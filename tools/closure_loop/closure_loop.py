@@ -1834,7 +1834,7 @@ def host_cores(cfg):
     return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
-TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
+TOOL_REF_HOST = "ot-epyc4"  # 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
@@ -3863,13 +3863,24 @@ def port_latency_record(j):
         return None
     kit = m.group(1)
     env = git("show", f"{j['commit_full']}:{kit}/kit.env", check=False).stdout
-    if "--orfs-var OT_PIN_REGS=1" not in env:
-        return None
+    if str(HERE.parent / "ref_tile") not in sys.path:
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+    from kit_orfs_vars import parse
+    enabled = parse(env).get("OT_PIN_REGS") == "1"
     top = None
+    tile_spec = {}
     try:
-        top = json.loads(git("show", f"{j['commit_full']}:{kit}/spec.json", check=False).stdout or "{}").get("top")
-    except ValueError:
-        pass
+        tile_spec = json.loads(git("show", f"{j['commit_full']}:{kit}/spec.json", check=False).stdout or "{}")
+        top = tile_spec.get("top")
+    except ValueError as ex:
+        raise RuntimeError("PORT-LATENCY: invalid source-pinned tile specification") from ex
+    if not enabled:
+        declared = tile_spec.get("pin_regs")
+        if isinstance(declared, dict) and declared.get("enable") is not False:
+            raise RuntimeError("PORT-LATENCY: spec enables pin registers but kit lacks a literal OT_PIN_REGS=1 option")
+        return None
+    if not top:
+        raise RuntimeError("PORT-LATENCY: missing source-pinned tile top; control roles cannot be verified")
     base = f"{j['run']}/routes/{label(j['name'])}/work/orfs/results/asap7/*/base"
     with tempfile.TemporaryDirectory() as td:
         got = {}
@@ -3880,13 +3891,14 @@ def port_latency_record(j):
                                    f"{f} under {base} (fail closed: the compilers need the elaborated per-port stages)")
             (Path(td) / f).write_text(r.stdout)
             got[f] = Path(td) / f
-        if not top:
-            mm = re.search(r"^\s*module\s+(\S+)\s*\(", got["ot_pin_regs_wrapper.v"].read_text(), re.M)
-            top = mm.group(1) if mm else ""
         if str(HERE.parent / "ref_tile") not in sys.path:
             sys.path.insert(0, str(HERE.parent / "ref_tile"))
         import port_latency
         rep = port_latency.export(got["ot_pin_regs.tsv"], got["ot_pin_regs_wrapper.v"], top, j["commit_full"])
+        def role_source(path):
+            result = git("show", f"{j['commit_full']}:{path}", check=False)
+            return result.stdout if result.returncode == 0 else None
+        rep["control_roles"] = port_latency.validate_roles(rep, got["ot_pin_regs_wrapper.v"], tile_spec, role_source)
     rep["job"] = j["name"]
     return kit, rep
 

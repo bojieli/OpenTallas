@@ -81,7 +81,7 @@ reg [511:0] expected_data[0:8191];
 reg [1741:0] compiler_control=0;
 ot_hgi_sfu_static_quarter dut(.clk_control(clk),.rst_control_n(rst_n),.compiler_control(compiler_control),
 .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
-.vi_q(aviq),.rd_q(ardq),.side_y(512'd0),.vi_re(avr),.vi_addr(avi),.rd_addr(ard),.rd_re(arre),
+.vi_q(aviq),.rd_q(ardq),.vi_re(avr),.vi_addr(avi),.rd_addr(ard),.rd_re(arre),
 .vm_we(avw),.vm_waddr(ava),.vm_wdata(avd));
 ot_hdc_v41x_vec #(.N(16),.M(16),.AW(24),.NW(16),.MLAT(6),.ALAT(6),.DDIV(21),.OPR(1),.CAPR(1),.GSH(1),.KIMM(1),.DENR(1),.DRING(3),.BCAST_STAGES(1),.RET_STAGES(5),.CTL12(2),.SIDEX(4)) oracle(.go(go),.i_nout(i_nout),.i_nin(i_nin),.i_asrc(i_asrc),.i_bsrc(i_bsrc),.i_csrc(i_csrc),.i_dsrc(i_dsrc),.i_abase(i_abase),.i_aso(i_aso),.i_asi(i_asi),.i_aibase(i_aibase),.i_aind(i_aind),.i_bbase(i_bbase),.i_bso(i_bso),.i_bsi(i_bsi),.i_bhalf(i_bhalf),.i_cbase(i_cbase),.i_cso(i_cso),.i_csi(i_csi),.i_cpair(i_cpair),.i_dbase(i_dbase),.i_dso(i_dso),.i_dsi(i_dsi),.i_arnd(i_arnd),.i_arelu(i_arelu),.i_amin(i_amin),.i_cclip(i_cclip),.i_m1(i_m1),.i_m2(i_m2),.i_qm(i_qm),.i_ad(i_ad),.i_sfu(i_sfu),.i_e1(i_e1),.i_e2(i_e2),.i_rnd(i_rnd),.i_dst(i_dst),.i_obase(i_obase),.i_oso(i_oso),.i_osi(i_osi),.i_orow(i_orow),.i_red(i_red),.i_redsq(i_redsq),.i_redwhole(i_redwhole),.i_redtree(i_redtree),.i_redrnd(i_redrnd),.i_rbase(i_rbase),.i_rso(i_rso),.i_imm1(i_imm1),.i_imm2(i_imm2),.i_imm3(i_imm3),.i_ch_src(i_ch_src),.i_ch_seq(i_ch_seq),.i_ch_lead(i_ch_lead),.i_ch_mul(i_ch_mul),.x_seq(x_seq),.x_dseq(x_dseq),.x_cnt(x_cnt),.clk(clk),.rst_n(rst_n),.vi_q(oviq),.rd_q(ordq),.vi_re(ovr),.vi_addr(ovi),.rd_addr(ord),.rd_re(orre),.vm_we(ovw),.vm_waddr(ova),.vm_wdata(ovd));
 wire [1199:0] oracle_terms;

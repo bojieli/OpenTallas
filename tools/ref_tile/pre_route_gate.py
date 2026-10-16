@@ -510,7 +510,13 @@ def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
     except OSError:
         return
     pr = spec.get("pin_regs") or {}
-    if "--orfs-var OT_PIN_REGS=1" in env:
+    from kit_orfs_vars import parse
+    try:
+        enabled = parse(env).get("OT_PIN_REGS") == "1"
+    except ValueError as ex:
+        g.add("FAIL", "pin_regs", str(ex))
+        return
+    if enabled:
         g.add("INFO", "pin_regs", "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)")
         return
     if pr.get("enable") is False and str(pr.get("reason", "")).strip():
@@ -524,7 +530,7 @@ def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
           "for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"}")
 
 
-def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now=None):
+def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now=None, binding=None):
     """PORT-LATENCY (ROOT 2215): a kit that inserts pin registers (kit.env OT_PIN_REGS=1) must leave the elaborated
     per-port table of its synthesis (ot_pin_regs.tsv + wrapper); it is exported here with tools/ref_tile/port_latency.py
     (g.port_latency -> gate_result.json "port_latency") so the per-port stages are visible before the route.  A missing or
@@ -537,7 +543,16 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
         env = (kd / "kit.env").read_text()
     except OSError:
         return
-    if "--orfs-var OT_PIN_REGS=1" not in env:
+    from kit_orfs_vars import parse
+    try:
+        enabled = parse(env).get("OT_PIN_REGS") == "1"
+    except ValueError as ex:
+        g.add("FAIL", "port_latency", str(ex))
+        return
+    if not enabled:
+        declared = spec.get("pin_regs")
+        if isinstance(declared, dict) and declared.get("enable") is not False:
+            g.add("FAIL", "port_latency", "spec enables pin registers but kit lacks a literal OT_PIN_REGS=1 option")
         return
     late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
     sev = "FAIL" if late else "WARN"
@@ -556,8 +571,21 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
         src = commit if commit and re.fullmatch(r"[0-9a-f]{40}", str(commit)) else "0" * 40
         try:
             rep = PL.export(tab, wrap, spec["top"], src)
+            def role_source(path):
+                # Bind role-defining SDC to the exact archived synthesis bytes,
+                # including snapshots without a clean provenance commit.
+                if binding is not None:
+                    files = _BlobFiles(binding.get("files") or [])
+                    try:
+                        return files[path].decode() if path in files else None
+                    except (KeyError, UnicodeError):
+                        return None
+                    finally:
+                        files.close()
+                return git_show(commit, path)
+            rep["control_roles"] = PL.validate_roles(rep, wrap, spec, role_source)
         except ValueError as ex:
-            g.add(sev, "port_latency", f"elaborated pin-register table rejected: {ex}", "fix ot_pin_regs.tcl output / the kit")
+            g.add("FAIL", "port_latency", f"elaborated pin-register table rejected: {ex}", "fix ot_pin_regs.tcl output / the kit")
             return
     if src != commit:
         rep["source_commit"] = None
@@ -1021,7 +1049,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.clock_ports(spec)),
+                          TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
@@ -1240,7 +1268,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
-    check_port_latency(g, kd, spec, out, binding.get("commit"))
+    check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue

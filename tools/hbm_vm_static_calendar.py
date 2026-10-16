@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Compile native VM port calendars into the actual programme-SRAM word ABI."""
 import argparse
+import hashlib
+import re
 import json
 from pathlib import Path
 
@@ -22,6 +24,28 @@ def layout(abi, quadrant, universal=False):
             for p in q['ports']:
                 if p['name'] in FIELDS and p['bits'] > ports[p['name']]['bits']:
                     ports[p['name']] = p
+    if universal:
+        # Packed offsets belong to the implemented calendar, independently of a
+        # client's compacted ABI. Read its literal registered bit slices; changing
+        # a VM wrapper must not move these SRAM instruction bits.
+        source=ROOT/'rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv'
+        text=source.read_text()
+        actual={name:(int(lo),int(bits)) for name,lo,bits in re.findall(
+            r'assign\s+(\w+)\s*=\s*calendar\[(\d+)\+:(\d+)\]',text)}
+        fields=[]
+        for field in FIELDS:
+            if field not in actual: raise ValueError(f'Calendar source lacks field {field}')
+            lo,bits=actual[field]
+            required=24 if field.startswith('lg_local_') else ports[field]['bits']
+            if required>bits: raise ValueError(f'{field} exceeds implemented calendar field')
+            fields.append(dict(name=field,bits=bits,lo=lo))
+        covered=sorted(bit for f in fields for bit in range(f['lo'],f['lo']+f['bits']))
+        if covered!=list(range(len(covered))) or len(covered)>223:
+            raise ValueError('Implemented calendar field layout overlaps or has holes')
+        return dict(quadrant=quadrant,params=shape['params'],fields=fields,universal=True,
+                    bits=len(covered),startup_edges=4,sustained_calendars_per_edge=1,
+                    master='hfd_hgi_vm_calendar',reset_release_edges=2,
+                    source=str(source.relative_to(ROOT)),source_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
     ports.update(lg_local_read=dict(bits=24), lg_local_write=dict(bits=24))
     fields, cursor = [], 0
     for field in FIELDS:

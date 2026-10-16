@@ -366,18 +366,32 @@
    "domain": "serial",
    "master": "dsfd_vm_static_cap_ctl",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_cap_ctl_1015_r1",
-     "R_tt_ps": 47.0,
-     "min": 46.4,
-     "max": 47.6,
-     "n": 9
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
+  },
+  "ck_cap_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": "dsfd_vm_capture_fault_serial (81 serial inputs)",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_cap_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "dsfd_vm_native_valid_diag (core 16 x34 faults)",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_cap_lane_s": {
    "dir": "input",
@@ -385,15 +399,7 @@
    "domain": "serial",
    "master": "dsfd_vm_static_cap_leaf (CAP_PIPE 2)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_cap_leaf_1015_r7",
-     "R_tt_ps": 238.9,
-     "min": 206.5,
-     "max": 264.1,
-     "n": 1386
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -404,15 +410,7 @@
    "domain": "serial",
    "master": "ot_s81_vm_x34_s W542 NAT1",
    "child_pin": "s_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_s_w542_1015_r4",
-     "R_tt_ps": 248.1,
-     "min": 233.3,
-     "max": 257.8,
-     "n": 1638
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -423,15 +421,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x34_t W542 NAT1 BAL1; native audited, synchronous pin reset",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_t_w542_1015_r10",
-     "R_tt_ps": 311.5,
-     "min": 273.0,
-     "max": 335.2,
-     "n": 2178
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -449,14 +439,14 @@
   },
   "ck_landing_t": {
    "dir": "input",
-   "bits": 1,
+   "bits": 5,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
+   "master": "dsfd_vm_static_landing_joined: lane0..3 plus fault_join (five roots; data age2/II1 unchanged)",
+   "child_pin": "ck",
    "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "BIND_ON_ADOPTION",
-   "disposition_why": "production u_land is the monolith dsfd_vm_static_landing (no native-PASS view: r4 FF -7.1); the joined form dsfd_vm_static_landing_joined = lanes 0..3 + fault join, five CLOSED native-PASS 1417 views (R 162 ps lane0), port widens 1 -> 5 roots; adopted with the A2-F write front because both change the core files pinned by service profile s81_vm_r4_c2_w1"
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND_NATIVE_COMPONENT",
+   "disposition_why": "Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate PASS bc297977c; die binding still required"
   },
   "ck_landing_x34_s": {
    "dir": "input",
@@ -475,22 +465,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x34_t W514 (u_xsel,u_xcol) | W1026 (u_xsw; n1 native capture fix)",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_t_w514_1015_f4",
-     "R_tt_ps": 169.7,
-     "min": 163.2,
-     "max": 176.6,
-     "n": 1036
-    },
-    {
-     "kit": "ot_s81_vm_x34_t_w1026_1015_n1",
-     "R_tt_ps": 203.5,
-     "min": 193.3,
-     "max": 221.6,
-     "n": 2060
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -501,15 +476,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_bank128",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_bank128_m4_v20",
-     "R_tt_ps": 222.0,
-     "min": 200.0,
-     "max": 226.7,
-     "n": 329
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -520,39 +487,21 @@
    "domain": "stream",
    "master": "dsfd_vm_static_fsr_b0..b3",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_fsr_b0_native_1015_r1",
-     "R_tt_ps": 185.2,
-     "min": 167.9,
-     "max": 199.3,
-     "n": 690
-    },
-    {
-     "kit": "dsfd_vm_static_fsr_b1_native_1015_r1",
-     "R_tt_ps": 187.7,
-     "min": 168.2,
-     "max": 203.3,
-     "n": 690
-    },
-    {
-     "kit": "dsfd_vm_static_fsr_b2_native_1015_r1",
-     "R_tt_ps": 185.2,
-     "min": 167.6,
-     "max": 202.0,
-     "n": 690
-    },
-    {
-     "kit": "dsfd_vm_static_fsr_b3_native_1015_r1",
-     "R_tt_ps": 183.9,
-     "min": 164.6,
-     "max": 198.0,
-     "n": 690
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
+  },
+  "ck_mem_native_diag_t": {
+   "dir": "input",
+   "bits": 4,
+   "domain": "stream",
+   "master": "dsfd_vm_native_valid_diag x4 (return-map valid/slot diagnostics)",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_mem_relay_req_t": {
    "dir": "input",
@@ -560,15 +509,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)",
    "child_pin": "ck_req",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_relay128_b8_native_cb",
-     "R_tt_ps": 222.0,
-     "min": 213.6,
-     "max": 261.8,
-     "n": 1346
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -579,15 +520,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)",
    "child_pin": "ck_rsp",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_relay128_b8_native_cb",
-     "R_tt_ps": 134.1,
-     "min": 127.8,
-     "max": 140.6,
-     "n": 1274
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -598,36 +531,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_return_bank8_l0..l3_p (READ L16; ONE entry per lane: bit 4*slice+lane -> lane, 5,380 FF/root)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_return_bank8_l0_p_native_1015_l16",
-     "R_tt_ps": 273.9,
-     "min": 262.6,
-     "max": 293.8,
-     "n": 2218
-    },
-    {
-     "kit": "dsfd_vm_static_return_bank8_l1_p_native_1015_l16",
-     "R_tt_ps": 272.2,
-     "min": 260.6,
-     "max": 285.4,
-     "n": 2218
-    },
-    {
-     "kit": "dsfd_vm_static_return_bank8_l2_p_native_1015_l16",
-     "R_tt_ps": 272.8,
-     "min": 264.4,
-     "max": 288.8,
-     "n": 2218
-    },
-    {
-     "kit": "dsfd_vm_static_return_bank8_l3_p_native_1015_l16",
-     "R_tt_ps": 273.5,
-     "min": 262.6,
-     "max": 285.3,
-     "n": 2218
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -638,36 +542,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_scatter_b8_out PIPE 1 (B0|B8|B16|B24)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_direct_scatter_b0_native_cb4",
-     "R_tt_ps": 222.1,
-     "min": 205.5,
-     "max": 234.7,
-     "n": 2459
-    },
-    {
-     "kit": "dsfd_vm_direct_scatter_b8_native_cb5",
-     "R_tt_ps": 220.3,
-     "min": 203.2,
-     "max": 233.6,
-     "n": 2459
-    },
-    {
-     "kit": "dsfd_vm_direct_scatter_b16_native_cb4",
-     "R_tt_ps": 220.3,
-     "min": 204.9,
-     "max": 231.5,
-     "n": 2459
-    },
-    {
-     "kit": "dsfd_vm_direct_scatter_b24_native_cb4b",
-     "R_tt_ps": 221.7,
-     "min": 206.0,
-     "max": 236.0,
-     "n": 2459
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -678,64 +553,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_read_q0..q7_p (READ_PIPE 2)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_read_q0_p_native_1015_p2",
-     "R_tt_ps": 201.4,
-     "min": 193.4,
-     "max": 210.8,
-     "n": 805
-    },
-    {
-     "kit": "dsfd_vm_static_read_q1_p_native_1015_p1",
-     "R_tt_ps": 203.3,
-     "min": 192.8,
-     "max": 217.5,
-     "n": 869
-    },
-    {
-     "kit": "dsfd_vm_static_read_q2_p_native_1015_p1",
-     "R_tt_ps": 191.6,
-     "min": 172.7,
-     "max": 215.0,
-     "n": 799
-    },
-    {
-     "kit": "dsfd_vm_static_read_q3_p_native_1015_p1",
-     "R_tt_ps": 191.6,
-     "min": 172.7,
-     "max": 215.0,
-     "n": 799
-    },
-    {
-     "kit": "dsfd_vm_static_read_q4_p_native_1015_p1",
-     "R_tt_ps": 123.0,
-     "min": 109.0,
-     "max": 136.4,
-     "n": 399
-    },
-    {
-     "kit": "dsfd_vm_static_read_q5_p_native_1015_p1",
-     "R_tt_ps": 191.6,
-     "min": 172.7,
-     "max": 215.0,
-     "n": 799
-    },
-    {
-     "kit": "dsfd_vm_static_read_q6_p_native_1015_p1",
-     "R_tt_ps": 128.4,
-     "min": 109.7,
-     "max": 138.0,
-     "n": 527
-    },
-    {
-     "kit": "dsfd_vm_static_read_q7_p_native_1015_p1",
-     "R_tt_ps": 128.4,
-     "min": 109.7,
-     "max": 138.0,
-     "n": 527
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -746,64 +564,7 @@
    "domain": "stream",
    "master": "dsfd_vm_static_read_v0..v7_p (READ_PIPE 2)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_static_read_v0_p_native_1015_p2",
-     "R_tt_ps": 87.6,
-     "min": 77.6,
-     "max": 100.2,
-     "n": 171
-    },
-    {
-     "kit": "dsfd_vm_static_read_v1_p_native_1015_p2",
-     "R_tt_ps": 82.0,
-     "min": 78.4,
-     "max": 86.6,
-     "n": 175
-    },
-    {
-     "kit": "dsfd_vm_static_read_v2_p_native_1015_p2",
-     "R_tt_ps": 74.7,
-     "min": 70.6,
-     "max": 78.5,
-     "n": 147
-    },
-    {
-     "kit": "dsfd_vm_static_read_v3_p_native_1015_p2",
-     "R_tt_ps": 74.4,
-     "min": 68.9,
-     "max": 78.6,
-     "n": 147
-    },
-    {
-     "kit": "dsfd_vm_static_read_v4_p_native_1015_p2",
-     "R_tt_ps": 53.9,
-     "min": 52.9,
-     "max": 55.4,
-     "n": 57
-    },
-    {
-     "kit": "dsfd_vm_static_read_v5_p_native_1015_p2",
-     "R_tt_ps": 77.2,
-     "min": 67.3,
-     "max": 86.4,
-     "n": 144
-    },
-    {
-     "kit": "dsfd_vm_static_read_v6_p_native_1015_p2",
-     "R_tt_ps": 70.7,
-     "min": 65.3,
-     "max": 75.9,
-     "n": 87
-    },
-    {
-     "kit": "dsfd_vm_static_read_v7_p_native_1015_p2",
-     "R_tt_ps": 71.4,
-     "min": 66.4,
-     "max": 76.5,
-     "n": 87
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -812,12 +573,12 @@
    "dir": "input",
    "bits": 1,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
+   "master": "dsfd_vm_a2f_rsched_p (REL 8, hop-1 release)",
+   "child_pin": "ck",
    "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "VIEW_OWED",
-   "disposition_why": "dsfd_vm_a2f_rsched_p (REL 8, hop-1 release) is a new netlist: the closed dsfd_vm_static_rsched_p_native_1015_l16 view is REL 10 and does not bind; build a kit from the same recipe"
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_seq_t": {
    "dir": "input",
@@ -825,15 +586,7 @@
    "domain": "stream",
    "master": "dsfd_vm_seq_tile (DLAT7; pin-registered diagnostic faults)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "dsfd_vm_seq_tile_native_1015_r3",
-     "R_tt_ps": 269.9,
-     "min": 254.1,
-     "max": 299.7,
-     "n": 2560
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -846,10 +599,87 @@
    "child_pin": null,
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "LEAF_IN_FLIGHT",
-   "disposition_why": "control flops extracted to the two-root hard leaf dsfd_vm_static_wfc_ctl (parent wires only; differential gate + full master gate PASS); route dsfd_vm_static_wfc_ctl_native_1015_r1-native1-COMMIT-60bbca547"
+   "disposition": "NO_SINK",
+   "disposition_why": "r6 serial control/grant now in independent fault leaf ck_wfc_fault_s; retained source ABI port has no sink"
   },
   "ck_wfc_control_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "dsfd_vm_wfc_request RLAT15 (hop-1)",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": "dsfd_vm_wfc_fault_serial",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "dsfd_vm_wfc_fault_core",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_fault_x34_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": "ot_s81_vm_fault_x34_s_w1",
+   "child_pin": "s_ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_fault_x34_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "ot_s81_vm_fault_x34_t_w1",
+   "child_pin": "t_ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_fault_x43_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": "ot_s81_vm_fault_x43_s_w1",
+   "child_pin": "s_ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_fault_x43_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "ot_s81_vm_fault_x43_t_w1",
+   "child_pin": "t_ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_wfc_return_t": {
    "dir": "input",
    "bits": 1,
    "domain": "stream",
@@ -857,8 +687,8 @@
    "child_pin": null,
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "LEAF_IN_FLIGHT",
-   "disposition_why": "stream root of dsfd_vm_static_wfc_ctl (same route)"
+   "disposition": "FIX_IN_FLIGHT",
+   "disposition_why": "dsfd_vm_wfc_return RESPONSE_PAD 2: r2 gate WARN (194.4x324, util 5 %, W clock 150 um from sinks) not routed; right-sized r3 kit in flight (S-VM 10-16)"
   },
   "ck_wfc_x34_s": {
    "dir": "input",
@@ -866,15 +696,7 @@
    "domain": "serial",
    "master": "ot_s81_vm_x34_s W560 (u_wfc.u_xi)",
    "child_pin": "s_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_s_w560_1015_f4",
-     "R_tt_ps": 183.5,
-     "min": 174.8,
-     "max": 193.4,
-     "n": 3375
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -885,15 +707,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x34_t W560 (u_wfc.u_xi; n1 native capture fix)",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_t_w560_1015_n1",
-     "R_tt_ps": 169.5,
-     "min": 160.8,
-     "max": 177.4,
-     "n": 1128
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -904,15 +718,7 @@
    "domain": "serial",
    "master": "ot_s81_vm_x43_s W1026 (u_wfc.u_xo)",
    "child_pin": "s_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x43_s_w1026_1015_f4",
-     "R_tt_ps": 177.2,
-     "min": 164.7,
-     "max": 189.5,
-     "n": 1034
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -923,15 +729,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x43_t W1026 (u_wfc.u_xo; cb2 sender stage)",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x43_t_w1026_1015_cb2",
-     "R_tt_ps": 250.5,
-     "min": 234.2,
-     "max": 271.5,
-     "n": 6173
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -942,18 +740,10 @@
    "domain": "stream",
    "master": "s81_a2f_control4_resetlocal (bit = slice)",
    "child_pin": "ck_control",
-   "routed_R": [
-    {
-     "kit": "s81_a2f_control4_resetlocal_pilot_2118_r3",
-     "R_tt_ps": 204.6,
-     "min": 188.2,
-     "max": 225.9,
-     "n": 1265
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
-   "disposition": "RETIRED_BY_A2F",
-   "disposition_why": "legacy wcontrol (no view, never hardened) replaced by the A2-F front roots"
+   "disposition": "BOUND",
+   "disposition_why": "A2-F front control4 roots (s81_a2f_control4_resetlocal r3, routed CLOSED, native PASS)"
   },
   "ck_write_data_t": {
    "dir": "input",
@@ -961,15 +751,7 @@
    "domain": "stream",
    "master": "s81_a2f_field4 (data: bit 32*slice + 4*field + nibble)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "s81_a2f_field4_pilot_2118_r3c",
-     "R_tt_ps": 158.1,
-     "min": 146.2,
-     "max": 177.3,
-     "n": 1145
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -978,23 +760,23 @@
    "dir": "input",
    "bits": 4,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
+   "master": "s81_a2f_fault_join4 x4",
+   "child_pin": "ck",
    "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "VIEW_OWED",
-   "disposition_why": "s81_a2f_fault_join4 x4 (40 pin flops + 4 sticky): no hard view"
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_write_header_t": {
    "dir": "input",
    "bits": 1,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
+   "master": "s81_a2_w0_header",
+   "child_pin": "ck",
    "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "VIEW_OWED",
-   "disposition_why": "s81_a2_w0_header (53 x {v, row 14, tag 8} pin register + epoch): no hard view"
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_write_meta_t": {
    "dir": "input",
@@ -1002,42 +784,113 @@
    "domain": "stream",
    "master": "s81_a2f_field4 (metadata: bit 7*slice + nibble; same master as data)",
    "child_pin": "ck",
-   "routed_R": [
-    {
-     "kit": "s81_a2f_field4_pilot_2118_r3c",
-     "R_tt_ps": 158.1,
-     "min": 146.2,
-     "max": 177.3,
-     "n": 1145
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
   },
   "ck_write_payload_t": {
    "dir": "input",
-   "bits": 4,
+   "bits": 16,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
+   "master": "s81_a2_w0_payload33 x16",
+   "child_pin": "ck",
    "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "VIEW_OWED",
-   "disposition_why": "s81_a2_w0_payload x4 (53 x {mask 4, data 128} per slice + epoch): no hard view"
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_write_summary_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "dsfd_vm_native_valid_diag (write fault summary)",
+   "child_pin": "ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_xio_control_s": {
    "dir": "input",
    "bits": 1,
    "domain": "serial",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "OPEN_GLUE",
-   "disposition_why": "dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs edge (L12 -> L14), needs S-FUNC + static-collective sign-off (owed, S-VM)"
+   "master": "dsfd_vm_xio_serial",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_serial_native_1016_r2",
+     "R_tt_ps": 43.9,
+     "min": 43.2,
+     "max": 44.4,
+     "n": 6
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
   },
   "ck_xio_control_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "dsfd_vm_xio_request",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_request_native_1016_r2",
+     "R_tt_ps": 133.8,
+     "min": 111.2,
+     "max": 139.7,
+     "n": 114
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_xio_fault_join_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "dsfd_vm_xio_fault_join",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_fault_join_native_1016_r2",
+     "R_tt_ps": 43.4,
+     "min": 43.0,
+     "max": 43.8,
+     "n": 8
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_xio_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": "ot_s81_vm_fault_x34_s_w1 (same master as WFC)",
+   "child_pin": "s_ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_xio_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": "ot_s81_vm_fault_x34_t_w1 (same master as WFC)",
+   "child_pin": "t_ck",
+   "routed_R": null,
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
+  },
+  "ck_xio_return_t": {
    "dir": "input",
    "bits": 1,
    "domain": "stream",
@@ -1045,8 +898,8 @@
    "child_pin": null,
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "OPEN_GLUE",
-   "disposition_why": "as ck_xio_control_s"
+   "disposition": "FIX_IN_FLIGHT",
+   "disposition_why": "dsfd_vm_xio_return r2 routed CLOSED TT+119.18/FF+16.74 but routed native FAIL capture 220.0 ps on e_v[0]; structural r3 in flight (S-VM 10-16)"
   },
   "ck_xio_x43_s": {
    "dir": "input",
@@ -1054,22 +907,7 @@
    "domain": "serial",
    "master": "ot_s81_vm_x43_s W512 (u_xio.u_xq) | W511 (u_xio.u_xg); n1 native capture fix",
    "child_pin": "s_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x43_s_w512_1015_n1",
-     "R_tt_ps": 144.6,
-     "min": 136.7,
-     "max": 162.3,
-     "n": 520
-    },
-    {
-     "kit": "ot_s81_vm_x43_s_w511_1015_n1",
-     "R_tt_ps": 144.5,
-     "min": 135.5,
-     "max": 166.1,
-     "n": 519
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -1080,28 +918,18 @@
    "domain": "stream",
    "master": "ot_s81_vm_x43_t W512 (u_xio.u_xq) | W511 (u_xio.u_xg)",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x43_t_w512_1015_f4",
-     "R_tt_ps": 182.2,
-     "min": 171.9,
-     "max": 191.7,
-     "n": 3089
-    },
-    {
-     "kit": "ot_s81_vm_x43_t_w511_1015_f4",
-     "R_tt_ps": 182.2,
-     "min": 172.1,
-     "max": 191.8,
-     "n": 3083
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
   }
  },
  "reset_entries": {
+  "rss_cap_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
   "rss_cap_x34_t": {
    "dir": "input",
    "bits": 16,
@@ -1130,6 +958,11 @@
   "rss_mem_fsr_t": {
    "dir": "input",
    "bits": 16,
+   "domain": "stream"
+  },
+  "rss_mem_native_diag_t": {
+   "dir": "input",
+   "bits": 4,
    "domain": "stream"
   },
   "rss_mem_relay_t": {
@@ -1172,6 +1005,26 @@
    "bits": 1,
    "domain": "stream"
   },
+  "rss_wfc_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_wfc_fault_x34_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_wfc_fault_x43_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_wfc_return_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
   "rss_wfc_x34_t": {
    "dir": "input",
    "bits": 1,
@@ -1209,10 +1062,30 @@
   },
   "rss_write_payload_t": {
    "dir": "input",
-   "bits": 4,
+   "bits": 16,
+   "domain": "stream"
+  },
+  "rss_write_summary_t": {
+   "dir": "input",
+   "bits": 1,
    "domain": "stream"
   },
   "rss_xio_control_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_xio_fault_join_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_xio_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_xio_return_t": {
    "dir": "input",
    "bits": 1,
    "domain": "stream"
@@ -1223,6 +1096,11 @@
    "domain": "stream"
   },
   "rst_cap_control_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
+  "rst_cap_fault_s": {
    "dir": "input",
    "bits": 1,
    "domain": "serial"
@@ -1242,6 +1120,21 @@
    "bits": 1,
    "domain": "serial"
   },
+  "rst_wfc_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
+  "rst_wfc_fault_x34_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
+  "rst_wfc_fault_x43_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
   "rst_wfc_x34_s": {
    "dir": "input",
    "bits": 1,
@@ -1257,6 +1150,11 @@
    "bits": 1,
    "domain": "serial"
   },
+  "rst_xio_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
   "rst_xio_x43_s": {
    "dir": "input",
    "bits": 2,
@@ -1264,12 +1162,12 @@
   }
  },
  "counts": {
-  "ports": 110,
+  "ports": 140,
   "functional": 44,
-  "clock_ports": 34,
-  "clock_bits": 520,
-  "reset_ports": 32,
-  "reset_bits": 476
+  "clock_ports": 49,
+  "clock_bits": 554,
+  "reset_ports": 47,
+  "reset_bits": 506
  },
  "generator_requirements": [
   "drop RTL_HUB_EXTRA vm->collective t_collective 592 / tcs 3 (no RTL port, backpressure-era)",

@@ -20,8 +20,8 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock vw can not be propagated.
 [WARNING STA-0450] virtual clock vclk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM PINFLOP reference: 1028 input pin flops, median arrival 532.470093 (range 167.479401 .. 876.204895)
-QDM reference pin u_ot_pr_core.dq0[551]$_DFF_N_/CLK clock arrival max 532.470093 min 0.000000 skew 90 hold 50
+QDM PINFLOP reference: 1028 input pin flops, median arrival 330.302246 (range 159.376892 .. 340.133881)
+QDM reference pin u_ot_pr_core.dq0[981]$_DFF_N_/CLK clock arrival max 330.302246 min 153.034714 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
 [WARNING STA-0450] virtual clock vw can not be propagated.
 [WARNING STA-0450] virtual clock vclk can not be propagated.
@@ -29,8 +29,16 @@ OT_IO_INTER 0 inputs 0 outputs at 150 ps
 OT_IOREF clock-port ck[0] (core_clk): data input delays dropped
 OT_IOREF clock-port fi0[0] (w_fi0): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 1027 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE w_fi0 boundary 1026 negedge 1026 noarc 0 inverted 1026
 OT_IOREF keep vw (not an insertion-reference clock)
-OT_IOREF vclk core_clk mean 156.6 min 145.2 max 168.0 n 1027 boundary
-OT_IOREF ot_lb_v_core_clk core_clk mean 156.6 min 145.2 max 168.0 n 1027 boundary
-OT_WS max 5.193020458094111e-10 min 1.8591878037099718e-11
+OT_IOREF vclk core_clk mean 150.3 min 140.0 max 165.1 n 1027 boundary
+OT_IOREF ot_lb_v_core_clk core_clk mean 150.3 min 140.0 max 165.1 n 1027 boundary
+OT_IOREF clock-port ck[0] (core_clk): data input delays dropped
+OT_IOREF clock-port fi0[0] (w_fi0): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 1027 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE w_fi0 boundary 1026 negedge 1026 noarc 0 inverted 1026
+OT_IOREF keep vw (not an insertion-reference clock)
+OT_IOREF vclk core_clk mean 150.3 min 140.0 max 165.1 n 1027 boundary
+OT_IOREF ot_lb_v_core_clk core_clk mean 150.3 min 140.0 max 165.1 n 1027 boundary
+OT_WS max 1.0169731723408404e-10 min 1.0540693318183969e-11
 OT_EXPORT_DONE
