@@ -6,6 +6,9 @@ def parse(text):
     lexer = shlex.shlex(text, posix=True, punctuation_chars='()')
     lexer.whitespace_split = True
     tokens = list(lexer)
+    if tokens.count('EXTRA=') > 1 or any(
+            token == 'EXTRA+=' or token.startswith('EXTRA[') for token in tokens):
+        raise ValueError('kit EXTRA must have one literal assignment without mutations')
     if 'EXTRA=' in tokens:
         index = tokens.index('EXTRA=') + 1
         if index < len(tokens) and tokens[index] == '()':

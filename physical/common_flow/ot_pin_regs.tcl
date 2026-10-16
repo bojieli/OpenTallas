@@ -12,6 +12,12 @@ if {![llength $ot_pr_clk]} { error "OT_PIN_REGS: OT_PIN_REGS_CLOCK not set" }
 if {![info exists ::env(OT_PIN_REGS_RESET_PORTS)]} {
   error "OT_PIN_REGS: missing literal reset roles (OT_PIN_REGS_RESET_PORTS); regenerate the kit, including an explicit empty list when no resets exist"
 }
+# Legacy regex/default was part of the accepted wrapper contract. Check its
+# population before transformation so adding exact roles cannot silently turn
+# a previously bypassed reset into data. Explicit declarations are required;
+# the regex is a compatibility check, not a new semantic classification.
+set ot_pr_legacy_reset [expr {[info exists ::env(OT_PIN_REGS_RESET)] && $::env(OT_PIN_REGS_RESET) ne "" ? $::env(OT_PIN_REGS_RESET) :
+                            {(?i)(^|_)(a?s?rst|reset|rstn|resetn|rst_n|rst_ni|reset_n|reset_ni|por|por_n)(_|$)}}]
 set ot_pr_exc [expr {[info exists ::env(OT_PIN_REGS_EXCLUDE)] ? $::env(OT_PIN_REGS_EXCLUDE) : ""}]
 set ot_pr_dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : "."}]
 yosys tee -q -o $ot_pr_dir/ot_pin_regs.ports portlist $ot_pr_top
@@ -54,6 +60,12 @@ proc ot_pr_resolve_roles {ports names role} {
 set ot_pr_clock_ports [ot_pr_resolve_roles $ports $ot_pr_clk clock]
 set ot_pr_reset_ports {}
 set ot_pr_reset_ports [ot_pr_resolve_roles $ports [split $::env(OT_PIN_REGS_RESET_PORTS) ","] reset]
+foreach p $ports {
+  set name [lindex $p 3]
+  if {[regexp -- $ot_pr_legacy_reset $name] && $name ni $ot_pr_reset_ports && $name ni $ot_pr_clock_ports} {
+    error "OT_PIN_REGS: legacy reset regexp/default matches undeclared reset $name; add its literal reset_ports declaration and regenerate before transformation"
+  }
+}
 foreach name $ot_pr_clock_ports {
   if {$name in $ot_pr_reset_ports} {error "OT_PIN_REGS: conflicting clock/reset role: $name"}
 }
