@@ -223,6 +223,12 @@ V143_X = (dict(g=226.8, t1n=-54.0, t2n=108.0, t2f=108.0, s1n=486.0, s2n=556.2, s
 V143_CENTER = __import__('os').environ.get('OT_KV_V143_CENTER', '0') == '1'   # 1: v1.4.2 centring (the die grows)
 V143_N_UP = float(__import__('os').environ.get('OT_KV_V143_NUP', '1404.0'))                             # N groups' top may rise this far into the empty top (the rest grows down)
 V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
+from gft_placement import selected as _gft_selected
+GFT_SELECTED = _gft_selected()
+if GFT_SELECTED:
+    if not V143C:
+        raise ValueError('OT_KV_GFT_GEOMETRY requires the existing OT_KV_V143C=1 two-row band')
+    V143_FT = dict(ftg=GFT_SELECTED['ftg'], fts=GFT_SELECTED['fts'])
 HGS, HSS = (324.0, 21.6), (21.6, 21.6)
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
             [f'ck_{t}{i}' for t in 'itabl' for i in range(16)])
@@ -1112,7 +1118,18 @@ def _v143_stages(add, se, cx, ey, col):
         add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
     for lower, near, far in ((True, 1, 0), (False, 2, 3)):
         row = (lambda k: cy - V143_ROW * k) if lower else (lambda k: cy + ECTL[1] + V143_GAP + V143_ROW * (k - 1))
-        if V143C:
+        if V143C and GFT_SELECTED:
+            # Same G3S2 leaves and edges. Two columns, two rows; the G multicast
+            # sinks stack rather than spreading across one row. Return stages
+            # occupy the third narrow column. No band/head/die height change.
+            g = GFT_SELECTED
+            put(f'{near}_g', 'qkd_hgs', g['gx'], row(1), lower)
+            put(f'{far}_g', 'qkd_hgs', g['gx'], row(2), lower)
+            put(f'{near}_t1', 'qkd_hgs', g['tx'], row(1), lower)
+            put(f'{near}_t2', 'qkd_hgs', g['tx'], row(2), lower)
+            put(f'{near}_s1', 'qkd_hss', g['sx'], row(2), lower)
+            put(f'{near}_s2', 'qkd_hss', g['sx'], row(1), lower)
+        elif V143C:
             put(f'{near}_g', 'qkd_hgs', 54.0, row(1), lower)
             put(f'{far}_g', 'qkd_hgs', 405.0, row(1), lower)
             put(f'{near}_t1', 'qkd_hgs', -216.0, row(2), lower)
