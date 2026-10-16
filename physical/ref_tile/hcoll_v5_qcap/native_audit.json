@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hgi_coll_qslots_capture_pin_v2",
+ "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+ "lib_cell": "ot_hgi_coll_qslots_capture_pin_v2",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 95.7,
+ "spread_ps": 10.0,
+ "outputs": 547,
+ "inputs": 548,
+ "launch_ps": 240.4,
+ "launch_pin": "captured[323]",
+ "capture_ps": 126.5,
+ "capture_pin": "src_d[393]",
+ "launch_over": 32,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 240.43489 > 220 (32 pins)"
+}
