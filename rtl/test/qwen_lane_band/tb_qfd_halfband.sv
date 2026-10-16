@@ -14,7 +14,7 @@
 // Negatives (must FAIL): MUT 1 = half-band level-8 pairing (0,2)(1,3); MUT 2 = upper level-10 pairing (hb, hb+3);
 // MUT 5 = DUT checked in the REF (BANDF 1) frame (the compiler not absorbing the moved result positions).
 module tb_qfd_halfband;
-    parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1, RDMEM = 0, SLOT = 0;
+    parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1, RDMEM = 0, SLOT = 0, S4 = 0;
     localparam integer NB = 3, LG = 12, LAT_L = 33, LAT_B = 46 + 2 * LNK - 8;
     reg clk = 0, rst_n = 0;
     reg break_return;
@@ -170,8 +170,13 @@ module tb_qfd_halfband;
             for(genvar pp=0;pp<3;pp=pp+1)begin:g_out
                 assign htt[32*(pp*16+2*u)+:64]=y[64*pp+:64];
             end
+            if(S4)begin:g_s4
+              qfd_band_upper_b2_l2_s4 u_up(.clk(clk),.rst_n(rst_n),.pw(w),.pw_v(vv),.lf(ff),
+                .sel_e(uc[11:10]),.tv_e(uc[24:23]),.tt_ty(y),.tt_use(uu[u]),.tt_v(uv[u]),.fault(uf[u]));
+            end else begin:g_legacy_selector
             qfd_band_upper_b2_l2 u_up(.clk(clk),.rst_n(rst_n),.pw(w),.pw_v(vv),.lf(ff),
               .sel_e(uc[12:0]),.tv_e(uc[25:13]),.tt_ty(y),.tt_use(uu[u]),.tt_v(uv[u]),.fault(uf[u]));
+            end
         end
         assign htu=uu[0];assign htv=uv[0];assign huf=(|uf) | (|(uu^{8{uu[0]}})) | (|(uv^{8{uv[0]}}));
     end endgenerate
