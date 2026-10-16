@@ -162444,7 +162444,7 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 259.2,
+    "w": 267.84,
     "h": 220.32
    },
    "origin": {
@@ -162453,112 +162453,122 @@
     "orient": "R0"
    },
    "version": 7,
-   "grant": "wires_only_cluster_v7",
+   "grant": "hardened_cluster_ckgen_1016",
    "clock_entry": null,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M9",
-   "layer_cap": "M9",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "pins": [
     {
      "name": "refclk",
      "face": "N",
      "layer": "M5",
      "span_um": [
-      124.8,
-      129.6
+      52.8,
+      57.6
      ],
-     "offset": 127.2
+     "offset": 57.564,
+     "offset_basis": "routed view LEF pin centre"
     },
     {
      "name": "por_n",
      "face": "N",
      "layer": "M5",
      "span_um": [
-      129.6,
-      134.4
+      57.6,
+      62.4
      ],
-     "offset": 132.0
-    },
-    {
-     "name": "pll_hbm",
-     "face": "S",
-     "layer": "M5",
-     "span_um": [
-      110.4,
-      115.2
-     ],
-     "offset": 112.8
-    },
-    {
-     "name": "pll_stream",
-     "face": "S",
-     "layer": "M5",
-     "span_um": [
-      115.2,
-      120.0
-     ],
-     "offset": 117.6
-    },
-    {
-     "name": "pll_serial",
-     "face": "S",
-     "layer": "M5",
-     "span_um": [
-      120.0,
-      124.8
-     ],
-     "offset": 122.4
-    },
-    {
-     "name": "pll_link",
-     "face": "S",
-     "layer": "M5",
-     "span_um": [
-      124.8,
-      129.6
-     ],
-     "offset": 127.2
+     "offset": 62.364,
+     "offset_basis": "routed view LEF pin centre"
     },
     {
      "name": "por_hbm",
      "face": "S",
      "layer": "M5",
      "span_um": [
-      129.6,
-      134.4
+      26.4,
+      31.2
      ],
-     "offset": 132.0
+     "offset": 31.164,
+     "offset_basis": "routed view LEF pin centre"
     },
     {
      "name": "por_stream",
      "face": "S",
      "layer": "M5",
      "span_um": [
-      134.4,
-      139.2
+      31.2,
+      36.0
      ],
-     "offset": 136.8
+     "offset": 35.964,
+     "offset_basis": "routed view LEF pin centre"
     },
     {
      "name": "por_serial",
      "face": "S",
      "layer": "M5",
      "span_um": [
-      139.2,
-      144.0
+      36.0,
+      40.8
      ],
-     "offset": 141.6
+     "offset": 36.252,
+     "offset_basis": "routed view LEF pin centre"
     },
     {
      "name": "por_link",
      "face": "S",
      "layer": "M5",
      "span_um": [
-      144.0,
-      148.8
+      40.8,
+      45.6
      ],
-     "offset": 146.4
+     "offset": 40.86,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_hbm",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      48.0,
+      52.8
+     ],
+     "offset": 48.06,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_stream",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      52.8,
+      57.6
+     ],
+     "offset": 52.86,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_serial",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      57.6,
+      62.4
+     ],
+     "offset": 57.66,
+     "offset_basis": "routed view LEF pin centre"
+    },
+    {
+     "name": "pll_link",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      62.4,
+      67.2
+     ],
+     "offset": 62.46,
+     "offset_basis": "routed view LEF pin centre"
     }
    ],
    "notes": "die clock root: PLL analog core = allowed modelled hard core (owner rule 10-14 08:05); reset release = real RTL; first tree level = four quadrant roots (die CTS, tools/hbm_die_v15/view_case.py --die-clock)",
@@ -162569,7 +162579,7 @@
      "cell": "ot_hbm_pll_bb",
      "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
      "at": [
-      43.2,
+      66.096,
       23.76
      ],
      "outline": {
@@ -162580,29 +162590,181 @@
     },
     {
      "inst": "u_rel",
+     "cell": "hfd_ckgen_rel4",
+     "view": "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4",
      "at": [
-      0,
-      23.76
+      24.192,
+      25.92
      ],
      "outline": {
       "w": 21.6,
       "h": 21.6
-     },
-     "view": "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4",
-     "cell": "hfd_ckgen_rel4",
-     "source": "rtl/hbm_accel/control/hfd_ckgen.sv",
-     "source_sha256": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f",
-     "view_files_sha256": {
-      "hfd_ckgen_rel4.lef": "3c92c105c9347689d5a857b50eb4d7baddee0a8c8f5b86f46d662867438035a1",
-      "hfd_ckgen_rel4_tt.lib": "5bd0344fadf0a1e73dee812e4712467ebc28c1cc427466c8fec3bc90c910d9fb",
-      "hfd_ckgen_rel4_ff.lib": "1baf43eff9018fada27a5fa32ad62642c808734ab6e8471b77c5074c54d3049f",
-      "insertion.json": "a9f8764c20058d2a417c919090228de7d4217269619c3cf366a74532d03890ce"
-     },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     }
     }
    ],
    "child_binding_refresh_2116": "Actual hfd_ckgen u_rel is ONE hfd_ckgen_rel4, replacing stale u_rel0..3 grant. Leaf west of PLL W-edge pins with 21.6 um gap; existing parent outline and ports unchanged.",
-   "parent_qualified": false
+   "parent_qualified": true,
+   "view": "physical/ref_tile/hbm_ckgen_cl/views/hfd_ckgen",
+   "view_files_sha256": {
+    "hfd_ckgen.lef": "fe79f3735922965d7b5bff102232abf7e3c8a42cebf2bb22dd13552f8686eca6",
+    "hfd_ckgen_ff.lib": "41f505ce3f32c2ed901f893b5be5fdb62c3ed28631b6f6f315afdd587b70ecea",
+    "hfd_ckgen_ss.lib": "8c75cd8da291a1bd9c5879e3dec247168764569cb5bfa809ddbf99b0fb3c57ed",
+    "hfd_ckgen_tt.lib": "f70d5b4d71f26990dfe21b60e33c55b72b879a91fc5f75ee9b5cfb5f937f0e67"
+   },
+   "hardened": {
+    "job": "hbm_ckgen_cl-cl1-c3fc50d5c",
+    "record": "489d313dd",
+    "kit": "physical/ref_tile/hbm_ckgen_cl",
+    "owner": "Claude:H-DIE-CKGEN",
+    "date": "2026-10-16",
+    "previous": {
+     "outline": {
+      "w": 259.2,
+      "h": 220.32
+     },
+     "pins": [
+      {
+       "name": "refclk",
+       "face": "N",
+       "layer": "M5",
+       "span_um": [
+        124.8,
+        129.6
+       ],
+       "offset": 127.2
+      },
+      {
+       "name": "por_n",
+       "face": "N",
+       "layer": "M5",
+       "span_um": [
+        129.6,
+        134.4
+       ],
+       "offset": 132.0
+      },
+      {
+       "name": "pll_hbm",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        110.4,
+        115.2
+       ],
+       "offset": 112.8
+      },
+      {
+       "name": "pll_stream",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        115.2,
+        120.0
+       ],
+       "offset": 117.6
+      },
+      {
+       "name": "pll_serial",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        120.0,
+        124.8
+       ],
+       "offset": 122.4
+      },
+      {
+       "name": "pll_link",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        124.8,
+        129.6
+       ],
+       "offset": 127.2
+      },
+      {
+       "name": "por_hbm",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        129.6,
+        134.4
+       ],
+       "offset": 132.0
+      },
+      {
+       "name": "por_stream",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        134.4,
+        139.2
+       ],
+       "offset": 136.8
+      },
+      {
+       "name": "por_serial",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        139.2,
+        144.0
+       ],
+       "offset": 141.6
+      },
+      {
+       "name": "por_link",
+       "face": "S",
+       "layer": "M5",
+       "span_um": [
+        144.0,
+        148.8
+       ],
+       "offset": 146.4
+      }
+     ],
+     "children": [
+      {
+       "inst": "u_pll",
+       "cell": "ot_hbm_pll_bb",
+       "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
+       "at": [
+        43.2,
+        23.76
+       ],
+       "outline": {
+        "w": 172.8,
+        "h": 172.8
+       },
+       "qualification": "allowed analog PHY/PLL abstract"
+      },
+      {
+       "inst": "u_rel",
+       "at": [
+        0,
+        23.76
+       ],
+       "outline": {
+        "w": 21.6,
+        "h": 21.6
+       },
+       "view": "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4",
+       "cell": "hfd_ckgen_rel4",
+       "source": "rtl/hbm_accel/control/hfd_ckgen.sv",
+       "source_sha256": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f",
+       "view_files_sha256": {
+        "hfd_ckgen_rel4.lef": "3c92c105c9347689d5a857b50eb4d7baddee0a8c8f5b86f46d662867438035a1",
+        "hfd_ckgen_rel4_tt.lib": "5bd0344fadf0a1e73dee812e4712467ebc28c1cc427466c8fec3bc90c910d9fb",
+        "hfd_ckgen_rel4_ff.lib": "1baf43eff9018fada27a5fa32ad62642c808734ab6e8471b77c5074c54d3049f",
+        "insertion.json": "a9f8764c20058d2a417c919090228de7d4217269619c3cf366a74532d03890ce"
+       },
+       "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+      }
+     ]
+    },
+    "clock_source": "clocks created at the PLL output pins; generated clocks (divide_by 1) at the four pll_* outputs = die clock-tree roots; por_* timed against their own forwarded clock"
+   }
   },
   {
    "name": "quant_NW0_lg",
@@ -171503,5 +171665,12 @@
   "source": "results/arch/hbm_die_v15/sfu_core_home_0030/homes.json",
   "status": "GRANTED",
   "supersedes": "sfu_core_request_v7 (PROPOSED strip, needed SM shrink)"
+ },
+ "ckgen_parent_grant_1016": {
+  "owner": "Claude:H-DIE-CKGEN",
+  "slot": "hb_ckgen",
+  "job": "hbm_ckgen_cl-cl1-c3fc50d5c",
+  "record": "489d313dd",
+  "why": "H-DIE hb_ckgen grant (hbm_v15.json slots[hb_ckgen], 259.2 x 220.32) -> 267.84 x 220.32 (grows EAST by 8.64 um; origin kept): the PLL (172.8) + rel4 (21.6) need 2.16 core margin + 20 um block-core-edge channel on both sides + a 20 um block-block channel = 258.72 um, which the 1.728 child / 0.432 macro lattice cannot fit in 259.2 (best fit 18.6 um E channel); next 8.64 track-lattice outline = 267.84 (free: no slot within 300 um E/W, idx_s3 is 123 um N).  PINS MOVED WEST (same faces, layer M5, 4.8 um spans): por_* directly under the rel4 release flops' S-face pins (x 26.4-45.6), pll_* in the 20 um channel the PLL W-edge clock pins drop through (x 48.0-67.2), refclk/por_n at the top of that channel (x 52.8-62.4): the granted spans (x 110-149, under the PLL) cost ~27 ps of wire on every por_* launch (gate 06:33 reg->out -29.1 ps).  rel4 at (24.192,25.92), PLL at (66.096,23.76); parent PG M7, signals <= M6; ports keep the flow's port buffers (the pll_* buffer separates each forwarded-clock port net from its PLL source net: one clock per net, CTS-0114 otherwise)."
  }
 }
