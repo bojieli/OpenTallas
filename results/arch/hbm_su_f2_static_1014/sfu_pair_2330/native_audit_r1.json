@@ -1,0 +1,28 @@
+{
+ "cell": "ot_hgi_sfu_lg_pair_leaf",
+ "view": "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/views/ot_hgi_sfu_lg_pair_leaf",
+ "lib_cell": "ot_hgi_sfu_lg_pair_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 105.6,
+ "spread_ps": 9.6,
+ "outputs": 1112,
+ "inputs": 1113,
+ "launch_ps": 189.8,
+ "launch_pin": "c_rr[342]",
+ "capture_ps": 133.0,
+ "capture_pin": "c_wq[481]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "hbm_sfu_lg_pair_leaf_2330-r1-f86d487d1",
+ "record": "c85de1de4",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT ETM of the record view, R = insertion.json boundary mean)",
+ "audited": "2026-10-16T00:50-07:00 Claude H-SU",
+ "layout_looked": "routed floorplan.png + density.png from the route dir, LOOKED (Read) 00:30"
+}
