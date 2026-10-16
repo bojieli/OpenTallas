@@ -103,13 +103,17 @@ def main():
     run(a.yosys, final, a.out/'partition')
     partition=json.loads((a.out/'partition.json').read_text())
     top=partition['modules']['dsfd_sp_pq_joint_candidate']
-    groups={name:cell['type'] for name,cell in top['cells'].items() if name in ('ot_s81_pq_control_joint','ot_s81_pq_lane_joint')}
+    group_names=('ot_s81_pq_control_joint','ot_s81_pq_lane_joint')
+    groups={logical:cell['type'] for name,cell in top['cells'].items() for logical in group_names if name.endswith(logical)}
+    group_cells={name for name in top['cells'] if any(name.endswith(g) for g in group_names)}
     if len(groups)!=2:raise ValueError('Both extracted groups must remain actual children')
-    if set(top['cells'])!=set(retained)|set(groups):raise ValueError('Unowned parent cells remain after partition')
+    if set(top['cells'])!=set(retained)|group_cells:raise ValueError('Unowned parent cells remain after partition')
     if len(partition['modules'][groups['ot_s81_pq_control_joint']]['cells'])!=len(controls):raise ValueError('Control cell conservation failed')
     if len(partition['modules'][groups['ot_s81_pq_lane_joint']]['cells'])!=len(lanes):raise ValueError('Lane cell conservation failed')
-    selected=['dsfd_sp_pq_joint_candidate',*groups.values()]
-    export='read_json '+str((a.out/'partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
+    selected=['dsfd_sp_pq_joint_candidate',*groups]
+    export='read_json '+str((a.out/'partition.json').resolve())+'; '
+    export+=''.join('rename '+actual+' '+logical+'; ' for logical,actual in groups.items())
+    export+='write_json '+str((a.out/'named_partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
     run(a.yosys,export,a.out/'export')
     receipt=dict(scope='Source partition only. Existing clocks/cycles unchanged; physical candidate unqualified.',
                  extraction_tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
