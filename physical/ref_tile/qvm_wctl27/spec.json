@@ -12,7 +12,7 @@
  ],
  "outline": {
   "w": 12.96,
-  "h": 8.64
+  "h": 10.8
  },
  "layer_cap": "M5",
  "macros": [],
@@ -41,7 +41,7 @@
  "job": {
   "owner": "Claude:Q-ATTN-RATE",
   "branch": "claude/q-vmwb-0030",
-  "tag": "w1",
+  "tag": "w2",
   "purpose": "Q-VMWB 2026-10-16: E3 VM per-bank write-control register (Codex 044c11ad8 composition, merged): qvm_wctl27 = row bank {src,line[7:0],mask} x 64 instances; with the 160 reused CLOSED qvm_data256_native it takes the E3 write state (40,960 + 2,160 FF) out of the VM parent. One register stage, 0 cycles.",
   "benches": [
    {
@@ -83,7 +83,11 @@
    "rtl/test/qwen_vm_residual"
   ],
   "views_to": "physical/ref_tile/qvm_wctl27/views",
-  "record_to": "results/rtl/ref_tile/qvm_wctl27"
+  "record_to": "results/rtl/ref_tile/qvm_wctl27",
+  "reroute_reason": {
+   "kind": "slot_change",
+   "why": "qvm_wctl27-w1-f20f55fe5 FLOORPLAN_MARGIN (post-flow util >60% in 37 um2 core); outline 12.96 x 8.64 -> 12.96 x 10.8 (core 46.7 -> 56 um2)"
+  }
  },
  "pin_regs": {
   "enable": false,

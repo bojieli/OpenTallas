@@ -26,25 +26,25 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def pg_m5_intervals():
+def pg_m5_intervals(width_nm=WIDTH_NM):
     # Same top-grid recipe as ref_tile.gen_pdn: core starts at 2.16 um,
     # then .300 offset; VDD/VSS .120 wide, .072 spacing, pitch5.4.
     return [(2160+300+5400*k+192*j, 2160+420+5400*k+192*j)
             for k in range(13) for j in range(2)
-            if 2160+300+5400*k+192*j < WIDTH_NM-2160]
+            if 2160+300+5400*k+192*j < width_nm-2160]
 
 
-def available(phase, layers):
+def available(phase, layers, width_nm=WIDTH_NM):
     slots = []
     for layer in layers:
         pitch, offset, width = TRACKS[layer]
         local = (offset-(phase if layer == 'M7' else 0)) % pitch
-        for x in range(local, WIDTH_NM, 2*pitch):
-            if x-width//2 < EDGE_MARGIN_NM or x+width//2 > WIDTH_NM-EDGE_MARGIN_NM:
+        for x in range(local, width_nm, 2*pitch):
+            if x-width//2 < EDGE_MARGIN_NM or x+width//2 > width_nm-EDGE_MARGIN_NM:
                 continue
             # Reserve M5 PG and M5 landing space under every M7 contact.
             # This is an analytic reservation; expanded routed vias are still mandatory.
-            if layer in ('M5','M7') and any(x+48 > a and x-48 < b for a,b in pg_m5_intervals()):
+            if layer in ('M5','M7') and any(x+48 > a and x-48 < b for a,b in pg_m5_intervals(width_nm)):
                 continue
             slots.append((x,layer,width))
     return sorted(slots)
