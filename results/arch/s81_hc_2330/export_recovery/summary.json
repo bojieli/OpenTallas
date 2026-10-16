@@ -1,0 +1,103 @@
+{
+  "status": "PASS",
+  "count": 6,
+  "scope": "Historical export lineage only; parent adoption requires separate review.",
+  "bundles": [
+    {
+      "job": "s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c",
+      "record_commit": "12e018a9f3f3dbc135d9c527947dae0e20b1983d",
+      "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+      "view": "physical/ref_tile/s81hc_ctfnq0_ref/views/ot_s81_hc_ctfnq0",
+      "status": "PASS",
+      "raw_sha256": "ac7095014f764d4404891d2f7b656f4857ef0139f9e6747b5b558b653d05a170",
+      "final_sha256": "136a1d34ee3f9af1779fb384a9c2535bb80ddc30fa2671fed43c70f63d8d6574",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    },
+    {
+      "job": "s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c",
+      "record_commit": "57c01808f891cae2708b5ba79dd98bec322271fc",
+      "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+      "view": "physical/ref_tile/s81hc_ctfnq1_ref/views/ot_s81_hc_ctfnq1",
+      "status": "PASS",
+      "raw_sha256": "13e1df4d68872f3a95f3c1ba22eb5688d730cea6a4a331bb0c6f74c5a4f74e09",
+      "final_sha256": "9fb7373b3e952e25eae48e9f4f0a92cd721b60f343aa43774ef74ca7c34270f1",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    },
+    {
+      "job": "s81hc_ctfnq3_ref-bank-native2330-COMMIT-85e95731c",
+      "record_commit": "36533b94f701644d90ab93012007596ccc80d3e0",
+      "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+      "view": "physical/ref_tile/s81hc_ctfnq3_ref/views/ot_s81_hc_ctfnq3",
+      "status": "PASS",
+      "raw_sha256": "1aa3c3ed90d62564e9ada67501e67d5ab8cdf99693f34ad03c8332c426c50c3b",
+      "final_sha256": "685186bd14c4d8f8bbb72cd0d491270f2dc46bf24cd6d518e85b6b2f42eb6491",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    },
+    {
+      "job": "s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c",
+      "record_commit": "c9230a6fa0f6944492f6d0f25fe6d3fa2c339c06",
+      "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+      "view": "physical/ref_tile/s81hc_ctfnq_reset_ref/views/ot_s81_hc_ctfnq_reset",
+      "status": "PASS",
+      "raw_sha256": "c2096682e5c81faef5fb4e3994c18b63f1e869015b277887c78ba851296c51fa",
+      "final_sha256": "db688e1d43666cb740fab100dfb696f0374870a5d3ebca7dd88334f7bd2ebc47",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    },
+    {
+      "job": "s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c",
+      "record_commit": "6789fb5272d42ae11998b6cfd5059ec5391ddad3",
+      "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+      "view": "physical/ref_tile/s81hc_ctfxsnt_ref/views/ot_s81_hc_ctfxs_nt",
+      "status": "PASS",
+      "raw_sha256": "81023a44a876dffaa3b239ddd1c5bd452ad74ed303c5e13b0714342bcdd07105",
+      "final_sha256": "67e5a28feca58d016fc985639feda2f695a3e1c7090557853f25f871187e9236",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    },
+    {
+      "job": "s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c",
+      "record_commit": "7722e43191dfb0929ea73d88a8ca0d462b700cc5",
+      "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+      "view": "physical/ref_tile/s81hc_ctfnq2_ref/views/ot_s81_hc_ctfnq2",
+      "status": "PASS",
+      "raw_sha256": "bf841b1030d64a880c9e99766fd4864fad210c761edff1982df59536f4776750",
+      "final_sha256": "f7439741d65bff714d3c753234c47ba338f5aade2c57eff3b552e1888d47f9ab",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    }
+  ]
+}

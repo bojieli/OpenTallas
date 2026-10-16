@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctfnq_reset.lef",
+    "sha256": "c2096682e5c81faef5fb4e3994c18b63f1e869015b277887c78ba851296c51fa"
+  },
+  "output": {
+    "path": "ot_s81_hc_ctfnq_reset.lef",
+    "sha256": "db688e1d43666cb740fab100dfb696f0374870a5d3ebca7dd88334f7bd2ebc47"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/helper.py",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/raw.lef",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/final.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 4 OBS rects moved into 4 pins: clk, rst_c, rst_in, valid_reset; pockets: 0 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas/claude/closure-loop/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/record/views/ot_s81_hc_ctfnq_reset/ot_s81_hc_ctfnq_reset.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_hc_ctfnq_reset 16.416 x 8.64: PG M5 VDD 3 stripes (66% spread, 100% cov) / VSS 3 stripes (66% spread, 100% cov); strap M6; face pins 4 blocked-above 0 blocked-same 0; clock clk insertion 49 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_hc_ctfnq_reset",
+      "W": 16.416,
+      "H": 8.64,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 3,
+            "dir": "V",
+            "spread": 0.658,
+            "coverage": 1.0,
+            "shapes_on_top": 3
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 3,
+            "dir": "V",
+            "spread": 0.658,
+            "coverage": 1.0,
+            "shapes_on_top": 3
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 4,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 48.81,
+          "min_ps": 42.6
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 0
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "record_commit": "c9230a6fa0f6944492f6d0f25fe6d3fa2c339c06",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "immutable_final_odb": "/srv/opentallas/claude/closure-loop/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/routes/s81hc_ctfnq_reset_ref_bank_native2330_COMMIT_85e95731c/work/orfs/results/asap7/opentallas_ot_s81_hc_ctfnq_reset_asap7_ref_s81hc_ctfnq_reset_ref_bank_native2330_COMMIT_85e95731c/base/6_final.odb",
+    "odb_sha256": "561d7c55f343d17503d5efb199192131f28c02bce39044f10e82ad732dcdf04d",
+    "raw_expected_hash_matches": true,
+    "published_final_hash_matches": true,
+    "environment_basis": "Original process environment was not recorded. Replay explicitly cleared both options and reproduced the exact published output hash.",
+    "published_files_verified": {
+      "ot_s81_hc_ctfnq_reset_tt.lib": true,
+      "abstract.json": true,
+      "ot_s81_hc_ctfnq_reset.lef": true,
+      "insertion.json": true,
+      "ot_s81_hc_ctfnq_reset_ss.lib": true,
+      "ot_s81_hc_ctfnq_reset_ff.lib": true,
+      "child_lint.json": true
+    },
+    "evidence": "provenance/reconstruction/replay.json"
+  }
+}

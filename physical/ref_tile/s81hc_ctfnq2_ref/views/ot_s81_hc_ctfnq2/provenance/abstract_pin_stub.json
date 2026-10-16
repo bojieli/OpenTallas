@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctfnq2.lef",
+    "sha256": "bf841b1030d64a880c9e99766fd4864fad210c761edff1982df59536f4776750"
+  },
+  "output": {
+    "path": "ot_s81_hc_ctfnq2.lef",
+    "sha256": "f7439741d65bff714d3c753234c47ba338f5aade2c57eff3b552e1888d47f9ab"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/helper.py",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/raw.lef",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/final.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 290 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/record/views/ot_s81_hc_ctfnq2/ot_s81_hc_ctfnq2.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_hc_ctfnq2 144.288 x 25.92: PG M5 VDD 26 stripes (94% spread, 100% cov) / VSS 26 stripes (94% spread, 100% cov); strap M6; face pins 1616 blocked-above 0 blocked-same 0; clock clk insertion 126 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_hc_ctfnq2",
+      "W": 144.288,
+      "H": 25.92,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.936,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.936,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1616,
+        "blocked_above": 0,
+        "covered_below": 21,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 125.62,
+          "min_ps": 91.66
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 290
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "record_commit": "7722e43191dfb0929ea73d88a8ca0d462b700cc5",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "immutable_final_odb": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/routes/s81hc_ctfnq2_ref_bank_native2330_COMMIT_85e95731c/work/orfs/results/asap7/opentallas_ot_s81_hc_ctfnq2_asap7_ref_s81hc_ctfnq2_ref_bank_native2330_COMMIT_85e95731c/base/6_final.odb",
+    "odb_sha256": "7b24466b564a3af0cac249def85a043de11cc20a2e94d9a918865bef50f439d7",
+    "raw_expected_hash_matches": true,
+    "published_final_hash_matches": true,
+    "environment_basis": "Original process environment was not recorded. Replay explicitly cleared both options and reproduced the exact published output hash.",
+    "published_files_verified": {
+      "ot_s81_hc_ctfnq2_tt.lib": true,
+      "ot_s81_hc_ctfnq2_ff.lib": true,
+      "abstract.json": true,
+      "insertion.json": true,
+      "ot_s81_hc_ctfnq2.lef": true,
+      "ot_s81_hc_ctfnq2_ss.lib": true,
+      "child_lint.json": true
+    },
+    "evidence": "provenance/reconstruction/replay.json"
+  }
+}

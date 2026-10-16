@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctfxs_nt.lef",
+    "sha256": "81023a44a876dffaa3b239ddd1c5bd452ad74ed303c5e13b0714342bcdd07105"
+  },
+  "output": {
+    "path": "ot_s81_hc_ctfxs_nt.lef",
+    "sha256": "67e5a28feca58d016fc985639feda2f695a3e1c7090557853f25f871187e9236"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/helper.py",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/raw.lef",
+    "/tmp/codex-hc-export-recovery-0010/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/final.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 2 OBS rects moved into 2 pins: clk, clk_l; pockets: 486 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/record/views/ot_s81_hc_ctfxs_nt/ot_s81_hc_ctfxs_nt.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_hc_ctfxs_nt 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 3025 blocked-above 0 blocked-same 0; clock clk insertion 155 ps; clock clk_l insertion 142 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_hc_ctfxs_nt",
+      "W": 576.72,
+      "H": 25.92,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 106,
+            "dir": "V",
+            "spread": 0.983,
+            "coverage": 1.0,
+            "shapes_on_top": 106
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 106,
+            "dir": "V",
+            "spread": 0.983,
+            "coverage": 1.0,
+            "shapes_on_top": 106
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 3025,
+        "blocked_above": 0,
+        "covered_below": 27,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 155.46,
+          "min_ps": 106.8
+        },
+        "clk_l": {
+          "max_ps": 141.82,
+          "min_ps": 90.58
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 486
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "record_commit": "6789fb5272d42ae11998b6cfd5059ec5391ddad3",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "immutable_final_odb": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/routes/s81hc_ctfxsnt_ref_s5_dlpin_fence_COMMIT_85e95731c/work/orfs/results/asap7/opentallas_ot_s81_hc_ctfxs_nt_asap7_ref_s81hc_ctfxsnt_ref_s5_dlpin_fence_COMMIT_85e95731c/base/6_final.odb",
+    "odb_sha256": "ad442cb894da089ddab5799012e0480bc241275e24f525d05de84fc9e62ed603",
+    "raw_expected_hash_matches": true,
+    "published_final_hash_matches": true,
+    "environment_basis": "Original process environment was not recorded. Replay explicitly cleared both options and reproduced the exact published output hash.",
+    "published_files_verified": {
+      "abstract.json": true,
+      "ot_s81_hc_ctfxs_nt_tt.lib": true,
+      "ot_s81_hc_ctfxs_nt.lef": true,
+      "insertion.json": true,
+      "ot_s81_hc_ctfxs_nt_ff.lib": true,
+      "ot_s81_hc_ctfxs_nt_ss.lib": true,
+      "child_lint.json": true
+    },
+    "evidence": "provenance/reconstruction/replay.json"
+  }
+}
