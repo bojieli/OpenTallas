@@ -363,8 +363,8 @@
  "inter": [],
  "structural_change": "Localize ten actual ROM capture/expansion/return pipelines to their own read-facing gutter halves (each measured 950-990 um2 mapped area, 126.144x15.12 um fence, about 50-52% initial fill); each ROM clock shares its local pair root. Compact independent RQR north/south groups. Preserves tall457.92x950.4, every data pin, all hard children and ROM placements, full arithmetic/workload and zero added edges. 23 clock entries. Reconcile actual post-repair exclusive data/reset/output sink ownership and actual-row capacity before ordinary DPL.",
  "job": {
-  "owner": "Codex:q_tile45",
-  "branch": "codex/qtile-g4-0847",
+  "owner": "Claude:Q-TILE45b",
+  "branch": "claude/qtile45-r6",
   "tag": "g4t",
   "purpose": "Localize ten actual ROM capture/expansion/return pipelines to their own read-facing gutter halves (each measured 950-990 um2 mapped area, 126.144x15.12 um fence, about 50-52% initial fill); each ROM clock shares its local pair root. Compact independent RQR north/south groups. Preserves tall457.92x950.4, every data pin, all hard children and ROM placements, full arithmetic/workload and zero added edges. 23 clock entries. Reconcile actual post-repair exclusive data/reset/output sink ownership and actual-row capacity before ordinary DPL.",
   "extra_paths": [
