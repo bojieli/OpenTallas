@@ -21,7 +21,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     // from 15,219 to ~7k sinks.  The payload is read continuously at the NEXT head (rp, or rp+1 on a column pop), so
     // the head word is valid one edge after any pop.  A write column issued less than two edges after its own payload
     // write would read the old word: that is checked (sticky fault), never silently stretched.  WPAY=0 = flops.
-    parameter integer WPAY=1
+    parameter integer WPAY=1,
+    // QREG=1 (H-HARDEN 2026-10-16, H6 route TT -50.14 / 888 D pins): same edges and decisions, fewer levels from
+    // flops -- (a) the same-row queue is written at its FREE slots wp..wp+3 (count+b<32) every edge instead of under
+    // `accepted` (K legality/same-row -> i_rdy -> 2,048-flop enable was -41 ps); an accept writes exactly the slots it
+    // always wrote, and a free slot is never read before an accept rewrites it (push/head are read only at valid slots;
+    // col_data/col_strb are sampled only with col_v); (b) the push entry queue[ep] is a REGISTER (push_q) maintained
+    // exactly, so ep -> 32:1 mux -> bank decode -> controller queue (-46.6 ps) starts from flops; (c) the response
+    // identity reads both candidate slots from registered addresses and selects late; (d) controller PHYS_WACT 2.
+    // QREG=0 is H6 exactly.
+    parameter integer QREG=1
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -84,7 +93,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_qq && {1'b0,incoming}+length<=31'd703125000;
     wire same_row=incoming_row==active_row;
     wire dr,wr,cv,cwe,caq;wire[4:0]cb,cc;
-    wire[319:0]head={queue[rp],head_wdata},push={queue[ep],256'b0};
+    reg[63:0]push_q;reg[4:0]ep1;reg[4:0]response_rp1;
+    wire[319:0]head={queue[rp],head_wdata},push={(QREG!=0)?push_q:queue[ep],256'b0};
     wire push_read=!push[319];
     wire enqueue=state==RUN && unposted!=0 && (!push_read || read_reserved<32) && !sticky;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
@@ -148,7 +158,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
         .clk(clk),.r_ce_in(response_read),.r_addr_in({2'b0,response_read_address}),.rd_out(response_data),
         .w_ce_in(response_write),.w_addr_in({2'b0,response_wp}),.wd_in(ret_data),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-    ot_hbm_r14_stream_pc_strap #(.ENABLE(1),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),.PHYS_WACT(1)) controller(
+    ot_hbm_r14_stream_pc_strap #(.ENABLE(1),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),.PHYS_WACT((QREG!=0)?2:1)) controller(
         .slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
@@ -158,16 +168,32 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
         .col_v(cv),.col_bank(cb),.col_col(cc),.cred_ret(3'b0),.busy(),.ref_fault(pc_fault),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_r(wr),
         .col_we(cwe),.wr_rd(push_read),.col_aq(caq));
+    // QREG: the four entries an accept at wp would write (beat b), the exact next push entry, both identity candidates
+    wire[255:0]qentry;
+    for(genvar b=0;b<4;b=b+1)begin:g_qentry
+        assign qentry[b*64+:64]={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
+    end
+    wire[4:0]ep_n=posted?ep1:ep;
+    wire[4:0]ep_off=ep_n-wp;
+    wire ep_hit=ep_off<5'd4 && count+6'(ep_off)<6'd32;
+    wire[63:0]push_n=ep_hit?qentry[ep_off[1:0]*64+:64]:(posted?queue[ep1]:push_q);
+    wire[20:0]rid_rp=response_identity[response_rp],rid_rp1=response_identity[response_rp1];
     always @(posedge clk or negedge lrst_n)begin
         if(!lrst_n)begin
             state<=IDLE;sticky<=0;active_row<=0;observed_open<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
             read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
-            head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;
+            head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;ep1<=5'd1;response_rp1<=5'd1;
         end else begin
             k_wr_done<=0;
             if(i_v&&!legal)sticky<=1;
+            if(QREG!=0)begin
+                for(integer b=0;b<4;b=b+1)if(count+6'(b)<6'd32)queue[5'(wp+b)]<=qentry[b*64+:64];
+                push_q<=push_n;
+                if(posted)ep1<=ep1+1'b1;
+                if(response_take)response_rp1<=response_rp1+1'b1;
+            end
             if(accepted)begin
-                for(integer b=0;b<4;b=b+1)if(b<length)
+                if(QREG==0)for(integer b=0;b<4;b=b+1)if(b<length)
                     queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
                 wp<=wp+5'(length);
                 if(state==IDLE || !same_row)begin active_row<=incoming_row;state<=DESC;end
@@ -203,7 +229,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
                 if(pending_count==0 || (response_count>=32&&!response_take))sticky<=1;
                 else begin response_identity[response_wp]<=pending_identity[pending_rp];pending_rp<=pending_rp+1'b1;response_wp<=response_wp+1'b1;end
             end
-            if(response_read)begin head_identity<=response_identity[response_read_address];head_valid<=1;end
+            if(response_read)begin head_identity<=(QREG!=0)?(response_take?rid_rp1:rid_rp):response_identity[response_read_address];head_valid<=1;end
             else if(response_take)head_valid<=0;
             if(response_take)begin
                 if(read_reserved==0||response_count==0)sticky<=1;

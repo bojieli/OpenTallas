@@ -82,6 +82,10 @@ module ot_hbm_r14_stream_pc_strap #(
   // Physical candidate: predecoded per-slot write ACT state and registered
   // age relations avoid rp -> rotated queue -> bank mux -> priority -> decode.
   // No new command edge or policy; default preserves historical implementation.
+  // PHYS_WACT = 2 (H-HARDEN 2026-10-16, H6 route TT -50.14 at blk -> bank eligibility -> 32-wide per-slot reduction
+  // -> age winner -> wab_oh): the per-bank write-ACT eligibility (~open & ~blk & aok_z & rrdl_z) and the per-slot
+  // eligibility are REGISTERED from the exact next-state values the existing registers load (bok_q, ent_q, bsel_oh),
+  // so the row decision starts from flops.  Same edges, same decisions (lockstep miter vs PHYS_WACT 0/1).
   parameter integer PHYS_WACT = 0
 )(
   input  wire        clk, rst_n,
@@ -137,6 +141,9 @@ module ot_hbm_r14_stream_pc_strap #(
     reg [3:0] wq_bgoh [0:WQ-1];
     reg [WQ-1:0] wq_pv;
     reg [WQ*WQ-1:0] wq_older;
+    reg [WQ-1:0] ent_q;                               // PHYS_WACT 2: == W && wq_pv[i] && |(wq_boh[i] & bank_ok)
+    reg [31:0] bok_q;                                 // PHYS_WACT 2: == ~open & ~blk & aok_z & {8{rrdl_z}}
+    reg [31:0] bsel_oh;                               // PHYS_WACT 2: == 1 << bsel
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
     reg hr;                                           // AQ_RD: the head entry is a read (registered)
     reg [WQW:0] wq_n; reg [WQW-1:0] wq_rp;
@@ -201,6 +208,7 @@ module ot_hbm_r14_stream_pc_strap #(
     wire [6:0] cr_inc = credit + 7'(cred_ret), cr_dec = credit + 7'(cred_ret) - 7'd1;
     // ---- per-bank timing state (down-counters; 0 = allowed) ------------------------------
     wire [31:0] rcd_z, ras_z, rtp_z, aok_z, aok_busy, rcdw_z;
+    wire [31:0] aok_zn;                               // the value aok_zr loads at this edge
     wire [223:0] keys;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
       reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
@@ -233,6 +241,8 @@ module ot_hbm_r14_stream_pc_strap #(
         end
       assign rcd_z[b] = rcd_zr; assign rcdw_z[b] = (rcd <= 5'(T_RCD - T_RCDW)); assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0) && (!W || wrr == 0);
       assign aok_z[b] = aok_zr; assign aok_busy[b] = (aok > 9'(LEAD));
+      assign aok_zn[b] = act_e ? (T_RAS + T_RP - 1 == 0) : rfa_e ? (T_RFC - 1 == 0) : rfp_e ? (T_RFCPB - 1 == 0) :
+                         (pre_e && aok < 9'(T_RP)) ? (T_RP - 1 == 0) : (aok <= 9'd1);
       // REFpb key: 127 refreshed; streaming/posted: open 24 (finished) / 32, protected (needed
       // within the next two sets) 16..18 farthest first, upcoming = distance, passed 8 + set;
       // idle: IDLE rank (+32 open); +64 if still busy from an earlier tRFCpb / tRC.
@@ -251,6 +261,7 @@ module ot_hbm_r14_stream_pc_strap #(
     end
     // ---- per-bank-group state ----------------------------------------------------------
     wire [3:0] rrdl_z, ccdl_z, faw_z;
+    wire [3:0] rrdl_zn;                               // the value rrdl_zr loads at this edge
     for (genvar g = 0; g < 4; g = g + 1) begin : bgs
       reg [2:0] rrdl; reg [1:0] ccdl; reg [3:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
       wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
@@ -268,6 +279,7 @@ module ot_hbm_r14_stream_pc_strap #(
           faw_zr  <= faw_take ? (T_FAW - 1 == 0) : (faw <= 4'd1);
         end
       assign rrdl_z[g] = rrdl_zr; assign ccdl_z[g] = ccdl_zr; assign faw_z[g] = faw_zr;
+      assign rrdl_zn[g] = act_g ? (T_RRDL - 1 == 0) : (rrdl <= 3'd1);
     end
     wire faw_ok = |faw_z;
     // ---- REFpb bank choice: argmin of keys, ties to the lowest bank ----------------------
@@ -284,6 +296,7 @@ module ot_hbm_r14_stream_pc_strap #(
     reg [6:0] s1k [0:7]; reg [4:0] s1i [0:7]; reg [6:0] s2k [0:1]; reg [4:0] s2i [0:1]; reg [4:0] bsel;
     reg [6:0] bkey;                                   // PULLIN: the key of bsel
     wire [71:0] m1; wire [17:0] m2; reg [223:0] keys_r;
+    wire [4:0] bsel_nx = (s2k[1] < s2k[0]) ? s2i[1] : s2i[0];
     for (genvar q = 0; q < 8; q = q + 1) begin : st1
       assign m1[q*9 +: 9] = min4(keys_r[q*28 +: 28], 2'd0);
     end
@@ -294,7 +307,7 @@ module ot_hbm_r14_stream_pc_strap #(
       if (!rst_n) begin
         for (integer q = 0; q < 8; q = q + 1) begin s1k[q] <= 7'd127; s1i[q] <= 0; end
         for (integer q = 0; q < 2; q = q + 1) begin s2k[q] <= 7'd127; s2i[q] <= 0; end
-        bsel <= 0; keys_r <= {32{7'd127}}; bkey <= 7'd127;
+        bsel <= 0; bsel_oh <= 32'b1; keys_r <= {32{7'd127}}; bkey <= 7'd127;
       end else begin
         keys_r <= keys;
         for (integer q = 0; q < 8; q = q + 1) begin
@@ -303,7 +316,7 @@ module ot_hbm_r14_stream_pc_strap #(
         for (integer q = 0; q < 2; q = q + 1) begin
           s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
         end
-        bsel <= (s2k[1] < s2k[0]) ? s2i[1] : s2i[0];
+        bsel <= bsel_nx; bsel_oh <= 32'b1 << bsel_nx;
         bkey <= (s2k[1] < s2k[0]) ? s2k[1] : s2k[0];
       end
     // ---- column: one RD per cycle ------------------------------------------------------
@@ -378,9 +391,13 @@ module ot_hbm_r14_stream_pc_strap #(
       wire [4:0] bq = wq_bq[i*5 +: 5];
       assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
                          !(REF_MODE && ref_lead_q && bq == bsel);
-      assign wq_act_physical[i] = W && wq_pv[i] &&
-          (|(wq_boh[i] & ~open & ~blk & aok_z)) && (|(wq_bgoh[i] & rrdl_z)) &&
-          !(REF_MODE && ref_lead_q && wq_bank[i] == bsel);
+      if (PHYS_WACT == 2) begin : reg_elig
+        assign wq_act_physical[i] = ent_q[i];
+      end else begin : comb_elig
+        assign wq_act_physical[i] = W && wq_pv[i] &&
+            (|(wq_boh[i] & ~open & ~blk & aok_z)) && (|(wq_bgoh[i] & rrdl_z)) &&
+            !(REF_MODE && ref_lead_q && wq_bank[i] == bsel);
+      end
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
     // against the current bank state with one-hot reductions, keeping the queue indexing and the
@@ -411,8 +428,11 @@ module ot_hbm_r14_stream_pc_strap #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin wcand_q <= 1'b0; wab <= 0; wab_oh <= 0; wcrd_q <= 1'b0; end
       else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= wab_oh_n; wcrd_q <= wcrd_n; end
-    wire wact_ok = wcand_q && !(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
-                   !(REF_MODE && ref_lead_q && wab == bsel) &&
+    wire [31:0] bank_ok = bok_q & ~({32{REF_MODE != 0 && ref_lead_q}} & bsel_oh);
+    wire wact_bank = (PHYS_WACT == 2) ? (|(wab_oh & bank_ok)) :
+                     (!(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
+                      !(REF_MODE && ref_lead_q && wab == bsel));
+    wire wact_ok = wcand_q && wact_bank &&
                    !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
     // ---- PULLIN: refresh ahead of schedule while not reading ---------------------------------
     localparam integer PIW = $clog2(PULLIN + 2);
@@ -426,6 +446,41 @@ module ot_hbm_r14_stream_pc_strap #(
                     (bkey < 7'd16 || bkey == 7'd20) && !(|(blk)) && sact >= 4'd6;   // bsel/bkey see a REFpb / ACT 5 cycles late
     wire ep_rdy = PI && ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= 4'(T_RREFD + 2) &&
                   ref_c > RW'(LEAD + 8);   // bsel at LEAD must not see a REFpb in flight
+    // PHYS_WACT 2: next-state mirrors of blk (the main sequential block below), then the registered eligibilities.
+    reg [31:0] blk_n;
+    always @* begin
+      blk_n = blk;
+      if (!PI) begin
+        if (REF_MODE && ref_c == RW'(LEAD)) blk_n = 32'b1 << bsel;
+      end else begin
+        if (ref_c == RW'(LEAD)) begin
+          if (ep) ;
+          else if (pin != 0 && !pi_idle) ;
+          else blk_n = 32'b1 << bsel;
+        end else if (ep_start) blk_n = 32'b1 << bsel;
+        else if (ep && |(blk & open)) blk_n = 32'b0;
+      end
+      if (row_fire && c_op == REFPB) blk_n = 32'b0;
+    end
+    wire ref_lead_nx = (ref_n == RW'(LEAD) || ref_n == RW'(LEAD + 1));
+    wire [31:0] bok_n = ~open_nx & ~blk_n & aok_zn & {8{rrdl_zn}};
+    wire [31:0] bank_ok_n = bok_n & ~({32{REF_MODE != 0 && ref_lead_nx}} & (32'b1 << bsel_nx));
+    if (PHYS_WACT == 2) begin : reg_wact
+      wire push_e = W && wr_v && wr_r;
+      wire [WQW-1:0] wp_e = WQW'(wq_rp + wq_n);
+      wire [WQ-1:0] pv_n = (wq_pv | (push_e ? (WQ'(1) << wp_e) : WQ'(0))) & ~((W && wr_ok) ? (WQ'(1) << wq_rp) : WQ'(0));
+      wire [31:0] push_oh = 32'b1 << wr_bank;
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin bok_q <= 32'hffffffff; ent_q <= 0; end
+        else begin
+          bok_q <= bok_n;
+          for (integer e = 0; e < WQ; e = e + 1)
+            ent_q[e] <= W && pv_n[e] && |(((push_e && wp_e == WQW'(e)) ? push_oh : wq_boh[e]) & bank_ok_n);
+        end
+    end else begin : no_reg_wact
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin bok_q <= 32'hffffffff; ent_q <= 0; end
+    end
     reg [31:0] r_oh;
     reg r_w;
     always @* begin

@@ -22,7 +22,7 @@ from pathlib import Path
 import sys
 s=Path(sys.argv[1]).read_text(); out=Path(sys.argv[2])
 m={'stale_head':[("wire[4:0]wpay_raddr=cv?rp+5'd1:rp;","wire[4:0]wpay_raddr=rp;")],
-   'wpay0':[("parameter integer WPAY=1\n)(","parameter integer WPAY=0\n)(")]}
+   'wpay0':[("parameter integer WPAY=1,\n","parameter integer WPAY=0,\n")]}
 for k,subs in m.items():
     t=s
     for a,b in subs:

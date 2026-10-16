@@ -84,10 +84,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:H-PCCTRL",
-  "branch": "claude/hpcctrl-0030",
-  "tag": "cfg-h6-nooverflight-west",
-  "purpose": "H6 after H4 GRT failure33 overflow: diagnostic full-M5 SRAM no-overflight reservation removed every capacity-zero SRAM pin-face marker (33->11 overflow). Remaining11 are positive-capacity channel overloads, mainly west x2..24/y133..134. Reserve the entire M5 macro footprint via OT_MEG_DEPTH_UM=48 using the same add/remove guard and ECO propagation; widen west logic/routing corridor34.56->56.16um by moving both SRAMs+21.6um and growing outline164.16x164.16->185.76x164.16, keeping east clearance. +3545.856um2/PC (+0.113467392mm2 for32PC), +0 cycles, same actual SRAM/logic/pin faces/layer cap/clock/signoff. Retain H4 RTL because H5 one-hot eligibility reduced gates but worsened TT placement diagnostic -29.2->-60.9ps; H4 production exact/mutants remain source-identical.",
+  "owner": "Claude:H-HARDEN-0600",
+  "branch": "claude/hharden-pcctrl-h7-0600",
+  "tag": "cfg-h7-qreg",
+  "purpose": "H7 = H6 geometry (185.76x164.16, full-M5 SRAM reservation, west corridor) + QREG=1 RTL. H6 route 0c263832f: DRC0/GRT0 but TT -50.14 ps, 888 D pins, all in four unchanged-cycle classes: skid head -> K legality/same-row -> accepted -> 2,048 queue-flop enables (296 paths, -41.3); ep -> queue[ep] 32:1 -> bank decode -> controller wq_boh/wq_older/wq_col (247, -46.6); blk -> bank eligibility -> 32-wide slot reduction -> age winner -> wab_oh/wab (36, -50.1); owner_fault -> identity address -> head_identity (16, -28.1). Fix: queue written at free slots (no accepted in the enable), push entry a maintained register, identity candidates read from registered addresses, controller PHYS_WACT 2 registers bank/slot write-ACT eligibility from exact next-state values. +0 cycles; lockstep miters vs H6 (leaf QREG 0/1 every output every edge; controller PHYS_WACT 0/1/2) PASS with 4+3 mutants rejected.",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -145,15 +145,32 @@
      "iverilog"
     ],
     "pass_regex": "PC_PHYSICAL_WRITE_ACT_GATE PASS"
+   },
+   {
+    "name": "qreg_miter",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_qreg_miter.sh {RUN}/bench/qreg",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CTRL_QREG_GATE PASS"
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "source": "results/arch/hbm_die_v15/pcctrl_h4_h5_1016/h6_drt/verdict.json",
+   "why": "H7 = H6 geometry (185.76x164.16, full-M5 SRAM reservation, west corridor) + QREG=1 RTL. H6 route 0c263832f: DRC0/GRT0 but TT -50.14 ps, 888 D pins, all in four unchanged-cycle classes: skid head -> K legality/same-row -> accepted -> 2,048 queue-flop enables (296 paths, -41.3); ep -> queue[ep] 32:1 -> bank decode -> controller wq_boh/wq_older/wq_col (247, -46.6); blk -> bank eligibility -> 32-wide slot reduction -> age winner -> wab_oh/wab (36, -50.1); owner_fault -> identity address -> head_identity (16, -28.1). Fix: queue written at free slots (no accepted in the enable), push entry a maintained register, identity candidates read from registered addresses, controller PHYS_WACT 2 registers bank/slot write-ACT eligibility from exact next-state values. +0 cycles; lockstep miters vs H6 (leaf QREG 0/1 every output every edge; controller PHYS_WACT 0/1/2) PASS with 4+3 mutants rejected."
+  }
  },
  "params": {
   "OREG": 1,
   "KREG": 1,
   "KRREG": 1,
   "RREG": 1,
-  "WPAY": 1
+  "WPAY": 1,
+  "QREG": 1
  },
  "children": [],
  "inter": [],
@@ -173,7 +190,7 @@
   "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
  },
  "io_tcl": "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl",
- "structural_change": "H6 after H4 GRT failure33 overflow: diagnostic full-M5 SRAM no-overflight reservation removed every capacity-zero SRAM pin-face marker (33->11 overflow). Remaining11 are positive-capacity channel overloads, mainly west x2..24/y133..134. Reserve the entire M5 macro footprint via OT_MEG_DEPTH_UM=48 using the same add/remove guard and ECO propagation; widen west logic/routing corridor34.56->56.16um by moving both SRAMs+21.6um and growing outline164.16x164.16->185.76x164.16, keeping east clearance. +3545.856um2/PC (+0.113467392mm2 for32PC), +0 cycles, same actual SRAM/logic/pin faces/layer cap/clock/signoff. Retain H4 RTL because H5 one-hot eligibility reduced gates but worsened TT placement diagnostic -29.2->-60.9ps; H4 production exact/mutants remain source-identical.",
+ "structural_change": "H7 = H6 geometry (185.76x164.16, full-M5 SRAM reservation, west corridor) + QREG=1 RTL. H6 route 0c263832f: DRC0/GRT0 but TT -50.14 ps, 888 D pins, all in four unchanged-cycle classes: skid head -> K legality/same-row -> accepted -> 2,048 queue-flop enables (296 paths, -41.3); ep -> queue[ep] 32:1 -> bank decode -> controller wq_boh/wq_older/wq_col (247, -46.6); blk -> bank eligibility -> 32-wide slot reduction -> age winner -> wab_oh/wab (36, -50.1); owner_fault -> identity address -> head_identity (16, -28.1). Fix: queue written at free slots (no accepted in the enable), push entry a maintained register, identity candidates read from registered addresses, controller PHYS_WACT 2 registers bank/slot write-ACT eligibility from exact next-state values. +0 cycles; lockstep miters vs H6 (leaf QREG 0/1 every output every edge; controller PHYS_WACT 0/1/2) PASS with 4+3 mutants rejected.",
  "clock": "spine",
  "spine_macro_leaf": true,
  "std_area_um2": 6327,
@@ -184,5 +201,10 @@
  "orfs_vars": {
   "OT_MEG_DEPTH_UM": 48
  },
- "slot_change_request": "H-PCCTRL H6 requests185.76x164.16um instead of164.16square; +0.11347mm2 for32PC. Explicit west channel expansion needed after measured positive-capacity congestion; HBM die lead notified in el1011-hbmdie.log."
+ "slot_change_request": "H-PCCTRL H6 requests185.76x164.16um instead of164.16square; +0.11347mm2 for32PC. Explicit west channel expansion needed after measured positive-capacity congestion; HBM die lead notified in el1011-hbmdie.log.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/hbm_die_v15/pcctrl_h4_h5_1016/h6_drt/verdict.json",
+  "why": "H7 = H6 geometry (185.76x164.16, full-M5 SRAM reservation, west corridor) + QREG=1 RTL. H6 route 0c263832f: DRC0/GRT0 but TT -50.14 ps, 888 D pins, all in four unchanged-cycle classes: skid head -> K legality/same-row -> accepted -> 2,048 queue-flop enables (296 paths, -41.3); ep -> queue[ep] 32:1 -> bank decode -> controller wq_boh/wq_older/wq_col (247, -46.6); blk -> bank eligibility -> 32-wide slot reduction -> age winner -> wab_oh/wab (36, -50.1); owner_fault -> identity address -> head_identity (16, -28.1). Fix: queue written at free slots (no accepted in the enable), push entry a maintained register, identity candidates read from registered addresses, controller PHYS_WACT 2 registers bank/slot write-ACT eligibility from exact next-state values. +0 cycles; lockstep miters vs H6 (leaf QREG 0/1 every output every edge; controller PHYS_WACT 0/1/2) PASS with 4+3 mutants rejected."
+ }
 }

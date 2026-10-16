@@ -9,11 +9,11 @@ module tb;
   reg [2:0] cred_ret=0;
   reg wr_v=0,wr_rd=0;
   reg [4:0] wr_bank=0,wr_col=0;
-  wire [1:0] desc_r,row_v,row_prio,col_v,busy,ref_fault,wr_r,col_we,col_aq;
-  wire [2:0] row_op[2];
-  wire [4:0] row_bank[2],col_bank[2],col_col[2];
-  wire [18:0] row_row[2];
-  for(genvar g=0;g<2;g=g+1)begin:impl
+  wire [2:0] desc_r,row_v,row_prio,col_v,busy,ref_fault,wr_r,col_we,col_aq;
+  wire [2:0] row_op[3];
+  wire [4:0] row_bank[3],col_bank[3],col_col[3];
+  wire [18:0] row_row[3];
+  for(genvar g=0;g<3;g=g+1)begin:impl
     ot_hbm_r14_stream_pc_strap #(.ENABLE(1),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),.PHYS_WACT(g)) dut(
       .clk(clk),.rst_n(rst_n),.slot_parity(slot_parity),.refresh_reload(refresh_reload),
       .desc_v(desc_v),.desc_r(desc_r[g]),.desc_row(desc_row),.desc_n(desc_n),.go(go),.next_posted(next_posted),
@@ -39,6 +39,12 @@ module tb;
       if({desc_r[0],row_v[0],row_prio[0],row_op[0],row_bank[0],row_row[0],col_v[0],col_bank[0],col_col[0],busy[0],ref_fault[0],wr_r[0],col_we[0],col_aq[0]} !==
          {desc_r[1],row_v[1],row_prio[1],row_op[1],row_bank[1],row_row[1],col_v[1],col_bank[1],col_col[1],busy[1],ref_fault[1],wr_r[1],col_we[1],col_aq[1]})
         $fatal(1,"physical_write_act mismatch edge%0d pushes%0d pops%0d",edges,pushes,pops);
+      // PHYS_WACT 2 (registered next-state eligibility) against the historical implementation, every output, every edge
+      if({desc_r[0],row_v[0],row_prio[0],row_op[0],row_bank[0],row_row[0],col_v[0],col_bank[0],col_col[0],busy[0],ref_fault[0],wr_r[0],col_we[0],col_aq[0]} !==
+         {desc_r[2],row_v[2],row_prio[2],row_op[2],row_bank[2],row_row[2],col_v[2],col_bank[2],col_col[2],busy[2],ref_fault[2],wr_r[2],col_we[2],col_aq[2]})
+        $fatal(1,"physical_write_act registered mismatch edge%0d pushes%0d pops%0d",edges,pushes,pops);
+      if(impl[2].dut.on.wq_act_physical!==impl[1].dut.on.wq_act_physical || impl[2].dut.on.wact_ok!==impl[1].dut.on.wact_ok)
+        $fatal(1,"physical_write_act registered eligibility mismatch edge%0d",edges);
       if(impl[0].dut.on.wcand!==impl[1].dut.on.wcand ||
          (impl[0].dut.on.wcand && {impl[0].dut.on.wab_n,impl[0].dut.on.wcrd_n}!=={impl[1].dut.on.wab_n,impl[1].dut.on.wcrd_n}))
         $fatal(1,"physical_write_act candidate mismatch edge%0d",edges);
