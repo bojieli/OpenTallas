@@ -279,7 +279,9 @@ module ot_qfd_xcol #(parameter integer HEAD_MUT = 0, parameter integer EAST = 1,
 `ifndef OT_QFD_XS_HARD
             ot_qfd_xs_leaf #(.READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .NCH(4)) u_leaf (
 `else
-            ot_qfd_xs_leaf #(.READ_PIN_PIPE(LEAF_READ_PIN_PIPE)) u_leaf (
+            // Parameter-free hardened master: actual view must be source-bound
+            // to the selected read latency; the parent never overrides a view.
+            ot_qfd_xs_leaf u_leaf (
 `endif
                 .clk(ck[1 + 4*h + j]), .rst_n(rst_n),
                 .w_v(cw_v[h][j]), .w_ep(cw_ep[h][j]), .w_off(cw_off[h][j]), .w_m(cw_m[h][j]), .w_d(cw_d[h][j]),
