@@ -144,8 +144,9 @@ def cmd_run(a):
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
                               + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_obdrop" if a.mut_obdrop else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
                               + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else "") + "".join("_" + x.lower() for x in a.define))
-    if len(bdir.name) > 120:   # long define lists overflowed NAME_MAX (255; smh_tile_rp1 bench, 10-15): stable short form
-        bdir = bdir.with_name(bdir.name[:80] + "_" + hashlib.sha256(bdir.name.encode()).hexdigest()[:16])
+    if len(bdir.name) > 200:   # H-SM-REPACK: long define lists overflow NAME_MAX (Errno 36); keep a readable prefix + digest
+        import hashlib
+        bdir = bdir.with_name(bdir.name[:160] + "_" + hashlib.sha1(bdir.name.encode()).hexdigest()[:16])
     cgdefs = (["-DOT_SMH_CG", "-DOT_SMH_CG_LOCKSTEP"] if a.cg else []) + (["-DOT_SMH_CG_MUT_LATE"] if a.cg_mut_late else []) + (["-DOT_SMH_CG_MUT_HOLD0"] if a.cg_mut_hold0 else []) + [f"-D{x}" for x in a.define]
     if a.cg and not a.smh:
         raise SystemExit("--cg needs --smh")
