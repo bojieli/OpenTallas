@@ -74,6 +74,10 @@ module ot_s81_hc_cseq #(
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
     localparam integer RP = RT + 2 + PAD;                         // return: relay + send + capture + padding
     reg [1:0] rsr;                                                // tile-local reset relay (2 flops at the pin)
+    // the srs pin loads ONLY rsr[0] (S-ELEM 10-16, native capture 192.8 ps at srs on pr4pk: the raw pin also fed the
+    // adapter's asynchronous reset AND -> both ot_reset_sync / reset-ack flops across the tile); the adapter's engine
+    // reset now takes the relayed rs_n like every other sk-domain flop here (and as c_rst_n takes crs_n). Reset only:
+    // assertion/release reach the adapter 2 sk edges later, no datapath cycle.
     always @(posedge sk) rsr <= {rsr[0], srs};
     wire rs_n = rsr[1];
     reg [1:0] crsr;                                      // same for the controller-clock reset
@@ -107,7 +111,7 @@ module ot_s81_hc_cseq #(
     ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
         .c_clk(cck), .c_rst_n(crs_n), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(cdv), .c_done_tag(cdt),
         .fault(a_flt), .online(online),
-        .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
+        .e_clk(sk), .e_rst_n(rs_n), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
         .e_done_v(dd[8]), .e_done_tag(dd[7:0]));
     reg       dv_q;
     reg [7:0] dt_q;
