@@ -1,0 +1,10269 @@
+{
+"complete": false,
+"source": "results/arch/hbm_die_v15/core4_sfu2_b3624/compact.graph.json",
+"nodes": {},
+"edges": [
+{
+"name": "phy_SW>pc_SW0:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW0",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW0>sm_SW0:SM_HBM",
+"source": [
+"pc_SW0",
+"SM_HBM"
+],
+"sink": [
+"sm_SW0",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW0>vmh_SW:SM_OUT",
+"source": [
+"sm_SW0",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW0:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW0:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW0:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW0:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW0:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW0:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW0:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW0:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW0>vmh_SW:HBM_VM",
+"source": [
+"pc_SW0",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW0:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW0",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW1:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW1",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW1>sm_SW1:SM_HBM",
+"source": [
+"pc_SW1",
+"SM_HBM"
+],
+"sink": [
+"sm_SW1",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW1>vmh_SW:SM_OUT",
+"source": [
+"sm_SW1",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW1:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW1:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW1:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW1:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW1:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW1:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW1:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW1:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW1>vmh_SW:HBM_VM",
+"source": [
+"pc_SW1",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW1:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW1",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW2:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW2",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW2>sm_SW2:SM_HBM",
+"source": [
+"pc_SW2",
+"SM_HBM"
+],
+"sink": [
+"sm_SW2",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW2>vmh_SW:SM_OUT",
+"source": [
+"sm_SW2",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW2:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW2:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW2:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW2:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW2:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW2:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW2:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW2:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW2>vmh_SW:HBM_VM",
+"source": [
+"pc_SW2",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW2:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW2",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW3:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW3",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW3>sm_SW3:SM_HBM",
+"source": [
+"pc_SW3",
+"SM_HBM"
+],
+"sink": [
+"sm_SW3",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW3>vmh_SW:SM_OUT",
+"source": [
+"sm_SW3",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW3:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW3:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW3:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW3:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW3:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW3:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW3:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW3:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW3>vmh_SW:HBM_VM",
+"source": [
+"pc_SW3",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW3:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW3",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW4:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW4",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW4>sm_SW4:SM_HBM",
+"source": [
+"pc_SW4",
+"SM_HBM"
+],
+"sink": [
+"sm_SW4",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW4>vmh_SW:SM_OUT",
+"source": [
+"sm_SW4",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW4:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW4:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW4:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW4:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW4:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW4:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW4:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW4:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW4>vmh_SW:HBM_VM",
+"source": [
+"pc_SW4",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW4:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW4",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW5:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW5",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW5>sm_SW5:SM_HBM",
+"source": [
+"pc_SW5",
+"SM_HBM"
+],
+"sink": [
+"sm_SW5",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW5>vmh_SW:SM_OUT",
+"source": [
+"sm_SW5",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW5:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW5:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW5:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW5:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW5:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW5:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW5:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW5:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW5>vmh_SW:HBM_VM",
+"source": [
+"pc_SW5",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW5:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW5",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW6:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW6",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW6>sm_SW6:SM_HBM",
+"source": [
+"pc_SW6",
+"SM_HBM"
+],
+"sink": [
+"sm_SW6",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW6>vmh_SW:SM_OUT",
+"source": [
+"sm_SW6",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW6:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW6:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW6:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW6:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW6:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW6:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW6:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW6:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW6>vmh_SW:HBM_VM",
+"source": [
+"pc_SW6",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW6:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW6",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SW>pc_SW7:HBM_K",
+"source": [
+"phy_SW",
+"HBM_K"
+],
+"sink": [
+"pc_SW7",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SW7>sm_SW7:SM_HBM",
+"source": [
+"pc_SW7",
+"SM_HBM"
+],
+"sink": [
+"sm_SW7",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SW7>vmh_SW:SM_OUT",
+"source": [
+"sm_SW7",
+"SM_OUT"
+],
+"sink": [
+"vmh_SW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SW0>sm_SW7:SM_X",
+"source": [
+"vmb_SW0",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW1>sm_SW7:SM_X",
+"source": [
+"vmb_SW1",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW2>sm_SW7:SM_X",
+"source": [
+"vmb_SW2",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW3>sm_SW7:SM_X",
+"source": [
+"vmb_SW3",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW4>sm_SW7:SM_X",
+"source": [
+"vmb_SW4",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW5>sm_SW7:SM_X",
+"source": [
+"vmb_SW5",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW6>sm_SW7:SM_X",
+"source": [
+"vmb_SW6",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SW7>sm_SW7:SM_X",
+"source": [
+"vmb_SW7",
+"SM_X"
+],
+"sink": [
+"sm_SW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SW7>vmh_SW:HBM_VM",
+"source": [
+"pc_SW7",
+"HBM_VM"
+],
+"sink": [
+"vmh_SW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>pc_SW7:VM_HBM",
+"source": [
+"vmh_SW",
+"VM_HBM"
+],
+"sink": [
+"pc_SW7",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW0:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW0",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW0>su_SW0:LG_SU",
+"source": [
+"vmb_SW0",
+"LG_SU"
+],
+"sink": [
+"su_SW0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW0>sfu_SW0:LG_SFU",
+"source": [
+"vmb_SW0",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW0>hc_SW0:LG_HC",
+"source": [
+"vmb_SW0",
+"LG_HC"
+],
+"sink": [
+"hc_SW0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW0>coll_SW:COLL_VM",
+"source": [
+"vmb_SW0",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW1:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW1",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW1>su_SW0:LG_SU",
+"source": [
+"vmb_SW1",
+"LG_SU"
+],
+"sink": [
+"su_SW0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW1>sfu_SW0:LG_SFU",
+"source": [
+"vmb_SW1",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW1>hc_SW0:LG_HC",
+"source": [
+"vmb_SW1",
+"LG_HC"
+],
+"sink": [
+"hc_SW0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW1>coll_SW:COLL_VM",
+"source": [
+"vmb_SW1",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW2:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW2",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW2>su_SW1:LG_SU",
+"source": [
+"vmb_SW2",
+"LG_SU"
+],
+"sink": [
+"su_SW1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW2>sfu_SW1:LG_SFU",
+"source": [
+"vmb_SW2",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW2>hc_SW1:LG_HC",
+"source": [
+"vmb_SW2",
+"LG_HC"
+],
+"sink": [
+"hc_SW1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW2>coll_SW:COLL_VM",
+"source": [
+"vmb_SW2",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW3:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW3",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW3>su_SW1:LG_SU",
+"source": [
+"vmb_SW3",
+"LG_SU"
+],
+"sink": [
+"su_SW1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW3>sfu_SW1:LG_SFU",
+"source": [
+"vmb_SW3",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW3>hc_SW1:LG_HC",
+"source": [
+"vmb_SW3",
+"LG_HC"
+],
+"sink": [
+"hc_SW1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW3>coll_SW:COLL_VM",
+"source": [
+"vmb_SW3",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW4:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW4",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW4>su_SW2:LG_SU",
+"source": [
+"vmb_SW4",
+"LG_SU"
+],
+"sink": [
+"su_SW2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW4>sfu_SW2:LG_SFU",
+"source": [
+"vmb_SW4",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW4>hc_SW2:LG_HC",
+"source": [
+"vmb_SW4",
+"LG_HC"
+],
+"sink": [
+"hc_SW2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW4>coll_SW:COLL_VM",
+"source": [
+"vmb_SW4",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW5:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW5",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW5>su_SW2:LG_SU",
+"source": [
+"vmb_SW5",
+"LG_SU"
+],
+"sink": [
+"su_SW2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW5>sfu_SW2:LG_SFU",
+"source": [
+"vmb_SW5",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW5>hc_SW2:LG_HC",
+"source": [
+"vmb_SW5",
+"LG_HC"
+],
+"sink": [
+"hc_SW2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW5>coll_SW:COLL_VM",
+"source": [
+"vmb_SW5",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW6:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW6",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW6>su_SW3:LG_SU",
+"source": [
+"vmb_SW6",
+"LG_SU"
+],
+"sink": [
+"su_SW3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW6>sfu_SW3:LG_SFU",
+"source": [
+"vmb_SW6",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW6>hc_SW3:LG_HC",
+"source": [
+"vmb_SW6",
+"LG_HC"
+],
+"sink": [
+"hc_SW3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW6>coll_SW:COLL_VM",
+"source": [
+"vmb_SW6",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SW>vmb_SW7:VM_HUB",
+"source": [
+"vmh_SW",
+"VM_HUB"
+],
+"sink": [
+"vmb_SW7",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SW7>su_SW3:LG_SU",
+"source": [
+"vmb_SW7",
+"LG_SU"
+],
+"sink": [
+"su_SW3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SW7>sfu_SW3:LG_SFU",
+"source": [
+"vmb_SW7",
+"LG_SFU"
+],
+"sink": [
+"sfu_SW3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SW7>hc_SW3:LG_HC",
+"source": [
+"vmb_SW7",
+"LG_HC"
+],
+"sink": [
+"hc_SW3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SW7>coll_SW:COLL_VM",
+"source": [
+"vmb_SW7",
+"COLL_VM"
+],
+"sink": [
+"coll_SW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "su_SW1>su_SW0:SU_CORE",
+"source": [
+"su_SW1",
+"SU_CORE"
+],
+"sink": [
+"su_SW0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_SW2>su_SW0:SU_CORE",
+"source": [
+"su_SW2",
+"SU_CORE"
+],
+"sink": [
+"su_SW0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_SW3>su_SW0:SU_CORE",
+"source": [
+"su_SW3",
+"SU_CORE"
+],
+"sink": [
+"su_SW0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "sfu_SW1>sfu_SW0:SFU_CORE",
+"source": [
+"sfu_SW1",
+"SFU_CORE"
+],
+"sink": [
+"sfu_SW0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_SW2>sfu_SW0:SFU_CORE",
+"source": [
+"sfu_SW2",
+"SFU_CORE"
+],
+"sink": [
+"sfu_SW0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_SW3>sfu_SW0:SFU_CORE",
+"source": [
+"sfu_SW3",
+"SFU_CORE"
+],
+"sink": [
+"sfu_SW0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "hc_SW>hc_eng:HC_ENG",
+"source": [
+"hc_SW",
+"HC_ENG"
+],
+"sink": [
+"hc_eng",
+"HC_ENG"
+],
+"bits": 2100,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "coll_SW>ep_S0:COLL_EP",
+"source": [
+"coll_SW",
+"COLL_EP"
+],
+"sink": [
+"ep_S0",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_S0>lk_S0:EP_SERDES",
+"source": [
+"ep_S0",
+"EP_SERDES"
+],
+"sink": [
+"lk_S0",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "coll_SW>ep_S1:COLL_EP",
+"source": [
+"coll_SW",
+"COLL_EP"
+],
+"sink": [
+"ep_S1",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_S1>lk_S1:EP_SERDES",
+"source": [
+"ep_S1",
+"EP_SERDES"
+],
+"sink": [
+"lk_S1",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "coll_SW>ep_S2:COLL_EP",
+"source": [
+"coll_SW",
+"COLL_EP"
+],
+"sink": [
+"ep_S2",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_S2>lk_S2:EP_SERDES",
+"source": [
+"ep_S2",
+"EP_SERDES"
+],
+"sink": [
+"lk_S2",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE0:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE0",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE0>sm_SE0:SM_HBM",
+"source": [
+"pc_SE0",
+"SM_HBM"
+],
+"sink": [
+"sm_SE0",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE0>vmh_SE:SM_OUT",
+"source": [
+"sm_SE0",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE0:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE0:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE0:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE0:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE0:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE0:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE0:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE0:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE0>vmh_SE:HBM_VM",
+"source": [
+"pc_SE0",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE0:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE0",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE1:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE1",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE1>sm_SE1:SM_HBM",
+"source": [
+"pc_SE1",
+"SM_HBM"
+],
+"sink": [
+"sm_SE1",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE1>vmh_SE:SM_OUT",
+"source": [
+"sm_SE1",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE1:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE1:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE1:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE1:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE1:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE1:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE1:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE1:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE1>vmh_SE:HBM_VM",
+"source": [
+"pc_SE1",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE1:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE1",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE2:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE2",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE2>sm_SE2:SM_HBM",
+"source": [
+"pc_SE2",
+"SM_HBM"
+],
+"sink": [
+"sm_SE2",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE2>vmh_SE:SM_OUT",
+"source": [
+"sm_SE2",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE2:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE2:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE2:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE2:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE2:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE2:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE2:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE2:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE2>vmh_SE:HBM_VM",
+"source": [
+"pc_SE2",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE2:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE2",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE3:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE3",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE3>sm_SE3:SM_HBM",
+"source": [
+"pc_SE3",
+"SM_HBM"
+],
+"sink": [
+"sm_SE3",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE3>vmh_SE:SM_OUT",
+"source": [
+"sm_SE3",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE3:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE3:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE3:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE3:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE3:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE3:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE3:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE3:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE3>vmh_SE:HBM_VM",
+"source": [
+"pc_SE3",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE3:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE3",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE4:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE4",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE4>sm_SE4:SM_HBM",
+"source": [
+"pc_SE4",
+"SM_HBM"
+],
+"sink": [
+"sm_SE4",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE4>vmh_SE:SM_OUT",
+"source": [
+"sm_SE4",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE4:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE4:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE4:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE4:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE4:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE4:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE4:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE4:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE4>vmh_SE:HBM_VM",
+"source": [
+"pc_SE4",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE4:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE4",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE5:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE5",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE5>sm_SE5:SM_HBM",
+"source": [
+"pc_SE5",
+"SM_HBM"
+],
+"sink": [
+"sm_SE5",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE5>vmh_SE:SM_OUT",
+"source": [
+"sm_SE5",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE5:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE5:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE5:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE5:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE5:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE5:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE5:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE5:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE5>vmh_SE:HBM_VM",
+"source": [
+"pc_SE5",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE5:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE5",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE6:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE6",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE6>sm_SE6:SM_HBM",
+"source": [
+"pc_SE6",
+"SM_HBM"
+],
+"sink": [
+"sm_SE6",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE6>vmh_SE:SM_OUT",
+"source": [
+"sm_SE6",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE6:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE6:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE6:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE6:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE6:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE6:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE6:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE6:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE6>vmh_SE:HBM_VM",
+"source": [
+"pc_SE6",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE6:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE6",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_SE>pc_SE7:HBM_K",
+"source": [
+"phy_SE",
+"HBM_K"
+],
+"sink": [
+"pc_SE7",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_SE7>sm_SE7:SM_HBM",
+"source": [
+"pc_SE7",
+"SM_HBM"
+],
+"sink": [
+"sm_SE7",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_SE7>vmh_SE:SM_OUT",
+"source": [
+"sm_SE7",
+"SM_OUT"
+],
+"sink": [
+"vmh_SE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_SE0>sm_SE7:SM_X",
+"source": [
+"vmb_SE0",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE1>sm_SE7:SM_X",
+"source": [
+"vmb_SE1",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE2>sm_SE7:SM_X",
+"source": [
+"vmb_SE2",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE3>sm_SE7:SM_X",
+"source": [
+"vmb_SE3",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE4>sm_SE7:SM_X",
+"source": [
+"vmb_SE4",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE5>sm_SE7:SM_X",
+"source": [
+"vmb_SE5",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE6>sm_SE7:SM_X",
+"source": [
+"vmb_SE6",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_SE7>sm_SE7:SM_X",
+"source": [
+"vmb_SE7",
+"SM_X"
+],
+"sink": [
+"sm_SE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_SE7>vmh_SE:HBM_VM",
+"source": [
+"pc_SE7",
+"HBM_VM"
+],
+"sink": [
+"vmh_SE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>pc_SE7:VM_HBM",
+"source": [
+"vmh_SE",
+"VM_HBM"
+],
+"sink": [
+"pc_SE7",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE0:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE0",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE0>su_SE0:LG_SU",
+"source": [
+"vmb_SE0",
+"LG_SU"
+],
+"sink": [
+"su_SE0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE0>sfu_SE0:LG_SFU",
+"source": [
+"vmb_SE0",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE0>hc_SE0:LG_HC",
+"source": [
+"vmb_SE0",
+"LG_HC"
+],
+"sink": [
+"hc_SE0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE0>coll_SE:COLL_VM",
+"source": [
+"vmb_SE0",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE1:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE1",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE1>su_SE0:LG_SU",
+"source": [
+"vmb_SE1",
+"LG_SU"
+],
+"sink": [
+"su_SE0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE1>sfu_SE0:LG_SFU",
+"source": [
+"vmb_SE1",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE1>hc_SE0:LG_HC",
+"source": [
+"vmb_SE1",
+"LG_HC"
+],
+"sink": [
+"hc_SE0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE1>coll_SE:COLL_VM",
+"source": [
+"vmb_SE1",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE2:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE2",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE2>su_SE1:LG_SU",
+"source": [
+"vmb_SE2",
+"LG_SU"
+],
+"sink": [
+"su_SE1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE2>sfu_SE1:LG_SFU",
+"source": [
+"vmb_SE2",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE2>hc_SE1:LG_HC",
+"source": [
+"vmb_SE2",
+"LG_HC"
+],
+"sink": [
+"hc_SE1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE2>coll_SE:COLL_VM",
+"source": [
+"vmb_SE2",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE3:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE3",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE3>su_SE1:LG_SU",
+"source": [
+"vmb_SE3",
+"LG_SU"
+],
+"sink": [
+"su_SE1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE3>sfu_SE1:LG_SFU",
+"source": [
+"vmb_SE3",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE3>hc_SE1:LG_HC",
+"source": [
+"vmb_SE3",
+"LG_HC"
+],
+"sink": [
+"hc_SE1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE3>coll_SE:COLL_VM",
+"source": [
+"vmb_SE3",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE4:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE4",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE4>su_SE2:LG_SU",
+"source": [
+"vmb_SE4",
+"LG_SU"
+],
+"sink": [
+"su_SE2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE4>sfu_SE2:LG_SFU",
+"source": [
+"vmb_SE4",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE4>hc_SE2:LG_HC",
+"source": [
+"vmb_SE4",
+"LG_HC"
+],
+"sink": [
+"hc_SE2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE4>coll_SE:COLL_VM",
+"source": [
+"vmb_SE4",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE5:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE5",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE5>su_SE2:LG_SU",
+"source": [
+"vmb_SE5",
+"LG_SU"
+],
+"sink": [
+"su_SE2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE5>sfu_SE2:LG_SFU",
+"source": [
+"vmb_SE5",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE5>hc_SE2:LG_HC",
+"source": [
+"vmb_SE5",
+"LG_HC"
+],
+"sink": [
+"hc_SE2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE5>coll_SE:COLL_VM",
+"source": [
+"vmb_SE5",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE6:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE6",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE6>su_SE3:LG_SU",
+"source": [
+"vmb_SE6",
+"LG_SU"
+],
+"sink": [
+"su_SE3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE6>sfu_SE3:LG_SFU",
+"source": [
+"vmb_SE6",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE6>hc_SE3:LG_HC",
+"source": [
+"vmb_SE6",
+"LG_HC"
+],
+"sink": [
+"hc_SE3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE6>coll_SE:COLL_VM",
+"source": [
+"vmb_SE6",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_SE>vmb_SE7:VM_HUB",
+"source": [
+"vmh_SE",
+"VM_HUB"
+],
+"sink": [
+"vmb_SE7",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_SE7>su_SE3:LG_SU",
+"source": [
+"vmb_SE7",
+"LG_SU"
+],
+"sink": [
+"su_SE3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_SE7>sfu_SE3:LG_SFU",
+"source": [
+"vmb_SE7",
+"LG_SFU"
+],
+"sink": [
+"sfu_SE3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_SE7>hc_SE3:LG_HC",
+"source": [
+"vmb_SE7",
+"LG_HC"
+],
+"sink": [
+"hc_SE3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_SE7>coll_SE:COLL_VM",
+"source": [
+"vmb_SE7",
+"COLL_VM"
+],
+"sink": [
+"coll_SE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "su_SE1>su_SE0:SU_CORE",
+"source": [
+"su_SE1",
+"SU_CORE"
+],
+"sink": [
+"su_SE0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_SE2>su_SE0:SU_CORE",
+"source": [
+"su_SE2",
+"SU_CORE"
+],
+"sink": [
+"su_SE0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_SE3>su_SE0:SU_CORE",
+"source": [
+"su_SE3",
+"SU_CORE"
+],
+"sink": [
+"su_SE0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "sfu_SE1>sfu_SE0:SFU_CORE",
+"source": [
+"sfu_SE1",
+"SFU_CORE"
+],
+"sink": [
+"sfu_SE0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_SE2>sfu_SE0:SFU_CORE",
+"source": [
+"sfu_SE2",
+"SFU_CORE"
+],
+"sink": [
+"sfu_SE0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_SE3>sfu_SE0:SFU_CORE",
+"source": [
+"sfu_SE3",
+"SFU_CORE"
+],
+"sink": [
+"sfu_SE0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "hc_SE>hc_eng:HC_ENG",
+"source": [
+"hc_SE",
+"HC_ENG"
+],
+"sink": [
+"hc_eng",
+"HC_ENG"
+],
+"bits": 2100,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "coll_SE>ep_S3:COLL_EP",
+"source": [
+"coll_SE",
+"COLL_EP"
+],
+"sink": [
+"ep_S3",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_S3>lk_S3:EP_SERDES",
+"source": [
+"ep_S3",
+"EP_SERDES"
+],
+"sink": [
+"lk_S3",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "coll_SE>ep_S4:COLL_EP",
+"source": [
+"coll_SE",
+"COLL_EP"
+],
+"sink": [
+"ep_S4",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_S4>lk_S4:EP_SERDES",
+"source": [
+"ep_S4",
+"EP_SERDES"
+],
+"sink": [
+"lk_S4",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW0:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW0",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW0>sm_NW0:SM_HBM",
+"source": [
+"pc_NW0",
+"SM_HBM"
+],
+"sink": [
+"sm_NW0",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW0>vmh_NW:SM_OUT",
+"source": [
+"sm_NW0",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW0:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW0:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW0:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW0:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW0:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW0:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW0:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW0:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW0>vmh_NW:HBM_VM",
+"source": [
+"pc_NW0",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW0:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW0",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW1:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW1",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW1>sm_NW1:SM_HBM",
+"source": [
+"pc_NW1",
+"SM_HBM"
+],
+"sink": [
+"sm_NW1",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW1>vmh_NW:SM_OUT",
+"source": [
+"sm_NW1",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW1:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW1:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW1:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW1:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW1:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW1:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW1:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW1:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW1>vmh_NW:HBM_VM",
+"source": [
+"pc_NW1",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW1:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW1",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW2:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW2",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW2>sm_NW2:SM_HBM",
+"source": [
+"pc_NW2",
+"SM_HBM"
+],
+"sink": [
+"sm_NW2",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW2>vmh_NW:SM_OUT",
+"source": [
+"sm_NW2",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW2:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW2:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW2:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW2:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW2:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW2:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW2:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW2:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW2>vmh_NW:HBM_VM",
+"source": [
+"pc_NW2",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW2:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW2",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW3:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW3",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW3>sm_NW3:SM_HBM",
+"source": [
+"pc_NW3",
+"SM_HBM"
+],
+"sink": [
+"sm_NW3",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW3>vmh_NW:SM_OUT",
+"source": [
+"sm_NW3",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW3:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW3:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW3:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW3:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW3:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW3:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW3:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW3:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW3>vmh_NW:HBM_VM",
+"source": [
+"pc_NW3",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW3:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW3",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW4:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW4",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW4>sm_NW4:SM_HBM",
+"source": [
+"pc_NW4",
+"SM_HBM"
+],
+"sink": [
+"sm_NW4",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW4>vmh_NW:SM_OUT",
+"source": [
+"sm_NW4",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW4:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW4:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW4:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW4:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW4:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW4:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW4:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW4:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW4>vmh_NW:HBM_VM",
+"source": [
+"pc_NW4",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW4:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW4",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW5:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW5",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW5>sm_NW5:SM_HBM",
+"source": [
+"pc_NW5",
+"SM_HBM"
+],
+"sink": [
+"sm_NW5",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW5>vmh_NW:SM_OUT",
+"source": [
+"sm_NW5",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW5:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW5:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW5:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW5:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW5:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW5:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW5:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW5:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW5>vmh_NW:HBM_VM",
+"source": [
+"pc_NW5",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW5:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW5",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW6:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW6",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW6>sm_NW6:SM_HBM",
+"source": [
+"pc_NW6",
+"SM_HBM"
+],
+"sink": [
+"sm_NW6",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW6>vmh_NW:SM_OUT",
+"source": [
+"sm_NW6",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW6:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW6:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW6:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW6:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW6:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW6:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW6:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW6:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW6>vmh_NW:HBM_VM",
+"source": [
+"pc_NW6",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW6:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW6",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NW>pc_NW7:HBM_K",
+"source": [
+"phy_NW",
+"HBM_K"
+],
+"sink": [
+"pc_NW7",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NW7>sm_NW7:SM_HBM",
+"source": [
+"pc_NW7",
+"SM_HBM"
+],
+"sink": [
+"sm_NW7",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NW7>vmh_NW:SM_OUT",
+"source": [
+"sm_NW7",
+"SM_OUT"
+],
+"sink": [
+"vmh_NW",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NW0>sm_NW7:SM_X",
+"source": [
+"vmb_NW0",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW1>sm_NW7:SM_X",
+"source": [
+"vmb_NW1",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW2>sm_NW7:SM_X",
+"source": [
+"vmb_NW2",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW3>sm_NW7:SM_X",
+"source": [
+"vmb_NW3",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW4>sm_NW7:SM_X",
+"source": [
+"vmb_NW4",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW5>sm_NW7:SM_X",
+"source": [
+"vmb_NW5",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW6>sm_NW7:SM_X",
+"source": [
+"vmb_NW6",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NW7>sm_NW7:SM_X",
+"source": [
+"vmb_NW7",
+"SM_X"
+],
+"sink": [
+"sm_NW7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NW7>vmh_NW:HBM_VM",
+"source": [
+"pc_NW7",
+"HBM_VM"
+],
+"sink": [
+"vmh_NW",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>pc_NW7:VM_HBM",
+"source": [
+"vmh_NW",
+"VM_HBM"
+],
+"sink": [
+"pc_NW7",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW0:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW0",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW0>su_NW0:LG_SU",
+"source": [
+"vmb_NW0",
+"LG_SU"
+],
+"sink": [
+"su_NW0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW0>sfu_NW0:LG_SFU",
+"source": [
+"vmb_NW0",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW0>hc_NW0:LG_HC",
+"source": [
+"vmb_NW0",
+"LG_HC"
+],
+"sink": [
+"hc_NW0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW0>coll_NW:COLL_VM",
+"source": [
+"vmb_NW0",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW1:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW1",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW1>su_NW0:LG_SU",
+"source": [
+"vmb_NW1",
+"LG_SU"
+],
+"sink": [
+"su_NW0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW1>sfu_NW0:LG_SFU",
+"source": [
+"vmb_NW1",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW1>hc_NW0:LG_HC",
+"source": [
+"vmb_NW1",
+"LG_HC"
+],
+"sink": [
+"hc_NW0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW1>coll_NW:COLL_VM",
+"source": [
+"vmb_NW1",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW2:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW2",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW2>su_NW1:LG_SU",
+"source": [
+"vmb_NW2",
+"LG_SU"
+],
+"sink": [
+"su_NW1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW2>sfu_NW1:LG_SFU",
+"source": [
+"vmb_NW2",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW2>hc_NW1:LG_HC",
+"source": [
+"vmb_NW2",
+"LG_HC"
+],
+"sink": [
+"hc_NW1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW2>coll_NW:COLL_VM",
+"source": [
+"vmb_NW2",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW3:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW3",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW3>su_NW1:LG_SU",
+"source": [
+"vmb_NW3",
+"LG_SU"
+],
+"sink": [
+"su_NW1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW3>sfu_NW1:LG_SFU",
+"source": [
+"vmb_NW3",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW3>hc_NW1:LG_HC",
+"source": [
+"vmb_NW3",
+"LG_HC"
+],
+"sink": [
+"hc_NW1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW3>coll_NW:COLL_VM",
+"source": [
+"vmb_NW3",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW4:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW4",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW4>su_NW2:LG_SU",
+"source": [
+"vmb_NW4",
+"LG_SU"
+],
+"sink": [
+"su_NW2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW4>sfu_NW2:LG_SFU",
+"source": [
+"vmb_NW4",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW4>hc_NW2:LG_HC",
+"source": [
+"vmb_NW4",
+"LG_HC"
+],
+"sink": [
+"hc_NW2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW4>coll_NW:COLL_VM",
+"source": [
+"vmb_NW4",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW5:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW5",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW5>su_NW2:LG_SU",
+"source": [
+"vmb_NW5",
+"LG_SU"
+],
+"sink": [
+"su_NW2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW5>sfu_NW2:LG_SFU",
+"source": [
+"vmb_NW5",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW5>hc_NW2:LG_HC",
+"source": [
+"vmb_NW5",
+"LG_HC"
+],
+"sink": [
+"hc_NW2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW5>coll_NW:COLL_VM",
+"source": [
+"vmb_NW5",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW6:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW6",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW6>su_NW3:LG_SU",
+"source": [
+"vmb_NW6",
+"LG_SU"
+],
+"sink": [
+"su_NW3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW6>sfu_NW3:LG_SFU",
+"source": [
+"vmb_NW6",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW6>hc_NW3:LG_HC",
+"source": [
+"vmb_NW6",
+"LG_HC"
+],
+"sink": [
+"hc_NW3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW6>coll_NW:COLL_VM",
+"source": [
+"vmb_NW6",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NW>vmb_NW7:VM_HUB",
+"source": [
+"vmh_NW",
+"VM_HUB"
+],
+"sink": [
+"vmb_NW7",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NW7>su_NW3:LG_SU",
+"source": [
+"vmb_NW7",
+"LG_SU"
+],
+"sink": [
+"su_NW3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NW7>sfu_NW3:LG_SFU",
+"source": [
+"vmb_NW7",
+"LG_SFU"
+],
+"sink": [
+"sfu_NW3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NW7>hc_NW3:LG_HC",
+"source": [
+"vmb_NW7",
+"LG_HC"
+],
+"sink": [
+"hc_NW3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NW7>coll_NW:COLL_VM",
+"source": [
+"vmb_NW7",
+"COLL_VM"
+],
+"sink": [
+"coll_NW",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "su_NW1>su_NW0:SU_CORE",
+"source": [
+"su_NW1",
+"SU_CORE"
+],
+"sink": [
+"su_NW0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_NW2>su_NW0:SU_CORE",
+"source": [
+"su_NW2",
+"SU_CORE"
+],
+"sink": [
+"su_NW0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_NW3>su_NW0:SU_CORE",
+"source": [
+"su_NW3",
+"SU_CORE"
+],
+"sink": [
+"su_NW0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "sfu_NW1>sfu_NW0:SFU_CORE",
+"source": [
+"sfu_NW1",
+"SFU_CORE"
+],
+"sink": [
+"sfu_NW0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_NW2>sfu_NW0:SFU_CORE",
+"source": [
+"sfu_NW2",
+"SFU_CORE"
+],
+"sink": [
+"sfu_NW0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_NW3>sfu_NW0:SFU_CORE",
+"source": [
+"sfu_NW3",
+"SFU_CORE"
+],
+"sink": [
+"sfu_NW0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "hc_NW>hc_eng:HC_ENG",
+"source": [
+"hc_NW",
+"HC_ENG"
+],
+"sink": [
+"hc_eng",
+"HC_ENG"
+],
+"bits": 2100,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "coll_NW>ep_N0:COLL_EP",
+"source": [
+"coll_NW",
+"COLL_EP"
+],
+"sink": [
+"ep_N0",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_N0>lk_N0:EP_SERDES",
+"source": [
+"ep_N0",
+"EP_SERDES"
+],
+"sink": [
+"lk_N0",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "coll_NW>ep_N1:COLL_EP",
+"source": [
+"coll_NW",
+"COLL_EP"
+],
+"sink": [
+"ep_N1",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_N1>lk_N1:EP_SERDES",
+"source": [
+"ep_N1",
+"EP_SERDES"
+],
+"sink": [
+"lk_N1",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE0:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE0",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE0>sm_NE0:SM_HBM",
+"source": [
+"pc_NE0",
+"SM_HBM"
+],
+"sink": [
+"sm_NE0",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE0>vmh_NE:SM_OUT",
+"source": [
+"sm_NE0",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE0:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE0:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE0:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE0:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE0:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE0:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE0:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE0:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE0",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE0>vmh_NE:HBM_VM",
+"source": [
+"pc_NE0",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE0:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE0",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE1:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE1",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE1>sm_NE1:SM_HBM",
+"source": [
+"pc_NE1",
+"SM_HBM"
+],
+"sink": [
+"sm_NE1",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE1>vmh_NE:SM_OUT",
+"source": [
+"sm_NE1",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE1:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE1:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE1:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE1:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE1:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE1:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE1:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE1:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE1",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE1>vmh_NE:HBM_VM",
+"source": [
+"pc_NE1",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE1:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE1",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE2:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE2",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE2>sm_NE2:SM_HBM",
+"source": [
+"pc_NE2",
+"SM_HBM"
+],
+"sink": [
+"sm_NE2",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE2>vmh_NE:SM_OUT",
+"source": [
+"sm_NE2",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE2:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE2:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE2:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE2:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE2:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE2:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE2:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE2:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE2",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE2>vmh_NE:HBM_VM",
+"source": [
+"pc_NE2",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE2:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE2",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE3:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE3",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE3>sm_NE3:SM_HBM",
+"source": [
+"pc_NE3",
+"SM_HBM"
+],
+"sink": [
+"sm_NE3",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE3>vmh_NE:SM_OUT",
+"source": [
+"sm_NE3",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE3:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE3:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE3:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE3:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE3:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE3:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE3:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE3:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE3",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE3>vmh_NE:HBM_VM",
+"source": [
+"pc_NE3",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE3:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE3",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE4:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE4",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE4>sm_NE4:SM_HBM",
+"source": [
+"pc_NE4",
+"SM_HBM"
+],
+"sink": [
+"sm_NE4",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE4>vmh_NE:SM_OUT",
+"source": [
+"sm_NE4",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE4:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE4:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE4:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE4:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE4:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE4:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE4:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE4:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE4",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE4>vmh_NE:HBM_VM",
+"source": [
+"pc_NE4",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE4:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE4",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE5:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE5",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE5>sm_NE5:SM_HBM",
+"source": [
+"pc_NE5",
+"SM_HBM"
+],
+"sink": [
+"sm_NE5",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE5>vmh_NE:SM_OUT",
+"source": [
+"sm_NE5",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE5:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE5:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE5:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE5:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE5:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE5:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE5:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE5:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE5",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE5>vmh_NE:HBM_VM",
+"source": [
+"pc_NE5",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE5:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE5",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE6:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE6",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE6>sm_NE6:SM_HBM",
+"source": [
+"pc_NE6",
+"SM_HBM"
+],
+"sink": [
+"sm_NE6",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE6>vmh_NE:SM_OUT",
+"source": [
+"sm_NE6",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE6:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE6:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE6:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE6:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE6:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE6:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE6:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE6:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE6",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE6>vmh_NE:HBM_VM",
+"source": [
+"pc_NE6",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE6:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE6",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "phy_NE>pc_NE7:HBM_K",
+"source": [
+"phy_NE",
+"HBM_K"
+],
+"sink": [
+"pc_NE7",
+"HBM_K"
+],
+"bits": 2212,
+"clock": "HBM_K",
+"binding": "SM_hbm"
+},
+{
+"name": "pc_NE7>sm_NE7:SM_HBM",
+"source": [
+"pc_NE7",
+"SM_HBM"
+],
+"sink": [
+"sm_NE7",
+"SM_HBM"
+],
+"bits": 1132,
+"clock": "SM_HBM",
+"binding": "SM_hbm"
+},
+{
+"name": "sm_NE7>vmh_NE:SM_OUT",
+"source": [
+"sm_NE7",
+"SM_OUT"
+],
+"sink": [
+"vmh_NE",
+"SM_OUT"
+],
+"bits": 270,
+"clock": "SM_OUT",
+"binding": "SM_out"
+},
+{
+"name": "vmb_NE0>sm_NE7:SM_X",
+"source": [
+"vmb_NE0",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE1>sm_NE7:SM_X",
+"source": [
+"vmb_NE1",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE2>sm_NE7:SM_X",
+"source": [
+"vmb_NE2",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE3>sm_NE7:SM_X",
+"source": [
+"vmb_NE3",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE4>sm_NE7:SM_X",
+"source": [
+"vmb_NE4",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE5>sm_NE7:SM_X",
+"source": [
+"vmb_NE5",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE6>sm_NE7:SM_X",
+"source": [
+"vmb_NE6",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "vmb_NE7>sm_NE7:SM_X",
+"source": [
+"vmb_NE7",
+"SM_X"
+],
+"sink": [
+"sm_NE7",
+"SM_X"
+],
+"bits": 273,
+"clock": "SM_X",
+"binding": "SM_x"
+},
+{
+"name": "pc_NE7>vmh_NE:HBM_VM",
+"source": [
+"pc_NE7",
+"HBM_VM"
+],
+"sink": [
+"vmh_NE",
+"HBM_VM"
+],
+"bits": 256,
+"clock": "HBM_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>pc_NE7:VM_HBM",
+"source": [
+"vmh_NE",
+"VM_HBM"
+],
+"sink": [
+"pc_NE7",
+"VM_HBM"
+],
+"bits": 256,
+"clock": "VM_HBM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE0:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE0",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE0>su_NE0:LG_SU",
+"source": [
+"vmb_NE0",
+"LG_SU"
+],
+"sink": [
+"su_NE0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE0>sfu_NE0:LG_SFU",
+"source": [
+"vmb_NE0",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE0>hc_NE0:LG_HC",
+"source": [
+"vmb_NE0",
+"LG_HC"
+],
+"sink": [
+"hc_NE0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE0>coll_NE:COLL_VM",
+"source": [
+"vmb_NE0",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE1:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE1",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE1>su_NE0:LG_SU",
+"source": [
+"vmb_NE1",
+"LG_SU"
+],
+"sink": [
+"su_NE0",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE1>sfu_NE0:LG_SFU",
+"source": [
+"vmb_NE1",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE0",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE1>hc_NE0:LG_HC",
+"source": [
+"vmb_NE1",
+"LG_HC"
+],
+"sink": [
+"hc_NE0",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE1>coll_NE:COLL_VM",
+"source": [
+"vmb_NE1",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE2:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE2",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE2>su_NE1:LG_SU",
+"source": [
+"vmb_NE2",
+"LG_SU"
+],
+"sink": [
+"su_NE1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE2>sfu_NE1:LG_SFU",
+"source": [
+"vmb_NE2",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE2>hc_NE1:LG_HC",
+"source": [
+"vmb_NE2",
+"LG_HC"
+],
+"sink": [
+"hc_NE1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE2>coll_NE:COLL_VM",
+"source": [
+"vmb_NE2",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE3:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE3",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE3>su_NE1:LG_SU",
+"source": [
+"vmb_NE3",
+"LG_SU"
+],
+"sink": [
+"su_NE1",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE3>sfu_NE1:LG_SFU",
+"source": [
+"vmb_NE3",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE1",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE3>hc_NE1:LG_HC",
+"source": [
+"vmb_NE3",
+"LG_HC"
+],
+"sink": [
+"hc_NE1",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE3>coll_NE:COLL_VM",
+"source": [
+"vmb_NE3",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE4:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE4",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE4>su_NE2:LG_SU",
+"source": [
+"vmb_NE4",
+"LG_SU"
+],
+"sink": [
+"su_NE2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE4>sfu_NE2:LG_SFU",
+"source": [
+"vmb_NE4",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE4>hc_NE2:LG_HC",
+"source": [
+"vmb_NE4",
+"LG_HC"
+],
+"sink": [
+"hc_NE2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE4>coll_NE:COLL_VM",
+"source": [
+"vmb_NE4",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE5:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE5",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE5>su_NE2:LG_SU",
+"source": [
+"vmb_NE5",
+"LG_SU"
+],
+"sink": [
+"su_NE2",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE5>sfu_NE2:LG_SFU",
+"source": [
+"vmb_NE5",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE2",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE5>hc_NE2:LG_HC",
+"source": [
+"vmb_NE5",
+"LG_HC"
+],
+"sink": [
+"hc_NE2",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE5>coll_NE:COLL_VM",
+"source": [
+"vmb_NE5",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE6:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE6",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE6>su_NE3:LG_SU",
+"source": [
+"vmb_NE6",
+"LG_SU"
+],
+"sink": [
+"su_NE3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE6>sfu_NE3:LG_SFU",
+"source": [
+"vmb_NE6",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE6>hc_NE3:LG_HC",
+"source": [
+"vmb_NE6",
+"LG_HC"
+],
+"sink": [
+"hc_NE3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE6>coll_NE:COLL_VM",
+"source": [
+"vmb_NE6",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "vmh_NE>vmb_NE7:VM_HUB",
+"source": [
+"vmh_NE",
+"VM_HUB"
+],
+"sink": [
+"vmb_NE7",
+"VM_HUB"
+],
+"bits": 538,
+"clock": "VM_HUB",
+"binding": null
+},
+{
+"name": "vmb_NE7>su_NE3:LG_SU",
+"source": [
+"vmb_NE7",
+"LG_SU"
+],
+"sink": [
+"su_NE3",
+"LG_SU"
+],
+"bits": 556,
+"clock": "LG_SU",
+"binding": "SU_vm"
+},
+{
+"name": "vmb_NE7>sfu_NE3:LG_SFU",
+"source": [
+"vmb_NE7",
+"LG_SFU"
+],
+"sink": [
+"sfu_NE3",
+"LG_SFU"
+],
+"bits": 556,
+"clock": "LG_SFU",
+"binding": "SFU_vm"
+},
+{
+"name": "vmb_NE7>hc_NE3:LG_HC",
+"source": [
+"vmb_NE7",
+"LG_HC"
+],
+"sink": [
+"hc_NE3",
+"LG_HC"
+],
+"bits": 556,
+"clock": "LG_HC",
+"binding": "HC_vm"
+},
+{
+"name": "vmb_NE7>coll_NE:COLL_VM",
+"source": [
+"vmb_NE7",
+"COLL_VM"
+],
+"sink": [
+"coll_NE",
+"COLL_VM"
+],
+"bits": 555,
+"clock": "COLL_VM",
+"binding": null
+},
+{
+"name": "su_NE1>su_NE0:SU_CORE",
+"source": [
+"su_NE1",
+"SU_CORE"
+],
+"sink": [
+"su_NE0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_NE2>su_NE0:SU_CORE",
+"source": [
+"su_NE2",
+"SU_CORE"
+],
+"sink": [
+"su_NE0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "su_NE3>su_NE0:SU_CORE",
+"source": [
+"su_NE3",
+"SU_CORE"
+],
+"sink": [
+"su_NE0",
+"SU_CORE"
+],
+"bits": 256,
+"clock": "SU_CORE",
+"binding": null
+},
+{
+"name": "sfu_NE1>sfu_NE0:SFU_CORE",
+"source": [
+"sfu_NE1",
+"SFU_CORE"
+],
+"sink": [
+"sfu_NE0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_NE2>sfu_NE0:SFU_CORE",
+"source": [
+"sfu_NE2",
+"SFU_CORE"
+],
+"sink": [
+"sfu_NE0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "sfu_NE3>sfu_NE0:SFU_CORE",
+"source": [
+"sfu_NE3",
+"SFU_CORE"
+],
+"sink": [
+"sfu_NE0",
+"SFU_CORE"
+],
+"bits": 256,
+"clock": "SFU_CORE",
+"binding": null
+},
+{
+"name": "hc_NE>hc_eng:HC_ENG",
+"source": [
+"hc_NE",
+"HC_ENG"
+],
+"sink": [
+"hc_eng",
+"HC_ENG"
+],
+"bits": 2100,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "coll_NE>ep_N2:COLL_EP",
+"source": [
+"coll_NE",
+"COLL_EP"
+],
+"sink": [
+"ep_N2",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_N2>lk_N2:EP_SERDES",
+"source": [
+"ep_N2",
+"EP_SERDES"
+],
+"sink": [
+"lk_N2",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "coll_NE>ep_N3:COLL_EP",
+"source": [
+"coll_NE",
+"COLL_EP"
+],
+"sink": [
+"ep_N3",
+"COLL_EP"
+],
+"bits": 1224,
+"clock": "COLL_EP",
+"binding": null
+},
+{
+"name": "ep_N3>lk_N3:EP_SERDES",
+"source": [
+"ep_N3",
+"EP_SERDES"
+],
+"sink": [
+"lk_N3",
+"EP_SERDES"
+],
+"bits": 1056,
+"clock": "EP_SERDES",
+"binding": null
+},
+{
+"name": "coll_SW>coll_SE:COLL_RING",
+"source": [
+"coll_SW",
+"COLL_RING"
+],
+"sink": [
+"coll_SE",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_SW>vmh_SE:VM_RING",
+"source": [
+"vmh_SW",
+"VM_RING"
+],
+"sink": [
+"vmh_SE",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_SE>coll_SW:COLL_RING",
+"source": [
+"coll_SE",
+"COLL_RING"
+],
+"sink": [
+"coll_SW",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_SE>vmh_SW:VM_RING",
+"source": [
+"vmh_SE",
+"VM_RING"
+],
+"sink": [
+"vmh_SW",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_SE>coll_NE:COLL_RING",
+"source": [
+"coll_SE",
+"COLL_RING"
+],
+"sink": [
+"coll_NE",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_SE>vmh_NE:VM_RING",
+"source": [
+"vmh_SE",
+"VM_RING"
+],
+"sink": [
+"vmh_NE",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_NE>coll_SE:COLL_RING",
+"source": [
+"coll_NE",
+"COLL_RING"
+],
+"sink": [
+"coll_SE",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_NE>vmh_SE:VM_RING",
+"source": [
+"vmh_NE",
+"VM_RING"
+],
+"sink": [
+"vmh_SE",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_NE>coll_NW:COLL_RING",
+"source": [
+"coll_NE",
+"COLL_RING"
+],
+"sink": [
+"coll_NW",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_NE>vmh_NW:VM_RING",
+"source": [
+"vmh_NE",
+"VM_RING"
+],
+"sink": [
+"vmh_NW",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_NW>coll_NE:COLL_RING",
+"source": [
+"coll_NW",
+"COLL_RING"
+],
+"sink": [
+"coll_NE",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_NW>vmh_NE:VM_RING",
+"source": [
+"vmh_NW",
+"VM_RING"
+],
+"sink": [
+"vmh_NE",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_NW>coll_SW:COLL_RING",
+"source": [
+"coll_NW",
+"COLL_RING"
+],
+"sink": [
+"coll_SW",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_NW>vmh_SW:VM_RING",
+"source": [
+"vmh_NW",
+"VM_RING"
+],
+"sink": [
+"vmh_SW",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "coll_SW>coll_NW:COLL_RING",
+"source": [
+"coll_SW",
+"COLL_RING"
+],
+"sink": [
+"coll_NW",
+"COLL_RING"
+],
+"bits": 826,
+"clock": "COLL_RING",
+"binding": null
+},
+{
+"name": "vmh_SW>vmh_NW:VM_RING",
+"source": [
+"vmh_SW",
+"VM_RING"
+],
+"sink": [
+"vmh_NW",
+"VM_RING"
+],
+"bits": 2224,
+"clock": "VM_RING",
+"binding": null
+},
+{
+"name": "vmb_NW0>quant_NW0:QUANT_VM",
+"source": [
+"vmb_NW0",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW0",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW1>quant_NW0:QUANT_VM",
+"source": [
+"vmb_NW1",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW0",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW2>quant_NW1:QUANT_VM",
+"source": [
+"vmb_NW2",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW1",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW3>quant_NW1:QUANT_VM",
+"source": [
+"vmb_NW3",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW1",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW4>quant_NW2:QUANT_VM",
+"source": [
+"vmb_NW4",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW2",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW5>quant_NW2:QUANT_VM",
+"source": [
+"vmb_NW5",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW2",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW6>quant_NW3:QUANT_VM",
+"source": [
+"vmb_NW6",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW3",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_NW7>quant_NW3:QUANT_VM",
+"source": [
+"vmb_NW7",
+"QUANT_VM"
+],
+"sink": [
+"quant_NW3",
+"QUANT_VM"
+],
+"bits": 555,
+"clock": "QUANT_VM",
+"binding": null
+},
+{
+"name": "vmb_SW0>idx_op:IDX_VM",
+"source": [
+"vmb_SW0",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW1>idx_op:IDX_VM",
+"source": [
+"vmb_SW1",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW2>idx_op:IDX_VM",
+"source": [
+"vmb_SW2",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW3>idx_op:IDX_VM",
+"source": [
+"vmb_SW3",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW4>idx_op:IDX_VM",
+"source": [
+"vmb_SW4",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW5>idx_op:IDX_VM",
+"source": [
+"vmb_SW5",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW6>idx_op:IDX_VM",
+"source": [
+"vmb_SW6",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "vmb_SW7>idx_op:IDX_VM",
+"source": [
+"vmb_SW7",
+"IDX_VM"
+],
+"sink": [
+"idx_op",
+"IDX_VM"
+],
+"bits": 274,
+"clock": "IDX_VM",
+"binding": null
+},
+{
+"name": "idx_op>idx_q:IDX_INT",
+"source": [
+"idx_op",
+"IDX_INT"
+],
+"sink": [
+"idx_q",
+"IDX_INT"
+],
+"bits": 1048,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_q>idx_s0:IDX_INT",
+"source": [
+"idx_q",
+"IDX_INT"
+],
+"sink": [
+"idx_s0",
+"IDX_INT"
+],
+"bits": 569,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_s0>idx_sel:IDX_INT",
+"source": [
+"idx_s0",
+"IDX_INT"
+],
+"sink": [
+"idx_sel",
+"IDX_INT"
+],
+"bits": 592,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_q>idx_s1:IDX_INT",
+"source": [
+"idx_q",
+"IDX_INT"
+],
+"sink": [
+"idx_s1",
+"IDX_INT"
+],
+"bits": 569,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_s1>idx_sel:IDX_INT",
+"source": [
+"idx_s1",
+"IDX_INT"
+],
+"sink": [
+"idx_sel",
+"IDX_INT"
+],
+"bits": 592,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_q>idx_s2:IDX_INT",
+"source": [
+"idx_q",
+"IDX_INT"
+],
+"sink": [
+"idx_s2",
+"IDX_INT"
+],
+"bits": 569,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_s2>idx_sel:IDX_INT",
+"source": [
+"idx_s2",
+"IDX_INT"
+],
+"sink": [
+"idx_sel",
+"IDX_INT"
+],
+"bits": 592,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_q>idx_s3:IDX_INT",
+"source": [
+"idx_q",
+"IDX_INT"
+],
+"sink": [
+"idx_s3",
+"IDX_INT"
+],
+"bits": 569,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_s3>idx_sel:IDX_INT",
+"source": [
+"idx_s3",
+"IDX_INT"
+],
+"sink": [
+"idx_sel",
+"IDX_INT"
+],
+"bits": 592,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_sel>idx_link:IDX_INT",
+"source": [
+"idx_sel",
+"IDX_INT"
+],
+"sink": [
+"idx_link",
+"IDX_INT"
+],
+"bits": 2372,
+"clock": "IDX_INT",
+"binding": null
+},
+{
+"name": "idx_link>coll_SW:IDX_COLL",
+"source": [
+"idx_link",
+"IDX_COLL"
+],
+"sink": [
+"coll_SW",
+"IDX_COLL"
+],
+"bits": 2180,
+"clock": "IDX_COLL",
+"binding": null
+},
+{
+"name": "vmh_SW>sm_SW0:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW0",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW1:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW1",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW2:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW2",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW3:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW3",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW4:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW4",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW5:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW5",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW6:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW6",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SW>sm_SW7:KV_DESC",
+"source": [
+"vmh_SW",
+"KV_DESC"
+],
+"sink": [
+"sm_SW7",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE0:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE0",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE1:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE1",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE2:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE2",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE3:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE3",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE4:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE4",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE5:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE5",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE6:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE6",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_SE>sm_SE7:KV_DESC",
+"source": [
+"vmh_SE",
+"KV_DESC"
+],
+"sink": [
+"sm_SE7",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW0:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW0",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW1:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW1",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW2:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW2",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW3:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW3",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW4:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW4",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW5:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW5",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW6:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW6",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NW>sm_NW7:KV_DESC",
+"source": [
+"vmh_NW",
+"KV_DESC"
+],
+"sink": [
+"sm_NW7",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE0:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE0",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE1:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE1",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE2:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE2",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE3:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE3",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE4:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE4",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE5:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE5",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE6:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE6",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "vmh_NE>sm_NE7:KV_DESC",
+"source": [
+"vmh_NE",
+"KV_DESC"
+],
+"sink": [
+"sm_NE7",
+"KV_DESC"
+],
+"bits": 64,
+"clock": "KV_DESC",
+"binding": "DESC"
+},
+{
+"name": "hc_SW>hc_SW0:HC_CORE",
+"source": [
+"hc_SW",
+"HC_CORE"
+],
+"sink": [
+"hc_SW0",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW0>hc_SW:HC_CORE",
+"source": [
+"hc_SW0",
+"HC_CORE"
+],
+"sink": [
+"hc_SW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW>hc_SW1:HC_CORE",
+"source": [
+"hc_SW",
+"HC_CORE"
+],
+"sink": [
+"hc_SW1",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW1>hc_SW:HC_CORE",
+"source": [
+"hc_SW1",
+"HC_CORE"
+],
+"sink": [
+"hc_SW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW>hc_SW2:HC_CORE",
+"source": [
+"hc_SW",
+"HC_CORE"
+],
+"sink": [
+"hc_SW2",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW2>hc_SW:HC_CORE",
+"source": [
+"hc_SW2",
+"HC_CORE"
+],
+"sink": [
+"hc_SW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW>hc_SW3:HC_CORE",
+"source": [
+"hc_SW",
+"HC_CORE"
+],
+"sink": [
+"hc_SW3",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SW3>hc_SW:HC_CORE",
+"source": [
+"hc_SW3",
+"HC_CORE"
+],
+"sink": [
+"hc_SW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE>hc_SE0:HC_CORE",
+"source": [
+"hc_SE",
+"HC_CORE"
+],
+"sink": [
+"hc_SE0",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE0>hc_SE:HC_CORE",
+"source": [
+"hc_SE0",
+"HC_CORE"
+],
+"sink": [
+"hc_SE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE>hc_SE1:HC_CORE",
+"source": [
+"hc_SE",
+"HC_CORE"
+],
+"sink": [
+"hc_SE1",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE1>hc_SE:HC_CORE",
+"source": [
+"hc_SE1",
+"HC_CORE"
+],
+"sink": [
+"hc_SE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE>hc_SE2:HC_CORE",
+"source": [
+"hc_SE",
+"HC_CORE"
+],
+"sink": [
+"hc_SE2",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE2>hc_SE:HC_CORE",
+"source": [
+"hc_SE2",
+"HC_CORE"
+],
+"sink": [
+"hc_SE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE>hc_SE3:HC_CORE",
+"source": [
+"hc_SE",
+"HC_CORE"
+],
+"sink": [
+"hc_SE3",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_SE3>hc_SE:HC_CORE",
+"source": [
+"hc_SE3",
+"HC_CORE"
+],
+"sink": [
+"hc_SE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW>hc_NW0:HC_CORE",
+"source": [
+"hc_NW",
+"HC_CORE"
+],
+"sink": [
+"hc_NW0",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW0>hc_NW:HC_CORE",
+"source": [
+"hc_NW0",
+"HC_CORE"
+],
+"sink": [
+"hc_NW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW>hc_NW1:HC_CORE",
+"source": [
+"hc_NW",
+"HC_CORE"
+],
+"sink": [
+"hc_NW1",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW1>hc_NW:HC_CORE",
+"source": [
+"hc_NW1",
+"HC_CORE"
+],
+"sink": [
+"hc_NW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW>hc_NW2:HC_CORE",
+"source": [
+"hc_NW",
+"HC_CORE"
+],
+"sink": [
+"hc_NW2",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW2>hc_NW:HC_CORE",
+"source": [
+"hc_NW2",
+"HC_CORE"
+],
+"sink": [
+"hc_NW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW>hc_NW3:HC_CORE",
+"source": [
+"hc_NW",
+"HC_CORE"
+],
+"sink": [
+"hc_NW3",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NW3>hc_NW:HC_CORE",
+"source": [
+"hc_NW3",
+"HC_CORE"
+],
+"sink": [
+"hc_NW",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE>hc_NE0:HC_CORE",
+"source": [
+"hc_NE",
+"HC_CORE"
+],
+"sink": [
+"hc_NE0",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE0>hc_NE:HC_CORE",
+"source": [
+"hc_NE0",
+"HC_CORE"
+],
+"sink": [
+"hc_NE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE>hc_NE1:HC_CORE",
+"source": [
+"hc_NE",
+"HC_CORE"
+],
+"sink": [
+"hc_NE1",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE1>hc_NE:HC_CORE",
+"source": [
+"hc_NE1",
+"HC_CORE"
+],
+"sink": [
+"hc_NE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE>hc_NE2:HC_CORE",
+"source": [
+"hc_NE",
+"HC_CORE"
+],
+"sink": [
+"hc_NE2",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE2>hc_NE:HC_CORE",
+"source": [
+"hc_NE2",
+"HC_CORE"
+],
+"sink": [
+"hc_NE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE>hc_NE3:HC_CORE",
+"source": [
+"hc_NE",
+"HC_CORE"
+],
+"sink": [
+"hc_NE3",
+"HC_CORE"
+],
+"bits": 596,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_NE3>hc_NE:HC_CORE",
+"source": [
+"hc_NE3",
+"HC_CORE"
+],
+"sink": [
+"hc_NE",
+"HC_CORE"
+],
+"bits": 516,
+"clock": "HC_CORE",
+"binding": null
+},
+{
+"name": "hc_eng>hc_SW:HC_ENG",
+"source": [
+"hc_eng",
+"HC_ENG"
+],
+"sink": [
+"hc_SW",
+"HC_ENG"
+],
+"bits": 772,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "hc_eng>hc_SE:HC_ENG",
+"source": [
+"hc_eng",
+"HC_ENG"
+],
+"sink": [
+"hc_SE",
+"HC_ENG"
+],
+"bits": 772,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "hc_eng>hc_NW:HC_ENG",
+"source": [
+"hc_eng",
+"HC_ENG"
+],
+"sink": [
+"hc_NW",
+"HC_ENG"
+],
+"bits": 772,
+"clock": "HC_ENG",
+"binding": null
+},
+{
+"name": "hc_eng>hc_NE:HC_ENG",
+"source": [
+"hc_eng",
+"HC_ENG"
+],
+"sink": [
+"hc_NE",
+"HC_ENG"
+],
+"bits": 772,
+"clock": "HC_ENG",
+"binding": null
+}
+]
+}
