@@ -1,5 +1,5 @@
 {
- "name": "s81engm_capture2_probe_1016-probe1016-COMMIT",
+ "name": "s81engm_capture2_probe_1016-probe1016-da05cbc8b",
  "block": "ot_s81_engram_capture2_probe",
  "ref_tile": true,
  "owner": "Codex:norm_mix",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "codex/s81-hc-2330",
-  "commit": "COMMIT",
+  "commit": "da05cbc8bff55a4d91b7984e74475795e55c8656",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/hdc",
@@ -78,7 +78,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_capture2_probe_1016/s81engm_capture2_probe_1016-probe1016-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_capture2_probe_1016/s81engm_capture2_probe_1016-probe1016-da05cbc8b"
   }
  ],
  "cycles_added": 0,
