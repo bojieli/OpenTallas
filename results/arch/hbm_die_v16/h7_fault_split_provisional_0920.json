@@ -1,0 +1,153 @@
+{
+ "schema": "opentallas.hbm.provisional_native_child_grant.v1",
+ "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+ "cell": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
+ "source_snapshot": "680655bef",
+ "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv",
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "QREG": 1
+ },
+ "receipt_sha256": {
+  "results/rtl/hbm_harden_0811/fault_split/physical_request.json": "4152e5cba95c5585520be35059a816e23113ecba6b002173adf63606504d309a",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "bd5be073a797d4c14508abd161de8c1e3f6caab5ddb078cba3d0cd0ecfc05af9",
+  "results/rtl/hbm_harden_0811/fault_split/receipt.json": "7f4588da83ec6cec5c3fd8698dd9f236eaa494dee3a6c291354a699985c4bfd3",
+  "results/rtl/hbm_harden_0811/fault_split/actual_track_readback/summary.json": "b6807bb350f2c46a9a39d224756eb9ce23a916ccf7e51be0a832d77dbee26b28"
+ },
+ "outline_um": [
+  185.76,
+  164.16
+ ],
+ "macro_rectangles_um": [
+  [
+   "g_wpay.u_write_payload",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   56.16,
+   30.24,
+   150.984,
+   71.304
+  ],
+  [
+   "u_response_payload",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   56.16,
+   92.88,
+   150.984,
+   133.944
+  ]
+ ],
+ "literal_pin_request": "results/rtl/hbm_harden_0811/fault_split/physical_request.json",
+ "signal_pin_count": 1229,
+ "pg_excluded": true,
+ "new_fault_pin_rectangles": [
+  [
+   "owner_fault_split[0]",
+   "M4",
+   0.0,
+   19.392,
+   0.192,
+   19.416
+  ],
+  [
+   "owner_fault_split[1]",
+   "M4",
+   0.0,
+   19.584,
+   0.192,
+   19.608
+  ],
+  [
+   "owner_fault_split[2]",
+   "M4",
+   0.0,
+   19.776,
+   0.192,
+   19.8
+  ],
+  [
+   "owner_fault_split[3]",
+   "M4",
+   0.0,
+   19.968,
+   0.192,
+   19.992
+  ],
+  [
+   "owner_fault_split[4]",
+   "M4",
+   0.0,
+   20.16,
+   0.192,
+   20.184
+  ],
+  [
+   "owner_fault_split[5]",
+   "M4",
+   0.0,
+   20.352,
+   0.192,
+   20.376
+  ]
+ ],
+ "actual_track_grid": {
+  "proof": "results/rtl/hbm_harden_0811/fault_split/actual_track_readback/summary.json",
+  "unit": "oth-ubuntu-2392759-1792167418",
+  "host": "ot-agidock128",
+  "exit": 0,
+  "M4_Y_um": {
+   "origin": 0.012,
+   "pitch": 0.048
+  },
+  "M3_X_um": {
+   "origin": 0.009,
+   "pitch": 0.036
+  },
+  "M5_X_um": {
+   "origin": 0.012,
+   "pitch": 0.048
+  },
+  "all_legacy_1224_signal_rectangles_on_track": true,
+  "new_six_fault_rectangles_on_same_actual_grid": true,
+  "note": "Canonical spread_face_pins.OFF M4=0.036 is not the actual M4 Y grid of either captured ODB. Use actual track readback; no invented snap."
+ },
+ "audit": "All1229 literal signal centres independently checked against actual ODB layer grids M3X.009/.036,M4Y.012/.048,M5X.012/.048; all in outline and unique. Six new W pins have22.824um minimum gap to other W rectangles; no scalar owner_fault retained.",
+ "new_fault_window": {
+  "face": "W",
+  "layer": "M4",
+  "span_um": [
+   19.308,
+   20.46
+  ],
+  "data_bits": 6,
+  "allocation_um_per_bit": 0.096,
+  "cut": 0.5
+ },
+ "normal_cycles_added": 0,
+ "fault_observation_cycles_added": 0,
+ "cost": {
+  "controller_instances": 128,
+  "extra_controller_ff_each": 5,
+  "parent_instances": 4,
+  "extra_parent_input_ff_each": 160,
+  "declared_total_extra_ff": 1280,
+  "additional_fault_wires": 640,
+  "normal_cycles_added": 0,
+  "fault_observation_cycles_added": 0
+ },
+ "required_gates": [
+  "exact new pin and macro readback",
+  "TT setup",
+  "FF hold",
+  "DRC0",
+  "native root/launch/capture proof",
+  "component mutants retained",
+  "literal parent wiring and all128 home/cut proof before adoption",
+  "Fresh PG must be regenerated, not inherited rectangles; new ODB track/pin/macro readback required.",
+  "Existing R418.9ps and TT-55.0373ps are FAILED; scalar-OR repair alone cannot inherit native timing qualification."
+ ],
+ "adoption": "Current d4/default/controller ABI unchanged. Isolated measurement only, no native or all128 parent homes/cut/clock/phase qualification inherited. Component source receipts do not establish production CDC or throughput."
+}
