@@ -10265,6 +10265,12 @@ def _assigned_physical_pins(Mx, ports):
             Mx.order.append(port)
 
 
+def _require_physical_source_ports(master, ports):
+    missing = sorted(set(ports) - set(master.ports))
+    if missing:
+        raise ValueError(f'{master.name}: physical master omits live source ports {missing}')
+
+
 def masters_r8(m, k=1):
     pdir = m.get('pdir') or finalize_r8(m)
     if '_by' not in m:
@@ -10304,6 +10310,7 @@ def masters_r8(m, k=1):
         if k == 1:
             _assigned_physical_pins(Mx, ports)
             _resolve_pin_collisions(Mx)
+        _require_physical_source_ports(Mx, ports)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
@@ -10508,6 +10515,13 @@ def _faces_r8(m, Mx, it, ports):
         else:
             _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
             _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+        # fn is a distinct non-inverted clock path (two actual RTL inverters),
+        # whereas fo is the forwarded stage clock. Never alias or drop fn.
+        # This is diagnostic placeholder geometry; a bound native view replaces
+        # it with its literal physical contacts and insertion measurements.
+        copies = P_([f'fn{j}' for j in range(n)])
+        if copies:
+            _lay(Mx, 'E' if horiz else 'N', copies, 'M4' if horiz else 'M5', start=2.16)
     elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
         for p_, f_, at in (('fi', mst[-2], 2.16), ('fo', mst[-1], 6.48)):
             Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
@@ -10613,7 +10627,7 @@ def _faces_r8(m, Mx, it, ports):
         c1 = COL_W8 - RSC_W / 2 - CF_X
         if CFIFO_V2:              # 432 um outline: the return pins at its E end (the return column lies beyond it)
             c1 = min(c1, Mx.w - 30.0)
-        _lay(Mx, 'S', P_(['xf', 'xd']), 'M5', start=c0 - 15.0)
+        _lay(Mx, 'S', P_(['xf', 'xd', 'xf2', 'xd2']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'x2', 'cc', 'st']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
