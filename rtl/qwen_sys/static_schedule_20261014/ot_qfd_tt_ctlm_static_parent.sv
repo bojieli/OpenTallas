@@ -1,5 +1,12 @@
 // Static successor parent: actual WSRC classification and real native status.
 // No native command reaches the ROM tree; native completion comes from endpoint.
+// Q-ELEM-TTP 2026-10-16: the body is THREE hard leaves and no logic of its own:
+//   u_hr    qfd_tt_head_leaf   (head + native route + resident relocation + loaded stage, CMDREG +1 accepted edge; one root)
+//   u_core  qfd_tt_core_leaf   (tree control; CLOSED tc1) \  bit-exact to qfd_tt_ctlm_tree_static (tb_tt_tree_partition),
+//   u_scale qfd_tt_scale_leaf  (post-scale requests; tc3)  /  93-bit seam scale_tag/scale_v/scale_rst_n, 0 edges.
+// Lockstep vs the original body (physical/qwen_tt_static_cluster_1015/ot_qfd_tt_ctlm_static_parent_ref.sv): run_regroup.sh.
+// ck_me_sched: the head leaf runs on ck_head (same PLL phase; ck_me_sched clocked only the head) -- port retained until
+// the die netlist drops it (Q-COMPUTE-DIE).
 module ot_qfd_tt_ctlm_static_parent (
     input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
@@ -67,91 +74,35 @@ module ot_qfd_tt_ctlm_static_parent (
     output wire [16-1:0] mx_mask,
     output wire [16*32-1:0] mx_data
 );
-    wire [379:0] cmd;
-    wire [94:0] ret,rom_ret;
-    wire [379:0] local_rom_cmd;
-    wire head_fault,relocation_fault;
-    reg [5:0] loaded_stage;
-    reg relocation_sticky;
-    always @(posedge ck_head or negedge rst_n)
-      if(!rst_n)begin loaded_stage<=0;relocation_sticky<=0;end
-      else begin
-        if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
-          loaded_stage<=pw_data[17:12];
-        if(relocation_fault)relocation_sticky<=1;
-      end
-    assign command_stage=loaded_stage;
-    ot_qwen_tp8_rom_relocate u_resident_relocation(
-      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd),.fault(relocation_fault));
-    assign c_fault=head_fault|relocation_sticky;
-    ot_qfd_native_cmd_route u_native_route (
-      .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
-      .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
-    qfd_tt_ctlm_head_static u_head (
-        .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
+    wire [94:0] rom_ret;
+    wire [90:0] scale_tag; wire scale_v, scale_rst_n;
+    qfd_tt_head_leaf u_hr (
+        .clk(ck_head),
+        .rom_ret_i(rom_ret),
+        .cp_active(cp_active),.cp(cp),
         .me_image_ready(me_image_ready),.program_obs(program_obs),
         .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
-
-        .clk(ck_head),
-        .ck_sched(ck_me_sched),
-        .rst_n(rst_n),
-        .h_start(h_start),
-        .token(token),
-        .pos(pos),
-        .prog_base(prog_base),
-        .pw_v(pw_v),
-        .pw_addr(pw_addr),
-        .pw_data(pw_data),
-        .x_oacc(x_oacc),
-        .x_oidle(x_oidle),
-        .x_oprog(x_oprog),
-        .x_orows(x_orows),
-        .kv_ok(kv_ok),
-        .kv_write_drained(kv_write_drained),
-        .me_mem_ok(me_mem_ok),
-        .m_fin_o(m_fin_o),
-        .m_fidx_o(m_fidx_o),
-        .m_fval_o(m_fval_o),
-        .me_clk_en(me_clk_en),
-        .c_fault(head_fault),
-        .kvd_v(kvd_v),
-        .kvd_wbase(kvd_wbase),
-        .kvd_ts(kvd_ts),
-        .kvd_ks(kvd_ks),
-        .kvd_js(kvd_js),
-        .kvd_wcs(kvd_wcs),
-        .kvd_split(kvd_split),
-        .kvd_jsh(kvd_jsh),
-        .kvd_tiles(kvd_tiles),
-        .kvd_k(kvd_k),
-        .kvd_nout(kvd_nout),
-        .kvd_kindk(kvd_kindk),
-        .kvd_pos(kvd_pos),
-        .cmd(cmd),.ret(ret));
-    qfd_tt_ctlm_tree_static u_tree (
-
-        .clk(ck_tree),
-        .rst_n(rst_n),
-        .me_acc_o(me_acc_o),
-        .me_idle_o(me_idle_o),
-        .me_prog_o(me_prog_o),
-        .up_fault(up_fault),
-        .land_cnt(land_cnt),
-        .scale_re(scale_re),
-        .scale_gre(scale_gre),
-        .scale_addr(scale_addr),
-        .t_sel_e(t_sel_e),
-        .t_tv_e(t_tv_e),
-        .tr_fault(tr_fault),
-        .p_v_e2(p_v_e2),
-        .p_f_e2(p_f_e2),
-        .p_am(p_am),
-        .p_fault(p_fault),
-        .fab_fault(fab_fault),
-        .ov(ov),
-        .mx_we(mx_we),
-        .mx_addr(mx_addr),
-        .mx_mask(mx_mask),
-        .mx_data(mx_data),
+        .rom_cmd(rom_cmd),.command_stage(command_stage),.native_cmd(native_cmd),.me_observe(me_observe),
+        .native_ret(native_ret),
+        .rst_n(rst_n),.h_start(h_start),.token(token),.pos(pos),.prog_base(prog_base),
+        .pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
+        .x_oacc(x_oacc),.x_oidle(x_oidle),.x_oprog(x_oprog),.x_orows(x_orows),
+        .kv_ok(kv_ok),.kv_write_drained(kv_write_drained),.me_mem_ok(me_mem_ok),
+        .m_fin_o(m_fin_o),.m_fidx_o(m_fidx_o),.m_fval_o(m_fval_o),
+        .kvd_v(kvd_v),.kvd_wbase(kvd_wbase),.kvd_ts(kvd_ts),.kvd_ks(kvd_ks),.kvd_js(kvd_js),.kvd_wcs(kvd_wcs),
+        .kvd_split(kvd_split),.kvd_jsh(kvd_jsh),.kvd_tiles(kvd_tiles),.kvd_k(kvd_k),.kvd_nout(kvd_nout),
+        .kvd_kindk(kvd_kindk),.kvd_pos(kvd_pos),
+        .me_clk_en(me_clk_en),.c_fault(c_fault));
+    qfd_tt_core_leaf u_core (
+        .clk(ck_tree),.rst_n(rst_n),
+        .scale_tag(scale_tag),.scale_v(scale_v),.scale_rst_n(scale_rst_n),
+        .me_acc_o(me_acc_o),.me_idle_o(me_idle_o),.me_prog_o(me_prog_o),
+        .up_fault(up_fault),.land_cnt(land_cnt),
+        .t_sel_e(t_sel_e),.t_tv_e(t_tv_e),.tr_fault(tr_fault),
+        .p_v_e2(p_v_e2),.p_f_e2(p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),
+        .ov(ov),.mx_we(mx_we),.mx_addr(mx_addr),.mx_mask(mx_mask),.mx_data(mx_data),
         .cmd(rom_cmd),.ret(rom_ret));
+    qfd_tt_scale_leaf u_scale (
+        .clk(ck_tree),.rst_n(scale_rst_n),.tag_payload(scale_tag),.s3_v(scale_v),
+        .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
 endmodule
