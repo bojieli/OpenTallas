@@ -1,5 +1,5 @@
 {
- "name": "qkd_rst_region-ec1-COMMIT",
+ "name": "qkd_rst_region-ec1-6719d1048",
  "block": "qkd_rst_region",
  "ref_tile": true,
  "owner": "Claude:ELEM-CENSUS kit helper",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/census-qkit-1016",
-  "commit": "COMMIT",
+  "commit": "6719d1048",
   "extra_paths": [
    "tools/qwen_kv_die/run_rst_region_bench.sh",
    "rtl/test/qwen_split/tb_qkd_rst_region.sv"
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_rst_region/qkd_rst_region-ec1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_rst_region/qkd_rst_region-ec1-6719d1048"
   }
  ],
  "cycles_added": 0,
