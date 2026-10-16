@@ -1,0 +1,166 @@
+{
+ "name": "hbm_ckgen_cl",
+ "top": "hfd_ckgen",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/control/hfd_ckgen.sv",
+  "rtl/hbm_accel/control/ot_hbm_pll_bb.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "refclk",
+ "reset_ports": [
+  "por_n"
+ ],
+ "pins": {
+  "N": [
+   "refclk",
+   "por_n"
+  ],
+  "S": [
+   "pll_hbm",
+   "pll_stream",
+   "pll_serial",
+   "pll_link",
+   "por_hbm",
+   "por_stream",
+   "por_serial",
+   "por_link"
+  ]
+ },
+ "pin_ranges": {
+  "refclk": [
+   124.8,
+   129.6
+  ],
+  "por_n": [
+   129.6,
+   134.4
+  ],
+  "pll_hbm": [
+   110.4,
+   115.2
+  ],
+  "pll_stream": [
+   115.2,
+   120.0
+  ],
+  "pll_serial": [
+   120.0,
+   124.8
+  ],
+  "pll_link": [
+   124.8,
+   129.6
+  ],
+  "por_hbm": [
+   129.6,
+   134.4
+  ],
+  "por_stream": [
+   134.4,
+   139.2
+  ],
+  "por_serial": [
+   139.2,
+   144.0
+  ],
+  "por_link": [
+   144.0,
+   148.8
+  ]
+ },
+ "outline": {
+  "w": 267.84,
+  "h": 220.32,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "child_lattice_um": 1.728,
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4",
+   "count": 1,
+   "inst": "u_rel",
+   "at": [
+    24.192,
+    25.92
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
+   "count": 1,
+   "inst": "u_pll",
+   "at": [
+    66.096,
+    23.76
+   ]
+  }
+ ],
+ "sdc_extra": [
+  "physical/hbm_pll_views/sdc/hfd_ckgen_parent.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/hbm_pll_views/sdc/hfd_ckgen_parent_io.tcl"
+ ],
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Parent is wires only (PLL modelled hard core + the closed hfd_ckgen_rel4 leaf): every por_* output IS a domain release flop inside the leaf (registered at the leaf pin by RTL), pll_* are the forwarded die clocks (generated clocks), refclk is a clock and por_n the asynchronous power-on assert (a pin register would make the assert synchronous to a clock that does not run before lock). No parent flop exists to register."
+ },
+ "io_flop_at_pins": false,
+ "inhold": false,
+ "outhold": false,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "params": {},
+ "inter": [],
+ "slot_change_request": "H-DIE hb_ckgen grant (hbm_v15.json slots[hb_ckgen], 259.2 x 220.32) grows EAST by 8.64 um to 267.84 x 220.32 (origin and every pin span unchanged: pins are offsets from the W/S corner): the PLL (172.8) + rel4 (21.6) need 2.16 core margin + 20 um block-core-edge channel on both sides + a 20 um block-block channel = 258.72 um, which the 2.16 child / 0.432 macro lattice cannot fit in 259.2 (best fit 18.6 um E channel); next 8.64 track-lattice outline = 267.84.  Free: no slot within 300 um E/W (idx_s3 is 123 um N).  rel4 at (24.192,25.92) (1.728 um = lcm of site and every M1-M7 track pitch; y also on the 8.64 row/M6 lattice) beside the PLL W-edge pins, PLL at (66.096,23.76); hardened parent PG = M7 (ref_tile cluster contract), signals <= M6.",
+ "job": {
+  "owner": "Claude:H-DIE-CKGEN",
+  "branch": "claude/hdie-ckgen-0630",
+  "tag": "cl1",
+  "merge_target": "main",
+  "purpose": "HBM die clock root hb_ckgen PARENT hfd_ckgen hardened: PLL modelled hard core ot_hbm_pll_bb + closed leaf hfd_ckgen_rel4 (native PASS) as hard blocks, parent wires only; clocks created at the PLL output pins, generated clocks at the four pll_* outputs (die tree roots), por_* timed against their own forwarded clock (launch <= 220 ps).",
+  "extra_paths": [
+   "rtl/hbm_accel/control",
+   "tools/hbm_v15_harden",
+   "physical/hbm_pll_views",
+   "physical/ref_tile/hbm_ckgen_rel4/views"
+  ],
+  "record_to": "results/rtl/ref_tile/hbm_ckgen_cl",
+  "benches": [
+   {
+    "name": "reset_release",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CKGEN_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "one_flop_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}
