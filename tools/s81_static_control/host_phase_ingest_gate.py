@@ -19,10 +19,10 @@ for name,c in cs.items():
  c['nb']=B.stream_nb(c['descs'])
  memw=B.C.pow2(max(c['exp'].size//32+1,1088));nd=B.C.pow2(len(c['descs']));npay=B.C.pow2(len(c['beats']))
  results={}
- for mode in ('apipe2','apipe3','mut_payload','mut_ap0'):
+ for mode in ('apipe2','apipe3','mut_tag','mut_ap0'):
   out=a.out/(name+'_'+mode);out.mkdir(exist_ok=True)
   B.write_case(out,c,memw)
-  pars=dict(MEMW=memw,ND=nd,NP=npay,HDMAX=16,KVHMAX=1,QKV_EN=0,RMW_EN=0,ENG_TRIM=1,APIPE=2 if mode=='apipe2' else 3,MUT=int(mode=='mut_payload'),HP=834,IP=834,CP=834)
+  pars=dict(MEMW=memw,ND=nd,NP=npay,HDMAX=16,KVHMAX=1,QKV_EN=0,RMW_EN=0,ENG_TRIM=1,APIPE=2 if mode=='apipe2' else 3,MUT=2 if mode=='mut_tag' else 0,HP=834,IP=834,CP=834)
   exe=out/'sim.vvp'
   defines=[] if mode=='apipe2' else ['-DOT_S81_HOST_PHASESAFE']
   if mode=='mut_ap0':defines+=['-DOT_ING_MUT_AP0SKIP']
@@ -35,10 +35,10 @@ for name,c in cs.items():
   results[mode]=result
   print(name,mode,json.dumps(result),flush=True)
   if mode in ('apipe2','apipe3') and not result['pass']:raise SystemExit('HOST_PHASE_INGEST FAIL '+name+' '+mode)
-  if mode=='mut_payload' and result['pass']:raise SystemExit('HOST_PHASE_INGEST MUTANT_ESCAPED payload')
+  if mode=='mut_tag' and result['pass']:raise SystemExit('HOST_PHASE_INGEST MUTANT_ESCAPED completion_tag')
  rec['cases'][name]=results
 rec['pass']=True
 # AP0 skip is meaningful only for modes with address rows; RAW bypasses APIPE.
 if not any(not rec['cases'][k]['mut_ap0']['pass'] for k in ('ckv','window','ikey')):raise SystemExit('HOST_PHASE_INGEST MUTANT_ESCAPED ap0')
 (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
-print('HOST_PHASE_INGEST_GATE PASS actual ROWS IKEY RAW and payload/address mutants')
+print('HOST_PHASE_INGEST_GATE PASS actual ROWS IKEY RAW and completion/address mutants')
