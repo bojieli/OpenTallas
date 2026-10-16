@@ -95,7 +95,12 @@ def place_child(bx, by, bw, bh, bo, cx, cy, cw, ch, co):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--region', default='pcrow', choices=['pcrow'])
+    ap.add_argument('--region', default='pcrow', choices=['pcrow', 'pcrow_rc'],
+                    help='pcrow = PHY(+modelled controller) abstract + 128 closed svc PCs (contract bands); pcrow_rc = '
+                         'the owner-rule successor: PHY-ONLY abstract ot_hbm3e_phy_rc_e8p5 + 128 REAL controller leaves '
+                         'ot_hbm_svc_pc_ctrl_leaf (one per PC, over its PHY channel window), row/column/data nets per PC')
+    ap.add_argument('--ctrl-view', type=Path, help='pcrow_rc: view dir of ot_hbm_svc_pc_ctrl_leaf (LEF + _tt/_ff.lib)')
+    ap.add_argument('--ctrl-view-kind', default='closed_tile_etm', help='pcrow_rc: closed_tile_etm | synth_etm_gate_lef')
     ap.add_argument('--out', required=True)
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--pc-align', action='store_true',
@@ -121,6 +126,66 @@ def main():
     slots = {s['name']: s for s in G['slots']}
     W0 = G['floorplan']['die_um'][0]
     inst = C['instances']
+    if a.region == 'pcrow_rc':
+        return main_rc(a, C, G, P, out, slots, W0)
+    return emit(a, C, G, P, out, slots, W0, inst)
+
+
+def main_rc(a, C, G, P, out, slots, W0):
+    """pcrow_rc: PHY-only abstract + one REAL controller leaf per PC (owner rule 10-14).  Nets are the RTL wiring of
+    ot_hbm_svc_native_sector_pipeline_leaves (leaf p <-> PHY bits p*w..): row/column commands leaf->PHY, read return
+    PHY->leaf.  The leaf K side (SM service group), its fault outputs (stack fault OR / ca_fault glue) are out of region."""
+    global PHY_M, PC_M, VIEWS
+    PHY_M, PC_M = 'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_svc_pc_ctrl_leaf'
+    assert a.ctrl_view, '--ctrl-view required for pcrow_rc'
+    VIEWS = {PHY_M: dict(dir=ROOT / f'physical/asap7_memory_macros/{PHY_M}', kind='hard_macro_abstract (PHY only)'),
+             PC_M: dict(dir=a.ctrl_view.resolve(), kind=a.ctrl_view_kind)}
+    phy_lef = next(VIEWS[PHY_M]['dir'].glob('*.lef'))
+    lp = lef_xy(phy_lef)
+    ctl_lef = next(VIEWS[PC_M]['dir'].glob('*.lef'))
+    m = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', ctl_lef.read_text())
+    cw, ch = float(m.group(1)), float(m.group(2))
+    per = [('row_v', 1, 'c'), ('row_op', 3, 'c'), ('row_bank', 5, 'c'), ('row_row', 19, 'c'), ('col_v', 1, 'c'),
+           ('col_we', 1, 'c'), ('col_bank', 5, 'c'), ('col_col', 5, 'c'), ('col_data', 256, 'c'), ('col_strb', 32, 'c'),
+           ('dram_rvalid', 1, 'p'), ('dram_rdata', 256, 'p')]
+    leaves, nets, used = {}, {}, defaultdict(set)
+    region = []
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        b = P[f'phy_{q}']; north = b['y'] > 10000
+        o = 'MX' if north else 'R0'
+        phy = f'phy_{q}'; region.append(phy)
+        leaves[phy] = dict(master=PHY_M, x=b['x'], y=b['y'], orient=o, w=b['w'], h=b['h'], of=phy,
+                           note='PHY-only abstract; pins face the controller row')
+        for pc in range(32):
+            xs = [lp[f'{n}[{pc * w + k}]' if True else n][0] for n, w, _ in per for k in range(w)]
+            cx = b['x'] + sum(xs) / len(xs)
+            l = f'ctl_{q}_p{pc:02d}'; region.append(l)
+            y = round(b['y'] - 10.8 - ch, 3) if north else round(b['y'] + b['h'] + 10.8, 3)
+            leaves[l] = dict(master=PC_M, x=round(round((cx - cw / 2) / 0.216) * 0.216, 3), y=y,
+                             orient='MX' if north else 'R0', w=cw, h=ch, of=l,
+                             note=f'real controller of PC {pc}, centred over its PHY channel window')
+            for n, w, d in per:
+                for k in range(w):
+                    pp = f'{n}[{pc * w + k}]'
+                    lpin = f'{n}[{k}]' if w > 1 else n
+                    nn = f'n_{q}_{pp.replace("[", "_").replace("]", "")}'
+                    ends = [(l, lpin, 'drv'), (phy, pp, 'load')] if d == 'c' else [(phy, pp, 'drv'), (l, lpin, 'load')]
+                    nets[nn] = ends
+                    used[l].add(lpin); used[phy].add(pp)
+    ls = list(leaves.items())
+    for i, (l1, v1) in enumerate(ls):
+        for l2, v2 in ls[i + 1:]:
+            if v1['x'] < v2['x'] + v2['w'] and v2['x'] < v1['x'] + v1['w'] and \
+                    v1['y'] < v2['y'] + v2['h'] and v2['y'] < v1['y'] + v1['h']:
+                raise SystemExit(f'overlap {l1} {l2}')
+    return emit(a, C, G, P, out, slots, W0, None, pre=(region, leaves, nets, used, len(nets)))
+
+
+def emit(a, C, G, P, out, slots, W0, inst, pre=None):
+    if pre is not None:
+        region, leaves, nets, used, edges_in = pre
+        vpins = {m: lef_pins(next(VIEWS[m]['dir'].glob('*.lef'))) for m in VIEWS}
+        return emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, vpins)
     region = sorted(n for n in inst if re.fullmatch(r'(phy_(SW|SE|NW|NE)|svc_(SW|SE|NW|NE)_s\d)', n))
     phys = [n for n in region if n.startswith('phy_')]
     bands = [n for n in region if n.startswith('svc_')]
@@ -211,6 +276,10 @@ def main():
                 if v1['x'] < v2['x'] + v2['w'] and v2['x'] < v1['x'] + v1['w'] and \
                         v1['y'] < v2['y'] + v2['h'] and v2['y'] < v1['y'] + v1['h']:
                     raise SystemExit(f'overlap {l1} {l2}')
+    return emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, vpins)
+
+
+def emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, vpins):
     # clocks / reset: die ports
     clk_pins = {PHY_M: ['clk'], PC_M: ['clk']}
     tree = None
@@ -314,13 +383,9 @@ def main():
     tcl = f'''# H-DIE r3: v15 PC-row die GRT + TT/FF STA on real views (generated by tools/hbm_die_v15/view_case.py)
 read_lef {plat}/lef/asap7_tech_1x_201209.lef
 read_lef {plat}/lef/asap7sc7p5t_28_R_1x_220121a.lef
-read_lef /work/views/{PHY_M}.lef
-read_lef /work/views/{PC_M}.lef
+{chr(10).join(f'read_lef /work/views/{m}.lef' for m in VIEWS)}
 define_corners tt ff
-read_liberty -corner tt /work/views/{PC_M}_tt.lib
-read_liberty -corner ff /work/views/{PC_M}_ff.lib
-read_liberty -corner tt /work/views/{PHY_M}_tt.lib
-read_liberty -corner ff /work/views/{PHY_M}_ff.lib
+{chr(10).join(f'read_liberty -corner {c} /work/views/{m}_{c}.lib' for m in VIEWS for c in ('tt', 'ff'))}
 {{STDLIB}}
 read_verilog /work/die.v
 link_design hbm_v15_pcrow
@@ -489,7 +554,10 @@ catch {report_clock_latency > /work/out/clock_latency_plain.rpt}'''
     for m, d in libs:
         shutil.copy(next(d.glob('*.lef')), vd / f'{m}.lef')
         for c in ('tt', 'ff'):
-            shutil.copy(d / f'{m}_{c}.lib', vd / f'{m}_{c}.lib')
+            src = d / f'{m}_{c}.lib'
+            if not src.exists():
+                src = next(d.glob(f'*_{c}.lib'))
+            shutil.copy(src, vd / f'{m}_{c}.lib')
     (out / 'out').mkdir(exist_ok=True)
     # ---- manifest ----
     open_pins = {}
@@ -498,9 +566,9 @@ catch {report_clock_latency > /work/out/clock_latency_plain.rpt}'''
         un = [p for p in allp if p not in used[l]]
         open_pins[l] = len(un)
     man = dict(schema='opentallas.hbm_v15.view_case.v1', region=a.region, variant='B_pc_align' if a.pc_align else 'A_grants_v4', die_um=[W, H],
-               contract_sha_file=str(CONTRACT.relative_to(ROOT)), grants=str(GRANTS.relative_to(ROOT)),
+               contract_sha_file=str(CONTRACT.relative_to(ROOT)) if a.region == 'pcrow' else 'n/a (pcrow_rc: RTL wiring of ot_hbm_svc_native_sector_pipeline_leaves)', grants=str(GRANTS.relative_to(ROOT)),
                grants_version=G['version'], plan=str(PLAN.relative_to(ROOT)),
-               views={m: dict(dir=str(v['dir'].relative_to(ROOT)), kind=v['kind']) for m, v in VIEWS.items()},
+               views={m: dict(dir=str(v['dir']), kind=v['kind']) for m, v in VIEWS.items()},
                region_instances=region, leaves=len(leaves), pcs=sum(1 for v in leaves.values() if v['master'] == PC_M),
                edges_in_region=edges_in, signal_nets=len(nets),
                out_of_region_open_pins=sum(open_pins.values()), open_pins_by_leaf=open_pins,

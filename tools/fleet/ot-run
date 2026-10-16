@@ -211,6 +211,20 @@ def selftest(hosts):
     return 1 if bad else 0
 
 
+# HELD HOSTS (ROOT 2026-10-15, coordinator: AGIdock reset 3x in one day): a host listed in HELD_FILE ("<host> <reason>"
+# per line) admits no new ot-run job (pick, run, explicit --hosts alike); jobs already running there are untouched.
+# Reversible: delete the line.  OT_RUN_INCLUDE_HELD=1 overrides for one call (diagnostics).
+HELD_FILE = os.path.expanduser("~/.config/ot-run/held_hosts")
+
+
+def held_hosts():
+    try:
+        return {ln.split()[0]: (ln.split(None, 1)[1].strip() if len(ln.split()) > 1 else "held")
+                for ln in open(HELD_FILE) if ln.strip() and not ln.startswith("#")}
+    except OSError:
+        return {}
+
+
 def main():
     a = sys.argv[1:]
     if a[:1] == ["--selftest"]:
@@ -231,6 +245,14 @@ def main():
     cmd = a[1:]
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
+    held = held_hosts()
+    if held and not os.environ.get("OT_RUN_INCLUDE_HELD"):
+        kept = [h for h in hosts if h not in held]
+        if not kept:
+            print(f"ot-run: NOT RUN: every requested host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); "
+                  f"edit {HELD_FILE} to release", file=sys.stderr)
+            sys.exit(75 if pick else 1)
+        hosts = kept
     t0, held = time.time(), False
     while True:
         with cf.ThreadPoolExecutor(len(hosts)) as ex:

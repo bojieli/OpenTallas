@@ -93,7 +93,7 @@ class Prog:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('out')
-    ap.add_argument('--rf-relay', type=int, default=8)
+    ap.add_argument('--rf-relay', type=int, default=36)  # H-DIE r2 route plan: 36 stages at 480 um (proof d9507c056)
     ap.add_argument('--mlat', type=int, default=3); ap.add_argument('--alat', type=int, default=3); ap.add_argument('--leaf', type=int, default=0)
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
