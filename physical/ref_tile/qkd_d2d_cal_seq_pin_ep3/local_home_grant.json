@@ -1,5 +1,5 @@
 {
-  "scope": "COMPACT_LOCAL_HOME_ASSIGNMENT_FOR_FRESH_SOURCE_BOUND_CTS_ONLY",
+  "scope": "FINAL_COMPACT_LOCAL_HOME_FOR_FRESH_SOURCE_BOUND_CTS_ONLY",
   "source_commit": "4275f7a47",
   "top": "qkd_d2d_cal_seq_pin",
   "rtl_sha256": "17a3d11dcab01a092b96408b56ac9debc8d9b50c547cf064187731ac23df5f64",
@@ -10,7 +10,7 @@
   ],
   "orient": "R0",
   "outline_um": [
-    19.44,
+    18.792,
     28.08
   ],
   "link_home_um": [
@@ -26,12 +26,12 @@
   "preserve_keepout": true,
   "requested_seq_pin_bits": 58,
   "requested_consumer_e_pin_bits": 281,
-  "clock_south_um": 9.708,
-  "reset_south_um": 11.868,
-  "reload_south_um": 4.86,
+  "clock_south_um": 9.42,
+  "reset_south_um": 11.58,
+  "reload_south_um": 4.716,
   "matched_control_epoch_abort_paths": 44,
   "matched_requested_worst_hop_um": 21.714,
-  "inspected_png": "/home/ubuntu/wt/codex-qkv-native-0253/results/arch/qwen_native_static_endpoint_1015/calendar_compact_pins_0253/pin_proposal.png",
+  "inspected_png": "/home/ubuntu/wt/codex-qkv-native-0253/results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253/pin_proposal.png",
   "visual_findings": [
     "Compact functional rectangle retains two aligned west cfg/cal bands and centred south clock.",
     "All44 matched global control/epoch endpoints unchanged within1e-8um.",
@@ -49,11 +49,11 @@
     "Bind actual producer package anchor and all remaining incident paths in die successor."
   ],
   "files_sha256": {
-    "plan.json": "1cb965adbe2f0b46d8d00367692743e78586c9667010fe7ff1ad9ac3e4280545",
-    "change_ledger.json": "221d65aea04cf54fd4a35e17b063a55d9af7f2b66e2977877cb50d9e1b3d43df",
+    "plan.json": "1ad0174aacaeaf4dc0a6f9480cf069de60db19135a70f7d6af43c1c7f662ff65",
+    "change_ledger.json": "428e80956842d1e4bd0ff200a2793939516dbbd2adf62ab67f00fada683bcfea",
     "qkd_d2d_static_e_3track.tcl": "dde41e669a0c5dc9e850836fb334271d31065981993ffded48519719c11776ff",
-    "qkd_d2d_cal_seq.tcl": "67465cc7ef55e7675281d88e70e54173cc8f0e551b54c6e6513b2765a12b34a2",
-    "pin_proposal.png": "e951088c9be9ec6a04bc096d601175e1b3c900fc60b45e3485952be551500cbc"
+    "qkd_d2d_cal_seq.tcl": "e51c82f8424c785cf6c159b2d29fd23e46aa48af51832da02d8682be3013262a",
+    "pin_proposal.png": "7fde24f3e2857bf1a579fa71e6f065f4d6d63e12326950b74d2478164b1f9294"
   },
   "prior_grant_slot_um": [
     5507.136,
@@ -61,7 +61,7 @@
     43.2,
     43.2
   ],
-  "motivation": "Actual155FF/163um2 synthesis and218um2 CTS cells made original43.2square sparse. Compact359.25um2 core estimates45.4% synth/60.7% CTS utilization.",
+  "motivation": "Core343.85472um2 measured synth156um2=45.37%, logic163um2=47.40%, oldCTS218um2 projects63.40%; final gate must measure actual. No additional width tuning planned.",
   "previous_cts_diagnostic": {
     "launch_ps": 193.3,
     "capture_ps": 139.8,

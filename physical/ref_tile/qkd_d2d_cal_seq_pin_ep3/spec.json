@@ -16,7 +16,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 19.44,
+  "w": 18.792,
   "h": 28.08
  },
  "layer_cap": "M5",
@@ -48,7 +48,7 @@
    "reload"
   ]
  },
- "io_tcl": "results/arch/qwen_native_static_endpoint_1015/calendar_compact_pins_0253/qkd_d2d_cal_seq.tcl",
+ "io_tcl": "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253/qkd_d2d_cal_seq.tcl",
  "orfs_vars": {
   "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
  },
@@ -82,7 +82,8 @@
    "rtl/test/qwen_split/run_cal_pin.sh",
    "rtl/test/qwen_split/tb_qkd_cal_pin.sv",
    "results/arch/qwen_native_static_endpoint_1015/calendar_both_pins_0253",
-   "results/arch/qwen_native_static_endpoint_1015/calendar_compact_pins_0253"
+   "results/arch/qwen_native_static_endpoint_1015/calendar_compact_pins_0253",
+   "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253"
   ],
   "benches": [
    {
@@ -119,5 +120,5 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "local_home_grant": "physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/local_home_grant.json",
- "structural_change": "Measured source156um2 synthesis/163um2 textbook/218um2 CTS total; original43.2square only10.8% util. Compact19.44x28.08 projects45.4% std/60.7% postCTS. All44matched global source/consumer endpoints unchanged; no RTL/cycles/relay change. Parent inspected and granted compact home inside original43.2slot/full oldgroupkeepout."
+ "structural_change": "Measured source156um2 synthesis/163um2 textbook/218um2 CTS total; original43.2square only10.8% util. Compact19.44x28.08 projects45.4% std/60.7% postCTS. All44matched global source/consumer endpoints unchanged; no RTL/cycles/relay change. Parent inspected and granted compact home inside original43.2slot/full oldgroupkeepout. Final width correction18.792 retains exact44Wpins/home inside granted19.44box: distinct synth156/logic163 measured area become45.37%/47.40%, not roundedup; actualCTS/native rerun required. No further width tuning planned."
 }
