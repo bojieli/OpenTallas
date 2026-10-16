@@ -23,9 +23,24 @@ endfunction
 reg[511:0]gold[0:65535];reg touched[0:65535];integer issued[0:65535];
 integer cycle=0,op_start=0,op_ends=0,rows_emitted=0,rows_checked=0,read_issued=0;
 integer op_tiles=0,op_ns=0,op_stride=0,op_payload=0,op_split=0,op_id=0;
-integer expected_end=0;
+integer expected_end=0,op_base=0,op_ots=0,op_ojs=0;
+reg op_started=0;reg[550:0]expected_rb;integer grow,gid;reg row_active,slot_end;
 always @(negedge clk)if(rst_n)begin
  cycle=cycle+1;
+ for(integer h=0;h<6;h=h+1)begin
+  expected_rb=0;
+  if(op_started)for(integer k=0;k<8*op_tiles;k=k+1)for(integer j=0;j<op_ns;j=j+1)begin
+   if(cycle==op_start+2+h*op_ns+(k/8)*((8*op_ns>op_stride)?8*op_ns:op_stride)+(k%8)*op_ns+j+(op_payload?2:1))begin
+    row_active=op_payload&&(op_split<=9||h==0);
+    slot_end=h==5&&j==op_ns-1;
+    gid=(op_split<=9)?h*(1<<(9-op_split))+j:j;
+    grow=op_base+(k/8)*op_ots*(3072>>op_split)+(k%8)*op_ojs+gid*op_ots;
+    if(row_active||slot_end)expected_rb={1'b1,slot_end,slot_end&&!row_active,
+      (row_active?20'(grow):20'd0),(row_active?16'hffff:16'd0),(row_active?image(grow,op_id):512'd0)};
+   end
+  end
+  if(op_started&&rb[h]!==expected_rb)$fatal(1,"exact RB calendar/data mismatch op%0d h%0d cycle%0d got%h want%h",op_id,h,cycle,rb[h],expected_rb);
+ end
  for(integer h=0;h<6;h=h+1)if(rb[h][550])begin
   if(!rb[h][548])rows_emitted=rows_emitted+1;
   if(rb[h][549])begin
@@ -45,6 +60,7 @@ task automatic run_op(input integer id,sp,tiles,ts,base,ots,ojs,pay);
  integer ns,span,k,g,row,cap;
  begin
  ns=(sp<=7)?4:(sp==8)?2:(sp==9)?1:(sp==10)?3:1;
+ op_started=1;op_base=base;op_ots=ots;op_ojs=ojs;
  op_id=id;op_tiles=tiles;op_ns=ns;op_stride=ts;op_payload=pay;op_split=sp;op_ends=0;
  start=1;count=4'(tiles);nh=4'(ns);stride=32'(ts);payload=pay;op_start=cycle;
  span=(tiles-1)*ts+8;
