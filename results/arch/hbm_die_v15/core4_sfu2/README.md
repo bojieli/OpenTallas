@@ -89,3 +89,16 @@ python3 tools/hbm_die_v15/rf_centre_allocate.py results/arch/hbm_die_v15/core4_s
 python3 tools/hbm_die_v15/standard_relay_compare_1016.py
 python3 tools/hbm_die_v15/sfu_geometry_compare_1016.py
 ```
+
+An additional obstacle-avoiding necessary cut fails before station placement:
+through the second SU slice, two broad LG groups plus actual qcore-to-first-
+slice signals require 2,676 bits. Adjacent SM frames leave 260 µm total channel,
+so the established 14.0625 tracks/µm supply gives 0.731897 utilization, above
+0.60. This needs at least 317.155556 µm channel even before clocks, reset glue,
+programme 474-macro candidate storage, SKV/collective traffic or other incident
+links. It is conditional on hard-frame avoidance; using higher-metal feedthrough
+requires actual leaf OBS/layer/PG evidence. The old aggregate cut does not expose
+this bottleneck. Actual station footprints must follow a structural channel or
+distributed-SFU successor rather than being forced into this failing route plane.
+See sfu_barrier_cuts.json and the personally inspected sfu_barrier_cuts.png;
+`python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py` reproduces them.
