@@ -123,5 +123,8 @@
  "pin_regs": {
   "enable": false,
   "reason": "RTL owns its pin registers: ot_hgi_coll_static_capture_ctl captures every external input before any guard fork and launches every output from a flop (closed hcoll_capture_ctl); the only added logic is the V4 parent's 8-bit epoch select ahead of that capture. An extra recipe-3 cycle would break the host_v4 lockstep edge contract."
+ },
+ "fill_reason": {
+  "pin_bound": "3,663 signal pins (612b TX + 612b RX pin frames, 545b wr/rx flits, 4 x 141b bank_data + stored, 88 W control): N 1,141 / S 1,157 / E 1,157 bits on the closed hcoll_capture_ctl 324 x 216 um outline (3.5-5.4 pins/um at the 2-track M3/M4/M5 pin pitch); synthesized std area 2,970 um2 (util 4%) cannot shrink the perimeter. Same outline and pin plan as the CLOSED view."
  }
 }
