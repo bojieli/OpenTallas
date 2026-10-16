@@ -1,0 +1,45 @@
+{
+  "scope": "Source integration and component proofs only. Full die native completeness and physical closure remain FAIL/OPEN.",
+  "ancestors": [
+    "2d0114e95",
+    "af7d0ebaa",
+    "5c95ab790",
+    "4451e38e5",
+    "6d78e26ae",
+    "30b66e65a",
+    "d5ead308c"
+  ],
+  "reviewed_source_dependencies": [
+    "53ece5c68",
+    "49705ce8a"
+  ],
+  "hardening_fresh_proofs": [
+    "0668c7902",
+    "81973ec53"
+  ],
+  "root_base": "51afac086b6d90cbe1fbe425b5d87992e2300398",
+  "preserved_main": "e486c3202 registered DMA stack identity and universal calendar homes/masters retained",
+  "binding_correction": "Universal calendar per-field zero-extension preserves original per-quadrant packed ABI;15 explicit low-field slices replace15 stale whole-field edges.",
+  "new_host_targets": {
+    "fill": [
+      56,
+      57,
+      58,
+      59
+    ],
+    "endpoint_calendar": [
+      132,
+      133,
+      134,
+      135
+    ]
+  },
+  "host_component_results": "67 targets readiness/active/completion and100 faults PASS; two status mutants rejected. EP realF20target+mappedSRAM1536 slots,512 wraps and invalidword fault PASS;2 calendar mutants reject.",
+  "limitations": [
+    "SU3:4 multirate predecessor run interrupted exit143; SU_TOP and isolatedjoins PASS only",
+    "Keyscorer tags now128*port+beat and all32servicegroups require compiler go_at[142:119], FIXED_GO1",
+    "VMkshare quadrant proof uses declared K-port controller models: boundarycomponent proof only, no truefullPHY/controller/die qualification",
+    "HCclientbench uses declaredexternal engine-tail inputs/VMboundary; no nativeHCengine qualification",
+    "New collars/status leaves and EPcalendar instances have no native physical views/homes yet"
+  ]
+}

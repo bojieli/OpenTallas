@@ -9,8 +9,8 @@ mv $OUT.gen.log $OUT/gen.log
 # masters defined outside die_port_bind's default roots (rtl/, physical/**/rtl) enter as explicit RTL files
 EXTRA=$(python3 -c "
 import json,sys; c=json.load(open('$OUT/contract.json'))
-print(' '.join(sorted({'--rtl-file '+i['source'] for i in c['instances'].values()
-      if not (i['source'].startswith('rtl/') or '/rtl/' in i['source'])})))")
+print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in [i['source']]+i.get('rtl_deps',[])
+      if not (f.startswith('rtl/') or '/rtl/' in f)})))")
 python3 tools/die_port_bind.py $OUT/die.v --top hbm_v16_die $EXTRA \
   --allow-model ot_hbm3e_phy_rc_e8p5 --allow-model ot_hbm_pll_bb --define OT_SMH_FC_HIER \
   --strap-file $OUT/straps.json --out $OUT/port_bind.json > $OUT/port_bind.log 2>&1
