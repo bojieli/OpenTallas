@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Native group-count successors: RG7/WG3(NW/NE), RG5/WG1(SW/SE).
+// Native group-count successors (H-NETLIST 0600): SW RG5/WG2 NC2, SE RG4/WG2, NW RG5/WG3 NC0, NE RG4/WG2.
 // Real eight-bank SRAM vehicle; no bank or response substitute.
 module tb_hbm_vm_native_parent;
     parameter integer SID=0,RG=5,WG=2;
@@ -50,9 +50,9 @@ module tb_hbm_vm_native_parent;
        .clk_ring({2{clk}}),
        .clk_replay(clk),
        .rst_n(rst_n),
-       .client_seq(8'd0),
-       .response_enable(4'd0),
-       .response_seq(8'd0),
+       .client_seq(6'd0),
+       .response_enable(3'd0),
+       .response_seq(6'd0),
        .bank_enable(8'd0),
        .bank_client(16'd0),
        .hub_ring_enable(2'd0),
@@ -82,7 +82,7 @@ module tb_hbm_vm_native_parent;
        .mirror_busy(),
        .vmstat(),
        .ring_fault(),
-       .cq(1014'd0),
+       .cq(676'd0),
        .cr());
     end
     if(SID==1)begin:quadrant_SE
@@ -132,13 +132,13 @@ module tb_hbm_vm_native_parent;
        .clk_ring({2{clk}}),
        .clk_replay(clk),
        .rst_n(rst_n),
-       .client_seq(8'd0),
-       .response_enable(4'd0),
-       .response_seq(8'd0),
+       .client_seq(2'd0),
+       .response_enable(1'd0),
+       .response_seq(2'd0),
        .bank_enable(8'd0),
-       .bank_client(16'd0),
+       .bank_client(8'd0),
        .hub_ring_enable(2'd0),
-       .hub_ring_client(4'd0),
+       .hub_ring_client(2'd0),
        .rslot_v(rslot_v),
        .wslot_v(wslot_v),
        .rslot(rslot),
@@ -163,9 +163,7 @@ module tb_hbm_vm_native_parent;
        .hub_status(),
        .mirror_busy(),
        .vmstat(),
-       .ring_fault(),
-       .cq(1014'd0),
-       .cr());
+       .ring_fault());
     end
     if(SID==3)begin:quadrant_NE
       hfd_hgi_vms_static_NE #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT)) u_die_master (

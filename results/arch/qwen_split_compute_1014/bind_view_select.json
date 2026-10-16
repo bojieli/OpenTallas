@@ -1,0 +1,7 @@
+{
+ "schema": "qwen.compute.bind_view_select.v1",
+ "note": "Q-COMPUTE-DIE 10-16: die masters with more than one CLOSED view of the same name; bind_real (OT_BIND_VIEW_SELECT) binds the listed one. qfd_d2d_static: r5 (closure-loop qfd_d2d_static_r5-r5-99ecb9ed4, main 767499a02) supersedes r1 (f779ceecf).",
+ "views": {
+  "qfd_d2d_static": "physical/ref_tile/qfd_d2d_static_r5/views/qfd_d2d_static"
+ }
+}

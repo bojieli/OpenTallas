@@ -30,7 +30,7 @@ module ot_vms_bank_native_physical #(
 );
 
  initial begin
- if(QUADRANT<0||QUADRANT>3||RG!=(QUADRANT==1?4:5)||WG!=(QUADRANT<2?2:3))$fatal(1,"native bank shape mismatch");
+ if(QUADRANT<0||QUADRANT>3||RG!=((QUADRANT==1||QUADRANT==3)?4:5)||WG!=(QUADRANT==2?3:2))$fatal(1,"native bank shape mismatch");
  if(MUT!=0&&MUT!=3&&MUT!=4&&MUT!=5)$fatal(1,"unsupported native mutation");
  end
  wire[2:0] die_bid=MUT==3?bid^3'd1:bid;wire[1:0]die_sid=MUT==4?sid^2'd1:sid;wire die_clk=MUT==5&&bid==7?1'b0:clk;
@@ -126,7 +126,8 @@ module ot_vms_bank_native_physical #(
 .wq2(wq[2*281+:281]),.wq_done2(wq_done[2]));
  end
  if(QUADRANT==3)begin:q3
- hfd_vms_bank_native_q3 u_bank(
+ // NE shares the SE bank master (RG4/WG2); sid is a port (H-NETLIST 0600)
+ hfd_vms_bank_native_q1 u_bank(
 .bid(die_bid),
    .sid(die_sid),
    .clk(die_clk),
@@ -151,10 +152,8 @@ module ot_vms_bank_native_physical #(
 .rq1(rq[1*17+:17]),.rr1(rr[1*257+:257]),
 .rq2(rq[2*17+:17]),.rr2(rr[2*257+:257]),
 .rq3(rq[3*17+:17]),.rr3(rr[3*257+:257]),
-.rq4(rq[4*17+:17]),.rr4(rr[4*257+:257]),
 .wq0(wq[0*281+:281]),.wq_done0(wq_done[0]),
-.wq1(wq[1*281+:281]),.wq_done1(wq_done[1]),
-.wq2(wq[2*281+:281]),.wq_done2(wq_done[2]));
+.wq1(wq[1*281+:281]),.wq_done1(wq_done[1]));
  end
  endgenerate
 endmodule
