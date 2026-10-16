@@ -47,5 +47,9 @@
   "direct_read_conservative_rule": "R >= W+5 for all8 tested source offsets; no incoming physical relay transport included",
   "reply_age_reference": "f_wfc[528] sampled serial R -> t_wfc[514] valid/data observed after NBA at serial R+21",
   "request_profile": "WFC core capture-to-decoded write output source-xi=2 currentcore edges (legacy1); totalreply+4core/+3serial includes request, never+5",
-  "production_epoch_proposal": "off-default future FIRST_SLOT_S/PERIOD_S multiple3/SLOT_COUNT, serial counter from declared srst_n epoch and pending52bit metadata; emit every reserved slot regardless pending/availability; commonphysicalepoch/compilerparamproducer stillUNBOUND"
+  "production_epoch_proposal": "off-default future FIRST_SLOT_S/PERIOD_S multiple3/SLOT_COUNT, serial counter from declared srst_n epoch and pending52bit metadata; emit every reserved slot regardless pending/availability; commonphysicalepoch/compilerparamproducer stillUNBOUND",
+  "joined_wrong_write_negative_cases": 8,
+  "joined_current_model_positive_cases": 8,
+  "wrong_write_failure": "actual c8-command/read-pin adapter observes changed bit returned from actual mapped SRAM; no source/internal expected forwarding",
+  "source_grid_status": "terminal PASS diagnostics only; single-programme arbitrary-phase production admission remains BLOCKED"
 }

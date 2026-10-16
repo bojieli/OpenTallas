@@ -4,7 +4,8 @@
     "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv": "289cde28ff543d3ae18302e212313ec05961b7b66b404f6ddf8b2e15138688c7",
     "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
     "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
-    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521"
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "tools/s81_static_control/program.py": "0cc4b547f0251cd8e1a18fb5c5ca8cd95f4244216ce2236645c9a94e8bdd6ccb"
   },
   "existing_state": {
     "vmx_w": "local reset synchronizers, FIFO pointers, busy, wcnt; no absolute epoch counter or reserved slot",
@@ -30,5 +31,6 @@
     "production_binding": "UNBOUND; no default production admission",
     "scope": "future source-visible logical epoch mechanism only; physical common epoch still external"
   },
-  "production_admissible": false
+  "production_admissible": false,
+  "existing_compiler_gate": "emit_native requires evidence-backed native_clock_epoch.physical_phase_qualified=true and phase_modulus_stream4; validates same-mod4 context_launch_cycles. encode_program alone is unqualified. Neither API currently emits START slot/reset binding."
 }
