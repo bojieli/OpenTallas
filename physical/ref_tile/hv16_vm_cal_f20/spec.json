@@ -50,6 +50,7 @@
   ],
   "S": [
    "clk",
+   "clk_tgt",
    "calendar_v",
    "active",
    "done",
@@ -188,7 +189,8 @@
  "clock_ports": [
   "clk",
   "clk_cap",
-  "clk_mem"
+  "clk_mem",
+  "clk_tgt"
  ],
  "clock_entry_domains": {
   "core": {
@@ -224,9 +226,7 @@
     "active",
     "done",
     "fault",
-    "ordinal",
-    "tgt_configured",
-    "tgt_fault"
+    "ordinal"
    ]
   },
   "cap": {
@@ -261,6 +261,20 @@
    ],
    "inputs": [],
    "outputs": []
+  },
+  "tgt": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_tgt"
+   ],
+   "inputs": [],
+   "outputs": [
+    "tgt_configured",
+    "tgt_fault"
+   ]
   }
  },
  "clock_data_paths": "related_same_frequency",
@@ -274,7 +288,8 @@
  },
  "clock_cts_roots": [
   "clk",
-  "clk_cap"
+  "clk_cap",
+  "clk_tgt"
  ],
  "slot_change_request": "H-NETLIST 0600: the 12 die calendars (calendar_<q>, epcal_<q>, vmfc_<q>) bind this folded master; W face takes the F20 bus + tgt strap instead of the collar programme pins; outline grows 220.32x116.64 -> 259.2x151.2 (target bitmap + data regs); H-DIE homes.",
  "reroute_reason": {

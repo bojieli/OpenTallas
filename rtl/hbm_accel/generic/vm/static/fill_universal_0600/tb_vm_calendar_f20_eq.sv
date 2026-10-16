@@ -24,7 +24,7 @@ module tb_vm_calendar_f20_eq;
         .replay_source(rf[138]),.lg_local_read(rf[139+:24]),.lg_local_write(rf[163+:24]));
     // device under test
     wire [186:0] df; wire d_v,d_act,d_done,d_fault,d_conf,d_tf; wire [31:0] d_ord;
-    hfd_hgi_vm_calendar_f20 dut(.clk(clk),.clk_cap(clk),.clk_mem(clk),.rst_n(rst_n),.tgt(MUT==1?T+8'd1:T),.cfg_v(cfg_v),
+    hfd_hgi_vm_calendar_f20 dut(.clk(clk),.clk_cap(clk),.clk_mem(clk),.clk_tgt(clk),.rst_n(rst_n),.tgt(MUT==1?T+8'd1:T),.cfg_v(cfg_v),
         .cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
         .desc_loops(desc_loops),.launch_v(launch_v),.tgt_configured(d_conf),.tgt_fault(d_tf),.calendar_v(d_v),.active(d_act),.done(d_done),
         .fault(d_fault),.ordinal(d_ord),.client_seq(df[0+:10]),.response_enable(df[10+:5]),.response_seq(df[15+:10]),.bank_enable(df[25+:8]),

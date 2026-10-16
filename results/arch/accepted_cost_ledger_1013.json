@@ -388,6 +388,53 @@
   },
   {
    "design": "s81",
+   "unit": "FIELD.CFG7_SEQ_PINREG (ot_s81_cfg7_seq_bfp / ot_s81_cfg7_seq pr3 at LAYOUT 1 PINREG 1: lc->a/ce +2, lc->cfg/go_e +4, st +5 edges vs PINREG 0; il7 cfg image)",
+   "group": "FIELD.CFG7_SEQ_PINREG",
+   "measured": 5.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 5.0,
+   "e2e_loss_pct": 0.14,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 830026.4,
+     "added_cycles": 1160.0,
+     "runs_per_token": 336,
+     "critical_runs": 290,
+     "overlapped_runs": 46,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1344.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.14
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1178924.1,
+     "added_cycles": 1408.0,
+     "runs_per_token": 312,
+     "critical_runs": 312,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1248.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 32.0,
+     "e2e_loss_pct": 0.119
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ELEM-PQ 10-16: view closed s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (native PASS), bound by S-DIE gen26d; exact gate tools/s81/cfg7_bfp_bench.sh pr. Charged +4 (lc->go_e) on every FIELD matrix job of the token path (upper bound: assumes lc cannot be issued under the previous phase; status +5 is off the data path). Compiler: field_cfg7_stage emits --layout il7 for this view.  S-ELEM-PQ 10-16 ~09:00: PINREG 1 = PINREG 0 shifted in time (inputs +1, cfg/go_e/st/go_tag +3; lockstep proof tools/s81/fill2_cfg7_bench.sh pr_pq1/pr_bf and cfg7_bfp_bench.sh pr). Cost is 0 when the issuer presents lc 4 edges earlier WITHOUT entering the loader window (cfg_go >= 40 edges before go and after the previous programme ends; a cfg_go during a pending load is the second-broadcast fault). Kept at +4 until the compiled 89-stage FIELD calendar shows >= 4 edges of slack before every cfg_go (no native 89-stage programmes exist yet)."
+  },
+  {
+   "design": "s81",
    "unit": "FIELD.RETURN_NODE_R2 (ot_s81_retn_static r2: +3 fixed pipeline edges per return-node level, 6 levels worst frame)",
    "group": "FIELD.RETURN_NODE_R2",
    "measured": 18.0,
@@ -485,42 +532,42 @@
   },
   {
    "design": "s81",
-   "unit": "HC.CTR_COLUMN_YBEAT (ctra/ctrb_column return: y-beat register stage, +1 return cycle on every HC NORM pre job; removes 3,558 joins > 500 um, worst 815.7 um)",
+   "unit": "HC.CTR_COLUMN_YBEAT (ctra/ctrb_column YB_STAGE=1: +2 return cycles per HC chain traversal (column payload +1, y stage +1; once per chain via far-tile origination) + 1 bank-request cycle; ctrn as 4 per-column slices at 0 cycles)",
    "group": "HC.CTR_COLUMN_YBEAT",
-   "measured": 2.0,
+   "measured": 4.0,
    "price": 1.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 2.0,
-   "e2e_loss_pct": 0.01,
+   "unit_ratio": 4.0,
+   "e2e_loss_pct": 0.029,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 828866.4,
-     "cycles": 828947.4,
-     "added_cycles": 81.0,
+     "cycles": 829109.4,
+     "added_cycles": 243.0,
      "runs_per_token": 81,
      "critical_runs": 81,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 81.0,
+     "naive_added_cycles": 243.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 0.01
+     "e2e_loss_pct": 0.029
     },
     "mtp": {
      "model": "token-path longest path",
      "base_cycles": 1177516.1,
-     "cycles": 1177613.1,
-     "added_cycles": 97.0,
+     "cycles": 1177807.1,
+     "added_cycles": 291.0,
      "runs_per_token": 87,
      "critical_runs": 87,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 87.0,
+     "naive_added_cycles": 261.0,
      "wave_positions": 5,
-     "wave_added_cycles_per_position": 2.0,
-     "e2e_loss_pct": 0.008
+     "wave_added_cycles_per_position": 6.0,
+     "e2e_loss_pct": 0.025
     }
    },
    "within_unit_limit": true,
@@ -528,7 +575,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
    "status": "proposed",
-   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16 ~07:00; el1015-s81-surx-engram.log 06:59): column RTL 82424ff85 + proposed y-beat relay; on top of the +1 already accepted for the columns. Priced +1 cycle on every hc_pre token-path node (upper: no overlap credit). Native/physical not yet built."
+   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16), measured on the proven RTL claude/s81-hccol-0600 YB_STAGE=1; supersedes the +1 proposal. Charged +3 (request +1, return +2) on every hc_pre token-path node (one chain traversal per NORM pre job; upper, no overlap credit). Native/physical column views not yet built."
   },
   {
    "design": "s81",
@@ -1731,11 +1778,11 @@
   },
   "s81": {
    "accepted_pct": 23.391,
-   "proposed_pct": 1.257,
-   "accepted_plus_proposed_pct": 24.648,
+   "proposed_pct": 1.416,
+   "accepted_plus_proposed_pct": 24.807,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 4,
+   "proposed_rows": 5,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true

@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g15/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g17/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
  "summary": {
   "masters": 61,
-  "instances": 1536,
+  "instances": 1532,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -20,7 +20,7 @@
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 15,
+  "strap_ports": 16,
   "pad_bits": 2288
  },
  "masters": {
@@ -1454,7 +1454,7 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hgi_sm_xload_cl2_ctl": {
+  "ot_hgi_sm_xload_cl2_ctlw": {
    "verdict": "PASS",
    "fails": [],
    "instances": 4,
@@ -1467,12 +1467,14 @@
     "xl_NW_ctl"
    ],
    "param_sets": {
-    "{\"MUT\": \"0\", \"NR\": \"32\", \"PMAX\": \"8\", \"RD_LAT\": \"6\"}": 4
+    "{\"LEAD\": \"8\", \"NR\": \"32\", \"PMAX\": \"8\", \"RD_LAT\": \"6\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "tgt"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -1530,7 +1532,7 @@
   "ot_static_cmd_target": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 36,
+   "instances": 32,
    "rtl": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -1540,8 +1542,7 @@
     "cp_svg_SW2"
    ],
    "param_sets": {
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TGT_PIN\": \"1\"}": 32,
-    "{\"CW\": \"108\", \"MODE\": \"1\", \"NA\": \"1\", \"NF\": \"1\", \"RELF\": \"0\", \"TGT_PIN\": \"1\"}": 4
+    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TGT_PIN\": \"1\"}": 32
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1593,7 +1594,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "1d259907b17dd885d9da7fc50227c2c2459e1fbfab799e55ee683d000e6f79de",
+ "die_sha256": "e882e87562f623dfeec9671bc9b41ed5e3d89cd4f4c58d7f0b7e93afdb94bb7d",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "ot_hbm_hc_eng_static:tgt",
@@ -1609,6 +1610,7 @@
   "ot_hbm_vm_lg_static_bank:wret",
   "ot_hgi_dma_back_static_vp4_banks_cp:stk",
   "ot_hgi_dma_back_static_vp4_banks_cp:tgt",
+  "ot_hgi_sm_xload_cl2_ctlw:tgt",
   "ot_static_cmd_target:tgt"
  ],
  "params_file": null,
