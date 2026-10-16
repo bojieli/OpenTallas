@@ -20,7 +20,27 @@
  ],
  "visual_findings": "Empty central20um strip removed relative to43.2. Pins distributed over106.7um of each129.6um face; edge-local FF strips. Remaining narrow center supports clock/buses. Both-edge hold-stage congestion warning requires actual trialGRT before route.",
  "native_final_audit": "OPEN",
- "trial_GRT": "QUEUED_NOT_YET_QUALIFIED",
+ "trial_GRT": "PASS: source-frozen copied CTS; exit0, overflow0 all layers",
  "production_native_complete": false,
- "SFU_core_home": "OPEN"
+ "SFU_core_home": "OPEN",
+ "trial_GRT_record": "width21_grt/trial.log",
+ "post_GRT": {
+  "ORFS_report_area_um2": 1128,
+  "ORFS_core_util_percent": 52,
+  "ODB_std_area_um2": 1101.3,
+  "ODB_outline_fill_fraction": 0.393,
+  "max_layer_usage_percent": 45.29,
+  "max_layer": "M2",
+  "total_usage_percent": 22.96,
+  "overflow": 0,
+  "looked_images": [
+   "width21_grt/floorplan.png",
+   "width21_grt/density.png",
+   "width21_grt/congestion.png"
+  ]
+ },
+ "die_grants": [
+  "3a8992092",
+  "0511f5684"
+ ]
 }

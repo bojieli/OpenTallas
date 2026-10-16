@@ -1,0 +1,29 @@
+ot-run: ot-epyc1tb     admits   395 GB (avail 622, growth 151, headroom 64, waiters 0/0 GB) load 107/128 running 17 disk 452 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/hbm_sfu_lg_pair_leaf_2330-20261015-234535
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/hbm_sfu_lg_pair_leaf_2330-20261015-234535
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/hbm_sfu_lg_pair_leaf_2330-20261015-234535
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1895750-1792133470 after 0 s
+TRIAL_GRT_RC=0
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 1128 um^2 52% utilization.
+[INFO FLW-0007] clock core_clk period 770.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 2247
+source /work/hooks/post_global_route_post_grt.tcl
+write_db /work/results/asap7/opentallas_ot_hgi_sfu_lg_pair_leaf_asap7_ref_gate/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_sfu_lg_pair_leaf_asap7_ref_gate/base/5_1_grt.sdc
+Elapsed time: 1:08.51[h:]min:sec. CPU time: user 204.12 sys 0.96 (299%). Peak memory: 567588KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb           68            554 445bac17b5af14e7bf1c
+5_1_grt                   .sdc                             08f526b5bd555cfd95b2
+M1                   0             0            0.00%             0 /  0 /  0
+M2               78094         35371           45.29%             0 /  0 /  0
+M3               96837         16092           16.62%             0 /  0 /  0
+M4               71400         15162           21.24%             0 /  0 /  0
+M5               71550          6365            8.90%             0 /  0 /  0
+Total           317881         72990           22.96%             0 /  0 /  0
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1895750-1792133470): exit 0
