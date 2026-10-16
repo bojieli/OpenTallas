@@ -97,7 +97,9 @@ def main():
     ap.add_argument('--input-odb', required=True, type=Path)
     ap.add_argument('--dump', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
-    ap.add_argument('--domains', default='serial', help='comma-separated PLL domains; pilot starts small')
+    ap.add_argument('--domains', default='serial', help='comma-separated PLL domains; empty string selects only extra roots')
+    ap.add_argument('--extra-root', action='append', default=[], metavar='NAME=INST/PIN',
+                    help='actual forwarded clock output; preserve that native driver and all its actual input loads')
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     if (a.out / 'physical_clock.odb').exists():
@@ -120,7 +122,28 @@ def main():
     # Snapshot a complete clock-like input inventory. This is a deliberately
     # conservative discovery list; it is NOT a substitute for per-pin Liberty
     # and RTL clock-source/forwarded-clock binding.
-    clocklike = re.compile(r'^(?:ck|clk|sk|fi|xf|cr|wclk|rclk)(?:_|\[|$)')
+    clocklike = re.compile(r'^(?:(?:ck|clk|sk)|(?:fi0?|xf|cr|wclk|rclk|io_clk)(?:_|\[|$))')
+    root_names={d:f'sp_collective/pll_{d}[0]' for d in a.domains.split(',') if d}
+    noncanonical_entries=[]
+    for spec in a.extra_root:
+        name,root=spec.split('=',1)
+        if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*',name) or name in root_names:
+            raise ValueError(f'invalid or duplicate extra clock root name: {name}')
+        driver=block.findITerm(root)
+        if not driver or driver.getIoType()!='OUTPUT' or not driver.getNet():
+            raise ValueError(f'extra root must be an actual connected macro clock output: {root}')
+        box=driver.getBBox()
+        roots[root]=((box.xMin()+box.xMax())/2/dbu,(box.yMin()+box.yMax())/2/dbu)
+        entries[root]=[]
+        for pin in driver.getNet().getITerms():
+            if pin.getIoType()!='INPUT':continue
+            inst=pin.getInst();port=pin.getMTerm().getName();box=pin.getBBox()
+            if not clocklike.match(port) and pin.getMTerm().getSigType()!='CLOCK':
+                noncanonical_entries.append(inst.getName()+'/'+port)
+            entries[root].append((inst.getName()+'/'+port,inst.getMaster().getName(),
+                (box.xMin()+box.xMax())/2/dbu,(box.yMin()+box.yMax())/2/dbu))
+        if not entries[root]:raise ValueError(f'extra root has no real input loads: {root}')
+        root_names[name]=root
     observed = {row[0] for vals in entries.values() for row in vals}
     discovery = []
     master_pins = {}
@@ -139,8 +162,7 @@ def main():
                                       reason='not reached by supplied PLL clock check'))
     (a.out / 'uncovered_clock_inventory.json').write_text(json.dumps(discovery, indent=1)+'\n')
     trees, selected, checks = {}, {}, {}
-    for domain in a.domains.split(','):
-        root = f'sp_collective/pll_{domain}[0]'
+    for domain,root in root_names.items():
         if root not in roots or root not in entries:
             raise ValueError(f'no actual placed root/entries for {root}')
         rpin = block.findITerm(root)
@@ -215,10 +237,10 @@ def main():
         source_sha256={str(p.relative_to(Path(__file__).resolve().parents[2])): digest(p)
             for p in [Path(__file__).resolve(), Path(dct.__file__), Path(clock_sites.__file__)]},
         dimensions_um=[width,height], hard_obstacles=len(obstacles),
-        domains={d:dict(root=selected[d][0], actual_entries=len(selected[d][2]), checks=checks[d], model=t['model'])
+        domains={d:dict(root=selected[d][0], clock_kind='pll' if selected[d][0].startswith('sp_collective/pll_') else 'native_macro_forwarded_output', actual_entries=len(selected[d][2]), checks=checks[d], model=t['model'])
                  for d,t in trees.items()},
         actual_clock_buffers=len(all_buffers), buffers=all_buffers, entries=leaf_map,
-        unwalked_clocklike_pins=len(discovery),
+        unwalked_clocklike_pins=len(discovery),noncanonical_explicit_root_entries=noncanonical_entries,
         open_obligations=['propagated TT/FF arrival with actual pin capacitance and physical RC',
             'per-child corner insertion R compensation: physical positive delays only',
             'all PLL and forwarded/ratio clock coverage against RTL/Liberty',
