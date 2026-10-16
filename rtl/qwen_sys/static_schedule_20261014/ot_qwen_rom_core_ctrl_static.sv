@@ -856,54 +856,98 @@ localparam integer W_ME_AMC = 1;
         dyn[7] <= 0;
     end
 
-    // DPRE (h9): per-head-word decode adds, selected after the add (removes h_rd -> ir mux from the add cone).
+    // DPRE (h9): per-head-word decode adds (log-depth Kogge-Stone, ot_hdc_ksadd_k: yosys maps `+` as a ripple),
+    // selected after the add (removes the h_rd -> ir mux from the add cone).
     `define FW(w,name) w[O_``name +: W_``name]
 `ifdef OT_DPRE_MUT
     localparam integer DPRE_X = 1;   // negative control: the per-word adds pick the wrong head word
 `else
     localparam integer DPRE_X = 0;
 `endif
-    wire [$bits(me_nout)-1:0] pre0_me_nout = `FW(hq,ME_NOUT) + dyn[`FW(hq,ME_D_NOUT)];
-    wire [$bits(me_nout)-1:0] pre1_me_nout = `FW(hq1,ME_NOUT) + dyn[`FW(hq1,ME_D_NOUT)];
+    wire [$bits(me_nout)-1:0] pa0_me_nout = `FW(hq,ME_NOUT), pb0_me_nout = dyn[`FW(hq,ME_D_NOUT)], pre0_me_nout;
+    wire [$bits(me_nout)-1:0] pa1_me_nout = `FW(hq1,ME_NOUT), pb1_me_nout = dyn[`FW(hq1,ME_D_NOUT)], pre1_me_nout;
     wire [$bits(me_nout)-1:0] dec_me_nout = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[1%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_nout : pre0_me_nout)
                                                  : `F(ME_NOUT) + dyn[`F(ME_D_NOUT)];
-    wire [$bits(me_k)-1:0] pre0_me_k = `FW(hq,ME_K) + dyn[`FW(hq,ME_D_K)];
-    wire [$bits(me_k)-1:0] pre1_me_k = `FW(hq1,ME_K) + dyn[`FW(hq1,ME_D_K)];
+    wire [$bits(me_k)-1:0] pa0_me_k = `FW(hq,ME_K), pb0_me_k = dyn[`FW(hq,ME_D_K)], pre0_me_k;
+    wire [$bits(me_k)-1:0] pa1_me_k = `FW(hq1,ME_K), pb1_me_k = dyn[`FW(hq1,ME_D_K)], pre1_me_k;
     wire [$bits(me_k)-1:0] dec_me_k = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[4%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_k : pre0_me_k)
                                                  : `F(ME_K) + dyn[`F(ME_D_K)];
-    wire [$bits(me_wbase)-1:0] pre0_me_wbase = `FW(hq,ME_WBASE) + dyn[`FW(hq,ME_D_WBASE)];
-    wire [$bits(me_wbase)-1:0] pre1_me_wbase = `FW(hq1,ME_WBASE) + dyn[`FW(hq1,ME_D_WBASE)];
+    wire [$bits(me_wbase)-1:0] pa0_me_wbase = `FW(hq,ME_WBASE), pb0_me_wbase = dyn[`FW(hq,ME_D_WBASE)], pre0_me_wbase;
+    wire [$bits(me_wbase)-1:0] pa1_me_wbase = `FW(hq1,ME_WBASE), pb1_me_wbase = dyn[`FW(hq1,ME_D_WBASE)], pre1_me_wbase;
     wire [$bits(me_wbase)-1:0] dec_me_wbase = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[7%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_wbase : pre0_me_wbase)
                                                  : `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
-    wire [$bits(me_xbase)-1:0] pre0_me_xbase = `FW(hq,ME_XBASE) + dyn[`FW(hq,ME_D_XBASE)];
-    wire [$bits(me_xbase)-1:0] pre1_me_xbase = `FW(hq1,ME_XBASE) + dyn[`FW(hq1,ME_D_XBASE)];
+    wire [$bits(me_xbase)-1:0] pa0_me_xbase = `FW(hq,ME_XBASE), pb0_me_xbase = dyn[`FW(hq,ME_D_XBASE)], pre0_me_xbase;
+    wire [$bits(me_xbase)-1:0] pa1_me_xbase = `FW(hq1,ME_XBASE), pb1_me_xbase = dyn[`FW(hq1,ME_D_XBASE)], pre1_me_xbase;
     wire [$bits(me_xbase)-1:0] dec_me_xbase = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[10%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_xbase : pre0_me_xbase)
                                                  : `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
-    wire [$bits(me_obase)-1:0] pre0_me_obase = `FW(hq,ME_OBASE) + dyn[`FW(hq,ME_D_OBASE)];
-    wire [$bits(me_obase)-1:0] pre1_me_obase = `FW(hq1,ME_OBASE) + dyn[`FW(hq1,ME_D_OBASE)];
+    wire [$bits(me_obase)-1:0] pa0_me_obase = `FW(hq,ME_OBASE), pb0_me_obase = dyn[`FW(hq,ME_D_OBASE)], pre0_me_obase;
+    wire [$bits(me_obase)-1:0] pa1_me_obase = `FW(hq1,ME_OBASE), pb1_me_obase = dyn[`FW(hq1,ME_D_OBASE)], pre1_me_obase;
     wire [$bits(me_obase)-1:0] dec_me_obase = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[13%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_obase : pre0_me_obase)
                                                  : `F(ME_OBASE) + dyn[`F(ME_D_OBASE)];
-    wire [$bits(su_nin)-1:0] pre0_su_nin = `FW(hq,SU_NIN) + dyn[`FW(hq,SU_D_NIN)];
-    wire [$bits(su_nin)-1:0] pre1_su_nin = `FW(hq1,SU_NIN) + dyn[`FW(hq1,SU_D_NIN)];
+    wire [$bits(su_nin)-1:0] pa0_su_nin = `FW(hq,SU_NIN), pb0_su_nin = dyn[`FW(hq,SU_D_NIN)], pre0_su_nin;
+    wire [$bits(su_nin)-1:0] pa1_su_nin = `FW(hq1,SU_NIN), pb1_su_nin = dyn[`FW(hq1,SU_D_NIN)], pre1_su_nin;
     wire [$bits(su_nin)-1:0] dec_su_nin = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[16%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_su_nin : pre0_su_nin)
                                                  : `F(SU_NIN) + dyn[`F(SU_D_NIN)];
-    wire [$bits(a_base)-1:0] pre0_a_base = `FW(hq,A_BASE) + dyn[`FW(hq,A_D)];
-    wire [$bits(a_base)-1:0] pre1_a_base = `FW(hq1,A_BASE) + dyn[`FW(hq1,A_D)];
+    wire [$bits(a_base)-1:0] pa0_a_base = `FW(hq,A_BASE), pb0_a_base = dyn[`FW(hq,A_D)], pre0_a_base;
+    wire [$bits(a_base)-1:0] pa1_a_base = `FW(hq1,A_BASE), pb1_a_base = dyn[`FW(hq1,A_D)], pre1_a_base;
     wire [$bits(a_base)-1:0] dec_a_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[19%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_a_base : pre0_a_base)
                                                  : `F(A_BASE) + dyn[`F(A_D)];
-    wire [$bits(b_base)-1:0] pre0_b_base = `FW(hq,B_BASE) + dyn[`FW(hq,B_D)];
-    wire [$bits(b_base)-1:0] pre1_b_base = `FW(hq1,B_BASE) + dyn[`FW(hq1,B_D)];
+    wire [$bits(b_base)-1:0] pa0_b_base = `FW(hq,B_BASE), pb0_b_base = dyn[`FW(hq,B_D)], pre0_b_base;
+    wire [$bits(b_base)-1:0] pa1_b_base = `FW(hq1,B_BASE), pb1_b_base = dyn[`FW(hq1,B_D)], pre1_b_base;
     wire [$bits(b_base)-1:0] dec_b_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[22%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_b_base : pre0_b_base)
                                                  : `F(B_BASE) + dyn[`F(B_D)];
-    wire [$bits(c_base)-1:0] pre0_c_base = `FW(hq,C_BASE) + dyn[`FW(hq,C_D)];
-    wire [$bits(c_base)-1:0] pre1_c_base = `FW(hq1,C_BASE) + dyn[`FW(hq1,C_D)];
+    wire [$bits(c_base)-1:0] pa0_c_base = `FW(hq,C_BASE), pb0_c_base = dyn[`FW(hq,C_D)], pre0_c_base;
+    wire [$bits(c_base)-1:0] pa1_c_base = `FW(hq1,C_BASE), pb1_c_base = dyn[`FW(hq1,C_D)], pre1_c_base;
     wire [$bits(c_base)-1:0] dec_c_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[25%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_c_base : pre0_c_base)
                                                  : `F(C_BASE) + dyn[`F(C_D)];
-    wire [$bits(d_base)-1:0] pre0_d_base = `FW(hq,D_BASE) + dyn[`FW(hq,D_D)];
-    wire [$bits(d_base)-1:0] pre1_d_base = `FW(hq1,D_BASE) + dyn[`FW(hq1,D_D)];
+    wire [$bits(d_base)-1:0] pa0_d_base = `FW(hq,D_BASE), pb0_d_base = dyn[`FW(hq,D_D)], pre0_d_base;
+    wire [$bits(d_base)-1:0] pa1_d_base = `FW(hq1,D_BASE), pb1_d_base = dyn[`FW(hq1,D_D)], pre1_d_base;
     wire [$bits(d_base)-1:0] dec_d_base = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[28%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_d_base : pre0_d_base)
                                                  : `F(D_BASE) + dyn[`F(D_D)];
 
+    generate if (DPRE != 0) begin : g_dpre
+        ot_hdc_ksadd_k #(.W($bits(me_nout))) u_pre0_me_nout (.a(pa0_me_nout), .b(pb0_me_nout), .cin(1'b0), .s(pre0_me_nout), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_nout))) u_pre1_me_nout (.a(pa1_me_nout), .b(pb1_me_nout), .cin(1'b0), .s(pre1_me_nout), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_k))) u_pre0_me_k (.a(pa0_me_k), .b(pb0_me_k), .cin(1'b0), .s(pre0_me_k), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_k))) u_pre1_me_k (.a(pa1_me_k), .b(pb1_me_k), .cin(1'b0), .s(pre1_me_k), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_wbase))) u_pre0_me_wbase (.a(pa0_me_wbase), .b(pb0_me_wbase), .cin(1'b0), .s(pre0_me_wbase), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_wbase))) u_pre1_me_wbase (.a(pa1_me_wbase), .b(pb1_me_wbase), .cin(1'b0), .s(pre1_me_wbase), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_xbase))) u_pre0_me_xbase (.a(pa0_me_xbase), .b(pb0_me_xbase), .cin(1'b0), .s(pre0_me_xbase), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_xbase))) u_pre1_me_xbase (.a(pa1_me_xbase), .b(pb1_me_xbase), .cin(1'b0), .s(pre1_me_xbase), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_obase))) u_pre0_me_obase (.a(pa0_me_obase), .b(pb0_me_obase), .cin(1'b0), .s(pre0_me_obase), .cout());
+        ot_hdc_ksadd_k #(.W($bits(me_obase))) u_pre1_me_obase (.a(pa1_me_obase), .b(pb1_me_obase), .cin(1'b0), .s(pre1_me_obase), .cout());
+        ot_hdc_ksadd_k #(.W($bits(su_nin))) u_pre0_su_nin (.a(pa0_su_nin), .b(pb0_su_nin), .cin(1'b0), .s(pre0_su_nin), .cout());
+        ot_hdc_ksadd_k #(.W($bits(su_nin))) u_pre1_su_nin (.a(pa1_su_nin), .b(pb1_su_nin), .cin(1'b0), .s(pre1_su_nin), .cout());
+        ot_hdc_ksadd_k #(.W($bits(a_base))) u_pre0_a_base (.a(pa0_a_base), .b(pb0_a_base), .cin(1'b0), .s(pre0_a_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(a_base))) u_pre1_a_base (.a(pa1_a_base), .b(pb1_a_base), .cin(1'b0), .s(pre1_a_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(b_base))) u_pre0_b_base (.a(pa0_b_base), .b(pb0_b_base), .cin(1'b0), .s(pre0_b_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(b_base))) u_pre1_b_base (.a(pa1_b_base), .b(pb1_b_base), .cin(1'b0), .s(pre1_b_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(c_base))) u_pre0_c_base (.a(pa0_c_base), .b(pb0_c_base), .cin(1'b0), .s(pre0_c_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(c_base))) u_pre1_c_base (.a(pa1_c_base), .b(pb1_c_base), .cin(1'b0), .s(pre1_c_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(d_base))) u_pre0_d_base (.a(pa0_d_base), .b(pb0_d_base), .cin(1'b0), .s(pre0_d_base), .cout());
+        ot_hdc_ksadd_k #(.W($bits(d_base))) u_pre1_d_base (.a(pa1_d_base), .b(pb1_d_base), .cin(1'b0), .s(pre1_d_base), .cout());
+    end else begin : g_dpre0
+        assign pre0_me_nout = '0;
+        assign pre1_me_nout = '0;
+        assign pre0_me_k = '0;
+        assign pre1_me_k = '0;
+        assign pre0_me_wbase = '0;
+        assign pre1_me_wbase = '0;
+        assign pre0_me_xbase = '0;
+        assign pre1_me_xbase = '0;
+        assign pre0_me_obase = '0;
+        assign pre1_me_obase = '0;
+        assign pre0_su_nin = '0;
+        assign pre1_su_nin = '0;
+        assign pre0_a_base = '0;
+        assign pre1_a_base = '0;
+        assign pre0_b_base = '0;
+        assign pre1_b_base = '0;
+        assign pre0_c_base = '0;
+        assign pre1_c_base = '0;
+        assign pre0_d_base = '0;
+        assign pre1_d_base = '0;
+    end endgenerate
     // Decode: every base and count may add one DYN value.
     always @(posedge clk) if (load) begin
         d_unit <= `F(UNIT); d_barrier <= `F(BARRIER);
