@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_bank6_clock7_1015-r9-COMMIT-9a821b4c9-arg1/record/views/ot_hbm_su_static_bank6_clock_physical/ot_hbm_su_static_bank6_clock_physical.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/hbm_su_static_bank6_clock7_1015-r11-f86d487d1/record/views/ot_hbm_su_static_bank6_clock_physical/ot_hbm_su_static_bank6_clock_physical.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "ot_hbm_su_static_bank6_clock_physical 390.96 x 151.2: PG M5 VDD 72 stripes (98% spread, 100% cov) / VSS 72 stripes (98% spread, 100% cov); strap M6; face pins 309 blocked-above 0 blocked-same 0; clock clk insertion 261 ps; clock clk_macro0 insertion 10 ps; clock clk_macro1 insertion 10 ps; clock clk_macro2 insertion 10 ps; clock clk_macro3 insertion 22 ps; clock clk_macro4 insertion 23 ps; clock clk_macro5 insertion 22 ps; clock clk_rd insertion 94 ps; pockets M5 0 (closed)",
+ "summary": "ot_hbm_su_static_bank6_clock_physical 390.96 x 151.2: PG M5 VDD 72 stripes (98% spread, 100% cov) / VSS 72 stripes (98% spread, 100% cov); strap M6; face pins 310 blocked-above 0 blocked-same 0; clock clk insertion 68 ps; clock clk_macro0 insertion 9 ps; clock clk_macro1 insertion 10 ps; clock clk_macro2 insertion 10 ps; clock clk_macro3 insertion 21 ps; clock clk_macro4 insertion 23 ps; clock clk_macro5 insertion 23 ps; clock clk_rd insertion 95 ps; clock clk_ws insertion 209 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hbm_su_static_bank6_clock_physical",
   "W": 390.96,
@@ -36,9 +36,9 @@
   "strap_layer": "M6",
   "cap": null,
   "face": {
-   "face_pins": 309,
+   "face_pins": 310,
    "blocked_above": 0,
-   "covered_below": 88,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,36 +47,40 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 261.26,
-    "min_ps": 163.14
+    "max_ps": 67.97,
+    "min_ps": 55.25
    },
    "clk_macro0": {
-    "max_ps": 9.51,
-    "min_ps": 9.51
+    "max_ps": 9.49,
+    "min_ps": 9.49
    },
    "clk_macro1": {
-    "max_ps": 9.77,
-    "min_ps": 9.77
+    "max_ps": 10.03,
+    "min_ps": 10.03
    },
    "clk_macro2": {
-    "max_ps": 9.62,
-    "min_ps": 9.62
+    "max_ps": 9.66,
+    "min_ps": 9.66
    },
    "clk_macro3": {
-    "max_ps": 22.5,
-    "min_ps": 22.5
+    "max_ps": 21.02,
+    "min_ps": 21.02
    },
    "clk_macro4": {
-    "max_ps": 22.96,
-    "min_ps": 22.96
+    "max_ps": 22.94,
+    "min_ps": 22.94
    },
    "clk_macro5": {
-    "max_ps": 21.59,
-    "min_ps": 21.59
+    "max_ps": 22.61,
+    "min_ps": 22.61
    },
    "clk_rd": {
-    "max_ps": 93.99,
-    "min_ps": 77.77
+    "max_ps": 95.35,
+    "min_ps": 78.4
+   },
+   "clk_ws": {
+    "max_ps": 208.77,
+    "min_ps": 151.0
    }
   },
   "pockets": {
@@ -85,7 +89,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 184
+    "added": 198
    },
    "count": 0,
    "area_um2": 0,
