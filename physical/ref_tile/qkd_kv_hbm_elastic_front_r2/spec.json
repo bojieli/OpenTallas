@@ -70,6 +70,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "elastic_front_mutant_release_ignores_ready",
+    "cmd": "mkdir -p {RUN}/bench/mut && PREP_ONLY=1 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/mut && verilator --binary --timing -Wno-fatal -j 2 --top-module tb_kv_hbm_elastic_boundary -GNBLK=16 -GRDEPTH=64 -GFRONT_MUT=3 --Mdir {RUN}/bench/mut/obj $(find {RUN}/bench/mut/source -name '*.sv') > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_kv_hbm_elastic_boundary +jit=16 +faultmode=2 +late=304",
+    "expect": "fail",
+    "fail_regex": "OBSERVED_FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "extra_paths": [
