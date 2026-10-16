@@ -66,7 +66,10 @@ def measure(P, nets, W, H, reach):
     for path, hops in PATHS.items():
         rows, tot = [], 0
         for name, keys in hops:
-            L = max((mx.get(tuple(sorted(k)), 0.0) for k in keys), default=0.0)
+            observed = [mx[tuple(sorted(k))] for k in keys if tuple(sorted(k)) in mx]
+            if not observed:
+                raise ValueError(f'unobserved VM path {path}/{name}: missing classified native connection')
+            L = max(observed)
             st = max(0, math.ceil(L / reach) - 1)
             tot += st
             rows.append(dict(hop=name, max_um=round(L, 1), relay_stages=st))
