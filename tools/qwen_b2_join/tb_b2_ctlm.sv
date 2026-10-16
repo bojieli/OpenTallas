@@ -66,7 +66,7 @@ qfd_tt_ctlm_b2 #(.XPF_TRANSPORT_EDGES(1))dut(.ck_xpf(clk),.ck_me_sched(clk),.cp_
 reg [16:0] actual_frame,expected_frame;
 integer framechecks=0,nactive,g;
 initial begin
-if(dut.u_body.u_tree.u_tt.u_ctl.BANDF!=2||dut.u_body.u_tree.u_tt.u_ctl.TCUT!=6)$fatal(1,"actual controller selected wrong b2 source parameters");
+if(dut.u_body.u_tree.u_tt.u_ctl.BANDF!=2||dut.u_body.u_tree.u_tt.u_ctl.TCUT!=7)$fatal(1,"actual controller selected wrong b2 source parameters");
 for(integer sp=7;sp<=12;sp=sp+1)for(integer p=0;p<24;p=p+1)begin
  if(sp<=9)begin nactive=1<<(9-sp);g=(p/4)*nactive+(p%4);expected_frame={(1'((p%4)<nactive)),16'(g)};end
  else begin g=p%4;expected_frame={(1'(p/4==0&&g<(3072>>sp))),16'(g)};end
