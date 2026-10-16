@@ -133,6 +133,21 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
+def communicating_pairs(nets, dom_of, clique_limit=8):
+    """Every source-to-sink branch participates, including wide multicast control."""
+    pairs = defaultdict(set)
+    for driver, ends in nets.items():
+        source = driver[0]
+        tiles = sorted({end[0] for end in ends})
+        edges = {(source, sink) for sink in tiles if sink != source}
+        if 2 <= len(tiles) <= clique_limit:
+            edges.update((x, y) for i, x in enumerate(tiles) for y in tiles[i + 1:])
+        for x, y in edges:
+            for domain in dom_of[x] & dom_of[y]:
+                pairs[domain].add(tuple(sorted((x, y))))
+    return {domain: sorted(edges) for domain, edges in pairs.items()}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
@@ -146,7 +161,8 @@ def main():
     ap.add_argument('--clock-mode', default='hbm=auto,stream=graph,serial=auto',
                     help="per domain htree|quad|lane|graph|auto (auto = graph when the domain has communicating tile pairs, "
                          "else htree; OWNER 07:30 10-16 low-skew die clock)")
-    ap.add_argument('--pair-max-tiles', type=int, default=8, help='a data net joining 2..N tiles makes clock pairs')
+    ap.add_argument('--pair-max-tiles', type=int, default=8,
+                    help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     a = ap.parse_args()
@@ -627,22 +643,13 @@ def main():
     # every hard outline (relays too), minus the carved die-owned feedthrough channels (clock repeaters may sit there)
     obs = [r for n, v in pl.items() for r in solid(n, v['x'], v['y'], v['w'], v['h'], v['o'])]
     quad = {n: ('N' if centre(n)[1] > H / 2 else 'S') + ('E' if centre(n)[0] > W / 2 else 'W') for n in inst}
-    # communicating tile pairs per clock domain (OWNER 07:30): two instances that share a signal net (<= N tiles) and both
-    # take a clock of the domain; the 'graph' die tree is a spanning tree of these pairs
+    # Every communicating source-to-sink branch participates, regardless of fanout.
+    # Small nets additionally form cliques; large fanouts avoid quadratic expansion.
     dom_of = defaultdict(set)
     for d_, ii in clk.items():
         for n_ in ii:
             dom_of[n_].add(d_)
-    pairs = defaultdict(set)
-    for d, ends in nets.items():
-        tiles = sorted({e_[0] for e_ in ends})
-        if not 2 <= len(tiles) <= a.pair_max_tiles:
-            continue
-        for i_, x_ in enumerate(tiles):
-            for y_ in tiles[i_ + 1:]:
-                for d_ in dom_of[x_] & dom_of[y_]:
-                    pairs[d_].add((x_, y_))
-    pairs = {d_: sorted(v) for d_, v in pairs.items()}
+    pairs = communicating_pairs(nets, dom_of, a.pair_max_tiles)
     trees, checks = {}, {}
     for di, (dom, insts) in enumerate(sorted(clk.items())):
         # the domain tree starts at the placed REAL hfd_ckgen's pll_<dom> output pin (routed LEF), cross-checked with the grant
