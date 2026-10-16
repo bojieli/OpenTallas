@@ -10,7 +10,9 @@ set gh_bf [$gh_db findMaster BUFx4f_ASAP7_75t_R]
 if {$gh_hb eq "NULL" || $gh_bf eq "NULL"} { error "CFIFO_GRAY_HOLD missing masters" }
 set gh_targets {}
 foreach gh_i [$gh_blk getInsts] {
-  if {[regexp {^u_x2?\.u_cross\.wg1\[[0-9]+\].*} [$gh_i getName]]} {
+  # OpenDB stores escaped bus brackets; canonicalize before matching the eight flops.
+  regsub -all {\\} [$gh_i getName] {} gh_canonical
+  if {[regexp {^u_x2?\.u_cross\.wg1\[[0-9]+\].*}  $gh_canonical]} {
     set gh_d [$gh_i findITerm D]
     if {$gh_d ne "NULL" && [$gh_d getNet] ne "NULL"} { lappend gh_targets $gh_d }
   }
