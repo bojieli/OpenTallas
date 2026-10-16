@@ -84,7 +84,7 @@ initial begin
  run_op(16,7,1,256,2975,8,1,1);
  run_op(20,8,3,48,0,8,1,1);
  run_op(110,10,1,8,8192,8,1,1);
- run_op(111,11,1,8,12288,8,1,1);
+ run_op(111,11,1,8,9216,8,1,1);
  run_op(64,7,8,8,16384,8,1,0);
  if(ld!=144)$fatal(1,"native landed count%0d expected144",ld);
  for(integer row=0;row<65536;row=row+1)if(touched[row])begin

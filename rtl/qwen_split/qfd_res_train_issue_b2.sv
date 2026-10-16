@@ -51,7 +51,7 @@ module qfd_res_train_issue_b2 #(parameter integer TRAIN_EDGES=-1, MUT=0)(
    if(pop&&n!=0)begin ldesc<=q[rp];rp<=rp+1'b1;left<=7'({q[rp][DW-1-:4],3'b0})-7'd1;end
    else if(tag&&left!=0)left<=left-1'b1;
    n<=n+3'(push)-3'(pop&&n!=0);
-   if(push&&n==4&&!(pop&&n!=0) || pop&&n==0 || push&&(me_tiles==0||me_tiles>8))fault<=1;
+   if(push&&n==4&&!(pop&&n!=0) || pop&&n==0 || push&&(me_tiles==0||me_tiles>8||me_split<7||me_split>11))fault<=1;
   end
  end
  // fixed delay: launch is one edge after the tag edge; TE - 1 more edges to the serializer capture edge
