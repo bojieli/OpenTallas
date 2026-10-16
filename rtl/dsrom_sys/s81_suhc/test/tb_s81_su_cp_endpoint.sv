@@ -36,6 +36,7 @@ module tb_s81_su_cp_endpoint;
         for(i=0;i<16;i=i+1)dp[0][512*i+:512]<=mem[rows[14*i+:14]];
         for(i=1;i<11;i=i+1)begin vp[i]<=rst_n?vp[i-1]:0;dp[i]<=dp[i-1];end
     end
+    reg[255:0]inputs[0:255];integer current_rows=0;
     integer d0,d1,slot,t,errors=0,nout=0,first=-1,last=-1,request_rows=0;
     string dir,vmfile;
     initial begin
@@ -43,8 +44,19 @@ module tb_s81_su_cp_endpoint;
            !$value$plusargs("D0=%d",d0)||!$value$plusargs("D1=%d",d1))$fatal(1,"actual builder fixture required");
         if($value$plusargs("LATE=%d",late))begin end
         $readmemh(vmfile,mem);$readmemh({dir,"/expected.mem"},expected);
+        if($value$plusargs("CURRENT_ROWS=%d",current_rows))begin end
+        if(current_rows)$readmemh({dir,"/in.mem"},inputs);
         repeat(8)@(negedge clk);rst_n=1;repeat(4)@(negedge clk);
         for(slot=0;slot<2;slot=slot+1)begin
+            if(current_rows)begin
+                // Declared FIELD/retained-history boundary words enter the
+                // same canonical current rows on each distinct command epoch.
+                // This fixture is not an implemented native FIELD producer.
+                for(t=0;t<32;t=t+1)for(k=0;k<4;k=k+1)begin
+                    mem[4816+t][128*k+:128]=inputs[128*slot+4*t+k][0+:128];
+                    mem[4848+t][128*k+:128]=inputs[128*slot+4*t+k][128+:128];
+                end
+            end
             if(!ready)$fatal(1,"controller not ready before compiled command");
             cmd=0;cmd[30:7]=(14<<20)|(slot?d1:d0);cmd[6:0]=slot;
             cmd_v=1;@(negedge clk);cmd_v=0;request_rows=0;

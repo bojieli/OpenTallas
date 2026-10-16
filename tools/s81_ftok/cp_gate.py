@@ -40,19 +40,25 @@ fixture_pins={str(p.relative_to(base)):hashlib.sha256(p.read_bytes()).hexdigest(
 t=time.time()
 with (out/'build.log').open('w') as log:r=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT)
 if r.returncode:print('BUILD FAIL',r.returncode,flush=True);sys.exit(r.returncode)
+def fixture_args(folder):
+ if not (folder/'binding.json').exists():return []
+ binding=json.loads((folder/'binding.json').read_text())
+ args=[f'+VM={folder}/vm.mem',f'+D0={binding["descriptor_rows"][0]}',f'+D1={binding["descriptor_rows"][1]}']
+ if binding.get('current_rows'):
+  if variant!='endpoint':raise ValueError('canonical current-row fixtures require --endpoint')
+  args.append('+CURRENT_ROWS=1')
+ return args
 checks=[]
 for L in [int(x) for x in a.layers.split(',')]:
  fixture=base/f'L{L:02d}'
- extra=[]
- if (fixture/'binding.json').exists():
-  binding=json.loads((fixture/'binding.json').read_text());extra=[f'+VM={fixture}/vm.mem',f'+D0={binding["descriptor_rows"][0]}',f'+D1={binding["descriptor_rows"][1]}']
+ extra=fixture_args(fixture)
  p=subprocess.run([str(out/'obj/sim'),f'+DIR={fixture}',*extra],capture_output=True,text=True);(out/f'run_L{L:02d}.log').write_text(p.stdout+p.stderr)
  ok=((marker+' PASS') in p.stdout and p.returncode==0) if mode==0 else ((marker+' FAIL') in p.stdout and p.returncode!=0 and ('BAD beat' in p.stdout or 'BAD row' in p.stdout))
  checks.append(dict(layer=L,expected='PASS' if mode==0 else 'FAIL',satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_DONE','CP_RESULT','CP_VM_DONE','CP_VM_RESULT','CP_ENDPOINT_DONE','CP_ENDPOINT_RESULT','BAD beat','BAD row'))]))
  print(L,ok,p.stdout[-500:],flush=True)
 protocol_mutant=None
 if variant in ('vm','endpoint') and mode==0:
- p=subprocess.run([str(out/'obj/sim'),f'+DIR={base}/L02','+LATE=1',*([f'+VM={base}/L02/vm.mem',f'+D0={json.loads((base/"L02/binding.json").read_text())["descriptor_rows"][0]}',f'+D1={json.loads((base/"L02/binding.json").read_text())["descriptor_rows"][1]}'] if (base/'L02/binding.json').exists() else [])],capture_output=True,text=True)
+ p=subprocess.run([str(out/'obj/sim'),f'+DIR={base}/L02','+LATE=1',*fixture_args(base/'L02')],capture_output=True,text=True)
  (out/'run_late_L02.log').write_text(p.stdout+p.stderr)
  ok=p.returncode!=0 and (marker+' FAIL') in p.stdout
  if variant=='vm':ok=ok and 'cycles139 scheduled139 fault1' in p.stdout and 'cycles272 scheduled272 fault1' in p.stdout
