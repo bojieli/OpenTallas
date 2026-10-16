@@ -25,7 +25,8 @@ module qkd_ctrl_pc_host_static #(
     // In-order read tag / pcport class queue depth. The fixed RL23 calendar
     // needs 32; the elastic PHY window needs CMD 4 + RL 23 + window + ECC
     // outstanding reads, so ELASTIC uses 64 (sized in the 0az parent proof).
-    parameter integer TQD = (ELASTIC != 0) ? 64 : 32
+    parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
+    parameter integer CONTEXT_DESC = 0
 ) (
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -179,7 +180,7 @@ module qkd_ctrl_pc_host_static #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
-    ot_qkd_static_ctrl_pc_emb #(.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+    ot_qkd_static_ctrl_pc_emb #(.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
