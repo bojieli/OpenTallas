@@ -40,6 +40,9 @@ def cli():
     ap.add_argument('--stub-inner',action='store_true',help='leave the spare root positions as one short hub-adjacent column instead of spreading them')
     ap.add_argument('--out',type=Path,help='output directory (default results/physical/die_iter_1012/s81/canonical_capacity_1015)')
     ap.add_argument('--name',default='capacity.json')
+    ap.add_argument('--node-strip',type=float,default=None,help='return-node slot width um (generator --node-strip, S-NET+FILL n6 = 43.2): '
+                    'every field column narrows by the strip change; W columns pack toward the W die edge, E columns toward the '
+                    'E die edge, the freed width goes to the hub')
     return ap.parse_args()
 
 
@@ -103,7 +106,9 @@ def main():
     remove=sorted({int(x) for x in a.remove_columns.split(',') if x.strip()})
     opts_path=R/'results/physical/die_iter_1012/s81/s81_layer1_jog8.opts'
     ap=argparse.ArgumentParser();ap.add_argument('mode');ap.add_argument('--k',type=int,default=16);G.die_options(ap)
-    G.apply_options(ap.parse_args(['real']+shlex.split(opts_path.read_text())))
+    ns_default=G.NS_W      # module default (86.4-um node strip); --node-strip narrows every column by the difference
+    G.apply_options(ap.parse_args(['real']+shlex.split(opts_path.read_text())+(['--node-strip',repr(a.node_strip)] if a.node_strip is not None else [])))
+    col_w_old=G.COL_W8+(ns_default-G.NS_W) if a.node_strip is not None else None
     frames=[]
     for root,(lo,hi) in enumerate(zip(bounds,bounds[1:])):
         elems,offsets,heights=G.pack_frame(range(lo,hi),bf,set())
@@ -121,6 +126,18 @@ def main():
     assert len(xs)==22
     assert all(0<=i<22 for i in remove) and not (set(remove)-set(range(5,17))),('only hub-adjacent columns',remove)
     kept=[x for i,x in enumerate(xs) if i not in remove]
+    repitch=None
+    if col_w_old is not None and abs(col_w_old-G.COL_W8)>1e-9:
+        # narrower columns (--node-strip): the outer W column keeps its W edge, the outer E column its E edge, every
+        # inter-column gap is kept, so W columns pack toward the W edge and E columns toward the E edge
+        dw=col_w_old-G.COL_W8
+        kw=sorted(x for x in kept if x<16000);ke=sorted((x for x in kept if x>=16000),reverse=True)
+        new={x:round(x-k*dw,3) for k,x in enumerate(kw)}
+        new.update({x:round(x+(j+1)*dw,3) for j,x in enumerate(ke)})
+        repitch=dict(node_strip_um=a.node_strip,col_w_um=[round(col_w_old,3),round(G.COL_W8,3)],
+                     column_pitch_um=[round(col_w_old+8.64,3),round(G.COL_W8+8.64,3)],
+                     moved_x_um=[[x,new[x]] for x in sorted(kept)])
+        kept=[new[x] for x in kept]
     west=[x for x in kept if x<16000];east=[x for x in kept if x>=16000]
     hub_x0=max(west)+G.COL_W8;hub_x1=min(east)
     io_moves=[]
@@ -169,7 +186,7 @@ def main():
                 placements.append(dict(**f,origin_um=[c['x_um'],round(y,6)],outline_um=[G.COL_W8,f['height_um']]));y+=f['height_um']+between
             assert y-between<=c['y1_um']+1e-6
         return finish(a,src,stage,inv,stage_path,inv_path,opts_path,plan_path,frames,cols,placements,moved,fixed,obstacles,
-                      overlap,first_gap,between,PAIRS,NBF,NSTAGES,remove,io_moves,hub_x0,hub_x1)
+                      overlap,first_gap,between,PAIRS,NBF,NSTAGES,remove,io_moves,hub_x0,hub_x1,repitch)
     # 132 geometrical positions,128 real roots. Spend the four empty positions
     # on the four tightest columns, preserving all immutable root/pair IDs.
     for c in sorted(cols,key=lambda c:c['height_um'])[:4]:c['roots']=5
@@ -232,7 +249,7 @@ def main():
 
 
 def finish(a,src,stage,inv,stage_path,inv_path,opts_path,plan_path,frames,cols,placements,moved,fixed,obstacles,overlap,
-           first_gap,between,PAIRS,NBF,NSTAGES,remove,io_moves,hub_x0,hub_x1):
+           first_gap,between,PAIRS,NBF,NSTAGES,remove,io_moves,hub_x0,hub_x1,repitch=None):
     """Wide-hub / re-cut capacity record (same schema as the 2417 record + wide_hub block)."""
     assert sorted(f['root'] for f in placements)==list(range(128))
     boxes=[(f'root{f["root"]}',*f['origin_um'],*f['outline_um']) for f in placements]
@@ -257,9 +274,13 @@ def finish(a,src,stage,inv,stage_path,inv_path,opts_path,plan_path,frames,cols,p
         wide_hub=dict(removed_columns=remove,field_columns=len(cols),hub_x_um=[round(hub_x0,3),round(hub_x1,3)],
                       hub_width_um=round(hub_x1-hub_x0,3),io_to_hub=bool(a.io_to_hub),io_moves=io_moves,
                       positions_used=len(placements),roots_per_column=[c['roots'] for c in sorted(cols,key=lambda c:c['x_um'])]),
+        **({'node_strip':repitch} if repitch else {}),
         changes=[f'remove field columns {remove} (x-sorted indices of the 22 canonical columns): wide hub {hub_x1-hub_x0:.1f} um',
                  f'128 allocator roots ({PAIRS} pairs, {NBF} BF) re-packed in id order into {len(cols)} columns'] +
-                (['SW PHY/CTRL/SVC band centred at the hub foot; six HCP homes at the hub head (E end)'] if a.io_to_hub else []),
+                (['SW PHY/CTRL/SVC band centred at the hub foot; six HCP homes at the hub head (E end)'] if a.io_to_hub else []) +
+                ([f'--node-strip {repitch["node_strip_um"]}: field column width {repitch["col_w_um"][0]} -> {repitch["col_w_um"][1]} um '
+                  f'(pitch {repitch["column_pitch_um"][0]} -> {repitch["column_pitch_um"][1]}); W columns packed W, E columns packed E, '
+                  f'hub +{len(cols)*(repitch["col_w_um"][0]-repitch["col_w_um"][1]):.1f} um'] if repitch else []),
         open=['generator wide-hub mode (hub blocks side by side), roads/pins, GEN/port-bind/GRT/STA',
               'actual 46-root HCP sizes/native pins/cuts and physical calendar',
               'regenerate canonical CFG/data ROM images for the allocator point'])

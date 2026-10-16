@@ -53,6 +53,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "d2 GRT/STA still running on E1 (unit oth-ubuntu-2130580-1792135616); no d3 / clock-generator fix yet"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:35",
+     "status": "fixed in case (GRT pending)",
+     "evidence": "a37c69eb8; VIS-HBM scan of /tmp/claude-1000/hdie0030/d3a/run.tcl: 0 of 24,156 placed die cells inside hard outlines; hbm quad 1,635 bufs 7.9 ns pads 1/2/0/4; stream htree 21,999 bufs 13.8 ns"
     }
    ]
   },
@@ -93,6 +99,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "no new plan revision"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:35",
+     "status": "open (re-scoped to v6b 770 mm2)",
+     "evidence": "v5 band gap -> sfucore slots; SU overflow homes 0.595 mm2/quadrant in the PHY corner voids; v6b: ~30 mm2 corner voids + ~23 mm2 above HC/SFU still empty (H-DIE)"
     }
    ]
   },
@@ -487,6 +499,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "strap4hookfix (same geometry): q1 CLOSED TT +18.72; q0 -149.91 (strap2) -> -62.49; q2/q3 -111.27 unchanged. Owner path fix = strap5 RTL, not geometry; no strap5 gate yet"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:05",
+     "status": "refuted for q1/q2/q3 (owner RTL fix closed them on the same geometry); open for q0",
+     "evidence": "strap5 2c0df5054: q2, q3 CLOSED TT +23.91 / FF +9.09 (from -111.27); q1 strap4hookfix CLOSED +18.72; q0 strap5 NEEDS_RTL TT -114.94 / FF +2.29"
     }
    ]
   },
@@ -1182,6 +1200,12 @@
      "date": "2026-10-16T01:30",
      "status": "reduce half: noted / no action",
      "evidence": "H-SU: ot_hbm_su_reduce_static is 4 per die; 216x151.2 -> 216x110 saves 4 x 216 x 41.2 um2 = 0.036 mm2 (1% of the 3.7 mm2 SU deficit), not worth re-routing a CLOSED (TT +154.98) tile; W/E 14 pins/um revisited only if die GRT shows overflow at the reducer faces"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:00",
+     "status": "confirmed (bank)",
+     "evidence": "bank r12 369.36 x 151.2 CLOSED TT +111.89 / FF +10.49 / DRC 0; routed native PASS L180.2 / C119.6 / spread 56.7 (main native_audit_r12.json, checked); -1.672 mm2 over 512 banks"
     }
    ]
   },
@@ -1438,6 +1462,12 @@
      "date": "2026-10-16T01:35",
      "status": "confirmed-provisional",
      "evidence": "route 2 GRT-0116 with 12 overflow edges at the inward SRAM faces -> route-3 kit e4e436536 (21.6-um channel between macro rows) trial GRT overflow 0, M2 16% (H-LKEP). Route itself pending. 90-um channel / outward rotation infeasible at the fixed 434.72 width (owner)."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:20",
+     "status": "fix-in-gate (route 4)",
+     "evidence": "route 3 e4e436536 CLOSED TT +128.49 / FF +7.69 (congestion fix confirmed: 12 overflow edges -> 0) but native FAIL launch 223.2 (3 sd_tx pins) / capture 212.7 (sd_rx[1]); route 4: single IDLE pin flop, clock moved west on the S face"
     }
    ]
   },
@@ -1523,9 +1553,9 @@
   "2": {
    "date": "2026-10-16T01:15",
    "scored": 15,
-   "confirmed": 1,
+   "confirmed": 2,
    "confirmed_provisional": 1,
-   "refuted": 0,
+   "refuted": 1,
    "withdrawn": 1,
    "open": 13,
    "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant; T4 now fully confirmed (routed native PASS: L222/C206.2/sp92.8 -> L179/C133/sp37.2)",

@@ -701,6 +701,10 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+# PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
+# view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
+# require MIN_SPREAD + PG_SPREAD_MARGIN; child_lint itself keeps 0.50.
+PG_SPREAD_MARGIN = 0.02
 
 
 def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
@@ -756,7 +760,7 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
 
 
 def pg_spread_ok(rec) -> bool:
-    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] >= PG_MIN_SPREAD + PG_SPREAD_MARGIN)
 
 
 def blocks_of(s: dict) -> list:
@@ -806,6 +810,33 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
             for _layer, (x0, y0, x1, y1) in pin["rects"]:
                 on_w_e = x0 <= 200 or x1 >= tm["W"] - 200          # nm: a W / E face pin reaches the side edge
                 if (y1 >= tm["H"] - 200 if edge == "top" else y0 <= 200) and not on_w_e:
+                    return False
+    return True
+
+
+def abutted_row(a: dict, b: dict, gx: float, gy: float) -> bool:
+    """two blocks (macros OR hard children) side by side E-W with no cell row between them (0 <= gap <= ABUT_UM,
+    overlapping in y) whose touching faces are BARE: no pin of any use (signal, clock, power, ground) within 200 nm of
+    either touching face.  A bare face needs no channel -- no pin to reach, no strap to land, no glue to place (Q-TILE45
+    r4 2026-10-16: the qfd_tile LSL master carries all 465 signal pins and the clock on its E face and keeps its PG rails
+    2.16 um inside, so a MY column and an R0 column abut back to back and give their 20 um to the two pin gutters).
+    Any pin on a touching face keeps the channel rule.  R0 / MX keep the LEF's W / E faces, MY / R180 swap them;
+    rotated (R90 / R270 ...) blocks keep the channel rule."""
+    flip = {"R0": False, "MX": False, "MY": True, "R180": True}
+    if a.get("orient", "R0") not in flip or b.get("orient", "R0") not in flip:
+        return False
+    if not (-1e-6 <= gx <= ABUT_UM + 1e-6 and gy < -1e-6):
+        return False
+    lo, hi = (a, b) if a["x"] < b["x"] else (b, a)
+    for blk, edge in ((lo, "E"), (hi, "W")):
+        if blk.get("_tm") is None:
+            blk["_tm"] = track_macro(blk["view"])
+        tm = blk["_tm"]
+        if flip[blk.get("orient", "R0")]:                       # the LEF face that ends up touching the neighbour
+            edge = "W" if edge == "E" else "E"
+        for pin in tm["pins"]:
+            for _layer, (x0, _y0, x1, _y1) in pin["rects"]:
+                if (x1 >= tm["W"] - 200) if edge == "E" else (x0 <= 200):
                     return False
     return True
 
@@ -933,12 +964,14 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gap = max(gx, gy)
             if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
                 continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
+            if gap < CHANNEL_UM - 1e-6 and abutted_row(a, b, gx, gy):
+                continue    # side-by-side abutment of two bare faces (no pin of any use on either): no channel needed
             if ab is not None and ch_min - 1e-6 <= gap < CHANNEL_UM - 1e-6:
                 ab_n["channel"] += 1
                 continue
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"))
     if ab is not None and (ab_n["channel"] or ab_n["macro_edge"]):
         out.append(("WARN", "abut_plan", f"PROBE: {ab_n['channel']} tile-tile channels in [{ch_min:g}, {CHANNEL_UM:g}) um and "
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",

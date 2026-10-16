@@ -4,7 +4,8 @@
     d2d_cal_seq_image.py CALDIR OUT.svh
 
 CALDIR = the output of tools/qwen_split/d2d_link_calendar.py --profile program (calendar.json + eight memh images).
-The include defines, per link end (C = compute die qfd_d2d_static, K = KV die qkd_d2d_static), the TX / RX images,
+The include defines the admission run (segment 2: BEGIN/AUTH S->C, admission WITNESS C->S, once per epoch),
+the first-token offset and the token period, and, per link end (C = compute die qfd_d2d_static, K = KV die qkd_d2d_static), the TX / RX images,
 their segment-1 bases and the shared start table: START[0] = 0 (token run: terminal RESULT + embedding + L0),
 START[l] = the compiled start of layer l relative to the token cal_start (calendar.json program.layers[l].start).
 The production include is committed as rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh; the full-program bench
@@ -43,7 +44,15 @@ def emit(caldir, out):
             s1 = words(cd / f'cal_{end}_{d}_seg1.memh')
             lines.append(f'localparam [32*{NE}-1:0] D2D_CAL_{end}_{d.upper()}_IMG = {vec(img, 32)};')
             lines.append(f"localparam [31:0] D2D_CAL_{end}_{d.upper()}_SEG1 = 32'h{s1[0]:08x};")
+            s2 = words(cd / f'cal_{end}_{d}_seg2.memh')
+            lines.append(f"localparam [31:0] D2D_CAL_{end}_{d.upper()}_SEG2 = 32'h{s2[0]:08x};")
     lines.append(f'localparam [{TW}*{NL}-1:0] D2D_CAL_START = {vec(starts, TW)};')
+    adm = prog['admission']
+    # one value per program, shared by both dies' sequencers and the compute face (first token / token period)
+    lines.append(f'localparam integer D2D_ADM_OFS = {adm["ofs"]};      // admission cal_start, edges after the epoch strobe')
+    lines.append(f'localparam integer D2D_ADM_LEN = {adm["len"]};    // admission run length (all calendars idle)')
+    lines.append(f'localparam integer D2D_FIRST_TOKEN = {adm["first_token_ofs"]};  // first token cal_start, edges after the epoch strobe')
+    lines.append(f'localparam integer D2D_TOKEN_PERIOD = {prog["token_period"]};  // compiled token period (token path totals)')
     Path(out).write_text('\n'.join(lines) + '\n')
 
 

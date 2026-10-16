@@ -252,3 +252,223 @@ def screen_36_capacity(T, p, layers=36):
 def compile_36(T, p, layers=36):
     """Legacy entry point: capacity diagnostic only, never programme qualification."""
     return screen_36_capacity(T, p, layers)
+
+
+# ---- PV16 V pass (Q-ATTN-RATE 2026-10-16): writer VMAP=1 placement + qkd_pv16_vport ----------------------------------
+def pv16_v_ordinal(t):
+    """PC-local V ordinal of row t under qkd_kv_static_writer VMAP=1 = the controller's v_consumer_order rank"""
+    return (((t >> 9) & 15) << 4) | (((t >> 6) & 1) << 3) | ((t >> 1) & 7)
+
+
+def pv16_v_streams(T, pv_rl=19):
+    """per PC (stack, group {t[5:4],t[0]}, quarter): [(ordinal, consume core edge after the pair's start, t)] in stream
+    order; consume = the pair's request cycle q (ot_qwen_tp8_vrow_wide: q = 16 (n + h) + t[3:0]) + pv_rl.
+    Raises if a PC's consumption order is not its ordinal order (the controller streams ordinals ascending)."""
+    out = {}
+    for t in range(T):
+        n, pr, c = t >> 8, (t >> 7) & 1, t & 127
+        h = c >> 6
+        q = 16 * (n + h) + (t & 15)
+        s, grp = (t >> 7) & 3, (((t >> 4) & 3) << 1) | (t & 1)
+        for qq in range(4):
+            out.setdefault(KVM.physical_pc(s, grp, qq), []).append((pv16_v_ordinal(t), q + pv_rl, t))
+    for pc, st in out.items():
+        st.sort(key=lambda x: x[0])
+        cons = [c for _, c, _ in st]
+        if any(b <= a for a, b in zip(cons, cons[1:])):
+            raise ScheduleError(f'PV16 V order: PC {pc} consumes out of ordinal order')
+        if [o for o, _, _ in st] != list(range(len(st))):
+            raise ScheduleError(f'PV16 V order: PC {pc} rows t < T are not an ordinal prefix')
+    return out
+
+
+def _core_to_hbm(e_core, p):
+    return math.ceil(e_core * p['core_ps'] / p['hbm_ps'])
+
+
+def pc_schedule_paced(demand, p, start_core):
+    """pc_schedule with ring pacing: sector i is put only after sector i - ring_depth was consumed (the compiler simply
+    places the block's blk_go later; the front credit then delays the next RDs).  Consume times are start_core + c."""
+    nb, bl, st, dep = p['front_nblk'], p['front_blk'], p['front_stride'], p['ring_depth']
+    n = len(demand)
+    cons = [start_core + c for _, c, _ in demand]
+    blocks = math.ceil(n / bl)
+    issue, go, put, freed = [0] * n, [0] * blocks, [0] * n, [0] * blocks
+    t = 0
+    lmax = p['rd_landing_nominal_hbm'] + p['front_window_hbm']
+    blocked = refresh_blocked(p)
+    for b in range(blocks):
+        if b >= nb:
+            t = max(t, freed[b - nb])
+        idx = range(b * bl, min(n, (b + 1) * bl))
+        for i in idx:
+            while blocked(t):
+                t += 1
+            issue[i] = t
+            t += 1
+        g = issue[idx[-1]] + lmax
+        if b:
+            g = max(g, put[b * bl - 1] + st - p['put_after_go_hbm'])
+        for k, i in enumerate(idx):                      # ring room: the slot of sector i - depth is consumed
+            if i - dep >= 0:
+                g = max(g, _core_to_hbm(cons[i - dep] + 1, p) - p['put_after_go_hbm'] - k * st)
+        go[b] = g
+        for k, i in enumerate(idx):
+            put[i] = g + p['put_after_go_hbm'] + k * st
+        freed[b] = put[idx[-1]] + 1
+    return dict(issue=issue, go=go, put=put, freed=freed, rd_end=t)
+
+
+def _layer_pc_paced(ks, p):
+    """minimal consumer start (core edges after the prefetch start) with every put visible before its consume under
+    ring pacing; returns the same tuple as _layer_pc"""
+    start = _layer_pc(ks, p)[0]                           # unpaced lower bound
+    cons = [c for _, c, _ in ks]
+    while True:
+        sch = pc_schedule_paced(ks, p, start)
+        vis = [hbm_to_core(x, p) + p['ring_cdc_core_edges'] for x in sch['put']]
+        if all(v <= start + c for v, c in zip(vis, cons)):
+            break
+        start += 1
+    ev = sorted([(hbm_to_core(x, p), 1) for x in sch['put']] + [(start + c + 1, -1) for c in cons])
+    occ = peak = 0
+    for _, d in ev:
+        occ += d
+        peak = max(peak, occ)
+    return start, peak, sch['rd_end'], len(ks), cons[-1] - cons[0] + 1
+
+
+def compile_pv16_v(T, p, pv_rl=19):
+    """V pass alone, worst PC and worst refresh phase: minimal pair start after the V prefetch start (core edges) with
+    every put before its consume, ring peak, V fetch length, and the per-PC consume spacing (edges between sectors)."""
+    _need(p)
+    r = p['refresh']
+    if r.get('period_hbm') and r.get('block_hbm') and not r.get('fixed_offset'):
+        outs = [compile_pv16_v(T, dict(p, refresh=dict(r, offset_hbm=o, fixed_offset=True)), pv_rl) for o in range(r['period_hbm'])]
+        return dict(max(outs, key=lambda d: (d['pv_start_after_v_prefetch_core'], d['ring_peak'])),
+                    ring_peak=max(d['ring_peak'] for d in outs), ring_ok=all(d['ring_ok'] for d in outs),
+                    pv_start_after_v_prefetch_core=max(d['pv_start_after_v_prefetch_core'] for d in outs),
+                    refresh_offsets=len(outs))
+    streams = pv16_v_streams(T, pv_rl)
+    per = {pc: _layer_pc_paced(st, p) for pc, st in streams.items()}
+    gaps = [b[1] - a[1] for st in streams.values() for a, b in zip(st, st[1:])]
+    return dict(T=T, pcs=len(per), v_sectors=max(v[3] for v in per.values()),
+                pv_start_after_v_prefetch_core=max(v[0] for v in per.values()),
+                ring_peak=max(v[1] for v in per.values()), ring_ok=max(v[1] for v in per.values()) <= p['ring_depth'],
+                v_rd_hbm_edges=max(v[2] for v in per.values()), min_consume_gap_core=min(gaps) if gaps else None)
+
+
+def pv16_receipt(contexts=(1, 128, 1000, 2048, 4096, 6144, 8192), ring_cdc_core_edges=3):
+    base = dict(SOURCED, ring_cdc_core_edges=ring_cdc_core_edges, layer_period_core=6639, write_ready_core=0,
+                front_nblk=10, ring_depth=64)
+    out = {}
+    for name, ref in (('refresh_as_implemented', refresh_from_table()), ('refresh_upper_bound', refresh_from_table(bound='upper'))):
+        out[name] = {str(T): compile_pv16_v(T, dict(base, refresh=ref)) for T in contexts}
+    return out
+
+
+# ---- 36-layer K+V shared-ring timeline (Q-ATTN-RATE 2026-10-16) -------------------------------------------------------
+def _pv_start(T):
+    """start_qk -> PV pair start (edges): the production w16 service calendar field PV_START (attn_calendar, G3S2)"""
+    import importlib.util as iu
+    s = iu.spec_from_file_location('attn_calendar_tl', ROOT / 'tools/qwen_attention_native/attn_calendar.py')
+    m = iu.module_from_spec(s)
+    s.loader.exec_module(m)
+    return m.calendar(T, pv='w16', head_g3s2=True)['PV_START']
+
+
+def timeline_36(T, p, layers=36, pv_rl=19, writes_per_layer=2):
+    """Every PC's HBM command stream, front, return ring (ONE ring shared by K and V, FIFO in consume order) over 36
+    consecutive layers of one token, on absolute time.  Per layer L (prefetch window opens at L x layer_period_core):
+    K sectors consume at start_qk + c (static_qk_calendar), V sectors (PV16 layout) at start_qk + PV_START + q + pv_rl
+    + 1; the new token's K/V writes take writes_per_layer command edges on every PC at the window start (worst case);
+    refresh at each PC's own strap phase (pc x T_REFIPB / 32) on absolute time, so 36 layers sweep the phases.  The
+    compiler picks ONE lead (start_qk of every layer - its window start, core edges): the minimum with every put
+    visible before its consume and the ring never above ring_depth.  No item issues before its layer's window."""
+    _need(p)
+    P = p['layer_period_core']
+    pvs = _pv_start(T)
+    ks = k_streams(T, p)
+    vs = pv16_v_streams(T, pv_rl=0)
+    r = p['refresh']
+    per_ref, blk_ref = r.get('period_hbm'), r.get('block_hbm', 0)
+    res = {}
+    for pc in sorted(set(ks) | set(vs)):
+        rel = [(c, 'K') for _, c, _ in ks.get(pc, [])] + [(pvs + c + pv_rl + 1, 'V') for _, c, _ in vs.get(pc, [])]
+        rel.sort()
+        if not rel:
+            continue
+        demand = []
+        for L in range(layers):
+            for c, kind in rel:
+                demand.append((kind, L * P + c, L))
+        win = [_core_to_hbm(L * P, p) for L in range(layers)]
+        phase = (pc * per_ref // 32) if per_ref else 0
+
+        def blocked(t, pc=pc):
+            if per_ref and blk_ref and (t - phase) % per_ref < blk_ref:
+                return True
+            L = min(layers - 1, max(0, int(t * p['hbm_ps'] // (P * p['core_ps']))))
+            return win[L] <= t < win[L] + writes_per_layer
+
+        lead = 0
+        while True:
+            sch = _paced_abs(demand, p, lead, win, blocked)
+            vis = [hbm_to_core(x, p) + p['ring_cdc_core_edges'] for x in sch['put']]
+            late = max(v - (lead + c) for v, (_, c, _) in zip(vis, demand))
+            if late <= 0:
+                break
+            lead += late
+        ev = sorted([(hbm_to_core(x, p), 1) for x in sch['put']] + [(lead + c + 1, -1) for _, c, _ in demand])
+        occ = peak = 0
+        for _, d in ev:
+            occ += d
+            peak = max(peak, occ)
+        busy = [0] * layers
+        for x, (_, _, L) in zip(sch['issue'], demand):
+            busy[L] += 1
+        res[pc] = dict(lead=lead, ring_peak=peak, last_issue_vs_next_window=max(
+            sch['issue'][i] - win[L + 1] for i, (_, _, L) in enumerate(demand) if L + 1 < layers) if layers > 1 else None)
+    lead = max(v['lead'] for v in res.values())
+    peak = max(v['ring_peak'] for v in res.values())
+    spill = max(v['last_issue_vs_next_window'] for v in res.values())
+    return dict(T=T, layers=layers, pcs=len(res), pv_start=pvs, start_qk_lead_core=lead, ring_peak=peak,
+                ring_ok=peak <= p['ring_depth'], worst_issue_after_next_window_hbm=spill,
+                layer_reads_fit_window=spill < 0, refresh=r.get('bound', 'custom'), writes_per_layer=writes_per_layer,
+                feasible=peak <= p['ring_depth'] and spill < 0)
+
+
+def _paced_abs(demand, p, lead, win, blocked):
+    """pc_schedule_paced on absolute time with a per-layer window (no RD of layer L before win[L])"""
+    nb, bl, st, dep = p['front_nblk'], p['front_blk'], p['front_stride'], p['ring_depth']
+    n = len(demand)
+    cons = [lead + c for _, c, _ in demand]
+    groups, s0 = [], 0                       # front blocks never straddle a layer (one descriptor stream per layer)
+    for i in range(1, n + 1):
+        if i == n or demand[i][2] != demand[s0][2] or i - s0 == bl:
+            groups.append(range(s0, i))
+            s0 = i
+    blocks = len(groups)
+    issue, put, freed = [0] * n, [0] * n, [0] * blocks
+    t = 0
+    lmax = p['rd_landing_nominal_hbm'] + p['front_window_hbm']
+    for b in range(blocks):
+        if b >= nb:
+            t = max(t, freed[b - nb])
+        idx = groups[b]
+        for i in idx:
+            t = max(t, win[demand[i][2]])
+            while blocked(t):
+                t += 1
+            issue[i] = t
+            t += 1
+        g = issue[idx[-1]] + lmax
+        if b:
+            g = max(g, put[idx[0] - 1] + st - p['put_after_go_hbm'])
+        for k, i in enumerate(idx):
+            if i - dep >= 0:
+                g = max(g, _core_to_hbm(cons[i - dep] + 1, p) - p['put_after_go_hbm'] - k * st)
+        for k, i in enumerate(idx):
+            put[i] = g + p['put_after_go_hbm'] + k * st
+        freed[b] = put[idx[-1]] + 1
+    return dict(issue=issue, put=put)

@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  273.456,
-  194.4
+  220.32,
+  125.28
  ],
  "core": [
   2.16,
   2.16,
-  271.296,
-  192.24
+  218.16,
+  123.12
  ],
- "why": "spec outline (exact: the closed view's sub-slot)",
+ "why": "spec outline",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
@@ -54,8 +54,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_residual",
    "idx": 0,
-   "x": 55.296,
-   "y": 43.2,
+   "x": 22.896,
+   "y": 28.08,
    "w": 174.744,
    "h": 70.47,
    "orient": "MY",
@@ -66,7 +66,6 @@
  "referenced": [
   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
-  "physical/hbm_hc/HC_residual_half_exact_source_audit.tcl",
   "physical/ref_tile/hbm_hc_residual_half_static/kit.env",
   "physical/ref_tile/hbm_hc_residual_half_static/clock.sdc",
   "physical/ref_tile/hbm_hc_residual_half_static/signoff.sdc",
@@ -90,7 +89,6 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/sram_edge_guard.tcl",
   "physical/common_flow/macro_edge_via_guard.tcl",
-  "physical/hbm_hc/HC_residual_half_exact_source_place.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 module tb_s81_pq_canonical_pins;
+`ifdef OT_PQ_QB_PINREAD
+ localparam integer LANE_EDGE=19;   // P10 QB head reads 2 edges later: bc passes two align stages more (u_qb_align0)
+`else
+ localparam integer LANE_EDGE=17;
+`endif
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,calendar_v=0;reg[74:0] action=0;reg[92:0] shape=0;
  wire[38:0] status;wire[19:0]vm;wire[11:0]ra0,ra1;wire[13:0]ra2;
@@ -38,8 +43,8 @@ module tb_s81_pq_canonical_pins;
     if(c==12&&ra2!==14'(phase*19))$fatal(1,"CANONICAL_PINS FAIL streamROM");
     @(posedge clk);#1;
     if(xw!==xe)$fatal(1,"CANONICAL_PINS FAIL lane copies");
-    if(xw[0]!==1'(c==17))$fatal(1,"CANONICAL_PINS FAIL fixed lane edge phase=%0d c=%0d",phase,c);
-    if(c==17&&(xw[561:552]!==10'(phase)||!xw[551]))$fatal(1,"CANONICAL_PINS FAIL cfg lane phase=%0d got=%h",phase,xw[564:550]);
+    if(xw[0]!==1'(c==LANE_EDGE))$fatal(1,"CANONICAL_PINS FAIL fixed lane edge phase=%0d c=%0d want %0d",phase,c,LANE_EDGE);
+    if(c==LANE_EDGE&&(xw[561:552]!==10'(phase)||!xw[551]))$fatal(1,"CANONICAL_PINS FAIL cfg lane phase=%0d got=%h",phase,xw[564:550]);
     checks=checks+1;
     @(negedge clk);
    end
