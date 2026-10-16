@@ -1,0 +1,87 @@
+<title>S81 Road Option C</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: single reading column, one to-scale bar ladder, then lever and cost tables. */
+:root{--bg:#f6f7f4;--panel:#ffffff;--fg:#1d2420;--muted:#5b665f;--line:#d5dbd4;--accent:#2f6b4f;--warn:#a5521b;--bar:#8fb3a0;
+--display:"Fraunces",Georgia,serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141916;--panel:#1c231f;--fg:#e3e9e4;--muted:#9aa79f;--line:#2f3a33;--accent:#7cc39e;--warn:#e19a62;--bar:#3f6b55;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141916;--panel:#1c231f;--fg:#e3e9e4;--muted:#9aa79f;--line:#2f3a33;--accent:#7cc39e;--warn:#e19a62;--bar:#3f6b55;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+main{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+h1{font-family:var(--display);font-size:2rem;margin:0;text-wrap:balance}
+h2{font-size:1.05rem;margin:0 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+p{margin:0;max-width:68ch}.lede{font-size:1.05rem}
+.mono,td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ladder{display:grid;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.row{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr) 4.5rem;gap:10px;align-items:center;font-size:.9rem}
+.track{position:relative;height:16px}.fill{height:100%;background:var(--bar)}.fill.over{background:var(--warn)}
+.budget{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--accent)}
+.legend{font-size:.82rem;color:var(--muted)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:600}
+td.n{text-align:right;white-space:nowrap}.ok{color:var(--accent);font-weight:600}.bad{color:var(--warn);font-weight:600}
+ul{margin:0;padding-left:1.2em;display:grid;gap:4px;max-width:72ch}
+</style>
+<main>
+<header style="display:grid;gap:8px">
+<div class="legend mono">GLOBAL-FP-S r3 · 2026-10-15 · screen on Codex RP SA replay 920444f4e</div>
+<h1>S81 road deficit, option C</h1>
+<p class="lede">The 33×26 mm reticle keeps its roads. Five levers take the joint vertical road peak from <b class="mono">23,572</b> to <b class="mono">15,451</b> tracks against a budget of <b class="mono">20,284</b> at 0.60. The owner asked for a cut of at least 3,288; this removes 8,121. Every road band and field street ends at or below 0.60. Only one lever adds cycles: about +0.34% on the AR token.</p>
+</header>
+
+<section>
+<h2>Joint peak, lever by lever</h2>
+<div class="ladder" id="ladder"></div>
+<p class="legend" style="margin-top:6px">Bar length is to scale (0 to 24,000 tracks). The green rule marks the 0.60 budget of 20,284 tracks across S14W + VCH + S14E (1,602.7 µm × 21.09 tracks/µm).</p>
+</section>
+
+<section>
+<h2>Levers</h2>
+<div class="tw"><table>
+<tr><th>Lever</th><th>What changes</th><th>Cycle cost</th></tr>
+<tr><td>A · U-turn removal</td><td>No lane runs back along a road it is already in. 64 chains change, including 4 K lanes that went down S14W to y 13,055 and then back up, and 54 RP returns that overshot their hr home. 118 mm of wire removed.</td><td>≤ 0</td></tr>
+<tr><td>B · links follow the collective</td><td>Both die-edge link stacks (UCIe + 3 SerDes per side) move up 2,000 µm along their own edge, in the same order. K lanes negotiate field streets. E lanes cross above sp_hc_s (y 22.76–23.65 mm, which holds only 99 b today) instead of going down VCH to the corridor.</td><td class="ok">−347 stages over 16 K lanes (1,143 → 796; each lane −11 to −31)</td></tr>
+<tr><td>D · broadcast trunk sharing</td><td>The 566+538 b x-broadcast becomes one trunk per road band and per street. This removes parallel copies at x 13,547 / 13,599 and the spine that ran up past its entry and back down.</td><td>≤ 0 (calendar re-derived)</td></tr>
+<tr><td>E · return street re-route</td><td>13 W return lanes leave the SW service street at y 3,061–3,320, whose load was 0.701. Same tree, same hr sink.</td><td class="ok">−6 stages total, worst lane 0</td></tr>
+<tr><td>C · return TDM 2:1</td><td>12 pairs of same-tree RP lanes share one 70 b lane in S14W from the join point to hr, using compiler-fixed odd/even slots.</td><td class="bad">+2 fixed stages per paired path, ≈ +2,740 cyc per AR token (+0.34%). Bandwidth cost is 0 because the highest measured region duty is 0.130. Burst skid is still open.</td></tr>
+</table></div>
+</section>
+
+<section>
+<h2>Local cuts after all levers</h2>
+<div class="tw"><table>
+<tr><th>Band</th><th>Width µm</th><th>Peak tracks</th><th>Share</th></tr>
+<tr><td>S14W</td><td class="n">509.76</td><td class="n">6,126</td><td class="n ok">0.570</td></tr>
+<tr><td>S14E</td><td class="n">509.76</td><td class="n">4,207</td><td class="n ok">0.391</td></tr>
+<tr><td>VCH (SA, x 18,457–19,040)</td><td class="n">583.2</td><td class="n">5,650</td><td class="n ok">0.459</td></tr>
+<tr><td>Field streets, worst bucket</td><td class="n">259.2</td><td class="n">—</td><td class="n ok">0.597</td></tr>
+<tr><td>Old VCH x band (GEN18c hub hb lanes)</td><td class="n">1,641.6</td><td class="n">9,926</td><td class="n bad">0.287 own · 0.807 at SA width</td></tr>
+</table></div>
+<p class="legend" style="margin-top:6px">The last row is VM ↔ collective/pq/wfc/gather traffic that still follows GEN18c hub paths. It is hub-internal and has to be re-planned together with the A2 VM reservation, keeping the VM next to those blocks. This screen does not claim it is solved.</p>
+</section>
+
+<section>
+<h2>Delivered to S-DIE</h2>
+<ul>
+<li><span class="mono">results/arch/s81_globalfp_1015/optc_r2/optc1_homes_roads.json</span>: new link and kc homes, the 16 K-lane paths with stage deltas, the 13 re-routed returns, the 12 TDM pairs, and the U-turn and broadcast rules.</li>
+<li><span class="mono">tools/s81/global_fp/road_optc.py</span>: reproduces the baseline of 23,572 exactly, then applies each lever alone and in combination. It also scans the link shift and books street and road congestion.</li>
+<li>Generator asks: a link-stack y offset, in-road monotone compaction, shared broadcast trunks, and a hook for return lane pairing.</li>
+</ul>
+</section>
+
+<section>
+<h2>Still open</h2>
+<ul>
+<li>Native pin rectangles, station legality, and PG/CTS footprints are not modelled. This is a centre-line screen, not a GRT result.</li>
+<li>Link-face edge-strip stubs reach up to 2.2 mm (2.5 mm today). The lk_* pin faces need a plan with S-NET.</li>
+<li>TDM burst skid needs the per-root emission calendar from S-FUNC.</li>
+</ul>
+</section>
+</main>
+<script>
+const steps=[["Baseline (RP SA replay)",23572],["A",22120],["A+D",22120],["A+B+D",15913],["A+B+D+E",15913],["A+B+D+E+C12",15451]];
+const max=24000,budget=20284,el=document.getElementById("ladder");
+for(const [k,v] of steps){const r=document.createElement("div");r.className="row";
+r.innerHTML=`<span>${k}</span><div class="track"><div class="fill${v>budget?" over":""}" style="width:${v/max*100}%"></div><div class="budget" style="left:${budget/max*100}%"></div></div><span class="mono" style="text-align:right">${v.toLocaleString("en-US")}</span>`;el.appendChild(r);}
+</script>
