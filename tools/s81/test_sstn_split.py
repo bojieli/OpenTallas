@@ -144,4 +144,4 @@ def test_existing_output_fanout_to_distinct_nets_is_preserved():
     model['buses'].append(extra)
     split.expand(model, usage, mapping, views)
     assert model['buses'][-1] == extra
-    assert sum(1 for b in model['buses'] for n, p in b[3] if n == 't0_0' and p.startswith('xa')) == 2
+    assert sum(1 for b in model['buses'] for n, p in b[3] if n == 't0_0' and p.split('[')[0] == 'xa') == 2
