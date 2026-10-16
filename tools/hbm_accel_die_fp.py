@@ -594,6 +594,8 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
              # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
              coll_h=1560.0,
+             closed_pin_records={'hfd_hc': 'physical/hbm_accel_die_views/hcp/r25gqw/ports/hfd_hc/ports.json'},   # hbmdie-1011
+             # contract v7: the 19 die-wired hfd_hc ports at the closed quarter's own pins / layers (r25gqw), not the generator plan
              hc_wh=(2263.68, 1499.04), hc_col_w=2032.944,    # hbmdie-1011 contract v6: the CLOSED tiled hfd_hc quarter (88
              # hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports, E-face pins +230.736) -- the die adapts to the closed element.
              # Wider than its column, it keeps its SU-facing edge (ix_x + hc_col_w, the v1 slot's) and grows AWAY from the
@@ -1954,6 +1956,117 @@ def build_r25gq_net(variant):
                     for gy_ in range(int(nb2_[1] // GS_), int(nb2_[3] // GS_) + 1):
                         grid_[(gx_, gy_)].append(nb2_)
         phys_rec['far_side_moved'] = n_fs
+    seam_hold_ = {}
+    if V.get('closed_pin_records') and V.get('phys_relays'):
+        # hbmdie-1011 contract v7 SEAM PLAN: a die data net on a CLOSED element's pins is measured PIN TO PIN, bit by bit
+        # (the closed element's own pins, the peer's pinned die-view pins), not box to box.  A net whose worst bit is
+        # over 500 um gets registered seam stations on the straight pin-to-pin line, each pitch-matched to the closed
+        # port (face = bits x the port's pin pitch, so every bit keeps its offset) and mirrored with it, placed at the
+        # free site that minimises the worst per-bit hop: every stage <= 500 um and registered.
+        seam_rec_, nb_s_ = [], []
+        SEAM_LIM = 500.0 - 4.0      # pin-snap margin inside the stage limit
+        blk_s_ = [i_.box() for i_ in insts if i_.kind != 'waypoint' and i_.master in V['closed_pin_records']]
+
+        def _bb(it):
+            return it.box()
+        for b_ in buses:
+            bid, cls, bits, eps = b_
+            if cls in ('clock_trunk', 'reset_tree') or len(eps) != 2 or any(e[0] not in by for e in eps) or \
+                    not any(by[e[0]].master in V['closed_pin_records'] for e in eps):
+                nb_s_.append(b_)
+                continue
+            A_ = seam_pin_bits(V, by[eps[0][0]], eps[0][1])
+            Z_ = seam_pin_bits(V, by[eps[1][0]], eps[1][1])
+            if not A_ or not Z_ or len(A_) != len(Z_):
+                nb_s_.append(b_)
+                continue
+            w0_ = max(abs(a[0] - z[0]) + abs(a[1] - z[1]) for a, z in zip(A_, Z_))
+            if w0_ <= SEAM_LIM:
+                seam_rec_.append(dict(bus=bid, stations=[], worst_bit_hops_um=[round(w0_, 1)]))
+                nb_s_.append(b_)
+                continue
+            ba_, bz_ = by[eps[0][0]].box(), by[eps[1][0]].box()
+            gx_ = max(bz_[0] - ba_[2], ba_[0] - bz_[2])
+            gy_ = max(bz_[1] - ba_[3], ba_[1] - bz_[3])
+            horiz = gx_ >= gy_          # the blocks sit side by side: the flow crosses the channel in x
+            ax_ = 1 if horiz else 0     # the along-face axis of the station pins
+            ca_ = [sum(q[i] for q in A_) / len(A_) for i in (0, 1)]
+            cz_ = [sum(q[i] for q in Z_) / len(Z_) for i in (0, 1)]
+            if horiz:
+                fl_ = 'E' if cz_[0] >= ca_[0] else 'W'
+            else:
+                fl_ = 'N' if cz_[1] >= ca_[1] else 'S'
+            st_pitch = abs(A_[-1][ax_] - A_[0][ax_]) / max(1, len(A_) - 1)
+            desc_ = A_[-1][ax_] < A_[0][ax_]
+            ln_ = up(max(21.6, bits * st_pitch + 20.0), GY if horiz else GX)
+            sw_, sh_ = (21.6, ln_) if horiz else (ln_, 21.6)
+            orient_ = ('MX' if horiz else 'MY') if desc_ else 'R0'
+            mst_ = f'hfd_stn_s{bits}{fl_}{"d" if desc_ else ""}'
+            stnf_[mst_] = dict(a={'E': 'W', 'W': 'E', 'N': 'S', 'S': 'N'}[fl_], b=fl_)
+            pitch_ = st_pitch * (-1 if desc_ else 1)
+
+            def st_bits(cx, cy, n=len(A_)):
+                c0_ = (cy if horiz else cx) - pitch_ * (n - 1) / 2
+                if horiz:
+                    return [(cx, c0_ + i * pitch_) for i in range(n)]
+                return [(c0_ + i * pitch_, cy) for i in range(n)]
+
+            def hop(P, Q_):
+                return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(P, Q_))
+            n_st = max(1, math.ceil(w0_ / SEAM_LIM) - 1)
+            prev_, chain_, hops_ = A_, [], []
+            for k_ in range(n_st):
+                fr_ = (k_ + 1) / (n_st + 1)
+                wx_, wy_ = ca_[0] + fr_ * (cz_[0] - ca_[0]), ca_[1] + fr_ * (cz_[1] - ca_[1])
+                best_ = None
+                for fx in range(-40, 41):
+                    for fy in range(-40, 41):
+                        cx, cy = wx_ + fx * 4.32, wy_ + fy * 4.32
+                        x_, y_ = dn(cx - sw_ / 2, GX), dn(cy - sh_ / 2, GY)
+                        bx = (x_ - 2.0, y_ - 2.0, x_ + sw_ + 2.0, y_ + sh_ + 2.0)
+                        if x_ < 20 or y_ < 20 or x_ + sw_ > W_ - 20 or y_ + sh_ > H_ - 20 or hit(bx, near(bx)) or \
+                                hit(bx, blk_s_):
+                            continue
+                        S_ = st_bits(x_ + sw_ / 2, y_ + sh_ / 2)
+                        rest_ = (n_st - k_) * SEAM_LIM      # what the remaining stages can still cover
+                        h1_ = hop(prev_, S_)
+                        h2_ = hop(S_, Z_) if k_ == n_st - 1 else 0.0
+                        if h1_ > SEAM_LIM or h2_ > SEAM_LIM or hop(S_, Z_) > rest_:
+                            continue
+                        key_ = (max(h1_, h2_), abs(cx - wx_) + abs(cy - wy_))
+                        if best_ is None or key_ < best_[0]:
+                            best_ = (key_, x_, y_, S_, h1_)
+                assert best_ is not None, ('no seam station site within the stage limit', bid, k_)
+                _, x_, y_, S_, h1_ = best_
+                nm_ = f'wq{nst}_{bid}_seam{k_}'
+                nst += 1
+                st_ = Inst(nm_, mst_, x_, y_, sw_, sh_, orient_, kind='waypoint', region='channel', domain='stream_1p2')
+                insts.append(st_)
+                by[nm_] = st_
+                G.inst[nm_] = st_
+                b2_ = st_.box()
+                for gx2_ in range(int(b2_[0] // GS_), int(b2_[2] // GS_) + 1):
+                    for gy2_ in range(int(b2_[1] // GS_), int(b2_[3] // GS_) + 1):
+                        grid_[(gx2_, gy2_)].append(b2_)
+                new_rl[nm_] = bid
+                chain_.append(nm_)
+                hops_.append(round(h1_, 1))
+                prev_ = S_
+            hops_.append(round(hop(prev_, Z_), 1))
+            nodes_ = [eps[0]] + [(c_, None) for c_ in chain_] + [eps[1]]
+            for j_ in range(len(nodes_) - 1):
+                drv_ = nodes_[j_] if j_ == 0 else (nodes_[j_][0], 'b')
+                ld_ = nodes_[j_ + 1] if j_ + 1 == len(nodes_) - 1 else (nodes_[j_ + 1][0], 'a')
+                nid_ = bid if j_ == 0 else f'{bid}_s{j_}'
+                nb_s_.append((nid_, cls, bits, [drv_, ld_]))
+                if bid in fcl_:
+                    fclk_new_[nid_] = fcl_[bid]
+            for e_ in eps:      # both ends keep the pin plan of the direct net (the peer's closed / pinned view)
+                seam_hold_[f'{by[e_[0]].master}|{e_[1]}|{e_[0]}'] = [x_[0] for x_ in eps if x_[0] != e_[0]]
+            seam_rec_.append(dict(bus=bid, stations=chain_, master=mst_, orient=orient_,
+                                  worst_bit_hops_um=hops_, before_um=round(w0_, 1)))
+        buses[:] = nb_s_
+        phys_rec['closed_seams'] = seam_rec_
     if V.get('phys_trees') or V.get('phys_relays'):
         phys_rec = phys_rec or {}
         # textbook audit rows 2 + 3: per clock domain ONE balanced H-tree from the PLL port on hb_coll to region leaves
@@ -1993,9 +2106,21 @@ def build_r25gq_net(variant):
                     # ports and repeats included), per copy
                     pin_hold.setdefault(f'{it.master}|{e[1]}|{it.name}', []).extend(
                         x[0] for j_, x in enumerate(eps_) if j_ != i_ and x[0] != 'TOP')
+        if V.get('closed_pin_records'):
+            # hbmdie-1011 contract v7: a closed element's ck / rst sinks attach at its REAL pins (closed record), and an
+            # HC row root's two pins ck<c>e / ck<c>w (opposite faces, 2.26 mm apart) are two sinks, each on its own leaf
+            for e_ in list(pin_pt):
+                if e_[0] in by and by[e_[0]].master in V['closed_pin_records']:
+                    q_ = seam_pin_bits(V, by[e_[0]], e_[1])
+                    if q_:
+                        pin_pt[e_] = (sum(v[0] for v in q_) / len(q_), sum(v[1] for v in q_) / len(q_))
         for b_ in buses:
             if b_[1] == 'clock_trunk' and b_[0].startswith('clk_'):
-                ck_sinks[b_[0][4:]] += [e for e in b_[3][1:]]
+                es_ = b_[3][1:]
+                if V.get('closed_pin_records') and V.get('hc_ck_ew'):
+                    es_ = [x for e in es_ for x in ([(e[0], e[1] + 'e'), (e[0], e[1] + 'w')]
+                                                     if e[0].startswith('hb_hc_') and re.fullmatch(r'ck\d', e[1]) else [e])]
+                ck_sinks[b_[0][4:]] += [e for e in es_]
             elif b_[1] == 'reset_tree' and b_[0].startswith('rst_'):
                 rs_sinks[b_[0][4:]] += [e for e in b_[3][1:]]
             else:
@@ -2305,7 +2430,7 @@ def build_r25gq_net(variant):
     if phys_rec is not None:
         m['phys_relays'] = phys_rec
     if V.get('phys_trees') or V.get('phys_relays'):
-        m['pin_peer_hold'] = pin_hold
+        m['pin_peer_hold'] = dict(pin_hold, **seam_hold_)
     if ep_of:
         m['fclk'] = {k: ((V['link_ep']['flit_bits'], *v[1:]) if k.startswith('lk_lk_') else v)
                      for k, v in (base.get('fclk') or {}).items()}
@@ -3024,6 +3149,204 @@ def hub_pin_window(mst, window, p4=False):
             sp_ = mst.ports[p_]
             mst.ports[p_] = ('face', sp_[1], f_, 'M4', round(y + 2 * t + n_ / 2, 4), pitch)
             y += n_ + 4 * t
+
+
+def closed_seam_report(m):
+    """hbmdie-1011 contract v7 check: (1) every die-wired port of a closed_pin_records master is generated exactly at
+    the closed element's pins (name, layer, rectangle); (2) every die stage on those nets, PIN TO PIN from the generated
+    abstracts (bit by bit where both ends carry the bus; driver pin to load pin for the 1-b clock / reset leaves):
+    count over 500 um, worst, and the per-net list; data stages must end on registered nodes (blocks' registered
+    boundaries / stations / reset relays)."""
+    V = m['variant']
+    recs = V.get('closed_pin_records') or {}
+    if not recs:
+        return None
+    M = masters(m, 1)
+    pw = port_widths(m, 1)
+    by = {it.name: it for it in m['insts']}
+    cache = {}
+
+    def pins(mst):
+        if mst not in cache:
+            mm = M[mst]
+            d = defaultdict(dict)
+            for nm, ly, r in S.pin_rects(mm, 1, {p: pw.get((mst, p), 0) for p in mm.order}):
+                b_ = re.match(r'^(.*)\[(\d+)\]$', nm)
+                d[b_.group(1)][int(b_.group(2))] = (ly, r)
+            cache[mst] = d
+        return cache[mst]
+
+    def pts(inst, port):
+        it = by[inst]
+        P = pins(it.master).get(port) or {}
+        out = []
+        for i in sorted(P):
+            r = P[i][1]
+            x, y = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
+            if it.orient in ('MX', 'R180'):
+                y = it.h - y
+            if it.orient in ('MY', 'R180'):
+                x = it.w - x
+            out.append((it.x + x, it.y + y))
+        return out
+    mism, nports = [], 0
+    for mst, rel in recs.items():
+        if mst not in M:
+            continue
+        rec = json.loads((ROOT / rel).read_text())
+        g = pins(mst)
+        for p_, r_ in rec['ports'].items():
+            if p_ not in M[mst].ports:
+                continue
+            nports += 1
+            for q in r_['pins']:
+                i = int(re.search(r'\[(\d+)\]', q[0]).group(1))
+                gl = g.get(p_, {}).get(i)
+                if gl is None or gl[0] != q[1] or any(abs(a - b) > 1e-3 for a, b in zip(gl[1], q[2:6])):
+                    mism.append((mst, q[0], q[1], gl))
+    closed_eps = {(it.name, p_) for it in m['insts'] if it.master in recs
+                  for p_ in json.loads((ROOT / recs[it.master]).read_text())['ports'] if p_ in M[it.master].ports}
+    roots = [b for b in m['buses'] if any((e[0], e[1]) in closed_eps for e in b[3])]
+    ids = {b[0] for b in roots}
+    nets = roots + [b for b in m['buses'] if b[0] not in ids and re.sub(r'_s\d+$', '', b[0]) in ids]
+    rows, over = [], 0
+    for bid, cls, bits, eps in nets:
+        d0 = eps[0]
+        if d0[0] not in by:
+            continue
+        A = pts(*d0)
+        for e in eps[1:]:
+            if e[0] not in by:
+                continue
+            if cls in ('clock_trunk', 'reset_tree') and (e[0], e[1]) not in closed_eps:
+                continue        # only the leaf -> closed pin stage of a tree net
+            Z = pts(*e)
+            if not A or not Z:
+                continue
+            if len(A) == len(Z) and len(A) > 1:
+                h = max(abs(a[0] - z[0]) + abs(a[1] - z[1]) for a, z in zip(A, Z))
+            else:
+                ca = (sum(a[0] for a in A) / len(A), sum(a[1] for a in A) / len(A))
+                cz = (sum(z[0] for z in Z) / len(Z), sum(z[1] for z in Z) / len(Z))
+                h = abs(ca[0] - cz[0]) + abs(ca[1] - cz[1])
+            reg = (by[d0[0]].kind != 'waypoint' or by[d0[0]].master.startswith(('hfd_stn', 'hfd_rrl', 'hfd_ckb'))) and \
+                (by[e[0]].kind != 'waypoint' or by[e[0]].master.startswith(('hfd_stn', 'hfd_rrl', 'hfd_ckb')))
+            over += h > 500.0
+            rows.append(dict(net=bid, cls=cls, bits=bits, drv=f'{d0[0]}/{d0[1]}', load=f'{e[0]}/{e[1]}',
+                             worst_bit_um=round(h, 1), registered_ends=reg))
+    return dict(closed_ports=nports, pin_mismatches=len(mism), mismatch_examples=[str(x) for x in mism[:5]],
+                stages=len(rows), stages_over_500=over, worst_stage_um=max((r['worst_bit_um'] for r in rows), default=0.0),
+                unregistered=sum(1 for r in rows if not r['registered_ends']), rows=rows,
+                seam_plan=(m.get('phys_relays') or {}).get('closed_seams'))
+
+
+_SEAM_REC = {}
+
+
+def seam_pin_bits(V, it, port):
+    """hbmdie-1011 contract v7: per-bit die-frame pin centres (bit order) of it/port from the CLOSED element's own pin
+    record (V['closed_pin_records'][master]) or else the pinned die-view record the element is built to
+    (V['pinned_faces']/<master>/ports.json), when that record's outline is the instance's; None otherwise."""
+    src_ = (V.get('closed_pin_records') or {}).get(it.master)
+    if src_:
+        f_ = ROOT / src_
+    elif V.get('pinned_faces'):
+        f_ = ROOT / V['pinned_faces'] / it.master / 'ports.json'
+    else:
+        return None
+    if f_ not in _SEAM_REC:
+        _SEAM_REC[f_] = json.loads(f_.read_text()) if f_.exists() else None
+    rec_ = _SEAM_REC[f_]
+    if not rec_ or abs(rec_['w_um'] - it.w) > 1e-3 or abs(rec_['h_um'] - it.h) > 1e-3 or port not in rec_['ports']:
+        return None
+    out = []
+    for q in sorted(rec_['ports'][port]['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1))):
+        x_, y_ = (q[2] + q[4]) / 2, (q[3] + q[5]) / 2
+        if it.orient in ('MX', 'R180'):
+            y_ = it.h - y_
+        if it.orient in ('MY', 'R180'):
+            x_ = it.w - x_
+        out.append((it.x + x_, it.y + y_))
+    return out
+
+
+def closed_pins(mst, rec, k=1):
+    """hbmdie-1011 contract v7: a CLOSED element's own pin plan wins over the generator.  Every port of the record
+    (a closed element's ports.json: per-bit [name, layer, x0, y0, x1, y1]) that the die wires is pinned exactly where
+    and on the layer the element has it (face from the geometry, not the record's label; uniform pitch reproduced as a
+    'face' spec so the k-bundled GRT abstracts follow it; pin half width via Q.PIN_HW).  Generator ports that collide
+    with those pins on the same face and layer are re-packed into the free spans of that face (nearest their wanted
+    centre, own pitch, else 2, else 1 track a bit); a generator port is never moved onto a closed pin."""
+    t_ = {ly_: Q.TRK[ly_][1] for ly_ in Q.TRK}
+    fixed_, keep_ = {}, defaultdict(list)          # (face, layer) -> occupied [lo, hi] along the face
+    for p_, r_ in rec['ports'].items():
+        if p_ not in mst.ports:
+            continue                               # the die does not wire it (no bus): no pin
+        pins_ = sorted(r_['pins'], key=lambda q: int(re.search(r'\[(\d+)\]', q[0]).group(1)))
+        lys_ = {q[1] for q in pins_}
+        assert len(lys_) == 1, ('closed port on several layers', mst.name, p_, lys_)
+        ly_ = lys_.pop()
+        q0_ = pins_[0]
+        face_ = 'W' if q0_[2] <= 0.01 else 'E' if q0_[4] >= mst.w - 0.01 else 'S' if q0_[3] <= 0.01 else 'N'
+        pos_ = [((q[3] + q[5]) / 2) if face_ in 'EW' else ((q[2] + q[4]) / 2) for q in pins_]
+        step_ = (pos_[-1] - pos_[0]) / (len(pos_) - 1) if len(pos_) > 1 else t_[ly_]
+        pitch_ = max(1, round(step_ / t_[ly_]))
+        assert all(abs(b_ - a_ - pitch_ * t_[ly_]) < 1e-4 for a_, b_ in zip(pos_, pos_[1:])), ('non-uniform closed port', mst.name, p_)
+        n_ = len(pins_)
+        fixed_[p_] = ('face', max(1, math.ceil(n_ / k)), face_, ly_, round(pos_[0] + n_ * pitch_ * t_[ly_] / 2, 4), pitch_)
+        hw_ = round(((q0_[5] - q0_[3]) if face_ in 'EW' else (q0_[4] - q0_[2])) / 2, 4)
+        if abs(hw_ - 0.012) > 1e-6:
+            Q.PIN_HW[(mst.name, p_)] = hw_
+        g_ = 4 * t_[ly_] * k
+        keep_[(face_, ly_)].append((pos_[0] - g_, pos_[-1] + g_))
+    for p_, sp_ in fixed_.items():
+        mst.ports[p_] = sp_
+        if p_ not in mst.order:
+            mst.order.append(p_)
+
+    def span(sp_):
+        st_ = t_[sp_[3]] * k * sp_[5]
+        return sp_[4] - sp_[1] * st_ / 2, sp_[4] + sp_[1] * st_ / 2
+
+    movers = []
+    for p_, sp_ in mst.ports.items():
+        if p_ in fixed_ or sp_[0] != 'face' or (sp_[2], sp_[3]) not in keep_:
+            continue
+        g_ = 4 * t_[sp_[3]] * k
+        lo_, hi_ = span(sp_)
+        if any(lo_ - g_ < b_ and a_ < hi_ + g_ for a_, b_ in keep_[(sp_[2], sp_[3])]):
+            movers.append(p_)
+        else:
+            keep_[(sp_[2], sp_[3])].append((lo_ - g_, hi_ + g_))
+    for p_ in sorted(movers, key=lambda q: -mst.ports[q][1]):      # widest first: it needs the longest free span
+        _, n_, face_, ly_, want_, pitch0_ = mst.ports[p_]
+        full_ = mst.h if face_ in 'EW' else mst.w
+        a0_, a1_ = 2 * t_[ly_] * k + 0.5, full_ - 2 * t_[ly_] * k - 0.5
+        g_ = 4 * t_[ly_] * k
+        best_ = None
+        for pc_ in sorted({pitch0_, 2, 1}, reverse=True):
+            if pc_ > pitch0_:
+                continue
+            need_ = n_ * t_[ly_] * k * pc_
+            occ_ = sorted(keep_[(face_, ly_)])
+            free_, cur_ = [], a0_
+            for a_, b_ in occ_:
+                if a_ > cur_:
+                    free_.append((cur_, min(a_, a1_)))
+                cur_ = max(cur_, b_)
+            if cur_ < a1_:
+                free_.append((cur_, a1_))
+            cands_ = [min(max(want_ - need_ / 2, lo_), hi_ - need_) for lo_, hi_ in free_ if hi_ - lo_ >= need_]
+            if cands_:
+                s_ = min(cands_, key=lambda c_: abs(c_ + need_ / 2 - want_))
+                best_ = (pc_, s_, need_)
+                break
+        if best_ is None:
+            raise ValueError(f'{mst.name} face {face_} {ly_}: no free span for {p_} ({n_} b) beside the closed pins')
+        pc_, s_, need_ = best_
+        mst.ports[p_] = ('face', n_, face_, ly_, round(s_ + need_ / 2, 4), pc_)
+        keep_[(face_, ly_)].append((s_ - g_, s_ + need_ + g_))
+    return sorted(fixed_), sorted(movers)
 
 
 HUB_QUARTERS = ('hfd_su', 'hfd_sfu', 'hfd_hc')
@@ -5116,6 +5439,11 @@ def masters(m, k=1):
                     hc_m.order.remove(p_)
             for f_ in ('e', 'w'):
                 hc_m.face(f'ck{c_}{f_}', 1, f_.upper(), 'M6' if (f_ == 'e' and c_ in m6_) else 'M4', y_, 1)
+    if m['variant'].get('closed_pin_records'):   # hbmdie-1011 contract v7: the closed element's pin plan wins (after every
+        # generator pass that places the master's pins: hub window, per-segment ck, hc_ck_ew)
+        for nm_, rel_ in m['variant']['closed_pin_records'].items():
+            if nm_ in M:
+                closed_pins(M[nm_], json.loads((ROOT / rel_).read_text()), k)
     if m['variant'].get('vm_cross_aligned') and 'hfd_vm_sw' in M:   # r23: abutting VM tiles' cross buses face to face
         vm_cross_align(M, k, two_layer=bool(m['variant'].get('vm_cross_2layer')))
     if m['variant'].get('vm_ck_centre'):      # r20: the VM tiles' ck as the centre M7 area pin
@@ -6590,7 +6918,10 @@ def main(argv=None):
                               notes=m['notes'], power=die_power(m)['peak_in_phase_w'])))
         ml = margin_lint(m)
         print(json.dumps(dict(margin_lint=ml), indent=1))
-        return 3 if ml['verdict'] == 'FAIL' else 0
+        cs_ = closed_seam_report(m)
+        if cs_ is not None:
+            print(json.dumps(dict(closed_seams=cs_), indent=1))
+        return 3 if ml['verdict'] == 'FAIL' or (cs_ and (cs_['pin_mismatches'] or cs_['stages_over_500'])) else 0
     if a.mode == 'irwin':
         print(' '.join(ir_windows(m)))
         return 0

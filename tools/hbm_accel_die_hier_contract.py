@@ -498,6 +498,16 @@ def main(argv=None):
                  'check rc 3 -> 0 (8 clock/reset tree segments + far-side relays -> 0)', status='v5'),
             dict(id='D17', slot='hfd_hc_eng', change='lane-major N-face re-pin accepted; needs per-lane ports in the die bus model '
                  '(generator places each port contiguous) and the lgE station spanning the full 4,384.8 face', status='open'),
+            dict(id='D19', slot='hfd_hc', change='v7: the 19 die-wired ports shared with the closed quarter (f_sfu / t_sfu 1,024 b, '
+                 'rst, ck0..7 e / w) take the CLOSED quarter\'s own pins and layers (hcp/r25gqw/ports/hfd_hc: f_sfu E M4 '
+                 '404.4-600.8, t_sfu E M4 601.2-797.6, both 0.192 pitch; rst E M4 801.0; ck0/1/4-7e E M4, ck2e/ck3e E M6, '
+                 'ck<c>w W M4), not the generator plan (closed_pin_records). Seam plan pin to pin, bit by bit: t_sfu -> '
+                 'sfu f_hc 853 um -> one registered pitch-matched seam station per quarter in the HC | SFU channel '
+                 '(hfd_stn_s1024E/W, MX copies on the N quarters; hops <= 429 um; +1 cycle on HC -> SFU); f_sfu 465 um '
+                 'direct; ck / rst attach the die tree at the real pins (each ck<c>e / ck<c>w its own sink; leaf -> pin '
+                 '<= 185 um). The 10 generator-only ports (t/f_hgi_vmap, f_hgi_vmr, t_hgi_vmq, f/t_hgi_cmdproc, '
+                 'f/t_lgW_*) are NOT on the closed quarter: re-packed clear of its pins; the quarter owner must add them '
+                 'or the die must re-home them', status='decided v7 (hgi ports open)'),
         ],
         versions=[dict(version=a.version, by='hbmdie-1011', note=a.note or 'v1 provisional')],
     )

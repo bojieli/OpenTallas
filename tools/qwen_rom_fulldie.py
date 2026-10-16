@@ -879,6 +879,7 @@ def masters(m, k=1, port_bits=None):
 
 CORNER_RULE = {}
 PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
+PIN_HW = {}         # hbmdie-1011 contract v7: (master, port) -> pin half width (um) of a CLOSED element's own pin plan
 
 
 def _corner_keep(poss, along, step, cr, off, p, label):
@@ -945,7 +946,7 @@ def pin_rects(mst, k, wmap):
         # kv-die 2026-10-10: a pin is at least its layer's minimum width (ASAP7 M6 / M7 0.032, M8 / M9 0.040); a 0.024
         # M6 pin is sub-minimum and the first one of a macro gets no access point (die_kv7 DRT-0073 on reng so[0] /
         # astk e0i[0], reproduced on one instance; 0.032 clears it).  Opt-in (MINW_PINS) so other dies' abstracts stay byte-identical
-        hw = (MIN_HW.get(layer, 0.012) if MINW_PINS else 0.012) * k
+        hw = PIN_HW.get((mst.name, port), MIN_HW.get(layer, 0.012) if MINW_PINS else 0.012) * k
         depth = 0.192 * (k if k > 1 else 1)
         poss = [first + i * step for i in range(len(names))]
         cr = CORNER_RULE.get(mst.name)
