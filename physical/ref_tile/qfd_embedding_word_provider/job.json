@@ -1,0 +1,136 @@
+{
+ "name": "qfd_embedding_word_provider-ec1-COMMIT",
+ "block": "qfd_embedding_word_provider",
+ "ref_tile": true,
+ "owner": "Claude:ELEM-CENSUS kit helper",
+ "purpose": "Compute-die embedding row store leaf, never kitted before (census 10-16). Standalone self-checking bench (new, ELEM-CENSUS): 6 rows x 64 code words + scale in random order through the mapped SRAM model, every word read back bit-exact, + 4 fault detections; mutants made on copies of the child sources (row-complete check removed / SRAM word address ^1 / scale from the wrong header half) must FAIL. The tile is also exercised as a child of tb_qfd_sys_face (Q-NETLIST, 1,512 events).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/census-qkit-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split/run_embedding_word_provider_bench.sh",
+   "rtl/test/qwen_split/tb_qfd_embedding_word_provider.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_embedding_word_provider u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_embedding_word_provider.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "provider_rows_exact",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^EMB_PROVIDER_PASS rows=6 compared=390 checks=4",
+    "min_count_regex": "^EMB_PROVIDER_PASS rows=\\d+ compared=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "provider_incomplete_row_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "^EMB_PROVIDER_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "provider_sram_word_addr_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "^EMB_PROVIDER_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "provider_scale_half_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "fail_regex": "^EMB_PROVIDER_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_embedding_word_provider/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_embedding_word_provider/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_embedding_word_provider --out {RUN}/record/views/qfd_embedding_word_provider --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_embedding_word_provider/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_embedding_word_provider/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_embedding_word_provider/qfd_embedding_word_provider-ec1-COMMIT"
+  }
+ ],
+ "cycles_added": 2,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, Q-COMPUTE-DIE go 10-16): compute-die embedding row store qfd_embedding_word_provider (Q-NETLIST ab5f73bcc, wires-only top over qkd_embedding_static_preload_face + qkd_embedding_static_core_store with the mapped ot_sram_1r1w_64x512_m1_r2c2 row SRAM), CONTRACT v1.4 frame 259.2 x 216 um, one ck root. Recipe 3: every data input and output registered at its pin (+1 edge in, +1 edge out, recorded in pin_regs.json for the compiler schedule). Pin FACES = the die tool's top-down assignment (q2o1 out_skc pins/qfd_embedding_word_provider.json: E row/slot/fill face toward sys_face, S sequencer ROM-port face, N ck/rst_n); per-port ranges are not frozen into the RTL or the kit (q2o2 moves the tile into the centre white space above the SU; a face move is a re-kit only)."
+}
