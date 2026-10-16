@@ -151,11 +151,11 @@ def make():
             "output-flop census: physical/audit_bank_output_flops.py.")}
         # q2 (identity2: GPL-0305 twice) and q1 (strap1: GRT-0116, 49 overflow at the W mouth of the 20-um channel between
         # arrays 2 and 3, where both arrays' W-edge M4 pin rows meet; rendered 10-15 20:47): abutted centred stack, no
-        # inter-array channel.  q0 / q3 routed the column as literal-identity masters (CLOSED) and keep it.
-        if q in (1, 2):
+        # inter-array channel.  q3 strap1 failed the same way (verdict 20:57); q0 switched pre-emptively: all four stacked.
+        if True:
             s2 = json.loads((ROOT / "physical/ref_tile/vm_identity_q2_b0_ref/spec.json").read_text())
             s["macros"] = s2["macros"]; s["floorplan_note"] = s2.get("floorplan_note", "")
-            s["job"]["tag"] = "strap2" if q == 1 else s["job"]["tag"]
+            s["job"]["tag"] = "strap2" if q in (0, 1, 3) else s["job"]["tag"]
         kd.mkdir(parents=True, exist_ok=True)
         (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
         print(json.dumps(RT.gen(str(kd / "spec.json"))))
