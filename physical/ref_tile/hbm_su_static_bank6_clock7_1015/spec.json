@@ -15,7 +15,6 @@
  ],
  "pins": {
   "N": [
-   "clk",
    "clk_macro3",
    "clk_macro4",
    "clk_macro5",
@@ -24,6 +23,7 @@
   "W": [
    "read_v",
    "read_addr",
+   "clk",
    "write_v",
    "write_addr",
    "write_data"
@@ -328,8 +328,8 @@
    320.49
   ],
   "clk": [
-   150.8,
-   170.8
+   65.0,
+   85.0
   ],
   "clk_rd": [
    65.0,
@@ -350,7 +350,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "The read-side output registers (read_data/read_return, 198 sinks) move from the shared register root to their own related root clk_rd pinned at the E face (RTL pinned_bank RD_ROOT=1), so no register-clock net crosses the SRAM columns to the east macro edge where r4/r5's M4 shorts were.",
+ "structural_change": "Register-clock topology split to match the dataflow: the 198 read-side output registers take their own root clk_rd at the E face (RTL pinned_bank RD_ROOT=1) and the request/write root clk moves from the N-face centre to the W face beside its own input registers, so no register-clock net crosses the SRAM columns to the east macro edge where all r4/r5 M4 shorts were (image hsu-1705/img/bank_r9_fp_r5drc.png).",
  "pin_regs": {
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_pinned_bank) already registers every input (a_pin/r_pin/wa_pin/wd_pin/w_pin) and every output (read_data, r_return) at the boundary; a kit-level flop stage would add a redundant read edge"
