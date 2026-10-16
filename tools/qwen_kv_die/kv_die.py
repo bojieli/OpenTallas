@@ -224,6 +224,89 @@ V143_CENTER = __import__('os').environ.get('OT_KV_V143_CENTER', '0') == '1'   # 
 V143_N_UP = float(__import__('os').environ.get('OT_KV_V143_NUP', '1404.0'))                             # N groups' top may rise this far into the empty top (the rest grows down)
 V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
 HGS, HSS = (324.0, 21.6), (21.6, 21.6)
+# ---- v1.4.4 (Q-KVSYS-PV 2026-10-16, OT_KV_V144=1 on top of OT_KV_V143C=1): the PV16 WIDE PAIRS (owner 10-15: PV 16
+# rows/cycle, KV die +8.3 mm2 approved).  Two wires-only groups ot_qwen_tp8_pv_wide_pair (PAIR 0 = WS+ES, PAIR 1 = WN+EN)
+# whose 289 children (256 x ot_qwen_tp8_pv_slice_t, 32 x ot_qwen_tp8_pv_join_t, 1 x ot_qwen_tp8_pv_wide_ctl) are placed
+# BY THE DIE (kv_expand) from their CLOSED views (qkd_pv_slice r4, qkd_pv_join r4, qkd_pv_ctl_rstpin_r5); every leaf port
+# is registered at its pin (RTL).  Envelope per pair = the matched-pin column array of the element owner's screen
+# (659a1f1fd: 3 x 3 column block, join centre, 21.6-um gaps, 561.6-um square, worst matched-bit Manhattan 248.76 um;
+# 2 x 16 blocks = 1,144.8 x 9,309.6) + a 21.6 gap + one CONTROL / COLLECTION STRIP of 216 um (the 43.2-um control tile and
+# the roots of the command / start / reset distribution and the column-flag collection; the trunks' stations sit in the
+# two 259.2-um side relay channels, PV_TREE below).  Centred in the 1,693.46-um centre column: >= 259.2 relay channel on
+# both sides.  The frames are hard keep-outs for the relay allocator (no relay frame inside an envelope).
+V144 = __import__('os').environ.get('OT_KV_V144', '0') == '1'
+# 'ahub' (default): the attention hub moves SOUTH by the north shortfall (rounded up to the 43.2-um band lattice) while the
+# south envelope still fits; any remainder grows the die height (north band = embgw and everything above it rises).
+# 'grow': the hub stays, the die height grows by the whole shortfall (the coordinator's decision-2 baseline).
+V144_MODE = __import__('os').environ.get('OT_KV_V144_MODE', 'ahub')
+# centre-column widening (um, a multiple of 2 x 43.2): the relay traffic of the old 1,145-um spine (688 relays: HOST slice
+# chains, S-stack af / mf / aq / kc / emf / emr, ares / hs / hf, the SerDes FDI) moves into the two side channels
+V144_DW = float(__import__('os').environ.get('OT_KV_V144_DW', '0'))
+# free relay apron between the north envelope's top and the gateway / sequencer / HOST band (the chains leaving the
+# north band fan out there before entering the side channels; v1.4.4 trial without it cornered the HOST trees)
+V144_APRON = float(__import__('os').environ.get('OT_KV_V144_APRON', '0'))
+PV_TILE, PV_GAP, PV_CTL = 172.8, 21.6, 43.2
+PV_BLK = 3 * PV_TILE + 2 * PV_GAP                 # 561.6: one column = 8 slices around its join
+PV_ARR = (2 * PV_BLK + PV_GAP, 16 * PV_BLK + 15 * PV_GAP)   # 1,144.8 x 9,309.6
+PV_STRIP = 216.0
+PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
+PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
+PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
+# element owner screen (results/arch/qwen_attention_rate_1015/pv_parent_2330/screen.json, gap 21.6): bank l -> (x, y, orient)
+PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'R180'),
+           4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'MY'), 7: (388.8, 194.4, 'R0')}
+PV_JOIN = (194.4, 194.4, 'R0')
+V144S = dict(resolved=False, grow=0.0, ahub_dy=0.0)
+# Q-VMWB 2026-10-16 (main 551d29b2c): the 16 V ports qkd_pv16_vport (86.4 x 172.8, pin-registered, CLOSED kit
+# qkd_pv16_vport_r1; static 2:1 select of the return rings of landing groups {k, 0} / {k, 1}).  Homes (die lead): the 4
+# ports of a stack in the landing-inner relay channel (landing | engine group, 343.7 um) at the group end that faces the
+# S|N corridor (S stacks: top, N stacks: bottom), port k nearest the corridor last -> the V words leave on the corridor
+# toward the side channel of the centre column.  Reserved as relay KEEP-OUTS now; instantiated (and wired ring -> port ->
+# pair) once Q-VMWB's landing ring faces and pin file land (OT_KV_V144_VPORT_PINS = that file).
+PV_VPORT = (86.4, 172.8)
+PVW_CLK = [f'ck_c{s}' for s in range(33)]        # die port ck_c<s> -> col_clk[s] (s = 32: the control tile)
+
+
+def pv_col_rc(s):
+    """column s = 8 H + GS (head H, dims 16 GS..16 GS+15) -> (block column c, block row r) of the 2 x 16 array: the four
+    columns of one GS (they share its 8 x 128-b V chunks) form one 2 x 2 group, the eight of one head H share e[H]"""
+    h_, gs_ = divmod(s, 8)
+    return h_ & 1, 2 * gs_ + (h_ >> 1)
+
+
+def pv_plan():
+    """canonical (R0, strip at the top) child homes of one wires-only PV pair: yosys flattened cell name -> (x, y, w, h,
+    orient).  The die places pvw_0 R0 (strip faces the hub above it) and pvw_1 MX (strip faces the hub below it)."""
+    pl = {}
+    for s in range(32):
+        c, r_ = pv_col_rc(s)
+        bx, by_ = c * (PV_BLK + PV_GAP), r_ * (PV_BLK + PV_GAP)
+        for l_, (x_, y_, o_) in PV_BANK.items():
+            pl[f'g_col[{s}].u_col.g_bank[{l_}].u_bank'] = (round(bx + x_, 4), round(by_ + y_, 4), PV_TILE, PV_TILE, o_)
+        pl[f'g_col[{s}].u_col.u_join'] = (round(bx + PV_JOIN[0], 4), round(by_ + PV_JOIN[1], 4), PV_TILE, PV_TILE, PV_JOIN[2])
+    pl['u_ctl'] = (round((PVW[0] - PV_CTL) / 2, 4), round(PV_ARR[1] + PV_GAP + (PV_STRIP - PV_CTL) / 2, 4), PV_CTL, PV_CTL, 'R0')
+    return pl
+
+
+def pv_tree(m):
+    """the PV pair's command / start / reset distribution as a registered trunk in each side relay channel (stations
+    <= PIN_REACH apart, one tap per block row), balanced to the farthest row: the depth the pair successor RTL and the
+    compiler must carry (pair RTL today broadcasts cmd in ONE edge over 9.3 mm -- element-owner item)."""
+    out = {}
+    for it in m['insts']:
+        if not it.master.startswith('qkd_pvw'):
+            continue
+        strip_y = it.y + (it.h - PV_STRIP / 2 if it.orient == 'R0' else PV_STRIP / 2)
+        rows = []
+        for r_ in range(16):
+            yc = r_ * (PV_BLK + PV_GAP) + PV_BLK / 2
+            yd = it.y + (yc if it.orient == 'R0' else it.h - yc)
+            rows.append(abs(yd - strip_y) + PV_BLK / 2)   # trunk run + the tap across half a block
+        st = [math.ceil(d_ / PIN_REACH) for d_ in rows]
+        out[it.name] = dict(row_distance_um=[round(d_, 1) for d_ in rows], stations_per_row=st, balanced_depth=max(st),
+                            trunks='W and E side channel, 60-b cmd + start / context / epoch + reset, one tap per block row',
+                            collection='col_valid / col_fault 2 b per column back on the same trunks (depth = balanced_depth)')
+    return out
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
             [f'ck_{t}{i}' for t in 'itabl' for i in range(16)])
 HEAD_CLK_CHILD = dict(**{f'ck_f{q}': f'front{q}' for q in range(4)}, ck_k='ktree', ck_s='score',
@@ -349,6 +432,19 @@ SPLIT_BINDINGS['qkd_rst_region'] = dict(module='qkd_rst_region', file='rtl/qwen_
     classed={'por_n': 'by_design: package POR pad (off-chip signal), async assert, synchronised inside the root'})
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
+# v1.4.4 PV16 wide pairs (wires-only; die-placed children via kv_expand).  The die connects ONLY the clock entries and the
+# reset today: the pair's data inputs (V / e / arrival identity / start / context / epoch) and outputs (V requests,
+# out_leaf, flags) have NO producer / consumer RTL on the die yet (landing strip without the 4 V return ports a stack,
+# ASTK strip without qkd_astk_native_er_service_w, hub without the wide-pair finalize face) -> they stay UNCONNECTED
+# (strict port bind MISMATCH, never tied); owners in kv_expand.PV_OPEN.
+for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
+    SPLIT_BINDINGS[_mn] = dict(module='ot_qwen_tp8_pv_wide_pair', file='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv',
+        parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=0, FIRST_INPUT_AGE=20, MUT=0),
+        ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'],
+                   vi=['in_valid', 'in_v', 'in_e', 'in_t', 'in_epoch'], vr=['req_valid', 'req_t'],
+                   po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age']),
+        sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)},
+        classed={'clk': 'by_design: unused by the RTL (every child takes its col_clk entry)'})
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
     ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
@@ -929,6 +1025,8 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
 
 
 def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False):
+    _args = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
+                 kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split)
     kv_wq_wide = kv_wq_wide or kv_wq_mirror
     kv_wq_leaf_s = kv_wq_leaf_s or kv_wq_head or kv_wq_wide
     kv_wq_binary = kv_wq_binary or kv_wq_leaf_s
@@ -958,6 +1056,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     d0 = up(max(0.0, SERDES[2] + GY + 2 * CHAN - (edge_chan + (sp - gh_) / 2)), LAT) if split else 0.0
     band_shift = {k: v + d0 for k, v in band_shift.items()}
     Hk = up(2 * (MARGIN+edge_chan) + 2 * sp + GY + d0, GY)
+    Hk0 = Hk
+    if split and V144:
+        Hk = round(Hk + V144S['grow'], 6)   # v1.4.4: the north band (embgw and everything above it) rises with the die top
     # x layout (W half; E mirrors)
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
     leaf_shift = ((518.4 if kv_wq_head else 432.0) + GX if kv_wq_leaf_s else 518.4 + GX) if kv_wq_leaves else 0.0
@@ -968,6 +1069,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
     if split:
         centre_w = max(UCIE[1], FRAMES['qkd_ahub'][0], FRAMES['qkd_d2d'][0]) + 4 * CHAN
+        if V144:
+            centre_w += V144_DW       # v1.4.4: wider side relay channels beside the PV envelopes (the spine is gone)
     Wk = up(2 * (x_grp + grp_w) + centre_w, 2 * GX)
     m = dict(die=dict(w=Wk, h=Hk), insts=[], buses=[], regions=[], geo={})
     ins = m['insts']
@@ -1069,7 +1172,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     pw, ph = FRAMES['qkd_pll']
     add('pll', 'qkd_pllm' if slice_w else 'qkd_pll', xc + UCIE[1] / 2 + GX * 10, Hk - MARGIN - ph, pw - SHAVE, ph - SHAVE, 'R0', 'pll', 'io')
     hw, hh = FRAMES['qkd_ahub']
-    add('ahub', 'qkd_ahub', xc - hw / 2, up(Hk / 2 - hh / 2, GY), hw - SHAVE, hh - SHAVE, 'R0', 'attn_hub', 'attn')
+    add('ahub', 'qkd_ahub', xc - hw / 2, up(Hk0 / 2 - hh / 2, GY) - (V144S['ahub_dy'] if split and V144 else 0.0),
+        hw - SHAVE, hh - SHAVE, 'R0', 'attn_hub', 'attn')
     add('serdes_host', SERDES[0], xc - SERDES[1] / 2, MARGIN, SERDES[1] - SHAVE, SERDES[2] - SHAVE, 'R0', 'phy_host',
         'io', 'link_serdes')
     tw, th = FRAMES['qkd_host']
@@ -1081,10 +1185,80 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         add('host', 'qkd_host_rt', xc - tw / 2, hy_north, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     else:
         add('host', 'qkd_host_rt' if slice_w else 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
+    pv_geo, m_keep = None, []
+    if split and V144:
+        if not V143['on'] or not V143C:
+            raise ValueError('v1.4.4 (OT_KV_V144=1) is defined on the v1.4.3c geometry: needs --v143 and OT_KV_V143C=1')
+        byc = {i.name: i for i in ins}
+        ah_, eg_, sd_ = byc['ahub'], byc['embgw'], byc['serdes_host']
+        n_lo, n_hi = ah_.y + ah_.h + PV_CLEAR, eg_.y - max(PV_CLEAR, V144_APRON)
+        s_lo, s_hi = sd_.y + sd_.h + PV_CLEAR, ah_.y - PV_CLEAR
+        if not V144S['resolved']:
+            # measured shortfall of the north home -> hub shift south (while the south envelope fits) + die growth
+            short = PVW[1] - (n_hi - n_lo)
+            dy_, gr_ = 0.0, 0.0
+            if short > 0:
+                if V144_MODE == 'ahub':
+                    spare_s = (s_hi - s_lo) - PVW[1]
+                    dy_ = min(up(short, LAT), math.floor(max(0.0, spare_s) / LAT + 1e-9) * LAT)
+                gr_ = up(max(0.0, short - dy_), LAT)
+            V144S.update(resolved=True, ahub_dy=round(dy_, 6), grow=round(gr_, 6), north_short_um=round(short, 3),
+                         mode=V144_MODE)
+            if dy_ or gr_:
+                return _build(**_args)
+        x_ = up(xc - PVW[0] / 2, GX)
+        y_s = PV_GRANT_Y0 if PV_GRANT_Y0 >= s_lo and PV_GRANT_Y0 + PVW[1] <= s_hi else \
+            math.floor((s_hi - PVW[1]) / GY + 1e-9) * GY
+        y_n = up(n_lo, GY)
+        if y_s < s_lo - 1e-6 or y_n + PVW[1] > n_hi + 1e-6:
+            raise ValueError(f'v1.4.4 PV envelope does not fit: south {s_lo:.1f}..{s_hi:.1f}, north {n_lo:.1f}..{n_hi:.1f}, '
+                             f'need {PVW[1]} (state {V144S})')
+        add('pvw_0', 'qkd_pvw_s', x_, y_s, PVW[0] - SHAVE, PVW[1] - SHAVE, 'R0', 'pv_pair', 'attn')
+        add('pvw_1', 'qkd_pvw_n', x_, y_n, PVW[0] - SHAVE, PVW[1] - SHAVE, 'MX', 'pv_pair', 'attn')
+        lft = max(i.x + i.w for i in ins if i.x + i.w < xc - PVW[0] / 2 and i.y < Hk - 2000 and i.y > 2000
+                  and not i.name.startswith(('pvw', 'ahub')))
+        rgt = min(i.x for i in ins if i.x > xc + PVW[0] / 2 and i.y < Hk - 2000 and i.y > 2000
+                  and not i.name.startswith(('pvw', 'ahub')))
+        pv_geo = dict(mode=V144S.get('mode'), north_shortfall_um=V144S.get('north_short_um'), ahub_dy_um=V144S['ahub_dy'],
+                      die_growth_um=V144S['grow'], die_area_delta_mm2=round(Wk * V144S['grow'] / 1e6, 4),
+                      envelope_um=list(PVW), array_um=list(PV_ARR), strip_um=PV_STRIP,
+                      pvw_0=dict(xy=[x_, y_s], orient='R0', stacks=['WS', 'ES'], kept_grant_y=y_s == PV_GRANT_Y0,
+                                 south_room_um=[round(s_lo, 3), round(s_hi, 3)]),
+                      pvw_1=dict(xy=[x_, y_n], orient='MX', stacks=['WN', 'EN'], north_room_um=[round(n_lo, 3), round(n_hi, 3)]),
+                      centre_column_um=[round(lft, 3), round(rgt, 3), round(rgt - lft, 3)],
+                      side_channel_um=[round(x_ - lft, 3), round(rgt - x_ - PVW[0], 3)],
+                      spare_over_259_2_um=[round(x_ - lft - 2 * CHAN, 3), round(rgt - x_ - PVW[0] - 2 * CHAN, 3)])
+        homes, keep = {}, []
+        for st in STACKS:
+            ld_ = byc[f'land_{st}']
+            g0, g1 = grp_y[st]
+            # channel between the landing's inner face and the engine group (W: landing E face, E: landing W face)
+            if st[0] == 'W':
+                c0 = ld_.x + ld_.w
+                c1 = min(i.x for i in ins if i.name.startswith(f'head_{st}_'))
+            else:
+                c1 = ld_.x
+                c0 = max(i.x + i.w for i in ins if i.name.startswith(f'head_{st}_'))
+            vx = up(c0 + (c1 - c0 - PV_VPORT[0]) / 2, GX)
+            for k_ in range(4):
+                if st[1] == 'S':
+                    vy = math.floor((g1 - (4 - k_) * PV_VPORT[1] - (3 - k_) * PV_GAP) / GY + 1e-9) * GY
+                else:
+                    vy = up(g0 + (3 - k_) * (PV_VPORT[1] + PV_GAP), GY)
+                homes[f'vport_{st}_{k_}'] = dict(xy=[round(vx, 4), round(vy, 4)], size=list(PV_VPORT), channel_um=[round(c0, 3), round(c1, 3)],
+                                                 pair=STACKS.index(st) % 2, pair_port=k_ + (4 if st[0] == 'E' else 0))
+                keep.append((f'vport_{st}_{k_}', vx, vy, PV_VPORT[0], PV_VPORT[1]))
+        pv_geo['vport_homes'] = homes
+        pv_geo['vport_status'] = ('RESERVED_KEEPOUT: qkd_pv16_vport instances + ring / pair wiring wait for the Q-VMWB landing '
+                                  'ring faces and pin file (the landing strip RTL has no return-ring face today)')
+        m_keep = keep
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
     m['geo'] = dict(grp_y=grp_y, split=split, land_width_um=LAND_W, static_memory_reservation=LAND_W > 172.8, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
                     ystack=ystack, slice_w=slice_w, host_v14=bool(slice_w), r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
+    if pv_geo:
+        m['geo']['pv144'] = pv_geo
+    m['keepouts'] = m_keep
     if kv_wq_leaves:
         _write_tiles(m, add)
     if slice_w:
@@ -1189,8 +1363,11 @@ def _buses(m, T, r):
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
              [(n, 'rst_n') for n in dict.fromkeys(n for n, _ in grp) if not n.startswith(('cdc_', 'hst_'))]))   # v1.4.3 stages: no reset   # the CDC core resets come from land.crst (r21c rst_kv)
     cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host'] + (['lnk'] if m['geo'].get('split') else [])
+    # v1.4.4: the two PV pairs = centre-clock groups, one entry per column (col_clk[s] -> its 9 tiles) + the control tile
+    cen += [i.name for i in m['insts'] if i.master.startswith('qkd_pvw')]
     add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] +
-         [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else ['ck'])] +
+         [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else
+                                         PVW_CLK if n.startswith('pvw_') else ['ck'])] +
          [('ucie_rom', 'clk'), ('serdes_host', 'clk')]))
     add(('rst_core_c', 'reset', 1, [('pll', 'rso_c')] + [(n, 'rst_n') for n in cen] +
          [('ucie_rom', 'rst_n'), ('serdes_host', 'rst_n')]))
@@ -1490,6 +1667,12 @@ def _relays(m):
         for gx in range(int(it.x // G), int((it.x + it.w) // G) + 1):
             for gy in range(int(it.y // G), int((it.y + it.h) // G) + 1):
                 owner.setdefault((gx, gy), set()).add(it.name)
+    # v1.4.4: reserved homes without an instance yet (the PV V ports) are hard keep-outs like a block frame
+    for kn_, kx_, ky_, kw_, kh_ in m.get('keepouts', []):
+        by[kn_] = F.Inst(kn_, 'keepout', kx_, ky_, kw_, kh_, 'R0')
+        for gx in range(int(kx_ // G), int((kx_ + kw_) // G) + 1):
+            for gy in range(int(ky_ // G), int((ky_ + kh_) // G) + 1):
+                owner.setdefault((gx, gy), set()).add(kn_)
     occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
     rocc = {}
     SP = dict(on=False)        # v1.1: set for a chain's retry: route around cells other chains' relays hold
@@ -2359,6 +2542,18 @@ def _split_pins(M, m=None):
         for j_, p_ in enumerate(AHUB_CLK):
             if p_ in hm.ports:
                 hm.ports[p_] = ('area', 1, round(hm.w * (j_ + 1) / (len(AHUB_CLK) + 1), 3), hm.h / 2, 1)
+    # v1.4.4: the PV pair's 33 clock entries sit on their children (ck_c<s>: column s's join centre, ck_c32: the control
+    # tile), rst_n on the control tile (canonical R0 frame, strip at the top; the die places pvw_1 MX)
+    for mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+        if mn in M:
+            hm, pl = M[mn], pv_plan()
+            for s in range(33):
+                x_, y_, w_, h_, _ = pl['u_ctl' if s == 32 else f'g_col[{s}].u_col.u_join']
+                if f'ck_c{s}' in hm.ports:
+                    hm.ports[f'ck_c{s}'] = ('area', 1, round(x_ + w_ / 2, 3), round(y_ + h_ / 2, 3), 1)
+            if 'rst_n' in hm.ports:
+                x_, y_, w_, h_, _ = pl['u_ctl']
+                hm.ports['rst_n'] = ('area', 1, round(x_ + w_ / 2 + 6.4, 3), round(y_ + h_ / 2, 3), 1)
     # the link bridge abuts the KV end: its rf / tf faces take the KV end's bit positions (v1 drew them ~220 um apart:
     # the 1.47 fine window of the d2d | lnk face); lx / lr leave its S face over the sequencer's lx / lr pins
     if m is not None and 'qkd_lnk' in M and 'qkd_d2d' in M:
@@ -2814,7 +3009,8 @@ def record(m):
                                               f'(measured cells: head 152,960 um2 placed, control 24,507 um2 synthesized; '
                                               f'routes qkd_rhead_c / qkd_ectl_c)',
                              astk_w=ASTK_W, land_w=LAND_W, frames=FRAMES,
-                             note='frames without a routed element are sized from synthesis or stated as ASSUMED'))
+                             note='frames without a routed element are sized from synthesis or stated as ASSUMED'),
+                **({'pv144': dict(m['geo']['pv144'], tree=pv_tree(m))} if m['geo'].get('pv144') else {}))
 
 
 def check(m):
