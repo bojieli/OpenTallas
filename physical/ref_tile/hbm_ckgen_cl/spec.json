@@ -29,44 +29,44 @@
  },
  "pin_ranges": {
   "refclk": [
-   124.8,
-   129.6
+   52.8,
+   57.6
   ],
   "por_n": [
-   129.6,
-   134.4
-  ],
-  "pll_hbm": [
-   110.4,
-   115.2
-  ],
-  "pll_stream": [
-   115.2,
-   120.0
-  ],
-  "pll_serial": [
-   120.0,
-   124.8
-  ],
-  "pll_link": [
-   124.8,
-   129.6
+   57.6,
+   62.4
   ],
   "por_hbm": [
-   129.6,
-   134.4
+   26.4,
+   31.2
   ],
   "por_stream": [
-   134.4,
-   139.2
+   31.2,
+   36.0
   ],
   "por_serial": [
-   139.2,
-   144.0
+   36.0,
+   40.8
   ],
   "por_link": [
-   144.0,
-   148.8
+   40.8,
+   45.6
+  ],
+  "pll_hbm": [
+   48.0,
+   52.8
+  ],
+  "pll_stream": [
+   52.8,
+   57.6
+  ],
+  "pll_serial": [
+   57.6,
+   62.4
+  ],
+  "pll_link": [
+   62.4,
+   67.2
   ]
  },
  "outline": {
@@ -124,7 +124,7 @@
  },
  "params": {},
  "inter": [],
- "slot_change_request": "H-DIE hb_ckgen grant (hbm_v15.json slots[hb_ckgen], 259.2 x 220.32) grows EAST by 8.64 um to 267.84 x 220.32 (origin and every pin span unchanged: pins are offsets from the W/S corner): the PLL (172.8) + rel4 (21.6) need 2.16 core margin + 20 um block-core-edge channel on both sides + a 20 um block-block channel = 258.72 um, which the 2.16 child / 0.432 macro lattice cannot fit in 259.2 (best fit 18.6 um E channel); next 8.64 track-lattice outline = 267.84.  Free: no slot within 300 um E/W (idx_s3 is 123 um N).  rel4 at (24.192,25.92) (1.728 um = lcm of site and every M1-M7 track pitch; y also on the 8.64 row/M6 lattice) beside the PLL W-edge pins, PLL at (66.096,23.76); hardened parent PG = M7 (ref_tile cluster contract), signals <= M6.",
+ "slot_change_request": "H-DIE hb_ckgen grant (hbm_v15.json slots[hb_ckgen], 259.2 x 220.32) -> 267.84 x 220.32 (grows EAST by 8.64 um; origin kept): the PLL (172.8) + rel4 (21.6) need 2.16 core margin + 20 um block-core-edge channel on both sides + a 20 um block-block channel = 258.72 um, which the 1.728 child / 0.432 macro lattice cannot fit in 259.2 (best fit 18.6 um E channel); next 8.64 track-lattice outline = 267.84 (free: no slot within 300 um E/W, idx_s3 is 123 um N).  PINS MOVED WEST (same faces, layer M5, 4.8 um spans): por_* directly under the rel4 release flops' S-face pins (x 26.4-45.6), pll_* in the 20 um channel the PLL W-edge clock pins drop through (x 48.0-67.2), refclk/por_n at the top of that channel (x 52.8-62.4): the granted spans (x 110-149, under the PLL) cost ~27 ps of wire on every por_* launch (gate 06:33 reg->out -29.1 ps).  rel4 at (24.192,25.92), PLL at (66.096,23.76); parent PG M7, signals <= M6; DONT_BUFFER_PORTS: the parent is wires only, rel4's release outputs already have their pin drivers and the PLL drives the die-tree root (a port buffer only adds launch delay).",
  "job": {
   "owner": "Claude:H-DIE-CKGEN",
   "branch": "claude/hdie-ckgen-0630",
@@ -162,5 +162,8 @@
     ]
    }
   ]
+ },
+ "orfs_vars": {
+  "DONT_BUFFER_PORTS": "1"
  }
 }
