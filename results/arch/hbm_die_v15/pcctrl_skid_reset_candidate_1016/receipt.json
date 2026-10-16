@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.pcctrl-skid-reset-candidate.v1",
+  "status": "UNADOPTED_FUNCTIONAL_DRAFT",
+  "source_commit": "c2612c9ec2eca52c95913028b57934365fb49801",
+  "original_rtl": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "original_rtl_sha256": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+  "golden_method": "Extract original ot_hbm_svc_pin_skid2 module, rename golden_skid, no functional edits",
+  "candidate_method": "Separate payload posedge blocks from asynchronous-reset valid/control state. Same capacity2 and intended cycle behavior; payload writes can differ while out_v=0.",
+  "exact_contract": "in_r and out_v equal every checked cycle; out_data equal whenever out_v=1, including stalled valid head. Invalid output payload is unspecified and not compared.",
+  "widths": [
+    340,
+    277
+  ],
+  "random_cycles_per_width": 20000,
+  "reset_pulses_per_width": 20,
+  "results": {
+    "340": {
+      "transfers": 9329,
+      "stalled_valid_cycles": 9888,
+      "exact": "PASS",
+      "stale_head_mutant": "rejected"
+    },
+    "277": {
+      "transfers": 9379,
+      "stalled_valid_cycles": 9874,
+      "exact": "PASS",
+      "stale_head_mutant": "rejected"
+    }
+  },
+  "qualification": "Standalone existing-RTL comparison only. No native pin, physical timing, actual PC controller integration, full-chip, or production throughput qualification. No RTL adoption and no route. Preserve H6 until its actual verdict.",
+  "area_cycles": "No added payload/control registers or pipeline stages intended; actual mapped area/setup/hold/native effect unmeasured.",
+  "run": {
+    "host": "ot-epyc4",
+    "path": "/srv/opentallas-scratch2/codex/pcctrl-skid-candidate-1016",
+    "unit": "oth-ubuntu-767228-1792146061",
+    "admitted_via": "ot-run --mem2 --threads1",
+    "exit_code": 0
+  },
+  "sha256": {
+    "candidate.sv": "8fecb0719f39b3927f1b791729171ee633684aed0264ed90041cbf436ddf1eb9",
+    "tb.sv": "c64f27014accf61d1a094786802a381ebc9804795827ce0290e2728330d1a73d",
+    "run.log": "eff8996528e2340abd38beda04749b5c487dfae53630795638763c67b8ad8a60",
+    "golden.sv": "53db715e4792579df81b6b67af7ab86a66f8c65b76956b98c0765fad12c4aa31",
+    "run.sh": "2ea084df205c9a6ded3c2c22c72ceb0003db0e876f555dd31239d720911cbadf"
+  }
+}

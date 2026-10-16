@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   319 GB (avail 574, growth 207, headroom 48, waiters 0/0 GB) load 71/128 running 34 disk 2189 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/codex/pcctrl-skid-candidate-1016
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/codex/pcctrl-skid-candidate-1016
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-767228-1792146061 after 1 s
+SKID_SPLIT_CANDIDATE PASS WIDTH=340 transfers=9329 stalled=9888 resets=20
+tb.sv:28: $finish called at 200070 (1s)
+FATAL: tb.sv:12: VALID_PAYLOAD mismatch
+SKID_SPLIT_MUTANT rejected WIDTH=340
+SKID_SPLIT_CANDIDATE PASS WIDTH=277 transfers=9379 stalled=9874 resets=20
+tb.sv:28: $finish called at 200070 (1s)
+FATAL: tb.sv:12: VALID_PAYLOAD mismatch
+SKID_SPLIT_MUTANT rejected WIDTH=277
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-767228-1792146061): exit 0
