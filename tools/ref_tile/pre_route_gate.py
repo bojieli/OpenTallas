@@ -1105,6 +1105,17 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
+    # A dropped SSH session can leave the admitted container running. Its
+    # partial stdout must never become a terminal CTS/clock qualification.
+    # Preserve the source snapshot and handle; collect this original job.
+    if p.returncode or not re.search(r"^GATE_DONE$", out, re.M):
+        g.add("FAIL", "remote_incomplete",
+              f"remote gate has no verified terminal completion (ot-run exit {p.returncode}); "
+              f"original job may still run at {host}:{R}; script {script}; log {logp}",
+              "inspect the original live handle and collect its terminal output; do not submit a duplicate")
+        g.clock = {"cts": bool(cts), "verdict": "REFUSE", "status": "REMOTE_INCOMPLETE",
+                   "text": "transport or script ended without verified GATE_DONE; no clock qualification"}
+        return
     analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
     gate_layout(g, kd, spec, out)
 
