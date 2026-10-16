@@ -9,7 +9,7 @@ if {$bt eq "NULL"} {error {LOCAL_MACRO_CLK missing literal ck port}}
 set source_net [$bt getNet]
 set targets {}
 foreach bank {0 1 2 3} {
-    set name "u_core.u_end.u_link.g_bank\[$bank\].u_store.u_sram"
+    set name [format {u_core.u_end.u_link.g_bank\[%d\].u_store.u_sram} $bank]
     set macro [$mb findInst $name]
     if {$macro eq "NULL" || [[$macro getMaster] getName] ne "ot_sram_1r1w_64x512_m1_r2c2"} {error "LOCAL_MACRO_CLK missing exact SRAM $name"}
     set clock [$macro findITerm clk]
