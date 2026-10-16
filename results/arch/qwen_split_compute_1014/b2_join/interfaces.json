@@ -2,8 +2,63 @@
   "status": "SOURCE_ONLY_UNQUALIFIED",
   "sources": [
     {
+      "source": "rtl/qwen_split/qfd_b2_train_source.sv",
+      "sha256": "b9c9da79a3a474a8b565132d70843b06ef79ab2f5840b0718a6a2d596183635d",
+      "top": "qfd_b2_train_source",
+      "ports": {
+        "ck_head": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_tree": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ib": {
+          "direction": "input",
+          "bits": 380
+        },
+        "tc2": {
+          "direction": "input",
+          "bits": 341
+        },
+        "me_go": {
+          "direction": "output",
+          "bits": 1
+        },
+        "me_tiles": {
+          "direction": "output",
+          "bits": 18
+        },
+        "me_ts": {
+          "direction": "output",
+          "bits": 24
+        },
+        "me_split": {
+          "direction": "output",
+          "bits": 4
+        },
+        "me_oen": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tag_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tag_last": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
       "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
-      "sha256": "8d713dc3e953f8bbb0f73eedce372979f9223d36347344b328689e3e942674db",
+      "sha256": "6f44046288b038dd4cbd49f32d3bab144b8d11a1186b55e297b675faf99fc821",
       "top": "qfd_tt_ctlm_b2",
       "ports": {
         "ck_xpf": {
@@ -61,6 +116,34 @@
         "ib": {
           "direction": "output",
           "bits": 380
+        },
+        "rsi_me_go": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rsi_me_tiles": {
+          "direction": "output",
+          "bits": 18
+        },
+        "rsi_me_ts": {
+          "direction": "output",
+          "bits": 24
+        },
+        "rsi_me_split": {
+          "direction": "output",
+          "bits": 4
+        },
+        "rsi_me_oen": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rsi_tag_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rsi_tag_last": {
+          "direction": "output",
+          "bits": 1
         },
         "su_observe": {
           "direction": "input",
@@ -4177,7 +4260,8 @@
     }
   ],
   "cycles": {
-    "controller_added_logic": 0,
+    "controller_execution_added_logic": 0,
+    "train_source_copy_edges": 1,
     "am_station_added_vs_old_master": 0,
     "vm_ingress_added_logic": 0,
     "return_ro": 6,
@@ -4194,7 +4278,7 @@
     "max_capture_bits_per_edge": 13278,
     "max_result_bits_per_edge": 3306,
     "new_external_vm_payload_pins": 1653,
-    "tt_extra_control_pins": 1107,
+    "tt_extra_control_pins": 1158,
     "normal_cycles_from_capture_zero_to_last_payload_pin": "D+5NH+(tiles-1)*max(8NH,stride)+7NH+NH-1+1 (observe after output-register edge); marker-only has one fewer edge",
     "outline_um": null,
     "area": "UNASSIGNED: actual source cell area/pin/clock assignment required; no inherited serializer grant"

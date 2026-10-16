@@ -13,6 +13,11 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     input wire [94:0] native_ret,
     output wire [5:0] command_stage,
     output wire [379:0] ib,
+    output wire rsi_me_go,
+    output wire [17:0] rsi_me_tiles,
+    output wire [23:0] rsi_me_ts,
+    output wire [3:0] rsi_me_split,
+    output wire rsi_me_oen,rsi_tag_v,rsi_tag_last,
     input wire [15:0] su_observe,output wire [71:0] xpf,
     output wire mer0,mer1,mer2,mer3,mer4,mer5,
     input wire rf0,rf1,rf2,rf3,rf4,rf5,xflt,
@@ -61,6 +66,10 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     generate if(XPF_TRANSPORT_EDGES<0)begin:g_unassigned_arm_route
       initial $error("native XPF transport edges require assigned physical route");
     end endgenerate
+    qfd_b2_train_source u_train_source(
+      .ck_head(ck_head),.ck_tree(ck_tree),.rst_n(rsi),.ib(ib),.tc2(tc2),
+      .me_go(rsi_me_go),.me_tiles(rsi_me_tiles),.me_ts(rsi_me_ts),
+      .me_split(rsi_me_split),.me_oen(rsi_me_oen),.tag_v(rsi_tag_v),.tag_last(rsi_tag_last));
     wire w_rst_n;
     wire w_h_start;
     wire [17:0] w_token;
