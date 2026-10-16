@@ -35,12 +35,18 @@ module qkd_static_kv_landing_seg #(
     wire [23:0] gl_d,ol_d;
     wire [1023:0] od_d;
     for(genvar branch=0;branch<4;branch=branch+1)begin:g_hop
+      // ls3 (KVELEM 2026-10-16): ls2 EARLY_FAIL_HOLD stalled at -44.7 ps on the FF removal check rst_n port -> hop rn
+      // RESETN (async capture straight from the pin; hold repair cannot pad a removal arc). The branch's hop reset is now
+      // a synchronous D capture of rst_n (a data path, as the landing PCs/rowctl already do: rn <= rst_n), one per branch
+      // beside its hops. Cost: hop reset deassertion +1 edge (reset guard only; no traffic cycle changes).
+      (* keep *) reg hrn;
+      always @(posedge ck) hrn <= rst_n;
       qkd_static_kv_hop38 #(.MUT(HOP_MUT==2 && branch==0))u_req(
-        .ck(ck),.rst_n(rst_n),
+        .ck(ck),.rst_n(hrn),
         .a({gl[6*branch+:6],ge[16*branch+:16],gv[branch],gt[14*branch+:14],get[branch]}),
         .b({gl_d[6*branch+:6],ge_d[16*branch+:16],gv_d[branch],gt_d[14*branch+:14],get_d[branch]}));
       qkd_static_kv_hop295 #(.MUT(HOP_MUT==1 && branch==0))u_rsp(
-        .ck(ck),.rst_n(rst_n),
+        .ck(ck),.rst_n(hrn),
         .a({pf[branch],ol[6*branch+:6],oe[16*branch+:16],vv[branch],ot[14*branch+:14],od[256*branch+:256],ov[branch]}),
         .b({pf_d[branch],ol_d[6*branch+:6],oe_d[16*branch+:16],vv_d[branch],ot_d[14*branch+:14],od_d[256*branch+:256],ov_d[branch]}));
     end
