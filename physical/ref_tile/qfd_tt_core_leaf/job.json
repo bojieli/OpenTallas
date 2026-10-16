@@ -1,5 +1,5 @@
 {
- "name": "qfd_tt_core_leaf-tc1-COMMIT",
+ "name": "qfd_tt_core_leaf-tc3-COMMIT",
  "block": "qfd_tt_core_leaf",
  "ref_tile": true,
  "owner": "claude:Q-TT-LEAF",
@@ -129,11 +129,9 @@
  "structural_change": "tc1 (Q-TT-LEAF 2026-10-15): tg1 core CTS gate boundary clock spread 360.0..454.6 = 94.6 ps (> 80 native) and whole tree 136.6 ps. Per-sink census of the gate's 4_1_cts.odb: every late sink (S face x60-180, N face x120-180, ring u_ts.g_s[0] up to 455.6 ps) hangs off ONE H-tree buffer clkbuf_6_31_0 that the obstruction-aware H-tree put at (109.8,124.5) in the channel between the two SRAMs, driving 10 leaf buffers up to 100 um away (317.5 -> 454 ps in one stage). Structural tree fix: route.cts_sink.extra -no_obstruction_aware (H-tree branch points at their geometric positions; clock wires cross the SRAM tops on M5/M4, same mechanism as the s81 gather leaf). Replay of CTS on the identical placement: boundary 360.0..383.8 = 23.8 ps, all registers 354.6..386.4, TT insertion 455.6 -> 384.7 ps. Same RTL, outline, pins, macros; no area or cycle cost. Track-snapped pins (tg1) kept.",
  "hold_merge": true,
  "reroute_reason": {
-  "kind": "pin_register",
-  "source": "results/arch/tt_boundary_2116/tc1_2330/old_tg1_core_native_fail.json",
+  "kind": "rtl_change",
+  "source": "628d63039",
   "cell": "qfd_tt_core_leaf",
-  "launch_ps": 257.91254,
-  "capture_ps": 176.7,
-  "fix": "Correct CTS branch placement with -no_obstruction_aware: the old H-tree parked a branch between two SRAMs and delayed output pin registers; actual routed old tg1 launch257.91254 on scale_rst_n plus27mx_data pins above220 and spread89.5. Same original pin-capture/output registers, outline/pins/RTL and recipe3 latency; current measured CTS tree spread70.8. Final native220/190/80 and TT/FF/DRC0 required."
+  "fix": "tc3 TT reset pair: qfd_tt_core_leaf.sv now drives scale_rst_n from a dedicated kept station copy (same IS release, +1 flop) so the scale leaf can capture rst_n locally at its pin (scale tc1 native FAIL raw rst_n capture 356.99 ps; scale tc3 CLOSED + native PASS 184.3 ps). The tc1 core view predates this RTL. Outline/pins/placement/CTS options of tc1 unchanged; 0 calendar cycles."
  }
 }
