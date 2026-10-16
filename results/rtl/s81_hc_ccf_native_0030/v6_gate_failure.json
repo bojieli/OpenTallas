@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.s81hc_ccf.native_recovery.v1",
+  "source_commit": "c53c3c428",
+  "gate_generated": "2026-10-16T02:48:40-0700",
+  "verdict": "FAIL",
+  "trial_grt_overflow": 998,
+  "trial_m3_overflow": 877,
+  "tt_insertion_ps": 714.9,
+  "tt_boundary_mean_ps": 693.9,
+  "tt_spread_ps": 31.3,
+  "root_sinks": 14188,
+  "placement_setup_ps": -41.5408818454921,
+  "placement_hold_ps": 42.99077760450132,
+  "physical_closure": false,
+  "native_qualification": false,
+  "submission": "NOT_SUBMITTED",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261016-005052",
+  "raw_log": "/tmp/ref_gate_s81hc_ccfh2_ref_20261016-005052.log",
+  "look": "Inspected gate_layout/congestion.png and density.png. Overflow localized N face channel ends, interior macro channels clear. N hold/flop band locally near full. auto N177 pin flops per10um ->gap4.3um,34rows; S102 per10um ->gap4um,20rows.",
+  "proposed_successor": "Separate hold stages from deeper 64row pin-register band by12um inset. Same RTL, assigned v18 pins, outline, SRAMs and fixed cycles. Must still resolve/close measured SRAM elastic-bank setup estimate -41.5ps; no timing exception."
+}

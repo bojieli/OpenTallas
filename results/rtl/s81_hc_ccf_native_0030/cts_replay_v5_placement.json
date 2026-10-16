@@ -1,0 +1,213 @@
+{
+ "schema": "opentallas.s81hc_ccf.cts_replay.v1",
+ "what": "CTS-only replays on the closed v5 placement (6_final.odb of s81hc_ccfh2_ref-v5-sspread-m5strip-3f81e581e, EPYC1): clock tree stripped (1,242 buffers + 373 dummy-load inverters), fillers removed, clock re-built, TT NLDM RVT, placement parasitics (ORFS setRC); boundary = fd_p/fv_p/y1/ya/ch_fd/ch_fv/yfl/rsr/g_pop_keep flops",
+ "tool": "/tmp/ccf0030/ctsx.tcl + ctss.tcl (S-ELEM-PQ/CCF 2026-10-16)",
+ "variants": {
+  "s_s1": {
+   "ctsa": "-repair_clock_nets",
+   "all": {
+    "n": 14186,
+    "mean": 624.0,
+    "min": 610.5,
+    "max": 639.8,
+    "spread": 29.3
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 624.7,
+    "min": 610.5,
+    "max": 639.8,
+    "spread": 29.3
+   },
+   "path_depth": null,
+   "spine_cells": 8570,
+   "spine_iters": [
+    "OT_SPINE iter 0 (coarse) leaves 1795 sinks 14186 cells 1946 leaf arrival 341.9..630.6 ps (spread 288.7) pad 60.0 / 14.0 ps",
+    "OT_SPINE iter 1 (coarse) leaves 1795 sinks 14186 cells 3618 leaf arrival 530.6..632.7 ps (spread 102.1) pad 54.3 / 14.0 ps",
+    "OT_SPINE iter 2 (coarse) leaves 1795 sinks 14186 cells 4151 leaf arrival 547.1..639.4 ps (spread 92.3) pad 59.8 / 14.0 ps",
+    "OT_SPINE iter 3 (fine) leaves 1795 sinks 14186 cells 7301 leaf arrival 587.3..635.6 ps (spread 48.3) pad 59.8 / 9.0 ps",
+    "OT_SPINE iter 4 (fine) leaves 1795 sinks 14186 cells 8568 leaf arrival 610.1..639.8 ps (spread 29.7) pad 59.8 / 16.3 ps",
+    "OT_SPINE iter 5 (fine) leaves 1795 sinks 14186 cells 8570 leaf arrival 612.0..639.8 ps (spread 27.8) pad 59.8 / 16.5 ps"
+   ]
+  },
+  "s_s2": {
+   "ctsa": "-repair_clock_nets",
+   "all": {
+    "n": 14186,
+    "mean": 687.9,
+    "min": 675.2,
+    "max": 706.9,
+    "spread": 31.7
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 688.4,
+    "min": 675.2,
+    "max": 706.9,
+    "spread": 31.7
+   },
+   "path_depth": null,
+   "spine_cells": 11316,
+   "spine_iters": [
+    "OT_SPINE iter 0 (coarse) leaves 1795 sinks 14186 cells 2136 leaf arrival 397.2..660.5 ps (spread 263.2) pad 60.0 / 14.0 ps",
+    "OT_SPINE iter 1 (coarse) leaves 1795 sinks 14186 cells 4713 leaf arrival 588.3..696.8 ps (spread 108.5) pad 63.6 / 14.0 ps",
+    "OT_SPINE iter 2 (coarse) leaves 1795 sinks 14186 cells 5548 leaf arrival 616.0..696.8 ps (spread 80.8) pad 56.7 / 14.0 ps",
+    "OT_SPINE iter 3 (fine) leaves 1795 sinks 14186 cells 9120 leaf arrival 653.5..696.8 ps (spread 43.3) pad 56.7 / 9.6 ps",
+    "OT_SPINE iter 4 (fine) leaves 1795 sinks 14186 cells 10946 leaf arrival 669.8..706.9 ps (spread 37.1) pad 56.7 / 16.4 ps",
+    "OT_SPINE iter 5 (fine) leaves 1795 sinks 14186 cells 11281 leaf arrival 674.9..706.9 ps (spread 32.0) pad 56.7 / 16.3 ps",
+    "OT_SPINE iter 6 (fine) leaves 1795 sinks 14186 cells 11316 leaf arrival 678.1..706.9 ps (spread 28.8) pad 56.7 / 16.3 ps"
+   ]
+  },
+  "s_s3": {
+   "ctsa": "-repair_clock_nets",
+   "all": {
+    "n": 14186,
+    "mean": 718.2,
+    "min": 705.9,
+    "max": 738.0,
+    "spread": 32.1
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 718.7,
+    "min": 707.1,
+    "max": 738.0,
+    "spread": 30.9
+   },
+   "path_depth": null,
+   "spine_cells": 12644,
+   "spine_iters": [
+    "OT_SPINE iter 0 (coarse) leaves 1795 sinks 14186 cells 3593 leaf arrival 510.5..703.7 ps (spread 193.2) pad 60.0 / 14.0 ps",
+    "OT_SPINE iter 1 (coarse) leaves 1795 sinks 14186 cells 6427 leaf arrival 633.3..718.9 ps (spread 85.5) pad 66.3 / 14.0 ps",
+    "OT_SPINE iter 2 (fine) leaves 1795 sinks 14186 cells 9427 leaf arrival 679.0..722.0 ps (spread 43.0) pad 66.3 / 8.7 ps",
+    "OT_SPINE iter 3 (fine) leaves 1795 sinks 14186 cells 12178 leaf arrival 692.3..738.0 ps (spread 45.7) pad 66.3 / 16.3 ps",
+    "OT_SPINE iter 4 (fine) leaves 1795 sinks 14186 cells 12595 leaf arrival 700.5..738.0 ps (spread 37.4) pad 66.3 / 16.4 ps",
+    "OT_SPINE iter 5 (fine) leaves 1795 sinks 14186 cells 12644 leaf arrival 709.1..738.0 ps (spread 28.8) pad 66.3 / 16.4 ps"
+   ]
+  },
+  "s_s4": {
+   "ctsa": "-repair_clock_nets",
+   "all": {
+    "n": 14186,
+    "mean": 635.3,
+    "min": 622.1,
+    "max": 651.8,
+    "spread": 29.7
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 634.7,
+    "min": 622.1,
+    "max": 651.8,
+    "spread": 29.7
+   },
+   "path_depth": null,
+   "spine_cells": 4818,
+   "spine_iters": [
+    "OT_SPINE iter 0 (coarse) leaves 920 sinks 14186 cells 1001 leaf arrival 351.9..640.0 ps (spread 288.0) pad 60.0 / 14.0 ps",
+    "OT_SPINE iter 1 (coarse) leaves 920 sinks 14186 cells 2037 leaf arrival 530.3..642.3 ps (spread 112.0) pad 52.5 / 14.0 ps",
+    "OT_SPINE iter 2 (coarse) leaves 920 sinks 14186 cells 2425 leaf arrival 564.7..651.7 ps (spread 86.9) pad 57.6 / 14.0 ps",
+    "OT_SPINE iter 3 (fine) leaves 920 sinks 14186 cells 4158 leaf arrival 608.3..646.8 ps (spread 38.6) pad 57.6 / 8.9 ps",
+    "OT_SPINE iter 4 (fine) leaves 920 sinks 14186 cells 4818 leaf arrival 623.0..651.8 ps (spread 28.8) pad 57.6 / 16.4 ps"
+   ]
+  },
+  "x_v0": {
+   "ctsa": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -macro_clustering_size 2 -macro_clustering_max_diameter 40",
+   "all": {
+    "n": 14186,
+    "mean": 557.3,
+    "min": 472.1,
+    "max": 712.6,
+    "spread": 240.5
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 563.8,
+    "min": 534.4,
+    "max": 712.6,
+    "spread": 178.2
+   },
+   "path_depth": [
+    "12",
+    "14"
+   ],
+   "spine_cells": null,
+   "spine_iters": []
+  },
+  "x_v2": {
+   "ctsa": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -macro_clustering_size 2 -macro_clustering_max_diameter 40 -distance_between_buffers 120",
+   "all": {
+    "n": 14186,
+    "mean": 496.6,
+    "min": 390.9,
+    "max": 641.8,
+    "spread": 250.9
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 526.9,
+    "min": 408.6,
+    "max": 641.8,
+    "spread": 233.2
+   },
+   "path_depth": [
+    "4",
+    "6"
+   ],
+   "spine_cells": null,
+   "spine_iters": []
+  },
+  "x_v4": {
+   "ctsa": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -macro_clustering_size 2 -macro_clustering_max_diameter 40 -distance_between_buffers 120 -sink_clustering_size 16 -sink_clustering_max_diameter 30",
+   "all": {
+    "n": 14186,
+    "mean": 509.1,
+    "min": 408.1,
+    "max": 659.1,
+    "spread": 251.0
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 530.2,
+    "min": 409.0,
+    "max": 659.1,
+    "spread": 250.1
+   },
+   "path_depth": [
+    "4",
+    "6"
+   ],
+   "spine_cells": null,
+   "spine_iters": []
+  },
+  "x_v5": {
+   "ctsa": "-repair_clock_nets -delay_buffer_derate 0.75 -macro_clustering_size 2 -macro_clustering_max_diameter 40 -distance_between_buffers 120",
+   "all": {
+    "n": 14186,
+    "mean": 759.0,
+    "min": 443.8,
+    "max": 1209.6,
+    "spread": 765.8
+   },
+   "bnd": {
+    "n": 6390,
+    "mean": 831.2,
+    "min": 460.0,
+    "max": 1209.6,
+    "spread": 749.6
+   },
+   "path_depth": [
+    "4",
+    "5"
+   ],
+   "spine_cells": null,
+   "spine_iters": []
+  }
+ },
+ "spine_env": {
+  "s1": "SYM FAN16 MERGE80 MACRO_LEAF",
+  "s2": "SYM FAN8 MERGE40 MACRO_LEAF SEG100",
+  "s3": "bisection MACRO_LEAF",
+  "s4": "SYM FAN16 MERGE80 MACRO_LEAF LEAF_N16 BIN40 (chosen)"
+ }
+}
