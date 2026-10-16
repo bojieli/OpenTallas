@@ -47,7 +47,7 @@ module tb_qwen_me_partition_w12;
     parameter integer ANR = 0;                 // hardcore-1010 D: valid-only adder resets + HSPLIT
     localparam integer IL = 8, AW = 24, NW = 16;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
-    localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + ((ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0)) : 0) + TOREG;   // TOREG: the tiles' t_out pin registers
+    localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + ((ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0)) : 0) + TOREG + ((HIER > 0 && HIER_HARD != 0) ? XTX : 0);   // TOREG: the tiles' t_out pin registers
     localparam integer ZERO_WIRE = (XD == 0 && ORD == 0);
     localparam integer LX = (MUL_LAT - 5) + (ACC_LAT - 5) + $clog2(GT) * (TREE_LAT - 3);   // the deeper adders' extra latency
     localparam integer EV = (LX != 0 || KV_PREP != 0);

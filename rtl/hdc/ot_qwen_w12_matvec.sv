@@ -319,7 +319,8 @@ module ot_qwen_w12_matvec_part #(
     localparam integer OD = TL * LG;      // split tree
     //: XTX (HIER_HARD only): the leaves see their inputs XTX cycles later, so every S3-referenced valid / tag / split
     //: line that meets the leaves' results is XTX cycles longer (same order, same arithmetic)
-    localparam integer XDD = ((PART == 2) ? XD : 0) + ((HIER > 0 && HIER_HARD != 0) ? XTX : 0);
+    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX : 0;
+    localparam integer XDD = ((PART == 2) ? XD : 0) + XTD;
     localparam integer LV0 = (PART == 2) ? TCUT : 0;   // tree levels LV0+1..LG live here
     localparam integer PRUNE = (SMIN > 0);
     // result-port groups: the only groups a K-split tree can deliver to
@@ -1021,7 +1022,7 @@ end endgenerate
     endgenerate
     // PART 1: the tile's top level and its valid, towards the tree above
     assign t_out = lvl[LG][W*32-1:0];
-    assign t_vout = vline[SD + OD];
+    assign t_vout = vline[SD + OD + XTD];           // XTX: the leaves' results (t_out) are XTD cycles later
     wire [GI*W*32-1:0] raw_res = lvl[LG];
     wire raw_v = vline[SD + OD + XDD];
     wire raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode;
