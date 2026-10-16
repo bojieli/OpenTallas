@@ -9,6 +9,15 @@ pins/um faces need 10.58 um of hold-stage + pin-flop depth each, > 45% of a 17.3
 bank bits b0..b3 are adjacent 2-track M4 pins (0.096 um) around the y of f_w[52 r + j] on the opposite face, so every
 f_w pin -> bank flop -> seam pin is a straight 21.6 um row; s_mark[r] / s_par[r] take the slot after row r.
 The seam has 8 x 53 slots x 0.384 um = 162.8 um, hence the 172.8 um height (>= 4.32 um corner keep-out).
+split1016y (claude S-VM-CAPT-X8S, 2026-10-16): the serial leaf is HS = 183.6 tall and its seam starts DS = 10.8 um higher
+than the t leaf's (t unchanged, 32.4 x 172.8, its closed split1016x views stand).  In the parent the t leaf sits DS above
+the s leaf origin (tops flush: ck/rst/ckv/rsv on one N edge), so every seam pin is still mirror-aligned; the parent bbox
+is 118.8 x 183.6 with a free 32.4 x 10.8 notch under t beside the t_vm S face.  Why: split1016x s_e / s_w routed CLOSED
+but failed native capture (s_e b[188] 211.4, 12 pins; s_w b[3] 200.4, 4 pins), all row 0.  OpenSTA on the s_e route:
+row-0 stage-A flops (y 8-23 um, inside the S-face t_vm stage-B band y 2-14) take ckv from the band's clock branch at
+172-176 ps vs 133-143 for rows 3-6; against the 130.6 ps IO reference the input hold repair puts 4-5 BUFx2 on every
+row-0 seam path (TT data 209.5 ps).  Capture flops at y >= 20 um measured <= 173 ps.  Moving the seam up 10.8 um puts
+row 0's stage-A flops at y >= 16 above the band.  Zero added latency (no RTL change).
 Usage: capx43_kits.py   (writes physical/s81_die_pins/capture_split_1016/dsfd_capt_x8x_*.tcl + specs)
 """
 import json, math, pathlib, re
@@ -17,6 +26,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 PINS = ROOT / 'physical/s81_die_pins/capture_split_1016'
 SPECS = ROOT / 'tools/ref_tile/specs_s81_capture_split_1016'
 H, WT, WS = 172.8, 32.4, 86.4
+HS, DS = 183.6, 10.8          # serial leaf height, its seam offset above the t leaf's (split1016y)
 TRK, Y0, SLOT = 0.048, 0.012, 0.384
 M4 = '-pin_size {0.192 0.024}'
 M5 = '-pin_size {0.024 0.192}'
@@ -27,10 +37,11 @@ def snap(y):
     return round(Y0 + round((y - Y0) / TRK) * TRK, 6)
 
 
-def slots():
-    """[(y_centre, f_w index or None, [(seam pin, dy)])] in slot order, plus the t_ho y"""
+def slots(dy=0.0, h=H):
+    """[(y_centre, f_w index or None, [(seam pin, dy)])] in slot order, plus the t_ho y.  dy: the leaf's seam offset
+    (0 for t, DS for the HS-tall s leaf), h: the leaf height (keep-out check)"""
     n = 8 * 53 + 1
-    start = snap((H - (n - 1) * SLOT) / 2)
+    start = round(snap((H - (n - 1) * SLOT) / 2) + dy, 6)
     out = []
     k = 0
     for r in range(8):
@@ -42,7 +53,7 @@ def slots():
         out.append((y, None, [(f's_mark[{r}]', -0.048), (f's_par[{r}]', 0.048)]))
         k += 1
     t_ho = round(start + k * SLOT, 6)
-    assert start >= 4.32 and t_ho <= H - 4.32, (start, t_ho)
+    assert start >= 4.32 and t_ho <= h - 4.32, (start, t_ho)
     return out, t_ho
 
 
@@ -64,7 +75,7 @@ def old_tvm():
 
 def pins(side, half):
     """half 't' / 's'; side 'e' / 'w'.  Returns (tcl text, faces dict)"""
-    sl, t_ho = slots()
+    sl, t_ho = slots() if half == 't' else slots(DS, HS)
     hdr = [f'# claude S-VM-CAPT-X8 2026-10-16 (tools/s81_ph/capx43_kits.py): dsfd_capt_x8x_{half}_{side}, DECISION B '
            f'single-clock leaf of dsfd_capt_x8_data_{side}.',
            '# BIT-MAJOR bank seam: b[208 r + 52 k + j] (bank k of row r, word bit j) at y(f_w[52 r + j]) + (k - 1.5) x 0.096 '
@@ -84,7 +95,9 @@ def pins(side, half):
     else:
         W = WS
         seam_x = W if side == 'e' else 0.0
-        L += [line('ckv[0]', 'M5', 40.044, H, M5), line('rsv[0]', 'M5', 42.444, H, M5)]
+        hdr.append(f'# split1016y: serial leaf {WS} x {HS}, seam {DS} um above the t leaf seam (the parent places t {DS} um above '
+                   'this leaf origin, tops flush); row 0 clear of the S-face t_vm stage-B band.')
+        L += [line('ckv[0]', 'M5', 40.044, HS, M5), line('rsv[0]', 'M5', 42.444, HS, M5)]
         for y, fi, seam in sl:
             L += [line(n, 'M4', seam_x, round(y + dy, 6), M4) for n, dy in seam]
         for i, (lay, x, size) in sorted(old_tvm().items()):
@@ -100,7 +113,36 @@ LINT = ("mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; TOP u_top (); end
         "-Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv " + SRC + " && echo lint-ok")
 
 
+NATIVE = 'results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_x8x.json'
+NATIVE_FAIL = {'e': ('b[188]', 211.4, 12, 177.6), 'w': ('b[3]', 200.4, 4, 168.0)}   # pin, capture, pins over, launch
+
+
+def spec_y(side, sp):
+    """split1016y successor of the serial leaf: HS outline, seam DS up; same RTL, benches and recipe"""
+    top = sp['top']
+    pin, cap, n, lw = NATIVE_FAIL[side]
+    sp.pop('slot_change_request', None)
+    sp['name'] = f'{top}_split1016y'
+    sp['outline'] = {"w": WS, "h": HS, "exact": True}
+    fix = (f"seam slot block {DS} um higher in a {WS} x {HS} serial leaf (was {WS} x {H}, seam from y 4.99): row 0's "
+           "stage-A capture flops leave the S-face t_vm stage-B band (y 2-14) and its late ckv branch (row 0 ckv "
+           "172-176 ps vs 133-143 mid rows; input hold repair put 4-5 BUFx2 on each row-0 seam path, TT data 209.5 ps); "
+           "t leaf unchanged, the parent places it DS above the s origin so the seam stays mirror-aligned; no RTL change")
+    sp['structural_change'] = (f"split1016y re-kit of {top} (closed split1016x view fails native capture: {pin} {cap} ps, "
+                               f"{n} pins, all row 0): " + fix + ".  " + sp['structural_change'])
+    sp['reroute_reason'] = {"kind": "pin_register", "source": NATIVE, "cell": top, "capture_ps": cap,
+                            "launch_ps": lw, "fix": fix}
+    sp['job']['owner'] = 'claude:S-VM-CAPT-X8S'
+    sp['job']['branch'] = 'claude/svm-capt-x8s-1016'
+    return sp
+
+
 def spec(side, half, faces):
+    sp = spec_x(side, half, faces)
+    return spec_y(side, sp) if half == 's' else sp
+
+
+def spec_x(side, half, faces):
     top = f'dsfd_capt_x8x_{half}_{side}'
     w = WT if half == 't' else WS
     clk, rst = ('ck[0]', 'rst') if half == 't' else ('ckv[0]', 'rsv')
