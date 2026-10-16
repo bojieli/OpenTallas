@@ -106,6 +106,7 @@
  "structural_change": "Source-exact capture split: only source-proven unused status/padding removed, both actual half faults captured at original g2 hoq edge, all used status/data/control epochs unchanged.",
  "reroute_reason": {
   "kind": "slot_change",
-  "change": "Die lead granted independent compactctl324x86.4 or CD15.12 native-reset rekit; no old view inheritance. Assigned pin contract required."
+  "change": "Die lead granted independent compactctl324x86.4 or CD15.12 native-reset rekit; no old view inheritance. Assigned pin contract required.",
+  "contract": "physical/s81_die_pins/capture_split_1016 (S-DIE assign10 literal capture variants 0364b74eb + 5782 pin requests 1dd814aad, imported 1acf56925/82dbd5b2e)"
  }
 }
