@@ -77,7 +77,20 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  genvar bank;
  generate for(bank=0;bank<4;bank=bank+1)begin:g_storage
   reg [71:0] bank_data[0:DEPTH-1];
-  assign read_data[bank*72+:72]=bank_data[ra];
+  // mc_r3b: the 64:1 read mux select is a per-18-bit pointer copy (4 per bank, 16 total), not the one rp
+  // (mc3b gate: rp[1] drove 18,407 mux loads). Each copy advances on slot exactly as rp (keep_hierarchy).
+  genvar q;
+  for(q=0;q<4;q=q+1)begin:g_rq
+   wire [AW-1:0] rq;
+   (* keep_hierarchy *) qkd_ksr_mc_rp #(.AW(AW),
+`ifdef OT_KV_RETURN_MUT_READ_ADDR
+    .INIT(1)
+`else
+    .INIT(0)
+`endif
+   ) u_rq(.clk(ck),.rst_n(rs),.adv(slot),.q(rq));
+   assign read_data[bank*72+q*18+:18]=bank_data[rq][q*18+:18];
+  end
   always @(posedge pll_hbm_data[bank])
    if(hr && write_slot)bank_data[wa]<=hd[bank*72+:72];
  end endgenerate
@@ -93,4 +106,11 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
     if(pub_sync2[ra] !== ~rp[AW] || observed_valid[ra] !== 1'b1 || read_data[287:256] !== meta)fault_core<=1;
    end
   end
+endmodule
+
+// read-pointer copy of the static return ring: advances on slot exactly as the ring's rp (keep_hierarchy: never merged)
+module qkd_ksr_mc_rp #(parameter integer AW=6, parameter integer INIT=0)(input wire clk,input wire rst_n,input wire adv,
+                                                                       output reg [AW-1:0] q);
+ localparam [AW-1:0] C_INIT=INIT;
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=C_INIT;else if(adv)q<=q+1'b1;
 endmodule
