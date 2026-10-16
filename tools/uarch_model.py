@@ -14819,6 +14819,12 @@ def s81_bf_root_phase_model():
     }
 
 
+def s81_bf_ten_root_candidate_model(**kwargs):
+    """Source-pinned BF clock partition sizing; no adoption or price change."""
+    from uarch_model_s81_bf_ten_root import model
+    return model(**kwargs)
+
+
 def hbm_sm_command_model(*, hops=8, depth=1, replicas=32):
     """Native-record command transport with conservative retirement ordering."""
     from hbm_sm_command_model import model
