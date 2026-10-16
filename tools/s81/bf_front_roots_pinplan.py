@@ -16,8 +16,11 @@ def main():
     request=json.loads(seed_bytes);pins=request['pins'];mapping={}
     for i in range(1068):
         old_name=f'xb[{i}]'
-        name=f'xb_data[{i}]' if i<1024 else f'xb_meta[{i-1024}]'
+        name=f'xb_meta[{i}]' if i<44 else f'xb_data[{i-44}]'
         pins[name]=pins.pop(old_name)
+        assert pins[name]['face']==('S' if i<44 else 'N'), (name,pins[name])
+        if i>=44:
+            assert pins[name]['source_pin']==f'xb_d[{i-44}]', (name,pins[name])
         mapping[old_name]=dict(new_pin=name,geometry=pins[name])
     added={}
     for name,face,layer,target,offset in [('io_n','N','M5',58.38,.012),('io_w','W','M4',99.36,.036),('io_e','E','M4',99.36,.036)]:

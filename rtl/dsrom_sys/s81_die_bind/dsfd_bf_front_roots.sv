@@ -21,8 +21,9 @@ module dsfd_bf_front_roots #(parameter INSTANCE = "") (
     input wire io_clk,
     input wire io_n,io_w,io_e
 );
+    // Legacy bits43:0 are metadata/control; data occupies1067:44.
     // Exact physical ABI reconstruction; no state or payload edge.
-    wire [1067:0] xb = {xb_meta,xb_data};
+    wire [1067:0] xb = {xb_data,xb_meta};
     wire w_busy;
     wire [13:0] w_c0_a_ctr;
     wire w_c0_i1_bf;

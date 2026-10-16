@@ -91,13 +91,13 @@ def main():
     wp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv'
     w=once(read_seed(wp),'module dsfd_bf_front_static #(','module dsfd_bf_front_roots #(')
     w=once(w,'    input  wire [1067:0] xb,','    input wire [1023:0] xb_data,\n    input wire [43:0] xb_meta,')
-    w=once(w,');\n    wire w_busy;',');\n    // Exact physical ABI reconstruction; no state or payload edge.\n    wire [1067:0] xb = {xb_meta,xb_data};\n    wire w_busy;')
+    w=once(w,');\n    wire w_busy;',');\n    // Legacy bits43:0 are metadata/control; data occupies1067:44.\n    // Exact physical ABI reconstruction; no state or payload edge.\n    wire [1067:0] xb = {xb_data,xb_meta};\n    wire w_busy;')
     w=w.replace('// Actual compiler-programmed BF front: all legacy payload pins retained;', '// Actual compiler-programmed BF front: old xb physical ABI split by face;')
     w=once(w,'    input wire io_clk\n','    input wire io_clk,\n    input wire io_n,io_w,io_e\n')
     w=once(w,'    ot_s81_bf_front #(','    ot_s81_bf_front_roots #(')
     w=once(w,'.io_clk(io_clk)', '.io_clk(io_clk), .io_n(io_n), .io_w(io_w), .io_e(io_e)')
     wo=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv';wo.write_text(w)
-    record=dict(status='SOURCE_CANDIDATE_UNPROVEN',input_source_commit=SEED,payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,physical_xb_reconstruction='legacy_xb[1067:0] = {xb_meta[43:0], xb_data[1023:0]}',
+    record=dict(status='SOURCE_CANDIDATE_UNPROVEN',input_source_commit=SEED,payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,physical_xb_reconstruction='legacy_xb[1067:0] = {xb_data[1023:0], xb_meta[43:0]}',
       roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme, xb metadata/control, and IO-source lockups','io_n':'north xb[1023:0] data primary capture only','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
       inputs={str(p.relative_to(ROOT)):hashlib.sha256(read_seed(p).encode()).hexdigest() for p in [fp,wp,core_input,seam_input]},
       outputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [out,wo,core_output,seam_output]},
