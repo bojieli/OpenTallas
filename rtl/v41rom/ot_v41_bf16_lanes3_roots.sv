@@ -51,6 +51,7 @@ module ot_v41_bf16_lanes3_roots #(
     output wire              oerr,
     output wire              fault
 );
+    localparam integer PARENT_XST=XST-1;
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
     // 1.2 GHz: the word, x slice and tag are registered at the lanes' boundary (the element's capture mux and the
@@ -58,24 +59,24 @@ module ot_v41_bf16_lanes3_roots #(
     // tree tile: the tag line, the 4-level pairwise tree and its delays
     wire clk, rst_n;
     ot_v41_tile_clk u_tt (.fclk(fclk), .rst_pin(rst_pin), .ze_d(ze_d), .gclk(clk), .rst_n(rst_n));
-    // XST input relay stages (tree tile clock; only the valid is reset)
+    // PARENT_XST input relay stages (tree tile clock; only the valid is reset)
     wire          v_s;
     wire [255:0]  w_s, x_s;
     wire [TW-1:0] t_s;
-    if (XST != 0) begin : g_xst
-        reg [XST-1:0] sv;
-        reg [255:0] sw [0:XST-1];
-        reg [255:0] sx [0:XST-1];
-        reg [TW-1:0] st [0:XST-1];
-        always @(posedge clk or negedge rst_n) if (!rst_n) sv <= '0; else sv <= (XST > 1) ? {sv[XST-2:0], v} : v;
+    if (PARENT_XST != 0) begin : g_xst
+        reg [PARENT_XST-1:0] sv;
+        reg [255:0] sw [0:PARENT_XST-1];
+        reg [255:0] sx [0:PARENT_XST-1];
+        reg [TW-1:0] st [0:PARENT_XST-1];
+        always @(posedge clk or negedge rst_n) if (!rst_n) sv <= '0; else sv <= (PARENT_XST > 1) ? {sv[PARENT_XST-2:0], v} : v;
         always @(posedge clk) begin
             sw[0] <= w; sx[0] <= x; st[0] <= {slot, first, last, tree, final_i};
-            for (int k = 1; k < XST; k++) begin sw[k] <= sw[k-1]; sx[k] <= sx[k-1]; st[k] <= st[k-1]; end
+            for (int k = 1; k < PARENT_XST; k++) begin sw[k] <= sw[k-1]; sx[k] <= sx[k-1]; st[k] <= st[k-1]; end
         end
 `ifdef XST_MUTANT_TAG
-        assign v_s = sv[XST-1]; assign w_s = sw[XST-1]; assign x_s = sx[XST-1]; assign t_s = (XST > 1) ? st[XST-2] : {slot, first, last, tree, final_i};  // negative control: tag one stage early
+        assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = (PARENT_XST > 1) ? st[PARENT_XST-2] : {slot, first, last, tree, final_i};  // negative control: tag one stage early
 `else
-        assign v_s = sv[XST-1]; assign w_s = sw[XST-1]; assign x_s = sx[XST-1]; assign t_s = st[XST-1];
+        assign v_s = sv[PARENT_XST-1]; assign w_s = sw[PARENT_XST-1]; assign x_s = sx[PARENT_XST-1]; assign t_s = st[PARENT_XST-1];
 `endif
     end else begin : g_nxst
         assign v_s = v; assign w_s = w; assign x_s = x; assign t_s = {slot, first, last, tree, final_i};
