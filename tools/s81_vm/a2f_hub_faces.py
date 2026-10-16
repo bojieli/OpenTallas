@@ -232,7 +232,7 @@ def _install_read_near():
 RP.PATHS['write'].insert(0, ('capture_port_cap', {('port', 'cap')}))
 
 
-def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
+def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False, meta4=False):
     """exactly a2f_split4_route_plan.main's placement (midcapd + field4 expansion)."""
     F.install_pin_models()
     baseface = R.port_face
@@ -241,6 +241,8 @@ def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
     leaves, nets = R.load()
     ol = dict(F.OUTLINES)
     ol.update(s81_a2f_field16=(194.4, 280.8), s81_a2f_meta26=(259.2, 162.0), s81_a2f_control4=(194.4, 129.6))
+    if meta4:
+        ol['s81_a2f_meta26'] = (734.4, 162.0) # seven standard leaves, existing row height retained
     leaves, nets = F.transform(leaves, nets, ol)
     import copy
     vo = copy.deepcopy(F.VARIANTS['midcapd'])
@@ -250,7 +252,7 @@ def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
         _install_read_near()
     vo['rows'] = rows or [['f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6'], ['ctl', 'fj', 'meta', 'f7']]
     P, W, H, struct = F.build_mid(leaves, nets, body_w, vo)
-    P, nets = S4.expand(P, nets)
+    P, nets = S4.expand(P, nets, meta4=meta4)
     oldpm = R.pin_models
 
     def pm(lv):
@@ -424,6 +426,7 @@ def main():
     ap.add_argument('--width', type=float, default=4104.0, help='total VM width (body = width - capture columns)')
     ap.add_argument('--caprow-per', type=int, default=8)
     ap.add_argument('--hub-plan', help='exact current die hub_layout.json; overrides nominal peer spans')
+    ap.add_argument('--meta4', action='store_true', help='seven standard field4 metadata leaves per slice')
     ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
     ap.add_argument('--read-near', action='store_true')
     ap.add_argument('--return-far', action='store_true', help='with --read-near: return lanes stay at the outer end (beside the storage)')
@@ -434,7 +437,7 @@ def main():
     CAPROW_PER = a.caprow_per
     SU_X0 = a.su_x0
     rows = [r.split(',') for r in a.rows.split('/')] if a.rows else None
-    P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far)
+    P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far, a.meta4)
     print('outline', W, H, struct, flush=True)
     W, H = arrange(P, W, H, struct, a.arr)
     if a.hop1:
@@ -453,7 +456,7 @@ def main():
     bad, outside = P.check(W, H)
     res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
-               spans=sp, by_reach={})
+               spans=sp, by_reach={}, metadata_standard_field4=a.meta4)
     if a.hub_plan:
         res['peer_plan'] = dict(path=a.hub_plan, sha256=hashlib.sha256(Path(a.hub_plan).read_bytes()).hexdigest(),
                                 source=json.loads(Path(a.hub_plan).read_text()))
