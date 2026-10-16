@@ -514,6 +514,7 @@ module ot_hgi_sm_xload_cl2_ctlw #(
 ) (
     input  wire               clk,
     input  wire               clk_eg,
+    input  wire               clk_cal,   // hard clock entry of the issuer's calendar SRAM only (die: phi - R, as the DMA fold's clk_tab)
     input  wire               rst_n,
     input  wire [7:0]         tgt,       // identity strap (x-load issuer TARGET 100 + QID), die constant
     input  wire               cfg_v,
@@ -554,13 +555,20 @@ module ot_hgi_sm_xload_cl2_ctlw #(
     input  wire [2047:0]      bq_d
 );
     wire x_v, x_busy, x_fault; wire [107:0] xc;
-    ot_static_cmd_target #(.TARGET(8'hff), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .LEAD(LEAD),
-                           .MUT((MUT == 6) ? 1 : 0), .TGT_PIN(1)) u_iss (
+    // issuer = ot_static_cmd_target_core + its calendar SRAM on the hard entry clk_cal (the multiple_cts_roots flow lets a
+    // CTS root reach standard-cell clock pins only; same pattern as ot_hgi_dma_back_static_vp4_banks_cp's clk_tab)
+    wire t_rce; wire [6:0] t_raddr, t_waddr; wire [0:0] t_wce; wire [255:0] t_wdata, t_rd;
+    ot_static_cmd_target_core #(.TARGET(8'hff), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .LEAD(LEAD),
+                                .MUT((MUT == 6) ? 1 : 0), .TGT_PIN(1)) u_iss (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .tgt_active(x_busy), .tgt_fault(x_fault),
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
-        .cmd_v(x_v), .cmd(xc), .cycle(), .configured(configured), .fault(fault), .active(active));
+        .cmd_v(x_v), .cmd(xc), .cycle(), .configured(configured), .fault(fault), .active(active),
+        .tab_r_ce(t_rce), .tab_r_addr(t_raddr), .tab_rd_word(t_rd), .tab_w_ce(t_wce), .tab_w_addr(t_waddr), .tab_w_data(t_wdata));
+    ot_sram_1r1w_128x256_m1_r2c2 u_tab (.clk(clk_cal), .r_ce_in(t_rce), .r_addr_in(t_raddr), .rd_out(t_rd),
+        .w_ce_in(t_wce[0]), .w_addr_in(t_waddr), .wd_in(t_wdata), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
     // cmd = {x_xb7, x_fmt2, x_space2, x_stride32, x_p4, x_n21, x_base40} (die contract v16 cp1_194..201)
     ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR)) u_ctl (
         .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(xc[39:0]), .x_n(xc[60:40]), .x_p(xc[64:61]),
@@ -781,6 +789,7 @@ module ot_hgi_sm_xload_static_cl2f #(
     input  wire               clk_qlo,
     input  wire               clk_qhi,
     input  wire               clk_bd,
+    input  wire               clk_cal,
     input  wire               rst_n,
     input  wire [7:0]         tgt,
     input  wire               cfg_v,
@@ -810,7 +819,7 @@ module ot_hgi_sm_xload_static_cl2f #(
     wire [2047:0] l_d; wire qv_lo, qv_hi, qo_lo, qo_hi, qf_lo, qf_hi; wire [255:0] qq_lo, qq_hi; wire signed [9:0] qe_lo, qe_hi;
     wire [15:0] r_wsel; wire zlo, zhi; wire [2*((PMAX*3152+2047)/2048)-1:0] bsel; wire [PMAX*8-1:0] lane_en; wire [2047:0] bq_d;
     ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
-        .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
+        .clk(clk), .clk_eg(clk_eg), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .configured(configured), .fault(fault), .active(active), .x_done(x_done), .xw_en(xw_en), .xw_last(xw_last),
         .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn),
