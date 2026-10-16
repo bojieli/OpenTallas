@@ -902,12 +902,20 @@
    "dir": "input",
    "bits": 1,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "FIX_IN_FLIGHT",
-   "disposition_why": "dsfd_vm_xio_return r2 routed CLOSED TT+119.18/FF+16.74 but routed native FAIL capture 220.0 ps on e_v[0]; structural r3 in flight (S-VM 10-16)"
+   "master": "dsfd_vm_xio_return r3 (plain pin capture, cycle-identical to r2)",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_return_native_1016_r3",
+     "R_tt_ps": 228.0,
+     "min": 206.6,
+     "max": 245.1,
+     "n": 3614
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND",
+   "disposition_why": "r3 routed CLOSED TT+196.13/FF+20.91/DRC0, routed native L184.3/C154.2/sp38.5 PASS; r3==r2 every output every cycle (tools/s81_vm/xio_return_r3_equiv_gate.sh)"
   },
   "ck_xio_x43_s": {
    "dir": "input",
