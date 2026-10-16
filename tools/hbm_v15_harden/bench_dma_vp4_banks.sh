@@ -13,7 +13,7 @@ cp "$d/ot_hgi_dma_back_static_vp4_banks.sv" "$out/vp.sv"
 cp "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/banks.sv"   # landing bank leaf ot_hgi_dma_back_landing_bank
 case "$mut" in
  1) sed -i "s/drain_row_hbm+37'(hbm_stride)/drain_row_hbm+37'(hbm_stride)+37'd256/g" "$out/vp.sv";;
- 3) sed -i "s/wd_payload<={capture_addr,capture};/wd_payload<={capture_addr^32'd1,capture};/" "$out/banks.sv";;
+ 3) sed -i "s/wd_payload<={capture_addr,macro_data};/wd_payload<={capture_addr^32'd1,macro_data};/" "$out/banks.sv";;
  2) sed -i "s/wire \[6:0\] a_rows_m1=7'(a_mv\[192:186\]-7'd1);/wire [6:0] a_rows_m1=7'(6'(a_mv[191:186]-6'd1));/" "$out/vp.sv";;
 esac
 if [ "$mut" != 0 ];then if cmp -s "$out/vp.sv" "$d/ot_hgi_dma_back_static_vp4_banks.sv" && cmp -s "$out/banks.sv" "$d/ot_hgi_dma_back_static_vp_banks.sv";then echo MUTANT_NOT_APPLIED;exit 3;fi;fi
