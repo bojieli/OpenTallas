@@ -158,7 +158,8 @@ def _link_words(m, rec):
           for b, c, n, e in nb]
     m['buses'] = nb
     ties = m.setdefault('ties', [])
-    have_tt = {i for b, c, n, e in m['buses'] for i, p in e if p == 'tt'}
+    from qwen_split.tt_input_binding import connected_bands
+    have_tt = connected_bands(m, bands)
     for x in bands:
         k = int(x.rsplit('_', 1)[1])
         ties.append((x, 'b0', 1, 1 if k == 0 else 0))
@@ -670,6 +671,10 @@ def place(v, m, G):
         if os.environ.get('OT_SPLIT_RES_TRAIN', '1') != '0':
             from qwen_split.res_train_bind import apply as res_train_apply
             rec['res_train_bind'] = res_train_apply(m)
+        # Q-NETLIST 2026-10-16: compute-die system face + rank straps close every open functional input (strict bind)
+        if os.environ.get('OT_SPLIT_SYS_FACE', '1') != '0' and 'static_link_bind' in m:
+            from qwen_split.sys_face_bind import apply as sys_face_apply
+            rec['sys_face_bind'] = sys_face_apply(m)
     # Freeze pre-pin source identity: later master installation adds derived pin receipts.
     from qwen_split.gfp_homes import source_fingerprint
     m['gfp_source_fingerprint'] = source_fingerprint(m)
@@ -677,9 +682,15 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_HOMES'):
         from qwen_split.gfp_homes import apply as gfp_homes_apply
         rec['gfp_homes'] = gfp_homes_apply(m, os.environ['OT_SPLIT_HOMES'])
+        if 'sys_face_bind' in m:
+            from qwen_split.sys_face_bind import place as sys_face_place
+            rec['sys_face_place'] = sys_face_place(m, rec['gfp_homes'].get('named_new', ()))
         if rec['gfp_homes'].get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
             from qwen_split.relay_geometry import rebuild as rebuild_relay_geometry
             rec['relay_geometry'] = rebuild_relay_geometry(v, m)
+    if 'sys_face_bind' in m and not os.environ.get('OT_SPLIT_HOMES'):
+        from qwen_split.sys_face_bind import place as sys_face_place
+        rec['sys_face_place'] = sys_face_place(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

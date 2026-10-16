@@ -1,0 +1,211 @@
+{
+ "audited_at": "2026-10-16T00:50-07:00",
+ "main": "c206b60b0",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "views": [
+  {
+   "cell": "ot_s81_hc_caq",
+   "view": "physical/ref_tile/s81hc_caq_ref/views/ot_s81_hc_caq",
+   "lib_cell": "ot_s81_hc_caq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 176.6,
+   "spread_ps": 21.3,
+   "outputs": 804,
+   "inputs": 1568,
+   "launch_ps": 203.4,
+   "launch_pin": "wd[108]",
+   "capture_ps": 253.6,
+   "capture_pin": "odd",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 253.62576 > 190 (1 pins)",
+   "closed_job": "s81hc_caq_ref-v1-d02b035e3",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  },
+  {
+   "cell": "ot_s81_hc_ccf",
+   "view": "physical/ref_tile/s81hc_ccfh2_ref/views/ot_s81_hc_ccf",
+   "lib_cell": "ot_s81_hc_ccf",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 539.1,
+   "spread_ps": 171.2,
+   "outputs": 2673,
+   "inputs": 3697,
+   "launch_ps": 408.2,
+   "launch_pin": "ch_rst",
+   "capture_ps": 544.3,
+   "capture_pin": "fv_i[2]",
+   "launch_over": 1502,
+   "capture_over": 1848,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 408.2241 > 220 (1502 pins); capture 544.34652 > 190 (1848 pins)",
+   "closed_job": "s81hc_ccfh2_ref-v5-sspread-m5strip-3f81e581e",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  },
+  {
+   "cell": "ot_s81_hc_ccr",
+   "view": "physical/ref_tile/s81hc_ccrh2_ref/views/ot_s81_hc_ccr",
+   "lib_cell": "ot_s81_hc_ccr",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 219.0,
+   "spread_ps": 23.9,
+   "outputs": 2684,
+   "inputs": 2165,
+   "launch_ps": 264.1,
+   "launch_pin": "crd_o[484]",
+   "capture_ps": 191.6,
+   "capture_pin": "ch_rd[583]",
+   "launch_over": 27,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 264.06348 > 220 (27 pins); capture 191.644 > 190 (1 pins)",
+   "closed_job": "s81hc_ccrh2_ref-v1-70eafa55c",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  },
+  {
+   "cell": "ot_s81_hc_cseq",
+   "view": "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq",
+   "lib_cell": "ot_s81_hc_cseq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean",
+    "lib midrange"
+   ],
+   "R_ps": 134.7,
+   "spread_ps": 19.1,
+   "outputs": 3472,
+   "inputs": 1102,
+   "launch_ps": 305.3,
+   "launch_pin": "w_fd[74]",
+   "capture_ps": 167.1,
+   "capture_pin": "n_yacc",
+   "launch_over": 88,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 305.29711 > 220 (88 pins)",
+   "closed_job": "s81hc_cseqh2_ref-v1-70eafa55c",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  },
+  {
+   "cell": "dsfd_mtp_hrow_cbw",
+   "view": "physical/ref_tile/hrow5_cbw_cx/views/dsfd_mtp_hrow_cbw",
+   "lib_cell": "dsfd_mtp_hrow_cbw",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 538.5,
+   "spread_ps": 89.2,
+   "outputs": 2079,
+   "inputs": 2084,
+   "launch_ps": 422.8,
+   "launch_pin": "t_w[54]",
+   "capture_ps": 440.4,
+   "capture_pin": "f_w[75]",
+   "launch_over": 991,
+   "capture_over": 962,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 422.79547 > 220 (991 pins); capture 440.43333 > 190 (962 pins)",
+   "closed_job": "hrow5_cbw_cx-r8b-cl-b05bb421d",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  },
+  {
+   "cell": "dsfd_mtp_hrow_cbe",
+   "view": "physical/ref_tile/hrow5_cbe_cx/views/dsfd_mtp_hrow_cbe",
+   "lib_cell": "dsfd_mtp_hrow_cbe",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 747.2,
+   "spread_ps": 98.5,
+   "outputs": 2079,
+   "inputs": 2084,
+   "launch_ps": 399.0,
+   "launch_pin": "t_w[844]",
+   "capture_ps": 505.9,
+   "capture_pin": "f_w[327]",
+   "launch_over": 971,
+   "capture_over": 870,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 398.99666 > 220 (971 pins); capture 505.86272 > 190 (870 pins)",
+   "closed_job": "hrow5_cbe_cx-r8a-cl-ac3fc3db7",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  },
+  {
+   "cell": "dsfd_mtp_hrow_hub",
+   "view": "physical/ref_tile/hrow5_hub/views/dsfd_mtp_hrow_hub",
+   "lib_cell": "dsfd_mtp_hrow_hub",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 236.3,
+   "spread_ps": 45.0,
+   "outputs": 1074,
+   "inputs": 3180,
+   "launch_ps": 316.0,
+   "launch_pin": "t_rc1[3]",
+   "capture_ps": 357.3,
+   "capture_pin": "f_pr1[693]",
+   "launch_over": 202,
+   "capture_over": 2436,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 315.99785 > 220 (202 pins); capture 357.34624 > 190 (2436 pins)",
+   "closed_job": "hrow5_hub-r5d-1a91bcdd1",
+   "budgets": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+   }
+  }
+ ]
+}

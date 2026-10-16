@@ -12,19 +12,20 @@
     "EDGES": 7116,
     "COLS": 38,
     "INDEX_PACK": 1,
-    "DICT_BANKS": "'{3,10,9,13,2,1,1,1,1,1,2,10,9,2,1,1,1,1,1,3,10,9,13,1,1,1,1,1,3,2,10,1,2,1,1,1,1,1}",
+    "DICT_BANKS": "{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd1,32'd10,32'd2,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd13,32'd9,32'd10,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd9,32'd10,32'd2,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}",
     "MACROS": 301
    },
    "slot": null,
    "owner": "H-SU",
-   "note": "whole-SU serial programme plane (target 128x256 SRAM macros, 301 macros) at the 4 x 2422-bit command boundary; params from results/arch/hbm_su_f2_static_1014/programme/two_planes_1103/serial_manifest.json (the MR1 proof image 7116 edges, receipt multirate_native_d9507c056); DICT_BANKS is an unpacked int array parameter (emit verbatim). NO die slot exists for it (H-DIE). command is registered and zeroed when !valid (ot_hbm_su_programme.sv always_ff), so the bench gate line=valid?command:0 is redundant and command binds directly."
+   "note": "whole-SU serial programme plane (target 128x256 SRAM macros, 301 macros) at the 4 x 2422-bit command boundary; params from results/arch/hbm_su_f2_static_1014/programme/two_planes_1103/serial_manifest.json (the MR1 proof image 7116 edges, receipt multirate_native_d9507c056); DICT_BANKS is an packed little-column vector parameter (emit verbatim). NO die slot exists for it (H-DIE). command is registered and zeroed when !valid (ot_hbm_su_programme.sv always_ff), so the bench gate line=valid?command:0 is redundant and command binds directly."
   },
   {
    "name": "sucore_SW",
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_SW",
    "owner": "H-SU",
@@ -44,7 +45,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW0",
    "owner": "H-SU",
@@ -64,7 +66,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW1",
    "owner": "H-SU",
@@ -84,7 +87,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW2",
    "owner": "H-SU",
@@ -104,7 +108,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW3",
    "owner": "H-SU",
@@ -115,7 +120,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_SE",
    "owner": "H-SU",
@@ -135,7 +141,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE0",
    "owner": "H-SU",
@@ -155,7 +162,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE1",
    "owner": "H-SU",
@@ -175,7 +183,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE2",
    "owner": "H-SU",
@@ -195,7 +204,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE3",
    "owner": "H-SU",
@@ -206,7 +216,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_NW",
    "owner": "H-SU",
@@ -226,7 +237,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW0",
    "owner": "H-SU",
@@ -246,7 +258,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW1",
    "owner": "H-SU",
@@ -266,7 +279,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW2",
    "owner": "H-SU",
@@ -286,7 +300,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW3",
    "owner": "H-SU",
@@ -297,7 +312,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_NE",
    "owner": "H-SU",
@@ -317,7 +333,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE0",
    "owner": "H-SU",
@@ -337,7 +354,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE1",
    "owner": "H-SU",
@@ -357,7 +375,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE2",
    "owner": "H-SU",
@@ -377,7 +396,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE3",
    "owner": "H-SU",
@@ -41177,10 +41197,6 @@
     [
      "sfucore_SW",
      "vi_q"
-    ],
-    [
-     "sfucore_SW",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
@@ -41261,10 +41277,6 @@
     [
      "sfucore_SE",
      "vi_q"
-    ],
-    [
-     "sfucore_SE",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
@@ -41345,10 +41357,6 @@
     [
      "sfucore_NW",
      "vi_q"
-    ],
-    [
-     "sfucore_NW",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
@@ -41429,27 +41437,9 @@
     [
      "sfucore_NE",
      "vi_q"
-    ],
-    [
-     "sfucore_NE",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
-  },
-  {
-   "id": "G-SU-MTP-LOGIT",
-   "owner": "H-SM (SM_OUT stream adapter) + MTP owner; was H-SU",
-   "missing_rtl": "static-SU logit stream producer for hb_argmax.am_stream (523 b); ot_hbm_su_static_top/pgslice have no logit-stream output (only the legacy ot_hgi_su_unit drives am_stream)",
-   "affects": [
-    [
-     "hb_argmax",
-     "am_stream",
-     0,
-     523
-    ]
-   ],
-   "note": "H-NETLIST/su 10-15: the am_stream producer is NOT the SU. tools/hgi_sim/ds_native.py:500 (fuse) sends the LM-head SM MATVEC output O to space STREAM base 2 = the argmax stream; the static SU has no logits (its reducer emits single FP32 scalars). The static producer is an SM result (rv/rrow/rdata 256 = 8 FP32 a beat, gap G-SMVM-SMOUT) -> am_stream adapter {v, last from the record row count, mask8 from the row bounds, vals256 = rdata, bias256/bias_en from the MTP Markov-bias VM row}. Reassign to H-SM (+MTP owner). Unfused fallback = ARGMAX VM mode (mode 0, 1 element a cycle vs 16 for STREAM, tools/hgi_sim/calibration.json)."
   }
  ],
  "notes": "SU: 16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore lifted 1:1 from ot_hbm_su_static_quarter/top (QID SW0 SE1 NW2 NE3 = v15 hb_su QIDs). Params = the only whole-SU proof with the die RF_RELAY: MR1 multirate d9507c056 (receipt results/arch/hbm_su_f2_static_1014/multirate_native_d9507c056: MULTIRATE=1, MLAT=4, ALAT=3, LEAF=1, RF_RELAY=36, RR10/WR7). DOUBT: the RTL default is still MULTIRATE=0/MLAT=3/LEAF=0 (su_multirate_top_contract.json default_parameter 0, candidate 1); MULTIRATE=1 is required by the v7 die clocking (slices serial 900 + pg_clk stream 1200). H-SU branch claude/hsu-k0r2-1705 (PIN_REG lane, programme 7116->7120) is NOT on main and not used. Command source: ot_hbm_su_programme (serial plane, 9688-bit line = 4 x {control1742,vmr240,vmw312,rf54,red74}, MSB->LSB, so quarter q red_cmd=[q*2422+0,+74), rf_rd=[+74,+128), vmw=[+128,+440), vmr=[+440,+680), control=[+680,+2422)); one central instance fans 9688 bits to all four quadrants -- it has NO die slot and its fixed S+4 timing assumes a direct registered boundary, so any die relay on that fan-out must be absorbed by the compiler epoch (H-SU/H-DIE). The stream programme plane (64-bit VM calendar cal_rd/cal_wr) belongs to the VM/calendar region, not here. Quarter glue: red_sel is pure wiring (bound as bit-slice edges); rf_drain_now and the relay head valid were AND gates in the compositions: CLOSED by H-NETLIST/su 10-15 (qcore rf_drain_cmd[1:0] input + red_rf_v output, edges in su.json); bridge_rst_n CLOSED by the leaf ot_hbm_su_bridge_release x4 (su.json). RF relays: 16 routes x 36 = 576 x hbfd_rly_48_<flow> (one register stage each, async active-low clear of ALL 48 bits from rs; the top's st_v reset is a subset, data reset is harmless); ck = clk_relay[w] = serial, rs = rst_n. PAD: stage 0 i[41:48] tied 0 (straps), last-stage o[41:48] open; logical width 41 = {v, addr8, data32} at bits 40, 39:32, 31:0. Flow per stage from su_rf_relays_v7 home deltas (next-home direction). SFU: RTL on main says the core IS ot_hgi_sfu_scheduled_engine with LG_PATH=1+R (ot_hgi_sfu_split_engine is a composition with no own logic; leaves+relays are die instances; H-SU 72130e7c9, Qswiglu exact at R=0/R=9). R=11 per sfu_core_request_v7 (LG_PATH 12; the compiler's SFU_LG_PATH IO calendar must be regenerated for 12 -- only R=9 was benched). SFU relays use the DEDUPE standard hbfd_rly_624 (fwd 596 b = rq34+wq562, bwd 516 b = rr514+done2) x 11 stages x 2 directions x 16 pairs = 352; PAD fwd 28 b, bwd 108 b. SFU core has NO slot (PROPOSED strip; H-SM must shrink SM rows) and the relay stages have no homes -> placement open (H-DIE). SFU rst_lane_n/rst_map_n are given as stream resets (v15 listed them under the loader/CP owner; if a programme-controlled lane reset is intended they move into G-SFU-LOADER). Faults: pgslice/qcore/sfucore fault outputs unconsumed (no die status aggregator in this region). hb_argmax.am_stream gap is recorded here per H-SU ownership (instance is the coordinator's)."

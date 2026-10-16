@@ -16,7 +16,12 @@
 // is an explicit exceptional mode; normal timing is unchanged).  The four es
 // lanes' bank/column/row and s_v/s_we fields were identical copies: they are one
 // shared register now (es is the same bit vector, cycle for cycle).
-module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_RELAY = 0) (
+// VMAP (Q-ATTN-RATE 2026-10-16, PV16 V layout): 1 = a V row t lives in group {t[5:4], t[0]} at PC sector
+//   {v, g, t[6], t[12:9], t[3:1]} (bank {1,0,t[6],t[2:1]}, column {t[12:9], t[3]}), so the w16 pair's four
+//   same-cycle rows (equal t[3:0], t[5:4] = lane) hit four DIFFERENT groups and every PC streams its V rows in the
+//   controller's existing v_consumer_order (rank {t[12:9], t[6], low3}) = the pair's consumption order, one sector
+//   every other core edge.  No transposer buffer.  K placement is unchanged.  0 = the historical t[2:0] layout.
+module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_RELAY = 0, parameter integer VMAP = 0) (
     input wire ck, rst_n,
     input wire word_valid, input wire [10:0] word_tag,
     input wire [511:0] word_data,
@@ -78,8 +83,11 @@ module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_R
     wire [5:0] layer = stage - 6'd1;
     wire kind = wt[2];                 // formatter {kind, head=0, half}
     wire [18:0] row = 19'd64 + {13'd0, layer};
-    wire [4:0] bank = {kind, 1'b0, pos[6], pos[4:3]};
-    wire [4:0] column = {pos[12:9], pos[5]};
+    wire vm = (VMAP != 0) && kind;                     // PV16 V layout for this row
+    wire [2:0] low3 = vm ? pos[3:1] : pos[5:3];
+    wire [2:0] grp = vm ? {pos[5:4], pos[0]} : pos[2:0];
+    wire [4:0] bank = {kind, 1'b0, pos[6], low3[1:0]};
+    wire [4:0] column = {pos[12:9], low3[2]};
     wire [1023:0] assembled_row = {wd, half_data};
     wire [2:0] expected_word_kind = {ix[1], 1'b0, ix[0]};
     wire identity_ok = wi == ci && wg == cg && stage >= 1 && stage <= 36 && wi[5:0] == 0;
@@ -89,6 +97,8 @@ module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_R
     wire program_ok = ix == next_index && (ix == 0 || (ci == cohort_identity && cg == cohort_generation));
     wire good = slot && wv && identity_ok && header_ok && pair_ok && program_ok;
     wire hi_slot = slot && ix[0];
+    wire cvm = (VMAP != 0) && ix[1];                  // compiled (expected) row is V under the PV16 layout
+    wire [2:0] cgrp = cvm ? {ci[11:10], ci[6]} : ci[8:6];
     // MUT: 1 data, 2 physical address, 3 mask, 4 actual identity,
     //      5 missing physical write, 6 one-edge-late physical descriptor.
 
@@ -114,8 +124,8 @@ module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_R
                 dest_stack <= pos[8:7];
                 identity <= wi ^ ((MUT == 4) ? 59'd1 << 19 : 59'd0);
                 generation <= wg;
-                dest_pc <= {group_of(pos[2:0]), 2'd3, group_of(pos[2:0]), 2'd2,
-                            group_of(pos[2:0]), 2'd1, group_of(pos[2:0]), 2'd0};
+                dest_pc <= {group_of(grp), 2'd3, group_of(grp), 2'd2,
+                            group_of(grp), 2'd1, group_of(grp), 2'd0};
             end
         end
     end
@@ -144,12 +154,12 @@ module qkd_kv_static_writer #(parameter integer MUT = 0, parameter integer RST_R
                 expected_stack <= ci[14:13];
                 expected_identity <= ci; expected_generation <= cg;
                 expected_address <= {19'd64 + {13'd0,(ci[42:37]-6'd1)},
-                                     ix[1],1'b0,ci[12],ci[10:9],ci[18:15],ci[11]};
+                                     ix[1],1'b0,ci[12],cvm ? ci[8:7] : ci[10:9],ci[18:15],cvm ? ci[9] : ci[11]};
                 write_mask <= {1024{1'b1}};
                 if (MUT == 3) write_mask[0] <= 0;
                 native_kv <= 4'hf;
-                expected_pc <= {group_of(ci[8:6]), 2'd3, group_of(ci[8:6]), 2'd2,
-                                group_of(ci[8:6]), 2'd1, group_of(ci[8:6]), 2'd0};
+                expected_pc <= {group_of(cgrp), 2'd3, group_of(cgrp), 2'd2,
+                                group_of(cgrp), 2'd1, group_of(cgrp), 2'd0};
                 es_sv <= 1;
                 es_addr <= {bank, column, row ^ ((MUT == 2) ? 19'd1 : 19'd0)};
                 if (MUT == 6) begin late_addr <= {bank, column, row}; late_live_c <= 1; end

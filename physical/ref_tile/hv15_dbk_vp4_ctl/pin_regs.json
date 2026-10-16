@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_static_vp4_controller",
+ "enable": false,
+ "reason": "RTL registers every data input at the pin (a_mv/a_ci/a_cd/a_cb/a_ce, cycle_q, wa_q, wb_ready_q, rr_valid capture, stk_q) and drives every output from a flop; rst_n enters the local 2-flop reset_meta/reset_ready synchroniser; a wrapper stage would add +1/+1 to the compiled DESC_LAT4 schedule for nothing"
+}
