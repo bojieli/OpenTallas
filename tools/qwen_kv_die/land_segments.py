@@ -155,6 +155,8 @@ def _canon(mod, rename):
                 drv[b] = ('port', pn, k)
     cells = {}
     for cn, c in mod['cells'].items():
+        if c['type'] == '$scopeinfo':
+            continue  # yosys >= 0.36 records flattened hierarchy as $scopeinfo cells: no function, no ports
         n = rename(cn.replace('\\', ''))
         cells[n] = c
         for pn, bits in c['connections'].items():
