@@ -103,7 +103,10 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware -distance_between_buffers 40"
+  }
  },
  "job": {
   "owner": "Claude:q-link",
