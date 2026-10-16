@@ -120,6 +120,9 @@ def build(nl=False):
              io_tcl=f'physical/ref_tile/{name}/assigned_pins.tcl',
              pin_hook_before_flops=[f'physical/ref_tile/{name}/regions.tcl'],
              pre_dpl_extra=['tools/qwen_repack/reconcile_sink_owners.tcl'])
+    # exact raw-ROM CTS bindings (main raw_macro_clocks): each ROM clk is a sink of its own pair root
+    s['soft_root_macro_bindings'] = {inst.replace('\\', ''): {'master': 'ot_rom_4096x266_m8', 'clock_pin': 'clk', 'root': r}
+                                     for r, inst in macro_by_root.items()}
     s['sources'] = [p.replace(f'{base_top}.sv', f'{top}.sv') for p in s['sources']]
     s['pins'] = {f: sorted({p['name'].split('[')[0] for p in pins if p['face'] == f}) for f in 'WENS' if any(p['face'] == f for p in pins)}
     s['required_hybrid_roots']['standard_cell_cts'] = soft
