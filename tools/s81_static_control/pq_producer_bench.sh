@@ -10,6 +10,7 @@ case "$mode" in
  hostdrop) extra=(--mut HOSTDROP) ;;
  *) echo "PQPRODUCER BUILD_FAIL unknown mode"; exit 2 ;;
 esac
+if [ "${3:-}" = phase-safe ]; then extra+=(--host-phase-safe); fi
 python3 tools/s81/pq_canonical_pins_gate.py --sequenced --work "$out" "${extra[@]}" > "$out/driver.log" 2>&1
 rc=$?
 if [ "$rc" -ne 0 ]; then cat "$out/driver.log"; echo "PQPRODUCER BUILD_FAIL $mode"; exit 2; fi

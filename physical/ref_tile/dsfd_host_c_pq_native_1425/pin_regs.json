@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_host_c",
+ "enable": false,
+ "reason": "This multiclock native RTL owns input pin captures fi/hc_q/ss1/wf and registered output bundles to/hw/t_sseq_pw/t_pq_pw/plen on their declared ck/ckv roots; duplicate single-clock wrappers would mis-clock serial outputs. HOST-only seams explicitly join the four real related roots; no extra normal token boundary cycle."
+}

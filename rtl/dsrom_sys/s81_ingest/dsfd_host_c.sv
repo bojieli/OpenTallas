@@ -187,12 +187,18 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     always @(posedge ck or negedge rn) if (!rn) xf <= 1'b0; else if (pw_ovf || ((csr_p || csr_pq) && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
 `ifdef DSFD_HOST_C_STATIC
     // lane faults (odd bits of f_lf), pin-registered
+`ifdef OT_S81_HOST_PHASESAFE
+    reg [4*NS-1:0] lf_pins;
+    always @(posedge ck) lf_pins <= f_lf;
+`else
+    wire [4*NS-1:0] lf_pins=f_lf;
+`endif
     reg lf_q; integer li;
     always @(posedge ck or negedge rn)
         if (!rn) lf_q <= 1'b0;
         else begin : lfo
             reg a; a = 1'b0;
-            for (li = 0; li < 2 * NS; li = li + 1) a = a | f_lf[2 * li + 1];
+            for (li = 0; li < 2 * NS; li = li + 1) a = a | lf_pins[2 * li + 1];
             lf_q <= a && (MUT != 4);
         end
     always @(posedge ck or negedge rn) if (!rn) tcr_l <= 1'b0; else tcr_l <= tv_core;

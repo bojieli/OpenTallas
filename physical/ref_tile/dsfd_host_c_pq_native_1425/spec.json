@@ -23,7 +23,8 @@
  },
  "defines": [
   "DSFD_HOST_C_STATIC",
-  "DSFD_HOST_PQ_BOOT"
+  "DSFD_HOST_PQ_BOOT",
+  "OT_S81_HOST_PHASESAFE"
  ],
  "clock": "multiple_cts_roots",
  "clock_port": "ck",
@@ -136,7 +137,7 @@
   ]
  },
  "io_tcl": "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_host_c.tcl",
- "recipe": 2,
+ "recipe": 3,
  "outhold": false,
  "inhold": true,
  "keep_pin_regs": true,
@@ -165,11 +166,11 @@
   ],
   "why": "C9 actual14982.7um2 std with48.5% insetmargin; HOST splitrealrootmax9293FF, exact1223/993 top-down pins; no c8/oldHOST view or parentfit inheritance."
  },
- "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15, n1 EARLY_FAIL_HOLD 49k buffers): kit SDC regenerated with the per-entry die-skew rule (same-root pairs keep tile-local uncertainty; the uniform hold 100 on all 4 roots' internal paths was the flood); u_hx head read 32 kept read-address copies (rbin[1] 8,230 loads).",
+ "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15, n1 EARLY_FAIL_HOLD 49k buffers): kit SDC regenerated with the per-entry die-skew rule (same-root pairs keep tile-local uncertainty; the uniform hold 100 on all 4 roots' internal paths was the flood); u_hx head read 32 kept read-address copies (rbin[1] 8,230 loads). | n3 phase-safe: measured n2 core-to-ingest payload hold -107.64ps, CSR/Gray/toggle -87..-102ps and rational3:4 boot FIFO -91ps require real half-phase seams, not extra hold buffers. OT_S81_HOST_PHASESAFE adds low-source pointer/control locks, high-read-half FWFT payload latches, locally conditioned boot resets (common raw assertion), and APIPE3 descriptor decomposition (+1 boot row/address edge, no normal-token stage). Four native roots, identical port/pin/outline ABI. New source-bound numeric+fixed-program+FIFO proof required; pre-route/route/native and parent timing remain OPEN.",
  "job": {
-  "owner": "Claude:S-ELEM-PQ",
-  "branch": "claude/s81-pq-producer-kits-1705",
-  "tag": "n1",
+  "owner": "Codex:S81-PQ2330",
+  "branch": "codex/s81-pq-2330",
+  "tag": "n3-phase-safe",
   "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
   "views_to": "physical/ref_tile/dsfd_host_c_pq_native_1425/views",
   "record_to": "results/rtl/ref_tile/dsfd_host_c_pq_native_1425",
@@ -190,7 +191,7 @@
   "benches": [
    {
     "name": "actual_host_c9_PQ_pass",
-    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass phase-safe",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 8,
@@ -201,7 +202,7 @@
    },
    {
     "name": "actual_host_c9_PQ_hostdrop",
-    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh hostdrop {RUN}/bench_hostdrop",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh hostdrop {RUN}/bench_hostdrop phase-safe",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
@@ -231,6 +232,28 @@
      "iverilog"
     ],
     "fail_regex": "FATAL RCOPY mismatch"
+   },
+   {
+    "name": "phase_fifo_order_ratios",
+    "cmd": "bash tools/s81_static_control/host_phase_fifo_gate.sh {RUN}/fifo",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_PHASE_FIFO_GATE PASS"
+   },
+   {
+    "name": "native_ingest_rows_ikey_raw",
+    "cmd": "python3 tools/s81_static_control/host_phase_ingest_gate.py {RUN}/ingest",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_PHASE_INGEST_GATE PASS"
    }
   ]
  },
@@ -239,5 +262,9 @@
  "inter": [],
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "This multiclock native RTL owns input pin captures fi/hc_q/ss1/wf and registered output bundles to/hw/t_sseq_pw/t_pq_pw/plen on their declared ck/ckv roots; duplicate single-clock wrappers would mis-clock serial outputs. HOST-only seams explicitly join the four real related roots; no extra normal token boundary cycle."
  }
 }
