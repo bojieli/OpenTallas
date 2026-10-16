@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_xhead_e",
+ "enable": false,
+ "reason": "RTL is already pin-registered (ONWARD_REG=2, LOCAL_RST=1): inputs land in g_pin/ib_pin/f_q and the input onward register, *r_q/fi_q/tid_q/lqp/lqvp/lqbp; outputs leave from flops: b_d (output onward register), lw_*/lc_* and lr_* (ot_qfd_face_reg per face), n_d/s_d (n_q/s_q), a_r (ar_q), fault; a second synthesized pin register would add +1 cycle per port with no timing purpose"
+}

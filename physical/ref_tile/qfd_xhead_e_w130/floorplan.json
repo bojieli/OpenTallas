@@ -30,10 +30,10 @@
   "m6_pin_grant": {
    "schema": "opentallas.m6_pin_grant.v1",
    "master": "qfd_xhead_e",
-   "granted_by": "refreshed by Q-LINK-D2D 2026-10-16 for the w130 head outline 129.6x345.6 agreed by Q-COMPUTE-DIE (E/W contacts, spans and ports identical; N/S M3/M5 pins re-spread at leaf w130 x) and the m6u RTL. | Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s/m6t source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical)",
+   "granted_by": "refreshed by Q-LINK-D2D 2026-10-16 for w2 (ONWARD_REG 2 RTL; ports/contacts identical). | refreshed by Q-LINK-D2D 2026-10-16 for the w130 head outline 129.6x345.6 agreed by Q-COMPUTE-DIE (E/W contacts, spans and ports identical; N/S M3/M5 pins re-spread at leaf w130 x) and the m6u RTL. | Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s/m6t source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical)",
    "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-   "source_commit": "98ac07e7cb39248c38a2fca709d0cd5156634b62",
-   "source_spec_sha256": "50a84ffea735f946f11b6e60c7cedbd8df5d57515c49a21efe7af765307dee60",
+   "source_commit": "7e4bb8103ebbae2adb364ed372290da49353886d",
+   "source_spec_sha256": "f42e31a4edcdd18daa38f0377801dcba4b554523fb38af5a76035c915e53f899",
    "ports": [
     {
      "name": "cs_wv",
