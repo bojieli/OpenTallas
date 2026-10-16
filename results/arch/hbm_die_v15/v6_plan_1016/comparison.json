@@ -1,0 +1,283 @@
+{
+ "schema": "opentallas.hbm_v15.v6_plan_comparison.v1",
+ "owner": "OWNER 02:15 10-16: die may grow to the reticle where area fixes a measured fit/congestion problem",
+ "tools": "tools/hbm_die_v15/compact_plan.py (--layout col --su-w/--su-h --smw/--smh --carry; defaults reproduce compact660_v5 exactly) + tools/hbm_die_v15/v6_eval.py",
+ "stage_model": "pin-to-pin route through the link lane (band_lanes.py at the per-candidate slack giving 0 windows > 0.60), ceil(L/480)-1, bit-weighted; v5 under this model 7.47 (the 22:54 table used centre distances: 6.43)",
+ "candidates": {
+  "v5carry": "compact660_v5 + granted sfucore and 511.92-um DMA back (baseline)",
+  "v6a": "SU 77 mm2 (16 x 1563 x 3071.5) with the v6 col band group (bank pair stacked at the SM side, HC|SFU on top, SU full band height), SM unchanged",
+  "v6b": "v6a + SM slot 7050 x 1780 (H-SM real single-row body 6,683-6,821 + front, rp3 stack 1,765; assumed, H-SM not answered), SU 16 x 1790 x 2681.6",
+  "v6c": "v6b + 700-um centre channels (no cut gain: v6b already 0 windows at slack 800) -> NOT needed"
+ },
+ "rows": {
+  "v5carry": {
+   "die_um": [
+    31018.4,
+    21277.693
+   ],
+   "die_mm2": 660.0,
+   "placed_mm2": 541.2,
+   "su_slice": [
+    1250.0,
+    1780.0
+   ],
+   "su_total_mm2": 35.6,
+   "sm_slot": [
+    6609.6,
+    1712.08
+   ],
+   "lane_slack_um": 900,
+   "cut_v": {
+    "ratio": 0.598,
+    "x": 13400.0,
+    "y": [
+     4900.0,
+     5900.0
+    ]
+   },
+   "cut_h": {
+    "ratio": 0.593,
+    "y": 5100.0,
+    "x": [
+     17200.0,
+     18200.0
+    ]
+   },
+   "windows_over_060": 0,
+   "stages_bw": 7.466,
+   "per_class": {
+    "HBM_K": 0.0,
+    "SM_X": 7.29,
+    "SM_HBM": 9.97,
+    "LG_HC": 0.0,
+    "LG_SFU": 0.0,
+    "LG_SU": 0.0,
+    "VM_RING": 13.38,
+    "COLL_VM": 16.19,
+    "VM_HUB": 17.09,
+    "COLL_EP": 13.78,
+    "EP_SERDES": 2.67,
+    "SM_OUT": 9.12,
+    "HBM_VM": 21.28,
+    "VM_HBM": 21.44,
+    "IDX_INT": 4.71,
+    "COLL_RING": 17.5,
+    "QUANT_VM": 0.0,
+    "HC_CORE": 11.42,
+    "SFU_CORE": 11.83,
+    "SU_CORE": 11.08,
+    "IDX_VM": 16.88,
+    "IDX_COLL": 15.0,
+    "KV_DESC": 10.03,
+    "HC_ENG": 40.25
+   },
+   "plan_grt": {
+    "overflow": 0,
+    "usage_pct": 3.72,
+    "wl_m": 76.88,
+    "note": "compact660_v5 plan GRT (22:54)"
+   },
+   "fits_reticle_33x26": true
+  },
+  "v6a": {
+   "die_um": [
+    31018.4,
+    23737.524
+   ],
+   "die_mm2": 736.3,
+   "placed_mm2": 586.18,
+   "su_slice": [
+    1563.0,
+    3071.52
+   ],
+   "su_total_mm2": 76.81,
+   "sm_slot": [
+    6609.6,
+    1712.08
+   ],
+   "lane_slack_um": 600,
+   "cut_v": {
+    "ratio": 0.557,
+    "x": 13200.0,
+    "y": [
+     5000.0,
+     6000.0
+    ]
+   },
+   "cut_h": {
+    "ratio": 0.587,
+    "y": 18700.0,
+    "x": [
+     17200.0,
+     18200.0
+    ]
+   },
+   "windows_over_060": 0,
+   "stages_bw": 7.78,
+   "per_class": {
+    "HBM_K": 0.0,
+    "SM_X": 8.37,
+    "SM_HBM": 10.81,
+    "LG_SU": 0.0,
+    "LG_HC": 0.0,
+    "LG_SFU": 0.0,
+    "VM_RING": 12.75,
+    "COLL_VM": 16.03,
+    "VM_HUB": 18.5,
+    "COLL_EP": 13.78,
+    "EP_SERDES": 1.56,
+    "SM_OUT": 9.0,
+    "HBM_VM": 21.34,
+    "VM_HBM": 21.38,
+    "IDX_INT": 4.08,
+    "COLL_RING": 19.12,
+    "QUANT_VM": 2.38,
+    "HC_CORE": 11.25,
+    "SFU_CORE": 11.08,
+    "SU_CORE": 9.33,
+    "IDX_VM": 16.62,
+    "IDX_COLL": 15.0,
+    "KV_DESC": 9.41,
+    "HC_ENG": 42.0
+   },
+   "plan_grt": {
+    "overflow": 0,
+    "usage_pct": 3.65,
+    "wl_m": 84.58
+   },
+   "fits_reticle_33x26": true
+  },
+  "v6b": {
+   "die_um": [
+    32780.0,
+    23502.135
+   ],
+   "die_mm2": 770.4,
+   "placed_mm2": 624.48,
+   "su_slice": [
+    1790.0,
+    2681.64
+   ],
+   "su_total_mm2": 76.8,
+   "sm_slot": [
+    7050.0,
+    1780.0
+   ],
+   "lane_slack_um": 800,
+   "cut_v": {
+    "ratio": 0.513,
+    "x": 14000.0,
+    "y": [
+     5000.0,
+     6000.0
+    ]
+   },
+   "cut_h": {
+    "ratio": 0.585,
+    "y": 18300.0,
+    "x": [
+     18100.0,
+     19100.0
+    ]
+   },
+   "windows_over_060": 0,
+   "stages_bw": 8.176,
+   "per_class": {
+    "HBM_K": 0.0,
+    "SM_X": 8.45,
+    "SM_HBM": 11.22,
+    "LG_SU": 0.0,
+    "LG_HC": 0.0,
+    "LG_SFU": 0.0,
+    "VM_RING": 12.5,
+    "COLL_VM": 17.59,
+    "VM_HUB": 20.44,
+    "COLL_EP": 14.11,
+    "EP_SERDES": 1.89,
+    "SM_OUT": 9.59,
+    "HBM_VM": 23.5,
+    "VM_HBM": 23.47,
+    "IDX_INT": 4.35,
+    "COLL_RING": 18.62,
+    "QUANT_VM": 2.62,
+    "HC_CORE": 13.17,
+    "SFU_CORE": 13.0,
+    "SU_CORE": 10.17,
+    "IDX_VM": 19.25,
+    "IDX_COLL": 14.0,
+    "KV_DESC": 9.91,
+    "HC_ENG": 43.0
+   },
+   "plan_grt": {
+    "overflow": 0,
+    "usage_pct": 3.62,
+    "wl_m": 87.16
+   },
+   "fits_reticle_33x26": true
+  },
+  "v6c": {
+   "die_um": [
+    32980.0,
+    23502.122
+   ],
+   "die_mm2": 775.1,
+   "placed_mm2": 624.48,
+   "su_slice": [
+    1790.0,
+    2681.64
+   ],
+   "su_total_mm2": 76.8,
+   "sm_slot": [
+    7050.0,
+    1780.0
+   ],
+   "lane_slack_um": 800,
+   "cut_v": {
+    "ratio": 0.513,
+    "x": 14000.0,
+    "y": [
+     5000.0,
+     6000.0
+    ]
+   },
+   "cut_h": {
+    "ratio": 0.585,
+    "y": 18300.0,
+    "x": [
+     18300.0,
+     19300.0
+    ]
+   },
+   "windows_over_060": 0,
+   "stages_bw": 8.202,
+   "per_class": {
+    "HBM_K": 0.0,
+    "SM_X": 8.45,
+    "SM_HBM": 11.22,
+    "LG_SU": 0.0,
+    "LG_HC": 0.0,
+    "LG_SFU": 0.0,
+    "VM_RING": 12.75,
+    "COLL_VM": 17.59,
+    "VM_HUB": 20.44,
+    "COLL_EP": 14.33,
+    "EP_SERDES": 1.89,
+    "SM_OUT": 9.59,
+    "HBM_VM": 23.5,
+    "VM_HBM": 23.47,
+    "IDX_INT": 4.48,
+    "COLL_RING": 18.88,
+    "QUANT_VM": 2.62,
+    "HC_CORE": 13.17,
+    "SFU_CORE": 13.0,
+    "SU_CORE": 10.17,
+    "IDX_VM": 19.25,
+    "IDX_COLL": 14.0,
+    "KV_DESC": 9.94,
+    "HC_ENG": 43.0
+   },
+   "plan_grt": null,
+   "fits_reticle_33x26": true
+  }
+ }
+}
