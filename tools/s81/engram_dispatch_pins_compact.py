@@ -2,7 +2,7 @@
 """Compact candidate pins for ot_s81_engram_dispatch (VIS-ROM 10-16: v20 129.6x86.4 outline is 4.8% filled).
 
 Same ports, faces, layers, bit order and 0.096-um pitch as tools/s81/engram_dispatch_pins.py; only the outline
-shrinks to 34.56 x 34.56 um (~537 um2 of cells -> ~45% fill) and each face's pin run is centred on its face.
+shrinks to 30.24 x 30.24 um (gate: 352-365 um2 std cells -> ~52% fill) and each face's pin run is centred on its face.
 CANDIDATE for S-DIE re-binding (absolute die pin positions move); written to v29_engram_dispatch_compact only.
 """
 import sys
@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import v19_pins_1014 as V
 R = Path(__file__).resolve().parents[2]
-W = H = 34.56
+W = H = 30.24
 def main():
     out = R / 'physical/s81_die_pins/v29_engram_dispatch_compact'
     out.mkdir(parents=True, exist_ok=True)

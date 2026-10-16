@@ -45,8 +45,8 @@
   "rst"
  ],
  "outline": {
-  "w": 34.56,
-  "h": 34.56,
+  "w": 30.24,
+  "h": 30.24,
   "exact": true
  },
  "recipe": 3,
@@ -72,8 +72,8 @@
   ]
  },
  "io_tcl": "physical/s81_die_pins/v29_engram_dispatch_compact/ot_s81_engram_dispatch.tcl",
- "why_floorplan": "compact candidate (VIS-ROM 10-16 finding S81H-11: v20 129.6x86.4 is 4.8% filled): 34.56x34.56 (~45% fill), same ports/faces/layers/pitch, pin runs centred; S-DIE re-binds on CLOSED",
- "structural_change": "Outline-only shrink of the CLOSED s81engm_dispatch (d1-4e3b2ead4, same RTL): 11,197 -> 1,194 um2.",
+ "why_floorplan": "compact candidate (VIS-ROM 10-16 finding S81H-11: v20 129.6x86.4 is 4.8% filled): 30.24x30.24 (~52% fill; 34.56 gate measured util 40%), same ports/faces/layers/pitch, pin runs centred; S-DIE re-binds on CLOSED",
+ "structural_change": "Outline-only shrink of the CLOSED s81engm_dispatch (d1-4e3b2ead4, same RTL): 11,197 -> 914 um2.",
  "job": {
   "owner": "Claude:s81-engnorm-2210",
   "branch": "claude/s81-engnorm-2210",
