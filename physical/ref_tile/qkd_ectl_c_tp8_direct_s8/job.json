@@ -1,5 +1,5 @@
 {
- "name": "qkd_ectl_c_tp8_direct_s8-s8-COMMIT",
+ "name": "qkd_ectl_c_tp8_direct_s8-s8-bd9951c5c",
  "block": "qkd_ectl_c_tp8_direct",
  "ref_tile": true,
  "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q-vmwb-1015",
-  "commit": "COMMIT",
+  "commit": "bd9951c5c",
   "extra_paths": [
    "rtl",
    "tools/qwen_kv_die",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ectl_c_tp8_direct_s8/qkd_ectl_c_tp8_direct_s8-s8-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ectl_c_tp8_direct_s8/qkd_ectl_c_tp8_direct_s8-s8-bd9951c5c"
   }
  ],
  "cycles_added": 0,
