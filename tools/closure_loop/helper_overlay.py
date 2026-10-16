@@ -107,6 +107,50 @@ def compare_plans(frozen, effective):
     return True, "effective route helper bytes and modes match frozen plan"
 
 
+# FLEET-RUN HELPERS (ROOT 2026-10-16): helpers a route does NOT execute from its frozen cl/ copy but from the fleet
+# snapshot kept at main on every loop host (closure_loop.tt_overlay_fallback runs the fleet copy FIRST since 00cbddaea;
+# snapshot_refresh keeps it at main).  A frozen plan row for such a path records what the daemon resolved at submit,
+# not what the route runs, so drift there is SANCTIONED when the effective bytes are exactly origin/main's blob for the
+# path and the frozen blob is an earlier main revision of the same path (never a daemon-only or foreign blob, never a
+# mode change).  The caller records both shas and re-freezes the plan to the executed bytes.  Every other helper keeps
+# the strict guard.  (s81net_sstn_e0c0sinf-n6-790b63257: frozen ba24e51 pre-3c31fb285, fleet/main 8c1b35bb.)
+FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
+
+
+def _main_blobs(repo, head, rel):
+    p = subprocess.run(["git", "-C", str(repo), "log", "--format=", "--raw", "--no-abbrev", "--no-renames", head, "--", rel],
+                       capture_output=True, text=True, timeout=180)
+    if p.returncode:
+        return set()
+    return {ln.split()[3] for ln in p.stdout.splitlines() if ln.startswith(":") and len(ln.split()) >= 5}
+
+
+def compare_plans_sanctioned(frozen, effective, repo, head=None):
+    """compare_plans, except that drift on FLEET_RUN paths is accepted when the effective blob is origin/main's and the
+    frozen blob is an earlier main revision of that path.  Returns (ok, why, sanctioned_rows)."""
+    ok, why = compare_plans(frozen, effective)
+    if ok or why.startswith(("missing", "frozen helper plan digest", "malformed")):
+        return ok, why, []
+    old = {f["path"]: f for f in content_rows(frozen["files"])}
+    new = {f["path"]: f for f in content_rows(effective["files"])}
+    head = head or effective.get("origin_main") or main_head(repo)
+    sanctioned = []
+    for rel in sorted(set(old) | set(new)):
+        o, n = old.get(rel), new.get(rel)
+        if o == n:
+            continue
+        if rel not in FLEET_RUN or o is None or n is None or not head:
+            return False, f"effective route helper drift: {rel} (frozen {o}, current {n})", []
+        p = subprocess.run(["git", "-C", str(repo), "rev-parse", f"{head}:{rel}"], capture_output=True, text=True, timeout=60)
+        tip = p.stdout.strip() if not p.returncode else None
+        if n["git_blob"] != tip or o["mode"] != n["mode"] or o["git_blob"] not in _main_blobs(repo, head, rel):
+            return False, (f"effective route helper drift: {rel} (frozen {o}, current {n}; fleet-run path, but current is "
+                           f"not origin/main {str(tip)[:9]} or frozen is not an earlier main revision)"), []
+        sanctioned.append(dict(path=rel, frozen_git_blob=o["git_blob"], frozen_sha256=o["sha256"],
+                               current_git_blob=n["git_blob"], current_sha256=n["sha256"], origin_main=head))
+    return True, "helper bytes match the frozen plan except sanctioned fleet-run paths at origin/main", sanctioned
+
+
 def frozen_rows(plan):
     """Validate the recorded plan without consulting today's helper resolution."""
     if not isinstance(plan, dict) or plan.get("schema") != SCHEMA:
