@@ -46,7 +46,7 @@
   "w": 345.6,
   "h": 216
  },
- "recipe": 2,
+ "recipe": 3,
  "layer_cap": "M5",
  "pins": {
   "W": [
@@ -135,7 +135,7 @@
  "job": {
   "owner": "claude:Q-ELEM 1705",
   "branch": "claude/qelem-tt-1705",
-  "tag": "fs2",
+  "tag": "fs3",
   "hold_merge": true,
   "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
   "benches": [
@@ -178,8 +178,16 @@
    "physical/qwen_tt_partition_1015",
    "tools/qwen_split/derive_tt_tree_partition.py"
   ],
-  "structural_change": "fs2 (Q-ELEM 1705): fs1 scale route DRT-0255 on seam pins tag_payload[0]/rst_n: 93 seam pins on every M5 track (0.096 pitch, 168.4..177.2) overlapped the M5 PG pair at x~173.1; seam now 3-track pitch on PG-free tracks 157.8..188.6 on BOTH leaves (identical x, straight seam), RTL/outline/cycles unchanged."
+  "structural_change": "fs2 (Q-ELEM 1705): fs1 scale route DRT-0255 on seam pins tag_payload[0]/rst_n: 93 seam pins on every M5 track (0.096 pitch, 168.4..177.2) overlapped the M5 PG pair at x~173.1; seam now 3-track pitch on PG-free tracks 157.8..188.6 on BOTH leaves (identical x, straight seam), RTL/outline/cycles unchanged. | fs3 (Q-ELEM 1705): fs2 core route DRT-0255 on S-face mx_*/land_cnt: 95 of 569 M5 pins sat on the M5 PG pair windows; S face respaced on PG-free 4-track M5 positions (same order). Recipe 3 (owner 19:50): one pin register on every data input/output at synthesis (+1 cycle per port, table in the route ot_pin_regs.tsv) for the compiler.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc4",
+   "ot-pve1"
+  ]
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "pin_regs": {
+  "enable": true
+ }
 }
