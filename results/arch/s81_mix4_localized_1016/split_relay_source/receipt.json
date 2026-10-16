@@ -18,5 +18,29 @@
  "root_delta": 68,
  "new_registered_edges": 0,
  "clock_semantics": "Same-edge functional comparison only:285roots phase-coherent in bench; actual skew/delivery/async recovery-removal remains OPEN",
- "physical_scope": "72 new capture instances replace4oldrly leaves. No physicalarea/pins/ETM borrowed from old rly; actualnewleaf implementation and both-leg/PG/clock checks required."
+ "physical_scope": "72 new capture instances replace4oldrly leaves. No physicalarea/pins/ETM borrowed from old rly; actualnewleaf implementation and both-leg/PG/clock checks required.",
+ "finite_physical_design_reservation": {
+  "per_capture_um": [
+   21.6,
+   21.6
+  ],
+  "captures_per_copy": 18,
+  "area_per_copy_um2": 8398.080000000002,
+  "old_relay_outline_um": [
+   43.2,
+   21.6
+  ],
+  "net_reserved_area_delta_all4_um2": 29859.840000000007,
+  "measured_cell_area": null,
+  "max_data_ports_per_leaf": 74,
+  "clock_reset_ports_per_leaf": 2,
+  "pin_model": "Future explicit pin plan only; .240um candidate pitch on21.6square perimeter gives360nominalslots vs76signals+clock/reset. PG/corners/clockspacing not allocated; no actual LEF/pinaccess claim.",
+  "clock_model": "285explicit real RTLroots,18percopy same-edge capture entries. Existing originalrlyroot reused groupmul0;17newroots/copy from217..284.150psunknownroot skew in screen. Actual root clockpin/insertion/phase/native spread proof OPEN.",
+  "reset_model": "Each18capture leaf percopy has real2FF active-low async assertion/synchronous release;17extra syncs/copy adds34FF. Recovery/removal/skew/cross-root release physicalproofOPEN.",
+  "newleaf_native_design_target_ps": {
+   "capture": 170,
+   "launch": 220
+  },
+  "physical_result": "Finite current fixed packing15/18individual intersections;mul1,mul5,add2fail. Simultaneous18nonoverlap and fullparent channel costs not proven."
+ }
 }

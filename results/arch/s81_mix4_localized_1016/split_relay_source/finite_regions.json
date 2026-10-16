@@ -1,0 +1,7389 @@
+{
+ "status": "FUTURE_NATIVE_BUDGET_BOTH_LEG_POINT_SCREEN_ONLY",
+ "new_capture_native_budgets_ps": {
+  "capture": 190,
+  "launch": 220,
+  "unknown_new_root_skew": 150
+ },
+ "uses_old_relay_ETM_for_new_leaf": false,
+ "groups": [
+  {
+   "group": "mul0",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     555.3874078947372,
+     694.2649999999999
+    ],
+    "x-y": [
+     -202.90963157894745,
+     336.8605921052631
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 2421,
+   "best_free_point_um": [
+    410.40000000000003,
+    213.84
+   ],
+   "best_worst_excess_um": -68.85259210526277,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[0].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       222.20399999999992,
+       123.078
+      ],
+      [
+       222.20399999999992,
+       122.2025
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[0].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       263.0039999999999,
+       123.078
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.42704,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.40257894736834,
+     "points_um": [
+      [
+       444.3960000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 131.81951,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 357.25459210526304,
+     "points_um": [
+      [
+       446.1240000000002,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul1",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     559.3107236842109,
+     506.345
+    ],
+    "x-y": [
+     -373.7252763157894,
+     230.8245
+    ]
+   },
+   "empty_even_before_obstacles": true,
+   "free_point_candidates": 0,
+   "best_free_point_um": [
+    120.96000000000001,
+    412.56
+   ],
+   "best_worst_excess_um": 27.174999999999955,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[1].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       19.164,
+       138.198
+      ],
+      [
+       19.164,
+       137.3225
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[1].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       59.964,
+       138.198
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.41510000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.4182894736841,
+     "points_um": [
+      [
+       444.4920000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.72827,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.4272763157894,
+     "points_um": [
+      [
+       446.22000000000014,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul2",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     556.528118421053,
+     1018.2650000000001
+    ],
+    "x-y": [
+     -138.10963157894727,
+     336.1038815789473
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 8566,
+   "best_free_point_um": [
+    447.12,
+    341.28000000000003
+   ],
+   "best_worst_excess_um": -229.86499999999998,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[2].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       416.60400000000004,
+       252.67799999999997
+      ],
+      [
+       416.60400000000004,
+       251.80249999999995
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[2].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       457.40400000000005,
+       252.67799999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.90623000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 361.0878552631578,
+     "points_um": [
+      [
+       444.5880000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.54053000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.3058815789473,
+     "points_um": [
+      [
+       446.31600000000014,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul3",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     602.686368421053,
+     1253.7050000000004
+    ],
+    "x-y": [
+     32.53036842105308,
+     333.3246710526316
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 7909,
+   "best_free_point_um": [
+    548.64,
+    365.04
+   ],
+   "best_worst_excess_um": -149.7246710526316,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[3].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       619.6440000000003,
+       285.078
+      ],
+      [
+       619.6440000000003,
+       284.20249999999993
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[3].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       660.4440000000004,
+       285.078
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.37998000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.4644999999999,
+     "points_um": [
+      [
+       444.6840000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.72569000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.43067105263157,
+     "points_um": [
+      [
+       446.41200000000015,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul4",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     628.6063684210528,
+     1266.1662500000002
+    ],
+    "x-y": [
+     -373.1502499999999,
+     -149.33550000000042
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 5167,
+   "best_free_point_um": [
+    278.64000000000004,
+    540.0
+   ],
+   "best_worst_excess_um": -111.79024999999996,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[4].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       215.72399999999996,
+       714.9180000000003
+      ],
+      [
+       215.72399999999996,
+       714.0425000000004
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[4].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       256.52399999999994,
+       714.9180000000003
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.19712,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 359.3893157894736,
+     "points_um": [
+      [
+       444.7800000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.94641000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.1402499999999,
+     "points_um": [
+      [
+       446.50800000000015,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul5",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     562.6336710526319,
+     1078.7450000000001
+    ],
+    "x-y": [
+     -370.4023289473683,
+     -358.85550000000006
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 267,
+   "best_free_point_um": [
+    116.64000000000001,
+    481.68
+   ],
+   "best_worst_excess_um": -5.362328947368326,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[5].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       10.524000000000001,
+       719.238
+      ],
+      [
+       10.524000000000001,
+       718.3625000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[5].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       51.324,
+       719.238
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.27515000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.7603289473683,
+     "points_um": [
+      [
+       444.87600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.04499,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.6421184210526,
+     "points_um": [
+      [
+       446.60400000000016,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul6",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     1071.4063684210523,
+     1262.315
+    ],
+    "x-y": [
+     -372.3709999999999,
+     228.6645000000005
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 5240,
+   "best_free_point_um": [
+    648.0,
+    518.4000000000001
+   ],
+   "best_worst_excess_um": -94.9936315789476,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[6].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       626.1240000000001,
+       747.3179999999996
+      ],
+      [
+       626.1240000000001,
+       746.4424999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[6].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       666.9240000000002,
+       747.3179999999996
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.70600000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.82499999999993,
+     "points_um": [
+      [
+       444.97200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.67756,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.1255789473684,
+     "points_um": [
+      [
+       446.70000000000016,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "mul7",
+   "both_leg_constraints": 4,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     848.9263684210528,
+     1266.465710526316
+    ],
+    "x-y": [
+     -376.32971052631575,
+     40.74449999999979
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 6531,
+   "best_free_point_um": [
+    444.96000000000004,
+    606.96
+   ],
+   "best_worst_excess_um": -202.7444999999998,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_mult[7].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.10592,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.983,
+     "points_um": [
+      [
+       420.92400000000004,
+       730.0380000000002
+      ],
+      [
+       420.92400000000004,
+       729.1625000000003
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_mult[7].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.77791999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.83563157894736,
+     "points_um": [
+      [
+       461.72400000000005,
+       730.0380000000002
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mvalid[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.62442000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 354.87971052631576,
+     "points_um": [
+      [
+       445.06800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "mfault[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.26462,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.6689210526315,
+     "points_um": [
+      [
+       446.79600000000016,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "add0",
+   "both_leg_constraints": 8,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     565.9177500000003,
+     979.8946184210524
+    ],
+    "x-y": [
+     -367.11824999999993,
+     232.9741184210525
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 10270,
+   "best_free_point_um": [
+    395.28000000000003,
+    378.0
+   ],
+   "best_worst_excess_um": -206.61461842105248,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "copy_out[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.19509,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.86567105263157,
+     "points_um": [
+      [
+       280.0919999999999,
+       373.638
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "copy_out[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 169.33900999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 347.36051315789473,
+     "points_um": [
+      [
+       280.18799999999993,
+       373.638
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43541,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.8126184210526,
+     "points_um": [
+      [
+       252.44399999999993,
+       373.638
+      ],
+      [
+       252.44399999999993,
+       373.2825
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.26326,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0391315789473,
+     "points_um": [
+      [
+       279.03599999999994,
+       373.638
+      ],
+      [
+       279.03599999999994,
+       372.5965
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.46641000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.14025,
+     "points_um": [
+      [
+       450.5400000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.45663000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.4162763157894,
+     "points_um": [
+      [
+       450.6360000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "avalid[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.02641,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.98235526315784,
+     "points_um": [
+      [
+       447.85200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "af[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.38381,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.51209210526304,
+     "points_um": [
+      [
+       449.19600000000014,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "add1",
+   "both_leg_constraints": 8,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     829.1854868421046,
+     1269.8787236842109
+    ],
+    "x-y": [
+     -138.41051315789548,
+     336.8427236842105
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 10013,
+   "best_free_point_um": [
+    542.1600000000001,
+    483.84000000000003
+   ],
+   "best_worst_excess_um": -196.73051315789553,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "copy_out[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.19509,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.86567105263157,
+     "points_um": [
+      [
+       692.6519999999994,
+       483.7980000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "copy_out[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 169.33900999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 347.36051315789473,
+     "points_um": [
+      [
+       692.7479999999994,
+       483.7980000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43541,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.8126184210526,
+     "points_um": [
+      [
+       665.0039999999993,
+       483.7980000000001
+      ],
+      [
+       665.0039999999993,
+       483.4425000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.26326,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0391315789473,
+     "points_um": [
+      [
+       691.5959999999993,
+       483.7980000000001
+      ],
+      [
+       691.5959999999993,
+       482.75650000000013
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.33517,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.62872368421046,
+     "points_um": [
+      [
+       450.7320000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.32097000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.2789868421052,
+     "points_um": [
+      [
+       450.82800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "avalid[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.72045,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.069144736842,
+     "points_um": [
+      [
+       447.94800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "af[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.81234,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.9482368421052,
+     "points_um": [
+      [
+       449.29200000000014,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "add2",
+   "both_leg_constraints": 8,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     747.1054868421052,
+     1264.6482236842107
+    ],
+    "x-y": [
+     -364.8659868421052,
+     -276.78588157894745
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 1375,
+   "best_free_point_um": [
+    248.4,
+    570.24
+   ],
+   "best_worst_excess_um": -43.025986842105226,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "copy_out[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.19509,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.86567105263157,
+     "points_um": [
+      [
+       245.53199999999995,
+       848.838
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "copy_out[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 169.33900999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 347.36051315789473,
+     "points_um": [
+      [
+       245.62799999999996,
+       848.838
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43541,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.8126184210526,
+     "points_um": [
+      [
+       217.88399999999996,
+       848.838
+      ],
+      [
+       217.88399999999996,
+       848.4825
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.26326,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0391315789473,
+     "points_um": [
+      [
+       244.47599999999994,
+       848.838
+      ],
+      [
+       244.47599999999994,
+       847.7964999999999
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.54007000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.6749078947368,
+     "points_um": [
+      [
+       450.92400000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.81333,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.3679868421052,
+     "points_um": [
+      [
+       451.02000000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "avalid[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.52395,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.6961184210526,
+     "points_um": [
+      [
+       448.04400000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "af[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.28891000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.7422236842105,
+     "points_um": [
+      [
+       449.38800000000015,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "add3",
+   "both_leg_constraints": 8,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     1073.2654868421037,
+     1270.1954605263159
+    ],
+    "x-y": [
+     -136.25051315789563,
+     337.15946052631574
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 4403,
+   "best_free_point_um": [
+    680.4000000000001,
+    490.32000000000005
+   ],
+   "best_worst_excess_um": -97.45451315789637,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "copy_out[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.19509,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.86567105263157,
+     "points_um": [
+      [
+       815.7719999999988,
+       604.7579999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "copy_out[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 169.33900999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 347.36051315789473,
+     "points_um": [
+      [
+       815.8679999999988,
+       604.7579999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "vo"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43541,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.8126184210526,
+     "points_um": [
+      [
+       788.1239999999988,
+       604.7579999999997
+      ],
+      [
+       788.1239999999988,
+       604.4024999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.26326,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0391315789473,
+     "points_um": [
+      [
+       814.7159999999988,
+       604.7579999999997
+      ],
+      [
+       814.7159999999988,
+       603.7164999999998
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.38629,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.5614605263157,
+     "points_um": [
+      [
+       451.11600000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "add_copy[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.10409,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.5643552631578,
+     "points_um": [
+      [
+       451.21200000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "avalid[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.49946,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.35992105263153,
+     "points_um": [
+      [
+       448.14000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "af[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.5918,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 354.9226315789473,
+     "points_um": [
+      [
+       449.48400000000015,
+       466.51800000000014
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "shell_up",
+   "both_leg_constraints": 77,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     560.2220000000004,
+     816.5139210526315
+    ],
+    "x-y": [
+     -179.8659210526315,
+     198.39842105263125
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 3746,
+   "best_free_point_um": [
+    317.52000000000004,
+    375.84000000000003
+   ],
+   "best_worst_excess_um": -121.54592105263151,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.38649999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.87697368421055,
+     "points_um": [
+      [
+       321.22800000000007,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 177.63530999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 336.4443289473684,
+     "points_um": [
+      [
+       321.32400000000007,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[2]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.12578999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.95685526315793,
+     "points_um": [
+      [
+       321.4200000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[3]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.23747999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.75726315789467,
+     "points_um": [
+      [
+       321.5160000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[4]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 175.48123,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 339.27864473684207,
+     "points_um": [
+      [
+       321.6120000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[5]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.22302,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.4604999999999,
+     "points_um": [
+      [
+       321.7080000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[6]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.10369,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.93330263157884,
+     "points_um": [
+      [
+       321.8040000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[7]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.32872999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.32140789473686,
+     "points_um": [
+      [
+       321.9000000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[8]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.93062999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 355.79259210526317,
+     "points_um": [
+      [
+       321.9960000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[9]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.12756,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 356.84926315789465,
+     "points_um": [
+      [
+       322.0920000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[10]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.16896999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.21582894736844,
+     "points_um": [
+      [
+       322.1880000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[11]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.35580000000002,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.9173684210525,
+     "points_um": [
+      [
+       322.2840000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[12]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.97691999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 349.1527368421053,
+     "points_um": [
+      [
+       322.3800000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[13]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.52678999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.3765921052631,
+     "points_um": [
+      [
+       322.4760000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[14]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 176.20242,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 338.3297105263158,
+     "points_um": [
+      [
+       322.57200000000006,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[15]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.11790999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 356.86196052631584,
+     "points_um": [
+      [
+       322.66800000000006,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[16]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 179.02241999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 334.61918421052627,
+     "points_um": [
+      [
+       322.76400000000007,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[17]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.32403000000002,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 355.27496052631574,
+     "points_um": [
+      [
+       322.86000000000007,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[18]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 174.86932,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 340.08378947368413,
+     "points_um": [
+      [
+       322.9560000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[19]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.78905999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.0841315789474,
+     "points_um": [
+      [
+       323.0520000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[20]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 176.63616,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 337.75899999999996,
+     "points_um": [
+      [
+       323.1480000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[21]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.03088,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.7133157894736,
+     "points_um": [
+      [
+       323.2440000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[22]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.46052999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.1479868421053,
+     "points_um": [
+      [
+       323.3400000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[23]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 169.52687999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 347.11331578947363,
+     "points_um": [
+      [
+       323.4360000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[24]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.67272,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.81615789473676,
+     "points_um": [
+      [
+       323.5320000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[25]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 171.29760000000002,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 344.7834210526315,
+     "points_um": [
+      [
+       323.6280000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[26]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.7716,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.05447368421045,
+     "points_um": [
+      [
+       323.7240000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[27]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.43690999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.54748684210523,
+     "points_um": [
+      [
+       323.8200000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[28]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.57246999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 356.2638552631579,
+     "points_um": [
+      [
+       323.91600000000005,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[29]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.8312,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 357.2392105263158,
+     "points_um": [
+      [
+       324.01200000000006,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[30]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 172.91869999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 342.65039473684214,
+     "points_um": [
+      [
+       324.10800000000006,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "scale[31]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 174.48830999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 340.58511842105264,
+     "points_um": [
+      [
+       324.20400000000006,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "copy[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 176.69070000000002,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 337.6872368421052,
+     "points_um": [
+      [
+       316.0440000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "copy[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.27459000000002,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 356.6558026315789,
+     "points_um": [
+      [
+       316.1400000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "iv"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.96880000000002,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 357.05815789473684,
+     "points_um": [
+      [
+       313.9320000000001,
+       395.32200000000006
+      ],
+      [
+       313.9320000000001,
+       395.3535000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "phase"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.34428999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 357.87988157894733,
+     "points_um": [
+      [
+       314.98800000000006,
+       395.32200000000006
+      ],
+      [
+       314.98800000000006,
+       395.3535000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "go"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 160.43298000000001,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 359.07897368421044,
+     "points_um": [
+      [
+       312.8760000000001,
+       395.32200000000006
+      ],
+      [
+       312.8760000000001,
+       395.3535000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.96252,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 361.01378947368414,
+     "points_um": [
+      [
+       440.36400000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.86397000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 358.51188157894734,
+     "points_um": [
+      [
+       440.46000000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.67452,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.076947368421,
+     "points_um": [
+      [
+       440.55600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.60199,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.17238157894735,
+     "points_um": [
+      [
+       440.65200000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 131.38250000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 357.82960526315776,
+     "points_um": [
+      [
+       440.74800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.94344,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 359.72310526315783,
+     "points_um": [
+      [
+       440.84400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.03219,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 356.9747499999999,
+     "points_um": [
+      [
+       440.94000000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.01614,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.6800789473684,
+     "points_um": [
+      [
+       441.0360000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[8]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.05997000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.67503947368414,
+     "points_um": [
+      [
+       441.1320000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[9]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 131.38474000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 357.8266578947368,
+     "points_um": [
+      [
+       441.2280000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[10]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.54027000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.674644736842,
+     "points_um": [
+      [
+       441.3240000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[11]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 131.20005,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 358.0696710526315,
+     "points_um": [
+      [
+       441.4200000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[12]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.73156,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.0018947368421,
+     "points_um": [
+      [
+       441.5160000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[13]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 132.88052000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.8585263157894,
+     "points_um": [
+      [
+       441.6120000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[14]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.48641,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 355.06130263157894,
+     "points_um": [
+      [
+       441.7080000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[15]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.39185,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.5541447368421,
+     "points_um": [
+      [
+       441.80400000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[16]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.76442,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 354.6955,
+     "points_um": [
+      [
+       441.90000000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[17]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.08046000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.64807894736833,
+     "points_um": [
+      [
+       441.99600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[18]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 133.9572,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 354.4418421052631,
+     "points_um": [
+      [
+       442.09200000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[19]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.56845,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.32177631578946,
+     "points_um": [
+      [
+       442.18800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[20]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.15355000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.86769736842103,
+     "points_um": [
+      [
+       442.28400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[21]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.44748,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.16515789473675,
+     "points_um": [
+      [
+       442.38000000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[22]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.78497000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.3526710526315,
+     "points_um": [
+      [
+       442.47600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[23]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.0386,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.01894736842104,
+     "points_um": [
+      [
+       442.5720000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[24]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.42691000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.19222368421043,
+     "points_um": [
+      [
+       442.6680000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[25]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.80758,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.3229210526315,
+     "points_um": [
+      [
+       442.7640000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[26]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.69853,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 353.4664078947368,
+     "points_um": [
+      [
+       442.8600000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[27]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.45190000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.4751315789473,
+     "points_um": [
+      [
+       442.9560000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[28]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.82852,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.3479999999999,
+     "points_um": [
+      [
+       443.0520000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[29]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 134.18583,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 354.1410131578947,
+     "points_um": [
+      [
+       443.1480000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[30]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.60141000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 358.85735526315784,
+     "points_um": [
+      [
+       443.24400000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "scale[31]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.18556,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.19399999999996,
+     "points_um": [
+      [
+       443.34000000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "copy[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.65824,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.0983684210526,
+     "points_um": [
+      [
+       439.21200000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "copy[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.66194000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 358.77771052631573,
+     "points_um": [
+      [
+       439.30800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "in_v"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.02609,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.93014473684207,
+     "points_um": [
+      [
+       438.1560000000002,
+       466.51800000000014
+      ],
+      [
+       438.1560000000002,
+       466.4975000000002
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "phase"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.80620000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 358.5878947368421,
+     "points_um": [
+      [
+       437.1000000000002,
+       466.51800000000014
+      ],
+      [
+       437.1000000000002,
+       466.4975000000002
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "go"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.83611000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 358.5485394736841,
+     "points_um": [
+      [
+       436.04400000000015,
+       466.51800000000014
+      ],
+      [
+       436.04400000000015,
+       466.4975000000002
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.dsum",
+      "go"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 127.54692000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 362.87642105263154,
+     "points_um": [
+      [
+       459.8039999999999,
+       276.5219999999999
+      ],
+      [
+       459.8039999999999,
+       276.7934999999999
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.hsum",
+      "go"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 127.54692000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 362.87642105263154,
+     "points_um": [
+      [
+       306.44399999999973,
+       470.922
+      ],
+      [
+       306.44399999999973,
+       471.19350000000003
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.ksum",
+      "go"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 127.54692000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 362.87642105263154,
+     "points_um": [
+      [
+       299.96400000000006,
+       153.40199999999996
+      ],
+      [
+       299.96400000000006,
+       153.67349999999996
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "gate0",
+   "both_leg_constraints": 64,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     575.8371973684214,
+     925.8498815789471
+    ],
+    "x-y": [
+     -311.59510526315796,
+     338.6302763157895
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 8823,
+   "best_free_point_um": [
+    447.12,
+    304.56
+   ],
+   "best_worst_excess_um": -174.16988157894718,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.50333999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.09165789473684,
+     "points_um": [
+      [
+       455.53200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.57601,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.99603947368416,
+     "points_um": [
+      [
+       455.62800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[2]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.61744999999996,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.88888157894735,
+     "points_um": [
+      [
+       455.72400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[3]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.36223,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.27732894736835,
+     "points_um": [
+      [
+       455.82000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[4]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.05025,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 358.2667763157894,
+     "points_um": [
+      [
+       455.91600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[5]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.2256,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0886842105263,
+     "points_um": [
+      [
+       456.01200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[6]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.77019,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.7405394736841,
+     "points_um": [
+      [
+       456.1080000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[7]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 160.35026999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 359.18780263157896,
+     "points_um": [
+      [
+       456.2040000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[8]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.59719,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.96817105263153,
+     "points_um": [
+      [
+       456.3000000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[9]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.9887,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.4003947368421,
+     "points_um": [
+      [
+       456.3960000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[10]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.99016,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.45110526315784,
+     "points_um": [
+      [
+       456.4920000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[11]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.3655,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.7467105263157,
+     "points_um": [
+      [
+       456.5880000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[12]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.59371,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 349.65696052631574,
+     "points_um": [
+      [
+       456.6840000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[13]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.57310999999999,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.36827631578944,
+     "points_um": [
+      [
+       456.7800000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[14]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43959,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.80711842105256,
+     "points_um": [
+      [
+       456.87600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[15]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.54933,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.3469342105263,
+     "points_um": [
+      [
+       456.97200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[16]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.9973,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 366.2311842105263,
+     "points_um": [
+      [
+       457.06800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[17]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.30705999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 367.13939473684206,
+     "points_um": [
+      [
+       457.16400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[18]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.06691,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.6659078947368,
+     "points_um": [
+      [
+       457.26000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[19]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.71116999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.44977631578945,
+     "points_um": [
+      [
+       457.35600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[20]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.97102999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.79206578947367,
+     "points_um": [
+      [
+       457.45200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[21]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.66307,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.5130657894736,
+     "points_um": [
+      [
+       457.5480000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[22]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.62275999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.93452631578947,
+     "points_um": [
+      [
+       457.6440000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[23]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.67055,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.50322368421047,
+     "points_um": [
+      [
+       457.7400000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[24]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.43633,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.4956184210526,
+     "points_um": [
+      [
+       457.8360000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[25]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.21587,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.4699078947368,
+     "points_um": [
+      [
+       457.9320000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[26]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.10805,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.92756578947365,
+     "points_um": [
+      [
+       458.0280000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[27]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.24135,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.80480263157887,
+     "points_um": [
+      [
+       458.1240000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[28]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.84398,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.59081578947365,
+     "points_um": [
+      [
+       458.22000000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[29]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.40746000000001,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.84939473684204,
+     "points_um": [
+      [
+       458.31600000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[30]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.86201999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 355.88286842105265,
+     "points_um": [
+      [
+       458.41200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[31]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.89146999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.0546447368421,
+     "points_um": [
+      [
+       458.50800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.84651000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.64011842105253,
+     "points_um": [
+      [
+       305.62799999999993,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.3997,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 361.7543421052631,
+     "points_um": [
+      [
+       305.72399999999993,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.02678000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 359.61344736842096,
+     "points_um": [
+      [
+       305.81999999999994,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.16809,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2169868421052,
+     "points_um": [
+      [
+       305.91599999999994,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.30386000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.4067631578947,
+     "points_um": [
+      [
+       306.01199999999994,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.21335,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.84164473684206,
+     "points_um": [
+      [
+       306.10799999999995,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.93048000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.89805263157893,
+     "points_um": [
+      [
+       306.20399999999995,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.74576000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.45689473684206,
+     "points_um": [
+      [
+       306.2999999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[8]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.08568000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.3780526315789,
+     "points_um": [
+      [
+       306.3959999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[9]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.89550000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.6282894736841,
+     "points_um": [
+      [
+       306.4919999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[10]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.83261000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0268289473683,
+     "points_um": [
+      [
+       306.5879999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[11]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.11118,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2918684210526,
+     "points_um": [
+      [
+       306.6839999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[12]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.35501,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7078815789473,
+     "points_um": [
+      [
+       306.7799999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[13]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.95037000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.5560921052631,
+     "points_um": [
+      [
+       306.8759999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[14]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.16044,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.2796842105263,
+     "points_um": [
+      [
+       306.9719999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[15]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.45356,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.52557894736833,
+     "points_um": [
+      [
+       307.0679999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[16]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.77757000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0992499999999,
+     "points_um": [
+      [
+       307.16399999999993,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[17]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.97728,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.8364736842105,
+     "points_um": [
+      [
+       307.25999999999993,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[18]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.43106,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.5025526315789,
+     "points_um": [
+      [
+       307.35599999999994,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[19]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.58085,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 345.7265131578947,
+     "points_um": [
+      [
+       307.45199999999994,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[20]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.29936,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7811052631579,
+     "points_um": [
+      [
+       307.5479999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[21]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.47684,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.17915789473676,
+     "points_um": [
+      [
+       307.6439999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[22]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.70311,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.8814342105262,
+     "points_um": [
+      [
+       307.7399999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[23]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.6228,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.30289473684206,
+     "points_um": [
+      [
+       307.8359999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[24]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.59254,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.6585,
+     "points_um": [
+      [
+       307.9319999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[25]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.14464,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.6162631578947,
+     "points_um": [
+      [
+       308.0279999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[26]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.35183,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.6594342105263,
+     "points_um": [
+      [
+       308.1239999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[27]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.73196000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.84347368421044,
+     "points_um": [
+      [
+       308.2199999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[28]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.89563,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.25969736842103,
+     "points_um": [
+      [
+       308.3159999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[29]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.31449,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.0243552631579,
+     "points_um": [
+      [
+       308.4119999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[30]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.30560000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.3518421052631,
+     "points_um": [
+      [
+       308.5079999999999,
+       274.36199999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[0].leaf",
+      "gate[31]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.34176000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.67268421052626,
+     "points_um": [
+      [
+       308.6039999999999,
+       274.36199999999997
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "gate1",
+   "both_leg_constraints": 64,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     759.8488947368415,
+     1271.6662763157897
+    ],
+    "x-y": [
+     -9.19510526315861,
+     338.6302763157895
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 8729,
+   "best_free_point_um": [
+    557.2800000000001,
+    393.12
+   ],
+   "best_worst_excess_um": -173.3551052631587,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.50333999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.09165789473684,
+     "points_um": [
+      [
+       455.53200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.57601,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.99603947368416,
+     "points_um": [
+      [
+       455.62800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[2]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.61744999999996,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.88888157894735,
+     "points_um": [
+      [
+       455.72400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[3]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.36223,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.27732894736835,
+     "points_um": [
+      [
+       455.82000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[4]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.05025,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 358.2667763157894,
+     "points_um": [
+      [
+       455.91600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[5]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.2256,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0886842105263,
+     "points_um": [
+      [
+       456.01200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[6]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.77019,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.7405394736841,
+     "points_um": [
+      [
+       456.1080000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[7]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 160.35026999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 359.18780263157896,
+     "points_um": [
+      [
+       456.2040000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[8]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.59719,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.96817105263153,
+     "points_um": [
+      [
+       456.3000000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[9]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.9887,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.4003947368421,
+     "points_um": [
+      [
+       456.3960000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[10]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.99016,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.45110526315784,
+     "points_um": [
+      [
+       456.4920000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[11]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.3655,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.7467105263157,
+     "points_um": [
+      [
+       456.5880000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[12]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.59371,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 349.65696052631574,
+     "points_um": [
+      [
+       456.6840000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[13]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.57310999999999,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.36827631578944,
+     "points_um": [
+      [
+       456.7800000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[14]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43959,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.80711842105256,
+     "points_um": [
+      [
+       456.87600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[15]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.54933,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.3469342105263,
+     "points_um": [
+      [
+       456.97200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[16]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.9973,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 366.2311842105263,
+     "points_um": [
+      [
+       457.06800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[17]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.30705999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 367.13939473684206,
+     "points_um": [
+      [
+       457.16400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[18]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.06691,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.6659078947368,
+     "points_um": [
+      [
+       457.26000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[19]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.71116999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.44977631578945,
+     "points_um": [
+      [
+       457.35600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[20]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.97102999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.79206578947367,
+     "points_um": [
+      [
+       457.45200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[21]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.66307,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.5130657894736,
+     "points_um": [
+      [
+       457.5480000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[22]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.62275999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.93452631578947,
+     "points_um": [
+      [
+       457.6440000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[23]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.67055,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.50322368421047,
+     "points_um": [
+      [
+       457.7400000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[24]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.43633,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.4956184210526,
+     "points_um": [
+      [
+       457.8360000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[25]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.21587,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.4699078947368,
+     "points_um": [
+      [
+       457.9320000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[26]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.10805,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.92756578947365,
+     "points_um": [
+      [
+       458.0280000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[27]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.24135,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.80480263157887,
+     "points_um": [
+      [
+       458.1240000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[28]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.84398,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.59081578947365,
+     "points_um": [
+      [
+       458.22000000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[29]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.40746000000001,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.84939473684204,
+     "points_um": [
+      [
+       458.31600000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[30]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.86201999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 355.88286842105265,
+     "points_um": [
+      [
+       458.41200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[31]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.89146999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.0546447368421,
+     "points_um": [
+      [
+       458.50800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.84651000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.64011842105253,
+     "points_um": [
+      [
+       718.1879999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.3997,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 361.7543421052631,
+     "points_um": [
+      [
+       718.2839999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.02678000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 359.61344736842096,
+     "points_um": [
+      [
+       718.3799999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.16809,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2169868421052,
+     "points_um": [
+      [
+       718.4759999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.30386000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.4067631578947,
+     "points_um": [
+      [
+       718.5719999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.21335,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.84164473684206,
+     "points_um": [
+      [
+       718.6679999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.93048000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.89805263157893,
+     "points_um": [
+      [
+       718.7639999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.74576000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.45689473684206,
+     "points_um": [
+      [
+       718.8599999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[8]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.08568000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.3780526315789,
+     "points_um": [
+      [
+       718.9559999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[9]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.89550000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.6282894736841,
+     "points_um": [
+      [
+       719.0519999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[10]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.83261000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0268289473683,
+     "points_um": [
+      [
+       719.1479999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[11]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.11118,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2918684210526,
+     "points_um": [
+      [
+       719.2439999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[12]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.35501,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7078815789473,
+     "points_um": [
+      [
+       719.3399999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[13]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.95037000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.5560921052631,
+     "points_um": [
+      [
+       719.4359999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[14]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.16044,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.2796842105263,
+     "points_um": [
+      [
+       719.5319999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[15]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.45356,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.52557894736833,
+     "points_um": [
+      [
+       719.6279999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[16]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.77757000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0992499999999,
+     "points_um": [
+      [
+       719.7239999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[17]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.97728,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.8364736842105,
+     "points_um": [
+      [
+       719.8199999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[18]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.43106,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.5025526315789,
+     "points_um": [
+      [
+       719.9159999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[19]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.58085,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 345.7265131578947,
+     "points_um": [
+      [
+       720.0119999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[20]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.29936,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7811052631579,
+     "points_um": [
+      [
+       720.1079999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[21]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.47684,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.17915789473676,
+     "points_um": [
+      [
+       720.2039999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[22]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.70311,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.8814342105262,
+     "points_um": [
+      [
+       720.2999999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[23]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.6228,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.30289473684206,
+     "points_um": [
+      [
+       720.3959999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[24]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.59254,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.6585,
+     "points_um": [
+      [
+       720.4919999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[25]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.14464,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.6162631578947,
+     "points_um": [
+      [
+       720.5879999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[26]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.35183,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.6594342105263,
+     "points_um": [
+      [
+       720.6839999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[27]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.73196000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.84347368421044,
+     "points_um": [
+      [
+       720.7799999999994,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[28]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.89563,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.25969736842103,
+     "points_um": [
+      [
+       720.8759999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[29]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.31449,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.0243552631579,
+     "points_um": [
+      [
+       720.9719999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[30]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.30560000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.3518421052631,
+     "points_um": [
+      [
+       721.0679999999993,
+       384.5220000000001
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[1].leaf",
+      "gate[31]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.34176000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.67268421052626,
+     "points_um": [
+      [
+       721.1639999999993,
+       384.5220000000001
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "gate2",
+   "both_leg_constraints": 64,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     677.7688947368421,
+     1271.6662763157897
+    ],
+    "x-y": [
+     -357.1988026315788,
+     -132.63411842105273
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 4272,
+   "best_free_point_um": [
+    412.56,
+    656.6400000000001
+   ],
+   "best_worst_excess_um": -111.44588157894736,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.50333999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.09165789473684,
+     "points_um": [
+      [
+       455.53200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.57601,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.99603947368416,
+     "points_um": [
+      [
+       455.62800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[2]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.61744999999996,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.88888157894735,
+     "points_um": [
+      [
+       455.72400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[3]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.36223,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.27732894736835,
+     "points_um": [
+      [
+       455.82000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[4]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.05025,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 358.2667763157894,
+     "points_um": [
+      [
+       455.91600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[5]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.2256,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0886842105263,
+     "points_um": [
+      [
+       456.01200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[6]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.77019,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.7405394736841,
+     "points_um": [
+      [
+       456.1080000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[7]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 160.35026999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 359.18780263157896,
+     "points_um": [
+      [
+       456.2040000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[8]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.59719,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.96817105263153,
+     "points_um": [
+      [
+       456.3000000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[9]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.9887,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.4003947368421,
+     "points_um": [
+      [
+       456.3960000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[10]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.99016,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.45110526315784,
+     "points_um": [
+      [
+       456.4920000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[11]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.3655,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.7467105263157,
+     "points_um": [
+      [
+       456.5880000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[12]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.59371,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 349.65696052631574,
+     "points_um": [
+      [
+       456.6840000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[13]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.57310999999999,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.36827631578944,
+     "points_um": [
+      [
+       456.7800000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[14]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43959,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.80711842105256,
+     "points_um": [
+      [
+       456.87600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[15]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.54933,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.3469342105263,
+     "points_um": [
+      [
+       456.97200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[16]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.9973,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 366.2311842105263,
+     "points_um": [
+      [
+       457.06800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[17]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.30705999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 367.13939473684206,
+     "points_um": [
+      [
+       457.16400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[18]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.06691,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.6659078947368,
+     "points_um": [
+      [
+       457.26000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[19]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.71116999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.44977631578945,
+     "points_um": [
+      [
+       457.35600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[20]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.97102999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.79206578947367,
+     "points_um": [
+      [
+       457.45200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[21]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.66307,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.5130657894736,
+     "points_um": [
+      [
+       457.5480000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[22]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.62275999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.93452631578947,
+     "points_um": [
+      [
+       457.6440000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[23]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.67055,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.50322368421047,
+     "points_um": [
+      [
+       457.7400000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[24]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.43633,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.4956184210526,
+     "points_um": [
+      [
+       457.8360000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[25]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.21587,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.4699078947368,
+     "points_um": [
+      [
+       457.9320000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[26]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.10805,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.92756578947365,
+     "points_um": [
+      [
+       458.0280000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[27]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.24135,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.80480263157887,
+     "points_um": [
+      [
+       458.1240000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[28]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.84398,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.59081578947365,
+     "points_um": [
+      [
+       458.22000000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[29]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.40746000000001,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.84939473684204,
+     "points_um": [
+      [
+       458.31600000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[30]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.86201999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 355.88286842105265,
+     "points_um": [
+      [
+       458.41200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[31]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.89146999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.0546447368421,
+     "points_um": [
+      [
+       458.50800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.84651000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.64011842105253,
+     "points_um": [
+      [
+       271.0679999999999,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.3997,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 361.7543421052631,
+     "points_um": [
+      [
+       271.16399999999993,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.02678000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 359.61344736842096,
+     "points_um": [
+      [
+       271.25999999999993,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.16809,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2169868421052,
+     "points_um": [
+      [
+       271.35599999999994,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.30386000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.4067631578947,
+     "points_um": [
+      [
+       271.45199999999994,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.21335,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.84164473684206,
+     "points_um": [
+      [
+       271.54799999999994,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.93048000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.89805263157893,
+     "points_um": [
+      [
+       271.64399999999995,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.74576000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.45689473684206,
+     "points_um": [
+      [
+       271.73999999999995,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[8]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.08568000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.3780526315789,
+     "points_um": [
+      [
+       271.83599999999996,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[9]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.89550000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.6282894736841,
+     "points_um": [
+      [
+       271.93199999999996,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[10]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.83261000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0268289473683,
+     "points_um": [
+      [
+       272.02799999999996,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[11]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.11118,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2918684210526,
+     "points_um": [
+      [
+       272.12399999999997,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[12]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.35501,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7078815789473,
+     "points_um": [
+      [
+       272.21999999999997,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[13]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.95037000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.5560921052631,
+     "points_um": [
+      [
+       272.3159999999999,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[14]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.16044,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.2796842105263,
+     "points_um": [
+      [
+       272.4119999999999,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[15]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.45356,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.52557894736833,
+     "points_um": [
+      [
+       272.5079999999999,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[16]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.77757000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0992499999999,
+     "points_um": [
+      [
+       272.6039999999999,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[17]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.97728,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.8364736842105,
+     "points_um": [
+      [
+       272.69999999999993,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[18]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.43106,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.5025526315789,
+     "points_um": [
+      [
+       272.79599999999994,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[19]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.58085,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 345.7265131578947,
+     "points_um": [
+      [
+       272.89199999999994,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[20]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.29936,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7811052631579,
+     "points_um": [
+      [
+       272.98799999999994,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[21]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.47684,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.17915789473676,
+     "points_um": [
+      [
+       273.08399999999995,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[22]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.70311,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.8814342105262,
+     "points_um": [
+      [
+       273.17999999999995,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[23]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.6228,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.30289473684206,
+     "points_um": [
+      [
+       273.27599999999995,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[24]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.59254,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.6585,
+     "points_um": [
+      [
+       273.37199999999996,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[25]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.14464,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.6162631578947,
+     "points_um": [
+      [
+       273.46799999999996,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[26]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.35183,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.6594342105263,
+     "points_um": [
+      [
+       273.56399999999996,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[27]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.73196000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.84347368421044,
+     "points_um": [
+      [
+       273.65999999999997,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[28]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.89563,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.25969736842103,
+     "points_um": [
+      [
+       273.756,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[29]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.31449,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.0243552631579,
+     "points_um": [
+      [
+       273.852,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[30]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.30560000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.3518421052631,
+     "points_um": [
+      [
+       273.9479999999999,
+       749.562
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[2].leaf",
+      "gate[31]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.34176000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.67268421052626,
+     "points_um": [
+      [
+       274.0439999999999,
+       749.562
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "gate3",
+   "both_leg_constraints": 64,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     1003.9288947368406,
+     1271.6662763157897
+    ],
+    "x-y": [
+     -7.035105263158755,
+     338.6302763157895
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 4403,
+   "best_free_point_um": [
+    654.48,
+    483.84000000000003
+   ],
+   "best_worst_excess_um": -133.34627631578974,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.50333999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.09165789473684,
+     "points_um": [
+      [
+       455.53200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.57601,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.99603947368416,
+     "points_um": [
+      [
+       455.62800000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[2]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.61744999999996,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.88888157894735,
+     "points_um": [
+      [
+       455.72400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[3]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.36223,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.27732894736835,
+     "points_um": [
+      [
+       455.82000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[4]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.05025,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 358.2667763157894,
+     "points_um": [
+      [
+       455.91600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[5]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.2256,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.0886842105263,
+     "points_um": [
+      [
+       456.01200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[6]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.77019,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.7405394736841,
+     "points_um": [
+      [
+       456.1080000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[7]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 160.35026999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 359.18780263157896,
+     "points_um": [
+      [
+       456.2040000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[8]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.59719,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.96817105263153,
+     "points_um": [
+      [
+       456.3000000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[9]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.9887,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.4003947368421,
+     "points_um": [
+      [
+       456.3960000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[10]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.99016,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.45110526315784,
+     "points_um": [
+      [
+       456.4920000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[11]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.3655,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.7467105263157,
+     "points_um": [
+      [
+       456.5880000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[12]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.59371,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 349.65696052631574,
+     "points_um": [
+      [
+       456.6840000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[13]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.57310999999999,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.36827631578944,
+     "points_um": [
+      [
+       456.7800000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[14]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.43959,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.80711842105256,
+     "points_um": [
+      [
+       456.87600000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[15]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.54933,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.3469342105263,
+     "points_um": [
+      [
+       456.97200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[16]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.9973,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 366.2311842105263,
+     "points_um": [
+      [
+       457.06800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[17]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 154.30705999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 367.13939473684206,
+     "points_um": [
+      [
+       457.16400000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[18]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.06691,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.6659078947368,
+     "points_um": [
+      [
+       457.26000000000016,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[19]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.71116999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.44977631578945,
+     "points_um": [
+      [
+       457.35600000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[20]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.97102999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.79206578947367,
+     "points_um": [
+      [
+       457.45200000000017,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[21]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.66307,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.5130657894736,
+     "points_um": [
+      [
+       457.5480000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[22]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.62275999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 350.93452631578947,
+     "points_um": [
+      [
+       457.6440000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[23]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.67055,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.50322368421047,
+     "points_um": [
+      [
+       457.7400000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[24]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.43633,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.4956184210526,
+     "points_um": [
+      [
+       457.8360000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[25]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 166.21587,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 351.4699078947368,
+     "points_um": [
+      [
+       457.9320000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[26]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.10805,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.92756578947365,
+     "points_um": [
+      [
+       458.0280000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[27]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 168.24135,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 348.80480263157887,
+     "points_um": [
+      [
+       458.1240000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[28]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 163.84398,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 354.59081578947365,
+     "points_um": [
+      [
+       458.22000000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[29]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 164.40746000000001,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 353.84939473684204,
+     "points_um": [
+      [
+       458.31600000000014,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[30]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.86201999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 355.88286842105265,
+     "points_um": [
+      [
+       458.41200000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "a_gate[31]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 155.89146999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 365.0546447368421,
+     "points_um": [
+      [
+       458.50800000000015,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.84651000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.64011842105253,
+     "points_um": [
+      [
+       841.3079999999987,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.3997,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 361.7543421052631,
+     "points_um": [
+      [
+       841.4039999999987,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[2]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 130.02678000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 359.61344736842096,
+     "points_um": [
+      [
+       841.4999999999987,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[3]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.16809,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2169868421052,
+     "points_um": [
+      [
+       841.5959999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[4]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.30386000000001,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.4067631578947,
+     "points_um": [
+      [
+       841.6919999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[5]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.21335,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.84164473684206,
+     "points_um": [
+      [
+       841.7879999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[6]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.93048000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.89805263157893,
+     "points_um": [
+      [
+       841.8839999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[7]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.74576000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.45689473684206,
+     "points_um": [
+      [
+       841.9799999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[8]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.08568000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.3780526315789,
+     "points_um": [
+      [
+       842.0759999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[9]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.89550000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.6282894736841,
+     "points_um": [
+      [
+       842.1719999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[10]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.83261000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0268289473683,
+     "points_um": [
+      [
+       842.2679999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[11]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.11118,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.2918684210526,
+     "points_um": [
+      [
+       842.3639999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[12]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.35501,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7078815789473,
+     "points_um": [
+      [
+       842.4599999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[13]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.95037000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.5560921052631,
+     "points_um": [
+      [
+       842.5559999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[14]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.16044,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.2796842105263,
+     "points_um": [
+      [
+       842.6519999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[15]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.45356,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.52557894736833,
+     "points_um": [
+      [
+       842.7479999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[16]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.77757000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.0992499999999,
+     "points_um": [
+      [
+       842.8439999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[17]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.97728,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.8364736842105,
+     "points_um": [
+      [
+       842.9399999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[18]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 135.43106,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 352.5025526315789,
+     "points_um": [
+      [
+       843.0359999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[19]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 140.58085,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 345.7265131578947,
+     "points_um": [
+      [
+       843.1319999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[20]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 141.29936,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 344.7811052631579,
+     "points_um": [
+      [
+       843.2279999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[21]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.47684,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.17915789473676,
+     "points_um": [
+      [
+       843.3239999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[22]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.70311,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.8814342105262,
+     "points_um": [
+      [
+       843.4199999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[23]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.6228,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.30289473684206,
+     "points_um": [
+      [
+       843.5159999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[24]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.59254,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.6585,
+     "points_um": [
+      [
+       843.6119999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[25]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.14464,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 347.6162631578947,
+     "points_um": [
+      [
+       843.7079999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[26]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.35183,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.6594342105263,
+     "points_um": [
+      [
+       843.8039999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[27]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 139.73196000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 346.84347368421044,
+     "points_um": [
+      [
+       843.8999999999988,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[28]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.89563,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 349.25969736842103,
+     "points_um": [
+      [
+       843.9959999999987,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[29]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 137.31449,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 350.0243552631579,
+     "points_um": [
+      [
+       844.0919999999987,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[30]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 136.30560000000003,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 351.3518421052631,
+     "points_um": [
+      [
+       844.1879999999987,
+       505.4819999999997
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.g_add[3].leaf",
+      "gate[31]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 138.34176000000002,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 348.67268421052626,
+     "points_um": [
+      [
+       844.2839999999987,
+       505.4819999999997
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "group": "shell_dn",
+   "both_leg_constraints": 8,
+   "necessary_strip_bounds_um": {
+    "x+y": [
+     570.6171578947371,
+     1081.6740526315791
+    ],
+    "x-y": [
+     -361.7033421052631,
+     290.1825526315789
+    ]
+   },
+   "empty_even_before_obstacles": false,
+   "free_point_candidates": 13539,
+   "best_free_point_um": [
+    429.84000000000003,
+    395.28000000000003
+   ],
+   "best_worst_excess_um": -254.50284210526286,
+   "constraints": [
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "fault"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 167.59037999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 349.66134210526315,
+     "points_um": [
+      [
+       454.47600000000017,
+       466.51800000000014
+      ],
+      [
+       454.47600000000017,
+       465.8025000000002
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "gate_copy[0]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 162.38423,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 356.51153947368414,
+     "points_um": [
+      [
+       453.3240000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "gate_copy[1]"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 161.22208999999998,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 358.0406710526316,
+     "points_um": [
+      [
+       453.4200000000002,
+       466.51800000000014
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "mix.control",
+      "gate_v"
+     ],
+     "direction": "producer_to_capture",
+     "existing_native_ps": 165.16663999999997,
+     "allocated_new_leaf_native_ps": 190,
+     "reach_um": 352.8504736842105,
+     "points_um": [
+      [
+       452.26800000000014,
+       466.51800000000014
+      ],
+      [
+       452.26800000000014,
+       465.7545000000002
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "mf"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 128.16814,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 362.0590263157894,
+     "points_um": [
+      [
+       329.6760000000001,
+       395.32200000000006
+      ],
+      [
+       329.6760000000001,
+       395.59350000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "gc[0]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.04996,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.8987368421052,
+     "points_um": [
+      [
+       326.3160000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "gc[1]"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.20741,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.69156578947366,
+     "points_um": [
+      [
+       326.4120000000001,
+       395.32200000000006
+      ]
+     ]
+    },
+    {
+     "existing_endpoint": [
+      "shell.ctl",
+      "gv"
+     ],
+     "direction": "capture_to_consumer",
+     "existing_native_ps": 129.54714,
+     "allocated_new_leaf_native_ps": 220,
+     "reach_um": 360.24455263157887,
+     "points_um": [
+      [
+       325.2600000000001,
+       395.32200000000006
+      ],
+      [
+       325.2600000000001,
+       396.1695000000001
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "finite_design_reservations": [
+  {
+   "group": "mul0",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 202,
+   "best_capture_budget_given_launch220_ps": 205.46219999999988,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    246.24,
+    406.08000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul1",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 0,
+   "best_capture_budget_given_launch220_ps": 79.05899999999997,
+   "minimum_capture_tightening_from190_ps": 110.94100000000003,
+   "best_center_um": [
+    151.20000000000002,
+    479.52000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul2",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 22,
+   "best_capture_budget_given_launch220_ps": 290.8254,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    578.88,
+    285.12
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul3",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 337,
+   "best_capture_budget_given_launch220_ps": 372.11851999999965,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    578.88,
+    285.12
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul4",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 228,
+   "best_capture_budget_given_launch220_ps": 207.83301999999972,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    246.24,
+    440.64000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul5",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 0,
+   "best_capture_budget_given_launch220_ps": 165.15141999999992,
+   "minimum_capture_tightening_from190_ps": 24.848580000000084,
+   "best_center_um": [
+    151.20000000000002,
+    498.96000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul6",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 705,
+   "best_capture_budget_given_launch220_ps": 280.2527600000002,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    622.08,
+    589.6800000000001
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "mul7",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 552,
+   "best_capture_budget_given_launch220_ps": 230.8154199999998,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    542.1600000000001,
+    576.72
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "add0",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 246,
+   "best_capture_budget_given_launch220_ps": 404.4831099999999,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    270.0,
+    406.08000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "add1",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 706,
+   "best_capture_budget_given_launch220_ps": 341.15679000000057,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    622.08,
+    540.0
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "add2",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 0,
+   "best_capture_budget_given_launch220_ps": 110.97073,
+   "minimum_capture_tightening_from190_ps": 79.02927,
+   "best_center_um": [
+    246.24,
+    440.64000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "add3",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 705,
+   "best_capture_budget_given_launch220_ps": 278.83983000000126,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    622.08,
+    589.6800000000001
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "shell_up",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 91,
+   "best_capture_budget_given_launch220_ps": 382.9010599999999,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    274.32,
+    406.08000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "gate0",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 239,
+   "best_capture_budget_given_launch220_ps": 279.31732999999974,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    274.32,
+    440.64000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "gate1",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 463,
+   "best_capture_budget_given_launch220_ps": 309.4007700000002,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    552.96,
+    540.0
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "gate2",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 34,
+   "best_capture_budget_given_launch220_ps": 279.31732999999974,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    274.32,
+    440.64000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "gate3",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 444,
+   "best_capture_budget_given_launch220_ps": 307.75917000000027,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    555.12,
+    540.0
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  },
+  {
+   "group": "shell_dn",
+   "reservation_um": [
+    21.6,
+    21.6
+   ],
+   "hard_outline_L1_clearance_um": 21.6,
+   "pin_offset_conservative_radius_um": 21.6,
+   "target_capture_ps": 170,
+   "target_launch_ps": 220,
+   "unknown_root_skew_ps": 150,
+   "individually_legal_candidate_count": 256,
+   "best_capture_budget_given_launch220_ps": 283.2845599999997,
+   "minimum_capture_tightening_from190_ps": 0,
+   "best_center_um": [
+    274.32,
+    440.64000000000004
+   ],
+   "simultaneous18leaf_nonoverlap": "NOT_PROVEN: these are individual feasible regions only; no collective adoption"
+  }
+ ],
+ "scope": [
+  "Actual existing producer/consumer ETM/pins; proposed leaf pins and footprint are unknown, represented as a point only. Not a newleaf native PASS.",
+  "Both capture edges are screened, not merely producer adjacency. Empty region rejects current fixed endpoints under allocated native budgets.",
+  "Nonempty points require actual tiny-leaf source synthesis/LEF/arcs/clock/reset/PG/fanout and all incident pin access proof. No actual area estimate or adopted physical root delivery.",
+  "Grid includes Etransport reserve; using these points consumes channel and requires joint fullparent route/cut regrant."
+ ]
+}
