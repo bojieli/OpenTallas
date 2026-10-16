@@ -132856,5 +132856,22 @@
    "32 DMA bank child identities/outline and actual generated hierarchy names",
    "Controller strap implementation gap explicit"
   ]
+ },
+ "vm_strap_child_grants_2116": {
+  "file": "results/arch/hbm_die_v15/vm_strap_grants_2116.json",
+  "sha256": "163c24c4c3cf7213ea6b2622783c201f3734ad19f35d65719fcc2657bd49d33b",
+  "distinct_masters": 4,
+  "instances": 32,
+  "registered_constant_pins": [
+   "bid[2:0]",
+   "sid[1:0]"
+  ],
+  "parent_source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "parent_opt_in": {
+   "STRAP_BANKS": 1
+  },
+  "production_binding_adopted": false,
+  "parent_and_die_qualified": false,
+  "note": "Accepts original exact strap pin proposal; live source-frozen strap routes unchanged. No270x270/M6 resize adopted while current routes run."
  }
 }
