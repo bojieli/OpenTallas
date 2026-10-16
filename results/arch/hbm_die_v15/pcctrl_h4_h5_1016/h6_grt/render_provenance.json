@@ -1,0 +1,22 @@
+{
+  "source": "exact H6 completed5_1_grt.odb",
+  "job": "hdie_pc_ctrl_cfg-cfg-h6-nooverflight-west-6a9d24cd2",
+  "reported_tables": [
+    [
+      "2627664",
+      "932344",
+      "35.48",
+      "0",
+      "0",
+      "0"
+    ]
+  ],
+  "marker_file": "Derived empty visualization marker list because no congestion.rpt is emitted for zero overflow; actual count authoritative in flow.log",
+  "qualification": "GRT stage only, detailed route/TT/FF/native still OPEN",
+  "inspected_at": "2026-10-16T04:13:20.839331-07:00",
+  "actual_pngs_inspected": [
+    "images/congestion.png",
+    "images/density.png"
+  ],
+  "findings": "0 overflow in actual GRT report; west corridor distributed with localized dense bins, no broad red wall or macro-gap choke. Full M5 SRAM reservation removes prior cap-zero macro face overflight. Detailed route/signoff/native remain open."
+}
