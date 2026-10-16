@@ -45,6 +45,7 @@ import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
 import clock_entry_constraints  # noqa: E402
+import raw_macro_clocks  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -1373,6 +1374,10 @@ HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
 def gen_hooks(s: dict, kd: str) -> dict:
+    try:
+        raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
+    except (ValueError, OSError) as error:
+        raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
@@ -1385,6 +1390,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
+            pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
@@ -1755,6 +1761,12 @@ def referenced_paths(s: dict, kd: str) -> list:
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
     if s["macros"] or s["children"]:
         out.append(f"{kd}/place.tcl")
+    if s.get("soft_root_macro_masters") or s.get("soft_root_macro_bindings"):
+        try:
+            _, raw_paths = raw_macro_clocks.contract(s, ROOT)
+        except (ValueError, OSError) as error:
+            raise SpecError(str(error)) from error
+        out += ["tools/ref_tile/raw_macro_clocks.py", *raw_paths]
     return out
 
 
