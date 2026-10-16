@@ -118,11 +118,11 @@
   "macro_halo_um": 5.4
  },
  "recipe": 3,
- "structural_change": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
+ "structural_change": "Native input capture correction: routed A had 913 inputs above 190 ps, worst rs[405] 220.98393 ps, with pre-GPL HB2+BUF and an added routed HB2 hold cell. Replace the macro-oriented equal-delay spine (4264 sinks, TT R413.6 ps) with a sink-clustered CTS tree appropriate to this 254.88x129.6 standard-cell capture leaf; enforce actual pin-flop anchoring. Every RTL data/valid/control stage, mapped SRAM, source params STATIC_QK1/RL21/AGE34/HXK13 and boundary min/max constraint remains unchanged. Exact routed hold and all-pin native audit decide qualification.",
  "job": {
-  "owner": "codex:Qwen takeover2115",
-  "branch": "codex/qwen-takeover-2115",
-  "tag": "h13",
+  "owner": "codex:Q-ECTL-A native capture",
+  "branch": "codex/qwen-ectl-a-2116",
+  "tag": "ic1",
   "purpose": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
   "benches": [
    {
@@ -165,7 +165,7 @@
    "ot-epyc4",
    "ot-pve1"
   ],
-  "structural_change": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory."
+  "structural_change": "Native input capture correction: routed A had 913 inputs above 190 ps, worst rs[405] 220.98393 ps, with pre-GPL HB2+BUF and an added routed HB2 hold cell. Replace the macro-oriented equal-delay spine (4264 sinks, TT R413.6 ps) with a sink-clustered CTS tree appropriate to this 254.88x129.6 standard-cell capture leaf; enforce actual pin-flop anchoring. Every RTL data/valid/control stage, mapped SRAM, source params STATIC_QK1/RL21/AGE34/HXK13 and boundary min/max constraint remains unchanged. Exact routed hold and all-pin native audit decide qualification."
  },
  "boundary_tcl": [
   "physical/qwen_die_masters/sram_edge_guard.tcl"
@@ -177,11 +177,11 @@
  },
  "io_flop_at_pins": {
   "cols": 4,
-  "allow_none": true
+  "allow_none": false
  },
  "inhold": true,
  "outhold": true,
- "clock": "spine",
+ "clock": "cts",
  "slot_change_request": "qkd_ectl slot unchanged (647.976 x 129.576, three abutting leaves A 254.88 | B 254.88 | C 138.24); parent becomes rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv (wires only, ck[2:0]); C.x_a (W 94-106) -> A.x_i (E 112-124) and A.rs_o[0] -> C.rsv_i are parent nets over the B slot on M6+ (<= 255 um).",
  "children": [],
  "inter": [],
@@ -197,7 +197,7 @@
    "ROW_RETURN_LAT": 21,
    "HXK": 13
   },
-  "why": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory."
+  "why": "HXK13 production profile vs CLOSED h5; structural clock correction also replaces macro-oriented spine by sink-clustered CTS, strict actual pin capture anchoring; native capture221ps source path contains HB2+BUF plus four routed hold cells. RTL data/valid/control edge counts unchanged."
  },
  "purpose": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory."
 }
