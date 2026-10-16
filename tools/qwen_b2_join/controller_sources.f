@@ -70,7 +70,6 @@ rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv
 rtl/physical/ot_qfd_tt_ctlm_split.sv
 rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv
 rtl/qwen_split/qfd_seq_su_gateway.sv
-rtl/physical/qfd_sp_su64_sfu_glue_entries.sv
 rtl/qwen_split/qfd_native59_compute_service.sv
 rtl/physical/ot_qfd_collective_static_io_production.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv
@@ -109,14 +108,6 @@ rtl/physical/ot_qfd_collective_static_io.sv
 rtl/rom/ot_coll_tp8_static.sv
 rtl/physical/ot_qfd_io_collective_static.sv
 rtl/rom/ot_coll_static_linkcal.sv
-rtl/physical/ot_qfd_sp_su64_static_glue_entries.sv
-rtl/physical/ot_hdc_vstream_static_relay_entries.sv
-rtl/physical/ot_qfd_su_lane_relay.sv
-rtl/physical/ot_qfd_su_lane_relay_native.sv
-rtl/physical/qfd_su_static_copy_entries.sv
-rtl/physical/ot_qfd_su_copy_core.sv
-rtl/physical/ot_qfd_su_align_group4_hold.sv
-rtl/physical/ot_qfd_su_delay_hold.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv
