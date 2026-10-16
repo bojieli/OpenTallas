@@ -50,10 +50,10 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(r['schedule']['events'][1]['service_cycle'],15)
         self.assertEqual(len(r['schedule']['dependencies']),1)
 
-    def selected_profile_fixture(self):
-        name = 's81_vm_r4_c2_w1'
-        manifest = json.loads((VSP.ROOT / VSP.MEASURED_MANIFEST).read_text())
-        for path in set(manifest) | set(VSP.PROFILES[name]['receipts']) | {VSP.MEASURED_MANIFEST}:
+    def selected_profile_fixture(self, name='s81_vm_r4_c2_w1'):
+        prof = VSP.PROFILES[name]
+        manifest, artifacts, _ = VSP.measurement_for(prof, VSP.ROOT)
+        for path in set(manifest) | set(artifacts):
             target = self.root / path
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(VSP.ROOT / path, target)
@@ -71,6 +71,22 @@ class CompileTest(unittest.TestCase):
             raw_cycle=13, lane=2, service_cycle=13, commit_cycle=15, deadline_cycle=15)
         self.binding['jobs']['su']['accesses'][0].update(
             raw_cycle=8, service_cycle=8, response_cycle=17, deadline_cycle=17)
+
+    def test_a2f_hop1_compiles_source_pinned_parent_calendar(self):
+        self.selected_profile_fixture('s81_vm_a2f_hop1_r4_c2_w1')
+        write = self.binding['jobs']['field']['accesses'][0]
+        read = self.binding['jobs']['su']['accesses'][0]
+        write.update(raw_cycle=14, service_cycle=14)
+        read.update(raw_cycle=7, service_cycle=7, response_cycle=15, deadline_cycle=15)
+        result = self.run_compile()
+        self.assertTrue(result['dispatch_eligible'], result)
+        self.assertFalse(result['qualified'])
+        self.assertEqual(result['reservations']['vm_service_profile'], 's81_vm_a2f_hop1_r4_c2_w1')
+        write['raw_cycle'] -= 1
+        result = self.run_compile()
+        self.assertFalse(result['dispatch_eligible'])
+        self.assertIsNone(result['schedule'])
+        self.assertIn('profile_write_raw_edge', [v['kind'] for v in result['reservations']['violations']])
 
     def test_selected_profile_compiles_raw_and_returned_edges(self):
         self.selected_profile_fixture()
