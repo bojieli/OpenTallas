@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.qwen.compute.trial-failure.v1",
+  "trial": "r2f2",
+  "source_commit": "bf04c007d",
+  "status": "GEN_FAIL_NO_CASE",
+  "error": "relays: no free spot for bword_1 near (2143,9249)",
+  "qualification": "FAIL: no complete relay allocation, case, GRT or STA",
+  "source_audit_cause": "Homes changed actual coordinates but left historical col_x, PM-H-S corridor_lanes, row_y, tile height and field rectangles. Thus relay discovery used stale placement search geometry.",
+  "earlier_inference_correction": "bword_1 has 514 bits, not the 4112-bit frame assumed in the first informal note. A head-corridor collision is not established solely by the old point coordinate.",
+  "successor": "r2f3 source054f8cf98 derives geometry from all768 actualtile+station homes; occupied corridor can search full-rectangle-vacant row channels; every occupancy/reach/cut/timing gate retained"
+}
