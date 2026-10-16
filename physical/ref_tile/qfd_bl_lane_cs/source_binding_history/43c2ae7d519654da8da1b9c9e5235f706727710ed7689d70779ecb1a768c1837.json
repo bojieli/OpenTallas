@@ -1,0 +1,35 @@
+{
+ "qualification_status": "unqualified_previous_source_binding",
+ "original_result": {
+  "schema": "opentallas.ref_tile.gate_result.v1",
+  "kit": "qfd_bl_lane_cs",
+  "verdict": "WARN",
+  "generated": "2026-10-13T20:43:52-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": "220dfa378",
+  "clock": {
+   "max_root_sinks": 7692,
+   "root": "port:ck",
+   "cts": true,
+   "tt_insertion_ps": 367.6,
+   "tt_spread_ps": 34.0,
+   "declared_clock": "spine",
+   "limits": {
+    "sinks": 15000,
+    "insertion_ps": 300.0,
+    "spread_ps": 80.0
+   },
+   "verdict": "PASS",
+   "text": "7,692 sinks on the largest root <= 15,000; measured TT insertion 367.6 ps, leaf spread 34.0 ps"
+  },
+  "items": [
+   {
+    "severity": "WARN",
+    "check": "textbook.high_fanout",
+    "message": "reset port rst_n: 433 loads (433 flops, e.g. u_l.f_q$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+    "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+   }
+  ]
+ }
+}
