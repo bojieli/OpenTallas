@@ -1,6 +1,6 @@
 import unittest
 
-from case_reach import branches, xf
+from case_reach import branches, multicast_relay_ages, xf
 
 
 class BranchReach(unittest.TestCase):
@@ -21,6 +21,19 @@ class BranchReach(unittest.TestCase):
         for orient, result in expected.items():
             with self.subTest(orient=orient):
                 self.assertEqual(xf({'x': 10, 'y': 20, 'orient': orient}, 10, 20, 2, 3), result)
+
+    def test_direct_and_two_cycle_multicast_are_not_equal_age(self):
+        def edge(a, b):
+            return dict(source=[*a, 0, 1], sink=[*b, 0, 1], bits=1)
+        c = dict(instances={n: dict(master='hbfd_rly_48_NS' if n.startswith('r') else 'opaque')
+                            for n in ('source', 'near', 'far', 'r0', 'r1')},
+                 edges=[edge(('source', 'o'), ('near', 'i')), edge(('source', 'o'), ('r0', 'i')),
+                        edge(('r0', 'o'), ('r1', 'i')), edge(('r1', 'o'), ('far', 'i'))])
+        result = multicast_relay_ages(c)
+        self.assertEqual(result['unequal_relay_age'], 1)
+        self.assertEqual(result['rows'][0]['min_relay_cycles'], 0)
+        self.assertEqual(result['rows'][0]['max_relay_cycles'], 2)
+        self.assertIn('UNPROVEN', result['rows'][0]['compiled_equal_age_calendar'])
 
 
 if __name__ == '__main__':

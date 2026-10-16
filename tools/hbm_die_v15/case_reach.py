@@ -65,10 +65,47 @@ def branches(ends, directions):
     return [(driver, load, abs(driver[2][0] - load[2][0]) + abs(driver[2][1] - load[2][1])) for load in loads]
 
 
+def multicast_relay_ages(contract):
+    """Trace explicit one-cycle hbfd relay RTL only; opaque units need compiler timing proof."""
+    links = defaultdict(list)
+    for e in contract['edges']:
+        si, sp, slo, _ = e['source']; ti, tp, tlo, _ = e['sink']
+        for bit in range(e['bits']):
+            links[(si, sp, slo + bit)].append((ti, tp, tlo + bit))
+    masters = {n: d['master'] for n, d in contract['instances'].items()}
+    result = []
+    for driver, sinks in links.items():
+        if len(sinks) < 2:
+            continue
+        terminal, failures = [], []
+        todo = [(s, 0, frozenset()) for s in sinks]
+        while todo:
+            sink, age, visited = todo.pop()
+            if sink in visited:
+                failures.append(dict(endpoint=list(sink), reason='relay cycle'))
+                continue
+            if masters.get(sink[0], '').startswith('hbfd_rly_') and sink[1] == 'i':
+                next_ = links.get((sink[0], 'o', sink[2]), [])
+                if not next_:
+                    failures.append(dict(endpoint=list(sink), reason='undriven relay output continuation'))
+                todo.extend((s, age + 1, visited | {sink}) for s in next_)
+            else:
+                terminal.append(dict(endpoint=list(sink), explicit_relay_cycles=age))
+        ages = [x['explicit_relay_cycles'] for x in terminal]
+        result.append(dict(driver=list(driver), direct_sinks=len(sinks), terminals=terminal, failures=failures,
+                           relay_age_equal=bool(ages) and not failures and min(ages) == max(ages),
+                           min_relay_cycles=min(ages, default=None), max_relay_cycles=max(ages, default=None),
+                           compiled_equal_age_calendar='UNPROVEN: source relay depth alone does not prove reserved cycles'))
+    return dict(qualification='SOURCE_GRAPH_ONLY; no hidden opaque-unit latency or calendar proof',
+                multicast_driver_bits=len(result), unequal_relay_age=sum(not r['relay_age_equal'] for r in result),
+                rows=result)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('case'); ap.add_argument('--reach', type=float, default=500.0)
     ap.add_argument('--paths', nargs='*', default=[]); ap.add_argument('--out')
+    ap.add_argument('--contract', help='frozen source contract for explicit multicast relay-depth/calendar audit')
     a = ap.parse_args()
     c = Path(a.case)
     man = json.loads((c / 'manifest.json').read_text())
@@ -163,6 +200,8 @@ def main():
                     r['max_len'] = max(r['max_len'], ln[0])
             classes[Path(pf).name] = dict(sorted(cls.items(), key=lambda kv: kv[1]['worst']))
         res['sta_classes'] = classes
+    if a.contract:
+        res['source_multicast_relay_ages'] = multicast_relay_ages(json.loads(Path(a.contract).read_text()))
     out = Path(a.out) if a.out else c / 'reach.json'
     out.write_text(json.dumps(res, indent=1))
     print(json.dumps({k: res[k] for k in ('nets', 'over_reach', 'max_um', 'mean_um')}))
