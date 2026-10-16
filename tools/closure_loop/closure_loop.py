@@ -92,6 +92,8 @@ RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-k
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
                          r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+# DETERMINISTIC-NO-RETRY 2026-10-15: route first errors that never passed on a same-input retry (see crash())
+DETERMINISTIC_ROUTE_ERR_RE = re.compile(r"\b(?:DPL-0033|GPL-0305|PPL-0093|PPL-0111|ANT-0008|PDN-0233|MPL-0020|STA-0340)\b")
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
 # g++ bus error on EPYC2 -> NEEDS_RTL although the bench never ran): crash -> retry once on another host -> NEEDS_HUMAN
 BENCH_CRASH_RC = (124, 126, 127, 134, 135, 137, 139, 143)   # 126/127: cannot execute / not found (a truncated
@@ -4250,7 +4252,7 @@ def crash(j, st, fleet, why):
     if err:
         why = re.sub(r"ok-check failed: *(;|$)", "ok-check failed;", why)
         why = f"{why}; first error: {err}"
-    if st["kind"] == "route" and "GRT-0116" in (err + tail) and not why.startswith("LOST"):
+    if st["kind"] == "route" and re.search(r"GRT-0116|GRT-0232", err + tail) and not why.startswith("LOST"):
         # stuckscan 2026-10-08: GRT gave up with congestion -- deterministic for this floorplan; a retry re-spends the
         # whole route (hbm_coll_port_big/rows, s81b-vm_bgh-grid: 'retry once on the same host')
         finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
@@ -4260,6 +4262,15 @@ def crash(j, st, fleet, why):
     resource = bool(RESOURCE_RE.search(tail + " " + err)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:], first_error=err))
+    det = DETERMINISTIC_ROUTE_ERR_RE.search(err) if st["kind"] == "route" and not resource else None
+    if det:
+        # DETERMINISTIC-NO-RETRY 2026-10-15 (ROOT): daemon.log 10-06..10-15, every same-input retry of these first
+        # errors failed again with the same error (DPL-0033 30/30+, GPL-0305 15/15, PPL-0093 14/14, ANT-0008 11/11,
+        # PDN-0233 9/9, MPL-0020 7/7, PPL-0111 6/6, STA-0340 5/5): a retry re-spent the whole route for nothing.
+        finish(j, "NEEDS_HUMAN", f"{st['key']} failed deterministically ({det.group(0)}), not retried: {err[:300]}",
+               f"NEEDS_HUMAN: {st['key']} first error {det.group(0)} is deterministic for these inputs (measured: every "
+               f"same-input retry failed again); fix the kit/floorplan and resubmit.\n{err[:300]}")
+        return
     if j["retries_used"] >= 1:
         finish(j, "NEEDS_HUMAN", f"{st['key']} crashed twice ({why}; resource={resource})"[:600],
                f"NEEDS_HUMAN: {st['key']} crashed twice ({why}); last log tail:\n" +
@@ -6989,6 +7000,32 @@ def trim_snapshot(tp):
         with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
             f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
     return b
+if mode == "src" and a.get("keep_config_paths"):
+    # GRT183 2026-10-15 (ROOT): a NEEDS_HUMAN route is diagnosed by re-running its saved ORFS state, which reads the
+    # /src files its config.mk names (macro LEF/Liberty/GDS, kit SDC/TCL): qfd_tt_scale_leaf-tg1's replay died on a
+    # trimmed ot_sram_1r1w_128x256_m1_r2c2_tt.lib.  Keep every config-named /src path; for a path >= 3 levels deep
+    # (physical/asap7_memory_macros/<macro>/..., physical/ref_tile/<kit>/...) keep its whole directory (all corners).
+    import re as _re
+    for dp, dn, fn in os.walk(R):
+        if dp == R + "/src" or dp.startswith(R + "/src/") or "/bench_src" in dp:
+            dn[:] = []
+            continue
+        if "config.mk" not in fn:
+            continue
+        try:
+            txt = open(os.path.join(dp, "config.mk"), errors="replace").read()
+        except OSError:
+            continue
+        for rel in set(_re.findall(r"/src/([A-Za-z0-9_./+-]+)", txt)):
+            rel = os.path.normpath(rel)
+            if rel.startswith(".."):
+                continue
+            p = os.path.join(R, "src", rel)
+            d = os.path.dirname(rel)
+            if d.count("/") >= 2 and os.path.isdir(os.path.join(R, "src", d)):
+                p = os.path.join(R, "src", d)
+            if os.path.exists(p):
+                hard.append(p)
 if mode == "src":
     # SRC-RELEASE (ROOT 2026-10-15): only the git snapshots (src/, bench_src*/) at the job's own commit, trimmed to the
     # receipt-named paths; nothing else in the run dir is touched
@@ -7405,7 +7442,8 @@ def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
                 continue
             full = git("rev-parse", commit + "^{commit}").stdout.strip()
             run = j["run"].rstrip("/")
-            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")])
+            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       keep_config_paths=j["status"] == "NEEDS_HUMAN")
             r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
             n += 1
             m = re.search(r"DEEP_FREED (\d+)", r.stdout)

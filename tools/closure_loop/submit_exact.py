@@ -64,7 +64,10 @@ def consumed_paths(spec):
 def move_spec(spec, commit):
     """spec at a new source commit; the conventional '-<commit>' name suffix follows it"""
     c9 = commit[:9]
-    spec = json.loads(json.dumps(spec))
+    # a kit job.json written by `ref_tile.py gen` carries the literal placeholder COMMIT in its name and record paths
+    # ("<name>-<tag>-COMMIT"): resolve it to the commit (S-NET+FILL 2026-10-15: five node jobs reached the daemon as
+    # "...-n6-COMMIT-<c9>" with record paths ending in "-COMMIT")
+    spec = json.loads(re.sub(r'-COMMIT(?=["/])', '-' + c9, json.dumps(spec)))
     spec.setdefault("source", {})["commit"] = c9
     m = SUFFIX.search(spec["name"])
     spec["name"] = (spec["name"][:m.start()] if m else spec["name"]) + "-" + c9

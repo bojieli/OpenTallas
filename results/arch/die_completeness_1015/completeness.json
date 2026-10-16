@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.die_completeness.v1",
- "date": "2026-10-15 20:23 PDT",
- "origin_main": "12e9400e1",
- "registry_generated": 1792121020.3208494,
+ "date": "2026-10-15 22:23 PDT",
+ "origin_main": "4346225dc",
+ "registry_generated": 1792128197.0148058,
  "native_budget": {
   "launch_ps": 220,
   "capture_ps": 190,
@@ -155,7 +155,7 @@
      "instances": 1,
      "rtl_kind": "real",
      "cls": "routed-failed",
-     "detail": "needs redesign (no live job); 3 failed job(s)",
+     "detail": "needs redesign (no live job); 5 failed job(s)",
      "registry": "needs redesign (no live job)",
      "owner": "Q-LINK",
      "open_inputs": [
@@ -774,7 +774,8 @@
       "port_bind": "2026-10-15 20:01:10 DIE_PORT_BIND FAIL masters=37 instances=1638 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=71 input_tied=0 unparsed_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_as",
       "views": "2026-10-15 20:01:10 real views: 8 masters / 793 of 1637 instances",
       "src": "711ec663b",
-      "gen": "2026-10-15 20:05:01 real case: OT_LEGAL instances=6385 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE "
+      "gen": "2026-10-15 20:05:01 real case: OT_LEGAL instances=6385 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE ",
+      "pdn": "2026-10-15 20:39:27 PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: io_serdes=3 up4_sel_station=1 io_ucie=1 "
      },
      "grt_overflow": null,
      "tt_wns_ps": null,
@@ -784,7 +785,7 @@
      "pdn_skipped": false,
      "host": "ot-epyc4",
      "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c23s/chain/STATUS.log",
-     "mtime": "2026-10-15 20:05 PDT",
+     "mtime": "2026-10-15 20:39 PDT",
      "src": {
       "commit": "711ec663b",
       "time": "2026-10-15T19:47:58-07:00"
@@ -810,7 +811,7 @@
      "pdn_skipped": false,
      "host": "repo",
      "path": "results/arch/qwen_split_compute_1014/c16s_terminal/STATUS.log",
-     "mtime": "2026-10-15 01:46 PDT",
+     "mtime": "2026-10-15 01:43 PDT",
      "src": {
       "commit": "675166521",
       "time": "2026-10-14T21:35:10-07:00"
@@ -840,21 +841,21 @@
    ],
    "netlist": {
     "host": "ot-epyc1tb",
-    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/port_bind_launch.json",
-    "mtime": "2026-10-15 19:14 PDT",
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/port_bind_launch.json",
+    "mtime": "2026-10-15 22:18 PDT",
     "schema": "opentallas.qwen_kv_die_port_bind.v1",
-    "die_v": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/case_kv/die.v",
+    "die_v": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/case_kv/die.v",
     "die_sha256": null
    },
    "bind_summary": {
     "verdict": "FAIL",
-    "masters": 53,
-    "instances": 19738,
+    "masters": 58,
+    "instances": 19342,
     "unbound_masters": 0,
     "stub_masters": 0,
     "port_not_in_rtl": 0,
     "width_mismatch": 0,
-    "input_unconnected": 27,
+    "input_unconnected": 25,
     "input_tied": null,
     "undriven_net_bits": null,
     "multi_driven_net_bits": null,
@@ -865,8 +866,8 @@
       "instances": 9
      },
      "REAL": {
-      "masters": 42,
-      "instances": 19597
+      "masters": 47,
+      "instances": 19201
      },
      "MISMATCH": {
       "masters": 6,
@@ -1120,8 +1121,8 @@
      "master": "qkd_ectl_a_tp8_epoch_direct",
      "instances": 32,
      "rtl_kind": "real",
-     "cls": "closed + native PASS",
-     "detail": "launch 183.8 / capture 153.1",
+     "cls": "closed, native FAIL",
+     "detail": "capture 220.98393 > 190 (913 pins)",
      "registry": "closed (TT era)",
      "owner": "Q-KVSYS-ELEM",
      "open_inputs": [],
@@ -1134,7 +1135,7 @@
      "instances": 32,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
-     "detail": "launch 181.3 / capture 163.2",
+     "detail": "launch 184.4 / capture 155.3",
      "registry": "closed (TT era)",
      "owner": "Q-KVSYS-ELEM",
      "open_inputs": [],
@@ -1147,7 +1148,7 @@
      "instances": 32,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
-     "detail": "launch 194.6 / capture 159.4",
+     "detail": "launch 189.1 / capture 148.3",
      "registry": "closed (TT era)",
      "owner": "Q-KVSYS-ELEM",
      "open_inputs": [],
@@ -1197,6 +1198,19 @@
      "real_view_in_die_run": null
     },
     {
+     "master": "qkd_hgs",
+     "instances": 320,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "qkd_host_rt",
      "instances": 1,
      "rtl_kind": "mismatch",
@@ -1205,9 +1219,7 @@
      "registry": "not started (open)",
      "owner": "Q-KVSYS-DIE",
      "open_inputs": [
-      "ctrl_completion_fault",
-      "engine_admit_ready",
-      "physical_fault"
+      "ctrl_completion_fault"
      ],
      "width": [],
      "port_fault": [],
@@ -1248,6 +1260,19 @@
      "real_view_in_die_run": null,
      "dedupe": "ph1: REPLACE by qkd_hslice mirrored (MX/MY), the second copy needs no RTL of its own",
      "dedupe_rebind": true
+    },
+    {
+     "master": "qkd_hss",
+     "instances": 192,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
     },
     {
      "master": "qkd_kvwq_ctl_bin",
@@ -1320,7 +1345,7 @@
     },
     {
      "master": "qkd_rly_1",
-     "instances": 439,
+     "instances": 451,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1335,7 +1360,7 @@
     },
     {
      "master": "qkd_rly_1025",
-     "instances": 221,
+     "instances": 242,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1365,7 +1390,7 @@
     },
     {
      "master": "qkd_rly_13",
-     "instances": 2,
+     "instances": 3,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1380,7 +1405,7 @@
     },
     {
      "master": "qkd_rly_17",
-     "instances": 214,
+     "instances": 244,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1395,7 +1420,7 @@
     },
     {
      "master": "qkd_rly_2",
-     "instances": 118,
+     "instances": 119,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1470,7 +1495,7 @@
     },
     {
      "master": "qkd_rly_291",
-     "instances": 155,
+     "instances": 154,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1485,7 +1510,7 @@
     },
     {
      "master": "qkd_rly_293",
-     "instances": 124,
+     "instances": 123,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1530,7 +1555,7 @@
     },
     {
      "master": "qkd_rly_36",
-     "instances": 26,
+     "instances": 13,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1575,7 +1600,7 @@
     },
     {
      "master": "qkd_rly_540",
-     "instances": 73,
+     "instances": 66,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1590,7 +1615,7 @@
     },
     {
      "master": "qkd_rly_563",
-     "instances": 26,
+     "instances": 16,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no closure-loop job yet",
@@ -1620,7 +1645,20 @@
     },
     {
      "master": "qkd_rly_t1",
-     "instances": 5245,
+     "instances": 4126,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "qkd_rst_region",
+     "instances": 50,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no registry row",
@@ -1648,15 +1686,41 @@
      "width": [],
      "port_fault": [],
      "real_view_in_die_run": null
+    },
+    {
+     "master": "qkh_head_gather_stage",
+     "instances": 64,
+     "rtl_kind": "real",
+     "cls": "closed + native PASS",
+     "detail": "launch 159.6 / capture 157.1",
+     "registry": "closed (TT era)",
+     "owner": "Codex:el1014-qwen-kvsys-elements",
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "qkh_head_sstage",
+     "instances": 64,
+     "rtl_kind": "real",
+     "cls": "closed + native PASS",
+     "detail": "launch 201.1 / capture 79.5",
+     "registry": "closed (TT era)",
+     "owner": "Claude:el1014-qwen-kvsys-elements",
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
     }
    ],
    "contract_missing": [
     {
      "master": "qkd_d2d_static",
      "cls": "routed-failed",
-     "registry": "failed, re-running",
+     "registry": "needs redesign (no live job)",
      "owner": "Q-LINK",
-     "detail": "failed, re-running; 2 failed job(s)"
+     "detail": "needs redesign (no live job); 3 failed job(s)"
     },
     {
      "master": "qkd_embedding_static_core_provider",
@@ -1681,25 +1745,25 @@
     }
    ],
    "view_state_masters": {
-    "closed + native PASS": 12,
-    "closed, native FAIL": 4,
+    "closed + native PASS": 13,
+    "closed, native FAIL": 5,
     "closed, native unmeasured": 0,
     "routed-failed": 0,
     "in flight": 0,
     "parent: leaves closed, not hardened": 3,
-    "RTL only (no route yet)": 28,
+    "RTL only (no route yet)": 31,
     "missing RTL": 0,
     "superseded but in netlist": 0,
     "hard macro / PHY (allowed model)": 6
    },
    "view_state_instances": {
-    "closed + native PASS": 9192,
-    "closed, native FAIL": 2305,
+    "closed + native PASS": 9288,
+    "closed, native FAIL": 2337,
     "closed, native unmeasured": 0,
     "routed-failed": 0,
     "in flight": 0,
     "parent: leaves closed, not hardened": 3,
-    "RTL only (no route yet)": 8228,
+    "RTL only (no route yet)": 7704,
     "missing RTL": 0,
     "superseded but in netlist": 0,
     "hard macro / PHY (allowed model)": 10
@@ -1715,8 +1779,8 @@
      "qkd_hslice_dn x64 (mismatch)",
      "qkd_seq x1 (mismatch)"
     ],
-    "no_closed_view_masters": 31,
-    "no_closed_view_instances": 8231,
+    "no_closed_view_masters": 34,
+    "no_closed_view_instances": 7707,
     "die_run_real_view": {
      "src": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8/classify_kvs8.json",
      "mtime": "2026-10-15 17:05 PDT",
@@ -1726,7 +1790,7 @@
     }
    },
    "bind_open": {
-    "input_ports_unconnected": 27,
+    "input_ports_unconnected": 25,
     "masters_with_open_inputs": 6,
     "width_mismatch": 0,
     "die_port_not_in_rtl": 0
@@ -1734,23 +1798,21 @@
    "die_runs": [
     {
      "events": {
-      "src": "eaa29a4be4aff90402a2a1dcd96061680bf8793e",
-      "port_bind": "2026-10-15 19:14:42 NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE",
-      "gen": "2026-10-15 19:14:42 real case: OT_LEGAL instances=27810 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE ",
-      "pdn": "2026-10-15 19:14:41 PDN FLOW FIX 2 (main 5b9c813fa): die-top tie rows + M1/M2 followpins (8072 ties placed on 4194 local rows, test pass); resume from pdn"
+      "src": "5f554a767",
+      "port_bind": "2026-10-15 22:18:20 NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE"
      },
      "grt_overflow": null,
      "tt_wns_ps": null,
      "ff_setup_wns_ps": null,
      "ff_hold_wns_ps": null,
-     "gen_instances": 27810.0,
+     "gen_instances": null,
      "pdn_skipped": false,
      "host": "ot-epyc1tb",
-     "path": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/STATUS.log",
-     "mtime": "2026-10-15 19:14 PDT",
+     "path": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/STATUS.log",
+     "mtime": "2026-10-15 22:18 PDT",
      "src": {
-      "commit": "eaa29a4be",
-      "time": "2026-10-15T13:39:30-07:00"
+      "commit": "5f554a767",
+      "time": "2026-10-15T22:02:42-07:00"
      }
     },
     {
@@ -1779,14 +1841,14 @@
     }
    ],
    "remaining": {
-    "masters_not_closed_native": 39,
-    "of_which_in_netlist": 35,
+    "masters_not_closed_native": 43,
+    "of_which_in_netlist": 39,
     "of_which_contract_missing": 4,
     "placeholders_to_replace": 10,
-    "inputs_to_bind": 27,
-    "total": 76,
+    "inputs_to_bind": 25,
+    "total": 78,
     "dedupe_phase1_rebinds": 23,
-    "masters_not_closed_native_after_dedupe": 16
+    "masters_not_closed_native_after_dedupe": 20
    }
   },
   {
@@ -1801,16 +1863,16 @@
    ],
    "netlist": {
     "host": "ot-epyc4",
-    "path": "/srv/opentallas-scratch/claude/s81-die-r10/bind21/port_bind.json",
-    "mtime": "2026-10-15 14:02 PDT",
+    "path": "/srv/opentallas-scratch/claude/s81-die-iter/c21h/port_bind.json",
+    "mtime": "2026-10-15 20:40 PDT",
     "schema": "opentallas.die_port_bind.v2",
-    "die_v": "/srv/opentallas-scratch/claude/s81-die-r10/bind21/gen/construction_pass0_die.v",
-    "die_sha256": "711b87279420506d"
+    "die_v": "/srv/opentallas-scratch/claude/s81-die-iter/c21h/nl/die.v",
+    "die_sha256": "c90a30897574f917"
    },
    "bind_summary": {
     "verdict": "FAIL",
-    "masters": 221,
-    "instances": 81423,
+    "masters": 255,
+    "instances": 84387,
     "unbound_masters": 0,
     "stub_masters": 0,
     "port_not_in_rtl": 0,
@@ -1840,8 +1902,8 @@
      "instances": 519,
      "rtl_kind": "real",
      "cls": "routed-failed",
-     "detail": "failed, re-running; 2 failed job(s)",
-     "registry": "failed, re-running",
+     "detail": "needs redesign (no live job); 3 failed job(s)",
+     "registry": "needs redesign (no live job)",
      "owner": "S-ELEM-B",
      "open_inputs": [],
      "width": [],
@@ -1915,7 +1977,7 @@
     },
     {
      "master": "dsfd_hstnh_1",
-     "instances": 9,
+     "instances": 68,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 163.9 / capture 102.8",
@@ -1944,8 +2006,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnh_1027",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_1029",
-     "instances": 2,
+     "instances": 6,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 195.6 / capture 135.6",
@@ -1960,7 +2035,7 @@
     },
     {
      "master": "dsfd_hstnh_11",
-     "instances": 8,
+     "instances": 10,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 170.8 / capture 102.1",
@@ -2004,8 +2079,34 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnh_138_sp10",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_138_sp3",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_15",
-     "instances": 10,
+     "instances": 11,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 171.6 / capture 102.3",
@@ -2017,6 +2118,19 @@
      "real_view_in_die_run": null,
      "dedupe": "ph1: REBIND NOW to 1 x dsfd_hstnh_20",
      "dedupe_rebind": true
+    },
+    {
+     "master": "dsfd_hstnh_16",
+     "instances": 31,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
     },
     {
      "master": "dsfd_hstnh_17",
@@ -2033,7 +2147,7 @@
     },
     {
      "master": "dsfd_hstnh_2",
-     "instances": 79,
+     "instances": 92,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 165.9 / capture 101.7",
@@ -2048,7 +2162,7 @@
     },
     {
      "master": "dsfd_hstnh_20",
-     "instances": 3,
+     "instances": 4,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 173.4 / capture 101.8",
@@ -2063,7 +2177,7 @@
     },
     {
      "master": "dsfd_hstnh_2049",
-     "instances": 3,
+     "instances": 4,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 198.5 / capture 147.2",
@@ -2077,8 +2191,47 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnh_207_sp13",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_207_sp2",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_2164",
+     "instances": 10,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_2204",
-     "instances": 2,
+     "instances": 6,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 207.0 / capture 156.6",
@@ -2090,6 +2243,110 @@
      "real_view_in_die_run": null,
      "dedupe": "ph2: REBIND AT NEXT TOUCH to 2 x dsfd_hstnh_1029 + 1 x dsfd_hstnh_514",
      "dedupe_rebind": false
+    },
+    {
+     "master": "dsfd_hstnh_276_sp0",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp1",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp11",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp12",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp4",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp5",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp8",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_276_sp9",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
     },
     {
      "master": "dsfd_hstnh_28",
@@ -2107,8 +2364,60 @@
      "dedupe_rebind": true
     },
     {
+     "master": "dsfd_hstnh_292",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_2_sp6",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_3",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnh_3056",
+     "instances": 11,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_36",
-     "instances": 7,
+     "instances": 8,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 173.4 / capture 104.3",
@@ -2123,7 +2432,7 @@
     },
     {
      "master": "dsfd_hstnh_4",
-     "instances": 7,
+     "instances": 10,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 167.7 / capture 101.7",
@@ -2152,8 +2461,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnh_512",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_513",
-     "instances": 9,
+     "instances": 11,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 193.9 / capture 125.6",
@@ -2168,7 +2490,7 @@
     },
     {
      "master": "dsfd_hstnh_514",
-     "instances": 7,
+     "instances": 8,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 192.1 / capture 127.4",
@@ -2183,7 +2505,7 @@
     },
     {
      "master": "dsfd_hstnh_515",
-     "instances": 10,
+     "instances": 16,
      "rtl_kind": "real",
      "cls": "closed, native unmeasured",
      "detail": "NO_VIEW",
@@ -2198,7 +2520,7 @@
     },
     {
      "master": "dsfd_hstnh_53",
-     "instances": 6,
+     "instances": 8,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 173.8 / capture 115.9",
@@ -2213,7 +2535,7 @@
     },
     {
      "master": "dsfd_hstnh_54",
-     "instances": 7,
+     "instances": 8,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 175.0 / capture 104.4",
@@ -2228,7 +2550,7 @@
     },
     {
      "master": "dsfd_hstnh_560",
-     "instances": 2,
+     "instances": 3,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 191.3 / capture 126.0",
@@ -2243,7 +2565,7 @@
     },
     {
      "master": "dsfd_hstnh_6",
-     "instances": 9,
+     "instances": 10,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 168.7 / capture 102.0",
@@ -2273,7 +2595,7 @@
     },
     {
      "master": "dsfd_hstnh_692",
-     "instances": 5,
+     "instances": 4,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 194.5 / capture 127.3",
@@ -2287,8 +2609,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnh_69_sp7",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_759",
-     "instances": 14,
+     "instances": 12,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 190.8 / capture 129.3",
@@ -2303,7 +2638,7 @@
     },
     {
      "master": "dsfd_hstnh_761",
-     "instances": 5,
+     "instances": 7,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 196.1 / capture 129.1",
@@ -2318,7 +2653,7 @@
     },
     {
      "master": "dsfd_hstnh_77",
-     "instances": 10,
+     "instances": 12,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 179.1 / capture 119.2",
@@ -2333,7 +2668,7 @@
     },
     {
      "master": "dsfd_hstnh_8",
-     "instances": 18,
+     "instances": 20,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 170.9 / capture 103.0",
@@ -2347,8 +2682,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnh_84",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnh_85",
-     "instances": 42,
+     "instances": 49,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 177.3 / capture 121.5",
@@ -2363,7 +2711,7 @@
     },
     {
      "master": "dsfd_hstnh_9",
-     "instances": 46,
+     "instances": 54,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 172.1 / capture 102.2",
@@ -2377,8 +2725,21 @@
      "dedupe_rebind": true
     },
     {
+     "master": "dsfd_hstnv_1",
+     "instances": 8,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnv_1029",
-     "instances": 6,
+     "instances": 8,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 171.9 / capture 133.2",
@@ -2407,6 +2768,19 @@
      "dedupe_rebind": true
     },
     {
+     "master": "dsfd_hstnv_12",
+     "instances": 5,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnv_15",
      "instances": 15,
      "rtl_kind": "real",
@@ -2420,6 +2794,19 @@
      "real_view_in_die_run": null,
      "dedupe": "ph1: REBIND NOW to 1 x dsfd_hstnv_20",
      "dedupe_rebind": true
+    },
+    {
+     "master": "dsfd_hstnv_16",
+     "instances": 2,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
     },
     {
      "master": "dsfd_hstnv_17",
@@ -2436,7 +2823,7 @@
     },
     {
      "master": "dsfd_hstnv_2",
-     "instances": 90,
+     "instances": 95,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 167.8 / capture 100.3",
@@ -2451,7 +2838,7 @@
     },
     {
      "master": "dsfd_hstnv_20",
-     "instances": 8,
+     "instances": 9,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 172.8 / capture 101.7",
@@ -2466,7 +2853,7 @@
     },
     {
      "master": "dsfd_hstnv_2049",
-     "instances": 9,
+     "instances": 18,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 173.7 / capture 151.2",
@@ -2481,7 +2868,7 @@
     },
     {
      "master": "dsfd_hstnv_2164",
-     "instances": 12,
+     "instances": 19,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 172.9 / capture 142.2",
@@ -2496,7 +2883,7 @@
     },
     {
      "master": "dsfd_hstnv_2204",
-     "instances": 16,
+     "instances": 26,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 172.4 / capture 146.1",
@@ -2510,8 +2897,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_hstnv_292",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnv_3056",
-     "instances": 12,
+     "instances": 21,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 184.2 / capture 158.9",
@@ -2555,8 +2955,21 @@
      "dedupe_rebind": true
     },
     {
+     "master": "dsfd_hstnv_48",
+     "instances": 5,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnv_512",
-     "instances": 3,
+     "instances": 4,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 170.6 / capture 128.4",
@@ -2646,7 +3059,7 @@
     },
     {
      "master": "dsfd_hstnv_560",
-     "instances": 5,
+     "instances": 6,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 171.1 / capture 129.7",
@@ -2676,7 +3089,7 @@
     },
     {
      "master": "dsfd_hstnv_690",
-     "instances": 2,
+     "instances": 5,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 170.3 / capture 133.4",
@@ -2690,8 +3103,21 @@
      "dedupe_rebind": false
     },
     {
-     "master": "dsfd_hstnv_759",
+     "master": "dsfd_hstnv_692",
      "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_hstnv_759",
+     "instances": 4,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 171.9 / capture 133.2",
@@ -2702,6 +3128,21 @@
      "port_fault": [],
      "real_view_in_die_run": null,
      "dedupe": "ph0: STANDARD (keep, replicate)",
+     "dedupe_rebind": false
+    },
+    {
+     "master": "dsfd_hstnv_761",
+     "instances": 2,
+     "rtl_kind": "real",
+     "cls": "closed + native PASS",
+     "detail": "launch 170.0 / capture 132.3",
+     "registry": "closed (TT era)",
+     "owner": "S-DIE",
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null,
+     "dedupe": "ph1: LET FINISH; on FAIL retire (no re-submit) and bind 1 x dsfd_hstnv_1029",
      "dedupe_rebind": false
     },
     {
@@ -2735,8 +3176,21 @@
      "dedupe_rebind": true
     },
     {
+     "master": "dsfd_hstnv_84",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_hstnv_85",
-     "instances": 55,
+     "instances": 58,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 185.8 / capture 120.2",
@@ -2751,7 +3205,7 @@
     },
     {
      "master": "dsfd_hstnv_9",
-     "instances": 54,
+     "instances": 56,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 169.7 / capture 101.3",
@@ -3610,8 +4064,8 @@
      "master": "dsfd_r2l_vr_1024x1__ha_SW",
      "instances": 1,
      "rtl_kind": "real",
-     "cls": "closed, native FAIL",
-     "detail": "capture 397.99082 > 190 (2 pins)",
+     "cls": "closed + native PASS",
+     "detail": "launch -734.2 / capture None",
      "registry": "closed (TT era)",
      "owner": "S-DIE",
      "open_inputs": [],
@@ -3651,7 +4105,7 @@
     },
     {
      "master": "dsfd_rly_15_EN",
-     "instances": 315,
+     "instances": 244,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 207.3 / capture 94.3",
@@ -3665,8 +4119,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_rly_15_NE",
+     "instances": 1,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_rly_15_NS",
-     "instances": 424,
+     "instances": 439,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 171.4 / capture 102.9",
@@ -3681,7 +4148,7 @@
     },
     {
      "master": "dsfd_rly_15_SN",
-     "instances": 624,
+     "instances": 786,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 209.5 / capture 105.1",
@@ -3708,6 +4175,19 @@
      "real_view_in_die_run": null,
      "dedupe": "ph0: STANDARD (keep, replicate)",
      "dedupe_rebind": false
+    },
+    {
+     "master": "dsfd_rly_15_WE",
+     "instances": 73,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
     },
     {
      "master": "dsfd_rly_1_EW",
@@ -3741,7 +4221,7 @@
     },
     {
      "master": "dsfd_rly_266_EW",
-     "instances": 1491,
+     "instances": 1521,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "launch 237.41262 > 220 (126 pins); capture 271.72626 > 190 (1 pins)",
@@ -3756,7 +4236,7 @@
     },
     {
      "master": "dsfd_rly_283_EW",
-     "instances": 1491,
+     "instances": 1521,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "launch 243.32915 > 220 (132 pins); capture 293.90512 > 190 (1 pins)",
@@ -3771,7 +4251,7 @@
     },
     {
      "master": "dsfd_rly_2_ES",
-     "instances": 849,
+     "instances": 1104,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 196.2 / capture 79.5",
@@ -3786,7 +4266,7 @@
     },
     {
      "master": "dsfd_rly_2_EW",
-     "instances": 11,
+     "instances": 67,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 197.1 / capture 79.7",
@@ -3801,7 +4281,7 @@
     },
     {
      "master": "dsfd_rly_2_NE",
-     "instances": 766,
+     "instances": 1259,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 193.7 / capture 78.4",
@@ -3816,7 +4296,7 @@
     },
     {
      "master": "dsfd_rly_2_NS",
-     "instances": 833,
+     "instances": 827,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 195.1 / capture 78.8",
@@ -3831,7 +4311,7 @@
     },
     {
      "master": "dsfd_rly_2_NW",
-     "instances": 978,
+     "instances": 854,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 197.0 / capture 78.6",
@@ -3861,7 +4341,7 @@
     },
     {
      "master": "dsfd_rly_2_WS",
-     "instances": 1038,
+     "instances": 1065,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 195.2 / capture 78.2",
@@ -3889,7 +4369,7 @@
     },
     {
      "master": "dsfd_rly_536_EN",
-     "instances": 407,
+     "instances": 79,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no registry row",
@@ -3902,7 +4382,7 @@
     },
     {
      "master": "dsfd_rly_536_SN",
-     "instances": 442,
+     "instances": 898,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no registry row",
@@ -3943,7 +4423,7 @@
     },
     {
      "master": "dsfd_rly_63_ES",
-     "instances": 177,
+     "instances": 131,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 218.5 / capture 148.4",
@@ -3957,8 +4437,21 @@
      "dedupe_rebind": false
     },
     {
+     "master": "dsfd_rly_63_EW",
+     "instances": 44,
+     "rtl_kind": "real",
+     "cls": "RTL only (no route yet)",
+     "detail": "no registry row",
+     "registry": null,
+     "owner": null,
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null
+    },
+    {
      "master": "dsfd_rly_63_NE",
-     "instances": 1491,
+     "instances": 2052,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 214.4 / capture 102.1",
@@ -3973,7 +4466,7 @@
     },
     {
      "master": "dsfd_rly_63_NS",
-     "instances": 4952,
+     "instances": 5250,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 219.0 / capture 100.0",
@@ -3988,7 +4481,7 @@
     },
     {
      "master": "dsfd_rly_63_NW",
-     "instances": 29,
+     "instances": 30,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 179.0 / capture 162.8",
@@ -4003,7 +4496,7 @@
     },
     {
      "master": "dsfd_rly_63_SE",
-     "instances": 839,
+     "instances": 636,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "capture 216.96895 > 190 (1 pins)",
@@ -4018,7 +4511,7 @@
     },
     {
      "master": "dsfd_rly_63_SN",
-     "instances": 73,
+     "instances": 62,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 183.0 / capture 130.3",
@@ -4033,7 +4526,7 @@
     },
     {
      "master": "dsfd_rly_63_WE",
-     "instances": 8278,
+     "instances": 8471,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "capture 198.8976 > 190 (1 pins)",
@@ -4048,7 +4541,7 @@
     },
     {
      "master": "dsfd_rly_63_WN",
-     "instances": 838,
+     "instances": 993,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "launch 223.74778 > 220 (2 pins)",
@@ -4063,7 +4556,7 @@
     },
     {
      "master": "dsfd_rly_63_WS",
-     "instances": 5181,
+     "instances": 5538,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "launch 220.61793 > 220 (1 pins)",
@@ -4078,7 +4571,7 @@
     },
     {
      "master": "dsfd_rly_66_ES",
-     "instances": 132,
+     "instances": 127,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "capture 243.78442 > 190 (1 pins)",
@@ -4093,7 +4586,7 @@
     },
     {
      "master": "dsfd_rly_66_EW",
-     "instances": 227,
+     "instances": 236,
      "rtl_kind": "real",
      "cls": "closed, native FAIL",
      "detail": "capture 200.14293 > 190 (1 pins)",
@@ -4123,7 +4616,7 @@
     },
     {
      "master": "dsfd_rly_66_NS",
-     "instances": 1304,
+     "instances": 1300,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 217.4 / capture 106.1",
@@ -4138,7 +4631,7 @@
     },
     {
      "master": "dsfd_rly_66_NW",
-     "instances": 69,
+     "instances": 113,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 181.2 / capture 164.8",
@@ -4168,7 +4661,7 @@
     },
     {
      "master": "dsfd_rly_66_WE",
-     "instances": 25,
+     "instances": 26,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no registry row",
@@ -4178,6 +4671,21 @@
      "width": [],
      "port_fault": [],
      "real_view_in_die_run": null
+    },
+    {
+     "master": "dsfd_rly_66_WS",
+     "instances": 9,
+     "rtl_kind": "real",
+     "cls": "closed, native FAIL",
+     "detail": "capture 195.00153 > 190 (1 pins)",
+     "registry": "closed (TT era)",
+     "owner": "S-DIE",
+     "open_inputs": [],
+     "width": [],
+     "port_fault": [],
+     "real_view_in_die_run": null,
+     "dedupe": "ph0: STANDARD (keep, replicate)",
+     "dedupe_rebind": false
     },
     {
      "master": "dsfd_rstg",
@@ -4484,7 +4992,7 @@
     },
     {
      "master": "dsfd_stnh_512x1",
-     "instances": 593,
+     "instances": 600,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 110.6 / capture 44.0",
@@ -4514,7 +5022,7 @@
     },
     {
      "master": "dsfd_stnh_538x1",
-     "instances": 560,
+     "instances": 628,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no registry row",
@@ -4542,7 +5050,7 @@
     },
     {
      "master": "dsfd_stnh_70x1",
-     "instances": 2500,
+     "instances": 2505,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 169.9 / capture 116.7",
@@ -4707,7 +5215,7 @@
     },
     {
      "master": "dsfd_stnv_514x1",
-     "instances": 127,
+     "instances": 129,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 108.2 / capture 40.4",
@@ -4722,7 +5230,7 @@
     },
     {
      "master": "dsfd_stnv_538x1",
-     "instances": 808,
+     "instances": 932,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
      "detail": "no registry row",
@@ -4737,9 +5245,9 @@
      "master": "dsfd_stnv_566x1",
      "instances": 808,
      "rtl_kind": "real",
-     "cls": "routed-failed",
-     "detail": "failed, re-running; 5 failed job(s)",
-     "registry": "failed, re-running",
+     "cls": "closed + native PASS",
+     "detail": "launch 98.8 / capture 123.2",
+     "registry": "closed (TT era)",
      "owner": "S-ELEM-B",
      "open_inputs": [],
      "width": [],
@@ -4750,7 +5258,7 @@
     },
     {
      "master": "dsfd_stnv_70x1",
-     "instances": 1337,
+     "instances": 1350,
      "rtl_kind": "real",
      "cls": "closed + native PASS",
      "detail": "launch 175.3 / capture 120.3",
@@ -5016,15 +5524,6 @@
      "detail": "11 of 11 contract leaves closed"
     },
     {
-     "master": "dsfd_hstnv_761",
-     "cls": "closed + native PASS",
-     "registry": "closed (TT era)",
-     "owner": "S-DIE",
-     "detail": "launch 170.0 / capture 132.3",
-     "dedupe": "ph1: LET FINISH; on FAIL retire (no re-submit) and bind 1 x dsfd_hstnv_1029",
-     "dedupe_rebind": false
-    },
-    {
      "master": "dsfd_l2r_vr_564x1__hx_E",
      "cls": "closed + native PASS",
      "registry": "closed (TT era)",
@@ -5136,15 +5635,6 @@
      "detail": "launch 218.4 / capture 165.9",
      "dedupe": "ph1: REBIND NOW to 1 x dsfd_rly_68_EW",
      "dedupe_rebind": true
-    },
-    {
-     "master": "dsfd_rly_66_WS",
-     "cls": "closed, native FAIL",
-     "registry": "closed (TT era)",
-     "owner": "S-DIE",
-     "detail": "capture 195.00153 > 190 (1 pins)",
-     "dedupe": "ph0: STANDARD (keep, replicate)",
-     "dedupe_rebind": false
     },
     {
      "master": "dsfd_rly_68_EW",
@@ -5304,25 +5794,25 @@
     }
    ],
    "view_state_masters": {
-    "closed + native PASS": 148,
+    "closed + native PASS": 151,
     "closed, native FAIL": 19,
     "closed, native unmeasured": 1,
-    "routed-failed": 3,
+    "routed-failed": 2,
     "in flight": 0,
     "parent: leaves closed, not hardened": 9,
-    "RTL only (no route yet)": 26,
+    "RTL only (no route yet)": 58,
     "missing RTL": 0,
     "superseded but in netlist": 10,
     "hard macro / PHY (allowed model)": 5
    },
    "view_state_instances": {
-    "closed + native PASS": 26359,
-    "closed, native FAIL": 27111,
-    "closed, native unmeasured": 10,
-    "routed-failed": 1328,
+    "closed + native PASS": 29018,
+    "closed, native FAIL": 27685,
+    "closed, native unmeasured": 16,
+    "routed-failed": 520,
     "in flight": 0,
     "parent: leaves closed, not hardened": 9,
-    "RTL only (no route yet)": 6266,
+    "RTL only (no route yet)": 6799,
     "missing RTL": 0,
     "superseded but in netlist": 1508,
     "hard macro / PHY (allowed model)": 18832
@@ -5331,8 +5821,8 @@
     "rtl_nonreal_masters": 0,
     "rtl_nonreal_instances": 0,
     "rtl_nonreal": [],
-    "no_closed_view_masters": 48,
-    "no_closed_view_instances": 9111,
+    "no_closed_view_masters": 79,
+    "no_closed_view_instances": 8836,
     "die_run_real_view": {
      "src": "ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/STATUS.log",
      "masters_real_view": 18,
@@ -5348,6 +5838,47 @@
     "die_port_not_in_rtl": 0
    },
    "die_runs": [
+    {
+     "events": {
+      "src": "aa9e7cfae195c2243e15418e7614dbef66048b66",
+      "gen": "2026-10-16T02:13:13 GEN_DONE  OT_VIEW_BINDING 18 masters / 31916 instances bound from results/arch/s81_native_20261013/view_binding.json",
+      "views": "2026-10-16T02:13:13 OT_VIEW_BINDING 18 masters / 31916 instances bound from results/arch/s81_native_20261013/view_binding.json",
+      "place": "2026-10-16T05:02:20 PLACE rc=0",
+      "port_bind": "2026-10-16T03:40:40 PORT_BIND rc=1 FAIL dsfd_sp_pq_n                       x1      INPUT_UNCONNECTED in_unconn=f_iss"
+     },
+     "grt_overflow": null,
+     "tt_wns_ps": null,
+     "ff_setup_wns_ps": null,
+     "ff_hold_wns_ps": null,
+     "gen_instances": 84387,
+     "pdn_skipped": false,
+     "host": "ot-epyc4",
+     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c21h/STATUS.log",
+     "mtime": "2026-10-15 22:02 PDT",
+     "src": {
+      "commit": "aa9e7cfae",
+      "time": "2026-10-15T17:12:05-07:00"
+     }
+    },
+    {
+     "events": {
+      "src": "d8072c7473d745faf514fcd5398fdf941f92a751",
+      "gen": "2026-10-16T04:25:09 GEN_FAIL "
+     },
+     "grt_overflow": null,
+     "tt_wns_ps": null,
+     "ff_setup_wns_ps": null,
+     "ff_hold_wns_ps": null,
+     "gen_instances": null,
+     "pdn_skipped": false,
+     "host": "ot-epyc4",
+     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c18/STATUS.log",
+     "mtime": "2026-10-15 21:25 PDT",
+     "src": {
+      "commit": "d8072c747",
+      "time": "2026-10-15T07:00:49-07:00"
+     }
+    },
     {
      "events": {
       "src": "d8072c7473d745faf514fcd5398fdf941f92a751",
@@ -5368,27 +5899,6 @@
      "src": {
       "commit": "d8072c747",
       "time": "2026-10-15T07:00:49-07:00"
-     }
-    },
-    {
-     "events": {
-      "src": "aa9e7cfae195c2243e15418e7614dbef66048b66",
-      "gen": "2026-10-16T02:13:13 GEN_DONE  OT_VIEW_BINDING 18 masters / 31916 instances bound from results/arch/s81_native_20261013/view_binding.json",
-      "views": "2026-10-16T02:13:13 OT_VIEW_BINDING 18 masters / 31916 instances bound from results/arch/s81_native_20261013/view_binding.json",
-      "place": "2026-10-16T02:32:24 PLACE rc=137"
-     },
-     "grt_overflow": null,
-     "tt_wns_ps": null,
-     "ff_setup_wns_ps": null,
-     "ff_hold_wns_ps": null,
-     "gen_instances": 84387,
-     "pdn_skipped": false,
-     "host": "ot-epyc4",
-     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c21h/STATUS.log",
-     "mtime": "2026-10-15 19:32 PDT",
-     "src": {
-      "commit": "aa9e7cfae",
-      "time": "2026-10-15T17:12:05-07:00"
      }
     },
     {
@@ -5422,24 +5932,6 @@
      "src": {
       "commit": "f22723676",
       "time": "2026-10-15T13:38:40-07:00"
-     }
-    },
-    {
-     "events": {
-      "src": "d8072c7473d745faf514fcd5398fdf941f92a751"
-     },
-     "grt_overflow": null,
-     "tt_wns_ps": null,
-     "ff_setup_wns_ps": null,
-     "ff_hold_wns_ps": null,
-     "gen_instances": null,
-     "pdn_skipped": false,
-     "host": "ot-epyc4",
-     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c18/STATUS.log",
-     "mtime": "2026-10-15 07:41 PDT",
-     "src": {
-      "commit": "d8072c747",
-      "time": "2026-10-15T07:00:49-07:00"
      }
     },
     {
@@ -5489,26 +5981,26 @@
    "grt_logs": [
     {
      "host": "ot-epyc4",
-     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c19b/grt_p/grt.log",
-     "mtime": "2026-10-15 20:00 PDT",
+     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c21h/grt/grt.log",
+     "mtime": "2026-10-15 22:16 PDT",
      "status": "RUNNING (extra iteration 3/12)"
     },
     {
      "host": "ot-epyc4",
-     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c8p/grt/grt.log",
-     "mtime": "2026-10-14 10:28 PDT",
-     "status": "overflow 0"
+     "path": "/srv/opentallas-scratch/claude/s81-die-iter/c19b/grt_p/grt.log",
+     "mtime": "2026-10-15 22:01 PDT",
+     "status": "RUNNING (extra iteration 7/12)"
     }
    ],
    "remaining": {
-    "masters_not_closed_native": 92,
-    "of_which_in_netlist": 68,
-    "of_which_contract_missing": 24,
-    "placeholders_to_replace": 40,
+    "masters_not_closed_native": 122,
+    "of_which_in_netlist": 99,
+    "of_which_contract_missing": 23,
+    "placeholders_to_replace": 38,
     "inputs_to_bind": 7,
-    "total": 139,
+    "total": 167,
     "dedupe_phase1_rebinds": 14,
-    "masters_not_closed_native_after_dedupe": 78
+    "masters_not_closed_native_after_dedupe": 108
    }
   },
   {
@@ -5615,7 +6107,7 @@
      "instances": 1,
      "rtl_kind": "real",
      "cls": "parent: leaves closed, not hardened",
-     "detail": "1 of 1 contract leaves closed",
+     "detail": "2 of 2 contract leaves closed",
      "registry": "not started (open)",
      "owner": "HBM-V15-HARDEN",
      "open_inputs": [],
@@ -5716,7 +6208,7 @@
      "instances": 1,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
-     "detail": "no closure-loop job yet",
+     "detail": "0 of 4 contract leaves closed",
      "registry": "not started (open)",
      "owner": "H-ELEM-A",
      "open_inputs": [
@@ -5734,7 +6226,7 @@
      "instances": 1,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
-     "detail": "no closure-loop job yet",
+     "detail": "0 of 4 contract leaves closed",
      "registry": "not started (open)",
      "owner": "H-ELEM-A",
      "open_inputs": [
@@ -5753,7 +6245,7 @@
      "instances": 1,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
-     "detail": "no closure-loop job yet",
+     "detail": "0 of 4 contract leaves closed",
      "registry": "not started (open)",
      "owner": "H-ELEM-A",
      "open_inputs": [
@@ -5770,7 +6262,7 @@
      "instances": 1,
      "rtl_kind": "real",
      "cls": "RTL only (no route yet)",
-     "detail": "no closure-loop job yet",
+     "detail": "0 of 4 contract leaves closed",
      "registry": "not started (open)",
      "owner": "H-ELEM-A",
      "open_inputs": [

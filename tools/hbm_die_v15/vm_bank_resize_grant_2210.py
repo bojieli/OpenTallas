@@ -24,16 +24,17 @@ OUT = DIR / 'vm_strap_grants_2210.json'
 W = H = 270.0
 CORE = 2.16
 LO, HI = 2.2, 270.0 - 2.2
-PITCH = 0.288
+PITCH = 0.192          # v4 (layer_cap M6, PG on M6): one pin layer per face, 4 tracks
 CLOCKISH = ('clk', 'rst_n', 'bid[2:0]', 'sid[1:0]')
 
 
-def track(off, p, lo, hi, ok=lambda c: True):
+def track(off, p, lo, hi, ok=lambda c: True, pitch=None):
+    pitch = pitch or PITCH
     out, last = [], -1e9
     k = int((lo - off) / p) + 1
     while off + k * p <= hi + 1e-9:
         c = round(off + k * p, 6); k += 1
-        if c - last >= PITCH - 1e-9 and ok(c):
+        if c - last >= pitch - 1e-9 and ok(c):
             out.append(c); last = c
     return out
 
@@ -42,15 +43,16 @@ PG = []
 k = 0
 while CORE + .3 + 5.4 * k - .06 < W:
     a = CORE + .3 + 5.4 * k - .06; PG += [(a, a + .12), (a + .192, a + .312)]; k += 1
-m5ok = lambda c: not any(c + .036 > a - 1e-9 and c - .036 < b + 1e-9 for a, b in PG)
+m5ok = lambda c: True   # v4: tile PG on M6 (layer_cap M6 grant), M5 carries no stripes
 
 
-def slots(face, lo, hi):
-    if face in 'WE':
-        a = [(c, 'M4') for c in track(.012, .048, lo, hi)]; b = [(c, 'M6') for c in track(.016, .064, lo, hi)]
-    else:
-        a = [(c, 'M5') for c in track(.012, .048, lo, hi, m5ok)]; b = [(c, 'M7') for c in track(.016, .064, lo, hi)]
-    return sorted(a + b)
+def slots(face, lo, hi, need=0):
+    # 0.192 um (4 tracks) unless that fills > 90 % of the face, then 0.144 um (3 tracks)
+    L = 'M4' if face in 'WE' else 'M5'
+    t = track(.012, .048, lo, hi)
+    if need > 0.9 * len(t):
+        t = track(.012, .048, lo, hi, pitch=.144)
+    return [(c, L) for c in t]      # PG is on M6 in the cap-M6 contract: no M5 stripes
 
 
 def spread(avail, n):
@@ -90,9 +92,10 @@ def regrant(s):
             continue
         if face == 'N':
             before = [p for p in fp if p['bit_centres_um'][0] < old_clk]; after = [p for p in fp if p['bit_centres_um'][0] > old_clk]
-            groups = [(before, slots('N', LO, ck_lo)), (after, slots('N', ck_hi, HI))]
+            nb = lambda g: sum(len(p['bit_centres_um']) for p in g)
+            groups = [(before, slots('N', LO, ck_lo, nb(before))), (after, slots('N', ck_hi, HI, nb(after)))]
         else:
-            groups = [(fp, slots(face, LO, HI))]
+            groups = [(fp, slots(face, LO, HI, sum(len(p['bit_centres_um']) for p in fp)))]
         for grp, avail in groups:
             n = sum(len(p['bit_centres_um']) for p in grp)
             pick = spread(avail, n); i = 0
@@ -101,7 +104,7 @@ def regrant(s):
                 q = dict(name=p['name'], face=face, layer=None, layers=sorted({l for _, l in sel}),
                          bit_centres_um=[c for c, _ in sel], bit_layers=[l for _, l in sel],
                          offset=round((sel[0][0] + sel[-1][0]) / 2, 6), span_um=[round(sel[0][0] - .048, 6), round(sel[-1][0] + .048, 6)],
-                         bit_pitch_um=PITCH, bit_centres_rule='explicit bit_centres_um[i] on bit_layers[i] (actual track; M5 PG-clear; >= 0.288 per layer)')
+                         bit_pitch_um=PITCH, bit_centres_rule='explicit bit_centres_um[i] on bit_layers[i] (actual track; >= 0.192)')
                 q['layer'] = q['layers'][0] if len(q['layers']) == 1 else '+'.join(q['layers'])
                 out_pins.append(q)
     # legality: unique (face, layer, centre), per-layer pitch
@@ -117,12 +120,12 @@ def regrant(s):
     s['pins'] = out_pins
     s['outline'] = dict(w=W, h=H)
     s['pin_ranges'] = {p['name']: p['span_um'] for p in out_pins}
-    s['face_density'] = {f: round(sum(len(p['bit_centres_um']) for p in out_pins if p['face'] == f) * PITCH / 2 / (W - 2 * LO), 4) for f in 'NSWE'}
+    s['face_density'] = {f: round(sum(len(p['bit_centres_um']) for p in out_pins if p['face'] == f) * PITCH / (W - 2 * LO), 4) for f in 'NSWE'}
     s['clock_entry'] = dict(pin='clk', face='N', layer='M5', offset=next(p for p in out_pins if p['name'] == 'clk')['bit_centres_um'][0])
-    s.update(signal_max_layer='M5', layer_cap='M7', layer_rule='tile_pin_layers_M4_M5_M6_M7',
-             pin_layer_grant=dict(W='M4+M6', E='M4+M6', N='M5+M7', S='M5+M7', internal_signals='M2-M5',
-                                  die_pdn_obligation='parent M6/M7 straps/routes keep the face pin rows free (>= 1 um inside the tile edge)'),
-             grant='die_owned_strap_pins_270_2210', version=3, instance_homes=[],
+    s.update(signal_max_layer='M6', layer_cap='M6', pg_layer='M6', strap_layer='M7', layer_rule='tile',
+             layer_cap_grant=dict(layer_cap='M6', reason='VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)'),
+             pin_layer_grant=dict(W='M4', E='M4', N='M5', S='M5', internal_signals='M2-M6'),
+             grant='die_owned_strap_pins_270_cap6_2210', version=4, instance_homes=[],
              scope='270 x 270 strap master grant (H-SM accepted 22:5x). Physical qualification, parent adoption and homes OPEN.')
     for kk in ('source_sha256', 'source_dependencies_sha256'):
         s.pop(kk, None)
@@ -130,7 +133,7 @@ def regrant(s):
 
 
 g = json.loads(SRC.read_text())
-new = dict(g, version=3, owner='Claude H-DIE 2210', derived_from=str(SRC.relative_to(ROOT)), slots=[regrant(s) for s in g['slots']],
+new = dict(g, version=4, owner='Claude H-DIE 2210', derived_from=str(SRC.relative_to(ROOT)), slots=[regrant(s) for s in g['slots']],
            adoption_scope='Exact 270 x 270 child pins (two layers per face) for hfd_vms_bank_strap_q0..3; homes/parent packing follow.',
            production_binding_adopted=False)
 OUT.write_text(json.dumps(new, indent=1) + '\n')
@@ -138,7 +141,7 @@ gf = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
 d = json.loads(gf.read_text())
 d['vm_strap_child_grants_2210'] = dict(file=str(OUT.relative_to(ROOT)), sha256=hashlib.sha256(OUT.read_bytes()).hexdigest(),
     outline_um=[W, H], supersedes='vm_strap_child_grants_2116 (356.4 x 365.04) for NEW strap kits; running 356x365 routes = diagnostics',
-    pin_layers=dict(W='M4+M6', E='M4+M6', N='M5+M7', S='M5+M7'), accepted_by='H-SM 2026-10-15 ~22:55', production_binding_adopted=False)
+    pin_layers=dict(W='M4', E='M4', N='M5', S='M5'), layer_cap='M6 (PG M6, parent strap M7)', bit_pitch_um=0.192, accepted_by='H-SM 2026-10-15 ~23:0x (cap-M6 single-layer variant; 2-layer v3 withdrawn: ref_tile has no pins-above-cap leaf contract)', production_binding_adopted=False)
 if 'vm_bank_resize_v7_proposal' in d:
     d['vm_bank_resize_v7_proposal']['status'] = 'ADOPTED 2210 (H-SM accepted with N/S two layers) -> vm_strap_child_grants_2210'
 gf.write_text(json.dumps(d, indent=1) + '\n')
