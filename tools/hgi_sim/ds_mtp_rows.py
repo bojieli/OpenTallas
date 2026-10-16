@@ -53,6 +53,10 @@ CURRENT_MEASURED = {
     "FUSED.QDQ_FP4_E4M3": (2.75, "qdq_wide/report.json"),
     "IDX.TOPK": (0.676, "idx/ds_L0_tput/report_topkw1_w8_r4.json (8-wide heap, production)"),
     "COLL.TOPK_MERGE": (1.057, "coll/tkm_tput_480f631d5.json"),
+    # H-MTP2 r3: the static HC engine (the die's intended HC_MIX engine, codex/hc-static-engine-1014 a35449ada,
+    # results/rtl/hbm_hc_static_1015/engine_967): 9,554 cycles a P1 HC_MIX at K 20,480 vs the 1,160 price (128 MAC
+    # lanes vs the price's W256 HCP); P-row II measured 4,385 (ds_mtp_verify HC_STATIC_II)
+    "HC.HC_MIX": (9554.0 / 1160.008, "static HC engine engine_967 9,554 cyc vs price 1,160.0 (unmerged branch a35449ada)"),
 }
 
 # Extra block-dot area floor from the ACTUAL closed HBM BDC outline, not the
