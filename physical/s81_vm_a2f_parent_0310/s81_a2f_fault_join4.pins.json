@@ -1,0 +1,333 @@
+{
+ "master": "s81_a2f_fault_join4",
+ "outline_um": [
+  21.6,
+  21.6
+ ],
+ "source": "tools/s81_vm/area_a2f.sv",
+ "source_sha256": "87ac2c197d4bfefa87289de73525565c5aae4b6a20f55f62015354dde00f59b7",
+ "pins": [
+  {
+   "port": "rst_n",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 4.476
+  },
+  {
+   "port": "i_fault[0]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 4.764
+  },
+  {
+   "port": "i_fault[1]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 5.052
+  },
+  {
+   "port": "i_fault[2]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 5.34
+  },
+  {
+   "port": "i_fault[3]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 5.628
+  },
+  {
+   "port": "i_fault[4]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 5.916
+  },
+  {
+   "port": "i_fault[5]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 6.204
+  },
+  {
+   "port": "i_fault[6]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 6.636
+  },
+  {
+   "port": "i_fault[7]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 6.924
+  },
+  {
+   "port": "i_fault[8]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 7.212
+  },
+  {
+   "port": "i_fault[9]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 7.5
+  },
+  {
+   "port": "i_fault[10]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 7.788
+  },
+  {
+   "port": "i_fault[11]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 8.076
+  },
+  {
+   "port": "i_fault[12]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 8.364
+  },
+  {
+   "port": "i_fault[13]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 8.796
+  },
+  {
+   "port": "i_fault[14]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 9.084
+  },
+  {
+   "port": "i_fault[15]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 9.372
+  },
+  {
+   "port": "i_fault[16]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 9.66
+  },
+  {
+   "port": "i_fault[17]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 9.948
+  },
+  {
+   "port": "i_fault[18]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 10.236
+  },
+  {
+   "port": "ck",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 10.524
+  },
+  {
+   "port": "i_fault[19]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 10.956
+  },
+  {
+   "port": "i_fault[20]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 11.244
+  },
+  {
+   "port": "i_fault[21]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 11.532
+  },
+  {
+   "port": "i_fault[22]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 11.82
+  },
+  {
+   "port": "i_fault[23]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 12.108
+  },
+  {
+   "port": "i_fault[24]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 12.396
+  },
+  {
+   "port": "i_fault[25]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 12.684
+  },
+  {
+   "port": "i_fault[26]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 13.116
+  },
+  {
+   "port": "i_fault[27]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 13.404
+  },
+  {
+   "port": "i_fault[28]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 13.692
+  },
+  {
+   "port": "i_fault[29]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 13.98
+  },
+  {
+   "port": "i_fault[30]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 14.268
+  },
+  {
+   "port": "i_fault[31]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 14.556
+  },
+  {
+   "port": "i_fault[32]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 14.844
+  },
+  {
+   "port": "i_fault[33]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 15.276
+  },
+  {
+   "port": "i_fault[34]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 15.564
+  },
+  {
+   "port": "i_fault[35]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 15.852
+  },
+  {
+   "port": "i_fault[36]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 16.14
+  },
+  {
+   "port": "i_fault[37]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 16.428
+  },
+  {
+   "port": "i_fault[38]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 16.716
+  },
+  {
+   "port": "i_fault[39]",
+   "face": "W",
+   "layer": "M4",
+   "x_um": 0,
+   "y_um": 17.004
+  },
+  {
+   "port": "fault[0]",
+   "face": "E",
+   "layer": "M4",
+   "x_um": 21.6,
+   "y_um": 5.916
+  },
+  {
+   "port": "fault[1]",
+   "face": "E",
+   "layer": "M4",
+   "x_um": 21.6,
+   "y_um": 9.084
+  },
+  {
+   "port": "fault[2]",
+   "face": "E",
+   "layer": "M4",
+   "x_um": 21.6,
+   "y_um": 12.396
+  },
+  {
+   "port": "fault[3]",
+   "face": "E",
+   "layer": "M4",
+   "x_um": 21.6,
+   "y_um": 15.564
+  }
+ ]
+}

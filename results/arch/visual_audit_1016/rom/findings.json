@@ -1774,7 +1774,8 @@
      },
      "image_r2b": "img_r2/S81H-08__field4_r3c_selected_density.png"
     }
-   }
+   },
+   "status_1016_0400": "field4 r3c CLOSED and bound (FF +5.25); i_sel split deferred unless die STA flags input hold."
   },
   {
    "id": "S81H-09",
@@ -2208,11 +2209,32 @@
      "reported": "2026-10-16 01:15"
     },
     "2": {
-     "id": "S81F-04",
-     "outcome": "open",
-     "evidence": "No new cfg7_seq route after the g1 jobs.",
-     "before": null,
-     "after": null
+     "outcome": "confirmed-partial",
+     "before": {
+      "native_capture_ps": 300.6,
+      "capture_fail_pins": 189,
+      "native_launch_ps": 221.6,
+      "combinational_pins": 20,
+      "q_bundles": "interleaved bit order"
+     },
+     "after": {
+      "job": "s81coll_cfg7_seq_pr-pr3-f8e89fc72 CLOSED (main 07a39fcde)",
+      "tt_ps": 321.2,
+      "ff_ps": 25.53,
+      "drc": 0,
+      "native_launch_ps": 194.2,
+      "native_capture_ps": 136.7,
+      "spread_ps": 12.0,
+      "combinational_pins": 0,
+      "outline_um": [
+       17.28,
+       51.84
+      ],
+      "W_pins_per_um": 7.42,
+      "hot_bins_frac": 0.223,
+      "image": "img_r2/S81F-04__cfg7_pr3_final_congestion.png"
+     },
+     "evidence": "03:20: tile part fixed and closed (every pin registered, q bundles in ROM rd_out order, clock at the W q-flop centroid); VIS-ROM snapped the route and LOOKED: dense but routed DRC 0. Still open die-side: the 152 um cfg/go_e jog (co-place cfg7 under qbank_S.i_cfg or re-pin i_cfg) and 896 reversed bundles (FN pairs mirror cfg7+ROMs but not qbank_S/q element: die must mirror the pair) - requested from S-DIE. Cost: +4/+2 compiler edges."
     }
    }
   },
@@ -2481,11 +2503,29 @@
      "reported": "2026-10-16 01:15"
     },
     "2": {
-     "id": "S81F-10",
-     "outcome": "open",
-     "evidence": "The S-NET+FILL 86x1 2-track window proposal is waiting on S-DIE. No re-route.",
-     "before": null,
-     "after": null
+     "outcome": "confirmed",
+     "before": {
+      "pins_per_um": 20.8,
+      "window_um": 3.5,
+      "bits": 70,
+      "tracks": "every M4 track"
+     },
+     "after": {
+      "jobs": "s81fill_stnh_86x1-f10-884a902b1 / s81fill_stnv_86x1-f10-ae282bdde CLOSED (main 203d89dd8)",
+      "bits": 86,
+      "window_um": 8.26,
+      "pins_per_um": 10.4,
+      "tracks": "2-track pitch, same window both faces",
+      "tt_ps": [
+       36.86,
+       29.41
+      ],
+      "ff_ps": 388,
+      "drc": 0,
+      "native": "PASS",
+      "image": "img_r2/S81F-10__stnh86_f10_floorplan.png"
+     },
+     "evidence": "03:45 S-NET+FILL: stn86 f10 routed on 2-track pins and closed; VIS-ROM LOOKED at floorplan/density: 86 bits per face in an 8.26 um window (2-track), identical W/E windows, clock at the W window foot; placement dense but tile is 17.3 um and closed. Die binding via c26b (--stn-pin-pitch2)."
     }
    }
   },
@@ -3196,7 +3236,8 @@
    "severity": 2,
    "images_committed": [],
    "images_local": [],
-   "owner_ack": "S-VM 02:30: noted; E face (6,987 bits) is the relief lever in the parent kit."
+   "owner_ack": "S-VM 02:30: noted; E face (6,987 bits) is the relief lever in the parent kit.",
+   "status_1016_0400": "S-VM measured: near-limit cells (0.55-0.60) are a plateau of E-W crossings in two columns (x~1,500 and ~3,900, y 1,100-3,100) plus the N capture strip; moving pins S->E does NOT cut E-W crossings (VIS-ROM fix refuted on mechanism). Control-leaf placement (rsched 2,900,1,933; seq 2,318,1,933) gives worst 0.593 / p99 0.585. <=0.55 needs fewer bits through those columns (MIX read leaves beside the W face) or more outline/layers; screened in the parent kit."
   },
   {
    "id": "S81H-14",
@@ -3225,7 +3266,8 @@
    "severity": 1,
    "images_committed": [],
    "images_local": [],
-   "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted."
+   "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted.",
+   "status_1016_0400": "fix-in-gate: r5 dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f submitted. r4 route had failed TT -98.74 / FF -70.09: (a) e_d->s_d -98.7 ps on 548 endpoints (lane-major e_d pins, 4 mux sources up to 225 um apart), (b) xd->w_d -36.5 (w_d flops pinned at E outputs 194 um from W inputs), (c) pre_e->e_q 4:3 core->serial crossing in-leaf. r5: e_d bit-major, pin-flop anchoring inputs only, NO in-leaf crossing (e_q serial-native x43 fault, fault core-native). Equivalence gate PASS vs r9 split ref (FAULT/LANE mutants + unmodified r9 FAIL). CTS gate WARN 0 fail, in->reg +174, reg->reg +259 ps. VIS-ROM LOOKED at gate density: cells at their W/E input faces, centre and top/bottom ~35% very sparse (area, not timing)."
   }
  ],
  "no_image": [
@@ -3421,17 +3463,17 @@
  "round2": {
   "date": "2026-10-16",
   "scored": {
-   "confirmed": 5,
+   "confirmed": 6,
    "refuted": 2,
-   "open": 43,
-   "confirmed-partial": 4,
+   "open": 41,
+   "confirmed-partial": 5,
    "retired": 2
   },
   "hit_rate": {
-   "hits_confirmed_incl_partial": 9,
+   "hits_confirmed_incl_partial": 11,
    "refuted": 2,
-   "decided": 11,
-   "hit_rate": 0.818,
+   "decided": 13,
+   "hit_rate": 0.846,
    "open": 43,
    "retired": 2,
    "note": "refuted: QC-03 gearbox E face (r13 routed overflow 0, no hot wall; M6 impossible, M5 cap), S81H-13 bank128_e timing (bke1 TT +343/FF +27.5). Owner-refuted parts of open findings: D-QC-01 3W/3E port split (cut 1.096), D-QC-02 reset fan-out is a relay-skip artefact (code-verified; full-relay r2h1/r2h2 pending). S81H-08 moved to partial 02:30 (native clock R 173.7->158.1, spread 38.0->31.1)."

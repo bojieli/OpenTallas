@@ -1,0 +1,287 @@
+{
+  "scope": "Historical actual mapped-netlist partition measurement; new ten-root source not synthesized or physically qualified. Clock buffer area excluded; new local roots/hold/seam cost pending.",
+  "mapped_netlist_sha256_zstd": "1f08ae04f28c453ba17deececc272207ed8dbfe07d6a9ea5809849094a4a2fc5",
+  "routed_def_sha256_zstd": "3aaf5dcc0404ada255164ae2316f0432bf9c08dbc11558e046f627dfbf811f04",
+  "sequential_cells": 53493,
+  "clock_cells_excluded": 3468,
+  "groups": {
+    "0": {
+      "sinks": 5002,
+      "cells": 28860,
+      "area_um2": 19146.544,
+      "old_sink_bounds_um": [
+        29.754,
+        33.75,
+        446.796,
+        196.29
+      ],
+      "old_span_um": [
+        417.042,
+        162.54
+      ]
+    },
+    "1": {
+      "sinks": 4628,
+      "cells": 34170,
+      "area_um2": 4160.593,
+      "old_sink_bounds_um": [
+        304.506,
+        37.8,
+        446.796,
+        144.99
+      ],
+      "old_span_um": [
+        142.29,
+        107.19
+      ]
+    },
+    "2": {
+      "sinks": 3660,
+      "cells": 26145,
+      "area_um2": 3224.425,
+      "old_sink_bounds_um": [
+        225.882,
+        39.69,
+        446.796,
+        196.29
+      ],
+      "old_span_um": [
+        220.914,
+        156.6
+      ]
+    },
+    "3": {
+      "sinks": 4874,
+      "cells": 25028,
+      "area_um2": 3198.254,
+      "old_sink_bounds_um": [
+        341.874,
+        2.16,
+        446.796,
+        124.74
+      ],
+      "old_span_um": [
+        104.922,
+        122.58
+      ]
+    },
+    "4": {
+      "sinks": 5680,
+      "cells": 34192,
+      "area_um2": 4170.507,
+      "old_sink_bounds_um": [
+        2.268,
+        2.16,
+        370.602,
+        115.29
+      ],
+      "old_span_um": [
+        368.334,
+        113.13
+      ]
+    },
+    "5": {
+      "sinks": 5608,
+      "cells": 33647,
+      "area_um2": 4128.429,
+      "old_sink_bounds_um": [
+        2.268,
+        3.78,
+        263.25,
+        133.11
+      ],
+      "old_span_um": [
+        260.982,
+        129.33
+      ]
+    },
+    "6": {
+      "sinks": 5608,
+      "cells": 33789,
+      "area_um2": 4127.088,
+      "old_sink_bounds_um": [
+        174.312,
+        21.87,
+        336.582,
+        147.15
+      ],
+      "old_span_um": [
+        162.27,
+        125.28
+      ]
+    },
+    "7": {
+      "sinks": 5608,
+      "cells": 33529,
+      "area_um2": 4109.927,
+      "old_sink_bounds_um": [
+        201.42,
+        87.48,
+        413.208,
+        196.29
+      ],
+      "old_span_um": [
+        211.788,
+        108.81
+      ]
+    },
+    "8": {
+      "sinks": 6738,
+      "cells": 34327,
+      "area_um2": 4254.619,
+      "old_sink_bounds_um": [
+        10.908,
+        2.16,
+        382.212,
+        196.29
+      ],
+      "old_span_um": [
+        371.304,
+        194.13
+      ]
+    },
+    "9": {
+      "sinks": 6087,
+      "cells": 32428,
+      "area_um2": 3925.986,
+      "old_sink_bounds_um": [
+        194.832,
+        2.16,
+        440.046,
+        154.44
+      ],
+      "old_span_um": [
+        245.214,
+        152.28
+      ]
+    }
+  },
+  "data_cut_edges": [
+    {
+      "source": 0,
+      "destination": 1,
+      "bits": 769
+    },
+    {
+      "source": 0,
+      "destination": 2,
+      "bits": 638
+    },
+    {
+      "source": 0,
+      "destination": 3,
+      "bits": 506
+    },
+    {
+      "source": 0,
+      "destination": 4,
+      "bits": 912
+    },
+    {
+      "source": 0,
+      "destination": 5,
+      "bits": 1022
+    },
+    {
+      "source": 0,
+      "destination": 6,
+      "bits": 877
+    },
+    {
+      "source": 0,
+      "destination": 7,
+      "bits": 908
+    },
+    {
+      "source": 0,
+      "destination": 8,
+      "bits": 1246
+    },
+    {
+      "source": 0,
+      "destination": 9,
+      "bits": 286
+    },
+    {
+      "source": 1,
+      "destination": 0,
+      "bits": 13
+    },
+    {
+      "source": 1,
+      "destination": 2,
+      "bits": 3
+    },
+    {
+      "source": 1,
+      "destination": 3,
+      "bits": 76
+    },
+    {
+      "source": 2,
+      "destination": 0,
+      "bits": 91
+    },
+    {
+      "source": 2,
+      "destination": 1,
+      "bits": 62
+    },
+    {
+      "source": 3,
+      "destination": 0,
+      "bits": 64
+    },
+    {
+      "source": 4,
+      "destination": 0,
+      "bits": 153
+    },
+    {
+      "source": 4,
+      "destination": 8,
+      "bits": 88
+    },
+    {
+      "source": 5,
+      "destination": 0,
+      "bits": 152
+    },
+    {
+      "source": 5,
+      "destination": 8,
+      "bits": 37
+    },
+    {
+      "source": 6,
+      "destination": 0,
+      "bits": 152
+    },
+    {
+      "source": 6,
+      "destination": 8,
+      "bits": 47
+    },
+    {
+      "source": 7,
+      "destination": 0,
+      "bits": 152
+    },
+    {
+      "source": 7,
+      "destination": 8,
+      "bits": 30
+    },
+    {
+      "source": 8,
+      "destination": 9,
+      "bits": 289
+    },
+    {
+      "source": 9,
+      "destination": 3,
+      "bits": 44
+    }
+  ],
+  "open": "Size actual local leaves from measured area/cuts and real macro geometry; legal clock pin homes and native CTS/STA remain required."
+}

@@ -3086,6 +3086,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return site_cache[key]
 
 
+    from qwen_split.relay_frame_ownership import FrameOwnership
+    reservations = FrameOwnership(plans)
     repaired, unrepaired, off_plan, cut_over = [], [], [], []
     lifted0 = set()      # r9: chains lifted off the grid at the start of pass 2 (their pass-1 frames are not restored)
     unrep = {}           # r8: bid -> reason (a chain repaired by a later rip-up pass leaves the list)
@@ -3109,10 +3111,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if tree is None:
             unrep[pl['bid']] = 'no sites'
             return False
-        # free the bus's own pass-1 relays for its search
-        own = [(f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE) for f in pl['frames']]
-        for r_ in own:
-            rm_rect(r_)
+        # A globally lifted plan retains search candidates, not live reservations.
+        # Releasing those stale coordinates a second time can erase a different
+        # repaired chain that claimed the old site. Only the actual owner releases.
+        owned_before_search = reservations.release(idx, pl['frames'], unplace)
         D = RMAX - max(W, H) / 2 + 26.0
         if GATE and P2P_REACH:
             # split-compute C4: the reach is PIN TO PIN (owner rule; RELAY_REACH_OK): two frames face to face on the
@@ -3258,7 +3260,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for a_, b_ in spans_:
                 pre_, suf_ = pl['frames'][:a_], pl['frames'][b_:]
                 kept_ = [(f[0], f[1], f[0] + W, f[1] + H) for f in pre_ + suf_]
-                if idx in lifted0 and any(not free(r_) for r_ in kept_):
+                if any(not free(r_) for r_ in kept_):
                     # r9: a lifted chain keeps the rest of its pass-1 chain only while those sites are still free (run
                     # f1: 13 chains 'self-overlap': the kept frames had gone to chains repaired before)
                     continue
@@ -3365,20 +3367,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 frames, why = [], 'self-overlap'
         if not frames:
             unrep[pl['bid']] = why
-            if idx not in lifted0:
-                for r_ in own:
-                    add_rect(r_)
+            if owned_before_search:
+                # Restore only geometry that this search actually released.
+                # No other chain can acquire it during this sequential search.
+                replace_frames(pl['frames'])
+                reservations.mark(idx)
             else:
-                # Pass-1 frames were lifted before the work list, so another
-                # repaired chain may own their sites now. Do not emit those
-                # stale rectangles on a failed search. The open chain remains
-                # explicitly unrepaired; a later retry can search fresh sites.
+                # Lifted candidates may now belong to another chain. They are
+                # not a placement to restore or emit after a failed search.
                 pl['frames'] = []
             if unbooked:
                 book(booked[idx][0], bits)
             return False
         old = len(pl['frames'])
         pl['frames'] = frames
+        reservations.mark(idx)
         unrep.pop(pl['bid'], None)
         rep_at[idx] = True
         repaired[:] = [q for q in repaired if q[0] != pl['bid']]
@@ -3414,7 +3417,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def _lift(j):
         plj = plans[j]
         fr = list(plj['frames'])
-        unplace(fr)
+        if not reservations.release(j, fr, unplace):
+            raise ValueError(f"relay occupancy: rip-up victim {plj['bid']} has no live reservation")
         return fr
 
     def _settle(j, fr):
@@ -3425,6 +3429,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for f in keep_:
             add_rect((f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE))
         plj['frames'] = keep_
+        if keep_:
+            reservations.mark(j)
+        else:
+            reservations.discard(j)
         return len(keep_) == len(fr)
 
     work = [idx for idx, pl in sorted(plans.items()) if needs_repair(pl)]
@@ -3441,7 +3449,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # at the edges of the blocks their plans crossed; left in place they took the sites the earlier repairs needed
         # (run b2: x3 'start 0', emb 'end free 0' beside the SU) and were gone by the end of the pass.
         for idx in work:
-            unplace(plans[idx]['frames'])
+            reservations.release(idx, plans[idx]['frames'], unplace)
             lifted0.add(idx)
     ripped = set()
     rounds = 0
@@ -3689,10 +3697,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
         len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
     # ---- emit relays and hops
+    from qwen_split.relay_clock import assigned_clock
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
         dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
+        assigned_ck = assigned_clock(m, bid, cl)
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
         prev, hops, rhops = eps[0], [], []
         for k, (x0, y0, w, h) in enumerate(pl['frames']):
@@ -3717,6 +3727,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
             if link:
                 fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
+            elif assigned_ck is not None:
+                ck_add.setdefault(assigned_ck, []).append((nm, 'ck'))
             elif dom == 'stream_1p2':
                 ck_add.setdefault(f'clk_r{region_of(ccx, ccy)}', []).append((nm, 'ck'))
             else:
@@ -4280,10 +4292,24 @@ def _reset_tree(v, m):
         _json.dump(dict(nets=nets, rects=rects, W=m['die']['w'], H=m['die']['h'], gx=v.GX, gy=v.GY), open(_os.environ['OT_RESET_DUMP'], 'w'))
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
-        rec.update(errors=errors, per_net=per)
-        if _os.environ.get('OT_RESET_GATE') == 'warn':     # diagnosis only: the long nets are left in place and reported
+        rec.update(errors=errors, per_net=dict(per))
+        if _os.environ.get('OT_RESET_GATE') != 'warn':
+            raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+        # diagnosis only (warn): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
+        # 10-16: every OTHER reset net still gets its tree (r2h2: 3 unreachable pins on rst_spine / rst_io dropped the whole
+        # tree, so rst_field reached 1,584 sinks as one 47.5 mm net and die STA read -3.96 us on it)
+        if _os.environ.get('OT_RESET_PARTIAL', '1') == '0':
             return rec
-        raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+        bad = {e['net'] for e in errors}
+        cells = [c for c in cells if c[4] not in bad]
+        wires = [w for w in wires if w[1] not in bad]
+        nets = [n for n in nets if n['bid'] not in bad]
+        per = {k: r for k, r in per.items() if k not in bad}
+        idx_of = {k: j for k, j in idx_of.items() if k not in bad}
+        ck_of_bus = {k: c for k, c in ck_of_bus.items() if k not in bad}
+        rec['partial_unbuilt_nets'] = sorted(bad)
+        if not nets:
+            return rec
     dom_inst = {n['bid']: n['domain'] for n in nets}
     ck_add = {}
     for nm, mst, x, y, bid, _ in cells:

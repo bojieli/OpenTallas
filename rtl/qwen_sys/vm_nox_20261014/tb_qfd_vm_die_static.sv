@@ -1,6 +1,11 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_die_static;
 parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,NATIVE_BANKS=0;
+parameter integer RETURN_RO=1,PARTITIONED=0,EXPECTED_RO=RETURN_RO,RETURN_PIN_INPUT=0;
+parameter integer WRITE_LEAVES=0;
+parameter integer EXPECTED_SU_VL=13+RETURN_RO+RETURN_PIN_INPUT;
+localparam integer NCK=8*(22+14*RETURN_RO)+(6*(10+RETURN_RO)+255)/256;
+localparam integer DELTA=EXPECTED_RO-1;
 integer COMMIT_MUT=0;
 initial void'($value$plusargs("COMMIT_MUT=%d",COMMIT_MUT));
 integer epoch=0;
@@ -41,14 +46,31 @@ generate for(rg=0;rg<8;rg=rg+1)begin : g_check_r
 end endgenerate
 reg [63:0] swmask=0;reg [23:0] swa0=0,swa1=0;reg [2047:0] swdata=0;
 wire [2366:0] sa;
-qfd_su_vm_pack u_pack(.s_re0(3'd0),.s_re1(3'd0),.s_a0(72'd0),.s_a1(72'd0),.sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1+PACK_MUT),.sw_data(swdata),.red_we(1'b0),.red_addr(24'd0),.red_data(32'd0),.va(sa));
+reg[2:0] su_re=0;reg[71:0]su_a0=0,su_a1=0;wire[6143:0]su_q;
+reg[EXPECTED_SU_VL:0] su_expected_v=0;
+reg[6143:0] su_expected_q[0:EXPECTED_SU_VL];
+integer su_replies=0;
+always @(posedge clk)begin
+ if(!rst_n)su_expected_v<=0;
+ else begin
+  su_expected_v<={su_expected_v,su_re[0]};
+  for(integer age=EXPECTED_SU_VL;age>0;age=age-1)su_expected_q[age]<=su_expected_q[age-1];
+  for(integer copy=0;copy<3;copy=copy+1)
+   for(integer lane=0;lane<64;lane=lane+1)su_expected_q[0][(copy*64+lane)*32+:32]<=32'h3f800000+su_a0[copy*24+:24]+lane+32768;
+ end
+end
+qfd_su_vm_pack u_pack(.s_re0(su_re),.s_re1(su_re),.s_a0(su_a0),.s_a1(su_a1),.sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1+PACK_MUT),.sw_data(swdata),.red_we(1'b0),.red_addr(24'd0),.red_data(32'd0),.va(sa));
 reg clk=0,rst_n=0; always #1 clk=~clk;
 reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,cycles=0,start_cycle=0,requests=0,responses=0,req_start=0;
 
-qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS)) dut(
+qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS),.RETURN_RO(RETURN_RO),.RETURN_PIN_INPUT(RETURN_PIN_INPUT),.WRITE_LEAVES(WRITE_LEAVES),.WRITE_CLOCKS(WRITE_LEAVES),.PAR_RB(PARTITIONED),
+ .USE_NATIVE_CLOCKS(PARTITIONED),.RETURN_LEAVES(PARTITIONED),.READ_CONTROL_LEAVES(PARTITIONED),.RETURN_CLOCKS(PARTITIONED),.RELAY_TILES(PARTITIONED)) dut(
 .ck(clk),.rst_n(rst_n),
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+.native_ck({1008{clk}}),.return_ck({96{clk}}),.read_control_ck({3{clk}}),.write_ck({240{clk}}),.relay_ck({NCK{clk}}),
+`endif
 .ck_r0_0(clk),
 .ck_r0_1(clk),
 .ck_r0_2(clk),
@@ -537,7 +559,7 @@ qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NA
 .ck_r6_61(clk),
 .ck_r6_62(clk),
 .ck_r6_63(clk),
-.sa(sa),.sq(),.mx(553'd0),.rb0(551'd0),.rb1(551'd0),.rb2(551'd0),
+.sa(sa),.sq(su_q),.mx(553'd0),.rb0(551'd0),.rb1(551'd0),.rb2(551'd0),
 .ld(),.mo(),.mee(1'b1),
 .svr(svr),.svr_rdy(),.svq(svq),.svq_v(svq_v),.svw(svw),.ar(ar),.xaw(),
 .write_commit_v(cv),.write_commit_line(cl),.write_commit_mask(cm),
@@ -547,6 +569,10 @@ integer l;begin for(l=0;l<16;l=l+1)image[32*l+:32]=32'h3f800000+16*row+l+epoch*3
 endfunction
 always @(negedge clk) if(rst_n)begin
 cycles=cycles+1;
+if(su_expected_v[EXPECTED_SU_VL])begin
+ su_replies=su_replies+3;
+ if(su_q!==su_expected_q[EXPECTED_SU_VL])begin errors=errors+1;$display("FAIL static SU reply cycle=%0d VL=%0d",cycles,EXPECTED_SU_VL);end
+end
 if(fv)begin
  if(fb!==5'(fence_commits) || ft!==59'h12345678)$fatal(1,"FAIL fence beat/tag");
  if(cycles-awcycle[fb]!=9)$fatal(1,"FAIL fence output latency");
@@ -559,12 +585,12 @@ for(integer b=7;b<39;b=b+1)if(cv[b] && cl[8*b+:8]==49)begin
 end
 if(q[523])begin
  if(q[516:512]!==beats[4:0] || q[511:0]!==image(856+beats))begin errors=errors+1;$display("FAIL beat=%0d tag=%0d",beats,q[516:512]);end
- if(cycles!=start_cycle+15+beats)begin errors=errors+1;$display("FAIL Q cadence cycle%0d expected%0d",cycles,start_cycle+15+beats);end
+ if(cycles!=start_cycle+15+DELTA+beats)begin errors=errors+1;$display("FAIL Q cadence cycle%0d expected%0d",cycles,start_cycle+15+DELTA+beats);end
  beats=beats+1;
 end
 if(svq_v)begin
- if(responses>=requests || svq!==image(3167+responses%32) || cycles!=req_start+13+responses)begin
-  errors=errors+1;$display("FAIL seq response%0d cycle=%0d expected=%0d",responses,cycles,req_start+13+responses);
+ if(responses>=requests || svq!==image(3167+responses%32) || cycles!=req_start+13+DELTA+responses)begin
+  errors=errors+1;$display("FAIL seq response%0d cycle=%0d expected=%0d",responses,cycles,req_start+13+DELTA+responses);
  end
  responses=responses+1;
 end
@@ -588,13 +614,13 @@ svw=0;ar=0;
 // Compiler reserves16 drain/visibility edges; commit coverage is checked,never used to move this start.
 repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
-repeat(46)@(negedge clk);
+repeat(46+DELTA)@(negedge clk);
 if(fence_commits!=32 || ff || !fc)$fatal(1,"FAIL fence commits=%0d fault=%0d complete=%0d",fence_commits,ff,fc);
 if(commits!=32)begin errors=errors+1;$display("FAIL commits=%0d",commits);end
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL beats=%0d fault=%0d",beats,fault);end
 // Fixed interval1 row service:256 requests in256 consecutive cycles,exact13-edge responses.
 for(i=0;i<256;i=i+1)begin svr={1'b1,20'(3167+i%32)};@(negedge clk);end
-svr=0;repeat(16)@(negedge clk);
+svr=0;repeat(16+DELTA)@(negedge clk);
 if(responses!=256)begin errors=errors+1;$display("FAIL responsecount%0d",responses);end
 // Repeat via the REAL shared native SU producer pack; fresh coverage cannot inherit the prior epoch.
 repeat(3)@(negedge clk);epoch=1;beats=0;qe=1;@(negedge clk);qe=0;
@@ -606,9 +632,21 @@ end
 swmask=0;
 repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
-repeat(46)@(negedge clk);
+repeat(46+DELTA)@(negedge clk);
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL SU beats=%0d fault=%0d",beats,fault);end
-if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=13 Q_cadence=1",requests);
+// Compiler-reserved SU read burst after the real epoch1 SU write producer.
+// Actual three mapped operand copies return64rawFP32words each, every edge.
+for(i=0;i<256;i=i+1)begin
+ su_re=3'b111;
+ for(integer copy=0;copy<3;copy=copy+1)begin
+  su_a0[copy*24+:24]=24'((856+(i+copy*5)%28)*16);
+  su_a1[copy*24+:24]=su_a0[copy*24+:24]+1;
+ end
+ @(negedge clk);
+end
+su_re=0;repeat(EXPECTED_SU_VL+4)@(negedge clk);
+if(su_replies!=768)begin errors=errors+1;$display("FAIL static SU count=%0d",su_replies);end
+if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=%0d Q_cadence=1 RO=%0d real_relay_tiles=%0d SU_replies=%0d SU_VL=%0d",requests,12+EXPECTED_RO,RETURN_RO,PARTITIONED?NCK:0,su_replies,EXPECTED_SU_VL);
 else $display("FAIL vm_die_static errors=%0d",errors);
 $finish;
 end

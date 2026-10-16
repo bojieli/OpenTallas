@@ -1,0 +1,12 @@
+{
+  "source_commit": "7c505bd43",
+  "job": "oth-ubuntu-1196482-1792126813",
+  "host": "ot-epyc1tb",
+  "scope": "full actual-source flat Verilator lint",
+  "exit": 143,
+  "kernel_cause": "CONSTRAINT_MEMCG; 64 GiB ot-heavy unit memory capacity reached",
+  "verilator_anon_rss_kib": 66964236,
+  "tool_errors_before_kill": 0,
+  "not_elaboration_pass": true,
+  "structural_followup": "actual-source hierarchical compilation at real module cuts to avoid repeated full arithmetic flattening; retain actual workload and source"
+}

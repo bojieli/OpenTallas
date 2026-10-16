@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/dsfd_vm_xio_return_native_1016_r1",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_xio_return_native_1016_r1-20261016-033317",
+  "gate_source_commit": null,
+  "gate_result_sha256": "7994f96be1d3a32ec06485a26260c39513d3cedf4ee24daa58daf36ec69529b2",
+  "library_sha256": "b49da7193ded60202fc01d11803503fadeb136e8a8661138a1f79334efad7000",
+  "insertion_sha256": "f19c6bb220185afb751538c46cba95eb14ef91cf382c7e284b3ddfef568f96d8",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+    "ps": 199.43201,
+    "pin": "g_d[182]"
+  },
+  "capture": {
+    "ps": 175.76641,
+    "pin": "e_d[1758]"
+  },
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "ck": {
+      "rise": 284.0,
+      "fall": 306.397885,
+      "min": 252.03867,
+      "max": 327.01315,
+      "src": "insertion.json boundary mean",
+      "bmin": 263.5,
+      "bmax": 327.0,
+      "n": 3613
+    }
+  },
+  "diagnostic_pass": true
+}

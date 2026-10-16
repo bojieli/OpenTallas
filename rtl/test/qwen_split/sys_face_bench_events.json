@@ -1,10 +1,8 @@
 {
-"note": "bench L / E event lists (relative to their calendar start); T is built by run_sys_face_bench.sh from the D2D sequencer START table",
+"note": "bench L / E event lists (relative to their calendar start); T is built by run_sys_face_bench.sh from the D2D sequencer START table; first token and token period come from d2d_cal_image.svh (D2D_FIRST_TOKEN, D2D_TOKEN_PERIOD)",
 "go_ofs": 3,
 "l0_start": 272,
 "emb_stage": 257,
-"token_cycles": 246340,
-"first_token": 3000,
 "L": [
 [
 20,

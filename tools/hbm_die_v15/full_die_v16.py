@@ -12,7 +12,7 @@ composes EVERY die instance from real RTL on main:
     Codex DECISION 14:40, H-DIE 1705);
   * the service engine region (bit-exact from tools/hbm_die_v15/die_case.py): per quadrant the PHY-only abstract
     ot_hbm3e_phy_rc_e8p5 (the one modelled core), 32 real controllers ot_hbm_svc_pc_ctrl_leaf, 8 SM service groups
-    ot_hbm_svc_sm_group (issuer + four-PC feed) and 8 SM tiles ot_hbm_accel_smh_static;
+    ot_hbm_svc_sm_group (issuer + four-PC feed) and 8 SM tiles ot_hbm_accel_smh_attn;
   * region specs written against the owners' RTL (tools/hbm_die_v15/v16_specs/*.json: sm_vm, su_sfu, coll_idx_link,
     host_misc): instances, edges (with the composition RTL / log line that proves each mapping), clock/reset domains,
     straps, and GAPS (owner + missing RTL) for every input no real producer drives.
@@ -141,8 +141,11 @@ def engine_region():
                              source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group.sv',
                              params=dict(STACK=QID[q], SM=k, FIXED_GO=1), slot=f'pc_{q}{k}', owner='H-DIE', region='engine',
                              note='SM k service group: issuer (descriptor SRAM) + four-PC feed (LBANKS 4)'))
-            inst.append(dict(name=s, master='ot_hbm_accel_smh_static', source='rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv',
-                             params={}, slot=s, owner='H-SM', region='engine', note='static SM tile (grant v6 real pins)'))
+            # H-NETLIST/attn 2026-10-16 (parent-approved): the ATTENTION SM (owner option B); command[191:83] + kv_desc
+            # come from xc_<q><k> (v16_specs/attn_0030.json), command[82:0] from svg_<q><k>.sm_command (below).
+            inst.append(dict(name=s, master='ot_hbm_accel_smh_attn', source='rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv',
+                             params={}, slot=s, owner='H-SM', region='engine',
+                             note='attention-capable static SM (ot_hbm_accel_smh_static + attention front/BE; grant v6 pins + KV_DESC)'))
             for p, dm in (('stream_clk', 'stream'), ('hbm_clk', 'hbm'), ('stream_bank_clk', 'stream'),
                           ('hbm_fifo_clk', 'hbm'), ('hbm_pc_clk', 'hbm')):
                 clocks.append(dict(inst=g, port=p, domain=dm, kind='clock'))
@@ -177,7 +180,7 @@ def engine_region():
                              allowed_exception=kexc if p in rdy else None)
                     edges.append(e)
             edges.append(dict(src=[g, 'sm_packet'], dst=[s, 'packet'], clock='stream', basis=basis))
-            edges.append(dict(src=[g, 'sm_command'], dst=[s, 'command'], clock='stream', basis=basis))
+            edges.append(dict(src=[g, 'sm_command'], dst=[s, 'command', 0, 83], clock='stream', basis=basis))
     # G-ENG-STACK-FAULT (-> sfault_<q> = ot_hbm_svc_stack_fault) and G-VM-HBM-PATH (-> vmks_<q><k> + vmdel_<q><b> +
     # vmfc_<q>) are closed by tools/hbm_die_v15/v16_specs/vmsm.json (H-NETLIST/vmsm 2026-10-15).
     gaps = []
@@ -192,6 +195,19 @@ def rng(ref, ports):
     if len(ref) >= 4 and ref[2] is not None:
         return i, p, int(ref[2]), int(ref[3])
     return i, p, 0, ports[i][p]['bits']
+
+
+STRAP_TARGET_MASTERS = ('ot_static_cmd_target', 'ot_static_program_target')
+UNIV_CAL_DIR = 'rtl/hbm_accel/generic/vm/static/'
+UNIV_CAL_SRC = UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv'
+
+
+def universal_calendar_fields():
+    """(field, lo, bits) of the universal calendar, read from the literal registered slices of its RTL."""
+    txt = (ROOT / UNIV_CAL_SRC).read_text()
+    f = sorted((int(lo), name, int(b)) for name, lo, b in re.findall(r'assign\s+(\w+)\s*=\s*calendar\[(\d+)\+:(\d+)\]', txt))
+    assert [lo for lo, _, _ in f] == [sum(b for _, _, b in f[:k]) for k in range(len(f))], 'universal fields not contiguous'
+    return [(name, lo, b) for lo, name, b in f]
 
 
 def build(specs_dir, out):
@@ -235,6 +251,31 @@ def build(specs_dir, out):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST 0600 (owner 19:50 FEWER DISTINCT TILES): programme/command targets take their F20 target id from the
+    # identity strap pin tgt (TGT_PIN=1) instead of the TARGET parameter, so one hardened master per shape serves every id
+    # (76 cmd + 18+ programme targets -> 5 + 1 masters).  The id is a die constant on the strap, never a runtime value.
+    tgt_straps = []
+    for n, i in insts.items():
+        if i['master'] in STRAP_TARGET_MASTERS and 'TARGET' in i['params']:
+            v = str(i['params'].pop('TARGET'))
+            tid = int(v.split("'d")[1]) if "'d" in v else (int(v.split("'h")[1], 16) if "'h" in v else int(v))
+            i['params']['TGT_PIN'] = 1
+            tgt_straps.append(dict(inst=n, port='tgt', value=tid, reason=f'identity: F20 target id {tid} of this target instance'))
+    specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
+    # H-NETLIST 0600: fill calendars vmfc_<q> (ot_vms_calendar_static, W<=187) are the CLOSED universal VM calendar
+    # master hfd_hgi_vm_calendar (native PASS): same programme ABI, calendar[W-1:0] = its low packed fields cycle for
+    # cycle (rtl/hbm_accel/generic/vm/static/fill_universal_0600 gate). Their 'calendar' edges are re-cut per field
+    # below and the related clocks clk_cap/clk_mem join the instance clock domain.
+    univ_cal = {}
+    ucal_fields = universal_calendar_fields()
+    for n, i in insts.items():
+        if i['master'] == 'ot_vms_calendar_static' and int(i['params'].get('W', 146)) <= sum(b for _, _, b in ucal_fields):
+            univ_cal[n] = int(i['params'].get('W', 146))
+            i.update(master='hfd_hgi_vm_calendar', source=UNIV_CAL_SRC, params={},
+                     rtl_deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv'],
+                     note=i.get('note', '') + f' | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W{univ_cal[n]})')
+    specs.append(dict(region='fill_calendar_universal', edges=[], instances=[], gaps=[], straps=[],
+                      clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]))
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])
@@ -262,6 +303,23 @@ def build(specs_dir, out):
             e.setdefault('name', f"{s['region']}_{k}")
             e['region'] = s['region']
             edges.append(e)
+    if univ_cal:
+        cut = []
+        for e in edges:
+            src = e['src']
+            if src[0] in univ_cal and src[1] == 'calendar':
+                lo = src[2] if len(src) > 2 else 0
+                hi = src[3] if len(src) > 3 else univ_cal[src[0]]
+                dst = e['dst']; dlo = dst[2] if len(dst) > 2 else 0
+                for fname, flo, fbits in ucal_fields:
+                    a, b = max(lo, flo), min(hi, flo + fbits)
+                    if a < b:
+                        cut.append(dict(e, name=f"{e['name']}__{fname}", src=[src[0], fname, a - flo, b - flo],
+                                        dst=[dst[0], dst[1], dlo + a - lo, dlo + b - lo],
+                                        basis=(e.get('basis') or '') + ' | universal calendar field slice (H-NETLIST 0600)'))
+            else:
+                cut.append(e)
+        edges = cut
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
     E = []

@@ -27,3 +27,14 @@ set +e
 vvp "$out/residual_mut.vvp" >"$out/residual_mut.log" 2>&1;rc=$?
 set -e
 [[ $rc != 0 ]];grep 'RESIDUAL_HALF write_phase mismatch' "$out/residual_mut.log"
+# v2 read pin capture (H-NETLIST/kits 10-16): bypassing the read address pin flop must be rejected (TML4 check)
+python3 - "$base/ot_hgi_hc_residual_half_static.sv" "$out/residual_rmut.sv" <<'PY'
+import pathlib,sys
+s=pathlib.Path(sys.argv[1]).read_text();assert '.r_addr_in(ra_q)' in s
+pathlib.Path(sys.argv[2]).write_text(s.replace('.r_addr_in(ra_q)','.r_addr_in(read_word)'))
+PY
+iverilog -g2012 -s tb_hgi_hc_residual_half_static -o "$out/residual_rmut.vvp" "$out/residual_rmut.sv" rtl/test/tb_hgi_hc_residual_half_static.sv "$xm" >"$out/residual_rmut.compile.log" 2>&1
+set +e
+vvp "$out/residual_rmut.vvp" >"$out/residual_rmut.log" 2>&1;rc=$?
+set -e
+[[ $rc != 0 ]];grep 'RESIDUAL_HALF read mismatch' "$out/residual_rmut.log"

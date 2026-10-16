@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_caq",
+ "enable": true,
+ "clock": "sk",
+ "clock_ports": [
+  "sk"
+ ],
+ "exclude": "^(run|kind|rv_u|t_u|iq|w_d|e_d|c_d|vo|e|f|iqo|wd|cq)$",
+ "reset": "^srs$",
+ "reason": "ot_s81_hc_caq RTL already registers every one of these ports at the pin (header: run / kind / rv_u / t_u / iq / w_d / e_d / c_d captured by run_q..cd_q; vo / e / f = aq12 output flops, iqo = u_iq last stage, wd = x_q, cq = cq flop); the routed audit puts them all inside budget (capture <= 116.8, launch <= 203.4 ps). Only odd (the per-instance parity tie into the 256-bit cq1 select, capture 253.6 ps) has no pin flop: it alone is registered (+1 edge on a static tie = no schedule change). A second register on the lockstep ports would add +1 cycle each to the HC combine region (exact register counts) for no timing need.",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

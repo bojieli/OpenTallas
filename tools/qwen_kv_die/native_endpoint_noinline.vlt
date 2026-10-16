@@ -1,0 +1,4 @@
+`verilator_config
+// Preserve actual module boundaries in the service glue / remaining ancestors.
+// This changes simulator compilation only, never RTL arithmetic or cycle count.
+no_inline -module "*"

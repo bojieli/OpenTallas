@@ -1,14 +1,14 @@
 {
- "name": "s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931",
+ "name": "s81hc_ctnl_l2_native_ref-np3-ctsclus-COMMIT",
  "block": "ot_s81_hc_ctnl_l2",
  "ref_tile": true,
- "owner": "Codex:s_norm_native_leaves",
- "purpose": "Actual native boundary repair of inherited ctnl_l2; strict launch220/capture190/spread80; same RTL arithmetic and reset epoch; immutable published predecessor remains separate",
+ "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
+ "purpose": "Native repair of ctnl_l2 np2 (CLOSED TT+37.36/FF+16.08/DRC0 but native FAIL launch 222.8/capture 208.7): same RTL, outline 142.56x99.36, granted pins and recipe-2 pin stage; clock tree rebuilt with explicit register-sink clustering (24 sinks / 30 um) and 15 um buffer distance, the setting closed-native on the same-size VM static tiles.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex-s81-norm-native-leaves-1014",
-  "commit": "57b4f1931001e59ea6e1b6501ff388c07be6fded"
+  "branch": "claude/s81-hccol-0600",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctnl_l2_native_ref/s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931"
+   "to": "results/rtl/ref_tile/s81hc_ctnl_l2_native_ref/s81hc_ctnl_l2_native_ref-np3-ctsclus-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -82,13 +82,13 @@
  "merge_target": null,
  "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption.",
- "structural_change": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes. Die-approved height growth95.04->99.36um; exact N-face pin rectangles shifted+4.32um per published grant.",
+ "structural_change": "np3: clock-tree structure only (explicit sink clustering 24/30 um, buffer distance 15 um) on the np2 kit: exact granted 142.56x99.36 pins, recipe-2 pin flops/pads, same RTL and edges. np2 measured: CTS leaf clkbuf_leaf_379 60.7 ps vs 38-42 ps neighbours; R 197.4/spread 27.2 vs l3 191.1/19.3.",
  "reroute_reason": {
   "kind": "pin_register",
-  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/native_audit.json",
+  "source": "results/arch/s81_hc_column_0600/ctnl_np2_native_audit.json",
   "cell": "ot_s81_hc_ctnl_l2",
-  "launch_ps": 228.5,
-  "capture_ps": 178.0,
-  "fix": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes."
+  "launch_ps": 222.8,
+  "capture_ps": 208.7,
+  "fix": "Same kit/RTL/pins; CTS structure changed (route.cts_sink size 24 / diameter 30 um / -distance_between_buffers 15): the np2 route left an overloaded 60.7 ps leaf (hrq launch flops ~15 ps late) and spread 27.2 ps, so 42 fdx captures took 2 extra route hold-ECO HB2 cells; l3 with spread 19.3 passes (launch 201.6/capture 166.7)."
  }
 }
