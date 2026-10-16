@@ -1,0 +1,50 @@
+{
+  "cell": "dsfd_m2l_raw_512x1__hl_W3",
+  "view": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w3/views/dsfd_m2l_raw_512x1__hl_W3",
+  "job": "s81net_m2l_raw_512x1__hl_w3-n3-f8139a4c7",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/s81net_m2l_raw_512x1__hl_w3-n3-f8139a4c7",
+  "record_commit": "7716f003f590c5d5684e9d5ee19e749fe4a82330",
+  "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81net_m2l_raw_512x1__hl_w3-n3-f8139a4c7/routes/s81net_m2l_raw_512x1__hl_w3_n3_f8139a4c7/work/orfs",
+  "mismatches": [
+    "dsfd_m2l_raw_512x1__hl_W3.lef"
+  ],
+  "raw_lef_expected": "e2d86e3a6bc59344d21650d2f3c940b2a468e46b5efc74442d129b18211ccb9e",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "dsfd_m2l_raw_512x1__hl_W3.lef": "bcfc915b1d297849d8ceb0680e7b79158999d04200eecd00a28f1d8289c957af",
+    "dsfd_m2l_raw_512x1__hl_W3_tt.lib": "a47e508bfd2ec44fd2a8bcff776017fe92ec47084e3c252ed89da3cd8147423d",
+    "dsfd_m2l_raw_512x1__hl_W3_ff.lib": "a75e30df1cf44651b7ac781e965e0526d9d750e922c47969ac9ebdc3df21148c",
+    "dsfd_m2l_raw_512x1__hl_W3_ss.lib": "1becf2d6f9eea3414d611932c21831c70d6a4c2450c0f48b517d7045d7d7d0f2",
+    "abstract.json": "c8b53da68ff055894ca8a85a118b2bcd61bbfb9f76ce2a3ae2b69b90cd1167fb",
+    "insertion.json": "611a6751407a9787f44e4ecd87fb96b075cbceb3f5cf4d505cfd50b40d344d70",
+    "child_lint.json": "7268e7b9cc4ebd7c14dc6090ad723ceff1947781ef52470921933e6d86025190"
+  },
+  "passed": true,
+  "raw_sha256": "e2d86e3a6bc59344d21650d2f3c940b2a468e46b5efc74442d129b18211ccb9e",
+  "final_sha256": "bcfc915b1d297849d8ceb0680e7b79158999d04200eecd00a28f1d8289c957af",
+  "helper_sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 2 OBS rects moved into 2 pins: ck[0], rs[0]; pockets: 963 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "dsfd_m2l_raw_512x1__hl_W3.lef": true,
+    "dsfd_m2l_raw_512x1__hl_W3_tt.lib": true,
+    "dsfd_m2l_raw_512x1__hl_W3_ff.lib": true,
+    "dsfd_m2l_raw_512x1__hl_W3_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "status": "DISPOSABLE_APPLY_ONLY_PASS_NOT_ROUTE_QUALIFICATION",
+  "removed_cells": 1826,
+  "protected_rows_identical": true,
+  "protected_counts": {
+    "CELL": 4264,
+    "CLOCK": 1975,
+    "PROTECTED": 6112
+  },
+  "protected_sorted_sha256": "04b24169254d14985a7848137bb91433515d478944e943c90506ddeb192c5cc4",
+  "source_odb_sha256": "e667770dccecdbf1ee0e637408d034fb3eafb0ca05b0e71545e3d6e67e814f44",
+  "all_non_buffer_cells_port_connectivity_equal_modulo_noninverting_delay_buffers": true,
+  "functional_connectivity_sha256": "7ebfd165b31f36a468e10972bab381c6bee44f51fcbbcba42c6af13deb466803",
+  "non_buffer_instances_including_physical_fillers_checked": 648478,
+  "non_buffer_instances_with_ports_checked": 9564,
+  "protected_cell_definition": "4262 sequential cells plus2real SRAM instances; exactsame masters/locations/orientations and clock/reset/macroportnets"
+}

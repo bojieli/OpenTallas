@@ -1,0 +1,13 @@
+{
+ "blocks": 48,
+ "buses": 0,
+ "bus_bits": 0,
+ "max_stages": 0,
+ "grt": null,
+ "note": "S81 wide-hub plan: blocks only (the plan file carries no inter-block bus list; render the GEN die dump with --dump for buses)",
+ "stage_model": "ceil(manhattan/500 um) - 1 where the plan gives none",
+ "images": {
+  "floorplan": "results/physical/die_iter_1012/s81/canonical_widehub_1015/layout_rm5/die_floorplan.png",
+  "buses": "results/physical/die_iter_1012/s81/canonical_widehub_1015/layout_rm5/die_buses.png"
+ }
+}

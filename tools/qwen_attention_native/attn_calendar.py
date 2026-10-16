@@ -5,7 +5,9 @@ The service takes one 176-bit calendar per request: 11 start/capture ages (edges
 {R, P1, P0, PV_START, HUB_PUB, HUB_RECIP, HUB_Z, HUB_LMAX, Z, LMAX, EXP} (tb_qwen_tp8_attention_native_service +CAL).
 Every age is derived from the context length T (1..8192) by laws read off the RTL structure and pinned by measured
 fault/exact boundaries on the production binary (fix_r3 RL21/HXK8 + static ASTK CTL reading Z sums by block index,
-results/arch/qwen_attention_native_calendar_1015):
+results/arch/qwen_attention_native_calendar_1015).
+PRODUCTION (2026-10-15, coordinator): pv="w16" = ot_qwen_tp8_attention_native_service_w16 (16 V rows/cycle P.V,
+results/arch/qwen_attention_rate_1015) is the default; pv="w1" keeps the 1-row/cycle service laws below for reference:
   LMAX     = last ECTL QK consume (tools/qwen_kv_die/static_qk_calendar.py) + 117
   EXP      = LMAX + 15
   Z        = EXP + 250 + zwalk(T)            (EP sequencer walk position of block 0's last chunk)
@@ -112,8 +114,30 @@ def hub(z, lmax):
     return hub_lmax, hub_z, recip, pub
 
 
-def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None):
-    """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_k: Z - (EXP + zwalk); pv_gap: PV_START - Z"""
+# ---- Q-ATTN-RATE 2026-10-15: 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16, 2 x ot_qwen_tp8_pv_wide_pair) ----
+W16_FIRST = 22          # pair cycle of the q = 0 arrival: start pin reg 1 + request cycle 1 + request pin reg 1 + V_EXT 16 + ER3 3
+W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 30   # last arrival -> TRA; in-bank tree 16 -> 1; join 24 behind cmd + bank-out + join-in pin regs (+6)
+W16_PV_AFTER_EXP = 186   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
+
+
+def w16_nq(T, p):
+    """issue cycles of pair p: 16 x (rounds of the c = 0 chain + 1 round of high-half skew), 0 for an empty pair"""
+    if T <= 128 * p:
+        return 0
+    return 16 * (((T - 128 * p + 255) >> 8) + 1)
+
+
+def w16_pair_out(T, p):
+    """pair output cycle after the start_pv cycle (ot_qwen_tp8_pv_wide_pair.out_age)"""
+    return W16_FIRST + w16_nq(T, p) - 1 + W16_DRAIN + W16_TREE + W16_JOIN
+
+
+def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w16", w16_gap=None, head_g3s2=False):
+    """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_k: Z - (EXP + zwalk); pv_gap: PV_START - Z;
+    pv: 'w1' (1 row/cycle pairs, ot_qwen_tp8_attention_native_service) or 'w16' (16 rows/cycle, _service_w16);
+    w16_gap: w16 only, PV_START - EXP override (default: the measured law pv_after_exp_w16)"""
+    if pv == "w16":
+        return calendar_w16(T, lmax, exp_gap, z_k, w16_gap, head_g3s2)
     if not 1 <= T <= 8192:
         raise ValueError("context 1..8192")
     if lmax is None:
@@ -131,6 +155,37 @@ def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None):
              LMAX=lmax, EXP=exp)
     check(c)
     return c
+
+
+HEAD_G3S2_SHIFT = 5   # KV-die v1.4.3 G3S2 head staging (3 ingress + 2 score stages) with ECTL HXK = 8 + 5 = 13: every age
+                      # after start_qk moves +5 (measured: exact at +5, fault at +4, T=1..8192; HXK 5 is numerically wrong)
+
+
+def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None, head_g3s2=False):
+    c = calendar(T, lmax, exp_gap, z_k, pv="w1")   # QK / softmax / hub ages are shared; P.V replaced below
+    if head_g3s2:
+        for f in ("LMAX", "EXP", "Z", "HUB_LMAX", "HUB_Z", "HUB_RECIP", "HUB_PUB"):
+            c[f] += HEAD_G3S2_SHIFT
+    po = [w16_pair_out(T, 0), w16_pair_out(T, 1)]
+    gap = w16_gap if w16_gap is not None else pv_after_exp_w16(T)
+    pv = max(c["EXP"] + gap, c["HUB_PUB"] + RZ_MARGIN - max(po))
+    c.update(P0=po[0], P1=po[1], PV_START=pv, R=max(max(po), c["HUB_PUB"] + RZ_MARGIN - pv))
+    check(c)
+    return c
+
+
+def pv_after_exp_w16(T):
+    """PV_START - EXP of the 16-row walk: zwalk(T) + 186.  Measured at 1-edge resolution on the production binary with
+    pin registers on every P.V port (4c026e895; fault = the stack e-read visibility check): d = PV_START - EXP - zwalk
+    is exact from 182 (T=6144), 184 (7000, 7168), 186 (8000, 8192) and faults one edge below; from ~5000 rows down the
+    published reciprocal (R) binds the capture (exact from 174 at 5000).  The 1-row/cycle-era receipt (55a5f5a98, no
+    request pin register) had the same boundaries 2 edges later."""
+    return zwalk(T) + W16_PV_AFTER_EXP
+
+
+def service_cycles(c):
+    """start_qk cycle -> last result beat (the bench's service_cycles): PV_START + max(P, R) + 16 (join) + 33"""
+    return c["PV_START"] + max(c["P0"], c["P1"], c["R"]) + 16 + 33
 
 
 def check(c):
@@ -158,10 +213,13 @@ def main(argv=None):
     ap.add_argument("--z-k", type=int, default=None)
     ap.add_argument("--pv-gap", type=int, default=None)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--pv", choices=("w1", "w16"), default="w16")
+    ap.add_argument("--pv-after-exp", type=int, default=None)
+    ap.add_argument("--head-g3s2", action="store_true", help="KV-die v1.4.3 staged heads (ECTL HXK 13): ages +5")
     a = ap.parse_args(argv)
     out = {}
     for T in a.ctx:
-        c = calendar(T, a.lmax, a.exp_gap, a.z_k, a.pv_gap)
+        c = calendar(T, a.lmax, a.exp_gap, a.z_k, a.pv_gap, pv=a.pv, w16_gap=a.pv_after_exp, head_g3s2=a.head_g3s2)
         out[T] = dict(cal=hexcal(c), fields=c)
     print(json.dumps(out, indent=1) if a.json else "\n".join(f"{T} {v['cal']}" for T, v in out.items()))
 

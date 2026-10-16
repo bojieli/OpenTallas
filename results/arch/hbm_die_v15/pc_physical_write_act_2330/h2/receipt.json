@@ -1,0 +1,21 @@
+{
+ "source": "4ad86b49b",
+ "policy_edges": 54018,
+ "policy_pushes": 3850,
+ "policy_pops": 3818,
+ "policy_wraps": 120,
+ "policy_simultaneous_push_pop": 1129,
+ "normal_edges_added": 0,
+ "steady_epoch_ps": 69583.3055,
+ "bytes_per_epoch_per_sm": 8704,
+ "production_shape": "32actualPC/8actualSMgroups/64rows/8epochs/4landingbanks",
+ "positive": "PASS",
+ "mutants": "reversed age, early, noresident, cfgPC, cfgPHASE, missingimage, staleWPAYhead all rejected",
+ "physical_qualification": false,
+ "sha256": {
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/h2/wpay.log": "ec1b1a8dbfd0cf85740b514b3a10aa563ba507dd905b52f3edbed08898890ee2",
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/h2/age_mutant.log": "53802c2ddf8b06f87439de4c0ea22fdf6f65404bd6fa8a9bbd23a349340d6952",
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/h2/policy.log": "cd215ef0f0ff2318db55d214dab75ea716f9c7ab528d0749ce1d6c4467cf30ba",
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/h2/issued.log": "4caa9bd655df8ffbf887118b9e48474d03e5c9ce9387893bc454796c84814e34"
+ }
+}

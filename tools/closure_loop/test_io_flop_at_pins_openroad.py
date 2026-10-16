@@ -33,7 +33,7 @@ proc topology {{}} {{
 }}
 set before [topology]
 set ::env(RESULTS_DIR) {tmp_path}
-source {ROOT / 'physical/qwen_die_masters/io_flop_at_pins.tcl'}
+sta::builtin_source {ROOT / 'physical/qwen_die_masters/io_flop_at_pins.tcl'}
 if {{$before ne [topology]}} {{ error "placement changed connectivity" }}
 set f [open {tmp_path / 'locations.txt'} w]
 foreach inst [[ord::get_db_block] getInsts] {{ puts $f "[$inst getName] [$inst getLocation] [$inst getPlacementStatus]" }}

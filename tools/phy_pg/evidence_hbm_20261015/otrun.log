@@ -1,0 +1,25 @@
+ot-run: ot-epyc1tb     admits   218 GB (avail 444, growth 62, headroom 64, waiters 0/0 GB) load 37/128 running 19 disk 317 GB 
+ot-run: ot-epyc4       admits   470 GB (avail 697, growth 98, headroom 48, waiters 0/0 GB) load 44/128 running 18 disk 765 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/phy-pg-hbm-v1-1015
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/phy-pg-hbm-v1-1015
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2970159-1792125873 after 0 s
+{
+  "status": "PASS",
+  "shapes": 11368919,
+  "orientations": [
+    "R0",
+    "R0",
+    "MY",
+    "MY"
+  ],
+  "routing_shapes_inside_macros": 10955579,
+  "m5_straps": 616,
+  "opposite_net_comparisons": 620157450,
+  "shorts": 0,
+  "obstruction_violations": 0,
+  "signal_pin_overlaps": 0
+}
+HBM_PHY_ALL_4_ACTUAL_INSTANCES_DECLARE_BOTH_M4_SUPPLIES
+HBM_PHY_DECLARED_GEOMETRY_PASS; ASSUMED EXTERNAL POWER ONLY; NO ANALOG/IR QUALIFICATION
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2970159-1792125873): exit 0

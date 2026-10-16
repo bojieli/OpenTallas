@@ -30,6 +30,7 @@ class CompileTest(unittest.TestCase):
                         accesses=[dict(kind=kind,tensor='q',row_offset=0,slot=0,issue_cycle=1,ingress_cycle=2,
                                        bank_enqueue_cycle=2,service_cycle=3,deadline_cycle=8,
                                        **({'commit_cycle':4} if kind=='write' else {'response_cycle':4}))],
+                        vm_pipeline_abi=dict(PIPELINE_ABI['vm']),
                         **({'pipeline_abi':dict(PIPELINE_ABI[eng])} if eng in PIPELINE_ABI else {}))
         self.binding = dict(stage='S000',tensors={'q':dict(base_row=256,nrows=1,source='native_job',producer='field',
                                                         consumers=['su'],evidence=self.evidence)},
@@ -226,6 +227,17 @@ class CompileTest(unittest.TestCase):
             with self.assertRaises(ValueError): kit_boundary_edges(su,self.root)
         del su['kit_boundary']; su['boundary_edges']=2
         with self.assertRaises(ValueError): kit_boundary_edges(su,self.root)
+
+    def test_vm_a2f_relay_record_required_on_vm_touching_jobs(self):
+        vm=PIPELINE_ABI['vm']
+        self.assertEqual((vm['a2_write_extra_edges'],vm['a2f_relay_write_edges'],vm['a2f_relay_read_edges'],vm['a2f_relay_commit_edges']),(2,9,16,3))
+        su=self.binding['jobs']['su']
+        for stale in (None, dict(vm,a2f_relay_read_edges=0)):
+            if stale is None: su.pop('vm_pipeline_abi')
+            else: su['vm_pipeline_abi']=stale
+            self.assertFalse(self.run_compile()['dispatch_eligible'])
+            with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+        su['vm_pipeline_abi']=dict(vm); self.assertTrue(self.run_compile()['dispatch_eligible'])
 
     def test_sa2x2rp_floorplan_stages_require_remeasured_durations(self):
         # SA_2x2_RP: SU-VM link +3 relay edges, field round trip 140 -> 118: old measurements are refused

@@ -35,6 +35,8 @@ PHY_M = 'ot_hbm3e_phy_rc_e8p5'
 CTL_M = 'ot_hbm_svc_pc_ctrl_leaf'
 SVG_M = 'ot_hbm_svc_sm_group'
 SM_M = 'ot_hbm_accel_smh_static'
+STN_M = 'hfd_stn_v15_cc1182'
+REACH = 480.0
 PERIOD = dict(stream=833.333, hbm=1024.0)
 TILE = 9.6
 Q = ('SW', 'SE', 'NW', 'NE')
@@ -166,6 +168,11 @@ def main():
     ap.add_argument('--feed-view', required=True, type=Path, help='dir: feed.netlist.v + <SVG_M>_synth_{tt,ff}.lib')
     ap.add_argument('--feed-wh', nargs=2, type=float, default=[1036.8, 228.96])
     ap.add_argument('--sm-view', required=True, type=Path, help='dir: smh netlist + <SM_M>_synth_{tt,ff}.lib')
+    ap.add_argument('--stn-view', type=Path, help='dir with hfd_stn_v15_cc1182_synth_{tt,ff}.lib: insert SM_HBM relay '
+                    'stages (<= 480 um reach) on every service group -> SM link')
+    ap.add_argument('--die-repeaters', action='store_true',
+                    help='die-level repeaters on the inter-block signal nets (repair_design -max_wire_length 400 on '
+                         'placement parasitics before GRT): the die buffering every block-to-block wire needs; not legalised')
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
     ap.add_argument('--ckgen', default='hb_ckgen')
@@ -224,15 +231,24 @@ def main():
     kinds['sm_grant_ports_absent_in_view'] = extra
     synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef')
     kinds[SM_M] = 'SYNTH (hierarchical mapped netlist ETM, -DOT_SMH_FC_HIER; outline + pins = v6 grant)'
-    vpins = {m: lef_pins(vd / f'{m}.lef') for m in (PHY_M, CTL_M, SVG_M, SM_M)}
-    vxy = {m: lef_xy(vd / f'{m}.lef') for m in (PHY_M, CTL_M, SVG_M, SM_M)}
-    for m in (CTL_M, SVG_M, SM_M):
+    MS = [PHY_M, CTL_M, SVG_M, SM_M]
+    if a.stn_view:
+        for c in ('tt', 'ff'):
+            shutil.copy(next(a.stn_view.glob(f'*_synth_{c}.lib')), vd / f'{STN_M}_{c}.lib')
+        ecap[STN_M] = [entry_cap(vd / f'{STN_M}_{c}.lib') for c in ('tt', 'ff')]
+        sp = ports_of_lib(vd / f'{STN_M}_tt.lib')
+        synth_lef(STN_M, 43.2, 129.6, face_pins(sp, {'W': ['a'], 'E': ['b'], 'N': ['clk']}, 43.2, 129.6), vd / f'{STN_M}.lef')
+        kinds[STN_M] = 'SYNTH relay stage (1,182 flops, ETM; 43.2 x 129.6 generated abstract)'
+        MS.append(STN_M)
+    vpins = {m: lef_pins(vd / f'{m}.lef') for m in MS}
+    vxy = {m: lef_xy(vd / f'{m}.lef') for m in MS}
+    for m in MS[1:]:
         lib = ports_of_lib(vd / f'{m}_tt.lib')
         lp = {re.sub(r'\[\d+\]$', '', p) for p in vpins[m]}
         assert set(lib) == lp, (m, sorted(set(lib) ^ lp)[:10])
     sz = {}
     for m in vpins:
-        t = (vd / f'{m}.lef').read_text()
+        t = (vd / f'{m}.lef').read_text()  # noqa
         mm = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', t)
         sz[m] = (float(mm.group(1)), float(mm.group(2)))
     # ---- placement ----
@@ -255,11 +271,16 @@ def main():
     for q in Q:
         b = P[f'phy_{q}']; north = b['y'] > 10000
         phy = f'phy_{q}'
-        leaves[phy] = dict(m=PHY_M, x=b['x'], y=b['y'], o='MX' if north else 'R0', w=b['w'], h=b['h'])
+        east = b['x'] > W / 2
+        # east PHYs mirrored so channel order runs with the PC band boxes (grants v5 lesson: SE/NE channel order is
+        # reversed vs the box order otherwise; v4 had 9.1 mm PHY-PC hops)
+        po = ('R180' if east else 'MX') if north else ('MY' if east else 'R0')
+        leaves[phy] = dict(m=PHY_M, x=b['x'], y=b['y'], o=po, w=b['w'], h=b['h'])
         lp = vxy[PHY_M]
         for pc in range(32):
             xs = [lp[f'{n}[{pc * w + k}]'][0] for n, w, _ in per for k in range(w)]
-            cx = b['x'] + sum(xs) / len(xs)
+            mx = sum(xs) / len(xs)
+            cx = b['x'] + (b['w'] - mx if po in ('MY', 'R180') else mx)
             l = f'ctl_{q}_p{pc:02d}'
             y = round(b['y'] - 10.8 - ch, 3) if north else round(b['y'] + b['h'] + 10.8, 3)
             leaves[l] = dict(m=CTL_M, x=round(round((cx - cw / 2) / 0.216) * 0.216, 3), y=y, o='MX' if north else 'R0',
@@ -296,12 +317,91 @@ def main():
                 net(f'pk_{q}{k}_{j}', (g, f'sm_packet[{j}]'), [(f'sm_{q}{k}', f'packet[{j}]')])
             for j in range(83):
                 net(f'cm_{q}{k}_{j}', (g, f'sm_command[{j}]'), [(f'sm_{q}{k}', f'command[{j}]')])
+    worst = 0
+    for q in Q:
+        for k in range(8):
+            g = leaves[f'svg_{q}{k}']
+            for lane in range(4):
+                c = leaves[f'ctl_{q}_p{4 * k + lane:02d}']
+                worst = max(worst, abs(g['x'] + g['w'] / 2 - c['x'] - c['w'] / 2) + abs(g['y'] + g['h'] / 2 - c['y'] - c['h'] / 2))
+    print(f'max group-controller centre distance {worst:.0f} um')
     ls = list(leaves.items())
     for i, (l1, v1) in enumerate(ls):
         for l2, v2 in ls[i + 1:]:
             if v1['x'] < v2['x'] + v2['w'] and v2['x'] < v1['x'] + v1['w'] and \
                     v1['y'] < v2['y'] + v2['h'] and v2['y'] < v1['y'] + v1['h']:
                 raise SystemExit(f'overlap {l1} {l2}')
+    # ---- SM_HBM relay stations ----
+    relay_rep = {}
+    if a.stn_view:
+        lanes = json.loads((ROOT / 'results/arch/hbm_die_v15/compact660_v5/lanes2.json').read_text())
+        robs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for v in leaves.values()]
+        for n, b in P.items():
+            if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
+                robs.append((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+        gr = dct.Grid(W, H, robs, margin=2.0)
+        SW_, SH_ = 43.2, 129.6
+
+        def centroid(l, pins):
+            v = leaves[l]; xs, ys = [], []
+            for p in pins:
+                x, y = rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], *vxy[v['m']][p]); xs.append(x); ys.append(y)
+            return sum(xs) / len(xs), sum(ys) / len(ys)
+
+        def place_free(x, y):
+            ci, cj = gr.cell(x, y)
+            nw, nh = int(SW_ // dct.GRID) + 1, int(SH_ // dct.GRID) + 1
+            for r in range(0, 400):
+                for di in range(-r, r + 1):
+                    for dj in (-r, r) if abs(di) != r else range(-r, r + 1):
+                        i0, j0 = ci + di, cj + dj
+                        if i0 < 0 or j0 < 0 or i0 + nw >= gr.nx or j0 + nh >= gr.ny:
+                            continue
+                        if all(gr.free((i0 + u, j0 + w_)) for u in range(nw) for w_ in range(nh)):
+                            for u in range(nw):
+                                for w_ in range(nh):
+                                    gr.blk[(j0 + w_) * gr.nx + i0 + u] = 1
+                            return round(i0 * dct.GRID + 1.0, 3), round(j0 * dct.GRID + 1.0, 3)
+            raise SystemExit(f'no relay home near {x},{y}')
+        for q in Q:
+            for k in range(8):
+                g, sm = f'svg_{q}{k}', f'sm_{q}{k}'
+                p0 = centroid(g, [f'sm_packet[{j}]' for j in range(0, 1099, 37)])
+                p1 = centroid(sm, [f'packet[{j}]' for j in range(0, 1099, 37)])
+                lane = lanes.get(f'pc_{q}{k}>sm_{q}{k}:SM_HBM', {})
+                if 'v' in lane:
+                    path = [p0, (lane['v'], p0[1]), (lane['v'], p1[1]), p1]
+                else:
+                    path = [p0, (p0[0], p1[1]), p1]
+                seg = [abs(path[i + 1][0] - path[i][0]) + abs(path[i + 1][1] - path[i][1]) for i in range(len(path) - 1)]
+                L = sum(seg); R = max(0, -(-int(L) // int(REACH)) - 1)
+                homes = []
+                for r in range(1, R + 1):
+                    t = L * r / (R + 1); i = 0
+                    while t > seg[i] and i < len(seg) - 1:
+                        t -= seg[i]; i += 1
+                    (x0, y0), (x1, y1) = path[i], path[i + 1]
+                    f = t / seg[i] if seg[i] else 0
+                    homes.append(place_free(x0 + (x1 - x0) * f - SW_ / 2, y0 + (y1 - y0) * f - SH_ / 2))
+                relay_rep[f'{q}{k}'] = dict(length_um=round(L), stages=R, lane=lane, homes=homes)
+                if not R:
+                    continue
+                for j in range(1099):
+                    del nets[f'pk_{q}{k}_{j}']
+                for j in range(83):
+                    del nets[f'cm_{q}{k}_{j}']
+                prev = [(g, f'sm_packet[{j}]') for j in range(1099)] + [(g, f'sm_command[{j}]') for j in range(83)]
+                for r, (hx, hy) in enumerate(homes):
+                    ri = f'rly_{q}{k}_{r:02d}'
+                    leaves[ri] = dict(m=STN_M, x=hx, y=hy, o='R0', w=SW_, h=SH_)
+                    for j in range(1182):
+                        net(f'rl_{q}{k}_{r:02d}_{j}', prev[j], [(ri, f'a[{j}]')])
+                    prev = [(ri, f'b[{j}]') for j in range(1182)]
+                for j in range(1099):
+                    net(f'pk_{q}{k}_{j}', prev[j], [(sm, f'packet[{j}]')])
+                for j in range(83):
+                    net(f'cm_{q}{k}_{j}', prev[1099 + j], [(sm, f'command[{j}]')])
+        print('SM_HBM relays', sum(v['stages'] for v in relay_rep.values()), 'max', max(v['stages'] for v in relay_rep.values()))
     # ---- clock domains of every view clock pin ----
     def domain(m, pin):
         b = re.sub(r'\[\d+\]$', '', pin)
@@ -309,15 +409,43 @@ def main():
             return 'hbm' if b == 'clk' else None
         if m == SM_M:
             return 'stream' if b == 'clk' else None
+        if m == STN_M:
+            return 'stream' if b == 'clk' else None
         if m == SVG_M:
             return {'stream_clk': 'stream', 'stream_bank_clk': 'stream', 'hbm_clk': 'hbm', 'hbm_fifo_clk': 'hbm',
                     'hbm_pc_clk': 'hbm'}.get(b)
     ck = slots[a.ckgen]
     pads = json.loads(a.clock_pads.read_text()) if a.clock_pads else {}
-    obs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for v in leaves.values()]
+    # obstacles: every placed view and every other plan block, MINUS the die-owned feedthrough relay column/row each
+    # cluster slot reserves (grants reserved_channels): die clock repeaters sit there, as the die relay stations do
+    def minus_channels(name, x0, y0, w, h, o):
+        sl = slots.get(name)
+        rects = [(x0, y0, x0 + w, y0 + h)]
+        for ch_ in (sl or {}).get('reserved_channels', []):
+            cx0, cx1 = ch_['x_um']; cy0, cy1 = ch_['y_um']
+            if o in ('MY', 'R180'):
+                cx0, cx1 = w - cx1, w - cx0
+            if o in ('MX', 'R180'):
+                cy0, cy1 = h - cy1, h - cy0
+            cut = (x0 + cx0, y0 + cy0, x0 + cx1, y0 + cy1)
+            nr = []
+            for (a0, b0, a1, b1) in rects:
+                if cut[0] >= a1 or cut[2] <= a0 or cut[1] >= b1 or cut[3] <= b0:
+                    nr.append((a0, b0, a1, b1)); continue
+                for r in ((a0, b0, cut[0], b1), (cut[2], b0, a1, b1), (max(a0, cut[0]), b0, min(a1, cut[2]), cut[1]),
+                          (max(a0, cut[0]), cut[3], min(a1, cut[2]), b1)):
+                    if r[2] - r[0] > 0.01 and r[3] - r[1] > 0.01:
+                        nr.append(r)
+            rects = nr
+        return rects
+    obs = []
+    for l, v in leaves.items():
+        if v['m'] == STN_M:      # relay stages are small: the clock wire crosses them (no repeater on them, Grid margin)
+            continue
+        obs += minus_channels(l, v['x'], v['y'], v['w'], v['h'], v['o'])
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
-            obs.append((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+            obs += minus_channels(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
     trees = {}
     clkpins = defaultdict(lambda: defaultdict(list))   # domain -> inst -> [pins]
     for l, v in leaves.items():
@@ -361,7 +489,7 @@ def main():
     for (l, p) in leafclk:
         used[l].add(p)
     rstp = {PHY_M: ['rst_n'], CTL_M: ['rst_n'], SM_M: ['rst_n'],
-            SVG_M: [p for p in svg_ports if p.endswith('rst_n')]}
+            SVG_M: [p for p in svg_ports if p.endswith('rst_n')], STN_M: []}
     # ---- die.v ----
     conn = defaultdict(list)
     for n, ends in nets.items():
@@ -434,7 +562,7 @@ def main():
           for l, v in sorted(leaves.items())]
     for t in trees.values():
         pl += [f'place_inst -name {b} -location {{{x:.3f} {y:.3f}}} -orientation R0 -status FIRM' for b, c, x, y in t['buffers']]
-    ms = (PHY_M, CTL_M, SVG_M, SM_M)
+    ms = tuple(MS)
     sinks = ' '.join(sorted(leaves))
     tcl = f'''# H-DIE v15 whole-die service+SM GRT + TT/FF STA (generated by tools/hbm_die_v15/die_case.py)
 read_lef {plat}/lef/asap7_tech_1x_201209.lef
@@ -467,6 +595,7 @@ set_wire_rc -signal -layer M6
 set_routing_layers -signal M4-M9 -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
+{{REPEAT}}
 set t0 [clock seconds]
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -504,6 +633,15 @@ foreach c {{tt ff}} {{
 }}
 puts OT_DONE
 '''
+    rep = '' if not a.die_repeaters else f'''create_clock -name hbm -period {PERIOD['hbm']} [get_ports clk_hbm]
+create_clock -name stream -period {PERIOD['stream']} [get_ports clk_stream]
+set_clock_groups -asynchronous -group hbm -group stream
+estimate_parasitics -placement
+set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* clk_*}}]
+set r0 [clock seconds]
+repair_design -max_wire_length 400 -buffer_gain 4.0
+puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
+    tcl = tcl.replace('{REPEAT}', rep)
     (out / 'run.tcl').write_text(tcl)
     (out / 'run.sh').write_text('''#!/bin/bash
 # OpenROAD in the pinned ORFS image; writes out/run.log, out/run.exit
@@ -526,7 +664,7 @@ echo $? > $D/out/run.exit
                                                      'insertion not included (no tile CTS yet)', pins_recapped=ecap), instances={m: sum(1 for v in leaves.values() if v['m'] == m) for m in ms},
                signal_nets=len(nets), clock_domains={d: dict(period_ps=PERIOD[d], sinks=sum(len(x) for x in clkpins[d].values()),
                                                              insts=len(clkpins[d])) for d in clkpins},
-               die_clock_trees={d: t['model'] for d, t in trees.items()},
+               die_clock_trees={d: t['model'] for d, t in trees.items()}, sm_hbm_relays=relay_rep,
                open_pins_by_master={m: dict(v) for m, v in open_pins.items()}, open_owner=owner,
                placement={l: v for l, v in leaves.items()},
                corners='setup TT, hold FF (owner option B); SS not run')

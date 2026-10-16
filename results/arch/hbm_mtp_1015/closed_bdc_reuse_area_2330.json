@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm_mtp.closed_bdc_reuse_area.v1",
+  "scope": "exact outline arithmetic for reusing additional copies of the existing closed standalone HBM BDC view; not a lower bound for a newly integrated K2 master",
+  "source": {
+    "path": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc.lef",
+    "sha256": "7973c9cd767a352f893c6215fd221b7f762de5f4b6f6a4b7e4dc24fa893fd749",
+    "git_blob": "084ea57e0beef7fdc94501adc5d22760d5679fdb",
+    "macro": "ot_hbm_accel_smh_bdc",
+    "width_um": 112.32,
+    "height_um": 142.56
+  },
+  "planning_scenario": {
+    "extra_copies_per_sm": 32,
+    "sm_per_die": 32,
+    "extra_copies": 1024,
+    "area_per_copy_um2": 16012.339199999999,
+    "extra_outline_area_per_sm_mm2": 0.5123948544,
+    "extra_outline_area_per_die_mm2": 16.3966353408
+  },
+  "excluded_unmeasured_costs": [
+    "P6 slot and operand storage",
+    "IL24 rather than original IL8 accumulation state",
+    "shared weight dispatch and response selection",
+    "clock roots and pin registration",
+    "parent channels, relays, PG and routing capacity"
+  ],
+  "rejected_prior_basis": "GPU ot_gpu_bd_col std-cell estimate 5473.54um2 / 0.60 cannot establish the area of additional closed HBM BDC copies; prior 10.72mm2 full-set area estimate is invalid",
+  "alternative_scope": "A newly integrated two-set IL24 master may have different mapped area and physical outline. H-SM owns its measured source-pinned arithmetic and same-tool synthesis receipts; this record does not replace those measurements.",
+  "qualification": {
+    "die_fit": false,
+    "physical_k2_view": false,
+    "integrated_mtp_schedule": false,
+    "measured_mtp_token_rate": false,
+    "owner_target_or_price_change": false
+  }
+}

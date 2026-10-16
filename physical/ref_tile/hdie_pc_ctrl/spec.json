@@ -3,6 +3,7 @@
  "top": "ot_hbm_svc_pc_ctrl_leaf",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
@@ -68,10 +69,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:H-DIE",
-  "branch": "claude/hdie-1705",
-  "tag": "hdie",
-  "purpose": "HBM v15 die: per-PC REAL memory controller leaf (owner 10-14 all on-chip execution real): actual ot_hbm_r14_stream_pc sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM; the stack g_pc body verbatim. 128 instances (32/stack) in the PC band boxes between the PHY-only abstract ot_hbm3e_phy_rc_e8p5 (S face) and the SM service groups (N face, K port). Flow control k_rdy/kr_rdy is the HBM-stack boundary (owner 10-14).",
+  "owner": "Codex:HBM2116",
+  "branch": "codex/hbm-takeover-2116",
+  "tag": "pinhead1",
+  "purpose": "HBM v15 die: per-PC REAL memory controller leaf (owner 10-14 all on-chip execution real): actual ot_hbm_r14_stream_pc sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM; the stack g_pc body verbatim. 128 instances (32/stack) in the PC band boxes between the PHY-only abstract ot_hbm3e_phy_rc_e8p5 (S face) and the SM service groups (N face, K port). Flow control k_rdy/kr_rdy is the HBM-stack boundary (owner 10-14). Clock: the HBM controller clock hbm (CK/2 = 1.024 ns, the r14 timing basis; asynchronous to stream via the group FIFOs); the flow signs off at the die 833.333 ps (stricter than the 1024 ps it runs at). OREG=1: every PHY-side command output from a flop.",
   "extra_paths": [
    "tools/hbm_die_v15",
    "tools/hbm_svc_packed136_image.py",
@@ -105,12 +106,17 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "structural_change": "Actual old KREG/KRREG gate has1027 primary input paths up to7levels from dram_rvalid and a -31.19ps output hold plateau on kr_data[48] from its pointer-selected output mux. Add257 PHYreturn pin FF (+1HBMedge before block-ready) and replace both depth2 pointer FIFOs with direct registered-head/tail skids (zero FIFOedge change), preserving same170.64sq outline. Actual32controller/8SM/64row/8epoch exact andearly/residency mutants pass; steady69.5833055ns=1.053x99B/cycle price."
  },
  "std_area_um2": 8666,
  "params": {
   "P": 0,
-  "PHASE": 0
+  "PHASE": 0,
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1
  },
  "children": [],
  "inter": [],
@@ -124,5 +130,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every boundary: K request and K response use true two-entry registered-head skids (no output pointer mux; exact count<2 timing), every PHY command uses OREG, every PHY return input uses RREG valid+data capture, rst_n reaches only the reset relay. Recipe-2 anchors/duplicates the actual boundary flops; adding another generic stage would alter the external elastic protocol."
  }
 }

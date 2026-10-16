@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_r2l_vr_1024x1__ha_SW",
+ "enable": true,
+ "clock": "ck",
+ "clock_ports": [
+  "ck"
+ ],
+ "exclude": "^(di0|fi0|rs)$",
+ "reset": "",
+ "reason": "fi0 is a real 1.2 GHz forwarded clock defined by create_clock w_fi0 in the consumed SDC and must pass directly to the core; di0 already has its RTL negedge fi0 pin register; rs is asynchronous reset. Only ck-domain o receives the generic +1 output edge.",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

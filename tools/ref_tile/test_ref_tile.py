@@ -289,7 +289,7 @@ class Recipe(unittest.TestCase):
             s = RT.load_spec(str(kd / "spec.json"))
             self.assertEqual(RT.kit_recipe(s, Path(b), str(kd / "spec.json")), 1)
         with tempfile.TemporaryDirectory() as c:      # no kit.env anywhere in sight: a new kit
-            self.assertEqual(RT.kit_recipe(s, Path(c)), 2)
+            self.assertEqual(RT.kit_recipe(s, Path(c)), RT.RECIPE_LATEST)
 
     def test_recipe_1_still_refuses_the_combination(self):
         with tempfile.TemporaryDirectory() as a:
@@ -302,7 +302,7 @@ class Recipe(unittest.TestCase):
             again = self.kit(a)                    # regeneration reads RECIPE=2 back from kit.env
         self.assertEqual(new, again)
         env = new["kit.env"]
-        self.assertIn("\nRECIPE=2\n", env)
+        self.assertIn(f"\nRECIPE={RT.RECIPE_LATEST}\n", env)
         kd = f"{RT.KIT_ROOT}/{json.loads(new['spec.json'])['name']}"
         self.assertIn(f"--step-tcl PRE_GLOBAL_PLACE={kd}/pre_gpl.tcl", env)
         self.assertIn(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl", env)
@@ -327,7 +327,7 @@ class Recipe(unittest.TestCase):
         self.assertEqual(job["route_hold_margin_ns"], 0.030)
         self.assertIn("HM=0.03 ", job["stages"]["route"]["cmd"])
         sp = json.loads(new["spec.json"])
-        self.assertEqual((sp["recipe"], sp["inhold"], sp["outhold"], sp["io_flop_at_pins"]["cols"]), (2, True, True, 4))
+        self.assertEqual((sp["recipe"], sp["inhold"], sp["outhold"], sp["io_flop_at_pins"]["cols"]), (RT.RECIPE_LATEST, True, True, 4))
         ref = json.loads(new["floorplan.json"])["referenced"]
         for f in (f"{kd}/pre_gpl.tcl", f"{kd}/pre_dpl.tcl", "physical/dsrom_window_source/leaf_iohold.tcl",
                   "physical/common_flow/pin_reg_split.tcl",
@@ -383,7 +383,7 @@ class Recipe(unittest.TestCase):
         with tempfile.TemporaryDirectory() as a:
             k = self.kit(a, name="rcp_a", inhold=False, outhold=False, route={"hold_margin_ns": 0.02, "macro_halo_um": 3.24})
             env = k["kit.env"]
-            self.assertIn("RECIPE=2", env)
+            self.assertIn(f"RECIPE={RT.RECIPE_LATEST}", env)
             self.assertNotIn("pre_gpl.tcl", k)                   # pin flops alone: the repo hooks directly, default hop limit
             self.assertIn("PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl", env)
             self.assertNotIn("OT_OFLOP_HOPS", env)
@@ -408,7 +408,7 @@ class Recipe(unittest.TestCase):
             self.assertIn("io_flop_at_pins", s)
             self.assertFalse("inhold" in s or "outhold" in s)
             with self.assertRaises(RT.SpecError):
-                self.kit(a, name="rcp_e", recipe=3)
+                self.kit(a, name="rcp_e", recipe=RT.RECIPE_LATEST + 1)
 
     def test_hold_pad_strong_ports_need_a_measured_basis(self):
         with tempfile.TemporaryDirectory() as a:
@@ -485,3 +485,59 @@ class PgSpread(unittest.TestCase):
         self.assertTrue(RT.pg_spread_ok(RT.pg_stripe_spread({"kind": "tile", "route": {"m5_pg_pitch": 2.7}},
                                                             {"pg_layer": "M5"}, 15.12, 30)))
         self.assertIsNone(RT.pg_stripe_spread({"kind": "cluster", "route": {}}, {"pg_layer": "M7"}, 15, 15))
+
+
+class PinRegs(unittest.TestCase):
+    """OWNER RULE 19:50 PT 2026-10-15: recipe 3 = pin registers on every data port of a new leaf tile"""
+    def test_plan_and_env(self):
+        s = {"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": True}}
+        p = RT.pin_regs_plan(s)
+        self.assertEqual((p["clock"], p["latency_cycles"]), ("clk", {"input": 1, "output": 1}))
+        self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK=clk"])
+        self.assertIsNone(RT.pin_regs_plan({"kind": "tile", "clock_port": "clk"}))
+        with self.assertRaises(RT.SpecError):
+            RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False}})       # no reason
+        self.assertEqual(RT.pin_regs_vars({"kind": "tile", "clock_port": "clk",
+                                           "pin_regs": {"enable": False, "reason": "PHY timing owned by the parent"}}), [])
+        with self.assertRaises(RT.SpecError):
+            RT.pin_regs_plan({"kind": "tile", "clock_port": "a", "clock": "entries", "clock_ports": ["a", "b"],
+                              "pin_regs": {"enable": True}})
+        with self.assertRaises(RT.SpecError):
+            RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": True, "exclude": "^cfg"}})
+        v = RT.pin_regs_vars({"kind": "tile", "clock_port": "clk",
+                              "pin_regs": {"enable": True, "exclude": "^cfg_", "reason": "static config"}})
+        self.assertIn("--orfs-var OT_PIN_REGS_EXCLUDE='^cfg_'", v)
+
+    def test_recipe_3_defaults(self):
+        s = {"kind": "tile", "route": {}, "orfs_vars": {}}
+        RT.apply_recipe(s, 3)
+        self.assertEqual(s["pin_regs"], {"enable": True})
+        c = {"kind": "cluster", "route": {}, "orfs_vars": {}}
+        RT.apply_recipe(c, 3)
+        self.assertNotIn("pin_regs", c)
+        o = {"kind": "tile", "route": {}, "orfs_vars": {}}
+        RT.apply_recipe(o, 2)
+        self.assertNotIn("pin_regs", o)
+
+
+class PinRegsGate(unittest.TestCase):
+    def test_warn_then_fail(self):
+        import datetime as dt
+        sys.path.insert(0, str(Path(RT.__file__).parent))
+        import pre_route_gate as PG
+        with tempfile.TemporaryDirectory() as td:
+            kd = Path(td)
+            (kd / "kit.env").write_text("EXTRA=(--orfs-var OT_KEEP_PIN_REGS=1)\n")
+            early = dt.datetime.fromisoformat("2026-10-16T10:00:00-07:00")
+            late = dt.datetime.fromisoformat("2026-10-17T10:00:00-07:00")
+            for now, spec, want in ((early, {}, "WARN"), (late, {}, "FAIL"), (late, {"auto_react_parent": "p"}, "WARN"),
+                                    (late, {"pin_regs": {"enable": False, "reason": "parent owns the boundary"}}, "INFO"),
+                                    (late, {"kind": "cluster"}, None)):
+                g = PG.Gate()
+                PG.check_pin_regs(g, kd, spec, now=now)
+                got = [i["severity"] for i in g.items if i["check"] == "pin_regs"]
+                self.assertEqual(got, [want] if want else [], (now, spec))
+            (kd / "kit.env").write_text("EXTRA=(--orfs-var OT_PIN_REGS=1 --orfs-var OT_PIN_REGS_CLOCK=clk)\n")
+            g = PG.Gate()
+            PG.check_pin_regs(g, kd, {}, now=late)
+            self.assertEqual([i["severity"] for i in g.items], ["INFO"])

@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_hstnv_1029.lef",
+    "sha256": "db2c71f119a6446cb3ea7b3e3d2bb0569e3e6bff91ed1813b549d1c4e6f1c895"
+  },
+  "output": {
+    "path": "dsfd_hstnv_1029.lef",
+    "sha256": "d4572a161766769f59ff07fe70ed090d7fa446374f2bc178aa3d424b552232f4"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py",
+    "basis": "job_source_commit",
+    "source_commit": "8a5212d0a602e8bdbcbc93af4671f252498c94a8"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_hstnv_1029.lef",
+    "dsfd_hstnv_1029.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 6 OBS rects moved into 6 pins: ck[0], di[733], dq[736], dq[778], dq[806], dq[872]; pockets: 238 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/el1015-snetfill/physical/ref_tile/s81fill_hstnv_1029/views/dsfd_hstnv_1029/dsfd_hstnv_1029.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_hstnv_1029 133.92 x 36.72: PG M5 VDD 48 stripes (95% spread, 100% cov) / VSS 48 stripes (95% spread, 100% cov); strap M6; face pins 2059 blocked-above 0 blocked-same 0; clock ck[0] insertion 129 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_hstnv_1029",
+      "W": 133.92,
+      "H": 36.72,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.948,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.948,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 2059,
+        "blocked_above": 0,
+        "covered_below": 41,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 129.4,
+          "min_ps": 101.33
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 238
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81fill_hstnv_1029-f8-8a5212d0a",
+    "source_commit": "8a5212d0a602e8bdbcbc93af4671f252498c94a8",
+    "published_record_commit": "afcbfd5e67883965f0774d1c75ee8a46501313aa",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81fill_hstnv_1029-f8-8a5212d0a/routes/s81fill_hstnv_1029_f8_8a5212d0a/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "4e3b9a86d779f62e547dfae6ad339ba0bd396fd317c8f0c5f6f1230406ba021c",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_hstnv_1029.lef": "d4572a161766769f59ff07fe70ed090d7fa446374f2bc178aa3d424b552232f4",
+      "dsfd_hstnv_1029_tt.lib": "db1ecf564ed0c4c0ca7682393d4789d2b6ff353d880a9b6332aaea81c70e9a72",
+      "dsfd_hstnv_1029_ff.lib": "5bcd8852f6b04df99501755e85240fc38de044b0516e6d1d11f5dfc85122fa42",
+      "dsfd_hstnv_1029_ss.lib": "da3cb913101b050469049ed66201f3b27989c8cd8e97cebe08c4365abaeb810c",
+      "abstract.json": "46ea1b114aace11e1fbd30107684414f97d78f44f4b912b556caad0d2e2a900d",
+      "insertion.json": "6a6b9d930cb5324655e7817891c8bdcc390b0b70d3864d843721c053ff103f7f",
+      "child_lint.json": "263da94abea9e480ead20f26009a61bd34ac0fb2f5edcec60950f9d2461d0685"
+    },
+    "admission": {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-3757852-1792135225",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}

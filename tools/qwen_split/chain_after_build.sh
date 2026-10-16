@@ -16,15 +16,22 @@ cat SOURCE_COMMIT > $R/case_r22k/SOURCE_COMMIT
 # r8 (Q-COMPUTE-DIE 2026-10-15, default): r7 + die-top tie cells on local rows stacked M2->M9 (die_tie_rows.tcl), no
 # die-wide M3..M7 stdcell ladder -- that ladder (58533b5a0) drove C19s / C21sa PDN to the 420 GiB cgroup kill
 PDN_REV=${OT_PDN_REV:-r8}
-TIE_LOCAL=; [ "$PDN_REV" = r8 ] && TIE_LOCAL=--tie-local
+TIE_LOCAL=; UP4SKIP="--skip-prefix up4_sel_"
+# up4_sel_* (8.64-um-tall selector blocks) cannot host an M8 macro grid (PDN-0185): recorded PG islands with the PHYs
+[ "$PDN_REV" = r8 ] && TIE_LOCAL=--tie-local
 if [ "$PDN_REV" = r7 ] || [ "$PDN_REV" = r8 ]; then
   cp $R/case_r22k/pdn.tcl $R/case_r22k/pdn_r5.tcl
 # licensed link-PHY abstracts (io_serdes*, io_ucie) carry their own M4 PG straps under a full M1-M5 OBS: no die macro
 # grid reaches them (PDN-0006); their PG hookup is the PHY IP integration, recorded open (OT_PGCHECK reports it)
-  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ --skip-prefix up4_sel_ --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
+  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ $UP4SKIP --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
+fi
+# Binding supplies the actual modeled PHY masters, and regroup writes the final
+# PDN grid. Apply the explicit contract here, before run.tcl creates any ODB.
+if [ "${OT_ASSUMED_PHY_PG_ACCESS:-0}" = 1 ]; then
+  python3 tools/phy_pg/apply_case.py $R/case_r22k --ack-assumed-phy-contract > $R/assumed_phy_pg_apply.json || exit 11
 fi
 # owner no-stub gate (08:05): the chain still runs for the die timing diagnosis, but its result is labelled by this verdict
 bash tools/qwen_split/port_bind_compute.sh $R/case_r22k/die.v $R/port_bind > $R/port_bind.line 2>&1; pb=$?
 echo "$(date '+%F %T %Z') port-bind (no stubs): $(cat $R/port_bind.line) rc=$pb" >> $R/STATUS.log
 echo "$(date '+%F %T %Z') qwen-split compute chain $T (src $(cat SOURCE_COMMIT)); real views: $(python3 -c "import json;b=json.load(open('../bind.json'));print(b['masters_bound'],'masters /',b['instances_bound'],'of',b['instances'],'instances')")" >> $R/STATUS.log
-exec env OT_ADMIT=pass OT_ITERS=12 OT_ROUTE_RESET=1 OT_CORNERS="tt ff ss" OT_STA_CLOCKS=$R/libs/clocks.tcl bash $S/src/tools/qwen_kv_die/chain/die_chain.sh r22k $R $S/src
+exec env OT_PG_OPEN_DIAG=${OT_PG_OPEN_DIAG:-1} OT_ADMIT=pass OT_ITERS=12 OT_ROUTE_RESET=1 OT_CORNERS="tt ff ss" OT_STA_CLOCKS=$R/libs/clocks.tcl bash $S/src/tools/qwen_kv_die/chain/die_chain.sh r22k $R $S/src

@@ -57,6 +57,15 @@ endmodule
 TB
 verilator --binary --timing --top-module tb -Wno-fatal -Wno-lint -Wno-style -j 2 --Mdir "$out/obj" \
   "$root/rtl/common/ot_fwd_link_stage.sv" "$out/dut.sv" "$out/tb.sv" > "$out/build.log" 2>&1 || { tail -20 "$out/build.log"; exit 3; }
+# harness guard (hstnv_1029-f8 18:5x: "Vtb: Permission denied", rc 126 read as a mutant result): the simulator must be an
+# executable file before it runs; rebuild once, else exit 3 (harness error, never a bench verdict)
+if [ ! -x "$out/obj/Vtb" ]; then
+  echo "HARNESS: $out/obj/Vtb not executable after build; rebuilding once" >&2
+  rm -rf "$out/obj"
+  verilator --binary --timing --top-module tb -Wno-fatal -Wno-lint -Wno-style -j 2 --Mdir "$out/obj" \
+    "$root/rtl/common/ot_fwd_link_stage.sv" "$out/dut.sv" "$out/tb.sv" > "$out/build2.log" 2>&1 || { tail -20 "$out/build2.log"; exit 3; }
+  [ -x "$out/obj/Vtb" ] || { echo "HARNESS: $out/obj/Vtb still not executable" >&2; exit 3; }
+fi
 set +e
 "$out/obj/Vtb" > "$out/sim.log" 2>&1
 rc=$?

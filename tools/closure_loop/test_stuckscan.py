@@ -6,7 +6,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import closure_loop as cl
 import stuckscan as ss
@@ -347,6 +347,36 @@ class DaemonGate(unittest.TestCase):
                 patch.object(cl, "ledger"), patch.object(cl, "experiment"):
             cl.crash(j, st, None, "rc=1")
         self.assertEqual((j["status"], j["retries_used"]), ("EARLY_FAIL_CONGESTION", 0))
+
+    def _crash_with(self, err, tail="x"):
+        j = job(retries_used=0, attempt=1, hosts_tried=["localhost"])
+        with patch.object(cl, "preserve_completed_route", return_value=False), \
+                patch.object(cl, "fp_lint_failed", return_value=None), \
+                patch.object(cl, "preroute_failed", return_value=None), \
+                patch.object(cl, "stage_tail", return_value=tail), \
+                patch.object(cl, "first_error", return_value=err), \
+                patch.object(cl, "checkpoint_location", return_value=None), \
+                patch.object(cl, "event"), patch.object(cl, "ledger"), patch.object(cl, "experiment"):
+            fleet = Mock(); fleet.choose.return_value = (None, None)
+            cl.crash(j, dict(key="route", kind="route"), fleet, "rc=1")
+        return j
+
+    def test_grt_0232_is_congestion_not_retried(self):
+        j = self._crash_with("[ERROR GRT-0232] Routing congestion too high.")
+        self.assertEqual((j["status"], j["retries_used"]), ("EARLY_FAIL_CONGESTION", 0))
+
+    def test_deterministic_route_error_is_not_retried(self):
+        j = self._crash_with("[ERROR DPL-0033] Detailed placement failed.")
+        self.assertEqual((j["status"], j["retries_used"]), ("NEEDS_HUMAN", 0))
+        self.assertIn("DPL-0033", j["reason"])
+
+    def test_deterministic_error_with_resource_signature_still_retries(self):
+        j = self._crash_with("[ERROR DPL-0033] Detailed placement failed.", tail="std::bad_alloc")
+        self.assertEqual((j["status"], j["retries_used"]), ("READY", 1))
+
+    def test_other_route_error_still_retried_once(self):
+        j = self._crash_with("[ERROR DRT-0255] pin access")
+        self.assertEqual((j["status"], j["retries_used"]), ("READY", 1))
 
     def test_starting_timeout_is_lost(self):
         j = job(stage_started="2026-10-08T00:00:00-07:00", stage_idx=0, status="RUNNING")

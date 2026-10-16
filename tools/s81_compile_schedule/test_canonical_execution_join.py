@@ -20,7 +20,7 @@ class CanonicalJoinTests(unittest.TestCase):
         self.catalogue = dict(source_SU_nodes=[dict(node='mtp.I0',scope='mtp',template_sha256='1'*64)])
         self.program = dict(stage='fixture',ops=[dict(id='native_job',eng='su',port=1,start=0,end=11,preds=[])])
         self.binding = dict(stage='fixture',tensors={'input':dict(base_row=256,nrows=1,source='external_input',consumers=['native_job'],evidence=self.evidence)},jobs=dict(native_job=dict(engine='su',implementation='native_rtl',
-            physical_instance='su0',endpoint='fixture',client='su',tag=0,duration_cycles=10,pipeline_abi=dict(PIPELINE_ABI['su']),
+            physical_instance='su0',endpoint='fixture',client='su',tag=0,duration_cycles=10,pipeline_abi=dict(PIPELINE_ABI['su']),vm_pipeline_abi=dict(PIPELINE_ABI['vm']),
             phase_period_stream=1,start_phase_stream=0,evidence=self.evidence,accesses=[dict(kind='read',tensor='input',row_offset=0,slot=0,issue_cycle=1,ingress_cycle=2,bank_enqueue_cycle=2,service_cycle=3,response_cycle=4,deadline_cycle=8)])))
         self.contract = dict(stream_period_ps=1,vm_period_ps=1,stream_phase_ps=0,vm_phase_ps=0,banks=32,
             bank_ops_per_cycle=1,read_ingress_per_cycle=16,write_ingress_per_cycle=16,request_min_ps=1,
@@ -71,6 +71,17 @@ class CanonicalJoinTests(unittest.TestCase):
             binding['jobs']['native_job']['physical_instance']='su'
             record['binding']=self.pin('repeated_hierarchy_binding.json',binding)
         self.assertTrue(self.run_join()['local_programmes_ready'])
+    def test_allocator89_requires_programmes_on_new_tail_stages(self):
+        self.canonical['counts']=dict(stages=89,rank_dies=356)
+        self.canonical['rank_programme_bindings'] += [dict(stage=s,rank=r,die_id=4*s+r) for s in range(81,89) for r in range(4)]
+        report=self.run_join()
+        missing=[v for v in report['violations'] if v['kind']=='missing_rank_programme']
+        self.assertEqual(len(missing),32)
+        self.assertEqual({v['stage'] for v in missing},set(range(81,89)))
+        self.assertEqual(report['compiled_rank_programmes'],[])
+        self.canonical['rank_programme_bindings'].pop()
+        with self.assertRaisesRegex(ValueError,'complete allocator'):self.run_join()
+
     def test_missing_mtp_not_hidden_by_2654_backbone_nodes(self):
         self.catalogue['source_SU_nodes'][0]['scope']=0
         r=self.run_join();self.assertIn('missing_literal_MTP_continuation_operations',self.reasons(r))

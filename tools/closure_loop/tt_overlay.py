@@ -170,7 +170,10 @@ def ensure_hooks(s, src):
     if "def apply_cts_fix_hooks" in s:
         # replace main's / an older overlay's version (no context-copy fallback, no sibling SDC copy)
         a = s.index("\n\ndef apply_cts_fix_hooks")
-        b = s.index("\ndef ", a + 5)
+        # end of the function = the first top-level line after it (2026-10-15: searching for the next "\ndef " also
+        # cut module-level statements between the two defs -- main 65529c027's GRT183_HOOK constant -> NameError in
+        # every TT-overlaid route)
+        b = re.compile(r"\n(?=\S)").search(s, s.index("\n", a + 5) + 1).start()
         s = s[:a] + fn.rstrip("\n") + "\n\n" + s[b:]
         return s, ["OT_CTS_FIX_HOOKS function replaced (context fallback)"], True
     if s.count(CFG_ANCHOR) != 1 or s.count(FN_ANCHOR) != 1:

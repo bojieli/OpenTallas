@@ -1,0 +1,129 @@
+{
+  "scope": "Exact candidate pin bytes, symbolic vertical bounds only. No physical grant or actual placed-hop qualification. Source mapping follows current ot_s81_hc_cth_nt source, scalar/reset/collective/CTNL consumers remain incomplete.",
+  "sources": {
+    "xs27": {
+      "path": "physical/s81_die_pins/v27_hc_ctfxs_spread_candidate/ot_s81_hc_ctfxs_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "2fe60fde7d8fe1470b0af1d21d1d0058d8dfef29157e8a9fb4f98d5fe10d822b"
+    },
+    "xs24": {
+      "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "eee39b53d2dc2c0d388d212d3315a27c805ce8a78cdf923dddd7b318423469a1"
+    },
+    "fs25": {
+      "path": "physical/s81_die_pins/v25_hc_norm_fs_yshift_candidate/ot_s81_hc_ctfs_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "8d102ace8655aae842a9908f5b3a8edcdc715a85e6c3b02e951a007bc366fb0d"
+    },
+    "fl24": {
+      "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "fe6b075eb82c59d8ef8da01d7816c16054c6daa48d98826e972dda5fe694442d"
+    }
+  },
+  "checks": {
+    "FS25_to_XS27_data": {
+      "bits": 1135,
+      "max_lateral_um": 55.488,
+      "max_allowable_face_vertical_gap_um": 444.512,
+      "worst": [
+        {
+          "src": "fv_out[6]",
+          "dst": "fv_in[6]",
+          "lateral_um": 55.488
+        },
+        {
+          "src": "fv_out[5]",
+          "dst": "fv_in[5]",
+          "lateral_um": 55.391999999999996
+        },
+        {
+          "src": "fv_out[4]",
+          "dst": "fv_in[4]",
+          "lateral_um": 55.29599999999999
+        }
+      ],
+      "actual_vertical_gap_um": null,
+      "qualification": "OPEN_REQUIRES_CURRENT_PARENT_HOMES"
+    },
+    "XS27_to_FL24_data": {
+      "bits": 1135,
+      "max_lateral_um": 57.312,
+      "max_allowable_face_vertical_gap_um": 442.688,
+      "worst": [
+        {
+          "src": "fdx[1024]",
+          "dst": "fdx[1024]",
+          "lateral_um": 57.31200000000001
+        },
+        {
+          "src": "fdx[1025]",
+          "dst": "fdx[1025]",
+          "lateral_um": 57.21600000000001
+        },
+        {
+          "src": "fv[6]",
+          "dst": "fv[6]",
+          "lateral_um": 57.21600000000001
+        }
+      ],
+      "actual_vertical_gap_um": null,
+      "qualification": "OPEN_REQUIRES_CURRENT_PARENT_HOMES"
+    },
+    "XS27_to_FS25_partial": {
+      "bits": 275,
+      "max_lateral_um": 32.004,
+      "max_allowable_face_vertical_gap_um": 467.996,
+      "worst": [
+        {
+          "src": "dl_out[0]",
+          "dst": "dl_in[0]",
+          "lateral_um": 32.004
+        },
+        {
+          "src": "dl_out[1]",
+          "dst": "dl_in[1]",
+          "lateral_um": 31.908
+        },
+        {
+          "src": "dl_out[2]",
+          "dst": "dl_in[2]",
+          "lateral_um": 31.811999999999998
+        }
+      ],
+      "actual_vertical_gap_um": null,
+      "qualification": "OPEN_REQUIRES_CURRENT_PARENT_HOMES"
+    },
+    "FS25_to_XS27_scale": {
+      "bits": 33,
+      "max_lateral_um": 13.932,
+      "max_allowable_face_vertical_gap_um": 486.068,
+      "worst": [
+        {
+          "src": "ul_out[32]",
+          "dst": "ul_in[32]",
+          "lateral_um": 13.932000000000002
+        },
+        {
+          "src": "ul_out[31]",
+          "dst": "ul_in[31]",
+          "lateral_um": 13.835999999999999
+        },
+        {
+          "src": "ul_out[30]",
+          "dst": "ul_in[30]",
+          "lateral_um": 13.643999999999991
+        }
+      ],
+      "actual_vertical_gap_um": null,
+      "qualification": "OPEN_REQUIRES_CURRENT_PARENT_HOMES"
+    }
+  },
+  "missing": [
+    "Actual v25/v27 parent row homes and transformations",
+    "All 4 specialized CTNL per-bit input LEFs/home joins",
+    "cs_n/cs_s and tid producer homes and exact clock/reset delivery",
+    "First/last chain anchors"
+  ]
+}

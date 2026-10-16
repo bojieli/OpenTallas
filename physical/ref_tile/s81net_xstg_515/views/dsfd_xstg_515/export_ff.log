@@ -15,26 +15,23 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
 [WARNING STA-0450] virtual clock vclk can not be propagated.
-[WARNING STA-0450] virtual clock vw can not be propagated.
-[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_wclk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock vclk can not be propagated.
-[WARNING STA-0450] virtual clock vw can not be propagated.
-[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_wclk can not be propagated.
-QDM reference pin o[0]$_DFF_P_/CLK clock arrival max 111.747795 min 103.313004 skew 90 hold 50
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 511 input pin flops, median arrival 117.226242 (range 108.640129 .. 122.888924)
+QDM reference pin u_x.pin[80]$_DFF_P_/CLK clock arrival max 117.226242 min 107.917747 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
 [WARNING STA-0450] virtual clock vclk can not be propagated.
-[WARNING STA-0450] virtual clock vw can not be propagated.
-[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_wclk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 OT_IOREF clock-port ck[0] (core_clk): data input delays dropped
 OT_IOREF clock-port cw[0] (wclk): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 515 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE wclk boundary 515 negedge 0 noarc 0 inverted 0
-OT_IOREF vclk core_clk mean 111.6 min 102.5 max 119.8 n 515 boundary
-OT_IOREF keep vw (not an insertion-reference clock)
-OT_IOREF ot_lb_v_core_clk core_clk mean 111.6 min 102.5 max 119.8 n 515 boundary
-OT_IOREF ot_lb_v_wclk wclk mean 122.2 min 107.8 max 132.5 n 515 boundary
-OT_WS max 2.9282859470569633e-10 min 1.50739420945456e-11
+OT_IOREF vclk core_clk mean 108.6 min 101.6 max 115.9 n 515 boundary
+OT_IOREF ot_lb_v_wclk wclk mean 116.8 min 108.6 max 122.9 n 515 boundary
+OT_IOREF ot_lb_v_core_clk core_clk mean 108.6 min 101.6 max 115.9 n 515 boundary
+OT_WS max 3.1279950851725857e-10 min 2.0840634773477973e-11
 OT_EXPORT_DONE
