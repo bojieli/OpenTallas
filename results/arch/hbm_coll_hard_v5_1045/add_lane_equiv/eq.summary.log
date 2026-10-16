@@ -1,0 +1,13 @@
+13. Executing MITER pass (creating miter circuit).
+Imported 1410 cells to SAT database.
+Imported 1410 cells to SAT database.
+Imported 1410 cells to SAT database.
+Imported 1410 cells to SAT database.
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+...
+15066:17. Executing SAT pass (solving SAT problems in the circuit).
+** Trying induction with length 1 **
+Base case for induction length 1 proven.
+[induction step 1] Solving problem with 31568 variables and 82461 clauses..
+Induction step proven: SUCCESS!
+Time spent: 33% 1x proc_mux (6 sec), 25% 3x opt_clean (5 sec), ...

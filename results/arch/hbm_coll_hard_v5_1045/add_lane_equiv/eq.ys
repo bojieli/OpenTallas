@@ -1,0 +1,12 @@
+read_verilog -sv src/ot_hdc_prefix.sv src/ot_hdc_fastfp.sv src/ot_hdc_fp32_add_lat.sv src/ot_hgi_coll_pring.sv src/ot_hgi_coll_pring_static.sv
+chparam -set LAT 8 ot_hgi_coll_pring_add_lane ot_hgi_coll_pring_static_add_lane
+hierarchy -check
+proc
+flatten
+opt_clean
+async2sync
+miter -equiv -flatten -make_assert -ignore_gold_x ot_hgi_coll_pring_add_lane ot_hgi_coll_pring_static_add_lane eqmiter
+hierarchy -top eqmiter
+opt -fast
+stat
+sat -verify -tempinduct -prove-asserts -set-init-zero -seq 1 -maxsteps 20 eqmiter

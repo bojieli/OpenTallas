@@ -1,0 +1,25 @@
+13. Executing MITER pass (creating miter circuit).
+Imported 2870 cells to SAT database.
+Imported 2870 cells to SAT database.
+Imported 2870 cells to SAT database.
+Imported 2870 cells to SAT database.
+Imported 2870 cells to SAT database.
+Imported 2870 cells to SAT database.
+Imported 2870 cells to SAT database.
+...
+14967:17. Executing SAT pass (solving SAT problems in the circuit).
+Induction step failed. Incrementing induction length.
+  Time Signal Name                                                      Dec       Hex                                                                                                       Bin
+** Trying induction with length 6 **
+Base case for induction length 6 proven.
+[induction step 6] Solving problem with 337479 variables and 945507 clauses..
+Induction step failed. Incrementing induction length.
+  Time Signal Name                                                      Dec       Hex                                                                                                       Bin
+** Trying induction with length 7 **
+Base case for induction length 7 proven.
+[induction step 7] Solving problem with 402485 variables and 1136535 clauses..
+Induction step failed. Incrementing induction length.
+  Time Signal Name                                                      Dec       Hex                                                                                                       Bin
+** Trying induction with length 8 **
+SAT temporal induction proof finished - model found for base case: FAIL!
+  Time Signal Name                                                      Dec       Hex                                                                                                       Bin

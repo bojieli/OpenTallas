@@ -1,0 +1,9 @@
+ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643  src/ot_hdc_fastfp.sv
+f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30  src/ot_hdc_fp32_add_lat.sv
+98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587  src/ot_hdc_prefix.sv
+c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514  src/ot_hgi_coll_pring_static.sv
+0ea3851d8b13054e9455c462b97ab5dc31ec7a9a16762b1805085238b6766636  src/ot_hgi_coll_pring.sv
+245c245
+<     always @(posedge clk)begin ap<=a;bp<=b;end
+---
+>     always @(posedge clk)begin ap<=a^{31'd0,a[30]&b[30]};bp<=b;end
