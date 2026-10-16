@@ -167,12 +167,23 @@ def _astar(a, b, boxes, die):
                     blocked[base + j] = 1
     def cell(p):
         return (min(max(int(round((p[0] - x0) / PITCH)), 0), nx - 1), min(max(int(round((p[1] - y0) / PITCH)), 0), ny - 1))
-    sa, sb = cell(a), cell(b)
-    for c_ in (sa, sb):              # the end cells and their 4-neighbours (a stub may sit in a neighbour's margin)
-        for di, dj in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)):
-            i_, j_ = c_[0] + di, c_[1] + dj
-            if 0 <= i_ < nx and 0 <= j_ < ny:
-                blocked[i_ * ny + j_] = 0
+    def anchor(p):
+        i0, j0 = cell(p)
+        choices = sorted(((abs(di)+abs(dj), i0+di, j0+dj)
+                          for di in range(-4, 5) for dj in range(-4, 5)))
+        for _, i, j in choices:
+            if not (0 <= i < nx and 0 <= j < ny) or blocked[i * ny + j]:
+                continue
+            q = (x0 + i * PITCH, y0 + j * PITCH)
+            for link in ([p, (p[0], q[1]), q], [p, (q[0], p[1]), q]):
+                if not path_hits(link, boxes):
+                    return (i, j), _dedup(link)
+        return None
+    aa, bb = anchor(a), anchor(b)
+    if aa is None or bb is None:
+        return None
+    sa, ac = aa
+    sb, bc = bb
     D = ((1, 0), (-1, 0), (0, 1), (0, -1))
     INF = 1 << 60
     dist = {}
@@ -207,7 +218,7 @@ def _astar(a, b, boxes, die):
         cells.append((x0 + k[0] * PITCH, y0 + k[1] * PITCH))
         k = prev.get(k)
     cells.reverse()
-    return cells
+    return _dedup(ac + cells[1:] + list(reversed(bc))[1:])
 
 
 def route(a, fa, b, fb, boxes, die, skip=()):
@@ -236,16 +247,7 @@ def route(a, fa, b, fb, boxes, die, skip=()):
     mid = _astar(sa, sb, [bx for bx in boxes if bx[0] not in skip], die)
     if mid is None:
         return None
-    # snap the raster ends onto the stubs
-    mid[0] = (sa[0], mid[0][1]) if fa in 'NS' else (mid[0][0], sa[1])
-    mid[-1] = (sb[0], mid[-1][1]) if fb in 'NS' else (mid[-1][0], sb[1])
-    path = _dedup([a, sa, (sa[0], mid[0][1]) if fa in 'NS' else (mid[0][0], sa[1])] + mid +
-                  [(sb[0], mid[-1][1]) if fb in 'NS' else (mid[-1][0], sb[1]), sb, b])
-    # orthogonalise any raster diagonal joints
-    out = [path[0]]
-    for p in path[1:]:
-        q = out[-1]
-        if abs(p[0] - q[0]) > 1e-6 and abs(p[1] - q[1]) > 1e-6:
-            out.append((p[0], q[1]))
-        out.append(p)
-    return _dedup(out)
+    # Anchor connectors were checked before A*: never move a raster endpoint
+    # through the source macro while stitching its exact physical face.
+    out = _dedup([a] + mid + [b])
+    return out if not path_hits(out, boxes, skip) else None
