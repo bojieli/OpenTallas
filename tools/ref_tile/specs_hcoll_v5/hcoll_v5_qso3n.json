@@ -71,7 +71,7 @@
     "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
     "min_count_regex": "PASS q3 scen0 checks(\\d+)",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
@@ -81,7 +81,7 @@
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut q3 causeswap",
     "expect": "fail",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
@@ -94,5 +94,6 @@
  "pin_regs": {
   "enable": false,
   "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Narrow pin-bound outline (<= 24 um across) keeps every pin flop within one short wire of its pin, so io_flop_at_pins (recipe-2 flop columns, oflop band wider than the core) is off; inhold/outhold stages kept."
- }
+ },
+ "structural_change": "Coordinator one-pass qso resize after the qso3w/qso2w FLOORPLAN_MARGIN verdicts (flow std = 1.27x gate synth): expected flow std ~142 um2 = 48% at 21.6x21.6, the lattice size nearest 55% (19.44 -> 62% > 60% cap), so the outline is kept; q3 bench peak_ram_gb 40 -> 128 (q3 lockstep with two KMAX-2048 TKMs SIGKILLed at 40 GB)."
 }

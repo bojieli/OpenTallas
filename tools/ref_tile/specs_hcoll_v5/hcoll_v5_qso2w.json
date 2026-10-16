@@ -11,8 +11,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 21.6,
-  "h": 88.56
+  "w": 23.76,
+  "h": 101.52
  },
  "pins": {
   "W": [
@@ -48,7 +48,7 @@
   "macro_halo_um": 5.4
  },
  "fill_reason": {
-  "pin_bound": "871 pin bits: E 495 out / W 297 in on M4 at 2 tracks over 88.56 um = 54.6%/32.8% of slots; N 79 on M5 over 21.6 = 38%; outline set by the E face (<=0.55)."
+  "pin_bound": "E 495 out / W 297 in on M4 at 2 tracks over 101.52 um = 48%/29% of slots; N 79 on M5 over 23.76 = 35%; outline from measured-util resize (FLOORPLAN_MARGIN 71.6% at 21.6x88.56)."
  },
  "job": {
   "owner": "Claude:H-NETLIST/COLL-QS-1045",
@@ -94,5 +94,6 @@
  "pin_regs": {
   "enable": false,
   "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Narrow pin-bound outline (<= 24 um across) keeps every pin flop within one short wire of its pin, so io_flop_at_pins (recipe-2 flop columns, oflop band wider than the core) is off; inhold/outhold stages kept."
- }
+ },
+ "structural_change": "Loop verdict hcoll_v5_qso2w-qs1045-f16932251 FLOORPLAN_MARGIN: flow std 1043 um2 = util 71.6% in 21.6x88.56 (gate synth 818 under-estimated by 1.28x); area x1.30 at the same aspect -> 23.76x101.52, core 1890 um2 = 55% at the measured std; same RTL, pin faces, recipe."
 }

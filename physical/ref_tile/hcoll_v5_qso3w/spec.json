@@ -11,8 +11,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 23.76,
-  "h": 95.04
+  "w": 25.92,
+  "h": 105.84
  },
  "pins": {
   "W": [
@@ -48,7 +48,7 @@
   "macro_halo_um": 5.4
  },
  "fill_reason": {
-  "pin_bound": "975 pin bits: E 528 out / W 363 in on M4 at 2 tracks over 95.04 um = 53.3%/36.7% of slots; N 84 on M5 over 23.76 = 36%; outline set by the E face (<=0.55)."
+  "pin_bound": "975 pin bits: E 528 out / W 363 in on M4 at 2 tracks over 105.84 um = 48%/33% of slots; N 84 on M5 over 25.92 = 34%; outline from measured-util resize (FLOORPLAN_MARGIN 67.3% at 23.76x95.04)."
  },
  "job": {
   "owner": "Claude:H-NETLIST/COLL-QS-1045",
@@ -71,7 +71,7 @@
     "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
     "min_count_regex": "PASS q3 scen0 checks(\\d+)",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
@@ -81,7 +81,7 @@
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut q3 causeswap",
     "expect": "fail",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
@@ -95,6 +95,7 @@
   "enable": false,
   "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Narrow pin-bound outline (<= 24 um across) keeps every pin flop within one short wire of its pin, so io_flop_at_pins (recipe-2 flop columns, oflop band wider than the core) is off; inhold/outhold stages kept."
  },
+ "structural_change": "Loop verdict hcoll_v5_qso3w-qs1045-92800f413 FLOORPLAN_MARGIN: flow std 1187 um2 = util 67.3% in 23.76x95.04 (gate synth 939 under-estimated by 1.27x); area x1.22 at the same aspect -> 25.92x105.84, core 2193 um2 = 54% at the measured std; same RTL, pin faces, recipe.",
  "inhold": true,
  "outhold": true,
  "hold_pad": {
