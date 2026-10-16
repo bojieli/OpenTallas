@@ -1266,7 +1266,12 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else [])
          # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
          # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
-         + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)])
+         + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)]
+         # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
+         # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
+         + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]
+         + [v.removeprefix("/src/") for v in (sp.get("orfs_vars") or {}).values()
+            if isinstance(v, str) and v.endswith((".tcl", ".sdc"))])
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
@@ -1308,8 +1313,9 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     import tempfile
     repo = repo or str(ROOT)
     g = Gate()
-    old = (ROOT, RT.ROOT)
+    old = (ROOT, RT.ROOT, RT.GIT_ROOT)
     try:
+        RT.GIT_ROOT = Path(repo)   # the materialised kit tree is not a git repo (M6 pin-grant source commit lookup)
         commit = str((spec.get("source") or {}).get("commit", ""))
         with tempfile.TemporaryDirectory() as td:
             if spec.get("ref_tile"):
@@ -1347,7 +1353,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     except Exception as ex:  # noqa: BLE001
         return {"verdict": "SKIP", "message": f"gate error {type(ex).__name__}: {str(ex)[:200]}"}
     finally:
-        ROOT, RT.ROOT = old
+        ROOT, RT.ROOT, RT.GIT_ROOT = old
     fails = [i for i in g.items if i["severity"] == "FAIL"]
     warns = [i for i in g.items if i["severity"] == "WARN"]
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
