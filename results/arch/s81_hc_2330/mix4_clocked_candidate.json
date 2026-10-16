@@ -1,0 +1,27 @@
+{
+ "status": "HELD_COMPONENT_CANDIDATE",
+ "source_sha256": {
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "1a8942fae37c34219719e11a3c22f5556c13e13abb05d24e15a465703a4256d4",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_clocked_candidate.sv": "a4056917282bab9e64ae4e33794b29cf6344786d76c755473c281189625175a6"
+ },
+ "logical_roots": {
+  "legacy_cluster_and_top": 149,
+  "independent_relay_stations": 40,
+  "total_RS5": 189
+ },
+ "per_station_flops": {
+  "up": 621,
+  "down": 2790
+ },
+ "station_flops_RS5": 68220,
+ "cycles_changed": 0,
+ "arithmetic_changed": false,
+ "proof": "clocked relay positive49092 comparisons across D0..5 and17 resets; stopped first station clock mutant8182 mismatches",
+ "open": [
+  "Full actual arithmetic MIX4 exact and data mutant",
+  "Top ingress/control clock localization and mapped sink census",
+  "Real leaf placement/pins/cuts/all incident hops",
+  "Physical CTS TT/FF/DRC and clock delivery",
+  "Compiler fixed-calendar full native composition"
+ ]
+}
