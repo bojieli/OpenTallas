@@ -217,6 +217,8 @@ class ParentAdmission(unittest.TestCase):
         with tempfile.TemporaryDirectory()as tmp:
             root=Path(tmp);source_tree(root);s=parent_spec()
             fifo_path=next(iter(A.SOURCES));source=(root/fifo_path).read_text()
+            # Clone only the FIFO, not the separate status publisher sharing its file.
+            source=source[:source.index('endmodule')+len('endmodule')]
             source=source.replace('module ot_hbm_svc_async_fifo #(parameter integer WIDTH=32,DEPTH=8)(',
                                   'module fake_fifo #(parameter integer WIDTH=2,DEPTH=4)(')
             # A one-stage clone is not the reviewed two-stage implementation.
