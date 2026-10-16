@@ -38,7 +38,13 @@ module ot_hgi_dma_back_static_vp4_banks #(
     wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
     wire [6:0] bank_read_slot,bank_write_slot;
     wire [255:0] bank_read_addr;
+    // OT_DBK_HARD (hb_dbk wires-only cluster route): the controller is a hard view, instantiated without overrides
+    // (its defaults ARE the hardened configuration); simulation keeps the bench MUT/STACK_BYTES pass-through.
+`ifdef OT_DBK_HARD
+    ot_hgi_dma_back_static_vp4_controller u_control(
+`else
     ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_control(
+`endif
         .clk(clk),
         .rst_n(rst_n),
         .stk(stk),

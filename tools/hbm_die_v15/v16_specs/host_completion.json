@@ -3662,7 +3662,15 @@
   }
  ],
  "straps": [],
- "gaps": [],
+ "gaps": [
+  {
+   "id": "G-HOST-PROGRAM-INSTALL",
+   "owner": "H-NETLIST / host programme targets",
+   "missing_rtl": "Programme-target configured proves descriptor bounds and one-launch arm only; no actual loaded-row completeness check is integrated for cp_cal/cp_fill/cp_ep/hc_tgt. Status aggregation PASS does not prove installation readiness. Integrate the actual loaded-row checker and compiled full-image evidence before native qualification.",
+   "affects": [],
+   "note": "Semantic installation-safety gap; no input tie or fake producer closes it."
+  }
+ ],
  "notes": [
   "Four VM HBM-fill calendars use existing ot_static_program_target PCW10, TARGET56..59. Host status uses one existing parameterised pin-registered join for all67 admitted targets; no empty-participation child join can veto a launch. Native physical timing/placement remains open."
  ],

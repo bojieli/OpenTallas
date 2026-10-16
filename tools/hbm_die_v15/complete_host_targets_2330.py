@@ -69,6 +69,9 @@ for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NE=(2,1,2,8,2)).items():
         s['drop_v15_edges'].append(f'calendar_{q}_{field}')
         e([f'calendar_{q}',field,0,w],[f'hb_vms_{q}',field,0,w],w)
         s['edges'][-1]['basis']='Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits.'
+s['gaps'].append(dict(id='G-HOST-PROGRAM-INSTALL',owner='H-NETLIST / host programme targets',
+    missing_rtl='Programme-target configured proves descriptor bounds and one-launch arm only; no actual loaded-row completeness check is integrated for cp_cal/cp_fill/cp_ep/hc_tgt. Status aggregation PASS does not prove installation readiness. Integrate the actual loaded-row checker and compiled full-image evidence before native qualification.',
+    affects=[],note='Semantic installation-safety gap; no input tie or fake producer closes it.'))
 write('host_completion',s)
 # Extend the existing root, preserving its original target/fault ordering and host fault pins.
 c = read('cp2')

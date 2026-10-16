@@ -15,7 +15,8 @@
 // launch_v).  Address map inside a target (cfg_addr[11:10]): 0 window A, 1 window B, 2 command table rows
 // (entry = row/NW, word = row%NW), 3 control (0xC00 data[31:0] = loop period); anything else is a FAULT.
 // desc (F28/F2c): MODE 0 run_base = base, run_count = limit-base, loops must be 1; MODE 1 entries [base,limit) x loops.
-// A target without a desc stays inactive at the launch (as ot_static_program_target).
+// A descriptor arms exactly one launch; writes or replacement descriptors disarm first.
+// Consumed descriptors stay inactive at later global launches (as ot_static_program_target).
 // Status: configured, fault (= own sticky fault | any tgt_fault), active (= sequencer on | any tgt_active), all
 // registered; cfg/desc while active or in the launch edge is a FAULT (static install, no runtime arbitration).
 // Pin rule (owner 19:50): every input lands in a pin flop, every output is a flop.  Fixed latencies: cfg -> window
@@ -134,6 +135,7 @@ module ot_static_cmd_target #(
             cyc <= cyc + 32'd1; cycle <= cyc;
             // ---- configuration writes
             if (cv && hit) begin
+                configured <= 0;
                 if (busy_any || lv) fault_r <= 1;
                 else case (win)
                     2'd0: if (AWA > 0 && {1'b0, row} < (11'd1 << AWA)) begin a_we <= 1; a_addr <= row[(AWA>0?AWA:1)-1:0]; a_data <= data_q; end
@@ -148,7 +150,8 @@ module ot_static_cmd_target #(
             end
             // ---- descriptor (run window / calendar range)
             if (dv && hit) begin
-                if (busy_any || lv) fault_r <= 1;
+                configured <= 0;
+                if (busy_any || lv || cv) fault_r <= 1;
                 else if (MODE == 0) begin
                     if (loops_q != 16'd1 || limit_q <= {1'b0, base_q} || limit_q > (13'd1 << RBW) ||
                         (limit_q - {1'b0, base_q}) >= (14'd1 << RCW)) fault_r <= 1;
@@ -161,7 +164,8 @@ module ot_static_cmd_target #(
             end
             // ---- launch
             if (lv && configured) begin
-                if (busy_any || fault_r || (|flt_q)) fault_r <= 1;
+                configured <= 0;
+                if (busy_any || fault_r || (|flt_q) || cv || dv) fault_r <= 1;
                 else if (MODE == 0) begin
                     run_v <= 1; run_base <= RBW'(s_base); run_count <= RCW'(s_limit - s_base);
                 end else begin
