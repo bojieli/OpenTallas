@@ -6313,6 +6313,16 @@ def reevaluate_benches(jobs):
         except RuntimeError as exc:
             # An unavailable historical log must not starve later jobs or the
             # independent recovery passes. Do not consume this retry until read.
+            # RETIRED-HOST 2026-10-15: a log on a host retired from hosts.json (EPYC2/3, 10-12) can never be read
+            # again; it was re-deferred every tick (~3,400 log lines per job). Consume the retry once: verdict stands.
+            if j.get("host") and all(h["name"] != j["host"] for h in hosts_table()):
+                with job_lock(j["name"]):
+                    fresh = load_job(j["name"])
+                    if eligible(fresh) is not None and fresh.get("reason") == j.get("reason"):
+                        fresh.setdefault("fix_requeued", []).append(fid)
+                        event(fresh, f"{st['key']} not re-judged under {fid}: log on retired host {j['host']}; verdict stands")
+                        save_job(fresh)
+                continue
             log(f"[{j['name']}] bench re-judgment deferred: {exc}")
             continue
         with job_lock(j["name"]):
@@ -6979,6 +6989,32 @@ def trim_snapshot(tp):
         with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
             f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
     return b
+if mode == "src" and a.get("keep_config_paths"):
+    # GRT183 2026-10-15 (ROOT): a NEEDS_HUMAN route is diagnosed by re-running its saved ORFS state, which reads the
+    # /src files its config.mk names (macro LEF/Liberty/GDS, kit SDC/TCL): qfd_tt_scale_leaf-tg1's replay died on a
+    # trimmed ot_sram_1r1w_128x256_m1_r2c2_tt.lib.  Keep every config-named /src path; for a path >= 3 levels deep
+    # (physical/asap7_memory_macros/<macro>/..., physical/ref_tile/<kit>/...) keep its whole directory (all corners).
+    import re as _re
+    for dp, dn, fn in os.walk(R):
+        if dp == R + "/src" or dp.startswith(R + "/src/") or "/bench_src" in dp:
+            dn[:] = []
+            continue
+        if "config.mk" not in fn:
+            continue
+        try:
+            txt = open(os.path.join(dp, "config.mk"), errors="replace").read()
+        except OSError:
+            continue
+        for rel in set(_re.findall(r"/src/([A-Za-z0-9_./+-]+)", txt)):
+            rel = os.path.normpath(rel)
+            if rel.startswith(".."):
+                continue
+            p = os.path.join(R, "src", rel)
+            d = os.path.dirname(rel)
+            if d.count("/") >= 2 and os.path.isdir(os.path.join(R, "src", d)):
+                p = os.path.join(R, "src", d)
+            if os.path.exists(p):
+                hard.append(p)
 if mode == "src":
     # SRC-RELEASE (ROOT 2026-10-15): only the git snapshots (src/, bench_src*/) at the job's own commit, trimmed to the
     # receipt-named paths; nothing else in the run dir is touched
@@ -7395,7 +7431,8 @@ def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
                 continue
             full = git("rev-parse", commit + "^{commit}").stdout.strip()
             run = j["run"].rstrip("/")
-            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")])
+            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       keep_config_paths=j["status"] == "NEEDS_HUMAN")
             r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
             n += 1
             m = re.search(r"DEEP_FREED (\d+)", r.stdout)

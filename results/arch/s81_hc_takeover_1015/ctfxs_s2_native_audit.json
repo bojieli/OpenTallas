@@ -1,0 +1,157 @@
+{
+ "job": "s81hc_ctfxsnt_ref-s2-2root-1da74f562",
+ "cell": "ot_s81_hc_ctfxs_nt",
+ "source": "1da74f562",
+ "closure": "CLOSED TT +137.12 / FF +18.83 ps DRC 0; SS sensitivity -184.34 ps | record claude/s81-norm-tree-1014 a92631ae0 (19 files) | AUTO-MERGED into main b754dddc8",
+ "worst_launch": [
+  "fdx[998]",
+  229.29954000000004
+ ],
+ "worst_capture": [
+  "dl_in[0]",
+  231.33805
+ ],
+ "spreads": {
+  "clk": 27.200000000000003,
+  "clk_l": 35.599999999999994
+ },
+ "violations": [
+  {
+   "pin": "cs_n[58]",
+   "dir": "input",
+   "launch": null,
+   "capture": 197.38343,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "cs_n[56]",
+   "dir": "input",
+   "launch": null,
+   "capture": 191.31037,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "cs_n[44]",
+   "dir": "input",
+   "launch": null,
+   "capture": 192.88043000000002,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "cs_s[15]",
+   "dir": "input",
+   "launch": null,
+   "capture": 194.49417,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "cs_s[12]",
+   "dir": "input",
+   "launch": null,
+   "capture": 190.24732,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "dl_in[137]",
+   "dir": "input",
+   "launch": null,
+   "capture": 204.99810000000002,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "dl_in[0]",
+   "dir": "input",
+   "launch": null,
+   "capture": 231.33805,
+   "clocks": [
+    "clk_l"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx[1003]",
+   "dir": "output",
+   "launch": 221.97938,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx[998]",
+   "dir": "output",
+   "launch": 229.29954000000004,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx[984]",
+   "dir": "output",
+   "launch": 223.70451000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx[945]",
+   "dir": "output",
+   "launch": 223.39534000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  }
+ ],
+ "passed": false,
+ "source_sha256": {
+  "ot_s81_hc_ctfxs_nt_tt.lib": "17f6b89f88c5d94edde42bc9bccb91c976906c1af03b5717d7c9af8438513707",
+  "insertion.json": "7e6efb2e799feda7396ed941500565b84d6d3467338a277f283ebe580efc18d8"
+ },
+ "references": {
+  "clk": {
+   "rise": 104.7,
+   "fall": 111.701525,
+   "min": 85.94813,
+   "max": 118.98786,
+   "src": "insertion.json boundary mean",
+   "bmin": 91.8,
+   "bmax": 119.0,
+   "n": 1139
+  },
+  "clk_l": {
+   "rise": 176.8,
+   "fall": 186.872125,
+   "min": 103.61396,
+   "max": 187.14471,
+   "src": "insertion.json boundary mean",
+   "bmin": 151.5,
+   "bmax": 187.1,
+   "n": 348
+  }
+ }
+}
