@@ -63,11 +63,6 @@
   "views_to": "physical/ref_tile/s81_rly_1_wn/views",
   "record_to": "results/rtl/ref_tile/s81_rly_1_wn"
  },
- "structural_change": "rfp2: outline 17.256 -> 17.28 (even row parity, site grid) for mirror binding; same RTL / faces / recipe",
- "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": "S-DIE a5e8547aaad74fc6a 2026-10-16 ~08:00 (SendMessage to S-NET+FILL): \"Yes, please re-cut WN to 17.28 so that WS/EN/ES bind too\" -- orientation qualification needs the 17.28 lattice outline"
- },
  "children": [],
  "inter": [],
  "recipe": 2,
@@ -80,5 +75,14 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "structural_change": "rfp2: outline 17.256 -> 17.28 (even row parity, site grid) for mirror binding; same RTL / faces / recipe",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S-DIE a5e8547aaad74fc6a 2026-10-16 ~08:00 (SendMessage to S-NET+FILL): \"Yes, please re-cut WN to 17.28 so that WS/EN/ES bind too\" -- orientation qualification needs the 17.28 lattice outline"
  }
 }

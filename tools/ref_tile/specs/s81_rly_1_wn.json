@@ -33,7 +33,9 @@
   "pd": 0.45,
   "threads": 4,
   "peak_ram_gb": 8,
-  "m5_pg_pitch": 2.7
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:s81-net-fill",
@@ -60,6 +62,23 @@
   ],
   "views_to": "physical/ref_tile/s81_rly_1_wn/views",
   "record_to": "results/rtl/ref_tile/s81_rly_1_wn"
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
  },
  "structural_change": "rfp2: outline 17.256 -> 17.28 (even row parity, site grid) for mirror binding; same RTL / faces / recipe",
  "reroute_reason": {
