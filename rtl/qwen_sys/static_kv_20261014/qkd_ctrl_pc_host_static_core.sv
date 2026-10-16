@@ -272,11 +272,19 @@ module qkd_ctrl_pc_host_static_core #(
     reg          l_v_q;
     always @(posedge hclk or negedge h_rn) if (!h_rn) l_v_q <= 1'b0; else l_v_q <= e_l_v;
     wire         l_v = l_v_q, ecc_fault = e_fault;
-    wire [TQA:0] tr_nx   = tr + {{TQA{1'b0}}, kv_v};
-    wire [33:0]  h_nx    = tq[tr_nx[TQA-1:0]];
-    wire [9:0]   h_nx_j  = (MUT == 3) ? {h_nx[9:2], h_nx[0], h_nx[1]} : h_nx[9:0];
-    wire [7:0]   h_nx_l  = h_nx[17:10] - 8'(ROW0);
-    always @(posedge hclk) begin e_sec <= {h_nx_l[5:0], h_nx_j[9:7], 1'b0, h_nx_j[6:0]}; e_row <= h_nx[17:10]; end
+    // KVCTRL core_s4: identical to e_sec/e_row <= f(tq[tr + kv_v]), but both candidates f(tq[tr]) and f(tq[tr1]) (tr1 a
+    // register = tr + 1) are formed in parallel and the port child's kv_v selects LAST (core_s1: p_kv_v -> e_sec 13 levels).
+    reg  [TQA-1:0] tr1;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) tr1 <= TQA'(1); else if (kv_v) tr1 <= tr1 + 1'b1;
+    wire [33:0]  h_c0    = tq[tr[TQA-1:0]];
+    wire [33:0]  h_c1    = tq[tr1];
+    wire [9:0]   h_c0_j  = (MUT == 3) ? {h_c0[9:2], h_c0[0], h_c0[1]} : h_c0[9:0];
+    wire [9:0]   h_c1_j  = (MUT == 3) ? {h_c1[9:2], h_c1[0], h_c1[1]} : h_c1[9:0];
+    wire [7:0]   h_c0_l  = h_c0[17:10] - 8'(ROW0);
+    wire [7:0]   h_c1_l  = h_c1[17:10] - 8'(ROW0);
+    wire [16:0]  e_sec_c0 = {h_c0_l[5:0], h_c0_j[9:7], 1'b0, h_c0_j[6:0]};
+    wire [16:0]  e_sec_c1 = {h_c1_l[5:0], h_c1_j[9:7], 1'b0, h_c1_j[6:0]};
+    always @(posedge hclk) begin e_sec <= kv_v ? e_sec_c1 : e_sec_c0; e_row <= kv_v ? h_c1[17:10] : h_c0[17:10]; end
     reg [15:0] ep0,ep1,ep2;
     always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
     assign corrected_epoch=ep2;
