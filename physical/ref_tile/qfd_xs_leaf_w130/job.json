@@ -1,5 +1,5 @@
 {
- "name": "qfd_xs_leaf_w130-w3p-COMMIT",
+ "name": "qfd_xs_leaf_w130-w3p-588adda56",
  "block": "ot_qfd_xs_leaf",
  "ref_tile": true,
  "m6_pin_grant": {
@@ -7928,7 +7928,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/qwen-io-collect-1626",
-  "commit": "COMMIT",
+  "commit": "588adda56",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
@@ -8021,7 +8021,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_xs_leaf_w130/qfd_xs_leaf_w130-w3p-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_xs_leaf_w130/qfd_xs_leaf_w130-w3p-588adda56"
   }
  ],
  "cycles_added": 0,
