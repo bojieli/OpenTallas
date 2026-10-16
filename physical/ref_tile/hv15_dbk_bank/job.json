@@ -1,5 +1,5 @@
 {
- "name": "hv15_dbk_bank-geo1-COMMIT",
+ "name": "hv15_dbk_bank-geo1-403df9d61",
  "block": "ot_hgi_dma_back_landing_bank",
  "ref_tile": true,
  "owner": "Claude:H-HARDEN",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/hbm-harden-2100",
-  "commit": "COMMIT",
+  "commit": "403df9d61f8c548ae440d9cac9b6b082bab394b0",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "rtl/hbm_accel/generic/peers/static",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_dbk_bank/hv15_dbk_bank-geo1-COMMIT"
+   "to": "results/rtl/ref_tile/hv15_dbk_bank/hv15_dbk_bank-geo1-403df9d61"
   }
  ],
  "cycles_added": 0,
