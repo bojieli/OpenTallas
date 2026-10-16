@@ -17,7 +17,9 @@ set_max_delay -ignore_clock_latency $ot_cw_x -from [get_clocks core_clk] -to [ge
 set_max_delay -ignore_clock_latency $ot_cw_x -from [get_clocks hclk] -to [get_clocks core_clk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks core_clk] -to [get_clocks hclk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks hclk] -to [get_clocks core_clk]
-set ot_cw_hi [get_ports {ci[*] pi[*] ki[*] pc[*] fi hrst static_cmd_owner static_cmd[*] reserved_rd reserved_static_col reserved_write_col static_epoch[*] expected_raw_valid cfg_stack[*]}]
+# cfg_stack is captured only by core-clock stack_q, and retains the core boundary.
+# STRAP_CDC1 keeps raw pc exclusively on hclk pc_q, with real core CDC captures.
+set ot_cw_hi [get_ports {ci[*] pi[*] ki[*] pc[*] fi hrst static_cmd_owner static_cmd[*] reserved_rd reserved_static_col reserved_write_col static_epoch[*] expected_raw_valid}]
 set ot_cw_ho [get_ports {co[*] po[*] ko[*] fo corrected_epoch[*] idle_hbm drain_fault_hbm}]
 catch {unset_input_delay [get_ports pll_hbm]}
 unset_input_delay $ot_cw_hi

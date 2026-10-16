@@ -18,7 +18,7 @@ def prepare(out):
     p=out/'source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv'
     text=p.read_text().replace('wire predicted_raw,predicted_corrected;',
       'wire [1:0] idle_core,idle_hbm,drain_fault_core,drain_fault_hbm;\n wire predicted_raw,predicted_corrected;')
-    text=text.replace('qkd_ctrl_pc_host_static #(', 'qkd_ctrl_pc_host_static #(.DRAIN_PIPE(1),')
+    text=text.replace('qkd_ctrl_pc_host_static #(', 'qkd_ctrl_pc_host_static #(.DRAIN_PIPE(1),.STRAP_CDC(1),')
     text=text.replace('.completion_fault(cf[g]));',
       '.completion_fault(cf[g]),.idle_core(idle_core[g]),.idle_hbm(idle_hbm[g]),.drain_fault_core(drain_fault_core[g]),.drain_fault_hbm(drain_fault_hbm[g]));')
     # Independent boundary scoreboard: external accepted descriptors, physical
@@ -36,6 +36,7 @@ def prepare(out):
     if(co[d][0])ob_kv[d]--;
     #0.001;
     drain_checks++;
+    if(er[d][260])$fatal(1,"NATIVE_CONTEXT_FAULT d%0d",d);
     if(idle_core[d]&&(ob_desc[d]!=0||ob_read[d]!=0))
      $fatal(1,"DRAIN_EARLY_CORE d%0d descriptors%0d reads%0d",d,ob_desc[d],ob_read[d]);
     if(idle_hbm[d]&&ob_kv[d]!=0)
@@ -45,6 +46,14 @@ def prepare(out):
   end
  end endgenerate
 """
+    # Native full-sector write at the fixture's declared boundary. Expected
+    # destination/address/identity are independently declared constants, never
+    # derived from observed controller or writer outputs.
+    text=text.replace(".es_context(318'b0)", ".es_context(es[0]&&es[287]?{1'b1,59'h1234567,2'b01,{256{1'b1}}}:318'b0)")
+    text=text.replace(".es_expected_valid(1'b0)", ".es_expected_valid(es[0]&&es[287])")
+    text=text.replace(".es_expected_identity(61'b0)", ".es_expected_identity({59'h1234567,2'b01})")
+    text=text.replace(".es_expected_address(29'b0)", ".es_expected_address({19'd24427,5'd5,5'd7})")
+    text=text.replace(".es_expected_pc(5'b0)", ".es_expected_pc(5'd13)")
     text=text.replace(' function automatic [255:0] data(',monitor+'\n function automatic [255:0] data(')
     text=text.replace('  if(front_bad)begin',
       '  if(!idle_core[1]||!idle_hbm[1]||ob_desc[1]||ob_read[1]||ob_kv[1])$fatal(1,"DRAIN_FINAL_NOT_IDLE");\n  $display("DRAIN_PASS boundary checks%0d actual host WDONE/read and KV landing drained",drain_checks);\n  if(front_bad)begin')
@@ -59,6 +68,7 @@ def execute(out):
     sources=[str(p) for p in sorted((out/'source').rglob('*.sv'))]
     variants={'production':good,
       'missing_host_read_debt':good.replace('drain_desc==0&&drain_reads==0&&drain_credits==0','drain_desc==0&&drain_credits==0'),
+      'bad_core_strap':good.replace("pc_core_q<=(STRAP_CDC!=0)?pc_core_meta:pc","pc_core_q<=(STRAP_CDC!=0)?(pc_core_meta^5'd1):pc"),
       'missing_kv_debt':good.replace('ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0','ctl_phase_idle').replace('hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&\n          (&hbm_quiet_q)&&!hbm_drain_activity','hgo&&ctl_phase_idle')}
     receipt={'scope':'COMPONENT_ONLY actual controller, pcport/ECC, front and ring; die bind/adoption remains OPEN','cases':[]}
     for name,source in variants.items():
@@ -73,7 +83,7 @@ def execute(out):
         r=subprocess.run([str(out/('obj_'+name)/'Vtb_kv_hbm_elastic_boundary'),'+jit='+str(jitter),'+seed=2',*extra],stdout=log,stderr=subprocess.STDOUT)
        text=(out/(namecase+'.log')).read_text()
        passed=(r.returncode!=0 and 'OBSERVED_HOLD' in text and 'DRAIN_EARLY' not in text and 'DRAIN_COUNTER_FAULT' not in text) if late_tail else (r.returncode==0 and 'DRAIN_PASS' in text and 'PASS 0az' in text)
-       rejected=r.returncode!=0 and ('DRAIN_EARLY_CORE' if name=='missing_host_read_debt' else 'DRAIN_EARLY_HBM') in text
+       rejected=r.returncode!=0 and {'missing_host_read_debt':'DRAIN_EARLY_CORE','missing_kv_debt':'DRAIN_EARLY_HBM','bad_core_strap':'NATIVE_CONTEXT_FAULT'}.get(name,'NOT_A_MUTANT') in text
        receipt['cases'].append(dict(name=namecase,returncode=r.returncode,pass_observed=passed,mutant_rejected=rejected))
        if (not passed if name=='production' else not rejected):
         (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');raise RuntimeError('drain proof failed '+namecase)

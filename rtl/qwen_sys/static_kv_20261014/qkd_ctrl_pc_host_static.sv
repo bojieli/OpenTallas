@@ -25,6 +25,7 @@ module qkd_ctrl_pc_host_static #(
     // In-order read tag / pcport class queue depth. The fixed RL23 calendar
     // needs 32; the elastic PHY window needs CMD 4 + RL 23 + window + ECC
     // outstanding reads, so ELASTIC uses 64 (sized in the 0az parent proof).
+    parameter integer STRAP_CDC = 0, // 1: physical HBM pin capture -> two core-domain captures
     parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
     parameter integer TQD = (ELASTIC != 0) ? 64 : 32
 ) (
@@ -282,12 +283,14 @@ module qkd_ctrl_pc_host_static #(
     (* keep *) reg [60:0] es_expected_identity_q;
     (* keep *) reg [28:0] es_expected_address_q;
     (* keep *) reg [4:0] es_expected_pc_q,pc_core_q;
+    (* keep *) reg [4:0] pc_core_meta;
     (* keep *) reg [1:0] stack_q,es_expected_stack_q;
     reg native_intake_fault;
     always @(posedge ck)begin
       es_context_q<=es_context;es_expected_identity_q<=es_expected_identity;
       es_expected_address_q<=es_expected_address;es_expected_pc_q<=es_expected_pc;
-      es_expected_stack_q<=es_expected_stack;stack_q<=cfg_stack;pc_core_q<=pc;
+      es_expected_stack_q<=es_expected_stack;stack_q<=cfg_stack;
+      pc_core_meta<=pc_q;pc_core_q<=(STRAP_CDC!=0)?pc_core_meta:pc;
     end
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin es_expected_q<=0;native_intake_fault<=0;end
