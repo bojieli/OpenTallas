@@ -10,7 +10,8 @@
 // All four clock roots require the same phase; COLUMN0 owns the merged-valid register. Canonical compiler/slot adoption is separate.
 
 module ot_s81_hc_ctra_column #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1,
+    parameter integer FLAG_MERGE = 1   // 0 (cth_ntc ret_column): the row's four flags are ORed in the ctrn_col slice register
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -96,7 +97,7 @@ module ot_s81_hc_ctra_column #(
     // per-column ctrn slice takes its column's own rvm (identical in all four columns).  PAYLOAD_STAGE 0 (the row form,
     // ot_s81_hc_retrow): no extra output register -- rvm / header / payload are the engine's own registers (flags ORed
     // from registers of the same edge), so a column is cycle-identical to the monolithic ctra / ctrb strip.
-    generate if(COLUMN==0) begin : g_merge
+    generate if(COLUMN==0 && FLAG_MERGE) begin : g_merge
         reg rr_merge;
         reg [S_RT+3:0] rv_delay;
         always @(posedge clk) rr_merge<=e_rst;

@@ -49,6 +49,8 @@
    "a_rdm",
    "b_rdm",
    "clk",
+   "flag_fault",
+   "flag_hnz",
    "hdr",
    "hnz_n",
    "hs_c",
@@ -77,8 +79,6 @@
    "cs_in"
   ],
   "W": [
-   "flag_fault",
-   "flag_hnz",
    "hov_fwd",
    "hov_in",
    "yb_fwd"
@@ -86,8 +86,6 @@
   "ANY": [
    "hrq_col",
    "nflt_col",
-   "peer_fault",
-   "peer_hnz",
    "yb_loc",
    "yb_peer"
   ]

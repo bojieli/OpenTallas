@@ -21,6 +21,7 @@ module ot_s81_hc_ctrn_col #(
     input  wire               clk,
     input  wire               rst_in,
     input  wire [S_RT+3:0]    rv_c,
+    input  wire [3:0]         flg_fault, flg_hnz,          // the row's four ret_column flag registers (column 0..3)
     input  wire [107:0]       hdr_c,
     input  wire [255:0]       a_own, b_own, a_par, b_par,
     output reg  [S_RT+3:0]    rv_out,
@@ -29,7 +30,10 @@ module ot_s81_hc_ctrn_col #(
 );
     reg rr;                                              // regional reset relay, as ot_s81_hc_ctrn
     always @(posedge clk) rr <= rst_in;
-    always @(posedge clk or negedge rr) if (!rr) rv_out <= 0; else rv_out <= rv_c;
+    // the row's fault / hnz merge (was a combinational OR in ret_column_c0 from its peers' flag pins): registered here,
+    // same edge as before; the flag bits of rv only accumulate along the chain (read at the chain end, column 0)
+    always @(posedge clk or negedge rr) if (!rr) rv_out <= 0;
+        else rv_out <= {rv_c[S_RT+3] | (|flg_hnz), rv_c[S_RT+2] | (|flg_fault), rv_c[S_RT+1:0]};
     always @(posedge clk) begin
         hdr_out <= hdr_c; a_own_out <= a_own; b_own_out <= b_own; a_par_out <= a_par; b_par_out <= b_par;
     end
@@ -108,6 +112,7 @@ module ot_s81_hc_retrow #(
     // the cs / hov relay nets (COLUMN 3 / COLUMN 0 relay one register; every other column reads the net)
     wire [127:0] cs_net;
     wire         hov_net;
+    wire [3:0]   flg_fault, flg_hnz;           // the four columns' flag registers -> every slice (registered merge)
     genvar c;
     generate for (c = 0; c < 4; c = c + 1) begin : g_col
         localparam integer B = RBW * c, PC = (c + 2) % 4;
@@ -121,13 +126,10 @@ module ot_s81_hc_retrow #(
         wire           hsr;
         wire [15:0]    hsc;
         wire [191:0]   yb_peer;
-        wire [2:0]     peer_fault, peer_hnz;
         for (genvar pc = 0; pc < 4; pc = pc + 1) begin : g_peer
             if (pc != c) begin : g_p
                 localparam integer PI = (pc < c) ? pc : pc - 1;
                 assign yb_peer[64 * PI +: 64] = g_col[pc].yb_fwd;
-                assign peer_fault[PI] = g_col[pc].flag_fault;
-                assign peer_hnz[PI]   = g_col[pc].flag_hnz;
             end
         end
         wire [4*64*S_RT-1:0] hrq_col;
@@ -148,7 +150,7 @@ module ot_s81_hc_retrow #(
             .hov_in(c == 0 ? hov_d : hov_net), .hov_fwd(hovf),
             .nflt_col({nflt[c + 12], nflt[c + 8], nflt[c + 4], nflt[c]}),
             .hnz_n(hnz_d[2 * c]), .hnz_s(hnz_d[2 * c + 1]), .pflt_n(pflt_d[2 * c]), .pflt_s(pflt_d[2 * c + 1]),
-            .flag_fault(flag_fault), .flag_hnz(flag_hnz), .peer_fault(peer_fault), .peer_hnz(peer_hnz));
+            .flag_fault(flag_fault), .flag_hnz(flag_hnz));
         end
         else if (c == 1) begin : g_m1
         ot_s81_hc_ret_column_c1 #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u_c (
@@ -164,7 +166,7 @@ module ot_s81_hc_retrow #(
             .hov_in(c == 0 ? hov_d : hov_net), .hov_fwd(hovf),
             .nflt_col({nflt[c + 12], nflt[c + 8], nflt[c + 4], nflt[c]}),
             .hnz_n(hnz_d[2 * c]), .hnz_s(hnz_d[2 * c + 1]), .pflt_n(pflt_d[2 * c]), .pflt_s(pflt_d[2 * c + 1]),
-            .flag_fault(flag_fault), .flag_hnz(flag_hnz), .peer_fault(peer_fault), .peer_hnz(peer_hnz));
+            .flag_fault(flag_fault), .flag_hnz(flag_hnz));
         end
         else if (c == 2) begin : g_m2
         ot_s81_hc_ret_column_c2 #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u_c (
@@ -180,7 +182,7 @@ module ot_s81_hc_retrow #(
             .hov_in(c == 0 ? hov_d : hov_net), .hov_fwd(hovf),
             .nflt_col({nflt[c + 12], nflt[c + 8], nflt[c + 4], nflt[c]}),
             .hnz_n(hnz_d[2 * c]), .hnz_s(hnz_d[2 * c + 1]), .pflt_n(pflt_d[2 * c]), .pflt_s(pflt_d[2 * c + 1]),
-            .flag_fault(flag_fault), .flag_hnz(flag_hnz), .peer_fault(peer_fault), .peer_hnz(peer_hnz));
+            .flag_fault(flag_fault), .flag_hnz(flag_hnz));
         end
         else if (c == 3) begin : g_m3
         ot_s81_hc_ret_column_c3 #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u_c (
@@ -196,19 +198,19 @@ module ot_s81_hc_retrow #(
             .hov_in(c == 0 ? hov_d : hov_net), .hov_fwd(hovf),
             .nflt_col({nflt[c + 12], nflt[c + 8], nflt[c + 4], nflt[c]}),
             .hnz_n(hnz_d[2 * c]), .hnz_s(hnz_d[2 * c + 1]), .pflt_n(pflt_d[2 * c]), .pflt_s(pflt_d[2 * c + 1]),
-            .flag_fault(flag_fault), .flag_hnz(flag_hnz), .peer_fault(peer_fault), .peer_hnz(peer_hnz));
+            .flag_fault(flag_fault), .flag_hnz(flag_hnz));
         end
 
         if (c < 2) begin : g_se
         ot_s81_hc_ctrn_col_e #(.S_RT(S_RT)) u_n (
-            .clk(clk), .rst_in(rst_in), .rv_c(rvm), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
+            .clk(clk), .rst_in(rst_in), .rv_c(rvm), .flg_fault(flg_fault), .flg_hnz(flg_hnz), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
             .a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),
             .rv_out(rb_out[B +: RVW]), .hdr_out(rb_out[B + RVW +: 108]),
             .a_own_out(rb_out[B + RVW + 108 +: 256]), .b_own_out(rb_out[B + RVW + 364 +: 256]),
             .a_par_out(rb_out[B + RVW + 620 +: 256]), .b_par_out(rb_out[B + RVW + 876 +: 256]));
         end else begin : g_sw
         ot_s81_hc_ctrn_col_w #(.S_RT(S_RT)) u_n (
-            .clk(clk), .rst_in(rst_in), .rv_c(rvm), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
+            .clk(clk), .rst_in(rst_in), .rv_c(rvm), .flg_fault(flg_fault), .flg_hnz(flg_hnz), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
             .a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),
             .rv_out(rb_out[B +: RVW]), .hdr_out(rb_out[B + RVW +: 108]),
             .a_own_out(rb_out[B + RVW + 108 +: 256]), .b_own_out(rb_out[B + RVW + 364 +: 256]),
@@ -216,6 +218,8 @@ module ot_s81_hc_retrow #(
         end
     end endgenerate
     assign cs_net = g_col[3].csf;
+    assign flg_fault = {g_col[3].flag_fault, g_col[2].flag_fault, g_col[1].flag_fault, g_col[0].flag_fault};
+    assign flg_hnz   = {g_col[3].flag_hnz, g_col[2].flag_hnz, g_col[1].flag_hnz, g_col[0].flag_hnz};
     assign hov_net = g_col[0].hovf;
     assign rq_q0 = g_col[0].rq; assign rq_q1 = g_col[1].rq; assign rq_q2 = g_col[2].rq; assign rq_q3 = g_col[3].rq;
     assign hs_run_c = {g_col[3].hsr, g_col[2].hsr, g_col[1].hsr, g_col[0].hsr};
@@ -452,8 +456,7 @@ module ot_s81_hc_ret_column #(
     output wire                   hov_fwd,
     input  wire [3:0]             nflt_col,         // ctnl[j][COLUMN].flt, j = 0..3
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,   // ctpl group COLUMN half 0 / 1
-    output wire                   flag_fault, flag_hnz,
-    input  wire [2:0]             peer_fault, peer_hnz
+    output wire                   flag_fault, flag_hnz             // to every ctrn_col slice of the row (registered)
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, SH = S_RT / 2;
     localparam integer PC = (COLUMN + 2) % 4, CSW = (COLUMN == 3) ? 128 : 1;
@@ -497,9 +500,9 @@ module ot_s81_hc_ret_column #(
             assign yb_rel[16 * q +: 16] = yb_peer[64 * P + 16 * K +: 16];
         end
     end endgenerate
-    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(1),.PAYLOAD_STAGE(0)) u_a (
+    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(1),.PAYLOAD_STAGE(0),.FLAG_MERGE(0)) u_a (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(a_rdp),
-        .rvm(rvm), .peer_fault(peer_fault), .peer_hnz(peer_hnz), .yb_loc(yb_loc), .yb_fwd(yb_fwd), .yb_peer(yb_peer),
+        .rvm(rvm), .peer_fault(3'b0), .peer_hnz(3'b0), .yb_loc(yb_loc), .yb_fwd(yb_fwd), .yb_peer(yb_peer),
         .cs_fwd(cs_f), .cs_rel(cs_in), .hov_fwd(hov_fwd), .hov_rel(hov_in),
         .rdm(a_rdm), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
         .rq_q_c1(), .rq_q_c2(), .rq_q_c3(), .hs_run_c1(), .hs_run_c2(), .hs_run_c3(), .hs_c_c1(), .hs_c_c2(), .hs_c_c3(),
@@ -542,8 +545,7 @@ module ot_s81_hc_ret_column_c0 #(
     output wire                   hov_fwd,
     input  wire [3:0]             nflt_col,         // ctnl[j][COLUMN].flt, j = 0..3
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,   // ctpl group COLUMN half 0 / 1
-    output wire                   flag_fault, flag_hnz,
-    input  wire [2:0]             peer_fault, peer_hnz
+    output wire                   flag_fault, flag_hnz             // to every ctrn_col slice of the row (registered)
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1;
     ot_s81_hc_ret_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(0)) u (.*);
@@ -577,8 +579,7 @@ module ot_s81_hc_ret_column_c1 #(
     output wire                   hov_fwd,
     input  wire [3:0]             nflt_col,         // ctnl[j][COLUMN].flt, j = 0..3
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,   // ctpl group COLUMN half 0 / 1
-    output wire                   flag_fault, flag_hnz,
-    input  wire [2:0]             peer_fault, peer_hnz
+    output wire                   flag_fault, flag_hnz             // to every ctrn_col slice of the row (registered)
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1;
     ot_s81_hc_ret_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(1)) u (.*);
@@ -612,8 +613,7 @@ module ot_s81_hc_ret_column_c2 #(
     output wire                   hov_fwd,
     input  wire [3:0]             nflt_col,         // ctnl[j][COLUMN].flt, j = 0..3
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,   // ctpl group COLUMN half 0 / 1
-    output wire                   flag_fault, flag_hnz,
-    input  wire [2:0]             peer_fault, peer_hnz
+    output wire                   flag_fault, flag_hnz             // to every ctrn_col slice of the row (registered)
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1;
     ot_s81_hc_ret_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(2)) u (.*);
@@ -647,8 +647,7 @@ module ot_s81_hc_ret_column_c3 #(
     output wire                   hov_fwd,
     input  wire [3:0]             nflt_col,         // ctnl[j][COLUMN].flt, j = 0..3
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,   // ctpl group COLUMN half 0 / 1
-    output wire                   flag_fault, flag_hnz,
-    input  wire [2:0]             peer_fault, peer_hnz
+    output wire                   flag_fault, flag_hnz             // to every ctrn_col slice of the row (registered)
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1;
     ot_s81_hc_ret_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(3)) u (.*);
@@ -659,6 +658,7 @@ module ot_s81_hc_ctrn_col_e #(
     input  wire               clk,
     input  wire               rst_in,
     input  wire [S_RT+3:0]    rv_c,
+    input  wire [3:0]         flg_fault, flg_hnz,
     input  wire [107:0]       hdr_c,
     input  wire [255:0]       a_own, b_own, a_par, b_par,
     output wire [S_RT+3:0]    rv_out,
@@ -673,6 +673,7 @@ module ot_s81_hc_ctrn_col_w #(
     input  wire               clk,
     input  wire               rst_in,
     input  wire [S_RT+3:0]    rv_c,
+    input  wire [3:0]         flg_fault, flg_hnz,
     input  wire [107:0]       hdr_c,
     input  wire [255:0]       a_own, b_own, a_par, b_par,
     output wire [S_RT+3:0]    rv_out,

@@ -2047,6 +2047,14 @@ place_pin -pin_name {b_par_out[253]} -layer M3 -location {142.716 25.878} -force
 place_pin -pin_name {b_par_out[254]} -layer M3 -location {142.908 25.878} -force_to_die_boundary
 place_pin -pin_name {b_par_out[255]} -layer M3 -location {143.100 25.878} -force_to_die_boundary
 place_pin -pin_name {clk} -layer M4 -location {0.042 12.972} -force_to_die_boundary
+place_pin -pin_name {flg_fault[0]} -layer M5 -location {1.068 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_fault[1]} -layer M3 -location {1.116 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_fault[2]} -layer M5 -location {1.164 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_fault[3]} -layer M3 -location {1.212 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_hnz[0]} -layer M5 -location {1.260 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_hnz[1]} -layer M3 -location {1.308 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_hnz[2]} -layer M5 -location {1.356 0.042} -force_to_die_boundary
+place_pin -pin_name {flg_hnz[3]} -layer M3 -location {1.404 0.042} -force_to_die_boundary
 place_pin -pin_name {hdr_c[0]} -layer M5 -location {2.892 0.042} -force_to_die_boundary
 place_pin -pin_name {hdr_c[1]} -layer M3 -location {3.132 0.042} -force_to_die_boundary
 place_pin -pin_name {hdr_c[2]} -layer M5 -location {3.372 0.042} -force_to_die_boundary
@@ -2264,8 +2272,8 @@ place_pin -pin_name {hdr_out[105]} -layer M3 -location {21.756 25.878} -force_to
 place_pin -pin_name {hdr_out[106]} -layer M5 -location {21.996 25.878} -force_to_die_boundary
 place_pin -pin_name {hdr_out[107]} -layer M3 -location {22.140 25.878} -force_to_die_boundary
 place_pin -pin_name {rst_in} -layer M4 -location {0.042 11.916} -force_to_die_boundary
-place_pin -pin_name {rv_c[0]} -layer M5 -location {1.068 0.042} -force_to_die_boundary
-place_pin -pin_name {rv_c[1]} -layer M3 -location {1.308 0.042} -force_to_die_boundary
+place_pin -pin_name {rv_c[0]} -layer M5 -location {1.452 0.042} -force_to_die_boundary
+place_pin -pin_name {rv_c[1]} -layer M3 -location {1.500 0.042} -force_to_die_boundary
 place_pin -pin_name {rv_c[2]} -layer M5 -location {1.548 0.042} -force_to_die_boundary
 place_pin -pin_name {rv_c[3]} -layer M3 -location {1.788 0.042} -force_to_die_boundary
 place_pin -pin_name {rv_c[4]} -layer M5 -location {2.028 0.042} -force_to_die_boundary

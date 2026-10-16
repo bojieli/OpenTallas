@@ -252,11 +252,10 @@ def build():
         for pi, pc in enumerate([x for x in range(4) if x != c]):
             for b in range(64):
                 L.add('yb_peer', 'W' if pc < c else 'E', RET_H / 2)
+        # a3: the row's flag merge moved into every slice's rv register (ret_column_c0 had a combinational
+        # peer_fault/peer_hnz -> rvm path = native comb-pin FAIL); flags leave N at the rv bits' x, toward the slices
         for p in ('flag_fault', 'flag_hnz'):
-            L.add(p, 'E' if c < 2 else 'W', 5.0)
-        for p in ('peer_fault', 'peer_hnz'):
-            for pi, pc in enumerate([x for x in range(4) if x != c]):
-                L.add(p, 'W' if pc < c else 'E', 5.0)
+            L.add(p, 'N', own_x(part_e)[('rv', 0)])
         L.add('clk', 'N', CW / 2)
         L.pack(spread_we=True)
         rets.append(L)
@@ -271,6 +270,9 @@ def build():
         par = [('a_par', 'a_par_out', 256), ('b_par', 'b_par_out', 256)]
         for port, x in own_bundle('slice', part_e) + par_bundle('slice', part_e):
             S.add(port[0], 'S', x); S.add(port[1], 'N', x)
+        for p in ('flg_fault', 'flg_hnz'):                  # the row's four column flags, next to the rv flops
+            for b in range(4):
+                S.add(p, 'S', own_x(part_e)[('rv', 0)])
         S.add('clk', 'W', SL_H / 2)
         S.add('rst_in', 'W', SL_H / 2 - 1)
         S.pack()
@@ -314,6 +316,10 @@ def audit(lanes, ctpl, ctfl, rets, slices):
         for port, sp in (('a_rdm', 'a_par'), ('b_rdm', 'b_par')):
             for b in range(256):
                 j('to_partner_slice', R.xy(port, b, x0, y0), P.xy(sp, b, px, py))
+        for c2 in range(4):                                   # flags: ret c -> every slice (bit c)
+            S2 = slices[skind(c2)]; s2x, s2y = spos(c2)
+            for p, sp in (('flag_fault', 'flg_fault'), ('flag_hnz', 'flg_hnz')):
+                j('flags', R.xy(p, 0, x0, y0), S2.xy(sp, c, s2x, s2y))
         # chain: this row's slice c (N edge) -> next row's ret c (above): + H
         for port, rp in (('rv_out', 'rv_in'), ('hdr_out', 'hdr_in'), ('a_own_out', 'ao_in'), ('b_own_out', 'bo_in'),
                          ('a_par_out', 'ap_in'), ('b_par_out', 'bp_in')):
@@ -328,7 +334,6 @@ def audit(lanes, ctpl, ctfl, rets, slices):
             pi = pc2 if pc2 < c else pc2 - 1
             for b in range(64):
                 j('yb_peer', Q.xy('yb_fwd', b, qx, qy), R.xy('yb_peer', 64 * pi + b, x0, y0))
-            j('flags', Q.xy('flag_fault', 0, qx, qy), R.xy('peer_fault', pi, x0, y0))
         if c != 3:
             Q = rets[3]; qx, qy = rpos(3)
             for b in range(128):
