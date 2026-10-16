@@ -1,5 +1,5 @@
 {
- "name": "qfd_xs_tap-xt9-COMMIT",
+ "name": "qfd_xs_tap-xt10-COMMIT",
  "block": "qfd_xs_tap",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-dvm-build",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_xs_tap/qfd_xs_tap-xt9-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_xs_tap/qfd_xs_tap-xt10-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -114,6 +114,6 @@
   "launch_ps": 230.9,
   "capture_ps": 198.6,
   "source": "results/arch/qwen_dvm_banked_leaf_1015/native_tap8/native_audit.json",
-  "fix": "xt9: same RTL/outline/die-assigned pins (f7574712e); pin-flop columns 4 -> 8 (380-bit gi in 18 um of E face pushed capture flops inward: 6 gi captures 198.6 ps, he_d[473] launch 230.9) and full-depth pin-access keepout OT_PK_FRAC 0.5 -> 1.0 (xt8 child lint: 61 gi M4 pins under routed M5 at x 215.808..215.832, the inner pin half the 0.5 keepout left open)"
+  "fix": "xt10: (a) aw 553-bit S bus spread 26.5 um -> 159 um (0.288 pitch) and ck moved from the NW corner to N-face centre (xt6 native capture 502 ps / xt9 gate: diagonal S->NE flop chain, corner clock, fill 7%); (b) recipe 3 pin registers on every input/output (owner 19:50); (c) pin-flop columns 8 + full-depth pin-access keepout (xt8 61 gi pins under routed M5); same RTL/outline"
  }
 }

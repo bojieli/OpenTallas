@@ -47,11 +47,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "slot_change_request": "Official assigned216square within reserved345.6 envelope; source f7574712e exact pin artifact.",
+ "slot_change_request": "xt10 tap pin plan (Q-DVM+LINK 2026-10-16): aw spread over S face x 28.38..187.42, ck N-centre 108.012; other pins as die f7574712e",
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xt9",
+  "tag": "xt10",
   "purpose": "Qwen TP8 distributed x slice FILL TAP r3: taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand, and emits the head-row word {fill, ib, go} to BOTH roots from two kept register copies: go / ib (gi from the tree top) ride the fill's own pipeline (fill-before-go); root fault chains in.",
   "benches": [
    {
@@ -96,8 +96,8 @@
    189.756
   ],
   "ck": [
-   12.972,
-   12.972
+   108.012,
+   108.012
   ],
   "hw_d": [
    32.796,
@@ -112,8 +112,8 @@
    210.492
   ],
   "aw": [
-   94.764,
-   121.26
+   28.38,
+   187.416
   ],
   "fault": [
    2.028,
@@ -135,7 +135,7 @@
  "macros": [],
  "children": [],
  "inter": [],
- "recipe": 2,
+ "recipe": 3,
  "io_flop_at_pins": {
   "cols": 8,
   "allow_none": true
@@ -154,9 +154,12 @@
   "launch_ps": 230.9,
   "capture_ps": 198.6,
   "source": "results/arch/qwen_dvm_banked_leaf_1015/native_tap8/native_audit.json",
-  "fix": "xt9: same RTL/outline/die-assigned pins (f7574712e); pin-flop columns 4 -> 8 (380-bit gi in 18 um of E face pushed capture flops inward: 6 gi captures 198.6 ps, he_d[473] launch 230.9) and full-depth pin-access keepout OT_PK_FRAC 0.5 -> 1.0 (xt8 child lint: 61 gi M4 pins under routed M5 at x 215.808..215.832, the inner pin half the 0.5 keepout left open)"
+  "fix": "xt10: (a) aw 553-bit S bus spread 26.5 um -> 159 um (0.288 pitch) and ck moved from the NW corner to N-face centre (xt6 native capture 502 ps / xt9 gate: diagonal S->NE flop chain, corner clock, fill 7%); (b) recipe 3 pin registers on every input/output (owner 19:50); (c) pin-flop columns 8 + full-depth pin-access keepout (xt8 61 gi pins under routed M5); same RTL/outline"
  },
  "pin_access": {
   "frac": 1.0
+ },
+ "pin_regs": {
+  "enable": true
  }
 }
