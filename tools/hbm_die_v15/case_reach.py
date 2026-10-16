@@ -20,13 +20,17 @@ def lef(path):
     for m in re.finditer(r'^MACRO (\S+)(.*?)^END \1', t, re.M | re.S):
         body = m.group(2)
         w, h = map(float, re.search(r'SIZE ([\d.]+) BY ([\d.]+)', body).groups())
-        pins = {}
+        pins, directions, uses = {}, {}, {}
         for pm in re.finditer(r'^\s*PIN (\S+)(.*?)^\s*END \1', body, re.M | re.S):
             r = re.search(r'RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', pm.group(2))
             if r:
                 x0, y0, x1, y1 = map(float, r.groups())
                 pins[pm.group(1)] = ((x0 + x1) / 2, (y0 + y1) / 2)
-        out[m.group(1)] = dict(w=w, h=h, pins=pins)
+                dm = re.search(r'DIRECTION\s+(\w+)', pm.group(2))
+                directions[pm.group(1)] = dm.group(1) if dm else 'UNKNOWN'
+                um = re.search(r'USE\s+(\w+)', pm.group(2))
+                uses[pm.group(1)] = um.group(1) if um else 'SIGNAL'
+        out[m.group(1)] = dict(w=w, h=h, pins=pins, directions=directions, uses=uses)
     return out
 
 
@@ -40,7 +44,25 @@ def xf(v, w, h, px, py):
         return v['x'] + w - px, v['y'] + py
     if o == 'R180':
         return v['x'] + w - px, v['y'] + h - py
+    if o == 'R90':
+        return v['x'] + h - py, v['y'] + px
+    if o == 'R270':
+        return v['x'] + py, v['y'] + w - px
+    if o == 'MXR90':
+        return v['x'] + py, v['y'] + px
+    if o == 'MYR90':
+        return v['x'] + h - py, v['y'] + w - px
     raise SystemExit(o)
+
+
+def branches(ends, directions):
+    """Use actual LEF directions, independent of instance order, and retain every sink."""
+    drivers = [e for e in ends if directions.get(e[:2]) == 'OUTPUT']
+    loads = [e for e in ends if directions.get(e[:2]) == 'INPUT']
+    if len(drivers) != 1 or len(drivers) + len(loads) != len(ends):
+        return None
+    driver = drivers[0]
+    return [(driver, load, abs(driver[2][0] - load[2][0]) + abs(driver[2][1] - load[2][1])) for load in loads]
 
 
 def main():
@@ -56,10 +78,13 @@ def main():
     pl = man['placement']
     # nets from die.v: instance blocks with .port({...}) or .port(net)
     txt = (c / 'die.v').read_text()
-    pinloc = {}                    # net -> list of (inst, pin, xy)
+    pinloc, directions, skipped = {}, {}, []
     nets = defaultdict(list)
     for m in re.finditer(r'^\s+(\w+) (\w+) \(\n(.*?)\n\s+\);', txt, re.M | re.S):
         mas, inst = m.group(1), m.group(2)
+        if inst not in pl or mas not in L:
+            skipped.append(dict(instance=inst, master=mas))
+            continue
         v = pl[inst]; lv = L[mas]
         for pm in re.finditer(r'\.(\w+)\((.*?)\)(?:,|$)', m.group(3), re.S):
             p, e = pm.group(1), pm.group(2).strip()
@@ -71,17 +96,23 @@ def main():
                         continue
                     bit = n - 1 - i
                     pn = f'{p}[{bit}]'
-                    if pn in lv['pins']:
+                    if pn in lv['pins'] and lv['uses'][pn] != 'CLOCK':
                         nets[s].append((inst, pn, xf(v, lv['w'], lv['h'], *lv['pins'][pn])))
+                        directions[(inst, pn)] = lv['directions'][pn]
             elif e and not e.startswith('nc_') and e not in ('clk_hbm', 'rst_n'):
-                if p in lv['pins']:
+                if p in lv['pins'] and lv['uses'][p] != 'CLOCK':
                     nets[e].append((inst, p, xf(v, lv['w'], lv['h'], *lv['pins'][p])))
-    length = {}
+                    directions[(inst, p)] = lv['directions'][p]
+    length, all_branches, ambiguous = {}, {}, {}
     for n, ends in nets.items():
         if len(ends) < 2:
             continue
-        (x0, y0), (x1, y1) = ends[0][2], ends[1][2]
-        length[n] = abs(x0 - x1) + abs(y0 - y1)
+        bs = branches(ends, directions)
+        if not bs:
+            ambiguous[n] = [dict(instance=e[0], pin=e[1], direction=directions.get(e[:2])) for e in ends]
+            continue
+        all_branches[n] = bs
+        length[n] = max(b[2] for b in bs)
     over = {n: d for n, d in length.items() if d > a.reach}
     by = defaultdict(list)
     for n, d in length.items():
@@ -89,17 +120,28 @@ def main():
         key = (e.group(1)[:6], re.sub(r'\d+$', '', e.group(2))) if e else ('?', n)
         by[key].append(d)
     res = dict(case=str(c), reach_um=a.reach, nets=len(length), over_reach=len(over),
-               max_um=round(max(length.values()), 1), mean_um=round(sum(length.values()) / len(length), 1),
+               max_um=round(max(length.values(), default=0), 1), mean_um=round(sum(length.values()) / max(1, len(length)), 1),
+               branch_coverage='Every typed driver-to-sink branch; LEF directions identify the driver.',
+               branches=sum(len(b) for b in all_branches.values()),
+               branches_over_reach=sum(d > a.reach for bs in all_branches.values() for _, _, d in bs),
+               ambiguous_nets=ambiguous, skipped_instances=skipped,
+               qualification='GEOMETRY_ONLY; unresolved directions/instances and calendar ages remain explicit.',
+               multicast={n: dict(sinks=len(bs), longest_um=max(b[2] for b in bs),
+                                  branches=[dict(driver=f'{d[0]}/{d[1]}', sink=f'{l[0]}/{l[1]}', length_um=v)
+                                            for d, l, v in bs],
+                                  equal_age_calendar='UNPROVEN: requires compiler/source-bound stage and slot audit')
+                          for n, bs in all_branches.items() if len(bs) > 1},
                hist={f'<{b}': sum(1 for d in length.values() if b - 250 <= d < b) for b in range(250, 3001, 250)},
                by_class={f'{k[0]}:{k[1]}': dict(n=len(v), max=round(max(v), 1), over=sum(1 for d in v if d > a.reach))
                          for k, v in sorted(by.items())})
     if a.paths:
         # endpoint pin -> net length: an endpoint "inst/pin" is a load pin
         loadlen = {}
-        for n, ends in nets.items():
-            if n in length:
-                loadlen[f'{ends[1][0]}/{ends[1][1]}'] = (length[n], ends[0][0], ends[0][1])
-                loadlen[f'{ends[0][0]}/{ends[0][1]}'] = (length[n], ends[1][0], ends[1][1])
+        for n, bs in all_branches.items():
+            for driver, load, dist in bs:
+                loadlen[f'{load[0]}/{load[1]}'] = (dist, driver[0], driver[1])
+            driver, worst, dist = max(bs, key=lambda b: b[2])
+            loadlen[f'{driver[0]}/{driver[1]}'] = (dist, worst[0], worst[1])
         classes = {}
         for pf in a.paths:
             rows = [l.split() for l in Path(pf).read_text().splitlines() if l.strip()]
