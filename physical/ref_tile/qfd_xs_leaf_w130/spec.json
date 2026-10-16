@@ -2539,8 +2539,8 @@
   "master": "ot_qfd_xs_leaf",
   "granted_by": "PROPOSED by Q-XSLEAF 2026-10-16 13:40 for Q-COMPUTE-DIE agreement (same-area reshape 129.6x69.12; contacts = m6 grant ports/faces/sizes, spans re-centred on the 69.12 um faces). Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6b/m6c params-only changes (READ_PIN_PIPE=1, FILL_PIPE=1 add internal flops; port list, faces, spans and contacts identical); m6f: OT_OUTHOLD_FREE placement only, contacts identical (source a2cc7551f: DVM head opt-in params 6886146c7 only, leaf defaults unchanged)",
   "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-  "source_commit": "a2cc7551f821af767d6fd548c807c3ad4abc6313",
-  "source_spec_sha256": "845824616855462f10af24f3db697ec3784fba63d4fbac0c35a2921bb2351b8a",
+  "source_commit": "0100bf2c1db7e1c7dbc107e4e815822785d202fe",
+  "source_spec_sha256": "e23f1296da1e109e31cf25447fbc362ecc6b27c06d693ba5bdd23537d6b4d3d6",
   "ports": [
    {
     "name": "w_v",
