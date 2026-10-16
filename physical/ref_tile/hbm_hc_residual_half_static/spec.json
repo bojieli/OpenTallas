@@ -47,9 +47,9 @@
  },
  "job": {
   "owner": "Claude:H-NETLIST/kits (for HC owner)",
-  "branch": "claude/hnl-kits-0030",
+  "branch": "claude/hnl-vmdel-0600",
   "tag": "native1",
-  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim | H-NETLIST/kits 10-16: regenerated + regated on current main (gate 10-15 04:59 predates flow overlays); leaf of the static HC engine (codex/hc-static-engine-1014 ot_hgi_hc_projection_sys1_split_static; v16 gap G-HC-ENG). | Re-kit 10-16 after gate PNG review: the 273.456x194.4 exact engine sub-slot left util 24.6% with the top half empty and gate TT insertion 326 ps; outline 220.32x125.28 (util ~48% of std 279 + macro 12,314 um2; macro + 20-um channels), face pins (W write, E read data, N control), exact-source pin plan dropped (the HC engine sub-slot is not bound in the v16 die; HC owner re-plans the engine from the new abstract). | v2 10-16: native capture fix (read pin flops TML4 + rst_n pin flop), bench PASS + write-capture and read-capture bypass mutants FAIL (Icarus 11 and 12).",
+  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim | H-NETLIST/kits 10-16: regenerated + regated on current main (gate 10-15 04:59 predates flow overlays); leaf of the static HC engine (codex/hc-static-engine-1014 ot_hgi_hc_projection_sys1_split_static; v16 gap G-HC-ENG). | Re-kit 10-16 after gate PNG review: the 273.456x194.4 exact engine sub-slot left util 24.6% with the top half empty and gate TT insertion 326 ps; outline 220.32x125.28 (util ~48% of std 279 + macro 12,314 um2; macro + 20-um channels), face pins (W write, E read data, N control), exact-source pin plan dropped (the HC engine sub-slot is not bound in the v16 die; HC owner re-plans the engine from the new abstract). | v2 10-16: native capture fix (read pin flops TML4 + rst_n pin flop), bench PASS + write-capture and read-capture bypass mutants FAIL (Icarus 11 and 12). | v2b 10-16 (H-NETLIST/vmdel): c88039d70 NEEDS_RTL was a bench-spec defect only -- min_count_regex 'checks=(\\d+)' also counted the read-capture mutant's FATAL 'checks=0' line echoed by tools/hbm_hc/run_memory_partition.sh (actual result RESIDUAL_HALF PASS checks=1280, 32x WEIGHT_QUARTER PASS checks=512); regex anchored to the PASS lines; same RTL, reroute_reason rtl_change.",
   "structural_change": "Replace500um10SRAMsharedclockmonolith withboundedlocalroot; keepactualmemory/phase/TML3; residualwrite+1 priced",
   "extra_paths": [
    "physical/hbm_hc",
@@ -72,7 +72,7 @@
      "iverilog"
     ],
     "pass_regex": "WEIGHT_QUARTER PASS",
-    "min_count_regex": "checks=(\\d+)"
+    "min_count_regex": "^[A-Z_]+ PASS .*checks=(\\d+)"
    },
    {
     "name": "write_capture_bypass_mutant",
