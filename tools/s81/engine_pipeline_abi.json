@@ -16,6 +16,14 @@
    "field_round_trip_cycles": 118,
    "change": "adopted S81 floorplan SA_2x2_RP: field round trip 140 -> 118 cycles",
    "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); field durations measured on the 140-cycle trip are stale"
+  },
+  "coll": {
+   "control_rom_abi": "opentallas.s81.collective-fixed-edge-rom.v3",
+   "control_rom_output_capture_edges_hidden_by_prefetch": 1,
+   "control_rom_initialization_extra_edges": 1,
+   "vm_boundary_pin_capture_edges": 1,
+   "change": "CAL7 ROM lookahead (565 macro-output capture flops + one-row-ahead prefetch: 0 normal edges, +1 edge once after reset) and per-root scalar reset; VM boundary PINCAP=1 (+1 write/visibility edge, read request 1, write output 2; b7 TT+88.15/FF+16.88/DRC0 native L181.1/C173.7)",
+   "source": "tools/s81_static_collective/resetpins/controller_image.py LATENCIES (a514eb8ea, ABI v3; S-ELEM-B 875c6ee6f same ABI); results/arch/s81_elements_1319/vmb7/receipt.json (a4117e99d); collective durations measured on the v2 ROM / PINCAP 0 boundary are refused"
   }
  }
 }

@@ -9,7 +9,8 @@ written independently of the RTL structure (pairing by arrival edges, not by win
   * a word arriving at edge n merges with its golden sibling (ot_v41_ret_pkg sibling on the normalised tags) if the
     sibling arrives on the OTHER input at an edge m with |m - n| <= WIN; the sum issues at max(n, m);
   * otherwise it is forwarded;
-  * every output word is visible at edge  early + WIN + 7 + RST  (early = arrival edge, the earlier one for a sum).
+  * every output word is visible at edge  early + WIN + 10 + RST  (early = arrival edge, the earlier one for a sum);
+    10 = 7 (window exit, 5-stage adder, calendar) + 3 fixed pipeline stages of the r2 node (port, norm, issue).
 
 Compiler obligations checked here (the RTL asserts the same, sticky fault, never re-times):
   F1 one exit-slot owner per edge; F2 one sum issue per edge; F3 at most one sibling candidate; F4 implied by F1/F2.
@@ -56,6 +57,21 @@ def norm(t: int) -> int:
     return _mk(row, lo, k, n)
 
 
+def norm_closed(t: int) -> int:
+    """the RTL's closed form of norm() (ot_s81_retn_static n5b): first j >= k with !C(j), else 5; k >= 5 unchanged"""
+    row, lo, k, n = _f(t)
+    c = [(not (lo == 0 and (1 << j) >= n)) and ((lo >> j) & 1) == 0 and lo + (1 << j) >= n for j in range(5)]
+    kf = k
+    if k < 5:
+        kf = next((j for j in range(k, 5) if not c[j]), 5)
+    return _mk(row, lo, kf, n)
+
+
+def norm_closed_check() -> int:
+    """exhaustive over (lo, k, n): the closed form equals the package loop bit for bit; returns the mismatch count"""
+    return sum(norm_closed(_mk(5, lo, k, n)) != norm(_mk(5, lo, k, n)) for lo in range(32) for k in range(8) for n in range(32))
+
+
 def complete(t: int) -> bool:
     _, lo, k, n = _f(t)
     return lo == 0 and ((1 << k) & 63) >= n
@@ -89,10 +105,13 @@ def fadd(x: int, y: int) -> tuple[int, int]:
     return r, 0
 
 
+PIPE_C = 10   # r2 node: 7 + P1 port + P2 norm + P3 issue register (ot_s81_retn_static.sv)
+
+
 # ---------------- one node --------------------------------------------------------------------------------------------
 def node(a_words, b_words, win: int, rst: int):
     """a_words / b_words: lists of (edge, tag, data, err).  Returns (outputs [(edge, tag, data, err, kind)], faults)."""
-    exit_c = win + 7 + rst
+    exit_c = win + PIPE_C + rst
     A = [(n, norm(t), d, e, 'a', i) for i, (n, t, d, e) in enumerate(a_words)]
     B = [(n, norm(t), d, e, 'b', i) for i, (n, t, d, e) in enumerate(b_words)]
     faults = []

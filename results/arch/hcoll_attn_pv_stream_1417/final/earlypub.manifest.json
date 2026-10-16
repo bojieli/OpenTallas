@@ -1,0 +1,4532 @@
+{
+  "schema": "hcoll-attention-pv-overlap-v1",
+  "scope": "Qwen canonical128row SM nodes component; native SM and physical/price separate",
+  "batches": 128,
+  "output_words": 1024,
+  "period": 82,
+  "first_output": 165,
+  "final_output": 10579,
+  "last": 10581,
+  "mutant": "earlypub",
+  "ring_tag_count": 8,
+  "reducer_tag_count": 16,
+  "landing_native_sram_banks": 2,
+  "bank_shape": "64x512",
+  "effective_payload": "16x256 per bank",
+  "ring_wave_stride": 40,
+  "local_level_edges": [
+    29,
+    21,
+    17,
+    15
+  ],
+  "local_stream_bits": 41,
+  "events": 80768,
+  "timelines": [
+    {
+      "batch": 0,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 0,
+      "local_start": 85,
+      "final_output": 165,
+      "release": 166,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 85,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 114,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 135,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 152,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 1,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 82,
+      "local_start": 167,
+      "final_output": 247,
+      "release": 248,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 167,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 196,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 217,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 234,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 2,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 164,
+      "local_start": 249,
+      "final_output": 329,
+      "release": 330,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 249,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 278,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 299,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 316,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 3,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 246,
+      "local_start": 331,
+      "final_output": 411,
+      "release": 412,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 331,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 360,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 381,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 398,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 4,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 328,
+      "local_start": 413,
+      "final_output": 493,
+      "release": 494,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 413,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 442,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 463,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 480,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 5,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 410,
+      "local_start": 495,
+      "final_output": 575,
+      "release": 576,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 495,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 524,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 545,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 562,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 6,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 492,
+      "local_start": 577,
+      "final_output": 657,
+      "release": 658,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 577,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 606,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 627,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 644,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 7,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 574,
+      "local_start": 659,
+      "final_output": 739,
+      "release": 740,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 659,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 688,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 709,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 726,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 8,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 656,
+      "local_start": 741,
+      "final_output": 821,
+      "release": 822,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 741,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 770,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 791,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 808,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 9,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 738,
+      "local_start": 823,
+      "final_output": 903,
+      "release": 904,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 823,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 852,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 873,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 890,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 10,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 820,
+      "local_start": 905,
+      "final_output": 985,
+      "release": 986,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 905,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 934,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 955,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 972,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 11,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 902,
+      "local_start": 987,
+      "final_output": 1067,
+      "release": 1068,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 987,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1016,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1037,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1054,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 12,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 984,
+      "local_start": 1069,
+      "final_output": 1149,
+      "release": 1150,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1069,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1098,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1119,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1136,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 13,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 1066,
+      "local_start": 1151,
+      "final_output": 1231,
+      "release": 1232,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1151,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1180,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1201,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1218,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 14,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 1148,
+      "local_start": 1233,
+      "final_output": 1313,
+      "release": 1314,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1233,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1262,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1283,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1300,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 15,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 1230,
+      "local_start": 1315,
+      "final_output": 1395,
+      "release": 1396,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1315,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1344,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1365,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1382,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 16,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 1312,
+      "local_start": 1397,
+      "final_output": 1477,
+      "release": 1478,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1397,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1426,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1447,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1464,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 17,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 1394,
+      "local_start": 1479,
+      "final_output": 1559,
+      "release": 1560,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1479,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1508,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1529,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1546,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 18,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 1476,
+      "local_start": 1561,
+      "final_output": 1641,
+      "release": 1642,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1561,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1590,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1611,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1628,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 19,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 1558,
+      "local_start": 1643,
+      "final_output": 1723,
+      "release": 1724,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1643,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1672,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1693,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1710,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 20,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 1640,
+      "local_start": 1725,
+      "final_output": 1805,
+      "release": 1806,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1725,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1754,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1775,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1792,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 21,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 1722,
+      "local_start": 1807,
+      "final_output": 1887,
+      "release": 1888,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1807,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1836,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1857,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1874,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 22,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 1804,
+      "local_start": 1889,
+      "final_output": 1969,
+      "release": 1970,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1889,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 1918,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 1939,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 1956,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 23,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 1886,
+      "local_start": 1971,
+      "final_output": 2051,
+      "release": 2052,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 1971,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2000,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2021,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2038,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 24,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 1968,
+      "local_start": 2053,
+      "final_output": 2133,
+      "release": 2134,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2053,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2082,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2103,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2120,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 25,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 2050,
+      "local_start": 2135,
+      "final_output": 2215,
+      "release": 2216,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2135,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2164,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2185,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2202,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 26,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 2132,
+      "local_start": 2217,
+      "final_output": 2297,
+      "release": 2298,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2217,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2246,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2267,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2284,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 27,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 2214,
+      "local_start": 2299,
+      "final_output": 2379,
+      "release": 2380,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2299,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2328,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2349,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2366,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 28,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 2296,
+      "local_start": 2381,
+      "final_output": 2461,
+      "release": 2462,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2381,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2410,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2431,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2448,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 29,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 2378,
+      "local_start": 2463,
+      "final_output": 2543,
+      "release": 2544,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2463,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2492,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2513,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2530,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 30,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 2460,
+      "local_start": 2545,
+      "final_output": 2625,
+      "release": 2626,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2545,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2574,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2595,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2612,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 31,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 2542,
+      "local_start": 2627,
+      "final_output": 2707,
+      "release": 2708,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2627,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2656,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2677,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2694,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 32,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 2624,
+      "local_start": 2709,
+      "final_output": 2789,
+      "release": 2790,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2709,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2738,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2759,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2776,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 33,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 2706,
+      "local_start": 2791,
+      "final_output": 2871,
+      "release": 2872,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2791,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2820,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2841,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2858,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 34,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 2788,
+      "local_start": 2873,
+      "final_output": 2953,
+      "release": 2954,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2873,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2902,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 2923,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 2940,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 35,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 2870,
+      "local_start": 2955,
+      "final_output": 3035,
+      "release": 3036,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 2955,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 2984,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3005,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3022,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 36,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 2952,
+      "local_start": 3037,
+      "final_output": 3117,
+      "release": 3118,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3037,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3066,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3087,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3104,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 37,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 3034,
+      "local_start": 3119,
+      "final_output": 3199,
+      "release": 3200,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3119,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3148,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3169,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3186,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 38,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 3116,
+      "local_start": 3201,
+      "final_output": 3281,
+      "release": 3282,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3201,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3230,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3251,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3268,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 39,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 3198,
+      "local_start": 3283,
+      "final_output": 3363,
+      "release": 3364,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3283,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3312,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3333,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3350,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 40,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 3280,
+      "local_start": 3365,
+      "final_output": 3445,
+      "release": 3446,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3365,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3394,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3415,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3432,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 41,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 3362,
+      "local_start": 3447,
+      "final_output": 3527,
+      "release": 3528,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3447,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3476,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3497,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3514,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 42,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 3444,
+      "local_start": 3529,
+      "final_output": 3609,
+      "release": 3610,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3529,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3558,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3579,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3596,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 43,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 3526,
+      "local_start": 3611,
+      "final_output": 3691,
+      "release": 3692,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3611,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3640,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3661,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3678,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 44,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 3608,
+      "local_start": 3693,
+      "final_output": 3773,
+      "release": 3774,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3693,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3722,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3743,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3760,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 45,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 3690,
+      "local_start": 3775,
+      "final_output": 3855,
+      "release": 3856,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3775,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3804,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3825,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3842,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 46,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 3772,
+      "local_start": 3857,
+      "final_output": 3937,
+      "release": 3938,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3857,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3886,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3907,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 3924,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 47,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 3854,
+      "local_start": 3939,
+      "final_output": 4019,
+      "release": 4020,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 3939,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 3968,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 3989,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4006,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 48,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 3936,
+      "local_start": 4021,
+      "final_output": 4101,
+      "release": 4102,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4021,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4050,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4071,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4088,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 49,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 4018,
+      "local_start": 4103,
+      "final_output": 4183,
+      "release": 4184,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4103,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4132,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4153,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4170,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 50,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 4100,
+      "local_start": 4185,
+      "final_output": 4265,
+      "release": 4266,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4185,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4214,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4235,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4252,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 51,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 4182,
+      "local_start": 4267,
+      "final_output": 4347,
+      "release": 4348,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4267,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4296,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4317,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4334,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 52,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 4264,
+      "local_start": 4349,
+      "final_output": 4429,
+      "release": 4430,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4349,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4378,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4399,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4416,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 53,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 4346,
+      "local_start": 4431,
+      "final_output": 4511,
+      "release": 4512,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4431,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4460,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4481,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4498,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 54,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 4428,
+      "local_start": 4513,
+      "final_output": 4593,
+      "release": 4594,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4513,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4542,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4563,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4580,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 55,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 4510,
+      "local_start": 4595,
+      "final_output": 4675,
+      "release": 4676,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4595,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4624,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4645,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4662,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 56,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 4592,
+      "local_start": 4677,
+      "final_output": 4757,
+      "release": 4758,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4677,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4706,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4727,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4744,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 57,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 4674,
+      "local_start": 4759,
+      "final_output": 4839,
+      "release": 4840,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4759,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4788,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4809,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4826,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 58,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 4756,
+      "local_start": 4841,
+      "final_output": 4921,
+      "release": 4922,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4841,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4870,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4891,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4908,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 59,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 4838,
+      "local_start": 4923,
+      "final_output": 5003,
+      "release": 5004,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 4923,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 4952,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 4973,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 4990,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 60,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 4920,
+      "local_start": 5005,
+      "final_output": 5085,
+      "release": 5086,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5005,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5034,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5055,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5072,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 61,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 5002,
+      "local_start": 5087,
+      "final_output": 5167,
+      "release": 5168,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5087,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5116,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5137,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5154,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 62,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 5084,
+      "local_start": 5169,
+      "final_output": 5249,
+      "release": 5250,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5169,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5198,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5219,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5236,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 63,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 5166,
+      "local_start": 5251,
+      "final_output": 5331,
+      "release": 5332,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5251,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5280,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5301,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5318,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 64,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 5248,
+      "local_start": 5333,
+      "final_output": 5413,
+      "release": 5414,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5333,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5362,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5383,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5400,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 65,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 5330,
+      "local_start": 5415,
+      "final_output": 5495,
+      "release": 5496,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5415,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5444,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5465,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5482,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 66,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 5412,
+      "local_start": 5497,
+      "final_output": 5577,
+      "release": 5578,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5497,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5526,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5547,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5564,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 67,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 5494,
+      "local_start": 5579,
+      "final_output": 5659,
+      "release": 5660,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5579,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5608,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5629,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5646,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 68,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 5576,
+      "local_start": 5661,
+      "final_output": 5741,
+      "release": 5742,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5661,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5690,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5711,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5728,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 69,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 5658,
+      "local_start": 5743,
+      "final_output": 5823,
+      "release": 5824,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5743,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5772,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5793,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5810,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 70,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 5740,
+      "local_start": 5825,
+      "final_output": 5905,
+      "release": 5906,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5825,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5854,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5875,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5892,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 71,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 5822,
+      "local_start": 5907,
+      "final_output": 5987,
+      "release": 5988,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5907,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 5936,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 5957,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 5974,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 72,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 5904,
+      "local_start": 5989,
+      "final_output": 6069,
+      "release": 6070,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 5989,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6018,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6039,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6056,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 73,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 5986,
+      "local_start": 6071,
+      "final_output": 6151,
+      "release": 6152,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6071,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6100,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6121,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6138,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 74,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 6068,
+      "local_start": 6153,
+      "final_output": 6233,
+      "release": 6234,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6153,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6182,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6203,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6220,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 75,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 6150,
+      "local_start": 6235,
+      "final_output": 6315,
+      "release": 6316,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6235,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6264,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6285,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6302,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 76,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 6232,
+      "local_start": 6317,
+      "final_output": 6397,
+      "release": 6398,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6317,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6346,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6367,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6384,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 77,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 6314,
+      "local_start": 6399,
+      "final_output": 6479,
+      "release": 6480,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6399,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6428,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6449,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6466,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 78,
+      "bank": 0,
+      "destination": 0,
+      "ring_start": 6396,
+      "local_start": 6481,
+      "final_output": 6561,
+      "release": 6562,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6481,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6510,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6531,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6548,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 79,
+      "bank": 1,
+      "destination": 0,
+      "ring_start": 6478,
+      "local_start": 6563,
+      "final_output": 6643,
+      "release": 6644,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6563,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6592,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6613,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6630,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 80,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 6560,
+      "local_start": 6645,
+      "final_output": 6725,
+      "release": 6726,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6645,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6674,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6695,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6712,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 81,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 6642,
+      "local_start": 6727,
+      "final_output": 6807,
+      "release": 6808,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6727,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6756,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6777,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6794,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 82,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 6724,
+      "local_start": 6809,
+      "final_output": 6889,
+      "release": 6890,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6809,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6838,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6859,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6876,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 83,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 6806,
+      "local_start": 6891,
+      "final_output": 6971,
+      "release": 6972,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6891,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 6920,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 6941,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 6958,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 84,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 6888,
+      "local_start": 6973,
+      "final_output": 7053,
+      "release": 7054,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 6973,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7002,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7023,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7040,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 85,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 6970,
+      "local_start": 7055,
+      "final_output": 7135,
+      "release": 7136,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7055,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7084,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7105,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7122,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 86,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 7052,
+      "local_start": 7137,
+      "final_output": 7217,
+      "release": 7218,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7137,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7166,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7187,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7204,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 87,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 7134,
+      "local_start": 7219,
+      "final_output": 7299,
+      "release": 7300,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7219,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7248,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7269,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7286,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 88,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 7216,
+      "local_start": 7301,
+      "final_output": 7381,
+      "release": 7382,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7301,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7330,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7351,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7368,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 89,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 7298,
+      "local_start": 7383,
+      "final_output": 7463,
+      "release": 7464,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7383,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7412,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7433,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7450,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 90,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 7380,
+      "local_start": 7465,
+      "final_output": 7545,
+      "release": 7546,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7465,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7494,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7515,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7532,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 91,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 7462,
+      "local_start": 7547,
+      "final_output": 7627,
+      "release": 7628,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7547,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7576,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7597,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7614,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 92,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 7544,
+      "local_start": 7629,
+      "final_output": 7709,
+      "release": 7710,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7629,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7658,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7679,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7696,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 93,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 7626,
+      "local_start": 7711,
+      "final_output": 7791,
+      "release": 7792,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7711,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7740,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7761,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7778,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 94,
+      "bank": 0,
+      "destination": 1,
+      "ring_start": 7708,
+      "local_start": 7793,
+      "final_output": 7873,
+      "release": 7874,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7793,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7822,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7843,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7860,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 95,
+      "bank": 1,
+      "destination": 1,
+      "ring_start": 7790,
+      "local_start": 7875,
+      "final_output": 7955,
+      "release": 7956,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7875,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7904,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 7925,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 7942,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 96,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 7872,
+      "local_start": 7957,
+      "final_output": 8037,
+      "release": 8038,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 7957,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 7986,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8007,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8024,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 97,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 7954,
+      "local_start": 8039,
+      "final_output": 8119,
+      "release": 8120,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8039,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8068,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8089,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8106,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 98,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 8036,
+      "local_start": 8121,
+      "final_output": 8201,
+      "release": 8202,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8121,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8150,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8171,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8188,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 99,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 8118,
+      "local_start": 8203,
+      "final_output": 8283,
+      "release": 8284,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8203,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8232,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8253,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8270,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 100,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 8200,
+      "local_start": 8285,
+      "final_output": 8365,
+      "release": 8366,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8285,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8314,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8335,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8352,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 101,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 8282,
+      "local_start": 8367,
+      "final_output": 8447,
+      "release": 8448,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8367,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8396,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8417,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8434,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 102,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 8364,
+      "local_start": 8449,
+      "final_output": 8529,
+      "release": 8530,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8449,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8478,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8499,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8516,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 103,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 8446,
+      "local_start": 8531,
+      "final_output": 8611,
+      "release": 8612,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8531,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8560,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8581,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8598,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 104,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 8528,
+      "local_start": 8613,
+      "final_output": 8693,
+      "release": 8694,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8613,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8642,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8663,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8680,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 105,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 8610,
+      "local_start": 8695,
+      "final_output": 8775,
+      "release": 8776,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8695,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8724,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8745,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8762,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 106,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 8692,
+      "local_start": 8777,
+      "final_output": 8857,
+      "release": 8858,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8777,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8806,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8827,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8844,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 107,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 8774,
+      "local_start": 8859,
+      "final_output": 8939,
+      "release": 8940,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8859,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8888,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8909,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 8926,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 108,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 8856,
+      "local_start": 8941,
+      "final_output": 9021,
+      "release": 9022,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 8941,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 8970,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 8991,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9008,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 109,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 8938,
+      "local_start": 9023,
+      "final_output": 9103,
+      "release": 9104,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9023,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9052,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9073,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9090,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 110,
+      "bank": 0,
+      "destination": 2,
+      "ring_start": 9020,
+      "local_start": 9105,
+      "final_output": 9185,
+      "release": 9186,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9105,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9134,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9155,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9172,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 111,
+      "bank": 1,
+      "destination": 2,
+      "ring_start": 9102,
+      "local_start": 9187,
+      "final_output": 9267,
+      "release": 9268,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9187,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9216,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9237,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9254,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 112,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 9184,
+      "local_start": 9269,
+      "final_output": 9349,
+      "release": 9350,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9269,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9298,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9319,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9336,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 113,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 9266,
+      "local_start": 9351,
+      "final_output": 9431,
+      "release": 9432,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9351,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9380,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9401,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9418,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 114,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 9348,
+      "local_start": 9433,
+      "final_output": 9513,
+      "release": 9514,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9433,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9462,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9483,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9500,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 115,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 9430,
+      "local_start": 9515,
+      "final_output": 9595,
+      "release": 9596,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9515,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9544,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9565,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9582,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 116,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 9512,
+      "local_start": 9597,
+      "final_output": 9677,
+      "release": 9678,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9597,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9626,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9647,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9664,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 117,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 9594,
+      "local_start": 9679,
+      "final_output": 9759,
+      "release": 9760,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9679,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9708,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9729,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9746,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 118,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 9676,
+      "local_start": 9761,
+      "final_output": 9841,
+      "release": 9842,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9761,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9790,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9811,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9828,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 119,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 9758,
+      "local_start": 9843,
+      "final_output": 9923,
+      "release": 9924,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9843,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9872,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9893,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9910,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 120,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 9840,
+      "local_start": 9925,
+      "final_output": 10005,
+      "release": 10006,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 9925,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 9954,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 9975,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 9992,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 121,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 9922,
+      "local_start": 10007,
+      "final_output": 10087,
+      "release": 10088,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10007,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10036,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10057,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10074,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 122,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 10004,
+      "local_start": 10089,
+      "final_output": 10169,
+      "release": 10170,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10089,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10118,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10139,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10156,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 123,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 10086,
+      "local_start": 10171,
+      "final_output": 10251,
+      "release": 10252,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10171,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10200,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10221,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10238,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 124,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 10168,
+      "local_start": 10253,
+      "final_output": 10333,
+      "release": 10334,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10253,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10282,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10303,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10320,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 125,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 10250,
+      "local_start": 10335,
+      "final_output": 10415,
+      "release": 10416,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10335,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10364,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10385,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10402,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 126,
+      "bank": 0,
+      "destination": 3,
+      "ring_start": 10332,
+      "local_start": 10417,
+      "final_output": 10497,
+      "release": 10498,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10417,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10446,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10467,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10484,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    },
+    {
+      "batch": 127,
+      "bank": 1,
+      "destination": 3,
+      "ring_start": 10414,
+      "local_start": 10499,
+      "final_output": 10579,
+      "release": 10580,
+      "local_stages": [
+        {
+          "width": 16,
+          "start": 10499,
+          "pairs": 8,
+          "edges": 29
+        },
+        {
+          "width": 8,
+          "start": 10528,
+          "pairs": 4,
+          "edges": 21
+        },
+        {
+          "width": 4,
+          "start": 10549,
+          "pairs": 2,
+          "edges": 17
+        },
+        {
+          "width": 2,
+          "start": 10566,
+          "pairs": 1,
+          "edges": 15
+        }
+      ]
+    }
+  ],
+  "files": {
+    "ring0.hex": "c91a74afaea95abd2ae225a2a10bbe860aef0b9d9c2736e93d3eea77283d80a3",
+    "ring1.hex": "10b0d60004125fbca4ac62d20b99e877ea8cd86d3a8eacfdff421bf651776be9",
+    "ring2.hex": "98827187cc9494524139b302521a91eb3dea638e677d900860817904365f2ffe",
+    "ring3.hex": "218bea04fa874ee67a93f84efee0ad15f13d7667d23f977010dee2f373d29b1b",
+    "input0.hex": "39e87680c6c70a28d2223b9e9c9436cc359f0cae41d7da830727eb5eb3f3290f",
+    "input1.hex": "d3532240101972cd1732ed355d19d8ced29ced4555bcd28867b814588c65fc3d",
+    "input2.hex": "86e77017976ba8caadf164ba39e23af9c241e2f7ced2dff936f68df5bed4d6a1",
+    "input3.hex": "a82b2e274fc4b0f997a2f1c3be158596b6cd08b5f368346465c6594ef41df722",
+    "local.hex": "9b42c92053c5557645d6146015d51a7b8a31952249f7ea0986dae17473d89283",
+    "landing.hex": "4e23a2262b1350ee79cf824cc8a112c3a4ffd852d74acd5cd37e7832ad14e0c5",
+    "destination.hex": "a5b1a7f504194f662053d05c6e193bf66484d63c26d3e5ce5530916b450c7c2d",
+    "expected.hex": "fc148ea1287e969f50c0ac9b5750fbaa6b7d1979d8d0ccc16ba0eb4ddf57e506",
+    "expected_v.hex": "7e2b3587db8db9053dc134b7979aa85793c77f9f62172a91973760e0efe17657",
+    "expected_batch.hex": "44d271fa43666299f6914dc87d26c259f8b5af01d220673c32ab57b4415d24c6",
+    "cycles.hex": "25bba034a51ccee1972b783990ebf9e153d6b73cc0499e504e9788471c3ea240"
+  },
+  "source_binding": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_attn_pv_pkg.sv": "bde954ba121c292de7f6c02dc14f2bdcdd8b0270e2a45d3cec884b17c8dbae6e",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_attn_pv_stream_pkg.sv": "95a156264afc0c75ce3f38fa354bbd84fd09e8f1d9c2d87a8ede754dc6376fef",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_attn_pv_stream.sv": "963bb247bfe90f646b5322a12cc8aacb09904fefc67e3b6152359952eee1e05f",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  }
+}

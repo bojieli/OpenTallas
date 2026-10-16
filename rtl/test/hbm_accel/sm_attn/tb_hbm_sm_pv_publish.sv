@@ -5,6 +5,7 @@ module tb_hbm_sm_pv_publish;
     reg [511:0] sum=0;
     reg [15:0] tag_d=0;
     reg [2:0] pub_slot=0;
+    reg fold_start=0; reg [2:0] fold_a=0, fold_b=0;
     wire pv_v,pub_v,fault;
     wire [511:0] pv_y;
     wire [15:0] pv_tag,pub_tag;

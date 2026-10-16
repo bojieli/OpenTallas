@@ -8,6 +8,41 @@
  "rows": [
   {
    "design": "qwen_rom",
+   "unit": "ARGMAX.PORT qfd_slab_port_leaf pl5 APIPE (4 argmax levels split compare|select, +4 on am)",
+   "group": "ARGMAX.PORT",
+   "measured": 5.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 5.0,
+   "e2e_loss_pct": 0.002,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 249435.0,
+     "added_cycles": 4.0,
+     "runs_per_token": 1,
+     "critical_runs": 1,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 4.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.002
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_1014/compute_cost_1015/port_argmax.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "accepted",
+   "note": "Coordinator 12:50 PT 10-15 accepted latency add as the structural fix of pl4 reg->reg -645.6 ps (compare -> long-wire select). Measured +4 exactly (equiv bench AMD=4 PASS, AMD=3 FAIL). The argmax result is consumed once per token at the LM head: +4 cycles/token, 0.002 %. Consumer spctl AMC +4 (die lead / Q-FUNC).  share modelled; measured head-programme delta recorded in evidence | Per-layer cycles (calendar view): TX.RNE +28/layer (2 AR x 14 TX traversals, upper bound), TT.ROMCMD +5.03/layer bound (181/36; measured 0 on head programme), ARGMAX.PORT +4/token at the LM head (not per layer).",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-15"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "DIE.RELAY (r21 die relay stations as wire-stage counts: BD 41->77, TWS 38->93, ORD 7->10, link 339->365; increment a layer)",
    "group": "DIE.RELAY",
    "measured": 613.0,
@@ -66,6 +101,76 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "pop-flop (PQ) kv_end: the 4-credit class 6 is round-trip bound at 0.40 words/cycle, was 0.44 (ratio 1.10, at the limit); class 6 is HCTL (qkd_host -> sequencer: START / CSR / STOP / status, host-driven, CONTRACT.md) and carries 0 words in a token step; the token classes (sbuf, 8+ credits) hold 1 word/cycle, so the measured attention layer step (1,814) does not move"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "TT.ROMCMD qfd_tt_head_static h4 rom_cmd output register (+1 ROM-tree command edge)",
+   "group": "TT.ROMCMD",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.073,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 249612.0,
+     "added_cycles": 181.0,
+     "runs_per_token": 181,
+     "critical_runs": 181,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 181.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.073
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_1014/compute_cost_1015/tt_romcmd.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "accepted",
+   "note": "Coordinator 12:50 PT 10-15 accepted +1 as the structural fix of h3 reg->out -633.9 ps (16 levels native route + relocation to the pin). MEASURED on the head programme (8 runs of head_program_rank7, ref without vs dut with the register): 0 added cycles per run (all m_fin on the same edges). Charged here at the modelled UPPER BOUND +1 per ME op on the token path (181 cycles/token, 0.073 %) until the per-layer die run; the HFC fill slices in the same leaf are exact (0 cycles).  share modelled; measured head-programme delta recorded in evidence | Per-layer cycles (calendar view): TX.RNE +28/layer (2 AR x 14 TX traversals, upper bound), TT.ROMCMD +5.03/layer bound (181/36; measured 0 on head programme), ARGMAX.PORT +4/token at the LM head (not per layer).",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-15"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "TX.RNE qwen_tx_rnes (+1 TX edge: R0 pin flop -> RNE/mask -> out flop, R1 capture; 2 -> 3 edges)",
+   "group": "TX.RNE",
+   "measured": 3.0,
+   "price": 2.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.5,
+   "e2e_loss_pct": 0.402,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 250439.0,
+     "added_cycles": 1008.0,
+     "runs_per_token": 72,
+     "critical_runs": 72,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1008.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.402
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/closure_loop/qwen_tx_rnes_r0-s2-845936439/verdict.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "accepted",
+   "note": "Coordinator 12:50 PT 10-15 ACCEPTED +1 TX cycle as the structural native fix (no zero-edge RNE split fits 220/190: rnen r1 capture 228.2, rnep r0 launch 248.1). R0/R1 CLOSED TT +338.04/+347.87, FF +27.04/+27.49, DRC0, native PASS (launch 179.2/170.9, capture 125.6/123.0). Edge cost measured (1 edge = 1 cycle at 833.333 ps, exact 267->198 composition bench). Critical-path share MODELLED as an upper bound: every TX traversal of both TP8 all-reduces serial, 2 x (TP-1) = 14 per AR, 28 cycles a layer, 1,008 a token (0.402 %); the real number is fewer (a pipelined AR stream pays the edge once per hop fill). Per-layer measured die run with the 3-edge TX calendar: OPEN with Q-FUNC/compiler (owner of the TX calendar/serializer slot) and the die lead.  share modelled (upper bound) until the per-layer die run Records: results/closure_loop/qwen_tx_rnes_r{0,1}-s2-845936439 (record branches c8f1ce181/115297c79 merged). | Per-layer cycles (calendar view): TX.RNE +28/layer (2 AR x 14 TX traversals, upper bound), TT.ROMCMD +5.03/layer bound (181/36; measured 0 on head programme), ARGMAX.PORT +4/token at the LM head (not per layer).",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-15"
   },
   {
    "design": "qwen_rom",
@@ -749,6 +854,38 @@
   },
   {
    "design": "r25gq",
+   "unit": "ATT.QK + ATT.PV on the SM engines (owner option B; DS-V4.1 T640/T128 records, canonical KV8 528 B / KV4 288 B rows)",
+   "group": "ATT",
+   "measured": 53472.0,
+   "price": 26363.5,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0283,
+   "e2e_loss_pct": 4.574,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "measured SM-element-shape component spans (r6, same-source, exact) composed per attention record: fa 259 + busiest-SM span (+ PV publish 64 + SU/COLL merge MODEL); tools/hbm_sm_attention/b_measured_model.py",
+     "base_cycles": 565569.1,
+     "cycles": 592677.6,
+     "added_cycles": 27108.5,
+     "program_records": 80,
+     "e2e_loss_pct": 4.574,
+     "prefetch_variant": {
+      "cycles": 584357.6,
+      "e2e_loss_pct": 3.215
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/hbm_sm_attention_1015/b_measured_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "per-token attention cycles at measured spans (QK 547/411, PV 808/580 per T640/T128 record, exposed) vs A price 339.144/147.144 a record (38 T640 + 2 T128 layers); exposed -4.57 % e2e (2,024.7 vs 2,121.8 tok/s), KV-prefetched -3.22 % (2,053.5). Structural: dedicated ATT tiles retired (111.1 mm2 / ~161 W freed). Spans are component-shape (r6 bench_r6_canonical, 12/12 gates); SM-element bench r2 in progress; first access, publish, cross-SM merge MODEL. qwen_ar row pending the r2 Qwen measurement (standard 128-B rows + in-SM fold). NOTE r25gq proposed total is already far over 15 % from SM.MATVEC/IDX rows (owner decision needed independent of this row).",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
    "measured": 65.8,
@@ -1134,28 +1271,28 @@
    "design": "r25gq",
    "unit": "SU.VOP [static F2 spread LAT4, Qwen]",
    "group": "SU.VOP",
-   "measured": 1858.0,
+   "measured": 2026.0,
    "price": 1668.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.1139,
-   "e2e_loss_pct": 0.543,
+   "unit_ratio": 1.2146,
+   "e2e_loss_pct": 0.895,
    "binding_workload": "qwen_ar",
    "per_workload": {
     "qwen_ar": {
      "model": "S2 schedule, op re-scheduled at its measured ratio",
-     "base_cycles": 1113294.0,
-     "cycles": 1119374.8,
-     "added_cycles": 6080.8,
+     "base_cycles": 1269120.1,
+     "cycles": 1280577.6,
+     "added_cycles": 11457.5,
      "program_records": 12,
-     "e2e_loss_pct": 0.543
+     "e2e_loss_pct": 0.895
     }
    },
    "within_unit_limit": true,
-   "evidence": "results/arch/hbm_su_f2_static_1014/spread/receipt.json",
+   "evidence": "results/arch/hbm_su_f2_static_1014/spread/spread_qwen_lat4_mr1_r4.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "static four-quarter SU (F2 per-quarter VM spread, 32 SFU lanes/quarter, LAT4): VM transport measured on RTL vehicle (24,560 events exact), SFU/divider depths measured by the full512 SFU-lane bench, whole-SU arithmetic full512 LAT4 run160 PASS; reduction tail still a model. Over price from softmax.exp_sum 65,536 exps on 128 SFU lanes (512 issues vs nv 256). Coordinator 10-15: keep 32 SFU lanes (64 lanes would give 0.919 at ~+1.65 mm2). Supersedes the credit-era SU.VOP rows for Qwen once accepted."
+   "note": "H-SU 10-15 17:40 rebased on CURRENT source (su_f2_spread.py --mlat 4 --profile mr1_r4): 3:4 multirate SU/VM bridge (VM read visible +12 / write ack +10 serial edges, multirate_contract.md), routed reducer r4 RAW 10 (3f1686f20), cross-quarter reduction through root-core RF (export +12 + RF_RELAY 36, 2 dependent levels) and RF relay back to non-root home quarters. Qwen 1858 -> 2026 edges (softmax.max 391 -> 524); DS 2521/3272 = 0.770 (under price). Same S2 method as the 1858 row (added 6,080.8 -> 11,457.5 cycles on base 1,269,120). Measured terms: VM bridge latencies, reducer RAW, SFU/divider depths (full512 SFU-lane bench), full512 LAT4 arithmetic; the relay count is the H-DIE route plan and the reduction tree shape is a model. 32 SFU lanes/quarter kept (coordinator 10-15)."
   },
   {
    "design": "r25gq",
@@ -1193,111 +1330,6 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
-  },
-  {
-   "design": "qwen_rom",
-   "unit": "ARGMAX.PORT qfd_slab_port_leaf pl5 APIPE (4 argmax levels split compare|select, +4 on am)",
-   "group": "ARGMAX.PORT",
-   "measured": 5.0,
-   "price": 1.0,
-   "unit_of_measure": "cycles",
-   "unit_ratio": 5.0,
-   "e2e_loss_pct": 0.002,
-   "binding_workload": "ar",
-   "per_workload": {
-    "ar": {
-     "model": "token-path longest path",
-     "base_cycles": 249431.0,
-     "cycles": 249435.0,
-     "added_cycles": 4.0,
-     "runs_per_token": 1,
-     "critical_runs": 1,
-     "overlapped_runs": 0,
-     "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 4.0,
-     "wave_positions": 0,
-     "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 0.002
-    }
-   },
-   "within_unit_limit": true,
-   "evidence": "results/arch/qwen_split_1014/compute_cost_1015/port_argmax.json",
-   "evidence_grade": "committed_bench",
-   "date": "2026-10-15",
-   "status": "accepted",
-   "note": "Coordinator 12:50 PT 10-15 accepted latency add as the structural fix of pl4 reg->reg -645.6 ps (compare -> long-wire select). Measured +4 exactly (equiv bench AMD=4 PASS, AMD=3 FAIL). The argmax result is consumed once per token at the LM head: +4 cycles/token, 0.002 %. Consumer spctl AMC +4 (die lead / Q-FUNC).  share modelled; measured head-programme delta recorded in evidence | Per-layer cycles (calendar view): TX.RNE +28/layer (2 AR x 14 TX traversals, upper bound), TT.ROMCMD +5.03/layer bound (181/36; measured 0 on head programme), ARGMAX.PORT +4/token at the LM head (not per layer).",
-   "share_basis": "modelled",
-   "accepted_date": "2026-10-15"
-  },
-  {
-   "design": "qwen_rom",
-   "unit": "TT.ROMCMD qfd_tt_head_static h4 rom_cmd output register (+1 ROM-tree command edge)",
-   "group": "TT.ROMCMD",
-   "measured": 2.0,
-   "price": 1.0,
-   "unit_of_measure": "cycles",
-   "unit_ratio": 2.0,
-   "e2e_loss_pct": 0.073,
-   "binding_workload": "ar",
-   "per_workload": {
-    "ar": {
-     "model": "token-path longest path",
-     "base_cycles": 249431.0,
-     "cycles": 249612.0,
-     "added_cycles": 181.0,
-     "runs_per_token": 181,
-     "critical_runs": 181,
-     "overlapped_runs": 0,
-     "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 181.0,
-     "wave_positions": 0,
-     "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 0.073
-    }
-   },
-   "within_unit_limit": true,
-   "evidence": "results/arch/qwen_split_1014/compute_cost_1015/tt_romcmd.json",
-   "evidence_grade": "committed_bench",
-   "date": "2026-10-15",
-   "status": "accepted",
-   "note": "Coordinator 12:50 PT 10-15 accepted +1 as the structural fix of h3 reg->out -633.9 ps (16 levels native route + relocation to the pin). MEASURED on the head programme (8 runs of head_program_rank7, ref without vs dut with the register): 0 added cycles per run (all m_fin on the same edges). Charged here at the modelled UPPER BOUND +1 per ME op on the token path (181 cycles/token, 0.073 %) until the per-layer die run; the HFC fill slices in the same leaf are exact (0 cycles).  share modelled; measured head-programme delta recorded in evidence | Per-layer cycles (calendar view): TX.RNE +28/layer (2 AR x 14 TX traversals, upper bound), TT.ROMCMD +5.03/layer bound (181/36; measured 0 on head programme), ARGMAX.PORT +4/token at the LM head (not per layer).",
-   "share_basis": "modelled",
-   "accepted_date": "2026-10-15"
-  },
-  {
-   "design": "qwen_rom",
-   "unit": "TX.RNE qwen_tx_rnes (+1 TX edge: R0 pin flop -> RNE/mask -> out flop, R1 capture; 2 -> 3 edges)",
-   "group": "TX.RNE",
-   "measured": 3.0,
-   "price": 2.0,
-   "unit_of_measure": "cycles",
-   "unit_ratio": 1.5,
-   "e2e_loss_pct": 0.402,
-   "binding_workload": "ar",
-   "per_workload": {
-    "ar": {
-     "model": "token-path longest path",
-     "base_cycles": 249431.0,
-     "cycles": 250439.0,
-     "added_cycles": 1008.0,
-     "runs_per_token": 72,
-     "critical_runs": 72,
-     "overlapped_runs": 0,
-     "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 1008.0,
-     "wave_positions": 0,
-     "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 0.402
-    }
-   },
-   "within_unit_limit": true,
-   "evidence": "results/closure_loop/qwen_tx_rnes_r0-s2-845936439/verdict.json",
-   "evidence_grade": "committed_bench",
-   "date": "2026-10-15",
-   "status": "accepted",
-   "note": "Coordinator 12:50 PT 10-15 ACCEPTED +1 TX cycle as the structural native fix (no zero-edge RNE split fits 220/190: rnen r1 capture 228.2, rnep r0 launch 248.1). R0/R1 CLOSED TT +338.04/+347.87, FF +27.04/+27.49, DRC0, native PASS (launch 179.2/170.9, capture 125.6/123.0). Edge cost measured (1 edge = 1 cycle at 833.333 ps, exact 267->198 composition bench). Critical-path share MODELLED as an upper bound: every TX traversal of both TP8 all-reduces serial, 2 x (TP-1) = 14 per AR, 28 cycles a layer, 1,008 a token (0.402 %); the real number is fewer (a pipelined AR stream pays the edge once per hop fill). Per-layer measured die run with the 3-edge TX calendar: OPEN with Q-FUNC/compiler (owner of the TX calendar/serializer slot) and the die lead.  share modelled (upper bound) until the per-layer die run Records: results/closure_loop/qwen_tx_rnes_r{0,1}-s2-845936439 (record branches c8f1ce181/115297c79 merged). | Per-layer cycles (calendar view): TX.RNE +28/layer (2 AR x 14 TX traversals, upper bound), TT.ROMCMD +5.03/layer bound (181/36; measured 0 on head programme), ARGMAX.PORT +4/token at the LM head (not per layer).",
-   "share_basis": "modelled",
-   "accepted_date": "2026-10-15"
   }
  ],
  "totals": {
@@ -1325,11 +1357,11 @@
   },
   "r25gq": {
    "accepted_pct": 0,
-   "proposed_pct": 107.972,
-   "accepted_plus_proposed_pct": 107.972,
+   "proposed_pct": 112.546,
+   "accepted_plus_proposed_pct": 112.546,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 16,
+   "proposed_rows": 17,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

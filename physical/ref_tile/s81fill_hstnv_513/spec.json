@@ -10,8 +10,8 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 30.216,
-  "h": 35.208,
+  "w": 71.28,
+  "h": 36.72,
   "exact": true
  },
  "layer_cap": "M5",
@@ -38,11 +38,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnv_513 (16 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 513 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 6711db5804bf94bc, glue 81730f1679e7bc00); pins at the generator centres. Slot 30.216 x 17.256 holds 335 um2 of core vs 438 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 30.216 x 35.208 (data-pin coordinates unchanged).",
+ "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnv_513 (16 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 513 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 6711db5804bf94bc, glue 81730f1679e7bc00); pins at the generator centres. Slot 30.216 x 17.256 holds 335 um2 of core vs 438 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 71.28 x 36.72 (data-pin coordinates unchanged). | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face grown to the pin demand at cut <= 0.6 -> 71.28 x 36.72; pins spread evenly per face (spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die adopts this footprint + pin file (slot_change_request)",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
-  "tag": "f2",
+  "tag": "f6",
   "purpose": "S81 FILL: GEN18r die station dsfd_hstnv_513 (16 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81fill_hstnv_513/views",
   "record_to": "results/rtl/ref_tile/s81fill_hstnv_513",
@@ -81,15 +81,16 @@
   ]
  },
  "slot_change_request": {
-  "reason": "recipe-2 content 438 um2 exceeds util 0.55 of the generator slot core 335 um2; depth-only growth keeps every data pin coordinate",
+  "reason": "f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, 0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)",
   "outline": [
-   30.216,
-   35.208
+   71.28,
+   36.72
   ],
   "generator_slot": [
    30.216,
    17.256
-  ]
+  ],
+  "pins": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_513.tcl"
  },
  "macros": [],
  "children": [],

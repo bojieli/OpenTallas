@@ -4,9 +4,13 @@
 // Compiler reserves request, scalar-publish and output-drain slots explicitly.
 // No internal credits, leases, normal ready or runtime rescheduling.
 module ot_hgi_sfu_scheduled_engine #(
- parameter integer PAGE_AW=1, AW=10+PAGE_AW, LWB=15
+ parameter integer PAGE_AW=1, AW=10+PAGE_AW, LWB=15,
+ // LG_PATH: fixed register edges each way between this core and the LG tap (0 = core at the tap;
+ // split die = 1 pair-leaf edge + R die relays, ot_hgi_sfu_lg_pair_leaf / ot_hgi_sfu_lg_relay).
+ parameter integer LG_PATH=0
 )(
  input wire clk,rst_n,
+ input wire [3:0] clk_lg,rst_lg_n,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire cfg_we,
  input wire [2:0] cfg_stripe,
@@ -70,8 +74,8 @@ module ot_hgi_sfu_scheduled_engine #(
  wire [511:0] drain_data;
  wire [1:0] drain_result_v;
  wire bridge_fault,engine_fault;
- ot_hgi_sfu_vm_static_bridge #(.LWB(LWB)) u_vm(
- .clk(clk),.rst_n(rst_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
+ ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LG_PATH),.WRITE_RETURN(11+2*LG_PATH)) u_vm(
+ .clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(local_rq),.local_rr(local_rr),.local_wq(local_wq),.local_w_done(local_w_done),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),

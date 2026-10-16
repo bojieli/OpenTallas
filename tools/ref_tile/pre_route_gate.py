@@ -58,6 +58,7 @@ HO = SB.overlay_module()
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
 GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach")
+RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
 SHIP_HELPERS = ("tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
@@ -861,20 +862,42 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     g.add("INFO", "source_binding", f"immutable shipping manifest {local_snapshot}")
     script = f"/tmp/ref_gate_{spec['name']}_{ts}.sh"
     t0 = time.time()
-    up = subprocess.run(["ssh", host, f"cat > {script}"], input=sh.encode(), capture_output=True)
-    if not up.returncode:
-        up = subprocess.run(["ssh", host, f"mkdir -p {Path(R).parent} && cat > {R}.tgz"], input=data, capture_output=True)
-    if not up.returncode:
-        up = subprocess.run(["ssh", host, f"cat > {R}.source_snapshot.json"],
-                            input=(json.dumps(binding, indent=1) + "\n").encode(), capture_output=True)
+
+    def ship(h):
+        binding["remote_host"] = h
+        local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
+        up = subprocess.run(["ssh", h, f"cat > {script}"], input=sh.encode(), capture_output=True)
+        if not up.returncode:
+            up = subprocess.run(["ssh", h, f"mkdir -p {Path(R).parent} && cat > {R}.tgz"], input=data, capture_output=True)
+        if not up.returncode:
+            up = subprocess.run(["ssh", h, f"cat > {R}.source_snapshot.json"],
+                                input=(json.dumps(binding, indent=1) + "\n").encode(), capture_output=True)
+        return up
+    up = ship(host)
     if up.returncode:
         g.add("FAIL", "remote", f"cannot ship to {host}: {up.stderr[-200:]!r}", "pick another host")
         return
     # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
     # Recheck after upload, reserving enough for extraction as well as outputs.
-    p = subprocess.run(["ot-run", "--mem", str(mem), "--threads", str(threads), "--disk", str(budget["runtime_gb"]), "--hosts", host,
-                        "--dir", str(Path(R).parent), "--", "bash", script],
-                       stdin=subprocess.DEVNULL, capture_output=True)
+    # AFTER-UPLOAD RACE (ROOT 2026-10-15): the archive sits on the picked host only, so a host that filled up (or went
+    # load-held) between pick and launch kept the gate waiting there while other hosts were free.  Each launch now waits
+    # at most RELAUNCH_WAIT_S; on NOT RUN (75) the read-only pick runs again and, when it names another host, the SAME
+    # bytes (archive, script, binding) are shipped there and the stale upload is removed.  Same host: wait again.
+    while True:
+        p = subprocess.run(["ot-run", "--mem", str(mem), "--threads", str(threads), "--disk", str(budget["runtime_gb"]),
+                            "--hosts", host, "--max-wait", str(RELAUNCH_WAIT_S), "--dir", str(Path(R).parent), "--",
+                            "bash", script], stdin=subprocess.DEVNULL, capture_output=True)
+        if p.returncode != 75 or b"NOT RUN" not in p.stderr:
+            break
+        again = subprocess.run(pick_cmd, capture_output=True, text=True)
+        nxt = again.stdout.strip() if again.returncode == 0 else ""
+        if not nxt or nxt == host:
+            continue
+        if ship(nxt).returncode:
+            continue
+        subprocess.run(["ssh", host, f"rm -f {script} {R}.tgz {R}.source_snapshot.json"], capture_output=True)
+        g.add("INFO", "remote", f"{host} did not admit the gate within {RELAUNCH_WAIT_S} s; same archive re-shipped to {nxt}")
+        host = nxt
     out = p.stdout.decode(errors="replace")
     logp = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.log"   # never into the kit (dirty tree)
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
@@ -1266,7 +1289,12 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else [])
          # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
          # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
-         + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)])
+         + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)]
+         # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
+         # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
+         + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]
+         + [v.removeprefix("/src/") for v in (sp.get("orfs_vars") or {}).values()
+            if isinstance(v, str) and v.endswith((".tcl", ".sdc"))])
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
@@ -1308,8 +1336,9 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     import tempfile
     repo = repo or str(ROOT)
     g = Gate()
-    old = (ROOT, RT.ROOT)
+    old = (ROOT, RT.ROOT, RT.GIT_ROOT)
     try:
+        RT.GIT_ROOT = Path(repo)   # the materialised kit tree is not a git repo (M6 pin-grant source commit lookup)
         commit = str((spec.get("source") or {}).get("commit", ""))
         with tempfile.TemporaryDirectory() as td:
             if spec.get("ref_tile"):
@@ -1347,7 +1376,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     except Exception as ex:  # noqa: BLE001
         return {"verdict": "SKIP", "message": f"gate error {type(ex).__name__}: {str(ex)[:200]}"}
     finally:
-        ROOT, RT.ROOT = old
+        ROOT, RT.ROOT, RT.GIT_ROOT = old
     fails = [i for i in g.items if i["severity"] == "FAIL"]
     warns = [i for i in g.items if i["severity"] == "WARN"]
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")

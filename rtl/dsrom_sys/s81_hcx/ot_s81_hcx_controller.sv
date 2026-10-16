@@ -8,7 +8,7 @@
 // Observed leaf-valid and CDC returns only verify those deadlines, never move
 // them. FAST_CYC and RETURN_CYC must be bound from the real physical calendar.
 module ot_s81_hcx_controller #(
- parameter integer RL=4,FAST_CYC=0,
+ parameter integer RL=4,FAST_CYC=0,XLAT=0,
  parameter [95:0] RETURN_CYC={6{16'd264}}
 )(
  input wire cck,crst_n,sk,srst_n,
@@ -54,7 +54,7 @@ module ot_s81_hcx_controller #(
  end endgenerate
  // Only metadata lives in this controller. The 4096-bit VM payload is a
  // real staged die multicast directly to projection-leaf pin registers.
- ot_s81_hcx_prefetch #(.RL(RL))prefetch(
+ ot_s81_hcx_prefetch #(.RL(RL),.XLAT(XLAT))prefetch(
   .clk(sk),.rst_n(srst_n),.start(event_s),.h_base_row(cmd_box[21:8]),
   .rq_v(rq_v),.rq_row(rq_row),.rs_v(rs_v),
   .stage_begin(stage_begin),.stage_v(stage_v),.stage_word(stage_word),.cmd_v(leaf_cmd_v),.fault(pfault));

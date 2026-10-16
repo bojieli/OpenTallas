@@ -1,0 +1,71 @@
+{
+ "name": "hbm_ckgen_rel",
+ "top": "hfd_ckgen_rel",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/control/hfd_ckgen.sv",
+  "rtl/hbm_accel/control/ot_hbm_pll_bb.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n",
+  "locked"
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "por_n",
+   "locked"
+  ],
+  "S": [
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "std_area_um2": 40,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 2,
+  "peak_ram_gb": 4,
+  "hold_margin_ns": 0.03
+ },
+ "slot_change_request": "H-DIE hb_ckgen (v6 216x216 hard_macro_group): realised as the PLL modelled hard macro physical/hbm_pll_views/ot_hbm_pll_bb (172.8 um) + 4 identical hardened hfd_ckgen_rel leaves (one per PLL domain: ck = pll_<d>, por_n, locked -> rst_n = por_<d>), wires only in the group. Grant needs por_stream/serial/hbm/link pins (missing) and a leaf home per domain next to the PLL output. H-HARDEN el1015-hbm-v15-harden.log",
+ "job": {
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hbm-harden-1705",
+  "tag": "r1",
+  "merge_target": "main",
+  "purpose": "HBM die clock root hb_ckgen reset-release leaf hfd_ckgen_rel (x4, one per PLL domain): async assert on por_n AND PLL lock, two-flop synchronous release in the domain clock. hb_ckgen = PLL modelled hard macro ot_hbm_pll_bb + 4 of these leaves, wires only.",
+  "extra_paths": [
+   "rtl/hbm_accel/control",
+   "tools/hbm_v15_harden"
+  ],
+  "record_to": "results/rtl/ref_tile/hbm_ckgen_rel",
+  "benches": [
+   {
+    "name": "reset_release",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CKGEN_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "one_flop_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}
