@@ -215,6 +215,7 @@ def main():
     ap.add_argument('--out', default=OUT)
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--equiv', action='store_true')
+    ap.add_argument('--mutant', action='store_true', help='the swapped-slot mutant alone: exit 1 (FAIL) when it is detected')
     a = ap.parse_args()
     t = emit()
     p = ROOT / a.out
@@ -222,6 +223,14 @@ def main():
         ok = p.exists() and p.read_text() == t
         print('land_segments: ' + ('up to date' if ok else 'STALE'))
         return 0 if ok else 1
+    if a.mutant:
+        mok, mrep = equiv(p, mutate=("lpc({2'd0, g})", "lpc({2'd1, g})"))
+        print(mrep.splitlines()[0])
+        if not mok:
+            print('FAIL land_seg mutant detected (pc0 lpc strap = slot 1)')
+            return 1
+        print('mutant NOT detected')
+        return 0
     if a.equiv:
         ok, rep = equiv(p)
         print(rep)

@@ -37,6 +37,15 @@
     "peak_ram_gb": 8,
     "needs": [],
     "pass_regex": "^EQUIV PASS"
+   },
+   {
+    "name": "land_seg_mutant",
+    "cmd": "python3 tools/qwen_kv_die/land_segments.py --mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [],
+    "fail_regex": "^FAIL land_seg mutant detected"
    }
   ],
   "calibrate": {
