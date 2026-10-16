@@ -7253,7 +7253,7 @@ def src_release_candidates(jobs, now=None):
         if any(y["status"] not in TERMINAL for y in shared.get((x["host"], x["run"].rstrip("/")), [])):
             continue
         out.append(x)
-    return out
+    return sorted(out, key=lambda x: x.get("updated") or "", reverse=True)    # the newest (largest, still on disk) first
 
 
 def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
