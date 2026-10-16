@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.hbm_v15.source_bind_checkpoint.v1",
+ "source_ref": "98ca51cf9c015b508993d439002226fbca5125bc",
+ "summary": {
+  "masters": 39,
+  "instances": 83,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 2,
+  "unparsed_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0
+ },
+ "failing": [
+  "input_tied"
+ ],
+ "explicit_boundary_inputs": 1072,
+ "explicit_boundary_input_bits": 177249,
+ "scope": "Actual83instance master/port binding only. Explicit top-level exposed producer/consumer gaps do not establish a native die. PHY model is declared allowed hardmacro.",
+ "next_step": "Bind genuine SID0 specializations then regenerate; still requires actual producers, full source graph, views, clocks, routes and native full-token proof."
+}

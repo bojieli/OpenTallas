@@ -255,6 +255,18 @@ logic): DFFHQNx1 flop->flop -35/-55 ps, DFFHQNx3 +2.8/-17.2 ps. A 3:4 crossing w
 launch and capture flops therefore cannot close natively; it needs a slower common (epoch) capture root, not a
 relaxed check.
 
+The real 300 MHz epoch-bank variant uses the explicit opt-in
+`"clock_data_paths":"related_pll_dividers"` and
+`"clock_relationship":{"kind":"same_pll_fixed_phase","phase_ps":0,"vco_dividers":{"core":3,"epoch":12}}`.
+Divider keys must match every declared IO domain, and each domain's period ratio
+must equal its divider divided by the core divider. Only /3, /4 and /12 roots
+of the existing 3.6 GHz VCO are admitted. An epoch-to-serial leaf may instead
+declare core /12 and serial /4, with ratio `[1,3]` and core signoff period
+3333.332 ps. Source-to-epoch uses ratio `[4,1]`. All paths retain ordinary
+setup/hold checks and the existing native pin budgets; a phase shift, undeclared
+divider, changed VCO frequency, or clock exception is refused. This API does not
+qualify the epoch-buffer RTL, its fixed latency, placement, or die clock source.
+
 `tests/test_multiple_cts_roots.py` exercises two actual OpenROAD CTS trees,
 differing insertion references, source compensation, generated hooks, and
 wrong-domain/unknown-port/crossing mutants. These are flow fixtures; production

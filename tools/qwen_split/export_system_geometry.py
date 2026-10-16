@@ -26,7 +26,8 @@ def export(v, model):
             pins=[dict(name=n, layer=L, rect=list(r))
                   for n, L, r in v.pin_rects(master, 1,
                       {q: widths.get((name, q), 0) for q in master.order})])
-    return dict(schema='opentallas.qwen.system-geometry.v1',
+    from qwen_split.gfp_homes import source_fingerprint
+    return dict(source_model_sha256=model.get('gfp_source_fingerprint') or source_fingerprint(model), schema='opentallas.qwen.system-geometry.v1',
         scope='complete generated graph and local physical pin rectangles; no routed qualification',
         die=model['die'],
         insts=[dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient)

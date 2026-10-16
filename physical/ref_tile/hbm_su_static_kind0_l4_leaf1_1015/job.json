@@ -1,5 +1,5 @@
 {
- "name": "hbm_su_static_kind0_l4_leaf1_1015-r1-COMMIT",
+ "name": "hbm_su_static_kind0_l4_leaf1_1015-r1-0fc0755dd",
  "block": "ot_hbm_su_static_kind0_lat4_leaf1_physical",
  "ref_tile": true,
  "owner": "Claude:H-ELEM-B",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-elemb-su-1015",
-  "commit": "COMMIT"
+  "commit": "0fc0755dd"
  },
  "stages": {
   "bench": [
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r1-COMMIT"
+   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r1-0fc0755dd"
   }
  ],
  "cycles_added": 0,

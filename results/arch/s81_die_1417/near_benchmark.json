@@ -1,0 +1,101 @@
+{
+  "scope": "Exact first-placement equivalence and CPU microbenchmark; no die closure claim",
+  "cases": [
+    {
+      "prefix": {
+        "median_seconds": 0.008797193877398968,
+        "hit": null
+      },
+      "axis": {
+        "median_seconds": 0.0060992734506726265,
+        "hit": null
+      },
+      "scenario": "blocked",
+      "horiz": false,
+      "speedup": 1.442334722085434
+    },
+    {
+      "prefix": {
+        "median_seconds": 0.0005275895819067955,
+        "hit": [
+          682.56,
+          784.08
+        ]
+      },
+      "axis": {
+        "median_seconds": 3.1106173992156982e-06,
+        "hit": [
+          682.56,
+          784.08
+        ]
+      },
+      "scenario": "open",
+      "horiz": false,
+      "speedup": 169.60928143712576
+    },
+    {
+      "prefix": {
+        "median_seconds": 0.0004904847592115402,
+        "hit": null
+      },
+      "axis": {
+        "median_seconds": 0.0005310159176588058,
+        "hit": null
+      },
+      "scenario": "narrow",
+      "horiz": false,
+      "speedup": 0.9236724228042668
+    },
+    {
+      "prefix": {
+        "median_seconds": 0.01051751896739006,
+        "hit": null
+      },
+      "axis": {
+        "median_seconds": 0.006678185425698757,
+        "hit": null
+      },
+      "scenario": "blocked",
+      "horiz": true,
+      "speedup": 1.5749066994930863
+    },
+    {
+      "prefix": {
+        "median_seconds": 0.0005214810371398926,
+        "hit": [
+          682.56,
+          784.08
+        ]
+      },
+      "axis": {
+        "median_seconds": 3.0891969799995422e-06,
+        "hit": [
+          682.56,
+          784.08
+        ]
+      },
+      "scenario": "open",
+      "horiz": true,
+      "speedup": 168.80795899909558
+    },
+    {
+      "prefix": {
+        "median_seconds": 0.00047627557069063187,
+        "hit": [
+          704.16,
+          784.08
+        ]
+      },
+      "axis": {
+        "median_seconds": 1.5825964510440826e-05,
+        "hit": [
+          704.16,
+          784.08
+        ]
+      },
+      "scenario": "narrow",
+      "horiz": true,
+      "speedup": 30.09456835167422
+    }
+  ]
+}

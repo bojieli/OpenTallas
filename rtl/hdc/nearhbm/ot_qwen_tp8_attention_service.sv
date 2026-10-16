@@ -12,7 +12,17 @@
 // KVD_QK_ONLY=1,KVD_ECTL3. Common-clock adapter is functional evidence only;
 // it is not a routed clock contract or a qualified HBM timing model.
 // Requires the explicitly source-bound fused program capability. Does not commit VM.
-module ot_qwen_tp8_attention_service (
+module ot_qwen_tp8_attention_service #(
+ // Historical arbitrary-stall transport remains diagnostic only. Static K
+ // mode requires its implemented return geometry in the compiler calendar;
+ // V transport and phase scheduling must also qualify before native adoption.
+ parameter integer STATIC_IO_TIMING=0,
+ parameter integer STATIC_K_TRANSPORT=0,
+ parameter integer K_RETURN_LATENCY=16,
+ parameter integer STATIC_V_TRANSPORT=0,
+ parameter integer E_READ_LATENCY=1,
+ parameter integer V_RETURN_LATENCY=16+E_READ_LATENCY
+) (
  input wire clk,rst_n,
  input wire request_valid,output wire request_ready,
  input wire [15:0] request_epoch,input wire [5:0] request_layer,
@@ -62,6 +72,12 @@ module ot_qwen_tp8_attention_service (
    start_qk<=0;start_pv<=0;result_done<=0;
    if(boot_count<80)boot_count<=boot_count+1'b1;
    if(busy)cycles<=cycles+1;
+   if(STATIC_IO_TIMING)begin
+    // A compiler command is followed by one arm edge, then exactly32 Q beats.
+    // Interface availability is checked, never used to shift these slots.
+    if(request_valid&&!request_ready)local_fault<=1;
+    if((q_valid!=(state==QLOAD&&!start_qk)) || (result_valid&&!result_ready))local_fault<=1;
+   end
    if(fault)state<=BAD;
    else case(state)
     IDLE:if(request_valid&&request_ready)begin
@@ -109,11 +125,19 @@ module ot_qwen_tp8_attention_service (
    .native_e_read(eread[s]),.native_e_addr(eaddr[11*s+:11]),.native_e_data(edata[64*s+:64]),.native_exp_done(edone[16*s+:16]),.native_score_done(scdone[s]));
   for(e=0;e<8;e=e+1)begin:ge
    localparam I=s*8+e;
+   if(STATIC_K_TRANSPORT)begin:gstatic
+   ot_qwen_tp8_k_request_static #(.RETURN_LATENCY(K_RETURN_LATENCY)) u_req(.clk(clk),.rst_n(rst_n),.start(start_qk),.epoch(ep),.layer(layer),
+    .raw_valid(raw_req[I]),.raw_t(raw_t[13*I+:13]),.raw_wrong_type(raw_v[I]|raw_g[I]),
+    .req_valid(k_req_valid[I]),.req_ready(k_req_ready[I]),.req_t(k_req_t[13*I+:13]),
+    .rsp_valid(k_rsp_valid[I]),.rsp_t(k_rsp_t[13*I+:13]),.rsp_epoch(k_rsp_epoch[16*I+:16]),.rsp_layer(k_rsp_layer[6*I+:6]),
+    .checked_rsp(checked_rsp[I]),.fault(kbad[I]),.accepted(kc[I]));
+   end else begin:ghistorical
    ot_qwen_tp8_k_request_adapter u_req(.clk(clk),.rst_n(rst_n),.start(start_qk),.epoch(ep),.layer(layer),
     .raw_valid(raw_req[I]),.raw_t(raw_t[13*I+:13]),.raw_wrong_type(raw_v[I]|raw_g[I]),
     .req_valid(k_req_valid[I]),.req_ready(k_req_ready[I]),.req_t(k_req_t[13*I+:13]),
     .rsp_valid(k_rsp_valid[I]),.rsp_t(k_rsp_t[13*I+:13]),.rsp_epoch(k_rsp_epoch[16*I+:16]),.rsp_layer(k_rsp_layer[6*I+:6]),
     .checked_rsp(checked_rsp[I]),.fault(kbad[I]),.accepted(kc[I]));
+   end
   end
  end endgenerate
  ot_qwen_nearhbm_attn_hub_p #(.HEADS(1)) u_hub(.clk(clk),.rst_n(rst_n),.start(start_qk),
@@ -126,7 +150,7 @@ module ot_qwen_tp8_attention_service (
   wire want_ready;reg [13:0] want_t;reg want_run;
   wire [2:0] slot;wire [13:0] req_t;wire [15:0] req_ep;
   wire ov,ordy,first,last;wire [1023:0] vdata;wire [63:0] expdata;wire [13:0] ot;wire [15:0] oep;
-  reg [1:0] rv;reg [5:0] slots;reg [27:0] ts;reg [31:0] eps;reg [2047:0] rows;
+  wire [1:0] rv;wire [5:0] slots;wire [27:0] ts;wire [31:0] eps;wire [2047:0] rows;
   wire [1:0] rsp_good;
   wire [1:0] rsp_ready;
   assign v_rsp_ready[s]=rsp_ready[0]&&state==PV&&!fault;
@@ -139,15 +163,21 @@ module ot_qwen_tp8_attention_service (
   assign eaddr[11*(s+2)+:11]={v_rsp_t[14*(s+2)+9+:4],v_rsp_t[14*(s+2)+:7]};
   reg bad0,bad1;assign vbad[s]=bad0;assign vbad[s+2]=bad1;
   always @(posedge clk or negedge rst_n)begin
-   if(!rst_n)begin rv<=0;slots<=0;ts<=0;eps<=0;rows<=0;bad0<=0;bad1<=0;end
+   if(!rst_n)begin bad0<=0;bad1<=0;end
    else begin
-    rv<={eread[s+2],eread[s]};
-    if(v_rsp_valid[s]&&v_rsp_ready[s]&&!rsp_good[0])bad0<=1;
-    if(v_rsp_valid[s+2]&&v_rsp_ready[s+2]&&!rsp_good[1])bad1<=1;
-    slots<={v_rsp_slot[3*(s+2)+:3],v_rsp_slot[3*s+:3]};ts<={v_rsp_t[14*(s+2)+:14],v_rsp_t[14*s+:14]};
-    eps<={v_rsp_epoch[16*(s+2)+:16],v_rsp_epoch[16*s+:16]};rows<={v_rsp_data[1024*(s+2)+:1024],v_rsp_data[1024*s+:1024]};
+    if(v_rsp_valid[s]&&((v_rsp_ready[s]&&!rsp_good[0])||(STATIC_V_TRANSPORT&&!v_rsp_ready[s])))bad0<=1;
+    if(v_rsp_valid[s+2]&&((v_rsp_ready[s+2]&&!rsp_good[1])||(STATIC_V_TRANSPORT&&!v_rsp_ready[s+2])))bad1<=1;
    end
   end
+  // Native ASTK EP reads take3 edges; the historical functional profile1.
+  // E_READ_LATENCY must match the actually instantiated memory service.
+  ot_qwen_tp8_vrow_capture #(.LATENCY(E_READ_LATENCY)) u_capture(
+   .clk(clk),.rst_n(rst_n),.in_valid({eread[s+2],eread[s]}),
+   .in_slot({v_rsp_slot[3*(s+2)+:3],v_rsp_slot[3*s+:3]}),
+   .in_t({v_rsp_t[14*(s+2)+:14],v_rsp_t[14*s+:14]}),
+   .in_epoch({v_rsp_epoch[16*(s+2)+:16],v_rsp_epoch[16*s+:16]}),
+   .in_rows({v_rsp_data[1024*(s+2)+:1024],v_rsp_data[1024*s+:1024]}),
+   .out_valid(rv),.out_slot(slots),.out_t(ts),.out_epoch(eps),.out_rows(rows));
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin want_t<=0;want_run<=0;end
    else if(start_pv)begin want_t<=s*128;want_run<=ctx>s*128;end
@@ -158,6 +188,15 @@ module ot_qwen_tp8_attention_service (
   end
   assign v_req_slot[3*s+:3]=slot;assign v_req_slot[3*(s+2)+:3]=slot;
   assign v_req_t[14*s+:14]=req_t;assign v_req_t[14*(s+2)+:14]=req_t;
+  if(STATIC_V_TRANSPORT)begin:gstatic
+   assign rsp_ready=2'b11;assign want_ready=1'b0;
+  ot_qwen_tp8_vrow_static #(.PAIR(s),.RETURN_LATENCY(V_RETURN_LATENCY)) u_merge(.clk(clk),.rst_n(rst_n),.start(start_pv),.context_len(ctx),.epoch(ep),
+   .lo_req_valid(v_req_valid[s]),.hi_req_valid(v_req_valid[s+2]),.lo_req_ready(v_req_ready[s]),.hi_req_ready(v_req_ready[s+2]),.req_slot(slot),.req_t(req_t),.req_epoch(req_ep),
+   .lo_rsp_valid(rv[0]),.hi_rsp_valid(rv[1]),
+   .lo_rsp_slot(slots[2:0]),.hi_rsp_slot(slots[5:3]),.lo_rsp_t(ts[13:0]),.hi_rsp_t(ts[27:14]),.lo_rsp_epoch(eps[15:0]),.hi_rsp_epoch(eps[31:16]),
+   .lo_vrow(rows[1023:0]),.hi_vrow(rows[2047:1024]),.lo_exp(edata[64*s+:64]),.hi_exp(edata[64*(s+2)+:64]),
+   .out_valid(ov),.out_ready(ordy),.out_vrow(vdata),.out_exp(expdata),.out_t(ot),.out_epoch(oep),.out_first(first),.out_last(last),.done(vdone[s]),.fault(vf[s]));
+  end else begin:ghistorical
   ot_qwen_tp8_vrow_merge #(.PAIR(s)) u_merge(.clk(clk),.rst_n(rst_n),.start(start_pv),.context_len(ctx),.epoch(ep),
    .want_valid(want_run),.want_ready(want_ready),.want_t(want_t),
    .lo_req_valid(v_req_valid[s]),.hi_req_valid(v_req_valid[s+2]),.lo_req_ready(v_req_ready[s]),.hi_req_ready(v_req_ready[s+2]),.req_slot(slot),.req_t(req_t),.req_epoch(req_ep),
@@ -165,6 +204,7 @@ module ot_qwen_tp8_attention_service (
    .lo_rsp_slot(slots[2:0]),.hi_rsp_slot(slots[5:3]),.lo_rsp_t(ts[13:0]),.hi_rsp_t(ts[27:14]),.lo_rsp_epoch(eps[15:0]),.hi_rsp_epoch(eps[31:16]),
    .lo_vrow(rows[1023:0]),.hi_vrow(rows[2047:1024]),.lo_exp(edata[64*s+:64]),.hi_exp(edata[64*(s+2)+:64]),
    .out_valid(ov),.out_ready(ordy),.out_vrow(vdata),.out_exp(expdata),.out_t(ot),.out_epoch(oep),.out_first(first),.out_last(last),.done(vdone[s]),.fault(vf[s]));
+  end
   ot_qwen_tp8_pv256_pair #(.PAIR(s),.TREE(1)) u_pv(.clk(clk),.rst_n(rst_n),.start(start_pv),.slice_clk({32{clk}}),.context_len(ctx),.epoch(ep),
    .in_valid(ov),.in_ready(ordy),.in_v(vdata),.in_e(expdata),.in_c(ot[6:0]),.in_t(ot),.in_epoch(oep),.in_first(first),.in_last(last),
    .out_valid(pvalid[s]),.out_ready(pready[s]),.out_leaf(partial[16384*s+:16384]),.out_c(),.out_epoch(pep[16*s+:16]),.fault(pf[s]),.busy(),.accepted(vc[s]),.committed(),.peak_inflight());

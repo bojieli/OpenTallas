@@ -1,0 +1,4081 @@
+{
+  "source_commit": "145a6a20875d0132991ff0ab76703e2c3e91e507",
+  "scope": "Potential callers only; a literal place_pin call does not establish an exact-centre requirement or measured failure. Closed views stand. Actual demonstrated failure is the new VM probe only.",
+  "matching_tcl_files": 906,
+  "distinct_parent_directories": 493,
+  "families": {
+    "ha2_relay_tx_internal_20261007": 1,
+    "ha2_relay_tx_internal_20261008": 1,
+    "ha2_truecredit_20261007": 4,
+    "hbm_accel_die_views": 146,
+    "hbm_attn_tile_r": 29,
+    "hbm_cp_mtp_native": 1,
+    "hbm_cp_parent_context_20261005": 1,
+    "hbm_cp_pin_margin_20261006": 1,
+    "hbm_die_abstracts_20261006": 1,
+    "hbm_ha2_fixedpins_20261007": 1,
+    "hbm_hc": 2,
+    "hbm_loader_crc_slot": 1,
+    "hbm_norm_split_20261008": 3,
+    "hbm_result_delay_bank_20261007": 2,
+    "hbm_result_relay_stage_20261007": 2,
+    "hbm_su_cp_side_20261006": 1,
+    "hbm_xp_buf_rptr_1014": 1,
+    "hgi_sm_pub_parent_stations": 4,
+    "qwen_code_pair_margin": 1,
+    "qwen_head_r3_1014": 4,
+    "qwen_head_r4_1014": 1,
+    "qwen_kv_die_native_static_pins": 1,
+    "qwen_slab_structural": 1,
+    "ref_tile": 31,
+    "ref_tile_specs": 99,
+    "res_ser": 1,
+    "s81_bf_hier": 1,
+    "s81_die_pins": 245,
+    "s81_die_views": 47,
+    "s81_fe_fsr_m5_port_major": 1,
+    "s81_hc_pinplan": 18,
+    "s81_ph_pq": 1,
+    "s81_ph_views": 178,
+    "s81_vm_cap_1015": 2,
+    "s81_vm_cdc_leaves_1015": 12,
+    "s81_vm_ctl_native_1015": 3,
+    "s81_vm_read_native_1015": 20,
+    "s81_vm_read_pinreg_1015": 9,
+    "s81_vm_return_bank8_1015": 14,
+    "s81_vm_write_edge_1015": 6,
+    "s81su_physical": 2,
+    "s81su_taps": 6
+  },
+  "files": [
+    "physical/ha2_relay_tx_internal_20261007/pins.tcl",
+    "physical/ha2_relay_tx_internal_20261008/pins.tcl",
+    "physical/ha2_truecredit_20261007/rx_pins.tcl",
+    "physical/ha2_truecredit_20261007/rx_pins_signal_only.tcl",
+    "physical/ha2_truecredit_20261007/tx_pins.tcl",
+    "physical/ha2_truecredit_20261007/tx_pins_signal_only.tcl",
+    "physical/hbm_accel_die_views/cmdproc/split/hfd_cmdproc_n/io_place.tcl",
+    "physical/hbm_accel_die_views/cmdproc/split/hfd_cmdproc_s/io_place.tcl",
+    "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_rgx_rx_n2_io.tcl",
+    "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_ring_add_n2_io.tcl",
+    "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_ring_state_n2_io.tcl",
+    "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_tkw_rx_n3_io.tcl",
+    "physical/hbm_accel_die_views/coll_r25gq/io_extra.tcl",
+    "physical/hbm_accel_die_views/common/wire_stage_fence.tcl",
+    "physical/hbm_accel_die_views/hcp/r25gq/ports/hfd_hc/io_place.tcl",
+    "physical/hbm_accel_die_views/hcp/r25gqw/ports/hfd_hc/io_place.tcl",
+    "physical/hbm_accel_die_views/hcp/rtl_tile_xl/io_place.tcl",
+    "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b0/io_place.tcl",
+    "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b1/io_place.tcl",
+    "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b2/io_place.tcl",
+    "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b3/io_place.tcl",
+    "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b4/io_place.tcl",
+    "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b5/io_place.tcl",
+    "physical/hbm_accel_die_views/pin_assign_1013/qw_lgr_ref_io.tcl",
+    "physical/hbm_accel_die_views/pin_assign_1013/qw_lgw_ref_io.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_att_su_relay/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_cmdproc/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_coll/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_hc/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_hc_eng/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_hgi_vm/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_lk_ep/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_loader/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_quant/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_sfu/io_place.tcl",
+    "physical/hbm_accel_die_views/ports_r25gqn/hfd_su/io_place.tcl",
+    "physical/hbm_accel_die_views/seq/hgi_seq_fe_pins.tcl",
+    "physical/hbm_accel_die_views/sfu/rtl_tiled/tile/io_place.tcl",
+    "physical/hbm_accel_die_views/sfu/rtl_tiled_r25gq/io_place.tcl",
+    "physical/hbm_accel_die_views/sfu/rtl_tiled_r25gq/tile/io_place.tcl",
+    "physical/hbm_accel_die_views/stations/bench/stn_meso_fence.tcl",
+    "physical/hbm_accel_die_views/su/io_left_reset_tree.tcl",
+    "physical/hbm_accel_die_views/su/r25gpht4_contract/io_place.tcl",
+    "physical/hbm_accel_die_views/su/rtl/strap_pins.tcl",
+    "physical/hbm_accel_die_views/su/rtl_tile_xl/io_place.tcl",
+    "physical/hbm_accel_die_views/su/rtl_tile_xl_fe/io_place.tcl",
+    "physical/hbm_accel_die_views/su/rtl_tile_xl_r25gpht4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s8/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s8/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SW_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SE_s8/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psfc/hfd_svc_SW_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SE_s8/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s0/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s1/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s2/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s3/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s4/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s5/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s6/io_place.tcl",
+    "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s7/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe0_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe1_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe2_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe3_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw0_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw1_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw2_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw3_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_re_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_root_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_rwt_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_slice3_cx_pins.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_ne_n/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_ne_s/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_nw_n/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_nw_s/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_se_n/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_se_s/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_sw_n/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split8/ports/hfd_vm_sw_s/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19/hfd_vm_ne/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19/hfd_vm_nw/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19/hfd_vm_se/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19/hfd_vm_sw/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19c/hfd_vm_ne/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19c/hfd_vm_nw/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19c/hfd_vm_se/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/split_r19c/hfd_vm_sw/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_ne_e/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_ne_w/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_nw_e/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_nw_w/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_se_e/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_se_w/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_sw_e/io_place.tcl",
+    "physical/hbm_accel_die_views/vm/vcut8/ports/hfd_vm_sw_w/io_place.tcl",
+    "physical/hbm_attn_tile_r/bank/io_ew136.tcl",
+    "physical/hbm_attn_tile_r/bank/io_ew544.tcl",
+    "physical/hbm_attn_tile_r/bank/io_sn136.tcl",
+    "physical/hbm_attn_tile_r/bank/io_sn136_c6.tcl",
+    "physical/hbm_attn_tile_r/bank/io_sn544.tcl",
+    "physical/hbm_attn_tile_r/bank/io_sn544_c6.tcl",
+    "physical/hbm_attn_tile_r/die_tile/io_place.tcl",
+    "physical/hbm_attn_tile_r/die_tile/io_place_r23.tcl",
+    "physical/hbm_attn_tile_r/die_tile/io_place_r23h.tcl",
+    "physical/hbm_attn_tile_r/half/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_ps/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_ps/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_tall/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_tall/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v10/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v10/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v10b/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v10b/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v11/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v11/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v2/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v2/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v2g/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v2g/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v3/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v3/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v8/hfd_attn_half_hi/io_place.tcl",
+    "physical/hbm_attn_tile_r/half_v8/hfd_attn_half_lo/io_place.tcl",
+    "physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/io_place.tcl",
+    "physical/hbm_cp_parent_context_20261005/pins_and_regions.tcl",
+    "physical/hbm_cp_pin_margin_20261006/pins.tcl",
+    "physical/hbm_die_abstracts_20261006/integration/router_successor_allocation/pins.tcl",
+    "physical/hbm_ha2_fixedpins_20261007/pins.tcl",
+    "physical/hbm_hc/assigned_pin_audit.tcl",
+    "physical/hbm_hc/hc_weight_quarter_pins.tcl",
+    "physical/hbm_loader_crc_slot/pins.tcl",
+    "physical/hbm_norm_split_20261008/g8p/gtile_io.tcl",
+    "physical/hbm_norm_split_20261008/g8p/top_io.tcl",
+    "physical/hbm_norm_split_20261008/g8p_u52/top_io.tcl",
+    "physical/hbm_result_delay_bank_20261007/ew/pins.tcl",
+    "physical/hbm_result_delay_bank_20261007/ns/pins.tcl",
+    "physical/hbm_result_relay_stage_20261007/ew/pins.tcl",
+    "physical/hbm_result_relay_stage_20261007/ns/pins.tcl",
+    "physical/hbm_su_cp_side_20261006/pins.tcl",
+    "physical/hbm_xp_buf_rptr_1014/buf_col_io.tcl",
+    "physical/hgi_sm_pub_parent_stations/parent_pins.tcl",
+    "physical/hgi_sm_pub_parent_stations/stream_edge_pins.tcl",
+    "physical/hgi_sm_pub_parent_stations/vmcore_pins.tcl",
+    "physical/hgi_sm_pub_parent_stations/vmport_pins.tcl",
+    "physical/qwen_code_pair_margin/pins.tcl",
+    "physical/qwen_head_r3_1014/front_io.tcl",
+    "physical/qwen_head_r3_1014/nb_io.tcl",
+    "physical/qwen_head_r3_1014/stin_io.tcl",
+    "physical/qwen_head_r3_1014/stk_io.tcl",
+    "physical/qwen_head_r4_1014/frontq_io.tcl",
+    "physical/qwen_kv_die_native_static_pins/qkd_kv_static_writer_native.tcl",
+    "physical/qwen_slab_structural/pins_bw_m8.tcl",
+    "physical/ref_tile/qfd_slab_reg512/assigned_pins.tcl",
+    "physical/ref_tile/qfd_sp_band_lanes_native/assigned_pins.tcl",
+    "physical/ref_tile/qfd_sp_band_lanes_quarter/assigned_pins.tcl",
+    "physical/ref_tile/qfd_static_ch546/assigned_pins.tcl",
+    "physical/ref_tile/qfd_tile_nk_native/assigned_pins.tcl",
+    "physical/ref_tile/qfd_tile_nl_native/assigned_pins.tcl",
+    "physical/ref_tile/qfd_vm_qcommit/assigned_pins.tcl",
+    "physical/ref_tile/qfd_x3_mux_native/assigned_pins.tcl",
+    "physical/ref_tile/qfd_x3_mux_static/assigned_pins.tcl",
+    "physical/ref_tile/qfd_xs_leaf_extcap/assigned_data_pins.tcl",
+    "physical/ref_tile/qfd_xs_leaf_extcap/assigned_pins.tcl",
+    "physical/ref_tile/qfd_xs_tap/assigned_pins.tcl",
+    "physical/ref_tile/qkd_kv_fault_stage/io_pins.tcl",
+    "physical/ref_tile/qkd_land_emb_ifw/io_pins.tcl",
+    "physical/ref_tile/qkd_llr_ctl/assigned_pins.tcl",
+    "physical/ref_tile/qkd_slot_ctl548/assigned_pins.tcl",
+    "physical/ref_tile/qkh_head_chunk_stage/io_pins.tcl",
+    "physical/ref_tile/qkh_head_tstage/io_pins.tcl",
+    "physical/ref_tile/qkh_packet_h256/assigned_pins.tcl",
+    "physical/ref_tile/qkh_packet_h263/assigned_pins.tcl",
+    "physical/ref_tile/qkh_packet_v256/assigned_pins.tcl",
+    "physical/ref_tile/qkh_packet_v263/assigned_pins.tcl",
+    "physical/ref_tile/qwen_glue_v508/assigned_pins.tcl",
+    "physical/ref_tile/qwen_glue_v514/assigned_pins.tcl",
+    "physical/ref_tile/qwen_glue_w514/assigned_pins.tcl",
+    "physical/ref_tile/qwen_glue_x1028/assigned_pins.tcl",
+    "physical/ref_tile/qwen_tx_rne_r0/assigned_pins.tcl",
+    "physical/ref_tile/qwen_tx_rne_r1/assigned_pins.tcl",
+    "physical/ref_tile/qwen_tx_rnes_r0/assigned_pins.tcl",
+    "physical/ref_tile/qwen_tx_rnes_r1/assigned_pins.tcl",
+    "physical/ref_tile/s81hc_cntreeh2_ref/frozen_closed_pins.tcl",
+    "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_pins.tcl",
+    "physical/ref_tile_specs/ds_vm/dsfd_vm_bgq28h_pc_pins.tcl",
+    "physical/ref_tile_specs/ds_vm/dsfd_vm_bgq28h_pins.tcl",
+    "physical/ref_tile_specs/ds_vm/dsfd_vm_bgr28_pins.tcl",
+    "physical/ref_tile_specs/hgi_topk/lane_seam_pins.tcl",
+    "physical/ref_tile_specs/hgi_topk/lane_seam_pins_h11664.tcl",
+    "physical/ref_tile_specs/lkep/lkep_rp_pins.tcl",
+    "physical/ref_tile_specs/lkep/lkep_sub_pins.tcl",
+    "physical/ref_tile_specs/lkep/lkep_ti_pins.tcl",
+    "physical/ref_tile_specs/lkep/lkep_ts_pins.tcl",
+    "physical/ref_tile_specs/qkd_ke/qkd_d2d_p2_pins.tcl",
+    "physical/ref_tile_specs/qkd_ke/qkd_ke_rq_pins.tcl",
+    "physical/ref_tile_specs/qkd_ke/qkd_ke_tm_pins.tcl",
+    "physical/ref_tile_specs/qwen_tp8/qkd_ectl_slot_pins.tcl",
+    "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk0_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk1_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk2_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk3_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk4_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk5_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk6_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/chunk7_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/ctl_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/ctl_static_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/fold_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/join_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/mul_pins.tcl",
+    "physical/ref_tile_specs/s81_markov_native/pair_pins.tcl",
+    "physical/ref_tile_specs/s81_q_permac/ot_s81_q_ctl_native_graph_pins.tcl",
+    "physical/ref_tile_specs/s81_q_permac/ot_s81_q_mac0_native_graph_pins.tcl",
+    "physical/ref_tile_specs/s81_q_permac/ot_s81_q_mac1_native_graph_pins.tcl",
+    "physical/ref_tile_specs/s81coll_static/s81coll_vm_boundary_spread_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/aq_common_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/aq_math_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/aq_mem_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/bc0_ns_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/bc0_w410_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/bc1_ns_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/bc2_ns_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/bc3_ns_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ctl_native_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/fault_native_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ix_ba_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ix_guarded_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ix_left_guarded_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ix_rg_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/ix_right_guarded_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_bank0_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_bank1_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_bank2_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_bank3_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_bankx_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_head_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/qb_headw_split_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/s81_pq_ctl_state_calcap_spread_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/s81pq_qb_headp_native_spread_pins.tcl",
+    "physical/ref_tile_specs/s81pq_native/s81pq_qb_headpc_native_spread_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_bdc_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_bdc_ref_p50_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcb_ref_p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcb_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcbc_ref_p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcbc_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcis_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcis_ref_p50_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fct_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fct_ref_p50_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcxl_ref_p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcxl_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcxr_ref_p35_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_fcxr_ref_p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_pt_e_ref_p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_pt_e_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_pt_e_ref_w26p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_pt_w_ref_p40_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_pt_w_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tcl_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tcl_ref_p50_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tct_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tct_ref_p50_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tile_eg_cpt_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tile_eg_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tile_wg_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_group_beat_e_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_group_beat_w_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_group_land_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_group_row_e_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_group_row_w_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_w128_s1_m0_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_w128_s2_m0_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_w128_s2_m80_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_w21_s1_m100000_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_w21_s2_m100000_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_tr_w50_s2_m3000000000000_ref_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_xs_ref_p45_pins.tcl",
+    "physical/ref_tile_specs/smh/smh_xs_ref_p50_pins.tcl",
+    "physical/res_ser/qfd_res_slot_ru_pins.tcl",
+    "physical/s81_bf_hier/front_pins_aligned.tcl",
+    "physical/s81_die_pins/fill2_gen19b/dsfd_host_c.tcl",
+    "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_N.tcl",
+    "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S.tcl",
+    "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S_t.tcl",
+    "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+    "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq.tcl",
+    "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_bf.tcl",
+    "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_bf_pd.tcl",
+    "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_pd.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_291x1__hs_hwSW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c4_svcj.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c5_bk_selector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c6_bk_collector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d4_svcj.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d5_bk_selector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d6_bk_collector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_hcSW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vr_512x1__hq_SW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vr_564x1__hx_E.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vr_564x1__hx_W.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vs0_1x1__hs_s4_svcj.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vs0_1x1__hs_s5_bk_selector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vs0_1x1__hs_s6_bk_collector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E0.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E1.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E2.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E3.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W0.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W1.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W2.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W3.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_291x1__he_hwSW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_84x1__he_c4_svcj.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_84x1__he_c5_bk_selector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_84x1__he_c6_bk_collector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_d4_svcj.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_d5_bk_selector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_d6_bk_collector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_hcSW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_512x1__hco_SW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_512x1__hix_SW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_512x1__hqe_SW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_E0.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_E5.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_W0.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_W5.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E1.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E2.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E3.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E4.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W1.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W2.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W3.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W4.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vs0_1x1__he_s4_svcj.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vs0_1x1__he_s5_bk_selector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vs0_1x1__he_s6_bk_collector.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_node_LLd.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_node_LLfd.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_node_LLfu.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_node_NNfd.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_node_NNfu.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_1024x1__ha_SW.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_512x1__hcol.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_512x1__hsel.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_rstg.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0_cp1.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0si.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0sinf.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1_cp1.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1si.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1sinf.tcl",
+    "physical/s81_die_pins/snet_gen19b/dsfd_xstg_515.tcl",
+    "physical/s81_die_pins/v18/dsfd_capt_x8_dual.tcl",
+    "physical/s81_die_pins/v18/gather_leaves/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v18/gather_leaves/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v18/gather_leaves/requests/lo_input_alignment/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v18/gather_leaves/requests/lo_input_alignment/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v18/gather_leaves/requests/ssa2_lo_input_alignment/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v18/gather_leaves/requests/ssa2_lo_input_alignment/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
+    "physical/s81_die_pins/v18/ot_s81_hc_pad_f4r1.tcl",
+    "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r1.tcl",
+    "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r2.tcl",
+    "physical/s81_die_pins/v19/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v19/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v19/dsfd_sp_gather_c.tcl",
+    "physical/s81_die_pins/v19_engram_hl/ot_engc_ctl_s.tcl",
+    "physical/s81_die_pins/v19_engram_hl/ot_engc_ctl_x.tcl",
+    "physical/s81_die_pins/v19_engram_hl/ot_engc_rr256.tcl",
+    "physical/s81_die_pins/v19_engram_hl/ot_engc_rr256w.tcl",
+    "physical/s81_die_pins/v19_engram_hl/ot_engc_rr64.tcl",
+    "physical/s81_die_pins/v19_markov/ot_s81_markov_k256_native.tcl",
+    "physical/s81_die_pins/v19_merged/dsfd_capt_x8_dual.tcl",
+    "physical/s81_die_pins/v19_merged/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v19_merged/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v19_merged/dsfd_sp_gather_c.tcl",
+    "physical/s81_die_pins/v19_merged/gather_leaves/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v19_merged/gather_leaves/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v19_merged/gather_leaves/requests/lo_input_alignment/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v19_merged/gather_leaves/requests/lo_input_alignment/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v19_merged/gather_leaves/requests/ssa2_lo_input_alignment/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v19_merged/gather_leaves/requests/ssa2_lo_input_alignment/dsfd_gth_rw.tcl",
+    "physical/s81_die_pins/v19_merged/ot_s81_hc_ccf.tcl",
+    "physical/s81_die_pins/v19_merged/ot_s81_hc_pad_f4r1.tcl",
+    "physical/s81_die_pins/v19_merged/ot_s81_hc_pad_fv4fd5r1.tcl",
+    "physical/s81_die_pins/v19_merged/ot_s81_hc_pad_fv4fd5r2.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C0.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C1.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C2.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnclb_C0.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnclb_C1.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnclb_C2.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnrsq.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfs_nt.tcl",
+    "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfx_nt.tcl",
+    "physical/s81_die_pins/v20/ot_s81_pq_rwbc15.tcl",
+    "physical/s81_die_pins/v20/ot_s81_pq_rwbc2.tcl",
+    "physical/s81_die_pins/v20_embedding/ot_s81_embed_expand.tcl",
+    "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_add8.tcl",
+    "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_chunk8.tcl",
+    "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_mul4.tcl",
+    "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_norm.tcl",
+    "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_sigmoid.tcl",
+    "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_signed_sqrt.tcl",
+    "physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl",
+    "physical/s81_die_pins/v20_functional/ot_s81_engram_dispatch.tcl",
+    "physical/s81_die_pins/v20_functional/ot_s81_hcx_controller.tcl",
+    "physical/s81_die_pins/v20_functional/ot_s81_hcx_gatherpack.tcl",
+    "physical/s81_die_pins/v20_functional/ot_s81_hcx_projection_leaf.tcl",
+    "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.tcl",
+    "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.tcl",
+    "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctfn.tcl",
+    "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctnl_l2.tcl",
+    "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctnl_l3.tcl",
+    "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctra.tcl",
+    "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctrb.tcl",
+    "physical/s81_die_pins/v20_static_seq/dsfd_stage_seq_static_c.tcl",
+    "physical/s81_die_pins/v20_svc_native/ot_s81_svc_probability_frame.tcl",
+    "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl",
+    "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl",
+    "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_write_capture128_E.tcl",
+    "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_write_capture128_W.tcl",
+    "physical/s81_die_pins/v20_vm_scatter_lane/dsfd_vm_static_scatter_lane.tcl",
+    "physical/s81_die_pins/v20_vm_static/dsfd_vm_static_bank128.tcl",
+    "physical/s81_die_pins/v20_vm_static_bank_e/dsfd_vm_static_bank128_E.tcl",
+    "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
+    "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_suhc_fsr.tcl",
+    "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b16.tcl",
+    "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b4.tcl",
+    "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b8.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_signed_sqrt.tcl",
+    "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sum.tcl",
+    "physical/s81_die_pins/v21_engram_clock_roots_candidate/dsfd_engram_lkp_clock_roots.tcl",
+    "physical/s81_die_pins/v21_gather_transverse_candidate/dsfd_gth_re.tcl",
+    "physical/s81_die_pins/v21_gather_transverse_candidate/dsfd_sp_gather_c.tcl",
+    "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.tcl",
+    "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_nt.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_1024.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_1029.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_11.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_112.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_128.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_15.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_2.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_20.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_2049.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_2204.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_28.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_36.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_4.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_4096.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_513.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_514.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_53.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_54.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_560.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_6.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_690.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_692.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_759.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_761.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_77.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_8.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_85.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_9.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_1029.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_11.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_15.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_20.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2049.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2164.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2204.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_3056.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_36.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_4.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_512.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_513.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_514.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_515.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_53.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_54.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_560.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_6.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_690.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_759.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_77.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_8.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_85.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_9.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_1026x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_10x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_293x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_3x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_70x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_86x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_1026x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_10x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_256x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_293x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_3x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_566x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_70x1.tcl",
+    "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_86x1.tcl",
+    "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfl_nt.tcl",
+    "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfn.tcl",
+    "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfs_nt.tcl",
+    "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfxs_nt.tcl",
+    "physical/s81_die_pins/v23_calendar7_reset_candidate/s81_static_calendar_controller7_resetpins.tcl",
+    "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfl_nt.tcl",
+    "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfn.tcl",
+    "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfs_nt.tcl",
+    "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfxs_nt.tcl",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.tcl",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.tcl",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_m2l_raw_512x1__hl_E0_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_m2l_raw_512x1__hl_E2_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_m2l_raw_512x1__hl_W1_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hco_SW_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hix_SW_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hqe_SW_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hcol_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hcol_v18_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hsel_io.tcl",
+    "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hsel_v18_io.tcl",
+    "physical/s81_die_views/ports/layer/dsfd_cfifo/io_place.tcl",
+    "physical/s81_die_views/ports/layer/dsfd_stnh_512x1/io_place.tcl",
+    "physical/s81_die_views/ports/layer/dsfd_stnh_514x1/io_place.tcl",
+    "physical/s81_die_views/ports/layer/dsfd_stnh_566x1/io_place.tcl",
+    "physical/s81_die_views/ports/layer/dsfd_stnv_512x1/io_place.tcl",
+    "physical/s81_die_views/ports/layer/dsfd_stnv_514x1/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_hstnh_515/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_l2r_vr_512x1__hq_SW/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_l2r_vr_564x1__hx_E/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_l2r_vr_564x1__hx_W/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_E0/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_E1/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_E2/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_E3/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_W0/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_W1/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_W2/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_raw_512x1__hl_W3/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_512x1__hco_SW/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_512x1__hix_SW/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_512x1__hqe_SW/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x10__hr_E0/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x10__hr_E5/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x10__hr_W0/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x10__hr_W5/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_E1/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_E2/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_E3/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_E4/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_W1/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_W2/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_W3/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_m2l_vr_68x11__hr_W4/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_r2l_vr_1024x1__ha_SW/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_r2l_vr_512x1__hcol/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq/dsfd_r2l_vr_512x1__hsel/io_place.tcl",
+    "physical/s81_die_views/ports/m221pq_colck/dsfd_cfifo/io_place.tcl",
+    "physical/s81_fe_fsr_m5_port_major/io_place.tcl",
+    "physical/s81_hc_pinplan/ccf.tcl",
+    "physical/s81_hc_pinplan/crrf_e.tcl",
+    "physical/s81_hc_pinplan/crrf_w.tcl",
+    "physical/s81_hc_pinplan/crrf_w_y_order_candidate.tcl",
+    "physical/s81_hc_pinplan/crrr_e.tcl",
+    "physical/s81_hc_pinplan/crrr_w.tcl",
+    "physical/s81_hc_pinplan/crrw_e.tcl",
+    "physical/s81_hc_pinplan/crrw_w.tcl",
+    "physical/s81_hc_pinplan/cryw_e.tcl",
+    "physical/s81_hc_pinplan/cryw_w.tcl",
+    "physical/s81_hc_pinplan/cryys.tcl",
+    "physical/s81_hc_pinplan/ctpl.tcl",
+    "physical/s81_hc_pinplan/ctrn.tcl",
+    "physical/s81_hc_pinplan/pad_f5r1.tcl",
+    "physical/s81_hc_pinplan/pad_f8.tcl",
+    "physical/s81_hc_pinplan/pad_meta2.tcl",
+    "physical/s81_hc_pinplan/pad_r5.tcl",
+    "physical/s81_hc_pinplan/pad_r6.tcl",
+    "physical/s81_ph_pq/dsfd_sp_pq_pins.tcl",
+    "physical/s81_ph_views/closed/dsfd_wfc_tok_hard/contract/io_place.tcl",
+    "physical/s81_ph_views/gather/control_strip/dsfd_gth_ctl.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_cap_mtp_ep/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_capt_ctl/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_capt_g2/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_capt_grp/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_capt_x/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_ck/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_core/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_lane_e/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_lane_w/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_mtp_lane/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_p2_ep/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_p2_lane_ba/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_coll_p2_lane_pa/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_colt_lane/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_colt_mrg/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_ctrl_ctr/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_ctrl_pc/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_drf_fan/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_dw_ep_c/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_dw_ep_s/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_engram_c/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_engram_lkp/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_engram_sink/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_host_sd/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow_bank/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow_hub/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow_ing/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow_pnode/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow_por/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_hrow_src/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_seed_launch/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_seq/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_mtp_seq_rtt/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_p2_lnk/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_selt_c/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_selt_q/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_selt_q2/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_sp_capture/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_sp_gather/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_ctl/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_kv0/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_kv1/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_pin/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_qb/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_qn0/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_qn1/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_sm/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_su_t_sw/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svc_io/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svc_join/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svc_pc/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svc_stn/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svcio_ad/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svcio_job/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svcio_od/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svcio_q/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_svcio_x/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_vm_bg/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_vm_mtp_ep/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_vm_p2_ep/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_vm_wfc_ep/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_wfc_crp/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_wfc_lnk/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_wfc_tok/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_wfc_vmx/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/ot_mtp_p2_prefix_path_hub/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/ot_p2h_arith/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/ot_p2h_fadd16/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/ot_p2h_xport/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/ot_s81ph_root_blk/io_place.tcl",
+    "physical/s81_ph_views/ports/contract/ot_s81ph_root_tile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_cbh/dsfd_coll_cbf/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_cbh/dsfd_coll_cbfj/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_cbh/dsfd_coll_cbh/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_cbh/dsfd_coll_cbq/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_cbh/dsfd_coll_cbq0/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_cbh/dsfd_coll_cbr/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_cef/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_cele/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_celp/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_ceq/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_ceq0/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_ceqp/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_ces0/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ceh/dsfd_coll_cesn/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ckE/dsfd_selt_q/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_ckS/dsfd_selt_q/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_gearbox_pipeline/dsfd_coll_ck/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_gearbox_pipeline/dsfd_coll_core/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_gearbox_pipeline/dsfd_coll_lane_e/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_gearbox_pipeline/dsfd_coll_lane_w/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_h600/dsfd_vm_bg/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc/ot_s81_hc_comb/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc/ot_s81_hc_cpin/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc/ot_s81_hc_croot/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc/ot_s81_hc_ctile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc10/ot_s81_hc_ctile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc9/ot_s81_hc_ctile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcc_e/ot_s81_hc_croot/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hch400/ot_s81_hc_ctile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hch450/ot_s81_hc_ctile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hch500/ot_s81_hc_ctile/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcs/ot_s81_hc_crootr/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcs/ot_s81_hc_crooty/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcs_e/ot_s81_hc_crootr/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_hcs_e/ot_s81_hc_crooty/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_lanes_w475/dsfd_coll_ck/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_lanes_w475/dsfd_coll_core/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_lanes_w475/dsfd_coll_lane_e/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_lanes_w475/dsfd_coll_lane_w/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_selsq/dsfd_selt_q2/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_selsq_ckS/dsfd_selt_q2/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_cb/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_cbj/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_ce/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_ct/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_split3/dsfd_coll_lane_w/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svch/dsfd_svc_idx/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svch/dsfd_svch_pcs/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svch/dsfd_svch_rly/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svchq0/dsfd_svc_quad/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svchq1/dsfd_svc_quad/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svchq2/dsfd_svc_quad/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_svchq3/dsfd_svc_quad/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vm28/dsfd_vm_be/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vm28/dsfd_vm_be_sl/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vm28/dsfd_vm_bgq28/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vm28/dsfd_vm_clt/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vm28/dsfd_vm_fe/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vmh/dsfd_vm_bgh/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vmh/dsfd_vm_bgq/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_vmh_t/dsfd_vm_bgq/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes/dsfd_coll_lane_e/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes/dsfd_coll_lane_w/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_ck/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_core/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_lane_e/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4/dsfd_coll_lane_w/io_place.tcl",
+    "physical/s81_ph_views/ports/contract_wide_lanes_p4_ckW/dsfd_coll_core/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_bk_collector/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_bk_selector/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_ctrl/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_capture/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_collective/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_gather/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_hc_n/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_hc_s/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_su_n/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_su_s/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_sp_vm/io_place.tcl",
+    "physical/s81_ph_views/ports/head/dsfd_svc/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_bk_collector/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_bk_selector/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_ctrl/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_capture/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_collective/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_gather/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_hc_n/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_hc_s/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_su_n/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_su_s/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_sp_vm/io_place.tcl",
+    "physical/s81_ph_views/ports/layer/dsfd_svc/io_place.tcl",
+    "physical/s81_ph_views/ports_ph/head/dsfd_ctrl/io_place.tcl",
+    "physical/s81_ph_views/ports_ph/head/dsfd_svc/io_place.tcl",
+    "physical/s81_ph_views/ports_ph/layer/dsfd_ctrl/io_place.tcl",
+    "physical/s81_ph_views/ports_ph/layer/dsfd_svc/io_place.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_clt.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fld.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_flt.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_frm.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxa.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxb.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxr.tcl",
+    "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxs.tcl",
+    "physical/s81_vm_cap_1015/x34_s_r4_local_banks.tcl",
+    "physical/s81_vm_cap_1015/x34_t_r5_local_banks.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w1026_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w514_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w560_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_t_w1026_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_t_w514_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_t_w560_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_s_w1026_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_s_w511_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_s_w512_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w1026_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w511_1015_f4.tcl",
+    "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w512_1015_f4.tcl",
+    "physical/s81_vm_ctl_native_1015/dsfd_vm_seq_tile.tcl",
+    "physical/s81_vm_ctl_native_1015/dsfd_vm_static_landing.tcl",
+    "physical/s81_vm_ctl_native_1015/dsfd_vm_static_rsched.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b0.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b1.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b2.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b3.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q0.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q1.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q2.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q3.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q4.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q5.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q6.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q7.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v0.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v1.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v2.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v3.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v4.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v5.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v6.tcl",
+    "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v7.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_q0_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v0_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v1_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v2_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v3_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v4_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v5_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v6_p.tcl",
+    "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v7_p.tcl",
+    "physical/s81_vm_return_bank8_1015/native2/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native3_l0/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native3_l1/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native3_l2/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native3_l3/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native4_l0/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native4_l1/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native4_l2/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native4_l3/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native5_l0/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native5_l1/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native5_l2/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/native5_l3/pins.tcl",
+    "physical/s81_vm_return_bank8_1015/pins.tcl",
+    "physical/s81_vm_write_edge_1015/dsfd_vm_static_w0_header.tcl",
+    "physical/s81_vm_write_edge_1015/dsfd_vm_static_w0_payload.tcl",
+    "physical/s81_vm_write_edge_1015/dsfd_vm_static_wcontrol.tcl",
+    "physical/s81_vm_write_edge_1015/dsfd_vm_static_wdispatch128.tcl",
+    "physical/s81_vm_write_edge_1015/dsfd_vm_static_wstage128_east.tcl",
+    "physical/s81_vm_write_edge_1015/dsfd_vm_static_wstage128_west.tcl",
+    "physical/s81su_physical/s81su_qnt_b1_ref_io.tcl",
+    "physical/s81su_physical/s81su_qnt_b8_ref_io.tcl",
+    "physical/s81su_taps/s81su_kvt_ref_io.tcl",
+    "physical/s81su_taps/s81su_pinns_ref_io.tcl",
+    "physical/s81su_taps/s81su_qbt_ref_io.tcl",
+    "physical/s81su_taps/s81su_qbtl_ref_io.tcl",
+    "physical/s81su_taps/s81su_swth_ref_io.tcl",
+    "physical/s81su_taps/s81su_swtl_ref_io.tcl"
+  ],
+  "ref_tile_specs_with_direct_matched_io_tcl": [
+    {
+      "spec": "physical/ref_tile/dsfd_bf_front_static_ref/spec.json",
+      "name": "dsfd_bf_front_static_ref",
+      "top": "dsfd_bf_front_static",
+      "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_ctl/spec.json",
+      "name": "dsfd_gth_ctl",
+      "top": "dsfd_gth_ctl",
+      "io_tcl": "physical/s81_ph_views/gather/control_strip/dsfd_gth_ctl.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_re_clockleaf/spec.json",
+      "name": "dsfd_gth_re_clockleaf",
+      "top": "dsfd_gth_re",
+      "io_tcl": "physical/s81_die_pins/v18/gather_leaves/dsfd_gth_re.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_re_transverse_1015/spec.json",
+      "name": "dsfd_gth_re_transverse_1015",
+      "top": "dsfd_gth_re",
+      "io_tcl": "physical/s81_die_pins/v21_gather_transverse_candidate/dsfd_gth_re.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_re_v19/spec.json",
+      "name": "dsfd_gth_re_v19",
+      "top": "dsfd_gth_re",
+      "io_tcl": "physical/s81_die_pins/v19/dsfd_gth_re.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_rw_clockleaf/spec.json",
+      "name": "dsfd_gth_rw_clockleaf",
+      "top": "dsfd_gth_rw",
+      "io_tcl": "physical/s81_die_pins/v18/gather_leaves/dsfd_gth_rw.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_rw_pin_repair_1015/spec.json",
+      "name": "dsfd_gth_rw_pin_repair_1015",
+      "top": "dsfd_gth_rw",
+      "io_tcl": "physical/s81_die_pins/v19/dsfd_gth_rw.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_gth_rw_v19/spec.json",
+      "name": "dsfd_gth_rw_v19",
+      "top": "dsfd_gth_rw",
+      "io_tcl": "physical/s81_die_pins/v19/dsfd_gth_rw.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_m2l_raw_512x1__hl_e0_negcap/spec.json",
+      "name": "dsfd_m2l_raw_512x1__hl_e0_negcap",
+      "top": "dsfd_m2l_raw_512x1__hl_E0",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_m2l_raw_512x1__hl_E0_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_m2l_raw_512x1__hl_e2_negcap/spec.json",
+      "name": "dsfd_m2l_raw_512x1__hl_e2_negcap",
+      "top": "dsfd_m2l_raw_512x1__hl_E2",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_m2l_raw_512x1__hl_E2_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_m2l_raw_512x1__hl_w1_negcap/spec.json",
+      "name": "dsfd_m2l_raw_512x1__hl_w1_negcap",
+      "top": "dsfd_m2l_raw_512x1__hl_W1",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_m2l_raw_512x1__hl_W1_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_m2l_vr_512x1__hco_sw_negcap/spec.json",
+      "name": "dsfd_m2l_vr_512x1__hco_sw_negcap",
+      "top": "dsfd_m2l_vr_512x1__hco_SW",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hco_SW_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_m2l_vr_512x1__hix_sw_negcap/spec.json",
+      "name": "dsfd_m2l_vr_512x1__hix_sw_negcap",
+      "top": "dsfd_m2l_vr_512x1__hix_SW",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hix_SW_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_m2l_vr_512x1__hqe_sw_negcap/spec.json",
+      "name": "dsfd_m2l_vr_512x1__hqe_sw_negcap",
+      "top": "dsfd_m2l_vr_512x1__hqe_SW",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hqe_SW_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_r2l_vr_512x1__hcol_negcap/spec.json",
+      "name": "dsfd_r2l_vr_512x1__hcol_negcap",
+      "top": "dsfd_r2l_vr_512x1__hcol",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hcol_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_r2l_vr_512x1__hcol_negcap_v2/spec.json",
+      "name": "dsfd_r2l_vr_512x1__hcol_negcap_v2",
+      "top": "dsfd_r2l_vr_512x1__hcol",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hcol_v18_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_r2l_vr_512x1__hsel_negcap/spec.json",
+      "name": "dsfd_r2l_vr_512x1__hsel_negcap",
+      "top": "dsfd_r2l_vr_512x1__hsel",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hsel_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_r2l_vr_512x1__hsel_negcap_v2/spec.json",
+      "name": "dsfd_r2l_vr_512x1__hsel_negcap_v2",
+      "top": "dsfd_r2l_vr_512x1__hsel",
+      "io_tcl": "physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hsel_v18_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_sp_pq_c/spec.json",
+      "name": "dsfd_sp_pq_c",
+      "top": "dsfd_sp_pq",
+      "io_tcl": "physical/s81_ph_pq/dsfd_sp_pq_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_bgl28_a/spec.json",
+      "name": "dsfd_vm_bgl28_a",
+      "top": "dsfd_vm_bgl28",
+      "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_bgl28_h1a/spec.json",
+      "name": "dsfd_vm_bgl28_h1a",
+      "top": "dsfd_vm_bgl28",
+      "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_bgl28_h1e/spec.json",
+      "name": "dsfd_vm_bgl28_h1e",
+      "top": "dsfd_vm_bgl28",
+      "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_bgr28_c/spec.json",
+      "name": "dsfd_vm_bgr28_c",
+      "top": "dsfd_vm_bgq28",
+      "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgr28_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_bgr28_cmy/spec.json",
+      "name": "dsfd_vm_bgr28_cmy",
+      "top": "dsfd_vm_bgq28",
+      "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgr28_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_bgr28_cmy40/spec.json",
+      "name": "dsfd_vm_bgr28_cmy40",
+      "top": "dsfd_vm_bgq28",
+      "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgr28_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_clt_m5/spec.json",
+      "name": "dsfd_vm_clt_m5",
+      "top": "dsfd_vm_clt",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_clt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_capture_e_native/spec.json",
+      "name": "dsfd_vm_direct_capture_e_native",
+      "top": "dsfd_vm_static_write_capture128",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_write_capture128_E.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_capture_w_native/spec.json",
+      "name": "dsfd_vm_direct_capture_w_native",
+      "top": "dsfd_vm_static_write_capture128_W",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_write_capture128_W.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b0_native/spec.json",
+      "name": "dsfd_vm_direct_scatter_b0_native",
+      "top": "dsfd_vm_static_scatter_b8_out",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b0_native_cb/spec.json",
+      "name": "dsfd_vm_direct_scatter_b0_native_cb",
+      "top": "dsfd_vm_static_scatter_b8_out",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b0_native_cb4/spec.json",
+      "name": "dsfd_vm_direct_scatter_b0_native_cb4",
+      "top": "dsfd_vm_static_scatter_b8_out",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b16_native/spec.json",
+      "name": "dsfd_vm_direct_scatter_b16_native",
+      "top": "dsfd_vm_static_scatter_b8_out_B16",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b16_native_cb/spec.json",
+      "name": "dsfd_vm_direct_scatter_b16_native_cb",
+      "top": "dsfd_vm_static_scatter_b8_out_B16",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b16_native_cb4/spec.json",
+      "name": "dsfd_vm_direct_scatter_b16_native_cb4",
+      "top": "dsfd_vm_static_scatter_b8_out_B16",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b24_native/spec.json",
+      "name": "dsfd_vm_direct_scatter_b24_native",
+      "top": "dsfd_vm_static_scatter_b8_out_B24",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb/spec.json",
+      "name": "dsfd_vm_direct_scatter_b24_native_cb",
+      "top": "dsfd_vm_static_scatter_b8_out_B24",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb4/spec.json",
+      "name": "dsfd_vm_direct_scatter_b24_native_cb4",
+      "top": "dsfd_vm_static_scatter_b8_out_B24",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb4b/spec.json",
+      "name": "dsfd_vm_direct_scatter_b24_native_cb4b",
+      "top": "dsfd_vm_static_scatter_b8_out_B24",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b8_native/spec.json",
+      "name": "dsfd_vm_direct_scatter_b8_native",
+      "top": "dsfd_vm_static_scatter_b8_out_B8",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b8_native_cb/spec.json",
+      "name": "dsfd_vm_direct_scatter_b8_native_cb",
+      "top": "dsfd_vm_static_scatter_b8_out_B8",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b8_native_cb4/spec.json",
+      "name": "dsfd_vm_direct_scatter_b8_native_cb4",
+      "top": "dsfd_vm_static_scatter_b8_out_B8",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_direct_scatter_b8_native_cb5/spec.json",
+      "name": "dsfd_vm_direct_scatter_b8_native_cb5",
+      "top": "dsfd_vm_static_scatter_b8_out_B8",
+      "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fld_m5/spec.json",
+      "name": "dsfd_vm_fld_m5",
+      "top": "dsfd_vm_fld",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fld.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fld_m5_parallel/spec.json",
+      "name": "dsfd_vm_fld_m5_parallel",
+      "top": "dsfd_vm_fld",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fld.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fld_m5_ranks/spec.json",
+      "name": "dsfd_vm_fld_m5_ranks",
+      "top": "dsfd_vm_fld",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fld.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_flt_m5/spec.json",
+      "name": "dsfd_vm_flt_m5",
+      "top": "dsfd_vm_flt",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_flt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_frm_m5/spec.json",
+      "name": "dsfd_vm_frm_m5",
+      "top": "dsfd_vm_frm",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_frm.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fsr_m5_pm/spec.json",
+      "name": "dsfd_vm_fsr_m5_pm",
+      "top": "dsfd_vm_fsr",
+      "io_tcl": "physical/s81_fe_fsr_m5_port_major/io_place.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fxa_m5/spec.json",
+      "name": "dsfd_vm_fxa_m5",
+      "top": "dsfd_vm_fxa",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxa.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fxb_m5/spec.json",
+      "name": "dsfd_vm_fxb_m5",
+      "top": "dsfd_vm_fxb",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxb.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fxr_m5/spec.json",
+      "name": "dsfd_vm_fxr_m5",
+      "top": "dsfd_vm_fxr",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxr.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_fxs_m5/spec.json",
+      "name": "dsfd_vm_fxs_m5",
+      "top": "dsfd_vm_fxs",
+      "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fxs.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_seq_tile_native_1015_r1/spec.json",
+      "name": "dsfd_vm_seq_tile_native_1015_r1",
+      "top": "dsfd_vm_seq_tile",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_seq_tile.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_seq_tile_native_1015_r3/spec.json",
+      "name": "dsfd_vm_seq_tile_native_1015_r3",
+      "top": "dsfd_vm_seq_tile",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_seq_tile.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20/spec.json",
+      "name": "dsfd_vm_static_bank128_e_m4_v20",
+      "top": "dsfd_vm_static_bank128_E",
+      "io_tcl": "physical/s81_die_pins/v20_vm_static_bank_e/dsfd_vm_static_bank128_E.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_bank128_m4_v20/spec.json",
+      "name": "dsfd_vm_static_bank128_m4_v20",
+      "top": "dsfd_vm_static_bank128",
+      "io_tcl": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r2/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015_r2",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r3/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015_r3",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r4/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015_r4",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r5/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015_r5",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r6/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015_r6",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r7/spec.json",
+      "name": "dsfd_vm_static_cap_leaf_1015_r7",
+      "top": "dsfd_vm_static_cap_leaf",
+      "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_fsr_b0_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_fsr_b0_native_1015_r1",
+      "top": "dsfd_vm_static_fsr_b0",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_fsr_b1_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_fsr_b1_native_1015_r1",
+      "top": "dsfd_vm_static_fsr_b1",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_fsr_b2_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_fsr_b2_native_1015_r1",
+      "top": "dsfd_vm_static_fsr_b2",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_fsr_b3_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_fsr_b3_native_1015_r1",
+      "top": "dsfd_vm_static_fsr_b3",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_fsr_b3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_landing_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_landing_native_1015_r1",
+      "top": "dsfd_vm_static_landing",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_landing.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_landing_native_1015_r2/spec.json",
+      "name": "dsfd_vm_static_landing_native_1015_r2",
+      "top": "dsfd_vm_static_landing",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_landing.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_landing_native_1015_r3/spec.json",
+      "name": "dsfd_vm_static_landing_native_1015_r3",
+      "top": "dsfd_vm_static_landing",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_landing.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_landing_native_1015_r4/spec.json",
+      "name": "dsfd_vm_static_landing_native_1015_r4",
+      "top": "dsfd_vm_static_landing",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_landing.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q0_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q0_native_1015_r1",
+      "top": "dsfd_vm_static_read_q0",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q0_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q0_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_q0_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_q0_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_q0_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q1_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q1_native_1015_r1",
+      "top": "dsfd_vm_static_read_q1",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q1_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q1_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q1_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q2_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q2_native_1015_r1",
+      "top": "dsfd_vm_static_read_q2",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q2_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q2_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q2_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q3_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q3_native_1015_r1",
+      "top": "dsfd_vm_static_read_q3",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q3_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q3_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q3_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q4_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q4_native_1015_r1",
+      "top": "dsfd_vm_static_read_q4",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q4_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q4_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q4_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q5_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q5_native_1015_r1",
+      "top": "dsfd_vm_static_read_q5",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q5_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q5_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q5_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q6_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q6_native_1015_r1",
+      "top": "dsfd_vm_static_read_q6",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q6_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q6_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q6_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q7_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_q7_native_1015_r1",
+      "top": "dsfd_vm_static_read_q7",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q7.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_q7_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_q7_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_q7_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q7.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v0_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v0_native_1015_r1",
+      "top": "dsfd_vm_static_read_v0",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v0_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v0_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v0_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v0_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v0_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v0_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v0_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v1_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v1_native_1015_r1",
+      "top": "dsfd_vm_static_read_v1",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v1_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v1_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v1_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v1_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v1_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v1_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v1_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v2_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v2_native_1015_r1",
+      "top": "dsfd_vm_static_read_v2",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v2_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v2_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v2_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v2_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v2_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v2_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v2_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v3_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v3_native_1015_r1",
+      "top": "dsfd_vm_static_read_v3",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v3_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v3_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v3_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v3_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v3_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v3_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v3_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v4_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v4_native_1015_r1",
+      "top": "dsfd_vm_static_read_v4",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v4_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v4_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v4_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v4_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v4_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v4_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v4_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v5_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v5_native_1015_r1",
+      "top": "dsfd_vm_static_read_v5",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v5_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v5_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v5_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v5_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v5_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v5_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v5_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v6_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v6_native_1015_r1",
+      "top": "dsfd_vm_static_read_v6",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v6_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v6_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v6_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v6_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v6_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v6_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v6_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v7_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_read_v7_native_1015_r1",
+      "top": "dsfd_vm_static_read_v7",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v7.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v7_p_native_1015_p1/spec.json",
+      "name": "dsfd_vm_static_read_v7_p_native_1015_p1",
+      "top": "dsfd_vm_static_read_v7_p",
+      "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_v7.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_read_v7_p_native_1015_p2/spec.json",
+      "name": "dsfd_vm_static_read_v7_p_native_1015_p2",
+      "top": "dsfd_vm_static_read_v7_p",
+      "io_tcl": "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_v7_p.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_cb/spec.json",
+      "name": "dsfd_vm_static_relay128_b4_native_cb",
+      "top": "dsfd_vm_static_relay128_b4",
+      "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_option/spec.json",
+      "name": "dsfd_vm_static_relay128_b4_native_option",
+      "top": "dsfd_vm_static_relay128_b4",
+      "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/spec.json",
+      "name": "dsfd_vm_static_relay128_b8_native_cb",
+      "top": "dsfd_vm_static_relay128_b8",
+      "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_option/spec.json",
+      "name": "dsfd_vm_static_relay128_b8_native_option",
+      "top": "dsfd_vm_static_relay128_b8",
+      "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_1015/spec.json",
+      "name": "dsfd_vm_static_return_bank8_1015",
+      "top": "dsfd_vm_static_return_bank8",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_1015_r2/spec.json",
+      "name": "dsfd_vm_static_return_bank8_1015_r2",
+      "top": "dsfd_vm_static_return_bank8",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native2/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l0_1015",
+      "top": "dsfd_vm_static_return_bank8_l0",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native3_l0/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015_r4/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l0_1015_r4",
+      "top": "dsfd_vm_static_return_bank8_l0",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native4_l0/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_1015_r6/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l0_1015_r6",
+      "top": "dsfd_vm_static_return_bank8_l0",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l0/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l0_p_native_1015_l16/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l0_p_native_1015_l16",
+      "top": "dsfd_vm_static_return_bank8_l0_p",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l0/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l1_1015",
+      "top": "dsfd_vm_static_return_bank8_l1",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native3_l1/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015_r4/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l1_1015_r4",
+      "top": "dsfd_vm_static_return_bank8_l1",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native4_l1/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_1015_r6/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l1_1015_r6",
+      "top": "dsfd_vm_static_return_bank8_l1",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l1/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l1_p_native_1015_l16/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l1_p_native_1015_l16",
+      "top": "dsfd_vm_static_return_bank8_l1_p",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l1/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l2_1015",
+      "top": "dsfd_vm_static_return_bank8_l2",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native3_l2/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015_r4/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l2_1015_r4",
+      "top": "dsfd_vm_static_return_bank8_l2",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native4_l2/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_1015_r6/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l2_1015_r6",
+      "top": "dsfd_vm_static_return_bank8_l2",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l2/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l2_p_native_1015_l16/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l2_p_native_1015_l16",
+      "top": "dsfd_vm_static_return_bank8_l2_p",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l2/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l3_1015",
+      "top": "dsfd_vm_static_return_bank8_l3",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native3_l3/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r4/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l3_1015_r4",
+      "top": "dsfd_vm_static_return_bank8_l3",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native4_l3/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r6/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l3_1015_r6",
+      "top": "dsfd_vm_static_return_bank8_l3",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l3/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_return_bank8_l3_p_native_1015_l16/spec.json",
+      "name": "dsfd_vm_static_return_bank8_l3_p_native_1015_l16",
+      "top": "dsfd_vm_static_return_bank8_l3_p",
+      "io_tcl": "physical/s81_vm_return_bank8_1015/native5_l3/pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_rsched_native_1015_r1/spec.json",
+      "name": "dsfd_vm_static_rsched_native_1015_r1",
+      "top": "dsfd_vm_static_rsched",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_rsched.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/dsfd_vm_static_rsched_p_native_1015_l16/spec.json",
+      "name": "dsfd_vm_static_rsched_p_native_1015_l16",
+      "top": "dsfd_vm_static_rsched_p",
+      "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_rsched.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hbm_xp_buf_rptr_1014/spec.json",
+      "name": "hbm_xp_buf_rptr_1014",
+      "top": "ot_hbm_xp_buf_rptr",
+      "io_tcl": "physical/hbm_xp_buf_rptr_1014/buf_col_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_coll_rgx_rx_r1/spec.json",
+      "name": "hgi_coll_rgx_rx_r1",
+      "top": "ot_hgi_coll_rx_native",
+      "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_rgx_rx_n2_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_coll_rgx_rx_r2/spec.json",
+      "name": "hgi_coll_rgx_rx_r2",
+      "top": "ot_hgi_coll_rx_native",
+      "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_rgx_rx_n2_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_coll_ring_add_r1/spec.json",
+      "name": "hgi_coll_ring_add_r1",
+      "top": "ot_hgi_coll_pring_add_lane",
+      "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_ring_add_n2_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_coll_ring_state_r1/spec.json",
+      "name": "hgi_coll_ring_state_r1",
+      "top": "ot_hgi_coll_pring_state",
+      "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_ring_state_n2_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_coll_tkw_rx_r1/spec.json",
+      "name": "hgi_coll_tkw_rx_r1",
+      "top": "ot_hgi_coll_rx_native",
+      "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_tkw_rx_n3_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_coll_tkw_rx_r2/spec.json",
+      "name": "hgi_coll_tkw_rx_r2",
+      "top": "ot_hgi_coll_rx_native",
+      "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_tkw_rx_n3_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_seq_fe/spec.json",
+      "name": "hgi_seq_fe",
+      "top": "ot_hgi_seq_fe",
+      "io_tcl": "physical/hbm_accel_die_views/seq/hgi_seq_fe_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_topk_lane_rt_c/spec.json",
+      "name": "hgi_topk_lane_rt_c",
+      "top": "ot_hgi_topk_lane_tile",
+      "io_tcl": "physical/ref_tile_specs/hgi_topk/lane_seam_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_topk_lane_rt_d/spec.json",
+      "name": "hgi_topk_lane_rt_d",
+      "top": "ot_hgi_topk_lane_tile",
+      "io_tcl": "physical/ref_tile_specs/hgi_topk/lane_seam_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/hgi_topk_lane_rt_e/spec.json",
+      "name": "hgi_topk_lane_rt_e",
+      "top": "ot_hgi_topk_lane_tile",
+      "io_tcl": "physical/ref_tile_specs/hgi_topk/lane_seam_pins_h11664.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/lkep_rp_ref/spec.json",
+      "name": "lkep_rp_ref",
+      "top": "ot_lkep_rp",
+      "io_tcl": "physical/ref_tile_specs/lkep/lkep_rp_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/lkep_ti_ref/spec.json",
+      "name": "lkep_ti_ref",
+      "top": "ot_lkep_ti",
+      "io_tcl": "physical/ref_tile_specs/lkep/lkep_ti_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/lkep_ts_ref/spec.json",
+      "name": "lkep_ts_ref",
+      "top": "ot_lkep_ts",
+      "io_tcl": "physical/ref_tile_specs/lkep/lkep_ts_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_s_w1026_1015_f4/spec.json",
+      "name": "ot_s81_vm_x34_s_w1026_1015_f4",
+      "top": "ot_s81_vm_x34_s",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w1026_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_s_w514_1015_f4/spec.json",
+      "name": "ot_s81_vm_x34_s_w514_1015_f4",
+      "top": "ot_s81_vm_x34_s",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w514_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_s_w542_1015_r4/spec.json",
+      "name": "ot_s81_vm_x34_s_w542_1015_r4",
+      "top": "ot_s81_vm_x34_s",
+      "io_tcl": "physical/s81_vm_cap_1015/x34_s_r4_local_banks.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_s_w560_1015_f4/spec.json",
+      "name": "ot_s81_vm_x34_s_w560_1015_f4",
+      "top": "ot_s81_vm_x34_s",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w560_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_t_w1026_1015_f4/spec.json",
+      "name": "ot_s81_vm_x34_t_w1026_1015_f4",
+      "top": "ot_s81_vm_x34_t",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_t_w1026_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_t_w514_1015_f4/spec.json",
+      "name": "ot_s81_vm_x34_t_w514_1015_f4",
+      "top": "ot_s81_vm_x34_t",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_t_w514_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r5/spec.json",
+      "name": "ot_s81_vm_x34_t_w542_1015_r5",
+      "top": "ot_s81_vm_x34_t",
+      "io_tcl": "physical/s81_vm_cap_1015/x34_t_r5_local_banks.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r6/spec.json",
+      "name": "ot_s81_vm_x34_t_w542_1015_r6",
+      "top": "ot_s81_vm_x34_t",
+      "io_tcl": "physical/s81_vm_cap_1015/x34_t_r5_local_banks.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r7/spec.json",
+      "name": "ot_s81_vm_x34_t_w542_1015_r7",
+      "top": "ot_s81_vm_x34_t",
+      "io_tcl": "physical/s81_vm_cap_1015/x34_t_r5_local_banks.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x34_t_w560_1015_f4/spec.json",
+      "name": "ot_s81_vm_x34_t_w560_1015_f4",
+      "top": "ot_s81_vm_x34_t",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_t_w560_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x43_s_w1026_1015_f4/spec.json",
+      "name": "ot_s81_vm_x43_s_w1026_1015_f4",
+      "top": "ot_s81_vm_x43_s",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_s_w1026_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x43_s_w511_1015_f4/spec.json",
+      "name": "ot_s81_vm_x43_s_w511_1015_f4",
+      "top": "ot_s81_vm_x43_s",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_s_w511_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x43_s_w512_1015_f4/spec.json",
+      "name": "ot_s81_vm_x43_s_w512_1015_f4",
+      "top": "ot_s81_vm_x43_s",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_s_w512_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x43_t_w1026_1015_f4/spec.json",
+      "name": "ot_s81_vm_x43_t_w1026_1015_f4",
+      "top": "ot_s81_vm_x43_t",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w1026_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x43_t_w511_1015_f4/spec.json",
+      "name": "ot_s81_vm_x43_t_w511_1015_f4",
+      "top": "ot_s81_vm_x43_t",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w511_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/ot_s81_vm_x43_t_w512_1015_f4/spec.json",
+      "name": "ot_s81_vm_x43_t_w512_1015_f4",
+      "top": "ot_s81_vm_x43_t",
+      "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w512_1015_f4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_res_slot_ru/spec.json",
+      "name": "qfd_res_slot_ru",
+      "top": "ot_qfd_res_slot_tile",
+      "io_tcl": "physical/res_ser/qfd_res_slot_ru_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_slab_reg512/spec.json",
+      "name": "qfd_slab_reg512",
+      "top": "qfd_slab_reg512",
+      "io_tcl": "physical/ref_tile/qfd_slab_reg512/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_sp_band_lanes_native/spec.json",
+      "name": "qfd_sp_band_lanes_native",
+      "top": "qfd_sp_band_lanes",
+      "io_tcl": "physical/ref_tile/qfd_sp_band_lanes_native/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_sp_band_lanes_quarter/spec.json",
+      "name": "qfd_sp_band_lanes_quarter",
+      "top": "qfd_sp_band_lanes",
+      "io_tcl": "physical/ref_tile/qfd_sp_band_lanes_quarter/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_static_ch546/spec.json",
+      "name": "qfd_static_ch546",
+      "top": "qfd_static_ch546",
+      "io_tcl": "physical/ref_tile/qfd_static_ch546/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_tile_nk_native/spec.json",
+      "name": "qfd_tile_nk_native",
+      "top": "qfd_tile_nk",
+      "io_tcl": "physical/ref_tile/qfd_tile_nk_native/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_tile_nl_native/spec.json",
+      "name": "qfd_tile_nl_native",
+      "top": "qfd_tile_nl",
+      "io_tcl": "physical/ref_tile/qfd_tile_nl_native/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_vm_qcommit/spec.json",
+      "name": "qfd_vm_qcommit",
+      "top": "qfd_vm_qcommit",
+      "io_tcl": "physical/ref_tile/qfd_vm_qcommit/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_x3_mux_native/spec.json",
+      "name": "qfd_x3_mux_native",
+      "top": "ot_qfd_x3_mux_native",
+      "io_tcl": "physical/ref_tile/qfd_x3_mux_native/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_x3_mux_nativer/spec.json",
+      "name": "qfd_x3_mux_nativer",
+      "top": "ot_qfd_x3_mux_native",
+      "io_tcl": "physical/ref_tile/qfd_x3_mux_native/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_x3_mux_static/spec.json",
+      "name": "qfd_x3_mux_static",
+      "top": "ot_qfd_x3_mux",
+      "io_tcl": "physical/ref_tile/qfd_x3_mux_static/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_xs_leaf_extcap/spec.json",
+      "name": "qfd_xs_leaf_extcap",
+      "top": "qfd_xs_leaf_extcap",
+      "io_tcl": "physical/ref_tile/qfd_xs_leaf_extcap/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qfd_xs_tap/spec.json",
+      "name": "qfd_xs_tap",
+      "top": "qfd_xs_tap",
+      "io_tcl": "physical/ref_tile/qfd_xs_tap/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_d2d_p2_ref/spec.json",
+      "name": "qkd_d2d_p2_ref",
+      "top": "ot_qkvd_kv_end",
+      "io_tcl": "physical/ref_tile_specs/qkd_ke/qkd_d2d_p2_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_ectl_slot/spec.json",
+      "name": "qkd_ectl_slot",
+      "top": "qkd_ectl",
+      "io_tcl": "physical/ref_tile_specs/qwen_tp8/qkd_ectl_slot_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_ke_rq_ref/spec.json",
+      "name": "qkd_ke_rq_ref",
+      "top": "ot_qkvd_ke_rq",
+      "io_tcl": "physical/ref_tile_specs/qkd_ke/qkd_ke_rq_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_ke_tm_ref/spec.json",
+      "name": "qkd_ke_tm_ref",
+      "top": "ot_qkvd_ke_tm",
+      "io_tcl": "physical/ref_tile_specs/qkd_ke/qkd_ke_tm_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_kv_fault_stage/spec.json",
+      "name": "qkd_kv_fault_stage",
+      "top": "qkd_kv_fault_stage",
+      "io_tcl": "physical/ref_tile/qkd_kv_fault_stage/io_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_kv_static_writer_native_r1/spec.json",
+      "name": "qkd_kv_static_writer_native_r1",
+      "top": "qkd_kv_static_writer_native",
+      "io_tcl": "physical/qwen_kv_die_native_static_pins/qkd_kv_static_writer_native.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_land_emb_ifw/spec.json",
+      "name": "qkd_land_emb_ifw",
+      "top": "qkd_land_emb_ifw",
+      "io_tcl": "physical/ref_tile/qkd_land_emb_ifw/io_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_llr_ctl/spec.json",
+      "name": "qkd_llr_ctl",
+      "top": "ot_qkvd_d2d_llr_ctl",
+      "io_tcl": "physical/ref_tile/qkd_llr_ctl/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkd_slot_ctl548/spec.json",
+      "name": "qkd_slot_ctl548",
+      "top": "ot_qwen_static_slot_ctl",
+      "io_tcl": "physical/ref_tile/qkd_slot_ctl548/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_head_chunk_stage/spec.json",
+      "name": "qkh_head_chunk_stage",
+      "top": "qkh_head_chunk_stage",
+      "io_tcl": "physical/ref_tile/qkh_head_chunk_stage/io_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_head_tstage/spec.json",
+      "name": "qkh_head_tstage",
+      "top": "qkh_head_tstage",
+      "io_tcl": "physical/ref_tile/qkh_head_tstage/io_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_packet_h256/spec.json",
+      "name": "qkh_packet_h256",
+      "top": "qkh_packet_h256",
+      "io_tcl": "physical/ref_tile/qkh_packet_h256/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_packet_h263/spec.json",
+      "name": "qkh_packet_h263",
+      "top": "qkh_packet_h263",
+      "io_tcl": "physical/ref_tile/qkh_packet_h263/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_packet_v256/spec.json",
+      "name": "qkh_packet_v256",
+      "top": "qkh_packet_v256",
+      "io_tcl": "physical/ref_tile/qkh_packet_v256/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_packet_v263/spec.json",
+      "name": "qkh_packet_v263",
+      "top": "qkh_packet_v263",
+      "io_tcl": "physical/ref_tile/qkh_packet_v263/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_r3_front_1014/spec.json",
+      "name": "qkh_r3_front_1014",
+      "top": "ot_qkh_head_front_native",
+      "io_tcl": "physical/qwen_head_r3_1014/front_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_r3_nb_1014/spec.json",
+      "name": "qkh_r3_nb_1014",
+      "top": "ot_qkh_head_nb_native",
+      "io_tcl": "physical/qwen_head_r3_1014/nb_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_r3_stin_1014/spec.json",
+      "name": "qkh_r3_stin_1014",
+      "top": "ot_qkh_head_stin_native",
+      "io_tcl": "physical/qwen_head_r3_1014/stin_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_r3_stk_1014/spec.json",
+      "name": "qkh_r3_stk_1014",
+      "top": "ot_qkh_head_stk_native",
+      "io_tcl": "physical/qwen_head_r3_1014/stk_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qkh_r4_frontq_1014/spec.json",
+      "name": "qkh_r4_frontq_1014",
+      "top": "ot_qkh_head_frontq_native",
+      "io_tcl": "physical/qwen_head_r4_1014/frontq_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_glue_v508/spec.json",
+      "name": "qwen_glue_v508",
+      "top": "qwen_glue_v508",
+      "io_tcl": "physical/ref_tile/qwen_glue_v508/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_glue_v514/spec.json",
+      "name": "qwen_glue_v514",
+      "top": "qwen_glue_v514",
+      "io_tcl": "physical/ref_tile/qwen_glue_v514/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_glue_w514/spec.json",
+      "name": "qwen_glue_w514",
+      "top": "qwen_glue_w514",
+      "io_tcl": "physical/ref_tile/qwen_glue_w514/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_glue_x1028/spec.json",
+      "name": "qwen_glue_x1028",
+      "top": "qwen_glue_x1028",
+      "io_tcl": "physical/ref_tile/qwen_glue_x1028/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_tx_rne_r0/spec.json",
+      "name": "qwen_tx_rne_r0",
+      "top": "qwen_tx_rne_r0",
+      "io_tcl": "physical/ref_tile/qwen_tx_rne_r0/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_tx_rne_r1/spec.json",
+      "name": "qwen_tx_rne_r1",
+      "top": "qwen_tx_rne_r1",
+      "io_tcl": "physical/ref_tile/qwen_tx_rne_r1/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_tx_rnes_r0/spec.json",
+      "name": "qwen_tx_rnes_r0",
+      "top": "qwen_tx_rnes_r0",
+      "io_tcl": "physical/ref_tile/qwen_tx_rnes_r0/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/qwen_tx_rnes_r1/spec.json",
+      "name": "qwen_tx_rnes_r1",
+      "top": "qwen_tx_rnes_r1",
+      "io_tcl": "physical/ref_tile/qwen_tx_rnes_r1/assigned_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_engram_lookup_13roots_1015/spec.json",
+      "name": "s81_engram_lookup_13roots_1015",
+      "top": "dsfd_engram_lkp_clock_roots",
+      "io_tcl": "physical/s81_die_pins/v21_engram_clock_roots_candidate/dsfd_engram_lkp_clock_roots.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk0_native/spec.json",
+      "name": "s81_markov_chunk0_native",
+      "top": "ot_s81_markov_chunk0_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk0_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk1_native/spec.json",
+      "name": "s81_markov_chunk1_native",
+      "top": "ot_s81_markov_chunk1_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk1_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk2_native/spec.json",
+      "name": "s81_markov_chunk2_native",
+      "top": "ot_s81_markov_chunk2_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk2_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk3_native/spec.json",
+      "name": "s81_markov_chunk3_native",
+      "top": "ot_s81_markov_chunk3_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk3_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk4_native/spec.json",
+      "name": "s81_markov_chunk4_native",
+      "top": "ot_s81_markov_chunk4_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk4_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk5_native/spec.json",
+      "name": "s81_markov_chunk5_native",
+      "top": "ot_s81_markov_chunk5_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk5_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk6_native/spec.json",
+      "name": "s81_markov_chunk6_native",
+      "top": "ot_s81_markov_chunk6_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk6_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_chunk7_native/spec.json",
+      "name": "s81_markov_chunk7_native",
+      "top": "ot_s81_markov_chunk7_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk7_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_ctl_native/spec.json",
+      "name": "s81_markov_ctl_native",
+      "top": "ot_s81_markov_ctl_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/ctl_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_ctl_static/spec.json",
+      "name": "s81_markov_ctl_static",
+      "top": "ot_s81_markov_ctl_static",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/ctl_static_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_fold_native/spec.json",
+      "name": "s81_markov_fold_native",
+      "top": "ot_s81_markov_fold_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/fold_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_join_native/spec.json",
+      "name": "s81_markov_join_native",
+      "top": "ot_s81_markov_join_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/join_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_mul_native/spec.json",
+      "name": "s81_markov_mul_native",
+      "top": "ot_s81_markov_mul_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/mul_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_markov_pair_native/spec.json",
+      "name": "s81_markov_pair_native",
+      "top": "ot_s81_markov_pair_native",
+      "io_tcl": "physical/ref_tile_specs/s81_markov_native/pair_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_pq_ctl_state_calcap/spec.json",
+      "name": "s81_pq_ctl_state_calcap",
+      "top": "ot_s81_pq_ctl_state_phw10",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/s81_pq_ctl_state_calcap_spread_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_q_ctl_permac/spec.json",
+      "name": "s81_q_ctl_permac",
+      "top": "ot_s81_q_ctl_native_graph",
+      "io_tcl": "physical/ref_tile_specs/s81_q_permac/ot_s81_q_ctl_native_graph_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81_svc_probability_native_ref/spec.json",
+      "name": "s81_svc_probability_native_ref",
+      "top": "ot_s81_svc_probability_frame",
+      "io_tcl": "physical/s81_die_pins/v20_svc_native/ot_s81_svc_probability_frame.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81coll_calendar7_resetpins_1319/spec.json",
+      "name": "s81coll_calendar7_resetpins_1319",
+      "top": "s81_static_calendar_controller7_resetpins",
+      "io_tcl": "physical/s81_die_pins/v23_calendar7_reset_candidate/s81_static_calendar_controller7_resetpins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81coll_vm_boundary/spec.json",
+      "name": "s81coll_vm_boundary",
+      "top": "s81_static_vm_boundary",
+      "io_tcl": "physical/ref_tile_specs/s81coll_static/s81coll_vm_boundary_spread_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engc_ctl_s/spec.json",
+      "name": "s81engc_ctl_s",
+      "top": "ot_engc_ctl_s",
+      "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_ctl_s.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engc_ctl_x/spec.json",
+      "name": "s81engc_ctl_x",
+      "top": "ot_engc_ctl_x",
+      "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_ctl_x.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engc_rr256/spec.json",
+      "name": "s81engc_rr256",
+      "top": "ot_engc_rr256",
+      "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_rr256.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engc_rr256w/spec.json",
+      "name": "s81engc_rr256w",
+      "top": "ot_engc_rr256w",
+      "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_rr256w.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engc_rr64/spec.json",
+      "name": "s81engc_rr64",
+      "top": "ot_engc_rr64",
+      "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_rr64.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_add8/spec.json",
+      "name": "s81engm_add8",
+      "top": "ot_s81_engram_add8",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_chunk8/spec.json",
+      "name": "s81engm_chunk8",
+      "top": "ot_s81_engram_chunk8",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_mul4/spec.json",
+      "name": "s81engm_mul4",
+      "top": "ot_s81_engram_mul4",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_norm/spec.json",
+      "name": "s81engm_norm",
+      "top": "ot_s81_engram_norm",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_sigmoid/spec.json",
+      "name": "s81engm_sigmoid",
+      "top": "ot_s81_engram_sigmoid",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_signed_sqrt/spec.json",
+      "name": "s81engm_signed_sqrt",
+      "top": "ot_s81_engram_signed_sqrt",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_signed_sqrt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engm_sum/spec.json",
+      "name": "s81engm_sum",
+      "top": "ot_s81_engram_sum",
+      "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sum.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81engram_mul4_native_sizing_1015/spec.json",
+      "name": "s81engram_mul4_native_sizing_1015",
+      "top": "ot_s81_engram_mul4",
+      "io_tcl": "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_mul4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq/spec.json",
+      "name": "s81fill2_cfg7_seq",
+      "top": "ot_s81_cfg7_seq",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_bf/spec.json",
+      "name": "s81fill2_cfg7_seq_bf",
+      "top": "ot_s81_cfg7_seq_bf",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_bf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_bf_l1/spec.json",
+      "name": "s81fill2_cfg7_seq_bf_l1",
+      "top": "ot_s81_cfg7_seq_bf",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_bf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_bf_l1pd/spec.json",
+      "name": "s81fill2_cfg7_seq_bf_l1pd",
+      "top": "ot_s81_cfg7_seq_bf",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_bf_pd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_bf_pd/spec.json",
+      "name": "s81fill2_cfg7_seq_bf_pd",
+      "top": "ot_s81_cfg7_seq_bf",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_bf_pd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_l1/spec.json",
+      "name": "s81fill2_cfg7_seq_l1",
+      "top": "ot_s81_cfg7_seq",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_l1pd/spec.json",
+      "name": "s81fill2_cfg7_seq_l1pd",
+      "top": "ot_s81_cfg7_seq",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_pd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_cfg7_seq_pd/spec.json",
+      "name": "s81fill2_cfg7_seq_pd",
+      "top": "ot_s81_cfg7_seq",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_pd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_host_c/spec.json",
+      "name": "s81fill2_host_c",
+      "top": "dsfd_host_c",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_host_c.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_qbank_n/spec.json",
+      "name": "s81fill2_qbank_n",
+      "top": "dsfd_qbank_N",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_N.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_qbank_s/spec.json",
+      "name": "s81fill2_qbank_s",
+      "top": "dsfd_qbank_S",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_qbank_s_t/spec.json",
+      "name": "s81fill2_qbank_s_t",
+      "top": "dsfd_qbank_S",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S_t.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill2_sseq_c8/spec.json",
+      "name": "s81fill2_sseq_c8",
+      "top": "dsfd_stage_seq_static_c8",
+      "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_1/spec.json",
+      "name": "s81fill_hstnh_1",
+      "top": "dsfd_hstnh_1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_1024/spec.json",
+      "name": "s81fill_hstnh_1024",
+      "top": "dsfd_hstnh_1024",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_1024.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_1029/spec.json",
+      "name": "s81fill_hstnh_1029",
+      "top": "dsfd_hstnh_1029",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_1029.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_11/spec.json",
+      "name": "s81fill_hstnh_11",
+      "top": "dsfd_hstnh_11",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_11.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_112/spec.json",
+      "name": "s81fill_hstnh_112",
+      "top": "dsfd_hstnh_112",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_112.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_128/spec.json",
+      "name": "s81fill_hstnh_128",
+      "top": "dsfd_hstnh_128",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_128.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_15/spec.json",
+      "name": "s81fill_hstnh_15",
+      "top": "dsfd_hstnh_15",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_15.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_2/spec.json",
+      "name": "s81fill_hstnh_2",
+      "top": "dsfd_hstnh_2",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_20/spec.json",
+      "name": "s81fill_hstnh_20",
+      "top": "dsfd_hstnh_20",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_20.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_2049/spec.json",
+      "name": "s81fill_hstnh_2049",
+      "top": "dsfd_hstnh_2049",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_2049.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_2204/spec.json",
+      "name": "s81fill_hstnh_2204",
+      "top": "dsfd_hstnh_2204",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_2204.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_28/spec.json",
+      "name": "s81fill_hstnh_28",
+      "top": "dsfd_hstnh_28",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_28.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_36/spec.json",
+      "name": "s81fill_hstnh_36",
+      "top": "dsfd_hstnh_36",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_36.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_4/spec.json",
+      "name": "s81fill_hstnh_4",
+      "top": "dsfd_hstnh_4",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_4096/spec.json",
+      "name": "s81fill_hstnh_4096",
+      "top": "dsfd_hstnh_4096",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_4096.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_513/spec.json",
+      "name": "s81fill_hstnh_513",
+      "top": "dsfd_hstnh_513",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_513.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_514/spec.json",
+      "name": "s81fill_hstnh_514",
+      "top": "dsfd_hstnh_514",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_514.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_53/spec.json",
+      "name": "s81fill_hstnh_53",
+      "top": "dsfd_hstnh_53",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_53.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_54/spec.json",
+      "name": "s81fill_hstnh_54",
+      "top": "dsfd_hstnh_54",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_54.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_560/spec.json",
+      "name": "s81fill_hstnh_560",
+      "top": "dsfd_hstnh_560",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_560.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_6/spec.json",
+      "name": "s81fill_hstnh_6",
+      "top": "dsfd_hstnh_6",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_690/spec.json",
+      "name": "s81fill_hstnh_690",
+      "top": "dsfd_hstnh_690",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_690.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_692/spec.json",
+      "name": "s81fill_hstnh_692",
+      "top": "dsfd_hstnh_692",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_692.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_759/spec.json",
+      "name": "s81fill_hstnh_759",
+      "top": "dsfd_hstnh_759",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_759.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_761/spec.json",
+      "name": "s81fill_hstnh_761",
+      "top": "dsfd_hstnh_761",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_761.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_77/spec.json",
+      "name": "s81fill_hstnh_77",
+      "top": "dsfd_hstnh_77",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_77.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_8/spec.json",
+      "name": "s81fill_hstnh_8",
+      "top": "dsfd_hstnh_8",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_85/spec.json",
+      "name": "s81fill_hstnh_85",
+      "top": "dsfd_hstnh_85",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_85.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnh_9/spec.json",
+      "name": "s81fill_hstnh_9",
+      "top": "dsfd_hstnh_9",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnh_9.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_1029/spec.json",
+      "name": "s81fill_hstnv_1029",
+      "top": "dsfd_hstnv_1029",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_1029.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_11/spec.json",
+      "name": "s81fill_hstnv_11",
+      "top": "dsfd_hstnv_11",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_11.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_15/spec.json",
+      "name": "s81fill_hstnv_15",
+      "top": "dsfd_hstnv_15",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_15.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_2/spec.json",
+      "name": "s81fill_hstnv_2",
+      "top": "dsfd_hstnv_2",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_20/spec.json",
+      "name": "s81fill_hstnv_20",
+      "top": "dsfd_hstnv_20",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_20.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_2049/spec.json",
+      "name": "s81fill_hstnv_2049",
+      "top": "dsfd_hstnv_2049",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2049.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_2164/spec.json",
+      "name": "s81fill_hstnv_2164",
+      "top": "dsfd_hstnv_2164",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2164.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_2204/spec.json",
+      "name": "s81fill_hstnv_2204",
+      "top": "dsfd_hstnv_2204",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_2204.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_3056/spec.json",
+      "name": "s81fill_hstnv_3056",
+      "top": "dsfd_hstnv_3056",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_3056.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_36/spec.json",
+      "name": "s81fill_hstnv_36",
+      "top": "dsfd_hstnv_36",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_36.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_4/spec.json",
+      "name": "s81fill_hstnv_4",
+      "top": "dsfd_hstnv_4",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_512/spec.json",
+      "name": "s81fill_hstnv_512",
+      "top": "dsfd_hstnv_512",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_512.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_513/spec.json",
+      "name": "s81fill_hstnv_513",
+      "top": "dsfd_hstnv_513",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_513.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_514/spec.json",
+      "name": "s81fill_hstnv_514",
+      "top": "dsfd_hstnv_514",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_514.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_515/spec.json",
+      "name": "s81fill_hstnv_515",
+      "top": "dsfd_hstnv_515",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_515.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_53/spec.json",
+      "name": "s81fill_hstnv_53",
+      "top": "dsfd_hstnv_53",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_53.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_54/spec.json",
+      "name": "s81fill_hstnv_54",
+      "top": "dsfd_hstnv_54",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_54.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_560/spec.json",
+      "name": "s81fill_hstnv_560",
+      "top": "dsfd_hstnv_560",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_560.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_6/spec.json",
+      "name": "s81fill_hstnv_6",
+      "top": "dsfd_hstnv_6",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_690/spec.json",
+      "name": "s81fill_hstnv_690",
+      "top": "dsfd_hstnv_690",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_690.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_759/spec.json",
+      "name": "s81fill_hstnv_759",
+      "top": "dsfd_hstnv_759",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_759.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_77/spec.json",
+      "name": "s81fill_hstnv_77",
+      "top": "dsfd_hstnv_77",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_77.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_8/spec.json",
+      "name": "s81fill_hstnv_8",
+      "top": "dsfd_hstnv_8",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_85/spec.json",
+      "name": "s81fill_hstnv_85",
+      "top": "dsfd_hstnv_85",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_85.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_hstnv_9/spec.json",
+      "name": "s81fill_hstnv_9",
+      "top": "dsfd_hstnv_9",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_hstnv_9.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnh_1026x1/spec.json",
+      "name": "s81fill_stnh_1026x1",
+      "top": "dsfd_stnh_1026x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_1026x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnh_10x1/spec.json",
+      "name": "s81fill_stnh_10x1",
+      "top": "dsfd_stnh_10x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_10x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnh_293x1/spec.json",
+      "name": "s81fill_stnh_293x1",
+      "top": "dsfd_stnh_293x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_293x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnh_3x1/spec.json",
+      "name": "s81fill_stnh_3x1",
+      "top": "dsfd_stnh_3x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_3x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnh_70x1/spec.json",
+      "name": "s81fill_stnh_70x1",
+      "top": "dsfd_stnh_70x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_70x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnh_86x1/spec.json",
+      "name": "s81fill_stnh_86x1",
+      "top": "dsfd_stnh_86x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnh_86x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_1026x1/spec.json",
+      "name": "s81fill_stnv_1026x1",
+      "top": "dsfd_stnv_1026x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_1026x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_10x1/spec.json",
+      "name": "s81fill_stnv_10x1",
+      "top": "dsfd_stnv_10x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_10x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_256x1/spec.json",
+      "name": "s81fill_stnv_256x1",
+      "top": "dsfd_stnv_256x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_256x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_293x1/spec.json",
+      "name": "s81fill_stnv_293x1",
+      "top": "dsfd_stnv_293x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_293x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_3x1/spec.json",
+      "name": "s81fill_stnv_3x1",
+      "top": "dsfd_stnv_3x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_3x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_566x1/spec.json",
+      "name": "s81fill_stnv_566x1",
+      "top": "dsfd_stnv_566x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_566x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_70x1/spec.json",
+      "name": "s81fill_stnv_70x1",
+      "top": "dsfd_stnv_70x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_70x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81fill_stnv_86x1/spec.json",
+      "name": "s81fill_stnv_86x1",
+      "top": "dsfd_stnv_86x1",
+      "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_86x1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ccfh2_ref/spec.json",
+      "name": "s81hc_ccfh2_ref",
+      "top": "ot_s81_hc_ccf",
+      "io_tcl": "physical/s81_hc_pinplan/ccf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cncla0_ref/spec.json",
+      "name": "s81hc_cncla0_ref",
+      "top": "ot_s81_hc_cncla",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cncla1_ref/spec.json",
+      "name": "s81hc_cncla1_ref",
+      "top": "ot_s81_hc_cncla",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cncla2_ref/spec.json",
+      "name": "s81hc_cncla2_ref",
+      "top": "ot_s81_hc_cncla",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cnclb0_ref/spec.json",
+      "name": "s81hc_cnclb0_ref",
+      "top": "ot_s81_hc_cnclb",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnclb_C0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cnclb1_ref/spec.json",
+      "name": "s81hc_cnclb1_ref",
+      "top": "ot_s81_hc_cnclb",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnclb_C1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cnclb2_ref/spec.json",
+      "name": "s81hc_cnclb2_ref",
+      "top": "ot_s81_hc_cnclb",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnclb_C2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cnrsq_ref/spec.json",
+      "name": "s81hc_cnrsq_ref",
+      "top": "ot_s81_hc_cnrsq",
+      "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnrsq.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cntreeh2_ref/spec.json",
+      "name": "s81hc_cntreeh2_ref",
+      "top": "ot_s81_hc_cntree",
+      "io_tcl": "physical/ref_tile/s81hc_cntreeh2_ref/frozen_closed_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrfe_ref/spec.json",
+      "name": "s81hc_crrfe_ref",
+      "top": "ot_s81_hc_crootr_f",
+      "io_tcl": "physical/s81_hc_pinplan/crrf_e.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrfw_local_ref/spec.json",
+      "name": "s81hc_crrfw_local_ref",
+      "top": "ot_s81_hc_crootr_f",
+      "io_tcl": "physical/s81_hc_pinplan/crrf_w_y_order_candidate.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrfw_ref/spec.json",
+      "name": "s81hc_crrfw_ref",
+      "top": "ot_s81_hc_crootr_f",
+      "io_tcl": "physical/s81_hc_pinplan/crrf_w.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrre_ref/spec.json",
+      "name": "s81hc_crrre_ref",
+      "top": "ot_s81_hc_crootr_r",
+      "io_tcl": "physical/s81_hc_pinplan/crrr_e.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrrw_ref/spec.json",
+      "name": "s81hc_crrrw_ref",
+      "top": "ot_s81_hc_crootr_r",
+      "io_tcl": "physical/s81_hc_pinplan/crrr_w.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrwe_ref/spec.json",
+      "name": "s81hc_crrwe_ref",
+      "top": "ot_s81_hc_crootr_w",
+      "io_tcl": "physical/s81_hc_pinplan/crrw_e.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crrww_ref/spec.json",
+      "name": "s81hc_crrww_ref",
+      "top": "ot_s81_hc_crootr_w",
+      "io_tcl": "physical/s81_hc_pinplan/crrw_w.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_crywe_ref/spec.json",
+      "name": "s81hc_crywe_ref",
+      "top": "ot_s81_hc_crooty_w",
+      "io_tcl": "physical/s81_hc_pinplan/cryw_e.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cryww_ref/spec.json",
+      "name": "s81hc_cryww_ref",
+      "top": "ot_s81_hc_crooty_w",
+      "io_tcl": "physical/s81_hc_pinplan/cryw_w.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_cryys_ref/spec.json",
+      "name": "s81hc_cryys_ref",
+      "top": "ot_s81_hc_cryys",
+      "io_tcl": "physical/s81_hc_pinplan/cryys.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctflnt_ref/spec.json",
+      "name": "s81hc_ctflnt_ref",
+      "top": "ot_s81_hc_ctfl_nt",
+      "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfn_native_k8_ref/spec.json",
+      "name": "s81hc_ctfn_native_k8_ref",
+      "top": "ot_s81_hc_ctfn",
+      "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfn_native_ref/spec.json",
+      "name": "s81hc_ctfn_native_ref",
+      "top": "ot_s81_hc_ctfn",
+      "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfsnt_ref/spec.json",
+      "name": "s81hc_ctfsnt_ref",
+      "top": "ot_s81_hc_ctfs_nt",
+      "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfxcap_margin_ref/spec.json",
+      "name": "s81hc_ctfxcap_margin_ref",
+      "top": "ot_s81_hc_ctfx_cap",
+      "io_tcl": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfxcap_ref/spec.json",
+      "name": "s81hc_ctfxcap_ref",
+      "top": "ot_s81_hc_ctfx_cap",
+      "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfxnt_margin_ref/spec.json",
+      "name": "s81hc_ctfxnt_margin_ref",
+      "top": "ot_s81_hc_ctfx_nt",
+      "io_tcl": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_nt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfxnt_ref/spec.json",
+      "name": "s81hc_ctfxnt_ref",
+      "top": "ot_s81_hc_ctfx_nt",
+      "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctfxsnt_ref/spec.json",
+      "name": "s81hc_ctfxsnt_ref",
+      "top": "ot_s81_hc_ctfxs_nt",
+      "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctnl_l2_native_ref/spec.json",
+      "name": "s81hc_ctnl_l2_native_ref",
+      "top": "ot_s81_hc_ctnl_l2",
+      "io_tcl": "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctnl_l2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctnl_l3_native_ref/spec.json",
+      "name": "s81hc_ctnl_l3_native_ref",
+      "top": "ot_s81_hc_ctnl_l3",
+      "io_tcl": "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctnl_l3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctpl_ref/spec.json",
+      "name": "s81hc_ctpl_ref",
+      "top": "ot_s81_hc_ctpl",
+      "io_tcl": "physical/s81_hc_pinplan/ctpl.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctra_ref/spec.json",
+      "name": "s81hc_ctra_ref",
+      "top": "ot_s81_hc_ctra",
+      "io_tcl": "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctra.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctrb_ref/spec.json",
+      "name": "s81hc_ctrb_ref",
+      "top": "ot_s81_hc_ctrb",
+      "io_tcl": "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctrb.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_ctrn_ref/spec.json",
+      "name": "s81hc_ctrn_ref",
+      "top": "ot_s81_hc_ctrn",
+      "io_tcl": "physical/s81_hc_pinplan/ctrn.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_pad_f5r1_ref/spec.json",
+      "name": "s81hc_pad_f5r1_ref",
+      "top": "ot_s81_hc_pad_f5r1",
+      "io_tcl": "physical/s81_hc_pinplan/pad_f5r1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_pad_f8_ref/spec.json",
+      "name": "s81hc_pad_f8_ref",
+      "top": "ot_s81_hc_pad_f8",
+      "io_tcl": "physical/s81_hc_pinplan/pad_f8.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_pad_meta2_ref/spec.json",
+      "name": "s81hc_pad_meta2_ref",
+      "top": "ot_s81_hc_pad_meta2",
+      "io_tcl": "physical/s81_hc_pinplan/pad_meta2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_pad_r5_ref/spec.json",
+      "name": "s81hc_pad_r5_ref",
+      "top": "ot_s81_hc_pad_r5",
+      "io_tcl": "physical/s81_hc_pinplan/pad_r5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81hc_pad_r6_ref/spec.json",
+      "name": "s81hc_pad_r6_ref",
+      "top": "ot_s81_hc_pad_r6",
+      "io_tcl": "physical/s81_hc_pinplan/pad_r6.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_291x1__hs_hwsw/spec.json",
+      "name": "s81net_l2r_vc_291x1__hs_hwsw",
+      "top": "dsfd_l2r_vc_291x1__hs_hwSW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_291x1__hs_hwSW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/spec.json",
+      "name": "s81net_l2r_vc_84x1__hs_c4_svcj",
+      "top": "dsfd_l2r_vc_84x1__hs_c4_svcj",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c4_svcj.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_84x1__hs_c5_bk_selector/spec.json",
+      "name": "s81net_l2r_vc_84x1__hs_c5_bk_selector",
+      "top": "dsfd_l2r_vc_84x1__hs_c5_bk_selector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c5_bk_selector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_84x1__hs_c6_bk_collector/spec.json",
+      "name": "s81net_l2r_vc_84x1__hs_c6_bk_collector",
+      "top": "dsfd_l2r_vc_84x1__hs_c6_bk_collector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c6_bk_collector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_8x1__hs_d4_svcj/spec.json",
+      "name": "s81net_l2r_vc_8x1__hs_d4_svcj",
+      "top": "dsfd_l2r_vc_8x1__hs_d4_svcj",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d4_svcj.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_8x1__hs_d5_bk_selector/spec.json",
+      "name": "s81net_l2r_vc_8x1__hs_d5_bk_selector",
+      "top": "dsfd_l2r_vc_8x1__hs_d5_bk_selector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d5_bk_selector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_8x1__hs_d6_bk_collector/spec.json",
+      "name": "s81net_l2r_vc_8x1__hs_d6_bk_collector",
+      "top": "dsfd_l2r_vc_8x1__hs_d6_bk_collector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d6_bk_collector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vc_8x1__hs_hcsw/spec.json",
+      "name": "s81net_l2r_vc_8x1__hs_hcsw",
+      "top": "dsfd_l2r_vc_8x1__hs_hcSW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_hcSW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vr_512x1__hq_sw/spec.json",
+      "name": "s81net_l2r_vr_512x1__hq_sw",
+      "top": "dsfd_l2r_vr_512x1__hq_SW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vr_512x1__hq_SW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vr_564x1__hx_e/spec.json",
+      "name": "s81net_l2r_vr_564x1__hx_e",
+      "top": "dsfd_l2r_vr_564x1__hx_E",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vr_564x1__hx_E.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vr_564x1__hx_w/spec.json",
+      "name": "s81net_l2r_vr_564x1__hx_w",
+      "top": "dsfd_l2r_vr_564x1__hx_W",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vr_564x1__hx_W.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vs0_1x1__hs_s4_svcj/spec.json",
+      "name": "s81net_l2r_vs0_1x1__hs_s4_svcj",
+      "top": "dsfd_l2r_vs0_1x1__hs_s4_svcj",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vs0_1x1__hs_s4_svcj.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vs0_1x1__hs_s5_bk_selector/spec.json",
+      "name": "s81net_l2r_vs0_1x1__hs_s5_bk_selector",
+      "top": "dsfd_l2r_vs0_1x1__hs_s5_bk_selector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vs0_1x1__hs_s5_bk_selector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_l2r_vs0_1x1__hs_s6_bk_collector/spec.json",
+      "name": "s81net_l2r_vs0_1x1__hs_s6_bk_collector",
+      "top": "dsfd_l2r_vs0_1x1__hs_s6_bk_collector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vs0_1x1__hs_s6_bk_collector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_e0/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_e0",
+      "top": "dsfd_m2l_raw_512x1__hl_E0",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_e1/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_e1",
+      "top": "dsfd_m2l_raw_512x1__hl_E1",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_e2/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_e2",
+      "top": "dsfd_m2l_raw_512x1__hl_E2",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_e3/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_e3",
+      "top": "dsfd_m2l_raw_512x1__hl_E3",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_E3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w0/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_w0",
+      "top": "dsfd_m2l_raw_512x1__hl_W0",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w1/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_w1",
+      "top": "dsfd_m2l_raw_512x1__hl_W1",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w2/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_w2",
+      "top": "dsfd_m2l_raw_512x1__hl_W2",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w3/spec.json",
+      "name": "s81net_m2l_raw_512x1__hl_w3",
+      "top": "dsfd_m2l_raw_512x1__hl_W3",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_291x1__he_hwsw/spec.json",
+      "name": "s81net_m2l_vc_291x1__he_hwsw",
+      "top": "dsfd_m2l_vc_291x1__he_hwSW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_291x1__he_hwSW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_84x1__he_c4_svcj/spec.json",
+      "name": "s81net_m2l_vc_84x1__he_c4_svcj",
+      "top": "dsfd_m2l_vc_84x1__he_c4_svcj",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_84x1__he_c4_svcj.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_84x1__he_c5_bk_selector/spec.json",
+      "name": "s81net_m2l_vc_84x1__he_c5_bk_selector",
+      "top": "dsfd_m2l_vc_84x1__he_c5_bk_selector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_84x1__he_c5_bk_selector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_84x1__he_c6_bk_collector/spec.json",
+      "name": "s81net_m2l_vc_84x1__he_c6_bk_collector",
+      "top": "dsfd_m2l_vc_84x1__he_c6_bk_collector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_84x1__he_c6_bk_collector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_8x1__he_d4_svcj/spec.json",
+      "name": "s81net_m2l_vc_8x1__he_d4_svcj",
+      "top": "dsfd_m2l_vc_8x1__he_d4_svcj",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_d4_svcj.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_8x1__he_d5_bk_selector/spec.json",
+      "name": "s81net_m2l_vc_8x1__he_d5_bk_selector",
+      "top": "dsfd_m2l_vc_8x1__he_d5_bk_selector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_d5_bk_selector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_8x1__he_d6_bk_collector/spec.json",
+      "name": "s81net_m2l_vc_8x1__he_d6_bk_collector",
+      "top": "dsfd_m2l_vc_8x1__he_d6_bk_collector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_d6_bk_collector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vc_8x1__he_hcsw/spec.json",
+      "name": "s81net_m2l_vc_8x1__he_hcsw",
+      "top": "dsfd_m2l_vc_8x1__he_hcSW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vc_8x1__he_hcSW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_512x1__hco_sw/spec.json",
+      "name": "s81net_m2l_vr_512x1__hco_sw",
+      "top": "dsfd_m2l_vr_512x1__hco_SW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_512x1__hco_SW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_512x1__hix_sw/spec.json",
+      "name": "s81net_m2l_vr_512x1__hix_sw",
+      "top": "dsfd_m2l_vr_512x1__hix_SW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_512x1__hix_SW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_512x1__hqe_sw/spec.json",
+      "name": "s81net_m2l_vr_512x1__hqe_sw",
+      "top": "dsfd_m2l_vr_512x1__hqe_SW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_512x1__hqe_SW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x10__hr_e0/spec.json",
+      "name": "s81net_m2l_vr_68x10__hr_e0",
+      "top": "dsfd_m2l_vr_68x10__hr_E0",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_E0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x10__hr_e5/spec.json",
+      "name": "s81net_m2l_vr_68x10__hr_e5",
+      "top": "dsfd_m2l_vr_68x10__hr_E5",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_E5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x10__hr_w0/spec.json",
+      "name": "s81net_m2l_vr_68x10__hr_w0",
+      "top": "dsfd_m2l_vr_68x10__hr_W0",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_W0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x10__hr_w5/spec.json",
+      "name": "s81net_m2l_vr_68x10__hr_w5",
+      "top": "dsfd_m2l_vr_68x10__hr_W5",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x10__hr_W5.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_e1/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_e1",
+      "top": "dsfd_m2l_vr_68x11__hr_E1",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_e2/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_e2",
+      "top": "dsfd_m2l_vr_68x11__hr_E2",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_e3/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_e3",
+      "top": "dsfd_m2l_vr_68x11__hr_E3",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_e4/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_e4",
+      "top": "dsfd_m2l_vr_68x11__hr_E4",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_E4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_w1/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_w1",
+      "top": "dsfd_m2l_vr_68x11__hr_W1",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_w2/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_w2",
+      "top": "dsfd_m2l_vr_68x11__hr_W2",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W2.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_w3/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_w3",
+      "top": "dsfd_m2l_vr_68x11__hr_W3",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W3.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vr_68x11__hr_w4/spec.json",
+      "name": "s81net_m2l_vr_68x11__hr_w4",
+      "top": "dsfd_m2l_vr_68x11__hr_W4",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vr_68x11__hr_W4.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vs0_1x1__he_s4_svcj/spec.json",
+      "name": "s81net_m2l_vs0_1x1__he_s4_svcj",
+      "top": "dsfd_m2l_vs0_1x1__he_s4_svcj",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vs0_1x1__he_s4_svcj.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vs0_1x1__he_s5_bk_selector/spec.json",
+      "name": "s81net_m2l_vs0_1x1__he_s5_bk_selector",
+      "top": "dsfd_m2l_vs0_1x1__he_s5_bk_selector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vs0_1x1__he_s5_bk_selector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_m2l_vs0_1x1__he_s6_bk_collector/spec.json",
+      "name": "s81net_m2l_vs0_1x1__he_s6_bk_collector",
+      "top": "dsfd_m2l_vs0_1x1__he_s6_bk_collector",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_vs0_1x1__he_s6_bk_collector.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_node_lld/spec.json",
+      "name": "s81net_node_lld",
+      "top": "dsfd_node_LLd",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_LLd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_node_llfd/spec.json",
+      "name": "s81net_node_llfd",
+      "top": "dsfd_node_LLfd",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_LLfd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_node_llfu/spec.json",
+      "name": "s81net_node_llfu",
+      "top": "dsfd_node_LLfu",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_LLfu.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_node_nnfd/spec.json",
+      "name": "s81net_node_nnfd",
+      "top": "dsfd_node_NNfd",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_NNfd.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_node_nnfu/spec.json",
+      "name": "s81net_node_nnfu",
+      "top": "dsfd_node_NNfu",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_NNfu.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/spec.json",
+      "name": "s81net_r2l_vr_1024x1__ha_sw",
+      "top": "dsfd_r2l_vr_1024x1__ha_SW",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_1024x1__ha_SW.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_r2l_vr_512x1__hcol/spec.json",
+      "name": "s81net_r2l_vr_512x1__hcol",
+      "top": "dsfd_r2l_vr_512x1__hcol",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_512x1__hcol.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_r2l_vr_512x1__hsel/spec.json",
+      "name": "s81net_r2l_vr_512x1__hsel",
+      "top": "dsfd_r2l_vr_512x1__hsel",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_512x1__hsel.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_rstg/spec.json",
+      "name": "s81net_rstg",
+      "top": "dsfd_rstg",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_rstg.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0c0/spec.json",
+      "name": "s81net_sstn_e0c0",
+      "top": "dsfd_sstn_e0c0",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0c0_cp1/spec.json",
+      "name": "s81net_sstn_e0c0_cp1",
+      "top": "dsfd_sstn_e0c0_cp1",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0_cp1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0c0si/spec.json",
+      "name": "s81net_sstn_e0c0si",
+      "top": "dsfd_sstn_e0c0si",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0si.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0c0sinf/spec.json",
+      "name": "s81net_sstn_e0c0sinf",
+      "top": "dsfd_sstn_e0c0sinf",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0sinf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0e1c0c1_cp1/spec.json",
+      "name": "s81net_sstn_e0e1c0c1_cp1",
+      "top": "dsfd_sstn_e0e1c0c1_cp1",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1_cp1.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0e1c0c1si/spec.json",
+      "name": "s81net_sstn_e0e1c0c1si",
+      "top": "dsfd_sstn_e0e1c0c1si",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1si.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_sstn_e0e1c0c1sinf/spec.json",
+      "name": "s81net_sstn_e0e1c0c1sinf",
+      "top": "dsfd_sstn_e0e1c0c1sinf",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1sinf.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81net_xstg_515/spec.json",
+      "name": "s81net_xstg_515",
+      "top": "dsfd_xstg_515",
+      "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_xstg_515.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_aq_common_native/spec.json",
+      "name": "s81pq_aq_common_native",
+      "top": "ot_s81_pq_aq_common_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/aq_common_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_aq_math_native/spec.json",
+      "name": "s81pq_aq_math_native",
+      "top": "ot_s81_pq_aq_math_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/aq_math_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_aq_mem_native/spec.json",
+      "name": "s81pq_aq_mem_native",
+      "top": "ot_s81_pq_aq_mem_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/aq_mem_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_bc0_ns/spec.json",
+      "name": "s81pq_bc0_ns",
+      "top": "ot_s81_pq_bc_slice0",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/bc0_ns_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_bc0_w410/spec.json",
+      "name": "s81pq_bc0_w410",
+      "top": "ot_s81_pq_bc_slice0",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/bc0_w410_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_bc1_ns/spec.json",
+      "name": "s81pq_bc1_ns",
+      "top": "ot_s81_pq_bc_slice1",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/bc1_ns_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_bc2_ns/spec.json",
+      "name": "s81pq_bc2_ns",
+      "top": "ot_s81_pq_bc_slice2",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/bc2_ns_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_bc3_ns/spec.json",
+      "name": "s81pq_bc3_ns",
+      "top": "ot_s81_pq_bc_slice3",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/bc3_ns_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_ctl_native/spec.json",
+      "name": "s81pq_ctl_native",
+      "top": "ot_s81_pq_ctl_fixed_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/ctl_native_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_fault_native/spec.json",
+      "name": "s81pq_fault_native",
+      "top": "ot_s81_pq_fault_pin",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/fault_native_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_ix_ba_native/spec.json",
+      "name": "s81pq_ix_ba_native",
+      "top": "ot_s81_pq_ix_ba_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_ba_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_ix_left_native/spec.json",
+      "name": "s81pq_ix_left_native",
+      "top": "ot_s81_pq_ix_left_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_left_guarded_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_ix_rb_native/spec.json",
+      "name": "s81pq_ix_rb_native",
+      "top": "ot_s81_pq_ix_rb_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_ix_rg_native/spec.json",
+      "name": "s81pq_ix_rg_native",
+      "top": "ot_s81_pq_ix_rg_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_rg_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_ix_right_native/spec.json",
+      "name": "s81pq_ix_right_native",
+      "top": "ot_s81_pq_ix_right_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_right_guarded_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_align_native/spec.json",
+      "name": "s81pq_qb_align_native",
+      "top": "ot_s81_pq_qb_align_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_bank0_native/spec.json",
+      "name": "s81pq_qb_bank0_native",
+      "top": "ot_s81_pq_qb_bank0_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bank0_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_bank1_native/spec.json",
+      "name": "s81pq_qb_bank1_native",
+      "top": "ot_s81_pq_qb_bank1_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bank1_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_bank2_native/spec.json",
+      "name": "s81pq_qb_bank2_native",
+      "top": "ot_s81_pq_qb_bank2_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bank2_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_bank3_native/spec.json",
+      "name": "s81pq_qb_bank3_native",
+      "top": "ot_s81_pq_qb_bank3_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bank3_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_bankx_native/spec.json",
+      "name": "s81pq_qb_bankx_native",
+      "top": "ot_s81_pq_qb_bankx_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bankx_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_head_native/spec.json",
+      "name": "s81pq_qb_head_native",
+      "top": "ot_s81_pq_qb_head_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_head_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_headp_native/spec.json",
+      "name": "s81pq_qb_headp_native",
+      "top": "ot_s81_pq_qb_headp_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_headp_native_spread_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_headpc_native/spec.json",
+      "name": "s81pq_qb_headpc_native",
+      "top": "ot_s81_pq_qb_headpc_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_headpc_native_spread_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81pq_qb_headw_native/spec.json",
+      "name": "s81pq_qb_headw_native",
+      "top": "ot_s81_pq_qb_headw_native",
+      "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_headw_split_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_kvt_ref/spec.json",
+      "name": "s81su_kvt_ref",
+      "top": "dsfd_su_t_kvt",
+      "io_tcl": "physical/s81su_taps/s81su_kvt_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_pinns_ref/spec.json",
+      "name": "s81su_pinns_ref",
+      "top": "dsfd_su_t_pin",
+      "io_tcl": "physical/s81su_taps/s81su_pinns_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_qbt_ref/spec.json",
+      "name": "s81su_qbt_ref",
+      "top": "dsfd_su_t_qbt",
+      "io_tcl": "physical/s81su_taps/s81su_qbt_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_qbtl_ref/spec.json",
+      "name": "s81su_qbtl_ref",
+      "top": "dsfd_su_t_qbtl",
+      "io_tcl": "physical/s81su_taps/s81su_qbtl_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_qnt_b1_ref/spec.json",
+      "name": "s81su_qnt_b1_ref",
+      "top": "dsfd_su_t_qnt",
+      "io_tcl": "physical/s81su_physical/s81su_qnt_b1_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_qnt_b8_ref/spec.json",
+      "name": "s81su_qnt_b8_ref",
+      "top": "dsfd_su_t_qnt",
+      "io_tcl": "physical/s81su_physical/s81su_qnt_b8_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_qnt_cb16_ref/spec.json",
+      "name": "s81su_qnt_cb16_ref",
+      "top": "dsfd_su_t_qnt",
+      "io_tcl": "physical/s81su_physical/s81su_qnt_b8_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_qnt_cb32_ref/spec.json",
+      "name": "s81su_qnt_cb32_ref",
+      "top": "dsfd_su_t_qnt",
+      "io_tcl": "physical/s81su_physical/s81su_qnt_b8_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_swth_ref/spec.json",
+      "name": "s81su_swth_ref",
+      "top": "dsfd_su_t_swth",
+      "io_tcl": "physical/s81su_taps/s81su_swth_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/s81su_swtl_ref/spec.json",
+      "name": "s81su_swtl_ref",
+      "top": "dsfd_su_t_swtl",
+      "io_tcl": "physical/s81su_taps/s81su_swtl_ref_io.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_bdc_ref_p45/spec.json",
+      "name": "smh_bdc_ref_p45",
+      "top": "ot_hbm_accel_smh_bdc",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_bdc_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_bdc_ref_p50/spec.json",
+      "name": "smh_bdc_ref_p50",
+      "top": "ot_hbm_accel_smh_bdc",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_bdc_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcb_ref_p40/spec.json",
+      "name": "smh_fcb_ref_p40",
+      "top": "ot_hbm_accel_smh_fc_b",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcb_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcb_ref_p45/spec.json",
+      "name": "smh_fcb_ref_p45",
+      "top": "ot_hbm_accel_smh_fc_b",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcb_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcbc_ref_p40/spec.json",
+      "name": "smh_fcbc_ref_p40",
+      "top": "ot_hbm_accel_smh_fc_bc",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcbc_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcbc_ref_p45/spec.json",
+      "name": "smh_fcbc_ref_p45",
+      "top": "ot_hbm_accel_smh_fc_bc",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcbc_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcis_ref_p45/spec.json",
+      "name": "smh_fcis_ref_p45",
+      "top": "ot_hbm_accel_smh_fc_is",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcis_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcis_ref_p50/spec.json",
+      "name": "smh_fcis_ref_p50",
+      "top": "ot_hbm_accel_smh_fc_is",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcis_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fct_ref_p45/spec.json",
+      "name": "smh_fct_ref_p45",
+      "top": "ot_hbm_accel_smh_fc_t",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fct_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fct_ref_p50/spec.json",
+      "name": "smh_fct_ref_p50",
+      "top": "ot_hbm_accel_smh_fc_t",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fct_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcxl_ref_p40/spec.json",
+      "name": "smh_fcxl_ref_p40",
+      "top": "ot_hbm_accel_smh_fc_xl",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcxl_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcxl_ref_p45/spec.json",
+      "name": "smh_fcxl_ref_p45",
+      "top": "ot_hbm_accel_smh_fc_xl",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcxl_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcxr_ref_p35/spec.json",
+      "name": "smh_fcxr_ref_p35",
+      "top": "ot_hbm_accel_smh_fc_xr",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcxr_ref_p35_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_fcxr_ref_p40/spec.json",
+      "name": "smh_fcxr_ref_p40",
+      "top": "ot_hbm_accel_smh_fc_xr",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_fcxr_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_e_ref_p40/spec.json",
+      "name": "smh_pt_e_ref_p40",
+      "top": "ot_hbm_accel_smh_pt_e",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_e_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_e_ref_p40s/spec.json",
+      "name": "smh_pt_e_ref_p40s",
+      "top": "ot_hbm_accel_smh_pt_e",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_e_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_e_ref_p45/spec.json",
+      "name": "smh_pt_e_ref_p45",
+      "top": "ot_hbm_accel_smh_pt_e",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_e_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_e_ref_w26p40/spec.json",
+      "name": "smh_pt_e_ref_w26p40",
+      "top": "ot_hbm_accel_smh_pt_e",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_e_ref_w26p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_w_ref_p40/spec.json",
+      "name": "smh_pt_w_ref_p40",
+      "top": "ot_hbm_accel_smh_pt_w",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_w_ref_p40_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_w_ref_p45/spec.json",
+      "name": "smh_pt_w_ref_p45",
+      "top": "ot_hbm_accel_smh_pt_w",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_w_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_pt_w_ref_p45h/spec.json",
+      "name": "smh_pt_w_ref_p45h",
+      "top": "ot_hbm_accel_smh_pt_w",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_pt_w_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tcl_ref_p45/spec.json",
+      "name": "smh_tcl_ref_p45",
+      "top": "ot_hbm_accel_smh_tcl",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tcl_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tcl_ref_p50/spec.json",
+      "name": "smh_tcl_ref_p50",
+      "top": "ot_hbm_accel_smh_tcl",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tcl_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tct_ref_p45/spec.json",
+      "name": "smh_tct_ref_p45",
+      "top": "ot_hbm_accel_smh_tct",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tct_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tct_ref_p50/spec.json",
+      "name": "smh_tct_ref_p50",
+      "top": "ot_hbm_accel_smh_tct",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tct_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tile_eg_cpt/spec.json",
+      "name": "smh_tile_eg_cpt",
+      "top": "ot_hbm_accel_smh_tile_eg",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tile_eg_cpt_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tile_eg_ref/spec.json",
+      "name": "smh_tile_eg_ref",
+      "top": "ot_hbm_accel_smh_tile_eg",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tile_eg_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tile_wg_ref/spec.json",
+      "name": "smh_tile_wg_ref",
+      "top": "ot_hbm_accel_smh_tile_wg",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tile_wg_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_group_beat_e_ref/spec.json",
+      "name": "smh_tr_group_beat_e_ref",
+      "top": "ot_smh_tr_group_beat_e",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_beat_e_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_group_beat_w_ref/spec.json",
+      "name": "smh_tr_group_beat_w_ref",
+      "top": "ot_smh_tr_group_beat_w",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_beat_w_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_group_land_ref/spec.json",
+      "name": "smh_tr_group_land_ref",
+      "top": "ot_smh_tr_group_land",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_land_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_group_row_e_ref/spec.json",
+      "name": "smh_tr_group_row_e_ref",
+      "top": "ot_smh_tr_group_row_e",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_row_e_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_group_row_w_ref/spec.json",
+      "name": "smh_tr_group_row_w_ref",
+      "top": "ot_smh_tr_group_row_w",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_row_w_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_w128_s1_m0_ref/spec.json",
+      "name": "smh_tr_w128_s1_m0_ref",
+      "top": "ot_smh_tr_w128_s1_m0",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w128_s1_m0_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_w128_s2_m0_ref/spec.json",
+      "name": "smh_tr_w128_s2_m0_ref",
+      "top": "ot_smh_tr_w128_s2_m0",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w128_s2_m0_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_w128_s2_m80_ref/spec.json",
+      "name": "smh_tr_w128_s2_m80_ref",
+      "top": "ot_smh_tr_w128_s2_m80",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w128_s2_m80_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_w21_s1_m100000_ref/spec.json",
+      "name": "smh_tr_w21_s1_m100000_ref",
+      "top": "ot_smh_tr_w21_s1_m100000",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w21_s1_m100000_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_w21_s2_m100000_ref/spec.json",
+      "name": "smh_tr_w21_s2_m100000_ref",
+      "top": "ot_smh_tr_w21_s2_m100000",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w21_s2_m100000_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_tr_w50_s2_m3000000000000_ref/spec.json",
+      "name": "smh_tr_w50_s2_m3000000000000_ref",
+      "top": "ot_smh_tr_w50_s2_m3000000000000",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_tr_w50_s2_m3000000000000_ref_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_xs_ref_p40x/spec.json",
+      "name": "smh_xs_ref_p40x",
+      "top": "ot_hbm_accel_smh_xs",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_xs_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_xs_ref_p45/spec.json",
+      "name": "smh_xs_ref_p45",
+      "top": "ot_hbm_accel_smh_xs",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_xs_ref_p45_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_xs_ref_p50/spec.json",
+      "name": "smh_xs_ref_p50",
+      "top": "ot_hbm_accel_smh_xs",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_xs_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_xs_ref_p50x/spec.json",
+      "name": "smh_xs_ref_p50x",
+      "top": "ot_hbm_accel_smh_xs",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_xs_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smh_xs_ref_t40/spec.json",
+      "name": "smh_xs_ref_t40",
+      "top": "ot_hbm_accel_smh_xs",
+      "io_tcl": "physical/ref_tile_specs/smh/smh_xs_ref_p50_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smpub_parent/spec.json",
+      "name": "smpub_parent",
+      "top": "ot_hgi_sm_pub_parent",
+      "io_tcl": "physical/hgi_sm_pub_parent_stations/parent_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smpub_stream_edge/spec.json",
+      "name": "smpub_stream_edge",
+      "top": "ot_hgi_sm_pub_stream_edge",
+      "io_tcl": "physical/hgi_sm_pub_parent_stations/stream_edge_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smpub_vmcore/spec.json",
+      "name": "smpub_vmcore",
+      "top": "ot_hgi_sm_pub_vmcore",
+      "io_tcl": "physical/hgi_sm_pub_parent_stations/vmcore_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/smpub_vmport/spec.json",
+      "name": "smpub_vmport",
+      "top": "ot_hgi_sm_pub_vmport",
+      "io_tcl": "physical/hgi_sm_pub_parent_stations/vmport_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fe0_cx/spec.json",
+      "name": "vm_cp_fe0_cx",
+      "top": "vm_cp_fe0",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe0_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fe1_cx/spec.json",
+      "name": "vm_cp_fe1_cx",
+      "top": "vm_cp_fe1",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe1_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fe2_cx/spec.json",
+      "name": "vm_cp_fe2_cx",
+      "top": "vm_cp_fe2",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe2_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fe3_cx/spec.json",
+      "name": "vm_cp_fe3_cx",
+      "top": "vm_cp_fe3",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fe3_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fw0_cx/spec.json",
+      "name": "vm_cp_fw0_cx",
+      "top": "vm_cp_fw0",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw0_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fw1_cx/spec.json",
+      "name": "vm_cp_fw1_cx",
+      "top": "vm_cp_fw1",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw1_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fw2_cx/spec.json",
+      "name": "vm_cp_fw2_cx",
+      "top": "vm_cp_fw2",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw2_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_fw3_cx/spec.json",
+      "name": "vm_cp_fw3_cx",
+      "top": "vm_cp_fw3",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_fw3_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_re_cx/spec.json",
+      "name": "vm_cp_re_cx",
+      "top": "vm_cp_re",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_re_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_root_cx/spec.json",
+      "name": "vm_cp_root_cx",
+      "top": "vm_cp_root",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_root_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_rwt_cx/spec.json",
+      "name": "vm_cp_rwt_cx",
+      "top": "vm_cp_rwt",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_rwt_cx_pins.tcl"
+    },
+    {
+      "spec": "physical/ref_tile/vm_cp_slice3_cx/spec.json",
+      "name": "vm_cp_slice3_cx",
+      "top": "vm_cp_slice3",
+      "io_tcl": "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_slice3_cx_pins.tcl"
+    }
+  ],
+  "distinct_ref_tile_tops_with_direct_matched_io_tcl": 398
+}

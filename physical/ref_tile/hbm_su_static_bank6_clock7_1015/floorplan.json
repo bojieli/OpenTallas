@@ -32,9 +32,6 @@
  "pins": {
   "N": [
    "clk",
-   "clk_macro0",
-   "clk_macro1",
-   "clk_macro2",
    "clk_macro3",
    "clk_macro4",
    "clk_macro5",
@@ -50,6 +47,11 @@
   "E": [
    "read_data",
    "read_return"
+  ],
+  "S": [
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2"
   ]
  },
  "clock_port": "clk",

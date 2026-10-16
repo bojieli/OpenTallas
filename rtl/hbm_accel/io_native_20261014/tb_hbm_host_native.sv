@@ -152,7 +152,7 @@ assign h[404]=irq;
 assign h[405]=fault;
 
  wire[512:0]pa,pb;wire ca,cb;wire[4:0]local_faults;wire[1:0]local_status,remote_status;wire local_locked;
- hfd_host_native #(.MUT(MUT==1?1:0))dut(.clk_controller(clk),.clk_landing(clk),.clk_ep(clk),.clk_face(clk),.clk_sub({12{clk}}),.clk_tx_shared(clk),.clk_rx_shared(clk),.clk_status_shared(clk),.clk_phy(clk),.rst_n(rst_n),.session(24'h3555),.h(h),.pma_tx(pa),.pma_tck(ca),.pma_rx(pb),.pma_rck(cb),.faults(local_faults),.phy_status(local_status),.ep_locked(local_locked));
+ hfd_host_native #(.MUT(MUT==1?1:0))dut(.clk_controller(clk),.clk_landing(clk),.clk_ep(clk),.clk_face(clk),.clk_sub({12{clk}}),.clk_tx_shared(clk),.clk_rx_shared(clk),.clk_status_shared(clk),.clk_phy(clk),.rst_n(rst_n),.session(24'h3555),.h(h),.s_bresp(2'd0),.pma_tx(pa),.pma_tck(ca),.pma_rx(pb),.pma_rck(cb),.faults(local_faults),.phy_status(local_status),.ep_locked(local_locked));
  wire [486:0]remote_tx;wire[511:0]remote_rx;wire remote_tcr,remote_rv,remote_fault,remote_locked;wire[544:0]remote_rdata;
  reg[5:0]remote_credit=32;
  always @(posedge clk)if(!rst_n)remote_credit<=32;else remote_credit<=remote_credit+6'(remote_tcr)-6'(rx_valid&&rx_ready);
