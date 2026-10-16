@@ -169,6 +169,8 @@ def main():
         else:unresolved.append(pin)
     names=[n for c in candidates for n in c['remove']]
     if len(names)!=len(set(names)):raise ValueError('shared removal cell: plan is not independent')
+    dead={n for c in candidates for n in c['dead_nets']}
+    if dead & {c['keep_net'] for c in candidates}:raise ValueError('dependent removal nets')
     plan={'schema':'opentallas.qwen.ectl_native_hold_plan.v1','status':'UNQUALIFIED_PLAN_REQUIRES_CANONICAL_REROUTE',
           'cell':CELL,'input_odb_sha256':args.input_odb_sha256,'FF_margin_ps':30.0,'added_edges':0,'parameters':{'STATIC_QK':1,'ROW_RETURN_LAT':21,'QK_ISSUE_AGE':34,'HXK':13},
           'input_hashes':{str(p):digest(p) for p in (args.netlist,args.ff_points,args.view/f'{CELL}_tt.lib',args.view/'insertion.json')},

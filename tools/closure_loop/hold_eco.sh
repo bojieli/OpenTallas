@@ -25,6 +25,19 @@
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
 #    {ss_ps (= tt_ps: setup at TT, option B), tt_ps, ss_sensitivity_ps, ff_ps, drc, sdc_name, setup_post_sdc, cells_added, pass, session, window}
 set -eo pipefail
+# Explicit A native-capture recovery only. The plan is source-pinned, hash-bound,
+# and reapplied in each fresh session from the same immutable original ODB.
+# Normal hold repair, routing, extraction and TT/FF acceptance remain unchanged.
+NATIVE_NORMALIZE_ENV=()
+if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
+  [[ "${NATIVE_NORMALIZE_SHA256:-}" =~ ^[0-9a-f]{64}$ ]] || { echo "native normalization needs SHA256"; exit 2; }
+  NATIVE_REAL=$(realpath "$NATIVE_NORMALIZE_TCL")
+  case "$NATIVE_REAL" in "$PWD"/*) ;; *) echo "native normalization must be inside source snapshot"; exit 2 ;; esac
+  [ -f "$NATIVE_REAL" ] || { echo "native normalization source missing"; exit 2; }
+  [ "$(sha256sum "$NATIVE_REAL" | cut -d ' ' -f 1)" = "$NATIVE_NORMALIZE_SHA256" ] || { echo "native normalization hash mismatch"; exit 2; }
+  NATIVE_REL=${NATIVE_REAL#"$PWD"/}
+  NATIVE_NORMALIZE_ENV=(-e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
+fi
 ECO_SESSION=${ECO_SESSION:-mm}
 case "$ECO_SESSION" in mm|ff|auto) ;; *) echo "ECO_SESSION must be mm, ff or auto"; exit 2 ;; esac
 RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
@@ -175,7 +188,7 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
            -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0}
            -e OT_REPAIR_DRV=${REPAIR_DRV:-0} -e OT_DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} -e OT_DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20}
-           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0} "${PK_ENV[@]}")
+           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0} "${PK_ENV[@]}" "${NATIVE_NORMALIZE_ENV[@]}" -e ECTL_ECO_INPUT_ODB=/in/$CUR_DB)
   # Multi-mode must reproduce both sign-off corners or fall back to FF-only.
   # Legacy merged-corner selection remains an explicit request.
   SESSION=ff
