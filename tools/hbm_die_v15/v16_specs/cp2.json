@@ -125,14 +125,14 @@
    "master": "ot_hbm_status_join",
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
    "params": {
-    "NT": 103,
-    "NF": 136,
+    "NT": 105,
+    "NF": 151,
     "NH": 6,
-    "TGTS": "824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
+    "TGTS": "840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
    },
    "slot": "host_cp_ingress",
    "owner": "host owner (H-NETLIST cp2)",
-   "note": "All103 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open."
+   "note": "All105 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open."
   }
  ],
  "edges": [
@@ -7070,7 +7070,7 @@
   },
   {
    "src": [
-    "cpx_SW0",
+    "hc_eng_tgt",
     "configured",
     0,
     1
@@ -7080,6 +7080,125 @@
     "t_ready",
     71,
     72
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET164 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_eng",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    71,
+    72
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET164 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_eng_tgt",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    104,
+    105
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET164 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_eng",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    105,
+    106
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET164 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_tbl_tgt",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    72,
+    73
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET165 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_eng",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    72,
+    73
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET165 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_tbl_tgt",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    106,
+    107
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET165 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cpx_SW0",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    73,
+    74
    ],
    "bits": 1,
    "clock": "stream",
@@ -7095,8 +7214,8 @@
    "dst": [
     "host_status",
     "t_active",
-    71,
-    72
+    73,
+    74
    ],
    "bits": 1,
    "clock": "stream",
@@ -7112,8 +7231,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    104,
-    105
+    107,
+    108
    ],
    "bits": 1,
    "clock": "stream",
@@ -7129,8 +7248,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    72,
-    73
+    74,
+    75
    ],
    "bits": 1,
    "clock": "stream",
@@ -7146,8 +7265,8 @@
    "dst": [
     "host_status",
     "t_active",
-    72,
-    73
+    74,
+    75
    ],
    "bits": 1,
    "clock": "stream",
@@ -7163,8 +7282,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    105,
-    106
+    108,
+    109
    ],
    "bits": 1,
    "clock": "stream",
@@ -7180,8 +7299,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    73,
-    74
+    75,
+    76
    ],
    "bits": 1,
    "clock": "stream",
@@ -7197,8 +7316,8 @@
    "dst": [
     "host_status",
     "t_active",
-    73,
-    74
+    75,
+    76
    ],
    "bits": 1,
    "clock": "stream",
@@ -7214,8 +7333,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    106,
-    107
+    109,
+    110
    ],
    "bits": 1,
    "clock": "stream",
@@ -7231,8 +7350,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    74,
-    75
+    76,
+    77
    ],
    "bits": 1,
    "clock": "stream",
@@ -7248,8 +7367,8 @@
    "dst": [
     "host_status",
     "t_active",
-    74,
-    75
+    76,
+    77
    ],
    "bits": 1,
    "clock": "stream",
@@ -7265,8 +7384,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    107,
-    108
+    110,
+    111
    ],
    "bits": 1,
    "clock": "stream",
@@ -7282,8 +7401,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    75,
-    76
+    77,
+    78
    ],
    "bits": 1,
    "clock": "stream",
@@ -7299,8 +7418,8 @@
    "dst": [
     "host_status",
     "t_active",
-    75,
-    76
+    77,
+    78
    ],
    "bits": 1,
    "clock": "stream",
@@ -7316,8 +7435,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    108,
-    109
+    111,
+    112
    ],
    "bits": 1,
    "clock": "stream",
@@ -7333,8 +7452,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    76,
-    77
+    78,
+    79
    ],
    "bits": 1,
    "clock": "stream",
@@ -7350,8 +7469,8 @@
    "dst": [
     "host_status",
     "t_active",
-    76,
-    77
+    78,
+    79
    ],
    "bits": 1,
    "clock": "stream",
@@ -7367,8 +7486,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    109,
-    110
+    112,
+    113
    ],
    "bits": 1,
    "clock": "stream",
@@ -7384,8 +7503,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    77,
-    78
+    79,
+    80
    ],
    "bits": 1,
    "clock": "stream",
@@ -7401,8 +7520,8 @@
    "dst": [
     "host_status",
     "t_active",
-    77,
-    78
+    79,
+    80
    ],
    "bits": 1,
    "clock": "stream",
@@ -7418,8 +7537,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    110,
-    111
+    113,
+    114
    ],
    "bits": 1,
    "clock": "stream",
@@ -7435,8 +7554,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    78,
-    79
+    80,
+    81
    ],
    "bits": 1,
    "clock": "stream",
@@ -7452,8 +7571,8 @@
    "dst": [
     "host_status",
     "t_active",
-    78,
-    79
+    80,
+    81
    ],
    "bits": 1,
    "clock": "stream",
@@ -7469,8 +7588,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    111,
-    112
+    114,
+    115
    ],
    "bits": 1,
    "clock": "stream",
@@ -7486,8 +7605,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    79,
-    80
+    81,
+    82
    ],
    "bits": 1,
    "clock": "stream",
@@ -7503,8 +7622,8 @@
    "dst": [
     "host_status",
     "t_active",
-    79,
-    80
+    81,
+    82
    ],
    "bits": 1,
    "clock": "stream",
@@ -7520,8 +7639,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    112,
-    113
+    115,
+    116
    ],
    "bits": 1,
    "clock": "stream",
@@ -7537,8 +7656,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    80,
-    81
+    82,
+    83
    ],
    "bits": 1,
    "clock": "stream",
@@ -7554,8 +7673,8 @@
    "dst": [
     "host_status",
     "t_active",
-    80,
-    81
+    82,
+    83
    ],
    "bits": 1,
    "clock": "stream",
@@ -7571,8 +7690,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    113,
-    114
+    116,
+    117
    ],
    "bits": 1,
    "clock": "stream",
@@ -7588,8 +7707,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    81,
-    82
+    83,
+    84
    ],
    "bits": 1,
    "clock": "stream",
@@ -7605,8 +7724,8 @@
    "dst": [
     "host_status",
     "t_active",
-    81,
-    82
+    83,
+    84
    ],
    "bits": 1,
    "clock": "stream",
@@ -7622,8 +7741,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    114,
-    115
+    117,
+    118
    ],
    "bits": 1,
    "clock": "stream",
@@ -7639,8 +7758,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    82,
-    83
+    84,
+    85
    ],
    "bits": 1,
    "clock": "stream",
@@ -7656,8 +7775,8 @@
    "dst": [
     "host_status",
     "t_active",
-    82,
-    83
+    84,
+    85
    ],
    "bits": 1,
    "clock": "stream",
@@ -7673,8 +7792,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    115,
-    116
+    118,
+    119
    ],
    "bits": 1,
    "clock": "stream",
@@ -7690,8 +7809,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    83,
-    84
+    85,
+    86
    ],
    "bits": 1,
    "clock": "stream",
@@ -7707,8 +7826,8 @@
    "dst": [
     "host_status",
     "t_active",
-    83,
-    84
+    85,
+    86
    ],
    "bits": 1,
    "clock": "stream",
@@ -7724,8 +7843,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    116,
-    117
+    119,
+    120
    ],
    "bits": 1,
    "clock": "stream",
@@ -7741,8 +7860,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    84,
-    85
+    86,
+    87
    ],
    "bits": 1,
    "clock": "stream",
@@ -7758,8 +7877,8 @@
    "dst": [
     "host_status",
     "t_active",
-    84,
-    85
+    86,
+    87
    ],
    "bits": 1,
    "clock": "stream",
@@ -7775,8 +7894,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    117,
-    118
+    120,
+    121
    ],
    "bits": 1,
    "clock": "stream",
@@ -7792,8 +7911,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    85,
-    86
+    87,
+    88
    ],
    "bits": 1,
    "clock": "stream",
@@ -7809,8 +7928,8 @@
    "dst": [
     "host_status",
     "t_active",
-    85,
-    86
+    87,
+    88
    ],
    "bits": 1,
    "clock": "stream",
@@ -7826,8 +7945,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    118,
-    119
+    121,
+    122
    ],
    "bits": 1,
    "clock": "stream",
@@ -7843,8 +7962,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    86,
-    87
+    88,
+    89
    ],
    "bits": 1,
    "clock": "stream",
@@ -7860,8 +7979,8 @@
    "dst": [
     "host_status",
     "t_active",
-    86,
-    87
+    88,
+    89
    ],
    "bits": 1,
    "clock": "stream",
@@ -7877,8 +7996,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    119,
-    120
+    122,
+    123
    ],
    "bits": 1,
    "clock": "stream",
@@ -7894,8 +8013,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    87,
-    88
+    89,
+    90
    ],
    "bits": 1,
    "clock": "stream",
@@ -7911,8 +8030,8 @@
    "dst": [
     "host_status",
     "t_active",
-    87,
-    88
+    89,
+    90
    ],
    "bits": 1,
    "clock": "stream",
@@ -7928,8 +8047,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    120,
-    121
+    123,
+    124
    ],
    "bits": 1,
    "clock": "stream",
@@ -7945,8 +8064,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    88,
-    89
+    90,
+    91
    ],
    "bits": 1,
    "clock": "stream",
@@ -7962,8 +8081,8 @@
    "dst": [
     "host_status",
     "t_active",
-    88,
-    89
+    90,
+    91
    ],
    "bits": 1,
    "clock": "stream",
@@ -7979,8 +8098,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    121,
-    122
+    124,
+    125
    ],
    "bits": 1,
    "clock": "stream",
@@ -7996,8 +8115,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    89,
-    90
+    91,
+    92
    ],
    "bits": 1,
    "clock": "stream",
@@ -8013,8 +8132,8 @@
    "dst": [
     "host_status",
     "t_active",
-    89,
-    90
+    91,
+    92
    ],
    "bits": 1,
    "clock": "stream",
@@ -8030,8 +8149,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    122,
-    123
+    125,
+    126
    ],
    "bits": 1,
    "clock": "stream",
@@ -8047,8 +8166,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    90,
-    91
+    92,
+    93
    ],
    "bits": 1,
    "clock": "stream",
@@ -8064,8 +8183,8 @@
    "dst": [
     "host_status",
     "t_active",
-    90,
-    91
+    92,
+    93
    ],
    "bits": 1,
    "clock": "stream",
@@ -8081,8 +8200,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    123,
-    124
+    126,
+    127
    ],
    "bits": 1,
    "clock": "stream",
@@ -8098,8 +8217,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    91,
-    92
+    93,
+    94
    ],
    "bits": 1,
    "clock": "stream",
@@ -8115,8 +8234,8 @@
    "dst": [
     "host_status",
     "t_active",
-    91,
-    92
+    93,
+    94
    ],
    "bits": 1,
    "clock": "stream",
@@ -8132,8 +8251,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    124,
-    125
+    127,
+    128
    ],
    "bits": 1,
    "clock": "stream",
@@ -8149,8 +8268,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    92,
-    93
+    94,
+    95
    ],
    "bits": 1,
    "clock": "stream",
@@ -8166,8 +8285,8 @@
    "dst": [
     "host_status",
     "t_active",
-    92,
-    93
+    94,
+    95
    ],
    "bits": 1,
    "clock": "stream",
@@ -8183,8 +8302,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    125,
-    126
+    128,
+    129
    ],
    "bits": 1,
    "clock": "stream",
@@ -8200,8 +8319,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    93,
-    94
+    95,
+    96
    ],
    "bits": 1,
    "clock": "stream",
@@ -8217,8 +8336,8 @@
    "dst": [
     "host_status",
     "t_active",
-    93,
-    94
+    95,
+    96
    ],
    "bits": 1,
    "clock": "stream",
@@ -8234,8 +8353,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    126,
-    127
+    129,
+    130
    ],
    "bits": 1,
    "clock": "stream",
@@ -8251,8 +8370,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    94,
-    95
+    96,
+    97
    ],
    "bits": 1,
    "clock": "stream",
@@ -8268,8 +8387,8 @@
    "dst": [
     "host_status",
     "t_active",
-    94,
-    95
+    96,
+    97
    ],
    "bits": 1,
    "clock": "stream",
@@ -8285,8 +8404,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    127,
-    128
+    130,
+    131
    ],
    "bits": 1,
    "clock": "stream",
@@ -8302,8 +8421,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    95,
-    96
+    97,
+    98
    ],
    "bits": 1,
    "clock": "stream",
@@ -8319,8 +8438,8 @@
    "dst": [
     "host_status",
     "t_active",
-    95,
-    96
+    97,
+    98
    ],
    "bits": 1,
    "clock": "stream",
@@ -8336,8 +8455,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    128,
-    129
+    131,
+    132
    ],
    "bits": 1,
    "clock": "stream",
@@ -8353,8 +8472,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    96,
-    97
+    98,
+    99
    ],
    "bits": 1,
    "clock": "stream",
@@ -8370,8 +8489,8 @@
    "dst": [
     "host_status",
     "t_active",
-    96,
-    97
+    98,
+    99
    ],
    "bits": 1,
    "clock": "stream",
@@ -8387,8 +8506,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    129,
-    130
+    132,
+    133
    ],
    "bits": 1,
    "clock": "stream",
@@ -8404,8 +8523,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    97,
-    98
+    99,
+    100
    ],
    "bits": 1,
    "clock": "stream",
@@ -8421,8 +8540,8 @@
    "dst": [
     "host_status",
     "t_active",
-    97,
-    98
+    99,
+    100
    ],
    "bits": 1,
    "clock": "stream",
@@ -8438,8 +8557,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    130,
-    131
+    133,
+    134
    ],
    "bits": 1,
    "clock": "stream",
@@ -8455,8 +8574,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    98,
-    99
+    100,
+    101
    ],
    "bits": 1,
    "clock": "stream",
@@ -8472,8 +8591,8 @@
    "dst": [
     "host_status",
     "t_active",
-    98,
-    99
+    100,
+    101
    ],
    "bits": 1,
    "clock": "stream",
@@ -8489,8 +8608,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    131,
-    132
+    134,
+    135
    ],
    "bits": 1,
    "clock": "stream",
@@ -8506,8 +8625,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    99,
-    100
+    101,
+    102
    ],
    "bits": 1,
    "clock": "stream",
@@ -8523,8 +8642,8 @@
    "dst": [
     "host_status",
     "t_active",
-    99,
-    100
+    101,
+    102
    ],
    "bits": 1,
    "clock": "stream",
@@ -8540,8 +8659,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    132,
-    133
+    135,
+    136
    ],
    "bits": 1,
    "clock": "stream",
@@ -8557,8 +8676,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    100,
-    101
+    102,
+    103
    ],
    "bits": 1,
    "clock": "stream",
@@ -8574,8 +8693,8 @@
    "dst": [
     "host_status",
     "t_active",
-    100,
-    101
+    102,
+    103
    ],
    "bits": 1,
    "clock": "stream",
@@ -8591,8 +8710,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    133,
-    134
+    136,
+    137
    ],
    "bits": 1,
    "clock": "stream",
@@ -8608,8 +8727,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    101,
-    102
+    103,
+    104
    ],
    "bits": 1,
    "clock": "stream",
@@ -8625,8 +8744,8 @@
    "dst": [
     "host_status",
     "t_active",
-    101,
-    102
+    103,
+    104
    ],
    "bits": 1,
    "clock": "stream",
@@ -8642,8 +8761,8 @@
    "dst": [
     "host_status",
     "t_fault",
-    134,
-    135
+    137,
+    138
    ],
    "bits": 1,
    "clock": "stream",
@@ -8659,8 +8778,8 @@
    "dst": [
     "host_status",
     "t_ready",
-    102,
-    103
+    104,
+    105
    ],
    "bits": 1,
    "clock": "stream",
@@ -8676,8 +8795,8 @@
    "dst": [
     "host_status",
     "t_active",
-    102,
-    103
+    104,
+    105
    ],
    "bits": 1,
    "clock": "stream",
@@ -8693,12 +8812,192 @@
    "dst": [
     "host_status",
     "t_fault",
-    135,
-    136
+    138,
+    139
    ],
    "bits": 1,
    "clock": "stream",
    "basis": "TARGET223 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    139,
+    140
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    140,
+    141
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    141,
+    142
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    142,
+    143
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    143,
+    144
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    144,
+    145
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    145,
+    146
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    146,
+    147
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_SW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    147,
+    148
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_SE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    148,
+    149
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_NW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    149,
+    150
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_NE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    150,
+    151
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
   }
  ],
  "clocks": [

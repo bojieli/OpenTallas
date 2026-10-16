@@ -30,16 +30,7 @@ print('SW_SPECIALIZATION_PORT_IDENTITY PASS (two actual masters, only SID port r
 bench=Path('rtl/test/hbm_idx_static/tb_argmax_static.sv').read_text()
 assert bench.count(".sid(2'd0), ") == 1
 bench=bench.replace('ot_hbm_argmax_static #','ot_hbm_argmax_static_sw #').replace(".sid(2'd0), ", '')
-# Current production SW master has three packet clients plus ring replay.
-# Historical benchmark used seven; adapt widths/packed client indices exactly.
-for old,new in [('[2365:0] cq_all','[1013:0] cq_all'),('[1917:0] cr_all','[821:0] cr_all'),
-                ('[15:0] client_seq','[7:0] client_seq'),('[7:0] response_enable','[3:0] response_enable'),
-                ('[15:0] response_seq','[7:0] response_seq'),('[23:0] bank_client','[15:0] bank_client'),
-                ('bank_client[b*3 +: 3] = 3\'d0','bank_client[b*2 +: 2] = 2\'d0'),
-                ('.hub_ring_client(6\'d0)','.hub_ring_client(4\'d0)')]:
-    assert old in bench,old
-    bench=bench.replace(old,new)
-
+# tb_argmax_static.sv itself now drives the current SW ABI (H-NETLIST 0600: NC2, WG2); no width adaptation.
 (out/'tb_argmax_static_sw.sv').write_text(bench)
 run=Path('rtl/test/hbm_idx_static/run_argmax_static.sh').read_text()
 run=run.replace('rtl/hbm_accel/generic/ot_hbm_argmax_static.sv ', 'rtl/hbm_accel/generic/ot_hbm_argmax_static.sv rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv ')

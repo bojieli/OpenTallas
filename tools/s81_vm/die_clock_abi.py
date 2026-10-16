@@ -9,6 +9,9 @@ tools/die_port_bind.py's parser and emits, for S-BIND / S-DIE:
     hardened master whose clock pin it feeds and that master's routed TT boundary insertion R (insertion.json), so the
     parent delivers phi - wire - R at each root (bank128: R = 222.0 ps).  A category without a closed view is OPEN.
 It infers nothing about physical qualification; per-bit instance identity stays with the S-BIND clock contract.
+--a2f: the same census for the A2-F / hop-1 parent dsfd_sp_vm_a2f (dsfd_sp_vm_a2f.sv, HOP1 1): the RETIRED_BY_A2F write
+roots are gone, the A2-F front roots and the 16-entry b8-only relay ports are bound to their leaf masters
+(results/arch/s81_vm_die_abi_a2f_0200/contract.json).
 """
 import json
 import sys
@@ -56,6 +59,13 @@ VIEWS = {
 }
 # Categories with no bindable closed view at READ_PIPE 4 / CAP_PIPE 2, each with its disposition (S-VM 2026-10-15 late).
 DISPOSITION = {
+    'ck_wfc_fault_x34_s': ('LEAF_IN_FLIGHT', 'Real W1 fixed-epoch typed transport; own per-child clock entry/native view pending'),
+    'ck_wfc_fault_x34_t': ('LEAF_IN_FLIGHT', 'Real W1 fixed-epoch typed transport; own per-child clock entry/native view pending'),
+    'ck_wfc_fault_x43_t': ('LEAF_IN_FLIGHT', 'Real W1 fixed-epoch typed transport; own per-child clock entry/native view pending'),
+    'ck_wfc_fault_x43_s': ('LEAF_IN_FLIGHT', 'Real W1 fixed-epoch typed transport; own per-child clock entry/native view pending'),
+
+    'ck_wfc_fault_s': ('LEAF_IN_FLIGHT', 'r6 epoch serial join dsfd_vm_wfc_fault_serial, root ck; own per-child phi-minus-R mandatory'),
+    'ck_wfc_fault_t': ('LEAF_IN_FLIGHT', 'r6 epoch core join dsfd_vm_wfc_fault_core, root ck; native/gate pending'),
     'ck_core_t': ('NO_SINK', 'native-read production (READ_PIPE 4): cks drives only the legacy READ_PIPE 0 output stage '
                   '(dsfd_vm_static_core.sv legacy_read, a5031e72f): no sink, no die root; the port stays for READ_PIPE 0'),
     'ck_landing_t': ('BIND_ON_ADOPTION', 'production u_land is the monolith dsfd_vm_static_landing (no native-PASS view: r4 '
@@ -72,16 +82,67 @@ DISPOSITION = {
     'ck_write_header_t': ('RETIRED_BY_A2F', 'legacy W0 header replaced by s81_a2_w0_header (A2-F keeps it; view owed)'),
     'ck_write_payload_t': ('RETIRED_BY_A2F', 'legacy W0 payloads replaced by s81_a2_w0_payload x4 (A2-F keeps them; '
                            'views owed)'),
-    'ck_wfc_control_s': ('LEAF_IN_FLIGHT', 'control flops extracted to the two-root hard leaf dsfd_vm_static_wfc_ctl '
-                         '(parent wires only; differential gate + full master gate PASS); route '
-                         'dsfd_vm_static_wfc_ctl_native_1015_r1-native1-COMMIT-60bbca547'),
-    'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'stream root of dsfd_vm_static_wfc_ctl (same route)'),
-    'ck_xio_control_s': ('OPEN_GLUE', 'dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three '
-                         'combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* '
-                         'is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs '
-                         'edge (L12 -> L14), needs S-FUNC + static-collective sign-off (owed, S-VM)'),
-    'ck_xio_control_t': ('OPEN_GLUE', 'as ck_xio_control_s'),
+    'ck_wfc_control_s': ('NO_SINK', 'r6 serial control/grant now in independent fault leaf ck_wfc_fault_s; retained source ABI port has no sink'),
+    'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'r6 request leaf dsfd_vm_wfc_request own root ck; native gate pending'),
+    'ck_wfc_return_t': ('LEAF_IN_FLIGHT', 'r6 return leaf dsfd_vm_wfc_return own root ck; native gate pending'),
+    'ck_xio_control_s': ('LEAF_IN_FLIGHT', 'Actual dsfd_vm_xio_serial native leaf captures serial diagnostic pins; strict CTS PASS, routed qualification pending'),
+    'ck_xio_control_t': ('LEAF_IN_FLIGHT', 'True pin-captured XIO request, request +2core; total collective +4core, Q/G +4core/+3serial. Exact native qualification pending'),
+    'ck_xio_return_t': ('LEAF_IN_FLIGHT', 'Actual XIO return leaf; native qualification pending'),
+    'ck_xio_fault_t': ('LEAF_IN_FLIGHT', 'W1 diagnostic x34 receiving core root; native qualification pending'),
+    'ck_xio_fault_s': ('LEAF_IN_FLIGHT', 'W1 diagnostic x34 sending serial root; native qualification pending'),
+    'ck_xio_fault_join_t': ('LEAF_IN_FLIGHT', 'Actual captured fault join with fixed warm-reset flush; qualification pending'),
 }
+
+
+# A2-F / hop-1 parent (S-VM-RTL 2026-10-16): category -> master / pin / kit, overriding VIEWS; None = no view (OPEN)
+SRC_A2F = 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_a2f.sv'
+VIEWS_A2F = {
+    'ck_landing_t': ('dsfd_vm_static_landing_joined: lane0..3 plus fault_join (five roots; data age2/II1 unchanged)', 'ck', 'dsfd_vm_static_landing_lane0_native_1417|dsfd_vm_static_landing_lane1_native_1417|dsfd_vm_static_landing_lane2_native_1417|dsfd_vm_static_landing_lane3_native_1417|dsfd_vm_static_landing_fault_join_native_1417'),
+    'ck_mem_relay_req_t': ('dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)', 'ck_req', 'dsfd_vm_static_relay128_b8_native_cb'),
+    'ck_mem_relay_rsp_t': ('dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)', 'ck_rsp', 'dsfd_vm_static_relay128_b8_native_cb'),
+    'ck_mem_wscatter_t': ('dsfd_vm_static_scatter_b8_out PIPE 1 (B0|B8|B16|B24)', 'ck', 'dsfd_vm_direct_scatter_b0_native_cb4|dsfd_vm_direct_scatter_b8_native_cb5|dsfd_vm_direct_scatter_b16_native_cb4|dsfd_vm_direct_scatter_b24_native_cb4b'),
+    'ck_write_data_t': ('s81_a2f_field4 (data: bit 32*slice + 4*field + nibble)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
+    'ck_write_meta_t': ('s81_a2f_field4 (metadata: bit 7*slice + nibble; same master as data)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
+    'ck_write_control_t': ('s81_a2f_control4_resetlocal (bit = slice)', 'ck_control', 's81_a2f_control4_resetlocal_pilot_2118_r3'),
+    # S-VM 10-16 06:05: routed CLOSED + strict routed native PASS (receipts results/rtl/s81_vm_a2f_leaves_0310,
+    # results/physical/s81_vm_native_0300/wfc_routed_native_partial.json, results/physical/s81_xio_native_0253/routed_native.json)
+    'ck_rsched_t': ('dsfd_vm_a2f_rsched_p (REL 8, hop-1 release)', 'ck', 'dsfd_vm_a2f_rsched_p_native_0310_r1'),
+    'ck_write_header_t': ('s81_a2_w0_header', 'ck', 's81_a2_w0_header_native_0310_r3'),
+    'ck_write_payload_t': ('s81_a2_w0_payload33 x16', 'ck', 's81_a2_w0_payload33_native_0330_r1'),
+    'ck_write_fault_t': ('s81_a2f_fault_join4 x4', 'ck', 's81_a2f_fault_join4_native_0310_r1'),
+    'ck_write_summary_t': ('dsfd_vm_native_valid_diag (write fault summary)', 'ck', 'dsfd_vm_native_valid_diag_native_0400_r2'),
+    'ck_mem_native_diag_t': ('dsfd_vm_native_valid_diag x4 (return-map valid/slot diagnostics)', 'ck', 'dsfd_vm_native_valid_diag_native_0400_r2'),
+    'ck_cap_fault_s': ('dsfd_vm_capture_fault_serial (81 serial inputs)', 'ck', 'dsfd_vm_capture_fault_serial_native_0415_r1'),
+    'ck_cap_fault_t': ('dsfd_vm_native_valid_diag (core 16 x34 faults)', 'ck', 'dsfd_vm_native_valid_diag_native_0400_r2'),
+    'ck_wfc_control_t': ('dsfd_vm_wfc_request RLAT15 (hop-1)', 'ck', 'dsfd_vm_wfc_request_hop1_native_1016_r1'),
+    'ck_wfc_fault_s': ('dsfd_vm_wfc_fault_serial', 'ck', 'dsfd_vm_wfc_fault_serial_native_1016_r1'),
+    'ck_wfc_fault_t': ('dsfd_vm_wfc_fault_core', 'ck', 'dsfd_vm_wfc_fault_core_native_1016_r1'),
+    'ck_wfc_fault_x34_s': ('ot_s81_vm_fault_x34_s_w1', 's_ck', 'ot_s81_vm_fault_x34_s_w1_native_1016_r1'),
+    'ck_wfc_fault_x34_t': ('ot_s81_vm_fault_x34_t_w1', 't_ck', 'ot_s81_vm_fault_x34_t_w1_native_1016_r1'),
+    'ck_wfc_fault_x43_s': ('ot_s81_vm_fault_x43_s_w1', 's_ck', 'ot_s81_vm_fault_x43_s_w1_native_1016_r2'),
+    'ck_wfc_fault_x43_t': ('ot_s81_vm_fault_x43_t_w1', 't_ck', 'ot_s81_vm_fault_x43_t_w1_native_1016_r1'),
+    'ck_xio_control_s': ('dsfd_vm_xio_serial', 'ck', 'dsfd_vm_xio_serial_native_1016_r2'),
+    'ck_xio_control_t': ('dsfd_vm_xio_request', 'ck', 'dsfd_vm_xio_request_native_1016_r2'),
+    'ck_xio_fault_s': ('ot_s81_vm_fault_x34_s_w1 (same master as WFC)', 's_ck', 'ot_s81_vm_fault_x34_s_w1_native_1016_r1'),
+    'ck_xio_fault_t': ('ot_s81_vm_fault_x34_t_w1 (same master as WFC)', 't_ck', 'ot_s81_vm_fault_x34_t_w1_native_1016_r1'),
+    'ck_xio_fault_join_t': ('dsfd_vm_xio_fault_join', 'ck', 'dsfd_vm_xio_fault_join_native_1016_r2'),
+    # S-VM-X34 10-16: u_xsw = ot_s81_vm_x34_sw2 (two W514 halves h0/h1 on root [2]); one W514 master per side for all three
+    'ck_landing_x34_s': ('ot_s81_vm_x34_s W514 (u_xsel, u_xcol, u_xsw.h0, u_xsw.h1)', 's_ck', 'ot_s81_vm_x34_s_w514_1015_f4'),
+    'ck_landing_x34_t': ('ot_s81_vm_x34_t W514 (u_xsel, u_xcol, u_xsw.h0, u_xsw.h1)', 't_ck', 'ot_s81_vm_x34_t_w514_1015_f4'),
+}
+DISPOSITION_A2F = {
+    'ck_landing_x34_s': ('BOUND', 'W1026 u_xsw (native launch FAIL n1 234.5 / n3 233.9 ps) split into two closed native-PASS W514 '
+                         'halves (L211.2/C171.9/sp22.5); bit-identical, zero cycles (S-VM-X34 10-16)'),
+    'ck_landing_t': ('BOUND_NATIVE_COMPONENT', 'Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate PASS bc297977c; die binding still required'),
+    'ck_wfc_return_t': ('FIX_IN_FLIGHT', 'dsfd_vm_wfc_return RESPONSE_PAD 2: r2 gate WARN (194.4x324, util 5 %, W clock 150 um from sinks) not routed; right-sized r3 kit in flight (S-VM 10-16)'),
+    'ck_write_control_t': ('BOUND', 'A2-F front control4 roots (s81_a2f_control4_resetlocal r3, routed CLOSED, native PASS)'),
+    'ck_xio_return_t': ('FIX_IN_FLIGHT', 'dsfd_vm_xio_return r2 routed CLOSED TT+119.18/FF+16.74 but routed native FAIL capture 220.0 ps on e_v[0]; structural r3 in flight (S-VM 10-16)'),
+}
+for _k in ('ck_rsched_t', 'ck_write_header_t', 'ck_write_payload_t', 'ck_write_fault_t', 'ck_write_summary_t', 'ck_mem_native_diag_t',
+           'ck_cap_fault_s', 'ck_cap_fault_t', 'ck_wfc_control_t', 'ck_wfc_fault_s', 'ck_wfc_fault_t', 'ck_wfc_fault_x34_s',
+           'ck_wfc_fault_x34_t', 'ck_wfc_fault_x43_s', 'ck_wfc_fault_x43_t', 'ck_xio_control_s', 'ck_xio_control_t',
+           'ck_xio_fault_s', 'ck_xio_fault_t', 'ck_xio_fault_join_t'):
+    DISPOSITION_A2F[_k] = ('BOUND', 'routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)')
 
 
 def insertion_r(kit, pin):
@@ -96,20 +157,25 @@ def insertion_r(kit, pin):
 
 
 def main():
-    src = (ROOT / SRC).read_text()
-    mod = next(m for m in bind.parse_modules(bind.preprocess(src, {'DSFD_SP_VM_MIX4': ''}), SRC) if m.name == 'dsfd_sp_vm')
+    a2f = '--a2f' in sys.argv
+    src_path = SRC_A2F if a2f else SRC
+    views = dict(VIEWS, **VIEWS_A2F) if a2f else VIEWS
+    disposition = dict(DISPOSITION, **DISPOSITION_A2F) if a2f else DISPOSITION
+    src = (ROOT / src_path).read_text()
+    mod = next(m for m in bind.parse_modules(bind.preprocess(src, {'DSFD_SP_VM_MIX4': ''}), src_path)
+               if m.name == ('dsfd_sp_vm_a2f' if a2f else 'dsfd_sp_vm'))
     ports = {n: {'dir': d[0], 'bits': mod.width(n, mod.env())} for n, d in mod.ports.items()}
     clocks, resets, func = {}, {}, {}
     for n, p in sorted(ports.items()):
         if n.startswith('ck_') or n == 'cks':
             dom = 'serial' if n.endswith('_s') else 'stream'
-            v = VIEWS.get(n)
+            v = views.get(n)
             clocks[n] = dict(p, domain=dom, master=v[0] if v else None, child_pin=v[1] if v else None,
                              routed_R=(insertion_r(v[2], v[1]) if v else None),
                              delivery='phi - wire - R per root (R from the bound routed view)' if v else
                              'OPEN: no closed native view; parent leaf/CTS root pending',
-                             disposition=DISPOSITION.get(n, ('BOUND', ''))[0] if v else DISPOSITION.get(n, ('OPEN', ''))[0],
-                             disposition_why=DISPOSITION.get(n, ('', ''))[1])
+                             disposition=disposition.get(n, ('BOUND', ''))[0] if v else disposition.get(n, ('OPEN', ''))[0],
+                             disposition_why=disposition.get(n, ('', ''))[1])
         elif n.startswith(('rss', 'rst_')):
             resets[n] = dict(p, domain='serial' if n.startswith('rst_') else 'stream')
         else:
@@ -127,7 +193,7 @@ def main():
     for v in legacy.values():
         stat[v['status']] = stat.get(v['status'], 0) + 1
     rec = {
-        'schema': 'opentallas.s81.vm-die-abi.v1', 'source': SRC, 'defines': ['DSFD_SP_VM_MIX4'],
+        'schema': 'opentallas.s81.vm-die-abi.v1', 'source': src_path, 'defines': ['DSFD_SP_VM_MIX4'],
         'legacy_18_15_list': {'count': len(LEGACY_40), 'status': stat, 'ports': legacy},
         'functional_ports': func, 'clock_entries': clocks, 'reset_entries': resets,
         'counts': {'ports': len(ports), 'functional': len(func), 'clock_ports': len(clocks),
@@ -141,7 +207,7 @@ def main():
             'MIX4 slot: f_mx_* / t_mx_* nets to dsfd_engram_mix4_c (DSFD_SP_VM_MIX4 in layer1.f)'],
         'not_claimed': 'no die netlist bound, no physical / native qualification; generator side owned by S-BIND/S-DIE',
     }
-    out = ROOT / 'results/arch/s81_vm_die_abi_1015/contract.json'
+    out = ROOT / ('results/arch/s81_vm_die_abi_a2f_0200/contract.json' if a2f else 'results/arch/s81_vm_die_abi_1015/contract.json')
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps({'legacy40': stat, 'counts': rec['counts'],

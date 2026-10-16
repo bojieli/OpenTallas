@@ -1,0 +1,217 @@
+{
+ "schema": "opentallas.s81.mtp-ledger.v1",
+ "grade": "COMPOSED_NOT_NATIVE",
+ "relay_screen": {
+  "hop2": {
+   "write": 11,
+   "read": 18,
+   "commit": 5
+  },
+  "hop1": {
+   "write": 11,
+   "read": 18,
+   "commit": 5
+  },
+  "reach_um": 900,
+  "outline_um": [
+   5037.0,
+   4600.8
+  ],
+  "note": "today-tools screen gives write 11 (front_scatter 2), the 2210 summary recorded write 10: VM.RELAY is 29 W+R edges, not 28; commit relay 5 was never in VM.RELAY"
+ },
+ "core_ages": {
+  "write_raw": "P+11+lane",
+  "write_commit": "P+12+lane",
+  "read_raw": "Q+6",
+  "read_return": "Q+14"
+ },
+ "core_vs_legacy": {
+  "hop2": {
+   "commit": 2,
+   "read": 0
+  },
+  "hop1": {
+   "commit": 0,
+   "read": -2
+  }
+ },
+ "remainder_edges": {
+  "hop2": 7,
+  "hop1": 3
+ },
+ "relay_wr_edges": {
+  "hop2": 29,
+  "hop1": 29
+ },
+ "scenarios": {
+  "ledger_as_is_89": {
+   "stages": 89,
+   "note": "current main ledger rows unchanged (VM.RELAY 28, A2 remainder +5 basis)",
+   "relay_edges": null,
+   "remainder_edges": null,
+   "rates": {
+    "ar": {
+     "hop_only": 1433.8,
+     "accepted_loss_pct": 23.232,
+     "proposed_loss_pct": 1.247,
+     "accepted_tok_s": 1100.7,
+     "accepted_and_proposed_tok_s": 1082.8,
+     "multiplied_accepted_and_proposed_tok_s": 1114.4,
+     "VM_RELAY_pct": 5.906,
+     "VM_A2_REMAINDER_pct": 0.621
+    },
+    "mtp": {
+     "hop_only": 4209.6,
+     "accepted_loss_pct": 19.551,
+     "proposed_loss_pct": 1.079,
+     "accepted_tok_s": 3386.6,
+     "accepted_and_proposed_tok_s": 3341.2,
+     "multiplied_accepted_and_proposed_tok_s": 3407.5,
+     "VM_RELAY_pct": 5.257,
+     "VM_A2_REMAINDER_pct": 0.544
+    }
+   }
+  },
+  "honest_hop2_89": {
+   "stages": 89,
+   "note": "today-tools 5,037 screen relays W+R and commit relay with the A2-F hop-2 core",
+   "relay_edges": 29,
+   "remainder_edges": 7,
+   "rates": {
+    "ar": {
+     "hop_only": 1433.8,
+     "accepted_loss_pct": 23.232,
+     "proposed_loss_pct": 2.064,
+     "accepted_tok_s": 1100.7,
+     "accepted_and_proposed_tok_s": 1071.1,
+     "multiplied_accepted_and_proposed_tok_s": 1105.3,
+     "VM_RELAY_pct": 5.906,
+     "VM_A2_REMAINDER_pct": 1.438
+    },
+    "mtp": {
+     "hop_only": 4209.6,
+     "accepted_loss_pct": 19.551,
+     "proposed_loss_pct": 1.795,
+     "accepted_tok_s": 3386.6,
+     "accepted_and_proposed_tok_s": 3311.0,
+     "multiplied_accepted_and_proposed_tok_s": 3383.0,
+     "VM_RELAY_pct": 5.257,
+     "VM_A2_REMAINDER_pct": 1.26
+    }
+   }
+  },
+  "honest_hop1_89": {
+   "stages": 89,
+   "note": "same screen with the measured hop-1 core (commit P+12, read return Q+14)",
+   "relay_edges": 29,
+   "remainder_edges": 3,
+   "rates": {
+    "ar": {
+     "hop_only": 1433.8,
+     "accepted_loss_pct": 23.232,
+     "proposed_loss_pct": 1.247,
+     "accepted_tok_s": 1100.7,
+     "accepted_and_proposed_tok_s": 1082.8,
+     "multiplied_accepted_and_proposed_tok_s": 1114.4,
+     "VM_RELAY_pct": 5.906,
+     "VM_A2_REMAINDER_pct": 0.621
+    },
+    "mtp": {
+     "hop_only": 4209.6,
+     "accepted_loss_pct": 19.551,
+     "proposed_loss_pct": 1.079,
+     "accepted_tok_s": 3386.6,
+     "accepted_and_proposed_tok_s": 3341.2,
+     "multiplied_accepted_and_proposed_tok_s": 3407.5,
+     "VM_RELAY_pct": 5.257,
+     "VM_A2_REMAINDER_pct": 0.544
+    }
+   }
+  },
+  "honest_hop1_affine_89": {
+   "stages": 89,
+   "note": "hop-1 + best capacity-feasible client-affine slice homes (worst pair W+R 27; commit unchanged)",
+   "relay_edges": 27,
+   "remainder_edges": 3,
+   "rates": {
+    "ar": {
+     "hop_only": 1433.8,
+     "accepted_loss_pct": 22.847,
+     "proposed_loss_pct": 1.247,
+     "accepted_tok_s": 1106.2,
+     "accepted_and_proposed_tok_s": 1088.3,
+     "multiplied_accepted_and_proposed_tok_s": 1119.0,
+     "VM_RELAY_pct": 5.521,
+     "VM_A2_REMAINDER_pct": 0.621
+    },
+    "mtp": {
+     "hop_only": 4209.6,
+     "accepted_loss_pct": 19.206,
+     "proposed_loss_pct": 1.079,
+     "accepted_tok_s": 3401.1,
+     "accepted_and_proposed_tok_s": 3355.7,
+     "multiplied_accepted_and_proposed_tok_s": 3419.9,
+     "VM_RELAY_pct": 4.912,
+     "VM_A2_REMAINDER_pct": 0.544
+    }
+   }
+  },
+  "honest_hop1_84_frames20": {
+   "stages": 84,
+   "note": "20-pair frames: 2,065 pairs/die (+92), allocator p2065s84h, 84 stages / 336 rank dies",
+   "relay_edges": 29,
+   "remainder_edges": 3,
+   "rates": {
+    "ar": {
+     "hop_only": 1442.4,
+     "accepted_loss_pct": 23.232,
+     "proposed_loss_pct": 1.247,
+     "accepted_tok_s": 1107.3,
+     "accepted_and_proposed_tok_s": 1089.4,
+     "multiplied_accepted_and_proposed_tok_s": 1121.2,
+     "VM_RELAY_pct": 5.906,
+     "VM_A2_REMAINDER_pct": 0.621
+    },
+    "mtp": {
+     "hop_only": 4227.6,
+     "accepted_loss_pct": 19.551,
+     "proposed_loss_pct": 1.079,
+     "accepted_tok_s": 3401.0,
+     "accepted_and_proposed_tok_s": 3355.4,
+     "multiplied_accepted_and_proposed_tok_s": 3422.0,
+     "VM_RELAY_pct": 5.257,
+     "VM_A2_REMAINDER_pct": 0.544
+    }
+   }
+  }
+ },
+ "allocator": {
+  "p1973s89h": {
+   "pairs": 1973,
+   "bf": 424,
+   "stages": 89,
+   "rank_dies": 356,
+   "declarations_placed": "46719/46719",
+   "home_order": "PASS",
+   "words_max_over_mean": 1.024
+  },
+  "p2065s84h": {
+   "pairs": 2065,
+   "bf": 424,
+   "stages": 84,
+   "rank_dies": 336,
+   "declarations_placed": "46671/46671",
+   "home_order": "PASS",
+   "words_max_over_mean": 1.03,
+   "last_stage_fill": 0.244,
+   "command": "tools/dsrom_s73_pair1.py --stages 84 --pairs 2065 --bf 424 --homes-from <p2065s84 home_order_check> (fixed point after 1 iteration)",
+   "refuted": "83 stages: 46 failed groups (layer 39); 82: 236",
+   "delta": "-5 stages, -20 rank dies (system 408 -> 388 if the 52 non-rank dies are unchanged), +18.0 MTP tok/s hop-only; +92 pairs/die costs +19.1 mm2 of frame area per die (S-NET+FILL) -- die fit is S-DIE's call"
+  }
+ },
+ "open": [
+  "VM.READ (accepted 9.093 % AR / 7.556 % MTP) prices the legacy dsfd_vm_bgr leaf-hop-2 chain; the die VM is the static/A2-F core (read return Q+14 + relays). Re-measure when the static VM closes; until then it stays charged.",
+  "Relay counts are a planning screen at R 900 um (driver->farthest sink basis for affine, Prim basis for VM.RELAY), not GRT/native.",
+  "Native 89/84-stage operator recut, actual VM service reservations and full-token run remain open."
+ ]
+}

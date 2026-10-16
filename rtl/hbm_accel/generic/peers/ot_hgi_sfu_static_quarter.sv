@@ -13,14 +13,14 @@ module ot_hgi_sfu_static_quarter #(
  input wire clk_control,rst_control_n,
  input wire [1741:0] compiler_control,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
- input wire [511:0] vi_q,side_y,
+ input wire [511:0] vi_q,
  input wire [2047:0] rd_q,
- output wire [15:0] vi_re,vm_we,kv_we,ro_v,fault,coll,side_v,
+ output wire [15:0] vi_re,vm_we,kv_we,ro_v,fault,coll,
  output wire [383:0] vi_addr,vm_waddr,kv_waddr,
  output wire [1535:0] rd_addr,
  output wire [63:0] rd_re,
  output wire [127:0] rd_src,
- output wire [511:0] vm_wdata,kv_wdata,ro_x,side_x
+ output wire [511:0] vm_wdata,kv_wdata,ro_x
 );
  reg [1741:0] control;
  always @(posedge clk_control or negedge rst_control_n)
@@ -35,9 +35,9 @@ module ot_hgi_sfu_static_quarter #(
 `endif
  ot_hgi_sfu_arithmetic_grid #(.BTREE(BTREE)) u_grid(
  .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
- .control(grid_control),.vi_q(vi_q),.side_y(side_y),.rd_q(rd_q),
- .vi_re(vi_re),.vm_we(vm_we),.kv_we(kv_we),.ro_v(ro_v),.fault(fault),.coll(coll),.side_v(side_v),
+ .control(grid_control),.vi_q(vi_q),.rd_q(rd_q),
+ .vi_re(vi_re),.vm_we(vm_we),.kv_we(kv_we),.ro_v(ro_v),.fault(fault),.coll(coll),
  .vi_addr(vi_addr),.vm_waddr(vm_waddr),.kv_waddr(kv_waddr),.rd_addr(rd_addr),.rd_re(rd_re),
- .rd_src(rd_src),.vm_wdata(vm_wdata),.kv_wdata(kv_wdata),.ro_x(ro_x),.side_x(side_x));
+ .rd_src(rd_src),.vm_wdata(vm_wdata),.kv_wdata(kv_wdata),.ro_x(ro_x));
 endmodule
 `default_nettype wire

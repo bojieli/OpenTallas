@@ -4,30 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/dsfd_node_LLd.lef",
-    "sha256": "cc9bd95a92f427a3714a96dcccd46aa74a353d8e014237cc031b54622c5df1e1"
-  },
-  "output": {
-    "path": "dsfd_node_LLd.lef",
-    "sha256": "12387434dae4cdba34ffc891b25389129735ed881fe23872604edce9f9df8af7"
-  },
-  "helper": {
-    "path": "tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
-    "source_commit": "13d6772ae387c217bf87ed30ccc19c899e804fef",
-    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+    "sha256": "80931a3c80bbff68dfafd6188997d3e50f2a20d5e66d49e25bca940d592a2e08"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-ab1-13d5be1a9/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
   "command": [
-    "python3",
-    "provenance/helper/abstract_pin_stub.py",
-    "provenance/raw/dsfd_node_LLd.lef",
-    "dsfd_node_LLd.lef"
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-ab1-13d5be1a9/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-ab1-13d5be1a9/record/views/dsfd_node_LLd/provenance/raw/dsfd_node_LLd.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-ab1-13d5be1a9/record/views/dsfd_node_LLd/provenance/dsfd_node_LLd.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 4 OBS rects moved into 3 pins: clk[0], fo[0], rst_n[0]; pockets: 254 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 4 OBS rects moved into 3 pins: clk[0], fo[0], rst_n[0]; pockets: 273 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -36,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-n6-13d6772ae/record/views/dsfd_node_LLd/dsfd_node_LLd.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-ab1-13d5be1a9/record/views/dsfd_node_LLd/provenance/dsfd_node_LLd.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "dsfd_node_LLd 43.2 x 77.76: PG M5 VDD 15 stripes (88% spread, 100% cov) / VSS 15 stripes (88% spread, 100% cov); strap M6; face pins 195 blocked-above 0 blocked-same 0; clock clk[0] insertion 126 ps; pockets M5 0 (closed)",
+    "summary": "dsfd_node_LLd 43.2 x 77.76: PG M5 VDD 15 stripes (88% spread, 100% cov) / VSS 15 stripes (88% spread, 100% cov); strap M6; face pins 195 blocked-above 0 blocked-same 0; clock clk[0] insertion 115 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "dsfd_node_LLd",
       "W": 43.2,
@@ -74,7 +68,7 @@
       "face": {
         "face_pins": 195,
         "blocked_above": 0,
-        "covered_below": 2,
+        "covered_below": 0,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -83,8 +77,8 @@
       },
       "clock_insertion": {
         "clk[0]": {
-          "max_ps": 126.26,
-          "min_ps": 89.75
+          "max_ps": 115.49,
+          "min_ps": 88.85
         }
       },
       "pockets": {
@@ -93,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 254
+          "added": 273
         },
         "count": 0,
         "area_um2": 0,
@@ -101,25 +95,8 @@
       }
     }
   },
-  "replay": {
-    "historical": true,
-    "job": "s81net_node_lld-n6-13d6772ae",
-    "source_commit": "13d6772ae387c217bf87ed30ccc19c899e804fef",
-    "published_record_commit": "afe83b340de004c20738de821550e41ee338ccd8",
-    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-n6-13d6772ae/routes/s81net_node_lld_n6_13d6772ae/work/orfs",
-    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
-    "raw_export_tcl_sha256": "3dd17625024796db0d667b70d153b5b4803ba0fd42ee9c162756e166d0dbf3e7",
-    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
-    "raw_matches_original_manifest": true,
-    "final_matches_published_export": true,
-    "all_published_files_verified": {
-      "dsfd_node_LLd.lef": "12387434dae4cdba34ffc891b25389129735ed881fe23872604edce9f9df8af7",
-      "dsfd_node_LLd_tt.lib": "fadf04cba68ef068850ff34bbfccde74216560cd72cd75b60eca5358fc3d0564",
-      "dsfd_node_LLd_ff.lib": "dcb1d256a4323c978916087e58737eb29fa3ac3bb9998c378cb4e0b7909107d0",
-      "dsfd_node_LLd_ss.lib": "bb8b5f98cc269687eec6069302bbf67ef1dfd5ec4cbbe71e420daeb3debfc5ef",
-      "abstract.json": "2bd3423638fa91080674e64cd6d0ee1c96325168f628d913f31750829875321d",
-      "insertion.json": "819ab8394daa87f1476c3495340138e04175853d707ad5b1400a4d1212d0ebfa",
-      "child_lint.json": "393ca1e612c1c28498f5367ae97f2f94a4977e7d04f5bccb51bb85cf75df0f24"
-    }
+  "output": {
+    "path": "dsfd_node_LLd.lef",
+    "sha256": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8"
   }
 }

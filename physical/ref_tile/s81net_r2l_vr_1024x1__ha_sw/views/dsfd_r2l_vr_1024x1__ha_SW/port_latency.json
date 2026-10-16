@@ -1,0 +1,59 @@
+{
+  "control_roles": {
+    "clocks": [
+      "ck",
+      "fi0"
+    ],
+    "excluded_data_ports": [
+      "di0"
+    ],
+    "reset_meaning": "source RTL polarity and reset semantics preserved by direct wiring",
+    "resets": [
+      "rs"
+    ],
+    "source_sha256": {
+      "physical/s81_static_net/hend/dsfd_r2l_vr_1024x1__ha_SW.sdc": "f10f9519789a126f3421e83820595e5701d77157b860fc91030ca5706b21ed28"
+    }
+  },
+  "evidence": {
+    "ot_pin_regs.tsv": "2ed440ad89c276ce65da384c5325fbcf0e384dea96cf4c9250dfb529ac1d46f8",
+    "ot_pin_regs_wrapper.v": "de2dd11080c6aa95a1c504144dbe2bda5f1c6056d59032a7596fe99b37a0a3c7"
+  },
+  "job": "s81net_r2l_vr_1024x1__ha_sw-n7-b51239333",
+  "ports": {
+    "ck": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "di0": {
+      "dir": "input",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1026
+    },
+    "fi0": {
+      "dir": "input",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "o": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1027
+    },
+    "rs": {
+      "dir": "input",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "b5123933317db6c422a80ff32b482930e6e17305",
+  "top": "dsfd_r2l_vr_1024x1__ha_SW"
+}
