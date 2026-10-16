@@ -3659,6 +3659,54 @@
    "port": "clk",
    "domain": "stream",
    "kind": "clock"
+  },
+  {
+   "inst": "epcal_SW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SE",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SE",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_NW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_NW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_NE",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_NE",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
   }
  ],
  "straps": [],
