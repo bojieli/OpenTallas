@@ -1,0 +1,718 @@
+{
+  "scope": "UNQUALIFIED_PARTITION_SIZING_NOT_A_ROUTE_SPEC",
+  "leaves": [
+    {
+      "name": "ingress_0_0",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 113
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        2.16,
+        2.16
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1054,
+      "read_root_sinks": 136,
+      "rtl_bits": {
+        "lane": 0,
+        "lo": 0,
+        "width": 113
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_0_1",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 113
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        66.96,
+        2.16
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1054,
+      "read_root_sinks": 136,
+      "rtl_bits": {
+        "lane": 0,
+        "lo": 113,
+        "width": 113
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_0_2",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 113
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        131.76,
+        2.16
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1054,
+      "read_root_sinks": 136,
+      "rtl_bits": {
+        "lane": 0,
+        "lo": 226,
+        "width": 113
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_0_3",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 113
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        196.55999999999997,
+        2.16
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1054,
+      "read_root_sinks": 136,
+      "rtl_bits": {
+        "lane": 0,
+        "lo": 339,
+        "width": 113
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_0_4",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 113
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        261.36,
+        2.16
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1054,
+      "read_root_sinks": 136,
+      "rtl_bits": {
+        "lane": 0,
+        "lo": 452,
+        "width": 113
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_1_0",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 108
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        2.16,
+        66.96
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1009,
+      "read_root_sinks": 131,
+      "rtl_bits": {
+        "lane": 1,
+        "lo": 0,
+        "width": 108
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_1_1",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 108
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        66.96,
+        66.96
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1009,
+      "read_root_sinks": 131,
+      "rtl_bits": {
+        "lane": 1,
+        "lo": 108,
+        "width": 108
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_1_2",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 107
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        131.76,
+        66.96
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1000,
+      "read_root_sinks": 130,
+      "rtl_bits": {
+        "lane": 1,
+        "lo": 216,
+        "width": 107
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_1_3",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 107
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        196.55999999999997,
+        66.96
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1000,
+      "read_root_sinks": 130,
+      "rtl_bits": {
+        "lane": 1,
+        "lo": 323,
+        "width": 107
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "ingress_1_4",
+      "master": "dsfd_cfifo_ingress_slice",
+      "params": {
+        "W": 107
+      },
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "home_um": [
+        261.36,
+        66.96
+      ],
+      "clock_entries": [
+        "f_ck",
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst_n"
+      ],
+      "source_root_sinks": 1000,
+      "read_root_sinks": 130,
+      "rtl_bits": {
+        "lane": 1,
+        "lo": 430,
+        "width": 107
+      },
+      "pins": {
+        "i": "S pitch0.096",
+        "o": "N pitch0.096",
+        "f_ck": "S adjacent i",
+        "ck": "N adjacent o",
+        "rst_n": "W",
+        "fault": "N"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_0",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        2.16,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_1",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        41.040000000000006,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_2",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 67108864
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        79.92,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_3",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        118.80000000000001,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_4",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 76561605982158848
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        157.68,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_5",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        196.56,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_6",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        235.44000000000003,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_7",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 128,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        274.32000000000005,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 128,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "format_8",
+      "master": "dsfd_cfifo_format_slice",
+      "params": {
+        "W": 76,
+        "QUALIFY": 0
+      },
+      "outline_um": [
+        17.28,
+        12.96
+      ],
+      "home_um": [
+        313.20000000000005,
+        131.76
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [],
+      "root_sinks": 76,
+      "pins": {
+        "d": "S pitch0.096",
+        "q": "N pitch0.096",
+        "v": "E",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "SOURCE_PROVEN_LAYOUT_UNQUALIFIED"
+    },
+    {
+      "name": "return_control",
+      "master": "dsfd_cfifo_return_control",
+      "outline_um": [
+        25.92,
+        12.96
+      ],
+      "home_um": [
+        354.24,
+        2.16
+      ],
+      "clock_entries": [
+        "ck"
+      ],
+      "clock_reset_ports": [
+        "rst",
+        "rs"
+      ],
+      "root_sinks": 73,
+      "pins": {
+        "ri": "N",
+        "st": "N",
+        "rd": "S",
+        "lane_fault": "E",
+        "av": "E",
+        "bv": "E",
+        "rs": "W",
+        "rst": "W",
+        "ck": "W"
+      },
+      "layer_cap": "M5",
+      "PG": "M5; parent straps M6",
+      "status": "PARENT_RI_TO_RD_PIN_REACH_NEEDS_CONNECTED_REDESIGN"
+    }
+  ],
+  "physical_clock_entries": 30,
+  "cycles_added": 0,
+  "source_semantics": "oa[0] qualifies every output; lane faults ORed inside return_control; lane-valid mismatch sticky status unchanged",
+  "blockers": [
+    "2 foreign KV relay overlaps in first-pass expanded parent",
+    "Return ri N to rd S separation must be resolved using actual peer pins, extra output stage priced if needed",
+    "Parent source/read/output wires and actual cuts not proven",
+    "No final die plan/clock delivery/native qualification"
+  ]
+}

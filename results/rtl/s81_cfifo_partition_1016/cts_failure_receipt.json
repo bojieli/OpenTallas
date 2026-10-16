@@ -1,0 +1,106 @@
+{
+  "scope": "ACTUAL_4_CTS_PRE_ROUTE_FAILURE_DIAGNOSTIC",
+  "source_commit": "c3be51165ceb8da09c5c8ed265abe30c8b7c462c",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81coll_cfifo_x2-20261016-025733",
+  "clock_measurements": [
+    {
+      "clock": "cr",
+      "sinks": 2324,
+      "min_ps": 171.84584379769134,
+      "mean_ps": 215.0700899495646,
+      "max_ps": 252.7573715990204,
+      "spread_ps": 80.91152780132904,
+      "spread_pass": false
+    },
+    {
+      "clock": "xf",
+      "sinks": 5122,
+      "min_ps": 148.78520697202714,
+      "mean_ps": 155.81513203247854,
+      "max_ps": 161.02877429209187,
+      "spread_ps": 12.243567320064727,
+      "spread_pass": true
+    },
+    {
+      "clock": "xf2",
+      "sinks": 4870,
+      "min_ps": 145.40568807156427,
+      "mean_ps": 152.0333037373278,
+      "max_ps": 156.163055333776,
+      "spread_ps": 10.757367262211716,
+      "spread_pass": true
+    }
+  ],
+  "layout_stats": {
+    "fill": 0.683,
+    "std_area": 9940.2,
+    "block_area": 0.0,
+    "die_area": 14556.7
+  },
+  "layout_stage": "4_cts.odb (not6_final)",
+  "inspected_images": [
+    "/home/ubuntu/artifacts/s81-cfifo-recovery-0350/cts_actual/floorplan.png",
+    "/home/ubuntu/artifacts/s81-cfifo-recovery-0350/cts_actual/density.png"
+  ],
+  "sha256": {
+    "4_1_cts.log": "ef1608b5b8d89bcc8e2accabc1d61ca4ab98b04e25a03090938d831419125c89",
+    "cts_actual.json": "26642cc2905cca9978403d3f4a4adee380f8b108a3578eff5f2c544058d55d67"
+  },
+  "decision": "NO_PLAIN_REROUTE: core clock boundaryspread80.912ps>80 and dense outerband; structural partition candidate required",
+  "clock_history": [
+    {
+      "clock": "cr",
+      "sinks": 2324,
+      "min_ps": 173.8434958494572,
+      "mean_ps": 214.39955384978933,
+      "max_ps": 247.61934268725147,
+      "spread_ps": 73.77584683779426,
+      "spread_pass": true
+    },
+    {
+      "clock": "xf",
+      "sinks": 5122,
+      "min_ps": 147.0172461871862,
+      "mean_ps": 154.14706307429617,
+      "max_ps": 160.41829040398673,
+      "spread_ps": 13.401044216800528,
+      "spread_pass": true
+    },
+    {
+      "clock": "xf2",
+      "sinks": 4870,
+      "min_ps": 144.60745159145702,
+      "mean_ps": 151.79975635421752,
+      "max_ps": 156.9026720379488,
+      "spread_ps": 12.295220446491783,
+      "spread_pass": true
+    },
+    {
+      "clock": "cr",
+      "sinks": 2324,
+      "min_ps": 171.84584379769134,
+      "mean_ps": 215.0700899495646,
+      "max_ps": 252.7573715990204,
+      "spread_ps": 80.91152780132904,
+      "spread_pass": false
+    },
+    {
+      "clock": "xf",
+      "sinks": 5122,
+      "min_ps": 148.78520697202714,
+      "mean_ps": 155.81513203247854,
+      "max_ps": 161.02877429209187,
+      "spread_ps": 12.243567320064727,
+      "spread_pass": true
+    },
+    {
+      "clock": "xf2",
+      "sinks": 4870,
+      "min_ps": 145.40568807156427,
+      "mean_ps": 152.0333037373278,
+      "max_ps": 156.163055333776,
+      "spread_ps": 10.757367262211716,
+      "spread_pass": true
+    }
+  ]
+}

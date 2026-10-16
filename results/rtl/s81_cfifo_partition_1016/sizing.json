@@ -1,0 +1,123 @@
+{
+  "schema": "opentallas.s81.cfifo.partition_sizing.v1",
+  "scope": "UNQUALIFIED_STRUCTURAL_SIZING_AND_FIRST_PASS_DIAGNOSTIC",
+  "source_commit": "17b13fb0637869d53580a1084bdd250d18828d9b",
+  "plan_sha256": "ca1f5b419ae1427a7a58d93904bbad440b5e944f77c6a6e59489bd86812e3c56",
+  "final_pins": false,
+  "final_hops": false,
+  "final_clocks": false,
+  "parents": 128,
+  "incident_buses": 1792,
+  "ports": {
+    "xa": 128,
+    "xb": 128,
+    "cc": 128,
+    "x2": 128,
+    "st": 128,
+    "ri": 128,
+    "co": 128,
+    "cr": 128,
+    "rs": 128,
+    "xd": 128,
+    "xf": 128,
+    "xd2": 128,
+    "xf2": 128,
+    "rf": 128,
+    "rd": 128
+  },
+  "proposal": {
+    "outline_um": [
+      384.48,
+      144.72
+    ],
+    "origin_delta_um": [
+      0,
+      -49.70399999999999
+    ],
+    "cycles_added": 0,
+    "ingress_widths": [
+      [
+        113,
+        113,
+        113,
+        113,
+        113
+      ],
+      [
+        108,
+        108,
+        107,
+        107,
+        107
+      ]
+    ],
+    "ingress_leaf_um": [
+      43.2,
+      43.2
+    ],
+    "formatter_widths": [
+      128,
+      128,
+      128,
+      128,
+      128,
+      128,
+      128,
+      128,
+      76
+    ],
+    "formatter_leaf_um": [
+      17.28,
+      12.96
+    ],
+    "return_leaf_um": [
+      25.92,
+      12.96
+    ],
+    "clock_roots": {
+      "source": 10,
+      "read": 10,
+      "formatter": 9,
+      "return_control": 1
+    },
+    "max_root_sinks": 1054,
+    "control_duplicated_flops": 480,
+    "old_flops_model": 12313,
+    "new_flops_model": 12793,
+    "relative_ff_cost": 0.03898318849995941,
+    "minimum_parallel_128bit_channel_um": 6.770337459007723,
+    "reserved_channel_um": 20,
+    "macro_area_um2": 21013.8624,
+    "parent_area_um2": 55641.9456,
+    "parent_area_delta_vs_old_slot_mm2": 1.868456189952
+  },
+  "overlaps": [
+    {
+      "cfifo": "cf72",
+      "other": "f_KW3r_22",
+      "master": "dsfd_stnh_512x1",
+      "overlap_um": [
+        17.256000000000313,
+        16.743999999998778
+      ]
+    },
+    {
+      "cfifo": "cf106",
+      "other": "f_KW3r_25",
+      "master": "dsfd_stnh_512x1",
+      "overlap_um": [
+        17.255999999999403,
+        16.719999999999345
+      ]
+    }
+  ],
+  "overlap_count": 2,
+  "open": [
+    "Actual leaf synthesis/hold allowance/PG/pins/clock tree",
+    "Actual parent signal routes for every incident bit",
+    "Marker fanout and samephase root delivery",
+    "Current final GEN per-instance overlap/pins/hops/cuts",
+    "Native launch220 capture190 spread80",
+    "TT setup FF hold DRC0"
+  ]
+}
