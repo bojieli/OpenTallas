@@ -39,9 +39,18 @@ if [ "$DIE" = kv ]; then
     fi
   }
 fi
+# Q-COMPUTE-DIE 2026-10-15: OT_PG_OPEN_DIAG=1 lets a DIAGNOSTIC chain reach GRT/STA when pdngen PASSED and only
+# check_power_grid failed (islands listed by master class); run_pdn.tcl must have written floorplan_pdn_prepg.odb.
+# The PDN stays FAIL in STATUS; nothing about the PG verdict is relaxed (like OT_PDN=skip, timing-only evidence).
+pg_open_diag() {
+  [ "${OT_PG_OPEN_DIAG:-0}" = 1 ] && grep -q '^OT_PDN PASS' $C/run_pdn.log && [ -s $C/floorplan_pdn_prepg.odb ] || return 1
+  grep -E '^(OT_.*FAIL|Error:|\[ERROR)' $C/run_pdn.log | grep -v -E 'OT_PGCHECK (VDD|VSS) FAIL|PSM-0069|run_pdn.tcl, [0-9]+ PSM-0069' | grep -q . && return 1
+  ln -f $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb
+  say "PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: $(grep PSM-0039 $C/run_pdn.log | sed -E 's/.*instance ([^ /]+)\/.*/\1/; s/(_[0-9]+)+$//' | sort | uniq -c | sort -rn | awk '{printf "%s=%s ",$2,$1}')"
+}
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
 if [ "${OT_FROM:-case}" = grt ]; then
-  validate_case run.log run.tcl && validate_case run_pdn.log run_pdn.tcl && [ -f $C/floorplan_pdn.odb ] || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
+  validate_case run.log run.tcl && { validate_case run_pdn.log run_pdn.tcl && [ -f $C/floorplan_pdn.odb ] || pg_open_diag; } || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
   say "resume: $(grep -m1 OT_LEGAL $C/run.log) / $(grep -m1 'OT_PDN PASS' $C/run_pdn.log)"
 else
 # OT_FROM=pdn (qwen-1010/b): reuse a passed real case (floorplan.odb + run.log from an earlier run), redo the PDN
@@ -57,9 +66,10 @@ if [ "${OT_PDN:-run}" = skip ]; then
   ln -f $C/floorplan.odb $C/floorplan_pdn.odb
   say "PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY"
 else
-$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)) || { say "PDN process/status failed"; exit 1; }
-validate_case run_pdn.log run_pdn.tcl || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
-say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
+$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)); pdn_rc=$?
+if validate_case run_pdn.log run_pdn.tcl; then say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
+elif pg_open_diag; then :
+else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb

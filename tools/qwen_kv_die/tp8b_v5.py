@@ -1084,7 +1084,7 @@ def _wrap(v, m, G, peers):
         mst = M[it.master]
         if inst_name not in plan_cache:
             byi = {i.name: i for i in model['insts']}
-            want = {}
+            want, alt, spilled = {}, {}, []
             for p, sp in mst.ports.items():
                 if sp[0] != 'face' or p in skip or (ports is not None and p not in ports):
                     continue
@@ -1095,20 +1095,45 @@ def _wrap(v, m, G, peers):
                 ox, oy = o.x + o.w / 2, o.y + o.h / 2
                 dxo = max(it.x - ox, 0.0, ox - (it.x + it.w))
                 dyo = max(it.y - oy, 0.0, oy - (it.y + it.h))
-                if dyo >= dxo:
-                    f, a = ('N' if oy > it.y + it.h / 2 else 'S'), ox - it.x
-                else:
-                    f, a = ('E' if ox > it.x + it.w / 2 else 'W'), oy - it.y
-                # die face / die-local coordinate -> master face / master-local coordinate
-                if it.orient in ('MX', 'R180'):
-                    f = {'N': 'S', 'S': 'N'}.get(f, f)
-                    if f in 'EW':
-                        a = it.h - a
-                if it.orient in ('MY', 'R180'):
-                    f = {'E': 'W', 'W': 'E'}.get(f, f)
-                    if f in 'NS':
-                        a = it.w - a
-                want[p] = (f, a)
+                fns = (('N' if oy > it.y + it.h / 2 else 'S'), min(max(ox - it.x, 0.0), it.w))
+                few = (('E' if ox > it.x + it.w / 2 else 'W'), min(max(oy - it.y, 0.0), it.h))
+                f, a = fns if dyo >= dxo else few
+                f2, a2 = few if dyo >= dxo else fns
+
+                def to_master(f, a):
+                    # die face / die-local coordinate -> master face / master-local coordinate
+                    if it.orient in ('MX', 'R180'):
+                        f = {'N': 'S', 'S': 'N'}.get(f, f)
+                        if f in 'EW':
+                            a = it.h - a
+                    if it.orient in ('MY', 'R180'):
+                        f = {'E': 'W', 'W': 'E'}.get(f, f)
+                        if f in 'NS':
+                            a = it.w - a
+                    return f, a
+                want[p] = to_master(f, a)
+                alt[p] = to_master(f2, a2) + (abs(dxo - dyo),)
+            # Q-COMPUTE-DIE r8 (C23s fpq_s6): a face whose groups cannot fit spills the groups with the most diagonal
+            # peers (smallest |dx - dy|) to their second face toward the peer
+            for _ in range(len(want)):
+                over = None
+                for f in 'NSEW':
+                    L = mst.w if f in 'NS' else mst.h
+                    keep_ = sum(sp[1] * 0.048 * sp[5] + 2.0 for q, sp in mst.ports.items()
+                                if sp[0] == 'face' and sp[2] == f and q not in want)
+                    need = keep_ + sum(mst.ports[q][1] * 0.048 + 2.0 for q, (ff, _) in want.items() if ff == f) + 8.0
+                    if need > L:
+                        over = f
+                        break
+                if over is None:
+                    break
+                cand = sorted((alt[q][2], q) for q, (ff, _) in want.items() if ff == over and alt[q][0] != over)
+                if not cand:
+                    break
+                q = cand[0][1]
+                want[q] = alt[q][:2]
+                alt[q] = (over, 0.0, float('inf'))
+                spilled.append((q, over, want[q][0]))
             plan_cache[inst_name] = want
         want = plan_cache[inst_name]
         for f in 'NSEW':
