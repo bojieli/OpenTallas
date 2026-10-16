@@ -4795,7 +4795,7 @@
     },
     {
       "source": "rtl/qwen_split/qfd_res_train_half_b2.sv",
-      "sha256": "8273aee8722d27ddd29ec51c4512bb380944212169bdd14cef820b85ed29a746",
+      "sha256": "71eb8bc0219df3aa0e998c882fdc2a7785106641b7eb41dd22394a91432c05a4",
       "top": "qfd_res_train_half_b2_bank",
       "ports": {
         "ck": {
@@ -4838,7 +4838,7 @@
     },
     {
       "source": "rtl/qwen_split/qfd_res_train_half_b2.sv",
-      "sha256": "8273aee8722d27ddd29ec51c4512bb380944212169bdd14cef820b85ed29a746",
+      "sha256": "71eb8bc0219df3aa0e998c882fdc2a7785106641b7eb41dd22394a91432c05a4",
       "top": "qfd_res_train_half_b2",
       "ports": {
         "ck": {
@@ -4958,6 +4958,7 @@
   "cycles": {
     "controller_execution_added_logic": 0,
     "train_source_copy_edges": 1,
+    "cold_reset_release_edges": 1,
     "am_station_added_vs_old_master": 0,
     "vm_ingress_added_logic": 0,
     "return_ro": 6,
@@ -4966,11 +4967,11 @@
   "calendar": "Six parallel halftrain F=D+HB*NH+t*max(8NH,stride)+i*NH+j. NH(split7..11)=4,2,1,3,1. Actual24 capturebanks and64 headonlymarkers. VM PAR_RB1/NB6. Per-route padding unassigned.",
   "sizing": {
     "capture_bits_per_half": 53088,
-    "capture_and_emit_ff_per_half": 66312,
+    "capture_and_emit_ff_per_half": 66336,
     "parent_output_ff_per_half": 551,
-    "parent_control_ff_census": "pending synthesis",
+    "parent_control_ff_census": "66507 total genericFF before cold reset stations; +25 resetFF in successor, rerun pending",
     "clock_entries_per_half": 25,
-    "per_bank_ff": 2763,
+    "per_bank_ff": 2764,
     "max_capture_bits_per_edge": 13278,
     "max_result_bits_per_edge": 3306,
     "new_external_vm_payload_pins": 1653,

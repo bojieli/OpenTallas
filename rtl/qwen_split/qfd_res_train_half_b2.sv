@@ -7,14 +7,18 @@
 module qfd_res_train_half_b2_bank #(parameter integer INDEX=0,BAND=0,NB=6,D=2,MUT=0)(
  input wire ck,rst_n,enable,input wire[10:0]cycle,input wire[31:0]stride,input wire[10:0]base,input wire[3:0]ns,
  input wire[2212:0]rq,output reg[550:0]q);
+ // Cold-init reset station: raw parent face sees one flop per independent root.
+ reg reset_q;
+ always @(posedge ck or negedge rst_n)if(!rst_n)reset_q<=0;else reset_q<=1;
+ wire rs=reset_q;
  reg[2207:0]data;reg[3:0]we;
  wire[31:0]cap=(INDEX/8)*stride+(INDEX%8)+((MUT==3)?32'd1:32'd0);
  wire emit=enable&&cycle>=base&&cycle<base+11'(ns);
  wire[1:0]j=2'(cycle-base);
  wire[551:0]w=data[552*j+:552];
  wire ending=emit&&(BAND==NB-1)&&(MUT==2 ? j==0 : 4'(j)==ns-4'd1);
- always @(posedge ck or negedge rst_n)begin
- if(!rst_n)begin data<=0;we<=0;q<=0;end
+ always @(posedge ck or negedge rs)begin
+ if(!rs)begin data<=0;we<=0;q<=0;end
  else begin
  if(enable&&32'(cycle)==cap)begin data<=rq[2207:0];we<=rq[2211:2208];end
  q<={emit&&(we[j]||ending),ending,ending&&!we[j],
@@ -27,6 +31,10 @@ module qfd_res_train_half_b2 #(
  input wire train_start,input wire[3:0]train_count,input wire[31:0]capture_stride,input wire payload_write,
  input wire[3:0]slot_count,
  input wire[2212:0]rq,output reg[550:0]rb,output reg fault);
+ // Parent reset face station; only cold release gains one edge.
+ reg reset_q;
+ always @(posedge ck or negedge rst_n)if(!rst_n)reset_q<=0;else reset_q<=1;
+ wire rs=reset_q;
  localparam integer BANKS=24;
  localparam integer MARKERS=8*MAX_TRAIN;
  localparam integer LAG=(MUT==1)?0:BAND;
@@ -75,8 +83,8 @@ module qfd_res_train_half_b2 #(
  for(integer k=0;k<MARKERS;k=k+1)
  if(active&&!payload_q&&(BAND==NB-1)&&k<8*count_q&&age==fbase(k,ns_q,period_q)+11'(ns_q)-11'd1)marker=1;
  end
- always @(posedge ck or negedge rst_n)begin
- if(!rst_n)begin payload_q<=0;active<=0;age<=0;stride_q<=0;count_q<=0;ns_q<=0;period_q<=0;stop_q<=0;fault<=0;rb<=0;end
+ always @(posedge ck or negedge rs)begin
+ if(!rs)begin payload_q<=0;active<=0;age<=0;stride_q<=0;count_q<=0;ns_q<=0;period_q<=0;stop_q<=0;fault<=0;rb<=0;end
  else begin
  rb<=payload?merged:{marker,marker,marker,548'd0};
  if(accept_start)begin

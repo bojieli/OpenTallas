@@ -13,9 +13,9 @@ for x in files:
   assert not m.port_parse_errors,m.port_parse_errors
   out.append(dict(source=x,sha256=hashlib.sha256(t.encode()).hexdigest(),top=m.name,ports={n:dict(direction=m.ports[n][0],bits=m.width(n,m.env()))for n in m.order}))
 a=dict(status='SOURCE_ONLY_UNQUALIFIED',sources=out,
- cycles=dict(controller_execution_added_logic=0,train_source_copy_edges=1,am_station_added_vs_old_master=0,vm_ingress_added_logic=0,return_ro=6,return_pin_input=1),
+ cycles=dict(controller_execution_added_logic=0,train_source_copy_edges=1,cold_reset_release_edges=1,am_station_added_vs_old_master=0,vm_ingress_added_logic=0,return_ro=6,return_pin_input=1),
  calendar='Six parallel halftrain F=D+HB*NH+t*max(8NH,stride)+i*NH+j. NH(split7..11)=4,2,1,3,1. Actual24 capturebanks and64 headonlymarkers. VM PAR_RB1/NB6. Per-route padding unassigned.',
- sizing=dict(capture_bits_per_half=24*2212,capture_and_emit_ff_per_half=24*(2212+551),parent_output_ff_per_half=551,parent_control_ff_census='pending synthesis',clock_entries_per_half=25,per_bank_ff=2763,
+ sizing=dict(capture_bits_per_half=24*2212,capture_and_emit_ff_per_half=24*(2212+551+1),parent_output_ff_per_half=551,parent_control_ff_census='66507 total genericFF before cold reset stations; +25 resetFF in successor, rerun pending',clock_entries_per_half=25,per_bank_ff=2764,
  max_capture_bits_per_edge=6*2213,max_result_bits_per_edge=6*551,
  new_external_vm_payload_pins=3*551,tt_extra_control_pins=3*341+3*26+6+1+50,
  normal_cycles_from_capture_zero_to_last_payload_pin='D+5NH+(tiles-1)*max(8NH,stride)+7NH+NH-1+1 (observe after output-register edge); marker-only has one fewer edge',
