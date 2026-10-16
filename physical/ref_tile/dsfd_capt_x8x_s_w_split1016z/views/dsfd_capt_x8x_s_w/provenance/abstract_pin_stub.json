@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/dsfd_capt_x8x_s_w.lef",
-    "sha256": "3cd3ddf49dfb44604d53ef7084c55314075e02f918fa12dc77e29ced32203378"
+    "sha256": "9097be2e89e250de7aa684cfeb79a327111df8463a8a849162ccbd914e951aa3"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-b786448b1/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-750db493b/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-b786448b1/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-b786448b1/record/views/dsfd_capt_x8x_s_w/provenance/raw/dsfd_capt_x8x_s_w.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-b786448b1/record/views/dsfd_capt_x8x_s_w/provenance/dsfd_capt_x8x_s_w.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-750db493b/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-750db493b/record/views/dsfd_capt_x8x_s_w/provenance/raw/dsfd_capt_x8x_s_w.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-750db493b/record/views/dsfd_capt_x8x_s_w/provenance/dsfd_capt_x8x_s_w.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 3 OBS rects moved into 3 pins: ckv[0], ckvb[0], rsv[0]; pockets: 379 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 3 OBS rects moved into 3 pins: ckv[0], ckvb[0], rsv[0]; pockets: 244 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-b786448b1/record/views/dsfd_capt_x8x_s_w/provenance/dsfd_capt_x8x_s_w.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8x_s_w_split1016z-x43-750db493b/record/views/dsfd_capt_x8x_s_w/provenance/dsfd_capt_x8x_s_w.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "dsfd_capt_x8x_s_w 86.4 x 183.6: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 2515 blocked-above 0 blocked-same 0; clock ckv[0] insertion 174 ps; clock ckvb[0] insertion 170 ps; pockets M5 0 (closed)",
+    "summary": "dsfd_capt_x8x_s_w 86.4 x 183.6: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 2515 blocked-above 0 blocked-same 0; clock ckv[0] insertion 172 ps; clock ckvb[0] insertion 169 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "dsfd_capt_x8x_s_w",
       "W": 86.4,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 2515,
         "blocked_above": 0,
-        "covered_below": 157,
+        "covered_below": 152,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "ckv[0]": {
-          "max_ps": 174.35,
-          "min_ps": 127.97
+          "max_ps": 171.97,
+          "min_ps": 127.98
         },
         "ckvb[0]": {
-          "max_ps": 169.97,
-          "min_ps": 134.26
+          "max_ps": 168.74,
+          "min_ps": 136.28
         }
       },
       "pockets": {
@@ -91,7 +91,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 379
+          "added": 244
         },
         "count": 0,
         "area_um2": 0,
@@ -101,6 +101,6 @@
   },
   "output": {
     "path": "dsfd_capt_x8x_s_w.lef",
-    "sha256": "9dfcdcc264e6be2d3c28c5d221134ce1634808bd72d935a93f11222806cafb75"
+    "sha256": "5ed23ad14f4fee45c4488a0065f76208f71c3e12043a916d3e70f60f1c574982"
   }
 }
