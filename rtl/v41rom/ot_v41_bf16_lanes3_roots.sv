@@ -110,49 +110,20 @@ module ot_v41_bf16_lanes3_roots #(
             assign ct[4*g+j]=ct_g[(TRW+1)*j +: TRW+1];
         end
     end endgenerate
-    // 4-level pairwise tree over the 16 chunk sums (all lanes emit in the same cycle)
-    wire [31:0] lvv [0:4][0:15];
-    wire [15:0] lve [0:4];
-    wire [4:0] lvvld;
-    wire [TRW:0] lvt [0:4];
-    generate for (l = 0; l < 16; l = l + 1) begin : g_in
-        assign lvv[0][l] = cs[l];
-        assign lve[0][l] = cf[l];
-    end endgenerate
-    assign lvvld[0] = cv[0];
-    assign lvt[0] = ct[0];
-    wire [1:0] tree_clk, tree_rst;
-    for (genvar q=0;q<2;q++) begin : g_tree_root
-        ot_v41_tile_clk u_tc (.fclk(leaf_clk[4+q]), .rst_pin(rst_pin), .ze_d(ze_d),
-                             .gclk(tree_clk[q]), .rst_n(tree_rst[q]));
+    wire [511:0] lane_values;
+    for(genvar n=0;n<16;n++) begin:g_lane_pack
+        assign lane_values[32*n +:32]=cs[n];
     end
-    genvar lv, k;
-    generate for (lv = 0; lv < 4; lv = lv + 1) begin : g_lv
-        wire lvclk=tree_clk[lv==0?0:1];
-        wire lvrst=tree_rst[lv==0?0:1];
-        localparam integer NN = 16 >> (lv + 1);
-        for (k = 0; k < NN; k = k + 1) begin : g_n
-            wire [1:0] e;
-            wire vo;
-            ot_v41_fadd #(.CUT(CUTT)) u_a (.clk(lvclk), .rst_n(lvrst), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
-                                          .b(lvv[lv][2*k+1]), .y(lvv[lv+1][k]), .err(e), .valid_out(vo));
-            reg [LATT-1:0] ep;
-            always @(posedge lvclk) ep <= {ep[LATT-2:0], lve[lv][2*k] | lve[lv][2*k+1]};
-            assign lve[lv+1][k] = ep[LATT-1] | (e != 2'd0);
-        end
-        for (k = NN; k < 16; k = k + 1) begin : g_z
-            assign lvv[lv+1][k] = 32'd0;
-            assign lve[lv+1][k] = 1'b0;
-        end
-        reg [LATT-1:0] vp;
-        always @(posedge lvclk or negedge lvrst) if (!lvrst) vp <= '0; else vp <= {vp[LATT-2:0], lvvld[lv]};
-        assign lvvld[lv+1] = vp[LATT-1];
-        ot_hdc_delay #(.W(TRW + 1), .D(LATT)) u_t (.clk(lvclk), .rst_n(lvrst), .d(lvt[lv]), .q(lvt[lv+1]));
-    end endgenerate
-    assign ov = lvvld[4];
-    assign oval = lvv[4][0];
-    assign otree = lvt[4][TRW:1];
-    assign ofinal = lvt[4][0];
-    assign oerr = lve[4][0];
-    assign fault = |cfault;
+    wire v_low;wire [255:0] low_values;wire [7:0] low_errors;
+    wire [TRW:0] low_tag,final_tag;
+    ot_v41_bf_reduce #(.NIN(16),.LEVELS(1),.TRW(TRW),.CUT(CUTT)) u_reduce_low
+      (.fclk(leaf_clk[4]),.rst_pin(rst_pin),.ze_d(ze_d),.iv(cv[0]),
+       .values_in(lane_values),.errors_in(cf),.tag_in(ct[0]),
+       .ov(v_low),.values_out(low_values),.errors_out(low_errors),.tag_out(low_tag));
+    ot_v41_bf_reduce #(.NIN(8),.LEVELS(3),.TRW(TRW),.CUT(CUTT)) u_reduce_high
+      (.fclk(leaf_clk[5]),.rst_pin(rst_pin),.ze_d(ze_d),.iv(v_low),
+       .values_in(low_values),.errors_in(low_errors),.tag_in(low_tag),
+       .ov(ov),.values_out(oval),.errors_out(oerr),.tag_out(final_tag));
+    assign otree=final_tag[TRW:1];assign ofinal=final_tag[0];
+    assign fault=|cfault;
 endmodule

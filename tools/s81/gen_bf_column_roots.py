@@ -92,6 +92,76 @@ module ot_v41_bf_lane4 #(
         end
     end endgenerate"""
     s=s[:start]+newbody+s[end:]
+    # Pairwise reductions form two further real leaves (8 adders, then4+2+1).
+    reduction="""`timescale 1ns/1ps
+// GENERATED from the original golden-order pairwise reduction; zero extra edges.
+module ot_v41_bf_reduce #(
+ parameter integer NIN=16,LEVELS=1,TRW=7,
+ parameter [8:0] CUT=9'b1_1111_1111,
+ parameter integer NOUT=NIN>>LEVELS,
+ parameter integer LAT=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]
+)(input wire fclk,rst_pin,ze_d,iv,
+ input wire [32*NIN-1:0] values_in,
+ input wire [NIN-1:0] errors_in,
+ input wire [TRW:0] tag_in,
+ output wire ov,
+ output wire [32*NOUT-1:0] values_out,
+ output wire [NOUT-1:0] errors_out,
+ output wire [TRW:0] tag_out);
+ wire clk,rst_n;
+ ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));
+ wire [31:0] val[0:LEVELS][0:NIN-1];
+ wire [NIN-1:0] err[0:LEVELS];
+ wire [LEVELS:0] valid;
+ wire [TRW:0] tag[0:LEVELS];
+ assign valid[0]=iv;assign tag[0]=tag_in;
+ for(genvar n=0;n<NIN;n++) begin:g_input
+  assign val[0][n]=values_in[32*n +:32];assign err[0][n]=errors_in[n];
+ end
+ for(genvar lv=0;lv<LEVELS;lv++) begin:g_level
+  localparam integer NN=NIN>>(lv+1);
+  for(genvar k=0;k<NN;k++) begin:g_node
+   wire [1:0] e;wire vo;
+   ot_v41_fadd #(.CUT(CUT)) u_a(.clk(clk),.rst_n(rst_n),.valid_in(valid[lv]),
+    .a(val[lv][2*k]),.b(val[lv][2*k+1]),.y(val[lv+1][k]),.err(e),.valid_out(vo));
+   reg [LAT-1:0] ep;
+   always @(posedge clk) ep<={ep[LAT-2:0],err[lv][2*k]|err[lv][2*k+1]};
+   assign err[lv+1][k]=ep[LAT-1]|(e!=2'd0);
+  end
+  for(genvar k=NN;k<NIN;k++) begin:g_zero
+   assign val[lv+1][k]=32'd0;assign err[lv+1][k]=1'b0;
+  end
+  reg [LAT-1:0] vp;
+  always @(posedge clk or negedge rst_n) if(!rst_n)vp<='0;else vp<={vp[LAT-2:0],valid[lv]};
+  assign valid[lv+1]=vp[LAT-1];
+  ot_hdc_delay #(.W(TRW+1),.D(LAT)) u_tag(.clk(clk),.rst_n(rst_n),.d(tag[lv]),.q(tag[lv+1]));
+ end
+ for(genvar n=0;n<NOUT;n++) begin:g_output
+  assign values_out[32*n +:32]=val[LEVELS][n];assign errors_out[n]=err[LEVELS][n];
+ end
+ assign ov=valid[LEVELS];assign tag_out=tag[LEVELS];
+endmodule
+"""
+    red=ROOT/'rtl/v41rom/ot_v41_bf_reduce.sv';red.write_text(reduction)
+    start=s.index('    // 4-level pairwise tree over the 16 chunk sums')
+    s=s[:start]+"""    wire [511:0] lane_values;
+    for(genvar n=0;n<16;n++) begin:g_lane_pack
+        assign lane_values[32*n +:32]=cs[n];
+    end
+    wire v_low;wire [255:0] low_values;wire [7:0] low_errors;
+    wire [TRW:0] low_tag,final_tag;
+    ot_v41_bf_reduce #(.NIN(16),.LEVELS(1),.TRW(TRW),.CUT(CUTT)) u_reduce_low
+      (.fclk(leaf_clk[4]),.rst_pin(rst_pin),.ze_d(ze_d),.iv(cv[0]),
+       .values_in(lane_values),.errors_in(cf),.tag_in(ct[0]),
+       .ov(v_low),.values_out(low_values),.errors_out(low_errors),.tag_out(low_tag));
+    ot_v41_bf_reduce #(.NIN(8),.LEVELS(3),.TRW(TRW),.CUT(CUTT)) u_reduce_high
+      (.fclk(leaf_clk[5]),.rst_pin(rst_pin),.ze_d(ze_d),.iv(v_low),
+       .values_in(low_values),.errors_in(low_errors),.tag_in(low_tag),
+       .ov(ov),.values_out(oval),.errors_out(oerr),.tag_out(final_tag));
+    assign otree=final_tag[TRW:1];assign ofinal=final_tag[0];
+    assign fault=|cfault;
+endmodule
+"""
     lp=ROOT/'rtl/v41rom/ot_v41_bf16_lanes3_roots.sv';lp.write_text(s)
     path=ROOT/'rtl/v41rom/ot_v41_bf_col.sv';base_col=path.read_text()
     s=replace_once(base_col,'module ot_v41_bf_col #(','module ot_v41_bf_col_roots #(')
@@ -127,6 +197,54 @@ module ot_v41_bf_lane4 #(
     s=replace_once(s,'ot_v41_bf16_lanes3 #(','ot_v41_bf16_lanes3_roots #(')
     # Only BF16 lanes3 has .fclk(clk) at this point (root gate .fclk uses spaces).
     s=replace_once(s,'            .fclk(clk), .rst_pin(b_rst)', '            .leaf_clk(leaf_clk[8:3]), .fclk(clk), .rst_pin(b_rst)')
+    fp_source="`timescale 1ns/1ps\n// Actual FP4/FP8 term and serial chunk chain; no arithmetic or latency changes.\nmodule ot_v41_bf_fp4_chain #(parameter integer NCH=16,TG=7,TW=$clog2(NCH)+TG+6,\n parameter[8:0] CUT=9'b1_0111_1011)(\n input wire fclk,rst_pin,ze_d,v,fp4,input wire[255:0] xq,wq,\n input wire[9:0] xe,we,input wire[TW-1:0] tag,\n output wire cv,output wire[31:0] cs,output wire cf,output wire[TG:0] ct,output wire fault);\n localparam integer HW=$clog2(NCH);\n wire clk,rst_n,term_v,term_f;wire[31:0] term;wire[TW-1:0] term_tag;\n ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));\n ot_v41_bterm4_w10 #(.TW(TW),.P1S(1),.CSAM(10),.P2S(1),.NS(1)) u_term\n (.clk(clk),.rst_n(rst_n),.v(v),.fp4(fp4),.xq(xq),.xe(xe),.wq(wq),.we(we),.tag(tag),\n .ov(term_v),.y(term),.f(term_f),.otag(term_tag));\n ot_v41_chain4 #(.PD(1),.ND(4),.NCH(NCH),.TW(TG+1),.CUT(CUT)) u_chain\n (.clk(clk),.rst_n(rst_n),.v(term_v),.slot(term_tag[TW-1 -:HW]),.first(term_tag[5]),.last(term_tag[4]),\n .term(term),.term_f(term_f),.tag({term_tag[TW-HW-1 -:TG],term_tag[3]}),\n .ov(cv),.osum(cs),.of(cf),.otag(ct),.fault(fault));\nendmodule\n\nmodule ot_v41_bf_fp4_pair_leaf #(parameter integer NCH=16,TG=7,TW=$clog2(NCH)+TG+6,\n parameter[8:0] CUT=9'b1_0111_1011,\n parameter integer LAT=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8])(\n input wire fclk,rst_pin,ze_d,v,fp4,input wire[255:0] xq,wq,\n input wire[9:0] xe,we,input wire[TW-1:0] tag,\n input wire other_v,input wire[31:0] other_sum,input wire other_f,input wire[TG:0] other_tag,\n output wire q_v,output wire[31:0] q_val,output wire q_err,output wire[TG:0] q_tag,output wire fault);\n wire cv,cf;wire[31:0] cs;wire[TG:0] ct;\n ot_v41_bf_fp4_chain #(.NCH(NCH),.TG(TG),.TW(TW),.CUT(CUT)) u_chain\n (.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.v(v),.fp4(fp4),.xq(xq),.wq(wq),.xe(xe),.we(we),.tag(tag),\n .cv(cv),.cs(cs),.cf(cf),.ct(ct),.fault(fault));\n wire clk,rst_n;\n ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));\n wire both=cv&&other_v;wire any_v=cv||other_v;\n wire[TG:0] chosen_tag=cv?ct:other_tag;wire[31:0] one=cv?cs:other_sum;wire one_f=cv?cf:other_f;\n wire[31:0] sum,pass;wire[1:0] err;wire vo;wire[TG+2:0] tp;\n ot_v41_fadd #(.CUT(CUT)) u_pair(.clk(clk),.rst_n(rst_n),.valid_in(both),.a(cs),.b(other_sum),.y(sum),.err(err),.valid_out(vo));\n ot_hdc_delay #(.W(32),.D(LAT)) u_pass(.clk(clk),.rst_n(rst_n),.d(one),.q(pass));\n ot_hdc_delay #(.W(TG+3),.D(LAT)) u_tag(.clk(clk),.rst_n(rst_n),.d({chosen_tag,both,both?(cf|other_f):one_f}),.q(tp));\n reg[LAT-1:0] vp;\n always @(posedge clk or negedge rst_n)if(!rst_n)vp<='0;else vp<={vp[LAT-2:0],any_v};\n assign q_v=vp[LAT-1];assign q_val=tp[1]?sum:pass;assign q_err=tp[0]|(tp[1]&&err!=2'd0);assign q_tag=tp[TG+2:2];\nendmodule\n"
+    fp=ROOT/'rtl/v41rom/ot_v41_bf_fp4_leaves.sv';fp.write_text(fp_source)
+    # Canonical source is BP0/QX10/QP_P1=1; its existing stage boundaries move
+    # intact into two physical FP leaves, with the sibling pair in root0.
+    first=s.index('        ot_v41_bterm4_w10 #(')
+    last=s.index('    end else if (FAST != 0) begin : g_l2',first)
+    s=s[:first]+"""        ot_v41_bf_fp4_pair_leaf #(.NCH(NCH),.TG(TG),.TW(TW),.CUT(CUT)) u_fp0_leaf
+          (.fclk(leaf_clk[0]),.rst_pin(b_rst),.ze_d(b_ze),.v(f_v0),.fp4(f_t[0]),
+           .xq(f_xq0),.xe(f_xe0),.wq(f_w0q),.we(f_we0),.tag(f_t),
+           .other_v(c1_v),.other_sum(c1_s),.other_f(c1_f),.other_tag(c1_t),
+           .q_v(q_v),.q_val(q_val),.q_err(q_err),.q_tag(q_tag_native),.fault(c0_fault));
+        ot_v41_bf_fp4_chain #(.NCH(NCH),.TG(TG),.TW(TW),.CUT(CUT)) u_fp1_leaf
+          (.fclk(leaf_clk[1]),.rst_pin(b_rst),.ze_d(b_ze),.v(f_v1),.fp4(1'b1),
+           .xq(f_xq1),.xe(f_xe1),.wq(f_w1q),.we(f_we1),.tag(f_t),
+           .cv(c1_v),.cs(c1_s),.cf(c1_f),.ct(c1_t),.fault(c1_fault));
+"""+s[last:]
+    first=s.index('    if (FAST != 0 && QZ != 0) begin : g_ch3')
+    last=s.index('    if (BP == 1) begin : g_bpc',first)
+    s=s[:first]+s[last:]
+    first=s.index('    // ---------------- sibling-chunk pair (FP4):')
+    last=s.index('    if (BP == 1) begin : g_bp4',first)
+    s=s[:first]+s[last:]
+    s=replace_once(s,'    wire bk_fault;',"""`ifndef SYNTHESIS
+    initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
+        FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1))
+        $fatal(1, \"ten-root extraction supports the source-pinned production column only\");
+`endif
+    wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
+    wire[TG+2:0]pr_t={q_tag_native,2'b00};
+    wire bk_fault;""")
+    segment_source="`timescale 1ns/1ps\n// Generated from ot_v41_bf_col's actual segment reduction and output registers.\nmodule ot_v41_bf_segment_leaf #(\n parameter integer NSEG=8,LV=5,MTP=1,EARLY=1,\n parameter [8:0] CUT=9'b1_0111_1011,\n parameter integer SW=$clog2(NSEG),TRW=SW+(MTP!=0?1:0)\n)(input wire fclk,rst_pin,ze_d,in_v,\n input wire [TRW-1:0] in_tree,input wire [2:0] in_pos,\n input wire [31:0] in_val,input wire in_final,in_err,\n input wire [16*NSEG-1:0] rows,input wire [5*NSEG-1:0] indices,counts,\n output reg pv,output reg[31:0] pval,output reg[15:0] prow,\n output reg[4:0] pseg,pnseg,output reg[2:0] ppos,output reg perr,\n output wire fault);\n wire clk,rst_n;\n ot_v41_tile_clk u_tc(.fclk(fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(clk),.rst_n(rst_n));\n wire tv,te;wire[TRW-1:0] tt;wire[2:0] tp;wire[31:0] tq;\n ot_v41_segtree5 #(.CUT(CUT),.NT(NSEG<<(MTP!=0?1:0)),.LV(LV),.EARLY(EARLY),.QD(8)) u_tree\n (.clk(clk),.rst_n(rst_n),.in_v(in_v),.in_tree(in_tree),.in_pos(in_pos),.in_val(in_val),\n  .in_final(in_final),.in_err(in_err),.ov(tv),.otree(tt),.opos(tp),.oval(tq),.oerr(te),.fault(fault));\n wire[SW-1:0] seg=tt[SW-1:0];\n always @(posedge clk or negedge rst_n) if(!rst_n)pv<=1'b0;else pv<=tv&&!rows[16*seg+15];\n always @(posedge clk) begin\n  pval<=tq;perr<=te;prow<=rows[16*seg +:16];pseg<=indices[5*seg +:5];pnseg<=counts[5*seg +:5];\n  ppos<=MTP!=0?tp:3'd0;\n end\nendmodule\n"
+    segment=ROOT/'rtl/v41rom/ot_v41_bf_segment_leaf.sv';segment.write_text(segment_source)
+    begin=s.index('    wire t_v, t_err;')
+    finish=s.index('    assign bk_fault =',begin)
+    s=s[:begin]+"""    wire [16*NSEG-1:0] rows_p;
+    wire [5*NSEG-1:0] indices_p,counts_p;
+    for(genvar z=0;z<NSEG;z++) begin:g_segment_pack
+        assign rows_p[16*z +:16]=so_row_c[z];
+        assign indices_p[5*z +:5]=b_so_idx[z];
+        assign counts_p[5*z +:5]=b_so_n[z];
+    end
+    ot_v41_bf_segment_leaf #(.NSEG(NSEG),.LV(LV),.MTP(MTP),.EARLY(EARLY),.CUT(CUT)) u_segment_leaf
+      (.fclk(leaf_clk[2]),.rst_pin(b_rst),.ze_d(b_ze),.in_v(b_v),.in_tree(b_tree),
+       .in_pos(b_pos),.in_val(b_val),.in_final(b_final),.in_err(b_err),
+       .rows(rows_p),.indices(indices_p),.counts(counts_p),
+       .pv(pv),.pval(pval),.prow(prow),.pseg(pseg),.pnseg(pnseg),.ppos(ppos),.perr(perr),.fault(t_fault));
+"""+s[finish:]
     cp=ROOT/'rtl/v41rom/ot_v41_bf_col_roots.sv';cp.write_text(s)
     wp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv';w=wp.read_text();w=w.replace('module dsfd_bf_col #(','module dsfd_bf_col_roots #(')
     w=replace_once(w,'    input  wire [775:0] ci,','    input wire [8:0] leaf_ck,\n    input  wire [775:0] ci,')
@@ -135,8 +253,8 @@ module ot_v41_bf_lane4 #(
     rp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv';rp.write_text(w)
     rec={'status':'SOURCE_ONLY_NOT_PHYSICAL_CLOSURE','cycles_added':0,'clock_contract':'10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path',
          'inputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [path,ROOT/'rtl/v41rom/ot_v41_bf16_lanes3.sv',wp]},
-         'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,lp,cp,rp]},
-         'physical_leaf_status':'Root plumbing complete. Extraction/hardening and boundary channel/capture/launch proof still required. No footprint proposed before measured area/cuts.',
+         'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp]},
+         'physical_leaf_status':'Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.',
          'roots':['ck: boundary/memory/input relays','leaf_ck[0]: FP4 term0+chain0+pair','leaf_ck[1]: FP4 term1+chain1','leaf_ck[2]: segment reduction/output','leaf_ck[3]: BF16 lanes0..3','leaf_ck[4]: BF16 lanes4..7','leaf_ck[5]: BF16 lanes8..11','leaf_ck[6]: BF16 lanes12..15','leaf_ck[7]: BF16 pairwise level0','leaf_ck[8]: BF16 pairwise levels1..3']}
     out=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/root_source.json';out.write_text(json.dumps(rec,indent=2)+'\n')
     print(json.dumps(rec,indent=2))

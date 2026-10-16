@@ -119,6 +119,14 @@ module ot_v41_bf_col_roots #(
             for (i = 0; i < 32; i = i + 1) nib[8*i +: 4] = c[4*i +: 4];
         end
     endfunction
+`ifndef SYNTHESIS
+    initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
+        FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1))
+        $fatal(1, "ten-root extraction supports the source-pinned production column only");
+`endif
+    wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
+    wire[TG+2:0]pr_t={q_tag_native,2'b00};
     wire bk_fault;
     // ---- registered boundary (free clock): the column runs one cycle behind the front end
     wire b_rst;                                     // reset synchroniser copy: the column's reset pin (+1 release)
@@ -399,10 +407,15 @@ module ot_v41_bf_col_roots #(
         wire f_v0, f_v1; wire [TW-1:0] f_t; wire [255:0] f_xq0, f_w0q, f_xq1, f_w1q; wire [9:0] f_xe0, f_xe1;
         wire signed [9:0] f_we0, f_we1;
         assign {f_v0, f_v1, f_t, f_xq0, f_xe0, f_w0q, f_we0, f_xq1, f_xe1, f_w1q, f_we1} = fl_o;
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(local_gclk[0]), .rst_n(local_rst[0]), .v(f_v0), .fp4(f_t[0]),
-            .xq(f_xq0), .xe(f_xe0), .wq(f_w0q), .we(f_we0), .tag(f_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(local_gclk[1]), .rst_n(local_rst[1]), .v(f_v1), .fp4(1'b1),
-            .xq(f_xq1), .xe(f_xe1), .wq(f_w1q), .we(f_we1), .tag(f_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
+        ot_v41_bf_fp4_pair_leaf #(.NCH(NCH),.TG(TG),.TW(TW),.CUT(CUT)) u_fp0_leaf
+          (.fclk(leaf_clk[0]),.rst_pin(b_rst),.ze_d(b_ze),.v(f_v0),.fp4(f_t[0]),
+           .xq(f_xq0),.xe(f_xe0),.wq(f_w0q),.we(f_we0),.tag(f_t),
+           .other_v(c1_v),.other_sum(c1_s),.other_f(c1_f),.other_tag(c1_t),
+           .q_v(q_v),.q_val(q_val),.q_err(q_err),.q_tag(q_tag_native),.fault(c0_fault));
+        ot_v41_bf_fp4_chain #(.NCH(NCH),.TG(TG),.TW(TW),.CUT(CUT)) u_fp1_leaf
+          (.fclk(leaf_clk[1]),.rst_pin(b_rst),.ze_d(b_ze),.v(f_v1),.fp4(1'b1),
+           .xq(f_xq1),.xe(f_xe1),.wq(f_w1q),.we(f_we1),.tag(f_t),
+           .cv(c1_v),.cs(c1_s),.cf(c1_f),.ct(c1_t),.fault(c1_fault));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(local_gclk[0]), .rst_n(local_rst[0]), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
             .xq(i2_q0), .xe(i2_e0), .wq(w0q), .we(we0), .tag(mi2_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
@@ -485,35 +498,6 @@ module ot_v41_bf_col_roots #(
     wire          ci1_first = (BP != 0 && fam) ? m_first : l1_t[5];
     wire          ci1_last = (BP != 0 && fam) ? m_last : l1_t[4];
     wire [TG:0]   ci1_tag = (BP != 0 && fam) ? m_tag : {l1_t[TW-HW-1 -: TG], l1_t[3]};
-    if (FAST != 0 && QZ != 0) begin : g_ch3
-    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(local_gclk[0]), .rst_n(local_rst[0]), .v(ci0_v),
-        .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
-        .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(local_gclk[1]), .rst_n(local_rst[1]), .v(ci1_v),
-        .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
-        .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
-    end else if (FAST != 0) begin : g_ch2
-    ot_v41_chain2 #(.NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(local_gclk[0]), .rst_n(local_rst[0]), .v(ci0_v),
-        .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
-        .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain2 #(.NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(local_gclk[1]), .rst_n(local_rst[1]), .v(ci1_v),
-        .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
-        .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
-    end else begin : g_ch1
-    ot_v41_chain #(.NCH(NCH), .TW(TG + 1)) u_c0 (.clk(local_gclk[0]), .rst_n(local_rst[0]), .v(ci0_v),
-        .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
-        .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain #(.NCH(NCH), .TW(TG + 1)) u_c1 (.clk(local_gclk[1]), .rst_n(local_rst[1]), .v(ci1_v),
-        .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
-        .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
-    end
-    // BF16_PAIR: chains 2 and 3 (multipliers 2 and 3) and the 4-chunk combine
-    wire        c2_v, c3_v, c2_f, c3_f, c2_fault, c3_fault;
-    wire [31:0] c2_s, c3_s;
-    wire [TG:0] c2_t, c3_t;
-    wire        q4_v, q4_err;
-    wire [31:0] q4_val;
-    wire [TG:0] q4_t;
     if (BP == 1) begin : g_bpc
         ot_v41_chain2 #(.NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c2 (.clk(gclk_c), .rst_n(rst_mc), .v(m_v),
             .slot(m_slot), .first(m_first), .last(m_last), .term(m_y[2]), .term_f(m_f[2]),
@@ -526,32 +510,6 @@ module ot_v41_bf_col_roots #(
         assign c3_f = 1'b0; assign c2_t = '0; assign c3_t = '0; assign c2_fault = 1'b0; assign c3_fault = 1'b0;
     end
 
-    // ---------------- sibling-chunk pair (FP4): chunk 2p + chunk 2p+1, or the one present ------------------
-    wire both = c0_v && c1_v;
-    wire any = c0_v || c1_v;
-    wire [TG:0] ct = c0_v ? c0_t : c1_t;
-    wire [31:0] one = c0_v ? c0_s : c1_s;
-    wire one_f = c0_v ? c0_f : c1_f;
-    wire [31:0] pr_sum, pr_pass;
-    wire [1:0] pr_err;
-    wire pr_vo;
-    if (FAST != 0) begin : g_pa2
-        ot_v41_fadd #(.CUT(CUT)) u_pair (.clk(local_gclk[0]), .rst_n(local_rst[0]), .valid_in(both), .a(c0_s), .b(c1_s),
-            .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
-    end else begin : g_pa1
-        ot_fp32_add_rne_pipe u_pair (.clk(local_gclk[0]), .rst_n(local_rst[0]), .valid_in(both), .a(c0_s), .b(c1_s),
-            .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
-    end
-    ot_hdc_delay #(.W(32), .D(LAT)) u_pp (.clk(local_gclk[0]), .rst_n(local_rst[0]), .d(one), .q(pr_pass));
-    wire [TG+2:0] pr_t;   // {position, tree, final, both, err}
-    ot_hdc_delay #(.W(TG + 3), .D(LAT)) u_pt (.clk(local_gclk[0]), .rst_n(local_rst[0]),
-        .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t));
-    reg [LAT-1:0] pr_vp;
-    always @(posedge gclk_c or negedge rst_mp)
-        if (!rst_mp) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
-    wire        q_v = pr_vp[LAT-1];
-    wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
-    wire        q_err = pr_t[0] | (pr_t[1] && pr_err != 2'd0);
     if (BP == 1) begin : g_bp4
         // chunks 4k+2 + 4k+3 (golden level 1), then (4k + 4k+1) + (4k+2 + 4k+3) (level 2)
         wire [31:0] pb_sum, l2_sum;
@@ -620,52 +578,18 @@ module ot_v41_bf_col_roots #(
     wire        b_final = bf_v ? bf_final : qq_t[0];
 
     // ---------------- segment tree -> partial ---------------------------------------------------------------------
-    wire t_v, t_err;
-    wire [TRW-1:0] t_tree;
-    wire [2:0]     t_pos;
-    wire [31:0] t_val;
-    if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
-    // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
-    ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(local_gclk[2]), .rst_n(local_rst[2]), .in_v(b_v),
-        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
-        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
-    end else if (FAST != 0 && QPIPE != 0) begin : g_tr3
-    ot_v41_segtree4 #(.XR(0), .XC(QX >= 8 ? 4 : 1), .CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(local_gclk[2]), .rst_n(local_rst[2]), .in_v(b_v),
-        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
-        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
-    end else if (FAST != 0) begin : g_tr2
-    ot_v41_segtree2 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(local_gclk[2]), .rst_n(local_rst[2]), .in_v(b_v),
-        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
-        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
-    end else begin : g_tr1
-    ot_v41_segtree #(.NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY)) u_tree (.clk(local_gclk[2]), .rst_n(local_rst[2]), .in_v(b_v),
-        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
-        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
+    wire [16*NSEG-1:0] rows_p;
+    wire [5*NSEG-1:0] indices_p,counts_p;
+    for(genvar z=0;z<NSEG;z++) begin:g_segment_pack
+        assign rows_p[16*z +:16]=so_row_c[z];
+        assign indices_p[5*z +:5]=b_so_idx[z];
+        assign counts_p[5*z +:5]=b_so_n[z];
     end
-    reg o_v, o_err;
-    reg [31:0] o_val;
-    reg [15:0] o_row;
-    reg [4:0] o_seg, o_n;
-    reg [2:0] o_pos;
-    wire [SW-1:0] t_seg = t_tree[SW-1:0];
-    always @(posedge local_gclk[2] or negedge local_rst[2]) begin
-        if (!local_rst[2]) o_v <= 1'b0;
-        else o_v <= t_v && !(QK != 0 ? so_row_c[t_seg][15] : s_row_c[t_seg][15]);   // row bit 15: an idle half of a pair emits nothing
-    end
-    always @(posedge local_gclk[2]) begin
-        o_val <= t_val; o_err <= t_err;
-`ifdef QP_MUTANT_SHADOW
-        if (0) begin                                                           // negative control: live tables
-`else
-        if (QK != 0) begin
-`endif
-            o_row <= so_row_c[t_seg]; o_seg <= b_so_idx[t_seg]; o_n <= b_so_n[t_seg]; end
-        else begin o_row <= s_row_c[t_seg]; o_seg <= s_idx[t_seg]; o_n <= s_n[t_seg]; end
-        o_pos <= (MTP != 0) ? t_pos : 3'd0;
-    end
-    assign pv = o_v; assign pval = o_val; assign prow = o_row;
-    assign pseg = o_seg; assign pnseg = o_n; assign perr = o_err;
-    assign ppos = o_pos;
+    ot_v41_bf_segment_leaf #(.NSEG(NSEG),.LV(LV),.MTP(MTP),.EARLY(EARLY),.CUT(CUT)) u_segment_leaf
+      (.fclk(leaf_clk[2]),.rst_pin(b_rst),.ze_d(b_ze),.in_v(b_v),.in_tree(b_tree),
+       .in_pos(b_pos),.in_val(b_val),.in_final(b_final),.in_err(b_err),
+       .rows(rows_p),.indices(indices_p),.counts(counts_p),
+       .pv(pv),.pval(pval),.prow(prow),.pseg(pseg),.pnseg(pnseg),.ppos(ppos),.perr(perr),.fault(t_fault));
     assign bk_fault = c0_fault | c1_fault | c2_fault | c3_fault | t_fault | b_fault;
     if (QY != 0) begin : g_qyb
         reg bkf_r;
