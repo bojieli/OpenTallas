@@ -426,6 +426,7 @@ def main():
     ap.add_argument('--width', type=float, default=4104.0, help='total VM width (body = width - capture columns)')
     ap.add_argument('--caprow-per', type=int, default=8)
     ap.add_argument('--hub-plan', help='exact current die hub_layout.json; overrides nominal peer spans')
+    ap.add_argument('--center-band', action='store_true', help='center the actual control/landing/CDC band in its empty middle strip')
     ap.add_argument('--meta4', action='store_true', help='seven standard field4 metadata leaves per slice')
     ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
     ap.add_argument('--read-near', action='store_true')
@@ -440,6 +441,22 @@ def main():
     P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far, a.meta4)
     print('outline', W, H, struct, flush=True)
     W, H = arrange(P, W, H, struct, a.arr)
+    if a.center_band:
+        # The old E-aligned cluster funnels landing/payload and read/return traffic
+        # through one E gcell column. Center its intact connected group in the
+        # empty middle strip; keep every leaf, face, root and parent dimension.
+        y0 = struct['slice_block_um'][1] + CH
+        yh = y0 + struct['band_um'][1]
+        ids = [i for i in P.pos if P.pos[i][1] >= y0-1e-4 and
+               P.pos[i][1]+P.leaves[i]['h'] <= yh+1e-4]
+        x0 = min(P.pos[i][0] for i in ids)
+        x1 = max(P.pos[i][0]+P.leaves[i]['w'] for i in ids)
+        dx = (W-(x1-x0))/2-x0
+        for i in ids:
+            x,y,fx,fy=P.pos[i]; P.pos[i]=(round(x+dx,4),y,fx,fy)
+        struct['center_band_shift_um']=round(dx,4)
+        struct['center_band_leaves']=len(ids)
+
     if a.hop1:
         nets = hop1(P, nets)
         for path in ('write', 'read'):
@@ -456,7 +473,7 @@ def main():
     bad, outside = P.check(W, H)
     res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
-               spans=sp, by_reach={}, metadata_standard_field4=a.meta4)
+               spans=sp, by_reach={}, metadata_standard_field4=a.meta4, center_band=a.center_band, structure=struct)
     if a.hub_plan:
         res['peer_plan'] = dict(path=a.hub_plan, sha256=hashlib.sha256(Path(a.hub_plan).read_bytes()).hexdigest(),
                                 source=json.loads(Path(a.hub_plan).read_text()))
