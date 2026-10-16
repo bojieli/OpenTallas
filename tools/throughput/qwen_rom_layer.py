@@ -149,6 +149,8 @@ def main():
     ap.add_argument("--sha", default="")
     ap.add_argument("--host", default="")
     ap.add_argument("--layer", default="L1", help="the chained layer compared with the priced layer")
+    ap.add_argument("--kv-attention", type=Path, default=ROOT / "results/arch/qwen_attention_rate_1015/receipt.json",
+                    help="measured production KV-die attention receipt (native static service + link), replaces the priced swap")
     a = ap.parse_args()
     run = a.run
     J = lambda p: json.loads(Path(p).read_text())
@@ -276,6 +278,20 @@ def main():
     hand["die_tile_cycles"] = dict(status="UNMEASURED: no die-tile composition run exists",
                                    note="the hardened qfd_* tiles and the TP8 die are not in a per-layer simulation; this record is the "
                                         "cycle-reference core composition")
+    # ---- production KV-die attention: measured native static service (+ link) replaces the priced attn_kv ------------
+    kv_att = dict(cycles=att_prod, status="PRICED", record="results/rtl/tput_map_1011/qwen_kv_die/record.json (its own composed bench)")
+    if a.kv_attention and a.kv_attention.exists():
+        ka = J(a.kv_attention)
+        r = ka["ratio_vs_price"]
+        assert ka["positives_exact"].startswith("53/53"), ka["positives_exact"]
+        att_meas = r["with_link"]
+        kv_att = dict(cycles=att_meas, priced=att_prod, ratio=round(att_meas / att_prod, 4), status="MEASURED (component: service + link)",
+                      service_cycles_T8192=r["service_8192"], link_cycles=ka["budget"]["link_cycles"],
+                      record=str(a.kv_attention.relative_to(ROOT)), source=ka["source_commit"],
+                      calendar="tools/qwen_attention_native/attn_calendar.py (production pv=w16)", exact=ka["positives_exact"])
+        d = att_meas - att_prod
+        items.append(dict(item="KV-die attention (native static w16 service + link) vs priced attn_kv", per_layer=d, l0=d,
+                          added_cycles=36 * d, grade="measured component (service bench + link stages)"))
     added = sum(i["added_cycles"] for i in items)
     e2e = dict(model="serial token path (every node critical, slack 0): added cycles summed over 36 layers + head",
                base_cycles=T, items=items, added_cycles=added, cycles=T + added, e2e_loss_pct=round(AC.loss_pct(T, T + added), 3),
@@ -303,6 +319,12 @@ def main():
                                layer_x_mismatches=neg["layer_x_mismatches"], kv_mismatches=neg["kv_mismatches"],
                                stage_cycles=neg["stage_cycles"], fails_as_required=not neg["exact"]),
                    head=dict(exact=head["exact"], next_token=head["next_token"], cycles=h_meas)),
+        production_layer=dict(priced=p_prod, measured_scope=dict(vehicle_measured=m_layer, minus_vehicle_attention=att_veh,
+                                                                  plus_kv_die_attention=kv_att["cycles"]),
+                              composed=m_layer - att_veh + kv_att["cycles"] + p_relay + sum(adders.values()),
+                              ratio=round((m_layer - att_veh + kv_att["cycles"] + p_relay + sum(adders.values())) / p_prod, 4),
+                              still_priced=dict(issue_relays_r22k=p_relay, **dict(adders)),
+                              note="vehicle layer measured (tile attention swapped out) + measured KV-die attention + the still-priced relay/adder terms"),
         layer=dict(name=a.layer, measured_cycles=m_layer, priced_vehicle_scope=p_vehicle, ratio=round(m_layer / p_vehicle, 4),
                    qualified=bool(pos["exact"] and not neg["exact"] and m_layer <= AC.QUALIFY * p_vehicle),
                    price=dict(source=f"{PRICE_SRC}/L3_base.json + L3_s22ml7.json, {KVD} split_structure, {TP.relative_to(ROOT)}",
@@ -326,7 +348,7 @@ def main():
                                      "inside the priced station lump. No operator class is over 1.10."),
         head=head_rec, handoffs=hand, end_to_end=e2e,
         unmeasured_per_layer=dict(cycles_per_layer=p_relay + sum(adders.values()), share_of_production_layer=round((p_relay + sum(adders.values())) / p_prod, 4),
-                                  items=unmeasured, kv_die_attention=dict(cycles=att_prod, record="results/rtl/tput_map_1011/qwen_kv_die/record.json (its own composed bench)"),
+                                  items=unmeasured, kv_die_attention=kv_att,
                                   embed="embedding fetch through the KV die (272, priced)"),
         registry=dict(model="qwen_rom", qualified_by="layer", class_ratio=reg_ratio,
                       basis=f"{a.layer} chained, measured / priced = {m_layer} / {p_vehicle:.0f}; class ratio = measured windows / priced base windows (no station credit)",
@@ -334,7 +356,7 @@ def main():
         accepted_cost=dict(rows_added=[], why="no unit of the measured layer is over 1.10 against its price"))
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / "record.json").write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps(dict(layer={k: v for k, v in rec["layer"].items() if k != "memstat_die0"}, classes=classes, over=single,
+    print(json.dumps(dict(production_layer=rec["production_layer"], layer={k: v for k, v in rec["layer"].items() if k != "memstat_die0"}, classes=classes, over=single,
                           head=head_rec, vm=vm, e2e=e2e), indent=1))
 
 

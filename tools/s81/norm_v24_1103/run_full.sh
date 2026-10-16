@@ -3,7 +3,7 @@ set -euo pipefail
 tar xf source.tar.gz
 printf '%s\n' 28dd8dbda > SOURCE_COMMIT
 sha256sum source.tar.gz rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv > source.sha256
-export S81_SU_CASES=/srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl
+export S81_SU_CASES=${S81_SU_CASES:-tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl}
 mkdir -p output
 bash tools/s81_suhc/hc_owned_bench.sh "$PWD/output/exact" 1 > output/exact.log 2>&1
 grep -q '^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67 pass$' output/exact.log

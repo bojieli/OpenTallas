@@ -3203,7 +3203,7 @@ def capacity_report():
     """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
     sh, sl = slot_geometry()
     if CANONICAL_LAYOUT is not None:
-        return dict(scope='Canonical immutable full2417 typed frame inventory; actual native binding and transport gates are separate', pairs=2417, bf_double=519, ordinary=1898, bf_pair_ids=sorted(BF_EXPLICIT_IDS), source_sha256=CANONICAL_LAYOUT['sha256'], frames=128, typed_frame_inventory_complete=True)
+        return dict(scope=f'Canonical immutable full{PAIRS} typed frame inventory; actual native binding and transport gates are separate', pairs=PAIRS, bf_double=BF_PAIRS, ordinary=PAIRS-BF_PAIRS, bf_pair_ids=sorted(BF_EXPLICIT_IDS), source_sha256=CANONICAL_LAYOUT['sha256'], frames=128, typed_frame_inventory_complete=True)
     if BF_EXPLICIT_IDS is not None:
         # The typed head inventory is fixed; layer capacity sweeps would
         # change pair identity and omit its dedicated Markov engines.
@@ -4717,7 +4717,7 @@ def build_r8(variant=None):
                 hub['selector'].master = 'dsfd_bk_selector_c1'
     if CANONICAL_LAYOUT is not None:
         m['canonical_layout'] = CANONICAL_LAYOUT
-        variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=2417, bf_pairs=519, root_count=128, phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
+        variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=PAIRS, bf_pairs=BF_PAIRS, root_count=128, wide_hub=CANONICAL_LAYOUT.get('wide_hub'), phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
         # Preserve exact supplemental HCP geometry against all station searches.
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
@@ -10831,7 +10831,8 @@ def apply_options(a):
         from s81.canonical_layout import load as canonical_load
         CANONICAL_LAYOUT = canonical_load(a.canonical_layout, ROOT)
         assert ROOTS == 128 and CFG_PER_PAIR == 7
-        PAIRS, BF_PAIRS, NV_PAIRS = 2417, 519, 0
+        # wide-hub canonical records carry their allocator point (S-DIE 10-15); the 22-column record is 2417/519
+        PAIRS, BF_PAIRS, NV_PAIRS = CANONICAL_LAYOUT['pair_count'], CANONICAL_LAYOUT['bf_pairs'], 0
         BF_PER_REGION = None
         BF_EXPLICIT_IDS = frozenset(CANONICAL_LAYOUT['bf_ids'])
         slot_geometry()

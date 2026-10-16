@@ -246,6 +246,7 @@ def main() -> int:
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
             'io_tcl': f'{PIN_DIR}/{mst}.tcl',
             'recipe': 2,
+            'pin_regs': {'enable': False, 'reason': 'OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price'},
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8 if wb <= 1100 else 16, 'pin_h': 'M4', 'pin_v': 'M3 M5',
                       'm5_pg_pitch': 2.7},
             'structural_change': ((f'First hardening of the GEN18r generated forwarded-clock station {mst} ({n} die instances): '

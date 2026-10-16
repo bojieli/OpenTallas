@@ -1,0 +1,129 @@
+{
+ "name": "hdie_pc_ctrl",
+ "top": "ot_hbm_svc_pc_ctrl_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "pc_fault",
+   "owner_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-DIE",
+  "branch": "claude/hdie-1705",
+  "tag": "hdie",
+  "purpose": "HBM v15 die: per-PC REAL memory controller leaf (owner 10-14 all on-chip execution real): actual ot_hbm_r14_stream_pc sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM; the stack g_pc body verbatim. 128 instances (32/stack) in the PC band boxes between the PHY-only abstract ot_hbm3e_phy_rc_e8p5 (S face) and the SM service groups (N face, K port). Flow control k_rdy/kr_rdy is the HBM-stack boundary (owner 10-14). Clock: the HBM controller clock hbm (CK/2 = 1.024 ns, the r14 timing basis; asynchronous to stream via the group FIFOs); the flow signs off at the die 833.333 ps (stricter than the 1024 ps it runs at). OREG=1: every PHY-side command output from a flop.",
+  "extra_paths": [
+   "tools/hbm_die_v15",
+   "tools/hbm_svc_packed136_image.py",
+   "results/arch/hbm_die_v15/checkpoint_allocation",
+   "rtl/model_ready_hbm_r14",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_leaf.sh {RUN}/bench/exact 0 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SM_STACK_CAPACITY PASS",
+    "min_count_regex": "records=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_leaf.sh {RUN}/bench/mut1 1 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "std_area_um2": 8666,
+ "params": {
+  "P": 0,
+  "PHASE": 0,
+  "OREG": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
