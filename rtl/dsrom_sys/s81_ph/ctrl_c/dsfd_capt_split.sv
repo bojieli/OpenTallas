@@ -419,7 +419,7 @@ endmodule
 module dsfd_capt_rly_64_EW (
     input wire ck, rs, input wire [63:0] i, output wire [63:0] o
 );
-    ot_s81_rly #(.W(64)) u (.ck(ck), .rs(rs), .i(i), .o(o));
+    ot_s81_rly #(.W(64), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));
 endmodule
 
 module dsfd_capt_rly_12_SN (

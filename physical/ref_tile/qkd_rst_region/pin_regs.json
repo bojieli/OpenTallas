@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_rst_region",
+ "enable": false,
+ "reason": "the regional reset root replaces ONE relay stage of a reset-tree chain (kv_die.py 2044: last stage of the region's chain) and its release calendar is compiled to that: the relayed level a is captured by its own flop (a_q, behind the ignore gate) and b is a flop output (rst_o), so both data pins are already registered at the face (io_flop_at_pins anchors them); dly[7:0] is a static die strap (tie cells, constant after power-up) and por_n is the package POR pad (async assert, two-flop synchronised inside). Extra pin registers would add 2 edges to every region's release and break the strap rule dly = D - d_r (release at host + D + 2 + L, generator RST_REGION_IGNORE)."
+}
