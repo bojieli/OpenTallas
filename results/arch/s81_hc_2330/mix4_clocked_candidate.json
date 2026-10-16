@@ -18,10 +18,10 @@
  "arithmetic_changed": false,
  "proof": "clocked relay positive49092 comparisons across D0..5 and17 resets; stopped first station clock mutant8182 mismatches",
  "open": [
-  "Full actual arithmetic MIX4 exact and data mutant",
   "Top ingress/control clock localization and mapped sink census",
   "Real leaf placement/pins/cuts/all incident hops",
   "Physical CTS TT/FF/DRC and clock delivery",
   "Compiler fixed-calendar full native composition"
- ]
+ ],
+ "full_component_proof": "results/arch/s81_hc_2330/mix4_clocked_proof/receipt.json"
 }
