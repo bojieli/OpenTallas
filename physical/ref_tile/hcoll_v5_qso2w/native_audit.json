@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hgi_coll_qso_q2_b32",
+ "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_q2_b32",
+ "lib_cell": "ot_hgi_coll_qso_q2_b32",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 107.9,
+ "spread_ps": 18.8,
+ "outputs": 497,
+ "inputs": 373,
+ "launch_ps": 182.8,
+ "launch_pin": "dst_d[138]",
+ "capture_ps": 141.4,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}
