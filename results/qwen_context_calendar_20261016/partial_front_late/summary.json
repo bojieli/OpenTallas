@@ -1,0 +1,418 @@
+{
+ "source_commit": "claude/qvmwb-ctx-1016 (6599c1558 + late-landing tb mode)",
+ "host": "ot-agidock128 via ot-run",
+ "stimulus": "sector i lands at 7+LATE+i, +STRAG from the first block tail on (bounded lateness at the elastic HBM boundary, owner 0az); default prefetch margin is 27 edges, cases exceed it",
+ "verdict": {
+  "positives_pass": true,
+  "n_pos": 5,
+  "mutants_fail": true,
+  "n_neg": 20
+ },
+ "findings": [
+  "true front holds (hold/stall_edges = the legal exceptional signal) and re-emits all 106002 words exact in order at LATE/STRAG 0/32, 12/24, 30/0, 36/0; default mode still zero hold",
+  "MUT2 (ready one sector early) and MUT3 (release ignores ready) now FAIL with stale ring words in every late case (previously undetected)",
+  "lateness at or below the 27-edge prefetch margin (e.g. 8/12, 4/20) is absorbed: MUT2 passes there and MUT3 is caught only by the never-held check -> keep the >27 cases as the negatives"
+ ],
+ "rows": [
+  {
+   "name": "m0_l0",
+   "mutant": 0,
+   "late": 0,
+   "strag": 0,
+   "exit": 0,
+   "output": "PASS context front 2176 passes 106002 actual words, peak25, zero dummy reads/hold/stalls",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "be280d961d446b98219d3a6de4741a0619769ec80538cb8037ea37efc3fd0c46",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m0_l0s32",
+   "mutant": 0,
+   "late": 0,
+   "strag": 32,
+   "exit": 0,
+   "output": "PASS context front LATE0 STRAG32 2176 passes 106002 actual words exact in order, peak9, hold edges17840",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "7d99df51ed4cef253141dda981fa57eb06e55810e498a7cd98fdce157dfb324e",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m0_l12s24",
+   "mutant": 0,
+   "late": 12,
+   "strag": 24,
+   "exit": 0,
+   "output": "PASS context front LATE12 STRAG24 2176 passes 106002 actual words exact in order, peak9, hold edges22428",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "228cfd19c9e2a1d711e43d22e5fffbbe79ba9f7c343c450e6840b5cd8361223b",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m0_l30s0",
+   "mutant": 0,
+   "late": 30,
+   "strag": 0,
+   "exit": 0,
+   "output": "PASS context front LATE30 STRAG0 2176 passes 106002 actual words exact in order, peak9, hold edges15546",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "3eda75b70dc117ed4812ce25da9166fea1e8116c6b7e70f7e6abc3bf62b40505",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m0_l36s0",
+   "mutant": 0,
+   "late": 36,
+   "strag": 0,
+   "exit": 0,
+   "output": "PASS context front LATE36 STRAG0 2176 passes 106002 actual words exact in order, peak9, hold edges22428",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "6c205a2f417f2c57f9809cbccee6c1df14545e7a9aa60085484ea144ee4af88e",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m10_l0s32",
+   "mutant": 10,
+   "late": 0,
+   "strag": 32,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:54: FAIL context front compiled block length",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "16351fdc9d835c97726711a9ffa06f9db15515916d491b51e87abd63743ba57c",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m10_l12s24",
+   "mutant": 10,
+   "late": 12,
+   "strag": 24,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:54: FAIL context front compiled block length",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "8914de89df3911074d01de7307df73aa31897da998485d653ffad163e69d4d86",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m10_l30s0",
+   "mutant": 10,
+   "late": 30,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:54: FAIL context front compiled block length",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "062081e9d88d07bc65044995552873877e2936d12ec1b26bc7d209dc074b30e9",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m10_l36s0",
+   "mutant": 10,
+   "late": 36,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:54: FAIL context front compiled block length",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "5c40219e35ba6a7c7d93b0c2dce3eeceb1fa257350a0579f817de5567aad2f9f",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m1_l0s32",
+   "mutant": 1,
+   "late": 0,
+   "strag": 32,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge43 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "7ae6f6e247ee080411569e0cd8540dfe3cb24478b5fd1b0f95e58a02ee575571",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m1_l12s24",
+   "mutant": 1,
+   "late": 12,
+   "strag": 24,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge47 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "5384e676c24fc9f057456535a0bfa0d16aa5c18bea09a14a807e823082a1036e",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m1_l30s0",
+   "mutant": 1,
+   "late": 30,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge41 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "e71d6f29d7091a6246eca6b78d7184364a331e4eb3954f764d199f3f06cf3fe3",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m1_l36s0",
+   "mutant": 1,
+   "late": 36,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge47 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "f5d86beeb3aa1974098454b5e3e48815a37bd17d0e738bf0b2a05d1539cc49e1",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m2_l0s32",
+   "mutant": 2,
+   "late": 0,
+   "strag": 32,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "21127fcc501893789b212d63e771218df7495eb729fc9eda68005da6c0fdac19",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m2_l12s24",
+   "mutant": 2,
+   "late": 12,
+   "strag": 24,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "1d740126e159523b7d6a150fb3ca88a1c5f9cdaecf4a5e1e376c65206ce03593",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m2_l30s0",
+   "mutant": 2,
+   "late": 30,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "2266f6f618a81e53c4ef4e1b716b112e60a65bff1618e17b530c984af5971549",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m2_l36s0",
+   "mutant": 2,
+   "late": 36,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "112eaad44b2cef282d3ad5d7b86c321646e22f7849c5fd32598b85340550caf3",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m3_l0s32",
+   "mutant": 3,
+   "late": 0,
+   "strag": 32,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "f3115cfc5056fa75f0a7dae16dc33535d2f9afc9e45004246ebd1e9751c1f703",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m3_l12s24",
+   "mutant": 3,
+   "late": 12,
+   "strag": 24,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "6a2e114a6036d9f6ab8fcbb847af13ab412f0a35d46384d9d2415c716790d43f",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m3_l30s0",
+   "mutant": 3,
+   "late": 30,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "1779ea43ac433017e412bad33db448170e7717e62d2172d5ebbcfde24fa9d5ed",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m3_l36s0",
+   "mutant": 3,
+   "late": 36,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:51: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "90451c7ba589d2db1bc30fb8d6a036f5ebf673d32b94ec5f276896667771267b",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m4_l0s32",
+   "mutant": 4,
+   "late": 0,
+   "strag": 32,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:36: FAIL context front count T1 s0 g0 pass0 seen0/1 blocks1 frees0 idle0",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "82e25fb983831ad3688bfbafa8f54d36ec32315feeb2ca4d620c841c09a20661",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m4_l12s24",
+   "mutant": 4,
+   "late": 12,
+   "strag": 24,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:36: FAIL context front count T1 s0 g0 pass0 seen0/1 blocks1 frees0 idle0",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "f224c78ad4534e0107046ffc5a1881274fc344cf896ef8d8b9099858e54b7180",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m4_l30s0",
+   "mutant": 4,
+   "late": 30,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:36: FAIL context front count T1 s0 g0 pass0 seen0/1 blocks1 frees0 idle0",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "51f5933508ca7ea5743bde3574093391a9a3c67defa852b7be3d4f9f0eb8714e",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  },
+  {
+   "name": "m4_l36s0",
+   "mutant": 4,
+   "late": 36,
+   "strag": 0,
+   "exit": 1,
+   "output": "FATAL: /srv/opentallas-scratch/claude/qvmwb-front-late/src/rtl/test/qwen_static_kv/tb_context_front.sv:36: FAIL context front count T1 s0 g0 pass0 seen0/1 blocks1 frees0 idle0",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "5ca6ed2a01a25c7585df8a52f4699abce9128575266eb7f39b33575480ab9dbe"
+   },
+   "binary_sha256": "419638f43e6a6cf9ae40a59ede99a58d591409d69d8f62a1be787a25da17f79f",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46"
+  }
+ ]
+}

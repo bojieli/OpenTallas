@@ -253,6 +253,8 @@ def main(argv=None):
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--only', default='')
     a = ap.parse_args(argv)
+    if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
+        ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
     K._set_geometry(True)
     case, libs = a.run / 'case_kv', a.run / 'libs'
     FR = frames()

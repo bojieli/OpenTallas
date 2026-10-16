@@ -35,7 +35,8 @@ module qkd_ctrl_pc_host_static #(
     parameter integer STRAP_CDC = 0, // 1: physical HBM pin capture -> two core-domain captures
     parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
     parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
-    parameter integer CONTEXT_DESC = 0
+    parameter integer CONTEXT_DESC = 0,
+    parameter integer STATIC_REFRESH = 0
 ) (
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -75,7 +76,7 @@ module qkd_ctrl_pc_host_static #(
     wire [16:0]  e_sec, l_sec;
     wire [7:0]   e_row, l_row;
     wire [11:0]  co_c;
-    qkd_ctrl_pc_host_static_core #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC)) u_core (
+    qkd_ctrl_pc_host_static_core #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_core (
         .pll_hbm(pll_hbm), .hrst(hrst), .ck(ck), .rsi(rsi), .pc(pc), .ci_c({ci[318:309], ci[52:0]}), .co_c(co_c),
         .es(es), .er(er), .po(po), .pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),
         .static_cmd_owner(static_cmd_owner), .static_cmd(static_cmd), .reserved_rd(reserved_rd),
@@ -125,7 +126,8 @@ module qkd_ctrl_pc_host_static_r2 #(
     parameter integer STRAP_CDC = 0, // 1: physical HBM pin capture -> two core-domain captures
     parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
     parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
-    parameter integer CONTEXT_DESC = 0
+    parameter integer CONTEXT_DESC = 0,
+    parameter integer STATIC_REFRESH = 0
 ) (
     input  wire         pll_hbm,
     input  wire         pll_hbm_b,   // second HBM clock root (same PLL output): port + ECC
@@ -166,7 +168,7 @@ module qkd_ctrl_pc_host_static_r2 #(
     wire [16:0]  e_sec, l_sec;
     wire [7:0]   e_row, l_row;
     wire [11:0]  co_c;
-    qkd_ctrl_pc_host_static_core #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC)) u_core (
+    qkd_ctrl_pc_host_static_core #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_core (
         .pll_hbm(pll_hbm), .hrst(hrst), .ck(ck), .rsi(rsi), .pc(pc), .ci_c({ci[318:309], ci[52:0]}), .co_c(co_c),
         .es(es), .er(er), .po(po), .pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),
         .static_cmd_owner(static_cmd_owner), .static_cmd(static_cmd), .reserved_rd(reserved_rd),

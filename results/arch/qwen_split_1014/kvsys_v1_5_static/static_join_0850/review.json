@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.qwen_kv_static.source_join_review.v1",
+  "date": "2026-10-16T08:50-07:00",
+  "status": "INCOMPLETE_SOURCE_COMPOSITION_ONLY",
+  "landing_source_recovery": {
+    "commit": "35aa71417",
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+    "git_blob": "f5a95925658824328ffd643251cc520c0ddf0d3d",
+    "sha256": "79eff6ebd5afa6f8dc36b6659605c5e90d15b1f4621a3547ae6917ef1d7a775e",
+    "evidence": "Exact source recovery only; historical owner bench scope is not broadened."
+  },
+  "actual_instance_counts": {
+    "writer": 1,
+    "writer_programme": 1,
+    "link": 1,
+    "vport": 16,
+    "landing": 32,
+    "landing_calendar": 32,
+    "front_calendar": 32,
+    "k_issuer": 32,
+    "ectla": 32,
+    "pc_path": 128
+  },
+  "unbound_input_ports": 4712,
+  "unpriced_parameters": 96,
+  "validation": {
+    "actual_pc_composition_lint": "Verilator5.050 --lint-only --timing: rc0 on all17 actual dependency files; existing source warnings retained",
+    "compiler_bind_gate": "17 targeted tests PASS including stale source/default parameter/omitted operand/golden input/wrong width/wrong ECTL latency/writer echoed expectation/physical fallback refusal controls",
+    "native_composition_bench": "NOT RUN",
+    "native_full_layer": false,
+    "physical_qualified": false
+  },
+  "writer_expectation_correction": "Independent qkd_kv_native_programme supplies compiled_word_slot/index/identity/generation to writer; link supplies observed words only. Same independent programme supplies receiver identity/generation expectations. Supersedes stale WRITER_LINK_MAP slot/index echo entries.",
+  "commands": {
+    "template": "python tools/qwen_kv_die/kv_static.py --template --out /tmp/static-join",
+    "opt_in": "OT_KV_STATIC=1 python tools/qwen_kv_die/kv_die.py plan --split --static-graph COMPLETE_COMPILER_JOIN.json --out OUT",
+    "tests": "cd tools/qwen_kv_die && python -m unittest -v test_kv_static"
+  },
+  "qualification_limits": [
+    "No complete production join or installed compiler image exists yet.",
+    "Compiler graph outputs are explicitly SOURCE_GRAPH_ONLY and do not establish ISA semantic correctness or exact-cycle native execution.",
+    "The instruction manifest must enumerate every emitted operation; unsupported programme schemas/kinds, missing endpoints and changed source pins are refused.",
+    "All missing operands/latencies remain null in generated template and cannot emit a die netlist.",
+    "Static physical case and legacy view expansion are refused; actual homes/pins/clocks/relay allocation and native TT FF DRC proofs remain required.",
+    "Original physical closed masters and legacy credit-era trials remain unchanged."
+  ]
+}

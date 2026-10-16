@@ -1,0 +1,123 @@
+{
+ "name": "s81engm_mx4rq1",
+ "kind": "tile",
+ "top": "ot_s81_mx4_rq",
+ "sources": [
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_flat.sv"
+ ],
+ "params": {
+  "VM_LAT": 17,
+  "SUP": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "N": [],
+  "S": [],
+  "W": [
+   "ck",
+   "rst",
+   "u_v",
+   "u_row",
+   "u_vtag",
+   "desc_rq",
+   "desc_row",
+   "dtag",
+   "vtag",
+   "fault"
+  ],
+  "E": [
+   "rq_v",
+   "rq_row"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "MIX4 flat parent VM request port of quarter 1..3 (SUP=1 V-lane suppression): at the slot E face on the quarter's VM rq band (E face toward the VM W face), shell-control requests from the W",
+ "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: new tile of the MIX4 flat parent (dsfd_engram_mix4_flat 1b429b606): top-level glue hardened as tiles so the parent is wires-only",
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
+  "branch": "claude/s81-mix4-parent-0600",
+  "tag": "p17",
+  "purpose": "S81 Engram MIX4 flat parent request port ot_s81_mx4_rq (VM_LAT 17 production, SUP 1)",
+  "benches": [
+   {
+    "name": "flat_prodlat_exact",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --flat --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --tb-g VML=17 --tb-g WCL=12 --out {RUN}/f_m0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS native Engram MIX4 flat.*20480words.*writes640 reads4161.*cycles=878"
+   },
+   {
+    "name": "flat_prodlat_mut2",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --flat --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --tb-g VML=17 --tb-g WCL=12 --mut 2 --out {RUN}/f_m2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault|FAIL [0-9]+ words"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engm_mx4rq1/views",
+  "record_to": "results/rtl/ref_tile/s81engm_mx4rq1",
+  "extra_paths": [
+   "physical/s81_die_pins/v21_engram_arithmetic",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_engram_mix",
+   "tools/s81_suhc",
+   "results/rtl/s81_engram_mix_1014/fixtures"
+  ],
+  "hold_merge": "flat MIX4 parent tile: adopt with the flat parent (slot A geometry pending S-DIE)."
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "new master ot_s81_mx4_rq VM_LAT 17 SUP 1 (MIX4 flat parent tile)"
+ },
+ "defines": [
+  "DSFD_ENGRAM_STATIC_ISSUE"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every port at the tile boundary (input and output registers); flow pin stages would add an unmodelled cycle to the fixed calendar"
+ }
+}
