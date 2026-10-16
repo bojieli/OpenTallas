@@ -5,8 +5,8 @@ The KV die generator emits one relay master per bus width, qkd_rly_<W> (21 maste
 an unrouted frame whose pins sit on M4 at minimum pitch (20.9 pins/um).  With OT_KV_RLY_STD=1 every relay stage binds to
 replicas of FOUR hardened standards (rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv, kits physical/ref_tile/qkd_rlys_<S>):
 
-    qkd_rlys_1    10.8  x 10.8 um     1 b   (reset / boot tree hops qkd_rly_t1, 1-bit words, reverse bits)
-    qkd_rlys_36   10.8  x 10.8 um    36 b
+    qkd_rlys_1    12.96 x 12.96 um    1 b   (reset / boot tree hops qkd_rly_t1, 1-bit words, reverse bits)
+    qkd_rlys_36   12.96 x 12.96 um   36 b
     qkd_rlys_296  21.6  x 47.52 um  296 b
     qkd_rlys_528  21.6  x 82.08 um  528 b   (face <= 86.4 um = a 129.6-um relay channel minus 2 x 21.6-um block keep-outs)
 
@@ -35,7 +35,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RT = 'physical/ref_tile'
 RTL = 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv'
-STD = {1: (10.8, 10.8), 36: (10.8, 10.8), 296: (21.6, 47.52), 528: (21.6, 82.08)}
+STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52), 528: (21.6, 82.08)}
 REPLICA_GAP = 10.8
 GY = 2.16
 CORNERS = ('tt', 'ff', 'ss')
