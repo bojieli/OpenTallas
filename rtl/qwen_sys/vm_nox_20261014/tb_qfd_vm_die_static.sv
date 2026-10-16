@@ -2,6 +2,7 @@
 module tb_qfd_vm_die_static;
 parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,NATIVE_BANKS=0;
 parameter integer RETURN_RO=1,PARTITIONED=0,EXPECTED_RO=RETURN_RO,RETURN_PIN_INPUT=0;
+parameter integer EXPECTED_SU_VL=13+RETURN_RO+RETURN_PIN_INPUT;
 localparam integer NCK=8*(22+14*RETURN_RO)+(6*(10+RETURN_RO)+255)/256;
 localparam integer DELTA=EXPECTED_RO-1;
 integer COMMIT_MUT=0;
@@ -44,7 +45,20 @@ generate for(rg=0;rg<8;rg=rg+1)begin : g_check_r
 end endgenerate
 reg [63:0] swmask=0;reg [23:0] swa0=0,swa1=0;reg [2047:0] swdata=0;
 wire [2366:0] sa;
-qfd_su_vm_pack u_pack(.s_re0(3'd0),.s_re1(3'd0),.s_a0(72'd0),.s_a1(72'd0),.sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1+PACK_MUT),.sw_data(swdata),.red_we(1'b0),.red_addr(24'd0),.red_data(32'd0),.va(sa));
+reg[2:0] su_re=0;reg[71:0]su_a0=0,su_a1=0;wire[6143:0]su_q;
+reg[EXPECTED_SU_VL:0] su_expected_v=0;
+reg[6143:0] su_expected_q[0:EXPECTED_SU_VL];
+integer su_replies=0;
+always @(posedge clk)begin
+ if(!rst_n)su_expected_v<=0;
+ else begin
+  su_expected_v<={su_expected_v,su_re[0]};
+  for(integer age=EXPECTED_SU_VL;age>0;age=age-1)su_expected_q[age]<=su_expected_q[age-1];
+  for(integer copy=0;copy<3;copy=copy+1)
+   for(integer lane=0;lane<64;lane=lane+1)su_expected_q[0][(copy*64+lane)*32+:32]<=32'h3f800000+su_a0[copy*24+:24]+lane+32768;
+ end
+end
+qfd_su_vm_pack u_pack(.s_re0(su_re),.s_re1(su_re),.s_a0(su_a0),.s_a1(su_a1),.sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1+PACK_MUT),.sw_data(swdata),.red_we(1'b0),.red_addr(24'd0),.red_data(32'd0),.va(sa));
 reg clk=0,rst_n=0; always #1 clk=~clk;
 reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
@@ -544,7 +558,7 @@ qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NA
 .ck_r6_61(clk),
 .ck_r6_62(clk),
 .ck_r6_63(clk),
-.sa(sa),.sq(),.mx(553'd0),.rb0(551'd0),.rb1(551'd0),.rb2(551'd0),
+.sa(sa),.sq(su_q),.mx(553'd0),.rb0(551'd0),.rb1(551'd0),.rb2(551'd0),
 .ld(),.mo(),.mee(1'b1),
 .svr(svr),.svr_rdy(),.svq(svq),.svq_v(svq_v),.svw(svw),.ar(ar),.xaw(),
 .write_commit_v(cv),.write_commit_line(cl),.write_commit_mask(cm),
@@ -554,6 +568,10 @@ integer l;begin for(l=0;l<16;l=l+1)image[32*l+:32]=32'h3f800000+16*row+l+epoch*3
 endfunction
 always @(negedge clk) if(rst_n)begin
 cycles=cycles+1;
+if(su_expected_v[EXPECTED_SU_VL])begin
+ su_replies=su_replies+3;
+ if(su_q!==su_expected_q[EXPECTED_SU_VL])begin errors=errors+1;$display("FAIL static SU reply cycle=%0d VL=%0d",cycles,EXPECTED_SU_VL);end
+end
 if(fv)begin
  if(fb!==5'(fence_commits) || ft!==59'h12345678)$fatal(1,"FAIL fence beat/tag");
  if(cycles-awcycle[fb]!=9)$fatal(1,"FAIL fence output latency");
@@ -615,7 +633,19 @@ repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
 repeat(46+DELTA)@(negedge clk);
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL SU beats=%0d fault=%0d",beats,fault);end
-if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=%0d Q_cadence=1 RO=%0d real_relay_tiles=%0d",requests,12+EXPECTED_RO,RETURN_RO,PARTITIONED?NCK:0);
+// Compiler-reserved SU read burst after the real epoch1 SU write producer.
+// Actual three mapped operand copies return64rawFP32words each, every edge.
+for(i=0;i<256;i=i+1)begin
+ su_re=3'b111;
+ for(integer copy=0;copy<3;copy=copy+1)begin
+  su_a0[copy*24+:24]=24'((856+(i+copy*5)%28)*16);
+  su_a1[copy*24+:24]=su_a0[copy*24+:24]+1;
+ end
+ @(negedge clk);
+end
+su_re=0;repeat(EXPECTED_SU_VL+4)@(negedge clk);
+if(su_replies!=768)begin errors=errors+1;$display("FAIL static SU count=%0d",su_replies);end
+if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=%0d Q_cadence=1 RO=%0d real_relay_tiles=%0d SU_replies=%0d SU_VL=%0d",requests,12+EXPECTED_RO,RETURN_RO,PARTITIONED?NCK:0,su_replies,EXPECTED_SU_VL);
 else $display("FAIL vm_die_static errors=%0d",errors);
 $finish;
 end
