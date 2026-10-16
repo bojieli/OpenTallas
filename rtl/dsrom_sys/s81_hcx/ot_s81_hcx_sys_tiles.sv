@@ -22,7 +22,8 @@
 //
 // CYCLES.  Output arrives at a fixed, data-independent cycle; the systolic chain costs T_LEAF 87 against the flat 33
 // (+54 cycles: 8 sequential adds at LAT 7 instead of 3, 7 registered seams, LAT-8 multiply, 1 descriptor relay).
-// Measured by tb_s81_hcx_projection_sys (both leaves on the same stimulus): see results/rtl/s81_hcx_sys_1016.
+// UNMEASURED analytical candidate: tb_s81_hcx_projection_sys must establish the full command latency.
+// No numerical, throughput, current-slot or physical qualification is inherited from the HBM lane master.
 // =====================================================================================================================
 
 // ---------------------------------------------------------------------------------------------------------------------

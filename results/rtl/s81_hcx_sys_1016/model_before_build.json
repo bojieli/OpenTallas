@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.s81-hcx-systolic-candidate.v1",
+  "adoption": false,
+  "native_qualified": false,
+  "numerical_component_build_only": true,
+  "partition": {
+    "lane_leaves": 32,
+    "lanes_per_leaf": 8,
+    "half_banks": 16,
+    "controllers": 1,
+    "total_child_roots": 49,
+    "projection_replicas_per_rank": 6
+  },
+  "compute": {
+    "MACs_per_cycle": 256,
+    "MACs_per_task": 20480,
+    "arithmetic": "unchanged FP32 chunk8 sequential adds and canonical tree",
+    "MACs_per_weight_byte": 0.25,
+    "MACs_per_x_byte": 0.5
+  },
+  "ports": {
+    "weight_read_bytes_per_cycle": 1024,
+    "x_read_bytes_per_cycle": 512,
+    "staging_bytes_per_cycle": 512,
+    "half_bank_weight_bytes_per_cycle": 64,
+    "half_bank_x_bytes_per_cycle": 32,
+    "half_bank_staging_bytes_per_cycle": 32
+  },
+  "boundaries": {
+    "lane_ingress_bits": 660,
+    "lane_egress_bits": 257,
+    "descriptor_bits_per_half_chain": 39,
+    "partial_sum_bits_per_stage": 1024,
+    "staging_multicast_targets": 16,
+    "staging_payload_bits": 4096,
+    "ctl_sum_ingress_bits": 1024,
+    "ctl_descriptor_egress_bits": 78,
+    "notes": "lane660 includes clk/reset/fst/gov/16 enables/256w/128x/256sum; no all-bank rotation crossbar; actual fanout and tracks unmeasured",
+    "track_capacity": null,
+    "tracks_required": null
+  },
+  "storage": {
+    "ROM4096x266": 64,
+    "SRAM128x256": 16,
+    "resident_sets": 43,
+    "read_ports_replicated": false,
+    "payload_identical_to_flat": true
+  },
+  "area": {
+    "ROM_um2": 490492.66176,
+    "SRAM_um2": 62265.23136,
+    "lane_outlines_um2": 611529.5232,
+    "lower_bound_um2": 1164287.41632,
+    "excludes": "half-bank registers/control, controller/tree/SFU, channels/halos/clock/hold",
+    "historical_v20_slot_um": [
+      1728,
+      1296
+    ],
+    "current_slot_grant": false,
+    "slot_fit": "UNRESOLVED: old grant names flat/partition, not SYS; no child packing"
+  },
+  "latency": {
+    "serial_GHz": 0.9,
+    "flat_T_LEAF": 33,
+    "proposed_SYS_LAT": 86,
+    "proposed_T_LEAF": 87,
+    "leaf_delta_serial_cycles": 54,
+    "status": "analytical only; command latency and both ss/dot phases must be measured",
+    "compiled_schedule_updated": false,
+    "measured_command_cycles": null
+  },
+  "clock": {
+    "root_sink_counts": null,
+    "insertion_ps": null,
+    "spread_ps": null,
+    "status": "existing lane master does not qualify new bank/controller roots"
+  },
+  "physical_submit_allowed": false,
+  "open_gates": [
+    "exact vs flat and independent golden; real mutant",
+    "current slot and actual child placement/pins/cuts <=0.60",
+    "root census/CTS, TT setup/FF hold/DRC0",
+    "fixed full-shape throughput and compiler cycle/visibility integration"
+  ]
+}

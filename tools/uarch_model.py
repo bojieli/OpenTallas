@@ -16828,6 +16828,52 @@ def s81_hcx_resident_native_model():
         adoption=False)
 
 
+def s81_hcx_systolic_partition_model():
+    """Opt-in, unqualified SYS candidate; numerical component builds only.
+
+    Physical admission requires a current slot, child outlines/pins/cut capacity,
+    clock census and measured timing. No price or accepted-cost row changes.
+    """
+    rom_area = 64 * 121.824 * 62.910
+    sram_area = 16 * 94.824 * 41.040
+    lane_area = 32 * 138.24 * 138.24  # existing hc_lanes_ref hard outline
+    return dict(schema='opentallas.s81-hcx-systolic-candidate.v1',
+        adoption=False, native_qualified=False, numerical_component_build_only=True,
+        partition=dict(lane_leaves=32, lanes_per_leaf=8, half_banks=16,
+                       controllers=1, total_child_roots=49, projection_replicas_per_rank=6),
+        compute=dict(MACs_per_cycle=256, MACs_per_task=20480,
+                     arithmetic='unchanged FP32 chunk8 sequential adds and canonical tree',
+                     MACs_per_weight_byte=0.25, MACs_per_x_byte=0.5),
+        ports=dict(weight_read_bytes_per_cycle=1024, x_read_bytes_per_cycle=512,
+                   staging_bytes_per_cycle=512, half_bank_weight_bytes_per_cycle=64,
+                   half_bank_x_bytes_per_cycle=32, half_bank_staging_bytes_per_cycle=32),
+        boundaries=dict(lane_ingress_bits=660, lane_egress_bits=257,
+                        descriptor_bits_per_half_chain=39, partial_sum_bits_per_stage=1024,
+                        staging_multicast_targets=16, staging_payload_bits=4096,
+                        ctl_sum_ingress_bits=1024, ctl_descriptor_egress_bits=78,
+                        notes='lane660 includes clk/reset/fst/gov/16 enables/256w/128x/256sum; '
+                              'no all-bank rotation crossbar; actual fanout and tracks unmeasured',
+                        track_capacity=None, tracks_required=None),
+        storage=dict(ROM4096x266=64, SRAM128x256=16, resident_sets=43,
+                     read_ports_replicated=False, payload_identical_to_flat=True),
+        area=dict(ROM_um2=rom_area, SRAM_um2=sram_area, lane_outlines_um2=lane_area,
+                  lower_bound_um2=rom_area+sram_area+lane_area,
+                  excludes='half-bank registers/control, controller/tree/SFU, channels/halos/clock/hold',
+                  historical_v20_slot_um=[1728,1296], current_slot_grant=False,
+                  slot_fit='UNRESOLVED: old grant names flat/partition, not SYS; no child packing'),
+        latency=dict(serial_GHz=0.9, flat_T_LEAF=33, proposed_SYS_LAT=86,
+                     proposed_T_LEAF=87, leaf_delta_serial_cycles=54,
+                     status='analytical only; command latency and both ss/dot phases must be measured',
+                     compiled_schedule_updated=False, measured_command_cycles=None),
+        clock=dict(root_sink_counts=None, insertion_ps=None, spread_ps=None,
+                   status='existing lane master does not qualify new bank/controller roots'),
+        physical_submit_allowed=False,
+        open_gates=['exact vs flat and independent golden; real mutant',
+                    'current slot and actual child placement/pins/cuts <=0.60',
+                    'root census/CTS, TT setup/FF hold/DRC0',
+                    'fixed full-shape throughput and compiler cycle/visibility integration'])
+
+
 def s81_native_functional_homes_1014_model():
     """Real missing functional homes, unchanged prices, explicit physical debt.
 
