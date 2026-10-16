@@ -1,13 +1,19 @@
 // Candidate only: all command/Y/calendar inputs already in this serial clock domain.
 // No inherited physical view or fixed phase bridge; output y_rdy is compatibility status only.
 module ot_s81_hc_cpin_calendar #(
+    parameter integer COMMAND_POST_AGES = 0,
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, TH = 8
 ) (
     input  wire                cck, crs, sk, srs,
+    input wire [639:0] command_post_ages,
+    output wire [639:0] n_command_post_ages,
     input wire [31:0] y_tag,command_y_tag,command_done_age,command_ss_age,command_scalar_age,
     input wire [4:0] y_row,
     output reg [31:0] n_y_tag,n_command_y_tag,n_command_done_age,n_command_ss_age,n_command_scalar_age,
     output reg [4:0] n_y_row,
+    // Descriptor is held from command capture until the next command; it
+    // shares the command's registered serial boundary without new cycles.
+    // Disabled mode adds no state and preserves the previous parameter profile.
     // die pins
     input  wire                c_cmd_v,
     input  wire [83:0]         c_cmd_d,
@@ -48,6 +54,13 @@ module ot_s81_hc_cpin_calendar #(
     localparam integer NP = (NS + NCOL - 1) / NCOL;
     localparam integer L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0;
     localparam integer YS1 = (L1 > 0) ? L1 * GS * 32 : 1;
+    generate if(COMMAND_POST_AGES!=0)begin:g_command_post_ages
+      reg[639:0]held;
+      always @(posedge sk)if(c_cmd_v)held<=command_post_ages;
+      assign n_command_post_ages=held;
+    end else begin:g_no_command_post_ages
+      assign n_command_post_ages=640'd0;
+    end endgenerate
     // controller-clock domain: command in, done out (pin flops; the seam flops are the combine tile's)
     always @(posedge sk or negedge srs)
         if (!srs) begin n_cmd_v <= 1'b0; c_done_v <= 1'b0; end

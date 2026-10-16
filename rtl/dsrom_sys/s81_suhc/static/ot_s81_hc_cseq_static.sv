@@ -7,7 +7,7 @@ module ot_s81_hc_cseq_static #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW,
     parameter integer PIPE = 1, PD = 40, POST_FIRST = 16, POST_STRIDE = 1, CMD_LAT = 2,VM_LAT = 12,
-    parameter integer POST_EXPLICIT = 0,
+    parameter integer POST_EXPLICIT = 0, COMMAND_POST_AGES = 0,
     parameter [20*32-1:0] POST_AGES = 0
 ) (
     input  wire                 cck, crs, sk, srs,
@@ -27,6 +27,7 @@ module ot_s81_hc_cseq_static #(
     input wire [31:0] n_y_tag,
     input wire [4:0] n_y_row,
     input wire [31:0] command_y_tag,
+    input wire [639:0] command_post_ages,
     input wire [31:0] command_done_age,command_ss_age,command_scalar_age,
     output reg                  n_ypop,
     input  wire                 w_flt, e_flt,
@@ -132,10 +133,21 @@ module ot_s81_hc_cseq_static #(
       .clk(sk),.rst_n(rs_n),.d(rq_v),.q(expected_response));
     reg y_take;
     reg [4:0] compiled_y_row;
+    // The cpin captures this held descriptor with n_cmd_v. It remains stable
+    // through CMD_LAT and is captured once at actual fixed command acceptance.
+    // This adds640 FF only in the explicit dynamic profile; no1280-bit pipe.
+    wire [639:0] job_post_ages;
+    generate if(COMMAND_POST_AGES!=0)begin:g_command_post_ages
+     reg[639:0]held;
+     always @(posedge sk)if(take)held<=command_post_ages;
+     assign job_post_ages=held;
+    end else begin:g_parameter_post_ages
+     assign job_post_ages=POST_AGES;
+    end endgenerate
     always @(*)begin
      y_take=0;compiled_y_row=0;
      for(integer row=0;row<NR;row=row+1)begin
-      if(run&&kind==K_POST&&age==(POST_EXPLICIT?POST_AGES[row*32+:32]:POST_FIRST+row*POST_STRIDE))begin
+      if(run&&kind==K_POST&&age==((POST_EXPLICIT||COMMAND_POST_AGES)?job_post_ages[row*32+:32]:POST_FIRST+row*POST_STRIDE))begin
        y_take=1;compiled_y_row=5'(row);
       end
      end

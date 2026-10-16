@@ -31,12 +31,13 @@ module dsfd_sp_hc_comb_calendar20 #(
     // 2 = bankpipe WITHOUT the trim: negative control, the HC composition must FAIL (centre chain 2 edges late).
     // 3 = bankpipe PINREG 1 (every leaf pin registered, uniform +3) with the forward pad trimmed by 3 (production
     // candidate); 4 = PINREG 1 without the trim (negative control).
-    parameter integer POST_FIRST=16, POST_STRIDE=1, CMD_LAT=2, VM_LAT=12, POST_EXPLICIT=0,
+    parameter integer POST_FIRST=16, POST_STRIDE=1, CMD_LAT=2, VM_LAT=12, POST_EXPLICIT=0, COMMAND_POST_AGES=0,
     parameter [639:0] POST_AGES=0,
     parameter integer CCF_BP = 3
 ) (
     input  wire                 cck, crs, sk, srs,
     input wire [19:0] sk_leaf,
+    input wire [639:0] command_post_ages,
     input wire [31:0] n_y_tag,command_y_tag,command_done_age,command_ss_age,command_scalar_age,
     input wire [4:0] n_y_row,
     // centre pin tile seam
@@ -168,14 +169,15 @@ module dsfd_sp_hc_comb_calendar20 #(
 
 `ifdef OT_S81_HC_COMB_HARD
     ot_s81_hc_cseq_static #(.PIPE(PIPE), .PD(PIPE_PD), .POST_FIRST(POST_FIRST), .POST_STRIDE(POST_STRIDE),
-        .CMD_LAT(CMD_LAT),.VM_LAT(VM_LAT),.POST_EXPLICIT(POST_EXPLICIT),.POST_AGES(POST_AGES)) u_seq (
+        .CMD_LAT(CMD_LAT),.VM_LAT(VM_LAT),.POST_EXPLICIT(POST_EXPLICIT),.POST_AGES(POST_AGES),.COMMAND_POST_AGES(COMMAND_POST_AGES)) u_seq (
 `else
     ot_s81_hc_cseq_static #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
         .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW),
         .PIPE(PIPE), .PD(PIPE_PD), .POST_FIRST(POST_FIRST), .POST_STRIDE(POST_STRIDE),
-        .CMD_LAT(CMD_LAT),.VM_LAT(VM_LAT),.POST_EXPLICIT(POST_EXPLICIT),.POST_AGES(POST_AGES)) u_seq (
+        .CMD_LAT(CMD_LAT),.VM_LAT(VM_LAT),.POST_EXPLICIT(POST_EXPLICIT),.POST_AGES(POST_AGES),.COMMAND_POST_AGES(COMMAND_POST_AGES)) u_seq (
 `endif
         .n_y_tag(n_y_tag),.n_y_row(n_y_row),.command_y_tag(command_y_tag),
+        .command_post_ages(command_post_ages),
         .command_done_age(command_done_age),.command_ss_age(command_ss_age),.command_scalar_age(command_scalar_age),
         .cck(sk_leaf[0]), .crs(crs), .sk(sk_leaf[0]), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),

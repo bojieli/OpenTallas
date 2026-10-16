@@ -73,5 +73,13 @@ cp=once(cp,"y_rdy <= 1'b0; cnt <= 0; pop <= 1'b0;", "y_rdy <= 1'b0;")
 cp=once(cp,'            pop <= n_ypop;\n            cnt <= cnt + acc - pop;\n            y_rdy <= (cnt + acc - pop) < TH;',"            y_rdy <= 1'b1; // compatibility/status only; not an execution enable")
 cp=once(cp,'endmodule',"    always @(posedge sk) begin\n        n_y_tag <= y_tag; n_y_row <= y_row;\n        n_command_y_tag <= command_y_tag; n_command_done_age <= command_done_age;\n        n_command_ss_age <= command_ss_age; n_command_scalar_age <= command_scalar_age;\n    end\nendmodule")
 (O/'ot_s81_hc_cpin_calendar.sv').write_text('// Candidate only: all command/Y/calendar inputs already in this serial clock domain.\n// No inherited physical view or fixed phase bridge; output y_rdy is compatibility status only.\n'+cp)
+# Default-off compiler-owned descriptor profile; exact checked source transform.
+import sys
+sys.path.insert(0,str(ROOT/'tools/s81_hc_programme'))
+from post_profile import extend
+paths=[O/'ot_s81_hc_cseq_static.sv',O/'dsfd_sp_hc_comb_calendar20.sv',O/'ot_s81_hc_cpin_calendar.sv']
+for path,text in zip(paths,extend(*(p.read_text()for p in paths))):path.write_text(text)
+helper=ROOT/'tools/s81_hc_programme/post_profile.py'
+inputs[str(helper.relative_to(ROOT))]=hashlib.sha256(helper.read_bytes()).hexdigest()
 receipt={'generator_inputs':inputs,'static_controller_origin':ref,'status':'source candidate; static allkind profile/full composition/physical qualification OPEN','clock_map':[{'index':i,'path':path} for i,path in enumerate(['u_seq','u_rx','u_nt',*[f'g_aq[{i}].u_caq' for i in range(4)],'u_cr.u_core','u_cr.g_meta.u_m','g_cf_bp.u_pd.u_f8','g_cf_bp.u_pd.u_f5r1','g_cf_bp.u_pd.u_r6','g_cf_bp.u_pd.u_r5','g_cf_bp.u_cf.u_n','g_cf_bp.u_cf.u_s',*[f'g_cf_bp.u_cf.g_bank[{i}].u_b' for i in range(5)]])], 'generated_files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [O/'ot_s81_hc_pad_roots20.sv',O/'dsfd_sp_hc_comb_roots20.sv',O/'dsfd_sp_hc_comb_calendar20.sv',O/'ot_s81_hc_cseq_static.sv',O/'ot_s81_hc_cpin_calendar.sv']}}
 (ROOT/'results/arch/s81_hc_current_1016/source_join.json').write_text(json.dumps(receipt,indent=2)+'\n')

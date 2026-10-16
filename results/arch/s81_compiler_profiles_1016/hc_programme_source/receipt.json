@@ -1,0 +1,41 @@
+{
+  "time": "2026-10-16T09:22:54.667356-07:00",
+  "scope": "Actual one-ROM metadata formatter and related-clock fixed phase mechanism; no complete HC arithmetic, canonical programme, physical timing, or rate claim",
+  "verdict": "COMPONENT_PASS",
+  "commands": 128,
+  "metadata_fields": 3072,
+  "macro_count": 1,
+  "serial_delivery_edges": 14,
+  "minimum_stream_spacing": 24,
+  "negative_cases": [
+    "serial_phase",
+    "tag",
+    "actual_ROM_cell"
+  ],
+  "native_qualified": false,
+  "physical_qualified": false,
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_hc_programme_source.sv": "34c511549fe5de73e280079b3cdf18721ac727e5260b970d6d1409853065deaa",
+    "rtl/dsrom_sys/s81_static_control/test/tb_s81_hc_programme_source.sv": "d5e6fac230f02225c390c2c4e05e5eb62e9851227963b64fc3a904695b166841",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+    "tools/s81_hc_programme/image.py": "04064e3df2bf90f88d6c7da8a6a16027696f62d463c514f199ea9b816012322d",
+    "tools/s81_static_control/pq_calendar.py": "97dc4da15d65414f2c89db50e74e1cf288eccdb5d4993394ce5119d548175790",
+    "tools/s81/pq_static_calendar_abi.json": "eae731ddf4584469490efeb58ba230f7831725754082e54658cee847f8101b69"
+  },
+  "logs_sha256": {
+    "results/arch/s81_compiler_profiles_1016/hc_programme_source/run1.log": "7c2813a7ad4a1610142e19c8ede3d22393f1a3468a92d4b8783a2c812b0e4b08",
+    "results/arch/s81_compiler_profiles_1016/hc_programme_source/run0.log": "929b76e33b946fb37372e374f1e7d471297025ff226755a3df4052a1c3a2407d",
+    "results/arch/s81_compiler_profiles_1016/hc_programme_source/run2.log": "0ba1b54380b038fc22aa7a328bd824db50bfb203be4b2a2ec61906e1b9aa9e4e",
+    "results/arch/s81_compiler_profiles_1016/hc_programme_source/rom_mut.log": "0ba1b54380b038fc22aa7a328bd824db50bfb203be4b2a2ec61906e1b9aa9e4e",
+    "results/arch/s81_compiler_profiles_1016/hc_programme_source/dynamic_cpin.log": "f909f852e5b4f241988465590db630d67d331f919330cb60a2dd4ff4d6c18801"
+  },
+  "job": "oth-ubuntu-41908-1792167563",
+  "initial_input_packaging_failure": "oth-ubuntu-36879-1792167518 missingpq_static_calendar_abi before compile, corrected input-only noDUTchange",
+  "next": [
+    "actual issuer and native HC sixkind source composition",
+    "completion return bridge",
+    "literal Y tag runtime identity source",
+    "mapped state perroot and body/pin grant",
+    "sourcebound currentVM profile once fullparent gate complete"
+  ]
+}
