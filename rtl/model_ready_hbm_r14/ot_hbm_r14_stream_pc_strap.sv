@@ -156,7 +156,15 @@ module ot_hbm_r14_stream_pc_strap #(
     integer hi;                                       // registered: one cycle behind the queue)
     always @* begin
       hold_n = 0;
-      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
+      if (PHYS_WACT != 0) begin
+        // This exact same set also feeds the current-cycle PRE exclusion.
+        // Reuse the physical-slot onehots instead of rebuilding all32
+        // rotated queue banks from rp on the row-command decision path.
+        for (hi = 0; hi < WQ; hi = hi + 1)
+          hold_n = hold_n | ({32{wq_pv[hi]}} & wq_boh[hi]);
+      end else begin
+        for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
+      end
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok;
