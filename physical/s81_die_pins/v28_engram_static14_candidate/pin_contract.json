@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.s81.candidate_clock_root_pins.v1",
+  "master": "dsfd_engram_lkp_static14",
+  "outline_um": [
+    324,
+    216
+  ],
+  "old_data_source": "physical/s81_ph_views/ports/contract/dsfd_engram_lkp/ports.json",
+  "old_signal_bits": 662,
+  "total_signal_bits": 674,
+  "extra_clocks": [
+    {
+      "name": "ck_hash[0]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 140.028
+    },
+    {
+      "name": "ck_hash[1]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 140.508
+    },
+    {
+      "name": "ck_hash[2]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 140.988
+    },
+    {
+      "name": "ck_hash[3]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 141.468
+    },
+    {
+      "name": "ck_hash[4]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 141.948
+    },
+    {
+      "name": "ck_hash[5]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 142.428
+    },
+    {
+      "name": "ck_rows[0]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 160.044
+    },
+    {
+      "name": "ck_rows[1]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 160.524
+    },
+    {
+      "name": "ck_rows[2]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 161.004
+    },
+    {
+      "name": "ck_rows[3]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 161.484
+    },
+    {
+      "name": "ck_rows[4]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 161.964
+    },
+    {
+      "name": "ck_rows[5]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 162.444
+    },
+    {
+      "name": "ck_seed",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 148.044
+    }
+  ],
+  "clock_roots": 13,
+  "old_ck": {
+    "face": "W",
+    "tangent_um": 107.964
+  },
+  "scope": "Die lead MIX4 guarded native-CTS grant. Restore all662 original rectangle coordinates afterPPL with direct FIRM BPin shapes, preservePG, add12Nclockpins. Actual final674pins/PG/nativeclockandparentbindingstillmandatory beforeadoption.",
+  "required_phase": "Actual phase-related1:1/phase0 internal roots with full min/max crossings, delivered phi-R using measured references.",
+  "grant_from": "/root/s_die/mix4_sizing message20261015",
+  "old_rectangles_preserved": 662,
+  "authority": "CANDIDATE: needs S-DIE grant (v22 662+13 rectangles otherwise unchanged; ck_seed grant still pending)",
+  "derived_from": "v22_engram_14roots_candidate",
+  "change": "static form: removed win_cred, rel[3:0] (rel[0..2] positions reused for win_slot[2:0]), hq_cred (position reused for hr_slot[0]), o_cred; added hr_slot[1..2] at S M5 x 81.084/81.180"
+}

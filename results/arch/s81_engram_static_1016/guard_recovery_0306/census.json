@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.s81.static14.pin_census.v1",
+  "source": "e8619316ec9bd5fb9f480e2d91755c1803421cf5",
+  "mapped_remote": "/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261016-005411",
+  "rows": 674,
+  "unique_names": 674,
+  "mapped_bits": 674,
+  "missing": [],
+  "unexpected": [],
+  "clock_bits": [
+    "ck",
+    "ck_hash[0]",
+    "ck_hash[1]",
+    "ck_hash[2]",
+    "ck_hash[3]",
+    "ck_hash[4]",
+    "ck_hash[5]",
+    "ck_rows[0]",
+    "ck_rows[1]",
+    "ck_rows[2]",
+    "ck_rows[3]",
+    "ck_rows[4]",
+    "ck_rows[5]",
+    "ck_seed"
+  ],
+  "rectangle_rows_sha256": "ae826c07aa74cd764f83eac07e8f33dd129f97a15bd24a1cd070e4eea1b5a13f",
+  "restore_before_sha256": "11d0d828a79e583a3f0b4ffa0eaf15bd321f1b2e8ada36df6d618a8a3479f988",
+  "restore_after_sha256": "c84a8bf025d1473f9f176150eab205248a59c9fefc30f1221b746c3c3ad9ba0c",
+  "change": "Guard/log literal675 corrected to actual674. All674 rectangle rows byte-identical. No ports/clocks/RTL/geometry/constraints/cycles changed.",
+  "gate_failed_only": "IO restore executed all674 exact rectangles then rejected stale675 guard; no missing BTerm."
+}

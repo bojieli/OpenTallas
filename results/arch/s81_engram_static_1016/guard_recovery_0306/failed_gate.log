@@ -1,0 +1,24 @@
+GATE INFO pin_regs: pin registers opted out: RTL dsfd_engram_lkp_static14 already registers every data input and every output at its pin (one flop each, no logic in front/behind); flow pin registers would add a second stage per port
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN rtl: runtime_partselect: 4 runtime-indexed part-select(s), 264 bits (1 >= 64 b; e.g. ot_s81_engram_lookup_static: e1_cat[{e1_off, 6'd0} +: 256] (256 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory  -> FIX: decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)
+GATE INFO remote: ot-run selected ot-epyc4 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81engm_lkp_static14_20261016-005411.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81engm_lkp_static14_20261016-005411.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261016-005411
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 487 s (gate total 7288 s)
+GATE FAIL io_place: IO placement failed:   -> FIX: fix the pin plan / pin layers
+GATE INFO util: synthesized std area 32026 um2 + macros 0 in core 67670: util 47%
+GATE INFO textbook: WARN dsfd_engram_lkp_static14 cells 215,382 flops 45,387 depth 643.5 ps util 0.4735 reach 0.0 um (4.4 s)
+GATE WARN textbook.high_fanout: reset port rst_n: 281 loads (277 flops, e.g. fault$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage u_e.u_hash.g_col[16].s2[1][0]$_DFF_P_ -> u_e.u_hash.g_col[19].s3[0][22]$_DFF_P_/D: ~643 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 381.0..459.8 ps (spread 78.8), boundary mean 394.1; tt insertion all 295.6..368.3 ps (spread 72.7), boundary mean 307.5; ff insertion all 242.4..311.3 ps (spread 68.9), boundary mean 253.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.400 vs spec PD 0.40
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81engm_lkp_static14/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg     4167 paths, worst slack 56.9 ps (e.g. u_e.u_hash.g_col[6].s1[7][23]$_DFF_P_/D)
+GATE INFO path_classes: in->reg       310 paths, worst slack 84.2 ps (e.g. u_e.crc[11]$_DFFE_PN1P_/SETN)
+GATE INFO path_classes: reg->out      300 paths, worst slack 340.1 ps (e.g. fault)
+GATE INFO path_classes: setup WNS 5.6907478729328886e-11 hold WNS 4.613120996310727e-11
+GATE INFO clock_rule: root port:ck_hash[4]: 4,289 sinks on the largest root <= 15,000; measured TT insertion 208.1 ps, leaf spread 14.2 ps
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-engnorm-2210/physical/ref_tile/s81engm_lkp_static14/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-engnorm-2210/physical/ref_tile/s81engm_lkp_static14/gate_layout/density.png
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)
+GATE: s81engm_lkp_static14/gate_result.json written (exact staged source binding; commit it with the kit)
+EXIT 1
