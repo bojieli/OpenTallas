@@ -1,0 +1,56 @@
+{
+ "scope": "Exact wrapper export of existing current native outputs; not numerical or physical qualification",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "42525bda6a091a32d042c592128ca68fdbb2a706a09613849b56884aa47c8c5d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "50b6dc804cc1e8d84725d937374d704f17cc0747afc7a13886e33acd305f76e2"
+ },
+ "emitted_sha256": "838d780799fd7db91e447415d7ceccc8ced20f7ab9f590f226704662140c4c61",
+ "wrappers": [
+  {
+   "top": "dsfd_su_t_kvt_current",
+   "native_core": "ot_s81_su_kvt",
+   "production_instances": 4,
+   "added_output_bits": {
+    "e_mode": 2,
+    "e_nb": 14
+   },
+   "normal_edges_added": 0,
+   "logic_or_state_added": 0,
+   "physical_view": "MISSING: never bind historical master; die must assign current output pins and native gate/bench+mutant/TT/FF/DRC"
+  },
+  {
+   "top": "dsfd_su_t_kve_current",
+   "native_core": "ot_s81_su_kve",
+   "production_instances": 56,
+   "added_output_bits": {
+    "norm_v": 1,
+    "norm_y": 128
+   },
+   "normal_edges_added": 0,
+   "logic_or_state_added": 0,
+   "physical_view": "MISSING: never bind historical master; die must assign current output pins and native gate/bench+mutant/TT/FF/DRC"
+  },
+  {
+   "top": "dsfd_su_t_kvp_current",
+   "native_core": "ot_s81_su_kve",
+   "production_instances": 8,
+   "added_output_bits": {
+    "norm_v": 1,
+    "norm_y": 128
+   },
+   "normal_edges_added": 0,
+   "logic_or_state_added": 0,
+   "physical_view": "MISSING: never bind historical master; die must assign current output pins and native gate/bench+mutant/TT/FF/DRC"
+  }
+ ],
+ "native_lint": {
+  "status": "PASS",
+  "tops": [
+   "dsfd_su_t_kvt_current",
+   "dsfd_su_t_kve_current",
+   "dsfd_su_t_kvp_current"
+  ],
+  "unit": "oth-ubuntu-113567-1792168302",
+  "scope": "Actual native source lint only, no numerical/physical qualification"
+ }
+}

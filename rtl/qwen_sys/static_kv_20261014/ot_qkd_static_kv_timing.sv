@@ -28,7 +28,9 @@ module ot_qkd_static_kv_timing #(
   parameter integer WR_EN = 0, WQ = 4, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
   parameter integer PULLIN = 0,
   parameter integer AQ_RD = 0,
-  parameter integer AQ_STARVE = 64
+  parameter integer AQ_STARVE = 64,
+  parameter integer CONTEXT_DESC = 0,
+  parameter integer STATIC_REFRESH = 0 // new descriptor ABI, legacy default unchanged
 )(
   input  wire        clk, rst_n,
   input  wire        desc_v, output wire desc_r,
@@ -39,6 +41,7 @@ module ot_qkd_static_kv_timing #(
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
   input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
   input wire [9:0] desc_first,
+  input wire desc_context,desc_vpass,desc_k_order_b,input wire [7:0] desc_k_count0,
   output wire schedule_fault,
   output wire phase_idle,
   output wire        busy, output wire ref_fault,
@@ -75,6 +78,13 @@ module ot_qkd_static_kv_timing #(
     endfunction
     reg [10:0] j, n; reg [18:0] row;
     reg v_consumer_order;
+    reg context_active,context_v,context_kb;reg [7:0] context_k0;
+    reg [8:0] ordinal,context_count;
+    function automatic [10:0] context_sector(input [8:0] o,input vp,kb,input [7:0] k0);
+      context_sector=!vp&&kb?(o<k0?{3'b0,o[7:0]}:{3'b0,1'b1,7'(o-k0)}):{1'b0,vp,1'b0,o[3],o[7:4],o[2:0]};
+    endfunction
+    wire context_accept=CONTEXT_DESC!=0 && desc_context;
+    wire [10:0] first_sector=context_accept?context_sector(9'd0,desc_vpass,desc_k_order_b,desc_k_count0):{1'b0,desc_first};
     reg [31:0] open, done, stale, refreshed;
     reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
@@ -90,7 +100,7 @@ module ot_qkd_static_kv_timing #(
     // be admitted with compiled pacing; physical-linear V acquisition cannot.
     wire [7:0] v_ordinal={j[6:3],j[7],j[2:0]};
     wire [7:0] v_next=v_ordinal+8'd1;
-    wire [10:0] j_p1 = v_consumer_order ? {3'b010,v_next[3],v_next[7:4],v_next[2:0]} : j+11'd1;
+    wire [10:0] j_p1 = context_active ? context_sector(ordinal+9'd1,context_v,context_kb,context_k0) : v_consumer_order ? {3'b010,v_next[3],v_next[7:4],v_next[2:0]} : j+11'd1;
     // ---- write queue (WR_EN) ------------------------------------------------------------
     reg [4:0] wq_bank [0:WQ-1]; reg [4:0] wq_col [0:WQ-1]; reg wq_rd [0:WQ-1];
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
@@ -155,7 +165,9 @@ module ot_qkd_static_kv_timing #(
     // ---- per-bank timing state (down-counters; 0 = allowed) ------------------------------
     wire [31:0] rcd_z, ras_z, rtp_z, aok_z, aok_busy, rcdw_z;
     wire [223:0] keys;
-    reg [4:0] bsel;
+    reg [4:0] bsel;reg [4:0] refresh_rr;
+    initial if(STATIC_REFRESH!=0 && (PULLIN!=0 || REF_MODE!=1))$fatal(1,"static RR refresh requires REFpb/no pullin");
+    always @(posedge clk or negedge rst_n)if(!rst_n)refresh_rr<=0;else if(row_fire&&c_op==REFPB)refresh_rr<=refresh_rr+5'd1;
     // Exact next-state eligibility; no extra decision cycle. The cut is
     // specialised to strict refresh and the write-only queue used by Qwen.
     localparam READY_ACTIVE = READY_CUT && PULLIN == 0 && AQ_RD == 0;
@@ -211,8 +223,8 @@ module ot_qkd_static_kv_timing #(
       // within the next two sets) 16..18 farthest first, upcoming = distance, passed 8 + set;
       // idle: IDLE rank (+32 open); +64 if still busy from an earlier tRFCpb / tRC.
       localparam [2:0] S = 3'(b >> 2);
-      wire [2:0] d = S - k;
-      wire ahead = (S >= k && S <= last) || next_posted;
+      wire [2:0] d = context_active ? (S==k?3'd0:3'd1) : S-k;
+      wire ahead = (context_active ? (context_v ? (S==4 || S==5) : (S==0 || S==1)) : (S >= k && S <= last)) || next_posted;
       // WR_EN: the descriptor's last set holds the token's write-back sectors (the service writes
       // only there): its closed banks rank 20, after every other closed bank, streaming or not.
       wire wset = W && S == last && !open[b];
@@ -277,7 +289,7 @@ module ot_qkd_static_kv_timing #(
         for (integer q = 0; q < 2; q = q + 1) begin
           s2k[q] <= m2[q*9 + 2 +: 7]; s2i[q] <= s1i[4*q + m2[q*9 +: 2]];
         end
-        bsel <= (s2k[1] < s2k[0]) ? s2i[1] : s2i[0];
+        bsel <= STATIC_REFRESH!=0?refresh_rr:((s2k[1] < s2k[0]) ? s2i[1] : s2i[0]);
         bkey <= (s2k[1] < s2k[0]) ? s2k[1] : s2k[0];
       end
     // ---- column: one RD per cycle ------------------------------------------------------
@@ -310,7 +322,7 @@ module ot_qkd_static_kv_timing #(
     assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
-      act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};
+      act_bank = {(c >= 4) ? (context_active ? (kk ^ 3'd1) : kk + 3'd1) : kk, 2'(c & 3)};
     endfunction
     // candidates (no dynamic indexing on the decision path): per-bank ACT eligibility, the 4-bank
     // groups of sets k and k+1, lowest-first one-hot selection; PRE of finished banks, lowest first
@@ -318,7 +330,7 @@ module ot_qkd_static_kv_timing #(
     // r8: k as a registered one-hot (koh) and the k+1 validity as a registered flag (k1v), both
     // updated exactly with j/last, so the set selection is an AND-OR, not a k-decoded mux.
     reg [7:0] koh; reg k1v;
-    wire [7:0] k1oh = {koh[6:0], 1'b0};                 // set k+1 (none when k == 7)
+    wire [7:0] k1oh = context_active ? (context_v?(koh^8'h30):(koh^8'h03)) : {koh[6:0], 1'b0};                 // set k+1 (none when k == 7)
     reg [3:0] grp_k, grp_k1;
     always @* begin
       grp_k = 4'b0; grp_k1 = 4'b0;
@@ -332,7 +344,7 @@ module ot_qkd_static_kv_timing #(
     // AQ_RD: a bank the stream still needs (set k .. last, not done) is never precharged as write-opened,
     // and the current queue (hold_n, not only the registered hold) protects the banks of queued accesses
     reg [31:0] sneed;
-    always @* for (integer b = 0; b < 32; b = b + 1) sneed[b] = AQ && streaming && !done[b] && 3'(b >> 2) >= k && 3'(b >> 2) <= last;
+    always @* for (integer b = 0; b < 32; b = b + 1) sneed[b] = (AQ || context_active) && streaming && !done[b] && (context_active ? (context_v ? (3'(b>>2)==4 || 3'(b>>2)==5) : (3'(b>>2)==0 || 3'(b>>2)==1)) : (3'(b >> 2) >= k && 3'(b >> 2) <= last));
     wire [31:0] pre_cand = open & (done | stale | (W ? (wopen & ~sneed) : 32'b0)) & ~blk & ras_z & rtp_z & ~shold &
                            ~(W ? (hold | (AQ ? hold_n : 32'b0)) : 32'b0);
     wire [31:0] pre_oh, act_oh;
@@ -359,9 +371,9 @@ module ot_qkd_static_kv_timing #(
     wire desc_acc = desc_v && !streaming && !fault_r;
     wire k_step = rd_ok && (j[6:0] == 7'h7f);
     wire v_set_flip=v_consumer_order && rd_ok && j[2:0]==3'd7;
-    wire [2:0] k_n = desc_acc ? desc_first[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
-    wire [2:0] last_n = desc_acc ? 3'((desc_n - 11'd1) >> 7) : last;
-    wire [7:0] koh_n = desc_acc ? (8'b1 << desc_first[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
+    wire [2:0] k_n = desc_acc ? first_sector[9:7] : context_active&&rd_ok ? j_p1[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
+    wire [2:0] last_n = desc_acc ? (context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7)) : last;
+    wire [7:0] koh_n = desc_acc ? (8'b1 << first_sector[9:7]) : context_active&&rd_ok ? (8'b1 << j_p1[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
@@ -442,7 +454,7 @@ module ot_qkd_static_kv_timing #(
     assign busy = streaming; assign ref_fault = fault_r;
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
-        streaming <= 0;v_consumer_order<=0; last <= 0; nm1 <= 0;
+        streaming <= 0;v_consumer_order<=0;context_active<=0;context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
@@ -477,10 +489,10 @@ module ot_qkd_static_kv_timing #(
                     & ~(rd_ok ? rd_oh : 32'b0))
                    & {32{!(row_fire && c_op == PREALL)}};
         end
-        if (desc_acc) begin rd_oh <= 32'b1 << {desc_first[9:7],desc_first[1:0]}; rd_bgoh <= 4'b1 << desc_first[1:0]; end
+        if (desc_acc) begin rd_oh <= 32'b1 << {first_sector[9:7],first_sector[1:0]}; rd_bgoh <= 4'b1 << first_sector[1:0]; end
         else if (rd_ok) begin rd_oh <= 32'b1 << {j_p1[9:7], j_p1[1:0]}; rd_bgoh <= 4'b1 << j_p1[1:0]; end
 
-        koh <= koh_n; k1v <= (k_n != 3'd7) && (k_n + 3'd1 <= last_n);
+        koh <= koh_n; k1v <= (desc_acc ? context_accept : context_active) || ((k_n != 3'd7) && (k_n + 3'd1 <= last_n));
         if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
         if (noact_c != 0) noact_c <= noact_c - 1'b1;
 
@@ -536,8 +548,10 @@ module ot_qkd_static_kv_timing #(
         // column
         if (rd_ok) begin
           j <= j_p1;
-          if (j == nm1) streaming <= 0;
-          if (j[6:2] == 5'd31) done <= done | rd_oh;
+          if (context_active ? ordinal+9'd1==context_count : j==nm1) streaming<=0;
+          if(context_active)ordinal<=ordinal+9'd1;
+          if (!context_active && j[6:2] == 5'd31) done <= done | rd_oh;
+          if(context_active && ordinal+9'd1==context_count)done<=done|32'hffffffff;
         end
         // row
         if (row_fire) case (c_op)
@@ -553,9 +567,10 @@ module ot_qkd_static_kv_timing #(
         endcase
         // descriptor
         if (desc_v && !streaming && !fault_r) begin
-          j <= {1'b0,desc_first}; n <= desc_n; row <= desc_row;
-          v_consumer_order <= desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
-          streaming <= (desc_n != 0); nm1 <= desc_n - 11'd1; last <= 3'((desc_n - 11'd1) >> 7);
+          j <= first_sector; n <= desc_n; row <= desc_row;
+          context_active<=context_accept;context_v<=desc_vpass;context_kb<=desc_k_order_b;context_k0<=desc_k_count0;ordinal<=0;context_count<=desc_n[8:0];
+          v_consumer_order <= !context_accept && desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
+          streaming <= (desc_n != 0); nm1 <= desc_n - 11'd1; last <= context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7);
           stale <= open_nx;                     // rows still open from the old descriptor close first
         end
       end

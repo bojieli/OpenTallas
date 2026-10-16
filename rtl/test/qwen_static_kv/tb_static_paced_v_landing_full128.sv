@@ -187,9 +187,9 @@ module qkd_paced_v_landing_return_cell #(parameter integer PC=0, STACK=0, DISCOV
     @(posedge ck);
     // Wrapper has two RD reservation pin stages ahead of its actual core.
     if(phase==0&&t>=2)begin
-     slots[t-2]=dut.u_ctl.core.on.rd_ok;
-     srslots[t-2]=dut.u_ctl.core.on.s_go;
-     wrslots[t-2]=dut.u_ctl.core.on.wr_ok;
+     slots[t-2]=dut.u_core.u_ctl.core.on.rd_ok;
+     srslots[t-2]=dut.u_core.u_ctl.core.on.s_go;
+     wrslots[t-2]=dut.u_core.u_ctl.core.on.wr_ok;
     end
     if(po[0]&&po[3:1]==3'd1)openrow[po[8:4]]=po[27:9];
     if(po[28])begin

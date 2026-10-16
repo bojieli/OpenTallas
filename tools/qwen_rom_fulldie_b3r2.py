@@ -30,6 +30,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import re
 from pathlib import Path
 import sys
@@ -1108,6 +1109,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         if m.get('corridor_lanes'):
             v.CORR = min(w_ for _, w_ in m['corridor_lanes'])
         try:
+            if os.environ.get('OT_SPLIT_B2', '0') == '1':
+                from qwen_split.b2_graph import apply as apply_b2_graph
+                apply_b2_graph(v, m)
             _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0

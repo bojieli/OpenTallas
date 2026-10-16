@@ -37,3 +37,12 @@ def test_malformed_candidate_is_transactional(tmp_path,change):
     if change=='outline':d['homes']['a']['w']=11
     with pytest.raises(ValueError):run(tmp_path,m,d)
     assert m==before
+
+
+def test_repacked_outline_recomputes_area_and_margin(tmp_path, monkeypatch):
+    m=model();m['die'].update(mm2=840.715,budget_mm2=858,margin_mm2=17.285)
+    d=candidate(m);d.update(schema='opentallas.qwen.globalfp-q-homes.2210.v1',die=dict(w=120,h=80))
+    d['homes']['b']=dict(m='M',x=20,y=0,w=10,h=10,o='R0')
+    monkeypatch.setenv('OT_SPLIT_HOMES_REBASE','1')
+    run(tmp_path,m,d)
+    assert m['die']==dict(w=120.,h=80.,mm2=.010,budget_mm2=858,margin_mm2=857.990)

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ccf_bankpipe_bank256",
+ "enable": false,
+ "reason": "HC-COMB 2026-10-16: leaf of the CCF successor ot_s81_hc_ccf_bankpipe PINREG=1 (branch claude/s81hc-comb-ccfbp-0700): the RTL registers every data input and output at the pin (pop/push keep flops, data d0, head/hv/ovf output registers; srs = reset relay); a second register would move the uniform +3 public shift that the comb's forward pad trim 3 absorbs (exact HC composition, CCF_BP=3)."
+}

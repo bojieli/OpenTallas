@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_mx4_rq",
+ "enable": false,
+ "reason": "the RTL registers every port at the tile boundary (input and output registers); flow pin stages would add an unmodelled cycle to the fixed calendar"
+}

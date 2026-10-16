@@ -1,0 +1,18 @@
+port	dir	width	cycles	why
+ck	input	1	0	clock
+rst	input	1	0	reset
+sk_en	input	1	1	pin register
+i_cv	input	1	1	pin register
+i_nv	input	7	1	pin register
+i_scale	input	32	1	pin register
+i_sink	input	32	1	pin register
+i_sv	input	1	1	pin register
+i_s	input	32	1	pin register
+i_mv	input	1	1	pin register
+i_nmb	input	32	1	pin register
+o_mxv	output	1	1	pin register
+o_mx	output	32	1	pin register
+o_ev	output	1	1	pin register
+o_es	output	1	1	pin register
+o_el	output	1	1	pin register
+o_e	output	32	1	pin register

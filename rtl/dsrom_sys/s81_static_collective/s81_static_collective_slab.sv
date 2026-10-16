@@ -16,7 +16,8 @@ module s81_static_collective_slab #(
  output wire[7:0]phy_tx_valid,output wire[4095:0]phy_tx_data,
  input wire[513:0]f_wfc,output wire[513:0]t_wfc,
  input wire[76:0]f_host,output wire[514:0]t_host,
- output wire[8191:0]t_hc_y,output wire t_hc_yv,output wire[31:0]t_hc_tag
+ output wire[8191:0]t_hc_y,output wire t_hc_yv,output wire[31:0]t_hc_tag,
+ output wire[4:0]t_hc_y5 // additive y_row5 = reduced_seq[8:4], registered with t_hc_yv/t_hc_tag
 );
  wire read_slot;
  wire [13:0]read_row;
@@ -178,9 +179,9 @@ module s81_static_collective_slab #(
  s81_static_hc_assemble_clocked assemble(
  .clk_lane(ck_hc_lane),.clk_control(ck_control[4]),.rst_n(rn_control[4]),.write_slot(hc_assemble_slot),
  .word_index(hc_word_index),.word_valid(reduced_valid&&hc_assemble_slot),
- .word_data(reduced_data),.word_tag(reduced_tag),.word_error(reduced_error),
+ .word_data(reduced_data),.word_tag(reduced_tag),.word_row(reduced_seq[8:4]),.word_error(reduced_error),
  .emit_slot(hc_emit_slot),.emit_tag(hc_emit_tag),.row_valid(t_hc_yv),
- .row_data(t_hc_y),.row_tag(row_tag),.fault(assemble_fault));
+ .row_data(t_hc_y),.row_tag(row_tag),.row_y5(t_hc_y5),.fault(assemble_fault));
  wire raw_send;reg raw_send_q;reg[2:0]raw_channel;reg raw_last;
  integer c;reg[2:0]raw_tx_count;
  always @*begin

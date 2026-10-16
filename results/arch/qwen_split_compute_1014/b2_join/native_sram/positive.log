@@ -1,0 +1,12 @@
+OP id1 split9 tiles1 ns1 last_end_delta16
+OP id12 split8 tiles3 ns2 last_end_delta61
+OP id16 split7 tiles1 ns4 last_end_delta55
+OP id20 split8 tiles3 ns2 last_end_delta125
+OP id110 split10 tiles1 ns3 last_end_delta42
+OP id111 split11 tiles1 ns1 last_end_delta16
+OP id64 split7 tiles8 ns4 last_end_delta278
+PASS b2 native halftrain SRAM checked560 emitted848 bursts144 with64headmarkers
+- tools/qwen_b2_join/tb_b2_train.sv:626: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 0.279 s; speed 51.656 us/s
+- Verilator: cpu 0.279 s on 1 threads; allocated 16 MB

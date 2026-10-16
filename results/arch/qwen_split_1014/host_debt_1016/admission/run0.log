@@ -1,0 +1,5 @@
+PASS actual_RX HOST4 ING16 CTRLlive retainedcredit/order faultlocked
+- tb_host_rx_admission.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.000 s; speed 4.702 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 6 MB
