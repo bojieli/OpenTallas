@@ -20,3 +20,13 @@ hier_block -module "qkd_native_attention_endpoint"
 hier_block -module "ot_qwen_tp8_attention_native_service_w16_g3s2"
 hier_block -module "qkd_head_g3s2_native"
 hier_block -module "ot_qwen_tp8_pv_wide_pair"
+
+// Service-glue OOM at128GB: hard library cuts for the actual512-lane
+// finalize arithmetic, physical PV columns/leaves and return capture.
+hier_block -module "ot_qwen_tp8_pv256_finalize_static_cal"
+hier_block -module "ot_qwen_tp8_vrow_capture"
+hier_block -module "ot_qkd_ahub_static_die_cal"
+hier_block -module "ot_qwen_tp8_pv_col"
+hier_block -module "ot_qwen_tp8_pv_slice_t"
+hier_block -module "ot_qwen_tp8_pv_join_t"
+hier_block -module "ot_qwen_tp8_pv_wide_ctl"
