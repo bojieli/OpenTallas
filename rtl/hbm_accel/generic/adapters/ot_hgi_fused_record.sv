@@ -39,6 +39,7 @@ module ot_hgi_fused_record #(
                                            //   the micro-op lowering; other shapes keep the lowering
     parameter integer HCD = 5120,
     parameter integer HMUT = 0,            // ot_hgi_hc_eng MUT (bench negatives)
+    parameter integer ULQ = 8,             // UWIDE / HCE: credits a wide VM lane holds (= the VM lane queue depth)
     parameter integer URWB = 6             // UWIDE = 0: log2 rows of the internal SU's reducer-result file: a reduction whose
                                            //   result rows exceed it (the HC mix: d rows; ROW_NORM sum of squares: nseg rows)
                                            //   runs as chunks of 2^URWB rows (hgi-1010/d: the lane-local SU keeps R in a file)
@@ -96,6 +97,7 @@ module ot_hgi_fused_record #(
     // hgi-unitrate: on the wide (PIPED) body HC_POST's 8 micro-ops issue back to back (the body overlaps their stage /
     // run / drain and orders the out_k <- mix_k dependence by its source / undrained-sink hazard); retire on the 8th done
     reg hph; reg [3:0] hdone;
+    reg hg_rdy;                            // HCE HC_PRE_NORM: the streamed gain move landed (held to the record's end)
     reg mixed;
     localparam [3:0] S_IDLE = 0, S_DEC = 1, S_MV = 2, S_MVW = 3, S_OP1 = 4, S_OP2 = 5, S_OP3 = 6, S_WSU = 7, S_NE = 8,
                      S_NEW = 9, S_Q = 10, S_HALT = 11;
@@ -157,8 +159,8 @@ module ot_hgi_fused_record #(
     generate if (HCE != 0 && UNIT != 0 && UWIDE != 0) begin : g_hce
         assign wrq = own ? e_wrq : u_wrq; assign wwq = own ? e_wwq : u_wwq;
         assign rg_req = own ? e_rg : u_rg; assign wg_req = own ? e_wg : u_wg;
-        ot_hgi_hc_eng #(.D(HCD), .MUT(HMUT)) u_hce (.clk(clk), .rst_n(rst_n), .job_v(ne_v), .job_rdy(e_rdy), .job(ne_job),
-            .done(e_done), .fault(e_fault), .idle(), .wrq(e_wrq), .wrq_cr(own ? wrq_cr : 32'd0), .wrr(own ? wrr : '0),
+        ot_hgi_hc_eng #(.D(HCD), .LQ(ULQ), .MUT(HMUT)) u_hce (.clk(clk), .rst_n(rst_n), .job_v(ne_v), .job_rdy(e_rdy),
+            .job(ne_job), .g_rdy(hg_rdy), .done(e_done), .fault(e_fault), .idle(), .wrq(e_wrq), .wrq_cr(own ? wrq_cr : 32'd0), .wrr(own ? wrr : '0),
             .wwq(e_wwq), .wwq_cr(own ? wwq_cr : 32'd0), .wwq_done(own ? wwq_done : 32'd0), .rg_req(e_rg), .rg_gnt(rg_gnt),
             .wg_req(e_wg), .wg_gnt(wg_gnt));
     end else begin : g_nohce
@@ -170,7 +172,7 @@ module ot_hgi_fused_record #(
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
     generate if (UNIT) begin : g_unit
-        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB), .RWB(URWB)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
+        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB), .RWB(URWB), .LQ(ULQ)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
             .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
             .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
             .vmq(vmq), .vmr(vmr), .s0_v(1'b0), .s0_idx(20'd0), .s0_data(32'd0), .am_stream(), .am_rdy(1'b0),
@@ -193,6 +195,8 @@ module ot_hgi_fused_record #(
     endfunction
     reg  [17:0] scr_q; always @(posedge clk) scr_q <= cfg_scratch;      // static strap, registered
     // hgi-1010 b: the one-pass HC engine takes row length HCD with sector-aligned A / B / O (the gain at the scratch base)
+    // the gain streamed packed (the raw HBM BF16 row as U32 words, concurrent with the engine's h pass): 4-byte aligned
+    wire hgp_ok = (HCD % 512 == 0) && (dB[9:8] == 2'd0);
     wire hce_ok = (HCE != 0) && (UNIT != 0) && (UWIDE != 0) && (d == 21'(HCD)) && (dA[10:8] == 3'd0) && (dO[10:8] == 3'd0) &&
                   ((op == 6'd2) ? (dB[10:8] == 3'd0) : (scr_q[2:0] == 3'd0));
     // F10: the end of the scratch this record uses (exclusive), against the reserved limit (SCR_WORDS words from the base,
@@ -204,7 +208,7 @@ module ot_hgi_fused_record #(
     reg [1:0] sudone;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; mixed <= 1'b0; hk <= 3'd0; ce <= 21'd0; cea <= 18'd0; x_b <= 18'd0; rec_done <= 1'b0; rec_fault <= 1'b0; mv_v <= 1'b0; mv <= 0; s_v <= 1'b0; ne_v <= 1'b0;
+            st <= S_IDLE; mixed <= 1'b0; hk <= 3'd0; ce <= 21'd0; cea <= 18'd0; x_b <= 18'd0; rec_done <= 1'b0; rec_fault <= 1'b0; mv_v <= 1'b0; mv <= 0; hg_rdy <= 1'b0; s_v <= 1'b0; ne_v <= 1'b0;
             ne_job <= 0; q_rec <= 0; hdr <= 0; dA <= 0; dB <= 0; dC <= 0; dO <= 0; nA <= 0; nB <= 0; nO <= 0; sudone <= 0;
             s_hdr <= 0; s_sut <= 0; s_a <= 0; s_b <= 0; s_c <= 0; s_o <= 0; s_r <= 0; s_n <= 0;
         end else begin
@@ -245,6 +249,14 @@ module ot_hgi_fused_record #(
                         // ROW_NORM G (d) + S (nseg) + S2 (nseg); HC_PRE_NORM G (d) + S + S2 + the mixed x (d)
                         if (op == 6'd1 ? !rn_ok : !hp_ok) begin rec_fault <= 1'b1; st <= S_HALT; end
                         else if (scr_end > SCR_LIMIT_W) begin rec_fault <= 1'b1; st <= S_HALT; end
+                        else if (op == 6'd0 && hce_ok && hgp_ok) begin
+                            // HC engine: gain -> G as raw U32 words {m 1, n d/2, dst VM U32 G, src HBM U32 B} streamed
+                            // while the engine reads h (it reads G on hg_rdy)
+                            mv <= {21'(d >> 1), 20'd1, 16'd1, 32'd0, {22'd0, g_b}, 3'd5, 2'd1, 16'd1, 32'd0, dB[47:8], 3'd5, 2'd0};
+                            mv_v <= 1'b1; hg_rdy <= 1'b0;
+                            ne_job <= {2'd0, hdr[63:32], d, dO[25:8], dC[25:8], 21'd0, 1'b1, g_b, dA[25:8]};
+                            ne_v <= 1'b1; st <= S_NEW;
+                        end
                         else begin                    // (0) gain -> G: {m 1, n d, dst VM FP32 G, src HBM BF16 B}
                             mv <= {d, 20'd1, 16'd1, 32'd0, {22'd0, g_b}, 3'd0, 2'd1, 16'd1, 32'd0, dB[47:8], 3'd1, 2'd0};
                             mv_v <= 1'b1; st <= S_MVW;
@@ -358,8 +370,11 @@ module ot_hgi_fused_record #(
                     end
                 end
                 S_HPW: if (hdone + {3'd0, s_done} == 4'd8) begin rec_done <= 1'b1; st <= S_IDLE; end
-                S_NEW: if (!ne_v) begin
-                    if (in_nef) begin rec_fault <= 1'b1; st <= S_HALT; end
+                S_NEW: if (in_mvf) begin rec_fault <= 1'b1; st <= S_HALT; end
+                else begin
+                    if (in_mvd) hg_rdy <= 1'b1;
+                    if (ne_v) ;
+                    else if (in_nef) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (in_ned) begin rec_done <= 1'b1; st <= S_IDLE; end
                 end
                 S_Q: if (in_qf) begin rec_fault <= 1'b1; st <= S_HALT; end
