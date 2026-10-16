@@ -11,11 +11,14 @@ module ot_hbm_su_static_pinned_bank #(
  // WS_ROOT (H-SU 10-15, bank r10b): clock of the 18 word-select flops (ks), which sit at each SRAM column's pin edge.
  // 0 = clk (r9: the clk tree then spans every macro column, R 196.6 / spread 74.7 -> native capture 224 > 190);
  // 1 = clk_rd (r10 gate: clk_rd insertion 308.7 / spread 57.1, the E-face read root then spans the columns);
- // 2 = clk_ws, their own related root, so clk stays at the W-face pin registers and clk_rd at the E-face ones.
+ // 2 = clk_ws, the interior root: ks plus (PIN_RST) the mid-tile return-valid stage r_macro, so clk stays at the
+ //     W-face pin registers and clk_rd at the E-face ones (r10b gate with r_macro on clk / rst_r on clk_rd: clk spread
+ //     42.8, clk_rd 174.5 / spread 64.2 -- one stray sink each). clk_ws reaches no pin.
  parameter integer WS_ROOT=0,
  // PIN_RST 1 (bank r10): rst_n is a synchronous data input registered at the W face like every other input
  // (r_pin/w_pin gate on it directly, so the first command after release is taken on the same edge as before); the
- // internal valid stages use registered copies (rst_w on clk, rst_r on clk_rd). Requires >= 2 clock edges in reset;
+ // internal return-valid stage gates on the registered copy rst_w; r_return needs no reset of its own (its only source
+ // r_macro is cleared). Requires >= 3 clock edges in reset;
  // reset is entered from idle (a read sampled before the asserting edge may still return within 2 edges).
  parameter integer PIN_RST=0,
  parameter integer MUT_RESET=0 // bench mutant: a write issued during reset lands (reset gate dropped on w_pin)
@@ -39,17 +42,16 @@ module ot_hbm_su_static_pinned_bank #(
  always @(posedge c_rd)read_data<=raw_data;
  wire c_ws=(WS_ROOT==2)?clk_ws:(WS_ROOT==1)?c_rd:clk;
  if(PIN_RST!=0)begin:g_pin_rst
-  reg rst_w,rst_r;
+  reg rst_w;
   always @(posedge clk)begin
    rst_w<=rst_n;
    r_pin<=read_v&{READERS{rst_n}};
    w_pin<=write_v&&(rst_n||MUT_RESET!=0);
-   r_macro<=r_pin&{READERS{rst_w}};
   end
+  always @(posedge c_ws)r_macro<=r_pin&{READERS{rst_w}};
   always @(posedge c_rd)begin
-   rst_r<=rst_w;
-   r_return<=r_macro&{READERS{rst_r}};
-   r_late<=r_return&{READERS{rst_r}};
+   r_return<=r_macro;
+   r_late<=r_return;
   end
  end else begin:g_async_rst
   always @(posedge clk or negedge rst_n)begin
