@@ -177,11 +177,18 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_node_LLfd.lef": "4e99369fb962b1e5af044ba4c9d39225319e0b76059d1f526189a6080af5adfd",
+    "dsfd_node_LLfd.lef": "725eb3280344efc5994a4cc7925ad854bfd64a426f2144ca17ed9a1a3517233d",
     "dsfd_node_LLfd_ff.lib": "c56fc19bd3268dc4a10eadb1f9b2bd42a8537b8cde6e0f8ffd9e1a1239d375cd",
     "dsfd_node_LLfd_ss.lib": "9de6ffdc85cf8c4cb5df36124640d1dabe9e350f0a74b90ca385fcc14d78cd74",
     "dsfd_node_LLfd_tt.lib": "edeff2bcf997c1cc099f2b2cb1959a3907835311121a4934ad138b1bc33ce80e"
   },
   "ok": true,
-  "checked": true
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "f055caa0585da80a4e04a9ddbee9e7e14e567197cb75d4c39037ab63e6b1ae36",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "8257f0689e76e7892cee8588eb2359539a61244022c20f4a90b5eacd532b686a"
+  }
 }

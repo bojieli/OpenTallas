@@ -1,0 +1,15 @@
+collar: PASS collar+join+ingress checks=31 A0=2100 A1=5 B=10 go=6/10/31
+collar_mut1: FAIL errors=2 checks=31
+collar_mut2: FAIL errors=4 checks=31
+collar_mut3: FAIL errors=1 checks=31
+collar_mut4: FAIL errors=1 checks=31
+join_mut1: FAIL errors=15 checks=31
+join_mut2: FAIL errors=1 checks=31
+packet: PASS host packet static checks=11 flits=46 maxout=32
+packet_mut1: FAIL errors=5 checks=11
+packet_mut2: FAIL errors=2 checks=11
+packet_mut3: FAIL errors=1 checks=11
+phy: PASS host phy adapt checks=404
+phy_mut1: FAIL errors=200 checks=404
+phy_mut2: FAIL errors=1 checks=404
+CP2 BENCHES PASS (3 positive, 12 mutants rejected)

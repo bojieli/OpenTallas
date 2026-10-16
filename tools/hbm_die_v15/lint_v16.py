@@ -54,8 +54,10 @@ def closure(c):
         src = next(i['source'] for i in c['instances'].values() if i['master'] == m)
         if src.endswith('_bb.v'):
             per[m] = dict(files=[], macros=[src]); continue
-        if src not in mf.index(ROOT).get(m, []):      # a master defined outside the resolver's roots (physical/<kit>/):
-            for f in sorted((ROOT / src).parent.glob('*.sv')):   # index its kit directory (sibling leaves)
+        deps = next((i.get('rtl_deps', []) for i in c['instances'].values() if i['master'] == m), [])
+        kits = ([src] if src not in mf.index(ROOT).get(m, []) else []) + list(deps)
+        for kit in kits:   # a master (or a child, rtl_deps) defined outside the resolver's roots (physical/<kit>/):
+            for f in sorted((ROOT / kit).parent.glob('*.sv')):   # index its kit directory (sibling leaves)
                 rel = str(f.relative_to(ROOT))
                 if f.name.startswith('tb_'):
                     continue

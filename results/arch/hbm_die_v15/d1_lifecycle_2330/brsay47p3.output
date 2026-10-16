@@ -1,0 +1,12 @@
+ctl
+ctl2
+feed
+group
+sm
+smcg
+stn
+
+[1]+  Stopped                 timeout 5000 python3 tools/hbm_die_v15/die_case.py --out $T --ctrl-view $V/ctl2 --feed-view $V/group --sm-view $V/smcg --stn-view $V/stn --die-repeaters > $T.gen.log 2>&1
+rc=147
+
+[exited with code 0]

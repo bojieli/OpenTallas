@@ -1,0 +1,38 @@
+{
+  "status": "FUNCTIONAL_COMPONENT_PASS_PHYSICAL_OPEN",
+  "source_commit": "f48a56409",
+  "source_sha256": {
+    "tools/hbm_v15_harden/bench_dma_vp4_banks.sh": "465fd9b9396124dba4ccc09421060795514ec5765be8d33907a462d9659e5623",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53"
+  },
+  "tools": [
+    "Icarus12",
+    "Verilator5.032"
+  ],
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-3500671-1792132571",
+  "admission_gb": 8,
+  "threads": 4,
+  "lockstep": {
+    "checks": 1921,
+    "beats": 6790
+  },
+  "production": {
+    "modes": [
+      "MAIN",
+      "MIRROR"
+    ],
+    "sectors_each": 2561,
+    "cycles_each": 173,
+    "real_vm_banks": 32,
+    "real_sram_macros": 128
+  },
+  "previous_failure": {
+    "tool": "Icarus11",
+    "source": "/tmp/claude-1000/hnl-harden/dma/m0.out",
+    "classification": "Historical simulator discrepancy. Both current source Icarus12 and Verilator pass exact unchanged declared expectations; mechanism not fully isolated."
+  },
+  "scope": "Actual RTL and mapped memory component production only; no native physical timing, full die, programme loader or throughput adoption claim."
+}

@@ -1,0 +1,26 @@
+{
+  "status": "FUNCTIONAL_COMPONENT_PASS_PHYSICAL_OPEN",
+  "commit": "0668c7902",
+  "staged_sources_checked": 353,
+  "staged_sha256_match": true,
+  "excluded_runtime_generated": "Python __pycache__ bytecode only",
+  "unit": "oth-ubuntu-341302-1792132695",
+  "host": "ot-agidock128",
+  "memory_gb": 4,
+  "threads": 1,
+  "dma_exact": "1921 checks/6790 beats + actual32VM/128SRAM MAIN/MIRROR2561sectors,173cycles each",
+  "dma_mutants": {
+    "stride": 1,
+    "truncated_product": 1,
+    "landing_address": 1,
+    "ignored_stack_strap": 1
+  },
+  "calendar_exact": "4 quadrants x120 edges",
+  "calendar_mutants": {
+    "reset_bypass": 1,
+    "field_offset": 1,
+    "extra_core_edge": 1
+  },
+  "lg_production": "Actual NE812-word programme exact functional composition PASS; dropped-response mutant fails",
+  "scope": "Functional native RTL/mapped-memory component only; no physical or full-die/loader qualification."
+}
