@@ -86,7 +86,7 @@ def main():
     for name, cell in cells.items():
         if cell['type'] in blackboxes:
             retained.append(name)
-        elif name.startswith('u_datapath.u_lane.') or 'u_datapath.u_lane.' in name:
+        elif 'u_datapath.u_lane.' in name.replace(chr(92),''):
             lanes.append(name)
         else:
             controls.append(name)
