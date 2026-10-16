@@ -2584,6 +2584,32 @@ def _case_ties(m, path):
     p_.write_text(tx)
 
 
+
+PDN_PA_BLOCK = """set t0 [clock seconds]
+if {[catch {pin_access -verbose 1} err]} { puts "OT_PA FAIL $err"; error $err } else { puts "OT_PA DONE" }
+puts "OT_TIME pa_s=[expr {[clock seconds]-$t0}]"
+mem pa
+"""
+
+
+def pdn_pin_access_after_pdn(text):
+    """Q-KVSYS-DIE 2026-10-15 (kvs8-codex-1338 PDN FAIL 'map::at'): OpenDB dbInst::swapMaster throws std::map::at
+    once pin_access has built access points (E4 reproducer on the exact floorplan.odb: 27,810 swaps PASS without pin
+    access, the chain's PA-then-swap order fails), so the temporary PDN bbox swap must precede pin access.  The real
+    case (run.tcl) already proves pin access before PDN; here pin access runs after pdngen + restore + the VDD/VSS
+    PG checks, on the real restored masters with the die straps present, and its OT_PA marker is kept."""
+    if text.count(PDN_PA_BLOCK) != 1:
+        raise ValueError('KV PDN vehicle changed: pin-access block unresolved')
+    text = text.replace(PDN_PA_BLOCK, '')
+    anchor = 'write_db /work/floorplan_pdn.odb'
+    if text.count(anchor) != 1:
+        raise ValueError('KV PDN vehicle changed: write_db anchor unresolved')
+    head, tail = text.split(anchor)
+    if 'OT_PGCHECK' not in head or 'pdngen' not in head:
+        raise ValueError('KV PDN vehicle changed: PG check must precede pin access')
+    return head + PDN_PA_BLOCK + anchor + tail
+
+
 def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
@@ -2628,7 +2654,7 @@ source /work/die_constant_pg_check.tcl"""
     original = 'source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl'
     if pdn_run.count(original) != 1:
         raise ValueError('KV PDN vehicle changed: guarded PDN hook unresolved')
-    (work / 'run_pdn.tcl').write_text(pdn_run.replace(original, guarded))
+    (work / 'run_pdn.tcl').write_text(pdn_pin_access_after_pdn(pdn_run.replace(original, guarded)))
     for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
         (work / helper).write_text((ROOT / 'tools/qwen_kv_die/chain' / helper).read_text())
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
