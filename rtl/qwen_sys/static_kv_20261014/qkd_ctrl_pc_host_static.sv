@@ -25,7 +25,11 @@ module qkd_ctrl_pc_host_static #(
     // In-order read tag / pcport class queue depth. The fixed RL23 calendar
     // needs 32; the elastic PHY window needs CMD 4 + RL 23 + window + ECC
     // outstanding reads, so ELASTIC uses 64 (sized in the 0az parent proof).
-    parameter integer TQD = (ELASTIC != 0) ? 64 : 32
+    parameter integer STRAP_CDC = 0, // 1: physical HBM pin capture -> two core-domain captures
+    parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
+    parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
+    parameter integer CONTEXT_DESC = 0,
+    parameter integer STATIC_REFRESH = 0
 ) (
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -179,7 +183,7 @@ module qkd_ctrl_pc_host_static #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
-    ot_qkd_static_ctrl_pc_emb #(.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+    ot_qkd_static_ctrl_pc_emb #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
@@ -281,12 +285,14 @@ module qkd_ctrl_pc_host_static #(
     (* keep *) reg [60:0] es_expected_identity_q;
     (* keep *) reg [28:0] es_expected_address_q;
     (* keep *) reg [4:0] es_expected_pc_q,pc_core_q;
+    (* keep *) reg [4:0] pc_core_meta;
     (* keep *) reg [1:0] stack_q,es_expected_stack_q;
     reg native_intake_fault;
     always @(posedge ck)begin
       es_context_q<=es_context;es_expected_identity_q<=es_expected_identity;
       es_expected_address_q<=es_expected_address;es_expected_pc_q<=es_expected_pc;
-      es_expected_stack_q<=es_expected_stack;stack_q<=cfg_stack;pc_core_q<=pc;
+      es_expected_stack_q<=es_expected_stack;stack_q<=cfg_stack;
+      pc_core_meta<=pc_q;pc_core_q<=(STRAP_CDC!=0)?pc_core_meta:pc;
     end
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin es_expected_q<=0;native_intake_fault<=0;end
@@ -334,6 +340,17 @@ module qkd_ctrl_pc_host_static #(
     wire dc_push=es_v_q,dc_pop=completion_v;
     wire dr_push=es_v_q&&!es_d_q[285],dr_pop=e_v;
     wire dq_push=es_v_q,dq_pop=s_credit;
+    // Register wide reductions independently, and require two quiet edges so
+    // a stale zero summary cannot hide an intake captured on the previous edge.
+    // Current activity remains an eager veto; only idle assertion may be later.
+    wire core_drain_activity=es[0]||es_v_q||completion_v||e_v||er_v||s_credit||er_cr;
+    reg core_debt_zero_q;reg [1:0] core_quiet_q;
+    always @(posedge ck or negedge rs_q)
+      if(!rs_q)begin core_debt_zero_q<=0;core_quiet_q<=0;end
+      else begin
+        core_debt_zero_q<=drain_desc==0&&drain_reads==0&&drain_credits==0;
+        core_quiet_q<={core_quiet_q[0],!core_drain_activity};
+      end
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin
         drain_desc<=0;drain_reads<=0;drain_credits<=0;
@@ -360,13 +377,24 @@ module qkd_ctrl_pc_host_static #(
            (dc_push&&!dc_pop&&drain_desc==16'hffff)||
            (dr_push&&!dr_pop&&drain_reads==16'hffff)||
            (dq_push&&!dq_pop&&drain_credits==16'hffff))drain_fault_core<=1;
-        idle_core<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
+        if(DRAIN_PIPE!=0)idle_core<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity&&
+          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
+        else idle_core<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
           !es[0]&&!es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
           !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
       end
     // KV corrected returns include tag, PHY raw, pcport and landing ECC
     // pipelines. Static reads are covered above through their actual e_v.
     reg [15:0] drain_kv;
+    wire hbm_drain_activity=rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||wv_q||cv_q||hand_q||
+      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
+    reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
+    always @(posedge hclk or negedge h_rn)
+      if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
+      else begin
+        hbm_debt_zero_q<=raw_out==0&&drain_kv==0&&hold==0&&dv==0&&av_s==0;
+        hbm_quiet_q<={hbm_quiet_q[0],!hbm_drain_activity};
+      end
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin drain_kv<=0;drain_fault_hbm<=0;idle_hbm<=0;end
       else begin
@@ -377,7 +405,9 @@ module qkd_ctrl_pc_host_static #(
         endcase
         if((l_v&&!rd_kv&&drain_kv==0)||
            (rd_kv&&!l_v&&drain_kv==16'hffff))drain_fault_hbm<=1;
-        idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
+        if(DRAIN_PIPE!=0)idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&
+          (&hbm_quiet_q)&&!hbm_drain_activity&&!drain_fault_hbm&&!fo&&!f_ecdc;
+        else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
           !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&!wv_q&&!cv_q&&!hand_q&&
           hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
           !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!native_commit_valid&&

@@ -30,6 +30,17 @@ class BranchReach(unittest.TestCase):
             self.assertEqual(r['multicast']['data']['longest_um'], 12750)
             self.assertEqual(len(r['top_driven_nets']['rst_n']['loads']), 2)
             self.assertEqual(r['top_driven_nets']['rst_n']['reset_forest'], 'UNQUALIFIED')
+            self.assertNotIn('rst_n', r['multicast'])
+            (root / 'out').mkdir()
+            (root / 'out' / 'layout_dump.json').write_text(json.dumps(dict(pins=[
+                ['rst_n', 'M5', 0, 0, 0, 0], ['rst_n', 'M5', 20000, 0, 20000, 0]])))
+            subprocess.run([sys.executable, str(Path(__file__).with_name('case_reach.py')), tmp],
+                           capture_output=True, text=True, check=True)
+            r = json.loads((root / 'reach.json').read_text())
+            self.assertEqual(r['top_driven_nets']['rst_n']['coverage'], 'MEASURED_BTERM_RECTANGLE_CENTRES')
+            self.assertEqual(r['top_driven_nets']['rst_n']['reset_forest'], 'UNQUALIFIED')
+            self.assertAlmostEqual(r['multicast']['rst_n']['longest_um'], 19990)
+            self.assertEqual(r['multicast']['rst_n']['sinks'], 2)
 
     def test_far_branch_and_driver_last(self):
         ends = [('near', 'i', (10, 0)), ('far', 'i', (12750, 0)), ('source', 'o', (0, 0))]

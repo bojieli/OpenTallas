@@ -49,9 +49,9 @@ module tb_ccf_bankpipe;
     if(faultcase==3)begin
      if(cycle>=40&&cycle<56)yv=1; // safe count, isolate real bank-overflow input term
      if(cycle==100)force old_dut.yf_ovf=1'b1;
-     if(cycle==101)force dut.g_bank[0].u_b.ovf=1'b1;
+     if(cycle==101)force dut.g_bank[0].u_b.u_h0.ovf=1'b1;
      if(cycle==104)release old_dut.yf_ovf;
-     if(cycle==105)release dut.g_bank[0].u_b.ovf;
+     if(cycle==105)release dut.g_bank[0].u_b.u_h0.ovf;
     end
     if(faultcase==4)begin
      if(cycle>=40&&cycle<56)yv=1;

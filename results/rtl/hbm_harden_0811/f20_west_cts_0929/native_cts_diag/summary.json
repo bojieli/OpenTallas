@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.hbm_f20_cts_native_diagnostic.v1",
+  "basis": "Actual original cfd1110a3 CTS ODB + placement parasitics; TT/FF ETM only; no routed/native/CLOSED/whole-die qualification",
+  "clock_tgt": {
+    "all_flops": 1399,
+    "min_ps": 157.423706,
+    "min_pin": "u_target.program_cfg_data[176]$_DFFE_PP_/CLK",
+    "max_ps": 262.664673,
+    "max_pin": "u_target.installed[1000]$_DFFE_PN0P_/CLK",
+    "all_spread_ps": 105.24096699999998,
+    "boundary_flops": 4,
+    "boundary_pins": [
+      [
+        "ot_prs_00002_ff/CLK",
+        187.696228
+      ],
+      [
+        "u_target.configured$_DFF_PN0_/CLK",
+        187.685287
+      ],
+      [
+        "u_target.reset_live$_DFF_PN0_/CLK",
+        189.943619
+      ],
+      [
+        "u_target.reset_meta$_DFF_PN0_/CLK",
+        189.955002
+      ]
+    ],
+    "boundary_spread_ps": 2.2697150000000192,
+    "classification": "The 105.3ps all-sink spread is internal target program_cfg_data versus installed bitmap branches. Actual four boundary reset/configured registers span2.27ps. Preserve all-sink warning and tiny internal TT margin; do not attribute105.3ps to external fault/configured outputs."
+  },
+  "native_residuals": {
+    "tt_worst_O_minus_R_ps": 183.49177000000003,
+    "tt_worst_output": "ordinal[8]",
+    "tt_worst_S_plus_R_ps": 165.77534,
+    "tt_worst_input": "cfg_data[34]",
+    "tt_launch_over220": 0,
+    "tt_capture_over190": 0,
+    "comb_pins": 0,
+    "ff_L_min_ps": 112.88238999999999,
+    "ff_L_min_pin": "ring_tx_source[1]",
+    "ff_H_max_ps": -72.29281,
+    "ff_H_max_pin": "rst_n",
+    "ff_L_minus_H_ps": 185.1752
+  },
+  "required_next": [
+    "Routed TT setup/FF hold/DRC0",
+    "GRT all66 previousoverflows vanish; actualmacroOBS capacity unchanged",
+    "Routed pin/slew/native plus exact four-domain compensated clock evidence",
+    "all12 home/cut proof before adoption"
+  ]
+}

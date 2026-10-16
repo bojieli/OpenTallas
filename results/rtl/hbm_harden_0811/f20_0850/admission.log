@@ -1,0 +1,35 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/closure-loop/hv16_vm_cal_f20-f20-df84589aa
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/closure-loop/hv16_vm_cal_f20-f20-df84589aa
+ot-run: ot-agidock128  admits    38 GB (avail 76, growth 38, headroom 24, waiters 0/0 GB) load 29/64 running 9 disk 273 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2289949-1792165746 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x/ot_hbm3e_phy_v41x.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30/ot_hbm3e_phy_v41x_aw30.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_16384x266_m16/ot_rom_16384x266_m16.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_hbm3e_phy/ot_hbm3e_phy.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_8192x104_m8/ot_rom_8192x104_m8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_1024x72_m8/ot_rom_1024x72_m8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef, created 1 library cells
+OT_LAYOUT_DUMP /out/actual_final.json blocks 1 pins 638 pg 80 fill 0.588
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2289949-1792165746): exit 0
