@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.s81.wfc-hop1-profile-proof.v1",
+ "status": "PASS_COMPONENT_FIXED_EDGE_HOP1_PROFILE_NOT_FULL_VM_OR_PHYSICAL_QUALIFICATION",
+ "production": {
+  "parent": "dsfd_sp_vm_a2f",
+  "HOP1": 1,
+  "READ_PIPE": 4,
+  "RPE": 2,
+  "WFC_RLAT": 15,
+  "WFC_RESPONSE_PAD": 2
+ },
+ "source_sha256": {
+  "tools/s81_wfc_hop1/gate.sh": "9d43c71fbecbb0ffcd6e69f4fc9cb3f1eef3330e4cb938e1df5439c92587cad5",
+  "tools/s81_vm/wfc_pipeline_bench.sv": "d581ff7ab20bba41b8240d9429908325a485d34f72cbc6615dd1f9ec2f2559ad",
+  "tools/s81_vm/wfc_fault_epoch_bench.sv": "fe222a72831c7e969047255801f567408483d41bb12d85ccadfb4a656d06f7c4",
+  "tools/s81_vm/wfc_pipeline_ref_r5.sv": "b2b27269a82ff3362a4b2f172daeab4db67c85113b45db21b029b7449b0e105f",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "1da737a110d1001124a190628b73bc2cea196f129191d352e10ff212d54200b0",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_fault_transports.sv": "a3bc91b3b0737a1e5568e2eed7a0580157ff2d9c480a6fc2a9945adad9900a94",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "db4810e343feccefb7a2cf3a010e99cced012e985e2635d55425c65a596a6e37",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "db36f2611d91193aa7b9fe8031b75c9ad901d0449aa90fbe77db0a12109c1b52"
+ },
+ "runs": [
+  {
+   "mode": "gold",
+   "rc": 0,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns123\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns127\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns131\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns119\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase1 core_delay_ns85 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase2 core_delay_ns81 serial_delay_ns57\nWFC_FAULT_EPOCH_GATE PASS cases7\nWFC_HOP1_PIPELINE_GATE PASS\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_LANE",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:29: return +4 mismatch 42\n       Time: 709000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_FAULT",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:39: core diagnostic not reported to BOTH domains\n       Time: 30385000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_CAPTURE",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:50: serial +3 mismatch 41\n       Time: 696000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_CDC",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:39: core diagnostic not reported to BOTH domains\n       Time: 30385000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_EPOCH",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:26: spurious fault under legal fixed schedule 41\n       Time: 697000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X34S_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns123\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns127\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns131\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns119\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir1 phase1 actual97/57 expected85/57\n       Time: 4408000 Scope: tb_wfc_fault_epoch.observe\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X34T_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns123\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns127\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns131\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns119\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase1 core_delay_ns85 serial_delay_ns57\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir1 phase2 actual69/57 expected81/57\n       Time: 5096000 Scope: tb_wfc_fault_epoch.observe\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X43T_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir0 phase0 actual31/139 expected31/123\n       Time: 742000 Scope: tb_wfc_fault_epoch.observe\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X43S_MUT_BANK",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:26: spurious fault under legal fixed schedule 41\n       Time: 697000 Scope: tb_wfc_pipeline\n"
+  }
+ ],
+ "request_delta_core": 1,
+ "response_delta_core": 4,
+ "response_delta_serial": 3,
+ "scope": "Standalone WFC component with declared ideal boundary stimuli and actual fixed-epoch diagnostic hardware. Production memory visibility, posted START ordering, compiler and integrated parent proof remain VM owner work. Legacy17/0 physical gates cannot qualify this15/2 parameter profile.",
+ "diagnostic_x43_serial_pin_stage": {
+  "extra_serial_edges": 1,
+  "core_to_serial_scaled_ns": [
+   123,
+   127,
+   131,
+   119
+  ],
+  "serial_to_core_scaled_ns": [
+   89,
+   85,
+   81
+  ],
+  "local_core_scaled_ns": 31,
+  "local_serial_scaled_ns": 57,
+  "sample_offset_ns": 1
+ }
+}
