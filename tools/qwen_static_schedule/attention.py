@@ -41,6 +41,21 @@ def service(T, pv='w16'):
                 measured_w16_edges=edges - V143_HEAD_EDGES, head_stage_edges=V143_HEAD_EDGES)
 
 
+# Measured link + KV endpoint ages (core edges), 2026-10-15:
+#  * D2D data port, pin-registered r4 masters qfd/qkd_d2d_static_r1 + PHY 5 trained: send slot S -> KV die-master
+#    OUTPUT pin S+18 (CMD / Q beats), RESULT beat S -> compute die-master output pin S+18 (Q-DVM+LINK 20:18:35,
+#    results/arch/qwen_split_1014/link_static_1015/program_calendar_prod_1015/calendar.json, tools/qwen_split/
+#    d2d_link_calendar.py --pinreg; physical qualification pending, CTS-only fixes expected, 0 cycles).
+#  * KV static endpoint qkd_native_attention_programme (Codex Q-STATIC-ENDPOINT c5e2e9903, branch
+#    codex/qwen-native-static-endpoint-2116, NOT yet on main / root review): record rx 1 edge, start_qk 2 edges after
+#    the CMD record (Q beats stream in behind it), last result beat -> RESULT record tx 1 edge.
+#  request_edges = CMD send slot -> start_qk = 18 + 2 = 20; result_edges = last result beat -> compute pin = 1 + 18 = 19.
+MEASURED_LINK = dict(request_edges=18 + 2, result_edges=1 + 18,
+                     sources=dict(link='results/arch/qwen_split_1014/link_static_1015/program_calendar_prod_1015/calendar.json',
+                                  endpoint='c5e2e9903:results/arch/qwen_native_static_endpoint_1015/programme_8192.json'),
+                     status='link RTL-compiled (physical pending); endpoint component unmerged')
+
+
 def _age(link, name):
     v = link.get(name)
     if type(v) is not int or v < 1:
