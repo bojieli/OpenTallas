@@ -158,7 +158,7 @@ def main():
         names += ['ot_v41_bf_col_roots','ot_v41_bf16_lanes3_roots','dsfd_bf_col_roots','ot_v41_bf_lane4','ot_v41_bf_reduce','ot_v41_bf_segment_leaf','ot_v41_bf_fp4_chain','ot_v41_bf_fp4_pair_leaf']
     if a.front_roots:
         assert a.die_pair and a.static_prog is not None
-        names += ['ot_s81_bf_front_roots','dsfd_bf_front_roots']
+        names += ['ot_s81_bf_front_roots','dsfd_bf_front_roots','ot_v41_bf_front_core_roots','ot_s81_bf_seam_roots']
     refreshed = []
     for f, src in SRC.items():
         t = candify((ROOT / src).read_text(), names)
@@ -224,7 +224,7 @@ def main():
         assert count==2, count
         files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.leaf_ck({9{clk}}), .ck(clk)').replace('e0e (.ck(clk)', 'e0e (.leaf_ck({9{clk}}), .ck(clk)')
     if a.front_roots:
-        for n in ['rtl/s81/ot_s81_bf_front_roots.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv']:
+        for n in ['rtl/s81/ot_s81_bf_front_roots.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv','rtl/v41rom/ot_v41_bf_front_core_roots.sv','rtl/s81/ot_s81_bf_seam_roots.sv']:
             fn='x_'+Path(n).name
             files[fn]=candify((ROOT/n).read_text(),names)
             extra.append(fn)

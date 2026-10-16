@@ -14,11 +14,15 @@
   },
   "inputs": {
     "rtl/s81/ot_s81_bf_front.sv": "514ef6c3d2570eece1f5df5cf42a1612d765e71e7945562eb76ebe75046d9856",
-    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5"
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
+    "rtl/v41rom/ot_v41_bf_front_core.sv": "183443f37e6eb80305a3d4897a0af6866ce17199ed2e21f5561ed0590bd0154a",
+    "rtl/s81/ot_s81_bf_seam.sv": "cc40967fc956cbd25a09d2b320aa8f75e4786d97a85aaee5f2620e9e58ab08ff"
   },
   "outputs": {
-    "rtl/s81/ot_s81_bf_front_roots.sv": "e375fc962f6018ec91652dda49f2019f6c67234bbd808788f8c95e10e1ae6517",
-    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "b4d7ada194db09feb5b6814bbf8305de6c72f93700cd720a1de1c95ea26a93bb"
+    "rtl/s81/ot_s81_bf_front_roots.sv": "b24bcdfeb9b1cb48db05df9894b1ebfe6ad293b5e4c3222e591defc5f44f04a3",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "b4d7ada194db09feb5b6814bbf8305de6c72f93700cd720a1de1c95ea26a93bb",
+    "rtl/v41rom/ot_v41_bf_front_core_roots.sv": "53cd0a80ecc0a52f6306eaa21b8981aba1cd4a831ff6870a9e8f0963997e38dd",
+    "rtl/s81/ot_s81_bf_seam_roots.sv": "44fddea07f7e616799c56814f76ed1bc5ef57e2917ffdc4cb95cda52849ac71e"
   },
   "physical_qualification": false,
   "clock_pins_homes_and_slot_grant": "PENDING",

@@ -70,6 +70,15 @@ def main():
     body=body[:start]+south+'\n        always @(posedge north_clk) begin\n'+'\n'.join(north)+'\n        end'+body[end:]
     body=once(body,'u_seam0 (.clk(pin_clk), .rst_n(core_rst),','u_seam0 (.clk(io_w), .rst_n(west_rst),')
     body=once(body,'u_seam1 (.clk(pin_clk), .rst_n(core_rst),','u_seam1 (.clk(io_e), .rst_n(east_rst),')
+    core_input=ROOT/'rtl/v41rom/ot_v41_bf_front_core.sv'
+    seam_input=ROOT/'rtl/s81/ot_s81_bf_seam.sv'
+    core_output=ROOT/'rtl/v41rom/ot_v41_bf_front_core_roots.sv'
+    seam_output=ROOT/'rtl/s81/ot_s81_bf_seam_roots.sv'
+    core_output.write_text(once(core_input.read_text(),'module ot_v41_bf_front_core #(','module ot_v41_bf_front_core_roots #('))
+    seam_output.write_text(once(seam_input.read_text(),'module ot_s81_bf_seam #(','module ot_s81_bf_seam_roots #('))
+    body=once(body,'ot_v41_bf_front_core #(','ot_v41_bf_front_core_roots #(')
+    assert body.count('ot_s81_bf_seam #(')==2
+    body=body.replace('ot_s81_bf_seam #(','ot_s81_bf_seam_roots #(')
     # Keep source-low IO lockups on the south physical root. The north->south
     # crossing is still a timed half-cycle path with no new architectural edge.
     out=ROOT/'rtl/s81/ot_s81_bf_front_roots.sv';out.write_text(head+relay+body)
@@ -84,8 +93,8 @@ def main():
     wo=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv';wo.write_text(w)
     record=dict(status='SOURCE_CANDIDATE_UNPROVEN',payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,physical_xb_reconstruction='legacy_xb[1067:0] = {xb_meta[43:0], xb_data[1023:0]}',
       roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme, xb metadata/control, and IO-source lockups','io_n':'north xb[1023:0] data primary capture only','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
-      inputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [fp,wp]},
-      outputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [out,wo]},
+      inputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [fp,wp,core_input,seam_input]},
+      outputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [out,wo,core_output,seam_output]},
       physical_qualification=False,clock_pins_homes_and_slot_grant='PENDING',native_capture='PENDING')
     rp=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/front_roots_source.json'
     rp.write_text(json.dumps(record,indent=2)+'\n')

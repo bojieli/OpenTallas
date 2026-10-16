@@ -398,7 +398,7 @@ module ot_s81_bf_front_roots #(
         wire c_issue, c_i1_v, c_i1_bk, c_i1_bf, c_ze_d;
         wire [13:0] c_a_ctr; wire [CTW-1:0] c_i1_t; wire [255:0] c_i2x_q0, c_i2x_q1; wire [9:0] c_i2x_e0, c_i2x_e1;
         wire [16*NB*NSEG-1:0] c_so_row; wire [5*NSEG-1:0] c_so_idx, c_so_n; wire [NB-1:0] c_qy_bkf;
-        ot_v41_bf_front_core #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
+        ot_v41_bf_front_core_roots #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (
@@ -432,9 +432,9 @@ module ot_s81_bf_front_roots #(
         wire [255:0] c_i2x_q0_l, c_i2x_q1_l; wire [9:0] c_i2x_e0_l, c_i2x_e1_l; wire [5*NSEG-1:0] c_so_idx_l, c_so_n_l;
         wire [16*NB*NSEG-1:0] c_so_row_l;
         assign {c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l} = c_lk;
-        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(io_w), .rst_n(west_rst),
+        ot_s81_bf_seam_roots #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(io_w), .rst_n(west_rst),
             .d({c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l[16*NSEG*0 +: 16*NSEG]}), .q({c0_issue, c0_a_ctr, c0_i1_v, c0_i1_bk, c0_i1_bf, c0_i1_t, c0_i2x_q0, c0_i2x_e0, c0_i2x_q1, c0_i2x_e1, c0_ze_d, c0_so_idx, c0_so_n, c0_so_row}));
-        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(io_e), .rst_n(east_rst),
+        ot_s81_bf_seam_roots #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(io_e), .rst_n(east_rst),
             .d({c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l[16*NSEG*1 +: 16*NSEG]}), .q({c1_issue, c1_a_ctr, c1_i1_v, c1_i1_bk, c1_i1_bf, c1_i1_t, c1_i2x_q0, c1_i2x_e0, c1_i2x_q1, c1_i2x_e1, c1_ze_d, c1_so_idx, c1_so_n, c1_so_row}));
         assign c_qy_bkf = c_qy_bkf_in;
         assign pv_e = '0; assign pval_e = '0; assign prow_e = '0; assign pseg_e = '0; assign pnseg_e = '0; assign perr_e = '0; assign ppos_e = '0;
