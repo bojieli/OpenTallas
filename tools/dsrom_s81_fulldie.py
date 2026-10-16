@@ -7712,7 +7712,8 @@ def _vmc_path(m, A, pa, Bk, pb):
     bx_ = _vmc_boxes(m)
     die_ = (0.0, 0.0, DIE[0], DIE[1])
     p_ = HR_.route(ea[1], ea[0], eb[1], eb[0], bx_, die_, narrow=False)
-    if p_ is None and not (fixa and fixb):
+    direct_ = p_ is not None and len(p_) <= 2
+    if not direct_ and not (fixa and fixb):
         # S-DIE 0030 10-16 (pf17 capture.t_cd -> gather.f_cd: the facing N/S seam is filled by the pq-cnt row; VM.t_crs ->
         # collective.f_crs: the facing point is behind a link landing): a free (generator-laid) end tries other points
         # of its face and the block's other faces; a route through a real channel (>= 2 x WIDE_CLR) is preferred over a
@@ -7722,8 +7723,10 @@ def _vmc_path(m, A, pa, Bk, pb):
             span = it.w if f_ in 'NS' else it.h
             out_ += [(f_, HR_.face_point(it, f_, 20.0 + (span - 40.0) * k_ / 8.0)) for k_ in range(9)]
             return out_
+        # S-DIE 0030 (pf18 hc_s -> VM: the peer-facing VM point lay behind the collective, 6 chains detoured over the
+        # WFC and back down the access corridor): the free end also moves when that shortens the route
         for narrow_ in (False, True):
-            best = None
+            best = p_ if not narrow_ else None
             for fa_ in ((ea[0],) if fixa else 'NSEW'):
                 for fb_ in ((eb[0],) if fixb else 'NSEW'):
                     ca_ = [ea] if fixa else pts_(A, fa_, _Pt(eb[1]) if fixb else Bk)

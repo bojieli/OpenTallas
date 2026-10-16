@@ -271,7 +271,7 @@ def hanan_route(a, fa, b, fb, boxes, die, clr=CLR, narrow=True):
     return None
 
 
-WIDE_CLR = 10.8      # ~900 bits on two layers at the 0.048-um pin pitch fit between two obstacles 21.6 um apart
+WIDE_CLR = 21.6     # a channel that also holds 17-um relay stations (>= 43.2 um); slits (CLR) only when none exists
 
 
 def _hanan_once(a, fa, b, fb, boxes, die, clr):
