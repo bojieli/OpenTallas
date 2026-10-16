@@ -37,7 +37,9 @@
   "peak_ram_gb": 8,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "pin_balance": true
+  "pin_balance": {
+   "group_max": 32
+  }
  },
  "job": {
   "owner": "Claude:S-ELEM-PQ",

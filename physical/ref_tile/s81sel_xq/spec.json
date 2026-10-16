@@ -15,12 +15,14 @@
  },
  "pins": {
   "S": [
-   "i_sw",
-   "ck",
-   "rst"
+   "i_sw"
   ],
   "N": [
    "o_lanes"
+  ],
+  "W": [
+   "ck",
+   "rst"
   ]
  },
  "layer_cap": "M5",
@@ -34,12 +36,15 @@
   "threads": 4,
   "peak_ram_gb": 8,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 32
+  }
  },
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-seltxq-1016",
-  "tag": "x2",
+  "tag": "x3",
   "purpose": "Harden dsfd_selt_xq (absent-quarter synthesiser, the open leaf of dsfd_bk_selector_c1 on the 1-stack S81 die); closure-first, removes the bk_selector_c1 stand-in once the parent binds it.",
   "benches": [
    {
@@ -75,6 +80,16 @@
   ],
   "views_to": "physical/ref_tile/s81sel_xq/views",
   "record_to": "results/rtl/ref_tile/s81sel_xq"
+ },
+ "pin_ranges": {
+  "o_lanes": [
+   10.8,
+   378.0
+  ],
+  "i_sw": [
+   10.8,
+   102.6
+  ]
  },
  "params": {},
  "macros": [],
