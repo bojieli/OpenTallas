@@ -3189,7 +3189,7 @@ def slot_geometry(elem_frame_h=None, field_margin=None):
     else:
         assert DIE_KIND in LAYER_KINDS and BF_PER_REGION is not None and NV_PAIRS == 0, \
             'mixed q/BF heights need an r8 layer die with explicit --bf-per-region and no NV'
-        qh = round(up(ELEM_DY + Q_ELEM_FRAME_H + 4.32, GY), 3)
+        qh = round(up(ELEM_DY + qbank_slot_extra('q') + Q_ELEM_FRAME_H + 4.32, GY), 3)
         SLOTS8 = math.floor((avail / TIERS - BF_PER_REGION * (SLOT_H8 - qh)) / qh + 1e-9)
         assert SLOTS8 >= BF_PER_REGION, 'BF slots alone exceed field height'
         FRAME_H8 = round(BF_PER_REGION * SLOT_H8 + (SLOTS8 - BF_PER_REGION) * qh, 3)
@@ -3223,7 +3223,7 @@ def pack_frame(pairs, bfs, nvs):
     offsets, heights, y = [], [], 0.0
     for kind in kinds:
         fh = Q_ELEM_FRAME_H if kind == 'q' and Q_ELEM_FRAME_H is not None else ELEM_FRAME_H
-        h = round(up(ELEM_DY + fh + 4.32, GY), 3)
+        h = round(up(ELEM_DY + qbank_slot_extra(kind) + fh + 4.32, GY), 3)
         offsets.append(round(y, 3)); heights.append(h); y += h
     return elems, offsets, heights
 
@@ -4225,7 +4225,7 @@ def build_r8(variant=None):
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
             else:
                 assert rq['h'] <= (Q_ELEM_FRAME_H or ELEM_FRAME_H), (rq['h'], Q_ELEM_FRAME_H or ELEM_FRAME_H)
-                it = Inst(f'e{p}', rq['name'], ex, sy + ELEM_DY, rq['w'], rq['h'], 'MY' if (Q_X1B and ln == 'R') else 'R0', kind='q', region=f'frame_{r}')
+                it = Inst(f'e{p}', rq['name'], ex, sy + qbank_element_dy('q'), rq['w'], rq['h'], 'MY' if (Q_X1B and ln == 'R') else 'R0', kind='q', region=f'frame_{r}')
             insts.append(it)
             slot_of[p] = (r, s, ln)
             # L lane / BF: ROMs (mirrored, pins east) then the sequencer, east of them, toward the slot station;
@@ -4287,7 +4287,7 @@ def build_r8(variant=None):
         if REV == 'r9':
             for p, kind, s, ln in elems:
                 if kind == 'q':
-                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + offsets[s] + ELEM_DY, rq,
+                    insts += _q_banks(p, x0 + (LANE_W if ln == 'R' else 0) + 4.32, y0 + offsets[s] + qbank_element_dy('q'), rq,
                                       f'frame_{r}', mirror=Q_X1B and ln == 'R')
         nodes, root = return_tree(2 * len(pairs))
         frames[r]['tree'] = (nodes, root)
@@ -6171,6 +6171,16 @@ HUB_LANE_PITCH = 72.0           # r9 hub-bus lane spacing in the VCH (was 12 um:
 # go into the element, outputs r0 / r1 / busy-fault out of it; CTS balances the banks with the element's
 # max_clock_tree_path), so every other column path is glue to glue.  +1 cycle on the way in, +1 on the way out.
 BANK_H = 6.48
+QBANK_HARD_FRAME = False       # opt-in source-only 25.92um S-bank frame; default unchanged
+
+def qbank_slot_extra(kind):
+    from s81.qbank_frame import slot_extra
+    return slot_extra(kind, QBANK_HARD_FRAME)
+
+def qbank_element_dy(kind):
+    from s81.qbank_frame import EXTRA
+    return ELEM_DY + (EXTRA if QBANK_HARD_FRAME and kind == 'q' else 0)
+
 BANK_RULE_UM = 430.0           # common-clock glue reach used for relays (the 430.56 um stage less pin spread)
 # MARGIN-FIRST (owner rule 2026-10-06): a common-clock (one CTS tree) hop does not close at 440 um (meso_fifo verdict
 # fwd_hop2_synchronous_counterfactual: SS -330 ps); --cc-reach-um caps every common-clock hop (hub-bus stations, end
@@ -6269,7 +6279,15 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
         w = 60.48
         x = dn(ex + xc - w / 2, GX)
         y = dn(ey - BANK_H - 2.0, GY) if face == 'S' else up(ey + rq['h'] + 1.08, GY)
-        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, BANK_H - SHAVE, kind='qbank',
+        bank_h = BANK_H
+        if QBANK_HARD_FRAME:
+            from s81.qbank_frame import EXTRA, HARD_BANK_H, N_BANK_H
+            if face == 'S':
+                y = round(y - EXTRA, 6)  # preserve nominal N edge relative to the translated element
+                bank_h = HARD_BANK_H
+            else:
+                bank_h = N_BANK_H  # preserve S edge toward the element; grow away from it
+        out.append(Inst(f'{tag}{p}', f'dsfd_qbank_{face}', x, y, w - SHAVE, bank_h - SHAVE, kind='qbank',
                         region=region, power_w=0.0))
         BANK_PORTS[out[-1].name] = (face, ports)
     return out
@@ -11118,6 +11136,7 @@ def die_options(ap):
                     'node strip NS_W = width + 8.64, every field column 43.2 um narrower')
     ap.add_argument('--node-rstreg', action='store_true', help='S-NET+FILL (native audit 10-15): with --node-static, rst_n '
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
+    ap.add_argument('--qbank-hard-frame', action='store_true', help='SOURCE CANDIDATE: S25.92/N8.64um nominal frames; q slots grow down with canonical frame tops fixed; requires actual full-plan proof before adoption')
     ap.add_argument('--qbank-s-rstreg', action='store_true', help='S-NET+FILL S81F-05: dsfd_qbank_S rs drives one reset '
                     'pin register (async assert, release +1 initialization edge); normal data remains one edge')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
@@ -11467,7 +11486,8 @@ def apply_options(a):
     NODE_WIN = int(getattr(a, 'node_win', 2) or 2)
     global NODE_RSTREG
     NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
-    global QBANK_S_RSTREG
+    global QBANK_S_RSTREG, QBANK_HARD_FRAME
+    QBANK_HARD_FRAME = bool(getattr(a, 'qbank_hard_frame', False))
     QBANK_S_RSTREG = bool(getattr(a, 'qbank_s_rstreg', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
@@ -11767,10 +11787,27 @@ def apply_options(a):
 
 
     CANONICAL_LAYOUT = None
+    assert not QBANK_HARD_FRAME or getattr(a, 'canonical_layout', None), '--qbank-hard-frame requires explicit canonical source layout'
+    assert not QBANK_HARD_FRAME or QBANK_S_RSTREG, '--qbank-hard-frame requires explicit --qbank-s-rstreg matching the current qualified nr1 S-bank RTL'
+    if QBANK_HARD_FRAME:
+        from s81.qbank_frame import require_replan, require_bank_views
+        assert PIN_ALIGN and not Q_X1B, '--qbank-hard-frame is the actual aligned604-bit unsplit-S-bank profile'
+        assert sha(Q_LEF) == '1dee3342360ceb7f83ee668a00e521a464703b5f4d573341f0f3cc546f8fc098', '--qbank-hard-frame requires the source-pinned qs5f_efs element LEF'
+        require_bank_views(bound_views())
+        require_replan(hop_fix=HOP_FIX, hop_iter=HOP_ITER, col_reset_tree=COL_RESET_TREE,
+                       rly_face_pins=RLY_FACE_PINS, reset_leaf=QBANK_S_RSTREG)
+        assert HOP_PLAN is None, 'qbank frame cannot reuse an existing hop plan'
+        RLY_FACES.clear()
+        BANK_PORTS.clear()
+        _BV_SPAN.clear()
+        _GEN_PROBE.clear()
     if getattr(a, 'canonical_layout', None):
         assert a.gen == 'r8' and a.die in LAYER_KINDS and not HEAD_BUNDLES
         from s81.canonical_layout import load as canonical_load
         CANONICAL_LAYOUT = canonical_load(a.canonical_layout, ROOT)
+        if QBANK_HARD_FRAME:
+            from s81.qbank_frame import canonical as qbank_canonical
+            CANONICAL_LAYOUT = qbank_canonical(CANONICAL_LAYOUT, cfifo_h=CF_WH[1], pq_root_h=PQ_ROOT_ROW if PQ_ROOTS else 0)
         assert ROOTS == 128 and CFG_PER_PAIR == 7
         # wide-hub canonical records carry their allocator point (S-DIE 10-15); the 22-column record is 2417/519
         PAIRS, BF_PAIRS, NV_PAIRS = CANONICAL_LAYOUT['pair_count'], CANONICAL_LAYOUT['bf_pairs'], 0

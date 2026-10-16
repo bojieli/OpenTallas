@@ -1,0 +1,84 @@
+{
+ "scope": "FIRST_PASS_PRE_HOP_PRE_FINAL_PINS_NOT_USABLE_FOR_QUALIFICATION",
+ "source": "17b13fb0637869d53580a1084bdd250d18828d9b",
+ "pair_population": {
+  "total": 1973,
+  "q": 1549,
+  "BF": 424
+ },
+ "transformed_instances": 26869,
+ "bank_bits": {
+  "S": 935596,
+  "N": 198272
+ },
+ "bank_bit_sha256": "18c04577d669d2b798a15d266c21acfcdeb3888e1eb04e5be89f47f07cd4f3c0",
+ "max_bank_x_jog_um": {
+  "S": 1.215000000001055,
+  "N": 21.840000000001055
+ },
+ "max_bank_segment_manhattan_um": {
+  "S": 4.004000000004453,
+  "N": 24.62800000000516
+ },
+ "slots": 1220,
+ "minimum_street_um": 108.0,
+ "all_added_intersections": 16970,
+ "source_core_added_intersections": 0,
+ "source_core_kind_definition": [
+  "bf",
+  "bfcol",
+  "cfg",
+  "cfifo",
+  "node",
+  "q",
+  "qbank",
+  "seq",
+  "sstn"
+ ],
+ "orientation_legality": "OPEN: geometric transforms preserve MY/MX but do not establish selected LEF orientation legality; root selected-view SYMMETRY reconciliation required, no header patch/waiver.",
+ "unmoved_glue_note": "Other relay and reset/clock geometry remains original PRE-FINALIZE; every new intersection is exposed. Full source GEN must replan these before adoption.",
+ "normal_data_cycles_added": 0,
+ "initialization_release_extra_edges_for_nr1": 1,
+ "rtl_topology_changed": false,
+ "latency_scope": "Source row transform adds no register. Full hop replan may add relay stages and must price its resulting static schedule before adoption.",
+ "bus_endpoint_sha256": "18258f01dd064af629c07bb6110672aed7412e222f06ef2e590491b593cdb7e3",
+ "leaf_sources": {
+  "Q": {
+   "size": [
+    510.84,
+    221.4
+   ],
+   "sha256": "1dee3342360ceb7f83ee668a00e521a464703b5f4d573341f0f3cc546f8fc098",
+   "path": "q_elem.lef.gz"
+  },
+  "qS": {
+   "size": [
+    60.48,
+    25.92
+   ],
+   "sha256": "05f344c239556e4ca1be92cdc69d835fd6e93a5ca3dc1fd88cac4d3e78377f03",
+   "path": "dsfd_qbank_S.lef"
+  },
+  "qN": {
+   "size": [
+    60.48,
+    8.64
+   ],
+   "sha256": "f0d203bb65221c658d9d80cade7b73d0505b7f906679c027ee3839220f7c4c2b",
+   "path": "dsfd_qbank_N.lef"
+  }
+ },
+ "files": {
+  "first_pass_plan.json.gz": "ca1f5b419ae1427a7a58d93904bbad440b5e944f77c6a6e59489bd86812e3c56",
+  "canonical_old.json": "7f21428401bd3f94f817517538aa315b2cc3d8c5d81f2ac219091faf78911326",
+  "/tmp/s81_qbank_frame_0401/tools/s81/qbank_frame_audit.py": "668599659125cd87888dfa912f49814fa8733b4dfd5ce387d4c8220b1be89bab",
+  "/tmp/s81_qbank_frame_0401/tools/s81/qbank_frame.py": "b000e622929f534da51a096f455badc5841e2bd716598af73c4b511cf088fbb5"
+ },
+ "adoption": false,
+ "remaining": [
+  "actual cfg7/BF/other-family LEF endpoint cuts and fit where views missing",
+  "all incident unchanged relay/clock/reset rebuild",
+  "full source-current final GEN",
+  "TT setup/FF hold/native/DRC0 die integration"
+ ]
+}

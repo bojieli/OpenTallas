@@ -1,0 +1,76 @@
+{
+ "scope": "FIRST_PASS_PRE_HOP_PRE_FINAL_PINS_NOT_USABLE_FOR_QUALIFICATION",
+ "candidate_only": true,
+ "source_plan": "17b13fb0637869d53580a1084bdd250d18828d9b",
+ "source_plan_artifact": "/home/ubuntu/artifacts/s81-connected-0305/first_pass_plan_17b.json.gz",
+ "source_plan_sha256": "ca1f5b419ae1427a7a58d93904bbad440b5e944f77c6a6e59489bd86812e3c56",
+ "flag": "--qbank-hard-frame (OFF by default)",
+ "profile": "Actual Q510.84x221.4, S60.48x25.92 nr1 and N60.48x8.64 native leaves pinned by exact job+LEF hash. Unsplit604bit S and pin-align only.",
+ "physical_frame_note": "Generator nominal frames retain standard .024um SHAVE (S60.456x25.896/N60.456x8.616); full actual unshavedLEF footprints and pin rectangles used in all collision/per-bit proof, no clipping.",
+ "repack": "Only qslotheight grows21.60um (S19.44 + N2.16); q element offset grows19.44; each canonical frame top fixed and bottom grows129.60..151.20 downward; pair/lane IDs and x/orientations unchanged.",
+ "population": {
+  "total": 1973,
+  "Q": 1549,
+  "BF": 424,
+  "BF_height_growth_um": 0,
+  "slots": 1220,
+  "frames": 128,
+  "affected_objects": 26869
+ },
+ "cost": {
+  "old_reserved_field_mm2": 416.13342630911944,
+  "new_reserved_field_mm2": 435.72752796672,
+  "added_reserved_field_mm2": 19.59410165760056,
+  "die_outline_changed": false,
+  "population_changed": false,
+  "source_normal_registers_added": 0,
+  "nr1_reset_initialization_release_extra_edges": 1,
+  "remaining": "Full hop/clock/reset replan can change static relay stages; must price before integration. No performance credit."
+ },
+ "street": {
+  "minimum_measured_um": 108.0,
+  "CFIFO_actual_h_um": 95.04,
+  "CFIFO_gap_um": 4.32,
+  "required_stack_um": 99.36,
+  "minimum_remaining_um": 8.64,
+  "PQ_root_row": false,
+  "roadmap_x_entry_y_um": 79.8
+ },
+ "proof": {
+  "bank_bit_checks": 1133868,
+  "source_core_new_overlaps": 0,
+  "unmoved_glue_new_overlaps": 16970,
+  "cfg_Q_native_pairs": 1549,
+  "BF_sequence_view_missing_pairs": 424,
+  "all_cfg_Q_bit_checks": 752814
+ },
+ "source_guards": "Explicit nr1 reset RTL and pinned real bank views; current qs5f_efs QLEF hash; fresh --hop-fix --hop-iter>=2, --rly-face-pins, --col-reset-tree>0, no existing hop plan, old face/bank/probe caches cleared. Repeated canonical transform and insufficient actual FIFO street rejected.",
+ "orientation_legality": "OPEN: geometric MY/MX bit matching is not physical legality. Actual closed cfg7 lacks SYMMETRY;753 MY Qcfg7 cases remain with root generic reconciliation, no header patch or waiver.",
+ "personally_viewed_image": "/home/ubuntu/artifacts/s81-netfill-0253/qbank/frame_candidate/frame0_before_candidate.png",
+ "visual_findings": "Actual S/N bank rectangles now fit between element/ROM rows; L/R cfg7 geometric chirality preserved; BF component height unchanged while row may translate; FIFO moves downward inside measured remaining street. Figure excludes old relay/reset glue; their16970 new intersections are fully exposed separately.",
+ "validation": [
+  "128 actual old default source pack values unchanged,128 candidate source/canonical rows agree",
+  "1549 qelements old default _q_banks values identical and match actual pinned slots;3098 candidate bank dimensions checked",
+  "replan flags and stale/missing/changed actual-leaf negatives reject",
+  "actual1133868 bank bit endpoints plus752814 actualQcfg7 edges checked;424BF native sequence view unavailable"
+ ],
+ "admission": {
+  "geometry": "ot-epyc4 4GB 1thread oth-ubuntu-2183330-1792149125 exit0",
+  "cfg": "ot-epyc4 4GB 1thread oth-ubuntu-2183317-1792149125 exit0"
+ },
+ "remaining": [
+  "root actual selected-view orientation legality reconciliation",
+  "current pinned nr1 S binding entry before running new fullGEN",
+  "source-current fullGEN rebuild of all old relay/reset/clock glue and all other-face cuts",
+  "actual BF cfg7 sequence view/port/timing evidence",
+  "price full static hop schedule; actual die TTsetup/FFhold/native/DRC0 integration"
+ ],
+ "source_sha256": {
+  "tools/dsrom_s81_fulldie.py": "a739a00a39d8d7f7ce84b1fa0eb87de6b487dca923a4418701d37a271676471b",
+  "tools/s81/qbank_frame_audit.py": "668599659125cd87888dfa912f49814fa8733b4dfd5ce387d4c8220b1be89bab",
+  "tools/s81/test_qbank_frame.py": "8fdcca2913828df5cc6cc447cebb8d6032b0ae0ca302a471862cc982b35de2ec",
+  "tools/s81/test_qbank_frame_sources.py": "8df65c93027c08348bc055b4f7374368bd22c40924e81d4ee14827d6b54ea693",
+  "tools/s81/qbank_frame.py": "b000e622929f534da51a096f455badc5841e2bd716598af73c4b511cf088fbb5",
+  "tools/s81/qbank_cfg_bits_audit.py": "6ca04b8d6c8cf2d09e4a4d2b98e322a8e993173df0d24f04d6626bc86e2eaf15"
+ }
+}
