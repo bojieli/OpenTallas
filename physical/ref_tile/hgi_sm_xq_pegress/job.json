@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hsm-xql-1315",
+  "branch": "codex/hbm-sm-1552",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros",
@@ -23,7 +23,8 @@
    "rtl/hdc",
    "rtl/lib/ot_rst_relay.sv",
    "rtl/link/ot_fifo_sram_fwft.sv",
-   "tools/hbm_sm_xload_static_timing.py"
+   "tools/hbm_sm_xload_static_timing.py",
+   "results/hbm_sm_attention_1015/hsm_1552/xql"
   ]
  },
  "stages": {
@@ -43,28 +44,38 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 12,
+    "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/pos2.log",
+    "min_count_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, ([0-9]+) pair beats, 0 differ$",
+    "min_count": 13440
    },
    {
     "name": "xql_pair_write_drop_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 12,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m1.log"
    },
    {
     "name": "xql_pair_skew_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 12,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m2.log"
    },
    {
     "name": "xql_pair_map_mutant",
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 12,
+    "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
+    "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m3.log"
    }
   ],
   "calibrate": {
