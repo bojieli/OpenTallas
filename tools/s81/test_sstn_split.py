@@ -145,3 +145,51 @@ def test_existing_output_fanout_to_distinct_nets_is_preserved():
     split.expand(model, usage, mapping, views)
     assert model['buses'][-1] == extra
     assert sum(1 for b in model['buses'] for n, p in b[3] if n == 't0_0' and p.split('[')[0] == 'xa') == 2
+
+
+def actual_t3_9_fixture():
+    root = Path(__file__).resolve().parents[2]
+    receipt = json.loads((root/'results/arch/s81_sstn_split_1552/current_t3_9_fixture.json').read_text())
+    model = dict(insts=[SimpleNamespace(**receipt['station'])],
+                 buses=[(bid, cls, width, [tuple(ep) for ep in eps]) for bid, cls, width, eps in receipt['buses']])
+    usage = {n: {p: tuple(sig) for p, sig in ports.items()} for n, ports in receipt['usage'].items()}
+    return model, usage, receipt['mapping'], receipt['views'], receipt
+
+
+def test_actual_current_t3_9_legacy_rejection_preserves_unused_cc_and_every_live_net():
+    model, usage, mapping, views, evidence = actual_t3_9_fixture()
+    assert evidence['legacy_predicate_match']['instance'] == 't3_9'
+    assert evidence['legacy_predicate_match']['role'] == 'dsfd_sstn_e0c0_x2'
+    assert evidence['legacy_predicate_match']['absent_outputs'] == ['cc']
+    assert 'cc' not in usage['t3_9']
+    original = copy.deepcopy(model['buses'])
+    split.expand(model, usage, mapping, views)
+    assert [b[:3] for b in model['buses']] == [b[:3] for b in original]
+    assert model['sstn_split']['roles'][0]['absent_unused_outputs'] == ['cc']
+    assert model['sstn_split']['source_abi']['base']['ports']['cc'] == ('output', 15)
+    for old, new in zip(original, model['buses']):
+        before = [ep for ep in old[3] if ep[0] != 't3_9']
+        after = [ep for ep in new[3] if not ep[0].startswith('t3_9')]
+        assert before == after
+    assert not any(n.startswith('t3_9') and p.split('[')[0] == 'cc' for b in model['buses'] for n, p in b[3])
+
+
+@pytest.mark.parametrize('fault', ['dropped_active_bit', 'mixed_width', 'duplicate_terminal'])
+def test_actual_t3_9_conservation_negatives_are_atomic(fault):
+    model, usage, mapping, views, evidence = actual_t3_9_fixture()
+    b = next(b for b in model['buses'] if ('t3_9', 'xai') in b[3])
+    if fault == 'dropped_active_bit':
+        # Make the transport syntactically valid but omit its active bit 281.
+        model['buses'].remove(b)
+        source = b[3][0]
+        model['buses'].extend([
+            (b[0]+'_low', b[1], 281, [(source[0], source[1]+'[0:280]'), ('t3_9', 'xai[0:280]')]),
+            (b[0]+'_high', b[1], 1, [(source[0], source[1]+'[282:282]'), ('t3_9', 'xai[282:282]')])])
+    elif fault == 'mixed_width':
+        b[3][-1] = ('t3_9', 'xai[0:281]')
+    else:
+        b[3].append(('t3_9', 'xai'))
+    original = copy.deepcopy(model)
+    with pytest.raises(ValueError):
+        split.expand(model, usage, mapping, views)
+    assert model == original

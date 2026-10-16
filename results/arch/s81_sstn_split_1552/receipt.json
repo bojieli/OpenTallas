@@ -1,0 +1,176 @@
+{
+  "schema": "s81-sstn-actual-transform-receipt-v1",
+  "scope": "Graph transform proof on actual corrected c26k4 model; not native tile qualification, whole GEN completion, die timing or GRT evidence.",
+  "historical_c26k3_identity": "UNKNOWN: original exception omitted station; immutable previous traceback preserved remotely.",
+  "current_legacy_predicate_match": {
+    "instance": "t3_9",
+    "role": "dsfd_sstn_e0c0_x2",
+    "usage": {
+      "x2i": [
+        "input",
+        536
+      ],
+      "xai": [
+        "input",
+        283
+      ],
+      "xbi": [
+        "input",
+        266
+      ],
+      "cci": [
+        "input",
+        15
+      ],
+      "e0": [
+        "input",
+        2
+      ],
+      "c0": [
+        "input",
+        2
+      ],
+      "x2": [
+        "output",
+        536
+      ],
+      "xa": [
+        "output",
+        283
+      ],
+      "xb": [
+        "output",
+        266
+      ],
+      "so": [
+        "output",
+        2
+      ],
+      "ck": [
+        "input",
+        1
+      ],
+      "rs": [
+        "input",
+        1
+      ]
+    },
+    "absent_outputs": [
+      "cc"
+    ]
+  },
+  "selected_stations": 1119,
+  "entry_active_terminal_bit_occurrences": 2474907,
+  "conserved_active_terminal_bit_occurrences": 2474907,
+  "duplicated_clock_reset_terminal_bit_occurrences": 2238,
+  "entry_max_rss_mb": 814.44140625,
+  "post_expand_max_rss_mb": 862.91015625,
+  "max_rss_growth_mb": 48.46875,
+  "source_abi": {
+    "base": {
+      "master": "ot_s81_sstn_base566",
+      "ports": {
+        "ck": [
+          "input",
+          1
+        ],
+        "rs": [
+          "input",
+          1
+        ],
+        "cci": [
+          "input",
+          15
+        ],
+        "xai": [
+          "input",
+          283
+        ],
+        "xbi": [
+          "input",
+          266
+        ],
+        "e0": [
+          "input",
+          2
+        ],
+        "e1": [
+          "input",
+          2
+        ],
+        "c0": [
+          "input",
+          2
+        ],
+        "c1": [
+          "input",
+          2
+        ],
+        "si": [
+          "input",
+          2
+        ],
+        "nf": [
+          "input",
+          1
+        ],
+        "cc": [
+          "output",
+          15
+        ],
+        "xa": [
+          "output",
+          283
+        ],
+        "xb": [
+          "output",
+          266
+        ],
+        "so": [
+          "output",
+          2
+        ]
+      },
+      "source": "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv",
+      "sha256": "d48d1c3c613f6d1012fa9347589d87f925cfe60124b2fe2f8ac22c7c4565b7d2"
+    },
+    "payload": {
+      "master": "ot_s81_sstn_payload536",
+      "ports": {
+        "ck": [
+          "input",
+          1
+        ],
+        "rs": [
+          "input",
+          1
+        ],
+        "i": [
+          "input",
+          536
+        ],
+        "o": [
+          "output",
+          536
+        ]
+      },
+      "source": "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv",
+      "sha256": "642702e7299c6977317fccd991e0a6c3f6df736f134f6bd3a2bd3f97ebc986b3"
+    }
+  },
+  "generator_sha256": "d070d6da23948dea4cbbeb4756a5565e73746e614e77a2a864e07b362b62acf7",
+  "transform_sha256": "d6997197813b627f59ed8473e33eaf713ec2a107b8a0ae9490a4743ce77cd2dc",
+  "options_sha256": "7b30c21c7447736944b01bbfce44953d3d05e27a9947a8614109ea53daed32ef",
+  "fleet_job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-3125548-1792193700",
+    "source": "/srv/opentallas-scratch/codex/s81-die-1552/source_946bddbe3",
+    "work": "/srv/opentallas-scratch/codex/s81-die-1552/c26k4_capture_protected_rehome",
+    "requested_memory_gb": 8,
+    "requested_threads": 1
+  },
+  "raw_fixture_sha256": "828b292171cea674aa837e2af59574877d5f8e9a854410499087726ecb9ed290",
+  "raw_expansion_sha256": "c549a13e31a70ab4c2ebf7580b26ea675204ddd6927008dce180b92eaec709bd",
+  "graph_policy": "Source ABI kept separate from exact incident usage; unused outputs acquire no nets. Sparse outputs preserve exact ranges; all required input bits present or only explicitly authorized neutral role controls. Existing distinct-net output fanout preserved. Ambiguous duplicate inputs and mixed directions/widths refused. Entire original instance/power/graph remains untouched until validation and inverse range conservation pass.",
+  "focused_regression_tests": "21 PASS: includes actual current t3_9 legacy-predicate reproduction plus dropped-active-bit, mixed-width and duplicate-terminal negatives"
+}
