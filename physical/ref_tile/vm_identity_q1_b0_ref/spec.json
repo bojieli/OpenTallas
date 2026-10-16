@@ -1,0 +1,240 @@
+{
+ "name": "vm_identity_q1_b0_ref",
+ "top": "hfd_vms_bank_identity_q1_b0",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b0.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_identity.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "rq2",
+   "rr2",
+   "kq_done",
+   "kq",
+   "status",
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "rq3",
+   "rr3",
+   "dq",
+   "dq_done",
+   "pq",
+   "pr"
+  ],
+  "E": [
+   "rq1",
+   "rr1",
+   "xq2",
+   "xq2_done",
+   "eg"
+  ],
+  "W": [
+   "rq0",
+   "rr0",
+   "wq0",
+   "wq_done0",
+   "xq",
+   "xq_done"
+  ]
+ },
+ "pin_ranges": {
+  "rq0": [
+   22.584,
+   29.112
+  ],
+  "rr0": [
+   29.112,
+   127.8
+  ],
+  "wq0": [
+   127.8,
+   235.704
+  ],
+  "wq_done0": [
+   235.704,
+   236.088
+  ],
+  "xq": [
+   236.088,
+   342.072
+  ],
+  "xq_done": [
+   342.072,
+   342.456
+  ],
+  "rq1": [
+   23.736,
+   30.264
+  ],
+  "rr1": [
+   30.264,
+   128.952
+  ],
+  "xq2": [
+   128.952,
+   234.936
+  ],
+  "xq2_done": [
+   234.936,
+   235.32
+  ],
+  "eg": [
+   235.32,
+   341.304
+  ],
+  "rq3": [
+   18.792,
+   23.688
+  ],
+  "rr3": [
+   23.688,
+   97.704
+  ],
+  "dq": [
+   97.704,
+   178.632
+  ],
+  "dq_done": [
+   178.632,
+   178.92
+  ],
+  "pq": [
+   178.92,
+   261.0
+  ],
+  "pr": [
+   261.0,
+   337.608
+  ],
+  "rslot_v": [
+   7.596,
+   8.172
+  ],
+  "rslot": [
+   8.172,
+   9.9
+  ],
+  "wslot_v": [
+   9.9,
+   10.476
+  ],
+  "wslot": [
+   10.476,
+   12.204
+  ],
+  "rq2": [
+   12.204,
+   21.996
+  ],
+  "rr2": [
+   21.996,
+   170.028
+  ],
+  "kq_done": [
+   170.028,
+   170.604
+  ],
+  "kq": [
+   181.188,
+   343.044
+  ],
+  "status": [
+   343.044,
+   353.412
+  ],
+  "clk": [
+   178.152,
+   178.248
+  ],
+  "rst_n": [
+   178.344,
+   178.44
+  ]
+ },
+ "outline": {
+  "w": 356.4,
+  "h": 365.04,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 3
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex H-ELEM-A VM",
+  "branch": "codex/hbm-vm-local-status-pub-1427",
+  "tag": "identity1",
+  "purpose": "Source-specialized bank from actual literal quadrant/slice identity; identity ports and FFs removed, no static-input timing waiver. CE status gains one registered carry edge; data calendars unchanged. New die-owned spread pins and actual ODB coordinate/track/PG readback. Diagnostic child only; no parent/die binding or physical qualification claimed.",
+  "structural_change": "Source-specialized bank from actual literal quadrant/slice identity; identity ports and FFs removed, no static-input timing waiver. CE status gains one registered carry edge; data calendars unchanged. New die-owned spread pins and actual ODB coordinate/track/PG readback. Diagnostic child only; no parent/die binding or physical qualification claimed.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/hbm_vm_identity_1015/q1_b0",
+   "results/arch/hbm_die_v15/vm_identity_grants_1417.json"
+  ],
+  "record_to": "results/rtl/ref_tile/vm_identity_q1_b0_ref",
+  "views_to": "physical/ref_tile/vm_identity_q1_b0_ref/views",
+  "benches": [
+   {
+    "name": "literal_banks_and_wrong_compiled_identity",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/identity/run_identity_wrappers.sh {RUN}/bench/literal 1 && bash rtl/hbm_accel/generic/vm/static/identity/run_identity.sh {RUN}/bench/identity 1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "min_count_regex": "eachgroup_reads=(\\d+)"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "clock": "spine",
+ "contract": {
+  "file": "results/arch/hbm_die_v15/vm_identity_grants_1417.json",
+  "slot": "vmb_SE0_identity_diagnostic"
+ },
+ "io_tcl": "physical/hbm_vm_identity_1015/q1_b0/io.tcl",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_identity_1015/q1_b0/post_iop.tcl"
+ }
+}
