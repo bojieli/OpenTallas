@@ -1,0 +1,180 @@
+{
+  "scope": "dsfd_host_c +OT_S81_HOST_ONECLK exact gate (S-ELEM-PQ/HOST 2026-10-16, VIS-ROM S81H-01).\n\nDUT: the tile as built (DSFD_HOST_C_STATIC, DSFD_HOST_PQ_BOOT, OT_S81_HOST_BOOT300, OT_S81_HOST_ADDR_PREFIX,\nOT_S81_HOST_ONECLK): one 1.2 GHz root, no lockup latches, HOST prefix / carry-save address arithmetic with the\nlocal*pitch and sb*0x880 terms formed one stage earlier.\nReference: the SAME source files with every module renamed ref_*, OT_S81_HOST_ONECLK / OT_S81_HOST_ADDR_PREFIX\ndisabled and OT_S81_HOST_PHASESAFE enabled, i.e. the legacy PHASESAFE+BOOT300 HOST with legacy '+' arithmetic,\ndriven with ck_ingest = {ck, ck} (the calendar of record: 59,989 compared edges / 1,093 packets / 544 sectors /\n1 DONE for the IKEY case).  Every ck edge compares hw and the completion pulse; every ckv edge compares the boot\nwords.  External HBM storage/ACKs and expected images are test models; every on-chip result is actual RTL.\nNegatives: MUT 3 (completions not emitted), address mutants (IKEY: sb*0x880 wrong shift; ROWS: local*pitch + 1),\nan intercepted-CSR leak mutant.\nBoot: tests/s81/tb_host_boot300.sv (8 serial phases, stopped boot clock, over-capacity, MUT 5 kind mutant).\nScope: initialization/off-chip ingress; physical timing comes from the route, not from this bench.\n",
+  "defines": [
+    "-DDSFD_HOST_C_STATIC",
+    "-DDSFD_HOST_PQ_BOOT",
+    "-DOT_S81_HOST_BOOT300",
+    "-DOT_S81_HOST_ADDR_PREFIX",
+    "-DOT_S81_HOST_ONECLK",
+    "-DREF_HOST_PHASESAFE"
+  ],
+  "reference_modules": [
+    "ot_s81_ingest_visibility_fence",
+    "ot_async_fifo_select_copy",
+    "ot_s81_hbm_secded_rd",
+    "ot_s81_hbm_secded_wr",
+    "ot_s81_secded_enc72",
+    "ot_s81_secded_dec72",
+    "ot_rom_host_ingest",
+    "ot_hdc_ingest_fp8q",
+    "ot_s81_sram_secded",
+    "dsfd_host_native",
+    "ot_hdc_kv_ingest",
+    "ot_link_afifo",
+    "ot_async_fifo",
+    "ot_reset_sync",
+    "ot_rst_relay",
+    "dsfd_host_sd",
+    "dsfd_host_c",
+    "dsfd_host"
+  ],
+  "reference_sha256": "21177512bc4b284dc3e6930a042e2d8a97d137a263fe31ba252d1f1f6b2dfc5e",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "e7b66f2e133f07ad2b84fe06e763646eeb9574d77ee68309c49b8b8d25bf1278",
+    "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+    "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+    "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "80fe5de085307b8aa50d3b091732c062e0a6624c94bb55f6736d72edf9f05681",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "tests/s81/tb_host_c_oneclk.sv": "a05f765df77f3d902945e8264c3af3aa3071f5d3f29b7984133f8444aec4e87a",
+    "tests/s81/tb_host_boot300.sv": "6c566e6b552b3fdbd8a44344e5ccdc976a377750c76a52d9410c6623fee5fe92",
+    "tools/s81_static_control/host_c_oneclk_gate.py": "67cd60117ad32c3371cb64d98a184f5a874964c5609d034ab20812cee6397164",
+    "tools/rtl_rom_host_ingest_bench.py": "53a881623280e85661a53b91d28bcd0a66ec1356a0a8a4ff4419bcca8cbad45b"
+  },
+  "calendars": {
+    "ikey": {
+      "emit": "af78d86520b5755fa1724b19bc54a3d5cd9b0e9871b204ca53afbdfba5d3aa34",
+      "completion": "4aaeb77cc7ada9ad798a3c2dd8083c7e1f9d262dac46bf3b06445d8ff2221c3c"
+    },
+    "rows": {
+      "emit": "af78d86520b5755fa1724b19bc54a3d5cd9b0e9871b204ca53afbdfba5d3aa34",
+      "completion": "4aaeb77cc7ada9ad798a3c2dd8083c7e1f9d262dac46bf3b06445d8ff2221c3c"
+    }
+  },
+  "input_slots": {
+    "first": 128,
+    "stride": 32,
+    "final_verification_edge": 60000
+  },
+  "added_cycles": {
+    "native_payload": 0,
+    "completion": 0,
+    "boot": "0 vs legacy PHASESAFE (edge-exact compare)"
+  },
+  "summary": {
+    "ikey": "HOST_ONECLK PASS exact_calendar=59989 real_packets=1093 sectors=544 completions=1 boot_words=2 boot_delta_ckv=-2..-2",
+    "rows": "HOST_ONECLK PASS exact_calendar=59989 real_packets=293 sectors=144 completions=1 boot_words=2 boot_delta_ckv=-2..-2"
+  },
+  "cases": [
+    {
+      "case": "sat_exact",
+      "marker": "SAT SUCCESS"
+    },
+    {
+      "case": "sat_sbm_shift",
+      "marker": "SAT FAIL (expected)"
+    },
+    {
+      "case": "ikey_m0",
+      "marker": "HOST_ONECLK PASS",
+      "line": "HOST_ONECLK PASS exact_calendar=59989 real_packets=1093 sectors=544 completions=1 boot_words=2 boot_delta_ckv=-2..-2"
+    },
+    {
+      "case": "ikey_m3",
+      "marker": "HOST_ONECLK FAIL",
+      "line": "FATAL: /home/ubuntu/wt/selempq-pq-2210/tests/s81/tb_host_c_oneclk.sv:41: HOST_ONECLK FAIL exact producer/calendar edge=35093"
+    },
+    {
+      "case": "ikey_koff_row",
+      "marker": "HOST_ONECLK FAIL",
+      "line": "FATAL: /home/ubuntu/wt/selempq-pq-2210/tests/s81/tb_host_c_oneclk.sv:41: HOST_ONECLK FAIL exact producer/calendar edge=1424"
+    },
+    {
+      "case": "ikey_csr_leak",
+      "marker": "HOST_ONECLK FAIL",
+      "line": "FATAL: /home/ubuntu/wt/selempq-pq-2210/tests/s81/tb_host_c_oneclk.sv:49: HOST_ONECLK FAIL interceptedCSR reached native ingest port"
+    },
+    {
+      "case": "rows_m0",
+      "marker": "HOST_ONECLK PASS",
+      "line": "HOST_ONECLK PASS exact_calendar=59989 real_packets=293 sectors=144 completions=1 boot_words=2 boot_delta_ckv=-2..-2"
+    },
+    {
+      "case": "rows_m3",
+      "marker": "HOST_ONECLK FAIL",
+      "line": "FATAL: /home/ubuntu/wt/selempq-pq-2210/tests/s81/tb_host_c_oneclk.sv:41: HOST_ONECLK FAIL exact producer/calendar edge=9500"
+    },
+    {
+      "case": "rows_lp_plus1",
+      "marker": "HOST_ONECLK FAIL",
+      "line": "FATAL: /home/ubuntu/wt/selempq-pq-2210/tests/s81/tb_host_c_oneclk.sv:41: HOST_ONECLK FAIL exact producer/calendar edge=7212"
+    },
+    {
+      "case": "rows_csr_leak",
+      "marker": "HOST_ONECLK FAIL",
+      "line": "FATAL: /home/ubuntu/wt/selempq-pq-2210/tests/s81/tb_host_c_oneclk.sv:49: HOST_ONECLK FAIL interceptedCSR reached native ingest port"
+    },
+    {
+      "case": "boot_phase0",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=0 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase1",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=1 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase2",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=2 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase3",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=3 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase4",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=4 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase5",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=5 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase6",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=6 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_phase7",
+      "marker": "BOOT300 PASS",
+      "line": "BOOT300 PASS phase=7 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4"
+    },
+    {
+      "case": "boot_stop",
+      "marker": "BOOT300 FAIL_EXPECTED",
+      "line": "BOOT300 FAIL_EXPECTED detected stop=1 overload=0 fault=1 words=0"
+    },
+    {
+      "case": "boot_capacity",
+      "marker": "BOOT300 FAIL_EXPECTED",
+      "line": "BOOT300 FAIL_EXPECTED detected stop=0 overload=1 fault=1 words=36"
+    },
+    {
+      "case": "boot_kind_mutant",
+      "marker": "BOOT300 FAIL payload/kind",
+      "line": "FATAL: /tmp/claude-host-1016/oneclk_gate/tb_host_boot300_oneclk.sv:41: BOOT300 FAIL payload/kind got=0 actual=80000cae5 expected=00000cae5"
+    }
+  ]
+}

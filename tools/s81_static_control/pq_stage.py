@@ -14,7 +14,7 @@ def host_word(opcode,word):
     if type(word)is not int or not 0<=word<1<<35:raise ValueError('actual PW payload35 required')
     return opcode|((word&((1<<28)-1))<<32)|((word>>28)<<96)
 
-def compile_stage(rows,descriptors,events,stage,phase,base=0,job_period=None):
+def compile_stage(rows,descriptors,events,stage,phase,base=0,job_period=None,host_boot300=False):
     if type(base)is not int or not 0<=base<4096:raise ValueError('calendar base12')
     pq=[r for r in rows if r['engine']==PQ_ENGINE]
     if not pq:raise ValueError('actual PQ engine13 row required')
@@ -38,7 +38,10 @@ def compile_stage(rows,descriptors,events,stage,phase,base=0,job_period=None):
     issuer=encode_program(rows,stage,phase)
     # Host packets occupy fixed stream edges >=8 apart: slower than the
     # four-serial-edge host dequeue plus actual fixed alternating mailbox.
-    packets=[];cycle=16
+    # Two finite initialization FIFOs require local reset release plus online
+    # rendezvous on the real300MHz root. Fixed prefix64 replaces16 for this
+    # profile; there is no readiness-driven delay or change to job periods.
+    packets=[];cycle=64 if host_boot300 else 16
     def emit(op,w):
         nonlocal cycle
         packets.append(dict(host_stream_cycle=cycle,cls=0,data=host_word(op,w)))
@@ -65,5 +68,7 @@ def compile_stage(rows,descriptors,events,stage,phase,base=0,job_period=None):
                 memory=dict(existing_descriptor_rows=64,existing_descriptor_bits=117,
                             existing_calendar_macros=2,calendar_macro_shape='4096x72',
                             new_rom_macros=0,new_sram_macros=0),
+                host_boot_profile='boot300-prefix64' if host_boot300 else 'legacy-prefix16',
+                host_boot_initial_prefix_edges=64 if host_boot300 else 16,
                 dispatch_eligible=False,qualified=False,
                 blockers=['physical phase/transport and native whole-program validation required'])

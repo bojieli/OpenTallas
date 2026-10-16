@@ -36,6 +36,23 @@
 // ingest).  CSR program words: no credit return; the crossing FIFO overflow / a word refused is the sticky fault xf.
 // MUT 3 (static negative): completion pulses not emitted; MUT 4: lane faults (f_lf) not folded into the status fault.
 // ---------------------------------------------------------------------------------------------------------------
+// +define+OT_S81_HOST_ONECLK (S-ELEM-PQ/HOST 2026-10-16, VIS-ROM S81H-01; off by default): ONE 1.2 GHz root for the whole
+// tile.  The native ingest's host (clk_h) and ingest-core (clk_i) clocks are the stream clock ck (same PLL, same
+// frequency, divider 3 = ck): the ck_ingest[1:0] ports are removed and every ingest FIFO (ot_link_afifo h->i, i->ck,
+// i->h) becomes a same-root crossing timed as ordinary synchronous logic; its cycle behaviour is the one the exact
+// calendar bench already runs (ck_ingest = {ck, ck}).  Measured cause (n1, 10-15): four interleaved strip-wide roots
+// (4,957 / 9,435 / 9,609 / 125 sinks) gave hold -50..-116 ps and setup -175..-353 ps on EVERY cross-root pair and a
+// 49,457-buffer hold flood.  No lockup latches (OT_S81_HOST_PHASESAFE stays off): the only remaining crossings are the
+// boot program path ck -> ck_boot (300 MHz = ck/4) -> ckv (900 MHz = 3*ck_boot), all edges of the slower clock
+// coincide with edges of the faster one, so every crossing gets a full fast-clock period of setup and only a
+// coincident-edge hold check on a few hundred flop-to-flop endpoints.  Reset conditioning, APIPE 3, registered lane-
+// fault pins are as in the PHASESAFE build (OT_S81_HOST_STRUCT below).  Zero added cycles on the native path.
+`ifdef OT_S81_HOST_ONECLK
+`define OT_S81_HOST_STRUCT
+`endif
+`ifdef OT_S81_HOST_PHASESAFE
+`define OT_S81_HOST_STRUCT
+`endif
 module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD = 16) (
     input  wire          ck,
     input  wire          rst,
@@ -54,7 +71,9 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
 `endif
     output reg  [35:0]         t_sseq_pw,
 `ifdef DSFD_HOST_PQ_BOOT
+`ifndef OT_S81_HOST_ONECLK
     input wire [1:0] ck_ingest, // independent native host RX/core roots; same nominal stream frequency
+`endif
     output reg [35:0] t_pq_pw, // CSR 0x12: same PW36 packing, routed to fixed PQ boot mailbox
 `endif
     output reg  [7:0]          t_sseq_plen,
@@ -67,7 +86,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     always @(posedge ck or negedge rst) if (!rst) rq <= 2'b00; else rq <= {rq[0], 1'b1};
     always @(posedge ckv or negedge rsv) if (!rsv) rvq <= 2'b00; else rvq <= {rvq[0], 1'b1};
     wire rn = rq[1], rvn = rvq[1];
-`ifdef OT_S81_HOST_PHASESAFE
+`ifdef OT_S81_HOST_STRUCT
     // Each raw assertion flushes both boot FIFO interfaces; each release is
     // conditioned only by its own clock. Never drive cross-root reset pins
     // from another root's conditioned reset.
@@ -122,10 +141,14 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
 `else
     wire hf_core=hf,tv_core=t_v;
     wire [63:0]td_core=t_d;
+`ifndef OT_S81_HOST_BOOT300
     wire pop_seam=pop_t;
     wire [7:0]plen_seam=plen;
 `endif
-    `ifdef DSFD_HOST_PQ_BOOT
+`endif
+`ifdef OT_S81_HOST_ONECLK
+    wire ingest_h_ck=ck,ingest_i_ck=ck;   // one root: host / ingest-core clocks are the stream clock
+`elsif DSFD_HOST_PQ_BOOT
     wire ingest_h_ck=ck_ingest[0],ingest_i_ck=ck_ingest[1];
 `else
     wire ingest_h_ck=ck,ingest_i_ck=ck;
@@ -135,6 +158,10 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     reg tcr_seam;
     always @* if (!ck) begin host_seam={hcl,hd,to_ing};tcr_seam=tcr;end
     wire ing_rst=rst;
+    localparam integer ING_APIPE=3;
+`elsif OT_S81_HOST_ONECLK
+    wire [514:0] host_seam={hcl,hd,to_ing};
+    wire tcr_seam=tcr,ing_rst=rst;        // the ingest conditions its own resets (u_rsh / u_rsi / u_rsc, all on ck)
     localparam integer ING_APIPE=3;
 `else
     wire [514:0] host_seam={hcl,hd,to_ing};
@@ -183,8 +210,13 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     reg boot_bad;
     always @(posedge ck_boot or negedge boot_rn)if(!boot_rn)boot_bad<=0;
        else if(bridge_v&&!bridge_ready)boot_bad<=1;
-    reg boot_bad_seam;reg[1:0]boot_bad_sync;
+    reg[1:0]boot_bad_sync;
+`ifdef OT_S81_HOST_ONECLK
+    wire boot_bad_seam=boot_bad;  // ck_boot edges coincide with every 4th ck edge: a full ck period of setup, no latch
+`else
+    reg boot_bad_seam;
     always @*if(!ck_boot)boot_bad_seam=boot_bad;  // plain lockup latch (boot_bad is 0 while boot_rn is low)
+`endif
     always @(posedge ck or negedge rn)if(!rn)boot_bad_sync<=0;else boot_bad_sync<={boot_bad_sync[0],boot_bad_seam};
     assign pw_ovf=up_ov|boot_bad_sync[1];
 `else
@@ -252,7 +284,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     ) && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
 `ifdef DSFD_HOST_C_STATIC
     // lane faults (odd bits of f_lf), pin-registered
-`ifdef OT_S81_HOST_PHASESAFE
+`ifdef OT_S81_HOST_STRUCT
     reg [4*NS-1:0] lf_pins;
     always @(posedge ck) lf_pins <= f_lf;
 `else

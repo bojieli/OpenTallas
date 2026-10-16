@@ -1,0 +1,276 @@
+{
+ "name": "dsfd_host_c_oneclk_1016",
+ "top": "dsfd_host_c",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"
+ ],
+ "params": {
+  "NS": 1,
+  "MUT": 0
+ },
+ "defines": [
+  "DSFD_HOST_C_STATIC",
+  "DSFD_HOST_PQ_BOOT",
+  "OT_S81_HOST_BOOT300",
+  "OT_S81_HOST_ADDR_PREFIX",
+  "OT_S81_HOST_ONECLK"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ckv",
+  "ck_boot"
+ ],
+ "clock_data_paths": "related_pll_dividers",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "phase_ps": 0,
+  "vco_dividers": {
+   "core": 3,
+   "serial": 4,
+   "boot": 12
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rst",
+    "f_collective",
+    "f_lf",
+    "f_sseq_st",
+    "f_wfc_ft",
+    "hc"
+   ],
+   "outputs": [
+    "t_collective",
+    "hw"
+   ]
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "ckv"
+   ],
+   "inputs": [
+    "rsv"
+   ],
+   "outputs": [
+    "t_sseq_pw",
+    "t_pq_pw",
+    "t_sseq_plen"
+   ]
+  },
+  "boot": {
+   "ratio": [
+    4,
+    1
+   ],
+   "ports": [
+    "ck_boot"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 453.6,
+  "h": 77.76,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "ck",
+   "ckv",
+   "f_lf",
+   "hc",
+   "hw",
+   "rst",
+   "rsv",
+   "ck_boot"
+  ],
+  "E": [
+   "f_collective",
+   "f_sseq_st",
+   "f_wfc_ft",
+   "t_collective",
+   "t_sseq_plen",
+   "t_sseq_pw",
+   "t_pq_pw"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/host_oneclk_1016/dsfd_host_c.tcl",
+ "recipe": 3,
+ "outhold": false,
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "signoff_period_ps": 833.3333333333334
+ },
+ "slot_change_request": {
+  "contract": "S81 HOST conditional boot300 clock grant minus the two ck_ingest pins",
+  "version": "981021400",
+  "source": "physical/s81_die_pins/host_boot300_0015/grant.json",
+  "delta": "physical/s81_die_pins/host_oneclk_1016/grant.json",
+  "outline": [
+   453.6,
+   77.76
+  ],
+  "why": "Same outline and every other pin rectangle; ck_ingest[1:0] removed (one 1.2 GHz root). Conditional grant, no inherited physical view."
+ },
+ "structural_change": "ONECLK (S-ELEM-PQ/HOST 10-16, VIS-ROM S81H-01). Measured n1 cause: 4 interleaved strip-wide roots ck 4957 / ck_ingest[0] 9435 / ck_ingest[1] 9609 / ckv 125 sinks; every cross-root pair negative (hold -50..-116 ps, setup core->serial -175, host->ingest_core -353 ps), boundary spread 95-98 ps, 49,457-buffer hold flood; n5c/n6 PHASESAFE lockup-latch seams plateaued at -72.9/-93.5 ps on rd_gray_w1. Fix: the native ingest host/core clocks ARE the stream clock (same PLL, divider 3): one 1.2 GHz root for all ~24k stream sinks; every ingest FIFO is a same-root crossing; no lockup latches anywhere (PHASESAFE off); the only other roots are ck_boot (300 MHz = ck/4, initialization FIFOs) and ckv (900 MHz serial outputs), whose crossings ck->ck_boot->ckv each get a full fast-clock period (all slow edges coincide with fast edges) and a coincident-edge hold check on a few hundred flop-to-flop endpoints. Address arithmetic: OT_S81_HOST_ADDR_PREFIX nibble-prefix adders (Codex 8902d55ca) plus local*pitch and sb*0x880 formed one stage earlier (A1) and stage B = one carry-save row + one prefix add (27-level ap1_pitch->ap_raddr ~952 ps; 35-level st_sec ripple -210 ps). Cost: 0 added cycles on the native path (exact 59,989-edge IKEY / ROWS calendars vs legacy PHASESAFE build), boot words 2 ckv edges earlier than legacy, boot300 init prefix 64 edges (Codex, +40 ns cold init only), +32 FF (ap1_lp/ap1_sbm). >15k sinks on ck: clock rule needs measured insertion <=300 / spread <=80 ps from the --cts gate.",
+ "job": {
+  "owner": "Claude:S-ELEM-PQ/HOST",
+  "branch": "claude/s81-host-oneclk-1016",
+  "tag": "o1",
+  "purpose": "One 1.2 GHz root HOST (no ck_ingest roots, no lockup latches), boot300 full-period crossings, pipelined address arithmetic; exact native calendar unchanged.",
+  "views_to": "physical/ref_tile/dsfd_host_c_oneclk_1016/views",
+  "record_to": "results/rtl/ref_tile/dsfd_host_c_oneclk_1016",
+  "extra_paths": [
+   "rtl",
+   "tools/s81",
+   "tools/s81_static_control",
+   "tools/s81_compile_schedule",
+   "tools/s81_vm",
+   "physical/s81_die_pins/pq_producer_c9_h108_1417",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/rom_host_ingest/rtl",
+   "tests/s81",
+   "rtl/link",
+   "tools/die_port_bind.py",
+   "physical/s81_die_pins/host_boot300_0015",
+   "physical/s81_die_pins/host_oneclk_1016",
+   "tools/rtl_rom_host_ingest_bench.py",
+   "tools/rtl_hdc_kv_ingest_campaign.py",
+   "tools/kv_ingest_ref.py"
+  ],
+  "benches": [
+   {
+    "name": "oneclk_exact_calendar_sat_boot",
+    "cmd": "python3 tools/s81_static_control/host_c_oneclk_gate.py {RUN}/oneclk",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog",
+     "yosys",
+     "numpy"
+    ],
+    "pass_regex": "HOST_ONECLK_GATE PASS"
+   },
+   {
+    "name": "actual_host_c9_PQ_pass",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass oneclk",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQPRODUCER PASS"
+   },
+   {
+    "name": "actual_host_c9_PQ_hostdrop",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh hostdrop {RUN}/bench_hostdrop oneclk",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQPRODUCER FAIL hostdrop"
+   },
+   {
+    "name": "afifo_rcopy_equiv",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012  -o {RUN}/af0 tests/s81/tb_link_afifo_rcopy.sv rtl/link/ot_link_afifo.sv && vvp -n {RUN}/af0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS link afifo RCOPY 32 equivalent"
+   },
+   {
+    "name": "mutant_afifo_rcopy",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -DOT_LINK_AFIFO_MUT_RCOPY -o {RUN}/afm tests/s81/tb_link_afifo_rcopy.sv rtl/link/ot_link_afifo.sv && vvp -n {RUN}/afm",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FATAL RCOPY mismatch"
+   }
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why_route": "Clocking structure change: OT_S81_HOST_ONECLK folds the ck_ingest[1:0] host/ingest-core roots onto the stream clock ck (one 1.2 GHz root, no lockup latches), keeps only boot300 full-period crossings to ck_boot/ckv; address arithmetic pipelined (A1 product/sbm precompute, carry-save + prefix add). Distinct RTL/ABI (ck_ingest ports removed) from every earlier dsfd_host_c view."
+  }
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data pin on its declared root: inputs fi (f_collective), hc_q (hc), ss1 (f_sseq_st), wf (f_wfc_ft), lf_pins (f_lf); outputs to (t_collective), hw, t_sseq_pw / t_pq_pw / t_sseq_plen (ckv). A generic single-clock wrapper would mis-clock the ckv outputs and add a duplicate stage."
+ },
+ "boot_clock_contract": {
+  "clock": "ck_boot",
+  "period_ps": 3333.3333333333335,
+  "fixed_phase_ps": 0,
+  "stream_edges": 4,
+  "serial_edges": 3,
+  "init_only": true,
+  "grant": "physical/s81_die_pins/host_oneclk_1016/grant.json",
+  "grant_commit": "981021400",
+  "reset": "shared raw rst&&rsv assertion; own boot clock deassertion conditioner",
+  "qualification": "OPEN until measured CTS/root/native boundary and die phi-R clock delivery"
+ }
+}

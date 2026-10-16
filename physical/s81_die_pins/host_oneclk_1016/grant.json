@@ -1,0 +1,19 @@
+{
+ "scope": "PIN_REMOVAL_ONLY_GRANT_DELTA (S-ELEM-PQ/HOST 2026-10-16); not a physical qualification",
+ "master": "dsfd_host_c",
+ "base": "physical/s81_die_pins/host_boot300_0015/grant.json (conditional boot300 grant, 994 pins)",
+ "outline_um": [
+  453.6,
+  77.76
+ ],
+ "pins_total": 992,
+ "removed": [
+  "ck_ingest[0] (S, M5, 227.100)",
+  "ck_ingest[1] (S, M5, 227.292)"
+ ],
+ "unchanged": "all other 992 pin rectangles byte-identical to host_boot300_0015/dsfd_host_c.tcl (clock entries ck 226.332 / ckv 226.524 / ck_boot 227.484, S centre)",
+ "why": "OT_S81_HOST_ONECLK: the native ingest host/core clocks are the stream clock ck (same PLL, same divider); the die no longer routes two extra 1.2 GHz clock nets to HOST",
+ "die_action": "die generator: drop the two ck_ingest nets to dsfd_host_c (port no longer exists in the ONECLK build)",
+ "source_sha256": "3900f523ecebafebf82f5bb344062d87da4717519756f806d49371cb38bc904a",
+ "tcl_sha256": "6fdfbddf0629fd2b99d9fc5751fa2952e53db3489fc492f21872b1f2f8f34dbc"
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_host_c",
+ "enable": false,
+ "reason": "RTL registers every data pin on its declared root: inputs fi (f_collective), hc_q (hc), ss1 (f_sseq_st), wf (f_wfc_ft), lf_pins (f_lf); outputs to (t_collective), hw, t_sseq_pw / t_pq_pw / t_sseq_plen (ckv). A generic single-clock wrapper would mis-clock the ckv outputs and add a duplicate stage."
+}

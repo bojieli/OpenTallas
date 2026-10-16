@@ -1,0 +1,1177 @@
+
+-- Running command `read_verilog -sv /tmp/claude-host-1016/oneclk_gate/sat_exact.sv; prep -top proof; flatten; opt; sat -verify -prove ok 1 -timeout 600' --
+
+1. Executing Verilog-2005 frontend: /tmp/claude-host-1016/oneclk_gate/sat_exact.sv
+Parsing SystemVerilog input from `/tmp/claude-host-1016/oneclk_gate/sat_exact.sv' to AST representation.
+Generating RTLIL representation for module `\proof'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \proof
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \proof
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 24 empty switches in `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+Found and cleaned up 24 empty switches in `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+Found and cleaned up 24 empty switches in `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+Found and cleaned up 24 empty switches in `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+Found and cleaned up 24 empty switches in `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+Cleaned up 120 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_INIT pass (extract init attributes).
+
+2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+     1/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:7]$924
+     2/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[6:6]$921
+     3/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[5:5]$918
+     4/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[4:4]$915
+     5/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[3:3]$914
+     6/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[2:2]$913
+     7/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[1:1]$912
+     8/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[0:0]$911
+     9/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:7]$907
+    10/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:7]$906
+    11/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[6:6]$902
+    12/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[6:6]$901
+    13/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[5:5]$897
+    14/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[5:5]$896
+    15/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[4:4]$892
+    16/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[4:4]$891
+    17/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[3:3]$887
+    18/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[3:3]$886
+    19/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[2:2]$882
+    20/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[2:2]$881
+    21/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[1:1]$880
+    22/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[1:1]$879
+    23/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[0:0]$878
+    24/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[0:0]$877
+    25/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:7]$873
+    26/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:7]$872
+    27/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[6:6]$868
+    28/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[6:6]$867
+    29/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[5:5]$863
+    30/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[5:5]$862
+    31/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[4:4]$858
+    32/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[4:4]$857
+    33/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[3:3]$853
+    34/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[3:3]$852
+    35/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[2:2]$848
+    36/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[2:2]$847
+    37/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[1:1]$843
+    38/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[1:1]$842
+    39/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[0:0]$841
+    40/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[0:0]$840
+    41/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$5$\host_addr_add3[31:0]$790
+    42/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\host_addr_add3[31:0]$791
+    43/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\i[31:0]$806
+    44/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [31:28]
+    45/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [27:24]
+    46/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [23:20]
+    47/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [19:16]
+    48/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [15:12]
+    49/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [11:8]
+    50/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [7:4]
+    51/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix[31:0]$795 [3:0]
+    52/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [7]
+    53/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [6]
+    54/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [5]
+    55/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [4]
+    56/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [3]
+    57/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [2]
+    58/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [1]
+    59/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805 [0]
+    60/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [7]
+    61/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [7]
+    62/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [6]
+    63/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [6]
+    64/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [5]
+    65/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [5]
+    66/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [4]
+    67/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [4]
+    68/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [3]
+    69/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [3]
+    70/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [2]
+    71/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [2]
+    72/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [1]
+    73/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [1]
+    74/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804 [0]
+    75/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803 [0]
+    76/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [7]
+    77/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [7]
+    78/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [6]
+    79/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [6]
+    80/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [5]
+    81/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [5]
+    82/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [4]
+    83/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [4]
+    84/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [3]
+    85/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [3]
+    86/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [2]
+    87/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [2]
+    88/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [1]
+    89/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [1]
+    90/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802 [0]
+    91/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1[7:0]$801 [0]
+    92/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [7]
+    93/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [7]
+    94/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [39:35]
+    95/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [6]
+    96/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [6]
+    97/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [34:30]
+    98/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [5]
+    99/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [5]
+   100/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [29:25]
+   101/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [4]
+   102/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [4]
+   103/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [24:20]
+   104/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [3]
+   105/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [3]
+   106/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [19:15]
+   107/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [2]
+   108/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [2]
+   109/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [14:10]
+   110/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [1]
+   111/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [1]
+   112/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [9:5]
+   113/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800 [0]
+   114/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0[7:0]$799 [0]
+   115/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798 [4:0]
+   116/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\b[31:0]$797
+   117/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\a[31:0]$796
+   118/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\c[31:0]$794
+   119/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\b[31:0]$793
+   120/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\a[31:0]$792
+Creating decoders for process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+     1/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:7]$779
+     2/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[6:6]$776
+     3/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[5:5]$773
+     4/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[4:4]$770
+     5/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[3:3]$769
+     6/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[2:2]$768
+     7/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[1:1]$767
+     8/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[0:0]$766
+     9/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:7]$762
+    10/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:7]$761
+    11/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[6:6]$757
+    12/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[6:6]$756
+    13/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[5:5]$752
+    14/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[5:5]$751
+    15/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[4:4]$747
+    16/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[4:4]$746
+    17/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[3:3]$742
+    18/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[3:3]$741
+    19/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[2:2]$737
+    20/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[2:2]$736
+    21/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[1:1]$735
+    22/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[1:1]$734
+    23/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[0:0]$733
+    24/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[0:0]$732
+    25/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:7]$728
+    26/120: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:7]$727
+    27/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[6:6]$723
+    28/120: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[6:6]$722
+    29/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[5:5]$718
+    30/120: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[5:5]$717
+    31/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[4:4]$713
+    32/120: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[4:4]$712
+    33/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[3:3]$708
+    34/120: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[3:3]$707
+    35/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[2:2]$703
+    36/120: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[2:2]$702
+    37/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[1:1]$698
+    38/120: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[1:1]$697
+    39/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[0:0]$696
+    40/120: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[0:0]$695
+    41/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$4$\host_addr_add3[31:0]$646
+    42/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\host_addr_add3[31:0]$647
+    43/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\i[31:0]$662
+    44/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [31:28]
+    45/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [27:24]
+    46/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [23:20]
+    47/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [19:16]
+    48/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [15:12]
+    49/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [11:8]
+    50/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [7:4]
+    51/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix[31:0]$651 [3:0]
+    52/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [7]
+    53/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [6]
+    54/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [5]
+    55/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [4]
+    56/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [3]
+    57/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [2]
+    58/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [1]
+    59/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661 [0]
+    60/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [7]
+    61/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [7]
+    62/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [6]
+    63/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [6]
+    64/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [5]
+    65/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [5]
+    66/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [4]
+    67/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [4]
+    68/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [3]
+    69/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [3]
+    70/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [2]
+    71/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [2]
+    72/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [1]
+    73/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [1]
+    74/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660 [0]
+    75/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2[7:0]$659 [0]
+    76/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [7]
+    77/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [7]
+    78/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [6]
+    79/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [6]
+    80/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [5]
+    81/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [5]
+    82/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [4]
+    83/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [4]
+    84/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [3]
+    85/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [3]
+    86/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [2]
+    87/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [2]
+    88/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [1]
+    89/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [1]
+    90/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658 [0]
+    91/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657 [0]
+    92/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [7]
+    93/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [7]
+    94/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [39:35]
+    95/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [6]
+    96/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [6]
+    97/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [34:30]
+    98/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [5]
+    99/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [5]
+   100/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [29:25]
+   101/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [4]
+   102/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [4]
+   103/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [24:20]
+   104/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [3]
+   105/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [3]
+   106/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [19:15]
+   107/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [2]
+   108/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [2]
+   109/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [14:10]
+   110/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [1]
+   111/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [1]
+   112/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [9:5]
+   113/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656 [0]
+   114/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0[7:0]$655 [0]
+   115/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654 [4:0]
+   116/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\b[31:0]$653
+   117/120: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\a[31:0]$652
+   118/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\c[31:0]$650
+   119/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\b[31:0]$649
+   120/120: $0$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\a[31:0]$648
+Creating decoders for process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+     1/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:7]$635
+     2/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[6:6]$632
+     3/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[5:5]$629
+     4/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[4:4]$626
+     5/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[3:3]$625
+     6/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[2:2]$624
+     7/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[1:1]$623
+     8/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[0:0]$622
+     9/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:7]$618
+    10/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:7]$617
+    11/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[6:6]$613
+    12/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[6:6]$612
+    13/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[5:5]$608
+    14/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[5:5]$607
+    15/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[4:4]$603
+    16/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[4:4]$602
+    17/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[3:3]$598
+    18/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[3:3]$597
+    19/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[2:2]$593
+    20/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[2:2]$592
+    21/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[1:1]$591
+    22/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[1:1]$590
+    23/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[0:0]$589
+    24/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[0:0]$588
+    25/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:7]$584
+    26/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:7]$583
+    27/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[6:6]$579
+    28/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[6:6]$578
+    29/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[5:5]$574
+    30/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[5:5]$573
+    31/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[4:4]$569
+    32/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[4:4]$568
+    33/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[3:3]$564
+    34/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[3:3]$563
+    35/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[2:2]$559
+    36/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[2:2]$558
+    37/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[1:1]$554
+    38/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[1:1]$553
+    39/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[0:0]$552
+    40/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[0:0]$551
+    41/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$3$\host_addr_add32_prefix[31:0]$514
+    42/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\i[31:0]$526
+    43/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [31:28]
+    44/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [27:24]
+    45/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [23:20]
+    46/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [19:16]
+    47/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [15:12]
+    48/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [11:8]
+    49/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [7:4]
+    50/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix[31:0]$515 [3:0]
+    51/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [7]
+    52/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [6]
+    53/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [5]
+    54/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [4]
+    55/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [3]
+    56/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [2]
+    57/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [1]
+    58/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525 [0]
+    59/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [7]
+    60/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [7]
+    61/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [6]
+    62/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [6]
+    63/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [5]
+    64/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [5]
+    65/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [4]
+    66/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [4]
+    67/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [3]
+    68/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [3]
+    69/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [2]
+    70/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [2]
+    71/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [1]
+    72/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [1]
+    73/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2[7:0]$524 [0]
+    74/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2[7:0]$523 [0]
+    75/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [7]
+    76/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [7]
+    77/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [6]
+    78/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [6]
+    79/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [5]
+    80/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [5]
+    81/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [4]
+    82/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [4]
+    83/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [3]
+    84/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [3]
+    85/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [2]
+    86/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [2]
+    87/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [1]
+    88/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [1]
+    89/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1[7:0]$522 [0]
+    90/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1[7:0]$521 [0]
+    91/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [7]
+    92/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [7]
+    93/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [39:35]
+    94/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [6]
+    95/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [6]
+    96/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [34:30]
+    97/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [5]
+    98/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [5]
+    99/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [29:25]
+   100/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [4]
+   101/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [4]
+   102/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [24:20]
+   103/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [3]
+   104/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [3]
+   105/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [19:15]
+   106/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [2]
+   107/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [2]
+   108/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [14:10]
+   109/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [1]
+   110/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [1]
+   111/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [9:5]
+   112/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520 [0]
+   113/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0[7:0]$519 [0]
+   114/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518 [4:0]
+   115/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\b[31:0]$517
+   116/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\a[31:0]$516
+Creating decoders for process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+     1/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:7]$503
+     2/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[6:6]$500
+     3/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[5:5]$497
+     4/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[4:4]$494
+     5/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[3:3]$493
+     6/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[2:2]$492
+     7/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[1:1]$491
+     8/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[0:0]$490
+     9/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:7]$486
+    10/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:7]$485
+    11/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[6:6]$481
+    12/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[6:6]$480
+    13/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[5:5]$476
+    14/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[5:5]$475
+    15/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[4:4]$471
+    16/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[4:4]$470
+    17/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[3:3]$466
+    18/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[3:3]$465
+    19/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[2:2]$461
+    20/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[2:2]$460
+    21/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[1:1]$459
+    22/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[1:1]$458
+    23/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[0:0]$457
+    24/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[0:0]$456
+    25/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:7]$452
+    26/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:7]$451
+    27/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[6:6]$447
+    28/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[6:6]$446
+    29/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[5:5]$442
+    30/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[5:5]$441
+    31/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[4:4]$437
+    32/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[4:4]$436
+    33/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[3:3]$432
+    34/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[3:3]$431
+    35/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[2:2]$427
+    36/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[2:2]$426
+    37/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[1:1]$422
+    38/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[1:1]$421
+    39/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[0:0]$420
+    40/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[0:0]$419
+    41/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$2$\host_addr_add32_prefix[31:0]$378
+    42/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\i[31:0]$390
+    43/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [31:28]
+    44/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [27:24]
+    45/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [23:20]
+    46/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [19:16]
+    47/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [15:12]
+    48/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [11:8]
+    49/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [7:4]
+    50/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix[31:0]$379 [3:0]
+    51/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [7]
+    52/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [6]
+    53/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [5]
+    54/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [4]
+    55/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [3]
+    56/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [2]
+    57/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [1]
+    58/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3[7:0]$389 [0]
+    59/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [7]
+    60/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [7]
+    61/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [6]
+    62/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [6]
+    63/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [5]
+    64/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [5]
+    65/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [4]
+    66/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [4]
+    67/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [3]
+    68/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [3]
+    69/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [2]
+    70/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [2]
+    71/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [1]
+    72/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [1]
+    73/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2[7:0]$388 [0]
+    74/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2[7:0]$387 [0]
+    75/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [7]
+    76/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [7]
+    77/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [6]
+    78/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [6]
+    79/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [5]
+    80/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [5]
+    81/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [4]
+    82/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [4]
+    83/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [3]
+    84/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [3]
+    85/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [2]
+    86/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [2]
+    87/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [1]
+    88/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [1]
+    89/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1[7:0]$386 [0]
+    90/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1[7:0]$385 [0]
+    91/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [7]
+    92/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [7]
+    93/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [39:35]
+    94/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [6]
+    95/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [6]
+    96/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [34:30]
+    97/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [5]
+    98/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [5]
+    99/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [29:25]
+   100/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [4]
+   101/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [4]
+   102/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [24:20]
+   103/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [3]
+   104/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [3]
+   105/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [19:15]
+   106/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [2]
+   107/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [2]
+   108/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [14:10]
+   109/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [1]
+   110/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [1]
+   111/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [9:5]
+   112/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0[7:0]$384 [0]
+   113/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0[7:0]$383 [0]
+   114/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q[39:0]$382 [4:0]
+   115/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\b[31:0]$381
+   116/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\a[31:0]$380
+Creating decoders for process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+     1/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:7]$367
+     2/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[6:6]$364
+     3/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[5:5]$361
+     4/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[4:4]$358
+     5/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[3:3]$357
+     6/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[2:2]$356
+     7/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[1:1]$355
+     8/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[0:0]$354
+     9/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:7]$350
+    10/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:7]$349
+    11/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[6:6]$345
+    12/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[6:6]$344
+    13/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[5:5]$340
+    14/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[5:5]$339
+    15/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[4:4]$335
+    16/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[4:4]$334
+    17/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[3:3]$330
+    18/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[3:3]$329
+    19/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[2:2]$325
+    20/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[2:2]$324
+    21/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[1:1]$323
+    22/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[1:1]$322
+    23/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[0:0]$321
+    24/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[0:0]$320
+    25/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:7]$316
+    26/116: $8$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:7]$315
+    27/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[6:6]$311
+    28/116: $7$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[6:6]$310
+    29/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[5:5]$306
+    30/116: $6$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[5:5]$305
+    31/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[4:4]$301
+    32/116: $5$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[4:4]$300
+    33/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[3:3]$296
+    34/116: $4$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[3:3]$295
+    35/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[2:2]$291
+    36/116: $3$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[2:2]$290
+    37/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[1:1]$286
+    38/116: $2$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[1:1]$285
+    39/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[0:0]$284
+    40/116: $1$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[0:0]$283
+    41/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$1$\host_addr_add32_prefix[31:0]$244
+    42/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\i[31:0]$256
+    43/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [31:28]
+    44/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [27:24]
+    45/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [23:20]
+    46/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [19:16]
+    47/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [15:12]
+    48/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [11:8]
+    49/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [7:4]
+    50/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix[31:0]$245 [3:0]
+    51/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [7]
+    52/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [6]
+    53/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [5]
+    54/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [4]
+    55/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [3]
+    56/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [2]
+    57/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [1]
+    58/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255 [0]
+    59/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [7]
+    60/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [7]
+    61/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [6]
+    62/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [6]
+    63/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [5]
+    64/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [5]
+    65/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [4]
+    66/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [4]
+    67/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [3]
+    68/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [3]
+    69/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [2]
+    70/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [2]
+    71/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [1]
+    72/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [1]
+    73/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254 [0]
+    74/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253 [0]
+    75/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [7]
+    76/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [7]
+    77/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [6]
+    78/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [6]
+    79/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [5]
+    80/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [5]
+    81/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [4]
+    82/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [4]
+    83/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [3]
+    84/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [3]
+    85/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [2]
+    86/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [2]
+    87/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [1]
+    88/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [1]
+    89/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252 [0]
+    90/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251 [0]
+    91/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [7]
+    92/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [7]
+    93/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [39:35]
+    94/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [6]
+    95/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [6]
+    96/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [34:30]
+    97/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [5]
+    98/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [5]
+    99/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [29:25]
+   100/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [4]
+   101/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [4]
+   102/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [24:20]
+   103/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [3]
+   104/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [3]
+   105/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [19:15]
+   106/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [2]
+   107/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [2]
+   108/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [14:10]
+   109/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [1]
+   110/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [1]
+   111/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [9:5]
+   112/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250 [0]
+   113/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249 [0]
+   114/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248 [4:0]
+   115/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\b[31:0]$247
+   116/116: $0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\a[31:0]$246
+
+2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$5$\host_addr_add3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\host_addr_add3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:44$167$\c' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\i' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$4$\host_addr_add3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\host_addr_add3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add3$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:43$126$\c' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\i' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$3$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\p2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\i' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$2$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\q' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\p2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\g3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:40$46$\i' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$1$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\host_addr_add32_prefix' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\a' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\b' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+No latch inferred for signal `\proof.$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\i' from process `\proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+
+2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$789'.
+Removing empty process `proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:27$645'.
+Removing empty process `proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$513'.
+Removing empty process `proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$377'.
+Removing empty process `proof.$proc$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:2$243'.
+Cleaned up 0 empty switches.
+
+2.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+<suppressed ~29 debug messages>
+
+2.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 74 unused cells and 623 unused wires.
+<suppressed ~75 debug messages>
+
+2.5. Executing CHECK pass (checking for obvious problems).
+checking module proof..
+found and reported 0 problems.
+
+2.6. Executing OPT pass (performing simple optimizations).
+
+2.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+<suppressed ~18 debug messages>
+Removed a total of 6 cells.
+
+2.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+2.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$836: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$835_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$835_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$835_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$835_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$833: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$832_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$832_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$832_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$832_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$830: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$829_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$829_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$829_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$829_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$827: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$826_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$826_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$826_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$826_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$824: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$823_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$823_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$823_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$823_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$821: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$820_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$820_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$820_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$820_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$691: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$690_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$690_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$690_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$690_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$688: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$687_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$687_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$687_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$687_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$685: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$684_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$684_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$684_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$684_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$682: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$681_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$681_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$681_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$681_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$679: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$678_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$678_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$678_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$678_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$676: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$675_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$675_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$675_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$675_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$547: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$546_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$546_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$546_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$546_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$544: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$543_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$543_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$543_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$543_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$541: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$540_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$540_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$540_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$540_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$538: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$537_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$537_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$537_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$537_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$535: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$534_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$534_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$534_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$534_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$532: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$531_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$531_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$531_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$531_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$415: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$414_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$414_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$414_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$414_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$412: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$411_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$411_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$411_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$411_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$409: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$408_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$408_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$408_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$408_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$406: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$405_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$405_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$405_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$405_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$403: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$402_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$402_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$402_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$402_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$279: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$278_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$278_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$278_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$278_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$276: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$275_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$275_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$275_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$275_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$273: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$272_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$272_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$272_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$272_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$270: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$269_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$269_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$269_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$269_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$267: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$266_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$266_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$266_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$266_Y [3] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$264: { $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$263_Y [0] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$263_Y [1] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$263_Y [2] $xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:10$263_Y [3] }
+  Optimizing cells in module \proof.
+Performed a total of 29 changes.
+
+2.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+2.6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+2.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1 debug messages>
+
+2.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+2.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Removed a total of 0 cells.
+
+2.6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+2.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.6.16. Finished OPT passes. (There is nothing left to do.)
+
+2.7. Executing WREDUCE pass (reducing word size of cells).
+Removed top 31 bits (of 32) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$218 ($add).
+Removed top 28 bits (of 32) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$218 ($add).
+Removed top 27 bits (of 32) from port Y of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$218 ($add).
+Removed top 25 bits (of 32) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$222 ($add).
+Removed top 28 bits (of 32) from port B of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$223 ($and).
+Removed top 1 bits (of 32) from port Y of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$223 ($and).
+Removed top 1 bits (of 32) from port A of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$223 ($and).
+Removed top 25 bits (of 32) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:37$227 ($add).
+Removed top 20 bits (of 32) from port A of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:41$232 ($or).
+Removed top 25 bits (of 32) from port B of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:41$232 ($or).
+Removed top 20 bits (of 32) from port Y of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:41$232 ($or).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$259 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$259 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$262 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$262 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$265 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$265 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$268 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$268 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$271 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$271 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$274 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$274 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$277 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$277 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$280 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$280 ($add).
+Removed top 1 bits (of 5) from port Y of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$280 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$371 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$370 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$372 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$373 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$374 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$375 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$376 ($add).
+Removed top 4 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$398 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$398 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$401 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$401 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$404 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$404 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$407 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$407 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$410 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$410 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$413 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$413 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$416 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$416 ($add).
+Removed top 1 bits (of 5) from port Y of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$416 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$507 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$506 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$508 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$509 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$510 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$511 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$512 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$527 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$527 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$530 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$530 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$533 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$533 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$536 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$536 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$539 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$539 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$542 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$542 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$545 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$545 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$548 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$548 ($add).
+Removed top 1 bits (of 5) from port Y of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$548 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$639 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$638 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$640 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$641 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$642 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$643 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$644 ($add).
+Removed top 1 bits (of 32) from port Y of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$669 ($or).
+Removed top 1 bits (of 32) from port A of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$669 ($or).
+Removed top 1 bits (of 32) from port B of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$669 ($or).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$671 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$671 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$674 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$674 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$677 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$677 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$680 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$680 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$683 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$683 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$686 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$686 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$689 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$689 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$692 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$692 ($add).
+Removed top 1 bits (of 5) from port Y of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$692 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$783 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$782 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$784 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$785 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$786 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$787 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$788 ($add).
+Removed top 25 bits (of 32) from port B of cell proof.$xor$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$809 ($xor).
+Removed top 25 bits (of 32) from port B of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$811 ($and).
+Removed top 25 bits (of 32) from port B of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$813 ($and).
+Removed top 1 bits (of 32) from port Y of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$814 ($or).
+Removed top 1 bits (of 32) from port A of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$814 ($or).
+Removed top 1 bits (of 32) from port B of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$814 ($or).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$816 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$816 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$819 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$819 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$822 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$822 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$825 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$825 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$828 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$828 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$831 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$831 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$834 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$834 ($add).
+Removed top 1 bits (of 5) from port A of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$837 ($add).
+Removed top 1 bits (of 5) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$837 ($add).
+Removed top 1 bits (of 5) from port Y of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:9$837 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$928 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$927 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$929 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$930 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$931 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$932 ($add).
+Removed top 3 bits (of 4) from port B of cell proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:24$933 ($add).
+Removed top 1 bits (of 32) from port Y of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$667 ($or).
+Removed top 1 bits (of 32) from port A of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$667 ($or).
+Removed top 1 bits (of 32) from port B of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$667 ($or).
+Removed top 1 bits (of 32) from port Y of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$668 ($and).
+Removed top 1 bits (of 32) from port A of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$668 ($and).
+Removed top 1 bits (of 32) from port B of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$668 ($and).
+Removed top 1 bits (of 32) from port Y of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$812 ($or).
+Removed top 1 bits (of 32) from port A of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$812 ($or).
+Removed top 1 bits (of 32) from port B of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$812 ($or).
+Removed top 1 bits (of 32) from port Y of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$813 ($and).
+Removed top 1 bits (of 32) from port A of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$813 ($and).
+Removed top 20 bits (of 32) from port A of cell proof.$or$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:41$235 ($or).
+Removed top 1 bits (of 32) from port Y of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$665 ($and).
+Removed top 1 bits (of 32) from port A of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$665 ($and).
+Removed top 1 bits (of 32) from port B of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$665 ($and).
+Removed top 1 bits (of 32) from port Y of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$666 ($and).
+Removed top 1 bits (of 32) from port A of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$666 ($and).
+Removed top 1 bits (of 32) from port B of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$666 ($and).
+Removed top 1 bits (of 32) from port Y of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$811 ($and).
+Removed top 1 bits (of 32) from port A of cell proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$811 ($and).
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g0[7:0]$656.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g1[7:0]$658.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g2[7:0]$660.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\g3[7:0]$661.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\p1[7:0]$657.
+Removed top 8 bits (of 40) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$127$\q[39:0]$654.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g0[7:0]$800.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g1[7:0]$802.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g2[7:0]$804.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\g3[7:0]$805.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\p2[7:0]$803.
+Removed top 8 bits (of 40) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:29$168$\q[39:0]$798.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g0[7:0]$250.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g1[7:0]$252.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g2[7:0]$254.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\g3[7:0]$255.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p0[7:0]$249.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p1[7:0]$251.
+Removed top 3 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\p2[7:0]$253.
+Removed top 13 bits (of 40) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:39$6$\q[39:0]$248.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g0[7:0]$520.
+Removed top 1 bits (of 8) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\g3[7:0]$525.
+Removed top 1 bits (of 40) from wire proof.$0$func$\host_addr_add32_prefix$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:42$86$\q[39:0]$518.
+Removed top 27 bits (of 32) from wire proof.$add$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$218_Y.
+Removed top 1 bits (of 32) from wire proof.$and$/tmp/claude-host-1016/oneclk_gate/sat_exact.sv:36$223_Y.
+Removed top 6 bits (of 32) from wire proof.sb.
+
+2.8. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 0 unused cells and 24 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+2.11.5. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== proof ===
+
+   Number of wires:                189
+   Number of wire bits:           1944
+   Number of public wires:          23
+   Number of public wire bits:     586
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                338
+     $add                           83
+     $and                          111
+     $eq                             4
+     $logic_and                      3
+     $mul                            2
+     $mux                            1
+     $or                            73
+     $reduce_and                    29
+     $xor                           32
+
+2.13. Executing CHECK pass (checking for obvious problems).
+checking module proof..
+found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+<suppressed ~2 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Removed a total of 0 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+<suppressed ~2 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+<suppressed ~7 debug messages>
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 4 unused cells and 4 unused wires.
+<suppressed ~6 debug messages>
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+4.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1 debug messages>
+
+4.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+4.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Removed a total of 0 cells.
+
+4.20. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+4.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+4.23. Finished OPT passes. (There is nothing left to do.)
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 325 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Solving problem with 21538 variables and 61417 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

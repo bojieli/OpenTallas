@@ -2,7 +2,8 @@
 import argparse,os,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--mut',choices=['PHW','SAW','CALGO','PQSLOT','PRIME','HOSTDROP']);p.add_argument('--calcap',action='store_true');p.add_argument('--produced',action='store_true');p.add_argument('--sequenced',action='store_true',help='real host CSR/FIFO -> c9 engine13 -> actual PHW10 PQ + mapped memories');p.add_argument('--rom4',action='store_true',help='DSFD_PQ_ROM4: die stream ROM = four 4096-row macros, select in dsfd_sp_pq_n');a=p.parse_args();
+p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--mut',choices=['PHW','SAW','CALGO','PQSLOT','PRIME','HOSTDROP']);p.add_argument('--calcap',action='store_true');p.add_argument('--produced',action='store_true');p.add_argument('--sequenced',action='store_true',help='real host CSR/FIFO -> c9 engine13 -> actual PHW10 PQ + mapped memories');p.add_argument('--rom4',action='store_true',help='DSFD_PQ_ROM4: die stream ROM = four 4096-row macros, select in dsfd_sp_pq_n');p.add_argument('--host-boot300',action='store_true',help='HOST real 300MHz common-divisor initialization bridge (+lockup-latch PHASESAFE)');p.add_argument('--host-oneclk',action='store_true',help='HOST OT_S81_HOST_ONECLK: one 1.2GHz root, boot300 bridge, no lockup latches, address prefix');a=p.parse_args();
+if a.host_oneclk:a.host_boot300=True
 if a.sequenced:a.produced=True;a.calcap=True;a.rom4=True
 a.work.mkdir(parents=True,exist_ok=True)
 v=os.environ.get('OT_VERILATOR',str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
@@ -30,7 +31,7 @@ if a.sequenced:
  descriptors=[dict(ph=514,np=0,xbase=0,xps=0,obase=0,ops=0,fmt=0,observed_end_edges=35,native_tag=0)]
  rows=[dict(engine=13,arg=0,issue=0,done=38,pin_to_pin=37,native_tag=0),dict(engine=14,arg=0,issue=39,done=0),dict(engine=15,arg=0,issue=40,done=0)]
  events=[dict(timestamp=1,action=dict(accept_tag=0)),dict(timestamp=10,action=dict(cfg=1)),dict(timestamp=14,action=dict(stream_req=1,stream_addr=16383)),dict(timestamp=32,action=dict(retire_mask=1)),dict(timestamp=42,action=dict(phase_end=1))]
- image=compile_stage(rows,descriptors,events,0,0)
+ image=compile_stage(rows,descriptors,events,0,0,host_boot300=a.host_boot300)
  packets=image['host_packets']
  # Declared external initialization CSR words exercise the real HOST h/i
  # async FIFO; all22 programming packets above are intentionally intercepted.
@@ -44,6 +45,8 @@ if a.sequenced:
 else:defs_extra=[]
 defs=['OT_PQ_ROM_PORTS' ,'OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PINREAD','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2']
 defs+=defs_extra
+if a.host_oneclk:defs+=['OT_S81_HOST_BOOT300','OT_S81_HOST_ONECLK','OT_S81_HOST_ADDR_PREFIX']
+elif a.host_boot300:defs+=['OT_S81_HOST_PHASESAFE','OT_S81_HOST_BOOT300']
 if a.produced:defs+=['OT_PQ_CTL_STATE_PINS','OT_PQ_CTL_INCAP','OT_PQ_AQ_PIN_LAUNCH']  # captured-input ctl leaf; AQ leaves launch from its registered aq_vin
 if a.calcap:defs.append('OT_PQ_CTL_CALCAP')
 if a.rom4:defs.append('DSFD_PQ_ROM4')
