@@ -19,7 +19,7 @@ module dsfd_rly_63_SN (input wire ck, input wire rs, input wire [62:0] i, output
     ot_s81_rly #(.W(63)) u (.ck(ck), .rs(rs), .i(i), .o(o));
 endmodule
 module dsfd_rly_66_ES (input wire ck, input wire rs, input wire [65:0] i, output wire [65:0] o);
-    ot_s81_rly #(.W(66)) u (.ck(ck), .rs(rs), .i(i), .o(o));
+    ot_s81_rly #(.W(66), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));
 endmodule
 module dsfd_rly_66_EW (input wire ck, input wire rs, input wire [65:0] i, output wire [65:0] o);
     ot_s81_rly #(.W(66)) u (.ck(ck), .rs(rs), .i(i), .o(o));
@@ -31,6 +31,6 @@ module dsfd_rly_66_NW (input wire ck, input wire rs, input wire [65:0] i, output
     ot_s81_rly #(.W(66)) u (.ck(ck), .rs(rs), .i(i), .o(o));
 endmodule
 module dsfd_rly_66_WS (input wire ck, input wire rs, input wire [65:0] i, output wire [65:0] o);
-    ot_s81_rly #(.W(66)) u (.ck(ck), .rs(rs), .i(i), .o(o));
+    ot_s81_rly #(.W(66), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));
 endmodule
 `default_nettype wire
