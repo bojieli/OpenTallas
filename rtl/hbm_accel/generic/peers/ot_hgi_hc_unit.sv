@@ -28,6 +28,13 @@
 // result is the single-position record's bit for bit (positions are independent; the HCP is exact per position).
 // X MEMORY: bank k (the HCP's term-k bank) holds RMAX x PMAX words of W BF16 lanes; XMACRO 1 builds it from
 // ot_sram_1r1w_1024x256 macros (W / 16 a bank, 16-b lane write mask; RMAX x PMAX <= 1,024), else flops.
+// PPIPE 1 (hgi-1010/tput2, opt-in, default 0 = the phase-serial POST above): the POST as a per-element dataflow. Each of
+// the 24 words runs its own op chain (pre/post: mul scale, add base, exp(-), add 1, div 1/, add eps | mul 2; comb: mul
+// scale2, add base, [row max], add -max, exp) and every unit (mul / add / exp / div, II 1) issues, each edge, the
+// highest-index element whose next op is its own and has no op in flight (comb first: it feeds the Sinkhorn). The row
+// max waits for all 16 comb words' base adds; the Sinkhorn starts the edge the 16th comb exp lands and the pre/post
+// tail runs under it.  Every word sees exactly the phase-serial op sequence and operands, so the result is bit-exact
+// (fault conditions unchanged).  HC_MIX_POST DS 1M: 692 -> ~585 cycles a record (tools/hgi_unit_tput/run_hc.sh).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_hc_unit #(
     parameter integer W = 32,               // HCP lanes per group (8W MAC lanes)
@@ -41,6 +48,7 @@ module ot_hgi_hc_unit #(
     parameter integer PMAX = 8,             // hgi-1010/d: positions a record (A.m; the MTP verify), a power of two
     parameter integer XMACRO = 0,           // hgi-1010/d: 1 = the x memory in ot_sram_1r1w_1024x256 macros
     parameter integer MUT_MP = 0,           // mutant: every position lands on position 0's x words
+    parameter integer PPIPE = 0,            // hgi-1010/tput2: 1 = POST as a per-element dataflow (see header)
     parameter integer TW = $clog2(RMAX),
     parameter integer TG = 4 + TW
 ) (
@@ -85,7 +93,7 @@ module ot_hgi_hc_unit #(
     localparam [4:0] S_IDLE = 0, S_PAR = 1, S_STAGE = 2, S_ROW = 3, S_RW = 4, S_RC = 5, S_REL = 6, S_P1 = 7,
                      S_P2 = 8, S_MAX = 9, S_P3 = 10, S_P4 = 11, S_P5 = 12, S_P6 = 13, S_P7 = 14, S_SK = 15,
                      S_SKW = 16, S_DRAIN = 17, S_DRW = 18, S_DONE = 19, S_FAULT = 20, S_GEO = 21, S_GEO2 = 22,
-                     S_LDA = 23, S_PL = 24;
+                     S_LDA = 23, S_PL = 24, S_PD = 25;
     reg wpre, wst;   // wpre: start the first row's windows next edge (boff settled); wst: they are started
     reg [4:0] st; reg [4:0] i; reg iss_done; reg [4:0] row;
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
@@ -203,6 +211,26 @@ module ot_hgi_hc_unit #(
 `ifdef HC_DBG
     reg flt_q; always @(posedge clk) begin flt_q <= flt; if (flt && !flt_q) $display("HC_DBG flt rises st %0d pc %0d row %0d", st, pc, row); end
 `endif
+    // ---- PPIPE 1: per-element POST dataflow state (es: ops done on word q; eb: an op of word q in flight)
+    reg [2:0] es [0:23]; reg [23:0] eb; reg mxok, skgo, skd;
+    reg ok_m, ok_a, ok_e, ok_d; reg [4:0] pk_m, pk_a, pk_e, pk_d; reg cmb_base, cmb_exp, pp_done;
+    integer qq;
+    always @* begin
+        ok_m = 1'b0; ok_a = 1'b0; ok_e = 1'b0; ok_d = 1'b0; pk_m = 5'd0; pk_a = 5'd0; pk_e = 5'd0; pk_d = 5'd0;
+        cmb_base = 1'b1; cmb_exp = 1'b1; pp_done = 1'b1;
+        for (qq = 0; qq < 24; qq = qq + 1) begin                  // ascending: the highest ready index wins
+            if (!eb[qq]) begin
+                if (es[qq] == 3'd0 || (qq >= 4 && qq < 8 && es[qq] == 3'd5)) begin ok_m = 1'b1; pk_m = qq[4:0]; end
+                if (es[qq] == 3'd1 || (qq >= 8 && es[qq] == 3'd2 && mxok) || (qq < 8 && es[qq] == 3'd3) ||
+                    (qq < 4 && es[qq] == 3'd5)) begin ok_a = 1'b1; pk_a = qq[4:0]; end
+                if ((qq < 8 && es[qq] == 3'd2) || (qq >= 8 && es[qq] == 3'd3)) begin ok_e = 1'b1; pk_e = qq[4:0]; end
+                if (qq < 8 && es[qq] == 3'd4) begin ok_d = 1'b1; pk_d = qq[4:0]; end
+            end
+            if (qq >= 8 && es[qq] < 3'd2) cmb_base = 1'b0;
+            if (qq >= 8 && es[qq] != 3'd4) cmb_exp = 1'b0;
+            if (qq < 8 && es[qq] != 3'd6) pp_done = 1'b0;
+        end
+    end
     // ---- control
     wire [31:0] F_ONE = 32'h3F800000, F_TWO = 32'h40000000;
     function automatic fgt(input [31:0] a, input [31:0] b);    // a > b for non-NaN binary32
@@ -234,9 +262,20 @@ module ot_hgi_hc_unit #(
             if (ad_o) begin T[aq[ar]] <= ad_y; ar <= ar + 5'd1; if (ad_e != 2'd0) flt <= 1'b1; end
             if (ex_o) begin T[eq[er]] <= ex_y; er <= er + 5'd1; end
             if (dv_o) begin T[dq[drp]] <= dv_y; drp <= drp + 5'd1; end
+            if (PPIPE != 0) begin
+                if (st != S_PD) begin
+                    for (q = 0; q < 24; q = q + 1) es[q] <= 3'd0;
+                    eb <= 24'd0; mxok <= 1'b0; skgo <= 1'b0; skd <= 1'b0;
+                end else begin
+                    if (mu_o) begin es[mq[mr]] <= es[mq[mr]] + 3'd1; eb[mq[mr]] <= 1'b0; end
+                    if (ad_o) begin es[aq[ar]] <= es[aq[ar]] + 3'd1; eb[aq[ar]] <= 1'b0; end
+                    if (ex_o) begin es[eq[er]] <= es[eq[er]] + 3'd1; eb[eq[er]] <= 1'b0; end
+                    if (dv_o) begin es[dq[drp]] <= es[dq[drp]] + 3'd1; eb[dq[drp]] <= 1'b0; end
+                end
+            end
             if (ex_f || dv_f || |w_flt || h_fault || sk_fault) flt <= 1'b1;
             wb_n = {3'd0, mu_o} + {3'd0, ad_o} + {3'd0, ex_o} + {3'd0, dv_o};
-            outst <= outst - {2'd0, wb_n} + ((!flt && !iss_done && (st == S_P1 || st == S_P2 || st == S_P3 ||
+            if (!PPIPE) outst <= outst - {2'd0, wb_n} + ((!flt && !iss_done && (st == S_P1 || st == S_P2 || st == S_P3 ||
                      st == S_P4 || st == S_P5 || st == S_P6 || st == S_P7)) ? 6'd1 : 6'd0);
 `ifdef HC_DBG
             if (!flt && (ex_f || dv_f || |w_flt || h_fault || sk_fault || (mu_o && mu_e != 0) || (ad_o && ad_e != 0)))
@@ -288,7 +327,7 @@ module ot_hgi_hc_unit #(
                         rsec <= rsec + 27'd1;
                     end
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
-                    if (rsec > sec_end && vo_n == 3'd0 && p_got == 4'd4) begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
+                    if (rsec > sec_end && vo_n == 3'd0 && p_got == 4'd4) begin i <= 5'd0; iss_done <= 1'b0; st <= PPIPE ? S_PD : S_P1; end
                 end
                 S_STAGE: begin                                       // A sectors -> x banks, 4 outstanding
                     if (vo_n < 3'd4 && sec <= sec_end) begin
@@ -334,7 +373,7 @@ module ot_hgi_hc_unit #(
                     if (op == 2'd1) begin
                         sec <= orow >> 3; sec_end <= ({9'd0, orow} + {22'd0, nrows} - 27'd1) >> 3; vo_n <= 3'd0;
                         st <= S_DRAIN;
-                    end else begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
+                    end else begin i <= 5'd0; iss_done <= 1'b0; st <= PPIPE ? S_PD : S_P1; end
                 end
                 // ---- post phases: issue one element per edge, then wait for every write-back
                 S_P1, S_P2, S_P3, S_P4, S_P5, S_P6, S_P7: begin
@@ -369,6 +408,46 @@ module ot_hgi_hc_unit #(
                             S_P6: begin i <= 5'd0; st <= S_P7; end
                             default: st <= S_SK;
                         endcase
+                    end
+                end
+                S_PD: if (PPIPE != 0) begin                          // PPIPE 1: the per-element POST dataflow
+                    if (ok_m) begin
+                        mu_v <= 1'b1; mu_a <= T[pk_m]; eb[pk_m] <= 1'b1; mq[mw] <= pk_m; mw <= mw + 5'd1;
+                        mu_b <= (es[pk_m] != 3'd0) ? F_TWO : (pk_m < 4) ? pw[0] : (pk_m < 8) ? pw[1] : pw[2];
+                    end
+                    if (ok_a) begin
+                        ad_v <= 1'b1; ad_a <= T[pk_a]; eb[pk_a] <= 1'b1; aq[aw] <= pk_a; aw <= aw + 5'd1;
+                        ad_b <= (es[pk_a] == 3'd1) ? pw[8 + pk_a] : (pk_a >= 8) ? (MX[(pk_a - 8) >> 2] ^ 32'h80000000) :
+                                (es[pk_a] == 3'd3) ? F_ONE : (MUT_POST ? 32'd0 : HC_EPS);
+                    end
+                    if (ok_e) begin
+                        ex_v <= 1'b1; ex_a <= (pk_e < 8) ? T[pk_e] ^ 32'h80000000 : T[pk_e]; eb[pk_e] <= 1'b1;
+                        eq[ew] <= pk_e; ew <= ew + 5'd1;
+                    end
+                    if (ok_d) begin
+                        dv_v <= 1'b1; dv_a <= F_ONE; dv_b <= T[pk_d]; eb[pk_d] <= 1'b1; dq[dw] <= pk_d; dw <= dw + 5'd1;
+                    end
+                    if (!mxok && cmb_base) begin                     // row maxima once every comb base add landed
+                        for (q = 0; q < 4; q = q + 1) begin : mxp
+                            reg [31:0] m; integer c;
+                            m = T[8 + 4*q];
+                            for (c = 1; c < 4; c = c + 1) if (fgt(T[8 + 4*q + c], m)) m = T[8 + 4*q + c];
+                            MX[q] <= m;
+                        end
+                        for (q = 8; q < 24; q = q + 1) if (isnan(T[q])) flt <= 1'b1;
+                        mxok <= 1'b1;
+                    end
+                    if (sk_busy) sk_req <= 1'b0;
+                    if (!skgo && cmb_exp) begin                      // the 16th comb exp landed: Sinkhorn
+                        for (q = 0; q < 16; q = q + 1) sk_in[32*q +: 32] <= T[8 + q];
+                        sk_req <= 1'b1; skgo <= 1'b1;
+                    end
+                    if (sk_done && skgo) begin
+                        for (q = 0; q < 16; q = q + 1) T[8 + q] <= sk_y[32*q +: 32];
+                        skd <= 1'b1;
+                    end
+                    if (skd && pp_done) begin
+                        sec <= orow >> 3; sec_end <= ({9'd0, orow} + 27'd23) >> 3; vo_n <= 3'd0; st <= S_DRAIN;
                     end
                 end
                 S_MAX: begin                                         // row maxima of comb (np.max; NaN faults)

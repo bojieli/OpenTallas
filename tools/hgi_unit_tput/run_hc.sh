@@ -1,6 +1,7 @@
 #!/bin/bash
 # HC unit throughput bench (hgi-1010/g): tools/hgi_unit_tput/run_hc.sh <vectors dir> <out dir>   (from the repo root)
-# builds tb_hgi_hc_tput (Verilator) twice: PASS build and +define+MUT_POST (must FAIL); env FA (HBM first access).
+# builds tb_hgi_hc_tput (Verilator) twice: PASS build and +define+MUT_POST (must FAIL); env FA (HBM first access),
+# env XDEF extra defines for both builds (e.g. XDEF=+define+PPIPE: the POST dataflow, hgi-1010/tput2).
 set -euo pipefail
 vec=$(realpath "$1"); out=$(realpath -m "$2"); mkdir -p "$out"
 VL=${VERILATOR:-verilator}
@@ -14,7 +15,7 @@ SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
   rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
 for m in pass MUT_POST; do
-  D=""; [ $m != pass ] && D="+define+$m"
+  D="${XDEF:-}"; [ $m != pass ] && D="$D +define+$m"
   "$VL" --binary --timing -O3 -CFLAGS -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN $D \
     --top-module tb_hgi_hc_tput -I"$vec" -Mdir "$out/$m.obj" $SRC rtl/hbm_accel/generic/adapters/tb/tb_hgi_hc_tput.sv \
     -j 8 > "$out/$m.build" 2>&1 &

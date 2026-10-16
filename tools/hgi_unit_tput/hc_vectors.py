@@ -34,8 +34,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
     ap.add_argument('--nx', type=int, default=4)
+    ap.add_argument('--post-only', action='store_true', help='only HC_MIX_POST records (the G25 DS AR HC op), nx of them')
     out = Path(ap.parse_args().out)
     nx = ap.parse_args().nx
+    post_only = ap.parse_args().post_only
     out.mkdir(parents=True, exist_ok=True)
     G.set_arith('chunk8')
     rng = np.random.default_rng(20261010)
@@ -59,7 +61,7 @@ def main():
     R = -(-nchunk // W)
     SPW = W // 8
     RS = R * SPW
-    for row in range(24):
+    for row in (range(24) if not post_only else ()):
         for k in range(8):
             lanes_all = np.zeros((R, W), F)
             idx = np.arange(R * W)
@@ -82,8 +84,9 @@ def main():
     rows = [0, 7, 15, 23, 3, 11, 19, 21][:nx]
     seq = []
     for j in range(nx):
-        seq += [(1, j), (2, j)]
-    seq.append((0, 0))
+        seq += [(2, j)] if post_only else [(1, j), (2, j)]
+    if not post_only:
+        seq.append((0, 0))
     for op, j in seq:
         v0 = len(vmi)
         if op == 2:

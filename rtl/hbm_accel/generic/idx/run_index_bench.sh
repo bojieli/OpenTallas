@@ -21,7 +21,7 @@ for m in 0 2 3; do
       -Wno-MULTIDRIVEN --top-module tb_hgi_idx_index -GMUT=$m -Mdir obj $SRC > build.log 2>&1; echo $? > build.exit )
 done
 for m in 0 2 3; do
-  ( cd $OUT/b$m && [ "$(cat build.exit)" = 0 ] && stdbuf -oL ./obj/Vtb_hgi_idx_index +DIR=$VEC +ODIR=. +SEED=7 +GAP=3 > sim.log 2>&1;
+  ( cd $OUT/b$m && [ "$(cat build.exit)" = 0 ] && stdbuf -oL ./obj/Vtb_hgi_idx_index +DIR=$VEC +ODIR=. +SEED=7 +GAP=${GAP:-3} > sim.log 2>&1;
     cd $R && python3 tools/hbm_idx_die_bench.py compare --work $VEC --run $OUT/b$m > $OUT/b$m/compare.log 2>&1;
     echo "MUT=$m $(grep -o '"verdict": "[A-Z]*"' $OUT/b$m/verdict.json 2>/dev/null) $(grep HGIIDX_FRAME $OUT/b$m/sim.log | tr '\n' ' ')" > $OUT/b$m/line ) &
 done

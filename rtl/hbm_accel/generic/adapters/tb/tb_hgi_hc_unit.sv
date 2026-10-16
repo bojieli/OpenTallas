@@ -35,6 +35,11 @@ module tb_hgi_hc_unit;
 `else
     localparam integer MP = 0;
 `endif
+`ifdef PPIPE
+    localparam integer PP = 1;                         // hgi-1010/tput2: POST dataflow (+define+PPIPE / -DPPIPE)
+`else
+    localparam integer PP = 0;
+`endif
 `ifdef VIA_LANE
     // hgi-1010/d: the die form -- ot_hgi_hc_die (unit + HBM lane client) -> 2 pin stages -> ot_hgi_hbm_rd_server (the
     // loader end) -> one kport-lane model (random ready, random latency, one transaction) -> 2 pin stages back
@@ -65,7 +70,7 @@ module tb_hgi_hc_unit;
         if (lane_f) begin $display("ERR lane fault"); errors = errors + 1; end
     end
 `else
-    ot_hgi_hc_unit #(.MUT_POST(MP), .MUT_MP(MM)) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_hc_unit #(.MUT_POST(MP), .MUT_MP(MM), .PPIPE(PP)) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
         .rec_n_a(cur[916:896]), .rec_n_o(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag),
