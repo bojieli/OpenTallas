@@ -55,5 +55,20 @@
       "state": "RUNNING_SYNTH_CTS",
       "auto_submit": false
     }
+  },
+  "measured_pre_cts": {
+    "cells": 47379,
+    "flops": 9539,
+    "mapped_chip_area_um2": 14371.56684,
+    "utilization": 0.4993,
+    "pin_geometry": {
+      "signal_clock_pins": 1229,
+      "off_track": 0,
+      "inaccessible": 0,
+      "outside": 0
+    },
+    "source_archive_sha256": "505bd36e0054cadc7a93dda48a88c011c94c799f4ae0ab9253b5f6f588163132",
+    "actual_floorplan_viewed": "/home/ubuntu/artifacts/pc-cfg-h8-1623-layout/png/floorplan.png",
+    "image_note": "Two fixed SRAMs with west corridor; viewed image is pre-placement. Density is empty pre-placement and cannot establish congestion. Post-CTS images still required."
   }
 }

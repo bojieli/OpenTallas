@@ -64,5 +64,5 @@
     "out_all32_h8/m0.log": "83c46930b87ce7d69666ad402137e00f66160acd9ced5a3f7a4b514c15a7da7d",
     "out_all32_h8/m1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
-  "old_test_failures": "Original width compile error, then wrong REFpb witness opcode=3 rather than6 in 4096-edge run. Preserved remote out/m0.build.log and out_widthfix; obsolete witness run remains progressing but no qualification claim."
+  "old_test_failures": "Original width compile error, then wrong REFpb witness opcode=3 rather than6 in 4096-edge run; obsolete run completed PC_CFG_VACUOUS checks130656 cols256 refs0. Preserved remote out/m0.build.log and out_widthfix; corrected512cycle all32 and actualH8 receipts supersede only the broken bench witness, no hardware failure hidden."
 }
