@@ -94,7 +94,7 @@ def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
         write_json(out / 'child_lint.json', lint)
         receipt['child_lint'] = lint
         if lint['verdict'] != 'PASS':
-            raise ValueError('child_lint FAIL')
+            raise ValueError('child_lint FAIL: ' + '; '.join(lint.get('fails', [])))
         final_hash = sha(candidate)
         receipt.update(status='PASS', output={'path': lef.name, 'sha256': final_hash})
         receipt_path = provenance / 'abstract_pin_stub.json'

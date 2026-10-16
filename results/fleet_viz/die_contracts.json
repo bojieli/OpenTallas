@@ -224,6 +224,11 @@
      ],
      "macro": "(phy|ckbump|pllm|fwdbump)",
      "evidence": "KV die contract v1.4.1 slots"
+    },
+    {
+     "kind": "registry",
+     "path": "results/fleet_viz/element_registry/qwen_kvsys_v143_die_masters_20261016.json",
+     "evidence": "Q-KVSYS-NETLIST 2026-10-16: v1.4.3 die masters absent from the v1.4.1 bind (qkd_hgs, qkd_hss, qkd_rly_t1, qkd_rst_region) + qkd_d2ds (die master of qkd_d2d_static); strict bind v2 results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/"
     }
    ],
    "add": [
@@ -313,6 +318,10 @@
      "Q-KVSYS-DIE"
     ],
     [
+     "^qkh_",
+     "Q-KVSYS-ELEM"
+    ],
+    [
      "^(qkd_|ot_qkh_|ot_qkvd_)",
      "Q-KVSYS-ELEM"
     ]
@@ -326,7 +335,7 @@
    "lead": "S-DIE",
    "log": "el1011-s81die.log",
    "doc": "results/arch/hier_contract_1011/s81_v21_gen18.json",
-   "complete": true,
+   "complete": false,
    "sources": [
     {
      "kind": "port_bind",
@@ -417,7 +426,8 @@
      "^(dsfd_|ot_s81_|ot_p2h_|ot_mtp_)",
      "S-ELEM-B"
     ]
-   ]
+   ],
+   "note": "Current complete master census is pending source-pinned c26b / gen26n GEN and strict port-bind results. Historical bind5 (GEN18) sources remain diagnostic inventory only and must not auto-retire modern unlisted S81 masters. Explicit source-evidenced retirements remain in force."
   },
   {
    "design": "hbm",

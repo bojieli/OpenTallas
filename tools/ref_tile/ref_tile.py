@@ -30,6 +30,7 @@ import json
 import math
 import os
 import re
+import shlex
 import sys
 from pathlib import Path
 
@@ -701,6 +702,10 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+# PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
+# view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
+# require MIN_SPREAD + PG_SPREAD_MARGIN; child_lint itself keeps 0.50.
+PG_SPREAD_MARGIN = 0.02
 
 
 def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
@@ -756,7 +761,7 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
 
 
 def pg_spread_ok(rec) -> bool:
-    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] >= PG_MIN_SPREAD + PG_SPREAD_MARGIN)
 
 
 def blocks_of(s: dict) -> list:
@@ -1297,6 +1302,11 @@ def shq(v: str) -> str:
     return "'" + v.replace("'", "'\"'\"'") + "'"
 
 
+def shell_array(fragments: list[str]) -> str:
+    """Serialize intended argument fragments as inert, separately quoted words."""
+    return " ".join(shq(word) for fragment in fragments for word in shlex.split(fragment))
+
+
 def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str:
     r = s["route"]
     ph, pv = pin_layers(s, lc)
@@ -1361,7 +1371,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # ... and post_iop.tcl re-applies them after place_pins (el1013-smh-r11, see the kit file below)
             if "POST_IO_PLACEMENT_TCL" not in s.get("orfs_vars", {}):
                 extra.append(f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{kd}/post_iop.tcl")
-        extra.append(f"--orfs-var {k}={vv}")
+        extra.append("--orfs-var " + shq(f"{k}={vv}"))
     # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
     # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
     # 2 pins, expected 1" and CTS misbehaves; the closed die-view routes ran it by default through route_view.sh POSTSYN)
@@ -1458,7 +1468,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/die.v",
+ "die_v": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/die.v",
  "top": null,
  "verdict": "PASS",
  "failing": [],
@@ -144,7 +144,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 1,
-   "rtl": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/port_bind/die_glue.sv",
+   "rtl": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/port_bind/die_glue.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -443,7 +443,7 @@
    "verdict": "PASS",
    "fails": [],
    "instances": 1,
-   "rtl": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/port_bind/die_glue.sv",
+   "rtl": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/port_bind/die_glue.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -960,7 +960,7 @@
  "top_assigns": [],
  "params_not_in_rtl": [],
  "pads_declared": [],
- "die_sha256": "1f9b7e8b63b9ae8c42d60f681c2f900ff286efd400f9805ac57dbc308b007628",
+ "die_sha256": "2f9024a060a9e45864e6cc708c6514e28b1e36123b9c3552cef36034ac836702",
  "straps_declared": [
   "qfd_crom_g:crom_lb",
   "qfd_sp_band_lanes:b0",
@@ -1044,7 +1044,7 @@
   "/srv/opentallas-scratch/claude/q-netlist-0030/src/rtl/physical/qfd_tile_rp2_45_slots.sv",
   "/srv/opentallas-scratch/claude/q-netlist-0030/src/rtl/physical/qfd_tile_nk_rp2_45.sv",
   "/srv/opentallas-scratch/claude/q-netlist-0030/src/rtl/physical/qfd_tile_nl_rp2_45.sv",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/port_bind/die_glue.sv",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/port_bind/die_glue.sv",
   "/srv/opentallas-scratch/claude/q-netlist-0030/src/rtl/qwen_split/qfd_link_slots.sv",
   "/srv/opentallas-scratch/claude/q-netlist-0030/src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
   "/srv/opentallas-scratch/claude/q-netlist-0030/src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",

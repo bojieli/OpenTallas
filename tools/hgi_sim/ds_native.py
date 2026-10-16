@@ -372,6 +372,13 @@ class Manifest:
 # ----------------------------------------------------------------------------------------------------------------
 # the lowering
 # ----------------------------------------------------------------------------------------------------------------
+# HEAD_STREAM (H-MTP2 2026-10-16, H-NETLIST main af261fbcb): the static die's argmax is ot_hbm_argmax_static_sw_vm, which
+# reads the logits from VM (mode 0, one sector a cycle).  STREAM 2 (SM LM head -> argmax) has no static producer, and its
+# records fault the legality check.  The LM head therefore writes VM logits and ARGMAX.LOCAL reads VM, whatever `fuse`
+# says (cost ~190 edges an ARGMAX.LOCAL).  True = the historical STREAM 2 form (pre-static benches only).
+HEAD_STREAM = False
+
+
 class Lower:
     def __init__(self, m, pos, lay: Layout, man: Manifest, fuse=True):
         self.m, self.pos, self.lay, self.man = m, pos, lay, man
@@ -497,7 +504,7 @@ class Lower:
             self.bufn[out] = n
             ooff = 0 if out in ("q", "q_own", "logits", "KIN") else r0          # die-local outputs
             desc = dict(A=x_desc, B=bd, O=V(out, max(r1 - r0, 1), off=ooff, fmt=out_fmt))
-            if self.fuse and out == "logits":         # the LM head streams into the argmax unit (STREAM 2)
+            if self.fuse and HEAD_STREAM and out == "logits":   # historical: the LM head streams into argmax (STREAM 2)
                 desc["O"] = MDesc(space="STREAM", fmt=out_fmt, base=2, n=max(r1 - r0, 1))
             if expert_slot is not None:
                 desc["I"] = U32V(lay.vm["rid"] + expert_slot, 1)
@@ -655,9 +662,10 @@ class Lower:
                            ad=I.AD_C, rnd=int(e == m.k_exp), dst=I.DST_VM)
                 elif fn == "argmax_local":
                     r0, r1 = head_rows(rank)
-                    src_ = MDesc(space="STREAM", fmt="FP32", base=2, n=r1 - r0) if self.fuse else V("logits", r1 - r0)
+                    hs = self.fuse and HEAD_STREAM
+                    src_ = MDesc(space="STREAM", fmt="FP32", base=2, n=r1 - r0) if hs else V("logits", r1 - r0)
                     add(Rec("ARGMAX", "LOCAL", imm_a=HEAD_ROWS, desc=dict(A=src_, O=V("TOK", 2)),
-                            tag="argmax_local", family="argmax"), [] if self.fuse else ["logits"], ["TOK"])
+                            tag="argmax_local", family="argmax"), [] if hs else ["logits"], ["TOK"])
                 elif fn == "engram_fetch":
                     self.engram_fetch(add, su, L)
                 elif fn == "engram_mix":
