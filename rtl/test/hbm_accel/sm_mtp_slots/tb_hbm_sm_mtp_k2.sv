@@ -23,6 +23,9 @@ module tb_hbm_sm_mtp_k2;
    z[512+lane*10+:10]=10'd0;
   end operand=z;end
  endfunction
+ function automatic [531:0] xoperand(input integer a,input integer b,input integer c);
+  reg[531:0] z;begin z=operand(a,b,c);xoperand={z[531:522],z[511:256],z[521:512],z[255:0]};end
+ endfunction
  always @(negedge clk) if(rst_n)begin
   cycle=cycle+1;
   if(sov)begin
@@ -41,7 +44,7 @@ module tb_hbm_sm_mtp_k2;
   // Six serial positions, 8 hardware interleave rows, 32 real block terms.
   for(pos=0;pos<P;pos=pos+1)for(k=0;k<TERMS;k=k+1)for(row=0;row<ROWS;row=row+1)begin
    @(posedge clk);#0.05;sv=1;sfirst=(k==0);slast=(k==TERMS-1);stag=pos*ROWS+row;
-   sw=operand(0,row,k);sx=operand(pos+1,0,k);reads0=reads0+1;
+   sw=operand(0,row,k);sx=xoperand(pos+1,0,k);reads0=reads0+1;
   end
   @(posedge clk);#0.05;sv=0;repeat(100)@(negedge clk);
   if(refseen!={48{1'b1}})$fatal(1,"serial incomplete %h",refseen);
@@ -54,7 +57,7 @@ module tb_hbm_sm_mtp_k2;
    for(g=0;g<3;g=g+1)begin
     @(posedge clk);#0.05;iv=1;first=(k==0);last=(k==TERMS-1);
     tag0=(2*g)*ROWS+row;tag1=(2*g+1)*ROWS+row;
-    w=operand(0,row,k);x0=operand(2*g+1,0,k);x1=operand(2*g+2,0,k);
+    w=operand(0,row,k);x0=xoperand(2*g+1,0,k);x1=xoperand(2*g+2,0,k);
    end
   end
   @(posedge clk);#0.05;iv=0;repeat(120)@(negedge clk);
