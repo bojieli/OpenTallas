@@ -35,7 +35,8 @@ module ot_hgi_sm_xload_cl2_ctl #(
     parameter integer PMAX   = 8,
     parameter integer RD_LAT = 6,
     parameter integer MUT    = 0,
-    parameter integer NR     = 32        // select replicas (each drives 2048 / NR data bits)
+    parameter integer NR     = 32,       // select replicas (each drives 2048 / NR data bits)
+    parameter integer EGRESS_SPLIT = 0   // XQL (H-SM 10-16): 1 = export the egress controls (eg_*) to pair-egress leaves
 ) (
     input  wire               clk,
     input  wire               clk_eg,    // egress root (rw / BD-beat pin capture, beat select, xw pins): related phase 0
@@ -80,7 +81,12 @@ module ot_hgi_sm_xload_cl2_ctl #(
     output reg  [2*((PMAX*3152+2047)/2048)-1:0] bsel,   // one-hot {parity a, beat b} of (ea, eb2), same edge
 
     output reg  [PMAX*8-1:0]  lane_en,
-    input  wire [2047:0]      bq_d
+    input  wire [2047:0]      bq_d,
+    // ---- XQL egress controls (EGRESS_SPLIT = 1; tied 0 otherwise): ed[RDP-3] {ok, b}, ed[RDP-2], the BD beat tag
+    output wire [7:0]         eg_ed5,
+    output wire [16:0]        eg_ede,
+    output wire               eg_bqv, eg_bqlast,
+    output wire [6:0]         eg_bqaddr, eg_bqb
 );
     localparam integer XC = 3152, XOFF = 2128;
     localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
@@ -485,6 +491,13 @@ module ot_hgi_sm_xload_cl2_ctl #(
     end
     always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; end
     always @(posedge clk_eg) begin bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
+    // ---- XQL: egress controls exported to the pair-egress leaves (their pin registers = this module's clk_eg stage)
+    generate if (EGRESS_SPLIT != 0) begin : g_egx
+        assign eg_ed5 = {ed[RDP-3][EW-2], ed[RDP-3][6:0]}; assign eg_ede = ed[RDP-2];
+        assign eg_bqv = bq_v; assign eg_bqlast = bq_last; assign eg_bqaddr = bq_addr; assign eg_bqb = bq_b;
+    end else begin : g_egx0
+        assign eg_ed5 = 8'd0; assign eg_ede = '0; assign eg_bqv = 1'b0; assign eg_bqlast = 1'b0; assign eg_bqaddr = 7'd0; assign eg_bqb = 7'd0;
+    end endgenerate
     // ---- xw pins (egress root)
     always @(posedge clk_eg or negedge rn) begin
         if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
@@ -517,7 +530,8 @@ module ot_hgi_sm_xload_cl2_ctlw #(
     parameter integer RD_LAT = 6,
     parameter integer MUT    = 0,
     parameter integer NR     = 32,
-    parameter integer LEAD   = 8
+    parameter integer LEAD   = 8,
+    parameter integer EGRESS_SPLIT = 0   // XQL: export the egress controls (eg_*), see ot_hgi_sm_xload_static_xql
 ) (
     input  wire               clk,
     input  wire               clk_eg,
@@ -559,7 +573,11 @@ module ot_hgi_sm_xload_cl2_ctlw #(
     output wire               zlo, zhi,
     output wire [2*((PMAX*3152+2047)/2048)-1:0] bsel,
     output wire [PMAX*8-1:0]  lane_en,
-    input  wire [2047:0]      bq_d
+    input  wire [2047:0]      bq_d,
+    output wire [7:0]         eg_ed5,
+    output wire [16:0]        eg_ede,
+    output wire               eg_bqv, eg_bqlast,
+    output wire [6:0]         eg_bqaddr, eg_bqb
 );
     wire x_v, x_busy, x_fault; wire [107:0] xc;
     // issuer = ot_static_cmd_target_core + its calendar SRAM on the hard entry clk_cal (the multiple_cts_roots flow lets a
@@ -577,14 +595,15 @@ module ot_hgi_sm_xload_cl2_ctlw #(
         .w_ce_in(t_wce[0]), .w_addr_in(t_waddr), .wd_in(t_wdata), .w_mask_in({256{1'b1}}),
         .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
     // cmd = {x_xb7, x_fmt2, x_space2, x_stride32, x_p4, x_n21, x_base40} (die contract v16 cp1_194..201)
-    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR)) u_ctl (
+    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT)) u_ctl (
         .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(xc[39:0]), .x_n(xc[60:40]), .x_p(xc[64:61]),
         .x_stride(xc[96:65]), .x_space(xc[98:97]), .x_fmt(xc[100:99]), .x_xb(xc[107:101]),
         .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn_o), .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi),
         .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq), .l_d_o(l_d_o), .qv_lo(qv_lo), .qv_hi(qv_hi),
         .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel),
-        .lane_en(lane_en), .bq_d(bq_d));
+        .lane_en(lane_en), .bq_d(bq_d), .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast),
+        .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
 endmodule
 
 module ot_hgi_sm_xload_cl2_bfq (
