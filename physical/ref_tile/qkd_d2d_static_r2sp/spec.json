@@ -1,0 +1,214 @@
+{
+ "name": "qkd_d2d_static_r2sp",
+ "top": "qkd_d2d_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 280.8
+ },
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    36.72,
+    51.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    267.192,
+    51.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    36.72,
+    151.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    267.192,
+    151.2
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "fdi_tx_flit",
+   "fdi_rx_v",
+   "fdi_rx_flit",
+   "phy_rst_n"
+  ],
+  "S": [
+   "att_tx_slot",
+   "att_tx_kind",
+   "att_tx_beat",
+   "att_tx_v",
+   "att_tx_payload",
+   "att_rx_v",
+   "att_rx_slot",
+   "att_rx_kind",
+   "att_rx_beat",
+   "rx_payload",
+   "record_tx_observed_v",
+   "record_tx",
+   "record_send_kind",
+   "record_witness_slot",
+   "record_rx_v",
+   "record_rx"
+  ],
+  "W": [
+   "emb_tx_slot",
+   "emb_tx_v",
+   "emb_tx_payload",
+   "kvn_compiled_identity",
+   "kvn_compiled_generation",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "kvn_word_data",
+   "kvn_word_identity",
+   "kvn_word_generation",
+   "kvn_word_slot",
+   "kvn_word_index"
+  ],
+  "E": [
+   "ck",
+   "por_n",
+   "rst_n",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "host_link_reset_req",
+   "host_recovery_clear",
+   "host_boot_begin",
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "status_epoch16",
+   "serdes_up",
+   "kv_drained_local",
+   "kv_flush_local",
+   "host_drained_local",
+   "kv_active_local",
+   "link_up",
+   "transport_fault",
+   "native_links_drained",
+   "native_link_reset_seen",
+   "native_retrained",
+   "abort_drained",
+   "native_kv_drained",
+   "native_vm_drained",
+   "native_collective_drained",
+   "native_host_drained",
+   "native_collective_busy",
+   "native_kv_flush",
+   "native_admit_ready",
+   "crom_fault",
+   "execution_active",
+   "engine_result_v",
+   "engine_result_done",
+   "engine_result_fault",
+   "engine_result_cause",
+   "engine_result_tag",
+   "engine_result_gen",
+   "engine_result_token",
+   "engine_result_value",
+   "engine_result_cycles",
+   "epoch_abort",
+   "recovery_cycles",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:Q-KVSYS-DIE",
+  "branch": "claude/qkd-d2d-clk-1015",
+  "tag": "r4sp",
+  "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/lib/ot_rst_pipe.sv"
+  ],
+  "benches": [
+   {
+    "name": "d2d_dies_exact",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0",
+    "expect": "pass",
+    "pass_regex": "D2D_DIES_PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "d2d_dies_mut_slot",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_static_r1/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_static_r1"
+ },
+ "pinreg_r4": "r4 (2026-10-15): die master is pin-registered (PR=1, tools/qwen_split/d2d_pinreg_gen.py): every functional port has one flop at its pin, placed FIRM at the pin by recipe-2 io_flop_at_pins; fixes qkd r1 EARLY_FAIL_SETUP (-434 ps, all boundary paths) and qfd r1 TT -79 / FF -32.6.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Production PR=1 wrapper already has one register per functional port; no extra port edges."
+ },
+ "structural_change": "r1sp route 19298aba3 EARLY_FAIL_CONGESTION (GRT-0116, 45 overflow M4 H 34 / M5 V 11, every hotspot inside the 20.1-um centre channel between the SRAM columns, x 224.6-226.9 / 247.4-250.2, y 70-103; the SRAM has pins on BOTH vertical faces so the centre channel carries two macro faces). r2sp: explicit macro homes x 36.72 / 267.192 (centre channel 59.18 um, margins 36.72 um), same outline/pins/spine/RTL. Prior: qkd d5 (d5b54c6f4) gate WARN, TT setup +17.3 / hold +35.6, but native clock delivery FAIL: TT insertion 420.4..637.2, spread 216.8 ps; raw clock probe: every boundary clock 439..488 ps except c_record_tx[350..373] SW-corner pin flops ~637 ps, leaf 563 at (9.2, 8.4) fed from H-tree node (243.8, 85.6) by a 2-repeater ~300-um wire branch (the 4-SRAM 2x2 block leaves the S-face corner rows outside the tree; -no_obstruction_aware did not balance it). r1sp B (clock distribution only): pre-placed equal-delay clock SPINE on ck (physical/common_flow/clock_spine.tcl: sinks binned into <=8-sink 60-um leaves, macro-avoiding L-path bisection tree, each SRAM clock pin its own leaf, leaves padded to equal MEASURED arrival), built for macro-dominated blocks where a sink-driven tree strands a far corner; TritonCTS not used for ck. RTL, pins, macros, clocks, SDC unchanged. Previous: qkd r1 TT -90.96 actual path rx_v->KVN word_data enable mux/fanout, TT -40.89 rst_n->KVN reset recovery and FF -14 reset removal/input capture. Capture KVN payload/context unconditionally with existing valid qualification (0 new normal edges); regional pipelined cold-reset distribution replaces port-to-wide-reset chains (+4 cold release edges); balanced CTS without macro obstruction detours and 40um trunk repeaters. No clock or timing gate relaxation.",
+ "clock": "spine"
+}
