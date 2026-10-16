@@ -1,0 +1,15 @@
+2026-10-15 22:55:12 PDT prep start 0a73911475285acdf5fb7a2f1b591c5fa9606b46
+2026-10-15 23:01:37 PDT prep done: prep done: 0a7391147 }
+2026-10-15 23:01:39 PDT ASSUMED PHY PG access applied (cc27a204b): ['ucie_rom', 'serdes_host'] ['phy_WN', 'phy_WS', 'phy_EN', 'phy_ES']
+2026-10-15 23:01:39 PDT chain start die=kv src=0a7391147 from=case
+2026-10-15 23:01:39 PDT NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE
+2026-10-16 00:02:42 PDT real case: OT_LEGAL instances=29013 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE 
+2026-10-16 02:25:10 PDT PDN PASS OT_PGCHECK VDD PASS OT_PGCHECK VSS PASS 
+2026-10-16 03:01:00 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 1013440872 um)
+2026-10-16 03:01:00 PDT STA tt clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/libs/clocks_{corner}.tcl
+2026-10-16 03:08:08 PDT STA tt: tns max -141820.59 wns max -196.70 worst slack max -196.70 
+2026-10-16 03:08:08 PDT STA ff clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/libs/clocks_{corner}.tcl
+2026-10-16 03:14:51 PDT STA ff: tns max -73.12 wns max -52.20 worst slack min -80.60 
+2026-10-16 03:14:51 PDT STA ss clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/libs/clocks_{corner}.tcl
+2026-10-16 03:21:40 PDT STA ss: tns max -39993840.00 wns max -411.18 worst slack max -411.18 
+2026-10-16 03:21:40 PDT chain done

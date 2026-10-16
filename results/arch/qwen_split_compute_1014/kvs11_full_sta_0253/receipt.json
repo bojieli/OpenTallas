@@ -1,0 +1,29 @@
+{
+  "scope": "FROZEN_GRT0_DIAGNOSTIC_CLASSIFICATION_NOT_DIE_QUALIFICATION",
+  "source_commit": "0a73911475285acdf5fb7a2f1b591c5fa9606b46",
+  "remote_run": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c",
+  "report_precision_note": "Worst slack preserved at report precision; any negative, including historical kvs10 -0.02ps and kvs11 sampled -0.18ps, is FAIL. No rounding waiver.",
+  "full_original_placed_def_sha256": "2a5857c661203b27c69b100990f9c055bc81dd8078a3549c2d621102c7ab4685",
+  "local_def_note": "Exact original DEF prefix through END COMPONENTS for realized origins only. Full original remains immutable remotely; prefix hash is distinct.",
+  "files_sha256": {
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/reports.tgz": "133419f07ea53c8d8594f711e563cc0076e81782447f13f1f0542ee4c77d09e8",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/boundary-libs.tgz": "e41437f0de321250f609c0bfe7fb2b18bb4870d566fe50c6cfb0f7167aa2ff44",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/case_kv/die.v": "062ccc4dca50a7fbe5dec8aa617808a1e0af9da6b72104c8da9e1d0dad42813f",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/case_kv/elements.lef": "248dcfc28ad3fad87b62d114116ebfdeffa695f7be84348d35f2c14a0c137d7a",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/case_kv/floorplan_placed.def": "60714179ce490c1ef91839b49c7cd95d6e0705db7ae6abcc0f7613283799fcfa",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/libs/views.json": "db2b8bafe6cde92c38c05086783515887dde8ab4481d71b47db186f78816ba57",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/libs/clocks.json": "1eacca430f7c5b30deff5db215f6a1a1577c097b78e7cdf987878c758b299df5",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/libs/clocks_tt.tcl": "6a9fde58ef329616ca7e5877c20849c0c628a7518dbe9769253578cced7210b8",
+    "/home/ubuntu/wt/codex-qkv-pv-0253/tools/qwen_kv_die/kvsys_classify.py": "34d0396eae5bc3bdadeb93f8d9e6a19140dae360d5abc73ad8b14809f7f5c2e1",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/sta_kv_ss/grt_ss_summary.rpt": "166d48a4fd04eb00253ccd37e8fda128b47fe94af4fc7a6b586a49d1ab975353",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/sta_kv_ff/grt_ff_summary.rpt": "cb37bbaf1c173ca06e6bff5ce34b1ca31e58452077eec6c508ec49f1dcc9c9a7",
+    "/home/ubuntu/artifacts/qwen-die-recovery-0253/kvs11-sta/sta_kv_tt/grt_tt_summary.rpt": "48a50dc40dbddc78624ea37e4df4811dc1ceda47fef8f5a0f6b5eb417f2ec10f"
+  },
+  "timing_rule": "TT setup and FF hold; SS sensitivity only",
+  "real_view_caveat": "Classifier real labels mean ETM-backed views, not current native-qualified views. ECTL-A h5 reuse is intentional byte-identical physical reuse with existing ab_reuse receipt; its native capture remains unqualified.",
+  "gates": {
+    "strict_native_binding": false,
+    "physical_die": false
+  },
+  "next": "Fix coherent ECTL/T1/T2/head-feedthrough group after actual net loading, clock phase and all incident face audit; no blind local translation."
+}
