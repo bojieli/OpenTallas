@@ -75,9 +75,10 @@ def main():
         raise ValueError('Incomplete semantic groups')
     def selection(names):
         return ' '.join('dsfd_sp_pq_produced/c:' + name for name in names)
-    final = 'read_json ' + str((a.out/'flat.json').resolve()) + ';\n'
-    final += 'submod -name ot_s81_pq_control_joint ' + selection(controls) + ';\n'
-    final += 'submod -name ot_s81_pq_lane_joint ' + selection(lanes) + ';\n'
+    for name in controls:cells[name].setdefault('attributes',{})['submod']='ot_s81_pq_control_joint'
+    for name in lanes:cells[name].setdefault('attributes',{})['submod']='ot_s81_pq_lane_joint'
+    (a.out/'marked.json').write_text(json.dumps(flat))
+    final = 'read_json ' + str((a.out/'marked.json').resolve()) + '; submod;\n'
     final += 'rename dsfd_sp_pq_produced dsfd_sp_pq_joint_candidate;\n'
     final += 'write_json ' + str((a.out/'partition.json').resolve()) + ';\n'
     run(a.yosys, final, a.out/'partition')
@@ -85,10 +86,15 @@ def main():
     top=partition['modules']['dsfd_sp_pq_joint_candidate']
     groups={name:cell['type'] for name,cell in top['cells'].items() if name in ('ot_s81_pq_control_joint','ot_s81_pq_lane_joint')}
     if len(groups)!=2:raise ValueError('Both extracted groups must remain actual children')
+    if set(top['cells'])!=set(retained)|set(groups):raise ValueError('Unowned parent cells remain after partition')
+    if len(partition['modules'][groups['ot_s81_pq_control_joint']]['cells'])!=len(controls):raise ValueError('Control cell conservation failed')
+    if len(partition['modules'][groups['ot_s81_pq_lane_joint']]['cells'])!=len(lanes):raise ValueError('Lane cell conservation failed')
     selected=['dsfd_sp_pq_joint_candidate',*groups.values()]
     export='read_json '+str((a.out/'partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
     run(a.yosys,export,a.out/'export')
     receipt=dict(scope='Source partition only. Existing clocks/cycles unchanged; physical candidate unqualified.',
+                 extraction_tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                 yosys_version=subprocess.check_output([a.yosys,'-V'],text=True).strip(),
                  hierarchy_sha256=hashlib.sha256(a.hierarchy.read_bytes()).hexdigest(),
                  source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
                  moved_control_cells=len(controls),moved_lane_cells=len(lanes),retained_hard_leaf_instances=len(retained),
