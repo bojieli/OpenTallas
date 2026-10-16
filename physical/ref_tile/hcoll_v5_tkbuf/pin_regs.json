@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_tkm_buffer",
+ "enable": false,
+ "reason": "RTL owns its pin registers: w_v/w_addr/w_data/r_v/r_addr are captured at the pin (wp/wa/wd/rp/ra) and rd_v/rd_data launch from flops (three-edge read reply); a recipe-3 cycle would change the compiled TKM pass-2 calendar."
+}
