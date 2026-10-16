@@ -68,7 +68,7 @@
  "job": {
   "owner": "Claude:s81-norm-1705",
   "branch": "claude/s81-norm-1705",
-  "tag": "n2-nohb4",
+  "tag": "n3-nohb4",
   "purpose": "el1014-s81-norm-tree v25: ot_s81_hc_ctfn_nt straight 2-register relay (y-shift moved to ctfs_nt)",
   "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
   "views_to": "physical/ref_tile/s81hc_ctfnnt_ref/views",
@@ -76,11 +76,10 @@
   "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption.",
   "structural_change": "v25 STRUCTURAL (S-NORM 2026-10-15, closure directive after ctfn np6 K4/K8 GRT-0116: M2 1,460 / M4 4,866 overflow at x 250-350, the y-beat shift's 736-bit vertical cut in a 25.92-um strip): the y-shift moves to ctfs_nt's second stage (YSHIFT 1), ctfn becomes the straight 2-register relay ot_s81_hc_ctfn_nt; ctfs_nt grows 25.92 -> 51.84 um (2x horizontal tracks, sized by the measured cut). Same registers per path, 0 cycles; cost +14,949 um2 and +25.92 um per cth_nt row (ledger).",
   "reroute_reason": {
-   "kind": "native_launch",
+   "kind": "evidence_gap",
    "source": "results/arch/s81_norm_1705/ctfn_nt_n1_native_audit.json",
    "cell": "ot_s81_hc_ctfn_nt",
-   "launch_ps": 249.80126,
-   "fix": "drop hold_pad_hb4 boundary hook: n1 output-side HB4 hold pads (clock->out 462-514 ps vs R 264); same RTL/outline/pins"
+   "why_route": "CLOSED n1 (s81hc_ctfnnt_ref-n1-dc2103db2) fails the native launch budget on 557 outputs (fdm 552 + fvm 5, worst fvm[4] 249.8 ps > 220; ETM clock->out 462-514 ps vs R 264). The RTL already registers every port at the pin (fd<=fd_in, fdm<=fd); the extra output delay comes from the n1 kit hook hold_pad_hb4.tcl letting repair_timing -hold pad the output paths. A re-export or bench bind cannot change placed hold cells: the tile needs a route with that hook removed (ctfs_nt v5-spread at the same 5.6 b/um faces closed native PASS without it). Recipe-3 synthesized pin registers would add 2 cycles to a pure 2-register relay that is already pin-registered, so not used."
   }
  },
  "params": {},

@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfnnt_ref-n2-nohb4-COMMIT",
+ "name": "s81hc_ctfnnt_ref-n3-nohb4-COMMIT",
  "block": "ot_s81_hc_ctfn_nt",
  "ref_tile": true,
  "owner": "Claude:s81-norm-1705",
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfnnt_ref/s81hc_ctfnnt_ref-n2-nohb4-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfnnt_ref/s81hc_ctfnnt_ref-n3-nohb4-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -84,10 +84,9 @@
  "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption.",
  "reroute_reason": {
-  "kind": "native_launch",
+  "kind": "evidence_gap",
   "source": "results/arch/s81_norm_1705/ctfn_nt_n1_native_audit.json",
   "cell": "ot_s81_hc_ctfn_nt",
-  "launch_ps": 249.80126,
-  "fix": "drop hold_pad_hb4 boundary hook: n1 output-side HB4 hold pads (clock->out 462-514 ps vs R 264); same RTL/outline/pins"
+  "why_route": "CLOSED n1 (s81hc_ctfnnt_ref-n1-dc2103db2) fails the native launch budget on 557 outputs (fdm 552 + fvm 5, worst fvm[4] 249.8 ps > 220; ETM clock->out 462-514 ps vs R 264). The RTL already registers every port at the pin (fd<=fd_in, fdm<=fd); the extra output delay comes from the n1 kit hook hold_pad_hb4.tcl letting repair_timing -hold pad the output paths. A re-export or bench bind cannot change placed hold cells: the tile needs a route with that hook removed (ctfs_nt v5-spread at the same 5.6 b/um faces closed native PASS without it). Recipe-3 synthesized pin registers would add 2 cycles to a pure 2-register relay that is already pin-registered, so not used."
  }
 }
