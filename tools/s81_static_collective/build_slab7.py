@@ -8,6 +8,8 @@ candidate. Normal datapath edges and the current compiler image are unchanged.
 import argparse
 import hashlib
 import json
+import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -45,13 +47,38 @@ def generate(out):
     text = once(text, " parameter integer MUT=0;", " parameter integer MUT=0;\n parameter integer CALENDAR_CLOCK_MUT=0;")
     text = once(text, " s81_static_collective_slab #(", " s81_static_collective_slab7 #(")
     text = once(text, ".CYCLES(2141)", ".CYCLES(4096)")
+    text = once(text, '   if(status[0]||vm_status[0]||(|peer_fault))$fatal(1,"fullslab fault',
+        '   if(e<80 && (crq[0]||crs[0]||dut.issue_slot||dut.read_slot||dut.transport_fault))$display("VMTRACE e%0d request%b row%0d return%b issue%b read%b transport%b",e,crq[0],crq[14:1],crs[0],dut.issue_slot,dut.read_slot,dut.transport_fault);\n   if(status[0]||vm_status[0]||(|peer_fault))$fatal(1,"fullslab fault')
     text = once(text, " .ck_control({5{clk}}),", ''' .ck_calendar_rom({3{clk}} & ((CALENDAR_CLOCK_MUT==1 && $time>400000) ? 3'b110:3'b111)),
  .ck_calendar_outputs({3{clk}} & ((CALENDAR_CLOCK_MUT==2 && $time>400000) ? 3'b110:3'b111)),
  .ck_control({5{clk}}),''')
+    # Current VM leaves expose distinct physical roots. A stale component TB
+    # must not silently leave a new delivered root at Verilator's zero default.
+    closure=subprocess.check_output(["python3",str(ROOT/"tools/die_port_bind.py"),"none","--closure","dsfd_sp_vm"],cwd=ROOT,text=True).splitlines()
+    candidates=[ROOT/p for p in closure if re.search(r"^module dsfd_sp_vm\b",(ROOT/p).read_text(),re.M)]
+    if len(candidates)!=1:raise ValueError("ambiguous actual die-name VM source")
+    vm=candidates[0]
+    vm_text = vm.read_text(); start=vm_text.index("module dsfd_sp_vm #(")
+    header=vm_text[start:vm_text.index(");",start)]
+    vm_roots=sorted(set(re.findall(r"\b(?:ck|rst|rss)_\w+",header)))
+    block=text[text.index(" dsfd_sp_vm vm("):text.index(" function automatic")]
+    missing=[p for p in vm_roots if not re.search(r"\."+p+r"\(",block)]
+    for decl in re.split(r"\b(?:input|output|inout)\b",header)[1:]:
+        if "[" in decl and any(re.search(r"\b"+p+r"\b",decl) for p in missing):
+            raise ValueError("new VM root bus requires explicit width-aware fixture delivery")
+    delivered=[]
+    for port in missing:
+        value="rst_n" if port.startswith(("rst_","rss_")) else "s_ck" if port.endswith("_s") else "clk"
+        delivered.append(f" .{port}({value}),")
+    text=once(text," dsfd_sp_vm vm("," dsfd_sp_vm vm(\n"+"\n".join(delivered))
+    block=text[text.index(" dsfd_sp_vm vm("):text.index(" function automatic")]
+    if any(not re.search(r"\."+p+r"\(",block) for p in vm_roots):
+        raise ValueError("incomplete actual VM clock/reset delivery")
+    sources[str(vm.relative_to(ROOT))]=hashlib.sha256(vm.read_bytes()).hexdigest()
     (out / tb.name).write_text(text)
     (out / "source_manifest.json").write_text(json.dumps(dict(source_sha256=sources,
         additional_parent_clock_pins=["ck_calendar_rom[2:0]", "ck_calendar_outputs[2:0]"],
-        delivered_clock_entry_bits=35, calendar_params=dict(CYCLES=4096), vm_boundary_params=dict(MUT=0, PINCAP=1, NARROW=1),
+        delivered_clock_entry_bits=35, vm_component_fixture_root_ports=vm_roots, vm_newly_delivered_fixture_roots=missing, calendar_params=dict(CYCLES=4096), vm_boundary_params=dict(MUT=0, PINCAP=1, NARROW=1),
         normal_edges_added=0, adopted=False, physical_qualified=False,
         note="Actual CAL7 and VMB b9 shapes. Other collective leaves, physical clock delivery, placement, production FIELD/calendar and native die proof remain required."), indent=2) + "\n")
 
