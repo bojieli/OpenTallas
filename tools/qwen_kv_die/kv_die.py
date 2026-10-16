@@ -1941,7 +1941,7 @@ def _relays(m):
         if V144:
             # v1.4.4: the PV pairs fill the centre column; the 2,089-b HOST FDI (north root -> south SerDes, ~22 mm) takes its
             # side-channel relay spots right after lx / lr, before the stack chains fill the 274-um side channels
-            pri_ = [p_ for p_ in __import__('os').environ.get('OT_KV_V144_RLY_FIRST', 'krs_,krq_').split(',') if p_]
+            pri_ = [p_ for p_ in __import__('os').environ.get('OT_KV_V144_RLY_FIRST', 'krs_').split(',') if p_]
             order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi',
                                         not any(b_[0].startswith(p_) for p_ in pri_)))
     for bid, cl, bits, eps in order_:
@@ -1984,8 +1984,6 @@ def _relays(m):
                                     return (wx_, wy_)
                         raise ValueError('no lane cell')
                     w1, w2 = lane_cell(lx_, hb_.y - 2 * CHAN), lane_cell(lx_, sb_.y + sb_.h + 2 * CHAN)
-                    if __import__('os').environ.get('DBG_FDI'):
-                        print('DBG_FDI', lx_, w1, w2, G, file=__import__('sys').stderr)
                     q1 = route_(a, 'fdi_w1', near_pin(ring(by[a]), a, pa), {w1})
                     q2 = route_('fdi_w1', 'fdi_w2', [w1], {w2})
                     q3 = route_('fdi_w2', b, [w2], set(near_pin(ring(by[b]), b, pb)))
@@ -2165,10 +2163,9 @@ def _relays(m):
             try:
                 chain_()
                 break
-            except ValueError as e0_:
-                if __import__('os').environ.get('DBG_FDI'):
-                    print('DBG_RETRY', bid, str(e0_)[:300], file=__import__('sys').stderr)
-                if attempt or not m['geo'].get('split'):
+            except ValueError:
+                if attempt == 3 or not m['geo'].get('split') or (attempt and bid not in tree_meta
+                                                                    and __import__('os').environ.get('OT_KV_RLY_STD', '0') != '1'):
                     raise
                 if attempt:
                     # retries 2-4: route 1 / 2 / 0 cells clear of placed relays, and every spot within PIN_REACH / 2 of
