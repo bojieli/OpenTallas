@@ -1,0 +1,4049 @@
+{
+ "schema": "opentallas.hbm.v6b.recovery.v1",
+ "qualification": "FAIL_CLOSED_NOT_ADOPTED",
+ "historical_study_mm2": 770.4,
+ "candidate_mm2": 780.0,
+ "die_um": [
+  32990.0,
+  23643.528
+ ],
+ "new_window_area_mm2": 21.6304,
+ "homes": {
+  "xc_SW0": {
+   "x": 100.0,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW1": {
+   "x": 620.0,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW2": {
+   "x": 2957.12,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW3": {
+   "x": 3477.12,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW4": {
+   "x": 8952.72,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW5": {
+   "x": 9472.72,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW6": {
+   "x": 11809.84,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SW7": {
+   "x": 12329.84,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "smw_SW": {
+   "x": 6770.64,
+   "y": 6761.84,
+   "w": 216,
+   "h": 1100,
+   "orient": "R0"
+  },
+  "sucx_SW": {
+   "x": 6150.64,
+   "y": 6761.84,
+   "w": 600,
+   "h": 600,
+   "orient": "R0"
+  },
+  "cij_SW": {
+   "x": 6150.64,
+   "y": 6041.44,
+   "w": 200,
+   "h": 200,
+   "orient": "R0"
+  },
+  "xc_SE0": {
+   "x": 32390.0,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE1": {
+   "x": 31870.0,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE2": {
+   "x": 29532.88,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE3": {
+   "x": 29012.88,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE4": {
+   "x": 23537.28,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE5": {
+   "x": 23017.28,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE6": {
+   "x": 20680.16,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_SE7": {
+   "x": 20160.16,
+   "y": 6868.48,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "smw_SE": {
+   "x": 26003.36,
+   "y": 6761.84,
+   "w": 216,
+   "h": 1100,
+   "orient": "R0"
+  },
+  "sucx_SE": {
+   "x": 26239.36,
+   "y": 6761.84,
+   "w": 600,
+   "h": 600,
+   "orient": "R0"
+  },
+  "xc_NW0": {
+   "x": 100.0,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW1": {
+   "x": 620.0,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW2": {
+   "x": 3051.648,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW3": {
+   "x": 3571.648,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW4": {
+   "x": 9141.776,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW5": {
+   "x": 9661.776,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW6": {
+   "x": 12093.424,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NW7": {
+   "x": 12613.424,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "smw_NW": {
+   "x": 6959.696,
+   "y": 15781.688,
+   "w": 216,
+   "h": 1100,
+   "orient": "R0"
+  },
+  "sucx_NW": {
+   "x": 6339.696,
+   "y": 16281.688,
+   "w": 600,
+   "h": 600,
+   "orient": "R0"
+  },
+  "xc_NE0": {
+   "x": 32390.0,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE1": {
+   "x": 31870.0,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE2": {
+   "x": 29532.88,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE3": {
+   "x": 29012.88,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE4": {
+   "x": 23537.28,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE5": {
+   "x": 23017.28,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE6": {
+   "x": 20680.16,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "xc_NE7": {
+   "x": 20160.16,
+   "y": 15626.888,
+   "w": 500,
+   "h": 1200,
+   "orient": "R0"
+  },
+  "smw_NE": {
+   "x": 26003.36,
+   "y": 15781.688,
+   "w": 216,
+   "h": 1100,
+   "orient": "R0"
+  },
+  "sucx_NE": {
+   "x": 26239.36,
+   "y": 16281.688,
+   "w": 600,
+   "h": 600,
+   "orient": "R0"
+  }
+ },
+ "source_pins": {
+  "xc_SW0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SW7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "smw_SW": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 0,
+    "DEPTH": 4
+   },
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "94058da859ea8484bab866486f76988cca00f138a26536b670b457eff23eca8a",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rv": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rrow": {
+     "direction": "input",
+     "bits": 96
+    },
+    "rdata": {
+     "direction": "input",
+     "bits": 2048
+    },
+    "cmd_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cmd": {
+     "direction": "input",
+     "bits": 26
+    },
+    "sm_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "sm_sched_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 4447,
+   "perimeter_capacity_bits": 16450,
+   "perimeter_capacity_pass": true
+  },
+  "cij_SW": {
+   "master": "ot_hgi_coll_inj_idx_join",
+   "params": {
+    "INJLAT": 12
+   },
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "4e8c9398561961fc4e7f58abc0384dd98fc30143129e1a5b98dacfe4344dd831",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "inj_rd": {
+     "direction": "input",
+     "bits": 2
+    },
+    "inj_idx": {
+     "direction": "input",
+     "bits": 32
+    },
+    "inj_addr": {
+     "direction": "input",
+     "bits": 160
+    },
+    "su_inj_d": {
+     "direction": "input",
+     "bits": 1024
+    },
+    "idx_tx_v": {
+     "direction": "input",
+     "bits": 4
+    },
+    "idx_tx": {
+     "direction": "input",
+     "bits": 2180
+    },
+    "inj_d": {
+     "direction": "output",
+     "bits": 1024
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 4429,
+   "perimeter_capacity_bits": 5000,
+   "perimeter_capacity_pass": true,
+   "inherited_perimeter_capacity_bits": 2267
+  },
+  "xc_SE0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_SE7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "smw_SE": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 1,
+    "DEPTH": 4
+   },
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "94058da859ea8484bab866486f76988cca00f138a26536b670b457eff23eca8a",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rv": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rrow": {
+     "direction": "input",
+     "bits": 96
+    },
+    "rdata": {
+     "direction": "input",
+     "bits": 2048
+    },
+    "cmd_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cmd": {
+     "direction": "input",
+     "bits": 26
+    },
+    "sm_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "sm_sched_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 4447,
+   "perimeter_capacity_bits": 16450,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NW7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "smw_NW": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 2,
+    "DEPTH": 4
+   },
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "94058da859ea8484bab866486f76988cca00f138a26536b670b457eff23eca8a",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rv": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rrow": {
+     "direction": "input",
+     "bits": 96
+    },
+    "rdata": {
+     "direction": "input",
+     "bits": 2048
+    },
+    "cmd_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cmd": {
+     "direction": "input",
+     "bits": 26
+    },
+    "sm_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "sm_sched_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 4447,
+   "perimeter_capacity_bits": 16450,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "xc_NE7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   },
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_addr": {
+     "direction": "input",
+     "bits": 7
+    },
+    "desc_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "run_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "run_base": {
+     "direction": "input",
+     "bits": 7
+    },
+    "run_count": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cmd_ext": {
+     "direction": "output",
+     "bits": 109
+    },
+    "kv_desc": {
+     "direction": "output",
+     "bits": 64
+    },
+    "active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 725,
+   "perimeter_capacity_bits": 21250,
+   "perimeter_capacity_pass": true
+  },
+  "smw_NE": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 3,
+    "DEPTH": 4
+   },
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
+   "source_ref": "af261fbcb",
+   "source_sha256": "94058da859ea8484bab866486f76988cca00f138a26536b670b457eff23eca8a",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rv": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rrow": {
+     "direction": "input",
+     "bits": 96
+    },
+    "rdata": {
+     "direction": "input",
+     "bits": 2048
+    },
+    "cmd_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cmd": {
+     "direction": "input",
+     "bits": 26
+    },
+    "sm_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "sm_sched_fault": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "port_bits": 4447,
+   "perimeter_capacity_bits": 16450,
+   "perimeter_capacity_pass": true
+  },
+  "sucx_SW": {
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "source_sha256": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk_s": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_q": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "inj_rd": {
+     "direction": "input",
+     "bits": 2
+    },
+    "inj_addr": {
+     "direction": "input",
+     "bits": 160
+    },
+    "inj_d": {
+     "direction": "output",
+     "bits": 1024
+    },
+    "del_valid": {
+     "direction": "input",
+     "bits": 4
+    },
+    "del_flit": {
+     "direction": "input",
+     "bits": 2180
+    },
+    "del_obase": {
+     "direction": "input",
+     "bits": 160
+    },
+    "rc_v": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rc_tag": {
+     "direction": "output",
+     "bits": 3
+    },
+    "rc_d": {
+     "direction": "output",
+     "bits": 256
+    },
+    "rr_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rr_tag": {
+     "direction": "input",
+     "bits": 3
+    },
+    "rr_d": {
+     "direction": "input",
+     "bits": 256
+    },
+    "inj_q": {
+     "direction": "input",
+     "bits": 4096
+    },
+    "dw_v": {
+     "direction": "output",
+     "bits": 8
+    },
+    "dw_row": {
+     "direction": "output",
+     "bits": 72
+    },
+    "dw_d": {
+     "direction": "output",
+     "bits": 4096
+    },
+    "red_sv": {
+     "direction": "input",
+     "bits": 1
+    },
+    "red_tag": {
+     "direction": "input",
+     "bits": 32
+    },
+    "red_x": {
+     "direction": "input",
+     "bits": 32
+    },
+    "rr_wv": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rr_wa": {
+     "direction": "output",
+     "bits": 5
+    },
+    "rr_wd": {
+     "direction": "output",
+     "bits": 256
+    },
+    "ro_v": {
+     "direction": "input",
+     "bits": 16
+    },
+    "ro_x": {
+     "direction": "input",
+     "bits": 512
+    },
+    "red_sel": {
+     "direction": "input",
+     "bits": 12
+    },
+    "sfu_x": {
+     "direction": "output",
+     "bits": 32
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 13225,
+   "perimeter_capacity_bits": 15000,
+   "perimeter_capacity_pass": true,
+   "inherited_perimeter_capacity_bits": 5129
+  },
+  "sfus_SW": {
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "source_sha256": "8d35f0b6799440c76318fedb5f686558b19377bc9dc7c8fd8c0fe060e1593e13",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_bank": {
+     "direction": "input",
+     "bits": 16
+    },
+    "clk_bank_macro": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_re": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_addr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "vi_q": {
+     "direction": "output",
+     "bits": 512
+    },
+    "kv_we": {
+     "direction": "input",
+     "bits": 16
+    },
+    "kv_waddr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "kv_wdata": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 1859,
+   "perimeter_capacity_bits": 16105,
+   "perimeter_capacity_pass": true
+  },
+  "sucx_SE": {
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "source_sha256": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk_s": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_q": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "inj_rd": {
+     "direction": "input",
+     "bits": 2
+    },
+    "inj_addr": {
+     "direction": "input",
+     "bits": 160
+    },
+    "inj_d": {
+     "direction": "output",
+     "bits": 1024
+    },
+    "del_valid": {
+     "direction": "input",
+     "bits": 4
+    },
+    "del_flit": {
+     "direction": "input",
+     "bits": 2180
+    },
+    "del_obase": {
+     "direction": "input",
+     "bits": 160
+    },
+    "rc_v": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rc_tag": {
+     "direction": "output",
+     "bits": 3
+    },
+    "rc_d": {
+     "direction": "output",
+     "bits": 256
+    },
+    "rr_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rr_tag": {
+     "direction": "input",
+     "bits": 3
+    },
+    "rr_d": {
+     "direction": "input",
+     "bits": 256
+    },
+    "inj_q": {
+     "direction": "input",
+     "bits": 4096
+    },
+    "dw_v": {
+     "direction": "output",
+     "bits": 8
+    },
+    "dw_row": {
+     "direction": "output",
+     "bits": 72
+    },
+    "dw_d": {
+     "direction": "output",
+     "bits": 4096
+    },
+    "red_sv": {
+     "direction": "input",
+     "bits": 1
+    },
+    "red_tag": {
+     "direction": "input",
+     "bits": 32
+    },
+    "red_x": {
+     "direction": "input",
+     "bits": 32
+    },
+    "rr_wv": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rr_wa": {
+     "direction": "output",
+     "bits": 5
+    },
+    "rr_wd": {
+     "direction": "output",
+     "bits": 256
+    },
+    "ro_v": {
+     "direction": "input",
+     "bits": 16
+    },
+    "ro_x": {
+     "direction": "input",
+     "bits": 512
+    },
+    "red_sel": {
+     "direction": "input",
+     "bits": 12
+    },
+    "sfu_x": {
+     "direction": "output",
+     "bits": 32
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 13225,
+   "perimeter_capacity_bits": 15000,
+   "perimeter_capacity_pass": true,
+   "inherited_perimeter_capacity_bits": 5129
+  },
+  "sfus_SE": {
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "source_sha256": "8d35f0b6799440c76318fedb5f686558b19377bc9dc7c8fd8c0fe060e1593e13",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_bank": {
+     "direction": "input",
+     "bits": 16
+    },
+    "clk_bank_macro": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_re": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_addr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "vi_q": {
+     "direction": "output",
+     "bits": 512
+    },
+    "kv_we": {
+     "direction": "input",
+     "bits": 16
+    },
+    "kv_waddr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "kv_wdata": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 1859,
+   "perimeter_capacity_bits": 16105,
+   "perimeter_capacity_pass": true
+  },
+  "sucx_NW": {
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "source_sha256": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk_s": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_q": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "inj_rd": {
+     "direction": "input",
+     "bits": 2
+    },
+    "inj_addr": {
+     "direction": "input",
+     "bits": 160
+    },
+    "inj_d": {
+     "direction": "output",
+     "bits": 1024
+    },
+    "del_valid": {
+     "direction": "input",
+     "bits": 4
+    },
+    "del_flit": {
+     "direction": "input",
+     "bits": 2180
+    },
+    "del_obase": {
+     "direction": "input",
+     "bits": 160
+    },
+    "rc_v": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rc_tag": {
+     "direction": "output",
+     "bits": 3
+    },
+    "rc_d": {
+     "direction": "output",
+     "bits": 256
+    },
+    "rr_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rr_tag": {
+     "direction": "input",
+     "bits": 3
+    },
+    "rr_d": {
+     "direction": "input",
+     "bits": 256
+    },
+    "inj_q": {
+     "direction": "input",
+     "bits": 4096
+    },
+    "dw_v": {
+     "direction": "output",
+     "bits": 8
+    },
+    "dw_row": {
+     "direction": "output",
+     "bits": 72
+    },
+    "dw_d": {
+     "direction": "output",
+     "bits": 4096
+    },
+    "red_sv": {
+     "direction": "input",
+     "bits": 1
+    },
+    "red_tag": {
+     "direction": "input",
+     "bits": 32
+    },
+    "red_x": {
+     "direction": "input",
+     "bits": 32
+    },
+    "rr_wv": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rr_wa": {
+     "direction": "output",
+     "bits": 5
+    },
+    "rr_wd": {
+     "direction": "output",
+     "bits": 256
+    },
+    "ro_v": {
+     "direction": "input",
+     "bits": 16
+    },
+    "ro_x": {
+     "direction": "input",
+     "bits": 512
+    },
+    "red_sel": {
+     "direction": "input",
+     "bits": 12
+    },
+    "sfu_x": {
+     "direction": "output",
+     "bits": 32
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 13225,
+   "perimeter_capacity_bits": 15000,
+   "perimeter_capacity_pass": true,
+   "inherited_perimeter_capacity_bits": 5129
+  },
+  "sfus_NW": {
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "source_sha256": "8d35f0b6799440c76318fedb5f686558b19377bc9dc7c8fd8c0fe060e1593e13",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_bank": {
+     "direction": "input",
+     "bits": 16
+    },
+    "clk_bank_macro": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_re": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_addr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "vi_q": {
+     "direction": "output",
+     "bits": 512
+    },
+    "kv_we": {
+     "direction": "input",
+     "bits": 16
+    },
+    "kv_waddr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "kv_wdata": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 1859,
+   "perimeter_capacity_bits": 16105,
+   "perimeter_capacity_pass": true
+  },
+  "sucx_NE": {
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "source_sha256": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk_s": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_q": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "inj_rd": {
+     "direction": "input",
+     "bits": 2
+    },
+    "inj_addr": {
+     "direction": "input",
+     "bits": 160
+    },
+    "inj_d": {
+     "direction": "output",
+     "bits": 1024
+    },
+    "del_valid": {
+     "direction": "input",
+     "bits": 4
+    },
+    "del_flit": {
+     "direction": "input",
+     "bits": 2180
+    },
+    "del_obase": {
+     "direction": "input",
+     "bits": 160
+    },
+    "rc_v": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rc_tag": {
+     "direction": "output",
+     "bits": 3
+    },
+    "rc_d": {
+     "direction": "output",
+     "bits": 256
+    },
+    "rr_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rr_tag": {
+     "direction": "input",
+     "bits": 3
+    },
+    "rr_d": {
+     "direction": "input",
+     "bits": 256
+    },
+    "inj_q": {
+     "direction": "input",
+     "bits": 4096
+    },
+    "dw_v": {
+     "direction": "output",
+     "bits": 8
+    },
+    "dw_row": {
+     "direction": "output",
+     "bits": 72
+    },
+    "dw_d": {
+     "direction": "output",
+     "bits": 4096
+    },
+    "red_sv": {
+     "direction": "input",
+     "bits": 1
+    },
+    "red_tag": {
+     "direction": "input",
+     "bits": 32
+    },
+    "red_x": {
+     "direction": "input",
+     "bits": 32
+    },
+    "rr_wv": {
+     "direction": "output",
+     "bits": 1
+    },
+    "rr_wa": {
+     "direction": "output",
+     "bits": 5
+    },
+    "rr_wd": {
+     "direction": "output",
+     "bits": 256
+    },
+    "ro_v": {
+     "direction": "input",
+     "bits": 16
+    },
+    "ro_x": {
+     "direction": "input",
+     "bits": 512
+    },
+    "red_sel": {
+     "direction": "input",
+     "bits": 12
+    },
+    "sfu_x": {
+     "direction": "output",
+     "bits": 32
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 13225,
+   "perimeter_capacity_bits": 15000,
+   "perimeter_capacity_pass": true,
+   "inherited_perimeter_capacity_bits": 5129
+  },
+  "sfus_NE": {
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "source_sha256": "8d35f0b6799440c76318fedb5f686558b19377bc9dc7c8fd8c0fe060e1593e13",
+   "source_ref": null,
+   "source_state": "UNCOMMITTED_PENDING_NATIVE_PROOF",
+   "pin_status": "WINDOW_UNQUALIFIED",
+   "physical_view": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_bank": {
+     "direction": "input",
+     "bits": 16
+    },
+    "clk_bank_macro": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_re": {
+     "direction": "input",
+     "bits": 16
+    },
+    "vi_addr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "vi_q": {
+     "direction": "output",
+     "bits": 512
+    },
+    "kv_we": {
+     "direction": "input",
+     "bits": 16
+    },
+    "kv_waddr": {
+     "direction": "input",
+     "bits": 384
+    },
+    "kv_wdata": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   },
+   "port_bits": 1859,
+   "perimeter_capacity_bits": 16105,
+   "perimeter_capacity_pass": true
+  }
+ },
+ "overlaps": [],
+ "outside": [],
+ "inherited_boundary_gap_lower_bounds": {
+  "SW": {
+   "cx_coll_gap_um": 21.599999999999454,
+   "cx_slice_gap_um": [
+    3148.7200000000003,
+    291.60000000000036,
+    833.7600000000002,
+    3690.879999999999
+   ],
+   "sfustore_core_gap_um": 21.599999999999454
+  },
+  "SE": {
+   "cx_coll_gap_um": 21.599999999999454,
+   "cx_slice_gap_um": [
+    3148.720000000001,
+    291.59999999999854,
+    833.760000000002,
+    3690.880000000001
+   ],
+   "sfustore_core_gap_um": 21.599999999999454
+  },
+  "NW": {
+   "cx_coll_gap_um": 21.599999999998545,
+   "cx_slice_gap_um": [
+    3243.2479999999996,
+    291.59999999999945,
+    833.7600000000002,
+    3785.4080000000004
+   ],
+   "sfustore_core_gap_um": 21.600000000002183
+  },
+  "NE": {
+   "cx_coll_gap_um": 21.599999999998545,
+   "cx_slice_gap_um": [
+    3148.720000000001,
+    291.59999999999854,
+    833.760000000002,
+    3690.880000000001
+   ],
+   "sfustore_core_gap_um": 21.600000000002183
+  }
+ },
+ "graph_missing_incident_edges": [
+  "xc_SW0",
+  "xc_SW1",
+  "xc_SW2",
+  "xc_SW3",
+  "xc_SW4",
+  "xc_SW5",
+  "xc_SW6",
+  "xc_SW7",
+  "smw_SW",
+  "cij_SW",
+  "xc_SE0",
+  "xc_SE1",
+  "xc_SE2",
+  "xc_SE3",
+  "xc_SE4",
+  "xc_SE5",
+  "xc_SE6",
+  "xc_SE7",
+  "smw_SE",
+  "xc_NW0",
+  "xc_NW1",
+  "xc_NW2",
+  "xc_NW3",
+  "xc_NW4",
+  "xc_NW5",
+  "xc_NW6",
+  "xc_NW7",
+  "smw_NW",
+  "xc_NE0",
+  "xc_NE1",
+  "xc_NE2",
+  "xc_NE3",
+  "xc_NE4",
+  "xc_NE5",
+  "xc_NE6",
+  "xc_NE7",
+  "smw_NE",
+  "sucx_SW",
+  "sfus_SW",
+  "sucx_SE",
+  "sfus_SE",
+  "sucx_NW",
+  "sfus_NW",
+  "sucx_NE",
+  "sfus_NE"
+ ],
+ "impossible_pin_windows": [],
+ "warnings": [
+  "Outlines for xc/smw/sucx/sfus/cij are preliminary window grants, not measured mapped fit.",
+  "Existing pin cuts and relay costs exclude new connections listed in graph_missing_incident_edges.",
+  "Gap lower bounds are not source-bound pin routes or qualified relay placement.",
+  "No inherited physical views apply to new or resized masters."
+ ]
+}

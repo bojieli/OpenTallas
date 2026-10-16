@@ -45,7 +45,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5'):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -84,6 +84,44 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
             y = H - y - h
         P[i] = dict(x=round(x, 3), y=round(y, 3), w=w, h=h, orient='R0')
 
+    def core_stack(q, x):
+        """v6b quarter core (H-DIE 0300/0330 10-16), SW frame, x = west edge: SU quarter core (full band height) | 21.6 |
+        cij_<q> (COLL inject/IDX join leaf 43.2 x 138.24, centred on the COLL west face) | 21.6 | COLL (band bottom);
+        on the COLL: sucx_<q> (SU cross-port 216 x 194.4, abuts the SU core east face and the COLL north face), the DMA
+        back (granted 511.92 x 360.72, right-aligned on the COLL), the IDX operand leaf (SW) over the DMA back; then the
+        granted SFU core sfucore_<q> 763.56 x 1936.44 with sfus_<q> (SU SFU store 763.56 x 524.88 = 0.40 mm2) abutting
+        its north face (0 relays).  Returns the east edge + 21.6."""
+        setn(f'sucore_{q}', CORE_W, SU_H, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B)')
+        put(f'sucore_{q}', x, y_band, q)
+        x += CORE_W + 21.6
+        setn(f'cij_{q}', 43.2, 138.24, 'COLL inject/IDX join leaf ot_hgi_coll_inj_idx_join (H-NETLIST)')
+        put(f'cij_{q}', x, y_band + GAP + (COLL_H - 138.24) / 2, q)
+        x += 43.2 + 21.6
+        xc = x
+        setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
+        put(f'coll_{q}', xc, y_band + GAP, q)
+        yo = y_band + GAP + COLL_H + 21.6
+        setn(f'sucx_{q}', 216.0, 194.4, 'SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)')
+        put(f'sucx_{q}', xc - 43.2 - 21.6 - 21.6 + 21.6, yo, q)       # west edge = sucore east edge + 21.6
+        dw = 511.92 if carry else DBK_W
+        setn(f'dbk_{q}', dw, DBK_H, 'DMA back (vp4 grant 2330 width when carried)')
+        put(f'dbk_{q}', xc + COLL_W - dw, yo, q)
+        if q == 'SW':
+            setn('idx_op', 360.72, 317.52, 'IDX:ot_hbm_idx_vm_query_static grant')
+            put('idx_op', xc + COLL_W - 360.72, yo + DBK_H + 21.6, q)
+        x = xc + COLL_W + 21.6
+        return sfu_stack(q, x) if not sfu_at_hub else x
+
+    def sfu_stack(q, x):
+        if carry:
+            setn(f'sfucore_{q}', 763.56, 1936.44, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
+            put(f'sfucore_{q}', x, y_band + 21.77, q)
+            setn(f'sfus_{q}', 763.56, 524.88, 'SU SFU store ot_hbm_su_static_sfustore (~0.40 mm2, abuts sfucore, 0 relays)')
+            put(f'sfus_{q}', x, y_band + 21.77 + 1936.44 + 21.6, q)
+            assert y_band + 21.77 + 1936.44 + 21.6 + 524.88 <= y_band + BAND - 21.6 + 1e-6, (q, 'band too short for sfus')
+            x += 763.56 + 21.6
+        return x
+
     for q in F.QS:
         # PHY + PC row
         put(f'phy_{q}', 1455.84, 21.6, q)
@@ -103,6 +141,8 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         sfu = sorted([k for k in N if k.startswith(f'sfu_{q}')])
         hc = sorted([k for k in N if k.startswith(f'hc_{q}')])
         for g in range(4):
+            if layout == 'col' and g == core_at and core_at < 4:
+                x = core_stack(q, x)
             bw = N[banks[2 * g]]['w']
             bh = N[banks[2 * g]]['h']
             if layout == 'col':
@@ -110,6 +150,13 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
                 # side on top of the pair (both abut bank 1, <= 385 um from bank 0), QUANT (NW) over the HC; the SU
                 # slice takes the full band height to the right, so the band grows by SU area / SU_W only
                 cw = max(bw, 2 * HC + GAP)
+                if q == 'NW':   # v6b: QUANT beside its bank pair (QUANT_VM 0 stages), not over the HC shell
+                    cw = max(cw, bw + GAP + 245)
+                mir = mirror_east and core_at < 4 and g >= core_at
+                if mir:         # east of the quarter core: SU slice first (its core face abuts the core), then its column
+                    setn(su[g], SU_W, SU_H, 'SU slice v6 (H-SU 77 mm2 at 60 % util: 4.8 mm2 per port group)')
+                    put(su[g], x, y_band, q)
+                    x += SU_W + GAP
                 put(banks[2 * g], x, y_band, q)
                 put(banks[2 * g + 1], x, y_band + bh + GAP, q)
                 yh = y_band + 2 * (bh + GAP)
@@ -120,13 +167,13 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
                 put(sfu[g], x + HC + GAP, yh, q)
                 top_c = yh + sh
                 if q == 'NW':
-                    put(f'quant_NW{g}', x, yh + HC + GAP, q)
-                    top_c = max(top_c, yh + HC + GAP + 245)
+                    put(f'quant_NW{g}', x + bw + GAP, y_band + (2 * bh + GAP - 245) / 2, q)
                 assert top_c <= y_band + BAND + 1e-6, (q, g, 'col group taller than band', top_c - y_band)
                 x += cw + GAP
-                setn(su[g], SU_W, SU_H, 'SU slice v6 (H-SU 77 mm2 at 60 % util: 4.8 mm2 per port group)')
-                put(su[g], x, y_band, q)
-                x += SU_W + GAP
+                if not mir:
+                    setn(su[g], SU_W, SU_H, 'SU slice v6 (H-SU 77 mm2 at 60 % util: 4.8 mm2 per port group)')
+                    put(su[g], x, y_band, q)
+                    x += SU_W + GAP
                 continue
             # left column (500 wide): HC shell / QUANT (NW) / SFU group, each within 500 um of BOTH banks of the pair
             setn(hc[g], HC, HC, 'HC combined shell 500 x 500 (GEO-H)')
@@ -147,15 +194,30 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
             setn(su[g], SU_W, SU_H, 'SU slice (Codex 0bd 34.75 mm2 leaf lower bound /16, +2.4 %)')
             put(su[g], x, y_band, q)
             x += SU_W + GAP
-        setn(f'sucore_{q}', CORE_W, SU_H, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B)')
-        put(f'sucore_{q}', x, y_band, q)
-        x += CORE_W + GAP
-        if carry:   # granted SFU core (main 818f005b6): band gap between the SU core and the COLL/DMA-back stack
+        if layout != 'col':
+            setn(f'sucore_{q}', CORE_W, SU_H, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B)')
+            put(f'sucore_{q}', x, y_band, q)
+            x += CORE_W + GAP
+        if carry and layout != 'col':   # granted SFU core (main 818f005b6): band gap between the SU core and the COLL/DMA-back stack
             x += 1.6
             setn(f'sfucore_{q}', 763.56, 1936.44, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
             put(f'sfucore_{q}', x, y_band + 21.77, q)
             x += 763.56
-        if hub_w:
+        if hub_w and layout == 'col':
+            hh = BAND - 2 * GAP
+            hx = EDGE + qw - hub_w
+            if core_at >= 4:
+                x = core_stack(q, x)
+            if sfu_at_hub:      # SFU core + store at the inner end beside the hub (COLL faces slices on both sides)
+                x = sfu_stack(q, x)
+                put(f'sfucore_{q}', hx - 21.6 - 763.56, y_band + 21.77, q)
+                put(f'sfus_{q}', hx - 21.6 - 763.56, y_band + 21.77 + 1936.44 + 21.6, q)
+            slack = hx - x
+            assert slack >= -1e-6, (q, 'band too long for the v6b core', slack)
+            setn(f'vmh_{q}', hub_w, hh, f'VM hub reshaped tall {hub_w:.0f} x {hh:.0f}')
+            put(f'vmh_{q}', hx, y_band + GAP, q)
+            x = hx + hub_w
+        elif hub_w:
             # TALL HUB (H-DIE r2 cut fix): hub reshaped to hub_w x (BAND - 2 GAP) at the quadrant's inner edge, so its
             # band-facing (W) and channel-facing (E) faces are ~1.8 mm long (pin density and the face cut both drop by
             # 1.1/1.76); COLL, DMA back and the IDX operand leaf stack in one column west of the hub.
@@ -213,6 +275,8 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         setn(sc, SC_W, SC_H, 'IDX scorer: 512 CLOSED hslices 172.8x103.68 + glue (v15 grant, rotated)')
         P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=ys + i * (SC_H + SC_GAP), w=SC_W, h=SC_H, orient='R90')
     yg = ys + 2 * SC_H + SC_GAP + GAP
+    if layout == 'col':   # v6: taller die -> N scorers mirror the S ones from the top (relay row inside the N SU core), glue centred
+        yg = round(H / 2 - 449.28 / 2, 3)
     glue = [('idx_q', 449.28, 449.28), ('idx_sel', 1164.24, 317.52), ('idx_link', 745.2, 317.52)]
     gx = c0
     for g, w, h in glue:
@@ -220,6 +284,8 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         P[g] = dict(x=gx, y=yg, w=w, h=h, orient='R0')
         gx += w + GAP
     yn = yg + 449.28 + GAP
+    if layout == 'col':
+        yn = round(H - ys - 2 * SC_H - SC_GAP, 3) - 0.001
     for i, sc in enumerate(('idx_s3', 'idx_s2')):       # NE, NW from the north half
         setn(sc, SC_W, SC_H, 'IDX scorer (v15 grant, rotated)')
         P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=yn + i * (SC_H + SC_GAP), w=SC_W, h=SC_H, orient='R90')
@@ -236,13 +302,23 @@ def main():
     ap.add_argument('--band', type=float, default=BAND, help='VM band height (SM row 2 to row 3 gap) in um')
     ap.add_argument('--hub-w', type=float, default=0.0, help='tall VM hub of this width (0 = 1.1 mm square hub)')
     ap.add_argument('--fit', action='store_true', help='grow --area to the smallest outline that fits (10 mm2 steps of 0.1)')
+    ap.add_argument('--edge', type=float, help='die edge margin (default 120 um)')
+    ap.add_argument('--column', type=float, help='centre column width (default 3100 um; IDX scorer 3008.88 rotated)')
     ap.add_argument('--su-w', type=float); ap.add_argument('--su-h', type=float)
     ap.add_argument('--smw', type=float); ap.add_argument('--smh', type=float)
     ap.add_argument('--layout', default='v5', choices=('v5', 'col'), help="band group layout ('col' = v6 bank-pair column)")
+    ap.add_argument('--mirror-east', action='store_true', help='col layout: groups east of the core put their SU slice first (slice faces the core)')
+    ap.add_argument('--sfu-at-hub', action='store_true', help='col layout: SFU core + store beside the hub, not in the core stack')
+    ap.add_argument('--core-at', type=int, default=4, help="col layout: band groups west of the quarter core (4 = inner end)")
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout)
+    global EDGE, COLUMN_W
+    if a.edge is not None:
+        EDGE = a.edge
+    if a.column is not None:
+        COLUMN_W = a.column
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area

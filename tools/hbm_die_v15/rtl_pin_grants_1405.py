@@ -135,11 +135,11 @@ def common(s, key, cell, params, ref, sha, note):
     s.pop('rtl_pending', None)
 
 
-def grant_su(s, P, q, g, ref, sha):
+def grant_su(s, P, q, g, ref, sha, corex=None):
     o = s['outline']
     lg = windows(s, 'LG_SU')
     lgf = lg[0]['face']
-    corex = 'E' if q in ('SW', 'NW') else 'W'       # sucore sits at the hub end of the slice row
+    corex = corex or ('E' if q in ('SW', 'NW') else 'W')       # sucore sits at the hub end of the slice row (v5)
     assert lgf != corex, (s['name'], lgf)
     bank_w = {}
     for w in lg:
@@ -159,7 +159,7 @@ def grant_su(s, P, q, g, ref, sha):
         faces[corex].append((rng(p, P[p][1]), P[p][1], mid + 60))
     for p in cmd:
         faces[corex].append((rng(p, P[p][1]), P[p][1], mid - 260))
-    clocks = [p for p in P if p.startswith(('clk', 'pg_clk', 'rst'))]
+    clocks = [p for p in P if p.startswith(('clk', 'pg_clk', 'rst', 'bridge_rst'))]
     for p in clocks:
         faces['N'].append((rng(p, P[p][1]), P[p][1], o['w'] / 2 + 80))
     assert set(per) | set(core) | set(cmd) | set(clocks) == set(P), set(P) - (set(per) | set(core) | set(cmd) | set(clocks))
@@ -182,11 +182,11 @@ def grant_core(s, P, q, rf, ref, sha):
     src = [r['src_pin']['xy'][1] - y0 for r in rf['routes'] if r['src_pin']['block'] == s['name']]
     dst = [r['dst_pin']['xy'][1] - y0 for r in rf['routes'] if r['dst_pin']['block'] == s['name']]
     faces = {slicef: [], chan: [], 'N': []}
-    for p in ('rf_bword', 'rf_bcmd', 'rf_dsec', 'slice_x', 'rf_drain_now'):
+    for p in ('rf_bword', 'rf_bcmd', 'rf_dsec', 'slice_x', 'rf_drain_cmd' if 'rf_drain_cmd' in P else 'rf_drain_now'):
         faces[slicef].append((rng(p, P[p][1]), P[p][1], o['h'] / 2 - 200))
     for p in ('rf_wv', 'rf_wa', 'rf_wd'):
         faces[chan].append((rng(p, P[p][1]), P[p][1], sum(dst) / len(dst)))
-    for p in ('red_sv', 'red_tag', 'red_x'):
+    for p in ('red_sv', 'red_tag', 'red_x') + (('red_rf_v',) if 'red_rf_v' in P else ()):
         faces[chan].append((rng(p, P[p][1]), P[p][1], sum(src) / len(src)))
     for p in ('rf_rd_cmd', 'red_cmd', 'fault'):
         faces[slicef].append((rng(p, P[p][1]), P[p][1], o['h'] / 2 + 200))
