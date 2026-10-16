@@ -59,7 +59,8 @@ RETIRE_V15 = {
             'ot_hbm3e_phy_rc_e8p5 + 128 real controllers (die_case.py, owner rule 10-14: only the PHY is modelled)',
 }
 # off-die pins: (master, port regex) -> die top-level port (never an on-die driver)
-DIE_PIN = [('ot_pdie_serdes', r'^pma_'), ('ot_pdie_ucie', r'^pma_'), ('hfd_ckgen', r'^(refclk|por_n)$')]
+DIE_PIN = [('ot_pdie_serdes', r'^pma_'), ('ot_pdie_ucie', r'^pma_'), ('hfd_ckgen', r'^(refclk|por_n)$'),
+           ('ot_hbm_host_phy_adapt', r'^session_pad$')]   # host link session id: package strap pins (cp2)
 ALLOW_MODEL = ['ot_hbm3e_phy_rc_e8p5', 'ot_hbm_pll_bb']
 
 
