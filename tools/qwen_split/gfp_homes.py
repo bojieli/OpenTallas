@@ -112,7 +112,7 @@ def apply(model, path):
         raise ValueError(f'OT_SPLIT_HOMES: outside={outside[:4]}, overlaps={overlap[:4]}')
     for n, h in proposed.items():
         by[n].x, by[n].y, by[n].orient = h['x'], h['y'], h['o']
-    return dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
+    return dict(path=str(path), schema=d.get('schema'), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
                 candidate=d.get('candidate'), moved=len(moved), moved_names=moved,
                 reserve=reserve, reserve_names=d.get('reserve_names', []), rebase=rebase, qualified=False,
                 open=['actual pins and legal orientations', 'relay allocation and cut capacity',
