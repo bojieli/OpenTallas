@@ -331,8 +331,10 @@ def main():
     payload = run.h_rows(np.asarray(ch.get('h_in', ch['h']), np.float32).reshape(HG.HC, D))
     eng_rows = run.h_rows(h) if fx is not None and fx['engram'] else None
     gold = {}
+    hcx_hin = {}                                        # the H rows each HC coefficient chain must read (check only)
     for b, blk in enumerate(('attn', 'ffn')):
         pre, w, eps, comb, post, y = ch[blk]
+        hcx_hin[blk] = run.h_rows(h)
         yn = HG.g_norm(h, pre, w, eps)
         run.norm_rows(O_BASE + 512 * b, yn, 1, 1 if blk == 'ffn' else 0)
         h = HG.g_post(h, np.asarray(y, np.float32), np.asarray(comb, np.float32).reshape(4, 4), np.asarray(post, np.float32))
@@ -604,6 +606,15 @@ def main():
     with open(a.out / 'coef.mem', 'w') as f:
         for r in sorted(coef):
             f.write(f'@{r:x}\n{coef[r]:0128x}\n')
+    if a.hcx_real:                                      # CHECK files (never written into the VM): chain input H rows
+        with open(a.out / 'hcx_hin.mem', 'w') as f:     # at each command and the coefficient rows at each chain done
+            for blk in ('attn', 'ffn'):
+                f.write(''.join(f'{int(r):0128x}\n' for r in hcx_hin[blk]))
+        with open(a.out / 'hcx_coef.mem', 'w') as f:
+            for blk in ('attn', 'ffn'):
+                g = gold[blk]
+                f.write(f"{HG.pack(HG.u32(np.asarray(g['comb'], np.float32).reshape(-1)), 32):0128x}\n")
+                f.write(f"{HG.pack(list(HG.u32(g['pre'])) + list(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32):0128x}\n")
     su_meta = None
     if sub is not None:
         assert min(sub['vm']) >= su_layer.SU_BASE and sub['top'] <= 16384, (min(sub['vm']), sub['top'])
