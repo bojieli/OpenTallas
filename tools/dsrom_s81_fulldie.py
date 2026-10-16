@@ -492,6 +492,15 @@ def bound_view_pin_faults(mst, view, ports):
     return faults
 
 
+# S-DIE 0030 10-16 (c26a2: 110 of 144 table masters misfit): (a) the generator shaves every generated outline by SHAVE
+# 0.024 um so abutted instances keep a pin-tip gap; closed views were kitted at the full pitch (rstg 38.88 in a 38.856
+# slot, cfg7 34.56 / 34.536, sstn 172.8 / 172.776): a real view up to SHAVE larger than its slot binds (abutment gap 0);
+# (b) mirrored instances (W-going MY / S-going MX stations, mirrored cfg7 halves) are legal DEF placements of the same
+# LEF; the per-instance orientation is recorded and the facing audit (pin_align) judges it
+BOUND_TOL = SHAVE + 1e-6
+BOUND_ORIENTS = ('R0', 'MY', 'MX', 'R180')
+
+
 def apply_view_binding(m, pdir):
     """Bind the table's masters present on this die (end of finalize_r8, before any LEF / DEF / netlist is written):
     hard error on a pin-name mismatch with the die netlist, on a non-R0 instance and on a real outline larger than the
@@ -515,10 +524,10 @@ def apply_view_binding(m, pdir):
             why = bound_view_pin_faults(mst, v, pdir.get(mst, {}))[:4]
             if mst in REAL_FILES:
                 why.append('constant-bound hard macro')
-            nr = [i.name for i in its if i.orient != 'R0']
+            nr = [i.name for i in its if i.orient not in BOUND_ORIENTS]
             if nr:
-                why.append(f'{len(nr)} non-R0 instance(s), e.g. {nr[0]}')
-            big = [i for i in its if v['w'] > i.w + 1e-6 or v['h'] > i.h + 1e-6]
+                why.append(f'{len(nr)} instance(s) not in {BOUND_ORIENTS}, e.g. {nr[0]}')
+            big = [i for i in its if v['w'] > i.w + BOUND_TOL or v['h'] > i.h + BOUND_TOL]
             if big:
                 why.append(f'real {v["w"]} x {v["h"]} > slot {big[0].w:.3f} x {big[0].h:.3f} ({len(big)} inst)')
             if why:
@@ -543,14 +552,16 @@ def apply_view_binding(m, pdir):
             r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
                                        generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0,
                                        binding_scope=v.get('binding_scope', 'QUALIFIED'))
-        if it.orient != 'R0':
-            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed R0 only')
-        if v['w'] > it.w + 1e-6 or v['h'] > it.h + 1e-6:
+        if it.orient not in BOUND_ORIENTS:
+            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed {BOUND_ORIENTS} only')
+        if v['w'] > it.w + BOUND_TOL or v['h'] > it.h + BOUND_TOL:
             raise SystemExit(f'VIEW_BINDING: {it.master} real outline {v["w"]} x {v["h"]} exceeds the generated slot '
                              f'{it.w:.3f} x {it.h:.3f} of {it.name}: the placer sizes slots from the generated outline '
                              '(results/arch/s81_native_20261013/BINDING.md, placer assumptions)')
         it.w, it.h = v['w'], v['h']
         r_['instances'] += 1
+        r_.setdefault('orients', {})
+        r_['orients'][it.orient] = r_['orients'].get(it.orient, 0) + 1
     m['bound_views'] = rec
     if rec:
         print('OT_VIEW_BINDING %d masters / %d instances bound from %s' % (len(rec), sum(r_['instances'] for r_ in rec.values()),
@@ -3893,6 +3904,23 @@ class Chains:
                     placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
                     if placed is not None:
                         self.m.setdefault('stn70_across', []).append(dict(chain=name, at=list(placed), lanes=len(lanes)))
+            if placed is None and os.environ.get('OT_S81_STATION_FALLBACK') == '1':
+                # S-DIE 0030 pathfinding trials only (env opt-in, recorded per station in m['station_fallback']): the
+                # nearest free spot within 600 / 1200 um of the planned point, no reach anchor; the die hop gate and STA
+                # measure what the displaced station costs.  A production GEN never sets the variable.
+                (cx, cy), d = _poly_at(path, target)
+                horiz = force_horiz or d in 'EW'
+                w, h = stn_dims(lanes, horiz)
+                for span_, rows_ in ((600.0, 60), (1200.0, 120)):
+                    placed = self.P.near(cx, cy, w, h, allowed + [(0.0, 0.0, DIE[0], DIE[1])], prev=None, horiz=horiz,
+                                         span=span_, rows=rows_)
+                    if placed is not None:
+                        self.m.setdefault('station_fallback', []).append(dict(
+                            chain=name, s_um=round(target, 1), planned=[round(cx, 1), round(cy, 1)],
+                            at=[round(placed[0], 1), round(placed[1], 1)],
+                            displaced_um=round(abs(placed[0] - cx) + abs(placed[1] - cy), 1)))
+                        print('OT_STATION_FALLBACK', json.dumps(self.m['station_fallback'][-1]), file=sys.stderr, flush=True)
+                        break
             if placed is None:
                 print('OT_CHAIN_NO_SPOT', name, [(round(p_[0], 1), round(p_[1], 1)) for p_ in path], file=sys.stderr, flush=True)
                 print('OT_CHAIN_NO_SPOT_NEAR', name, lanes[:3], len(lanes), [(i_.name, round(i_.x), round(i_.y), round(i_.w), round(i_.h)) for i_ in self.m['insts']
