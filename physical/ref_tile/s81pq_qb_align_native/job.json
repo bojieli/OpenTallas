@@ -118,7 +118,7 @@
  "reroute_reason": {
   "kind": "pin_register",
   "cell": "ot_s81_pq_qb_align_native",
-  "source": "tools/hier_contract/native_pin_audit.py audit_one on the merged p4 view (s81pq_qb_align_native-p4-sclk-1705-ea4e8c39d)",
+  "source": "results/rtl/s81_pq_native_audit_1015/pqn_1016/ot_s81_pq_qb_align_native.json",
   "launch_ps": 229.9,
   "fix": "native boundary budgets enforced in route and sign-off (io_budget in 0.6 / out 0.57); RTL and pins unchanged"
  }

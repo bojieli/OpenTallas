@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen.compute-netlist-0030.v1",
- "run": "E4 /srv/opentallas-scratch/claude/q-netlist-0030/g2 (OT_RELAY_SKIP=1, r2h2 env: fpq_r2h homes, held45 tile grant, su64 W grant, bw spread, tree hosts dp)",
+ "run": "E4 /srv/opentallas-scratch/claude/q-netlist-0030/g3 (g2 before the cal_seq adoption) (OT_RELAY_SKIP=1, r2h2 env: fpq_r2h homes, held45 tile grant, su64 W grant, bw spread, tree hosts dp)",
  "sys_face_bind": {
   "master": "qfd_sys_face",
   "source": "rtl/qwen_split/qfd_sys_face.sv",

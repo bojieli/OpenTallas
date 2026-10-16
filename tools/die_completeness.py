@@ -60,7 +60,9 @@ DIES = {
     ),
     'qwen_kvsys': dict(
         label='Qwen KV/system die', lead='Q-KVSYS-DIE', design='qwen_kvsys',
-        bind=[('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind_launch.json'),
+        bind=[('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind_v2/port_bind_v2.json'),
+              ('repo', 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/port_bind_v2.json'),
+              ('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind_launch.json'),
               ('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind.json'),
               ('repo', 'results/arch/qwen_split_1014/kvsys_v1_4_1/port_bind.json')],
         view_classify=('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/classify_*.json'),
@@ -195,6 +197,16 @@ def load_bind(cands, exclude=(), remote=True):
                                   open_inputs=list(r.get('input_unconnected') or []),
                                   width=sorted((r.get('width_mismatch') or {}).keys()),
                                   port_fault=list(r.get('die_port_not_in_rtl') or []), tied=list(r.get('input_tied') or []))
+            if d.get('die_masters'):
+                # Qwen KV/system die (tools/qwen_kv_die/kv_port_bind_v2.sh): the strict bind runs on the BOUND netlist
+                # (die masters rewritten into their BINDINGS RTL modules); report per DIE master, each with its module's
+                # verdict and its own instance count
+                by_mod = masters
+                masters = {}
+                for dm, info in d['die_masters'].items():
+                    r = by_mod.get(info.get('module')) or dict(kind='unbound', rtl=None, verdict='FAIL', open_inputs=[],
+                                                                width=[], port_fault=[], tied=[])
+                    masters[dm] = dict(r, instances=info.get('instances', 0), module=info.get('module'))
             s = d['summary']
             summ = dict(verdict=d.get('verdict'), masters=s['masters'], instances=s['instances'],
                         unbound_masters=s['unbound_masters'], stub_masters=s['stub_masters'],
@@ -519,7 +531,8 @@ def die(name, cfg, reg, native, remote=True):
                           registry=(row or {}).get('category'), owner=(row or {}).get('owner_stream') or (row or {}).get('owner'),
                           open_inputs=b['open_inputs'], width=b['width'], port_fault=b['port_fault'],
                           real_view_in_die_run=(None if not phys.get('no_view') else m not in phys['no_view'])))
-    netlist_masters = set(bind['masters'])
+    # a die master bound to a differently named RTL module (KV die: qkd_d2ds = qkd_d2d_static) carries the module too
+    netlist_masters = set(bind['masters']) | {b.get('module') for b in bind['masters'].values() if b.get('module')}
     missing = []
     for m, role in sorted(contract_masters.items()):
         if role != 'master' or m in netlist_masters or re.search(macro_rx, m):
@@ -791,9 +804,10 @@ UNKNOWNS = [
     'inputs come from 7 producers that are not built; no compute-die STA has ever produced numbers (C16s STA flow error, '
     'C23s in PDN); contract v1.3 predates the fpq_s6 homes, so the 10 contract masters absent from the netlist may be '
     'stale names rather than missing blocks.',
-    'Qwen KV/system: the strict die_port_bind.py v2 check has never run on the KV netlist (the KV tool does not count '
-    'undriven / multi-driven bits); the measured open inputs are 27 (the logged "25" is arithmetic after the HOST fix, '
-    'not a bind). The only die STA is PDN-skipped (TT -1,762.84 ps, 299,285 real-to-real violators). The v1.4.3 '
+    'Qwen KV/system: the strict die_port_bind.py v2 check now runs on the BINDINGS-bound netlist (kv_port_bind_v2.sh, '
+    '2026-10-16): after the embgw / host_fdi / stack-strap fixes 0 undriven and 0 multi-driven bits, 23 unconnected inputs '
+    'that are owed RTL (results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/remaining_items.json); the record is a '
+    'local regeneration, not yet a die trial. The only die STA is PDN-skipped (TT -1,762.84 ps, 299,285 real-to-real violators). The v1.4.3 '
     'PV-wide pair (new masters, 1,024 SRAM macros) is not yet in the netlist.',
     'Native audit: closed views that fail the native launch/capture budget (compute 1, KV 4, S81 19 in the netlist, '
     'HBM 4) need re-kits; each one found at die level so far has cost a re-route.',

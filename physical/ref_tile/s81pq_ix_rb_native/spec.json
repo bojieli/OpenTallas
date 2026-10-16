@@ -174,7 +174,7 @@
  "reroute_reason": {
   "kind": "pin_register",
   "cell": "ot_s81_pq_ix_rb_native",
-  "source": "tools/hier_contract/native_pin_audit.py audit_one on physical/ref_tile/s81pq_ix_rb_native/views (origin/main 7115078c5)",
+  "source": "results/rtl/s81_pq_native_audit_1015/pqn_1016/ot_s81_pq_ix_rb_native.json",
   "capture_ps": 240.9,
   "fix": "input pin capture flops (incrementer moved behind the flop, 0 cycles) + io_flop_at_pins anchoring; RTL change bit-exact (pq_native_core_bench exact PASS, IX/WV mutants FAIL)"
  },
