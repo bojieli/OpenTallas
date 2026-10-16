@@ -103,7 +103,7 @@ module ot_rom_host_ingest #(
     wire [HFA:0] hx_freed, hx_cnt;
     wire [513:0] hx_head;
     reg          hx_pop;
-    ot_link_afifo #(.W(514), .AW(HFA)) u_hx (
+    ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (   // 32 kept read-address copies (8,230-load select)
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;

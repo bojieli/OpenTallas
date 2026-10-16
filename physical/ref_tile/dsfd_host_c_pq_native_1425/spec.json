@@ -165,7 +165,7 @@
   ],
   "why": "C9 actual14982.7um2 std with48.5% insetmargin; HOST splitrealrootmax9293FF, exact1223/993 top-down pins; no c8/oldHOST view or parentfit inheritance."
  },
- "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified.",
+ "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15, n1 EARLY_FAIL_HOLD 49k buffers): kit SDC regenerated with the per-entry die-skew rule (same-root pairs keep tile-local uncertainty; the uniform hold 100 on all 4 roots' internal paths was the flood); u_hx head read 32 kept read-address copies (rbin[1] 8,230 loads).",
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-pq-producer-kits-1705",
@@ -183,7 +183,9 @@
    "physical/s81_pq_hier/pinned",
    "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/rom_host_ingest/rtl"
+   "physical/rom_host_ingest/rtl",
+   "tests/s81",
+   "rtl/link"
   ],
   "benches": [
    {
@@ -207,6 +209,28 @@
      "verilator"
     ],
     "fail_regex": "PQPRODUCER FAIL hostdrop"
+   },
+   {
+    "name": "afifo_rcopy_equiv",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012  -o {RUN}/af0 tests/s81/tb_link_afifo_rcopy.sv rtl/link/ot_link_afifo.sv && vvp -n {RUN}/af0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS link afifo RCOPY 32 equivalent"
+   },
+   {
+    "name": "mutant_afifo_rcopy",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -DOT_LINK_AFIFO_MUT_RCOPY -o {RUN}/afm tests/s81/tb_link_afifo_rcopy.sv rtl/link/ot_link_afifo.sv && vvp -n {RUN}/afm",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FATAL RCOPY mismatch"
    }
   ]
  },

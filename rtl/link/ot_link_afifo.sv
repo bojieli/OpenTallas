@@ -26,7 +26,10 @@
 module ot_link_afifo #(
     parameter integer W    = 64,
     parameter integer AW   = 4,           // 2^AW entries
-    parameter integer SYNC = 2
+    parameter integer SYNC = 2,
+    // RCOPY > 0 (S-ELEM-PQ 2026-10-15, host_c route: u_hx rbin[1] drove 8,230 read-mux loads): the head read selects
+    // each ceil(W/RCOPY)-bit slice with its own kept copy of the read address, loaded with rbin on the same edge.
+    parameter integer RCOPY = 0
 ) (
     input  wire          wclk,
     input  wire          wrst_n,
@@ -82,12 +85,33 @@ module ot_link_afifo #(
 
     // ---- read domain -----------------------------------------------------------------------------------
     reg  [AW:0] rbin, rgray;
+    wire [AW:0] rbin_n = rbin + 1'b1;
     reg  [AW:0] wgray_s [0:SYNC-1];
     wire [AW:0] wgray_r = wgray_s[SYNC-1];
     assign rempty = (rgray == wgray_r);
-    assign rdata  = mem[rbin[AW-1:0]];
+    localparam integer RS = (RCOPY > 0) ? (W + RCOPY - 1) / RCOPY : W;
+    if (RCOPY > 0) begin : g_rcopy
+        (* keep *) reg [RCOPY*AW-1:0] rbin_c;
+        always @(posedge rclk or negedge rrst_n)
+            if (!rrst_n) rbin_c <= '0;
+            else if (rd && !rempty) for (int k = 0; k < RCOPY; k++)
+`ifdef OT_LINK_AFIFO_MUT_RCOPY
+                if (k != 0) rbin_c[AW*k +: AW] <= rbin_n[AW-1:0];      // negative control: slice 0 copy stalls
+`else
+                rbin_c[AW*k +: AW] <= rbin_n[AW-1:0];
+`endif
+        genvar gs;
+        for (gs = 0; gs < RCOPY; gs = gs + 1) begin : g_s
+            localparam integer LO = gs * RS, HI = ((gs + 1) * RS > W) ? W : (gs + 1) * RS;
+            if (LO < W) begin : g_on
+                wire [W-1:0] row = mem[rbin_c[AW*gs +: AW]];
+                assign rdata[HI-1:LO] = row[HI-1:LO];
+            end
+        end
+    end else begin : g_r1
+        assign rdata  = mem[rbin[AW-1:0]];
+    end
     assign rcount = g2b(wgray_r) - rbin;
-    wire [AW:0] rbin_n = rbin + 1'b1;
     always @(posedge rclk or negedge rrst_n) begin
         if (!rrst_n) begin
             rbin <= 0; rgray <= 0;
