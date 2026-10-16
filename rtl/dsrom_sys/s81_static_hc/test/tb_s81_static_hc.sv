@@ -9,11 +9,12 @@ module tb_s81_static_hc;
  wire[511:0]word_data;wire[31:0]word_tag;wire[15:0]word_seq;
  s81_static_hc_reduce #(.MUT(MUT==1)) dut(.*);
  reg pack_en=1,emit_slot=0;reg[31:0]emit_tag=0;
- wire row_valid,row_fault;wire[8191:0]row_data;wire[31:0]row_tag;
- s81_static_hc_assemble #(.MUT(MUT==2)) pack(.clk(clk),.rst_n(rst_n),
+ wire row_valid,row_fault;wire[8191:0]row_data;wire[31:0]row_tag;wire[4:0]row_y5;
+ // MUT 3/4: assembler row/tag registered off emit_good; MUT 5: row source reduced_seq[7:3] instead of [8:4]
+ s81_static_hc_assemble #(.MUT((MUT==2)?1:(MUT==3)?3:(MUT==4)?4:0)) pack(.clk(clk),.rst_n(rst_n),
   .write_slot(pack_en&&word_valid),.word_valid(pack_en&&word_valid),.word_index(word_seq[3:0]),
-  .word_data(word_data),.word_tag(word_tag),.word_error(word_error),.emit_slot(emit_slot),.emit_tag(emit_tag),
-  .row_valid(row_valid),.row_data(row_data),.row_tag(row_tag),.fault(row_fault));
+  .word_data(word_data),.word_tag(word_tag),.word_row((MUT==5)?word_seq[7:3]:word_seq[8:4]),.word_error(word_error),.emit_slot(emit_slot),.emit_tag(emit_tag),
+  .row_valid(row_valid),.row_data(row_data),.row_tag(row_tag),.row_y5(row_y5),.fault(row_fault));
  always @(posedge clk)begin
   emit_slot<=pack_en&&word_valid&&(word_seq[3:0]==15);
   emit_tag<=word_tag;
@@ -50,6 +51,7 @@ module tb_s81_static_hc;
    if(row_valid)begin
     if(cyc!=rowedges[gotrows])$fatal(1,"row latency got %0d want %0d",cyc,rowedges[gotrows]);
     if(gotrows>=20||row_data!==rows[gotrows]||row_tag!==(32'h12340000+gotrows))$fatal(1,"row mismatch %0d",gotrows);
+    if(row_y5!==5'(gotrows))$fatal(1,"y_row5 mismatch row %0d got %0d",gotrows,row_y5);
     gotrows=gotrows+1;
    end
   end
@@ -97,7 +99,7 @@ module tb_s81_static_hc;
   @(negedge clk);slot=1;rank_valid=7;
   idle();repeat(24)idle();
   if(!fault||word_valid)$fatal(1,"missing rank must fault without variable wait");
-  $display("PASS static HC: 832 exact words,20 full8192bit rows, pipeline18regs/sampleedge+17, FMT1cadence4/4/8 and II1, arithmetic+missingrank fault");
+  $display("PASS static HC: 832 exact words,20 full8192bit rows (y_row5 0..19 aligned with tag/data), pipeline18regs/sampleedge+17, FMT1cadence4/4/8 and II1, arithmetic+missingrank fault");
   $finish;
  end
 endmodule
