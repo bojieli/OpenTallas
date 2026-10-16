@@ -2767,9 +2767,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[1].u_bank",
@@ -2789,9 +2802,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[2].u_bank",
@@ -2811,9 +2837,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[3].u_bank",
@@ -2833,9 +2872,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[4].u_bank",
@@ -2855,9 +2907,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[5].u_bank",
@@ -2877,9 +2942,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[6].u_bank",
@@ -2899,9 +2977,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[7].u_bank",
@@ -2921,9 +3012,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "u_control",
@@ -2932,10 +3036,32 @@
       347.76,
       239.76
      ],
-     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required.",
+     "cell": "ot_hgi_dma_back_static_vp4_controller",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+     "source_sha256": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833"
+     },
+     "view_files_sha256": {
+      "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+      "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541",
+      "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+      "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+      "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+      "provenance/abstract_pin_stub.json": "ae38a5a6077691011614018f8235929466c2ee21870058d920082e6743b74171"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/controller_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 132.2,
+      "spread_ps": 14.8,
+      "launch_ps": 195.1,
+      "capture_ps": 144.0
+     },
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die."
     }
    ],
-   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
+   "controller_binding_status": "One exact native-PASS registered-stk controller master; per-instance stk0/1/2/3 are explicit logical straps. Parent remains unqualified.",
    "parent_qualified": false,
    "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
    "identity_straps": {
@@ -3346,9 +3472,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[1].u_bank",
@@ -3368,9 +3507,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[2].u_bank",
@@ -3390,9 +3542,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[3].u_bank",
@@ -3412,9 +3577,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[4].u_bank",
@@ -3434,9 +3612,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[5].u_bank",
@@ -3456,9 +3647,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[6].u_bank",
@@ -3478,9 +3682,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[7].u_bank",
@@ -3500,9 +3717,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "u_control",
@@ -3511,10 +3741,32 @@
       347.76,
       239.76
      ],
-     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required.",
+     "cell": "ot_hgi_dma_back_static_vp4_controller",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+     "source_sha256": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833"
+     },
+     "view_files_sha256": {
+      "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+      "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541",
+      "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+      "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+      "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+      "provenance/abstract_pin_stub.json": "ae38a5a6077691011614018f8235929466c2ee21870058d920082e6743b74171"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/controller_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 132.2,
+      "spread_ps": 14.8,
+      "launch_ps": 195.1,
+      "capture_ps": 144.0
+     },
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die."
     }
    ],
-   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
+   "controller_binding_status": "One exact native-PASS registered-stk controller master; per-instance stk0/1/2/3 are explicit logical straps. Parent remains unqualified.",
    "parent_qualified": false,
    "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
    "identity_straps": {
@@ -3925,9 +4177,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[1].u_bank",
@@ -3947,9 +4212,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[2].u_bank",
@@ -3969,9 +4247,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[3].u_bank",
@@ -3991,9 +4282,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[4].u_bank",
@@ -4013,9 +4317,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[5].u_bank",
@@ -4035,9 +4352,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[6].u_bank",
@@ -4057,9 +4387,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[7].u_bank",
@@ -4079,9 +4422,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "u_control",
@@ -4090,10 +4446,32 @@
       347.76,
       239.76
      ],
-     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required.",
+     "cell": "ot_hgi_dma_back_static_vp4_controller",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+     "source_sha256": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833"
+     },
+     "view_files_sha256": {
+      "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+      "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541",
+      "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+      "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+      "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+      "provenance/abstract_pin_stub.json": "ae38a5a6077691011614018f8235929466c2ee21870058d920082e6743b74171"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/controller_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 132.2,
+      "spread_ps": 14.8,
+      "launch_ps": 195.1,
+      "capture_ps": 144.0
+     },
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die."
     }
    ],
-   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
+   "controller_binding_status": "One exact native-PASS registered-stk controller master; per-instance stk0/1/2/3 are explicit logical straps. Parent remains unqualified.",
    "parent_qualified": false,
    "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
    "identity_straps": {
@@ -4499,9 +4877,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[1].u_bank",
@@ -4521,9 +4912,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[2].u_bank",
@@ -4543,9 +4947,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[3].u_bank",
@@ -4565,9 +4982,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[4].u_bank",
@@ -4587,9 +5017,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[5].u_bank",
@@ -4609,9 +5052,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[6].u_bank",
@@ -4631,9 +5087,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "L[7].u_bank",
@@ -4653,9 +5122,22 @@
       "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
       "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
       "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
-      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "provenance/abstract_pin_stub.json": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
      },
-     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die.",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/bank_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 125.9,
+      "spread_ps": 17.4,
+      "launch_ps": 181.2,
+      "capture_ps": 138.3
+     }
     },
     {
      "inst": "u_control",
@@ -4664,10 +5146,32 @@
       347.76,
       239.76
      ],
-     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required.",
+     "cell": "ot_hgi_dma_back_static_vp4_controller",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+     "source_sha256": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833",
+     "source_dependencies_sha256": {
+      "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833"
+     },
+     "view_files_sha256": {
+      "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+      "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541",
+      "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+      "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+      "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+      "provenance/abstract_pin_stub.json": "ae38a5a6077691011614018f8235929466c2ee21870058d920082e6743b74171"
+     },
+     "native_audit": "results/rtl/hbm_harden_2330/controller_native_strict_bundle.json",
+     "native_metrics": {
+      "R_ps": 132.2,
+      "spread_ps": 14.8,
+      "launch_ps": 195.1,
+      "capture_ps": 144.0
+     },
+     "qualified_scope": "Exact audited native descendant only; does not qualify parent clocks, PG, incident data paths or die."
     }
    ],
-   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
+   "controller_binding_status": "One exact native-PASS registered-stk controller master; per-instance stk0/1/2/3 are explicit logical straps. Parent remains unqualified.",
    "parent_qualified": false,
    "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
    "identity_straps": {
@@ -170821,5 +171325,14 @@
   "actual_ODB_PG": "PENDING",
   "qualified": false,
   "core_home": "OPEN; boundary leaves do not reserve a complete arithmetic core"
+ },
+ "native_hardening_binding_2330": {
+  "counts": {
+   "controller": 4,
+   "bank": 32
+  },
+  "parent_qualified": false,
+  "canonical_lineage_publication": "c206b60b0",
+  "scope": "Exact descendant binding; emitted parent geometry, PG, relay hops and roots remain OPEN."
  }
 }

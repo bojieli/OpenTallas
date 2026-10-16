@@ -1,0 +1,35 @@
+{
+ "source_commit": "8e8df5ff2",
+ "positive": "PASS",
+ "edges": 54018,
+ "pushes": 3850,
+ "pops": 3818,
+ "wraps": 120,
+ "simultaneous_push_pop": 1129,
+ "reversed_age_mutant": "FAIL at edge8",
+ "normal_edges_added": 0,
+ "added_state_upper_bound_ff": 2208,
+ "physical_qualification": false,
+ "production_issued_service": "PASS: actual32configuredPCcontrollers+8SM service groups,64rows,8epochs,4landingbanks",
+ "baseline": "same-source PHYS_WACT0 historical policy; identical outputs and write-ACT candidates every cycle",
+ "sha256": {
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/positive.log": "cd215ef0f0ff2318db55d214dab75ea716f9c7ab528d0749ce1d6c4467cf30ba",
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/age_mutant.log": "53802c2ddf8b06f87439de4c0ea22fdf6f65404bd6fa8a9bbd23a349340d6952",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv": "36e789c5f59a85221318d5d535ee5d83df447ae26074c11a636ce1500fbbe34b",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv": "6afc04f4a4ef46d6674d6ff949730bb37cc5fbdfddbe28ff517455fc0deab4d8",
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/issued.log": "e38fa06371f9e39f6eb3ff61d022ebaed32d2dc2386aa5c10d86d5712001331f",
+  "results/arch/hbm_die_v15/pc_physical_write_act_2330/wpay.log": "0a8277adbc201a5bbe996751ce0930801c0aa2fd63b3e344df3307be42fbc629"
+ },
+ "steady_epoch_ps": 69583.3055,
+ "bytes_per_epoch_per_sm": 8704,
+ "throughput_changed": false,
+ "production_mutants": {
+  "early": "rejected",
+  "missing_images": "rejected",
+  "noresident": "rejected",
+  "cfg_PC": "rejected",
+  "cfg_PHASE": "rejected",
+  "stale_wpay_head": "rejected"
+ },
+ "write_production": "WR640 WPAY1/0 exact payload + true ACK PASS"
+}
