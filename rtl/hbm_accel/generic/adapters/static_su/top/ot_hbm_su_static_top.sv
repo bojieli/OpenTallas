@@ -16,7 +16,7 @@
 // reducer 1 to quarter 3's replica is missing (replica incoherence).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_top #(
- parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0
+ parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0
 )(
  input wire [15:0] pg_clk,                       // 4 port-group roots per quarter
  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,
@@ -65,7 +65,7 @@ module ot_hbm_su_static_top #(
    assign wv[w]=rly_out[w][q][40]; assign wa[w*8+:8]=rly_out[w][q][39:32]; assign wd[w*32+:32]=rly_out[w][q][31:0];
   end
   ot_hbm_su_static_quarter #(.QID(q),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
-   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE)) u_quarter(
+   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG)) u_quarter(
    .pg_clk(pg_clk[q*4+:4]),.clk_lane(clk_lane[q*1024+:1024]),.clk_insert(clk_insert[q*512+:512]),
    .rst_lane_n(rst_lane_n[q*128+:128]),.clk_bcast(clk_bcast[q*16+:16]),.rst_bcast_n(rst_bcast_n[q*16+:16]),
    .clk_bank(clk_bank[q*128+:128]),.clk_bank_macro(clk_bank_macro[q*768+:768]),.clk_rf(clk_rf[q*64+:64]),.clk_ctl(clk_ctl[q*4+:4]),.clk_core(clk_core[q]),
