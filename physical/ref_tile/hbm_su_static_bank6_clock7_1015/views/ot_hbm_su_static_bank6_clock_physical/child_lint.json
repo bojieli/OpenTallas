@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_bank6_clock7_1015-r9-COMMIT-9a821b4c9-arg1/record/views/ot_hbm_su_static_bank6_clock_physical/ot_hbm_su_static_bank6_clock_physical.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hbm_su_static_bank6_clock_physical 390.96 x 151.2: PG M5 VDD 72 stripes (98% spread, 100% cov) / VSS 72 stripes (98% spread, 100% cov); strap M6; face pins 309 blocked-above 0 blocked-same 0; clock clk insertion 261 ps; clock clk_macro0 insertion 10 ps; clock clk_macro1 insertion 10 ps; clock clk_macro2 insertion 10 ps; clock clk_macro3 insertion 22 ps; clock clk_macro4 insertion 23 ps; clock clk_macro5 insertion 22 ps; clock clk_rd insertion 94 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_su_static_bank6_clock_physical",
+  "W": 390.96,
+  "H": 151.2,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 72,
+     "dir": "V",
+     "spread": 0.981,
+     "coverage": 1.0,
+     "shapes_on_top": 72
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 72,
+     "dir": "V",
+     "spread": 0.981,
+     "coverage": 1.0,
+     "shapes_on_top": 72
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 309,
+   "blocked_above": 0,
+   "covered_below": 88,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 261.26,
+    "min_ps": 163.14
+   },
+   "clk_macro0": {
+    "max_ps": 9.51,
+    "min_ps": 9.51
+   },
+   "clk_macro1": {
+    "max_ps": 9.77,
+    "min_ps": 9.77
+   },
+   "clk_macro2": {
+    "max_ps": 9.62,
+    "min_ps": 9.62
+   },
+   "clk_macro3": {
+    "max_ps": 22.5,
+    "min_ps": 22.5
+   },
+   "clk_macro4": {
+    "max_ps": 22.96,
+    "min_ps": 22.96
+   },
+   "clk_macro5": {
+    "max_ps": 21.59,
+    "min_ps": 21.59
+   },
+   "clk_rd": {
+    "max_ps": 93.99,
+    "min_ps": 77.77
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 184
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
