@@ -4,6 +4,18 @@ proc ot_assumed_phy_pg_grids {} {
   foreach inst [$block getInsts] {
     set master [$inst getMaster]; set name [$master getName]
     if {![regexp {^(OT_PDN_BBOX_)?ot_q(fd_serdes_112g_x12|fd_ucie_x64|kvd_ucie_x64)_phy} $name]} continue
+    # A planning PHY with real M7/M8 PG access stays on its existing grid.
+    # Only the actual M4-only interface needs this revised access contract.
+    set m4nets 0
+    foreach net {VDD VSS} {
+      set term [$master findMTerm $net]; set ls {}
+      if {$term ne "NULL"} {foreach mp [$term getMPins] {foreach box [$mp getGeometry] {
+        lappend ls [[$box getTechLayer] getName]
+      }}}
+      if {[lsort -unique $ls] eq "M4"} {incr m4nets}
+    }
+    if {!$m4nets} {continue}
+    if {$m4nets != 2} {error "OT_ASSUMED_PHY_PG: asymmetric M4 power profile $name"}
     set width [expr {[$master getWidth]/double($dbu)}]
     set left [expr {floor(($width-2.0)/0.048+1e-7)*0.048}]
     set orient [$inst getOrient]

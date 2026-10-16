@@ -15,14 +15,22 @@ from decimal import Decimal as D, ROUND_FLOOR
 
 SCHEMA = 'opentallas.assumed-phy-pg-access.v1'
 
+def pg_layers(text,net):
+    pin=re.search(r'(?ms)^\s*PIN '+re.escape(net)+r'\s*\n(.*?)^\s*END '+re.escape(net)+r'\s*$',text)
+    return set(re.findall(r'LAYER (M\d+)\s*;',pin[1])) if pin else set()
+
+def m4_profile(text):
+    return all(pg_layers(text,n)=={'M4'} for n in ['VDD','VSS'])
+
 def build(text):
+    if not m4_profile(text):raise ValueError("candidate requires actual M4-only VDD/VSS pins")
     width, height = map(D, re.search(r'SIZE ([\d.]+) BY ([\d.]+)', text).groups())
     left = ((width-D('2'))/D('.048')).to_integral_value(rounding=ROUND_FLOOR)*D('.048')
     centers = [left+D('.06'), left+D('1.068')]
     windows = [(c-D('.2'), c+D('.2')) for c in centers]
     obs_start = text.index('  OBS\n')
     body = text[obs_start:]
-    match = re.search(r'(    LAYER M5 ;\n)    RECT ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ;', body)
+    match = re.search(r'([ \t]*LAYER M5 ;\n)[ \t]+RECT ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ;', body)
     if not match:
         raise ValueError('expected one rectangular M5 obstruction')
     x0,y0,x1,y1 = map(D,match.groups()[1:])

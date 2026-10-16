@@ -5,6 +5,7 @@ subtraction, reserved-column clearance, and no geometry outside macro footprint.
 Does not substitute for foundry signoff of a licensed PHY.
 """
 import argparse
+import bisect
 from collections import defaultdict
 import heapq
 import json
@@ -33,19 +34,38 @@ def verify(data):
     # Sweep in Y: include every SWire routing shape and via enclosure.
     shorts=[];comparisons=0
     for layer, shapes in layers.items():
-        active={};ends=[]
+        active={};ends=[];buckets=defaultdict(set);span=50000
         for k,(net,r,kind) in enumerate(sorted(shapes,key=lambda s:s[1][1])):
             while ends and ends[0][0]<=r[1]:
-                _,j=heapq.heappop(ends);active.pop(j,None)
-            for other,box,_ in active.values():
+                _,j=heapq.heappop(ends)
+                if j in active:
+                    _,old,_=active.pop(j)
+                    for b in range(old[0]//span,(old[2]-1)//span+1):
+                        buckets[b].discard(j)
+                        if not buckets[b]:del buckets[b]
+            possible=set()
+            for b in range(r[0]//span,(r[2]-1)//span+1):possible.update(buckets.get(b,()))
+            for j in possible:
+                other,box,_=active[j]
                 if other==net:continue
                 comparisons+=1
                 if intersect(r,box):shorts.append([layer,net,other,r,box])
             active[k]=(net,r,kind);heapq.heappush(ends,(r[3],k))
-    obs_hits=[];signal_hits=[];checked=0;straps=0
+            for b in range(r[0]//span,(r[2]-1)//span+1):buckets[b].add(k)
+    obs_hits=[];signal_hits=[];signal_spacing=[];checked=0;straps=0
     for i in data['instances']:
         pins=defaultdict(list)
         for n,typ,l,*r in i['pins']:pins[(n,l)].append(transform(r,i))
+        signal_bounds={};signal_layer_bounds={}
+        for (name,layer),boxes in pins.items():
+            if name in ['VDD','VSS']:continue
+            b=[min(r[0] for r in boxes),min(r[1] for r in boxes),max(r[2] for r in boxes),max(r[3] for r in boxes)]
+            signal_bounds[(name,layer)]=b
+            old=signal_layer_bounds.get(layer,b)
+            signal_layer_bounds[layer]=[min(old[0],b[0]),min(old[1],b[1]),max(old[2],b[2]),max(old[3],b[3])]
+        pin_index={}
+        for key,boxes in pins.items():
+            boxes=sorted(boxes,key=lambda r:r[1]);pin_index[key]=(boxes,[r[1] for r in boxes],max(r[3]-r[1] for r in boxes))
         obs=defaultdict(list)
         for l,*r in i['obs']:obs[l].append(transform(r,i))
         for l,shapes in layers.items():
@@ -54,15 +74,23 @@ def verify(data):
                 if l=='M5' and kind=='wire':
                     straps+=1
                     if intersect(r,i['bbox'])!=r:raise ValueError('M5 strap escapes reserved footprint')
-                for (n,pl),boxes in pins.items():
-                    if pl==l and n not in ['VDD','VSS']:
-                        for b in boxes:
-                            if intersect(r,b):signal_hits.append([i['name'],l,net,n,r,b])
+                clearance=40 if l=='M8' else 0
+                expanded=[r[0]-clearance,r[1]-clearance,r[2]+clearance,r[3]+clearance]
+                if l in signal_layer_bounds and intersect(expanded,signal_layer_bounds[l]):
+                    for (n,pl),boxes in pins.items():
+                        if pl==l and n not in ['VDD','VSS'] and intersect(expanded,signal_bounds[(n,pl)]):
+                            for b in boxes:
+                                if intersect(r,b):signal_hits.append([i['name'],l,net,n,r,b])
+                                elif clearance and intersect(expanded,b):signal_spacing.append([i['name'],l,net,n,r,b])
                 for b in obs[l]:
                     hit=intersect(r,b)
                     if hit is None:continue
                     pieces=[hit]
-                    for p in pins[(net,l)]:pieces=[q for part in pieces for q in subtract(part,p)]
+                    if (net,l) in pin_index:
+                        boxes,starts,max_height=pin_index[(net,l)]
+                        lo=bisect.bisect_left(starts,hit[1]-max_height)
+                        hi=bisect.bisect_left(starts,hit[3])
+                        for p in boxes[lo:hi]:pieces=[q for part in pieces for q in subtract(part,p)]
                     if pieces:obs_hits.append([i['name'],l,net,r,pieces])
                 # M5 wide-wire min spacing in pinned ASAP7 tech is72nm.
                 # There are no M5 macro PG pins that could waive this check.
@@ -71,10 +99,10 @@ def verify(data):
                     for b in obs[l]:
                         if intersect(expanded,b):obs_hits.append([i['name'],'M5_spacing72',net,r,b])
                 checked+=1
-    result=dict(status='PASS' if not (shorts or obs_hits or signal_hits) else 'FAIL',shapes=len(data['shapes']),
+    result=dict(status='PASS' if not (shorts or obs_hits or signal_hits or signal_spacing) else 'FAIL',shapes=len(data['shapes']),
       orientations=[i['orient'] for i in data['instances']],routing_shapes_inside_macros=checked,m5_straps=straps,
-      opposite_net_comparisons=comparisons,shorts=len(shorts),obstruction_violations=len(obs_hits),signal_pin_overlaps=len(signal_hits))
-    if shorts or obs_hits or signal_hits:result['examples']=(shorts+obs_hits+signal_hits)[:8]
+      opposite_net_comparisons=comparisons,shorts=len(shorts),obstruction_violations=len(obs_hits),signal_pin_overlaps=len(signal_hits),m8_signal_spacing40_violations=len(signal_spacing))
+    if shorts or obs_hits or signal_hits or signal_spacing:result['examples']=(shorts+obs_hits+signal_hits+signal_spacing)[:8]
     return result
 
 def main():

@@ -53,3 +53,38 @@ This fixture proves the declared access geometry and connectivity only. It does
 not close any die, qualify foundry PHY IP, prove analog/IP internals, or replace
 full-die route/DRC/IR/EM and timing checks. Actual full-die integration must retain
 the explicit ASSUMED_UNQUALIFIED PHY boundary and check neighboring geometry.
+
+Actual-case integration follow-up
+
+The case hook now classifies actual VDD/VSS layers. It revises only M4-only
+link PHYs. C23s ucie_kv already exposes M7/M8 PG, so that PHY's LEF and old grid
+remain unchanged; io_ucie and the three SerDes PHYs need the new access contract.
+The KV case has two link PHYs needing the M4/M5 access revision.
+
+The native KV qkd_hbm3e_phy_pc historically has no supply MTerms at all.
+A separate NEW ASSUMED external power-interface revision clones the VDD/VSS
+M4 PIN blocks verbatim from same-outline ot_hbm3e_phy in the case's phy_ew.lef.
+Every existing DFI pin, original obstruction, dimension and latency stays
+unchanged. It adds the exact native master name (and its bbox alias) to the
+HBM grid, which connects M4->M5->M8. This is a declared external power model,
+not a claim about vendor/internal analog layout, IR/EM or full-die signoff.
+
+The new HBM preflight rejects missing actual supply MTerms. During pdngen it
+also reserves a temporary parent M8 keepout of 0.16um around each actual native
+HBM M8 signal pin. These protect the existing clock/reset pins from power
+stripes. The pdngen finally block removes the temporary block obstructions;
+macro pin/OBS geometry is never edited. A case without the recognized finally
+cleanup hook is rejected before any files are written. New cases also receive
+the source-pinned bbox helper, which preserves declared link access columns.
+
+patch_pdn rewrites only literal generated foreach-glob lists and exact instance
+selectors. It refuses arbitrary PHY regexp selectors instead of deleting pieces
+from alternations. Actual generated C23s, current C23s and KV PDN snapshots and
+source hashes are in evidence_integration_20261015. trace_pdn_selection executes
+the actual Tcl control flow against LEF-derived master/pin attributes and the
+entire emitted netlist; it is a selector test, not a physical simulation.
+
+HBM full-size actual four-instance fixture is in hbm_fixture. The initial
+copy-rails fixture and the successor with signal keepouts are physically run
+separately; their audit evidence is recorded separately when collected. No
+historical LEFs or frozen die cases are changed by this work.

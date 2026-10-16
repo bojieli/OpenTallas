@@ -1,0 +1,36 @@
+# case (a) follow-on: pin access and die PDN on the placed floorplan
+proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
+  regexp {VmRSS:\s+(\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
+read_db /work/floorplan.odb
+mem read
+source /work/die_tie_rows.tcl
+ot_tie_rows 10.88 0.48 10.88 0.48 12.0 0.6 1.08 2.0 2.0
+mem tie_rows
+set_routing_layers -signal M2-M9
+set t0 [clock seconds]
+if {[catch {set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  # Preflight the entire actual KV master set before any PDN geometry work.
+  ot_pdn_bbox::begin /work
+  ot_pdn_bbox::restore
+  puts "OT_PDN_BBOX PREFLIGHT PASS actual KV pins, outline, PG, containment and detailed OBS restoration"
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+try {source /work/pdn.tcl; pdngen} finally {
+  if {[llength [info commands ot_hbm_pg::restore]]} {ot_hbm_pg::restore}
+  if {$ot_bbox} {ot_pdn_bbox::restore}
+}
+ot_tie_rows_verify 10.88 0.48
+source /work/die_constant_pg_check.tcl} err]} { puts "OT_PDN FAIL $err"; error $err } else {
+  set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }
+  puts "OT_PDN PASS special_shapes=$nsw" }
+puts "OT_TIME pdn_s=[expr {[clock seconds]-$t0}]"
+mem pdn
+foreach net {VDD VSS} { if {[catch {check_power_grid -net $net} err]} { puts "OT_PGCHECK $net FAIL $err"; error $err } else { puts "OT_PGCHECK $net PASS" } }
+set t0 [clock seconds]
+if {[catch {pin_access -verbose 1} err]} { puts "OT_PA FAIL $err"; error $err } else { puts "OT_PA DONE" }
+puts "OT_TIME pa_s=[expr {[clock seconds]-$t0}]"
+mem pa
+write_db /work/floorplan_pdn.odb

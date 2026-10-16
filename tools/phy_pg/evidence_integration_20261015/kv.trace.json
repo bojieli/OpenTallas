@@ -1,0 +1,62 @@
+{
+  "status": "TCL_SELECTION_TRACE_PASS",
+  "case": "/tmp/phy-pg-integration/kv",
+  "pdn_sha256": "9502c5a57df79740b36083f46282c1be806974ddba6ba1ad5c326fbd6f4e7838",
+  "masters": 58,
+  "instances": 19738,
+  "actual_phy_instances": [
+    "serdes_host",
+    "ucie_rom"
+  ],
+  "repaired_phy_instances": [
+    "serdes_host",
+    "ucie_rom"
+  ],
+  "preserved_phy_instances": [],
+  "old_grids_claiming_phy": [],
+  "grids": [
+    {
+      "grid": "core",
+      "selected_count": 0,
+      "phy": []
+    },
+    {
+      "grid": "strip",
+      "selected_count": 0,
+      "phy": []
+    },
+    {
+      "grid": "hub",
+      "selected_count": 0,
+      "phy": []
+    },
+    {
+      "grid": "io",
+      "selected_count": 0,
+      "phy": []
+    },
+    {
+      "grid": "phy",
+      "selected_count": 4,
+      "phy": []
+    },
+    {
+      "grid": "hv5",
+      "selected_count": 5352,
+      "phy": []
+    },
+    {
+      "grid": "hv5s",
+      "selected_count": 6144,
+      "phy": []
+    },
+    {
+      "grid": "NEW_DECLARED_PHY",
+      "selected_count": 2,
+      "phy": [
+        "serdes_host",
+        "ucie_rom"
+      ]
+    }
+  ]
+}
