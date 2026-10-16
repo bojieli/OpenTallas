@@ -230,6 +230,86 @@ def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
     return P, nets, W, H, struct, baseface
 
 
+RELAY_PAIRS = ('rv', 'wv', 'ra', 'wa', 'rt', 'wt', 'wm', 'wd', 'sv', 'cv', 'sd', 'st', 'ct', 'ca', 'cm')
+
+
+def hop1(P, nets):
+    """A2-F hop 1: the eight b4 quarter relays (dsfd_vm_static_relay128_b4, one register per direction) are removed;
+    each b8 bridge drives its eight bank128 directly (RTL: o_X of b8 -> bank, bank -> i_X of b8, -1 edge each way).
+    Nets through a b4 (i_X bit b == o_X bit b) are merged and the b4 endpoints dropped.  Every storage unit is
+    re-packed inside its own box: [bank column B (mirrored, inputs E) | scatter + b8 column | bank column A], b8 kept
+    at its row, so b8 -> farthest bank stays well inside one cycle's reach."""
+    L = P.leaves
+    M = [l['master'] for l in L]
+    b4 = {i for i in P.pos if M[i] == 'dsfd_vm_static_relay128_b4'}
+    # nets: union through b4 (i_X[b] <-> o_X[b])
+    parent = list(range(len(nets)))
+
+    def f(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    where = {}
+    for n, eps in enumerate(nets):
+        for e in eps:
+            if e[0] in b4:
+                i, p, b = e
+                key = (i, p[2:], b)
+                if key in where:
+                    parent[f(n)] = f(where[key])
+                else:
+                    where[key] = n
+    groups = collections.defaultdict(list)
+    for n in range(len(nets)):
+        groups[f(n)].append(n)
+    new = []
+    for g in groups.values():
+        eps = [e for n in g for e in nets[n] if e[0] not in b4]
+        seen, out = set(), []
+        for e in eps:
+            if e not in seen:
+                seen.add(e)
+                out.append(e)
+        if len(out) > 1:
+            new.append(out)
+    # re-pack each unit: members by adjacency of the (old) graph
+    for i in b4:
+        del P.pos[i]
+    b8s = [i for i in P.pos if M[i] == 'dsfd_vm_static_relay128_b8']
+    adj = collections.defaultdict(set)
+    for eps in new:
+        ls = {e[0] for e in eps if e[0] >= 0}
+        if len(ls) <= 4:
+            for a in ls:
+                adj[a] |= ls
+    for j in b8s:
+        banks = sorted([i for i in adj[j] if M[i] == 'dsfd_vm_static_bank128'], key=lambda i: L[i]['name'])
+        scs = [i for i in adj[j] if M[i] == 'dsfd_vm_static_scatter_b8_out']
+        assert len(banks) == 8, (L[j]['name'], len(banks))
+        mem = banks + scs + [j]
+        x0 = min(P.pos[i][0] for i in mem)
+        bw = L[banks[0]]['w']
+        colw = max(L[i]['w'] for i in scs + [j])
+        xs = x0 + bw + CH
+        xa = xs + colw + CH
+        bx, by, bfx, bfy = P.pos[j]
+        P.pos[j] = (round(xs, 4), by, bfx, bfy)
+        for i in scs:
+            _, y, fx, fy = P.pos[i]
+            P.pos[i] = (round(xs, 4), y, fx, fy)
+        ys = sorted({P.pos[i][1] for i in banks})
+        rows = collections.defaultdict(list)
+        for i in banks:
+            rows[P.pos[i][1]].append(i)
+        for y, ids in rows.items():
+            ids = sorted(ids, key=lambda i: P.pos[i][0])
+            for k, i in enumerate(ids):
+                _, _, fx, fy = P.pos[i]
+                P.pos[i] = ((round(x0, 4), y, True, fy) if k == 0 else (round(xa, 4), y, False, fy))
+    return new
+
+
 def arrange(P, W, H, struct, arr):
     """returns the (possibly new) outline"""
     if arr == 'caprow':
@@ -311,6 +391,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--width', type=float, default=4104.0, help='total VM width (body = width - capture columns)')
     ap.add_argument('--caprow-per', type=int, default=8)
+    ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
     ap.add_argument('--read-near', action='store_true')
     ap.add_argument('--return-far', action='store_true', help='with --read-near: return lanes stay at the outer end (beside the storage)')
     ap.add_argument('--su-x0', type=float, default=0.0, help='SU W edge along the VM S face; -1 centred')
@@ -323,6 +404,13 @@ def main():
     P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far)
     print('outline', W, H, struct, flush=True)
     W, H = arrange(P, W, H, struct, a.arr)
+    if a.hop1:
+        nets = hop1(P, nets)
+        for path in ('write', 'read'):
+            RP.PATHS[path] = [h for h in RP.PATHS[path] if h[0] not in ('b8_b4', 'b4_bank')]
+        RP.PATHS['write'].append(('b8_bank', {('b8', 'bank')}))
+        RP.PATHS['read'].insert(RP.PATHS['read'].index(next(h for h in RP.PATHS['read'] if h[0] == 'b8_return')),
+                                ('b8_bank', {('b8', 'bank')}))
     print('arranged', W, H, flush=True)
     sp = spans_for(a.hub, W, H)
     if sp is None:          # split4 reference: the grant's face map, free spans
