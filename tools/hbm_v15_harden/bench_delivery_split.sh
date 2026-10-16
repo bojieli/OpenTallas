@@ -16,7 +16,7 @@ case "$mut" in
  1) sed -i 's/({256{out_group==2.d0}}&macro_data\[0+:256\])/({256{out_group==2\x27d0}}\&macro_data[256+:256])/' "$out/split.sv";;
  2) sed -i 's/\.r_addr_in({rb,rs})/.r_addr_in({rb,rs ^ 6\x27d1})/' "$out/split.sv";;
  3) sed -i 's/ else rst_ctl<=1.b1;/ else rst_ctl<=rst_ctl2; reg rst_ctl2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_ctl2<=0; else rst_ctl2<=1;/' "$out/split.sv";;  # v4: lane control state released one edge late
- 4) sed -i 's/ wire landing_fault=sticky || |pcbad_q;/ wire landing_fault=sticky || |pcbad_all;/; s/(\&full1_q),owned\[0\] \&\& (\&full0_q)/(\&full1_all),owned[0] \&\& (\&full0_all)/' "$out/split.sv";;  # v5: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
+ 4) sed -i 's/ wire landing_fault=sticky || pcbad_q;/ wire landing_fault=sticky || |pcbad_all;/; s/owned\[1\] \&\& full1_q,owned\[0\] \&\& full0_q/owned[1] \&\& (\&full1_all),owned[0] \&\& (\&full0_all)/' "$out/split.sv";;  # v5: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
 esac
 if [ "$mut" != 0 ]; then cmp -s "$out/split.sv" $sp && { echo 'mutant not applied'; exit 3; }; fi
 sed 's/module ot_hbm_svc_static_vm_delivery_split /module ot_hbm_svc_static_vm_delivery /' "$out/split.sv" > "$out/as_delivery.sv"

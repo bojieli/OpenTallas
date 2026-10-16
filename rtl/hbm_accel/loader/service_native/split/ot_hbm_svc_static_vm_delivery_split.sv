@@ -101,19 +101,22 @@ module ot_hbm_svc_vmdel_lane (
  // 257-um lane, 5 gate levels, 2 more buffers to the macro pins; full*_all -> start_ok -> issue -> fill_ok likewise).
  // Owner rule 19:50 (register every pin, both directions): the three cross-lane status bits now leave from an output
  // flop (full0/full1/pcbad <= AND/OR of this lane's 4 PCs) and are captured in a pin flop at every receiving lane
- // (full0_q/full1_q/pcbad_q).  Cross-lane status is therefore observed STATUS_LAT=2 edges later, identically in all
+ // (full0_q/full1_q/pcbad_q, the 8-lane AND / OR reduced in front of the pin flop: <= 2 gate levels).  Cross-lane status is therefore observed STATUS_LAT=2 edges later, identically in all
  // eight lanes (the lane's own bits take the same parent loop), so the replicated control stays cycle-consistent.
  // Reference: ot_hbm_svc_static_landing/vm_delivery #(.STATUS_LAT(2)) (the 32 per-PC full/fault bits pass two register
  // stages before use); every output bit = that reference delayed LAT=2.  Cost: block_ready and the landing-fault
  // response +2 edges (block ready -> compiler start; a 64-fill block, 256 read slots per start: no II change).
- reg [7:0] full0_q,full1_q,pcbad_q;
+ // v5b (gate 06:17 CTS STA, reg->reg +2.5 ps: pcbad_q[6] pin flop on the E face, 186 ps of wire buffers to the
+ // control logic at the W/S corner + a 4-level OR of the 8 status bits): the reduction moves in front of the pin flop
+ // (3 flops, not 24) and the 24 status inputs move to the W face beside the begin/start control pins.
+ reg full0_q,full1_q,pcbad_q;
  always @(posedge clk or negedge rst_ctl)
   if(!rst_ctl) begin full0_q<=0;full1_q<=0;pcbad_q<=0; end
-  else begin full0_q<=full0_all;full1_q<=full1_all;pcbad_q<=pcbad_all; end
- wire landing_fault=sticky || |pcbad_q;
+  else begin full0_q<=&full0_all;full1_q<=&full1_all;pcbad_q<=|pcbad_all; end
+ wire landing_fault=sticky || pcbad_q;
  assign fault_c=bad||landing_fault;
  assign busy_c=running;
- assign block_ready_c={owned[1] && (&full1_q),owned[0] && (&full0_q)};
+ assign block_ready_c={owned[1] && full1_q,owned[0] && full0_q};
  wire aperture_ok=start_base_sector[4:0]==0 && start_base_sector[12:0]<=13'd6144 &&
                   (!start_base_sector[15] || start_base_sector[14:13]==0);
  wire lstart=start && aperture_ok && !bad;
