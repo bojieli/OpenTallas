@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.native_pin_audit.cells.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, phi - R; launch<=220, capture<=190)",
+ "routed_probe": "launch tail = hold-repair chains (n a_d[170]: QN 197.7 -> 6 x BUFx2 + INV + output BUF -> port 362.1 ps, cells within 10 um of the face); n b_d[265] capture flop at the output face (95 um ihdrv wire)",
+ "cells": [
+  {
+   "cell": "qfd_xcst_s_m5",
+   "view": "physical/ref_tile/qfd_xcst_s_m5/views/qfd_xcst_s_m5",
+   "lib_cell": "qfd_xcst_s_m5",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 129.8,
+   "spread_ps": 24.6,
+   "outputs": 960,
+   "inputs": 520,
+   "launch_ps": 224.7,
+   "launch_pin": "b_d[86]",
+   "capture_ps": 186.0,
+   "capture_pin": "a_d[62]",
+   "launch_over": 2,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 224.72405 > 220 (2 pins)",
+   "job": "qfd_xcst_s_m5-xsm5c-62235a2ed"
+  },
+  {
+   "cell": "qfd_xcst_n_m5",
+   "view": "physical/ref_tile/qfd_xcst_n_m5/views/qfd_xcst_n_m5",
+   "lib_cell": "qfd_xcst_n_m5",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 129.1,
+   "spread_ps": 39.3,
+   "outputs": 960,
+   "inputs": 520,
+   "launch_ps": 235.5,
+   "launch_pin": "a_d[170]",
+   "capture_ps": 206.8,
+   "capture_pin": "b_d[265]",
+   "launch_over": 7,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 235.54523 > 220 (7 pins); capture 206.75353 > 190 (1 pins)",
+   "job": "qfd_xcst_n_m5-xnm5c-62235a2ed"
+  }
+ ]
+}

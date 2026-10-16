@@ -1,0 +1,2141 @@
+{
+  "schema": "opentallas.s81.vm-area-id-assigned-template.v1",
+  "status": "LOCAL_ASSIGNED_PINS_AND_RECTANGLES_ONLY_NO_NATIVE_LEF_GLOBAL_ROUTE_OR_FIT",
+  "source": "tools/s81_vm/area_id_candidate.sv",
+  "source_sha256": "ac4d10f2f96fe83d7d9acb4b10a5ab5b612cf1c4fce8586761154d93e5b87217",
+  "templates": {
+    "data16": {
+      "master": "s81_area_stripe_W16",
+      "outline_um": [
+        237.6,
+        54.0
+      ],
+      "ports": [
+        {
+          "port": "i_data",
+          "bits": 848,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            78.144,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_sel",
+          "bits": 168,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            110.78399999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_data",
+          "bits": 128,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            20.472
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "o_v",
+          "bits": 8,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            32.760000000000005
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            33.528000000000006
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "i_drain_v",
+          "bits": 8,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            25.8
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "i_drain_slot",
+          "bits": 16,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            26.568
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            28.104
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            28.2
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "metadata26": {
+      "master": "s81_area_stripe_W26",
+      "outline_um": [
+        237.6,
+        54.0
+      ],
+      "ports": [
+        {
+          "port": "i_data",
+          "bits": 1378,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            52.70399999999999,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_sel",
+          "bits": 168,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            110.78399999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_data",
+          "bits": 208,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            16.631999999999998
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "o_v",
+          "bits": 8,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            36.599999999999994
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            37.367999999999995
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "i_drain_v",
+          "bits": 8,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            25.8
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "i_drain_slot",
+          "bits": 16,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            26.568
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            28.104
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            28.2
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "selector": {
+      "master": "s81_area_selector",
+      "outline_um": [
+        172.8,
+        54.0
+      ],
+      "ports": [
+        {
+          "port": "o_sel",
+          "bits": 168,
+          "direction": "output",
+          "face": "N",
+          "first_bit_center_um": [
+            78.384,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_v",
+          "bits": 53,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            43.2,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_row",
+          "bits": 742,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            48.288000000000004,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_lane",
+          "bits": 106,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            119.52000000000001,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            172.8,
+            27.0
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            26.952
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            27.048000000000002
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    }
+  },
+  "quarters": [
+    {
+      "name": "slice0_banks0_7",
+      "slice": 0,
+      "bank_base": 0,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s0_b0_ck_selector",
+        "a2_s0_b0_ck_metadata",
+        "a2_s0_b0_ck_data0",
+        "a2_s0_b0_ck_data1",
+        "a2_s0_b0_ck_data2",
+        "a2_s0_b0_ck_data3",
+        "a2_s0_b0_ck_data4",
+        "a2_s0_b0_ck_data5",
+        "a2_s0_b0_ck_data6",
+        "a2_s0_b0_ck_data7"
+      ]
+    },
+    {
+      "name": "slice0_banks8_15",
+      "slice": 0,
+      "bank_base": 8,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s0_b8_ck_selector",
+        "a2_s0_b8_ck_metadata",
+        "a2_s0_b8_ck_data0",
+        "a2_s0_b8_ck_data1",
+        "a2_s0_b8_ck_data2",
+        "a2_s0_b8_ck_data3",
+        "a2_s0_b8_ck_data4",
+        "a2_s0_b8_ck_data5",
+        "a2_s0_b8_ck_data6",
+        "a2_s0_b8_ck_data7"
+      ]
+    },
+    {
+      "name": "slice0_banks16_23",
+      "slice": 0,
+      "bank_base": 16,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s0_b16_ck_selector",
+        "a2_s0_b16_ck_metadata",
+        "a2_s0_b16_ck_data0",
+        "a2_s0_b16_ck_data1",
+        "a2_s0_b16_ck_data2",
+        "a2_s0_b16_ck_data3",
+        "a2_s0_b16_ck_data4",
+        "a2_s0_b16_ck_data5",
+        "a2_s0_b16_ck_data6",
+        "a2_s0_b16_ck_data7"
+      ]
+    },
+    {
+      "name": "slice0_banks24_31",
+      "slice": 0,
+      "bank_base": 24,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s0_b24_ck_selector",
+        "a2_s0_b24_ck_metadata",
+        "a2_s0_b24_ck_data0",
+        "a2_s0_b24_ck_data1",
+        "a2_s0_b24_ck_data2",
+        "a2_s0_b24_ck_data3",
+        "a2_s0_b24_ck_data4",
+        "a2_s0_b24_ck_data5",
+        "a2_s0_b24_ck_data6",
+        "a2_s0_b24_ck_data7"
+      ]
+    },
+    {
+      "name": "slice1_banks0_7",
+      "slice": 1,
+      "bank_base": 0,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s1_b0_ck_selector",
+        "a2_s1_b0_ck_metadata",
+        "a2_s1_b0_ck_data0",
+        "a2_s1_b0_ck_data1",
+        "a2_s1_b0_ck_data2",
+        "a2_s1_b0_ck_data3",
+        "a2_s1_b0_ck_data4",
+        "a2_s1_b0_ck_data5",
+        "a2_s1_b0_ck_data6",
+        "a2_s1_b0_ck_data7"
+      ]
+    },
+    {
+      "name": "slice1_banks8_15",
+      "slice": 1,
+      "bank_base": 8,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s1_b8_ck_selector",
+        "a2_s1_b8_ck_metadata",
+        "a2_s1_b8_ck_data0",
+        "a2_s1_b8_ck_data1",
+        "a2_s1_b8_ck_data2",
+        "a2_s1_b8_ck_data3",
+        "a2_s1_b8_ck_data4",
+        "a2_s1_b8_ck_data5",
+        "a2_s1_b8_ck_data6",
+        "a2_s1_b8_ck_data7"
+      ]
+    },
+    {
+      "name": "slice1_banks16_23",
+      "slice": 1,
+      "bank_base": 16,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s1_b16_ck_selector",
+        "a2_s1_b16_ck_metadata",
+        "a2_s1_b16_ck_data0",
+        "a2_s1_b16_ck_data1",
+        "a2_s1_b16_ck_data2",
+        "a2_s1_b16_ck_data3",
+        "a2_s1_b16_ck_data4",
+        "a2_s1_b16_ck_data5",
+        "a2_s1_b16_ck_data6",
+        "a2_s1_b16_ck_data7"
+      ]
+    },
+    {
+      "name": "slice1_banks24_31",
+      "slice": 1,
+      "bank_base": 24,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s1_b24_ck_selector",
+        "a2_s1_b24_ck_metadata",
+        "a2_s1_b24_ck_data0",
+        "a2_s1_b24_ck_data1",
+        "a2_s1_b24_ck_data2",
+        "a2_s1_b24_ck_data3",
+        "a2_s1_b24_ck_data4",
+        "a2_s1_b24_ck_data5",
+        "a2_s1_b24_ck_data6",
+        "a2_s1_b24_ck_data7"
+      ]
+    },
+    {
+      "name": "slice2_banks0_7",
+      "slice": 2,
+      "bank_base": 0,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s2_b0_ck_selector",
+        "a2_s2_b0_ck_metadata",
+        "a2_s2_b0_ck_data0",
+        "a2_s2_b0_ck_data1",
+        "a2_s2_b0_ck_data2",
+        "a2_s2_b0_ck_data3",
+        "a2_s2_b0_ck_data4",
+        "a2_s2_b0_ck_data5",
+        "a2_s2_b0_ck_data6",
+        "a2_s2_b0_ck_data7"
+      ]
+    },
+    {
+      "name": "slice2_banks8_15",
+      "slice": 2,
+      "bank_base": 8,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s2_b8_ck_selector",
+        "a2_s2_b8_ck_metadata",
+        "a2_s2_b8_ck_data0",
+        "a2_s2_b8_ck_data1",
+        "a2_s2_b8_ck_data2",
+        "a2_s2_b8_ck_data3",
+        "a2_s2_b8_ck_data4",
+        "a2_s2_b8_ck_data5",
+        "a2_s2_b8_ck_data6",
+        "a2_s2_b8_ck_data7"
+      ]
+    },
+    {
+      "name": "slice2_banks16_23",
+      "slice": 2,
+      "bank_base": 16,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s2_b16_ck_selector",
+        "a2_s2_b16_ck_metadata",
+        "a2_s2_b16_ck_data0",
+        "a2_s2_b16_ck_data1",
+        "a2_s2_b16_ck_data2",
+        "a2_s2_b16_ck_data3",
+        "a2_s2_b16_ck_data4",
+        "a2_s2_b16_ck_data5",
+        "a2_s2_b16_ck_data6",
+        "a2_s2_b16_ck_data7"
+      ]
+    },
+    {
+      "name": "slice2_banks24_31",
+      "slice": 2,
+      "bank_base": 24,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s2_b24_ck_selector",
+        "a2_s2_b24_ck_metadata",
+        "a2_s2_b24_ck_data0",
+        "a2_s2_b24_ck_data1",
+        "a2_s2_b24_ck_data2",
+        "a2_s2_b24_ck_data3",
+        "a2_s2_b24_ck_data4",
+        "a2_s2_b24_ck_data5",
+        "a2_s2_b24_ck_data6",
+        "a2_s2_b24_ck_data7"
+      ]
+    },
+    {
+      "name": "slice3_banks0_7",
+      "slice": 3,
+      "bank_base": 0,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s3_b0_ck_selector",
+        "a2_s3_b0_ck_metadata",
+        "a2_s3_b0_ck_data0",
+        "a2_s3_b0_ck_data1",
+        "a2_s3_b0_ck_data2",
+        "a2_s3_b0_ck_data3",
+        "a2_s3_b0_ck_data4",
+        "a2_s3_b0_ck_data5",
+        "a2_s3_b0_ck_data6",
+        "a2_s3_b0_ck_data7"
+      ]
+    },
+    {
+      "name": "slice3_banks8_15",
+      "slice": 3,
+      "bank_base": 8,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s3_b8_ck_selector",
+        "a2_s3_b8_ck_metadata",
+        "a2_s3_b8_ck_data0",
+        "a2_s3_b8_ck_data1",
+        "a2_s3_b8_ck_data2",
+        "a2_s3_b8_ck_data3",
+        "a2_s3_b8_ck_data4",
+        "a2_s3_b8_ck_data5",
+        "a2_s3_b8_ck_data6",
+        "a2_s3_b8_ck_data7"
+      ]
+    },
+    {
+      "name": "slice3_banks16_23",
+      "slice": 3,
+      "bank_base": 16,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s3_b16_ck_selector",
+        "a2_s3_b16_ck_metadata",
+        "a2_s3_b16_ck_data0",
+        "a2_s3_b16_ck_data1",
+        "a2_s3_b16_ck_data2",
+        "a2_s3_b16_ck_data3",
+        "a2_s3_b16_ck_data4",
+        "a2_s3_b16_ck_data5",
+        "a2_s3_b16_ck_data6",
+        "a2_s3_b16_ck_data7"
+      ]
+    },
+    {
+      "name": "slice3_banks24_31",
+      "slice": 3,
+      "bank_base": 24,
+      "rectangle_budget_um": [
+        820.8,
+        324.0
+      ],
+      "placement": "UNPLACED_IN_VM",
+      "local_leaves": [
+        {
+          "name": "selector",
+          "template": "selector",
+          "xy_um": [
+            324.0,
+            0.0
+          ]
+        },
+        {
+          "name": "data0",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data1",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data2",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            81.0
+          ]
+        },
+        {
+          "name": "data3",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data4",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data5",
+          "template": "data16",
+          "xy_um": [
+            534.6,
+            162.0
+          ]
+        },
+        {
+          "name": "data6",
+          "template": "data16",
+          "xy_um": [
+            48.6,
+            243.0
+          ]
+        },
+        {
+          "name": "data7",
+          "template": "data16",
+          "xy_um": [
+            291.6,
+            243.0
+          ]
+        },
+        {
+          "name": "metadata",
+          "template": "metadata26",
+          "xy_um": [
+            534.6,
+            243.0
+          ]
+        }
+      ],
+      "clocks": [
+        "a2_s3_b24_ck_selector",
+        "a2_s3_b24_ck_metadata",
+        "a2_s3_b24_ck_data0",
+        "a2_s3_b24_ck_data1",
+        "a2_s3_b24_ck_data2",
+        "a2_s3_b24_ck_data3",
+        "a2_s3_b24_ck_data4",
+        "a2_s3_b24_ck_data5",
+        "a2_s3_b24_ck_data6",
+        "a2_s3_b24_ck_data7"
+      ]
+    }
+  ],
+  "source_binding": {
+    "sources": 53,
+    "payload_slice_bits": 128,
+    "payload_stripe": "data[k].i_data[16*s+b] <- source[s].data[128*slice+16*k+b]",
+    "metadata": "metadata.i_data[26*s+:26] <- {source[s].tag8,source[s].mask[4*slice+:4],source[s].row14}",
+    "selector": "selector.i_v[s]/i_row[14*s+:14]/i_lane[2*s+:2] <- source[s].valid/row/capturelane",
+    "IDs": "stripe.i_sel[7*g+:7] <- {valid,sourceID6}, g=3*localbank+capturelane",
+    "output": "stripe.o_data[16*localbank+b] -> bank[base+localbank].data[128*slice+16*k+b]",
+    "output_metadata": "{tag8,mask4,row14} frommetadata26.o_data[26*localbank+:26]",
+    "unique_source_nets_per_quarter": 8321,
+    "source_pin_occurrences_per_quarter": 9063,
+    "duplicate_branch": "742rowbits enter metadata and selector; do not count twice as distinct cut nets",
+    "source_north_south_split_budget_bits": [
+      4160,
+      4161
+    ],
+    "source_N_S_fraction_each": [
+      0.48654970760233923,
+      0.4866666666666667
+    ],
+    "additional_ingress": "drain24 unique nets plus individually delivered10clock/reset roots; not included in8321"
+  },
+  "clock_ownership": {
+    "previous_dispatch_stage_capture_roots": 272,
+    "new_roots": 160,
+    "delta": -112,
+    "actual_inventory_clock_pins": 688,
+    "proposed_A2_clock_pins": 576,
+    "landing_separate_candidate_delta": 3,
+    "root_rule": "Each root under15000flops and phi-R from its own measured insertion; no shared-spine waiver",
+    "reset_status": "Current isolatedRTL uses raw asynchronousreset; localtwoflop release required in native successor"
+  },
+  "local_geometry": {
+    "selector_to_stripes_max_manhattan_um": 432.0,
+    "selector_fanout": 9,
+    "selector_unique_nets": 168,
+    "selector_horizontal_cut_fraction": 0.049777777777777775,
+    "source_ingress": "Distributed source N/S budget; all source paths and legal layers UNPLACED",
+    "PG_and_roads": "Quarter internal reserve is explicit budget only; PG stripes, landing flops and roads need coordinates"
+  },
+  "immutable": {
+    "real_SRAM_count": 128,
+    "real_SRAM_512x128_dimensions_um": [
+      174.12,
+      29.736
+    ],
+    "memory_bytes": 1048576,
+    "logical_read_ports_512bit": 32,
+    "logical_write_ports_512bit": 32,
+    "storage_slots": 3,
+    "maximum_capture_lanes": 3
+  },
+  "claim": "No14mm2fit,SS/FFclosure,PG/IR,globalcutorfullprogrammethroughput qualification"
+}

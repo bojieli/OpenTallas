@@ -1,0 +1,30 @@
+{
+ "old_job": "dsfd_vm_static_landing_fault_join_native_1417-join1-7dea3579b",
+ "new_job": "dsfd_vm_static_landing_fault_join_native_1417-join1-7dea3579b-e1retarget",
+ "why": "unstarted host retarget; archive retained",
+ "old_host": "ot-epyc1tb",
+ "old_archive": "/srv/opentallas/claude/closure-loop/dsfd_vm_static_landing_fault_join_native_1417-join1-7dea3579b",
+ "new_host": "ot-epyc1tb",
+ "old_status": "CANCELLED",
+ "old_stage": "route",
+ "old_route_started": false,
+ "old_btrack": {},
+ "remote_process_check": "2026-10-15T14:53:05-07:00 ps found no process with old run path; no route files",
+ "source": {
+  "branch": "codex/s81-vm-landing-1417",
+  "commit": "7dea3579b4617509daba18b78ca942dede5b524f",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_landing_fault_join_1417"
+  ]
+ },
+ "gate": "physical/ref_tile/dsfd_vm_static_landing_fault_join_native_1417/gate_result.json",
+ "unchanged_runtime_stages_sha256": "08b8ecf5b1cdc3e651e14a17e4c03561eaa25a056f63e915fffee54b41e36594",
+ "allowed_metadata_changes": [
+  "name",
+  "hosts",
+  "record[].to (job name only)"
+ ],
+ "authority": "root normal retarget approval via VM owner; no cross-root migration bypass"
+}

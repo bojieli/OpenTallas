@@ -24,6 +24,7 @@
 module ot_hgi_sm_xload_static #(
     parameter integer PMAX   = 8,
     parameter integer RD_LAT = 6,       // VM read group: rq output edge -> rr valid edge (bank n+6 + slice/station edges)
+    parameter integer LOCAL_MASK_REGS = 0, // 1: two kept mask drivers at each real SRAM, unchanged write edge
     parameter integer MUT    = 0        // 1: lane rotation off by one; 2: emission early (BF16: overlaps the landing window; block-dot: beat decided one lane early); 3: block-dot lane j ^ 1 (all must fail)
 ) (
     input  wire               clk,
@@ -202,7 +203,22 @@ module ot_hgi_sm_xload_static #(
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
             (* keep = 1 *) reg rp_ce; (* keep = 1 *) reg [6:0] rp_a; reg rp_sel;
-            (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d; reg [255:0] wp_m;
+            (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d; wire [255:0] wp_m;
+            if(LOCAL_MASK_REGS)begin:g_local_mask
+                // ot_keep_regs.tcl promotes these scalar keep wires to kept FFs.
+                // Exactly 64 mask FFs for 32 SRAMs, max128 physical loads/driver.
+                // This is the existing W-stage edge, beside wp_ce/wp_a/wp_d.
+                (* keep = 1 *) reg mask_hi,mask_lo;
+                always @(posedge clk)begin
+                    mask_hi <= c_wq[0] ^ (MUT==4);
+                    mask_lo <= ~c_wq[0] ^ (MUT==4);
+                end
+                assign wp_m={{128{mask_hi}},{128{mask_lo}}};
+            end else begin:g_shared_mask
+                reg [255:0] mask_q;
+                always @(posedge clk)mask_q <= c_wq[0] ? {{128{1'b1}}, 128'd0} : {128'd0, {128{1'b1}}};
+                assign wp_m=mask_q;
+            end
             reg [255:0] cq;
             wire [255:0] rd;
             always @(posedge clk or negedge rn) begin
@@ -220,7 +236,6 @@ module ot_hgi_sm_xload_static #(
                     wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
                     wp_d[128 + 16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
                 end
-                wp_m <= c_wq[0] ? {{128{1'b1}}, 128'd0} : {128'd0, {128{1'b1}}};
                 cq <= rd & {256{rp_sel}};
             end
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
