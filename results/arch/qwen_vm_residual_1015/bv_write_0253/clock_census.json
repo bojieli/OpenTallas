@@ -1,0 +1,14 @@
+{
+  "source_Q_bits": 43184,
+  "distinct_clock_roots": 240,
+  "sinks_histogram": {
+    "28": 64,
+    "256": 160,
+    "27": 16
+  },
+  "max_sinks": 256,
+  "all_43184_Q_bits_have_exact_expected_root": true,
+  "clock_tie_mutant": "observed FAIL: missing/extra actual clock roots",
+  "scope": "source-extracted full64BW+16WS E3 actual RTL only; physical clocks/phase/native limits unqualified",
+  "netlist_sha256": "6f2f33d1673a40e3ab6687cef7140492a891d5bd2b756f782244fc719494423f"
+}

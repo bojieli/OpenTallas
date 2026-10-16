@@ -1,0 +1,92 @@
+{
+  "scope": "Exact original pin0 RO6 source FF-only aliases, remaining after E3 candidate, not hardening credit",
+  "groups": {
+    "SU_input_E1": {
+      "source_FF_bits": 2160,
+      "signals": {
+        "e1_a0": 24,
+        "e1_a1": 24,
+        "e1_d": 2048,
+        "e1_m": 64
+      }
+    },
+    "SU_row_formation_E2": {
+      "source_FF_bits": 2662,
+      "signals": {
+        "f_bad": 1,
+        "f_d": 2560,
+        "f_m": 80,
+        "f_r0": 20,
+        "f_v": 1
+      }
+    },
+    "skid_input_E1": {
+      "source_FF_bits": 2196,
+      "signals": {
+        "k1_data[0]": 512,
+        "k1_data[1]": 512,
+        "k1_data[2]": 512,
+        "k1_data[3]": 512,
+        "k1_mask[0]": 16,
+        "k1_mask[1]": 16,
+        "k1_mask[2]": 16,
+        "k1_mask[3]": 16,
+        "k1_row[0]": 20,
+        "k1_row[1]": 20,
+        "k1_row[2]": 20,
+        "k1_row[3]": 20,
+        "k1_v": 4
+      }
+    },
+    "skid_fixed_E2": {
+      "source_FF_bits": 2200,
+      "signals": {
+        "q_data[0]": 512,
+        "q_data[1]": 512,
+        "q_data[2]": 512,
+        "q_data[3]": 512,
+        "q_mask[0]": 16,
+        "q_mask[1]": 16,
+        "q_mask[2]": 16,
+        "q_mask[3]": 16,
+        "ge": 4,
+        "q_late": 4,
+        "lt_row": 80
+      }
+    },
+    "row_read_path": {
+      "source_FF_bits": 1112,
+      "signals": {
+        "b_ra": 512,
+        "b_re": 64,
+        "r_q": 512,
+        "r_qv": 1,
+        "rr_b0": 6,
+        "rr_v": 17
+      }
+    },
+    "progress_fault_and_enable": {
+      "source_FF_bits": 35,
+      "signals": {
+        "land_cnt": 16,
+        "lg_v": 4,
+        "m1": 1,
+        "m_fault": 1,
+        "me_c": 1,
+        "me_ok": 1,
+        "me_x": 8,
+        "q_ovf": 1,
+        "w_fault": 1,
+        "w_hazard": 1
+      }
+    }
+  },
+  "alias_caveats": [
+    "ge is combinational alias of static q_v; counted registered owner by Q identity only",
+    "lt_row lower80 bits alias q_row E2 registers; upper80 bits alias separate unassigned lg_row memory",
+    "static q_late/lg_v/q_ovf constant registers retained by original proc/opt_clean census; not silently removed"
+  ],
+  "additional_unmapped_memory_bits": 80,
+  "total_remaining_BV_FF_bits": 10365,
+  "selector_boundary": "SU/skid/PAR_RB AND-OR operators remain parent; E3 register ownership alone does not qualify incident paths"
+}
