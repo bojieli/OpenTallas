@@ -17380,3 +17380,11 @@ QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
     parent_clock_ff_before=55382, parent_clock_ff_after=12198,
     unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
     SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
+
+# Two fixed-name leaf wrappers for the existing E3 control FF widths.
+QWEN_VM_WRITE_CONTROL_LOCAL_LEAVES_1016 = dict(
+    variants=((27,64,28,58),(26,16,27,56)),
+    outline_um=(17.28,21.6), source_new_state_bits=0, added_edges=0,
+    clock_face='W', clock_layer='M4', reset_face='S', reset_layer='M5',
+    control_total_area_mm2=80*17.28*21.6/1e6,
+    status='UNGRANTED fixed-name component wrappers; parent binding and physical/native gates OPEN')
