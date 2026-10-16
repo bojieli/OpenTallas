@@ -1,0 +1,30 @@
+{
+  "generated": "2026-10-16T03:05:42.104250-07:00",
+  "method": "Actual view_image calls, plus live c21h LEF/DEF extraction and rendered peer diagram",
+  "images": [
+    {
+      "path": "physical/ref_tile/s81coll_cfifo_x2/gate_layout/floorplan.png",
+      "findings": "280.8x51.84; no macros/internal narrow channels; cr N at core centroid, xf/xf2 S at lane groups"
+    },
+    {
+      "path": "physical/ref_tile/s81coll_cfifo_x2/gate_layout/density.png",
+      "findings": "Dense left/right and lower regions, lower upper-center density; no macro traps"
+    },
+    {
+      "path": "results/rtl/s81_cfifo_native_1016/cf0_x2_peer_context.png",
+      "findings": "Old.048-pitch x2 compacts536 outputs into25.68um versus station.096 pitch51.36um, requiring25.68um worst jog over8.95um channel; proposed pitch+origin gives0 horizontal jog for all536 cf0 bits"
+    },
+    {
+      "path": "/tmp/visrom/s81/dsfd_stnv_566x1/floorplan.png",
+      "findings": "Source-trunk station has opposite N/S full-width lane strips and central clock pins; this historical master image alone does not establish the new x2 route"
+    }
+  ],
+  "open": [
+    "Fresh gate image inspection",
+    "Routed floorplan/density/congestion inspection",
+    "All128 die homes and orientation after rebind",
+    "Die ck_col and return clock ownership",
+    "Every native root <=80ps spread; old cr gate measured81.0ps",
+    "Native launch<=220 capture<=190; TT setup/FF hold>=0 and DRC0"
+  ]
+}

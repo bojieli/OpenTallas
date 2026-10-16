@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.behavioral_receipt.v1",
+  "source_commit": "c3be51165ceb8da09c5c8ed265abe30c8b7c462c",
+  "generated": "2026-10-16T02:58:25.653145-07:00",
+  "scope": "Component static x2-pair column ingress; not integrated native full-layer qualification",
+  "sha256": {
+    "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv": "dedf37e3e971b332dac3f73ed1d650283bfb858c3858c72aade6d7f3a657d4a3",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv": "ce4a1a1ae6c423478ea74f60d360c7f19e53757c30d159849097f2d79f549938",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv": "586c49f533b429c9fca1bebde92ce9f31b691b37a22959ba8f49d6ca4abcfe9b",
+    "rtl/dsrom_sys/s81_die_bind/test/tb_dsfd_cfifo_x2pair.sv": "f76b11cf4d0cd9d23338f5f1ef369b5688b91b6bce03ca15d506d509aa8238d8",
+    "tools/s81/cfifo_x2pair_gate.sh": "9ed482ea90b59b68726464fe83ed911e77897522e7b13b2fcea313a4b0901d1b"
+  },
+  "pass_phase_pairs": [
+    {
+      "pha": 2,
+      "phb": 2,
+      "words": 390,
+      "first": 1,
+      "offset_ps": 197000
+    },
+    {
+      "pha": 0,
+      "phb": 0,
+      "words": 390,
+      "first": 1,
+      "offset_ps": 197000
+    },
+    {
+      "pha": 3,
+      "phb": 4,
+      "words": 391,
+      "first": 1,
+      "offset_ps": 187000
+    },
+    {
+      "pha": 7,
+      "phb": 7,
+      "words": 391,
+      "first": 1,
+      "offset_ps": 187000
+    },
+    {
+      "pha": 9,
+      "phb": 8,
+      "words": 391,
+      "first": 1,
+      "offset_ps": 187000
+    }
+  ],
+  "mutants": [
+    {
+      "mode": "mut_payload",
+      "expected_exit": 1,
+      "observed_exit": 1,
+      "evidence": "CFIFO_X2 FAIL unrecognised first record t=207000"
+    },
+    {
+      "mode": "mut_valid",
+      "expected_exit": 1,
+      "observed_exit": 1,
+      "evidence": "CFIFO_X2 FAIL bad=220 words=390"
+    }
+  ],
+  "command_template": "bash tools/s81/cfifo_x2pair_gate.sh MODE /tmp/cfifo-recovery-0253/MODE",
+  "verdict": "PASS"
+}
