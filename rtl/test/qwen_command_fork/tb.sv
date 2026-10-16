@@ -1,12 +1,16 @@
 `timescale 1ns/1ps
 module tb;
-`ifdef OT_TEST_SELECTOR_FORK
+`ifdef OT_TEST_SELECTOR4_FORK
+ localparam integer WIDTH=4;
+`elsif OT_TEST_SELECTOR_FORK
  localparam integer WIDTH=26;
 `else
  localparam integer WIDTH=42;
 `endif
  reg ck=0,rst_n=0; reg[WIDTH-1:0]a=0;wire[WIDTH-1:0]b0,b1;
-`ifdef OT_TEST_SELECTOR_FORK
+`ifdef OT_TEST_SELECTOR4_FORK
+ qfd_static_selector_fork4 dut(.*);
+`elsif OT_TEST_SELECTOR_FORK
  qfd_static_selector_fork26 dut(.*);
 `else
  qfd_static_command_fork42 dut(.*);

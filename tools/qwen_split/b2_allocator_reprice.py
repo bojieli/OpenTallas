@@ -16,8 +16,9 @@ def main():
     ap.add_argument('--mode',choices=['baseline','b2'],required=True)
     ap.add_argument('--out',required=True,type=Path)
     ap.add_argument('--prepare-only',action='store_true')
+    ap.add_argument('--compact-selector',action='store_true',help='actual4used selector bits; requires new NL2 s4 source')
     ap.add_argument('--production',action='store_true',help='actual banked halftrain/controller/NB6VM interfaces; still unqualified candidate frames')
-    a=ap.parse_args(); NUP=8 if a.production else 4; QW=64 if a.production else 128; RW=192 if a.production else 384
+    a=ap.parse_args(); NUP=8 if a.production else 4; QW=64 if a.production else 128; RW=192 if a.production else 384;SEL_W=4 if a.compact_selector else 26;SEL='sel4'if a.compact_selector else'sel'
     a.out.mkdir(parents=True,exist_ok=True)
     import die_top_lint as D
     import qwen_rom_fulldie_b3r2 as G
@@ -61,7 +62,7 @@ def main():
     def alias(master,name,real,indices):aliases.setdefault(master,{})[name]=(real,list(indices));return name
     def add(name,n,src,dst):return(name,'tree_spine',n,[src,dst])
     if a.mode=='b2':
-        pm='qfd_port_half_b2';lm='qfd_sp_halfband_lanes_b2_l2'if a.production else'qfd_sp_halfband_lanes';um='qfd_band_upper_b2_l2'if a.production else'qfd_band_upper_b2'
+        pm='qfd_port_half_b2';lm='qfd_sp_halfband_lanes_b2_l2'if a.production else'qfd_sp_halfband_lanes';um=('qfd_band_upper_b2_l2_s4'if a.compact_selector else'qfd_band_upper_b2_l2')if a.production else'qfd_band_upper_b2'
         sm='qfd_res_train_half_b2'if a.production else'qfd_res_ser_half_b2'
         frame(pm,'rtl/qwen_split/qfd_port_half_b2.sv',1036.8,2462.4,
               lambda p:'W'if p.startswith('bw')else'S'if p in('cw0','ty')else'N'if p.startswith('ck')or p in('rst_n','rq')else'E')
@@ -69,7 +70,7 @@ def main():
               lambda p:'N'if p in('tw','ty')else'S'if p in('ck','rst_n')or p.startswith('ck_l')else'E')
         frame(sm,'rtl/qwen_split/qfd_res_train_half_b2.sv'if a.production else'rtl/qwen_split/qfd_res_ser_half_b2.sv',777.6,518.4 if a.production else 324.,
               lambda p:'S'if p=='rq'else'N'if p.startswith('ck')or p=='rst_n'else'E')
-        frame(um,'rtl/qwen_split/qfd_band_upper_b2_l2.sv'if a.production else'rtl/qwen_split/qfd_band_upper_b2.sv',86.4,205.2 if a.production else 410.4,
+        frame(um,('rtl/qwen_split/qfd_band_upper_b2_l2_s4.sv'if a.compact_selector else'rtl/qwen_split/qfd_band_upper_b2_l2.sv')if a.production else'rtl/qwen_split/qfd_band_upper_b2.sv',86.4,205.2 if a.production else 410.4,
               lambda p:'W'if p in('pw','pw_v','lf')else'N'if p in('clk','rst_n')else'E')
         # Exact numeric aliases; no centroid stand-ins for missing pin groups.
         alias(pm,'cw_data','cw0',range(2048))
@@ -214,7 +215,8 @@ def main():
             for u in range(NUP):
                 alias(cm,f'uf_l{u}','uf',[u])
                 newdata.append(add(f'b2_uf{u}',1,(f'tt_up4_leaf{u}','fault'),('tt_ctlm',f'uf_l{u}')))
-            newdata.append(('b2_selector','tree_spine',26,[('tt_ctlm','sel')]+[(f'tt_up4_leaf{u}','sel')for u in range(NUP)]))
+            if a.compact_selector:alias(cm,SEL,'sel',[10,11,23,24])
+            newdata.append(('b2_selector','tree_spine',SEL_W,[('tt_ctlm',SEL)]+[(f'tt_up4_leaf{u}',SEL)for u in range(NUP)]))
             from qwen_split.command_distribution import FIELDS
             for f,n in FIELDS:
                 newdata.append((f'b2_rsi_{f}','spine_local',n,[('res_train_issue',f)]+[(ser_by[hb].name,f)for hb in range(6)]))
@@ -286,12 +288,13 @@ def main():
         # Existing selector bundle is a wire concatenation of two distinct
         # source ports, not a new unregistered control input.
         uq=M[um]
-        if any(p=='sel' for bid,cl,n,es in data for i,p in es if i in leaves):
+        if any(p==SEL for bid,cl,n,es in data for i,p in es if i in leaves):
             xy=[]
             for real in ('sel_e','tv_e'):
                 sp=uq.ports[real]
                 xy.extend([((uq.w-.096)if sp[2]=='E'else .096,z)for z in sp[4]])
-            uq.ports['sel']=('xy',26,'M4',xy,1);uq.order.append('sel')
+            uq.ports[SEL]=('xy',SEL_W,'M4',xy,1);uq.order.append(SEL)
+            m.setdefault('port_split',{}).setdefault(um,{})[SEL]=[['sel_e',SEL_W//2],['tv_e',SEL_W//2]]
         for mn,aa in aliases.items():
             # Partition real pin rectangles into exact numeric fragments.
             q=M[mn];rects=v.pin_rects(q,1,{p:sp[1]for p,sp in q.ports.items()})
@@ -304,7 +307,7 @@ def main():
     if a.mode=='b2'and a.production:
         from qwen_split.command_distribution import apply as distribute,install_master as install_fork
         distribute(m,[ser_by[hb].name for hb in range(6)])
-        distribute(m,[f'tt_up4_leaf{u}'for u in range(NUP)],issuer='tt_ctlm',fielddefs=(('sel',26),),master='qfd_static_selector_fork26',source_file='rtl/qwen_split/qfd_static_selector_fork26.sv',prefix='selector',clock_port='ck_tree',reset_port='rsi')
+        distribute(m,[f'tt_up4_leaf{u}'for u in range(NUP)],issuer='tt_ctlm',fielddefs=((SEL,SEL_W),),master=f'qfd_static_selector_fork{SEL_W}',source_file=f'rtl/qwen_split/qfd_static_selector_fork{SEL_W}.sv',prefix='selector',clock_port='ck_tree',reset_port='rsi')
         install_fork(M,m,v.Master,v.pin_rects)
         data=[bb for bb in m['buses']if bb[1]not in('clock_trunk','reset')]
     original_bids={b[0] for b in m['buses']}
@@ -344,7 +347,7 @@ def main():
             for name,p in es:
                 if name!=inst.name:continue
                 if p in aliases.get(inst.master,{}):real,idx=aliases[inst.master][p]
-                elif p=='sel'and 'sel_e'in actual:
+                elif p in('sel','sel4')and 'sel_e'in actual:
                     for rp in ('sel_e','tv_e'):covered[rp].update(range(actual[rp][0]))
                     continue
                 elif p in actual:real,idx=p,range(actual[p][0])
