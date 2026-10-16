@@ -3,7 +3,7 @@
 ranked top-down from a throughput target, timed on the batched verify compiler (hgi_sim.ds_mtp_verify) with the
 command processor modelled (timing.schedule S2, per layer segment).
 
-TARGET (stated basis): >= 3,500 tok/s MTP at 1M context, tau 4.159 (DSpark gamma 5, owner 6-class blend; the DS ROM
+EXPLORATORY SCREEN (not an adopted owner target or a measured token rate): >= 3,500 tok/s MTP at 1M context, tau 4.159 (DSpark gamma 5, owner 6-class blend; the DS ROM
 basis), 1.2 GHz: one DSpark step <= tau x 1.2e9 / 3,500 = 1,426,029 cycles.  3,500 = 1.74 x the same die's AR
 (2,010 tok/s, option B attention on the SM engines, same program and price table): MTP must pay at least the
 accepted-cost ledger's worth over AR (owner: MTP is required and paying) with margin for the unpriced 4-PC service /
@@ -55,9 +55,13 @@ CURRENT_MEASURED = {
     "COLL.TOPK_MERGE": (1.057, "coll/tkm_tput_480f631d5.json"),
 }
 
-# one extra block-dot MAC set on every SM: 8 columns x 4 ot_gpu_bd_col (LB 2) a SM, results/physical_abi3/asap7/gpu/
-# ot_gpu_bd_col_lb2_092/physical.json 5,474 um2 routed std cells -> 9,123 um2 at 0.6 utilisation; 32 SMs
-BDSET = 32 * 32 * 5473.54 / 0.6 / 1e6
+# Extra block-dot area floor from the ACTUAL closed HBM BDC outline, not the
+# smaller GPU master's std-cell estimate. IL24 feedback and slot/control/storage
+# changes remain unmeasured, so this is only a floor for new K2 hardware.
+BDC_LEF = ROOT / "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc.lef"
+BDC_LEF_SHA256 = "7973c9cd767a352f893c6215fd221b7f762de5f4b6f6a4b7e4dc24fa893fd749"
+assert hashlib.sha256(BDC_LEF.read_bytes()).hexdigest() == BDC_LEF_SHA256, "BDC outline evidence changed"
+BDSET = 32 * 32 * 112.32 * 142.56 / 1e6
 # item: (owner, change, area_mm2 estimate, area basis, config delta)
 ITEMS = {
     "COLL": ("H-COLL", "COLL.ROW_GATHER / TOPK_MERGE / kv_gather / ARGMAX_MERGE take R = P rows: one message train of "
@@ -92,15 +96,15 @@ ITEMS = {
                 dict(sm_mode="slots", sm_k=1)),
     "SM_K2": ("H-SM", "SM MAC slot sets k = 2 (the P-slot port of HGI-1 spec 6.7 at 2 slots a pass): ceil(6 / 2) = 3 "
               "passes, 3 / 1.374 of the HBM-bound line time",
-              BDSET * 1 + 0.32, "1 more block-dot set a SM (32 ot_gpu_bd_col LB2 at 9,123 um2 = 5,474 um2 std cells "
-              "routed / 0.6) x 32 SMs + the line hold -- ESTIMATE from the routed bd_col, H-SM to measure",
+              BDSET * 1 + 0.32, "1 more block-dot set a SM: 32 actual closed HBM BDC outlines 112.32x142.56um "
+              "x32 SMs plus estimated line hold. FLOOR ONLY; IL24 accumulation and slots/control/storage unmeasured",
               dict(sm_mode="slots", sm_k=2, att_k=2)),
     "SM_K3": ("H-SM", "SM MAC slot sets k = 3 (spec 6.7 P-slot port at 3 slots a pass): ceil(6 / 3) = 2 passes, "
               "2 / 1.374 of the HBM-bound line time",
-              BDSET * 2 + 0.32, "2 more block-dot sets a SM (same basis) -- ESTIMATE, H-SM to measure",
+              BDSET * 2 + 0.32, "2 more block-dot sets a SM (same closed HBM outline floor); new contexts/control/storage unmeasured",
               dict(sm_mode="slots", sm_k=3, att_k=3)),
     "SM_K6": ("H-SM", "SM MAC slot sets k = 6 (one pass, spec 6.7 'issue unchanged')",
-              BDSET * 5 + 0.32, "5 more block-dot sets a SM (same basis) -- ESTIMATE",
+              BDSET * 5 + 0.32, "5 more block-dot sets a SM (same closed HBM outline floor); new contexts/control/storage unmeasured",
               dict(sm_mode="slots", sm_k=6, att_k=6)),
     "VM": ("H-DIE", "VM +150k words: the P verify columns' h / PRE resident (no per-layer column swap)",
            0.9, "+150k x 32 b SRAM at the VM's 1.5 mm2 / 256k-word density",
@@ -263,6 +267,8 @@ def main():
         minimal.append(dict(items=list(st), area_mm2=round(sum(ITEMS[i][2] for i in st), 2), fixed=f_, sens_current=s_))
     meet = sorted([m_ for m_ in minimal if m_["fixed"]["mtp_tok_s"] >= TARGET], key=lambda m_: m_["area_mm2"])
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_rows.v1",
+               area_scope="unqualified_floor_plus_estimates; no_integrated_fit_or_MTP_rate_claim",
+               bdc_outline=dict(path=str(BDC_LEF.relative_to(ROOT)), sha256=BDC_LEF_SHA256, width_um=112.32, height_um=142.56, extra_set_mm2=BDSET),
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                target=dict(tok_s=TARGET, step_cycles_max=round(V.TAU * V.CLK / TARGET), basis=__doc__.split("ITEMS")[0]),
                tau=V.TAU, P=P, clock_hz=V.CLK, position=V.DT.POS,
