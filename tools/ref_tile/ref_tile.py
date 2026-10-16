@@ -701,6 +701,10 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+# PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
+# view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
+# require MIN_SPREAD + PG_SPREAD_MARGIN; child_lint itself keeps 0.50.
+PG_SPREAD_MARGIN = 0.02
 
 
 def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
@@ -756,7 +760,7 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
 
 
 def pg_spread_ok(rec) -> bool:
-    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] >= PG_MIN_SPREAD + PG_SPREAD_MARGIN)
 
 
 def blocks_of(s: dict) -> list:
