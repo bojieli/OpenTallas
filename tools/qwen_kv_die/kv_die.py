@@ -246,6 +246,15 @@ HGS, HSS = (324.0, 21.6), (21.6, 21.6)
 # two 259.2-um side relay channels, PV_TREE below).  Centred in the 1,693.46-um centre column: >= 259.2 relay channel on
 # both sides.  The frames are hard keep-outs for the relay allocator (no relay frame inside an envelope).
 V144 = __import__('os').environ.get('OT_KV_V144', '0') == '1'
+# KVDIE 2026-10-16 (kvs13d, coordinator): OT_KV_V144_R6=1 binds the CLOSED qkd_pv16_vport r6 (DQ 0 / RT 8; the V word's epoch
+# travels with it: in<g>_epoch -> out_epoch -> the pair's in_epoch[16k +: 16]) behind the epoch-carrying pair face
+# qkd_pvw_die_e, and EQUALISES the die relay edges W = WP + O of all 16 ports to OT_KV_PV_W (default 59, the r6 bench's
+# measured W) by extra registered stages on the 15-bit request word (cheapest side) -> RL = 4 + W + DQ + RT, pair
+# FIRST_INPUT_AGE = RL + 1 (OT_KV_PV_AGE overrides the pair parameter; default = the bound ctl view's 20 until a closed
+# FIRST_INPUT_AGE = RL + 1 ctl view exists -- recorded in plan pv144.vport_timing.age).
+V144_R6 = V144 and __import__('os').environ.get('OT_KV_V144_R6', '0') == '1'
+PV_W = int(__import__('os').environ.get('OT_KV_PV_W', '59'))
+PV_AGE = int(__import__('os').environ.get('OT_KV_PV_AGE', '20'))
 # 'ahub' (default): the attention hub moves SOUTH by the north shortfall (rounded up to the 43.2-um band lattice) while the
 # south envelope still fits; any remainder grows the die height (north band = embgw and everything above it rises).
 # 'grow': the hub stays, the die height grows by the whole shortfall (the coordinator's decision-2 baseline).
@@ -343,7 +352,11 @@ def pv_vport_timing(m):
                 RT_range=[min(rt_), max(rt_)], RT_assumed_landing_only=not any('RT' in r_ for r_ in rows.values()),
                 worst_WP_plus_O_plus_RT=worst, RL_needed_DQ0=4 + worst, kit=dict(RL=19, WP=2, RT=8),
                 note='all 16 ports must see the same RL: shorter ports take DQ = RL - 4 - WP - RT - O (per-port value); '
-                     'the r5 kit DQ formula omits O (vport -> pair relays)')
+                     'the r5 kit DQ formula omits O (vport -> pair relays)',
+                **(dict(r6=dict(W_target=PV_W, W=sorted({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}),
+                                W_equal=len({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}) == 1,
+                                RL=4 + PV_W + 0 + 8, age_needed=4 + PV_W + 0 + 8 + 1, age_bound=PV_AGE,
+                                age_ok=PV_AGE == 4 + PV_W + 0 + 8 + 1)) if V144_R6 else {}))
 
 
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
@@ -478,11 +491,14 @@ SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_
 # epoch: the r5 vport carries none).  Outputs without a die consumer yet: out_* / fault / busy / out_age (finalize face).
 for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
     SPLIT_BINDINGS[_mn] = dict(module='qkd_pvw_die', file='rtl/qwen_sys/split_20261014/qkd_pvw_die.sv',
-        parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=1, FIRST_INPUT_AGE=20, MUT=0),
-        ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'], iep=['in_epoch'],
+        parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=1, FIRST_INPUT_AGE=PV_AGE if V144_R6 else 20, MUT=0),
+        ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'],
+                   **({} if V144_R6 else dict(iep=['in_epoch'])),
                    **{f'vin{k}': [f'vin{k}'] for k in range(8)}, **{f'vrq{k}': [f'vrq{k}'] for k in range(8)},
                    po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age']),
         sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)}, classed={})
+    if V144_R6:
+        SPLIT_BINDINGS[_mn].update(module='qkd_pvw_die_e', file='rtl/qwen_sys/split_20261014/qkd_pvw_die_e.sv')
 # v1.4.4 PV16 V ports (Q-VMWB r5 = the V ISSUER, kit physical/ref_tile/qkd_pv16_vport_r5): pr = the pair's request for this
 # port, vq0 / vq1 = V gets to static landing groups {k, 0} / {k, 1}, i0 / i1 = those groups' rsp words, vo -> the pair.
 # RL / WP / RT are the kit's (19 / 2 / 8); the die's measured relay depths are recorded in plan pv144.vport_timing.
@@ -491,6 +507,11 @@ SPLIT_BINDINGS['qkd_pv16_vport'] = dict(module='qkd_pv16_vport', file='rtl/qwen_
     ports=dict(ck=['ck'], rst_n=['rst_n'], pr=['pr_valid', 'pr_t'], vq0=['vq0_valid', 'vq0_t'], vq1=['vq1_valid', 'vq1_t'],
                i0=['in0_valid', 'in0_vflag', 'in0_t', 'in0_d'], i1=['in1_valid', 'in1_vflag', 'in1_t', 'in1_d'],
                vo=['out_valid', 'out_t', 'out_v_lo', 'out_v_hi'], f=['fault']), classed={})
+if V144_R6:
+    SPLIT_BINDINGS['qkd_pv16_vport'].update(parameters=dict(MUT=0, DQ=0, RT=8), ports=dict(
+        ck=['ck'], rst_n=['rst_n'], pr=['pr_valid', 'pr_t'], vq0=['vq0_valid', 'vq0_t'], vq1=['vq1_valid', 'vq1_t'],
+        i0=['in0_valid', 'in0_vflag', 'in0_t', 'in0_epoch', 'in0_d'], i1=['in1_valid', 'in1_vflag', 'in1_t', 'in1_epoch', 'in1_d'],
+        vo=['out_valid', 'out_t', 'out_epoch', 'out_v_lo', 'out_v_hi'], f=['fault']))
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
     ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
@@ -1494,7 +1515,7 @@ def _pv144_buses(m, add):
         for k in range(4):
             vp, wp = f'vport_{st}_{k}', k + (4 if st[0] == 'E' else 0)
             add((f'pvrq_{st}_{k}', 'kv_oneway', 15, [(pv_, f'vrq{wp}'), (vp, 'pr')]))
-            add((f'pvin_{st}_{k}', 'kv_oneway', 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
+            add((f'pvin_{st}_{k}', 'kv_oneway', 1055 if V144_R6 else 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
             for g in (0, 1):
                 sg = f'slg_{st}_{2 * k + g}'
                 if sg not in names:
@@ -1505,7 +1526,7 @@ def _pv144_buses(m, add):
                         m['buses'][i_] = (bid, cl, bits, list(eps) + [(vp, f'i{g}')])   # rsp: K consumer + this port
                         break
                 else:
-                    add((f'pvrs_{st}_{k}_{g}', 'kv_oneway', 1040, [(sg, 'rsp'), (vp, f'i{g}')]))
+                    add((f'pvrs_{st}_{k}_{g}', 'kv_oneway', 1056 if V144_R6 else 1040, [(sg, 'rsp'), (vp, f'i{g}')]))
 
 
 def _buses(m, T, r):
@@ -2043,6 +2064,8 @@ def _relays(m):
             pri_ = [p_ for p_ in __import__('os').environ.get('OT_KV_V144_RLY_FIRST', 'krs_').split(',') if p_]
             order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi',
                                         not any(b_[0].startswith(p_) for p_ in pri_)))
+            if V144_R6:   # kvs13d: every V port's return word is planned first; its request word is then padded to W
+                order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'),))
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -2160,6 +2183,10 @@ def _relays(m):
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(prev_pt, b, pb)
         st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path, wide=bid in tree_meta)
+        if V144_R6 and bid.startswith('pvrq_'):
+            # kvs13d: WP = PV_W - O; spread over the path (hop <= length / (WP + 1)), the rest padded at the V port end
+            st_['min_k'] = max(0, PV_W - stages.get('pvin_' + bid[5:], 0))
+            st_['wide'] = True
         offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 11) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
                                 if max(abs(i), abs(j)) == r_]
         if bid in tree_meta:      # v1.4.2: a 1-bit tree hop may sit up to 24 grid cells off its path
@@ -2184,6 +2211,10 @@ def _relays(m):
         def reach_():
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
             # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
+            if st_.get('min_k'):
+                if 'pad_reach' not in st_:
+                    st_['pad_reach'] = max(4 * G, min(PIN_REACH, remaining_() / (st_['min_k'] + 1)))
+                return st_['pad_reach']
             if HOP:
                 fr_ = FIRST_REACH.get(bid.rsplit('_', 2)[0], HOP_FIRST.get(bid.split('_')[0], HOP_REACH))
                 return min(fr_, HOP_REACH) if st_['prev_pt'] is None else HOP_REACH
@@ -2193,12 +2224,14 @@ def _relays(m):
 
         def chain_():
             path_ = st_['path']
-            while remaining_() > (TREE_LAST if bid in tree_meta else reach_()):
+            while remaining_() > (TREE_LAST if bid in tree_meta else reach_()) or st_['k'] < st_.get('min_k', 0):
                 got = None
                 prev_pt_, idx0_ = st_['prev_pt'], st_['idx0']
                 rch = reach_()
                 # the farthest path point (from the previous chain point) with a free spot within reach
                 idxs = list(range(min(len(path_) - 1, idx0_ + int(rch // G) + 2), idx0_, -1))
+                if not idxs and st_.get('min_k'):
+                    idxs = [len(path_) - 1]          # kvs13d request padding: further stages beside the V port
                 at_end = bid in tree_meta and not idxs
                 if at_end:
                     idxs = [len(path_) - 1]          # at the path end: spots around the leader itself

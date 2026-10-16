@@ -26,7 +26,8 @@ if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
 # v1.4.4 (OT_KV_V144=1, read by kv_die.py; needs OT_KV_V143C=1): PV16 wide pairs in the centre spine (closed r5 leaves placed
 # by kv_expand) + the 16 V ports qkd_pv16_vport bound to their closed view (r5, the V issuer)
 if [ "${OT_KV_V144:-0}" = 1 ]; then
-  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-qkd_pv16_vport_r5}/views/qkd_pv16_vport
+  VPK=qkd_pv16_vport_r5; [ "${OT_KV_V144_R6:-0}" = 1 ] && VPK=qkd_pv16_vport_r6   # kvs13d: r6 (DQ 0 / RT 8, epoch on the V word)
+  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-$VPK}/views/qkd_pv16_vport
   [ -f $VP/qkd_pv16_vport.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
   BV="$BV --view qkd_pv16_vport=$VP"
 fi
