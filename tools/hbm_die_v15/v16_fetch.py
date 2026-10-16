@@ -21,6 +21,32 @@ tops = re.findall(r'^hierarchy -check -top (\S+)\s*$', ys, re.M)
 if tops != [wrap]:
     raise ValueError(f"Wrong synthesized top: {tops}; expected parameter wrapper {wrap}")
 inputs = sorted({shlex.split(l)[-1] for l in ys.splitlines() if l.startswith('read_verilog ')})
+# Source includes participate in the hardware just as read_verilog inputs do.
+# Existing launchers have no -I options; refuse unknown search paths rather than
+# claiming source closure using a guessed compiler resolution.
+if any(tok.startswith('-I') for line in ys.splitlines() if line.startswith('read_verilog ')
+       for tok in shlex.split(line)):
+    raise ValueError('Include search options require explicit source-resolution proof')
+pending, consumed = list(inputs), set()
+while pending:
+    path = pending.pop()
+    if path in consumed:
+        continue
+    consumed.add(path)
+    text = open(f'{src}/{path}').read()
+    text = re.sub(r'/\*.*?\*/|//[^\n]*', '', text, flags=re.S)
+    for include in re.findall(r'^\s*`include\s+([^\n]+)', text, re.M):
+        literal = re.fullmatch(r'"([^"\n]+)"\s*', include)
+        if not literal:
+            raise ValueError(f'Nonliteral include requires preprocessor proof: {path}: {include}')
+        name = literal.group(1)
+        candidates = {os.path.normpath(p) for p in (os.path.join(os.path.dirname(path), name), name)
+                      if not os.path.isabs(p) and not os.path.normpath(p).startswith('../')
+                      and os.path.isfile(os.path.join(src, p))}
+        if len(candidates) != 1:
+            raise ValueError(f'Missing/ambiguous include in {path}: {name}: {sorted(candidates)}')
+        pending.extend(candidates)
+inputs = sorted(consumed)
 input_hashes = {p: hashlib.sha256(open(f'{src}/{p}', 'rb').read()).hexdigest() for p in inputs}
 etm_scripts = {}
 for corner in ('tt', 'ff'):

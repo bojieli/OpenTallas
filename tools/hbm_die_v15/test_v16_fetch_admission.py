@@ -23,8 +23,9 @@ class FetchAdmission(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); d = root / 'syn' / 'cell'; d.mkdir(parents=True)
             src = root / 'src'; (src / 'v16w').mkdir(parents=True)
-            wrapper = b'module parameter_wrapper; endmodule\n'
+            wrapper = b'`include "coeff.svh"\nmodule parameter_wrapper; endmodule\n'
             (src / 'v16w' / 'wrapper.sv').write_bytes(wrapper)
+            (src / 'v16w' / 'coeff.svh').write_bytes(b'// exact consumed include\n')
             (d / 'cell.ys').write_text('read_verilog -sv v16w/wrapper.sv\nhierarchy -check -top parameter_wrapper\n')
             (d / 'cell.stat').write_text("Chip area for top module 'parameter_wrapper': 12.5\n")
             (d / 'cell.files.json').write_text(json.dumps({'macros': []}))
@@ -33,12 +34,24 @@ class FetchAdmission(unittest.TestCase):
             m = json.loads(r.stdout)
             self.assertEqual(m['actual_top'], 'parameter_wrapper')
             self.assertEqual(m['source_file_sha256']['v16w/wrapper.sv'], hashlib.sha256(wrapper).hexdigest())
+            self.assertEqual(m['source_file_sha256']['v16w/coeff.svh'],
+                             hashlib.sha256(b'// exact consumed include\n').hexdigest())
             (root / 'views' / 'wrap').mkdir(parents=True)
             (root / 'views' / 'wrap' / 'wrapper.sv').write_bytes(wrapper)
+            (root / 'views' / 'wrap' / 'coeff.svh').write_bytes(b'// exact consumed include\n')
             check_sources(m, 'HEAD', root / 'views')
+            (root / 'views' / 'wrap' / 'coeff.svh').write_bytes(b'// changed include\n')
+            with self.assertRaisesRegex(ValueError, 'Parameter wrapper mismatch'):
+                check_sources(m, 'HEAD', root / 'views')
+            (root / 'views' / 'wrap' / 'coeff.svh').write_bytes(b'// exact consumed include\n')
             (root / 'views' / 'wrap' / 'wrapper.sv').write_bytes(wrapper + b'// different parameters\n')
             with self.assertRaisesRegex(ValueError, 'Parameter wrapper mismatch'):
                 check_sources(m, 'HEAD', root / 'views')
+            (src / 'coeff.svh').write_bytes(b'// ambiguous current-directory include\n')
+            r = subprocess.run([sys.executable, '-c', REMOTE_PY, tmp, str(src), 'cell', 'parameter_wrapper'],
+                               capture_output=True, text=True)
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn('Missing/ambiguous include', r.stderr)
 
     def test_modified_snapshot_source_is_rejected(self):
         path = 'tools/hbm_die_v15/synth_master.sh'
