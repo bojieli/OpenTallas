@@ -4,13 +4,14 @@
 module tb_controller_calendar_native;
  parameter integer MUT=0;
  reg ck=0;always #0.512 ck=~ck;
+ integer pc_id=13;
  reg rn=0,we=0,seal=0,go=0;reg[5:0]layer=0;reg[15:0]epoch_in=100;reg[4:0]addr=0;reg[63:0]data=0;
  wire owner,rd,sr,wr,raw,calfault,idle;wire[42:0]cmd;wire[15:0]epoch;
  qkd_controller_hbm_calendar #(.MUT(MUT))cal(ck,rn,we,addr,data,seal,go,epoch_in,layer,owner,cmd,rd,sr,wr,epoch,raw,calfault,idle);
  wire [327:0]po;wire[293:0]co;wire[260:0]er;wire fault,cf;wire[15:0]oe;
  reg[288:0]pi=0;
  qkd_ctrl_pc_host_static #(.PROFILE(0),.ELASTIC(1),.RAW_WD(256),.TQD(64))dut(
- .pll_hbm(ck),.hrst(rn),.ck(ck),.rsi(rn),.pc(5'd13),.ci(319'b0),.co(co),.es(288'b0),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
+ .pll_hbm(ck),.hrst(rn),.ck(ck),.rsi(rn),.pc(5'(pc_id)),.ci(319'b0),.co(co),.es(288'b0),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
  .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(rd),.reserved_static_col(sr),.reserved_write_col(wr),.static_epoch(epoch),.expected_raw_valid(raw),
  .cfg_stack(2'b0),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),
  .native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(oe),.completion_v(),.completion_we(),.completion_fault(cf),.idle_core(),.idle_hbm(),.drain_fault_core(),.drain_fault_hbm());
@@ -26,7 +27,8 @@ module tb_controller_calendar_native;
  integer edge_num=0,reads=0,landed=0,last_arrival=0,jitter=0,origin=-100000,relative_edge,frame_reads=0,frame_landed=0;
  string image_path,expect_path;
  initial begin
- void'($value$plusargs("JITTER=%d",jitter));
+ void'($value$plusargs("JITTER=%d",jitter));void'($value$plusargs("PC=%d",pc_id));
+ if(pc_id<0||pc_id>31)$fatal(1,"invalid PC strap");
  if(!$value$plusargs("IMAGE=%s",image_path))$fatal(1,"missing compiled image");
  if(!$value$plusargs("EXPECT=%s",expect_path))$fatal(1,"missing independent slot image");
  $readmemh(expect_path,expected_rd);$readmemh(image_path,image);for(integer j=0;j<100001;j++)due[j]=0;for(integer j=0;j<32;j++)openrow[j]=-1;
@@ -40,7 +42,7 @@ module tb_controller_calendar_native;
  if(frame_reads!=512||frame_landed!=512)$fatal(1,"FAIL native calendar frame%0d reads%0d landed%0d",l,frame_reads,frame_landed);
  end
  if(reads!=18432||landed!=18432)$fatal(1,"FAIL native calendar count reads%0d landed%0d",reads,landed);
- $display("PASS native controller calendar PROFILE0 frames=36 reads=%0d landed=%0d jitter=%0d",reads,landed,jitter);$finish;
+ $display("PASS native controller calendar PROFILE0 frames=36 reads=%0d landed=%0d jitter=%0d pc=%0d",reads,landed,jitter,pc_id);$finish;
  end
  always @(posedge ck)begin
  edge_num++;if(go)origin=edge_num;relative_edge=edge_num-origin;

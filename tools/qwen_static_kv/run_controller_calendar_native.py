@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,subprocess
 from pathlib import Path
 from controller_calendar_image import Run,compile_image
 ROOT=Path(__file__).resolve().parents[2]
-a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--binary',type=Path);a.add_argument('--mutant',type=int,default=0,choices=(0,1,2));x=a.parse_args();out=x.out.resolve();out.mkdir(parents=True,exist_ok=True)
+a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--binary',type=Path);a.add_argument('--pcs',default='13');a.add_argument('--mutant',type=int,default=0,choices=(0,1,2));x=a.parse_args();out=x.out.resolve();out.mkdir(parents=True,exist_ok=True)
 runs=[Run(10,command=(256<<20)|1,layer_row=True),Run(80,command=(1<<31)|1),Run(120,256,8,2,mask=1),Run(600,command=(512<<33)|(768<<20)|1,layer_row=True),Run(700,command=(1<<31)|1),Run(1000,256,8,3,mask=1)]
 z=compile_image(runs,deadline=1800);
 expected_rd=[0]*4096
@@ -18,11 +18,13 @@ if not x.binary:
  with(out/'build.log').open('w')as log:subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=True)
 binary=x.binary.resolve()if x.binary else obj/'Vtb_controller_calendar_native'
 results=[]
-for jit in(0,8,16):
- p=subprocess.run([str(binary),f'+IMAGE={out}/image.hex',f'+JITTER={jit}',f'+EXPECT={out}/expected_rd.hex'],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
- (out/f'run{jit}.log').write_text(p.stdout);results.append(dict(jitter=jit,exit=p.returncode,output=p.stdout[-1000:]))
+pcs=[int(t)for t in x.pcs.split(',')]
+if not pcs or any(not 0<=pc<=31 for pc in pcs):raise ValueError('invalid physical PC strap list')
+for pc,jit in((pc,jit)for pc in pcs for jit in(0,8,16)):
+ p=subprocess.run([str(binary),f'+IMAGE={out}/image.hex',f'+JITTER={jit}',f'+EXPECT={out}/expected_rd.hex',f'+PC={pc}'],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+ (out/f'pc{pc}_run{jit}.log').write_text(p.stdout);results.append(dict(pc=pc,jitter=jit,exit=p.returncode,output=p.stdout[-1000:]))
  if p.returncode:break
-receipt=dict(scope='actual PROFILE0/ELASTIC1 controller; compiler fixed K256+V256; PHY only modeled; 36 persistent layer rows/epochs; no host writes/all128PC/native die',source_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in files},results=results,image_sha256=hashlib.sha256((out/'image.hex').read_bytes()).hexdigest(),compiler_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in ('tools/qwen_static_kv/controller_calendar_image.py','tools/qwen_static_kv/run_controller_calendar_native.py')},binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),native_full_layer=False)
+receipt=dict(scope='actual PROFILE0/ELASTIC1 controller; compiler fixed K256+V256; PHY only modeled; 36 persistent layer rows/epochs; no host writes/all128PC/native die',source_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in files},results=results,mutant_parameter=x.mutant,physical_pc_straps=pcs,image_sha256=hashlib.sha256((out/'image.hex').read_bytes()).hexdigest(),compiler_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in ('tools/qwen_static_kv/controller_calendar_image.py','tools/qwen_static_kv/run_controller_calendar_native.py')},binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),native_full_layer=False)
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
 
 if x.mutant:

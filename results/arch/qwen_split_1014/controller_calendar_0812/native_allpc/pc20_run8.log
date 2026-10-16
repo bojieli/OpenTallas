@@ -1,0 +1,5 @@
+PASS native controller calendar PROFILE0 frames=36 reads=18432 landed=18432 jitter=8 pc=20
+- /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_calendar_native.sv:45: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 92us; walltime 2.053 s; speed 45.002 us/s
+- Verilator: cpu 2.050 s on 1 threads; allocated 10 MB
