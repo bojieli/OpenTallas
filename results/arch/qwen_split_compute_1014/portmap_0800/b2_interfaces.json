@@ -1,0 +1,121 @@
+{
+  "status": "SOURCE_INTERFACE_WIP_NOT_PHYSICALLY_QUALIFIED",
+  "ordering": [
+    "W0",
+    "E0",
+    "W1",
+    "E1",
+    "W2",
+    "E2"
+  ],
+  "port": {
+    "master": "qfd_port_half_b2",
+    "source": "rtl/qwen_split/qfd_port_half_b2.sv",
+    "count": 6,
+    "parameters": "No synthesizable variant: hb=2*band+half captured strap. ROM_BAND/ROM_HALF name masks in simulation only; synthesis has actual physical ROM macros.",
+    "inputs": {
+      "bw0..bw7": 514,
+      "tc": 341,
+      "ty": 2048,
+      "hb": 3
+    },
+    "outputs": {
+      "cw0": 2050,
+      "rq": 2213,
+      "am": 52
+    },
+    "clock_entries": "ck,ck_bw0..7,ck_pair0..3,ck_col0..15,ck_mul0..15,ck_group0..3",
+    "outline": "candidate1036.8x2462.4 from die owner; new source needs views",
+    "status": "cw0[2048]=native valid, [2049]=native fault. local sticky word fault folded into am[51] with registered am station (+1); central cross-half valid check pending. Source-specific qfd_b2_word_status added, real die wiring/padding remains pending."
+  },
+  "halfband": {
+    "master": "qfd_sp_halfband_lanes",
+    "source": "rtl/physical/ot_qwen_halfband_lanes_slots.sv",
+    "count": 6,
+    "inputs": {
+      "tw": 2048,
+      "c": 26,
+      "tt": 1538,
+      "b0": 1,
+      "lnk": 6
+    },
+    "outputs": {
+      "pw": 513,
+      "pw_l0..pw_l3": 129,
+      "f_up": 4,
+      "ty": 2048,
+      "f": 1
+    },
+    "clock_entries": "ck,ck_l0..15",
+    "outline": "candidate881.28x648 from die owner; new views required"
+  },
+  "upper": {
+    "master": "qfd_band_upper_b2",
+    "source": "rtl/qwen_split/qfd_band_upper_b2.sv",
+    "count": 4,
+    "inputs": {
+      "pw": 768,
+      "pw_v": 6,
+      "lf": 6,
+      "sel_e": 13,
+      "tv_e": 13
+    },
+    "outputs": {
+      "tt_ty": 384,
+      "tt_use": 1,
+      "tt_v": 1,
+      "fault": 1
+    },
+    "clock_entries": "clk",
+    "parameters": {
+      "NL": 4,
+      "NB": 6,
+      "TCUT": 6,
+      "LG": 12,
+      "RPIN": 1
+    },
+    "outline": "candidate86.4x410.4 from die owner; new views required"
+  },
+  "serializer": {
+    "master": "qfd_res_ser_half_b2",
+    "source": "rtl/qwen_split/qfd_res_ser_half_b2.sv",
+    "count": 6,
+    "inputs": {
+      "rq": 2213,
+      "me_en": 1
+    },
+    "outputs": {
+      "rb": 551,
+      "fault": 1
+    },
+    "clock_entries": "ck",
+    "calendar": "D+4*HB+j; j0..3; HB5 slot3 end; 24-edge span",
+    "outline": "candidate777.6x324 from die owner; new views required"
+  },
+  "graph": [
+    "Each original bword terminates same-side port bw0..7",
+    "cw0 data[2047:0] -> local halfband tw; cw0 upper status remains fault/control audit",
+    "Halfband h pw_lu[127:0] -> upper u pw[128*h+:128]; pw_lu[128] -> pw_v[h]; f_up[u] -> lf[h]",
+    "Upper u tt_ty distributes quarter lanes to halfband0 tt only, upper use/v duplicated per quarter as existing tree",
+    "local halfband ty -> same-side port ty",
+    "port rq -> same-side serializer rq",
+    "six serializer rb -> six independent VM result sources, statically disjoint; VM source pending",
+    "tt_ctlm tc duplicated to W/E, half am routed separately; controller source pending"
+  ],
+  "costs": "No actual allocator price yet. Existing 0bits/64stages and0.3..0.6mm2 are geometric estimates only.",
+  "status_collector": {
+    "master": "qfd_b2_word_status",
+    "source": "rtl/qwen_split/qfd_b2_word_status.sv",
+    "count": 1,
+    "inputs": {
+      "word_v": 6,
+      "word_fault": 6
+    },
+    "outputs": {
+      "fault": 1
+    },
+    "clock_entries": "ck",
+    "required_schedule": "Actual cw0 status links padded to same source-event edge by compiler; fault route to controller still pending source integration",
+    "outline": "unassigned tiny new leaf"
+  }
+}
