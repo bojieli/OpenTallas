@@ -91,7 +91,8 @@ def build(key):
         reset_ports=[c['reset']], outline=dict(w=w, h=h, exact=True),
         pins={f: list(dict.fromkeys(e.split(':')[0] for e in n)) for f, n in c['faces'].items() if n},
         io_tcl=str((OUT / f'{c["top"]}.tcl').relative_to(ROOT)), macros=[],
-        route=dict(pd=.4, threads=8, peak_ram_gb=16, period_ps=770, hold_margin_ns=.03), recipe=2,
+        route=dict(pd=.4, threads=8, peak_ram_gb=16, period_ps=770, hold_margin_ns=.03), recipe=3,
+        pin_regs=dict(enable=False, reason="Every data input already feeds a dedicated unconditional pin register (d0/raw_sq/raw_dv/ds); every data/valid/fault output leaves a dedicated register. Preserve those existing stages with keep_pin_regs/pin_reg_split/io_flop_at_pins; adding generic wrapper registers would duplicate them and silently change the static schedule. Native gate must audit actual boundary placement."),
         io_flop_at_pins=dict(cols=4, allow_none=True), inhold=True, outhold=True, keep_pin_regs=True, pin_reg_split=True,
         hold_pad=dict(cell='HB2xp67_ASAP7_75t_R'),
         structural_change=(f'{c["top"]}: field16 whole-body congestion split into four independent field4 clock/placement leaves. Input '

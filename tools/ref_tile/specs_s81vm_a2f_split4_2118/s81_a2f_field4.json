@@ -48,7 +48,11 @@
   "period_ps": 770,
   "hold_margin_ns": 0.03
  },
- "recipe": 2,
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every data input already feeds a dedicated unconditional pin register (d0/raw_sq/raw_dv/ds); every data/valid/fault output leaves a dedicated register. Preserve those existing stages with keep_pin_regs/pin_reg_split/io_flop_at_pins; adding generic wrapper registers would duplicate them and silently change the static schedule. Native gate must audit actual boundary placement."
+ },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
