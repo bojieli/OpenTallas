@@ -1,7 +1,0 @@
-PASS seq_su_bi_psram cycles=20997 program_reads=539 loads=150 core_done=1036 cwait=18064 coll=786 vm_writes=400 chase_eq=0
-POSTED_ABI native8 overflow=0 sent=389 initial_credit=32
-RANK_ABI native8 mismatches=0 high_rank_samples=10166
-- rtl/test/tb_qfd_seq_su_native8_candidate.sv:390: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 21us; walltime 0.044 s; speed 474.995 us/s
-- Verilator: cpu 0.044 s on 1 threads; allocated 7 MB

@@ -1,4 +1,0 @@
-W17_RECOVERY_WITNESS PC_advance cycles=10 fault_cycle=8 checking=1 pc=21 stopped_pc=20 rec_active=0 suffix_closed=1 qe_idle=1 win_idle=1 qe_accepts=0 terminals=0 vm_stores=0 sink_words=0 written_words=0 su_accepts=0 suppress=0 su_idle=1 xs_we=0 kv_we=0
-[13000] %Fatal: tb.sv:1299: Assertion failed in tb: fault edge advanced PC
-%Error: /tmp/DS-recovery-negative-successor-execution-20261002-r1/PC_advance/sources/tb.sv:1299: Verilog $stop
-Aborting...

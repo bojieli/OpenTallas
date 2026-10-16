@@ -1,8 +1,0 @@
-ot-run: ot-epyc1tb     admits   180 GB (avail 468, growth 259, headroom 64, waiters 0/0 GB) load 169/128 running 38 disk 1166 GB 
-ot-run: ot-epyc4       admits   -12 GB (avail 595, growth 165, headroom 48, waiters 1/380 GB) load 60/128 running 27 disk 1270 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-throughput-r8
-ot-run: ot-agidock128  admits   -19 GB (avail 80, growth 65, headroom 24, waiters 1/10 GB) load 19/64 running 16 disk 365 GB 
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-234244-1791946364 after 0 s
-/usr/bin/bash: /srv/opentallas-scratch/codex/s81-throughput-r8/order_baseline.sh: No such file or directory
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-234244-1791946364): exit 127

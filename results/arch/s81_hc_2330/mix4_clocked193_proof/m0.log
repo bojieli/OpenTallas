@@ -1,0 +1,14 @@
+ot-run: ot-epyc1tb     admits   606 GB (avail 832, growth 51, headroom 64, waiters 0/0 GB) load 64/128 running 14 disk 446 GB 
+ot-run: ot-epyc4       admits   511 GB (avail 738, growth 68, headroom 48, waiters 0/0 GB) load 59/128 running 15 disk 753 GB 
+ot-run: ot-pve1        admits   172 GB (avail 219, growth 8, headroom 32, waiters 0/0 GB) load 17/28 running 4 disk 1350 GB 
+ot-run: ot-agidock128  admits    69 GB (avail 102, growth 33, headroom 24, waiters 0/0 GB) load 23/64 running 7 disk 393 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 48 GB, admissible 45 GB: available 102 GB, growth charged 41 GB, young 32 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-429195-1792133956 after 20 s
+PASS native Engram MIX4 full4x5120 in-place20480words done tag53 writes640 reads4161 write_span639..798 cycles=810
+- /srv/opentallas-scratch/codex/s81-mix4-clocked-2330/run193_0/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_clocked.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 1.623 s; speed 1.075 us/s
+- Verilator: cpu 1.623 s on 1 threads; allocated 65 MB
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-429195-1792133956): exit 0

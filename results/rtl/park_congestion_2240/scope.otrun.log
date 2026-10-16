@@ -1,7 +1,0 @@
-ot-run: ot-epyc1tb     admits   648 GB (avail 875, growth 20, headroom 64, waiters 0/0 GB) load 24/128 running 5 disk 1486 GB 
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2524098-1791975612 after 0 s
-docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "openroad": executable file not found in $PATH
-
-Run 'docker run --help' for more information
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2524098-1791975612): exit 127

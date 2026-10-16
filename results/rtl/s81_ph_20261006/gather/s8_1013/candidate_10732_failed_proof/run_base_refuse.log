@@ -1,7 +1,0 @@
-READY_SUMMARY errors=0 early_command=0 ctl_words_flat=1
-SUMMARY phases=1 rows_flat=127 rows_cluster=127 row_mismatch=0 ctl_mismatch=0 status_mismatch=0 first=-1 roots_with_rows=127 xgo=1 done=1 ctl_words=1 busy_seen=1 fault_flat=0 fault_cluster=0 bad_before_fault=0 shift=c+k-2
-RESULT REFUSED coverage: roots 127/128 xgo 1 done 1 busy 1
-- /srv/opentallas-scratch/codex/s81-gather-leaf-v18/10732e4ef/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_cl.sv:220: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 4us; walltime 0.572 s; speed 7.688 us/s
-- Verilator: cpu 0.571 s on 1 threads; alloced 1027 MB

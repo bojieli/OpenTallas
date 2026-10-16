@@ -1,3 +1,0 @@
-`verilator_config
-// Compile the real repeated PT64 tile once; avoid flattening all32 copies at KMAX2048.
-hier_block -module "ot_hgi_coll_tkm_tile"

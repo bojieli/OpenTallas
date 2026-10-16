@@ -1,9 +1,0 @@
-ot-run: ot-epyc4       admits   441 GB (avail 668, growth 157, headroom 48, waiters 0/0 GB) load 63/128 running 10 disk 824 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2624565-1791981884 after 0 s
-{
- "status": "pass",
- "verdict": "PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=7 FAST_ISSUE=1 KV_PREP=4 adder_latency_added=21",
- "negative_control": "FAIL result write event 0 differs"
-}
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2624565-1791981884): exit 0

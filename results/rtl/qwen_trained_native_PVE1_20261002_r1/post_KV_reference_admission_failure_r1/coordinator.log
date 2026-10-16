@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/h1-qwen-final-KV-reference-20261002-r1/coordinator.py", line 14, in <module>
-    if keeper.poll()is not None:raise RuntimeError('Freshpostreference fleetlease denied; no automaticretry')
-RuntimeError: Freshpostreference fleetlease denied; no automaticretry

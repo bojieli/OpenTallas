@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_hc_residual_half_static",
- "enable": false,
- "reason": "RTL already registers every pin: write_v/write_word/write_data captured in first-pin flops (priced +1 write edge), read_v/read_word land on the synchronous SRAM input latch (TML3 read latency priced), residual_data/read_valid/fault leave from flops; synthesis pin registers would add an unpriced stage to the HC engine schedule."
-}

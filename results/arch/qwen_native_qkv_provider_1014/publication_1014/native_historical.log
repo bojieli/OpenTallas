@@ -1,5 +1,0 @@
-PROGRESS cycles1000 ep12 ready0 active1 sent1f issued7 seen512 ff0 fc00 nq3 nkv4 credits1
-PROGRESS cycles2000 ep24 ready1 active0 sentff issued7 seen512 ff0 fc00 nq7 nkv8 credits0
-PROGRESS cycles3000 ep36 ready1 active0 sentff issued7 seen512 ff0 fc00 nq11 nkv8 credits1
-NATIVE_KV_PASS heads=2 epochs=40 uniqueKVbytes=20480 words=1600 cycles=3278 zero_credit=1401 kv_stall=769 q_stall=742
-/srv/opentallas-scratch/codex/qwen-provider-publication-1014/src/rtl/test/qwen_su_kv_native/tb_native.sv:103: $finish called at 32810000 (1ps)

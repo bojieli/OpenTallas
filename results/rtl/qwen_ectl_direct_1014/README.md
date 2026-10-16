@@ -1,5 +1,0 @@
-# Direct registered ECTL seams
-
-Closed native A fails capture on rs[0]; B fails capture on rvm_i and x_i and launch on x_o[49:34]. Those feed-through flops try to capture and launch at opposite faces. The candidate moves existing stages: A rv2 feeds C directly (C rv1 still sees stage3); C x2 feeds A directly (A x1 still sees stage3); C x1 feeds B x1/x2 (B still consumes stage3). B removes the redundant response-valid and control-return ports. The new A/C bypass wires span the254.88-um B slot on parent layers above M5 leaves. There is no added data/control edge, no timing exception and no measured-cost row.
-
-Source00f42ca01 passed actual monolithic-reference lockstep at S1/E3 (3,705 comparisons,1,005 rows) and S0/E0 (4,137 comparisons,1,101 rows), four layers each. A/B/C mutants failed2,835/924/172 lockstep comparisons. The original compile failure at5f3e5767f is preserved in the takeover log directory and is not mutant evidence. Default qkd_ectl3_s remains unchanged; the common part only exposes its existing x2 state as an optional output. New direct child pin assignments/views and exact die binding are required before adoption or physical qualification.

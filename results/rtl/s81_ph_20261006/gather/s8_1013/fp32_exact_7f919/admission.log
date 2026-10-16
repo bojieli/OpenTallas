@@ -1,7 +1,0 @@
-ot-run: ot-epyc1tb     admits   597 GB (avail 824, growth 51, headroom 64, waiters 0/0 GB) load 20/128 running 6 disk 722 GB 
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3310456-1791980927 after 1 s
-FP32_EXACT_GATE PASS checked=104657 latency_edges=8 short_reset_phases=6 KS=1 SPLIT=7
-FATAL: /srv/opentallas-scratch/codex/s81-fp32-7f9197ab4/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_fp32_exact.sv:20: FP32 independent reference mismatch checked=539 got=0c800001 err=0 expected=0c800000 err=0
-FP32_ARITH_RNE_MUTANT FAIL_AS_REQUIRED
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3310456-1791980927): exit 0

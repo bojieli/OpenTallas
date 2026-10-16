@@ -1,7 +1,0 @@
-C8_POSITION_VISIBLE user=2 pos=100 gid=766 accepted=9 visible_ACKs=8 cycle=409
-C8_POSITION_VISIBLE user=2 pos=101 gid=767 accepted=9 visible_ACKs=8 cycle=1740
-PASS C8_TWO_POSITIONS same_user=2 positions=100,101 own_sectors=18 visible_ACKs=18 native_readback=27 retained_first_row=1 no_reset_between=1 first_visible_cycle=409 second_begin_cycle=1236 end_cycle=2442
-- /home/ubuntu/otjobs/dsrom-c8/source-b8c40d3f7/rtl/test/dsrom_sys/c8/tb_dsrom_c8_two_positions.sv:122: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.166 s; speed 12.330 us/s
-- Verilator: cpu 0.166 s on 1 threads; allocated 10 MB

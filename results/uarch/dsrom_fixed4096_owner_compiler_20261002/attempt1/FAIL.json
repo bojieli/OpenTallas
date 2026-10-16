@@ -1,7 +1,0 @@
-{
-  "verdict": "FAIL_COMPILER_DECLARATION_INCOMPLETE",
-  "cause": "die_slices textprofile does not declare layers.0.ffn.gate.bias_vl; fullmodel capacity compiler must preserve auxiliary routerbias in constant provider.",
-  "tool_sha256": "e273a353c6b4fefb3dc0a8a05ff9559c8a55ac29c391016612a0249535ec2a7c",
-  "source_profile_unchanged": true,
-  "RTL_runs": 0
-}

@@ -1,6 +1,0 @@
-SUMMARY words=280 rows_p=280 rows_s=280 mismatch_cycles=0 first=-1 macro_mismatch=0 fault_p=0 fault_s=0 open_peak=0 q_peak=1 rows_s_not_in_p=0 cov=16 need=16 latency_delta=0
-RESULT PASS
-- /srv/opentallas-scratch/codex/s81-gather-leaf-v18/ad50382d0/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_root_s.sv:95: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 44us; walltime 0.032 s; speed 1.316 ms/s
-- Verilator: cpu 0.033 s on 1 threads; alloced 1017 MB

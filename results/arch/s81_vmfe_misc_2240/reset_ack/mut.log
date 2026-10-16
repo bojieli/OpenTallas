@@ -1,8 +1,0 @@
-ot-run: ot-epyc4       admits   787 GB (avail 1014, growth 52, headroom 48, waiters 0/0 GB) load 34/128 running 10 disk 1113 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-1518833-1791969464 after 0 s
-[300000] %Fatal: tb_dsfd_vm_be_reset_ack.sv:24: Assertion failed in tb_dsfd_vm_be_reset_ack: Stopped serial consumer acknowledged unsampled reset
-%Error: tb_dsfd_vm_be_reset_ack.sv:24: Verilog $stop
-Aborting...
-bash: line 1: 1518833 Aborted                    (core dumped) /usr/local/bin/ot-heavy --mem 8 --tag otrun-ubuntu-4008674-969464481 -- bash -lc 'verilator --binary --timing -Wno-fatal --top-module tb_dsfd_vm_be_reset_ack -DOT_SPVM_RESET_ACK -DOT_SPVM_MUT_ACK_MIRROR -j 4 --Mdir obj_mut dsfd_sp_vm.sv tb_dsfd_vm_be_reset_ack.sv > compile_mut.log 2>&1 && obj_mut/Vtb_dsfd_vm_be_reset_ack'
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1518833-1791969464): exit 134

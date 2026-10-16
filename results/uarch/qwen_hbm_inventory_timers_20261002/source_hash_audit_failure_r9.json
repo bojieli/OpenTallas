@@ -1,7 +1,0 @@
-{
-  "status": "FAIL_PRESERVED",
-  "initial_tests": "7PASS_1FAIL",
-  "failed_test": "test_source_inventory_and_no_replacement",
-  "reason": "False assertion all inherited floorplan source hashes match; tools/uarch_model.py recorded d683f27c4d851fcf98b35538a63a5adee019732e2ae0f69aec53dad6ad9b7f16 vs pinned current2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
-  "correction": "Report actual mismatch; do not modify inherited source/floorplan."
-}

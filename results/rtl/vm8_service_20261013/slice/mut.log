@@ -1,9 +1,0 @@
-data cycle262 bank0
-data cycle262 bank1
-data cycle263 bank0
-data cycle263 bank1
-data cycle264 bank0
-SERVICE_SLICE reads=4096 writes=2304 cycles=2312 errors=4096
-[4624000] %Fatal: tb_vm_service_slice.sv:45: Assertion failed in tb_vm_service_slice: SERVICE_SLICE FAIL
-%Error: tb_vm_service_slice.sv:45: Verilog $stop
-Aborting...

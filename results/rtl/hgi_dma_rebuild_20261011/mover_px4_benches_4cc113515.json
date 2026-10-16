@@ -1,8 +1,0 @@
-{"element": "ot_hgi_dma_mover_el", "rtl": "4cc113515 (PX3 class-5 restructure of 344de5a43; cycle-exact)", "host": "ot-epyc4 Verilator 5.050, 2026-10-12",
- "benches": {"mover_exact": "HGI_MOVER PASS 73 cases, 60,589 words, last retire 15,814 cyc (unchanged)",
-  "mut_rne": "HGI_MOVER FAIL errors=246 (expected)", "mut_drop": "HGI_MOVER FAIL errors=317 (expected)",
-  "kport_exact": "MOVER-KPORT PASS 13 cases, 97,378 words; swap_linear 10.61 B/cyc (unchanged)",
-  "kport_px2": "MOVER-KPORT PASS 13 cases; swap_linear 9.80 B/cyc (unchanged)",
-  "kport_px2_prod (VR2 1 SVR2 0 KVW 1)": "MOVER-KPORT PASS 13 cases; swap_linear 17.89 B/cyc (unchanged)",
-  "kport_px2_mut4": "MOVER-KPORT FAIL 50,203 errors (expected)"},
- "verdict": "PASS (4 exact PASS, 3 mutants FAIL); routes hgi_adp_mover_px4{a,b}-4cc113515-tc-cl"}

@@ -1,8 +1,0 @@
-VM_RING_SRC tile=rwb sha256=6ea7a060e398c52d2ae81a672101ebe0d33e14f040807874a9ca8bca379cc9c5 mut=ADDR
-ring_mut: ADDR applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rwb.sv -> ../out/rwb_mut_addr/vm_cp_rwb_mut_ADDR.sv
-VM_RING tile=rwb WA=217 WB=0 WF=0 cycles=1204323 beatsA=16(main 0 stn 0) beatsB=0(main 0 stn 0) exact_err=601496 order_err=0 data_err=0 addr_err=16 credit_err=1199998 toggled=217/217 stallA=510124/509716 fullA=0/0 zeroA=1/1 stallB=0/0 fullB=0/0 zeroB=0/0 cfg=0
-VM_RING_RUN FAIL tile=rwb: exact addr credit leak_or_deadlock cov_beats_A cov_backpressure_A
-VM_RING tile=rwb WA=217 WB=0 WF=0 cycles=1204323 beatsA=16(main 0 stn 0) beatsB=0(main 0 stn 0) exact_err=601655 order_err=0 data_err=0 addr_err=16 credit_err=1199999 toggled=217/217 stallA=510810/509454 fullA=0/0 zeroA=1/1 stallB=0/0 fullB=0/0 zeroB=0/0 cfg=0
-VM_RING_RUN FAIL tile=rwb: exact addr credit leak_or_deadlock cov_beats_A cov_backpressure_A
-VM_RING_BENCH FAIL tile=rwb mut=ADDR beats=0/1
-rc=1

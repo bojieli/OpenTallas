@@ -1,1 +1,0 @@
-{"status":"INITIAL_TEST_FIXTURE_ERROR_CORRECTED","failure":"KeyError: class in test_compact_actual_source_RF_publish_and_write_checksum_fault","cause":"Test home omitted the mandatory original RF home class","correction":"Fixture explicitly binds home.class=RF; original source publisher unchanged","subsequent_compact_tests":5,"subsequent_full_tests":80}

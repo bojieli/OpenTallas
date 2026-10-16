@@ -1,4 +1,0 @@
-RATE qfd_link_adp512 RXD=512 LAT=223 SRAM=1 rate=231/1000 words-per-cycle (min 0)
-PASS qfd_link_adp512 W=1024 RXD=512 LAT=223 words=3000 each way cycles=13234
-/srv/opentallas-scratch/codex/qwen-edge-split2240/rtl/test/tb_qfd_link_adp512_split.sv:85: $finish called at 13234000 (1ps)
-PAIR split checked_cycles=13229

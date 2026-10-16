@@ -1,8 +1,0 @@
-2026-10-13T21:09:02Z start src 2c095be7767537271f87280f317d51394b58b09a recipe results/physical/die_iter_1012/s81/s81_layer1_v16.opts kind layer1
-2026-10-13T21:22:37Z GEN_DONE OT_HOP_GATE PASS max 490.1 um bits>500: 0 bits>504(SS): 0 OT_VIEW_BINDING 21 masters / 25600 instances bound from results/arch/s81_native_20261013/view_binding.json
-2026-10-13T21:22:47Z PLACE rc=1
-2026-10-13T21:34:55Z CLOCK_PLAN done
-2026-10-13T21:35:40Z IR spine Worstcase IR drop: 1.34e-02 V OT_IR net=VDD status=PASS OT_IR_INNER net=VDD worst_mv=13.39 budget_mv=35 at=f_xWup_13,VDD,M1,132.9040,1915.9080,0.686614 Worstcase IR drop: 2.08e-02 V OT_IR net=VSS status=PASS OT_IR_INNER net=VSS worst_mv=18.28 budget_mv=35 at=f_aSW_33,VSS,M1,149.5360,2812.3080,0.018283 
-2026-10-13T21:44:05Z KIT rc=0 CLOCK_DELIVERY common 174 early_tap 1 deep_pins 1280 estimated_R 3 spread_defects 0
-2026-10-13T21:44:05Z PLACE_FAIL
-2026-10-13T21:48:24Z IR field Worstcase IR drop: 2.95e-02 V OT_IR net=VDD status=PASS OT_IR_INNER net=VDD worst_mv=29.50 budget_mv=35 at=n26_19__t1_0,VDD,M1,1532.8000,2358.7200,0.670503 Worstcase IR drop: 4.06e-02 V OT_IR net=VSS status=PASS OT_IR_INNER net=VSS worst_mv=29.94 budget_mv=35 at=n27_7__t1_0,VSS,M1,346.7440,1425.6000,0.029942 

@@ -1,8 +1,0 @@
-VM_RING_SRC tile=rwa sha256=4f112925b72294ff0c7d25e8a0ef33fd34f88e8310f841683c93eec374c1b863 mut=DROP
-ring_mut: DROP applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rwa.sv -> ../out/rwa_mut_drop/vm_cp_rwa_mut_DROP.sv
-VM_RING tile=rwa WA=2048 WB=0 WF=0 cycles=1206154 beatsA=3824(main 1904 stn 1904) beatsB=0(main 0 stn 0) exact_err=25 order_err=3681 data_err=0 addr_err=0 credit_err=1198423 toggled=2048/2048 stallA=508232/507790 fullA=0/2 zeroA=730/741 stallB=0/0 fullB=0/0 zeroB=0/0 cfg=0
-VM_RING_RUN FAIL tile=rwa: exact order credit leak_or_deadlock cov_beats_A cov_backpressure_A
-VM_RING tile=rwa WA=2048 WB=0 WF=0 cycles=1206154 beatsA=3824(main 1904 stn 1904) beatsB=0(main 0 stn 0) exact_err=19 order_err=3681 data_err=0 addr_err=0 credit_err=1198328 toggled=2048/2048 stallA=508853/507607 fullA=0/4 zeroA=710/752 stallB=0/0 fullB=0/0 zeroB=0/0 cfg=0
-VM_RING_RUN FAIL tile=rwa: exact order credit leak_or_deadlock cov_beats_A cov_backpressure_A
-VM_RING_BENCH FAIL tile=rwa mut=DROP beats=0/1
-rc=1

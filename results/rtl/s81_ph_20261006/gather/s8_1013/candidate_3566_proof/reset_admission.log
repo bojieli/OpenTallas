@@ -1,7 +1,0 @@
-ot-run: ot-epyc1tb     admits   638 GB (avail 865, growth 51, headroom 64, waiters 0/0 GB) load 42/128 running 11 disk 816 GB 
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2656686-1791976906 after 0 s
-CANDIDATE_RESET PASS6 short-reset/early-release phases; same D/edge, no extra epoch
-FATAL: /srv/opentallas-scratch/codex/s81-gather-leaf-v18/3566a4825/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_candidate_reset.sv:18: short async reset missed case0
-SELECT_RESET_MUTANT FAIL_AS_REQUIRED
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2656686-1791976906): exit 0

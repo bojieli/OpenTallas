@@ -1,6 +1,0 @@
-Oct 01 20:27:16 ot-pve3 kernel: openroad invoked oom-killer: gfp_mask=0x1100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
-Oct 01 20:27:16 ot-pve3 kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-88842473948b3e27a5b1f549f5cd7169fa00e1d3fac989536241a2a3e234f158.scope,mems_allowed=0,global_oom,task_memcg=/system.slice/docker-df0291e1d827b81b0c77f6f28e8367535e0287a6ac13bae07f898570075db0c8.scope,task=openroad,pid=4002090,uid=0
-Oct 01 20:27:16 ot-pve3 kernel: Out of memory: Killed process 4002090 (openroad) total-vm:49302576kB, anon-rss:47450008kB, file-rss:0kB, shmem-rss:0kB, UID:0 pgtables:93792kB oom_score_adj:0
-Oct 02 02:35:29 ot-pve3 kernel: cc1plus invoked oom-killer: gfp_mask=0x1100dca(GFP_HIGHUSER_MOVABLE|__GFP_ZERO), order=0, oom_score_adj=0
-Oct 02 02:35:29 ot-pve3 kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-5772ca3bd3df5eb04aa23a16fe031045c0361c8423656d3fda170aa2ebddff2f.scope,mems_allowed=0,global_oom,task_memcg=/system.slice/docker-5772ca3bd3df5eb04aa23a16fe031045c0361c8423656d3fda170aa2ebddff2f.scope,task=cc1plus,pid=4017916,uid=1000
-Oct 02 02:35:29 ot-pve3 kernel: Out of memory: Killed process 4017916 (cc1plus) total-vm:79376164kB, anon-rss:79081920kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:155292kB oom_score_adj:0

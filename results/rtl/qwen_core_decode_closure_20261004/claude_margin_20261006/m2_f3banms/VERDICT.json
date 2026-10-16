@@ -1,6 +1,0 @@
-{"run":"m2_f3banms","rtl":"FB3+BOUND+AMQ+NXREG+MEIF+SUIF, controller cut, route 770","host":"ot-epyc1tb",
- "signoff_at_770":{"skew90":{"ss":-201.82,"ss_r2r":-193.87,"ff":-124.92},"skew150":{"ss":-261.82,"ff":-124.92}},
- "signoff_at_833_skew90_ss":-138.5,
- "verdict":"NOT CLOSED",
- "classes":"1,713 of 1,995 failing endpoints start at the UNREGISTERED input kv_write_drained (issue enable of ~1,900 nx_*/kvd_* flops, -262 @770 skew150); rst_n used as data into vw_me_we / u_me.rst_n / me_clk_en / ICG enable (-214); g_vsu.u_su.wrom_re -> wrom_addr output combinational (-196); prog_q -> u_pa_*_base program-address adders (-158 reg-reg); start / token inputs unregistered. FF: output-port hold -125.",
- "next":"RTL: register every remaining boundary port (kv_write_drained, start, token, wrom_*/vw_* outputs), reset through a synchronizer (async assert), split / pipeline the prog_q -> pa_base adders; exact benches + negative control; one route"}

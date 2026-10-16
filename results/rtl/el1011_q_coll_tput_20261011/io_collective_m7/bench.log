@@ -1,5 +1,0 @@
-case qwen_ar_256w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=299
-case qwen_layer_2x256w margin=7 mutant=0 PASS mismatches=0 words_out=2048 cycles=555
-case qwen_argmax_1w margin=7 mutant=0 PASS mismatches=0 words_out=16 cycles=25
-COLL_MARGIN PASS margin=7 cases=3
-rc=0

@@ -1,8 +1,0 @@
-{
-  "verdict": "FAIL_MISSING_R11_PRIVATE_PROVIDER_RESERVATIONS",
-  "earlier_model_path": "results/uarch/h4_v1_expanded_service_20261002/final/model.json",
-  "earlier_model_sha256": "c388788227c3b4a46bdabf81dc4824d246185e8699ee15d3e532c59c355b1dbe",
-  "earlier_source_snapshot": "final/source_snapshot/",
-  "authoritative_successor": "private_routes_r3/",
-  "scope": "Earlier service/die region-only screen excluded twelve separate provider-private routes; cannot establish complete-die reservation. Preserved without overwriting."
-}

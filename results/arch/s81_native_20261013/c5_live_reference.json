@@ -1,8 +1,0 @@
-{
-  "observed_utc": "2026-10-13T09:08:56.930389+00:00",
-  "host": "ot-epyc1tb",
-  "command": "D=/srv/opentallas-scratch/claude/s81-die-iter/c5; tail -4 \"$D/STATUS.log\"; tail -3 \"$D/grt/grt.log\"; grep -E \"set_routing_layers\" \"$D/grt/grt.tcl\"; grep -E \"^TRACKS X .*LAYER M[579]\" \"$D/a_real/floorplan_placed.def\"; docker ps --format \"{{.Names}}\" | grep dieit_grt_c5_grt",
-  "stdout": "2026-10-13T00:18:06Z PLACE rc=0\n2026-10-13T00:18:11Z IR spine Worstcase IR drop: 1.44e-02 V OT_IR net=VDD status=PASS OT_IR_INNER net=VDD worst_mv=14.38 budget_mv=35 at=f_aSW_33,VDD,M1,383.6800,2505.5880,0.685623 Worstcase IR drop: 1.78e-02 V OT_IR net=VSS status=PASS OT_IR_INNER net=VSS worst_mv=15.65 budget_mv=35 at=f_aSW_33,VSS,M1,383.6800,2505.5880,0.015647 \n2026-10-13T00:27:09Z KIT rc=0\n2026-10-13T00:30:09Z IR field Worstcase IR drop: 2.95e-02 V OT_IR net=VDD status=PASS OT_IR_INNER net=VDD worst_mv=29.53 budget_mv=35 at=n26_19__t1_0,VDD,M1,1532.8000,2358.7200,0.670469 Worstcase IR drop: 4.06e-02 V OT_IR net=VSS status=PASS OT_IR_INNER net=VSS worst_mv=31.38 budget_mv=35 at=n26_15__t0_0,VSS,M1,1495.0000,2047.6800,0.031377 \n[INFO GRT-0102] Start extra iteration 28/30\n[INFO GRT-0102] Start extra iteration 29/30\n[INFO GRT-0102] Start extra iteration 30/30\nset_routing_layers -signal M4-M9 -clock M4-M9\nTRACKS X 116 DO 412499 STEP 80 LAYER M9 ;\nTRACKS X 16 DO 515625 STEP 64 LAYER M7 ;\nTRACKS X 12 DO 687500 STEP 48 LAYER M5 ;\ndieit_grt_c5_grt\n",
-  "returncode": 0,
-  "altered_or_restarted": false
-}

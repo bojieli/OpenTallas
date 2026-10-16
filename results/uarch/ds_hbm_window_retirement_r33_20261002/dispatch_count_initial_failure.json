@@ -1,7 +1,0 @@
-{
-  "correction": "multiply scalar projection by actual PC calls; final2 LOAD verified6592512",
-  "draft_output": "/tmp/kepler-ds-r33-window-rope-final",
-  "no_numerical_execution": true,
-  "reason": "initial PC count replacement used per-call counts rather than actual96 calls",
-  "status": "METADATA_COUNT_UNDERCHARGE_PRESERVED"
-}

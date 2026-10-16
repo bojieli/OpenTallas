@@ -1,9 +1,0 @@
-{
-  "status": "FAIL",
-  "returncode": 1,
-  "source_sha256": {
-    "tools/qwen_rom_persistent_kv_g0.py": "435664b017a180e2b87a489a851bcc0cffdbeb5d588e7114ddb6df8494e568c9",
-    "tests/test_qwen_rom_persistent_kv_g0.py": "8a4ddfeecab5c0718fd85809826477af8fbb529034b134ee8a09394575d425ae"
-  },
-  "cause": "TP2 writer count272 was not scaled to TP4 count136; max54 local rows includes V position stride512; source dimension44 inventory is not address-map coverage"
-}

@@ -1,7 +1,0 @@
-{
-  "status": "FUNCTIONAL_ONLY_PHYSICAL_GATE_PENDING",
-  "source_snapshot": "ot-epyc1tb:/srv/opentallas-scratch/codex/dvm4-observer",
-  "test": "PASS actual native SRAM macros,64Qrows/1024words,32ATTrows,256consecutive seq requests/RL13/Qcadence1",
-  "change": "Extract actual observer into32explicit qfd_vm_qcommit leaves; same input/reset/consume-edge stages, independent native clock root per leaf",
-  "physical_phi_R_modeled": false
-}

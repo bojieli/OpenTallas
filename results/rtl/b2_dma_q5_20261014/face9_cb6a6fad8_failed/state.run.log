@@ -1,9 +1,0 @@
-FACE_DEBUG rq rdact=0 rdout=0 rbn=0 idfn= 0 sqact=0 sqwait=0 sqe=      5 sqlast=1 mpend=0 mdone=0 mready=1 mvbusy=0 cvq=0 sel=0 rdone=1 ucv=0 cdv=0 cfn=  0 sfn=  0 wqn= 0 wrin=  0 rdin=  0 landpend=00000 p2=0 pa=0 pe=0 pk=0 p3=0
-B2_DMA_Q ERR @469141: record never retired: op 0 bp 0 A{sp 0 f 0 base 09080066e0 n 5 m 1 str 0} O{sp 1 base 0000000e10 str 256}
-B2_DMA_Q TPUT load_fp32_20480B cycles=689 cyc_per_sector=1.077 B_per_cycle=29.72 | store_fp32_20480B(posted) cycles=362 cyc_per_sector=0.566 B_per_cycle=56.57 | store+fence(drained) cycles=872 cyc_per_sector=1.363 B_per_cycle=23.49 | fp8_1024el cycles=209 cyc_per_elem=0.204
-B2_DMA_Q STATS records=235 faults=10 resets=19 burst_reqs=5167 kport_reqs=577 vm_packets=306 group_reads=3668 wide_writes=10470 cycles=512781
-B2_DMA_Q FAIL errors=1 checked=114789 records=235 MUT_B2=0
-- /srv/opentallas-scratch/dma-face9-cb6a6fad8/rtl/test/hbm_accel/b2_dma/tb_hgi_b2_dma_q.sv:543: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 427us; walltime 1.253 s; speed 340.388 us/s
-- Verilator: cpu 1.253 s on 1 threads; allocated 26 MB

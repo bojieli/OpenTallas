@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     skipped: no /home/ubuntu/codex-qwen-vm5
-ot-run: ot-epyc4       admits  -789 GB (avail 344, growth 350, headroom 48, waiters 6/736 GB) load 154/128 running 27 disk 785 GB 
-ot-run: ot-pve1        skipped: no /home/ubuntu/codex-qwen-vm5
-ot-run: ot-agidock128  skipped: no /home/ubuntu/codex-qwen-vm5
-ot-run: -> ot-epyc4 (will queue: admits -789 GB < 8 GB)
-ot-heavy: waiting for memory on regular-crane: need 8 GB, admissible -54 GB: available 343 GB, growth charged 349 GB, young 114 GB, headroom 48 GB, real floor 227 GB
-ot-heavy: admitted on regular-crane as oth-ubuntu-4088161-1791945130 after 61 s
-preserve args='-GNRB=64 -GSMAX=11 -GCYCLES=1500' :: PASS qfd_vm_xcol NRB=64 SMAX=11 SEED=1 exact 1483 checks: stalls=400 q_changes=318 line_writes=532 replications=370 odd_parity=141 maxrss_kb=4188 wall=0.23
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4088161-1791945130): exit 0

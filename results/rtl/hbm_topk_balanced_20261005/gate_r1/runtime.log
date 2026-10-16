@@ -1,5 +1,0 @@
-ASYNC_RESET_INFLIGHT_PASS
-RAW_COMPARE checks=512
-INTERNAL checks=124464 injected_cases=288 default_cycle_checks=enabled
-LOCKSTEP N=384 P=16 K=6 vectors=256 sel0=256 sel1=256 mismatches=0 lat0=23 lat1=23
-rtl/test/hbm_topk_predicate/tb_topk_balanced.sv:127: $finish called at 7811500 (1ps)

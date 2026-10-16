@@ -1,8 +1,0 @@
-{
-  "status": "FAILED_DEVELOPMENT_TEST_RETAINED",
-  "test": "test_connected_actual_phase_programs_both_fullshapes",
-  "error": "ValueError: shuffle needs warp32 lane axis",
-  "cause": "128row denominator fixture initially allocated16lanes instead of warp32 with16active lanes",
-  "fix": "32lane backing, active16 unchanged; original published4stage denominator calendar unchanged",
-  "scope": "uncommitted proof harness development; no RTL or numerical gate launched on this attempt"
-}

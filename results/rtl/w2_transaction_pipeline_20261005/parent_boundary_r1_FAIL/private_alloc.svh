@@ -1,2 +1,0 @@
-localparam integer RAM_BYTES=8192;
-localparam [31:0] BASE_A=32'd4096,LIMIT_A=32'd4160,BASE_B=32'd4224,LIMIT_B=32'd4288;

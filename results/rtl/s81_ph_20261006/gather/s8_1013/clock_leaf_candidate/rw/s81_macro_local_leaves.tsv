@@ -1,9 +1,0 @@
-macro	clock_pin	old_clock_net	new_buffer	new_net	x_um	y_um	BUF_Y_to_macro_CLK_manhattan_um
-u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m	clk	clknet_1_0__leaf_ck	s81_macro_clock_leaf_0_bm	s81_macro_clock_leaf_0_bm_clock	21.654	16.47	7.321
-u_l.g_r[0].u_root.u_qm.g_q.u_m	clk	clknet_1_1__leaf_ck	s81_macro_clock_leaf_0_qm	s81_macro_clock_leaf_0_qm_clock	129.276	16.74	6.737
-u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m	clk	clknet_1_0__leaf_ck	s81_macro_clock_leaf_1_bm	s81_macro_clock_leaf_1_bm_clock	15.444	52.38	5.873
-u_l.g_r[1].u_root.u_qm.g_q.u_m	clk	clknet_1_1__leaf_ck	s81_macro_clock_leaf_1_qm	s81_macro_clock_leaf_1_qm_clock	122.958	51.3	6.623
-u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m	clk	clknet_1_0__leaf_ck	s81_macro_clock_leaf_2_bm	s81_macro_clock_leaf_2_bm_clock	14.796	81.54	6.719
-u_l.g_r[2].u_root.u_qm.g_q.u_m	clk	clknet_1_1__leaf_ck	s81_macro_clock_leaf_2_qm	s81_macro_clock_leaf_2_qm_clock	117.288	79.92	12.239
-u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m	clk	clknet_1_0__leaf_ck	s81_macro_clock_leaf_3_bm	s81_macro_clock_leaf_3_bm_clock	14.634	108.81	8.141
-u_l.g_r[3].u_root.u_qm.g_q.u_m	clk	clknet_1_1__leaf_ck	s81_macro_clock_leaf_3_qm	s81_macro_clock_leaf_3_qm_clock	123.39	105.84	7.907

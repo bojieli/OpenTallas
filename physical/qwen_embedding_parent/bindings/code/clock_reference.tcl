@@ -1,2 +1,0 @@
-set embedding_ref_internal_setup_ps 74.779907000
-set embedding_ref_internal_hold_ps 34.014729000

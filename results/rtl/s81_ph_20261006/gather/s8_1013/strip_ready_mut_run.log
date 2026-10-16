@@ -1,8 +1,0 @@
-DELAY MISMATCH sample 2
-DELAY MISMATCH sample 3
-DELAY MISMATCH sample 4
-DELAY MISMATCH sample 5
-STRIP_EXACT FAIL 19905 errors
-[120060000] %Fatal: tb_s81ph_gather_strip.sv:30: Assertion failed in tb_s81ph_gather_strip: strip timing mismatch
-%Error: /srv/opentallas-scratch/codex/gather-strip-v18/src/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_strip.sv:30: Verilog $stop
-Aborting...
