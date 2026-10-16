@@ -45,7 +45,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -53,6 +53,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
     BAND = band or globals()['BAND']
     SU_W = su_w or globals()['SU_W']; SU_H = su_h or globals()['SU_H']
     SMW = smw or globals()['SMW']; SMH = smh or globals()['SMH']
+    core_width=core_w or CORE_W; core_height=core_h or SU_H
     G = copy.deepcopy(G0)
     N = G['nodes']
     P = {}
@@ -91,9 +92,9 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         back (granted 511.92 x 360.72, right-aligned on the COLL), the IDX operand leaf (SW) over the DMA back; then the
         granted SFU core sfucore_<q> 763.56 x 1936.44 with sfus_<q> (SU SFU store 763.56 x 524.88 = 0.40 mm2) abutting
         its north face (0 relays).  Returns the east edge + 21.6."""
-        setn(f'sucore_{q}', CORE_W, SU_H, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B)')
-        put(f'sucore_{q}', x, y_band, q)
-        x += CORE_W + 21.6
+        setn(f'sucore_{q}', core_width, core_height, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B); native compact gate pending')
+        put(f'sucore_{q}', x, y_band + SU_H-core_height, q)
+        x += core_width + 21.6
         setn(f'cij_{q}', 43.2, 138.24, 'COLL inject/IDX join leaf ot_hgi_coll_inj_idx_join (H-NETLIST)')
         put(f'cij_{q}', x, y_band + GAP + (COLL_H - 138.24) / 2, q)
         x += 43.2 + 21.6
@@ -110,7 +111,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
             setn('idx_op', 360.72, 317.52, 'IDX:ot_hbm_idx_vm_query_static grant')
             put('idx_op', xc + COLL_W - 360.72, yo + DBK_H + 21.6, q)
         x = xc + COLL_W + 21.6
-        return sfu_stack(q, x) if not sfu_at_hub else x
+        return sfu_stack(q, x) if not sfu_at_hub and sfu_at_group is None else x
 
     def sfu_stack(q, x):
         if carry:
@@ -141,6 +142,8 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         sfu = sorted([k for k in N if k.startswith(f'sfu_{q}')])
         hc = sorted([k for k in N if k.startswith(f'hc_{q}')])
         for g in range(4):
+            if layout == 'col' and g == sfu_at_group:
+                x=sfu_stack(q,x)
             if layout == 'col' and g == core_at and core_at < 4:
                 x = core_stack(q, x)
             bw = N[banks[2 * g]]['w']
@@ -208,7 +211,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
             hx = EDGE + qw - hub_w
             if core_at >= 4:
                 x = core_stack(q, x)
-            if sfu_at_hub:      # SFU core + store at the inner end beside the hub (COLL faces slices on both sides)
+            if sfu_at_hub and sfu_at_group is None:      # SFU core + store at the inner end beside the hub (COLL faces slices on both sides)
                 x = sfu_stack(q, x)
                 put(f'sfucore_{q}', hx - 21.6 - 763.56, y_band + 21.77, q)
                 put(f'sfus_{q}', hx - 21.6 - 763.56, y_band + 21.77 + 1936.44 + 21.6, q)
@@ -309,6 +312,8 @@ def main():
     ap.add_argument('--layout', default='v5', choices=('v5', 'col'), help="band group layout ('col' = v6 bank-pair column)")
     ap.add_argument('--mirror-east', action='store_true', help='col layout: groups east of the core put their SU slice first (slice faces the core)')
     ap.add_argument('--sfu-at-hub', action='store_true', help='col layout: SFU core + store beside the hub, not in the core stack')
+    ap.add_argument('--sfu-at-group',type=int,choices=range(4),help='col layout: independent SFU core/store inserted before this bank-pair group')
+    ap.add_argument('--core-w',type=float);ap.add_argument('--core-h',type=float)
     ap.add_argument('--core-at', type=int, default=4, help="col layout: band groups west of the quarter core (4 = inner end)")
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
@@ -318,7 +323,7 @@ def main():
         EDGE = a.edge
     if a.column is not None:
         COLUMN_W = a.column
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east)
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area

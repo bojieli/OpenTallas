@@ -1,0 +1,1668 @@
+{
+ "schema": "opentallas.hbm.relay_compare.v1",
+ "payload_bits": 624,
+ "views": [
+  {
+   "master": "hbfd_rly_48_WE",
+   "width": 48,
+   "flow": "WE",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_48_we/views/hbfd_rly_48_WE/",
+   "hashes": {
+    "hbfd_rly_48_WE.lef": "84a7fb8e0d6d67001284859d6f135b0784bbf99d28dd0de9a555511b40eb8c72",
+    "hbfd_rly_48_WE_tt.lib": "422ef4ec7531424d7e3f4601672ba77a44c349bcd901004df7e0ea784bdf2268",
+    "hbfd_rly_48_WE_ff.lib": "91f56974eba68a994770a38f59543fb75d4e422d70402543dd62305205208af7",
+    "insertion.json": "29c11ef6931c7705c307089073438282d97273ad20c2f78843a0370dabc999ec",
+    "abstract.json": "d1acc2e0a72858863d104b502541ea39f7eaad301ec88f4cd04e1c6fe2993f3e"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 38.58730002193056,
+     "verdict_ps": 38.59,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 303.96499206553074,
+     "verdict_ps": 303.96,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 13,
+   "one_station_area_mm2": 0.006065280000000001,
+   "one_station_clock_sinks": 624,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48
+   ],
+   "full_master_launch_ps": 215.25334999999998,
+   "full_master_capture_ps": 148.10408,
+   "full_master_native_pass": true,
+   "payload_native_pass": true,
+   "payload_native": [
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.25334999999998,
+     "capture_max_ps": 148.10408,
+     "ff_hold_after25plus90_ps": 111.29781999999997,
+     "pin_native_pass": true
+    }
+   ],
+   "tt_insertion_mean_ps": 56.4,
+   "tt_boundary_spread_ps": 0.8000000000000043,
+   "conservative_stream_reach_um": 420.977,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_48_EW",
+   "width": 48,
+   "flow": "EW",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_48_ew/views/hbfd_rly_48_EW/",
+   "hashes": {
+    "hbfd_rly_48_EW.lef": "87e8247aecbb01b80a81f425aed78fce6e7e5858cf247888c3db3ee5c278720a",
+    "hbfd_rly_48_EW_tt.lib": "db0394059a76c5059cc2fadd901cff7069fb60146130b49d2df411aa3ecd3e3d",
+    "hbfd_rly_48_EW_ff.lib": "24379d375af8aafa2acdce7c6122cee2b550a040951b4aee7719c36c9a7d004a",
+    "insertion.json": "13ddbbcbe476ca6791a58e2afa202ec7db98f5a017a17b08230cc92dc094942b",
+    "abstract.json": "18d9a044834a24bceb8cf617bcbf4ca38bf839191a4ff03109b15f796d424857"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 32.911423586412525,
+     "verdict_ps": 32.91,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 302.5692751901232,
+     "verdict_ps": 302.57,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 13,
+   "one_station_area_mm2": 0.006065280000000001,
+   "one_station_clock_sinks": 624,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48
+   ],
+   "full_master_launch_ps": 216.01364999999998,
+   "full_master_capture_ps": 151.38335,
+   "full_master_native_pass": true,
+   "payload_native_pass": true,
+   "payload_native": [
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 216.01364999999998,
+     "capture_max_ps": 151.38335,
+     "ff_hold_after25plus90_ps": 112.22733,
+     "pin_native_pass": true
+    }
+   ],
+   "tt_insertion_mean_ps": 57.2,
+   "tt_boundary_spread_ps": 0.9000000000000057,
+   "conservative_stream_reach_um": 415.662,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_48_SN",
+   "width": 48,
+   "flow": "SN",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_48_sn/views/hbfd_rly_48_SN/",
+   "hashes": {
+    "hbfd_rly_48_SN.lef": "e2f801ce3bde35b7f2dad5c199830eec6cc7eec1245bdc796524958d30db34b6",
+    "hbfd_rly_48_SN_tt.lib": "84565f789ea8e0d5db8f59b6623792467721c84068bb0b3c878728f9150608b2",
+    "hbfd_rly_48_SN_ff.lib": "656022f88556319756b852b077c1831a915f4bebe5e3931eae288fa169363263",
+    "insertion.json": "c99bda0c11e949a3719f896d69e9f378ec225dc1213fe3f0e77a349af580ab23",
+    "abstract.json": "954fa0f11d4b22da828821946f844e84547184208df3d9467b1344a3065a7216"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 34.23413635905703,
+     "verdict_ps": 34.23,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 302.68654249709925,
+     "verdict_ps": 302.69,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 13,
+   "one_station_area_mm2": 0.006065280000000001,
+   "one_station_clock_sinks": 624,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48
+   ],
+   "full_master_launch_ps": 215.47623,
+   "full_master_capture_ps": 148.81245,
+   "full_master_native_pass": true,
+   "payload_native_pass": true,
+   "payload_native": [
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 215.47623,
+     "capture_max_ps": 148.81245,
+     "ff_hold_after25plus90_ps": 111.80239,
+     "pin_native_pass": true
+    }
+   ],
+   "tt_insertion_mean_ps": 59.0,
+   "tt_boundary_spread_ps": 1.6000000000000014,
+   "conservative_stream_reach_um": 419.752,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_48_NS",
+   "width": 48,
+   "flow": "NS",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_48_ns/views/hbfd_rly_48_NS/",
+   "hashes": {
+    "hbfd_rly_48_NS.lef": "8f6bd1b1bf964db30ec1fbe5e5a96591fdabcf392841bb60702ea39dd2f7f146",
+    "hbfd_rly_48_NS_tt.lib": "35b1e0a36d3ee39d4050a5233f3667aa9e219d012a38e7eb83f4e92e08a506e4",
+    "hbfd_rly_48_NS_ff.lib": "22904760f89f2ad8cf95f61d76242b8cf9dead99721a4ab3acdab5382eb0e40e",
+    "insertion.json": "8fc92e3a82695e8fdca7c9a58271ce59bebe2378f32c67ec5bc3d6206aa13805",
+    "abstract.json": "a0f23755f4c2250247f9431f8d7f09a352714e1817150202574c9dc376e9e702"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 27.58188816232021,
+     "verdict_ps": 27.58,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 301.8567618084944,
+     "verdict_ps": 301.86,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 13,
+   "one_station_area_mm2": 0.006065280000000001,
+   "one_station_clock_sinks": 624,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48
+   ],
+   "full_master_launch_ps": 217.23122999999998,
+   "full_master_capture_ps": 152.02364,
+   "full_master_native_pass": true,
+   "payload_native_pass": true,
+   "payload_native": [
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 48,
+     "launch_max_ps": 217.23122999999998,
+     "capture_max_ps": 152.02364,
+     "ff_hold_after25plus90_ps": 109.33585000000002,
+     "pin_native_pass": true
+    }
+   ],
+   "tt_insertion_mean_ps": 56.5,
+   "tt_boundary_spread_ps": 1.2000000000000028,
+   "conservative_stream_reach_um": 413.217,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_136_WE",
+   "width": 136,
+   "flow": "WE",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/",
+   "hashes": {
+    "hbfd_rly_136_WE.lef": "a288ed463526210b7224687536270d2900177d2deaf776c49e1f78a51788787e",
+    "hbfd_rly_136_WE_tt.lib": "d37ef693c23fb0aa117b29ac5a6c30b96eb8b769f57b07196ee0c8e61db67353",
+    "hbfd_rly_136_WE_ff.lib": "2e47e6b5c7c24f7acc26d817a79baa3721adda23c7f67b9b99b3d876489f73ae",
+    "insertion.json": "0ba6f8edbca884e8463777bc11d11753dbe979b46224ba47fbcda9bc9573f28d",
+    "abstract.json": "c0bfc79f4a3dcee676b968d1c20c2166937f81960ae4cba8827804be6491dec4"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 33.63759965013813,
+     "verdict_ps": 33.64,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 296.9678392084063,
+     "verdict_ps": 296.97,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 5,
+   "one_station_area_mm2": 0.0023328000000000003,
+   "one_station_clock_sinks": 680,
+   "unused_lanes": 56,
+   "payload_lane_map": [
+    125,
+    125,
+    125,
+    125,
+    124
+   ],
+   "full_master_launch_ps": 221.56530999999998,
+   "full_master_capture_ps": 164.54883999999998,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 125,
+     "launch_max_ps": 221.56530999999998,
+     "capture_max_ps": 164.54883999999998,
+     "ff_hold_after25plus90_ps": 107.62483,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 221.56530999999998,
+     "capture_max_ps": 164.54883999999998,
+     "ff_hold_after25plus90_ps": 107.62483,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 221.56530999999998,
+     "capture_max_ps": 164.54883999999998,
+     "ff_hold_after25plus90_ps": 107.62483,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 221.56530999999998,
+     "capture_max_ps": 164.54883999999998,
+     "ff_hold_after25plus90_ps": 107.62483,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 124,
+     "launch_max_ps": 221.56530999999998,
+     "capture_max_ps": 164.54883999999998,
+     "ff_hold_after25plus90_ps": 107.62483,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 82.1,
+   "tt_boundary_spread_ps": 2.1999999999999886,
+   "conservative_stream_reach_um": 391.034,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_136_EW",
+   "width": 136,
+   "flow": "EW",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_136_ew/views/hbfd_rly_136_EW/",
+   "hashes": {
+    "hbfd_rly_136_EW.lef": "370ff2bbbcb7b68bd0ccf9b3e4e16485098820d750f472b688a38078a08f48f7",
+    "hbfd_rly_136_EW_tt.lib": "fac9a77f0e4ad93b52d17e5cffcd555dd9756374e1550c2c2830726b4ea93fd6",
+    "hbfd_rly_136_EW_ff.lib": "90ad3971a39e5ad929f8bac99976ac52900f8b353270a73758ab7cfff6272965",
+    "insertion.json": "2dac94ed515f57b9aae867a4316277919a9931f834f32bac0535fdde4d0371e0",
+    "abstract.json": "5bec85ea100e881417171be0574ee5da9ece35cc6ff64574bdeb70c448a0147e"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 30.577415599530866,
+     "verdict_ps": 30.58,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 293.65071485543126,
+     "verdict_ps": 293.65,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 5,
+   "one_station_area_mm2": 0.0023328000000000003,
+   "one_station_clock_sinks": 680,
+   "unused_lanes": 56,
+   "payload_lane_map": [
+    125,
+    125,
+    125,
+    125,
+    124
+   ],
+   "full_master_launch_ps": 223.48884999999999,
+   "full_master_capture_ps": 163.5007,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 125,
+     "launch_max_ps": 223.48884999999999,
+     "capture_max_ps": 163.5007,
+     "ff_hold_after25plus90_ps": 108.29307,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 223.48884999999999,
+     "capture_max_ps": 163.5007,
+     "ff_hold_after25plus90_ps": 108.29307,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 223.48884999999999,
+     "capture_max_ps": 163.5007,
+     "ff_hold_after25plus90_ps": 108.29307,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 223.48884999999999,
+     "capture_max_ps": 163.5007,
+     "ff_hold_after25plus90_ps": 108.29307,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 124,
+     "launch_max_ps": 223.48884999999999,
+     "capture_max_ps": 163.5007,
+     "ff_hold_after25plus90_ps": 108.29307,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 83.9,
+   "tt_boundary_spread_ps": 2.5,
+   "conservative_stream_reach_um": 389.882,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_136_SN",
+   "width": 136,
+   "flow": "SN",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_136_sn/views/hbfd_rly_136_SN/",
+   "hashes": {
+    "hbfd_rly_136_SN.lef": "7643d35c47e2aaf70292c8f4b9a7bc7837a5a95ceb1bd577a2aeedc84a9804ad",
+    "hbfd_rly_136_SN_tt.lib": "99ae3a520bf6430415257cdd09c18b0c780785c46e7b4fd6910d82cb21d1ef7e",
+    "hbfd_rly_136_SN_ff.lib": "539a7879981a51a28e7abac8bd91044cf67535844c81dc68abf3443f7d46d4f2",
+    "insertion.json": "d90ea57d329962bcdd634ec7659a9ac3f85aaafeb85d81c57400ffcc75cc2b5d",
+    "abstract.json": "0324bb809cfd4c9ba74172e989cc94a45e9564b6661a5e4ae7a14b96d43c5bdf"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 37.46584986696888,
+     "verdict_ps": 37.47,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 292.1952679812989,
+     "verdict_ps": 292.2,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 5,
+   "one_station_area_mm2": 0.0023328000000000003,
+   "one_station_clock_sinks": 680,
+   "unused_lanes": 56,
+   "payload_lane_map": [
+    125,
+    125,
+    125,
+    125,
+    124
+   ],
+   "full_master_launch_ps": 219.22758000000002,
+   "full_master_capture_ps": 162.3288,
+   "full_master_native_pass": true,
+   "payload_native_pass": true,
+   "payload_native": [
+    {
+     "bits": 125,
+     "launch_max_ps": 219.22758000000002,
+     "capture_max_ps": 162.3288,
+     "ff_hold_after25plus90_ps": 110.25299999999999,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 219.22758000000002,
+     "capture_max_ps": 162.3288,
+     "ff_hold_after25plus90_ps": 110.25299999999999,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 219.22758000000002,
+     "capture_max_ps": 162.3288,
+     "ff_hold_after25plus90_ps": 110.25299999999999,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 219.22758000000002,
+     "capture_max_ps": 162.3288,
+     "ff_hold_after25plus90_ps": 110.25299999999999,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 124,
+     "launch_max_ps": 219.22758000000002,
+     "capture_max_ps": 162.3288,
+     "ff_hold_after25plus90_ps": 110.25299999999999,
+     "pin_native_pass": true
+    }
+   ],
+   "tt_insertion_mean_ps": 83.1,
+   "tt_boundary_spread_ps": 2.799999999999997,
+   "conservative_stream_reach_um": 397.031,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_136_NS",
+   "width": 136,
+   "flow": "NS",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_136_ns/views/hbfd_rly_136_NS/",
+   "hashes": {
+    "hbfd_rly_136_NS.lef": "67d7ec2e522351380421fac567f5369ac9b105cd2e61b2ea7c1305857ddb0c87",
+    "hbfd_rly_136_NS_tt.lib": "d0c9b0006703b563e8f134783fa7ddc895cf933f21d033ae351a68ce27861583",
+    "hbfd_rly_136_NS_ff.lib": "82886fbbd360f5e7bdc4c0ae283626d726b9925858ea099a3eed4c5552a3857d",
+    "insertion.json": "fb3455990bd8725b15cec7a95bf387d5857080badedb27ef8ae7274cb6e76182",
+    "abstract.json": "7669883abfdd65d4eaa40d2c8f3ab3eaf229acfb109e49a0323d290ca74cac00"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 34.0074773896859,
+     "verdict_ps": 34.01,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 300.0663051366814,
+     "verdict_ps": 300.07,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    21.6
+   ],
+   "one_station_leaves": 5,
+   "one_station_area_mm2": 0.0023328000000000003,
+   "one_station_clock_sinks": 680,
+   "unused_lanes": 56,
+   "payload_lane_map": [
+    125,
+    125,
+    125,
+    125,
+    124
+   ],
+   "full_master_launch_ps": 218.94606,
+   "full_master_capture_ps": 162.58114999999998,
+   "full_master_native_pass": true,
+   "payload_native_pass": true,
+   "payload_native": [
+    {
+     "bits": 125,
+     "launch_max_ps": 218.94606,
+     "capture_max_ps": 162.58114999999998,
+     "ff_hold_after25plus90_ps": 97.03057000000001,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 218.94606,
+     "capture_max_ps": 162.58114999999998,
+     "ff_hold_after25plus90_ps": 97.03057000000001,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 218.94606,
+     "capture_max_ps": 162.58114999999998,
+     "ff_hold_after25plus90_ps": 97.03057000000001,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 125,
+     "launch_max_ps": 218.94606,
+     "capture_max_ps": 162.58114999999998,
+     "ff_hold_after25plus90_ps": 97.03057000000001,
+     "pin_native_pass": true
+    },
+    {
+     "bits": 124,
+     "launch_max_ps": 218.94606,
+     "capture_max_ps": 162.58114999999998,
+     "ff_hold_after25plus90_ps": 97.03057000000001,
+     "pin_native_pass": true
+    }
+   ],
+   "tt_insertion_mean_ps": 82.8,
+   "tt_boundary_spread_ps": 1.9000000000000057,
+   "conservative_stream_reach_um": 397.069,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_304_WE",
+   "width": 304,
+   "flow": "WE",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_304_we/views/hbfd_rly_304_WE/",
+   "hashes": {
+    "hbfd_rly_304_WE.lef": "70df2557432ddaa5ad00aaa3fa8f653726d689fed747d94a96f7ea0737b89ebd",
+    "hbfd_rly_304_WE_tt.lib": "fdba86705428afd6ccafd8b704a28f3f47e7ae8e6735e20fc80a5789fbd00642",
+    "hbfd_rly_304_WE_ff.lib": "b2398b0fec2ed5409b53de43aaf55d02ddd07c3770a60e96f3a39c22b307413b",
+    "insertion.json": "7fb184063a9dfb4716fe3b54758f65fe9a4c2afa294b97289771bfc15f9f45ff",
+    "abstract.json": "9d74cfa7ac1f8e184c48093ab6fbcc970da94c352780da30d13d78b73bf5751e"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 8.222228453647062,
+     "verdict_ps": 8.22,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 293.7198262387142,
+     "verdict_ps": 293.72,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    34.56
+   ],
+   "one_station_leaves": 3,
+   "one_station_area_mm2": 0.002239488000000001,
+   "one_station_clock_sinks": 924,
+   "unused_lanes": 288,
+   "payload_lane_map": [
+    208,
+    208,
+    208
+   ],
+   "full_master_launch_ps": 223.81306999999998,
+   "full_master_capture_ps": 102.60003,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 208,
+     "launch_max_ps": 223.81306999999998,
+     "capture_max_ps": 102.60003,
+     "ff_hold_after25plus90_ps": 57.49115999999998,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 223.81306999999998,
+     "capture_max_ps": 102.60003,
+     "ff_hold_after25plus90_ps": 57.49115999999998,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 223.81306999999998,
+     "capture_max_ps": 102.60003,
+     "ff_hold_after25plus90_ps": 57.49115999999998,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 82.3,
+   "tt_boundary_spread_ps": 5.200000000000003,
+   "conservative_stream_reach_um": 469.588,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_304_EW",
+   "width": 304,
+   "flow": "EW",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_304_ew/views/hbfd_rly_304_EW/",
+   "hashes": {
+    "hbfd_rly_304_EW.lef": "97703b069675ce9b9a766e67ebdf632a673fb79b49b9dc8791f5dd0a4c2465c9",
+    "hbfd_rly_304_EW_tt.lib": "a0ea140918567ea52c3ceee54b76a166eb77629a7c87a8e4000dbf52b511a7ef",
+    "hbfd_rly_304_EW_ff.lib": "ba877ac0ad88d427b63ab271647c1f39dcb251591ef1516b61219228ec8b0bc3",
+    "insertion.json": "3c3f711869fb491d566b66708db08b3f312715d23cb77b9258c61f770583c312",
+    "abstract.json": "2b6dbfad02a3d73a500c215dd334bdb0467529dbad2ec08b1bfc64b81a3f2125"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 7.570645499388462,
+     "verdict_ps": 7.57,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 291.6573371702924,
+     "verdict_ps": 291.66,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    34.56
+   ],
+   "one_station_leaves": 3,
+   "one_station_area_mm2": 0.002239488000000001,
+   "one_station_clock_sinks": 924,
+   "unused_lanes": 288,
+   "payload_lane_map": [
+    208,
+    208,
+    208
+   ],
+   "full_master_launch_ps": 227.49702,
+   "full_master_capture_ps": 105.8419,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 208,
+     "launch_max_ps": 227.49702,
+     "capture_max_ps": 103.75919999999999,
+     "ff_hold_after25plus90_ps": 59.40190999999999,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 227.49702,
+     "capture_max_ps": 103.75919999999999,
+     "ff_hold_after25plus90_ps": 59.40190999999999,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 227.49702,
+     "capture_max_ps": 103.75919999999999,
+     "ff_hold_after25plus90_ps": 59.40190999999999,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 86.6,
+   "tt_boundary_spread_ps": 5.0,
+   "conservative_stream_reach_um": 463.215,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_304_SN",
+   "width": 304,
+   "flow": "SN",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_304_sn/views/hbfd_rly_304_SN/",
+   "hashes": {
+    "hbfd_rly_304_SN.lef": "24fc83c3263d830e7f32b372e2cb8cb278473d0f1574d4b722f1770910cf46f4",
+    "hbfd_rly_304_SN_tt.lib": "52cb1598bf6357d8fba95cf02c076e74c60d374a3426052e485e3643d2aee274",
+    "hbfd_rly_304_SN_ff.lib": "9589f7b3c650767ce303f00d90b6fdf336383d5f117e83908935a16b8bc3ee3a",
+    "insertion.json": "eefcf01ae20ad7fb48a63577151ef74c94e8879e62958f590dc09adc3efa10ac",
+    "abstract.json": "99bcc8b69ea09f798f358606c722c65f94d9c2a97f118967f5680c8c35ea62fd"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 29.243274468626623,
+     "verdict_ps": 29.24,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 291.8560948472759,
+     "verdict_ps": 291.86,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    34.56,
+    23.76
+   ],
+   "one_station_leaves": 3,
+   "one_station_area_mm2": 0.0024634368000000005,
+   "one_station_clock_sinks": 924,
+   "unused_lanes": 288,
+   "payload_lane_map": [
+    208,
+    208,
+    208
+   ],
+   "full_master_launch_ps": 225.67974999999998,
+   "full_master_capture_ps": 161.03010999999998,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 208,
+     "launch_max_ps": 224.48389,
+     "capture_max_ps": 161.03010999999998,
+     "ff_hold_after25plus90_ps": 103.32711,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 224.48389,
+     "capture_max_ps": 161.03010999999998,
+     "ff_hold_after25plus90_ps": 103.32711,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 224.48389,
+     "capture_max_ps": 161.03010999999998,
+     "ff_hold_after25plus90_ps": 103.32711,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 85.1,
+   "tt_boundary_spread_ps": 8.099999999999994,
+   "conservative_stream_reach_um": 391.824,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_304_NS",
+   "width": 304,
+   "flow": "NS",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_304_ns/views/hbfd_rly_304_NS/",
+   "hashes": {
+    "hbfd_rly_304_NS.lef": "ce6c3514ada75a0bdbe70c538bce509c4d12f323849f862411d94132c4ecb2c7",
+    "hbfd_rly_304_NS_tt.lib": "649adcb9fe4b76837801f9569d3bca79c801d97637c547261b1e24be8e68201d",
+    "hbfd_rly_304_NS_ff.lib": "3ee8d61e9cc75273117c3c09d3513e9388be86346ad42308ed2497dd7271b861",
+    "insertion.json": "d8477cad0fca82767e75b1284b83da0124270bc5ffe1a90da1228c99ebbadf59",
+    "abstract.json": "a70a02756e9184252dd38947de10b719c1f242050d503359cf4f2c9eec0fefc2"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 29.740696017022117,
+     "verdict_ps": 29.74,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 290.90033160095174,
+     "verdict_ps": 290.9,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    34.56,
+    23.76
+   ],
+   "one_station_leaves": 3,
+   "one_station_area_mm2": 0.0024634368000000005,
+   "one_station_clock_sinks": 924,
+   "unused_lanes": 288,
+   "payload_lane_map": [
+    208,
+    208,
+    208
+   ],
+   "full_master_launch_ps": 228.11274000000003,
+   "full_master_capture_ps": 160.00281999999999,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 208,
+     "launch_max_ps": 228.11274000000003,
+     "capture_max_ps": 160.00281999999999,
+     "ff_hold_after25plus90_ps": 102.11950999999999,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 228.11274000000003,
+     "capture_max_ps": 160.00281999999999,
+     "ff_hold_after25plus90_ps": 102.11950999999999,
+     "pin_native_pass": false
+    },
+    {
+     "bits": 208,
+     "launch_max_ps": 228.11274000000003,
+     "capture_max_ps": 160.00281999999999,
+     "ff_hold_after25plus90_ps": 102.11950999999999,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 82.2,
+   "tt_boundary_spread_ps": 4.1000000000000085,
+   "conservative_stream_reach_um": 388.401,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_624_WE",
+   "width": 624,
+   "flow": "WE",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_624_we/views/hbfd_rly_624_WE/",
+   "hashes": {
+    "hbfd_rly_624_WE.lef": "27a5e4f10152fb6dfb3e345509ad36d4d16c3d7948c0beb264a863db34364c2a",
+    "hbfd_rly_624_WE_tt.lib": "7d32202862a6d7eff7d5c47c6c840aa80652a16afd1526147e8de15d733d62a0",
+    "hbfd_rly_624_WE_ff.lib": "77c36e5287c6cf59f31f79087ad095993ddcbbeb7f4693e778b50e2f2683c9a7",
+    "insertion.json": "ec6d38f7c5224fb3101c071f3ffe0da772df99c30b4442357373bd4abdacb56c",
+    "abstract.json": "8346db50af270eddb376a1cb08bde1b714d0569e048793603d1244c2fd6caacb"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 6.884971759379965,
+     "verdict_ps": 6.88,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 290.0069906441871,
+     "verdict_ps": 290.01,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    64.8
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.0013996800000000002,
+   "one_station_clock_sinks": 629,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 226.84502999999998,
+   "full_master_capture_ps": 109.35519000000001,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 226.84502999999998,
+     "capture_max_ps": 109.35519000000001,
+     "ff_hold_after25plus90_ps": 54.25986999999998,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 85.9,
+   "tt_boundary_spread_ps": 7.5,
+   "conservative_stream_reach_um": 456.71,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_624_EW",
+   "width": 624,
+   "flow": "EW",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_624_ew/views/hbfd_rly_624_EW/",
+   "hashes": {
+    "hbfd_rly_624_EW.lef": "3a3f70de00c0b3aea6fc9aa20f7e92ec95b61d4469edd1de57d7942be66c7a9a",
+    "hbfd_rly_624_EW_tt.lib": "be9c729ffd5162c3257bbbe96193ea33287d86df2a9bdb5080dd1866591daa0a",
+    "hbfd_rly_624_EW_ff.lib": "266965de3148f0cdb54d2e9c850e5b8391eea1c2a79306eb00360e5f2ede1337",
+    "insertion.json": "f0c6e6ea82cf80982392ded8989576c5214e62b40c1b542d2ae4bd748c36641b",
+    "abstract.json": "b390025be777f45d78fc8e4fc7690666aeb6463e829610a96657dabee24d928b"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 4.111641582760228,
+     "verdict_ps": 4.11,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 287.78252003647253,
+     "verdict_ps": 287.78,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    64.8
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.0013996800000000002,
+   "one_station_clock_sinks": 629,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 229.66091999999998,
+   "full_master_capture_ps": 113.54384,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 229.66091999999998,
+     "capture_max_ps": 113.54384,
+     "ff_hold_after25plus90_ps": 56.98477,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 89.0,
+   "tt_boundary_spread_ps": 9.599999999999994,
+   "conservative_stream_reach_um": 447.494,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_624_SN",
+   "width": 624,
+   "flow": "SN",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_624_sn/views/hbfd_rly_624_SN/",
+   "hashes": {
+    "hbfd_rly_624_SN.lef": "ac1d75cbbb7155889528ed3c444a955844b637a16814493da1509336e9df42ed",
+    "hbfd_rly_624_SN_tt.lib": "c7d82d44fe210cbbe447149224e4055f5ceb157b824a0ebd5ebc697c0ca312ef",
+    "hbfd_rly_624_SN_ff.lib": "d427ca1c29dfbbeeb98b23c017554ec4f77c9ce7ba94bf75097862a979a14f88",
+    "insertion.json": "03264906b4fafa8868ebf18df62f347efd9bbac3e4384bc8961f48feaa3deca3",
+    "abstract.json": "7e1656a055daff84e11674b5809c100b33d42632d4ac463e195e69620bc18c9b"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 32.2819965203891,
+     "verdict_ps": 32.28,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 229.62515222602065,
+     "verdict_ps": 229.63,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    64.8,
+    23.76
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.0015396480000000002,
+   "one_station_clock_sinks": 629,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 288.23171,
+   "full_master_capture_ps": 161.4676,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 288.23171,
+     "capture_max_ps": 161.4676,
+     "ff_hold_after25plus90_ps": 101.81033,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 91.9,
+   "tt_boundary_spread_ps": 11.200000000000003,
+   "conservative_stream_reach_um": 307.369,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_624_NS",
+   "width": 624,
+   "flow": "NS",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_624_ns/views/hbfd_rly_624_NS/",
+   "hashes": {
+    "hbfd_rly_624_NS.lef": "c62583e4ba3319f3a4969dbfdbeb9045f990ae4b87ff129af305012716f0e5b5",
+    "hbfd_rly_624_NS_tt.lib": "a8c5f9468baaba128372ac067d5bb9d6923190d3e2ff3c496f1b670bf6df26a1",
+    "hbfd_rly_624_NS_ff.lib": "08271f07b50824c0cecc8193a0e3b46f10420d33613233582a44f3aacb99dba8",
+    "insertion.json": "4a6b6ccb8f81abf24f637878567a8a199deed8690ad785d0251d238eeb8cdb56",
+    "abstract.json": "edd8f27a8b9927435a950cfa8450022de853573e02adb6108ffe6812056642f3"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 31.114236187512745,
+     "verdict_ps": 31.11,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 229.19915965147197,
+     "verdict_ps": 229.2,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    64.8,
+    23.76
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.0015396480000000002,
+   "one_station_clock_sinks": 629,
+   "unused_lanes": 0,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 288.09088,
+   "full_master_capture_ps": 164.83128,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 288.09088,
+     "capture_max_ps": 164.83128,
+     "ff_hold_after25plus90_ps": 102.26103999999998,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 91.5,
+   "tt_boundary_spread_ps": 7.700000000000003,
+   "conservative_stream_reach_um": 303.129,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_1136_WE",
+   "width": 1136,
+   "flow": "WE",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_1136_we/views/hbfd_rly_1136_WE/",
+   "hashes": {
+    "hbfd_rly_1136_WE.lef": "79d545ed7a56bc2ab9ba07fd0f01a4a11f9f60466e8c37a24dea4da7502adcd9",
+    "hbfd_rly_1136_WE_tt.lib": "f43418cba58c2edee9b53949f2eb008a87c616e0bdbf33526ec81d5706df0a0a",
+    "hbfd_rly_1136_WE_ff.lib": "0eb13f886f1a4e4508a00ca0cc361e555b82a47386b153233e0c39d4d2bb777c",
+    "insertion.json": "f5273be799cc64ab1e989b3320d4ea4ca699e3cf5898253576c06eed7e697585",
+    "abstract.json": "dbb40642006dc45611ce9806cd8a7de18e452465d9e84b4936e384e2ca9755dd"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 6.567843491289693,
+     "verdict_ps": 6.57,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 280.7361842993572,
+     "verdict_ps": 280.74,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    114.48
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.002472768,
+   "one_station_clock_sinks": 1143,
+   "unused_lanes": 512,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 235.70945,
+   "full_master_capture_ps": 112.16042,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 226.35209000000003,
+     "capture_max_ps": 112.16042,
+     "ff_hold_after25plus90_ps": 52.191040000000015,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 103.7,
+   "tt_boundary_spread_ps": 9.599999999999994,
+   "conservative_stream_reach_um": 453.668,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_1136_EW",
+   "width": 1136,
+   "flow": "EW",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_1136_ew/views/hbfd_rly_1136_EW/",
+   "hashes": {
+    "hbfd_rly_1136_EW.lef": "9b00e028adb3e52a8f9b7b4dcd7219d3ea30ba5479d8fd3906ab0171204ad43d",
+    "hbfd_rly_1136_EW_tt.lib": "fc24b1f0bd56bbcb72c143ca2c2293c36a79fedd7799e3bbc0590c12a503b4a8",
+    "hbfd_rly_1136_EW_ff.lib": "4b61c7017905e262b7b4582ee46984833be0cda84771b308c5e11da4e07f3034",
+    "insertion.json": "a6b174866fccd728fcb3484e569c4e7467a1d13aa92819cf22256092f20d145e",
+    "abstract.json": "e042369fc94a1e9e5d1a323545d20695d95fd7d493797e14f0dac7bf60932800"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 7.821979175481886,
+     "verdict_ps": 7.82,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 288.20182351729784,
+     "verdict_ps": 288.2,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    21.6,
+    114.48
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.002472768,
+   "one_station_clock_sinks": 1143,
+   "unused_lanes": 512,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 228.53585,
+   "full_master_capture_ps": 112.77943,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 226.23997999999997,
+     "capture_max_ps": 109.21209,
+     "ff_hold_after25plus90_ps": 56.443839999999994,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 105.4,
+   "tt_boundary_spread_ps": 10.800000000000011,
+   "conservative_stream_reach_um": 457.695,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_1136_SN",
+   "width": 1136,
+   "flow": "SN",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_1136_sn/views/hbfd_rly_1136_SN/",
+   "hashes": {
+    "hbfd_rly_1136_SN.lef": "50730173602e421c983da6f37a888d6f29b9bb1f59c5ae7835dcb99ba645a21c",
+    "hbfd_rly_1136_SN_tt.lib": "ef36ea1c9dbc122df25d3cb69843aab2615119dec4d152a0170d66919a95974f",
+    "hbfd_rly_1136_SN_ff.lib": "4733f3c47752985714c09d0b2245bc2be6575c35d268dcd8328df505a6777858",
+    "insertion.json": "b97447e85e2f3ee35e48db154836186d25d541a60b5f6d8defb8699a2ab05c5c",
+    "abstract.json": "67098814a7a7c2b7d6cc097d205adb317cd7a750bd50dc43659890b223c2d78c"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 30.536392858770967,
+     "verdict_ps": 30.54,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 195.77553467264863,
+     "verdict_ps": 195.78,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    114.48,
+    23.76
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.0027200448000000003,
+   "one_station_clock_sinks": 1143,
+   "unused_lanes": 512,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 322.65774,
+   "full_master_capture_ps": 165.71589,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 225.36781999999997,
+     "capture_max_ps": 164.9122,
+     "ff_hold_after25plus90_ps": 100.91879999999998,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 113.4,
+   "tt_boundary_spread_ps": 20.700000000000003,
+   "conservative_stream_reach_um": 385.553,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  },
+  {
+   "master": "hbfd_rly_1136_NS",
+   "width": 1136,
+   "flow": "NS",
+   "source_ref": "a0924c57c",
+   "view": "physical/ref_tile/hbfd_rly_1136_ns/views/hbfd_rly_1136_NS/",
+   "hashes": {
+    "hbfd_rly_1136_NS.lef": "e19b123ec4eb18546f88a995eb42e61ab9729e24d6769a9fdd2b4870fa515824",
+    "hbfd_rly_1136_NS_tt.lib": "b456abf04c2498dc37d0a61cdd2ccce98ece5d8100544f171931eddf274d497b",
+    "hbfd_rly_1136_NS_ff.lib": "10d885bf9fcd4a7a7cc3b3c611bfa4d61aa465a51b9ba8bfd57302532c9b5b1c",
+    "insertion.json": "004b027e3db610514c24cd7e24ce26fb1e7249ad6ce34b8d458480ef27e7dbb3",
+    "abstract.json": "e312481ef7483ab1d98314bdd54a6b176e08d508407cb31dfe35a5e9d17697d1"
+   },
+   "export_verdict_checks": {
+    "ff": {
+     "export_ps": 27.65837558982298,
+     "verdict_ps": 27.66,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 192.9406079348439,
+     "verdict_ps": 192.94,
+     "ok": true
+    }
+   },
+   "outline_um": [
+    114.48,
+    23.76
+   ],
+   "one_station_leaves": 1,
+   "one_station_area_mm2": 0.0027200448000000003,
+   "one_station_clock_sinks": 1143,
+   "unused_lanes": 512,
+   "payload_lane_map": [
+    624
+   ],
+   "full_master_launch_ps": 325.68120999999996,
+   "full_master_capture_ps": 164.29186,
+   "full_master_native_pass": false,
+   "payload_native_pass": false,
+   "payload_native": [
+    {
+     "bits": 624,
+     "launch_max_ps": 225.04211,
+     "capture_max_ps": 164.29186,
+     "ff_hold_after25plus90_ps": 97.71175,
+     "pin_native_pass": false
+    }
+   ],
+   "tt_insertion_mean_ps": 111.4,
+   "tt_boundary_spread_ps": 20.799999999999997,
+   "conservative_stream_reach_um": 386.797,
+   "reach_scope": "same candidate kind; strongest used-bit O plus strongest used-bit S; measured reference; no source/sink endpoint views or routed wire"
+  }
+ ],
+ "qualification": "COMPARISON_ONLY_NO_SOURCE_OR_DIE_ADOPTION",
+ "obligations": [
+  "source must instantiate selected real master leaves with explicit lane padding",
+  "count actual footprints/pins/clocks/cuts and per-bit native reach",
+  "no source cycles changed without measured compiler/performance proof"
+ ]
+}

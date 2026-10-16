@@ -1,0 +1,3623 @@
+{
+ "schema": "opentallas.hbm.sfu_geometry_compare.v1",
+ "qualification": "LOWER_BOUNDS_ONLY_NOT_ADOPTED",
+ "source_contract": "/home/ubuntu/wt/hnl-0030/results/arch/hbm_die_v16/source_compact_0253/contract.json",
+ "source_contract_sha256": "77df74f1df6a2060723cee8bb5764f9dd20db62ba6b30b65ce1363bdb1e9d205",
+ "candidates": [
+  {
+   "candidate": "compact_v6b_recovery",
+   "sfr": [
+    {
+     "quarter": "SW",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "SW",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9277.72,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "SW",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3282.12,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "SW",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 425.0,
+     "min_relays_at_universal500um": 0,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "SE",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "SE",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9277.72,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "SE",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3282.12,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "SE",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 425.0,
+     "min_relays_at_universal500um": 0,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "NW",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "NW",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9183.192,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "NW",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3093.064,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 6
+    },
+    {
+     "quarter": "NW",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 141.416,
+     "min_relays_at_universal500um": 0,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "NE",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "NE",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9277.72,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "NE",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3282.12,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "NE",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 425.0,
+     "min_relays_at_universal500um": 0,
+     "min_relays_with_best_native48_interior": 1
+    }
+   ],
+   "sfu_result_to_exchange": [
+    {
+     "quarter": "SW",
+     "bits": 528,
+     "rectangle_gap_um": 6384.2
+    },
+    {
+     "quarter": "SE",
+     "bits": 528,
+     "rectangle_gap_um": 6384.2
+    },
+    {
+     "quarter": "NW",
+     "bits": 528,
+     "rectangle_gap_um": 6195.144
+    },
+    {
+     "quarter": "NE",
+     "bits": 528,
+     "rectangle_gap_um": 6384.2
+    }
+   ],
+   "actual_core_slice_edges": [
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_SW0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_SW1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "su_SW2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "su_SW3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_SE0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_SE1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "su_SE2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "su_SE3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "su_NW0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_NW1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "su_NW2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 4023.008
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 4023.008
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 4023.008
+    },
+    {
+     "source": [
+      "su_NW3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 4023.008
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_NE0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_NE1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "su_NE2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 1071.36
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 3928.48
+    },
+    {
+     "source": [
+      "su_NE3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 3928.48
+    }
+   ],
+   "sfr_bit_mm": 111101.64582400002,
+   "ro_bit_mm": 13383.608832000002,
+   "core_slice_bit_mm": 14363.156992,
+   "worst_sfr_gap_um": 12134.84,
+   "worst_ro_gap_um": 6384.2,
+   "worst_core_slice_gap_um": 4023.008
+  },
+  {
+   "candidate": "core4_rf36",
+   "sfr": [
+    {
+     "quarter": "SW",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "SW",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9277.72,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "SW",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 6420.6,
+     "min_relays_at_universal500um": 12,
+     "min_relays_with_best_native48_interior": 14
+    },
+    {
+     "quarter": "SW",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3563.48,
+     "min_relays_at_universal500um": 7,
+     "min_relays_with_best_native48_interior": 8
+    },
+    {
+     "quarter": "SE",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "SE",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9277.72,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "SE",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 6420.6,
+     "min_relays_at_universal500um": 12,
+     "min_relays_with_best_native48_interior": 14
+    },
+    {
+     "quarter": "SE",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3563.48,
+     "min_relays_at_universal500um": 7,
+     "min_relays_with_best_native48_interior": 8
+    },
+    {
+     "quarter": "NW",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "NW",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9183.192,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "NW",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 6231.544,
+     "min_relays_at_universal500um": 12,
+     "min_relays_with_best_native48_interior": 14
+    },
+    {
+     "quarter": "NW",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3279.896,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "NE",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 12134.84,
+     "min_relays_at_universal500um": 24,
+     "min_relays_with_best_native48_interior": 28
+    },
+    {
+     "quarter": "NE",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 9277.72,
+     "min_relays_at_universal500um": 18,
+     "min_relays_with_best_native48_interior": 21
+    },
+    {
+     "quarter": "NE",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 6420.6,
+     "min_relays_at_universal500um": 12,
+     "min_relays_with_best_native48_interior": 14
+    },
+    {
+     "quarter": "NE",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3563.48,
+     "min_relays_at_universal500um": 7,
+     "min_relays_with_best_native48_interior": 8
+    }
+   ],
+   "sfu_result_to_exchange": [
+    {
+     "quarter": "SW",
+     "bits": 528,
+     "rectangle_gap_um": 669.96
+    },
+    {
+     "quarter": "SE",
+     "bits": 528,
+     "rectangle_gap_um": 669.96
+    },
+    {
+     "quarter": "NW",
+     "bits": 528,
+     "rectangle_gap_um": 291.848
+    },
+    {
+     "quarter": "NE",
+     "bits": 528,
+     "rectangle_gap_um": 669.96
+    }
+   ],
+   "actual_core_slice_edges": [
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "su_SW0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "su_SW1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_SW2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_SW3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "su_SE0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "su_SE1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_SE2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_SE3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 8874.944
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 8874.944
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 8874.944
+    },
+    {
+     "source": [
+      "su_NW0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 8874.944
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 5923.296
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 5923.296
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 5923.296
+    },
+    {
+     "source": [
+      "su_NW1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 5923.296
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "su_NW2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_NW3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "su_NE0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 8591.36
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "su_NE1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 5734.24
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_NE2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_NE3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    }
+   ],
+   "sfr_bit_mm": 139021.563904,
+   "ro_bit_mm": 1215.3123839999998,
+   "core_slice_bit_mm": 31395.037696000007,
+   "worst_sfr_gap_um": 12134.84,
+   "worst_ro_gap_um": 669.96,
+   "worst_core_slice_gap_um": 8874.944
+  },
+  {
+   "candidate": "core4_sfu2",
+   "sfr": [
+    {
+     "quarter": "SW",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 4694.24,
+     "min_relays_at_universal500um": 9,
+     "min_relays_with_best_native48_interior": 10
+    },
+    {
+     "quarter": "SW",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 1837.12,
+     "min_relays_at_universal500um": 3,
+     "min_relays_with_best_native48_interior": 3
+    },
+    {
+     "quarter": "SW",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 541.6,
+     "min_relays_at_universal500um": 1,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "SW",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3398.72,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "SE",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 4694.24,
+     "min_relays_at_universal500um": 9,
+     "min_relays_with_best_native48_interior": 10
+    },
+    {
+     "quarter": "SE",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 1837.12,
+     "min_relays_at_universal500um": 3,
+     "min_relays_with_best_native48_interior": 3
+    },
+    {
+     "quarter": "SE",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 541.6,
+     "min_relays_at_universal500um": 1,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "SE",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3398.72,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "NW",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 4883.296,
+     "min_relays_at_universal500um": 9,
+     "min_relays_with_best_native48_interior": 11
+    },
+    {
+     "quarter": "NW",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 1931.648,
+     "min_relays_at_universal500um": 3,
+     "min_relays_with_best_native48_interior": 4
+    },
+    {
+     "quarter": "NW",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 541.6,
+     "min_relays_at_universal500um": 1,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "NW",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3493.248,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    },
+    {
+     "quarter": "NE",
+     "group": 0,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 4694.24,
+     "min_relays_at_universal500um": 9,
+     "min_relays_with_best_native48_interior": 10
+    },
+    {
+     "quarter": "NE",
+     "group": 1,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 1837.12,
+     "min_relays_at_universal500um": 3,
+     "min_relays_with_best_native48_interior": 3
+    },
+    {
+     "quarter": "NE",
+     "group": 2,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 541.6,
+     "min_relays_at_universal500um": 1,
+     "min_relays_with_best_native48_interior": 1
+    },
+    {
+     "quarter": "NE",
+     "group": 3,
+     "forward_bits": 596,
+     "return_bits": 516,
+     "rectangle_gap_um": 3398.72,
+     "min_relays_at_universal500um": 6,
+     "min_relays_with_best_native48_interior": 7
+    }
+   ],
+   "sfu_result_to_exchange": [
+    {
+     "quarter": "SW",
+     "bits": 528,
+     "rectangle_gap_um": 6098.72
+    },
+    {
+     "quarter": "SE",
+     "bits": 528,
+     "rectangle_gap_um": 6098.72
+    },
+    {
+     "quarter": "NW",
+     "bits": 528,
+     "rectangle_gap_um": 6287.776
+    },
+    {
+     "quarter": "NE",
+     "bits": 528,
+     "rectangle_gap_um": 6098.72
+    }
+   ],
+   "actual_core_slice_edges": [
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "su_SW0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "su_SW1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_SW2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SW3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_SW3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SW",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "su_SE0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "su_SE1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_SE2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_SE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_SE3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_SE3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_SE",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 9660.104
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 9660.104
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 9660.104
+    },
+    {
+     "source": [
+      "su_NW0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 9660.104
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 6708.456
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 6708.456
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 6708.456
+    },
+    {
+     "source": [
+      "su_NW1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 6708.456
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "su_NW2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2971.648
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NW",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NW3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_NW3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NW",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE0",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "su_NE0",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      0,
+      32
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 9376.52
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE1",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "su_NE1",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      32,
+      64
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 6519.4
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE2",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "su_NE2",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      64,
+      96
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 2877.12
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bword",
+      0,
+      128
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_bword",
+      0,
+      128
+     ],
+     "bits": 128,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_bcmd",
+      0,
+      36
+     ],
+     "bits": 36,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "sucore_NE",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "sink": [
+      "su_NE3",
+      "rf_dsec",
+      0,
+      256
+     ],
+     "bits": 256,
+     "rectangle_gap_um": 20.0
+    },
+    {
+     "source": [
+      "su_NE3",
+      "slice_x",
+      0,
+      32
+     ],
+     "sink": [
+      "sucore_NE",
+      "slice_x",
+      96,
+      128
+     ],
+     "bits": 32,
+     "rectangle_gap_um": 20.0
+    }
+   ],
+   "sfr_bit_mm": 46998.493184,
+   "ro_bit_mm": 12980.318208,
+   "core_slice_bit_mm": 34234.176256,
+   "worst_sfr_gap_um": 4883.296,
+   "worst_ro_gap_um": 6287.776,
+   "worst_core_slice_gap_um": 9660.104
+  }
+ ],
+ "open": [
+  "actual source/sink pins and leaf views",
+  "obstacle-aware per-bit routes/clockreach",
+  "full current cut and relay footprint allocation",
+  "compiler exact static cycles and measured native token cost"
+ ]
+}
