@@ -485,42 +485,42 @@
   },
   {
    "design": "s81",
-   "unit": "HC.CTR_COLUMN_YBEAT (ctra/ctrb_column return: y-beat register stage, +1 return cycle on every HC NORM pre job; removes 3,558 joins > 500 um, worst 815.7 um)",
+   "unit": "HC.CTR_COLUMN_YBEAT (ctra/ctrb_column YB_STAGE=1: +2 return cycles per HC chain traversal (column payload +1, y stage +1; once per chain via far-tile origination) + 1 bank-request cycle; ctrn as 4 per-column slices at 0 cycles)",
    "group": "HC.CTR_COLUMN_YBEAT",
-   "measured": 2.0,
+   "measured": 4.0,
    "price": 1.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 2.0,
-   "e2e_loss_pct": 0.01,
+   "unit_ratio": 4.0,
+   "e2e_loss_pct": 0.029,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 828866.4,
-     "cycles": 828947.4,
-     "added_cycles": 81.0,
+     "cycles": 829109.4,
+     "added_cycles": 243.0,
      "runs_per_token": 81,
      "critical_runs": 81,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 81.0,
+     "naive_added_cycles": 243.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 0.01
+     "e2e_loss_pct": 0.029
     },
     "mtp": {
      "model": "token-path longest path",
      "base_cycles": 1177516.1,
-     "cycles": 1177613.1,
-     "added_cycles": 97.0,
+     "cycles": 1177807.1,
+     "added_cycles": 291.0,
      "runs_per_token": 87,
      "critical_runs": 87,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 87.0,
+     "naive_added_cycles": 261.0,
      "wave_positions": 5,
-     "wave_added_cycles_per_position": 2.0,
-     "e2e_loss_pct": 0.008
+     "wave_added_cycles_per_position": 6.0,
+     "e2e_loss_pct": 0.025
     }
    },
    "within_unit_limit": true,
@@ -528,7 +528,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
    "status": "proposed",
-   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16 ~07:00; el1015-s81-surx-engram.log 06:59): column RTL 82424ff85 + proposed y-beat relay; on top of the +1 already accepted for the columns. Priced +1 cycle on every hc_pre token-path node (upper: no overlap credit). Native/physical not yet built."
+   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16), measured on the proven RTL claude/s81-hccol-0600 YB_STAGE=1; supersedes the +1 proposal. Charged +3 (request +1, return +2) on every hc_pre token-path node (one chain traversal per NORM pre job; upper, no overlap credit). Native/physical column views not yet built."
   },
   {
    "design": "s81",
@@ -1731,8 +1731,8 @@
   },
   "s81": {
    "accepted_pct": 23.391,
-   "proposed_pct": 1.257,
-   "accepted_plus_proposed_pct": 24.648,
+   "proposed_pct": 1.276,
+   "accepted_plus_proposed_pct": 24.667,
    "limit_pct": 15.0,
    "accepted_rows": 11,
    "proposed_rows": 4,
