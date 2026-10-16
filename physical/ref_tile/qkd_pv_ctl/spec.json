@@ -13,8 +13,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 129.6,
-  "h": 129.6
+  "w": 43.2,
+  "h": 43.2
  },
  "layer_cap": "M5",
  "macros": [],
@@ -58,7 +58,7 @@
  "job": {
   "owner": "Claude:Q-ATTN-RATE (el1015-qwen-attn.log)",
   "branch": "claude/q-attn-rate-1015",
-  "tag": "r3",
+  "tag": "r4",
   "purpose": "P.V pair control of ot_qwen_tp8_attention_native_service_w16 (KV/system die).",
   "benches": [
    {

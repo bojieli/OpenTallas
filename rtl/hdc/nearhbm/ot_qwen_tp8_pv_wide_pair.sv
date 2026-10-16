@@ -203,6 +203,8 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
  localparam integer COL_LAT=JGO+3+3*7+3+1;      // JOIN -> column y_valid: + cmd reg, join pin reg, jrun start, J_OUT 24, y reg
  // ---- input pin registers ----
  reg start_r;reg[13:0] ctx_r;reg[15:0] epoch_r;reg[7:0] iv_r;reg[111:0] it_r;reg[127:0] ie_r;reg[31:0] cv_r,cf_r;
+ reg pid;                                         // pair_id strap, registered (constant; the gate saw pair_id -> wage 15 levels)
+ always @(posedge clk)pid<=pair_id;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin start_r<=0;iv_r<=0;cv_r<=0;cf_r<=0;end
   else begin start_r<=start;iv_r<=in_valid;cv_r<=col_valid;cf_r<=col_fault;end
@@ -223,20 +225,22 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
  always @*begin
   exp_take=0;pexp_v=0;wn=0;wt=0;wp=0;
   for(l=0;l<8;l=l+1)pexp_t[l]=0;
-  for(l=0;l<8;l=l+1)begin
+  // per PORT (constant index): port wp carries bank l = (wp&3) + 4h of step n = rc - h with n&1 == wp>>2, i.e.
+  // h = (rc ^ (wp>>2)) & 1 -- the same (bank, step) -> port map as before, without a runtime-indexed write
+  for(wp=0;wp<8;wp=wp+1)begin
+   l=(wp&3)+4*((int'(rc)^(wp>>2))&1);
    wn=int'(rc)-(l>>2);
-   wt=256*wn+128*int'(pair_id)+16*l+int'(ac);
-   wp=4*(wn&1)+(l&3);
+   wt=256*wn+128*int'(pid)+16*l+int'(ac);
    if(chk_window&&wn>=0&&wt<int'(lim))begin pexp_v[wp]=1'b1;pexp_t[wp]=14'(wt);end
   end
   for(l=0;l<8;l=l+1)begin
    wn=int'(rn)-(l>>2);
-   wt=256*wn+128*int'(pair_id)+16*l+int'(an);
+   wt=256*wn+128*int'(pid)+16*l+int'(an);
    if(next_window&&wn>=0&&wt<int'(lim))exp_take[l]=1'b1;
   end
  end
  wire[7:0] rq;wire[111:0] rqt;
- ot_qwen_tp8_vrow_wide u_req(.clk(clk),.rst_n(rst_n),.pair_id(pair_id),.start(start_r),.context_len(ctx_r),
+ ot_qwen_tp8_vrow_wide u_req(.clk(clk),.rst_n(rst_n),.pair_id(pid),.start(start_r),.context_len(ctx_r),
   .req_valid(rq),.req_t(rqt),.fault());
  always @(posedge clk or negedge rst_n)if(!rst_n)req_valid<=0;else req_valid<=rq;
  always @(posedge clk)req_t<=rqt;
@@ -277,7 +281,7 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
    case(state)
     IDLE:if(start_r)begin
      ep<=epoch_r;lim<=ctx_r;age<=0;
-     nq<=(ctx_r>14'(128*int'(pair_id)))?16'(16*(((int'(ctx_r)-128*int'(pair_id)+255)>>8)+1)):16'd0;
+     nq<=(ctx_r>14'(128*int'(pid)))?16'(16*(((int'(ctx_r)-128*int'(pid)+255)>>8)+1)):16'd0;
      if(ctx_r==0||ctx_r>8192)flt<=1;else state<=FEED;
     end
     FEED:if(pa>=16'(FIRSTI)+nq-16'd1&&pa>=16'd16)begin state<=DRAIN;drain_left<=12;end
@@ -311,10 +315,10 @@ module ot_qwen_tp8_vrow_wide (
  integer l,wn,wt,wp;                          // loop temporaries (blocking, combinational only; no automatic decls for yosys)
  always @*begin
   req_valid=0;req_t=0;wn=0;wt=0;wp=0;
-  if(active&&q<nq)for(l=0;l<8;l=l+1)begin
+  if(active&&q<nq)for(wp=0;wp<8;wp=wp+1)begin      // per PORT, constant index (see ot_qwen_tp8_pv_wide_ctl)
+   l=(wp&3)+4*((int'(q>>4)^(wp>>2))&1);
    wn=int'(q>>4)-(l>>2);
    wt=256*wn+128*int'(pair_id)+16*l+int'(q&15);
-   wp=4*(wn&1)+(l&3);
    if(wn>=0&&wt<int'(lim))begin req_valid[wp]=1'b1;req_t[14*wp+:14]=14'(wt);end
   end
  end
