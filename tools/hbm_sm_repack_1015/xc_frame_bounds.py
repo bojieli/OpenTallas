@@ -15,13 +15,19 @@ d=dict(schema='opentallas.sm_xc_frame_bounds.v1',scope='Lower bounds only; MATVE
 fig,axs=plt.subplots(2,1,figsize=(16,7),dpi=140)
 for ax,(w,h,mode) in zip(axs,[(side,1800,'side_XC'),(7200,top,'rebuilt_wide_XC_top')]):
  ax.add_patch(Rectangle((0,0),w,h,fill=False,ec='black'))
+ rects=[]
  x=0
  for i in range(16):
   if i==8:
-   ax.add_patch(Rectangle((x,0),front,1765.44,fc='#b07aa1',alpha=.6));ax.text(x+front/2,800,'static\nfront',ha='center',fontsize=6);x+=front+gap
-  ax.add_patch(Rectangle((x,0),tw,th,fc='#4e79a7',alpha=.6));ax.text(x+tw/2,th/2,str(i),ha='center',fontsize=7);x+=tw+gap
+   rects.append((x,0,front,1765.44));ax.add_patch(Rectangle((x,0),front,1765.44,fc='#b07aa1',alpha=.6));ax.text(x+front/2,800,'static\nfront',ha='center',fontsize=6);x+=front+gap
+  rects.append((x,0,tw,th));ax.add_patch(Rectangle((x,0),tw,th,fc='#4e79a7',alpha=.6));ax.text(x+tw/2,th/2,str(i),ha='center',fontsize=7);x+=tw+gap
  if mode=='side_XC':xx,yy,ww,hh=old+gap,0,500,1200
  else:xx,yy,ww,hh=8*(tw+gap)+front+gap,th+gap,1200,500
+ rects.append((xx,yy,ww,hh))
+ for i,(x0,y0,rw,rh) in enumerate(rects):
+  assert x0>=0 and y0>=0 and x0+rw<=w+1e-6 and y0+rh<=h+1e-6
+  for x1,y1,sw,sh in rects[i+1:]:
+   assert min(x0+rw,x1+sw)<=max(x0,x1)+1e-6 or min(y0+rh,y1+sh)<=max(y0,y1)+1e-6
  ax.add_patch(Rectangle((xx,yy),ww,hh,fc='#f28e2b',alpha=.7));ax.text(xx+ww/2,yy+hh/2,'XC\nproposed\nnew leaf',ha='center',va='center',fontsize=6)
  ax.set(xlim=(-40,w+40),ylim=(-40,h+40),title=f'{mode}: {w:.2f} x {h:.2f} um LOWER BOUND (attention + exact pins/relays OPEN)');ax.set_aspect('equal');ax.set_xlabel('um');ax.set_ylabel('um')
 fig.tight_layout();fig.savefig(out/'alternatives.png');print(json.dumps(d,indent=2))
