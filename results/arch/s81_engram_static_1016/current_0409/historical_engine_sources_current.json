@@ -1,0 +1,34 @@
+{
+ "status": "ALL7_HISTORICAL_ENGINE_INPUTS_BYTE_IDENTICAL_ON_CURRENT_MAIN",
+ "rows": [
+  {
+   "path": "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+   "sha256": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989"
+  },
+  {
+   "path": "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+   "sha256": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98"
+  },
+  {
+   "path": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+   "sha256": "f0438ddac6c9056b238c7fd82840a9dc9c73fb634c2573eac369588438ab09de"
+  },
+  {
+   "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv",
+   "sha256": "4da4936c211acbbf1ce0c2b13318f95fa2cb8f03e65164e9c1a4f3d56ce1ed73"
+  },
+  {
+   "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv",
+   "sha256": "b5fd9fcf57428fdf0f8286aafb3e5e19966f354f620eb63eb7621b9985f65a11"
+  },
+  {
+   "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv",
+   "sha256": "ae8aa4505023d8860e545d9e46191f48544266095f66fcc6c65a4b52c07f7e9f"
+  },
+  {
+   "path": "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_static.sv",
+   "sha256": "957e5ba51370b9b95c33d6d904af92177e0ddb5c5bce6d5ee106314cdbe009c6"
+  }
+ ],
+ "scope": "Preserved historical numeric evidence exact input-byte comparison; wrapper/sourcehash proof and physical gate remain separately scoped. No new physical/timing/native result."
+}

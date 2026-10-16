@@ -1,5 +1,5 @@
 {
- "name": "s81engm_lkp_static14-st2-current0409-COMMIT",
+ "name": "s81engm_lkp_static14-st2-current0409-f5bc5c694",
  "block": "dsfd_engram_lkp_static14",
  "ref_tile": true,
  "owner": "Codex:S81-Engram-recovery",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-static14-current-0409",
-  "commit": "COMMIT",
+  "commit": "f5bc5c694dd4044be3d55fbe00226c32f46c4086",
   "extra_paths": [
    "physical/s81_die_pins/v28_engram_static14_candidate",
    "rtl/dsrom_sys/engram",
@@ -160,7 +160,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_lkp_static14/s81engm_lkp_static14-st2-current0409-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_lkp_static14/s81engm_lkp_static14-st2-current0409-f5bc5c694"
   }
  ],
  "cycles_added": 0,
