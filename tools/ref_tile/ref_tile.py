@@ -435,8 +435,20 @@ def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
         bounds = {n: [lsb, lsb+w-1] if lsb >= 0 else None for n,w,lsb in decl}
         widths = {n: (w, lsb >= 0) for n,w,lsb in decl}
     else:
-        widths = ports
         bounds = getattr(ports, "ranges", {})
+        widths = {}
+        for n, (w, vec) in ports.items():
+            # A synthesized parameterized header may retain a symbolic range.
+            # The separate GATE_PORT_RANGES record contains its evaluated bounds.
+            b = bounds.get(n)
+            if w is None and vec:
+                if not (isinstance(b, (list, tuple)) and len(b) == 2
+                        and all(isinstance(i, int) for i in b) and b[1] >= b[0]):
+                    raise SpecError(f"literal pin actual synthesized width unresolved for {n}")
+                w = b[1] - b[0] + 1
+            if not isinstance(w, int) or w < 1:
+                raise SpecError(f"literal pin actual synthesized width invalid for {n}")
+            widths[n] = (w, vec)
     expected = set()
     for n,(w,vec) in widths.items():
         if vec and w > 1:
