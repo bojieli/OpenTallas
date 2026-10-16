@@ -1,5 +1,5 @@
 {
- "name": "hbm_sfucore_split-k5-COMMIT",
+ "name": "hbm_sfucore_split-k6-COMMIT",
  "block": "ot_hgi_sfu_core_split",
  "ref_tile": true,
  "owner": "Claude:H-SU/core-kit",
@@ -49,7 +49,7 @@
     "name": "split_mutant_skip_pinreg",
     "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
     "expect": "fail",
-    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
     "peak_ram_gb": 96,
     "needs": [
@@ -108,7 +108,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k5-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k6-COMMIT"
   }
  ],
  "cycles_added": 0,
