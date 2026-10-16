@@ -63,7 +63,13 @@ module ot_hgi_sfu_split_engine #(
   wire [561:0] m_wq;
   wire [513:0] m_rr;
   wire [1:0] m_done;
-  ot_hgi_sfu_lg_relay #(.R(R)) u_relay(.clk(clk_lg[g]),.rst_n(rst_lg_n[g]),
+`ifdef OT_SFU_SPLIT_RELAY_MUTANT
+  // negative control: one unaccounted die relay on pair 1 (the core still assumes LG_PATH = 1 + R)
+  localparam integer RG=R+(g==1);
+`else
+  localparam integer RG=R;
+`endif
+  ot_hgi_sfu_lg_relay #(.R(RG)) u_relay(.clk(clk_lg[g]),.rst_n(rst_lg_n[g]),
    .c_rq(c_rq[34*g+:34]),.c_wq(c_wq[562*g+:562]),.c_rr(c_rr[514*g+:514]),.c_w_done(c_done[2*g+:2]),
    .l_rq(m_rq),.l_wq(m_wq),.l_rr(m_rr),.l_w_done(m_done));
   ot_hgi_sfu_lg_pair_leaf u_leaf(.clk(clk_lg[g]),.rst_n(rst_lg_n[g]),

@@ -20,8 +20,8 @@ done
 sources+=(rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_scheduled.sv)
 python3 tools/hbm_static/make_qswiglu_gate.py "$SFU_QSWIGLU_FIXTURE" "$OUT/data"
 lgpath=0;[ -n "${SFU_LG_R:-}" ] && lgpath=$((SFU_LG_R+1))
-# negative control: calendar compiled for one relay fewer than the built path (must FAIL)
-[ "${MUT_LG_PATH:-0}" = 1 ] && lgpath=$((lgpath-1))
+# negative control: calendar compiled without the split latency shift while the RTL has the leaf+relay path
+[ "${MUT_LG_PATH:-0}" = 1 ] && lgpath=0
 SFU_LG_PATH=$lgpath python3 tools/hbm_static/make_qswiglu_io_calendar.py "$OUT/data"
 cp "$OUT/data/image.hex" "$OUT/image.hex"
 M=physical/asap7_memory_macros
@@ -46,6 +46,7 @@ if [ -n "$lgr" ];then
  sources+=(rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_relay.sv
   rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv)
  defs+=(-DSFU_LG_R=$lgr)
+ [ "${MUT_RELAY:-0}" = 1 ] && defs+=(-DOT_SFU_SPLIT_RELAY_MUTANT)
 fi
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
