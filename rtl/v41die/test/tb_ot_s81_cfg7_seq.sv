@@ -13,7 +13,8 @@
 // of phase p in macro k % 7, row 4p + k / 7); the reference and every check are unchanged.
 // +define+TB_CFG7_PINREG (S-ELEM-PQ/COLL 2026-10-16): the DUT at PINREG 1 (every pin registered).  The reference is fed
 // the stimulus through one reset-cleared pin-flop stage and its outputs go through 3 reset-cleared stages (the DUT's
-// +2 capture-side edges and its output flops); go_tag is checked 4 edges after the stimulus go.  Everything else (words,
+// +2 capture-side edges and its output flops); go_tag is checked 4 edges after the stimulus go.  The DUT's reset relay
+// releases 3 edges after rst_n: the reference, its stages and every check run on the same released reset rst_d.  Everything else (words,
 // macro reads, extent, multi-enable) is unchanged.
 module tb_ot_s81_cfg7_seq;
     parameter integer PQ = 0;
@@ -31,9 +32,13 @@ module tb_ot_s81_cfg7_seq;
     reg clk = 0;
     always #0.416667 clk = ~clk;
     reg rst_n = 0, cfg_go = 0, go = 0;
+    // released reset: PINREG 1 = ot_rst_relay (async assert, release after 3 rising edges)
+    reg [2:0] rrel = 0;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rrel <= 3'd0; else rrel <= {rrel[1:0], 1'b1};
     reg [PHW-1:0] phase = 0;
     reg [2:0] np = 0;
     reg [1:0] ef = 2'b11;
+    wire rst_d = PINREG ? rrel[2] : rst_n;
     reg [47:0] payload [0:NW-1];
     function automatic [47:0] word_at(input integer g);
         reg [47:0] w;
@@ -50,8 +55,8 @@ module tb_ot_s81_cfg7_seq;
     wire [47:0] rd;
     // reference input stage: PINREG 1 = one reset-cleared pin-flop stage (the DUT's lc/ef pin flops)
     reg i_cgo = 0, i_go = 0; reg [PHW-1:0] i_ph = 0; reg [2:0] i_np = 0; reg [1:0] i_ef = 0;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin i_cgo <= 0; i_go <= 0; i_ph <= 0; i_np <= 0; i_ef <= 0; end
+    always @(posedge clk or negedge rst_d)
+        if (!rst_d) begin i_cgo <= 0; i_go <= 0; i_ph <= 0; i_np <= 0; i_ef <= 0; end
         else begin i_cgo <= cfg_go; i_go <= go; i_ph <= phase; i_np <= np; i_ef <= ef; end
     wire r_cgo = PINREG ? i_cgo : cfg_go, r_go = PINREG ? i_go : go;
     wire [PHW-1:0] r_ph = PINREG ? i_ph : phase;
@@ -59,14 +64,14 @@ module tb_ot_s81_cfg7_seq;
     wire [1:0] r_ef = PINREG ? i_ef : ef;
     wire rv0, rge0, rbusy0, rfault0; wire [4:0] ra0; wire [47:0] rd0;
     ot_v41_pair_pq_ld_frontend #(.PHW(PHW), .PQ(PQ)) ref_ld (
-        .clk(clk), .rst_n(rst_n), .cfg_go(r_cgo), .cfg_ph(r_ph), .cfg_np(r_np), .go(r_go), .e_sh_free(r_ef[0]),
+        .clk(clk), .rst_n(rst_d), .cfg_go(r_cgo), .cfg_ph(r_ph), .cfg_np(r_np), .go(r_go), .e_sh_free(r_ef[0]),
         .e_bank_free(r_ef[1]), .cm_a(cm_a), .cm_q(payload[cm_a]), .c_v(rv0), .c_a(ra0), .c_d(rd0), .go_e(rge0),
         .ld_busy(rbusy0), .fault(rfault0));
     // reference output stages (OD, reset-cleared)
     reg [56:0] rpipe [0:3];
     integer pi;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) for (pi = 0; pi < 4; pi++) rpipe[pi] <= '0;
+    always @(posedge clk or negedge rst_d)
+        if (!rst_d) for (pi = 0; pi < 4; pi++) rpipe[pi] <= '0;
         else begin
             rpipe[0] <= {rv0, rge0, rbusy0, rfault0, ra0, rd0};
             for (pi = 1; pi < 4; pi++) rpipe[pi] <= rpipe[pi-1];
@@ -99,10 +104,10 @@ module tb_ot_s81_cfg7_seq;
     reg [1:0] stag = 0;
     integer tags = 0;
     reg [3:0] gp = 0;      // gp[k] before an edge = go before the edge k + 1 earlier
-    always @(posedge clk or negedge rst_n) if (!rst_n) gp <= 4'd0; else gp <= {gp[2:0], go};
+    always @(posedge clk or negedge rst_d) if (!rst_d) gp <= 4'd0; else gp <= {gp[2:0], go};
     wire go_chk = (GD == 0) ? go : gp[GD-1];
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) stag <= 2'd0;
+    always @(posedge clk or negedge rst_d)
+        if (!rst_d) stag <= 2'd0;
         else if (go_chk) begin
             if (gtag !== (PQ != 0 ? stag : 2'd0)) $fatal(1, "go_tag %0d, spine tag %0d", gtag, stag);
             tags++;
@@ -114,12 +119,12 @@ module tb_ot_s81_cfg7_seq;
     end endgenerate
     integer checks = 0, words = 0, reads = 0, admits = 0, multi_ce = 0;
     always @(posedge clk) begin
-        if (rst_n && |ce) begin
+        if (rst_d && |ce) begin
             reads++;
             if ((ce & (ce - 7'd1)) != 0) multi_ce++;
         end
         #0.001;
-        if (rst_n) begin
+        if (rst_d) begin
             checks++;
             if ({cfg[53], ge, st[0], st[1]} !== {rv, rge, rbusy, rfault})
                 $fatal(1, "control mismatch check %0d: dut v/go/busy/fault %b%b%b%b ref %b%b%b%b", checks, cfg[53], ge,
@@ -164,6 +169,7 @@ module tb_ot_s81_cfg7_seq;
                     default: g_rom[6].u_rom.arr[(g % 4096) / 8][b * 8 + g % 8] = (payload[g] >> b) & 1;
                 endcase
         repeat (3) tick(); rst_n = 1;
+        repeat (PINREG ? 4 : 0) tick();          // PINREG: the reset relay releases 3 edges after rst_n
         for (int ph = 0; ph < (1 << PHW); ph++) begin
             oldr = reads;
             phase = PHW'(ph); np = 3'(ph); cfg_go = 1; tick(); cfg_go = 0;

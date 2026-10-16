@@ -38,7 +38,8 @@
 // ld_np at capture, c_v/c_a/c_d, act) and the go side (go, cfg_go, pend, ld_start, the second-broadcast fault event, the
 // tag count) run DL = 2 edges behind the loader; the output flops add 1.  Exact: the tile equals the PINREG 0 tile
 // with its inputs delayed 1 edge and cfg/go_e/st/go_tag delayed 3 more (lc -> cfg/go_e/st/go_tag +4 edges, lc -> a/ce
-// +2 edges, a fixed compiler-schedule shift, no runtime handshake added); reset flushes every pipeline flop.
+// +2 edges, a fixed compiler-schedule shift, no runtime handshake added); reset flushes every pipeline flop.  The rst_n
+// port drives only an ot_rst_relay (rtl/lib/ot_rst_relay.sv): assert immediate, release 3 edges after the port.
 // Gate: tb_ot_s81_cfg7_seq.sv +define+TB_CFG7_PINREG (lockstep against the reference loader behind the same delays);
 // negative control +define+OT_S81_CFG7_MUT_PRDL (capture 1 edge early) must FAIL.  PINREG = 0 is byte-for-byte the
 // previous behaviour.
@@ -71,6 +72,20 @@ module ot_s81_cfg7_seq #(
         if (CW > 32 || AW < 12) $fatal(1, "ot_s81_cfg7_seq: CW <= 32 and AW >= 12 required");
         if (LAYOUT == 1 && (CW > 4 * NROM || PHW + 2 > 12)) $fatal(1, "ot_s81_cfg7_seq: LAYOUT 1 needs CW <= 28 and PHW <= 10");
     end
+    // ---- reset (PINREG): the rst_n port drives only an ot_rst_relay (async assert, release 3 edges later); pin flops
+    // reset from region 0, the sequencer from region 1 (native audit pr2: the port -> 564 async clears was capture 303 ps)
+    wire rst_p, rst_c;
+    generate if (PINREG != 0) begin : g_rst
+        wire [1:0] rr_;
+`ifdef OT_S81_CFG7_MUT_RSTREL
+        ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(2)) u_rst (.clk(clk[0]), .rst_n_in(rst_n[0]), .rst_n(rr_));  // negative control: release 1 edge late
+`else
+        ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk[0]), .rst_n_in(rst_n[0]), .rst_n(rr_));
+`endif
+        assign rst_p = rr_[0]; assign rst_c = rr_[1];
+    end else begin : g_rst0
+        assign rst_p = rst_n[0]; assign rst_c = rst_n[0];
+    end endgenerate
     // ---- pin registers (PINREG): inputs captured at the pin, outputs launched from the pin ----
     wire [PHW+4:0] lc_i;
     wire [1:0]     ef_i;
@@ -84,12 +99,12 @@ module ot_s81_cfg7_seq #(
         reg [PHW+4:0] lc_r; reg [1:0] ef_r;
         reg [47:0] q0_r, q1_r, q2_r, q3_r, q4_r, q5_r, q6_r;
         reg [11:0] a_r; reg [6:0] ce_r; reg [53:0] cfg_r; reg go_e_r; reg [1:0] st_r, go_tag_r;
-        always @(posedge clk[0] or negedge rst_n[0])
-            if (!rst_n[0]) begin lc_r <= '0; ef_r <= 2'b00; end
+        always @(posedge clk[0] or negedge rst_p)
+            if (!rst_p) begin lc_r <= '0; ef_r <= 2'b00; end
             else begin lc_r <= lc; ef_r <= ef; end
         always @(posedge clk[0]) begin q0_r <= q0; q1_r <= q1; q2_r <= q2; q3_r <= q3; q4_r <= q4; q5_r <= q5; q6_r <= q6; end
-        always @(posedge clk[0] or negedge rst_n[0])
-            if (!rst_n[0]) begin a_r <= 12'd0; ce_r <= 7'd0; cfg_r <= 54'd0; go_e_r <= 1'b0; st_r <= 2'b00; go_tag_r <= 2'b00; end
+        always @(posedge clk[0] or negedge rst_p)
+            if (!rst_p) begin a_r <= 12'd0; ce_r <= 7'd0; cfg_r <= 54'd0; go_e_r <= 1'b0; st_r <= 2'b00; go_tag_r <= 2'b00; end
             else begin a_r <= a_c; ce_r <= ce_c; cfg_r <= cfg_c; go_e_r <= go_e_c; st_r <= st_c; go_tag_r <= go_tag_c; end
         assign lc_i = lc_r; assign ef_i = ef_r;
         assign q0_i = q0_r; assign q1_i = q1_r; assign q2_i = q2_r; assign q3_i = q3_r; assign q4_i = q4_r; assign q5_i = q5_r; assign q6_i = q6_r;
@@ -120,7 +135,7 @@ module ot_s81_cfg7_seq #(
     wire        ld_ok = (PQ == 0) || (ef_i[0] && ef_i[1]);
     wire        ld_start = (cfg_go && ld_ok) || (PQ != 0 && pend && !cfg_go && ld_ok);
     // same-edge lookahead of the reference's combinational cm_a = ld_a: read ld_a's word one edge early
-    wire          rce = rst_n[0] && (ld_start || (ld_run && ld_k < 5'(CW - 1)));
+    wire          rce = rst_c && (ld_start || (ld_run && ld_k < 5'(CW - 1)));
     wire [AW-13:0] rbank;
     reg  [AW-13:0] bank_q;
     generate if (LAYOUT == 1) begin : g_il7
@@ -168,8 +183,8 @@ module ot_s81_cfg7_seq #(
         reg [4:0] d_k [0:1];
         reg [2:0] d_np [0:1];
         reg [AW-13:0] d_bk [0:1];
-        always @(posedge clk[0] or negedge rst_n[0])
-            if (!rst_n[0]) begin d_run <= 2'b00; d_cgo <= 2'b00; d_st <= 2'b00; d_go <= 2'b00; d_pend <= 2'b00; d_ev1 <= 2'b00; end
+        always @(posedge clk[0] or negedge rst_c)
+            if (!rst_c) begin d_run <= 2'b00; d_cgo <= 2'b00; d_st <= 2'b00; d_go <= 2'b00; d_pend <= 2'b00; d_ev1 <= 2'b00; end
             else begin
                 d_run <= {d_run[0], ld_run}; d_cgo <= {d_cgo[0], cfg_go}; d_st <= {d_st[0], ld_start};
                 d_go <= {d_go[0], go}; d_pend <= {d_pend[0], pend}; d_ev1 <= {d_ev1[0], ev1};
@@ -205,8 +220,8 @@ module ot_s81_cfg7_seq #(
             default: cm_q = q6_i;
         endcase
     end
-    always @(posedge clk[0] or negedge rst_n[0]) begin
-        if (!rst_n[0]) begin
+    always @(posedge clk[0] or negedge rst_c) begin
+        if (!rst_c) begin
             ld_run <= 1'b0; ld_k <= 5'd0; c_v <= 1'b0; fault <= 1'b0; pend <= 1'b0; tag <= 2'd0;
         end else begin
             fault <= fault;
@@ -235,8 +250,8 @@ module ot_s81_cfg7_seq #(
         end
     end
     reg act;
-    always @(posedge clk[0] or negedge rst_n[0]) begin
-        if (!rst_n[0]) act <= 1'b0;
+    always @(posedge clk[0] or negedge rst_c) begin
+        if (!rst_c) act <= 1'b0;
         else if (cfg_go_x || ld_start_x) act <= 1'b0;
         else if (c_v && c_a >= 5'(NSEG) && c_a < 5'(2 * NSEG) && c_d[0]) act <= 1'b1;
     end
