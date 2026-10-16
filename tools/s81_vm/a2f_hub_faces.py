@@ -114,7 +114,7 @@ def spans_from_plan(plan, W, H):
     return {p: span(name, face) for name,face,ports in assignments for p in ports}
 
 
-def install_spans(spans):
+def install_spans(spans, assigned=None):
     """replace R.port_face / R.connections port placement by the span-clipped version (same Prim tree otherwise)."""
     if spans is None:
         return
@@ -144,13 +144,22 @@ def install_spans(spans):
                 continue
             ports = [e for e in eps if e[0] < 0]
             for e in ports:
-                groups[e[1]].append((len(raw), pts[0]))
-            raw.append((pts, tags, [e[1] for e in ports]))
+                groups[e[1]].append((len(raw), pts[0], e[2]))
+            raw.append((pts, tags, [(e[1], e[2]) for e in ports]))
         place, face_bits = {}, collections.Counter()
         for pname, lst in groups.items():
             f, lo, hi = look(pname)
             face_bits[f] += len(lst)
-            proj = sorted((p[1] if f in 'WE' else p[0]) for _, p in lst)
+            if assigned and pname in assigned['ports']:
+                ps=assigned['ports'][pname]
+                assert len(ps['per_bit'])==ps['bits']
+                aw,ah=assigned['outline_um']
+                for ni,_,bit in lst:
+                    af,layer,c,depth=ps['per_bit'][bit]
+                    assert af==f, ('assigned face mismatch',pname,bit,af,f)
+                    place[(ni,pname)]={'W':(depth/2,c),'E':(aw-depth/2,c),'N':(c,ah-depth/2),'S':(c,depth/2)}[af]
+                continue
+            proj = sorted((p[1] if f in 'WE' else p[0]) for _, p, _ in lst)
             c = proj[len(proj) // 2]
             span = min(max(len(lst) / port_density, proj[-1] - proj[0] if len(proj) > 1 else 0.0), hi - lo)
             a = min(max(c - span / 2, lo), hi - span)
@@ -161,7 +170,7 @@ def install_spans(spans):
         out = []
         for n, (pts, tags, ports) in enumerate(raw):
             pts, tags = list(pts), list(tags)
-            for pname in ports:
+            for pname,bit in ports:
                 pts.append(place[(n, pname)])
                 tags.append('PORT_' + look(pname)[0] + ':' + pname)
             done, todo = [0], list(range(1, len(pts)))
@@ -425,6 +434,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--width', type=float, default=4104.0, help='total VM width (body = width - capture columns)')
     ap.add_argument('--caprow-per', type=int, default=8)
+    ap.add_argument('--assigned-pins', help='actual per-bit parent pin record; supplied ports override span packing')
     ap.add_argument('--hub-plan', help='exact current die hub_layout.json; overrides nominal peer spans')
     ap.add_argument('--center-band', action='store_true', help='center the actual control/landing/CDC band in its empty middle strip')
     ap.add_argument('--meta4', action='store_true', help='seven standard field4 metadata leaves per slice')
@@ -469,11 +479,15 @@ def main():
     if sp is None:          # split4 reference: the grant's face map, free spans
         cdc = ('aSW', 't_wfc', 'f_wfc', 'sel', 'col', 'qSW', 't_gather')
         R.port_face = lambda p: 'E' if p.startswith(cdc) else baseface(p)
-    install_spans(sp)
+    assigned=json.loads(Path(a.assigned_pins).read_text()) if a.assigned_pins else None
+    install_spans(sp, assigned)
     bad, outside = P.check(W, H)
     res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
                spans=sp, by_reach={}, metadata_standard_field4=a.meta4, center_band=a.center_band, structure=struct)
+    if a.assigned_pins:
+        res['assigned_pins']=dict(path=a.assigned_pins,sha256=hashlib.sha256(Path(a.assigned_pins).read_bytes()).hexdigest(),
+                                  ports=sorted(assigned['ports']),outline_um=assigned['outline_um'],scope='Partial grant; other ports retain peer-span planning positions. Parent fit and remaining pin/clock assignment open.')
     if a.hub_plan:
         res['peer_plan'] = dict(path=a.hub_plan, sha256=hashlib.sha256(Path(a.hub_plan).read_bytes()).hexdigest(),
                                 source=json.loads(Path(a.hub_plan).read_text()))
