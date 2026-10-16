@@ -120,7 +120,7 @@ module ot_hbm_svc_vm_kshare #(parameter integer SM=0, parameter integer MUT=0) (
   ot_hbm_svc_pin_skid2 #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hbm_rst_n),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
    .in_data({g_k_we[l],g_k_addr[30*l+:30],g_k_len[4*l+:4],g_k_tag[17*l+:17],g_k_wstrb[32*l+:32],g_k_wdata[256*l+:256]}),
    .out_v(a_v),.out_r(a_r),.out_data(a_d));
-  reg[2:0]st;reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[3:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
+  reg[2:0]st;reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[5:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
   wire[7:0]wn=wcmd_q[8*l+:8];
   // WB-side request pin skid (E)
   wire e_v,e_r;wire[285:0]e_d;
@@ -171,13 +171,14 @@ module ot_hbm_svc_vm_kshare #(parameter integer SM=0, parameter integer MUT=0) (
    .rd_clk(stream_clk),.rd_rst_n(stream_rst_n),.rd_valid(rf_valid[l]),.rd_ready(rf_valid[l]),.rd_data(rf_data[FW*l+:FW]),.rd_underflow(f_un));
   wire[8:0]rd_beats=b_pop_grp&&!b_d[KW-1]?{5'd0,b_d[KW-1-30-1-:4]}:9'd0;
   wire drained=!b_v&&g_rd_out==0&&g_wr_out==0;
+  // Controller queue holds 32 writes and KREG holds two more: count needs six bits.
   wire wdrained=!b_v&&(g_wr_out==0||MUT==3);
   wire g_done=c_k_wr_done[l]&&!wb_st;
   always @(posedge hbm_clk or negedge hbm_rst_n)begin
    if(!hbm_rst_n)begin st<=NORM;j<=0;got<=0;g_rd_out<=0;g_wr_out<=0;hf<=0;wsent<=0;wdone<=0;end
    else begin
     g_rd_out<=g_rd_out+rd_beats[7:0]-{7'd0,c_pop_grp};
-    g_wr_out<=g_wr_out+{3'd0,b_pop_grp&&b_d[KW-1]}-{3'd0,g_done};
+    g_wr_out<=g_wr_out+{5'd0,b_pop_grp&&b_d[KW-1]}-{5'd0,g_done};
     if(g_done&&g_wr_out==0)hf<=1;
     if(w_push)begin wsent<=wsent+1'b1;if(e_bad)hf<=1;end
     if(c_k_wr_done[l]&&wb_st)begin wdone<=wdone+1'b1;if(wdone==wsent)hf<=1;end

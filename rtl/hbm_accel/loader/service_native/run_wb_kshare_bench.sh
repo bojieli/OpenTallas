@@ -13,7 +13,9 @@ src=("$n/tb_hbm_svc_wb_kshare_q.sv" "$n/ot_hbm_svc_wb_kport.sv" "$n/ot_hbm_svc_v
  rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
 sha256sum "${src[@]}" > "$out/source.sha256"
-for c in baseline overlap address premature; do
+cases=("${@:2}")
+if ((${#cases[@]}==0)); then cases=(baseline overlap address premature); fi
+for c in "${cases[@]}"; do
  args=()
  case "$c" in overlap) args=(-GKSMUT=3);; address) args=(-GKSMUT=4);; premature) args=(-GWBMUT=1);; esac
  "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
