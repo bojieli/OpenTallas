@@ -18,7 +18,7 @@ def repair(K, m):
             buses.append((bid, cls, bits, eps)); continue
         (a, pa), (b, pb) = eps
         ap, bp = K.pin_xy(by[a], M[by[a].master], pa.lstrip('*')), K.pin_xy(by[b], M[by[b].master], pb.lstrip('*'))
-        if abs(ap[0]-bp[0]) + abs(ap[1]-bp[1]) <= K.PIN_REACH:
+        if abs(ap[0]-bp[0]) + abs(ap[1]-bp[1]) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             buses.append((bid, cls, bits, eps)); continue
         width, height = 52.68, 30.24 if bits <= 512 else K.up(bits * .048 + 4, K.GY)
         if __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
@@ -31,7 +31,7 @@ def repair(K, m):
         # Several registered stages are necessary for a long fault-chain return.
         # Each stage is chosen in free channel space; a trapped chain is rolled back.
         for stage in range(math.ceil((abs(ap[0]-bp[0])+abs(ap[1]-bp[1]))/200)+12):
-            cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else K.PIN_REACH
+            cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH)
             if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= cap:
                 break
             distance = abs(ap[0]-bp[0])+abs(ap[1]-bp[1])
@@ -64,7 +64,7 @@ def repair(K, m):
             sbid=bid if not chain else bid+'__pinfix'+str(stage)
             chain.append((sbid,cls,bits,[previous,(name,'a')]))
             previous=(name,'b');ap=(out_x,y+height/2)
-        if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > K.PIN_REACH:
+        if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             unresolved.append(dict(bus=bid,um=abs(initial_ap[0]-bp[0])+abs(initial_ap[1]-bp[1])));
             buses.append((bid,cls,bits,eps)); continue
         if not staged:
