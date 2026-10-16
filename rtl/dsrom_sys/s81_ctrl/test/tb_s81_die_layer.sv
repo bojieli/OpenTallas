@@ -426,7 +426,7 @@ module tb_s81_die_layer;
     wire [3:0] mx_wq_v; wire [55:0] mx_wq_row;
     wire [63:0] mx_wq_mask; wire [2047:0] mx_wq_d;
     dsfd_engram_mix4_c #(.MUT(MXMUT)) u_mix4 (
-        .ck({133{ck}}), .rst(rst), .c_cmd(c[10]), .c_done(d[10]), .c_st(est[10]),
+        .ck({149{ck}}), .rst(rst), .c_cmd(c[10]), .c_done(d[10]), .c_st(est[10]),
         .f_inp(hcnt == XW), .rq_v(mx_rq_v), .rq_row(mx_rq_row),
         .rs_v(mx_rs_v), .rs_d(mx_rs_d), .wq_v(mx_wq_v), .wq_row(mx_wq_row),
         .wq_mask(mx_wq_mask), .wq_d(mx_wq_d));
