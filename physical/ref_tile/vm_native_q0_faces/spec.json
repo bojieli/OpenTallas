@@ -286,7 +286,9 @@
  },
  "clock": "multiple_cts_roots",
  "io_tcl": "physical/ref_tile_specs/smh/vm_q0_faces_pins.tcl",
- "orfs_vars": {},
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/ref_tile_specs/smh/vm_q0_faces_post_iop.tcl"
+ },
  "pin_regs": {
   "enable": false,
   "reason": "Actual source wrapper explicitly preserves exact recipe3 input registers; no additional automatic stage."

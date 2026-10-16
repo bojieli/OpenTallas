@@ -36,7 +36,7 @@ lines+=['source /src/physical/common_flow/assigned_pin_exact.tcl','set vm_expect
 for p,v in pins.items():lines.append(' {'+p+' '+v['face']+' '+v['layer']+f" {v['position_um']:.3f}"+'}')
 lines+=['}','foreach vm_item $vm_expected {lassign $vm_item vm_p vm_f vm_l vm_x;ot_assigned_pin_exact $vm_p $vm_l $vm_f $vm_x}']
 pf=ROOT/'physical/ref_tile_specs/smh/vm_q0_faces_pins.tcl';pf.write_text('\n'.join(lines)+'\n')
-s['io_tcl']=str(pf.relative_to(ROOT));s['orfs_vars'].pop('POST_IO_PLACEMENT_TCL',None)
+s['io_tcl']=str(pf.relative_to(ROOT));s['orfs_vars']['POST_IO_PLACEMENT_TCL']='physical/ref_tile_specs/smh/vm_q0_faces_post_iop.tcl'
 s['clock_entry_domains']={}
 for face in ['N','S','E','W']:
  c='clk_'+face.lower();ports=[p for p in old['pins'][face] if p not in ['clk','rst_n']];ins=[p for p in ports if p in ['rq0','rq1','rq2','rq3','rq4','wq0','wq1','dq','kq','xq','xq2','pq','bid','sid','rslot_v','rslot','wslot_v','wslot']]
