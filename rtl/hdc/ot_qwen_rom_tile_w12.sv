@@ -501,7 +501,9 @@ module ot_qwen_rom_tile_logic_w12 #(
                     wire [25:0] rq;
                     ot_qwen_rpair_logic #(.PWB(PWB), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .ROM_MUT(ROM_MUT),
                         .MUT3((TMUT == 3 && b == 0) ? 1 : 0), .MUT5((TMUT == 5 && b == 0) ? 1 : 0)) u_rp (
-                        .clk(clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .req_m(rq),
+                        // Q-TILE-REPACK: CHILD_CLOCKS gives each soft bank row its own CTS root ck_rpair[b] (the hardened
+                        // leaf's clock entry becomes a local standard-cell root; ~4.4k sinks per bank, not 22k on clk)
+                        .clk(CHILD_CLOCKS ? ck_rpair[b] : clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .req_m(rq),
                         .rd({rom_rd[(CODE_BANKS + b)*266 +: PWB], rom_rd[b*266 +: PWB]}), .r_q(r_q));
                     assign rom_req_m[13*b +: 13] = rq[12:0];
                     assign rom_req_m[13*(CODE_BANKS+b) +: 13] = rq[25:13];
@@ -744,6 +746,9 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer CHILD_CLOCKS = 0
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
+    // Q-TILE-REPACK 10-15: CHILD_CLOCKS with RPH 1 (ROM macros placed directly in the tile parent): one raw-macro clock
+    // entry per macro, index p*CODE_BANKS + b (= g_col[p].g_bank[b].u_rom).  Unused (any value) otherwise.
+    input wire [2*CODE_BANKS-1:0] ck_rom,
     input wire [7:0] ck_lsl,
     input wire ck_node,
     input  wire              clk,
@@ -792,7 +797,7 @@ module ot_qwen_rom_tile_w12 #(
         //: array binding); BAW 11 half-depth banks live under g_colh (zero-trip loops, no extra scope level)
         for (p = 0; p < ((BAW == 12 && RPH != 2) ? 2 : 0); p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
+                ot_rom_4096x266_m8 u_rom (.clk((CHILD_CLOCKS != 0 && RPH == 1) ? ck_rom[p*CODE_BANKS+b] : clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
                     .addr_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end

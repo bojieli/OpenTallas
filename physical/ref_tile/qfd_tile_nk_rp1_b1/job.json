@@ -1,0 +1,148 @@
+{
+ "name": "qfd_tile_nk_rp1_b1-b1-COMMIT",
+ "block": "qfd_tile_nk_rp1",
+ "ref_tile": true,
+ "owner": "Claude:q_tile_repack",
+ "purpose": "Re-pack at today's 449.28 column: 2x4 lane grid + E glue strip, 5 abutted macro rows (one bank each)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qtile-repack-1015",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/tb_qfd_tile_nk_rp1.sv",
+   "tools/rtl_qwen_me_partition_gate_w12.py",
+   "tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tile_nk_rp1 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_node_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/physical/qfd_tile_nk_rp1.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rp1_face_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_tile_nk_rp1 -o {RUN}/bench/rp1_exact rtl/test/tb_qfd_tile_nk_rp1.sv rtl/physical/qfd_tile_nk_rp1.sv rtl/physical/ot_qwen_rom_tile_nk.sv && vvp -n {RUN}/bench/rp1_exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qfd_tile_nk_rp1 checks=4000"
+   },
+   {
+    "name": "rp1_face_mutant",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DOT_QFD_TILE_NK_RP1_MUT -s tb_qfd_tile_nk_rp1 -o {RUN}/bench/rp1_mutant rtl/test/tb_qfd_tile_nk_rp1.sv rtl/physical/qfd_tile_nk_rp1.sv rtl/physical/ot_qwen_rom_tile_nk.sv && vvp -n {RUN}/bench/rp1_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qfd_tile_nk_rp1 checks=4000"
+   },
+   {
+    "name": "r5_rom_pipe_exact",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=1 --workdir {RUN}/bench/r5_rom_pipe_exact --result {RUN}/bench/r5_rom_pipe_exact.json; python3 -c \"import json,sys;d=json.load(open('{RUN}/bench/r5_rom_pipe_exact.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control']);sys.exit(0 if d['status']=='pass' else 1)\"",
+    "expect": "pass",
+    "pass_regex": "^PASS rom_pipe PASS .*latency_added=16 ",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "r5_rom_pipe_tmut3",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/r5_rom_pipe_tmut3 --result {RUN}/bench/r5_rom_pipe_tmut3.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_rom_pipe_tmut3.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+    "expect": "fail",
+    "fail_regex": "MUTVERDICT FAIL",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "r5_rpair_seam_tmut5",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=2 --param TMUT=5 --workdir {RUN}/bench/r5_rpair_seam_tmut5 --result {RUN}/bench/r5_rpair_seam_tmut5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_rpair_seam_tmut5.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+    "expect": "fail",
+    "fail_regex": "MUTVERDICT FAIL",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tile_nk_rp1_b1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tile_nk_rp1_b1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tile_nk_rp1_b1 --out {RUN}/record/views/qfd_tile_nk_rp1 --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node --macro-view physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tile_nk_rp1_b1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tile_nk_rp1_b1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tile_nk_rp1_b1/qfd_tile_nk_rp1_b1-b1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Q-TILE-REPACK: ROM macros placed directly in the tile (RPH 1, soft bank rows on local CTS roots ck_rp0..4, 10 raw macro clock entries ck_rom0..9) instead of 5 closed rpair leaves (311 x 130 um each); lanes 3 x 3 grid, macro block abutted rows; same die ports/values/edges as qfd_tile_nk; die adopts under the name qfd_tile_nk."
+}

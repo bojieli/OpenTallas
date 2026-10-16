@@ -7,7 +7,7 @@
 module ot_qwen_rom_tile_w12 #(parameter ROM_TILE=-1, NW=18,GT=6144,SMIN=7,CODE_BANKS=5,KV_VB=131072,KV_NH=2,MEM_EXTRA=1,ACC_LAT=7,
     FAST_ISSUE=1,KV_PREP=4,MUL_LAT=8,TREE_LAT=7,ROM_PIPE=1,ROM_ARELAY=2,ROM_CAP2=1,ROM_CAPX=2,LRST=3,ARPB=1,MPR=1,HIER=2,
     HIER_HARD=1,TOREG=1,TIDR=1,LRR=1,XTX=2,ANR=1,BAW=12,KV_SLICE=1,RPH=0,RQR=0,NDH=0,BMUT=0,NODE=1,CHILD_CLOCKS=0) (
-    input [CODE_BANKS-1:0] ck_rpair, input [7:0] ck_lsl,input ck_node,
+    input [CODE_BANKS-1:0] ck_rpair, input [2*CODE_BANKS-1:0] ck_rom, input [7:0] ck_lsl,input ck_node,
     input clk, rst_n, input [15:0] tile_id, input ib_go, input [3*NW+13*24+13-1:0] ib, input [127:0] xl,
     output [511:0] t_out, output t_vout, input [511:0] n_a, n_b, input n_va, output [511:0] n_y, output n_vy,
     output fault, input kvw_ce, input [6:0] kvw_addr, input [511:0] kvw_data, kvw_mask);
