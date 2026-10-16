@@ -1,5 +1,5 @@
 {
- "name": "qfd_static_command_fork42-cf1-COMMIT",
+ "name": "qfd_static_command_fork42-cf1-81c36e5d2",
  "block": "qfd_static_command_fork42",
  "ref_tile": true,
  "owner": "Codex:Q-COMPUTE-DIE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 4,
  "source": {
   "branch": "codex/qwen-b2-allocator-command-0812",
-  "commit": "COMMIT",
+  "commit": "81c36e5d2",
   "extra_paths": [
    "rtl/test/qwen_command_fork",
    "tools/qwen_split/run_fork_bench.sh",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_static_command_fork42/qfd_static_command_fork42-cf1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_static_command_fork42/qfd_static_command_fork42-cf1-81c36e5d2"
   }
  ],
  "cycles_added": 0,

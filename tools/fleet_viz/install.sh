@@ -7,7 +7,11 @@ cp "$src"/{server.py,agent.py,recorder.py,elements.py,die_contracts.py,flow_stat
 cp "$src"/{landing.py,coverage.py,native_provenance.py,elem_shell.py,elem_desc.py,explorer.py,explorer_geom.py,explorer.html,explorer.js,explorer_story.js,explorer_dies.json,explorer_names.json,explorer_compose.json,stories_import.py} "$dst"/
 mkdir -p "$dst/stories" "$dst/explorer"
 # data-flow views + link records (explorer/dataflow/data/*.links.json.gz from dataflow_links.py)
-rm -rf "$dst/explorer/dataflow"; cp -r "$src/explorer/dataflow" "$dst/explorer/dataflow"
+# code files are replaced; data/ is NEVER deleted or overwritten (die-lead-published records + the live index.json):
+# repo data files are only added when absent
+mkdir -p "$dst/explorer/dataflow/data"
+find "$src/explorer/dataflow" -maxdepth 1 -type f -exec cp {} "$dst/explorer/dataflow/" \;
+cp -n "$src"/explorer/dataflow/data/* "$dst/explorer/dataflow/data/" 2>/dev/null || true
 rm -f "$dst/explorer_chip_dataflow.js" "$dst/explorer_dataflow.py" "$dst/explorer/dataflow.js" "$dst/explorer/flow_layout.js"
 cp "$src"/stories/*.json "$dst/stories/"
 rm -rf "$dst/explorer/token"; cp -r "$src/explorer/token" "$dst/explorer/token"

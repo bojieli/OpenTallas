@@ -12,7 +12,7 @@ if [[ -n "${WRITER_PHYSICAL_SOURCE:-}" ]];then cp -r "$WRITER_PHYSICAL_SOURCE/."
  for spec in fe242d5ba:rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv 34cfa0d07:rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv;do
   p=${spec#*:};mkdir -p "$src/$(dirname "$p")";git -C "$root" show "$spec" > "$src/$p"
  done
- for p in rtl/qwen_sys/static_kv_20261014/{ot_qkd_static_emb_cdc,qkd_static_kv_write_observer,qkd_ctrl_pc_host_static,ot_qkd_static_ctrl_pc_emb,ot_qkd_static_kv_timing}.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/lib/{ot_async_fifo,ot_reset_sync}.sv;do
+ for p in rtl/qwen_sys/static_kv_20261014/{ot_qkd_static_emb_cdc,qkd_static_kv_write_observer,qkd_ctrl_pc_host_static,qkd_ctrl_pc_host_static_core,qkd_ctrl_pc_children,ot_qkd_static_ctrl_pc_emb,ot_qkd_static_kv_timing}.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/lib/{ot_async_fifo,ot_reset_sync}.sv;do
   mkdir -p "$src/$(dirname "$p")";git -C "$root" show "6f673e98d:$p" > "$src/$p"
  done
  cp "$root/rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv" "$src/"

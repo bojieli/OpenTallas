@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+ "enable": false,
+ "reason": "Actual v6 core captures every input and owns registered outputs; physical wrapper is pure wiring. Source-exact4096edge miter and25 proof rows show0 added normal edges. Scalar related roots and base IO domains preserve ordinary cross-root setup+hold."
+}

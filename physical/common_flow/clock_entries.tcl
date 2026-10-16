@@ -9,6 +9,23 @@
 # every clock source port must drive exactly one hard-child clock pin and nothing else; a clock port that reaches a
 # standard-cell register is an ERROR (that register belongs in a leaf).  Long entry wires (> OT_ENTRY_WIRE_MAX_UM,
 # default 60) are reported: put the entry pin at the child's clock pin.
+# Only generator-validated raw Liberty memories with exact instance/pin/root
+# bindings may be ordinary sinks of glue CTS. Hard-child entries stay exclusive.
+proc ot_ce_raw_memory_sink {inst pin source} {
+  if {$inst eq "NULL" || ![[$inst getMaster] isBlock]} {return 0}
+  set master [[$inst getMaster] getName]
+  if {[info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts $master]} {return 0}
+  set name [string map {\\ {}} [$inst getName]]
+  if {![info exists ::ot_ce_raw_memory_bindings] || ![dict exists $::ot_ce_raw_memory_bindings $name]} {return 0}
+  set b [dict get $::ot_ce_raw_memory_bindings $name]
+  set leaf [lindex [split [get_full_name $pin] /] end]
+  if {$master ne [dict get $b master] || $leaf ne [dict get $b clock_pin] || $source ne [dict get $b root]} {
+    error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+  }
+  if {[dict exists $::ot_ce_raw_memory_seen $name]} {error "OT_HYBRID: duplicate raw memory clock sink $name"}
+  dict set ::ot_ce_raw_memory_seen $name 1
+  return 1
+}
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_ce_cts_orig
   proc clock_tree_synthesis {args} {
@@ -16,6 +33,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set lim [expr {[info exists ::env(OT_ENTRY_WIRE_MAX_UM)] ? $::env(OT_ENTRY_WIRE_MAX_UM) : 60.0}]
     set dbu [expr {double([$block getDbUnitsPerMicron])}]
     set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}; set entry_nets {}
+    set ::ot_ce_raw_memory_seen [dict create]
     set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
     foreach clk [all_clocks] {
       foreach src [get_property $clk sources] {
@@ -37,6 +55,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             # STA renders escaped identifiers differently from OpenDB names.
             # Convert the actual instance object rather than reparsing its name.
             set inst [sta::sta_to_db_inst [lindex $cell 0]]
+            if {[ot_ce_raw_memory_sink $inst $pin $pname]} {continue}
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }
@@ -65,6 +84,10 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
                   [[$inst getMaster] getName] $d [expr {$d > $lim ? " LONG" : ""}]]
         incr n
       }
+    }
+    if {[info exists ::ot_ce_raw_memory_bindings]
+        && [lsort [dict keys $::ot_ce_raw_memory_bindings]] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
+      error "OT_HYBRID: declared raw-memory clock sinks were not all reached from their granted source roots"
     }
     if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
     if {[lsort $cts_seen] ne [lsort $roots]} { error "OT_HYBRID: declared CTS root coverage mismatch" }

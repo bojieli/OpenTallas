@@ -1,0 +1,319 @@
+{
+ "name": "hv16_vm_cal_f20_ww",
+ "top": "hfd_hgi_vm_calendar_f20",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk_mem",
+   "clk_cap",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v"
+  ],
+  "E": [
+   "client_seq",
+   "response_enable",
+   "response_seq",
+   "bank_enable",
+   "bank_client",
+   "hub_ring_enable",
+   "hub_ring_client",
+   "rslot_v",
+   "wslot_v",
+   "rslot",
+   "wslot",
+   "ring_tx_enable",
+   "ring_tx_source",
+   "replay_enable",
+   "replay_source",
+   "lg_local_read",
+   "lg_local_write"
+  ],
+  "S": [
+   "clk",
+   "clk_tgt",
+   "calendar_v",
+   "active",
+   "done",
+   "fault",
+   "ordinal",
+   "tgt_configured",
+   "tgt_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_calendar.u_programme.u_program",
+   "clock_entry": {
+    "port": "clk_mem",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    44.496,
+    23.76
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-HARDEN",
+  "branch": "codex/hbm-f20-west-0900",
+  "tag": "ww0900",
+  "purpose": "Structural West channel measurement after66overflow/44hotgcells in df84589aa; explicit44.496um West clearance and558 granted signal rectangles, same RTL/edges. Measurement grantdf7c12a94, no12-homeadoption.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "tools/hbm_vm_static_calendar.py",
+   "results/arch/hbm_vm_static_1014/quadrant_abi.json",
+   "results/arch/hbm_vm_lg_split_1015/programme",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hier_contract_1015/hbm_v15.json",
+   "rtl/hbm_accel/generic/vm/static/fill_universal_0600",
+   "results/arch/hbm_die_v16/f20_west_provisional_0900.json",
+   "results/rtl/hbm_harden_0811/f20_0850/pin_window_request.json",
+   "physical/hbm_die_pins/f20_west_0900/hfd_hgi_vm_calendar_f20.tcl"
+  ],
+  "record_to": "results/rtl/ref_tile/hv16_vm_cal_f20_ww",
+  "benches": [
+   {
+    "name": "f20_eq",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh {RUN}/bench/f20",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CAL_F20_EQ GATE PASS",
+    "min_count_regex": "MUT0 CAL_F20_EQ PASS checks=(\\d+)"
+   },
+   {
+    "name": "f20_strap_mutant",
+    "cmd": "ONLY=1 bash rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh {RUN}/bench/f20m",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CAL_F20_EQ FAIL"
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_CALENDAR_UNIVERSAL_ALL PASS4",
+    "min_count_regex": "PASS(\\d+) edges exact"
+   },
+   {
+    "name": "mut_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_field",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_core",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "merge_target": null
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every input at the pin (ot_static_program_target cv/dv/lv/target/address/data_q/base/limit/loops/tgt_q on clk_cap) and every output is a flop (calendar word fields, calendar_v, ordinal, active, done, fault, configured, target fault); rst_n drives only local synchronisers; a wrapper stage would add +1/+1 for nothing"
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_cap",
+  "clk_mem",
+  "clk_tgt"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "client_seq",
+    "response_enable",
+    "response_seq",
+    "bank_enable",
+    "bank_client",
+    "hub_ring_enable",
+    "hub_ring_client",
+    "rslot_v",
+    "wslot_v",
+    "rslot",
+    "wslot",
+    "ring_tx_enable",
+    "ring_tx_source",
+    "replay_enable",
+    "replay_source",
+    "lg_local_read",
+    "lg_local_write",
+    "calendar_v",
+    "active",
+    "done",
+    "fault",
+    "ordinal"
+   ]
+  },
+  "cap": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cap"
+   ],
+   "inputs": [
+    "tgt",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": []
+  },
+  "mem": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "tgt": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_tgt"
+   ],
+   "inputs": [],
+   "outputs": [
+    "tgt_configured",
+    "tgt_fault"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_cts_roots": [
+  "clk",
+  "clk_cap",
+  "clk_tgt"
+ ],
+ "slot_change_request": "APPROVED measurement grant df7c12a94:241.92x116.64, exact558 signal pin rectangles;12-home actualplacement/cuts remain ungranted. Current d4 frozen.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "APPROVED measurement grant df7c12a94:241.92x116.64, exact558 signal pin rectangles;12-home actualplacement/cuts remain ungranted. Current d4 frozen."
+ },
+ "outline": {
+  "w": 241.92,
+  "h": 116.64
+ },
+ "io_tcl": "physical/hbm_die_pins/f20_west_0900/hfd_hgi_vm_calendar_f20.tcl",
+ "provisional_measurement_grant": {
+  "grant_commit": "df7c12a94",
+  "source": "results/arch/hbm_die_v16/f20_west_provisional_0900.json",
+  "scope": "isolated measurement only; all12 homes not granted"
+ },
+ "structural_change": "West macro-facing channel22.896->44.496um and outline+21.600um; macro fixed44.496/23.760, same558 signal rectangles W/S/N with E translated+21.6. No OBS/clock/capacity waiver; all66overflows must disappear, especially20 inside-edge cap0markers."
+}
