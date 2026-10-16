@@ -1,5 +1,5 @@
 {
- "name": "s81engm_shctlp-p29-COMMIT",
+ "name": "s81engm_shctlp-p29b-COMMIT",
  "block": "ot_s81_engram_mixq_shctl",
  "ref_tile": true,
  "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_shctlp/s81engm_shctlp-p29-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_shctlp/s81engm_shctlp-p29b-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -125,7 +125,11 @@
  "hold_merge": "production-param shctl: adopt with the banded/flat MIX4 parent.",
  "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: production parameterization of the closed shell control: the closed s81engm_shctl view was built with module defaults VM_LAT=3 / WRITE_COMMIT_LAT=1, but the banded MIX4 production cluster runs VM_LAT = 17 (VM RL16+1) + 2 + 2*RS(5) = 29 and WRITE_COMMIT_LAT 12; same RTL/outline/pins, only the latency-check line and commit counter depth change",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "reason": "parameter change VM_LAT 3->29, WRITE_COMMIT_LAT 1->12 (production MIX4 cluster); the closed view's expected-return line does not match the production VM latency"
+  "kind": "param_change",
+  "params": {
+   "VM_LAT": "3 -> 29",
+   "WRITE_COMMIT_LAT": "1 -> 12"
+  },
+  "reason": "RTL byte-identical to closed startq eea61ffca; the closed view was elaborated at module defaults VM_LAT 3 / WRITE_COMMIT_LAT 1 while the production banded cluster needs 29 / 12. Netlist differs: closed gate 332 clock sinks vs 462 at 29/12 (+130 = 5-bit expected-return line x 26 extra stages)"
  }
 }

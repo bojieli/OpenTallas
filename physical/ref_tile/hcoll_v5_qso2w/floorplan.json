@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  21.6,
-  88.56
+  23.76,
+  101.52
  ],
  "core": [
   2.16,
   2.16,
-  19.44,
-  86.4
+  21.6,
+  99.36
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -73,9 +73,14 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl"
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hcoll_v5_qso2w/pre_gpl.tcl",
+  "physical/ref_tile/hcoll_v5_qso2w/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

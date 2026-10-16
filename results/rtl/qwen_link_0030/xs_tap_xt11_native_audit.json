@@ -1,0 +1,31 @@
+{
+ "cell": "qfd_xs_tap",
+ "view": "qfd_xs_tap",
+ "lib_cell": "qfd_xs_tap",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 259.6,
+ "spread_ps": 75.4,
+ "outputs": 3135,
+ "inputs": 3145,
+ "launch_ps": 206.5,
+ "launch_pin": "hw_d[13]",
+ "capture_ps": 210.8,
+ "capture_pin": "sw[2081]",
+ "launch_over": 0,
+ "capture_over": 34,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 210.84118 > 190 (34 pins)",
+ "job": "qfd_xs_tap-xt11-90b1a75f7",
+ "record": "4559a50b4",
+ "audited": "2026-10-16 Q-DVM+LINK",
+ "diagnosis": {
+  "launch": "fixed by the hw_d N-face re-spread (301.4 -> 206.5)",
+  "capture": "34 sw pins (W face, y 190-210, NW corner) 190.4-210.8: sw[2120] = input 166.7 + HB2 inhold 81.4 + ihdrv 24.4 + SEVEN route hold-repair BUFx2 (~131 ps) to a flop on late leaf clkbuf_leaf_145 (input slew 110 ps, 44.7 fF level-6 net); the hold buffers come from the 30 ps route hold margin applied to boundary inputs",
+  "fix": "xt12: route io_hold_margin_ns 0.010 (boundary-input FF repair margin only; signoff.sdc unchanged, FF >= 0 still required)"
+ }
+}

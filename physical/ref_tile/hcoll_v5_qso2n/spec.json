@@ -11,8 +11,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 21.6,
-  "h": 21.6
+  "w": 19.44,
+  "h": 19.44
  },
  "pins": {
   "W": [
@@ -48,7 +48,7 @@
   "macro_halo_um": 5.4
  },
  "fill_reason": {
-  "pin_bound": "127 pin bits: N 79 (sink_slot/select + clk/rst/faults) on M5 over 21.6 um = 38% of slots; outline 21.6x21.6 (17.28 gate: std 93 um2 = util 56% and post-place density saturated over the whole core; qso3n twin GPL-0301 at 17.28)."
+  "pin_bound": "127 pin bits: N 79 (sink_slot/select + clk/rst/faults) on M5 over 19.44 um = 42% of slots; 19.44 square gives ~52% util at the expected flow std (1.28x gate synth 93 um2) and 3 M5 PG stripes per net spanning 56%."
  },
  "job": {
   "owner": "Claude:H-NETLIST/COLL-QS-1045",
@@ -90,11 +90,20 @@
   "views_to": "physical/ref_tile/hcoll_v5_qso2n/views",
   "record_to": "results/rtl/ref_tile/hcoll_v5_qso2n"
  },
- "io_flop_at_pins": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
  "pin_regs": {
   "enable": false,
-  "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Narrow pin-bound outline (<= 24 um across) keeps every pin flop within one short wire of its pin, so io_flop_at_pins (recipe-2 flop columns, oflop band wider than the core) is off; inhold/outhold stages kept."
+  "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Recipe-2 output stage on: io_flop_at_pins anchors only the OUTPUT launch flops at their pins (OT_OFLOP_PORT_RE), pin_reg_split + keep_pin_regs give one launch flop per output pin; inputs keep their inhold pad."
  },
+ "structural_change": "Coordinator one-pass qso resize after the qso3w/qso2w FLOORPLAN_MARGIN verdicts (flow std = 1.28x gate synth): expected flow std ~119 um2 = 40% at 21.6x21.6 -> 19.44x19.44 (core 229 um2, ~52%), same RTL, pin faces, recipe. Plus the recipe-2 output stage (io_flop_at_pins on outputs only, pin_reg_split, keep_pin_regs) so dst launch meets the native 220-ps budget (qcap twin failed launch 240.4 without it).",
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^(dst_|select_fault|unavailable_fault)"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
  "inhold": true,
  "outhold": true,
  "hold_pad": {

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen.dvm_read_pin_candidate.v1",
- "qualification": "UNQUALIFIED opt-in source candidate, no physical kit; array/static program proofs running",
+ "qualification": "SOURCE-QUALIFIED opt-in candidate (array exact + full48 production static PASS, +1 program edge measured); physical leaf/head views still native FAIL, no parent M7/M9 grant",
  "rtl_source_commit": "dd4b10a1b",
  "production_bench_syntax_fix_commit": "7ae85d21d",
  "mixed_write_bench_commit": "ef31f0701",
@@ -37,15 +37,31 @@
  ],
  "source_proofs": {
   "mixed_write_leaf": "PASS129reads128good1invalid; physicalwrites identical, reference effective request delayed1; swappedtile mutantFAIL58ns",
-  "array_exact": "RUNNING 2columns,128tiles,40ops,DX11,40ops variedrounding/reuse/attention writes",
-  "native_static36": "RUNNING ACTUAL48columns/768tiles production profile SMIN7..11,36layers+6random,STATIC_SCHEDULE1,NATIVE_AFFINE1,DX11",
+  "array_exact": "PASS NCOL=2 NH=8 GT=128 DX=11 ops=40 cycles=9416 result_writes=2456 operand_checks=232704 bd_ref=26 bd_dvm=28 first_result_delta=2 (E4 unit 2151109)",
+  "native_static36": "PASS NCOL=48 NH=8 tiles=768 GT=3072 SMIN=7 SMAX=11 DX=11 ops=150 cycles=20958 element_checks=57507840 dvm_minus_ref_edges=2 (E4 unit 2188006, 7ae85d21d source, -GNLAYER=36 -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GLEAF_READ_PIN_PIPE=1)",
   "whole_48column_parent": "Native static production-shape RTL full48column benchmark running; final physical real-view parent remains NOT_PROVED",
-  "end_to_end_price_ratio": "UNMEASURED",
-  "invalid_reduced_prod": "FAIL markers cyc27..,629663errors caused unsupported literal production split9/8 under incorrect SMIN4/SMAX7 reducedprofile; exit0isNOTpass, negative preserved"
+  "end_to_end_price_ratio": "<=1 edge per program (<0.01%); see measured_cost",
+  "invalid_reduced_prod": "FAIL markers cyc27..,629663errors caused unsupported literal production split9/8 under incorrect SMIN4/SMAX7 reducedprofile; exit0isNOTpass, negative preserved",
+  "native_static36_baseline_rpp0": "PASS same source/profile with -GLEAF_READ_PIN_PIPE=0: DX=10 ops=150 cycles=20976 element_checks=57655296 dvm_minus_ref_edges=1 (E4 unit 2549945, Q-DVM+LINK 2026-10-16 06:50)",
+  "native_static36_rpp1_fill1": "PASS LEAF_READ_PIN_PIPE=1 LEAF_FILL_PIPE=1: DX=14 ops=150 cycles=20976 element_checks=57655296 dvm_minus_ref_edges=5 (E4 unit 2923447)"
  },
  "gaps": [
   "Current original leaf CTS rawgeometry0FAIL but native diagnostic FAIL r_v234.95/r_t228.41 and two outputs221.56/220.84ps",
   "Original heads CTS rawgeometry0FAIL but native diagnostic FAIL hundreds outputs and rst_n",
   "No new M6 source grant refresh, no parentM7/M9reservation, no final TT/FF/DRC/native gate for newcandidate"
- ]
+ ],
+ "measured_cost": {
+  "dvm_minus_ref_edges": {
+   "read_pin_pipe0": 1,
+   "read_pin_pipe1": 2,
+   "delta": 1
+  },
+  "interpretation": "the read-pin capture adds exactly one edge to the DVM-vs-central-x offset of the whole static 36-layer production program (fixed schedule shift, not per-op); total program cycles 20958 vs 20976 differ only through the random op mix (element checks differ), so the e2e cost is <= 1 cycle per 36-layer program (< 0.01%), far inside the 1.10x/5% ledger rule",
+  "measured_by": "Q-DVM+LINK (Claude) 2026-10-16",
+  "fill_pipe": {
+   "dvm_minus_ref_edges": 5,
+   "delta_vs_read_pin_only": 3,
+   "interpretation": "+3 program edges (FILL_LEAD +3 over the 4-leaf chain), < 0.02% of a 36-layer program"
+  }
+ }
 }
