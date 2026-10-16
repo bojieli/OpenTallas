@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.s81.mix4_vm_joint_pin_candidate.v1",
+ "source_commit": "1b01109ab6cb404d0365db85ea9a7bbade26e89d",
+ "status": "CANDIDATE_ONLY_NOT_ADOPTED",
+ "source_geometry": "17b13fb0637869d53580a1084bdd250d18828d9b vmc_26b",
+ "logical_bits": 12732,
+ "exact_peer_jog_um": 0,
+ "pitch_um": 0.24,
+ "layer": "M4",
+ "nominal_seam_um": 21.6,
+ "post_shave_candidate_seam_um": 21.624,
+ "same_layer_face_pin_fraction": 0.167318,
+ "bands": [
+  {
+   "physical_VM_group": 0,
+   "bits": 3183,
+   "first_local_y_um": 74.748,
+   "last_local_y_um": 838.428,
+   "logical_order_sha256": "96b1999d2813876628e4913bf38d7e8c24cf7f9fd76af4514e8ddb62c802ec56"
+  },
+  {
+   "physical_VM_group": 1,
+   "bits": 3183,
+   "first_local_y_um": 987.9,
+   "last_local_y_um": 1751.58,
+   "logical_order_sha256": "7ca8b065db926864739dc0632e2c925d2803311470c0851ac73cd55c214f6063"
+  },
+  {
+   "physical_VM_group": 2,
+   "bits": 3183,
+   "first_local_y_um": 1901.052,
+   "last_local_y_um": 2664.732,
+   "logical_order_sha256": "1962563203b8c6ca7a01bfb0bb47d7753aeabd30885b1991c53ca49c142fdfbb"
+  },
+  {
+   "physical_VM_group": 3,
+   "bits": 3183,
+   "first_local_y_um": 2814.156,
+   "last_local_y_um": 3577.836,
+   "logical_order_sha256": "afc571c672b3db8b8537e4e12f2d040dafe084ea4c10d24e3656c9d41939f6ce"
+  }
+ ],
+ "preserved_existing_VM_ports": [
+  "f_capture"
+ ],
+ "dependency_rules": [
+  "Each physical H lane distributes128bits to each of4compute copies.",
+  "Shared V read lanes1/2 broadcast1024bits to all copies; other-copy V requests are suppressed.",
+  "HLAYOUT1 writeq combines8BF16 words from each of4compute copies; all valids must lockstep.",
+  "K/W returns unicast to own copy outside shared V phase.",
+  "Descriptor read uses physical q0 lane0; status/command/reset/clock ports are not included."
+ ],
+ "missing": [
+  "Source-current full native interleaf graph including H transpose, V broadcast and write transpose",
+  "Actual pin-registered launch/capture, clock/reset/status/command allocation and all incident stages",
+  "Real internal/channel cut occupancy with LEF obstructions and PG, no over-hardmacro layer assumption",
+  "VM XIO/WFC/payload/header hardening and any consequent outline change",
+  "All TT setup/FF hold/DRC0 and exact static-calendar/full native workload qualification"
+ ],
+ "warnings": [
+  "Face pin fraction is geometry only, NOT a measured route cut.",
+  "Four groups are physical VM lanes, NEVER four independent compute copies.",
+  "Current c26b/26n snapshots and daily contract/recipes are unchanged.",
+  "MIX4 record covers data interface only; importing it does not bind all master ports."
+ ],
+ "input_sha256": {
+  "results/arch/s81_mix4_joint_pins_1016/logical_face_groups.json": "0be33f3f0dfbf4721ee39bb8b0f75561be2c0004e669f46c10de7d30bf2dcbf1",
+  "physical/s81_die_pins/vmc2_2330/dsfd_sp_vm.json": "60e4ded165451773d39ef5b9b923b7570e18513c63ebe4404a4a0aa614eb1033",
+  "results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_26b/hub_layout.json": "35e19a01a1241c4f37763b6b9833d6b7497e5db7dd73b05f860586f068f9f60b"
+ }
+}

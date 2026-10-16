@@ -1,0 +1,24 @@
+{
+ "scope": "Read-only observation from actual live ORFS gate container, not immutable source17b13fb06 PDK attestation",
+ "host": "ot-epyc4",
+ "container": "gate_cts_s81fill2_sseq_c8-20261016-030138",
+ "tech_lef": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+ "tech_lef_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+ "make_tracks": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl",
+ "make_tracks_sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+ "M4": {
+  "direction": "HORIZONTAL",
+  "pitch_um": 0.048,
+  "width_um": 0.024,
+  "spacing_um": 0.024,
+  "actual_y_offset_um": 0.012
+ },
+ "M5": {
+  "direction": "VERTICAL",
+  "pitch_um": 0.048,
+  "width_um": 0.024,
+  "spacing_um": 0.024,
+  "actual_x_offset_um": 0.012
+ },
+ "capacity_caution": "No MIX4 actual native parent PG/OBS/channel cut map yet; no free over-hardmacro capacity claimed."
+}
