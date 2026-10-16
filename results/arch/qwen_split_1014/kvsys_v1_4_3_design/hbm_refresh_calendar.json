@@ -1,0 +1,989 @@
+{
+ "schema": "opentallas.qwen-kvsys-hbm-refresh-calendar.v1",
+ "status": "STATIC SCHEDULE (no run-time postpone / pull-in)",
+ "timing": {
+  "tREFI_ps": 3900000,
+  "tRFC_ab_ps": 350000,
+  "tRFC_pb_ps": 200000,
+  "banks_per_pc": 32,
+  "tRREFD_ps": 8000,
+  "tREFIpb_ps": 121875.0,
+  "source": "JESD238 HBM3 16 Gb 8-high (project HBM model / Ramulator 2 72427a1)"
+ },
+ "core_clock_ps": 833.3333333333334,
+ "policy_recommended": {
+  "kind": "REFpb round-robin",
+  "command_time": "n*tREFI + b*tREFIpb + phase(p)",
+  "bank_busy_ps": 200000,
+  "busy_banks_avg": 1.641,
+  "in_core_cycles": {
+   "tREFI": 4680.0,
+   "tREFIpb": 146.25,
+   "tRFCpb": 240.0,
+   "tRREFD": 9.6
+  },
+  "calendar_rule": "no ACT/RD to (pc, bank) in [t, t + tRFCpb); tRREFD between a REFpb and an ACT/REFpb of another bank"
+ },
+ "policy_alternative": {
+  "kind": "REFab staggered",
+  "command_time": "n*tREFI + 32*phase(p)",
+  "pc_blocked_ps": 350000,
+  "duty": 0.0897,
+  "in_core_cycles": {
+   "tREFI": 4680.0,
+   "tRFC": 420.0
+  }
+ },
+ "pseudo_channels": [
+  {
+   "pc": 0,
+   "stack": "WS",
+   "phase_ps": 0.0,
+   "phase_core_cycles": 0.0
+  },
+  {
+   "pc": 1,
+   "stack": "WS",
+   "phase_ps": 3808.594,
+   "phase_core_cycles": 4.57
+  },
+  {
+   "pc": 2,
+   "stack": "WS",
+   "phase_ps": 7617.188,
+   "phase_core_cycles": 9.141
+  },
+  {
+   "pc": 3,
+   "stack": "WS",
+   "phase_ps": 11425.781,
+   "phase_core_cycles": 13.711
+  },
+  {
+   "pc": 4,
+   "stack": "WS",
+   "phase_ps": 15234.375,
+   "phase_core_cycles": 18.281
+  },
+  {
+   "pc": 5,
+   "stack": "WS",
+   "phase_ps": 19042.969,
+   "phase_core_cycles": 22.852
+  },
+  {
+   "pc": 6,
+   "stack": "WS",
+   "phase_ps": 22851.562,
+   "phase_core_cycles": 27.422
+  },
+  {
+   "pc": 7,
+   "stack": "WS",
+   "phase_ps": 26660.156,
+   "phase_core_cycles": 31.992
+  },
+  {
+   "pc": 8,
+   "stack": "WS",
+   "phase_ps": 30468.75,
+   "phase_core_cycles": 36.562
+  },
+  {
+   "pc": 9,
+   "stack": "WS",
+   "phase_ps": 34277.344,
+   "phase_core_cycles": 41.133
+  },
+  {
+   "pc": 10,
+   "stack": "WS",
+   "phase_ps": 38085.938,
+   "phase_core_cycles": 45.703
+  },
+  {
+   "pc": 11,
+   "stack": "WS",
+   "phase_ps": 41894.531,
+   "phase_core_cycles": 50.273
+  },
+  {
+   "pc": 12,
+   "stack": "WS",
+   "phase_ps": 45703.125,
+   "phase_core_cycles": 54.844
+  },
+  {
+   "pc": 13,
+   "stack": "WS",
+   "phase_ps": 49511.719,
+   "phase_core_cycles": 59.414
+  },
+  {
+   "pc": 14,
+   "stack": "WS",
+   "phase_ps": 53320.312,
+   "phase_core_cycles": 63.984
+  },
+  {
+   "pc": 15,
+   "stack": "WS",
+   "phase_ps": 57128.906,
+   "phase_core_cycles": 68.555
+  },
+  {
+   "pc": 16,
+   "stack": "WS",
+   "phase_ps": 60937.5,
+   "phase_core_cycles": 73.125
+  },
+  {
+   "pc": 17,
+   "stack": "WS",
+   "phase_ps": 64746.094,
+   "phase_core_cycles": 77.695
+  },
+  {
+   "pc": 18,
+   "stack": "WS",
+   "phase_ps": 68554.688,
+   "phase_core_cycles": 82.266
+  },
+  {
+   "pc": 19,
+   "stack": "WS",
+   "phase_ps": 72363.281,
+   "phase_core_cycles": 86.836
+  },
+  {
+   "pc": 20,
+   "stack": "WS",
+   "phase_ps": 76171.875,
+   "phase_core_cycles": 91.406
+  },
+  {
+   "pc": 21,
+   "stack": "WS",
+   "phase_ps": 79980.469,
+   "phase_core_cycles": 95.977
+  },
+  {
+   "pc": 22,
+   "stack": "WS",
+   "phase_ps": 83789.062,
+   "phase_core_cycles": 100.547
+  },
+  {
+   "pc": 23,
+   "stack": "WS",
+   "phase_ps": 87597.656,
+   "phase_core_cycles": 105.117
+  },
+  {
+   "pc": 24,
+   "stack": "WS",
+   "phase_ps": 91406.25,
+   "phase_core_cycles": 109.688
+  },
+  {
+   "pc": 25,
+   "stack": "WS",
+   "phase_ps": 95214.844,
+   "phase_core_cycles": 114.258
+  },
+  {
+   "pc": 26,
+   "stack": "WS",
+   "phase_ps": 99023.438,
+   "phase_core_cycles": 118.828
+  },
+  {
+   "pc": 27,
+   "stack": "WS",
+   "phase_ps": 102832.031,
+   "phase_core_cycles": 123.398
+  },
+  {
+   "pc": 28,
+   "stack": "WS",
+   "phase_ps": 106640.625,
+   "phase_core_cycles": 127.969
+  },
+  {
+   "pc": 29,
+   "stack": "WS",
+   "phase_ps": 110449.219,
+   "phase_core_cycles": 132.539
+  },
+  {
+   "pc": 30,
+   "stack": "WS",
+   "phase_ps": 114257.812,
+   "phase_core_cycles": 137.109
+  },
+  {
+   "pc": 31,
+   "stack": "WS",
+   "phase_ps": 118066.406,
+   "phase_core_cycles": 141.68
+  },
+  {
+   "pc": 32,
+   "stack": "WN",
+   "phase_ps": 0.0,
+   "phase_core_cycles": 0.0
+  },
+  {
+   "pc": 33,
+   "stack": "WN",
+   "phase_ps": 3808.594,
+   "phase_core_cycles": 4.57
+  },
+  {
+   "pc": 34,
+   "stack": "WN",
+   "phase_ps": 7617.188,
+   "phase_core_cycles": 9.141
+  },
+  {
+   "pc": 35,
+   "stack": "WN",
+   "phase_ps": 11425.781,
+   "phase_core_cycles": 13.711
+  },
+  {
+   "pc": 36,
+   "stack": "WN",
+   "phase_ps": 15234.375,
+   "phase_core_cycles": 18.281
+  },
+  {
+   "pc": 37,
+   "stack": "WN",
+   "phase_ps": 19042.969,
+   "phase_core_cycles": 22.852
+  },
+  {
+   "pc": 38,
+   "stack": "WN",
+   "phase_ps": 22851.562,
+   "phase_core_cycles": 27.422
+  },
+  {
+   "pc": 39,
+   "stack": "WN",
+   "phase_ps": 26660.156,
+   "phase_core_cycles": 31.992
+  },
+  {
+   "pc": 40,
+   "stack": "WN",
+   "phase_ps": 30468.75,
+   "phase_core_cycles": 36.562
+  },
+  {
+   "pc": 41,
+   "stack": "WN",
+   "phase_ps": 34277.344,
+   "phase_core_cycles": 41.133
+  },
+  {
+   "pc": 42,
+   "stack": "WN",
+   "phase_ps": 38085.938,
+   "phase_core_cycles": 45.703
+  },
+  {
+   "pc": 43,
+   "stack": "WN",
+   "phase_ps": 41894.531,
+   "phase_core_cycles": 50.273
+  },
+  {
+   "pc": 44,
+   "stack": "WN",
+   "phase_ps": 45703.125,
+   "phase_core_cycles": 54.844
+  },
+  {
+   "pc": 45,
+   "stack": "WN",
+   "phase_ps": 49511.719,
+   "phase_core_cycles": 59.414
+  },
+  {
+   "pc": 46,
+   "stack": "WN",
+   "phase_ps": 53320.312,
+   "phase_core_cycles": 63.984
+  },
+  {
+   "pc": 47,
+   "stack": "WN",
+   "phase_ps": 57128.906,
+   "phase_core_cycles": 68.555
+  },
+  {
+   "pc": 48,
+   "stack": "WN",
+   "phase_ps": 60937.5,
+   "phase_core_cycles": 73.125
+  },
+  {
+   "pc": 49,
+   "stack": "WN",
+   "phase_ps": 64746.094,
+   "phase_core_cycles": 77.695
+  },
+  {
+   "pc": 50,
+   "stack": "WN",
+   "phase_ps": 68554.688,
+   "phase_core_cycles": 82.266
+  },
+  {
+   "pc": 51,
+   "stack": "WN",
+   "phase_ps": 72363.281,
+   "phase_core_cycles": 86.836
+  },
+  {
+   "pc": 52,
+   "stack": "WN",
+   "phase_ps": 76171.875,
+   "phase_core_cycles": 91.406
+  },
+  {
+   "pc": 53,
+   "stack": "WN",
+   "phase_ps": 79980.469,
+   "phase_core_cycles": 95.977
+  },
+  {
+   "pc": 54,
+   "stack": "WN",
+   "phase_ps": 83789.062,
+   "phase_core_cycles": 100.547
+  },
+  {
+   "pc": 55,
+   "stack": "WN",
+   "phase_ps": 87597.656,
+   "phase_core_cycles": 105.117
+  },
+  {
+   "pc": 56,
+   "stack": "WN",
+   "phase_ps": 91406.25,
+   "phase_core_cycles": 109.688
+  },
+  {
+   "pc": 57,
+   "stack": "WN",
+   "phase_ps": 95214.844,
+   "phase_core_cycles": 114.258
+  },
+  {
+   "pc": 58,
+   "stack": "WN",
+   "phase_ps": 99023.438,
+   "phase_core_cycles": 118.828
+  },
+  {
+   "pc": 59,
+   "stack": "WN",
+   "phase_ps": 102832.031,
+   "phase_core_cycles": 123.398
+  },
+  {
+   "pc": 60,
+   "stack": "WN",
+   "phase_ps": 106640.625,
+   "phase_core_cycles": 127.969
+  },
+  {
+   "pc": 61,
+   "stack": "WN",
+   "phase_ps": 110449.219,
+   "phase_core_cycles": 132.539
+  },
+  {
+   "pc": 62,
+   "stack": "WN",
+   "phase_ps": 114257.812,
+   "phase_core_cycles": 137.109
+  },
+  {
+   "pc": 63,
+   "stack": "WN",
+   "phase_ps": 118066.406,
+   "phase_core_cycles": 141.68
+  },
+  {
+   "pc": 64,
+   "stack": "ES",
+   "phase_ps": 0.0,
+   "phase_core_cycles": 0.0
+  },
+  {
+   "pc": 65,
+   "stack": "ES",
+   "phase_ps": 3808.594,
+   "phase_core_cycles": 4.57
+  },
+  {
+   "pc": 66,
+   "stack": "ES",
+   "phase_ps": 7617.188,
+   "phase_core_cycles": 9.141
+  },
+  {
+   "pc": 67,
+   "stack": "ES",
+   "phase_ps": 11425.781,
+   "phase_core_cycles": 13.711
+  },
+  {
+   "pc": 68,
+   "stack": "ES",
+   "phase_ps": 15234.375,
+   "phase_core_cycles": 18.281
+  },
+  {
+   "pc": 69,
+   "stack": "ES",
+   "phase_ps": 19042.969,
+   "phase_core_cycles": 22.852
+  },
+  {
+   "pc": 70,
+   "stack": "ES",
+   "phase_ps": 22851.562,
+   "phase_core_cycles": 27.422
+  },
+  {
+   "pc": 71,
+   "stack": "ES",
+   "phase_ps": 26660.156,
+   "phase_core_cycles": 31.992
+  },
+  {
+   "pc": 72,
+   "stack": "ES",
+   "phase_ps": 30468.75,
+   "phase_core_cycles": 36.562
+  },
+  {
+   "pc": 73,
+   "stack": "ES",
+   "phase_ps": 34277.344,
+   "phase_core_cycles": 41.133
+  },
+  {
+   "pc": 74,
+   "stack": "ES",
+   "phase_ps": 38085.938,
+   "phase_core_cycles": 45.703
+  },
+  {
+   "pc": 75,
+   "stack": "ES",
+   "phase_ps": 41894.531,
+   "phase_core_cycles": 50.273
+  },
+  {
+   "pc": 76,
+   "stack": "ES",
+   "phase_ps": 45703.125,
+   "phase_core_cycles": 54.844
+  },
+  {
+   "pc": 77,
+   "stack": "ES",
+   "phase_ps": 49511.719,
+   "phase_core_cycles": 59.414
+  },
+  {
+   "pc": 78,
+   "stack": "ES",
+   "phase_ps": 53320.312,
+   "phase_core_cycles": 63.984
+  },
+  {
+   "pc": 79,
+   "stack": "ES",
+   "phase_ps": 57128.906,
+   "phase_core_cycles": 68.555
+  },
+  {
+   "pc": 80,
+   "stack": "ES",
+   "phase_ps": 60937.5,
+   "phase_core_cycles": 73.125
+  },
+  {
+   "pc": 81,
+   "stack": "ES",
+   "phase_ps": 64746.094,
+   "phase_core_cycles": 77.695
+  },
+  {
+   "pc": 82,
+   "stack": "ES",
+   "phase_ps": 68554.688,
+   "phase_core_cycles": 82.266
+  },
+  {
+   "pc": 83,
+   "stack": "ES",
+   "phase_ps": 72363.281,
+   "phase_core_cycles": 86.836
+  },
+  {
+   "pc": 84,
+   "stack": "ES",
+   "phase_ps": 76171.875,
+   "phase_core_cycles": 91.406
+  },
+  {
+   "pc": 85,
+   "stack": "ES",
+   "phase_ps": 79980.469,
+   "phase_core_cycles": 95.977
+  },
+  {
+   "pc": 86,
+   "stack": "ES",
+   "phase_ps": 83789.062,
+   "phase_core_cycles": 100.547
+  },
+  {
+   "pc": 87,
+   "stack": "ES",
+   "phase_ps": 87597.656,
+   "phase_core_cycles": 105.117
+  },
+  {
+   "pc": 88,
+   "stack": "ES",
+   "phase_ps": 91406.25,
+   "phase_core_cycles": 109.688
+  },
+  {
+   "pc": 89,
+   "stack": "ES",
+   "phase_ps": 95214.844,
+   "phase_core_cycles": 114.258
+  },
+  {
+   "pc": 90,
+   "stack": "ES",
+   "phase_ps": 99023.438,
+   "phase_core_cycles": 118.828
+  },
+  {
+   "pc": 91,
+   "stack": "ES",
+   "phase_ps": 102832.031,
+   "phase_core_cycles": 123.398
+  },
+  {
+   "pc": 92,
+   "stack": "ES",
+   "phase_ps": 106640.625,
+   "phase_core_cycles": 127.969
+  },
+  {
+   "pc": 93,
+   "stack": "ES",
+   "phase_ps": 110449.219,
+   "phase_core_cycles": 132.539
+  },
+  {
+   "pc": 94,
+   "stack": "ES",
+   "phase_ps": 114257.812,
+   "phase_core_cycles": 137.109
+  },
+  {
+   "pc": 95,
+   "stack": "ES",
+   "phase_ps": 118066.406,
+   "phase_core_cycles": 141.68
+  },
+  {
+   "pc": 96,
+   "stack": "EN",
+   "phase_ps": 0.0,
+   "phase_core_cycles": 0.0
+  },
+  {
+   "pc": 97,
+   "stack": "EN",
+   "phase_ps": 3808.594,
+   "phase_core_cycles": 4.57
+  },
+  {
+   "pc": 98,
+   "stack": "EN",
+   "phase_ps": 7617.188,
+   "phase_core_cycles": 9.141
+  },
+  {
+   "pc": 99,
+   "stack": "EN",
+   "phase_ps": 11425.781,
+   "phase_core_cycles": 13.711
+  },
+  {
+   "pc": 100,
+   "stack": "EN",
+   "phase_ps": 15234.375,
+   "phase_core_cycles": 18.281
+  },
+  {
+   "pc": 101,
+   "stack": "EN",
+   "phase_ps": 19042.969,
+   "phase_core_cycles": 22.852
+  },
+  {
+   "pc": 102,
+   "stack": "EN",
+   "phase_ps": 22851.562,
+   "phase_core_cycles": 27.422
+  },
+  {
+   "pc": 103,
+   "stack": "EN",
+   "phase_ps": 26660.156,
+   "phase_core_cycles": 31.992
+  },
+  {
+   "pc": 104,
+   "stack": "EN",
+   "phase_ps": 30468.75,
+   "phase_core_cycles": 36.562
+  },
+  {
+   "pc": 105,
+   "stack": "EN",
+   "phase_ps": 34277.344,
+   "phase_core_cycles": 41.133
+  },
+  {
+   "pc": 106,
+   "stack": "EN",
+   "phase_ps": 38085.938,
+   "phase_core_cycles": 45.703
+  },
+  {
+   "pc": 107,
+   "stack": "EN",
+   "phase_ps": 41894.531,
+   "phase_core_cycles": 50.273
+  },
+  {
+   "pc": 108,
+   "stack": "EN",
+   "phase_ps": 45703.125,
+   "phase_core_cycles": 54.844
+  },
+  {
+   "pc": 109,
+   "stack": "EN",
+   "phase_ps": 49511.719,
+   "phase_core_cycles": 59.414
+  },
+  {
+   "pc": 110,
+   "stack": "EN",
+   "phase_ps": 53320.312,
+   "phase_core_cycles": 63.984
+  },
+  {
+   "pc": 111,
+   "stack": "EN",
+   "phase_ps": 57128.906,
+   "phase_core_cycles": 68.555
+  },
+  {
+   "pc": 112,
+   "stack": "EN",
+   "phase_ps": 60937.5,
+   "phase_core_cycles": 73.125
+  },
+  {
+   "pc": 113,
+   "stack": "EN",
+   "phase_ps": 64746.094,
+   "phase_core_cycles": 77.695
+  },
+  {
+   "pc": 114,
+   "stack": "EN",
+   "phase_ps": 68554.688,
+   "phase_core_cycles": 82.266
+  },
+  {
+   "pc": 115,
+   "stack": "EN",
+   "phase_ps": 72363.281,
+   "phase_core_cycles": 86.836
+  },
+  {
+   "pc": 116,
+   "stack": "EN",
+   "phase_ps": 76171.875,
+   "phase_core_cycles": 91.406
+  },
+  {
+   "pc": 117,
+   "stack": "EN",
+   "phase_ps": 79980.469,
+   "phase_core_cycles": 95.977
+  },
+  {
+   "pc": 118,
+   "stack": "EN",
+   "phase_ps": 83789.062,
+   "phase_core_cycles": 100.547
+  },
+  {
+   "pc": 119,
+   "stack": "EN",
+   "phase_ps": 87597.656,
+   "phase_core_cycles": 105.117
+  },
+  {
+   "pc": 120,
+   "stack": "EN",
+   "phase_ps": 91406.25,
+   "phase_core_cycles": 109.688
+  },
+  {
+   "pc": 121,
+   "stack": "EN",
+   "phase_ps": 95214.844,
+   "phase_core_cycles": 114.258
+  },
+  {
+   "pc": 122,
+   "stack": "EN",
+   "phase_ps": 99023.438,
+   "phase_core_cycles": 118.828
+  },
+  {
+   "pc": 123,
+   "stack": "EN",
+   "phase_ps": 102832.031,
+   "phase_core_cycles": 123.398
+  },
+  {
+   "pc": 124,
+   "stack": "EN",
+   "phase_ps": 106640.625,
+   "phase_core_cycles": 127.969
+  },
+  {
+   "pc": 125,
+   "stack": "EN",
+   "phase_ps": 110449.219,
+   "phase_core_cycles": 132.539
+  },
+  {
+   "pc": 126,
+   "stack": "EN",
+   "phase_ps": 114257.812,
+   "phase_core_cycles": 137.109
+  },
+  {
+   "pc": 127,
+   "stack": "EN",
+   "phase_ps": 118066.406,
+   "phase_core_cycles": 141.68
+  }
+ ],
+ "as_implemented": {
+  "source": {
+   "file": "rtl/qwen_sys/emb_hbm_20261008/ot_hbm_r14_stream_pc_srow.sv",
+   "head": "rtl/physical/ot_qwen_ctrl_pc_head.sv",
+   "hbm_clk_ps": 1024,
+   "REF_MODE": 1,
+   "T_REFIPB": 118,
+   "T_RFCPB": 196,
+   "T_RREFD": 8,
+   "T_REFI": 3808,
+   "T_RFC": 342
+  },
+  "period_ps": 120832,
+  "period_core_cycles": 144.998,
+  "bank_busy_ps": 200704,
+  "rrefd_ps": 8192,
+  "act_slot_loss_upper_bound": 0.0678,
+  "per_stack_pc_phases": [
+   {
+    "pc": 0,
+    "REF_PHASE_hbm_cycles": 0,
+    "first_refpb_ps": 0
+   },
+   {
+    "pc": 1,
+    "REF_PHASE_hbm_cycles": 3,
+    "first_refpb_ps": 3072
+   },
+   {
+    "pc": 2,
+    "REF_PHASE_hbm_cycles": 7,
+    "first_refpb_ps": 7168
+   },
+   {
+    "pc": 3,
+    "REF_PHASE_hbm_cycles": 11,
+    "first_refpb_ps": 11264
+   },
+   {
+    "pc": 4,
+    "REF_PHASE_hbm_cycles": 14,
+    "first_refpb_ps": 14336
+   },
+   {
+    "pc": 5,
+    "REF_PHASE_hbm_cycles": 18,
+    "first_refpb_ps": 18432
+   },
+   {
+    "pc": 6,
+    "REF_PHASE_hbm_cycles": 22,
+    "first_refpb_ps": 22528
+   },
+   {
+    "pc": 7,
+    "REF_PHASE_hbm_cycles": 25,
+    "first_refpb_ps": 25600
+   },
+   {
+    "pc": 8,
+    "REF_PHASE_hbm_cycles": 29,
+    "first_refpb_ps": 29696
+   },
+   {
+    "pc": 9,
+    "REF_PHASE_hbm_cycles": 33,
+    "first_refpb_ps": 33792
+   },
+   {
+    "pc": 10,
+    "REF_PHASE_hbm_cycles": 36,
+    "first_refpb_ps": 36864
+   },
+   {
+    "pc": 11,
+    "REF_PHASE_hbm_cycles": 40,
+    "first_refpb_ps": 40960
+   },
+   {
+    "pc": 12,
+    "REF_PHASE_hbm_cycles": 44,
+    "first_refpb_ps": 45056
+   },
+   {
+    "pc": 13,
+    "REF_PHASE_hbm_cycles": 47,
+    "first_refpb_ps": 48128
+   },
+   {
+    "pc": 14,
+    "REF_PHASE_hbm_cycles": 51,
+    "first_refpb_ps": 52224
+   },
+   {
+    "pc": 15,
+    "REF_PHASE_hbm_cycles": 55,
+    "first_refpb_ps": 56320
+   },
+   {
+    "pc": 16,
+    "REF_PHASE_hbm_cycles": 59,
+    "first_refpb_ps": 60416
+   },
+   {
+    "pc": 17,
+    "REF_PHASE_hbm_cycles": 62,
+    "first_refpb_ps": 63488
+   },
+   {
+    "pc": 18,
+    "REF_PHASE_hbm_cycles": 66,
+    "first_refpb_ps": 67584
+   },
+   {
+    "pc": 19,
+    "REF_PHASE_hbm_cycles": 70,
+    "first_refpb_ps": 71680
+   },
+   {
+    "pc": 20,
+    "REF_PHASE_hbm_cycles": 73,
+    "first_refpb_ps": 74752
+   },
+   {
+    "pc": 21,
+    "REF_PHASE_hbm_cycles": 77,
+    "first_refpb_ps": 78848
+   },
+   {
+    "pc": 22,
+    "REF_PHASE_hbm_cycles": 81,
+    "first_refpb_ps": 82944
+   },
+   {
+    "pc": 23,
+    "REF_PHASE_hbm_cycles": 84,
+    "first_refpb_ps": 86016
+   },
+   {
+    "pc": 24,
+    "REF_PHASE_hbm_cycles": 88,
+    "first_refpb_ps": 90112
+   },
+   {
+    "pc": 25,
+    "REF_PHASE_hbm_cycles": 92,
+    "first_refpb_ps": 94208
+   },
+   {
+    "pc": 26,
+    "REF_PHASE_hbm_cycles": 95,
+    "first_refpb_ps": 97280
+   },
+   {
+    "pc": 27,
+    "REF_PHASE_hbm_cycles": 99,
+    "first_refpb_ps": 101376
+   },
+   {
+    "pc": 28,
+    "REF_PHASE_hbm_cycles": 103,
+    "first_refpb_ps": 105472
+   },
+   {
+    "pc": 29,
+    "REF_PHASE_hbm_cycles": 106,
+    "first_refpb_ps": 108544
+   },
+   {
+    "pc": 30,
+    "REF_PHASE_hbm_cycles": 110,
+    "first_refpb_ps": 112640
+   },
+   {
+    "pc": 31,
+    "REF_PHASE_hbm_cycles": 114,
+    "first_refpb_ps": 116736
+   }
+  ],
+  "compiler_rule": "per PC: one REFpb at REF_PHASE + n*118 HBM cycles; for tRREFD (8 cycles) around it no ACT; one bank out of 32 busy tRFCpb (196), chosen by the controller outside the stream's current and next two sets -> RD continuity is kept; model the 8-cycle ACT gap per 118 cycles (<= 6.8 % ACT slots)"
+ },
+ "owner_split": "HBM controller (qkd_ctrl_pc) issues REFpb from this table (strap phase per PC); compiler (Q-VMWB kv_calendar.py) places KV reads around the windows"
+}

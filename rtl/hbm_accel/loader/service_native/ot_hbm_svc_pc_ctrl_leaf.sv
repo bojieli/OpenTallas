@@ -7,10 +7,13 @@
 // OREG=1 (H-DIE 2026-10-15, die default): every PHY-side command output (row_*, col_*, write data/strobe) leaves from a
 // flop -- one uniform extra cycle on the command path to the PHY (relative DRAM command timing unchanged); the read
 // return path is unchanged.  OREG=0 is the stack body exactly.
+// KREG=1 (die default): the K request enters a 2-entry pin-registered skid; k_rdy = skid not full (a register), so no
+// K input reaches k_rdy or the queue combinationally; one extra hbm cycle on the request, full rate.  KREG=0: as the stack.
 module ot_hbm_svc_pc_ctrl_leaf #(
     parameter integer PHASE=0,
     parameter integer P=0,
-    parameter integer OREG=1
+    parameter integer OREG=1,
+    parameter integer KREG=1
 )(
     input wire clk,rst_n,
     input wire k_v,output wire k_rdy,input wire k_we,
@@ -26,6 +29,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     output wire pc_fault,owner_fault
 );
     localparam[1:0]IDLE=0,DESC=1,DRAIN=2,RUN=3;
+    wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
+    wire i_rdy;
     reg[1:0]state;reg sticky;reg[18:0]active_row;reg[31:0]observed_open;
     reg[4:0]wp,rp,ep;reg[5:0]count,unposted;
     reg[319:0]queue[0:31];
@@ -34,24 +39,43 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     reg[20:0]pending_identity[0:31],response_identity[0:31];
     reg[20:0]head_identity;reg head_valid;
     wire[255:0]response_data;
-    wire[29:0]incoming=k_addr;
+    wire[29:0]incoming=i_addr;
     wire[18:0]incoming_row={4'b0,incoming[29:15]};
     wire[4:0]incoming_pc=incoming[6:2]^incoming[11:7]^incoming[16:12];
-    wire[3:0]length=k_len;
-    wire legal=length>=1 && length<=4 && (!k_we || length==1) &&
+    wire[3:0]length=i_len;
+    wire legal=length>=1 && length<=4 && (!i_we || length==1) &&
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==5'(P) && {1'b0,incoming}+length<=31'd703125000;
     wire same_row=incoming_row==active_row;
     wire dr,wr,cv,cwe,caq;wire[4:0]cb,cc;
     wire[319:0]head=queue[rp],push=queue[ep];
     wire push_read=!push[319];
     wire enqueue=state==RUN && unposted!=0 && (!push_read || read_reserved<32) && !sticky;
-    wire accepted=k_v&&k_rdy;wire posted=enqueue&&wr;
+    wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
     wire posted_read=posted&&push_read;
     wire column_read=cv&&!cwe;
     wire response_take=kr_v&&kr_rdy;
     wire row_idle=count==0&&read_reserved==0;
-    assign k_rdy=!sticky&&!pc_fault&&legal&&count+length<=32&&
+    assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=32&&
         (state==IDLE || (state==RUN && (same_row || row_idle)));
+    generate if(KREG!=0)begin:g_kreg
+        reg[339:0]sk[0:1];reg[1:0]sn;reg sw,sr;
+        wire push_k=k_v&&k_rdy,pop_k=i_v&&i_rdy;
+        assign k_rdy=sn!=2'd2;
+        assign i_v=sn!=0;
+        assign {i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}=sk[sr];
+        always @(posedge clk)if(push_k)sk[sw]<={k_we,k_addr,k_len,k_tag,k_wstrb,k_wdata};
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin sn<=0;sw<=0;sr<=0;end
+            else begin
+                if(push_k)sw<=~sw;
+                if(pop_k)sr<=~sr;
+                sn<=sn+(push_k?2'd1:2'd0)-(pop_k?2'd1:2'd0);
+            end
+    end else begin:g_kdirect
+        assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
+        assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
+    end endgenerate
+
     assign kr_v=head_valid&&!sticky&&!pc_fault;
     assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
@@ -92,10 +116,10 @@ module ot_hbm_svc_pc_ctrl_leaf #(
             head_identity<=0;head_valid<=0;k_wr_done<=0;
         end else begin
             k_wr_done<=0;
-            if(k_v&&!legal)sticky<=1;
+            if(i_v&&!legal)sticky<=1;
             if(accepted)begin
                 for(integer b=0;b<4;b=b+1)if(b<length)
-                    queue[5'(wp+b)]<={k_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],k_tag,4'(b),k_wstrb,k_wdata};
+                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb,i_wdata};
                 wp<=wp+5'(length);
                 if(state==IDLE || !same_row)begin active_row<=incoming_row;state<=DESC;end
             end
