@@ -22,6 +22,8 @@ S = 'rtl/qwen_sys/static_kv_20261014/'
 # Name, actual source/module, exact required full-die population. The pc parent
 # elaborates into four real masters; it is not an inherited physical frame.
 ROLES = {
+    'ownership': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_ownership_calendar', 1),
+    'drain_guard': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_drain_guard4', 32),
     'pc_path': (S+'qkd_static_kv_pc_path.sv', 'qkd_static_kv_pc_path', 128),
     'landing': (S+'qkd_static_kv_landing_seg.sv', 'qkd_static_kv_landing_seg', 32),
     'landing_calendar': (S+'qkd_kv_landing_cal.sv', 'qkd_kv_landing_cal', 32),
@@ -203,7 +205,7 @@ def compile_graph(graph, root=ROOT):
             raise ValueError(f'{n}: all exact input ports must be connected')
         if role=='k_issuer' and (i['parameters']['RESPONSE_LAT']<1 or i['parameters']['MUT']!=0):
             raise ValueError(f'{n}: actual positive response latency and production MUT0 required')
-        if role in ('landing','front_calendar','landing_calendar','writer','writer_programme') and i['parameters'].get('MUT')!=0:
+        if role in ('landing','front_calendar','landing_calendar','writer','writer_programme','ownership','drain_guard') and i['parameters'].get('MUT')!=0:
             raise ValueError(f'{n}: production MUT0 required')
     if counts!=Counter({k:v[2] for k,v in ROLES.items()}):raise ValueError(f'full die actual source census mismatch: {dict(counts)}')
     validate_native_edges(ins)
@@ -307,6 +309,7 @@ def template(root=ROOT):
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
     params={
+        'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
         'pc_path':{},'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
@@ -329,7 +332,7 @@ def template(root=ROOT):
     def ep(n,p,lo=0,w=None):return dict(instance=n,port=p,lo=lo,width=width(n,p) if w is None else w)
     def join(dst,p,src,sp,lo=0,w=None):lookup[dst]['inputs'][p]=[ep(src,sp,lo,w)]
     def strap(dst,p,v,w):lookup[dst]['inputs'][p]=[dict(strap=v,width=w)]
-    add('wrn','writer');add('wprg','writer_programme');add('d2d','link')
+    add('ownership','ownership');add('wrn','writer');add('wprg','writer_programme');add('d2d','link')
     for p,sp in WRITER_LINK_MAP.items():join('wrn',p,'d2d',sp)
     for p,sp in WRITER_PROGRAMME_MAP.items():join('wrn',p,'wprg',sp)
     join('d2d','kvn_compiled_identity','wprg','compiled_identity')
@@ -338,8 +341,8 @@ def template(root=ROOT):
     for stack,st in enumerate(('WS','WN','ES','EN')):
         for lane in range(4):add(f'vport_{st}_{lane}','vport')
         for g in range(8):
-            land=f'slg_{st}_{g}';lc=f'lcal_{st}_{g}';fc=f'fcal_{st}_{g}';ki=f'ki_{st}_{g}';a=f'ectl_a_{st}_{g}'
-            for name,role in [(land,'landing'),(lc,'landing_calendar'),(fc,'front_calendar'),(ki,'k_issuer'),(a,'ectla')]:add(name,role)
+            land=f'slg_{st}_{g}';lc=f'lcal_{st}_{g}';fc=f'fcal_{st}_{g}';ki=f'ki_{st}_{g}';a=f'ectl_a_{st}_{g}';guard=f'drain_{st}_{g}'
+            for name,role in [(land,'landing'),(lc,'landing_calendar'),(fc,'front_calendar'),(ki,'k_issuer'),(a,'ectla'),(guard,'drain_guard')]:add(name,role)
             strap(land,'cfg_stack',stack,2);strap(land,'cfg_group',g,3);strap(a,'cfg',(g<<2)|stack,5)
             join(ki,'rq',a,'rq');join(a,'rs',ki,'rs')
             for p in ('req_valid','req_t','req_v','req_epoch','req_layer'):join(land,p,ki,p)
@@ -356,6 +359,18 @@ def template(root=ROOT):
                 join(n,'front_blk_go',fc,'blk_go',q,1)
             for p,sp in [('actual_valid','actual_valid'),('actual_sector','actual_sector'),('actual_epoch','actual_epoch'),('actual_layer','actual_layer'),('actual_data','actual_data')]:
                 lookup[land]['inputs'][p]=[ep(n,sp) for n in reversed(pcs)]
+            for p,sp in [('ctrl_idle_core','idle_core'),('ring_idle_core','return_idle_core'),
+                         ('ctrl_idle_hbm','idle_hbm'),('front_idle_hbm','front_idle_hbm'),('ring_idle_hbm','return_idle_hbm'),
+                         ('ctrl_fault_core','drain_fault_core'),('ctrl_completion_fault_core','completion_fault'),
+                         ('ring_fault_core','return_fault_core'),('ctrl_fault_hbm','drain_fault_hbm'),
+                         ('ctrl_output_fault_hbm','fo'),('ctrl_calendar_fault_hbm','cal_fault_hbm'),
+                         ('ring_fault_hbm','return_fault_hbm'),('front_fault_overflow_hbm','front_fault_overflow_hbm'),
+                         ('front_fault_go_hbm','front_fault_go_hbm'),('front_hold_hbm','front_hold')]:
+                lookup[guard]['inputs'][p]=[ep(n,sp) for n in reversed(pcs)]
+            lookup[guard]['inputs']['ctrl_intake_fault_core']=[ep(n,'er',260,1) for n in reversed(pcs)]
+    guard_names=[f'drain_{st}_{g}' for st in ('WS','WN','ES','EN') for g in range(8)]
+    lookup['ownership']['inputs']['group_drained']=[ep(n,'drained') for n in reversed(guard_names)]
+    lookup['ownership']['inputs']['group_fault']=[ep(n,'fault') for n in reversed(guard_names)]
     dep_paths=set(PC_SOURCES)|{i['source'] for i in instances}
     deps=[dict(path=p,sha256=hashlib.sha256((root/p).read_bytes()).hexdigest()) for p in sorted(dep_paths)]
     graph=dict(schema='opentallas.qwen_kv_static.join.v1',
