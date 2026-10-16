@@ -19,8 +19,8 @@ module ot_qwen_fixed_issue #(
     input wire [46:0] slot_q,
     input wire candidate_v, input wire [11:0] candidate_pc,
     input wire [1:0] candidate_unit,
-    input wire available, input wire end_ok,
-    output wire issue_v, output wire end_v,
+    input wire available, input wire end_ok, input wire cp_available,
+    output wire issue_v, output wire end_v, output wire cp_v, output reg[1:0]cp_index,
     output wire [11:0] issue_pc, output wire [1:0] issue_unit,
     output reg active, output reg done,
     output reg [31:0] cycle,
@@ -38,6 +38,7 @@ module ot_qwen_fixed_issue #(
     assign issue_pc=head[43:32];
     assign issue_v=scheduled && head[45:44]==OWN;
     assign end_v=scheduled && head[45:44]==0;
+    assign cp_v=scheduled && OWN==1 && head[45:44]==3;
     wire next_from_rom=pending && pending_index==index+1'b1;
     wire next_present=tail_v || next_from_rom;
     wire [46:0] next_row=next_from_rom ? slot_q : tail;
@@ -48,7 +49,7 @@ module ot_qwen_fixed_issue #(
       if(!rst_n) begin
         active<=0;done<=0;cycle<=0;fault<=0;stop_q<=0;
         head<=0;tail<=0;head_v<=0;tail_v<=0;index<=0;
-        pending<=0;pending_index<=0;second_read<=0;
+        pending<=0;pending_index<=0;second_read<=0;cp_index<=0;
       end else begin
         done<=0;
         pending<=slot_re;
@@ -56,7 +57,7 @@ module ot_qwen_fixed_issue #(
         if(start && active) fault<=1;
         if(start && !active) begin
           active<=1;cycle<=0;stop_q<=stop_cycle;fault<=0;
-          head_v<=0;tail_v<=0;index<=0;second_read<=1;
+          head_v<=0;tail_v<=0;index<=0;second_read<=1;cp_index<=0;
         end else if(active) begin
           cycle<=cycle+1'b1;
           if(second_read) second_read<=0;
@@ -67,9 +68,10 @@ module ot_qwen_fixed_issue #(
           end
           if(head_v && cycle>head[31:0]) fault<=1;
           if(scheduled) begin
-            if(!candidate_v || candidate_pc!=head[43:32] || candidate_unit!=head[45:44]) fault<=1;
-            if(head[45:44]==0 ? !end_ok : !available) fault<=1;
-            if(head[45:44]!=0 && head[45:44]!=OWN) fault<=1;
+            if(!candidate_v || candidate_pc!=head[43:32] || candidate_unit!=(head[45:44]==3?2'd1:head[45:44])) fault<=1;
+            if(head[45:44]==0 ? !end_ok : head[45:44]==3 ? !cp_available : !available) fault<=1;
+            if(cp_v)begin cp_index<=cp_index+1'b1;if(cp_index==3)fault<=1;end
+            if(head[45:44]!=0 && head[45:44]!=OWN && !(OWN==1&&head[45:44]==3)) fault<=1;
             if(head[46]) begin
               if(head[45:44]!=0 || cycle!=stop_q) fault<=1;
               active<=0;done<=1;head_v<=0;tail_v<=0;

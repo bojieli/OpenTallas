@@ -29,6 +29,31 @@ def rows(calendar, stage, own, period_fs, phase_fs, stop_cycle):
         if result and cycle<=result[-1]['cycle']:
             raise ScheduleError('native decoder cannot issue twice in one edge')
         result.append(dict(pc=issue['pc'],unit=issue['unit'],cycle=cycle))
+    if own==1:
+        targets=set()
+        for event in calendar['events']:
+            if event['stage']!=stage or event.get('kind')!='copy_issue':continue
+            target=event['target_pc']
+            matching=[i for i in result if i['pc']==target and i['unit']==1]
+            if len(matching)!=1 or target in targets:
+                raise ScheduleError('copy event must name one distinct actual upcoming ME command')
+            if not event.get('rtl_instance') or not event.get('rtl_module') or not event.get('requires') or not event.get('produces'):
+                raise ScheduleError('copy event lacks native engine/operand/commit attribution')
+            time=event['time_fs']
+            if time<phase_fs or (time-phase_fs)%period_fs:
+                raise ScheduleError('copy issue does not align to actual scheduler clock')
+            cycle=(time-phase_fs)//period_fs
+            command=int(event['cp56_hex'],16)
+            if not 0<=command<1<<56 or not command&1 or not 1<=(command>>49)<=64:
+                raise ScheduleError('copy descriptor exceeds actual CP56 source encoding')
+            if not 2<=cycle<matching[0]['cycle']:
+                raise ScheduleError('copy must issue before its actual consuming ME command')
+            targets.add(target)
+            result.append(dict(pc=target,unit=3,cycle=cycle,cp56_hex=f'{command:014x}'))
+        if len(targets)>3:raise ScheduleError('copy controls exceed three actual PW stores')
+        result.sort(key=lambda e:e['cycle'])
+        if any(a['cycle']==b['cycle'] for a,b in zip(result,result[1:])):
+            raise ScheduleError('copy and engine operations conflict on actual issue edge')
     if not result or result[-1]['unit']!=0 or result[-1]['cycle']!=stop_cycle:
         raise ScheduleError('actual compiled END must end each owner calendar at stop_cycle')
     for n,r in enumerate(result):
@@ -49,6 +74,8 @@ def pw_image(calendar, stage, me_clock, su_clock, program_words):
          dict(address=1018,data_hex=f'{((0x43414c32<<32)|su_clock["stop_cycle"]):016x}')]
     for base,records in ((976,me),(984,su)):
         out.extend(dict(address=base+n,data_hex=f'{int(r["hex"],16):016x}') for n,r in enumerate(records))
+    copies=[r for r in me if r['unit']==3]
+    out.extend(dict(address=1019+n,data_hex=f'{int(r["cp56_hex"],16):016x}') for n,r in enumerate(copies))
     seal=(0x43414c53<<32)|(program_words<<18)|(stage<<12)|(len(su)<<6)|len(me)
     out.append(dict(address=1017,data_hex=f'{seal:016x}'))
     return out
