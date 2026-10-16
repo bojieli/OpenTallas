@@ -296,7 +296,12 @@ module ot_hfd_coll_q_static_v4 #(
   assign tkm_done=0;assign tkm_busy=0;assign tk_cycles=0;
   assign tkm_fault=p_tkm_start || (|dest_v[NPT+8+:4]) || (|p_tkm_del_slot);
  end endgenerate
- ot_hgi_coll_pring_static #(.SPLIT_CLOCKS(1)) u_ring(
+ // State slots: the CLOSED captured lane (H-DIE grants_v7_1900: hcoll_ring_state_capture_1417 in all 32 slots).
+ // Captured ring = state reads reserved TWO edges ahead, write visibility +1 edge (wave 44 vs 40, ledger
+ // COLL.STATE_CAPTURE). The production COLL compiler (tools/hbm_coll_static/g96_calendar.py) reserves no
+ // ring operation (reductions run on u_reduce/AR; p_ring[57:0] stay 0), so no compiled trace changes; a ring
+ // trace must use the captured lead or the ring faults (MUT_READ_LEAD, run_pring_captured_suite.sh).
+ ot_hgi_coll_pring_captured_static #(.SPLIT_CLOCKS(1)) u_ring(
   .clk(clk_ring[0]),.clk_state(clk_ring[8:1]),.clk_add(clk_ring[16:9]),.rst_n(rst_n),.qid(qid),
   .cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),
   .lp_data(rc_d),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.fault(ring_fault),
