@@ -7,16 +7,16 @@
   0,
   0,
   220.32,
-  177.12
+  116.64
  ],
  "core": [
   2.16,
   2.16,
   218.16,
-  174.96
+  114.48
  ],
- "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 400.0,
+ "why": "contract calendar_NE",
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -76,21 +76,14 @@
    "inst": null,
    "idx": 0,
    "x": 22.896,
-   "y": 54.0,
+   "y": 23.76,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 34% outside 45%-60% (std 400 + macro 12317 in core 37325 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",

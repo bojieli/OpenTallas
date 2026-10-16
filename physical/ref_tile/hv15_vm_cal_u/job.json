@@ -1,9 +1,9 @@
 {
- "name": "hv15_vm_cal_u-u1-COMMIT",
+ "name": "hv15_vm_cal_u-compact2330-COMMIT",
  "block": "hfd_hgi_vm_calendar",
  "ref_tile": true,
- "owner": "Claude:HBM-V15-HARDEN",
- "purpose": "ONE VM calendar master hfd_hgi_vm_calendar for SW/SE/NW/NE (dedupe, replaces 4 closed per-quadrant masters): universal programme layout (per-field max width, W=187), compiler programme SRAM 1024x256 drives VM slots/LG/ring/replay on fixed cycles; structural fix of the native capture FAIL (rst_n 229-268 ps > 190: async reset fanned to ~90 flops) = local 2-flop reset synchroniser, rst_n pin load 2 flops; 0 normal cycles.",
+ "owner": "Codex:H-HARDEN-2330",
+ "purpose": "ONE VM calendar master hfd_hgi_vm_calendar for SW/SE/NW/NE (dedupe, replaces 4 closed per-quadrant masters): universal programme layout (per-field max width, W=187), compiler programme SRAM 1024x256 drives VM slots/LG/ring/replay on fixed cycles; structural fix of the native capture FAIL (rst_n 229-268 ps > 190: async reset fanned to ~90 flops) = local 2-flop reset synchroniser, rst_n pin load 2 flops; 0 normal cycles. Compact die-owned grant e948073d9:220.32x116.64 and exact assigned per-bus face ranges, removes unused north/south whitespace; fixed normal edges unchanged.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -16,7 +16,8 @@
    "results/arch/hbm_vm_lg_split_1015/programme",
    "rtl/hbm_accel/generic/vm/static",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hier_contract_1015/hbm_v15.json"
   ]
  },
  "stages": {
@@ -157,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_vm_cal_u/hv15_vm_cal_u-u1-COMMIT"
+   "to": "results/rtl/ref_tile/hv15_vm_cal_u/hv15_vm_cal_u-compact2330-COMMIT"
   }
  ],
  "cycles_added": 0,
