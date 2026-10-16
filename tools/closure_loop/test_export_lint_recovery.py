@@ -68,6 +68,39 @@ class ExportLintRecovery(unittest.TestCase):
             path.write_bytes(old)
         E.verify(manifest)
 
+    def structured_receipt(self, fails):
+        self.j['crashes'] = [dict(tail='REF_TILE export station: child_lint FAIL child_lint FAIL')]
+        p = self.run / 'record/views/station/provenance/abstract_pin_stub.json'
+        p.parent.mkdir(parents=True, exist_ok=True)
+        lint = dict(verdict='FAIL', fails=fails)
+        p.write_text(json.dumps(dict(child_lint=lint)))
+        evidence = dict(path=str(p), sha256=E.digest(p), child_lint=lint)
+        self.request['pg_lint_evidence'] = evidence
+        return p, evidence
+
+    def test_generic_error_recovers_only_retained_pg_receipt(self):
+        p, evidence = self.structured_receipt(['(b) pg: VDD: stripes span only 50%'])
+        E.eligible(self.j, evidence)
+        rec = E.prepare(self.request)
+        d = Path(rec['directory'])
+        preserved = d / 'original_record/views/station/provenance/abstract_pin_stub.json'
+        self.assertEqual(preserved.read_bytes(), p.read_bytes())
+        # The fresh export may replace record/, but preserved evidence is immutable.
+        p.write_text('new export receipt')
+        E.verify(json.loads((d / 'inputs.json').read_text()))
+        preserved.write_text('changed historical evidence')
+        with self.assertRaisesRegex(ValueError, 'immutable input changed'):
+            E.verify(json.loads((d / 'inputs.json').read_text()))
+
+    def test_structured_receipt_rejects_other_lint_or_changed_receipt(self):
+        p, evidence = self.structured_receipt(['(b) pg: missing stripe', '(f) blocked pin'])
+        with self.assertRaisesRegex(ValueError, 'no recorded PG'):
+            E.prepare(self.request)
+        p, evidence = self.structured_receipt(['(b) pg: missing stripe'])
+        p.write_text('{}')
+        with self.assertRaisesRegex(ValueError, 'differs from retained export'):
+            E.prepare(self.request)
+
     def test_guard_rejects_tampered_manifest_and_verifier_before_execution(self):
         rec = E.prepare(self.request)
         for name in ('inputs.json', 'verify.py'):

@@ -18,12 +18,13 @@
 // every row of bursts <= k of all bands (band NB-1 lags most).  No ready, credit, wait or runtime extension: an
 // off-calendar capture, a start while active, an illegal field, a row address above 20 bits or a real row outside
 // the reserved slots raises the sticky `fault` and the timeline is unchanged.
-// MUT (bench negative controls): 1 = no band lag (concurrent rows collide in the VM banks); 2 = `end` on slot 0.
+// MUT (bench negative controls): 1 = no band lag (concurrent rows collide in the VM banks); 2 = `end` on slot 0;
+// 3 = every bank captures one edge late (off its calendar slot; every band, Q-ELEM-CMP 2026-10-16).
 module qfd_res_train_par_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2,MUT=0)(
  input wire ck,rst_n,enable,input wire[10:0]cycle,input wire[31:0]stride,input wire[10:0]base,input wire[3:0]ns,
  input wire[4424:0]rq,output reg[550:0]q);
  reg[4415:0]data;reg[7:0]we;
- wire[31:0]cap=(INDEX/8)*stride+(INDEX%8);
+ wire[31:0]cap=(INDEX/8)*stride+(INDEX%8)+((MUT==3)?32'd1:32'd0);
  wire emit=enable&&cycle>=base&&cycle<base+11'(ns);
  wire[2:0]j=3'(cycle-base);
  wire[551:0]w=data[552*j+:552];

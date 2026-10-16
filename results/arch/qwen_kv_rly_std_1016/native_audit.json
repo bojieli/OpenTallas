@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.native_pin_audit.view.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, launch<=220 / capture<=190 ps, phi-R)",
+ "views": {
+  "qkd_rlys_296": {
+   "cell": "qkd_rlys_296",
+   "view": "physical/ref_tile/qkd_rlys_296/views/qkd_rlys_296",
+   "lib_cell": "qkd_rlys_296",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 84.8,
+   "spread_ps": 5.8,
+   "outputs": 296,
+   "inputs": 296,
+   "launch_ps": 219.7,
+   "launch_pin": "b[25]",
+   "capture_ps": 124.5,
+   "capture_pin": "a[9]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "qkd_rlys_528": {
+   "cell": "qkd_rlys_528",
+   "view": "physical/ref_tile/qkd_rlys_528/views/qkd_rlys_528",
+   "lib_cell": "qkd_rlys_528",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 87.7,
+   "spread_ps": 10.9,
+   "outputs": 528,
+   "inputs": 528,
+   "launch_ps": 256.1,
+   "launch_pin": "b[432]",
+   "capture_ps": 126.7,
+   "capture_pin": "a[131]",
+   "launch_over": 140,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 256.11799 > 220 (140 pins)"
+  }
+ }
+}
