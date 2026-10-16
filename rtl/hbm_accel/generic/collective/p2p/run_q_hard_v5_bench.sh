@@ -12,7 +12,7 @@ ROOT=${HCOLL_ROOT:-$(cd "$HERE/../../../../.." && pwd)}
 OUT=$(realpath -m "${1:?output directory}"); Q=${2:-q2}; MODE=${3:-all}; mkdir -p "$OUT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$V" ] || V=verilator
 p=$ROOT/rtl/hbm_accel/generic/collective/p2p; t=$ROOT/rtl/hbm_accel/generic/collective/tkm
-src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv"
+src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hgi_coll_ctl_v5.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv"
  "$p/ot_hfd_coll_q2_static_host_v4.sv" "$p/ot_hgi_coll_static_program_target.sv" "$p/ot_hfd_coll_q_static_v4.sv"
  "$p/ot_hgi_coll_static_issuer.sv" "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_qslots_capture_pin_v2.sv"
  "$p/ot_hgi_coll_pring_static.sv" "$p/ot_hgi_coll_pring_captured_static.sv" "$p/ot_hgi_coll_pring_static_state_capture.sv"
