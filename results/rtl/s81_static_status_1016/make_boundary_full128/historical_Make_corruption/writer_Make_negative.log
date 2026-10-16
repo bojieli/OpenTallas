@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-s81-issuer-0253/tools/s81/issuer_pinreg_boundary_gate.py", line 88, in <module>
+    if __name__=='__main__':main()
+  File "/home/ubuntu/wt/codex-s81-issuer-0253/tools/s81/issuer_pinreg_boundary_gate.py", line 47, in main
+    if actual_env!=pin_env:raise RuntimeError('actual GNU Make boundary environment differs from literal kit: '+repr(dict(expected=pin_env,actual=actual_env)))
+RuntimeError: actual GNU Make boundary environment differs from literal kit: {'expected': {'OT_PIN_REGS': '1', 'OT_PIN_REGS_CLOCK': 'ck,ckv', 'OT_PIN_REGS_RESET_PORTS': 'rst,rsv', 'OT_PIN_REGS_EXCLUDE': '^ckv$|^(f_ks|f_pw|t_kd|t_st)(\\[.*\\])?$', 'OT_PIN_REGS_RESET': '^(rst|rsv)(\\[.*\\])?$'}, 'actual': {'OT_PIN_REGS_RESET_PORTS': 'rst,rsv', 'OT_PIN_REGS_RESET': '^(rst|rsv)(\\[.*\\])?$', 'OT_PIN_REGS': '1', 'OT_PIN_REGS_EXCLUDE': '^ckv^(f_ks|f_pw|t_kd|t_st)(\\[.*\\])?$', 'OT_PIN_REGS_CLOCK': 'ck,ckv'}}

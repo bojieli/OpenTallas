@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   429 GB (avail 687, growth 210, headroom 48, waiters 0/0 GB) load 94/128 running 33 disk 846 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81issuer-make-negative
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81issuer-make-negative
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2145029-1792148722 after 1 s
+FATAL: /srv/opentallas-scratch/claude/s81issuer-boundary-roles2/rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv:56: status fault edge 17 expected 211
+       Time: 140100  Scope: tb_s81_issuer_pinreg_boundary
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2145029-1792148722): exit 0

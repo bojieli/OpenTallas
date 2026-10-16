@@ -134,5 +134,17 @@
     },
     "negative_control": "actual historical gate wrapper with ckv/rsv data registered fails clock/reset directness assertion",
     "does_not_qualify": "Measured physical epoch, actual downstream success consumer/static compiler binding, HOST3ck forwarding, native TTsetup/FFhold/DRC0/reach remain required."
+  },
+  "production_Make_Yosys_boundary_proof": {
+    "qualified": false,
+    "scope": "actual production config writer -> GNU Make -> Yosys -> generated boundary -> actual source RTL full128; physicalphase/route/productionconsumer still unqualified",
+    "receipt": "results/rtl/s81_static_status_1016/make_boundary_full128/receipt.json",
+    "receipt_sha256": "578b88646dc8d05730fa8827b3e892da0459cba69369f59bbf2faf984dc89dea",
+    "config_writer_sha256": "14f20a2ed72ad7fcec609e0364d8656c9c9d92374a7c2326c36ceb36a1cedcaf",
+    "normal_and_missing_completion_cases": 4,
+    "actual_historical_mutants": {
+      "registered_clock_reset": "rejected direct edge assertion",
+      "Make_corrupted_serial_data_exclusion": "rejected status fault edge17 expected211"
+    }
   }
 }

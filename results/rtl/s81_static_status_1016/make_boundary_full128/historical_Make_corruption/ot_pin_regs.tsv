@@ -1,0 +1,37 @@
+port	dir	width	cycles	why
+ckv	input	1	0	clock
+rsv	input	1	0	reset
+ck	input	1	0	clock
+rst	input	1	0	reset
+f_ks	input	53	1	pin register
+t_kd	output	54	1	pin register
+f_pw	input	36	1	pin register
+f_plen	input	8	1	pin register
+t_st	output	6	1	pin register
+c0	output	85	1	pin register
+c1	output	85	1	pin register
+c2	output	85	1	pin register
+c3	output	85	1	pin register
+c4	output	85	1	pin register
+c5	output	85	1	pin register
+c6	output	85	1	pin register
+c7	output	85	1	pin register
+c12	output	85	1	pin register
+d0	input	9	1	pin register
+d1	input	9	1	pin register
+d2	input	9	1	pin register
+d3	input	9	1	pin register
+d4	input	9	1	pin register
+d5	input	9	1	pin register
+d6	input	9	1	pin register
+d7	input	9	1	pin register
+d12	input	9	1	pin register
+s0	input	2	1	pin register
+s1	input	2	1	pin register
+s2	input	2	1	pin register
+s3	input	2	1	pin register
+s4	input	2	1	pin register
+s5	input	2	1	pin register
+s6	input	2	1	pin register
+s7	input	2	1	pin register
+s12	input	2	1	pin register
