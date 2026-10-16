@@ -1,0 +1,358 @@
+{
+ "name": "hbm_sfu_programme_store_1016",
+ "top": "ot_hgi_sfu_programme_store",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "PAGE_AW": 1
+ },
+ "outline": {
+  "w": 447.12,
+  "h": 1023.84,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?0?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    23.76
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?0?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?1?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    114.48
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?1?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    114.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?2?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    205.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_io.g_stripe?2?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?0?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    295.92
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?0?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    295.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?1?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    386.64
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?1?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    386.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?2?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    477.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?2?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    477.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?3?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    568.08
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?3?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    568.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?4?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    658.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?4?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    658.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?5?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    749.52
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?5?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    749.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?6?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    840.24
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?6?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    840.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?7?.u_program.g_page?0?.u_program",
+   "at": [
+    30.24,
+    930.96
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_programme.g_stripe?7?.u_program.g_page?1?.u_program",
+   "at": [
+    244.944,
+    930.96
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "io_word",
+   "clk",
+   "rst_n",
+   "compiler_control"
+  ],
+  "N": [
+   "cfg_we",
+   "cfg_stripe",
+   "cfg_addr",
+   "cfg_data",
+   "start_base",
+   "start_limit",
+   "start_loops",
+   "io_cfg_we",
+   "io_cfg_stripe",
+   "io_cfg_addr",
+   "io_cfg_data",
+   "io_start_v",
+   "io_start_base",
+   "io_start_limit",
+   "io_start_loops",
+   "programme_active",
+   "programme_done",
+   "programme_ordinal",
+   "io_active",
+   "io_done",
+   "io_ordinal",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   506.0,
+   514.0
+  ],
+  "rst_n": [
+   515.0,
+   519.0
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hgi_sfu_programme_store) already registers every input (r_* pin registers) and every output (io_word/compiler_control/status/fault output registers) at the boundary, per OWNER RULE 19:50; a kit-level flop stage would add a redundant edge to the +3 split latency the equivalence receipt prices"
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N.",
+ "job": {
+  "owner": "Claude:H-SU/store-kit",
+  "branch": "claude/hsu-storekit-0700",
+  "tag": "r1",
+  "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N.",
+  "views_to": "physical/ref_tile/hbm_sfu_programme_store_1016/views",
+  "record_to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers"
+  ],
+  "benches": [
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}
