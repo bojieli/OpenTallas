@@ -96,7 +96,9 @@
    "rtl/dsrom_sys/s81_suhc",
    "tools/s81_suhc",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
-  ]
+  ],
+  "structural_change": "gate v1 46e236c64: plain CTS around the centred 171x78 macro gave TT insertion 380.9 / leaf spread 135.2 ps (sinks in a ring W/E/N/S of the macro, both macro edges carry pins); v2: balanced clock spine (clock: spine)"
  },
- "io_tcl": "physical/ref_tile/s81hc_ccfbp_bank_ref/io_spread.tcl"
+ "io_tcl": "physical/ref_tile/s81hc_ccfbp_bank_ref/io_spread.tcl",
+ "clock": "spine"
 }

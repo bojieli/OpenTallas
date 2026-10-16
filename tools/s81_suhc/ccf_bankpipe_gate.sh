@@ -37,19 +37,20 @@ python3 - "$new" "$out" <<'PY'
 from pathlib import Path
 import sys
 s=Path(sys.argv[1]).read_text();out=Path(sys.argv[2])
-for name,old,new in [('wrongpop','.pop(pop_q)',".pop(1'b0)"),('wronghead','head_o<=head;',"head_o<=head ^ 512'b1;"),('earlymetadata','fd_p <= fd_mid;','fd_p <= fd_i;'),('wrongfaultphase','pop_p<=pop_mid;','pop_p<=fv_q[POPBIT];'),('ignorebankovf',' || yf_ovf)',')'),('ignorebankhv',' || (pop_o && !yf_hv)',''),('statusskew','bv=PINREG ? bv_q : bank_valid','bv=bank_valid'),('headskew','bank_heads = PINREG ? bh_q : bank_heads_pin','bank_heads = bank_heads_pin')]:
+for name,old,new in [('wrongpop','.pop(pop_q)',".pop(1'b0)"),('wronghead','head_o<=head;',"head_o<=head ^ 512'b1;"),('earlymetadata','fd_p <= fd_mid;','fd_p <= fd_i;'),('wrongfaultphase','pop_p<=pop_mid;','pop_p<=fv_q[POPBIT];'),('ignorebankovf',' || yf_ovf)',')'),('ignorebankhv',' || (pop_o && !yf_hv)',''),('statusskew','bo=PINREG ? bo_q : bank_overflow','bo=bank_overflow'),('popskew','wire pop_o=PINREG ? pop_p2 : pop_p','wire pop_o=pop_p'),('headskew','bank_heads = PINREG ? bh_q : bank_heads_pin','bank_heads = bank_heads_pin')]:
  assert s.count(old)==1,(name,s.count(old))
  (out/(name+'.sv')).write_text(s.replace(old,new))
 PY
 mutants="wrongpop wronghead earlymetadata wrongfaultphase ignorebankovf ignorebankhv"
-[ "$extra" = 3 ] && mutants="$mutants statusskew headskew"
+[ "$extra" = 3 ] && mutants="$mutants statusskew popskew headskew"
 for mutant in $mutants; do
   compile "$mutant" "$out/$mutant.sv"
   fault_probe=0
   if [ "$mutant" = wrongfaultphase ]; then fault_probe=1; fi
   if [ "$mutant" = ignorebankovf ]; then fault_probe=3; fi
   if [ "$mutant" = ignorebankhv ]; then fault_probe=4; fi
-  if [ "$mutant" = statusskew ]; then fault_probe=4; fi
+  if [ "$mutant" = statusskew ]; then fault_probe=3; fi
+  if [ "$mutant" = popskew ]; then fault_probe=1; fi
   set +e
   vvp "$out/$mutant.vvp" +MODE=0 +SEED=17 +FAULTCASE="$fault_probe" > "$out/$mutant.log" 2>&1
   neg_rc=$?

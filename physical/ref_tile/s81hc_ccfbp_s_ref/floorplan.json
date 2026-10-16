@@ -7,16 +7,16 @@
   0,
   0,
   492.48,
-  43.2
+  34.56
  ],
  "core": [
   2.16,
   2.16,
   490.32,
-  41.040000000000006
+  32.400000000000006
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 5200,
+ "std_area_um2": 3157,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -49,7 +49,7 @@
   [
    "WARN",
    "util",
-   "utilisation 27% outside 45%-60% (std 5200 + macro 0 in core 18980 um2)",
+   "utilisation 21% outside 45%-60% (std 3157 + macro 0 in core 14762 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],

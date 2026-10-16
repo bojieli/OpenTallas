@@ -37,10 +37,10 @@
  "params": {
   "PINREG": 1
  },
- "std_area_um2": 5200,
+ "std_area_um2": 3157,
  "outline": {
   "w": 492.48,
-  "h": 43.2,
+  "h": 34.56,
   "exact": true
  },
  "macros": [],
@@ -86,7 +86,8 @@
    "rtl/dsrom_sys/s81_suhc",
    "tools/s81_suhc",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
-  ]
+  ],
+  "structural_change": "v1 gate 46e236c64 at 492.48x43.2: std 3,157 um2 (util 17%), 8,661 sinks TT 292.9/spread 78.7 ps, setup +212.4/hold +32.8 ps; empty middle between the pin rims -> height 43.2 -> 34.56"
  },
  "io_tcl": "physical/ref_tile/s81hc_ccfbp_s_ref/io_spread.tcl"
 }
