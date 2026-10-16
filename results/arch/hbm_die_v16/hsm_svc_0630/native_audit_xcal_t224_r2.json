@@ -1,0 +1,31 @@
+{
+ "cell": "ot_hbm_svc_sm_xcal_t",
+ "view": "physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t",
+ "lib_cell": "ot_hbm_svc_sm_xcal_t",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 235.0,
+ "spread_ps": 31.8,
+ "outputs": 177,
+ "inputs": 329,
+ "launch_ps": 179.0,
+ "launch_pin": "kv_desc[33]",
+ "capture_ps": 157.6,
+ "capture_pin": "desc_loops[10]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "hsm_xcal_t224_r2-r2-38e71c4dc",
+ "verdict": "CLOSED TT +143.41 / FF +5.48 / DRC 0",
+ "supersedes": {
+  "view": "physical/ref_tile/hsm_xcal_t224_r1/views/ot_hbm_svc_sm_xcal_t",
+  "job": "hsm_xcal_t224_r1-r1-c3e947611",
+  "why": "r1 CLOSED (TT +94.11 / FF +1.25) but native FAIL capture 203.4 ps > 190 on 103 N-face pins, spread 109 ps (results/arch/hbm_die_v16/hsm_svc_0630/native_audit_xcal_t224_r1.json); r2 passes with more hold margin"
+ },
+ "die_binding": "ot_hbm_svc_sm_xcal_t -> physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t (32 instances xc_<q><k>, replaces cpx_<q><k> + xc_<q><k>); all signal pins on the W face"
+}
