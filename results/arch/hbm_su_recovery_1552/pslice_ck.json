@@ -1,0 +1,5044 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_pslice_1016-20261016-144213/routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_su_programme_pslice_q_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 2824,
+   "mean": 1984.1,
+   "min": 1835.6,
+   "max": 2053.0
+  },
+  "all": {
+   "n": 3021,
+   "mean": 1976.7,
+   "min": 1803.9,
+   "max": 2053.0
+  },
+  "errors": [],
+  "macros": {
+   "n": 98,
+   "nets": 98,
+   "max_per_net": 1,
+   "reg_mean": 1976.7,
+   "max_slew": 20.5,
+   "max_late": -13.8,
+   "pins": [
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+     "arr": 1903.2,
+     "slew": 18.6,
+     "late": -73.5,
+     "net": "clkbuf_sp_L127_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+     "arr": 1891.8,
+     "slew": 18.8,
+     "late": -84.9,
+     "net": "clkbuf_sp_L126_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+     "arr": 1890.2,
+     "slew": 18.7,
+     "late": -86.5,
+     "net": "clkbuf_sp_L125_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+     "arr": 1887.8,
+     "slew": 18.6,
+     "late": -88.9,
+     "net": "clkbuf_sp_L123_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+     "arr": 1897.4,
+     "slew": 18.7,
+     "late": -79.3,
+     "net": "clkbuf_sp_L122_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+     "arr": 1900.1,
+     "slew": 18.8,
+     "late": -76.6,
+     "net": "clkbuf_sp_L121_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+     "arr": 1842.5,
+     "slew": 18.7,
+     "late": -134.2,
+     "net": "clkbuf_sp_L120_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+     "arr": 1828.5,
+     "slew": 18.8,
+     "late": -148.2,
+     "net": "clkbuf_sp_L119_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+     "arr": 1828.6,
+     "slew": 18.8,
+     "late": -148.1,
+     "net": "clkbuf_sp_L118_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+     "arr": 1803.9,
+     "slew": 18.7,
+     "late": -172.8,
+     "net": "clkbuf_sp_L117_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+     "arr": 1835.8,
+     "slew": 18.6,
+     "late": -140.9,
+     "net": "clkbuf_sp_L116_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+     "arr": 1850.1,
+     "slew": 18.7,
+     "late": -126.6,
+     "net": "clkbuf_sp_L115_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+     "arr": 1844.6,
+     "slew": 18.6,
+     "late": -132.1,
+     "net": "clkbuf_sp_L114_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+     "arr": 1889.2,
+     "slew": 18.6,
+     "late": -87.5,
+     "net": "clkbuf_sp_L112_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[1].mem/clk",
+     "arr": 1950.3,
+     "slew": 18.5,
+     "late": -26.4,
+     "net": "clkbuf_sp_L111_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[2].mem/clk",
+     "arr": 1948.0,
+     "slew": 18.5,
+     "late": -28.7,
+     "net": "clkbuf_sp_L110_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[3].mem/clk",
+     "arr": 1949.8,
+     "slew": 18.6,
+     "late": -26.9,
+     "net": "clkbuf_sp_L109_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[4].mem/clk",
+     "arr": 1926.3,
+     "slew": 18.5,
+     "late": -50.4,
+     "net": "clkbuf_sp_L108_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[5].mem/clk",
+     "arr": 1918.9,
+     "slew": 18.6,
+     "late": -57.8,
+     "net": "clkbuf_sp_L107_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[6].mem/clk",
+     "arr": 1920.7,
+     "slew": 18.6,
+     "late": -56.0,
+     "net": "clkbuf_sp_L106_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+     "arr": 1871.4,
+     "slew": 18.5,
+     "late": -105.3,
+     "net": "clkbuf_sp_L105_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+     "arr": 1872.0,
+     "slew": 18.5,
+     "late": -104.7,
+     "net": "clkbuf_sp_L104_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+     "arr": 1871.9,
+     "slew": 18.5,
+     "late": -104.8,
+     "net": "clkbuf_sp_L100_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[10].mem/clk",
+     "arr": 1918.7,
+     "slew": 18.7,
+     "late": -58.0,
+     "net": "clkbuf_sp_L99_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[11].mem/clk",
+     "arr": 1919.5,
+     "slew": 18.6,
+     "late": -57.2,
+     "net": "clkbuf_sp_L98_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+     "arr": 1838.9,
+     "slew": 18.6,
+     "late": -137.8,
+     "net": "clkbuf_sp_L97_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+     "arr": 1871.9,
+     "slew": 18.5,
+     "late": -104.8,
+     "net": "clkbuf_sp_L96_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+     "arr": 1841.4,
+     "slew": 18.9,
+     "late": -135.3,
+     "net": "clkbuf_sp_L95_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+     "arr": 1890.6,
+     "slew": 18.5,
+     "late": -86.1,
+     "net": "clkbuf_sp_L94_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+     "arr": 1890.7,
+     "slew": 18.5,
+     "late": -86.0,
+     "net": "clkbuf_sp_L93_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+     "arr": 1890.9,
+     "slew": 18.5,
+     "late": -85.8,
+     "net": "clkbuf_sp_L92_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[6].mem/clk",
+     "arr": 1962.9,
+     "slew": 18.6,
+     "late": -13.8,
+     "net": "clkbuf_sp_L91_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[7].mem/clk",
+     "arr": 1936.5,
+     "slew": 19.2,
+     "late": -40.2,
+     "net": "clkbuf_sp_L90_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[8].mem/clk",
+     "arr": 1929.4,
+     "slew": 18.7,
+     "late": -47.3,
+     "net": "clkbuf_sp_L89_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[9].mem/clk",
+     "arr": 1931.9,
+     "slew": 19.2,
+     "late": -44.8,
+     "net": "clkbuf_sp_L88_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+     "arr": 1880.7,
+     "slew": 18.7,
+     "late": -96.0,
+     "net": "clkbuf_sp_L85_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+     "arr": 1876.5,
+     "slew": 18.7,
+     "late": -100.2,
+     "net": "clkbuf_sp_L84_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+     "arr": 1880.4,
+     "slew": 18.6,
+     "late": -96.3,
+     "net": "clkbuf_sp_L83_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+     "arr": 1869.6,
+     "slew": 18.6,
+     "late": -107.1,
+     "net": "clkbuf_sp_L82_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+     "arr": 1891.9,
+     "slew": 18.6,
+     "late": -84.8,
+     "net": "clkbuf_sp_L81_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+     "arr": 1862.3,
+     "slew": 18.6,
+     "late": -114.4,
+     "net": "clkbuf_sp_L80_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+     "arr": 1862.4,
+     "slew": 18.6,
+     "late": -114.3,
+     "net": "clkbuf_sp_L79_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+     "arr": 1836.5,
+     "slew": 18.6,
+     "late": -140.2,
+     "net": "clkbuf_sp_L73_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+     "arr": 1844.9,
+     "slew": 18.6,
+     "late": -131.8,
+     "net": "clkbuf_sp_L72_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+     "arr": 1844.9,
+     "slew": 18.6,
+     "late": -131.8,
+     "net": "clkbuf_sp_L71_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+     "arr": 1862.0,
+     "slew": 18.6,
+     "late": -114.7,
+     "net": "clkbuf_sp_L70_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+     "arr": 1862.8,
+     "slew": 18.6,
+     "late": -113.9,
+     "net": "clkbuf_sp_L69_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+     "arr": 1836.3,
+     "slew": 18.5,
+     "late": -140.4,
+     "net": "clkbuf_sp_L68_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+     "arr": 1836.3,
+     "slew": 18.5,
+     "late": -140.4,
+     "net": "clkbuf_sp_L67_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+     "arr": 1838.7,
+     "slew": 18.5,
+     "late": -138.0,
+     "net": "clkbuf_sp_L66_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+     "arr": 1838.8,
+     "slew": 18.6,
+     "late": -137.9,
+     "net": "clkbuf_sp_L65_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+     "arr": 1838.7,
+     "slew": 18.6,
+     "late": -138.0,
+     "net": "clkbuf_sp_L64_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+     "arr": 1839.7,
+     "slew": 18.8,
+     "late": -137.0,
+     "net": "clkbuf_sp_L63_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+     "arr": 1836.5,
+     "slew": 18.6,
+     "late": -140.2,
+     "net": "clkbuf_sp_L62_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+     "arr": 1855.0,
+     "slew": 18.7,
+     "late": -121.7,
+     "net": "clkbuf_sp_L61_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+     "arr": 1855.4,
+     "slew": 18.6,
+     "late": -121.3,
+     "net": "clkbuf_sp_L60_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+     "arr": 1855.8,
+     "slew": 18.7,
+     "late": -120.9,
+     "net": "clkbuf_sp_L59_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+     "arr": 1861.3,
+     "slew": 18.5,
+     "late": -115.4,
+     "net": "clkbuf_sp_L58_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+     "arr": 1850.5,
+     "slew": 18.5,
+     "late": -126.2,
+     "net": "clkbuf_sp_L57_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+     "arr": 1861.6,
+     "slew": 18.5,
+     "late": -115.1,
+     "net": "clkbuf_sp_L56_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+     "arr": 1861.6,
+     "slew": 18.5,
+     "late": -115.1,
+     "net": "clkbuf_sp_L55_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+     "arr": 1856.5,
+     "slew": 18.5,
+     "late": -120.2,
+     "net": "clkbuf_sp_L54_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+     "arr": 1820.7,
+     "slew": 18.6,
+     "late": -156.0,
+     "net": "clkbuf_sp_L53_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+     "arr": 1820.8,
+     "slew": 18.6,
+     "late": -155.9,
+     "net": "clkbuf_sp_L52_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+     "arr": 1824.3,
+     "slew": 20.2,
+     "late": -152.4,
+     "net": "clkbuf_sp_L51_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+     "arr": 1844.4,
+     "slew": 18.7,
+     "late": -132.3,
+     "net": "clkbuf_sp_L50_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+     "arr": 1843.8,
+     "slew": 18.7,
+     "late": -132.9,
+     "net": "clkbuf_sp_L49_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+     "arr": 1843.5,
+     "slew": 18.7,
+     "late": -133.2,
+     "net": "clkbuf_sp_L48_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+     "arr": 1850.8,
+     "slew": 18.6,
+     "late": -125.9,
+     "net": "clkbuf_sp_L47_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+     "arr": 1847.6,
+     "slew": 18.6,
+     "late": -129.1,
+     "net": "clkbuf_sp_L46_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+     "arr": 1866.4,
+     "slew": 18.7,
+     "late": -110.3,
+     "net": "clkbuf_sp_L45_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+     "arr": 1867.0,
+     "slew": 18.7,
+     "late": -109.7,
+     "net": "clkbuf_sp_L44_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+     "arr": 1882.1,
+     "slew": 18.6,
+     "late": -94.6,
+     "net": "clkbuf_sp_L43_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+     "arr": 1882.3,
+     "slew": 18.6,
+     "late": -94.4,
+     "net": "clkbuf_sp_L42_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+     "arr": 1856.4,
+     "slew": 18.6,
+     "late": -120.3,
+     "net": "clkbuf_sp_L41_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+     "arr": 1824.3,
+     "slew": 20.2,
+     "late": -152.4,
+     "net": "clkbuf_sp_L40_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+     "arr": 1904.2,
+     "slew": 18.7,
+     "late": -72.5,
+     "net": "clkbuf_sp_L39_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+     "arr": 1902.3,
+     "slew": 18.7,
+     "late": -74.4,
+     "net": "clkbuf_sp_L38_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+     "arr": 1858.8,
+     "slew": 18.5,
+     "late": -117.9,
+     "net": "clkbuf_sp_L37_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+     "arr": 1858.9,
+     "slew": 18.5,
+     "late": -117.8,
+     "net": "clkbuf_sp_L36_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+     "arr": 1849.1,
+     "slew": 18.5,
+     "late": -127.6,
+     "net": "clkbuf_sp_L35_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+     "arr": 1823.1,
+     "slew": 18.5,
+     "late": -153.6,
+     "net": "clkbuf_sp_L34_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+     "arr": 1825.8,
+     "slew": 18.6,
+     "late": -150.9,
+     "net": "clkbuf_sp_L33_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+     "arr": 1860.0,
+     "slew": 18.5,
+     "late": -116.7,
+     "net": "clkbuf_sp_L32_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+     "arr": 1866.7,
+     "slew": 18.5,
+     "late": -110.0,
+     "net": "clkbuf_sp_L31_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+     "arr": 1844.9,
+     "slew": 18.3,
+     "late": -131.8,
+     "net": "clkbuf_sp_L30_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+     "arr": 1824.0,
+     "slew": 20.5,
+     "late": -152.7,
+     "net": "clkbuf_sp_L29_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+     "arr": 1866.8,
+     "slew": 18.6,
+     "late": -109.9,
+     "net": "clkbuf_sp_L28_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+     "arr": 1851.0,
+     "slew": 18.6,
+     "late": -125.7,
+     "net": "clkbuf_sp_L27_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+     "arr": 1849.3,
+     "slew": 18.7,
+     "late": -127.4,
+     "net": "clkbuf_sp_L26_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+     "arr": 1846.8,
+     "slew": 18.5,
+     "late": -129.9,
+     "net": "clkbuf_sp_L25_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+     "arr": 1805.9,
+     "slew": 18.6,
+     "late": -170.8,
+     "net": "clkbuf_sp_L24_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+     "arr": 1880.3,
+     "slew": 18.6,
+     "late": -96.4,
+     "net": "clkbuf_sp_L23_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+     "arr": 1848.0,
+     "slew": 18.7,
+     "late": -128.7,
+     "net": "clkbuf_sp_L22_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+     "arr": 1847.5,
+     "slew": 18.6,
+     "late": -129.2,
+     "net": "clkbuf_sp_L21_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+     "arr": 1854.2,
+     "slew": 18.7,
+     "late": -122.5,
+     "net": "clkbuf_sp_L20_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+     "arr": 1854.0,
+     "slew": 18.6,
+     "late": -122.7,
+     "net": "clkbuf_sp_L19_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+     "arr": 1856.4,
+     "slew": 18.6,
+     "late": -120.3,
+     "net": "clkbuf_sp_L18_net"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "tt": {
+  "boundary": {
+   "n": 2824,
+   "mean": 1489.2,
+   "min": 1478.4,
+   "max": 1506.0
+  },
+  "all": {
+   "n": 3021,
+   "mean": 1489.1,
+   "min": 1477.6,
+   "max": 1506.0
+  },
+  "errors": [],
+  "macros": {
+   "n": 98,
+   "nets": 98,
+   "max_per_net": 1,
+   "reg_mean": 1489.1,
+   "max_slew": 14.9,
+   "max_late": 12.3,
+   "pins": [
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+     "arr": 1494.1,
+     "slew": 13.8,
+     "late": 5.0,
+     "net": "clkbuf_sp_L127_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+     "arr": 1487.3,
+     "slew": 14.0,
+     "late": -1.8,
+     "net": "clkbuf_sp_L126_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+     "arr": 1488.0,
+     "slew": 13.9,
+     "late": -1.1,
+     "net": "clkbuf_sp_L125_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+     "arr": 1486.6,
+     "slew": 13.8,
+     "late": -2.5,
+     "net": "clkbuf_sp_L123_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+     "arr": 1492.1,
+     "slew": 13.9,
+     "late": 3.0,
+     "net": "clkbuf_sp_L122_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+     "arr": 1492.3,
+     "slew": 14.1,
+     "late": 3.2,
+     "net": "clkbuf_sp_L121_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+     "arr": 1497.9,
+     "slew": 13.9,
+     "late": 8.8,
+     "net": "clkbuf_sp_L120_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+     "arr": 1489.3,
+     "slew": 14.0,
+     "late": 0.2,
+     "net": "clkbuf_sp_L119_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+     "arr": 1489.3,
+     "slew": 14.0,
+     "late": 0.2,
+     "net": "clkbuf_sp_L118_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+     "arr": 1483.0,
+     "slew": 14.0,
+     "late": -6.1,
+     "net": "clkbuf_sp_L117_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+     "arr": 1481.6,
+     "slew": 13.8,
+     "late": -7.5,
+     "net": "clkbuf_sp_L116_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+     "arr": 1491.7,
+     "slew": 13.9,
+     "late": 2.6,
+     "net": "clkbuf_sp_L115_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+     "arr": 1488.4,
+     "slew": 13.8,
+     "late": -0.7,
+     "net": "clkbuf_sp_L114_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+     "arr": 1489.9,
+     "slew": 13.8,
+     "late": 0.8,
+     "net": "clkbuf_sp_L112_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[1].mem/clk",
+     "arr": 1489.3,
+     "slew": 13.7,
+     "late": 0.2,
+     "net": "clkbuf_sp_L111_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[2].mem/clk",
+     "arr": 1498.8,
+     "slew": 13.7,
+     "late": 9.7,
+     "net": "clkbuf_sp_L110_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[3].mem/clk",
+     "arr": 1500.0,
+     "slew": 13.7,
+     "late": 10.9,
+     "net": "clkbuf_sp_L109_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[4].mem/clk",
+     "arr": 1483.2,
+     "slew": 13.6,
+     "late": -5.9,
+     "net": "clkbuf_sp_L108_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[5].mem/clk",
+     "arr": 1480.6,
+     "slew": 13.8,
+     "late": -8.5,
+     "net": "clkbuf_sp_L107_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[6].mem/clk",
+     "arr": 1481.8,
+     "slew": 13.8,
+     "late": -7.3,
+     "net": "clkbuf_sp_L106_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+     "arr": 1481.1,
+     "slew": 13.7,
+     "late": -8.0,
+     "net": "clkbuf_sp_L105_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+     "arr": 1481.6,
+     "slew": 13.7,
+     "late": -7.5,
+     "net": "clkbuf_sp_L104_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+     "arr": 1481.4,
+     "slew": 13.7,
+     "late": -7.7,
+     "net": "clkbuf_sp_L100_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[10].mem/clk",
+     "arr": 1480.1,
+     "slew": 13.9,
+     "late": -9.0,
+     "net": "clkbuf_sp_L99_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[11].mem/clk",
+     "arr": 1480.5,
+     "slew": 13.8,
+     "late": -8.6,
+     "net": "clkbuf_sp_L98_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+     "arr": 1484.6,
+     "slew": 13.8,
+     "late": -4.5,
+     "net": "clkbuf_sp_L97_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+     "arr": 1481.5,
+     "slew": 13.7,
+     "late": -7.6,
+     "net": "clkbuf_sp_L96_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+     "arr": 1486.9,
+     "slew": 14.1,
+     "late": -2.2,
+     "net": "clkbuf_sp_L95_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+     "arr": 1489.7,
+     "slew": 13.7,
+     "late": 0.6,
+     "net": "clkbuf_sp_L94_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+     "arr": 1489.8,
+     "slew": 13.7,
+     "late": 0.7,
+     "net": "clkbuf_sp_L93_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+     "arr": 1485.8,
+     "slew": 13.7,
+     "late": -3.3,
+     "net": "clkbuf_sp_L92_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[6].mem/clk",
+     "arr": 1486.1,
+     "slew": 13.8,
+     "late": -3.0,
+     "net": "clkbuf_sp_L91_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[7].mem/clk",
+     "arr": 1490.1,
+     "slew": 14.5,
+     "late": 1.0,
+     "net": "clkbuf_sp_L90_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[8].mem/clk",
+     "arr": 1485.5,
+     "slew": 13.8,
+     "late": -3.6,
+     "net": "clkbuf_sp_L89_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[9].mem/clk",
+     "arr": 1486.4,
+     "slew": 14.5,
+     "late": -2.7,
+     "net": "clkbuf_sp_L88_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+     "arr": 1488.8,
+     "slew": 13.9,
+     "late": -0.3,
+     "net": "clkbuf_sp_L85_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+     "arr": 1488.1,
+     "slew": 13.8,
+     "late": -1.0,
+     "net": "clkbuf_sp_L84_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+     "arr": 1490.5,
+     "slew": 13.8,
+     "late": 1.4,
+     "net": "clkbuf_sp_L83_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+     "arr": 1484.5,
+     "slew": 13.8,
+     "late": -4.6,
+     "net": "clkbuf_sp_L82_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+     "arr": 1499.9,
+     "slew": 13.8,
+     "late": 10.8,
+     "net": "clkbuf_sp_L81_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+     "arr": 1499.6,
+     "slew": 13.8,
+     "late": 10.5,
+     "net": "clkbuf_sp_L80_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+     "arr": 1499.6,
+     "slew": 13.8,
+     "late": 10.5,
+     "net": "clkbuf_sp_L79_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+     "arr": 1490.6,
+     "slew": 13.8,
+     "late": 1.5,
+     "net": "clkbuf_sp_L73_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+     "arr": 1485.1,
+     "slew": 13.8,
+     "late": -4.0,
+     "net": "clkbuf_sp_L72_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+     "arr": 1485.1,
+     "slew": 13.8,
+     "late": -4.0,
+     "net": "clkbuf_sp_L71_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+     "arr": 1483.2,
+     "slew": 13.8,
+     "late": -5.9,
+     "net": "clkbuf_sp_L70_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+     "arr": 1483.7,
+     "slew": 13.8,
+     "late": -5.4,
+     "net": "clkbuf_sp_L69_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+     "arr": 1490.4,
+     "slew": 13.7,
+     "late": 1.3,
+     "net": "clkbuf_sp_L68_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+     "arr": 1490.4,
+     "slew": 13.7,
+     "late": 1.3,
+     "net": "clkbuf_sp_L67_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+     "arr": 1492.4,
+     "slew": 13.7,
+     "late": 3.3,
+     "net": "clkbuf_sp_L66_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+     "arr": 1492.6,
+     "slew": 13.8,
+     "late": 3.5,
+     "net": "clkbuf_sp_L65_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+     "arr": 1492.7,
+     "slew": 13.7,
+     "late": 3.6,
+     "net": "clkbuf_sp_L64_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+     "arr": 1493.3,
+     "slew": 14.0,
+     "late": 4.2,
+     "net": "clkbuf_sp_L63_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+     "arr": 1490.6,
+     "slew": 13.8,
+     "late": 1.5,
+     "net": "clkbuf_sp_L62_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+     "arr": 1490.8,
+     "slew": 13.9,
+     "late": 1.7,
+     "net": "clkbuf_sp_L61_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+     "arr": 1491.0,
+     "slew": 13.8,
+     "late": 1.9,
+     "net": "clkbuf_sp_L60_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+     "arr": 1491.4,
+     "slew": 13.9,
+     "late": 2.3,
+     "net": "clkbuf_sp_L59_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+     "arr": 1495.8,
+     "slew": 13.7,
+     "late": 6.7,
+     "net": "clkbuf_sp_L58_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+     "arr": 1483.1,
+     "slew": 13.7,
+     "late": -6.0,
+     "net": "clkbuf_sp_L57_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+     "arr": 1482.7,
+     "slew": 13.7,
+     "late": -6.4,
+     "net": "clkbuf_sp_L56_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+     "arr": 1482.7,
+     "slew": 13.7,
+     "late": -6.4,
+     "net": "clkbuf_sp_L55_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+     "arr": 1480.0,
+     "slew": 13.7,
+     "late": -9.1,
+     "net": "clkbuf_sp_L54_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+     "arr": 1478.4,
+     "slew": 13.8,
+     "late": -10.7,
+     "net": "clkbuf_sp_L53_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+     "arr": 1478.4,
+     "slew": 13.8,
+     "late": -10.7,
+     "net": "clkbuf_sp_L52_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+     "arr": 1483.0,
+     "slew": 14.5,
+     "late": -6.1,
+     "net": "clkbuf_sp_L51_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+     "arr": 1493.9,
+     "slew": 13.9,
+     "late": 4.8,
+     "net": "clkbuf_sp_L50_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+     "arr": 1495.6,
+     "slew": 13.9,
+     "late": 6.5,
+     "net": "clkbuf_sp_L49_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+     "arr": 1495.4,
+     "slew": 13.9,
+     "late": 6.3,
+     "net": "clkbuf_sp_L48_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+     "arr": 1493.8,
+     "slew": 13.8,
+     "late": 4.7,
+     "net": "clkbuf_sp_L47_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+     "arr": 1480.6,
+     "slew": 13.8,
+     "late": -8.5,
+     "net": "clkbuf_sp_L46_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+     "arr": 1486.9,
+     "slew": 13.9,
+     "late": -2.2,
+     "net": "clkbuf_sp_L45_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+     "arr": 1487.2,
+     "slew": 13.9,
+     "late": -1.9,
+     "net": "clkbuf_sp_L44_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+     "arr": 1484.6,
+     "slew": 13.8,
+     "late": -4.5,
+     "net": "clkbuf_sp_L43_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+     "arr": 1484.7,
+     "slew": 13.8,
+     "late": -4.4,
+     "net": "clkbuf_sp_L42_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+     "arr": 1479.9,
+     "slew": 13.8,
+     "late": -9.2,
+     "net": "clkbuf_sp_L41_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+     "arr": 1483.0,
+     "slew": 14.5,
+     "late": -6.1,
+     "net": "clkbuf_sp_L40_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+     "arr": 1491.1,
+     "slew": 13.9,
+     "late": 2.0,
+     "net": "clkbuf_sp_L39_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+     "arr": 1486.5,
+     "slew": 13.9,
+     "late": -2.6,
+     "net": "clkbuf_sp_L38_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+     "arr": 1489.4,
+     "slew": 13.7,
+     "late": 0.3,
+     "net": "clkbuf_sp_L37_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+     "arr": 1489.5,
+     "slew": 13.7,
+     "late": 0.4,
+     "net": "clkbuf_sp_L36_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+     "arr": 1492.4,
+     "slew": 13.7,
+     "late": 3.3,
+     "net": "clkbuf_sp_L35_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+     "arr": 1489.3,
+     "slew": 13.7,
+     "late": 0.2,
+     "net": "clkbuf_sp_L34_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+     "arr": 1490.0,
+     "slew": 13.8,
+     "late": 0.9,
+     "net": "clkbuf_sp_L33_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+     "arr": 1493.5,
+     "slew": 13.7,
+     "late": 4.4,
+     "net": "clkbuf_sp_L32_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+     "arr": 1489.7,
+     "slew": 13.7,
+     "late": 0.6,
+     "net": "clkbuf_sp_L31_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+     "arr": 1479.7,
+     "slew": 13.5,
+     "late": -9.4,
+     "net": "clkbuf_sp_L30_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+     "arr": 1482.2,
+     "slew": 14.9,
+     "late": -6.9,
+     "net": "clkbuf_sp_L29_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+     "arr": 1494.8,
+     "slew": 13.7,
+     "late": 5.7,
+     "net": "clkbuf_sp_L28_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+     "arr": 1490.8,
+     "slew": 13.8,
+     "late": 1.7,
+     "net": "clkbuf_sp_L27_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+     "arr": 1489.8,
+     "slew": 13.9,
+     "late": 0.7,
+     "net": "clkbuf_sp_L26_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+     "arr": 1486.9,
+     "slew": 13.7,
+     "late": -2.2,
+     "net": "clkbuf_sp_L25_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+     "arr": 1484.8,
+     "slew": 13.9,
+     "late": -4.3,
+     "net": "clkbuf_sp_L24_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+     "arr": 1485.3,
+     "slew": 13.7,
+     "late": -3.8,
+     "net": "clkbuf_sp_L23_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+     "arr": 1501.4,
+     "slew": 13.9,
+     "late": 12.3,
+     "net": "clkbuf_sp_L22_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+     "arr": 1501.1,
+     "slew": 13.8,
+     "late": 12.0,
+     "net": "clkbuf_sp_L21_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+     "arr": 1490.3,
+     "slew": 13.9,
+     "late": 1.2,
+     "net": "clkbuf_sp_L20_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+     "arr": 1490.2,
+     "slew": 13.8,
+     "late": 1.1,
+     "net": "clkbuf_sp_L19_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+     "arr": 1491.9,
+     "slew": 13.8,
+     "late": 2.8,
+     "net": "clkbuf_sp_L18_net"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "ff": {
+  "boundary": {
+   "n": 2824,
+   "mean": 1190.8,
+   "min": 1164.9,
+   "max": 1244.2
+  },
+  "all": {
+   "n": 3021,
+   "mean": 1193.9,
+   "min": 1164.9,
+   "max": 1267.0
+  },
+  "errors": [],
+  "macros": {
+   "n": 98,
+   "nets": 98,
+   "max_per_net": 1,
+   "reg_mean": 1193.9,
+   "max_slew": 12.8,
+   "max_late": 73.1,
+   "pins": [
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+     "arr": 1233.0,
+     "slew": 11.8,
+     "late": 39.1,
+     "net": "clkbuf_sp_L127_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+     "arr": 1229.7,
+     "slew": 12.0,
+     "late": 35.8,
+     "net": "clkbuf_sp_L126_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+     "arr": 1230.6,
+     "slew": 11.9,
+     "late": 36.7,
+     "net": "clkbuf_sp_L125_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+     "arr": 1229.7,
+     "slew": 11.8,
+     "late": 35.8,
+     "net": "clkbuf_sp_L123_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+     "arr": 1233.6,
+     "slew": 11.9,
+     "late": 39.7,
+     "net": "clkbuf_sp_L122_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+     "arr": 1232.8,
+     "slew": 12.0,
+     "late": 38.9,
+     "net": "clkbuf_sp_L121_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+     "arr": 1265.5,
+     "slew": 11.9,
+     "late": 71.6,
+     "net": "clkbuf_sp_L120_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+     "arr": 1260.1,
+     "slew": 12.0,
+     "late": 66.2,
+     "net": "clkbuf_sp_L119_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+     "arr": 1260.0,
+     "slew": 12.0,
+     "late": 66.1,
+     "net": "clkbuf_sp_L118_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+     "arr": 1262.6,
+     "slew": 12.1,
+     "late": 68.7,
+     "net": "clkbuf_sp_L117_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+     "arr": 1245.7,
+     "slew": 11.8,
+     "late": 51.8,
+     "net": "clkbuf_sp_L116_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+     "arr": 1253.5,
+     "slew": 11.9,
+     "late": 59.6,
+     "net": "clkbuf_sp_L115_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+     "arr": 1251.3,
+     "slew": 11.8,
+     "late": 57.4,
+     "net": "clkbuf_sp_L114_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+     "arr": 1233.9,
+     "slew": 11.8,
+     "late": 40.0,
+     "net": "clkbuf_sp_L112_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[1].mem/clk",
+     "arr": 1205.8,
+     "slew": 11.6,
+     "late": 11.9,
+     "net": "clkbuf_sp_L111_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[2].mem/clk",
+     "arr": 1220.8,
+     "slew": 11.6,
+     "late": 26.9,
+     "net": "clkbuf_sp_L110_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[3].mem/clk",
+     "arr": 1221.6,
+     "slew": 11.7,
+     "late": 27.7,
+     "net": "clkbuf_sp_L109_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[4].mem/clk",
+     "arr": 1209.1,
+     "slew": 11.6,
+     "late": 15.2,
+     "net": "clkbuf_sp_L108_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[5].mem/clk",
+     "arr": 1207.9,
+     "slew": 11.8,
+     "late": 14.0,
+     "net": "clkbuf_sp_L107_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[6].mem/clk",
+     "arr": 1208.8,
+     "slew": 11.8,
+     "late": 14.9,
+     "net": "clkbuf_sp_L106_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+     "arr": 1229.6,
+     "slew": 11.6,
+     "late": 35.7,
+     "net": "clkbuf_sp_L105_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+     "arr": 1230.0,
+     "slew": 11.6,
+     "late": 36.1,
+     "net": "clkbuf_sp_L104_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+     "arr": 1229.8,
+     "slew": 11.6,
+     "late": 35.9,
+     "net": "clkbuf_sp_L100_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[10].mem/clk",
+     "arr": 1207.4,
+     "slew": 11.9,
+     "late": 13.5,
+     "net": "clkbuf_sp_L99_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[11].mem/clk",
+     "arr": 1207.7,
+     "slew": 11.8,
+     "late": 13.8,
+     "net": "clkbuf_sp_L98_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+     "arr": 1249.2,
+     "slew": 11.8,
+     "late": 55.3,
+     "net": "clkbuf_sp_L97_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+     "arr": 1229.9,
+     "slew": 11.6,
+     "late": 36.0,
+     "net": "clkbuf_sp_L96_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+     "arr": 1251.5,
+     "slew": 12.1,
+     "late": 57.6,
+     "net": "clkbuf_sp_L95_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+     "arr": 1232.5,
+     "slew": 11.6,
+     "late": 38.6,
+     "net": "clkbuf_sp_L94_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+     "arr": 1232.6,
+     "slew": 11.6,
+     "late": 38.7,
+     "net": "clkbuf_sp_L93_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+     "arr": 1227.8,
+     "slew": 11.6,
+     "late": 33.9,
+     "net": "clkbuf_sp_L92_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[6].mem/clk",
+     "arr": 1196.1,
+     "slew": 11.8,
+     "late": 2.2,
+     "net": "clkbuf_sp_L91_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[7].mem/clk",
+     "arr": 1213.8,
+     "slew": 12.5,
+     "late": 19.9,
+     "net": "clkbuf_sp_L90_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[8].mem/clk",
+     "arr": 1210.6,
+     "slew": 11.8,
+     "late": 16.7,
+     "net": "clkbuf_sp_L89_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[3].mem.g[9].mem/clk",
+     "arr": 1211.0,
+     "slew": 12.6,
+     "late": 17.1,
+     "net": "clkbuf_sp_L88_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+     "arr": 1236.0,
+     "slew": 11.9,
+     "late": 42.1,
+     "net": "clkbuf_sp_L85_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+     "arr": 1236.2,
+     "slew": 11.8,
+     "late": 42.3,
+     "net": "clkbuf_sp_L84_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+     "arr": 1237.8,
+     "slew": 11.8,
+     "late": 43.9,
+     "net": "clkbuf_sp_L83_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+     "arr": 1235.1,
+     "slew": 11.8,
+     "late": 41.2,
+     "net": "clkbuf_sp_L82_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+     "arr": 1246.4,
+     "slew": 11.8,
+     "late": 52.5,
+     "net": "clkbuf_sp_L81_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+     "arr": 1259.0,
+     "slew": 11.8,
+     "late": 65.1,
+     "net": "clkbuf_sp_L80_net"
+    },
+    {
+     "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+     "arr": 1259.0,
+     "slew": 11.8,
+     "late": 65.1,
+     "net": "clkbuf_sp_L79_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+     "arr": 1257.6,
+     "slew": 11.8,
+     "late": 63.7,
+     "net": "clkbuf_sp_L73_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+     "arr": 1246.8,
+     "slew": 11.8,
+     "late": 52.9,
+     "net": "clkbuf_sp_L72_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+     "arr": 1246.8,
+     "slew": 11.8,
+     "late": 52.9,
+     "net": "clkbuf_sp_L71_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+     "arr": 1236.1,
+     "slew": 11.8,
+     "late": 42.2,
+     "net": "clkbuf_sp_L70_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+     "arr": 1236.4,
+     "slew": 11.8,
+     "late": 42.5,
+     "net": "clkbuf_sp_L69_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+     "arr": 1257.4,
+     "slew": 11.6,
+     "late": 63.5,
+     "net": "clkbuf_sp_L68_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+     "arr": 1257.4,
+     "slew": 11.6,
+     "late": 63.5,
+     "net": "clkbuf_sp_L67_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+     "arr": 1258.9,
+     "slew": 11.6,
+     "late": 65.0,
+     "net": "clkbuf_sp_L66_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+     "arr": 1259.0,
+     "slew": 11.8,
+     "late": 65.1,
+     "net": "clkbuf_sp_L65_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+     "arr": 1259.2,
+     "slew": 11.7,
+     "late": 65.3,
+     "net": "clkbuf_sp_L64_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+     "arr": 1259.7,
+     "slew": 12.0,
+     "late": 65.8,
+     "net": "clkbuf_sp_L63_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+     "arr": 1257.6,
+     "slew": 11.8,
+     "late": 63.7,
+     "net": "clkbuf_sp_L62_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+     "arr": 1249.8,
+     "slew": 11.8,
+     "late": 55.9,
+     "net": "clkbuf_sp_L61_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+     "arr": 1249.8,
+     "slew": 11.8,
+     "late": 55.9,
+     "net": "clkbuf_sp_L60_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+     "arr": 1250.5,
+     "slew": 11.9,
+     "late": 56.6,
+     "net": "clkbuf_sp_L59_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+     "arr": 1254.2,
+     "slew": 11.6,
+     "late": 60.3,
+     "net": "clkbuf_sp_L58_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+     "arr": 1242.0,
+     "slew": 11.6,
+     "late": 48.1,
+     "net": "clkbuf_sp_L57_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+     "arr": 1235.6,
+     "slew": 11.6,
+     "late": 41.7,
+     "net": "clkbuf_sp_L56_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+     "arr": 1235.6,
+     "slew": 11.6,
+     "late": 41.7,
+     "net": "clkbuf_sp_L55_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+     "arr": 1235.3,
+     "slew": 11.6,
+     "late": 41.4,
+     "net": "clkbuf_sp_L54_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+     "arr": 1247.8,
+     "slew": 11.8,
+     "late": 53.9,
+     "net": "clkbuf_sp_L53_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+     "arr": 1247.9,
+     "slew": 11.8,
+     "late": 54.0,
+     "net": "clkbuf_sp_L52_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+     "arr": 1252.8,
+     "slew": 12.3,
+     "late": 58.9,
+     "net": "clkbuf_sp_L51_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+     "arr": 1258.9,
+     "slew": 11.9,
+     "late": 65.0,
+     "net": "clkbuf_sp_L50_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+     "arr": 1261.0,
+     "slew": 11.9,
+     "late": 67.1,
+     "net": "clkbuf_sp_L49_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+     "arr": 1260.9,
+     "slew": 11.9,
+     "late": 67.0,
+     "net": "clkbuf_sp_L48_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+     "arr": 1256.7,
+     "slew": 11.8,
+     "late": 62.8,
+     "net": "clkbuf_sp_L47_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+     "arr": 1239.9,
+     "slew": 11.8,
+     "late": 46.0,
+     "net": "clkbuf_sp_L46_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+     "arr": 1239.5,
+     "slew": 11.9,
+     "late": 45.6,
+     "net": "clkbuf_sp_L45_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+     "arr": 1239.8,
+     "slew": 11.9,
+     "late": 45.9,
+     "net": "clkbuf_sp_L44_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+     "arr": 1229.7,
+     "slew": 11.8,
+     "late": 35.8,
+     "net": "clkbuf_sp_L43_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+     "arr": 1229.8,
+     "slew": 11.8,
+     "late": 35.9,
+     "net": "clkbuf_sp_L42_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+     "arr": 1235.2,
+     "slew": 11.8,
+     "late": 41.3,
+     "net": "clkbuf_sp_L41_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+     "arr": 1252.8,
+     "slew": 12.3,
+     "late": 58.9,
+     "net": "clkbuf_sp_L40_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+     "arr": 1229.9,
+     "slew": 11.9,
+     "late": 36.0,
+     "net": "clkbuf_sp_L39_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+     "arr": 1224.1,
+     "slew": 11.9,
+     "late": 30.2,
+     "net": "clkbuf_sp_L38_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+     "arr": 1246.7,
+     "slew": 11.6,
+     "late": 52.8,
+     "net": "clkbuf_sp_L37_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+     "arr": 1246.8,
+     "slew": 11.6,
+     "late": 52.9,
+     "net": "clkbuf_sp_L36_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+     "arr": 1255.5,
+     "slew": 11.6,
+     "late": 61.6,
+     "net": "clkbuf_sp_L35_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+     "arr": 1262.0,
+     "slew": 11.6,
+     "late": 68.1,
+     "net": "clkbuf_sp_L34_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+     "arr": 1262.0,
+     "slew": 11.8,
+     "late": 68.1,
+     "net": "clkbuf_sp_L33_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+     "arr": 1251.3,
+     "slew": 11.6,
+     "late": 57.4,
+     "net": "clkbuf_sp_L32_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+     "arr": 1243.7,
+     "slew": 11.6,
+     "late": 49.8,
+     "net": "clkbuf_sp_L31_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+     "arr": 1239.3,
+     "slew": 11.4,
+     "late": 45.4,
+     "net": "clkbuf_sp_L30_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+     "arr": 1252.0,
+     "slew": 12.8,
+     "late": 58.1,
+     "net": "clkbuf_sp_L29_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+     "arr": 1250.4,
+     "slew": 11.7,
+     "late": 56.5,
+     "net": "clkbuf_sp_L28_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+     "arr": 1251.7,
+     "slew": 11.8,
+     "late": 57.8,
+     "net": "clkbuf_sp_L27_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+     "arr": 1251.1,
+     "slew": 11.9,
+     "late": 57.2,
+     "net": "clkbuf_sp_L26_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+     "arr": 1248.2,
+     "slew": 11.6,
+     "late": 54.3,
+     "net": "clkbuf_sp_L25_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+     "arr": 1264.2,
+     "slew": 12.0,
+     "late": 70.3,
+     "net": "clkbuf_sp_L24_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+     "arr": 1231.3,
+     "slew": 11.7,
+     "late": 37.4,
+     "net": "clkbuf_sp_L23_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+     "arr": 1267.0,
+     "slew": 11.9,
+     "late": 73.1,
+     "net": "clkbuf_sp_L22_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+     "arr": 1266.8,
+     "slew": 11.8,
+     "late": 72.9,
+     "net": "clkbuf_sp_L21_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+     "arr": 1249.4,
+     "slew": 11.9,
+     "late": 55.5,
+     "net": "clkbuf_sp_L20_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+     "arr": 1249.4,
+     "slew": 11.8,
+     "late": 55.5,
+     "net": "clkbuf_sp_L19_net"
+    },
+    {
+     "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+     "arr": 1250.9,
+     "slew": 11.8,
+     "late": 57.0,
+     "net": "clkbuf_sp_L18_net"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 98,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": true,
+  "outliers": [
+   {
+    "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+    "why": "ff 39 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+    "why": "ff 37 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+    "why": "ff 40 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+    "why": "ff 39 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+    "why": "ff 72 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+    "why": "ff 66 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+    "why": "ff 66 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+    "why": "ff 69 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+    "why": "ff 52 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+    "why": "ff 60 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+    "why": "ff 57 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+    "why": "ff 40 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+    "why": "ff 55 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+    "why": "ff 58 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+    "why": "ff 39 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+    "why": "ff 39 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+    "why": "ff 34 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+    "why": "ff 42 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+    "why": "ff 42 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+    "why": "ff 44 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+    "why": "ff 41 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+    "why": "ff 52 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+    "why": "ff 65 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+    "why": "ff 65 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+    "why": "ff 64 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+    "why": "ff 53 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+    "why": "ff 53 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+    "why": "ff 42 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+    "why": "ff 42 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+    "why": "ff 64 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+    "why": "ff 64 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+    "why": "ff 65 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+    "why": "ff 65 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+    "why": "ff 65 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+    "why": "ff 66 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+    "why": "ff 64 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+    "why": "ff 56 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+    "why": "ff 56 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+    "why": "ff 57 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+    "why": "ff 60 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+    "why": "ff 48 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+    "why": "ff 42 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+    "why": "ff 42 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+    "why": "ff 41 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+    "why": "ff 54 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+    "why": "ff 54 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+    "why": "ff 59 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+    "why": "ff 65 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+    "why": "ff 67 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+    "why": "ff 67 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+    "why": "ff 63 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+    "why": "ff 46 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+    "why": "ff 46 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+    "why": "ff 46 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+    "why": "ff 41 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+    "why": "ff 59 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+    "why": "ff 36 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+    "why": "ff 30 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+    "why": "ff 53 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+    "why": "ff 53 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+    "why": "ff 62 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+    "why": "ff 68 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+    "why": "ff 68 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+    "why": "ff 57 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+    "why": "ff 50 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+    "why": "ff 45 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+    "why": "ff 58 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+    "why": "ff 56 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+    "why": "ff 58 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+    "why": "ff 57 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+    "why": "ff 54 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+    "why": "ff 70 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+    "why": "ff 37 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+    "why": "ff 73 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+    "why": "ff 73 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+    "why": "ff 56 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+    "why": "ff 56 ps after the register mean > 30"
+   },
+   {
+    "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+    "why": "ff 57 ps after the register mean > 30"
+   }
+  ]
+ },
+ "env": {
+  "CK_SS_MEAN": 1984,
+  "CK_SS_ALL_MEAN": 1977,
+  "CK_SS_MIN": 1836,
+  "CK_SS_ALL_MIN": 1804,
+  "CK_SS_MAX": 2053,
+  "CK_SS_ALL_MAX": 2053,
+  "CK_TT_MEAN": 1489,
+  "CK_TT_ALL_MEAN": 1489,
+  "CK_TT_MIN": 1478,
+  "CK_TT_ALL_MIN": 1478,
+  "CK_TT_MAX": 1506,
+  "CK_TT_ALL_MAX": 1506,
+  "CK_FF_MEAN": 1191,
+  "CK_FF_ALL_MEAN": 1194,
+  "CK_FF_MIN": 1165,
+  "CK_FF_ALL_MIN": 1165,
+  "CK_FF_MAX": 1244,
+  "CK_FF_ALL_MAX": 1267,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_pslice_1016-20261016-144213/routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_su_programme_pslice_q_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 2824,
+     "mean": 1984.1,
+     "min": 1835.6,
+     "max": 2053.0
+    },
+    "all": {
+     "n": 3021,
+     "mean": 1976.7,
+     "min": 1803.9,
+     "max": 2053.0
+    },
+    "errors": [],
+    "macros": {
+     "n": 98,
+     "nets": 98,
+     "max_per_net": 1,
+     "reg_mean": 1976.7,
+     "max_slew": 20.5,
+     "max_late": -13.8,
+     "pins": [
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+       "arr": 1903.2,
+       "slew": 18.6,
+       "late": -73.5,
+       "net": "clkbuf_sp_L127_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+       "arr": 1891.8,
+       "slew": 18.8,
+       "late": -84.9,
+       "net": "clkbuf_sp_L126_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+       "arr": 1890.2,
+       "slew": 18.7,
+       "late": -86.5,
+       "net": "clkbuf_sp_L125_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+       "arr": 1887.8,
+       "slew": 18.6,
+       "late": -88.9,
+       "net": "clkbuf_sp_L123_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+       "arr": 1897.4,
+       "slew": 18.7,
+       "late": -79.3,
+       "net": "clkbuf_sp_L122_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+       "arr": 1900.1,
+       "slew": 18.8,
+       "late": -76.6,
+       "net": "clkbuf_sp_L121_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+       "arr": 1842.5,
+       "slew": 18.7,
+       "late": -134.2,
+       "net": "clkbuf_sp_L120_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+       "arr": 1828.5,
+       "slew": 18.8,
+       "late": -148.2,
+       "net": "clkbuf_sp_L119_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+       "arr": 1828.6,
+       "slew": 18.8,
+       "late": -148.1,
+       "net": "clkbuf_sp_L118_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+       "arr": 1803.9,
+       "slew": 18.7,
+       "late": -172.8,
+       "net": "clkbuf_sp_L117_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+       "arr": 1835.8,
+       "slew": 18.6,
+       "late": -140.9,
+       "net": "clkbuf_sp_L116_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+       "arr": 1850.1,
+       "slew": 18.7,
+       "late": -126.6,
+       "net": "clkbuf_sp_L115_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+       "arr": 1844.6,
+       "slew": 18.6,
+       "late": -132.1,
+       "net": "clkbuf_sp_L114_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+       "arr": 1889.2,
+       "slew": 18.6,
+       "late": -87.5,
+       "net": "clkbuf_sp_L112_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[1].mem/clk",
+       "arr": 1950.3,
+       "slew": 18.5,
+       "late": -26.4,
+       "net": "clkbuf_sp_L111_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[2].mem/clk",
+       "arr": 1948.0,
+       "slew": 18.5,
+       "late": -28.7,
+       "net": "clkbuf_sp_L110_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[3].mem/clk",
+       "arr": 1949.8,
+       "slew": 18.6,
+       "late": -26.9,
+       "net": "clkbuf_sp_L109_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[4].mem/clk",
+       "arr": 1926.3,
+       "slew": 18.5,
+       "late": -50.4,
+       "net": "clkbuf_sp_L108_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[5].mem/clk",
+       "arr": 1918.9,
+       "slew": 18.6,
+       "late": -57.8,
+       "net": "clkbuf_sp_L107_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[6].mem/clk",
+       "arr": 1920.7,
+       "slew": 18.6,
+       "late": -56.0,
+       "net": "clkbuf_sp_L106_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+       "arr": 1871.4,
+       "slew": 18.5,
+       "late": -105.3,
+       "net": "clkbuf_sp_L105_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+       "arr": 1872.0,
+       "slew": 18.5,
+       "late": -104.7,
+       "net": "clkbuf_sp_L104_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+       "arr": 1871.9,
+       "slew": 18.5,
+       "late": -104.8,
+       "net": "clkbuf_sp_L100_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[10].mem/clk",
+       "arr": 1918.7,
+       "slew": 18.7,
+       "late": -58.0,
+       "net": "clkbuf_sp_L99_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[11].mem/clk",
+       "arr": 1919.5,
+       "slew": 18.6,
+       "late": -57.2,
+       "net": "clkbuf_sp_L98_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+       "arr": 1838.9,
+       "slew": 18.6,
+       "late": -137.8,
+       "net": "clkbuf_sp_L97_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+       "arr": 1871.9,
+       "slew": 18.5,
+       "late": -104.8,
+       "net": "clkbuf_sp_L96_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+       "arr": 1841.4,
+       "slew": 18.9,
+       "late": -135.3,
+       "net": "clkbuf_sp_L95_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+       "arr": 1890.6,
+       "slew": 18.5,
+       "late": -86.1,
+       "net": "clkbuf_sp_L94_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+       "arr": 1890.7,
+       "slew": 18.5,
+       "late": -86.0,
+       "net": "clkbuf_sp_L93_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+       "arr": 1890.9,
+       "slew": 18.5,
+       "late": -85.8,
+       "net": "clkbuf_sp_L92_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[6].mem/clk",
+       "arr": 1962.9,
+       "slew": 18.6,
+       "late": -13.8,
+       "net": "clkbuf_sp_L91_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[7].mem/clk",
+       "arr": 1936.5,
+       "slew": 19.2,
+       "late": -40.2,
+       "net": "clkbuf_sp_L90_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[8].mem/clk",
+       "arr": 1929.4,
+       "slew": 18.7,
+       "late": -47.3,
+       "net": "clkbuf_sp_L89_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[9].mem/clk",
+       "arr": 1931.9,
+       "slew": 19.2,
+       "late": -44.8,
+       "net": "clkbuf_sp_L88_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+       "arr": 1880.7,
+       "slew": 18.7,
+       "late": -96.0,
+       "net": "clkbuf_sp_L85_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+       "arr": 1876.5,
+       "slew": 18.7,
+       "late": -100.2,
+       "net": "clkbuf_sp_L84_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+       "arr": 1880.4,
+       "slew": 18.6,
+       "late": -96.3,
+       "net": "clkbuf_sp_L83_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+       "arr": 1869.6,
+       "slew": 18.6,
+       "late": -107.1,
+       "net": "clkbuf_sp_L82_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+       "arr": 1891.9,
+       "slew": 18.6,
+       "late": -84.8,
+       "net": "clkbuf_sp_L81_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+       "arr": 1862.3,
+       "slew": 18.6,
+       "late": -114.4,
+       "net": "clkbuf_sp_L80_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+       "arr": 1862.4,
+       "slew": 18.6,
+       "late": -114.3,
+       "net": "clkbuf_sp_L79_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+       "arr": 1836.5,
+       "slew": 18.6,
+       "late": -140.2,
+       "net": "clkbuf_sp_L73_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+       "arr": 1844.9,
+       "slew": 18.6,
+       "late": -131.8,
+       "net": "clkbuf_sp_L72_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+       "arr": 1844.9,
+       "slew": 18.6,
+       "late": -131.8,
+       "net": "clkbuf_sp_L71_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+       "arr": 1862.0,
+       "slew": 18.6,
+       "late": -114.7,
+       "net": "clkbuf_sp_L70_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+       "arr": 1862.8,
+       "slew": 18.6,
+       "late": -113.9,
+       "net": "clkbuf_sp_L69_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+       "arr": 1836.3,
+       "slew": 18.5,
+       "late": -140.4,
+       "net": "clkbuf_sp_L68_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+       "arr": 1836.3,
+       "slew": 18.5,
+       "late": -140.4,
+       "net": "clkbuf_sp_L67_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+       "arr": 1838.7,
+       "slew": 18.5,
+       "late": -138.0,
+       "net": "clkbuf_sp_L66_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+       "arr": 1838.8,
+       "slew": 18.6,
+       "late": -137.9,
+       "net": "clkbuf_sp_L65_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+       "arr": 1838.7,
+       "slew": 18.6,
+       "late": -138.0,
+       "net": "clkbuf_sp_L64_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+       "arr": 1839.7,
+       "slew": 18.8,
+       "late": -137.0,
+       "net": "clkbuf_sp_L63_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+       "arr": 1836.5,
+       "slew": 18.6,
+       "late": -140.2,
+       "net": "clkbuf_sp_L62_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+       "arr": 1855.0,
+       "slew": 18.7,
+       "late": -121.7,
+       "net": "clkbuf_sp_L61_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+       "arr": 1855.4,
+       "slew": 18.6,
+       "late": -121.3,
+       "net": "clkbuf_sp_L60_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+       "arr": 1855.8,
+       "slew": 18.7,
+       "late": -120.9,
+       "net": "clkbuf_sp_L59_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+       "arr": 1861.3,
+       "slew": 18.5,
+       "late": -115.4,
+       "net": "clkbuf_sp_L58_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+       "arr": 1850.5,
+       "slew": 18.5,
+       "late": -126.2,
+       "net": "clkbuf_sp_L57_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+       "arr": 1861.6,
+       "slew": 18.5,
+       "late": -115.1,
+       "net": "clkbuf_sp_L56_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+       "arr": 1861.6,
+       "slew": 18.5,
+       "late": -115.1,
+       "net": "clkbuf_sp_L55_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+       "arr": 1856.5,
+       "slew": 18.5,
+       "late": -120.2,
+       "net": "clkbuf_sp_L54_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+       "arr": 1820.7,
+       "slew": 18.6,
+       "late": -156.0,
+       "net": "clkbuf_sp_L53_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+       "arr": 1820.8,
+       "slew": 18.6,
+       "late": -155.9,
+       "net": "clkbuf_sp_L52_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+       "arr": 1824.3,
+       "slew": 20.2,
+       "late": -152.4,
+       "net": "clkbuf_sp_L51_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+       "arr": 1844.4,
+       "slew": 18.7,
+       "late": -132.3,
+       "net": "clkbuf_sp_L50_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+       "arr": 1843.8,
+       "slew": 18.7,
+       "late": -132.9,
+       "net": "clkbuf_sp_L49_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+       "arr": 1843.5,
+       "slew": 18.7,
+       "late": -133.2,
+       "net": "clkbuf_sp_L48_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+       "arr": 1850.8,
+       "slew": 18.6,
+       "late": -125.9,
+       "net": "clkbuf_sp_L47_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+       "arr": 1847.6,
+       "slew": 18.6,
+       "late": -129.1,
+       "net": "clkbuf_sp_L46_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+       "arr": 1866.4,
+       "slew": 18.7,
+       "late": -110.3,
+       "net": "clkbuf_sp_L45_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+       "arr": 1867.0,
+       "slew": 18.7,
+       "late": -109.7,
+       "net": "clkbuf_sp_L44_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+       "arr": 1882.1,
+       "slew": 18.6,
+       "late": -94.6,
+       "net": "clkbuf_sp_L43_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+       "arr": 1882.3,
+       "slew": 18.6,
+       "late": -94.4,
+       "net": "clkbuf_sp_L42_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+       "arr": 1856.4,
+       "slew": 18.6,
+       "late": -120.3,
+       "net": "clkbuf_sp_L41_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+       "arr": 1824.3,
+       "slew": 20.2,
+       "late": -152.4,
+       "net": "clkbuf_sp_L40_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+       "arr": 1904.2,
+       "slew": 18.7,
+       "late": -72.5,
+       "net": "clkbuf_sp_L39_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+       "arr": 1902.3,
+       "slew": 18.7,
+       "late": -74.4,
+       "net": "clkbuf_sp_L38_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+       "arr": 1858.8,
+       "slew": 18.5,
+       "late": -117.9,
+       "net": "clkbuf_sp_L37_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+       "arr": 1858.9,
+       "slew": 18.5,
+       "late": -117.8,
+       "net": "clkbuf_sp_L36_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+       "arr": 1849.1,
+       "slew": 18.5,
+       "late": -127.6,
+       "net": "clkbuf_sp_L35_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+       "arr": 1823.1,
+       "slew": 18.5,
+       "late": -153.6,
+       "net": "clkbuf_sp_L34_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+       "arr": 1825.8,
+       "slew": 18.6,
+       "late": -150.9,
+       "net": "clkbuf_sp_L33_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+       "arr": 1860.0,
+       "slew": 18.5,
+       "late": -116.7,
+       "net": "clkbuf_sp_L32_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+       "arr": 1866.7,
+       "slew": 18.5,
+       "late": -110.0,
+       "net": "clkbuf_sp_L31_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+       "arr": 1844.9,
+       "slew": 18.3,
+       "late": -131.8,
+       "net": "clkbuf_sp_L30_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+       "arr": 1824.0,
+       "slew": 20.5,
+       "late": -152.7,
+       "net": "clkbuf_sp_L29_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+       "arr": 1866.8,
+       "slew": 18.6,
+       "late": -109.9,
+       "net": "clkbuf_sp_L28_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+       "arr": 1851.0,
+       "slew": 18.6,
+       "late": -125.7,
+       "net": "clkbuf_sp_L27_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+       "arr": 1849.3,
+       "slew": 18.7,
+       "late": -127.4,
+       "net": "clkbuf_sp_L26_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+       "arr": 1846.8,
+       "slew": 18.5,
+       "late": -129.9,
+       "net": "clkbuf_sp_L25_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+       "arr": 1805.9,
+       "slew": 18.6,
+       "late": -170.8,
+       "net": "clkbuf_sp_L24_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+       "arr": 1880.3,
+       "slew": 18.6,
+       "late": -96.4,
+       "net": "clkbuf_sp_L23_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+       "arr": 1848.0,
+       "slew": 18.7,
+       "late": -128.7,
+       "net": "clkbuf_sp_L22_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+       "arr": 1847.5,
+       "slew": 18.6,
+       "late": -129.2,
+       "net": "clkbuf_sp_L21_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+       "arr": 1854.2,
+       "slew": 18.7,
+       "late": -122.5,
+       "net": "clkbuf_sp_L20_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+       "arr": 1854.0,
+       "slew": 18.6,
+       "late": -122.7,
+       "net": "clkbuf_sp_L19_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+       "arr": 1856.4,
+       "slew": 18.6,
+       "late": -120.3,
+       "net": "clkbuf_sp_L18_net"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "tt": {
+    "boundary": {
+     "n": 2824,
+     "mean": 1489.2,
+     "min": 1478.4,
+     "max": 1506.0
+    },
+    "all": {
+     "n": 3021,
+     "mean": 1489.1,
+     "min": 1477.6,
+     "max": 1506.0
+    },
+    "errors": [],
+    "macros": {
+     "n": 98,
+     "nets": 98,
+     "max_per_net": 1,
+     "reg_mean": 1489.1,
+     "max_slew": 14.9,
+     "max_late": 12.3,
+     "pins": [
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+       "arr": 1494.1,
+       "slew": 13.8,
+       "late": 5.0,
+       "net": "clkbuf_sp_L127_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+       "arr": 1487.3,
+       "slew": 14.0,
+       "late": -1.8,
+       "net": "clkbuf_sp_L126_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+       "arr": 1488.0,
+       "slew": 13.9,
+       "late": -1.1,
+       "net": "clkbuf_sp_L125_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+       "arr": 1486.6,
+       "slew": 13.8,
+       "late": -2.5,
+       "net": "clkbuf_sp_L123_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+       "arr": 1492.1,
+       "slew": 13.9,
+       "late": 3.0,
+       "net": "clkbuf_sp_L122_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+       "arr": 1492.3,
+       "slew": 14.1,
+       "late": 3.2,
+       "net": "clkbuf_sp_L121_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+       "arr": 1497.9,
+       "slew": 13.9,
+       "late": 8.8,
+       "net": "clkbuf_sp_L120_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+       "arr": 1489.3,
+       "slew": 14.0,
+       "late": 0.2,
+       "net": "clkbuf_sp_L119_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+       "arr": 1489.3,
+       "slew": 14.0,
+       "late": 0.2,
+       "net": "clkbuf_sp_L118_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+       "arr": 1483.0,
+       "slew": 14.0,
+       "late": -6.1,
+       "net": "clkbuf_sp_L117_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+       "arr": 1481.6,
+       "slew": 13.8,
+       "late": -7.5,
+       "net": "clkbuf_sp_L116_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+       "arr": 1491.7,
+       "slew": 13.9,
+       "late": 2.6,
+       "net": "clkbuf_sp_L115_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+       "arr": 1488.4,
+       "slew": 13.8,
+       "late": -0.7,
+       "net": "clkbuf_sp_L114_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+       "arr": 1489.9,
+       "slew": 13.8,
+       "late": 0.8,
+       "net": "clkbuf_sp_L112_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[1].mem/clk",
+       "arr": 1489.3,
+       "slew": 13.7,
+       "late": 0.2,
+       "net": "clkbuf_sp_L111_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[2].mem/clk",
+       "arr": 1498.8,
+       "slew": 13.7,
+       "late": 9.7,
+       "net": "clkbuf_sp_L110_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[3].mem/clk",
+       "arr": 1500.0,
+       "slew": 13.7,
+       "late": 10.9,
+       "net": "clkbuf_sp_L109_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[4].mem/clk",
+       "arr": 1483.2,
+       "slew": 13.6,
+       "late": -5.9,
+       "net": "clkbuf_sp_L108_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[5].mem/clk",
+       "arr": 1480.6,
+       "slew": 13.8,
+       "late": -8.5,
+       "net": "clkbuf_sp_L107_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[6].mem/clk",
+       "arr": 1481.8,
+       "slew": 13.8,
+       "late": -7.3,
+       "net": "clkbuf_sp_L106_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+       "arr": 1481.1,
+       "slew": 13.7,
+       "late": -8.0,
+       "net": "clkbuf_sp_L105_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+       "arr": 1481.6,
+       "slew": 13.7,
+       "late": -7.5,
+       "net": "clkbuf_sp_L104_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+       "arr": 1481.4,
+       "slew": 13.7,
+       "late": -7.7,
+       "net": "clkbuf_sp_L100_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[10].mem/clk",
+       "arr": 1480.1,
+       "slew": 13.9,
+       "late": -9.0,
+       "net": "clkbuf_sp_L99_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[11].mem/clk",
+       "arr": 1480.5,
+       "slew": 13.8,
+       "late": -8.6,
+       "net": "clkbuf_sp_L98_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+       "arr": 1484.6,
+       "slew": 13.8,
+       "late": -4.5,
+       "net": "clkbuf_sp_L97_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+       "arr": 1481.5,
+       "slew": 13.7,
+       "late": -7.6,
+       "net": "clkbuf_sp_L96_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+       "arr": 1486.9,
+       "slew": 14.1,
+       "late": -2.2,
+       "net": "clkbuf_sp_L95_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+       "arr": 1489.7,
+       "slew": 13.7,
+       "late": 0.6,
+       "net": "clkbuf_sp_L94_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+       "arr": 1489.8,
+       "slew": 13.7,
+       "late": 0.7,
+       "net": "clkbuf_sp_L93_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+       "arr": 1485.8,
+       "slew": 13.7,
+       "late": -3.3,
+       "net": "clkbuf_sp_L92_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[6].mem/clk",
+       "arr": 1486.1,
+       "slew": 13.8,
+       "late": -3.0,
+       "net": "clkbuf_sp_L91_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[7].mem/clk",
+       "arr": 1490.1,
+       "slew": 14.5,
+       "late": 1.0,
+       "net": "clkbuf_sp_L90_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[8].mem/clk",
+       "arr": 1485.5,
+       "slew": 13.8,
+       "late": -3.6,
+       "net": "clkbuf_sp_L89_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[9].mem/clk",
+       "arr": 1486.4,
+       "slew": 14.5,
+       "late": -2.7,
+       "net": "clkbuf_sp_L88_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+       "arr": 1488.8,
+       "slew": 13.9,
+       "late": -0.3,
+       "net": "clkbuf_sp_L85_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+       "arr": 1488.1,
+       "slew": 13.8,
+       "late": -1.0,
+       "net": "clkbuf_sp_L84_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+       "arr": 1490.5,
+       "slew": 13.8,
+       "late": 1.4,
+       "net": "clkbuf_sp_L83_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+       "arr": 1484.5,
+       "slew": 13.8,
+       "late": -4.6,
+       "net": "clkbuf_sp_L82_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+       "arr": 1499.9,
+       "slew": 13.8,
+       "late": 10.8,
+       "net": "clkbuf_sp_L81_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+       "arr": 1499.6,
+       "slew": 13.8,
+       "late": 10.5,
+       "net": "clkbuf_sp_L80_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+       "arr": 1499.6,
+       "slew": 13.8,
+       "late": 10.5,
+       "net": "clkbuf_sp_L79_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+       "arr": 1490.6,
+       "slew": 13.8,
+       "late": 1.5,
+       "net": "clkbuf_sp_L73_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+       "arr": 1485.1,
+       "slew": 13.8,
+       "late": -4.0,
+       "net": "clkbuf_sp_L72_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+       "arr": 1485.1,
+       "slew": 13.8,
+       "late": -4.0,
+       "net": "clkbuf_sp_L71_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+       "arr": 1483.2,
+       "slew": 13.8,
+       "late": -5.9,
+       "net": "clkbuf_sp_L70_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+       "arr": 1483.7,
+       "slew": 13.8,
+       "late": -5.4,
+       "net": "clkbuf_sp_L69_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+       "arr": 1490.4,
+       "slew": 13.7,
+       "late": 1.3,
+       "net": "clkbuf_sp_L68_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+       "arr": 1490.4,
+       "slew": 13.7,
+       "late": 1.3,
+       "net": "clkbuf_sp_L67_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+       "arr": 1492.4,
+       "slew": 13.7,
+       "late": 3.3,
+       "net": "clkbuf_sp_L66_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+       "arr": 1492.6,
+       "slew": 13.8,
+       "late": 3.5,
+       "net": "clkbuf_sp_L65_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+       "arr": 1492.7,
+       "slew": 13.7,
+       "late": 3.6,
+       "net": "clkbuf_sp_L64_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+       "arr": 1493.3,
+       "slew": 14.0,
+       "late": 4.2,
+       "net": "clkbuf_sp_L63_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+       "arr": 1490.6,
+       "slew": 13.8,
+       "late": 1.5,
+       "net": "clkbuf_sp_L62_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+       "arr": 1490.8,
+       "slew": 13.9,
+       "late": 1.7,
+       "net": "clkbuf_sp_L61_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+       "arr": 1491.0,
+       "slew": 13.8,
+       "late": 1.9,
+       "net": "clkbuf_sp_L60_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+       "arr": 1491.4,
+       "slew": 13.9,
+       "late": 2.3,
+       "net": "clkbuf_sp_L59_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+       "arr": 1495.8,
+       "slew": 13.7,
+       "late": 6.7,
+       "net": "clkbuf_sp_L58_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+       "arr": 1483.1,
+       "slew": 13.7,
+       "late": -6.0,
+       "net": "clkbuf_sp_L57_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+       "arr": 1482.7,
+       "slew": 13.7,
+       "late": -6.4,
+       "net": "clkbuf_sp_L56_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+       "arr": 1482.7,
+       "slew": 13.7,
+       "late": -6.4,
+       "net": "clkbuf_sp_L55_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+       "arr": 1480.0,
+       "slew": 13.7,
+       "late": -9.1,
+       "net": "clkbuf_sp_L54_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+       "arr": 1478.4,
+       "slew": 13.8,
+       "late": -10.7,
+       "net": "clkbuf_sp_L53_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+       "arr": 1478.4,
+       "slew": 13.8,
+       "late": -10.7,
+       "net": "clkbuf_sp_L52_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+       "arr": 1483.0,
+       "slew": 14.5,
+       "late": -6.1,
+       "net": "clkbuf_sp_L51_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+       "arr": 1493.9,
+       "slew": 13.9,
+       "late": 4.8,
+       "net": "clkbuf_sp_L50_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+       "arr": 1495.6,
+       "slew": 13.9,
+       "late": 6.5,
+       "net": "clkbuf_sp_L49_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+       "arr": 1495.4,
+       "slew": 13.9,
+       "late": 6.3,
+       "net": "clkbuf_sp_L48_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+       "arr": 1493.8,
+       "slew": 13.8,
+       "late": 4.7,
+       "net": "clkbuf_sp_L47_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+       "arr": 1480.6,
+       "slew": 13.8,
+       "late": -8.5,
+       "net": "clkbuf_sp_L46_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+       "arr": 1486.9,
+       "slew": 13.9,
+       "late": -2.2,
+       "net": "clkbuf_sp_L45_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+       "arr": 1487.2,
+       "slew": 13.9,
+       "late": -1.9,
+       "net": "clkbuf_sp_L44_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+       "arr": 1484.6,
+       "slew": 13.8,
+       "late": -4.5,
+       "net": "clkbuf_sp_L43_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+       "arr": 1484.7,
+       "slew": 13.8,
+       "late": -4.4,
+       "net": "clkbuf_sp_L42_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+       "arr": 1479.9,
+       "slew": 13.8,
+       "late": -9.2,
+       "net": "clkbuf_sp_L41_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+       "arr": 1483.0,
+       "slew": 14.5,
+       "late": -6.1,
+       "net": "clkbuf_sp_L40_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+       "arr": 1491.1,
+       "slew": 13.9,
+       "late": 2.0,
+       "net": "clkbuf_sp_L39_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+       "arr": 1486.5,
+       "slew": 13.9,
+       "late": -2.6,
+       "net": "clkbuf_sp_L38_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+       "arr": 1489.4,
+       "slew": 13.7,
+       "late": 0.3,
+       "net": "clkbuf_sp_L37_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+       "arr": 1489.5,
+       "slew": 13.7,
+       "late": 0.4,
+       "net": "clkbuf_sp_L36_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+       "arr": 1492.4,
+       "slew": 13.7,
+       "late": 3.3,
+       "net": "clkbuf_sp_L35_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+       "arr": 1489.3,
+       "slew": 13.7,
+       "late": 0.2,
+       "net": "clkbuf_sp_L34_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+       "arr": 1490.0,
+       "slew": 13.8,
+       "late": 0.9,
+       "net": "clkbuf_sp_L33_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+       "arr": 1493.5,
+       "slew": 13.7,
+       "late": 4.4,
+       "net": "clkbuf_sp_L32_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+       "arr": 1489.7,
+       "slew": 13.7,
+       "late": 0.6,
+       "net": "clkbuf_sp_L31_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+       "arr": 1479.7,
+       "slew": 13.5,
+       "late": -9.4,
+       "net": "clkbuf_sp_L30_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+       "arr": 1482.2,
+       "slew": 14.9,
+       "late": -6.9,
+       "net": "clkbuf_sp_L29_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+       "arr": 1494.8,
+       "slew": 13.7,
+       "late": 5.7,
+       "net": "clkbuf_sp_L28_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+       "arr": 1490.8,
+       "slew": 13.8,
+       "late": 1.7,
+       "net": "clkbuf_sp_L27_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+       "arr": 1489.8,
+       "slew": 13.9,
+       "late": 0.7,
+       "net": "clkbuf_sp_L26_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+       "arr": 1486.9,
+       "slew": 13.7,
+       "late": -2.2,
+       "net": "clkbuf_sp_L25_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+       "arr": 1484.8,
+       "slew": 13.9,
+       "late": -4.3,
+       "net": "clkbuf_sp_L24_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+       "arr": 1485.3,
+       "slew": 13.7,
+       "late": -3.8,
+       "net": "clkbuf_sp_L23_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+       "arr": 1501.4,
+       "slew": 13.9,
+       "late": 12.3,
+       "net": "clkbuf_sp_L22_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+       "arr": 1501.1,
+       "slew": 13.8,
+       "late": 12.0,
+       "net": "clkbuf_sp_L21_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+       "arr": 1490.3,
+       "slew": 13.9,
+       "late": 1.2,
+       "net": "clkbuf_sp_L20_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+       "arr": 1490.2,
+       "slew": 13.8,
+       "late": 1.1,
+       "net": "clkbuf_sp_L19_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+       "arr": 1491.9,
+       "slew": 13.8,
+       "late": 2.8,
+       "net": "clkbuf_sp_L18_net"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "ff": {
+    "boundary": {
+     "n": 2824,
+     "mean": 1190.8,
+     "min": 1164.9,
+     "max": 1244.2
+    },
+    "all": {
+     "n": 3021,
+     "mean": 1193.9,
+     "min": 1164.9,
+     "max": 1267.0
+    },
+    "errors": [],
+    "macros": {
+     "n": 98,
+     "nets": 98,
+     "max_per_net": 1,
+     "reg_mean": 1193.9,
+     "max_slew": 12.8,
+     "max_late": 73.1,
+     "pins": [
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+       "arr": 1233.0,
+       "slew": 11.8,
+       "late": 39.1,
+       "net": "clkbuf_sp_L127_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+       "arr": 1229.7,
+       "slew": 12.0,
+       "late": 35.8,
+       "net": "clkbuf_sp_L126_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+       "arr": 1230.6,
+       "slew": 11.9,
+       "late": 36.7,
+       "net": "clkbuf_sp_L125_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+       "arr": 1229.7,
+       "slew": 11.8,
+       "late": 35.8,
+       "net": "clkbuf_sp_L123_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+       "arr": 1233.6,
+       "slew": 11.9,
+       "late": 39.7,
+       "net": "clkbuf_sp_L122_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+       "arr": 1232.8,
+       "slew": 12.0,
+       "late": 38.9,
+       "net": "clkbuf_sp_L121_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+       "arr": 1265.5,
+       "slew": 11.9,
+       "late": 71.6,
+       "net": "clkbuf_sp_L120_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+       "arr": 1260.1,
+       "slew": 12.0,
+       "late": 66.2,
+       "net": "clkbuf_sp_L119_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+       "arr": 1260.0,
+       "slew": 12.0,
+       "late": 66.1,
+       "net": "clkbuf_sp_L118_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+       "arr": 1262.6,
+       "slew": 12.1,
+       "late": 68.7,
+       "net": "clkbuf_sp_L117_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+       "arr": 1245.7,
+       "slew": 11.8,
+       "late": 51.8,
+       "net": "clkbuf_sp_L116_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+       "arr": 1253.5,
+       "slew": 11.9,
+       "late": 59.6,
+       "net": "clkbuf_sp_L115_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+       "arr": 1251.3,
+       "slew": 11.8,
+       "late": 57.4,
+       "net": "clkbuf_sp_L114_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+       "arr": 1233.9,
+       "slew": 11.8,
+       "late": 40.0,
+       "net": "clkbuf_sp_L112_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[1].mem/clk",
+       "arr": 1205.8,
+       "slew": 11.6,
+       "late": 11.9,
+       "net": "clkbuf_sp_L111_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[2].mem/clk",
+       "arr": 1220.8,
+       "slew": 11.6,
+       "late": 26.9,
+       "net": "clkbuf_sp_L110_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[3].mem/clk",
+       "arr": 1221.6,
+       "slew": 11.7,
+       "late": 27.7,
+       "net": "clkbuf_sp_L109_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[4].mem/clk",
+       "arr": 1209.1,
+       "slew": 11.6,
+       "late": 15.2,
+       "net": "clkbuf_sp_L108_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[5].mem/clk",
+       "arr": 1207.9,
+       "slew": 11.8,
+       "late": 14.0,
+       "net": "clkbuf_sp_L107_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[6].mem/clk",
+       "arr": 1208.8,
+       "slew": 11.8,
+       "late": 14.9,
+       "net": "clkbuf_sp_L106_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+       "arr": 1229.6,
+       "slew": 11.6,
+       "late": 35.7,
+       "net": "clkbuf_sp_L105_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+       "arr": 1230.0,
+       "slew": 11.6,
+       "late": 36.1,
+       "net": "clkbuf_sp_L104_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+       "arr": 1229.8,
+       "slew": 11.6,
+       "late": 35.9,
+       "net": "clkbuf_sp_L100_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[10].mem/clk",
+       "arr": 1207.4,
+       "slew": 11.9,
+       "late": 13.5,
+       "net": "clkbuf_sp_L99_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[11].mem/clk",
+       "arr": 1207.7,
+       "slew": 11.8,
+       "late": 13.8,
+       "net": "clkbuf_sp_L98_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+       "arr": 1249.2,
+       "slew": 11.8,
+       "late": 55.3,
+       "net": "clkbuf_sp_L97_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+       "arr": 1229.9,
+       "slew": 11.6,
+       "late": 36.0,
+       "net": "clkbuf_sp_L96_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+       "arr": 1251.5,
+       "slew": 12.1,
+       "late": 57.6,
+       "net": "clkbuf_sp_L95_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+       "arr": 1232.5,
+       "slew": 11.6,
+       "late": 38.6,
+       "net": "clkbuf_sp_L94_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+       "arr": 1232.6,
+       "slew": 11.6,
+       "late": 38.7,
+       "net": "clkbuf_sp_L93_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+       "arr": 1227.8,
+       "slew": 11.6,
+       "late": 33.9,
+       "net": "clkbuf_sp_L92_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[6].mem/clk",
+       "arr": 1196.1,
+       "slew": 11.8,
+       "late": 2.2,
+       "net": "clkbuf_sp_L91_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[7].mem/clk",
+       "arr": 1213.8,
+       "slew": 12.5,
+       "late": 19.9,
+       "net": "clkbuf_sp_L90_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[8].mem/clk",
+       "arr": 1210.6,
+       "slew": 11.8,
+       "late": 16.7,
+       "net": "clkbuf_sp_L89_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[3].mem.g[9].mem/clk",
+       "arr": 1211.0,
+       "slew": 12.6,
+       "late": 17.1,
+       "net": "clkbuf_sp_L88_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+       "arr": 1236.0,
+       "slew": 11.9,
+       "late": 42.1,
+       "net": "clkbuf_sp_L85_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+       "arr": 1236.2,
+       "slew": 11.8,
+       "late": 42.3,
+       "net": "clkbuf_sp_L84_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+       "arr": 1237.8,
+       "slew": 11.8,
+       "late": 43.9,
+       "net": "clkbuf_sp_L83_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+       "arr": 1235.1,
+       "slew": 11.8,
+       "late": 41.2,
+       "net": "clkbuf_sp_L82_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+       "arr": 1246.4,
+       "slew": 11.8,
+       "late": 52.5,
+       "net": "clkbuf_sp_L81_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+       "arr": 1259.0,
+       "slew": 11.8,
+       "late": 65.1,
+       "net": "clkbuf_sp_L80_net"
+      },
+      {
+       "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+       "arr": 1259.0,
+       "slew": 11.8,
+       "late": 65.1,
+       "net": "clkbuf_sp_L79_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+       "arr": 1257.6,
+       "slew": 11.8,
+       "late": 63.7,
+       "net": "clkbuf_sp_L73_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+       "arr": 1246.8,
+       "slew": 11.8,
+       "late": 52.9,
+       "net": "clkbuf_sp_L72_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+       "arr": 1246.8,
+       "slew": 11.8,
+       "late": 52.9,
+       "net": "clkbuf_sp_L71_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+       "arr": 1236.1,
+       "slew": 11.8,
+       "late": 42.2,
+       "net": "clkbuf_sp_L70_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+       "arr": 1236.4,
+       "slew": 11.8,
+       "late": 42.5,
+       "net": "clkbuf_sp_L69_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+       "arr": 1257.4,
+       "slew": 11.6,
+       "late": 63.5,
+       "net": "clkbuf_sp_L68_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+       "arr": 1257.4,
+       "slew": 11.6,
+       "late": 63.5,
+       "net": "clkbuf_sp_L67_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+       "arr": 1258.9,
+       "slew": 11.6,
+       "late": 65.0,
+       "net": "clkbuf_sp_L66_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+       "arr": 1259.0,
+       "slew": 11.8,
+       "late": 65.1,
+       "net": "clkbuf_sp_L65_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+       "arr": 1259.2,
+       "slew": 11.7,
+       "late": 65.3,
+       "net": "clkbuf_sp_L64_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+       "arr": 1259.7,
+       "slew": 12.0,
+       "late": 65.8,
+       "net": "clkbuf_sp_L63_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+       "arr": 1257.6,
+       "slew": 11.8,
+       "late": 63.7,
+       "net": "clkbuf_sp_L62_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+       "arr": 1249.8,
+       "slew": 11.8,
+       "late": 55.9,
+       "net": "clkbuf_sp_L61_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+       "arr": 1249.8,
+       "slew": 11.8,
+       "late": 55.9,
+       "net": "clkbuf_sp_L60_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+       "arr": 1250.5,
+       "slew": 11.9,
+       "late": 56.6,
+       "net": "clkbuf_sp_L59_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+       "arr": 1254.2,
+       "slew": 11.6,
+       "late": 60.3,
+       "net": "clkbuf_sp_L58_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+       "arr": 1242.0,
+       "slew": 11.6,
+       "late": 48.1,
+       "net": "clkbuf_sp_L57_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+       "arr": 1235.6,
+       "slew": 11.6,
+       "late": 41.7,
+       "net": "clkbuf_sp_L56_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+       "arr": 1235.6,
+       "slew": 11.6,
+       "late": 41.7,
+       "net": "clkbuf_sp_L55_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+       "arr": 1235.3,
+       "slew": 11.6,
+       "late": 41.4,
+       "net": "clkbuf_sp_L54_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+       "arr": 1247.8,
+       "slew": 11.8,
+       "late": 53.9,
+       "net": "clkbuf_sp_L53_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+       "arr": 1247.9,
+       "slew": 11.8,
+       "late": 54.0,
+       "net": "clkbuf_sp_L52_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+       "arr": 1252.8,
+       "slew": 12.3,
+       "late": 58.9,
+       "net": "clkbuf_sp_L51_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+       "arr": 1258.9,
+       "slew": 11.9,
+       "late": 65.0,
+       "net": "clkbuf_sp_L50_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+       "arr": 1261.0,
+       "slew": 11.9,
+       "late": 67.1,
+       "net": "clkbuf_sp_L49_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+       "arr": 1260.9,
+       "slew": 11.9,
+       "late": 67.0,
+       "net": "clkbuf_sp_L48_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+       "arr": 1256.7,
+       "slew": 11.8,
+       "late": 62.8,
+       "net": "clkbuf_sp_L47_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+       "arr": 1239.9,
+       "slew": 11.8,
+       "late": 46.0,
+       "net": "clkbuf_sp_L46_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+       "arr": 1239.5,
+       "slew": 11.9,
+       "late": 45.6,
+       "net": "clkbuf_sp_L45_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+       "arr": 1239.8,
+       "slew": 11.9,
+       "late": 45.9,
+       "net": "clkbuf_sp_L44_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+       "arr": 1229.7,
+       "slew": 11.8,
+       "late": 35.8,
+       "net": "clkbuf_sp_L43_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+       "arr": 1229.8,
+       "slew": 11.8,
+       "late": 35.9,
+       "net": "clkbuf_sp_L42_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+       "arr": 1235.2,
+       "slew": 11.8,
+       "late": 41.3,
+       "net": "clkbuf_sp_L41_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+       "arr": 1252.8,
+       "slew": 12.3,
+       "late": 58.9,
+       "net": "clkbuf_sp_L40_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+       "arr": 1229.9,
+       "slew": 11.9,
+       "late": 36.0,
+       "net": "clkbuf_sp_L39_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+       "arr": 1224.1,
+       "slew": 11.9,
+       "late": 30.2,
+       "net": "clkbuf_sp_L38_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+       "arr": 1246.7,
+       "slew": 11.6,
+       "late": 52.8,
+       "net": "clkbuf_sp_L37_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+       "arr": 1246.8,
+       "slew": 11.6,
+       "late": 52.9,
+       "net": "clkbuf_sp_L36_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+       "arr": 1255.5,
+       "slew": 11.6,
+       "late": 61.6,
+       "net": "clkbuf_sp_L35_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+       "arr": 1262.0,
+       "slew": 11.6,
+       "late": 68.1,
+       "net": "clkbuf_sp_L34_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+       "arr": 1262.0,
+       "slew": 11.8,
+       "late": 68.1,
+       "net": "clkbuf_sp_L33_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+       "arr": 1251.3,
+       "slew": 11.6,
+       "late": 57.4,
+       "net": "clkbuf_sp_L32_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+       "arr": 1243.7,
+       "slew": 11.6,
+       "late": 49.8,
+       "net": "clkbuf_sp_L31_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+       "arr": 1239.3,
+       "slew": 11.4,
+       "late": 45.4,
+       "net": "clkbuf_sp_L30_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+       "arr": 1252.0,
+       "slew": 12.8,
+       "late": 58.1,
+       "net": "clkbuf_sp_L29_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+       "arr": 1250.4,
+       "slew": 11.7,
+       "late": 56.5,
+       "net": "clkbuf_sp_L28_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+       "arr": 1251.7,
+       "slew": 11.8,
+       "late": 57.8,
+       "net": "clkbuf_sp_L27_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+       "arr": 1251.1,
+       "slew": 11.9,
+       "late": 57.2,
+       "net": "clkbuf_sp_L26_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+       "arr": 1248.2,
+       "slew": 11.6,
+       "late": 54.3,
+       "net": "clkbuf_sp_L25_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+       "arr": 1264.2,
+       "slew": 12.0,
+       "late": 70.3,
+       "net": "clkbuf_sp_L24_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+       "arr": 1231.3,
+       "slew": 11.7,
+       "late": 37.4,
+       "net": "clkbuf_sp_L23_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+       "arr": 1267.0,
+       "slew": 11.9,
+       "late": 73.1,
+       "net": "clkbuf_sp_L22_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+       "arr": 1266.8,
+       "slew": 11.8,
+       "late": 72.9,
+       "net": "clkbuf_sp_L21_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+       "arr": 1249.4,
+       "slew": 11.9,
+       "late": 55.5,
+       "net": "clkbuf_sp_L20_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+       "arr": 1249.4,
+       "slew": 11.8,
+       "late": 55.5,
+       "net": "clkbuf_sp_L19_net"
+      },
+      {
+       "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+       "arr": 1250.9,
+       "slew": 11.8,
+       "late": 57.0,
+       "net": "clkbuf_sp_L18_net"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 98,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": true,
+    "outliers": [
+     {
+      "pin": "u_ps.u_p.dt[0].mem.g[0].mem/clk",
+      "why": "ff 39 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[0].mem.g[1].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[0].mem.g[2].mem/clk",
+      "why": "ff 37 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[0].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[1].mem/clk",
+      "why": "ff 40 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[2].mem/clk",
+      "why": "ff 39 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[3].mem/clk",
+      "why": "ff 72 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[4].mem/clk",
+      "why": "ff 66 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[5].mem/clk",
+      "why": "ff 66 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[6].mem/clk",
+      "why": "ff 69 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[7].mem/clk",
+      "why": "ff 52 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[8].mem/clk",
+      "why": "ff 60 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[1].mem.g[9].mem/clk",
+      "why": "ff 57 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[2].mem.g[0].mem/clk",
+      "why": "ff 40 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[2].mem.g[7].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[2].mem.g[8].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[0].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[12].mem/clk",
+      "why": "ff 55 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[1].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[2].mem/clk",
+      "why": "ff 58 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[3].mem/clk",
+      "why": "ff 39 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[4].mem/clk",
+      "why": "ff 39 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[3].mem.g[5].mem/clk",
+      "why": "ff 34 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[4].mem.g[0].mem/clk",
+      "why": "ff 42 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[4].mem.g[1].mem/clk",
+      "why": "ff 42 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[5].mem.g[0].mem/clk",
+      "why": "ff 44 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[6].mem.g[0].mem/clk",
+      "why": "ff 41 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[7].mem.g[0].mem/clk",
+      "why": "ff 52 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[8].mem.g[0].mem/clk",
+      "why": "ff 65 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.dt[9].mem.g[0].mem/clk",
+      "why": "ff 65 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[0].mem/clk",
+      "why": "ff 64 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[10].mem/clk",
+      "why": "ff 53 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[11].mem/clk",
+      "why": "ff 53 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[12].mem/clk",
+      "why": "ff 42 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[13].mem/clk",
+      "why": "ff 42 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[14].mem/clk",
+      "why": "ff 64 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[15].mem/clk",
+      "why": "ff 64 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[16].mem/clk",
+      "why": "ff 65 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[17].mem/clk",
+      "why": "ff 65 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[18].mem/clk",
+      "why": "ff 65 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[19].mem/clk",
+      "why": "ff 66 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[1].mem/clk",
+      "why": "ff 64 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[20].mem/clk",
+      "why": "ff 56 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[21].mem/clk",
+      "why": "ff 56 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[22].mem/clk",
+      "why": "ff 57 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[23].mem/clk",
+      "why": "ff 60 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[24].mem/clk",
+      "why": "ff 48 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[25].mem/clk",
+      "why": "ff 42 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[26].mem/clk",
+      "why": "ff 42 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[27].mem/clk",
+      "why": "ff 41 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[28].mem/clk",
+      "why": "ff 54 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[29].mem/clk",
+      "why": "ff 54 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[2].mem/clk",
+      "why": "ff 59 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[30].mem/clk",
+      "why": "ff 65 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[31].mem/clk",
+      "why": "ff 67 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[32].mem/clk",
+      "why": "ff 67 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[33].mem/clk",
+      "why": "ff 63 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[34].mem/clk",
+      "why": "ff 46 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[35].mem/clk",
+      "why": "ff 46 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[36].mem/clk",
+      "why": "ff 46 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[37].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[38].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[39].mem/clk",
+      "why": "ff 41 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[3].mem/clk",
+      "why": "ff 59 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[40].mem/clk",
+      "why": "ff 36 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[41].mem/clk",
+      "why": "ff 30 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[42].mem/clk",
+      "why": "ff 53 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[43].mem/clk",
+      "why": "ff 53 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[44].mem/clk",
+      "why": "ff 62 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[45].mem/clk",
+      "why": "ff 68 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[46].mem/clk",
+      "why": "ff 68 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[47].mem/clk",
+      "why": "ff 57 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[48].mem/clk",
+      "why": "ff 50 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[49].mem/clk",
+      "why": "ff 45 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[4].mem/clk",
+      "why": "ff 58 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[50].mem/clk",
+      "why": "ff 56 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[51].mem/clk",
+      "why": "ff 58 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[52].mem/clk",
+      "why": "ff 57 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[53].mem/clk",
+      "why": "ff 54 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[54].mem/clk",
+      "why": "ff 70 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[55].mem/clk",
+      "why": "ff 37 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[5].mem/clk",
+      "why": "ff 73 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[6].mem/clk",
+      "why": "ff 73 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[7].mem/clk",
+      "why": "ff 56 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[8].mem/clk",
+      "why": "ff 56 ps after the register mean > 30"
+     },
+     {
+      "pin": "u_ps.u_p.ix[0].mem.g[9].mem/clk",
+      "why": "ff 57 ps after the register mean > 30"
+     }
+    ]
+   },
+   "env": {
+    "CK_SS_MEAN": 1984,
+    "CK_SS_ALL_MEAN": 1977,
+    "CK_SS_MIN": 1836,
+    "CK_SS_ALL_MIN": 1804,
+    "CK_SS_MAX": 2053,
+    "CK_SS_ALL_MAX": 2053,
+    "CK_TT_MEAN": 1489,
+    "CK_TT_ALL_MEAN": 1489,
+    "CK_TT_MIN": 1478,
+    "CK_TT_ALL_MIN": 1478,
+    "CK_TT_MAX": 1506,
+    "CK_TT_ALL_MAX": 1506,
+    "CK_FF_MEAN": 1191,
+    "CK_FF_ALL_MEAN": 1194,
+    "CK_FF_MIN": 1165,
+    "CK_FF_ALL_MIN": 1165,
+    "CK_FF_MAX": 1244,
+    "CK_FF_ALL_MAX": 1267,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}
