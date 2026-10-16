@@ -4,6 +4,9 @@
 // reset pulses.  Stimulus: f_st redrawn at each negedge with per-segment biases on busy f_st[0] / done f_st[2] so the
 // handshake runs (busy -> done rising -> toggle), plus fully random segments.  +SEED=<n> +N=<cycles>.
 // With -DSYNTHESIS the DUT's ICG-gated bank is simulated through a behavioural ICG (latch on CLK low + AND).
+// -DCAPCD_PINREG (S-VM-CAPT-CD2 2026-10-16): the DUT is dsfd_capt_cd #(.PINREG(1)) and the reference is fed f_st delayed
+// by exactly ONE ckv edge (f_st_d, sampled at posedge like the DUT pin registers): the golden alignment moves by +1 ckv
+// and nothing else (every t_cd bit, every edge, through resets).
 // Verdict: "CAPCD_EQ cycles=.. fires=.. toggles=.. resets=.. mismatches=.. EQ_PASS|EQ_FAIL".
 `ifdef SYNTHESIS
 module ICGx2_ASAP7_75t_R (input wire CLK, input wire ENA, input wire SE, output wire GCLK);
@@ -16,13 +19,22 @@ module tb_dsfd_capt_cd_eq;
     reg ckv = 1'b0, rsv = 1'b0;
     reg [13:0] f_st = 14'd0;
     wire [11:0] cd_ref, cd_dut;
-    dsfd_capt_cd_ref1013 u_ref (.ckv(ckv), .rsv(rsv), .f_st(f_st), .t_cd(cd_ref));
-    dsfd_capt_cd         u_dut (.ckv(ckv), .rsv(rsv), .f_st(f_st), .t_cd(cd_dut));
+`ifdef CAPCD_PINREG
+    localparam integer PR = 1;
+    reg [13:0] f_st_d = 14'd0;
+    always @(posedge ckv) f_st_d <= f_st;       // the +1 ckv alignment of the pin-registered DUT
+    wire [13:0] f_ref = f_st_d;
+`else
+    localparam integer PR = 0;
+    wire [13:0] f_ref = f_st;
+`endif
+    dsfd_capt_cd_ref1013 u_ref (.ckv(ckv), .rsv(rsv), .f_st(f_ref), .t_cd(cd_ref));
+    dsfd_capt_cd #(.PINREG(PR)) u_dut (.ckv(ckv), .rsv(rsv), .f_st(f_st), .t_cd(cd_dut));
     integer seed = 1, n = 200000, i, mm = 0, fires = 0, togs = 0, rsts = 0, seg = 0, pb = 50, pd = 50;
     reg tq = 1'b0;
     always #1 ckv = ~ckv;
     // reference phase completions (its enable, sampled before the edge)
-    always @(posedge ckv) if (u_ref.rv_s[1] && f_st[2] && !u_ref.dr_q && u_ref.armed && !f_st[0]) fires = fires + 1;
+    always @(posedge ckv) if (u_ref.rv_s[1] && f_ref[2] && !u_ref.dr_q && u_ref.armed && !f_ref[0]) fires = fires + 1;
     initial begin
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         if (!$value$plusargs("N=%d", n)) n = 200000;

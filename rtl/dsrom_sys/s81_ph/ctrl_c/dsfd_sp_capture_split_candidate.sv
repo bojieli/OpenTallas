@@ -80,6 +80,6 @@ module dsfd_sp_capture_split_candidate (
     dsfd_capt_status_dual u_status (.ck(ck_status), .rst(rst), .ckv(ckv_status), .rsv(rsv), .f_sn(nd), .t_st(stw)); //   // the tile left of the control tile
     assign t_vm[13375:13312] = stw;
     wire [11:0] cd;
-    dsfd_capt_cd u_cd (.ckv(ckv_d), .rsv(rsv[0]), .f_st(stw[13:0]), .t_cd(cd));
+    dsfd_capt_cd #(.PINREG(1)) u_cd (.ckv(ckv_d), .rsv(rsv[0]), .f_st(stw[13:0]), .t_cd(cd));
     dsfd_capt_rly_12_SN u_cr (.ck(ckv_r), .rs(rsv[0]), .i(cd), .o(t_cd));
 endmodule

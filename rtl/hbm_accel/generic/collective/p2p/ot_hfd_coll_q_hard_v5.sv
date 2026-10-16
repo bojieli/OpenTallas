@@ -7,7 +7,7 @@
 // constant; HOST target = 52+qid), never a parameter. Children:
 //   u_fj      ot_hgi_coll_fj_q{3,2}        HOST F20 programme target + aggregate fault/visibility join (leaf)
 //   u_issuer  ot_hgi_coll_issuer_m         actual 3-SRAM issuer, uop masked by uop_v INSIDE the leaf
-//   u_control ot_hgi_coll_ctl_v4_q{3,2}    V4 protocol leaf (INJLAT 12)
+//   u_control ot_hgi_coll_ctl_v5_q{3,2}    protocol leaf: pipelined iteration products + V4 protocol (INJLAT 12)
 //   g_qcap    ot_hgi_coll_qslots_capture_pin_v2 x NS  (pin_v2: every check input captured at its pin)
 //   g_qout    ot_hgi_coll_qso_q{3,2}_b32 x17 + _b1 x1 (32-bit qslots switch slices)
 //   g_link    ot_hgi_coll_link_e x NPT    (TX6/RX2 rail; epoch select inside the capture-control leaf)
@@ -15,9 +15,11 @@
 //   u_reduce  ot_hgi_coll_reduce_static    (hybrid cluster: 16 state + 16 add lanes)
 //   u_ring    ot_hgi_coll_ring_v5          (= pring_captured_static SPLIT_CLOCKS 1; 8 CLOSED state-capture lanes)
 //   q3 only:  u_arg ot_hgi_coll_argmax_m (mode gating inside), u_tkm ot_hgi_coll_tkm_m (32 CLOSED tkm tiles)
-// Normal data/valid edges are identical to host_v4 (lockstep bench tb_hgi_coll_q_hard_v5). Exceptional fault ABI
-// (all sticky; registered once in u_fj on clk_program, host-visible `fault`/`hgi_fault` and fault_cause):
-//   every child fault reaches `fault` at the host_v4 edge, EXCEPT
+// V5 ISSUE TIMING: HOST frames are captured at the fj pins (+1: programme-target outputs +1) and the uop stream
+// (with exported busy/done) is delayed 2 more edges: issue path +3 vs host_v4; every relative edge is unchanged. Normal data/valid are
+// identical to host_v4 shifted by 2 edges (lockstep bench tb_hgi_coll_q_hard_v5). Exceptional fault ABI
+// (all sticky; u_fj captures every input at its pin, then registers fault/fault_cause on clk_program). Relative to
+// host_v4 shifted by the issue latency (+3: HOST frame capture +1, uop delay +2): every child fault +1 edge, AND
 //   qslots capture (pin_v2)        +1 edge (source C -> leaf fault C+1 -> fault C+2)
 //   q2 arg capture reservation      -1 edge (q2 has no arg source: checked in u_fj directly, C -> fault C+1)
 //   q2 arg sink selection           select_fault instead of unavailable_fault (same edge; class only)
@@ -63,51 +65,74 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18)(
  output reg fault,
  output reg [15:0] fault_cause
 );
- wire [7:0] target_eff=(cfg_target==(8'd52+{6'd0,qid}))?8'd52:8'd0;
+ // Every input is captured at its pin (coordinator native audit of fj_q2 54f035ca0: 71 unregistered inputs, capture
+ // 512.9 ps). rst_n: synchronous D-pin flop. HOST frames: +1 edge (target remap after capture, against the static
+ // qid strap). Issuer feedback and child faults: +1 edge (exceptional fault ABI +1, like qslots pin_v2).
+ reg rst_q;
+ always @(posedge clk) rst_q<=rst_n;
+ reg cv_q,dv_q,lv_q,act_q,ibusy_q,ifault_q,iuv_q;
+ reg [7:0] tgt_q;reg [1:0] qid_q;reg [11:0] addr_q,base_q;reg [255:0] data_q;reg [12:0] limit_q;reg [15:0] loops_q;
+ reg [5:0] iupc_q;
+ reg prot_q,ring_q,writer_q,reduce_q,arg_q,tkm_q,argcap_q,tkmstart_q;
+ reg [NS-1:0] cap_q;reg [NSL-1:0] sel_q,unav_q;reg [NPT-1:0] lk_q;reg [3:0] tdel_q,tdest_q;
+ always @(posedge clk)begin
+  tgt_q<=cfg_target;qid_q<=qid;addr_q<=cfg_addr;data_q<=cfg_data;base_q<=desc_base;limit_q<=desc_limit;
+  loops_q<=desc_loops;iupc_q<=issuer_uop_pc;
+ end
+ always @(posedge clk or negedge rst_q)
+  if(!rst_q)begin
+   cv_q<=0;dv_q<=0;lv_q<=0;act_q<=0;ibusy_q<=0;ifault_q<=0;iuv_q<=0;prot_q<=0;ring_q<=0;writer_q<=0;reduce_q<=0;
+   arg_q<=0;tkm_q<=0;argcap_q<=0;tkmstart_q<=0;cap_q<=0;sel_q<=0;unav_q<=0;lk_q<=0;tdel_q<=0;tdest_q<=0;
+  end else begin
+   cv_q<=cfg_v;dv_q<=desc_v;lv_q<=launch_v;act_q<=program_active;ibusy_q<=issuer_busy;ifault_q<=issuer_fault;
+   iuv_q<=issuer_uop_v;prot_q<=protocol_fault;ring_q<=ring_fault;writer_q<=writer_fault;reduce_q<=reduce_fault;
+   arg_q<=arg_fault;tkm_q<=tkm_fault;argcap_q<=arg_capture_slot;tkmstart_q<=tkm_start;cap_q<=capture_fault;
+   sel_q<=select_fault;unav_q<=unavailable_fault;lk_q<=link_abort;tdel_q<=tkm_del_slot;tdest_q<=tkm_dest_v;
+  end
+ wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
  ot_hgi_coll_static_program_target #(.TARGET(8'd52)) u_program(
-  .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(target_eff),
-  .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),
-  .desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
-  .program_active(program_active),.issuer_busy(issuer_busy),.issuer_fault(issuer_fault),
-  .issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),
+  .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
+  .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
+  .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
+  .program_active(act_q),.issuer_busy(ibusy_q),.issuer_fault(ifault_q),
+  .issuer_uop_v(iuv_q),.issuer_uop_pc(iupc_q),
   .issuer_cfg(issuer_cfg),.issuer_start(issuer_start),.issuer_start_pc(issuer_start_pc),
   .configured(configured),.init_busy(init_busy),.fault(program_fault));
- wire noengine_arg=(SOLO==0)&&arg_capture_slot;
- wire noengine_tkm=(SOLO==0)&&(tkm_start || (|tkm_dest_v) || (|tkm_del_slot));
+ wire noengine_arg=(SOLO==0)&&argcap_q;
+ wire noengine_tkm=(SOLO==0)&&(tkmstart_q || (|tdest_q) || (|tdel_q));
  wire [2:0] link3;
  for(genvar k=0;k<3;k=k+1)begin:g_l3
-  if(k<NPT)begin:p assign link3[k]=link_abort[k]; end else begin:z assign link3[k]=1'b0; end
+  if(k<NPT)begin:p assign link3[k]=lk_q[k]; end else begin:z assign link3[k]=1'b0; end
  end
  wire [15:0] cause_now;
  assign cause_now[0]=program_fault;
- assign cause_now[1]=issuer_fault;
- assign cause_now[2]=protocol_fault;
+ assign cause_now[1]=ifault_q;
+ assign cause_now[2]=prot_q;
 `ifdef OT_COLL_V5_MUT_CAUSE_SWAP
- assign cause_now[3]=|select_fault;
- assign cause_now[4]=|capture_fault;
+ assign cause_now[3]=|sel_q;
+ assign cause_now[4]=|cap_q;
 `else
- assign cause_now[3]=|capture_fault;
- assign cause_now[4]=|select_fault;
+ assign cause_now[3]=|cap_q;
+ assign cause_now[4]=|sel_q;
 `endif
- assign cause_now[5]=|unavailable_fault;
+ assign cause_now[5]=|unav_q;
 `ifdef OT_COLL_V5_MUT_DROP_LINK
  assign cause_now[8:6]=3'b000;
 `else
  assign cause_now[8:6]=link3;
 `endif
- assign cause_now[9]=ring_fault;
- assign cause_now[10]=writer_fault;
- assign cause_now[11]=reduce_fault;
- assign cause_now[12]=(SOLO!=0)?arg_fault:noengine_arg;
+ assign cause_now[9]=ring_q;
+ assign cause_now[10]=writer_q;
+ assign cause_now[11]=reduce_q;
+ assign cause_now[12]=(SOLO!=0)?arg_q:noengine_arg;
 `ifdef OT_COLL_V5_MUT_DROP_TKM
- assign cause_now[13]=(SOLO!=0)?tkm_fault:1'b0;
+ assign cause_now[13]=(SOLO!=0)?tkm_q:1'b0;
 `else
- assign cause_now[13]=(SOLO!=0)?tkm_fault:noengine_tkm;
+ assign cause_now[13]=(SOLO!=0)?tkm_q:noengine_tkm;
 `endif
  assign cause_now[15:14]=2'b00;
- // Same edge as host_v4 `fault<=fault|program_fault|quad_fault` (quad_fault = OR of registered child faults).
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin fault<=1'b0;fault_cause<=16'd0;end
+ always @(posedge clk or negedge rst_q)
+  if(!rst_q)begin fault<=1'b0;fault_cause<=16'd0;end
   else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end
 endmodule
 
@@ -149,12 +174,16 @@ endmodule
 module ot_hgi_coll_issuer_m(
  input wire clk_control,input wire rst_n,
  input wire [36:0] cfg,input wire start,input wire [5:0] start_pc,
- output wire busy,done,fault,uop_v,
- output wire [1535:0] uop,
- output wire [31:0] iteration,
- output wire [5:0] uop_pc
+ output wire busy,done,fault,uop_v,          // raw (programme-target feedback, host_v4 edges)
+ output wire [5:0] uop_pc,
+ // V5 issue timing: the instruction stream and its control (start/busy/done) leave 2 edges later; the early tap
+ // carries iteration and the six step fields at the raw edge for the protocol leaf's pipelined products.
+ output reg [1535:0] uop_d2,
+ output reg busy_d2,done_d2,start_d2,
+ output wire [31:0] tap_iteration,
+ output wire [87:0] tap_steps                // {lk8, rgx16, del16, iaddr16, vm16, idx16}
 );
- wire [1535:0] raw;
+ wire [1535:0] raw,uop;wire [31:0] iteration;
  ot_hgi_coll_static_issuer u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
   .cfg(cfg),.start(start),.start_pc(start_pc),.busy(busy),.done(done),.fault(fault),
   .uop_v(uop_v),.uop(raw),.iteration(iteration),.uop_pc(uop_pc));
@@ -163,12 +192,48 @@ module ot_hgi_coll_issuer_m(
 `else
  assign uop=uop_v?raw:1536'd0;
 `endif
+ assign tap_iteration=iteration;
+ assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
+ reg [1535:0] uop_d1;reg busy_d1,done_d1,start_d1;
+ always @(posedge clk_control)begin uop_d1<=uop;uop_d2<=uop_d1;end
+ always @(posedge clk_control or negedge rst_n)
+  if(!rst_n)begin busy_d1<=0;busy_d2<=0;done_d1<=0;done_d2<=0;start_d1<=0;start_d2<=0;end
+  else begin busy_d1<=busy;busy_d2<=busy_d1;done_d1<=done;done_d2<=done_d1;start_d1<=start;start_d2<=start_d1;end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
-// Protocol leaves (V4 control, INJLAT 12; parameters fixed by name for hardening).
-module ot_hgi_coll_ctl_v4_q3(
- input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] iteration,
+// Protocol leaves (V5 issue timing, INJLAT 12; parameters fixed by name for hardening): one leaf = the pipelined
+// iteration-product unit (pin capture of the early tap at E+3, registered partials at E+4) + ot_hgi_coll_q_static_ctl_v5
+// on the 2-edge-delayed instruction (valid E+4..E+5): only field+partial adders remain in the cycle.
+module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [ND-1:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [2055:0] vm_rr,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [2047:0] vm_assembled,output wire [3:0] vm_assembled_v,output wire [NPT*8-1:0] held_epoch,
+ output wire [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles);
+ wire [15:0] m_idx,m_vm,m_iaddr_h,m_del_h,m_rgx_h;wire [31:0] m_iaddr_l,m_del_l,m_rgx_l;wire [23:0] m_lk_l,m_lk_h;
+ ot_hgi_coll_iter_mul u_mul(.clk(clk_control),.iteration(tap_iteration),.s_idx(tap_steps[0+:16]),
+  .s_vm(tap_steps[16+:16]),.s_iaddr(tap_steps[32+:16]),.s_del(tap_steps[48+:16]),.s_rgx(tap_steps[64+:16]),
+  .s_lk(tap_steps[80+:8]),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
+  .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h));
+ ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12)) u(.clk_control(clk_control),.rst_n(rst_n),
+  .inst(inst),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
+  .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
+  .hgi_start(hgi_start),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+  .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rr(vm_rr),.vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),
+  .inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),.delivery_obase_pin(delivery_obase_pin),
+  .rgx_addr_pin(rgx_addr_pin),.inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),
+  .vm_source_meta(vm_source_meta),.vm_assembled(vm_assembled),.vm_assembled_v(vm_assembled_v),
+  .held_epoch(held_epoch),.wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),
+  .rx_sequence_pin(rx_sequence_pin),.protocol_fault(protocol_fault),.cycles(cycles));
+endmodule
+
+module ot_hgi_coll_ctl_v5_q3(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [15:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [2055:0] vm_rr,
  output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
@@ -177,11 +242,11 @@ module ot_hgi_coll_ctl_v4_q3(
  output wire [2047:0] vm_assembled,output wire [3:0] vm_assembled_v,output wire [23:0] held_epoch,
  output wire [47:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_q_static_ctl_v4 #(.NPT(3),.SOLO(1),.INJLAT(12)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1)) u(.*);
 endmodule
 
-module ot_hgi_coll_ctl_v4_q2(
- input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] iteration,
+module ot_hgi_coll_ctl_v5_q2(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [2055:0] vm_rr,
  output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
@@ -190,7 +255,7 @@ module ot_hgi_coll_ctl_v4_q2(
  output wire [2047:0] vm_assembled,output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
  output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_q_static_ctl_v4 #(.NPT(2),.SOLO(0),.INJLAT(12)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0)) u(.*);
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -263,13 +328,32 @@ endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // q3 engines with the V4 parent's arg/tkm mode gating inside the hardened child.
+// COLL-CTL 1045: the leaf takes only the delivery bits the engine reads -- per lane the FP32 key + index word
+// (flit[63:0], ot_hgi_coll_amerge stage 1) and the 33b meta (flit[544:512], argmax_static source/order checks).
+// flit[511:64] has no load in either module (amerge runs with en=1, so its pass-through o_f never reaches out_flit);
+// dropping those 1,792 pins changes no edge or value (lockstep bench) and removes a pin-bound 2,180-bit face.
 module ot_hgi_coll_argmax_m(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
- input wire [3:0] in_slot,in_v,input wire [2179:0] in_flit,input wire flush_slot,publish_slot,
+ input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
- ot_hgi_coll_argmax_static u(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
+ // u_data: live inputs, data/valid edges exact (its check logic has no load and is removed by synthesis).
+ // u_chk : the same actual module on pin-captured inputs; only its sticky fault is used (arg fault ABI +1 edge;
+ //         the 15-level input-check cone becomes reg->reg).
+ wire [2179:0] in_flit;
+ for(genvar l=0;l<4;l=l+1)begin:g_lane
+  assign in_flit[l*545+:545]={in_meta[l*33+:33],448'd0,in_key[l*64+:64]};
+ end
+ ot_hgi_coll_argmax_static u_data(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
   .cfg_rank(cfg_rank),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
-  .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault(fault));
+  .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault());
+ reg start_q,flush_q,pub_q;reg [7:0] g_q,gb_q,rk_q;reg [3:0] slot_q,v_q;reg [2179:0] flit_q;
+ always @(posedge clk)begin g_q<=cfg_g;gb_q<=cfg_gbase;rk_q<=cfg_rank;flit_q<=in_flit;end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
+  else begin start_q<=start;flush_q<=flush_slot;pub_q<=publish_slot;slot_q<=in_slot & {4{mode}};v_q<=in_v & {4{mode}};end
+ ot_hgi_coll_argmax_static u_chk(.clk(clk),.rst_n(rst_n),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
+  .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
+  .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
 
 module ot_hgi_coll_tkm_m(
@@ -336,10 +420,12 @@ module ot_hfd_coll_q_hard_v5_body #(
  localparam integer PWT=545,SELW=4;
  // ---- issuer + programme target + fault join
  wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;
- wire issue_fault,issue_done,uop_v;wire [1535:0] inst;wire [31:0] iteration;wire [5:0] uop_pc;
+ wire issue_fault,issue_done,uop_v;wire [1535:0] inst;wire [5:0] uop_pc;
+ wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;
  ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
-  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(hgi_busy),.done(issue_done),
-  .fault(issue_fault),.uop_v(uop_v),.uop(inst),.iteration(iteration),.uop_pc(uop_pc));
+  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
+  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d2(inst),.busy_d2(hgi_busy),.done_d2(issue_done),
+  .start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
  assign hgi_done=issue_done;assign done=issue_done;assign hgi_fault=fault;
  // ---- ISA fields (wires; identical positions to ot_hfd_coll_q_static_v4)
  wire [9:0] p_capture_slot=inst[0+:10];
@@ -398,8 +484,8 @@ module ot_hfd_coll_q_hard_v5_body #(
   wire arg_out_v;wire [PWT-1:0] arg_out_data;
   assign source_v[NPT+7]=arg_out_v;assign source_d[(NPT+7)*PWT+:PWT]=arg_out_data;
   assign capture_calendar[NPT+7]=p_ring[82];
-  ot_hgi_coll_ctl_v4_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst),.iteration(iteration),
-   .hgi_start(hgi_start),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+  ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rr(vm_rr),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
    .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
@@ -409,7 +495,9 @@ module ot_hfd_coll_q_hard_v5_body #(
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   ot_hgi_coll_argmax_m u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
-   .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),.in_flit(dest_d[(NPT+8)*PWT+:4*PWT]),
+   .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
+   .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
+   .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
    .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
   ot_hgi_coll_tkm_m u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
    .start(p_tkm_start),.arg_mode(a_arg_mode),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),.cfg_nout(p_tkm_cfg_nout),
@@ -420,7 +508,7 @@ module ot_hfd_coll_q_hard_v5_body #(
    .busy(tkm_busy),.done(tkm_done),.fault(tkm_fault),.stat_cycles(tk_cycles));
   ot_hgi_coll_fj_q3 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
-   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(hgi_busy),.issuer_busy(hgi_busy),
+   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
    .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
    .issuer_cfg(program_cfg),.issuer_start(hgi_start),.issuer_start_pc(hgi_start_pc),
    .configured(program_configured),.init_busy(program_init_busy),.program_fault(program_fault),
@@ -432,8 +520,8 @@ module ot_hfd_coll_q_hard_v5_body #(
   // No arg/tkm engine in q2: their tkm sinks are unrouted switch outputs; illegal reservations fault in u_fj.
   assign tk_w_v=1'b0;assign tk_w_addr=40'd0;assign tk_w_mask=16'd0;assign tk_w_data=512'd0;
   assign tkm_done=1'b0;assign tkm_busy=1'b0;assign arg_fault=1'b0;assign tkm_fault=1'b0;assign tk_cycles=32'd0;
-  ot_hgi_coll_ctl_v4_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst),.iteration(iteration),
-   .hgi_start(hgi_start),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+  ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rr(vm_rr),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
    .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
@@ -443,7 +531,7 @@ module ot_hfd_coll_q_hard_v5_body #(
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   ot_hgi_coll_fj_q2 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
    .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
-   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(hgi_busy),.issuer_busy(hgi_busy),
+   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),
    .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),
    .issuer_cfg(program_cfg),.issuer_start(hgi_start),.issuer_start_pc(hgi_start_pc),
    .configured(program_configured),.init_busy(program_init_busy),.program_fault(program_fault),
