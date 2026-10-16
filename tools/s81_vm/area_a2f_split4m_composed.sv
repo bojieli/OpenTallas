@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 `default_nettype none
 module s81_a2f_slice_split4m(
- input wire ck_control,ck_fault,input wire [6:0] ck_meta,input wire [31:0] ck_data,
- input wire rst_control_n,rst_fault_n,input wire [6:0] rst_meta_n,input wire [31:0] rst_data_n,
+ input wire ck_control,input wire [6:0] ck_meta,input wire ck_fault,input wire [31:0] ck_data,
+ input wire rst_control_n,input wire [6:0] rst_meta_n,input wire rst_fault_n,input wire [31:0] rst_data_n,
  input wire [52:0] src_v,input wire [423:0] src_bank,
  input wire [2:0] header_epoch,input wire [11:0] payload_epoch,
  input wire [741:0] i_row,input wire [211:0] i_mask,input wire [423:0] i_tag,input wire [6783:0] i_data,
