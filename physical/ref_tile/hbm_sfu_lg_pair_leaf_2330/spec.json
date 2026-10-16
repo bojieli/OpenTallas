@@ -1,0 +1,112 @@
+{
+ "name": "hbm_sfu_lg_pair_leaf_2330",
+ "top": "ot_hgi_sfu_lg_pair_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "PIN_RST": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "c_rq",
+   "c_wq",
+   "c_rr",
+   "c_w_done"
+  ],
+  "E": [
+   "lg_rq",
+   "lg_wq",
+   "lg_rr",
+   "lg_w_done"
+  ]
+ },
+ "outline": {
+  "w": 43.2,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL has one boundary register on every data bit in both directions (596 core-to-LG and516 LG-to-core) plus registered reset PIN_RST=1; adding wrapper flops would alter the fixed one-edge calendar."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "std_area_um2": 900,
+ "structural_change": "Existing SFU pair leaf, compact43.2x129.6 within216-square reservation; same1edge bothways and1112data FF. Reset captures once at N pin (coldinit2edges). Exact legal track-centred pins preserve face and bit order; actual PG and native audit required.",
+ "job": {
+  "owner": "Codex:H-SU-2330",
+  "branch": "codex/hsu-sfu-2330",
+  "tag": "r0",
+  "purpose": "Compact existing SFU registered pair master. Gate/route only after die adopts assigned pins. No inherited physical qualification; full SFU core home/calendar remains OPEN.",
+  "record_to": "results/arch/hbm_su_f2_static_1014/sfu_pair_2330",
+  "views_to": "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "physical/hbm_sfu_pair_2330",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "tools/hbm_static/sfu_pair_leaf_run.sh",
+   "rtl/test/hbm_accel/generic/tb_hgi_sfu_lg_pair_leaf.sv"
+  ],
+  "benches": [
+   {
+    "name": "leaf_exact",
+    "cmd": "bash tools/hbm_static/sfu_pair_leaf_run.sh {RUN}/bench/leaf",
+    "expect": "pass",
+    "pass_regex": "SFU_PAIR PASS",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "leaf_mutant",
+    "cmd": "bash tools/hbm_static/sfu_pair_leaf_run.sh {RUN}/bench/mut +MUT_DATA",
+    "expect": "fail",
+    "fail_regex": "SFU_PAIR FAIL",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
