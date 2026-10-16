@@ -13,19 +13,26 @@ is relaxed. The supplied clock must run during initialization.
 
 The CLI verifies SHA256 of the source manifest, full model file and actual
 placement file, and matches **every** original reset/col_reset/reset_tree endpoint
-before writing output. Pin IDs are arbitrary stable names; each pin also identifies
+before writing output. Root records name a shared compiler reset epoch and an explicit
+qualified release cycle in that epoch; unrelated epochs cannot be silently aligned.
+Pin IDs are arbitrary stable names; each pin also identifies
 its original `instance` and `port`. Sites have distinct input/output pin IDs and
 must be reserved from real nonoverlapping space, not instance-centre guesses.
 `pair_checks` are keyed `driver_pin_id->load_pin_id`, and carry source and placement
 hashes plus FF hold, recovery and removal slack. Missing records reject an edge.
+Each site supplies `delay_views` keyed by exact DELAY_CYCLES, with a source-bound
+view hash, the matching input/output pins and area. Padding must fit the reserved
+site and cannot inherit another parameter's physical view.
 Candidate output includes actual RTL, its hash, the real reset-leaf RTL hash, port
 mapping, register count, area, all edge lengths/pair setup margins, and reset release
 cycles/ps. A failed invocation does not produce a candidate.
 
 The behavioral mechanism is `ot_s81_reset_leaf`: two local reset synchronizer flops
 and DELAY_CYCLES additional reset pipeline flops. It asynchronously asserts and
-synchronously deasserts. A delay=1 leaf releases on edge 3. A depth-D forest releases
-all terminal leaves on edge 3D; shorter branches carry explicit extra leaf padding.
+synchronously deasserts. A delay=1 leaf releases on edge 3. A depth-D forest first permits release
+on edge 3D. All independent roots sharing a domain clock align to one fixed release
+edge, accounting for each root's declared epoch offset; shorter branches carry
+explicit extra leaf padding.
 The calendar begins at a *qualified domain release*, not an asynchronous pad whose
 synchronizer phase cannot be deterministic. No runtime credit, polling, backpressure
 or production-data latency is added. Every hardleaf and clock entry still needs
