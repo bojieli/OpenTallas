@@ -81,3 +81,33 @@ Classes: P1 pin face points away from its consumer; P2 pins crowded on one edge 
 | S81H-13 | 2 | s81 | dsfd_vm_static_bank128_e_m4_v20 | S-VM | P6,P5 | Clock at NW corner while 338 flops cluster on lower W/E faces; util 34%: clock to S-face centre, outline ~220x55 um or full-height pins. |
 
 Continuous: owners' next images are re-inspected as they post (see HANDOFF 0bs VIS-ROM).
+
+
+## Round 2 (2026-10-16 ~02:10 PT): event-driven, scored
+Only the items that changed since pass 1 were re-audited. Every pass-1 finding is now scored: **{'confirmed': 5, 'refuted': 3, 'open': 43, 'retired': 2, 'confirmed-partial': 3}**.
+Hit rate: 8 of 11 decided findings were confirmed (**0.727**). 3 were refuted: QC-03 (gearbox r13 routed cleanly on the same E-face pins), S81H-08 (moving the field4 clock did not help) and S81H-13 (bank128_e closed with the corner clock). Owner measurements also refuted parts of two open findings: the Qwen 3W/3E port split (cut 1.096) and the Qwen reset fan-out (a relay-skip artefact).
+Most findings stay open because no new route, die run or generator fix has landed yet: the S81 relay-face fix, hub v2 regeneration (gen26a failed twice), c21h GRT (stopped), KV kvs10/kvs11 (still at PDN) and Qwen r2h1/r2h2 (no output yet).
+Flags: Qwen d2d_static r4 is in the loop although its gate already measured clock insertion 417-501 ps and spread 84 ps (rule: 300/80); the fix is r5. The return_slots mc_r3 tile was submitted before anyone looked at its images (QKV-13).
+Sheets: `sheets/contact_r2_qwen.png`, `sheets/contact_r2_s81.png`. Images: `img_r2/`. Raw agent outputs: `round2/`.
+
+| id | outcome | before | after |
+|---|---|---|---|
+| QC-01 | confirmed | {'illegal_cells': 170, 'in_W_strip': 145, 'dpl': {'site': 186, 'overlap': 136, 'edge': 64, 'padding': 50}} | {'illegal_cells': 92, 'in_W_strip': '~0 (all in LSL gutters per r3 receipts)', 'dpl': {'site': 88, 'overlap':  |
+| QC-02 | confirmed | {'illegal_cells': 96, 'dpl': {'site': 124, 'overlap': 65, 'edge': 24, 'padding': 15}} | {'illegal_cells': 53, 'dpl': {'site': 53, 'overlap': 42, 'edge': 10, 'padding': 0}, 'verdict': 'FAIL DPL-0033' |
+| QC-03 | refuted | {'E_pins_per_um': 9.9, 'density_max': 1.077, 'hot_frac': 0.027, 'grt_M4': 0.216, 'tt_ps': 31.9} | {'E_pins_per_um': 10.05, 'density_max': 1.005, 'hot_frac': 0.005, 'grt_M4': 0.183, 'grt_overflow': 0, 'tt_ps': |
+| QC-05 | confirmed | {'S_pins_per_um': 20.87, 'S_span_um': 26.5, 'clock': 'NW corner (xt9)', 'native_capture_ps': 502} | {'S_span_um': 159, 'S_pins_per_um': 3.5, 'clock': 'N centre x=108', 'gate_tt_setup_ps': 120.3, 'gate_hold_ps': |
+| S81H-06 | confirmed | {'span_frac': 0.52, 'tt_ps': 137.12, 'ff_ps': 18.83, 'ss_ps': -184.34, 'frac_empty': 0.76} | {'span_frac': 0.68, 'pins_per_um': 3.89, 'tt_ps': 282.3, 'ff_ps': 8.85, 'ss_ps': 49.54, 'frac_empty': 0.73, 'j |
+| S81H-08 | refuted | {'r2_ff_ps': -10.52, 'r2_arg2_ff_ps': -28.72} | {'r3_ff_ps': 8.41, 'r3_ss_ps': -150.67, 'r3c_ff_ps': 5.25, 'r3c_ss_ps': -216.93, 'W_pins_per_um': 5.6, 'images |
+| S81H-10 | retired | None | None |
+| S81H-11 | confirmed | {'fill': 0.048, 'area_um2': 11197} | {'fill': 0.306, 'area_um2': 1194, 'cts_ins_ps': 98.3, 'spread_ps': 4.1, 'images': ['/tmp/visrom/r2/img/s81_S81 |
+| S81F-03 | confirmed-partial | {'fill': 0.222, 'W_pins_per_um': 18.4} | {'fill': 0.444, 'W_pins_per_um': 18.39, 'dens_max': 2.03, 'frac_hot': 0.188, 'images': ['/tmp/visrom/r2/img/s8 |
+| S81F-12 | retired | None | None |
+| S81F-13 | confirmed-partial | {'native_capture_ps': 356.0} | {'native_capture_ps': 126.4, 'native_launch_ps': 115.1, 'W_E_pins_per_um': 6.15, 'images': ['/tmp/visrom/r2/im |
+| D-QC-01 | confirmed-partial | {'die_mm2': 528.9, 'centre_empty_mm2': 61.6, 'south_strips_empty_mm2': 34.1, 'total_empty_mm2': 95.7} | {'die_mm2': 521.9, 'centre_empty_mm2': 53.3, 'south_strips_empty_mm2': 0, 'centre_width_mm': 7.93, 'cut': 0.59 |
+| S81H-13 | refuted | {'fill': 0.318, 'clock': 'NW corner'} | {'tt_ps': 343.02, 'ff_ps': 27.53, 'fill': 0.326, 'images': ['/tmp/visrom/r2/img/s81_S81H-13_bke1_floorplan.png |
+
+New findings (round 2, each cites a measured number):
+- **QKV-13** (sev2, Q-KV (Codex Q-KV-2330 kit, adopted under Q-ELEM)) qkd_static_kv_return_slots_mc (mc_r3): Submitted before anyone looked at the images. Placement (3_5_place_dp) is a round blob in a 194.4x216 um outline at fill 0.32, with a 25-40 um empty ring on every side; 23 % of bins are under 0.05. The pins are fine: W/E
+- **QC-11** (sev2, Q-TILE45) qfd_tile_nk_rp2_45_a2 / qfd_tile_nl_rp2_45_a2 (r4 kit): The r4 repitch abuts LSL col1 (MY, x 100.224) and col2 (R0, x 200.016) E-W with a 0 um seam to widen the pin gutters 20.1 -> 30.1 um. The kit's own floorplan lint records 3 FAIL 'channel -0.0 um (< 20 um)', one per LSL r
+- **D-S81-03** (sev2, S-VM / S-DIE) VM (MIX4 slot A + hop-1 + lever 2, adopted): The adopted VM variant has zero cut margin. Its PathFinder gcell model gives worst edge share 0.600 (the ceiling) and p99 0.585. The W_1x4 alternative already breaks it: 0.606, 8 edges >0.60. 98,672 leaf links run >500 u
+- **S81H-14** (sev1, S-VM) dsfd_vm_static_wfc_ctl: No image: the route dies in 1_2 synth SDC check on both attempts. The cause is OT_MULTI_ROOT "input vm_fault has wrong domain for e_q". In rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv (ctl module L72), e_q <= sq[1] && (
