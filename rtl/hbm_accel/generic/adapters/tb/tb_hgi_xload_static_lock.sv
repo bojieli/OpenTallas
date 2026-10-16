@@ -184,9 +184,9 @@ module tb_xload_static_lock;
     // block-dot streaming emission model (= tools/hbm_sm_xload_static_timing.py): pair (k, b) decided at
     // E = max(k WB + n(b), E_prev + 2) after the tpair origin; beat (k, b, a) on the xw pins at command + CBD + E + a
 `ifdef XLOAD_CL2
-    localparam integer CBD = 27 + 2;          // cl2: + 2 fixed edges (pin-registered landing and egress)
+    localparam integer CBD = 27 + 2 + (RD_LAT - 6);   // cl2: + 2 fixed edges (pin-registered landing and egress); + VM read latency over 6
 `else
-    localparam integer CBD = 27;
+    localparam integer CBD = 27 + (RD_LAT - 6);
 `endif
     function automatic integer nall(input integer lav, input integer bb);
         integer p2, j2; nall = 0;
