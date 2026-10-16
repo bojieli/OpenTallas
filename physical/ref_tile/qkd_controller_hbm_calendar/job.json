@@ -1,5 +1,5 @@
 {
- "name": "qkd_controller_hbm_calendar-c1-COMMIT",
+ "name": "qkd_controller_hbm_calendar-c1-74eff8103",
  "block": "qkd_controller_hbm_calendar",
  "ref_tile": true,
  "owner": "Codex:Q-KVSYS-DIE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/qkvsys-lead-0600",
-  "commit": "COMMIT",
+  "commit": "74eff8103",
   "extra_paths": [
    "tools/qwen_static_kv/controller_calendar_image.py",
    "tools/qwen_static_kv/run_controller_calendar.py",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_controller_hbm_calendar/qkd_controller_hbm_calendar-c1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_controller_hbm_calendar/qkd_controller_hbm_calendar-c1-74eff8103"
   }
  ],
  "cycles_added": 0,
