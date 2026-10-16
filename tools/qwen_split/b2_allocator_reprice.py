@@ -178,8 +178,29 @@ def main():
     os.environ.pop('OT_RELAY_SKIP');os.environ['OT_RELAY_GATE']='warn'
     os.environ['OT_RELAY_DUMP']=str(a.out/'allocator_dump.json')
     G._relays(v,m)
+    st=m.get('r21_stage_of',{})
+    S=lambda name:st.get(name,1)
+    prices=[]
+    for bid,cl,n,es in data:
+        if not re.fullmatch(r'bword_[0-9]+',bid):continue
+        pn=es[-1][0];b=int(pn.split('_')[3]);h=int(pn.endswith('_f1'));hb=2*b+h
+        if a.mode=='b2':
+            upper=max((f'b2_pword_{hb}_l{u}' for u in range(4)),key=S)
+            chain=[bid,f'b2_tw_{hb}',upper]
+        else:
+            chain=[bid]
+            if h:chain.append(f'pfrag_{b}_port_tiles_{b}_f1')
+            chain.append(f'tw_{b}')
+            chain.append(max((f'pword_{b}_l{u}' for u in range(4)),key=S))
+        # Every name must exist in the frozen source graph before using default1.
+        original={bb[0] for bb in data}
+        if any(k not in original for k in chain):raise ValueError(f'price chain missing exact bus {chain}')
+        prices.append(dict(bword=bid,halfband=hb,buses=chain,stages=[S(k)for k in chain],transport_hops=sum(S(k)for k in chain)))
+    prices.sort(key=lambda x:-x['transport_hops'])
     result=dict(mode=a.mode,status='PARTIAL_REAL_ALLOCATOR_DIAGNOSTIC_NOT_NATIVE_DIE',source_receipts=source_receipts,
-                notes=notes,stage_of=m.get('r21_stage_of',{}),relays=m.get('r21_relays',{}),
+                notes=notes,stage_of=st,relays=m.get('r21_relays',{}),
+                reduction_transport_paths=prices,
+                measured_scope='registered wire hops from bword producer to upper input only; excludes source arithmetic latencies and incomplete native result/control paths',
                 omitted='tc/am/rb/LC/new controller and VM source interfaces and other data relay contention')
     (a.out/'result.json').write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps({k:val for k,val in result.items()if k not in('source_receipts','stage_of')},indent=1))
