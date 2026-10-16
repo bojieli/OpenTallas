@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.sm_xc_frame_bounds.v1",
+  "scope": "Lower bounds only; MATVEC RP4 body not closed, attention/fullSM still absent. XC500x1200 is preliminary proposed rebuilt real leaf, not accepted existing hard view.",
+  "rp4_plan_sha256": "4e1e94e53aba564a2f0a6b8c2a081ad23b4955c3034e914a38e6e8d0bfcca61e",
+  "tile_outline_um": [
+    406.08,
+    1321.92
+  ],
+  "body16_tiles_width_um": 6821.28,
+  "front_column_um": [
+    345.6,
+    1765.44
+  ],
+  "total_body_front_width_um": 7188.4800000000005,
+  "slot_um": [
+    7200,
+    1800
+  ],
+  "current_residual_width_um": 11.519999999999527,
+  "current_top_strip_height_um": 456.4799999999999,
+  "xc_preliminary_um": [
+    500,
+    1200
+  ],
+  "fits_7200x1800": false,
+  "reason": "Side remainder11.52um cannot hold500um XC; top strip456.48um cannot hold1200um tall XC or500um tall rebuilt wide XC.",
+  "alternatives": [
+    {
+      "name": "side_XC",
+      "outline_lower_bound_um": [
+        7710.080000000001,
+        1800
+      ],
+      "added_frame_area_mm2": 0.9181440000000015,
+      "added32SM_area_mm2": 29.38060800000005,
+      "dependency": "Actual500x1200 XC leaf pin/macro layout plus7200-wide SM body/front closure. Whole die row expansion and all connected cut/hop/relay changes required."
+    },
+    {
+      "name": "rebuilt_wide_XC_top",
+      "outline_lower_bound_um": [
+        7200,
+        1843.52
+      ],
+      "added_frame_area_mm2": 0.3133439999999999,
+      "added32SM_area_mm2": 10.027007999999997,
+      "dependency": "New1200x500 XC floorplan with actual unrotated SRAM macros; not a90degree rotation of an existing hard view. Requires macro/pin/clock/route proof. Exact173bit command capture adjacency/calendar cycles unresolved."
+    }
+  ],
+  "open": [
+    "Exact173bit endpoints and capture alignment",
+    "Attention PV/wave/prob/BE outline and actual graph",
+    "Source-bound full static front/feed physical views",
+    "Independent28root real clock distributor placement",
+    "Actual edgepins and cut<=0.60",
+    "Physical relay homes and fixed compiler cycles",
+    "Full native TT/FF/DRC0 and end-to-end rate"
+  ]
+}
