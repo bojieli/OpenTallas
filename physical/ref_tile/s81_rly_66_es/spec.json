@@ -38,14 +38,14 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:fill-s81",
-  "branch": "claude/el1015-fill-1015",
-  "tag": "g18",
-  "purpose": "S81 die relay master dsfd_rly_66_ES (153 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
+  "owner": "Claude:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "r4",
+  "purpose": "S81 die relay master dsfd_rly_66_ES (153 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) for the native pin audit",
   "benches": [
    {
     "name": "exact_words",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_66_ES 66 {RUN}/bench_p",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_66_ES 66 {RUN}/bench_p 1",
     "expect": "pass",
     "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
     "threads": 2,
@@ -53,7 +53,15 @@
    },
    {
     "name": "neg_bit0_mutant",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_66_ES 66 {RUN}/bench_m",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_66_ES 66 {RUN}/bench_m 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "rsreg_bypass_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_66_ES 66 {RUN}/bench_r 1",
     "expect": "fail",
     "fail_regex": "RLY_BENCH FAIL",
     "threads": 2,
@@ -75,5 +83,14 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "structural_change": "r4 (S-NET+FILL 2026-10-15 23:00, native audit of the CLOSED view: rs capture 243.8; DEDUPE standard of its flow): ot_s81_rly RSREG=1 -- rs drives ONE reset pin register (async assert, release +1 edge, initialization only, no data edge), the data flops clear from it; same outline / pin faces, same die function (one register stage)",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "native audit fail of the CLOSED view: reset pin register (RSREG=1)"
  }
 }

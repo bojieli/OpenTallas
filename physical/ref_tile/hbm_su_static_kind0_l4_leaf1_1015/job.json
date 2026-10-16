@@ -1,20 +1,20 @@
 {
- "name": "hbm_su_static_kind0_l4_leaf1_1015-r1-0fc0755dd",
+ "name": "hbm_su_static_kind0_l4_leaf1_1015-r2-COMMIT",
  "block": "ot_hbm_su_static_kind0_lat4_leaf1_physical",
  "ref_tile": true,
  "owner": "Claude:H-ELEM-B",
- "purpose": "Static SU LIGHT lane (KIND 0) at the accepted LAT4 point (MLAT4/ALAT3/LEAF1, FETCH_EXTRA 2; full512 LAT4 arithmetic join PASS 31 cases, ledger row SU.VOP static F2 spread LAT4): 384 replicas (96 per quarter, 24 per port-group slice of ot_hbm_su_static_top). Seven related 1:1 phase-0 stage roots at the serial 1111 ps clock. First route of this leaf. Outline from the measured LAT4 mapping (7,207 um2 std, lat4_kind0_map) at util 0.5 instead of the 216x216 prototype (util 14%).",
+ "purpose": "Static SU LIGHT lane (KIND 0) at the accepted LAT4 point (MLAT4/ALAT3/LEAF1, FETCH_EXTRA 2; full512 LAT4 arithmetic join PASS 31 cases, ledger row SU.VOP static F2 spread LAT4): 384 replicas (96 per quarter, 24 per port-group slice of ot_hbm_su_static_top). Seven related 1:1 phase-0 stage roots at the serial 1111 ps clock. First route of this leaf. Outline from the measured LAT4 mapping (7,207 um2 std, lat4_kind0_map) at util 0.5 instead of the 216x216 prototype (util 14%). r2 (H-SU 10-15 23:55): r1 route NEEDS_HUMAN, GRT-0232 twice: initial GRT overflow 0, but post-GRT repair_timing (hold margin 30) pushed the incremental GRT to 3-13 overflows (M5); r1 gate measured 8,909 um2 std in a 14,631 um2 core = util 61 % (spec std_area 7,207 was stale) and 1,649 inputs > 3 logic levels, rst_n 506 async loads. r2 STRUCTURE: owner rule 19:50 pin-registered lane (ot_hbm_su_static_lane_pinreg: every input/output registered at its pin, measured +2 edges requests / +4 writes, absorbed by su_top_compile --pin-reg; whole-SU PIN_REG=1 native proof PASS main 5e84e5bdd) with rst_n registered (PIN_RST=1, b5800d05e); outline re-sized from the measured area at util 0.45 (std ~9,600 um2 incl. ~2,000 pin flops) instead of 0.61. Bench: leaf PASS 3,968 checks first_output 40 (SU_PINREG=1), ADDR/DATA/PHASE mutants FAIL.",
  "threads": 4,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-elemb-su-1015",
-  "commit": "0fc0755dd"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_kind0_lat4_leaf1_physical u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind0_lat4_leaf1_physical.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_kind0_lat4_leaf1_physical u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind0_lat4_leaf1_physical.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -24,7 +24,7 @@
    },
    {
     "name": "lane_exact",
-    "cmd": "bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane ot_hbm_su_static_kind0_lat4_leaf1_physical 4 3 1 205",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane ot_hbm_su_static_kind0_lat4_leaf1_physical 4 3 1 205",
     "expect": "pass",
     "pass_regex": "SU_LANE PASS",
     "min_count_regex": "outputs=(\\d+)",
@@ -36,7 +36,29 @@
    },
    {
     "name": "lane_mutant_addr",
-    "cmd": "bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut ot_hbm_su_static_kind0_lat4_leaf1_physical 4 3 1 205 ADDR",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut ot_hbm_su_static_kind0_lat4_leaf1_physical 4 3 1 205 ADDR",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_data",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_data ot_hbm_su_static_kind0_lat4_leaf1_physical 4 3 1 205 DATA",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_phase",
+    "cmd": "SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_phase ot_hbm_su_static_kind0_lat4_leaf1_physical 4 3 1 205 PHASE",
     "expect": "fail",
     "fail_regex": "SU_LANE FAIL",
     "threads": 4,
@@ -94,7 +116,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r1-0fc0755dd"
+   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -102,5 +124,6 @@
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null
+ "merge_target": null,
+ "structural_change": "Pin-registered lane (every input, rst_n and every output registered at its pin; 1,649 deep input cones and the 506-load async reset fan-out removed from the boundary) and outline sized to util 0.45 from the measured r1 synthesis (8,909 um2, was 61 %) after the r1 post-repair GRT congestion (GRT-0232, M5 overflow 3-13)."
 }

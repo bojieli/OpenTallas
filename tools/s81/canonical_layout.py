@@ -5,14 +5,23 @@ Roadmap edges use local horizontal streets and the real47.52um return subcolumns
 import hashlib,json,heapq
 from pathlib import Path
 
+def west_count(d):
+ """Columns W of the hub (the widest gap between consecutive field columns; 11 on the 22-column die)."""
+ xs=sorted(c['x_um'] for c in d['columns']);gaps=[b-a for a,b in zip(xs,xs[1:])]
+ return gaps.index(max(gaps))+1
+
 def load(path,root):
  p=Path(path);p=p if p.is_absolute() else root/p;d=json.loads(p.read_text())
- assert d['pair_count']==2417 and d['bf_pairs']==519 and d['root_count']==128
+ assert d['root_count']==128
  fs={f['root']:f for f in d['placements']};assert sorted(fs)==list(range(128))
- stagepath=root/'results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json'
+ # wide-hub records (S-DIE 10-15) name their allocator stage map; the 22-column record uses the released binding
+ stagepath=root/d.get('stage_map','results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json')
  stage=json.loads(stagepath.read_text());bf=set(stage['BF_site_IDs']);bounds=stage['region_bounds']
- assert len(bf)==519 and bounds==[r*2417//128 for r in range(129)]
- assert stage['PHW_required_by_stage'][:74]==[10]*74
+ assert len(bf)==d['bf_pairs'] and bounds[-1]==d['pair_count'] and len(bounds)==129
+ if 'stage_map' not in d:
+  assert d['pair_count']==2417 and d['bf_pairs']==519 and bounds==[r*2417//128 for r in range(129)]
+  assert stage['PHW_required_by_stage'][:74]==[10]*74
+ d['west_columns']=west_count(d)
  for r,f in fs.items():
   assert f['pairs']==bounds[r:r+2]
   assert sorted(e[0] for e in f['packed_elements'])==list(range(*f['pairs']))
@@ -29,7 +38,7 @@ def load(path,root):
  return d
 
 def geometry(G,d,legacy_order):
- cols=sorted(d['columns'],key=lambda c:c['x_um']);mid=(cols[10]['x_um']+cols[11]['x_um'])/2
+ cols=sorted(d['columns'],key=lambda c:c['x_um']);nw=d['west_columns'];mid=(cols[nw-1]['x_um']+cols[nw]['x_um'])/2
  out={}
  for ci,c in enumerate(cols):
   fs=sorted((f for f in d['placements'] if abs(f['origin_um'][0]-c['x_um'])<1e-6),key=lambda f:f['origin_um'][1])
@@ -37,7 +46,7 @@ def geometry(G,d,legacy_order):
   for ordinal,f in enumerate(fs):
    r=f['root'];x,y=f['origin_um'];lh,lt,lc=legacy_order[r]
    assert abs(f['outline_um'][0]-G.COL_W8)<.025,('canonical frame width/source mismatch',r)
-   out[r]=dict(half='W' if x<mid else 'E',tier=ordinal,col=10-ci if ci<11 else ci-11,x=x,y=y,h=f['height_um'],
+   out[r]=dict(half='W' if x<mid else 'E',tier=ordinal,col=nw-1-ci if ci<nw else ci-nw,x=x,y=y,h=f['height_um'],
     logical_half=lh,logical_tier=lt,logical_col=lc,street=[x,previous,x+G.COL_W8,y],column_index=ci,
     cfifo_y=y-(G.PQ_ROOT_ROW if G.PQ_ROOTS else 0)-4.32-G.CF_WH[1])
    assert y-previous>=d['interframe_channels_um']['first']-1e-6
@@ -68,7 +77,8 @@ class Roadmap:
  def __init__(self,G,m,cor,return_lanes=False):
   self.G,self.m,self.cor=G,m,cor;self.graph={};self.rootnode={};self.entry={}
   cols=sorted(m['canonical_layout']['columns'],key=lambda c:c['x_um'])
-  self.cols=cols;levels={i:set() for i in range(22)};streets={i:[] for i in range(22)}
+  self.cols=cols;nw=m['canonical_layout']['west_columns'];self.nw=nw
+  levels={i:set() for i in range(len(cols))};streets={i:[] for i in range(len(cols))}
   self.sx={i:c['x_um']+G.COL_W8-(15.12 if return_lanes else G.RSC_W/2) for i,c in enumerate(cols)}
   for r,f in m['frames'].items():
    a=f['street'][1];b=f['street'][3]
@@ -82,15 +92,15 @@ class Roadmap:
   for i,rows in streets.items():
    for r,k,y in rows:
     self.rootnode[(r,k)]=(self.sx[i],y)
-    if i not in (0,11):levels[i-1].add(y)
+    if i not in (0,nw):levels[i-1].add(y)
   for i,ys in levels.items():
    ys=sorted(ys)
    for a,b in zip(ys,ys[1:]):self.add((self.sx[i],a),(self.sx[i],b))
   for i,rows in streets.items():
    for r,k,y in rows:
-    if i not in (0,11):self.add((self.sx[i-1],y),(self.sx[i],y))
-    if i in (10,11):
-     side='W' if i==10 else 'E';sx=G.s14_x(m,side,'xdn')
+    if i not in (0,nw):self.add((self.sx[i-1],y),(self.sx[i],y))
+    if i in (nw-1,nw):
+     side='W' if i==nw-1 else 'E';sx=G.s14_x(m,side,'xdn')
      # A coherent field-column move may consume part of the old S14.
      # Keep the actual global spine outside the moved child strip, with
      # enough half-width for a real1026-bit vertical service station.
@@ -116,6 +126,11 @@ class Roadmap:
    cy=self.G.corr_y(self.m, 'xdn' if kind=='x' else 'r0')
    sx=self.entry[side][0][0]
    stem += [(source[0],cy),(sx,cy)]
+  elif side=='W' and self.G.wide_hub() and source[0] > self.G.wide_hub()['s14w'][1]:
+   # wide hub: hub sources leave W through the W strip and the W corridor above MIX4 (SU / VM / MIX4 below)
+   cy=self.G.wide_corr_y(self.m, 'xdn' if kind=='x' else 'r0')
+   sx=self.entry[side][0][0];vx=self.G.wide_strip_x(self.m, 'xdn' if kind=='x' else 'r0')
+   stem += [(vx,source[1]),(vx,cy),(sx,cy)] if source[0]>vx else [(source[0],cy),(sx,cy)]
   base=stem[-1]
   for node in self.entry[side]:
    d=abs(node[0]-base[0])+abs(node[1]-base[1]);dist[node]=d;prev[node]=None;heapq.heappush(q,(d,node))
@@ -189,7 +204,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  x_stages/r_stages become compiler inputs, never an ideal tier flight estimate.
  """
  compact_return_relays(G,m,CH)
- road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access'))]
+ road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access','hub_w','strip_w'))]
  m['chain_paths']=[];calendar={};m['canonical_injectors']={side:dict(inst=starts[side].name,box=list(starts[side].box()),source_ports=['fo','od'])for side in 'WE'}
  m['canonical_broadcast_trees']={}
  # One real broadcast tree per physical half. Shared road prefixes are
@@ -200,7 +215,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
   entries=sorted(road.entry[side],key=lambda n:n[1])
   for a,b in zip(entries,entries[1:]):road.add(a,b)
   # Entry candidates include return rows; take an actual x-row as tree root.
-  xentries=[road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['column_index']==(10 if side=='W' else 11)]
+  xentries=[road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['column_index']==(road.nw-1 if side=='W' else road.nw)]
   root=min(xentries,key=lambda n:abs(n[1]-source[1]))
   entry=next(n for n in entries if n[1]==root[1])
   override=m['canonical_layout'].get('broadcast_entry_overrides',{}).get(side)
@@ -210,6 +225,9 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    assert G._mh(entry,override)<.001,('broadcast override is not an actual S14 entry',side,override,entry)
   if side=='E':
    cy=G.corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
+  elif G.wide_hub():
+   # wide hub: up the W strip to the W corridor above MIX4, then W to the S14W entry
+   cy=G.wide_corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
   else:prefix=G._dedup([source,(entry[0],source[1]),entry])
   dist={entry:0};parent={entry:None};q=[(0,entry)]
   while q:
@@ -322,9 +340,20 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      active=flows[entry];dst=(endb.x+endb.w/2,endb.y+endb.h/2);path=[entry]
      if side=='E':
       cy=G.corr_y(m,f'r{t}');vx=G.vch_x(m,f'r{t}');path +=[(entry[0],cy),(vx,cy)]
+     elif G.wide_hub():
+      # wide hub: W returns cross over SU / MIX4 in the W corridor, then drop down the W strip to the gather W face
+      cy=G.wide_corr_y(m,f'r{t}');vx=G.wide_strip_x(m,f'r{t}');path +=[(entry[0],cy),(vx,cy)]
      if side!=logical:
       wx=G.s14_x(m,'W',f'r{t}');vx=G.vch_x(m,f'r{t}');xx0,xx1=sorted((wx,vx));margin=.432
       free=[(max(cor['s14W'][1],cor['vch'][1]),min(cor['s14W'][3],cor['vch'][3]))]
+      if G.wide_hub():
+       # wide hub: the halves meet across the capture column only (W strip <-> VCH), through a seam between its slabs
+       wx=G.wide_strip_x(m,f'r{t}');xx0,xx1=sorted((wx,vx))
+       # above the gather (not the pq-cnt seam), up to the W approach top: the free column above the host included
+       free=[(max(cor['strip_w'][1],cor['vch'][1],ga.y+ga.h),min(cor['hub_w'][3],cor['vch'][3]))]
+       sm_=G.wide_hub().get('vmhc_seam')
+       if sm_:   # the VM <-> HC seam is reserved for those buses
+        free=[iv for lo_,hi_ in free for iv in ((lo_,min(hi_,sm_[0]-20)),(max(lo_,sm_[1]+20),hi_)) if iv[1]>iv[0]]
       for obj in m['insts']:
        if obj.x>=xx1 or obj.x+obj.w<=xx0:continue
        cut=(obj.y-margin,obj.y+obj.h+margin);nfree=[]
@@ -342,7 +371,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      for lane,r in group:
       tail=active[lane];bus(f'{prefix}_fe{lane}','fclk',1,[(tail[0],tail[1]),(endb.name,f'fi{lane}')]);bus(f'{prefix}_de{lane}','lane',G.CRET+2,[(tail[0],tail[2]),(endb.name,f'di{lane}')])
       m.setdefault('r_stages',{})[r]=flights[r];calendar[r].update(return_stations=flights[r],gather_input_lane=lane,return_bundle=prefix)
-   G._local_chain(m,CH,[cor['s14W'] if logical=='W' else cor['vch']],endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
+   G._local_chain(m,CH,([cor['s14W']]+([cor['strip_w'],cor['hub_w']] if G.wide_hub() else []) if logical=='W' else [cor['vch']]),endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
  m['canonical_calendar']=[calendar[r] for r in sorted(calendar)]
 
 

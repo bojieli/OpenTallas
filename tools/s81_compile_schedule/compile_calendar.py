@@ -48,6 +48,88 @@ def check_pipeline_abi(job):
     if want is not None and job.get('pipeline_abi') != want:
         raise ValueError(f"duration measured against a stale {job.get('engine')} pipeline; re-measure with "
                          f"{sorted(want)} (tools/s81/engine_pipeline_abi.json)")
+    vm = PIPELINE_ABI.get('vm')
+    if vm is not None and job.get('accesses') and job.get('vm_pipeline_abi') != vm:
+        raise ValueError("duration of a VM-touching job measured against a stale VM pipeline; re-measure with the "
+                         f"A2-F record {sorted(k for k in vm if k.endswith('edges'))} (tools/s81/engine_pipeline_abi.json vm)")
+
+
+KIT_PORT_LATENCY_SCHEMA = 'opentallas.ref_tile.port_latency.v1'
+
+
+def kit_boundary_edges(job, root=ROOT):
+    """Owner rule 2026-10-15 19:50: every new tile registers its pins (+1-2 edges per boundary).  The schedule takes those
+    edges from the KIT's reported per-port latency, never from a typed constant.  A job binding names the kit report
+    (ref_tile gen: {"schema": KIT_PORT_LATENCY_SCHEMA, "ports": {name: {"dir": "input"|"output", "register_edges": n}}}),
+    its sha256, the ports on the job's command -> done path, and whether duration_cycles was measured at the RTL core
+    ('rtl_core': kit edges are added) or at the registered kit pins ('kit_pins': already included).  No report -> 0."""
+    kb = job.get('kit_boundary')
+    if 'boundary_edges' in job or 'pin_register_edges' in job:
+        raise ValueError('typed tile-boundary latency constant refused: name the kit port_latency report (kit_boundary)')
+    if kb is None:
+        return 0
+    if kb.get('duration_measured_at') not in ('rtl_core', 'kit_pins'):
+        raise ValueError("kit_boundary.duration_measured_at must be 'rtl_core' or 'kit_pins'")
+    path = (root / kb.get('report', '')).resolve()
+    if not path.is_relative_to(root.resolve()) or not path.is_file():
+        raise ValueError(f"kit port latency report missing: {kb.get('report')}")
+    if digest(path) != kb.get('sha256'):
+        raise ValueError(f"stale kit port latency report {kb['report']} (kit regenerated: re-bind)")
+    rep = json.loads(path.read_text())
+    if rep.get('schema') != KIT_PORT_LATENCY_SCHEMA:
+        raise ValueError('kit port latency report schema')
+    ports = kb.get('ports')
+    if not ports or not isinstance(ports, list):
+        raise ValueError('kit_boundary.ports: the command-in and done-out ports of the job path are required')
+    total = 0
+    for name in ports:
+        rec = rep.get('ports', {}).get(name)
+        if rec is None:
+            raise ValueError(f'kit report has no port {name}')
+        total += integer(rec.get('register_edges'), f'{name} register_edges')
+    return total if kb['duration_measured_at'] == 'rtl_core' else 0
+
+
+
+def command_issue_phase(clock, root=ROOT):
+    """Translate an engine's reset-relative sample phase into an issuer row phase.
+
+    The actual fixed issuer accepts job_v, loads command pins on the following
+    stream edge, and the engine samples those pins one edge later (+2). The
+    controller counter reads zero at its first active edge after reset. Thus
+    engine_phase = (context_accept + issue + 2 - first_active) modulo period.
+    The clock ABI is evidence-bound; it does not establish physical clock fit.
+    """
+    validate_evidence(clock.get('evidence'), root)
+    ratio = Fraction(str(clock['serial_period_ps'])) / Fraction(str(clock['stream_period_ps']))
+    if ratio != Fraction(4, 3):
+        raise ValueError('HCX command clock ABI requires actual 3:4 serial/stream clocks')
+    period = ratio.numerator
+    first = integer(clock['first_active_stream_edge'], 'first active stream edge')
+    context = integer(clock['context_accept_stream_edge'], 'context accept stream edge')
+    if clock.get('issuer_to_engine_sample_edges') != 2:
+        raise ValueError('fixed issuer to engine command sample requires two stream edges')
+    phase = integer(clock['required_counter_phase'], 'required counter phase')
+    if phase >= period:
+        raise ValueError('engine sample phase outside recurring clock period')
+    return period, (phase + first - context - 2) % period
+
+
+def job_start_phase(job, root=ROOT):
+    period = integer(job['phase_period_stream'], 'phase period', 1)
+    phase = integer(job['start_phase_stream'], 'start phase')
+    if phase >= period:
+        raise ValueError('start phase outside recurring phase period')
+    if 'command_clock_abi' in job:
+        derived = command_issue_phase(job['command_clock_abi'], root)
+        if (period, phase) != derived:
+            raise ValueError(f'start phase differs from reset/command clock ABI: expected {derived}')
+    return period, phase
+
+
+def job_pin_to_pin(job, root=ROOT):
+    """issuer pin-to-pin latency of a bound job = measured duration + the kit's reported pin-register edges."""
+    return integer(job['duration_cycles'], 'duration', 1) + kit_boundary_edges(job, root)
 
 
 def issuer_done_row(issue, pin_to_pin):
@@ -224,11 +306,11 @@ def compile_program(program, binding, contract, root=ROOT):
                 raise ValueError('native engine/endpoint mismatch')
             check_pipeline_abi(job)
             start = integer(op['start'], 'start')
-            duration = integer(job['duration_cycles'], 'duration', 1)
+            duration = job_pin_to_pin(job, root)
             if op['end'] != issuer_done_row(start, duration):
                 raise ValueError('done row must be issue + 1 + native command-pin -> done-pin latency; recompile graph')
-            period = integer(job['phase_period_stream'], 'phase period', 1)
-            if start % period != integer(job['start_phase_stream'], 'start phase'):
+            period, phase = job_start_phase(job, root)
+            if start % period != phase:
                 raise ValueError('native template does not match scheduled clock phase')
             sp, vp = Fraction(str(contract['stream_period_ps'])), Fraction(str(contract['vm_period_ps']))
             if period * sp % vp:
@@ -313,7 +395,7 @@ def compile_program(program, binding, contract, root=ROOT):
                 note='Compiler lowering only; actual native RTL replay and die timing remain mandatory.')
 
 
-def schedule_jobs(program, binding):
+def schedule_jobs(program, binding, root=ROOT):
     """Compile engine issue times offline from owned durations and clock phases.
 
     Memory/transfer reservations are subsequently lowered and checked; a
@@ -330,11 +412,8 @@ def schedule_jobs(program, binding):
     for index, op in enumerate(ops):
         owner = bindings[op['id']]
         check_pipeline_abi(owner)
-        duration = integer(owner['duration_cycles'], 'native duration', 1)
-        phase_period = integer(owner['phase_period_stream'], 'phase period', 1)
-        phase = integer(owner['start_phase_stream'], 'start phase')
-        if phase >= phase_period:
-            raise ValueError('start phase outside recurring phase period')
+        duration = job_pin_to_pin(owner, root)
+        phase_period, phase = job_start_phase(owner, root)
         predecessors = op.get('preds', [])
         if any(type(p) is not int or p not in ends for p in predecessors):
             raise ValueError(f"{op['id']} requires topologically ordered native predecessors")

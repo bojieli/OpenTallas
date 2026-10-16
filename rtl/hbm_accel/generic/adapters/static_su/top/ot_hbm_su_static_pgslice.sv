@@ -30,7 +30,10 @@
 // edge early.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_pgslice #(
- parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0
+ parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
+ // PIN_REG (owner rule 10-15 19:50): every lane is the pin-registered leaf ot_hbm_su_static_lane_pinreg: its store /
+ // RF-stream requests leave +2 edges and its writes / reducer operands +4 edges later (su_top_compile --pin-reg)
+ parameter integer PIN_REG=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -40,6 +43,7 @@ module ot_hbm_su_static_pgslice #(
  input wire clk_ctl,
  input wire [5:0] clk_side,
  input wire rst_n,
+ input wire bridge_rst_n, // phase-zero reset for MULTIRATE boundary only
  input wire [1741:0] control,
  input wire [2*30-1:0] vmr_cmd,
  input wire [2*39-1:0] vmw_cmd,
@@ -52,7 +56,12 @@ module ot_hbm_su_static_pgslice #(
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
  output reg fault
 );
- localparam integer RR=READ_RETURN;
+ // Serial fill destination delay and stream leaf tap return are different
+ // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
+ // macros commit n+15. Stream leaf retains its native10/7 edge contract.
+ localparam integer RR=MULTIRATE ? 12 : READ_RETURN;
+ initial if(MULTIRATE && (READ_RETURN!=10 || WRITE_RETURN!=7))
+  $fatal(1,"SU multirate candidate requires source-proven stream tap10/7");
  function automatic integer lid(input integer n); lid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // ------------------------------------------------------------------ lanes
  wire [31:0] vi_re,vm_we,kv_we,ro_v,l_fault,l_coll;
@@ -81,7 +90,30 @@ module ot_hbm_su_static_pgslice #(
   wire [839:0] terms;
   for(genvar s=0;s<5;s=s+1)begin:g_terms assign terms[s*168+:168]=c_ld_c[s*240+:168]; end
   wire sv; wire [31:0] sx;
-  if(KIND==2)begin:g_side assign side_v=sv; assign side_x=sx; assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu; end
+  if(KIND==2)begin:g_side
+   assign side_v=sv; assign side_x=sx;
+   if(PIN_REG)begin:g_fn_pin
+    // the pin-registered FULL lane sees its commands one edge later: the side function selects follow it
+    reg [2:0] fn_q,fn_out_q;
+    always @(posedge clk_side[0])begin fn_q<=c_ci_sfu; fn_out_q<=c_cs_sfu; end
+    assign side_fn=fn_q; assign side_fn_out=fn_out_q;
+   end else begin:g_fn_comb assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu; end
+  end
+  if(PIN_REG)begin:g_pr
+  ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
+   .clk_stage(clk_lane[n*8+:8]),.clk_insert(clk_insert[n*4+:4]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
+   .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
+   .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
+   .cx_cclip(c_cx_cclip),.cx_imm3(c_cx_imm3),.cp_m1(c_cp_m1),.cp_imm1(c_cp_imm1),.cm_m1(c_cm_m1),.cm_m2(c_cm_m2),
+   .cm_qm(c_cm_qm),.cm_imm1(c_cm_imm1),.ca_ad(c_ca_ad),.ca_imm2(c_ca_imm2),.ci_sfu(c_ci_sfu),.cs_sfu(c_cs_sfu),
+   .cs_e1(c_cs_e1),.cs_imm2(c_cs_imm2),.ce_e2(c_ce_e2),.ce_imm1(c_ce_imm1),.co_rnd(c_co_rnd),.co_dst(c_co_dst),
+   .vi_q(vi_q[n*32+:32]),.rd_q(rd_q[n*128+:128]),.vi_re(vi_re[n]),.vm_we(vm_we[n]),.kv_we(kv_we[n]),.ro_v(ro_v[n]),
+   .fault(l_fault[n]),.coll(l_coll[n]),.vi_addr(vi_addr[n*24+:24]),.vm_waddr(vm_waddr[n*24+:24]),
+   .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
+   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
+   .side_v(sv),.side_x(sx),.side_y(side_y));
+  end else begin:g_plain
   ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
    .clk_stage(clk_lane[n*8+:8]),.clk_insert(clk_insert[n*4+:4]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
@@ -95,6 +127,7 @@ module ot_hbm_su_static_pgslice #(
    .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
    .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
    .side_v(sv),.side_x(sx),.side_y(side_y));
+  end
  end
  if(QID==0&&G==0)begin:g_side_pipe
   ot_hbm_su_static_side u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
@@ -105,11 +138,26 @@ module ot_hbm_su_static_pgslice #(
   assign side_v=1'b0; assign side_x=32'd0; assign side_fn=3'd0; assign side_fn_out=3'd0;
  end
  // ------------------------------------------------------------------ VM bank leaves (port group G = banks 2G, 2G+1)
- wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault;
+ wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault,bridge_fault;
+ wire [33:0] leaf_rq; wire [561:0] leaf_wq; wire [513:0] leaf_rr; wire [1:0] leaf_done;
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
+  if(MULTIRATE)begin:g_multirate
+   ot_hbm_su_multirate_bridge u_bridge(
+    .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
+    .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
+    .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),
+    .stream_rq(leaf_rq[h*17+:17]),.stream_wq(leaf_wq[h*281+:281]),
+    .stream_rr(leaf_rr[h*257+:257]),.stream_done(leaf_done[h]),.fault(bridge_fault[h]));
+  end else begin:g_same_clock
+   assign leaf_rq[h*17+:17]=su_rq[h*17+:17];
+   assign leaf_wq[h*281+:281]=su_wq[h*281+:281];
+   assign su_rr[h*257+:257]=leaf_rr[h*257+:257];
+   assign su_w_done[h]=leaf_done[h];
+   assign bridge_fault[h]=1'b0;
+  end
   ot_hbm_su_static_vm_bank_leaf #(.QID(QID),.B(2*G+h),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_leaf(
-   .clk(pg_clk),.rst_n(rst_n),.su_rq(su_rq[h*17+:17]),.su_wq(su_wq[h*281+:281]),.su_rr(su_rr[h*257+:257]),
-   .su_w_done(su_w_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
+   .clk(pg_clk),.rst_n(rst_n),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
+   .su_w_done(leaf_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
    .lg_w_done(lg_w_done[h]),.fault(leaf_fault[h]));
  end
  // ------------------------------------------------------------------ FILL: request, destination delay line, one stage
@@ -161,7 +209,7 @@ module ot_hbm_su_static_pgslice #(
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
   end
   assign st_id_fault[n]=idf;
-  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(),.write_v(lw|fw),.write_addr(fw?fr_row[H]:{la[17:16],la[13:7]}),
    .write_data(fw?fr_dat[H][K*32+:32]:ldat));
  end
@@ -217,7 +265,7 @@ module ot_hbm_su_static_pgslice #(
  // ------------------------------------------------------------------ sticky fault
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0;
-  else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
+  else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
           (|rf_drain_bad)||red_bad||side_fault)fault<=1'b1;
 endmodule
 `default_nettype wire

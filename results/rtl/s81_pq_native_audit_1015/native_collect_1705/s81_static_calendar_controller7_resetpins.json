@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.source-pinned-component-native-boundary-audit.v1",
+  "job": "s81coll_calendar7_resetpins_1319-localreset1-9f5af3545",
+  "source_commit": "9f5af35451b8063cd0c9a0bb009f480a49f1a1c9",
+  "record_commit": "393f54ffc26d7d99220ff5237cc5ca2022fe9d30",
+  "audit_base_commit": "b12e714a28de928c855ef7b4b1c62570e1111ca3",
+  "scope": "Component exported boundary only; not full layer, token, production adoption or die qualification.",
+  "route": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545",
+    "tt_setup_ps": 7.45,
+    "ff_hold_ps": 11.2,
+    "drc": 0,
+    "ss_sensitivity_ps": -279.07
+  },
+  "source": {
+    "path": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7_resetpins.sv",
+    "job_git_blob": "396a1f20b802061612c5f91b07ecc9b29093fb1e",
+    "current_main_git_blob": "396a1f20b802061612c5f91b07ecc9b29093fb1e",
+    "matches_current_main": true
+  },
+  "view_sha256": {
+    "s81_static_calendar_controller7_resetpins_ff.lib": "13f1f7286c70d25ab5003cdd5f0697548a6ed9f4b8fe7bd67016bbfdd8fb141d",
+    "insertion.json": "600b4f2a917a110c11e05a46963215297ac7ebc0456a0f8e325b2b76a0b30246",
+    "s81_static_calendar_controller7_resetpins_tt.lib": "769af0896c1a8c542de35b5144417c9e8f9650e0a0ad0a941c8ecc6aabd0af70"
+  },
+  "clock_references": {
+    "clk": {
+      "rise": 152.4,
+      "fall": 164.44133,
+      "min": 125.63013,
+      "max": 174.05223,
+      "src": "insertion.json boundary mean",
+      "bmin": 135.6,
+      "bmax": 174.1,
+      "n": 101
+    },
+    "clk_outputs[2]": {
+      "rise": 177.6,
+      "fall": 189.096775,
+      "min": 134.99405,
+      "max": 180.37302,
+      "src": "insertion.json boundary mean",
+      "bmin": 173.1,
+      "bmax": 180.4,
+      "n": 145
+    },
+    "clk_outputs[1]": {
+      "rise": 166.3,
+      "fall": 179.38293,
+      "min": 144.37569,
+      "max": 193.97508,
+      "src": "insertion.json boundary mean",
+      "bmin": 162.4,
+      "bmax": 170.2,
+      "n": 146
+    },
+    "clk_outputs[0]": {
+      "rise": 214.3,
+      "fall": 228.45727000000002,
+      "min": 167.72131,
+      "max": 223.47903,
+      "src": "insertion.json boundary mean",
+      "bmin": 185.9,
+      "bmax": 223.1,
+      "n": 186
+    },
+    "clk_rom[2]": {
+      "rise": 11.22536,
+      "fall": 11.22535,
+      "min": 11.22536,
+      "max": 11.22536,
+      "src": "lib midrange",
+      "bmin": 11.22536,
+      "bmax": 11.22536,
+      "n": null
+    },
+    "clk_rom[1]": {
+      "rise": 11.919,
+      "fall": 11.91899,
+      "min": 11.919,
+      "max": 11.919,
+      "src": "lib midrange",
+      "bmin": 11.919,
+      "bmax": 11.919,
+      "n": null
+    },
+    "clk_rom[0]": {
+      "rise": 11.45028,
+      "fall": 11.45028,
+      "min": 11.45028,
+      "max": 11.45028,
+      "src": "lib midrange",
+      "bmin": 11.45028,
+      "bmax": 11.45028,
+      "n": null
+    }
+  },
+  "raw_metrics": {
+    "launch": {
+      "pin": "hc_emit_tag[1]",
+      "clock": "clk_outputs[2]",
+      "ps": 181.60326999999998
+    },
+    "capture": {
+      "pin": "c_cmd[56]",
+      "clock": "clk",
+      "ps": 147.5409
+    },
+    "spread_ps": 38.5,
+    "ff_min_launch_minus_max_hold_ps": 160.94155
+  },
+  "violating_launch_arcs": [],
+  "violating_capture_arcs": [],
+  "combinational_pins": [],
+  "unconstrained_or_unused_inputs": [],
+  "unconstrained_note": "ETM omitted timing arcs: requires source/parameter/integration classification; no waiver inferred.",
+  "bench_state": {
+    "bench_lint": "done",
+    "bench_calendar7_reset_phase_and_real_mutants": "done",
+    "bench_actual_output_root_reset_mutant": "done"
+  },
+  "limits": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+  },
+  "boundary_status": "PASS"
+}

@@ -3,6 +3,7 @@
  "top": "qkd_d2d_static",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_pipe.sv",
   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
   "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
@@ -23,7 +24,7 @@
   "w": 475.2,
   "h": 280.8
  },
- "recipe": 2,
+ "recipe": 3,
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
@@ -126,12 +127,15 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware -distance_between_buffers 40"
+  }
  },
  "job": {
-  "owner": "Claude:q-link",
-  "branch": "claude/qwen-link-1015",
-  "tag": "r1",
+  "owner": "Codex:qwen-link-2116",
+  "branch": "codex/qwen-link-2116",
+  "tag": "r2",
   "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -139,7 +143,8 @@
    "rtl/test/qwen_split",
    "tools/qwen_split",
    "physical/qwen_kv_die_phy",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/lib/ot_rst_pipe.sv"
   ],
   "benches": [
    {
@@ -174,5 +179,10 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Production PR=1 wrapper already has one register per functional port; no extra port edges."
+ },
+ "structural_change": "qkd r1 TT -90.96 actual path rx_v->KVN word_data enable mux/fanout, TT -40.89 rst_n->KVN reset recovery and FF -14 reset removal/input capture. Capture KVN payload/context unconditionally with existing valid qualification (0 new normal edges); regional pipelined cold-reset distribution replaces port-to-wide-reset chains (+4 cold release edges); balanced CTS without macro obstruction detours and 40um trunk repeaters. No clock or timing gate relaxation."
 }

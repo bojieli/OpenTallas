@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.s81.control-resetlocal.model.v1",
+ "status": "PLANNED_PILOT_NOT_ADOPTED",
+ "sources": 53,
+ "quarters": 4,
+ "capture_slots_per_bank": 3,
+ "latency_delta_cycles": 0,
+ "clock_roots_delta": 0,
+ "RTL_register_delta": 0,
+ "old_outline_um": [
+  172.8,
+  86.4
+ ],
+ "new_outline_um": [
+  194.4,
+  129.6
+ ],
+ "full4slice_area_delta_mm2": 0.04105727999999999,
+ "bandwidth_change": 0,
+ "operations": "Same 53-source ascending-source prefix assignment, saturated three writers per bank; bank xor hash/ID/drain unchanged",
+ "memory_change": "None; downstream128 mapped SRAMs preserved",
+ "failure": "Actual TT rn_pin_d->lane_bad -109.37ps, reset fanout buffers and20level prefix/overflow cone; secondary bank_d->ids priority paths down to-25ps",
+ "structural_change": [
+  "Move reset qualification to final lane-valid/bad results, preserving stale data suppression and all observable outputs.",
+  "Replace binary saturated carry prefix by monotone threshold-code merges: synthesis depth631.8ps->513.4ps; current CTS WNS+41.7ps vsbinary-2.9ps.",
+  "Onehot OR merge for IDs under exact reachable prefix uniqueness instead of priority mux.",
+  "Larger standard control master194.4x129.6 for actual placement margin; native in0.6/out0.57T budgets HB1 input/no firm output hold."
+ ],
+ "not_claimed": [
+  "Physical CTS/native audit",
+  "TT/FF/DRC closure",
+  "Parent outline adoption"
+ ],
+ "current_CTS_diagnostic": {
+  "cells": 32196,
+  "flops": 2047,
+  "std_area_um2": 3874,
+  "R_TT_ps": 216.7,
+  "spread_TT_ps": 45.0,
+  "WNS_TT_ps": 41.7,
+  "scope": "Placement RC, not signoff/native closure"
+ }
+}

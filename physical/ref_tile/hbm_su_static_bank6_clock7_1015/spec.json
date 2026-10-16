@@ -15,21 +15,23 @@
  ],
  "pins": {
   "N": [
-   "clk",
    "clk_macro3",
    "clk_macro4",
-   "clk_macro5",
-   "rst_n"
+   "clk_macro5"
   ],
   "W": [
    "read_v",
    "read_addr",
+   "clk",
+   "clk_ws",
+   "rst_n",
    "write_v",
    "write_addr",
    "write_data"
   ],
   "E": [
    "read_data",
+   "clk_rd",
    "read_return"
   ],
   "S": [
@@ -101,7 +103,7 @@
   }
  ],
  "outline": {
-  "w": 369.36,
+  "w": 390.96,
   "h": 151.2
  },
  "layer_cap": "M5",
@@ -120,9 +122,9 @@
  },
  "job": {
   "owner": "Claude:H-ELEM-B",
-  "branch": "claude/hbm-elemb-su-1015",
-  "tag": "r4",
-  "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root. r3 (H-ELEM-B, coordinator 12:24): the r2 CTS measured raw macro clock slew 417.5 ps because all seven clock pins were clustered on the N face; each raw macro clock pin now sits over its own macro column on the face nearest its row (bottom row 0-2 on S, top row 3-5 on N, 20 um ranges at the macro column centres); register root clk + rst_n stay on N. No RTL change. r4 (H-SU 10-15 17:50): r3 gate WARN 0 fail but register-root TT insertion 234.5-275.5 ps (H-tree 6 buffer levels from an unconstrained N-face clk pin) > native launch 220: clk pin pinned at the N-face centre (140-160 um, beside clk_macro4) so the H-tree trunk starts over the sink centroid. No RTL change.",
+  "branch": "main",
+  "tag": "r10c",
+  "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root. r3 (H-ELEM-B, coordinator 12:24): the r2 CTS measured raw macro clock slew 417.5 ps because all seven clock pins were clustered on the N face; each raw macro clock pin now sits over its own macro column on the face nearest its row (bottom row 0-2 on S, top row 3-5 on N, 20 um ranges at the macro column centres); register root clk + rst_n stay on N. No RTL change. r4 (H-SU 10-15 17:50): r3 gate WARN 0 fail but register-root TT insertion 234.5-275.5 ps (H-tree 6 buffer levels from an unconstrained N-face clk pin) > native launch 220: clk pin pinned at the N-face centre (140-160 um, beside clk_macro4) so the H-tree trunk starts over the sink centroid. No RTL change. r5 (H-SU 10-15 18:30): r4 route TT+130.87/FF+7.79 but DRC 12, all M4 shorts (clock leaf nets/a signal vs macro g_read[2]/[5] PG/OBS) at the macros' EAST edge x 344.6-347.0: the east channel (22 um) holds all 198 read_data/read_return pins, their output flops and the clock leaves. Outline 369.36 -> 390.96 um widens that channel to ~44 um (macros unmoved, W channel unchanged). No RTL change. Generator centres the macros (+10.8 um, both channels ~33 um); raw macro clock and clk pin ranges move +10.8 um with their columns. r6 (H-SU 10-15 19:20): r5 route TT+130.0/FF+5.31, DRC 6, all M4 shorts of clock-leaf nets at the EAST edge of the east-column SRAMs g_read[2]/[5], x 355.38-357.84 vs edge 357.91 = starting 2.2-2.5 um inside the edge, i.e. just past the 2.4 um macro-edge guard (the jog moved to the first free M5 track beyond the guard). Guard depth 2.4 -> 6.0 um (the depth that routed DRC 0 on the ds-coll lane_w / hrow5 SRAM edges). No RTL/outline/pin change. r7 (H-SU 10-15 20:10, coordinator: change structure): r4/r5 DRC 12/6 were ALL M4 shorts of the REGISTER-root clock leaf nets (clknet_*_clk) against the M4 PG/OBS of the EAST-column SRAMs g_read[2]/[5] at their east edge: one root fed both the W-face request/write registers and the E-face read-data/return registers, so its tree crossed the SRAM columns over M5 and dropped onto M4 at the east macro edge. Structure: the read-side output registers move to their own related root clk_rd (same serial clock, pinned at the E face centre; RTL pinned_bank RD_ROOT=1, every caller wires clk_rd to the bank clock); clk now only reaches the W-side request/write registers. No register-clock net needs to cross the macros. Guard back to the 2.4 um default; outline 390.96 kept. Bench: exact PASS + coherence/return/clock_halt/new rd_halt mutants FAIL. r10 (H-SU 10-15 22:40, native audit of the CLOSED r9-arg1 view TT+153.75/FF+22.68/DRC0: launch 217.6 PASS but capture FAIL on 39 inputs, max 224.0 (read_addr) and rst_n 370.1 > 190: the clk root still reached the 18 word-select flops (ks) beside the six SRAM columns, so its tree spanned the tile: R 196.6 ps / spread 74.7 (min 171.6, max 246.3) for only 126 sinks, while clk_rd (198 sinks at the E face) is 84.2 / 4.2). Structure: ks gets its own related root clk_ws (RTL WS_ROOT=2; W-face pin in the macro-row channel; the ks flops sit at each SRAM column's pin edge, so whichever root clocks them spans the columns -- the r10 gate with ks on clk_rd measured clk_rd 308.7 ps / spread 57.1, which would break the 217.6 ps launch), so clk reaches only the 108 W-face pin registers and clk_rd only the 198 E-face registers; rst_n becomes a registered W-face data input (PIN_RST=1: r_pin/w_pin gate on rst_n, rst_w/rst_r registered copies for the internal valid stages, same first-command edge after release) and its pin moves from N to the W face beside clk. Bench: exact PASS 3,613 checks (new reset-phase checks) + coherence/return/clock_halt/rd_halt and new ws_halt/reset mutants FAIL. r10c: the r10b gate (ks on clk_ws, r_macro on clk, rst_r on clk_rd) measured clk 158.4 / spread 42.8 and clk_rd 174.5 / spread 64.2: one stray mid-tile sink group per root (r_macro between the W pins and the E return registers; rst_r beside rst_w). clk_ws becomes the interior root (ks + r_macro; it reaches no pin), rst_r is removed (r_return's only source r_macro is already cleared by rst_w).",
   "views_to": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7",
   "benches": [
@@ -159,16 +161,51 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "bank_mutant_rd_halt",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/rd_halt rd_halt",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_reset",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/reset reset",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_ws_halt",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/ws_halt ws_halt",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
    }
   ]
  },
- "recipe": 2,
+ "recipe": 3,
  "orfs_vars": {
   "OT_MEG_DEPTH_UM": "2.4"
  },
  "clock": "hybrid_entries",
  "clock_ports": [
   "clk",
+  "clk_rd",
+  "clk_ws",
   "clk_macro0",
   "clk_macro1",
   "clk_macro2",
@@ -268,43 +305,79 @@
     "write_addr",
     "write_data"
    ],
+   "outputs": []
+  },
+  "rd": {
+   "ports": [
+    "clk_rd"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
    "outputs": [
     "read_data",
     "read_return"
    ]
+  },
+  "ws": {
+   "ports": [
+    "clk_ws"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "clock_cts_roots": [
-  "clk"
+  "clk",
+  "clk_rd",
+  "clk_ws"
  ],
  "pin_ranges": {
   "clk_macro0": [
-   59.86,
-   79.86
+   70.66,
+   90.66
   ],
   "clk_macro1": [
-   174.78,
-   194.78
+   185.58,
+   205.58
   ],
   "clk_macro2": [
-   289.69,
-   309.69
+   300.49,
+   320.49
   ],
   "clk_macro3": [
-   59.86,
-   79.86
+   70.66,
+   90.66
   ],
   "clk_macro4": [
-   174.78,
-   194.78
+   185.58,
+   205.58
   ],
   "clk_macro5": [
-   289.69,
-   309.69
+   300.49,
+   320.49
   ],
   "clk": [
-   140.0,
-   160.0
+   64.0,
+   73.0
+  ],
+  "clk_rd": [
+   65.0,
+   85.0
+  ],
+  "rst_n": [
+   86.0,
+   90.0
+  ],
+  "clk_ws": [
+   75.0,
+   84.0
   ]
  },
  "params": {},
@@ -320,5 +393,10 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Clock-root ownership follows the floorplan: r9 clk still clocked the 18 word-select flops at the SRAM columns' pin edges, so its tree spanned the tile (R 196.6 / spread 74.7 ps, native capture 224 ps > 190 on 38 inputs); r10c gives those flops and the mid-tile return-valid stage their own interior related root clk_ws (reaches no pin) (RTL WS_ROOT=2; on clk_rd the r10 gate measured 308.7/57.1 ps) and makes rst_n a registered W-face input (PIN_RST=1; the async reset fan-out across the tile gave rst_n capture 370 ps), leaving clk with only the 108 W-face pin registers and clk_rd with the 198 E-face registers.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hbm_su_static_pinned_bank) already registers every input (a_pin/r_pin/wa_pin/wd_pin/w_pin) and every output (read_data, r_return) at the boundary; a kit-level flop stage would add a redundant read edge"
  }
 }

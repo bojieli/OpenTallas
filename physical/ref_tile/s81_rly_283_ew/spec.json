@@ -37,14 +37,14 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:s81-die",
-  "branch": "claude/el1011-s81dieit",
-  "tag": "v3",
-  "purpose": "S81 die relay master dsfd_rly_283_EW (512 instances in the v17 (g17/p2) placement, generated outline + interim timing there): real hard tile, 283 b in E / out W, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget | v3: inhold removed (hold owned by the launcher's outhold), see structural_change",
+  "owner": "Claude:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "r4",
+  "purpose": "S81 die relay master dsfd_rly_283_EW (512 instances in the v17 (g17/p2) placement, generated outline + interim timing there): real hard tile, 283 b in E / out W, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget | v3: inhold removed (hold owned by the launcher's outhold), see structural_change; r4: reset pin register (RSREG=1) + output pad HB1 for the native pin audit",
   "benches": [
    {
     "name": "exact_words",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_283_EW 283 {RUN}/bench_p",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_283_EW 283 {RUN}/bench_p 1",
     "expect": "pass",
     "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
     "threads": 2,
@@ -52,7 +52,15 @@
    },
    {
     "name": "neg_bit0_mutant",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_283_EW 283 {RUN}/bench_m",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_283_EW 283 {RUN}/bench_m 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "rsreg_bypass_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_283_EW 283 {RUN}/bench_r 1",
     "expect": "fail",
     "fail_regex": "RLY_BENCH FAIL",
     "threads": 2,
@@ -70,5 +78,20 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": false
+ "inhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r4 (S-NET+FILL 2026-10-15 23:00, native audit of the CLOSED view: launch 243.3 (132 pins) / rs capture 293.9; DEDUPE standard of its flow): ot_s81_rly RSREG=1 -- rs drives ONE reset pin register (async assert, release +1 edge, initialization only, no data edge), the data flops clear from it; output pad HB2 -> HB1 (hold_pad.out_cell, VM F6 precedent: ~38 ps FF sender-min hold, lighter launch); same outline / pin faces, same die function (one register stage)",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "native audit fail of the CLOSED view: reset pin register (RSREG=1) + lighter output hold pad"
+ }
 }

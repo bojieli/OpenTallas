@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.hbm_v15.service_issuer.v1",
+ "date": "2026-10-15",
+ "owner": "H-DIE",
+ "source_commit": "0a8d84419",
+ "what": "hardware issuer per SM (descriptor SRAM 128x256): reserve as soon as the landing block is free, start when the landing block is RESIDENT (HBM elastic boundary) and the cache bank is free, go when the cache bank is ready after the previous programme done. Testbench only initializes tables and pulses one launch.",
+ "bench": "8 ot_hbm_svc_sm_group + 32 ot_hbm_svc_pc_ctrl_leaf (die composition) + DRAM fixture at the PHY row/column boundary, capacity images stack 0, 64 rows x 8 epochs",
+ "result": {
+  "pass_": true,
+  "steady_epoch_ps": 69722.194,
+  "vs_price_99": 1.052,
+  "tb_issued_reference_ps": 69583.306,
+  "note": "hardware issue costs +0.2% vs the testbench issuer (139 ps/epoch); still 1.051x the 99 B/cycle/SM price"
+ },
+ "mutants": {
+  "early_programme": "rejected (DUT fault)",
+  "issuer_copy_before_resident (OT_ISSUER_MUT_NORESIDENT)": "rejected (DUT fault cycle 174)"
+ },
+ "area": {
+  "group_std_um2": 23913.2,
+  "extra_sram": "1 x ot_sram_1r1w_128x256 per SM (descriptor table), 32/die = 0.125 mm2"
+ },
+ "source_sha256": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv": "a1d2e680eae05d2aae1dc614836450e31446e92f3d8712b1e1855e3643042ebe",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group.sv": "c1f1a25aefc2007aa771fcbcf3cbe0159732d5a3e3e667b674cf7f51bee177b2",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed.sv": "a1adc092a076331ad3e6ff8388868f450fb3337f482fa632555fa0ac5ec4035e",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_groups_issued.sv": "4ddb92cf4285e012a3742351d37065848ec1740441ea395a862d64de930305ec",
+  "rtl/hbm_accel/loader/service_native/run_sm_groups_issued.sh": "ee836b9e25dcbef045a8c7bef971b17768a1a62b2c761d4120a821754c7bf02a",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "724486e2813c12206de99ebf0f62a735c4dfb553198a219cf79f12827eff83a8",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv": "d9a122821374a9f9d12e3fc5d067c6dac87b1b233580c63e4d78c07134e99371"
+ },
+ "logs_sha256": {
+  "positive.log": "0b1eb8b435ed7a3522cebb0b641461812c7ace149bdb12123e7d5647f4f31853",
+  "early_mutant.log": "2bcb9e8a720d25e0c121a002c25fd6ac586c62b0581866ac4614547068de981d",
+  "noresident_mutant.log": "5c215c4cd22a57df6053be5cec4299f24497352f87b5d2d4331c98d7b2210bb6"
+ }
+}

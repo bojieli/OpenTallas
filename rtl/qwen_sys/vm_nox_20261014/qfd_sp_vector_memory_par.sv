@@ -3,6 +3,8 @@
 // plain macro netlist emission; it does not depend on a parameter sidecar.
 // Identical numeric port ABI to qfd_sp_vector_memory. New physical master;
 // no static/default-PAR_RB=0 physical qualification is inherited.
+// NATIVE_BANKS=1 (Q-VMWB 2026-10-15, production): the 64 row banks and 48 operand banks are the native structural
+// successors qvm_bank_banked_native / qvm_su_bank_native (hard views qvm_bank_entries_my_native, qvm_su_bank_native).
 module qfd_sp_vector_memory_par (
     input wire ck,
     input wire rst_n,
@@ -521,7 +523,7 @@ module qfd_sp_vector_memory_par (
 );
     qfd_sp_vector_memory #(
         .USE_MACRO(1), .USE_LEAF_CLOCKS(1), .OBS_MUT(0), .MUT(0),
-        .PAR_RB(1), .PMUT(0)
+        .PAR_RB(1), .PMUT(0), .NATIVE_BANKS(1)
     ) u_vm (
         .ck(ck),
         .rst_n(rst_n),

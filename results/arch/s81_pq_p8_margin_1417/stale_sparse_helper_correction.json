@@ -1,0 +1,44 @@
+{
+ "old_gate_scope": "unqualified diagnostic only: actual gate shipped stale sparse IO helper differs from route source; no P8 route submitted",
+ "source_branch": "9bfe02e14",
+ "current_main": "9dd173edafde56fa8928021c552f7800f31e8347",
+ "correction": "materialize exact tracked current origin/main helper bytes and rerun source-exact CTS; no RTL/spec/pin/cycle change",
+ "files": [
+  {
+   "path": "physical/common_flow/macro_cts_cluster.tcl",
+   "source": "daemon_overlay",
+   "executed_sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
+   "current_sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798"
+  },
+  {
+   "path": "physical/qwen_die_masters/io_flop_at_pins.tcl",
+   "source": "working_tree",
+   "executed_sha256": "71cc8bb60983e652ab10f7c4c41f7e2c6c77e8ae5c275b3f7cdde87fbcc7b949",
+   "current_sha256": "4e53d7e20fc599c39424da330566befadabb42780e349f9bb1568b9f0fa1b75b"
+  },
+  {
+   "path": "tools/fp_margin_lint.py",
+   "source": "daemon_overlay",
+   "executed_sha256": "ae43f76c2b874a9b0c5061094e800e9909ffafbec0773d80c89b33c0fa955fd8",
+   "current_sha256": "ae43f76c2b874a9b0c5061094e800e9909ffafbec0773d80c89b33c0fa955fd8"
+  },
+  {
+   "path": "tools/fp_margin_lint.tcl",
+   "source": "daemon_overlay",
+   "executed_sha256": "4002a944a0d0deb06e2b6b4a1d5c196596509a93a563a77a91f0bd2400976063",
+   "current_sha256": "4002a944a0d0deb06e2b6b4a1d5c196596509a93a563a77a91f0bd2400976063"
+  },
+  {
+   "path": "tools/orfs_hold_mm.tcl",
+   "source": "daemon_overlay",
+   "executed_sha256": "80f8d1c70610016b872515163e54a58b939e03ea6931ba6d0e1a159de3884c6b",
+   "current_sha256": "80f8d1c70610016b872515163e54a58b939e03ea6931ba6d0e1a159de3884c6b"
+  },
+  {
+   "path": "tools/textbook_lint.py",
+   "source": "daemon_overlay",
+   "executed_sha256": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
+   "current_sha256": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af"
+  }
+ ]
+}

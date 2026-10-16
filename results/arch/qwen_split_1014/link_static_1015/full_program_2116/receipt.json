@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.qwen.d2d.full_program_component.v1",
+  "source_commit": "99314e467",
+  "scope": "Real die-name link RTL, actual SRAM macro models, typed codecs and real KVN transport with declared external component payload stimuli. PHY5 is modeled. Whole native token/layer compute is not qualified.",
+  "normal_production_credits": false,
+  "normal_schedule_rescheduling": false,
+  "compiled_finish_cycle": 246329,
+  "layers": 36,
+  "phy_latency": 5,
+  "pinreg": 1,
+  "host_relay_stages": 0,
+  "positive": {
+    "attention_frames_C_to_K": 1188,
+    "attention_frames_K_to_C": 1188,
+    "kvn_words": 144,
+    "layer_results": 36,
+    "host_checks": 36,
+    "embedding_words": 64,
+    "terminal_results": 1,
+    "normal_epoch_faults": 0,
+    "errors": 0
+  },
+  "wrong_TXL_mutant": {
+    "calendar_TXL": 5,
+    "actual_RTL_TXL": 6,
+    "normal_epoch_faults": 246313,
+    "errors": 37,
+    "expected_failure": true
+  },
+  "all_eight_memh_images_match_prior_production": true,
+  "prior_production_images": "results/arch/qwen_split_1014/link_static_1015/program_calendar_prod_1015",
+  "source_sha256": {
+    "rtl/test/qwen_split/run_d2d_program.sh": "fa3382ba9c847c152805d2531434e5864c579a092933bbf8aa66d481d7fcd253",
+    "tools/qwen_split/d2d_program_params.py": "24ab52275fd9470e18273c99cdab612580335ba4ec6212ad39ccdf2034a0a946",
+    "rtl/test/qwen_split/tb_qwen_d2d_program.sv": "cbc09179213f06a851b6c15d3ebbae479f1e951f9f89356d5427d406848bab0a",
+    "tools/qwen_split/d2d_link_calendar.py": "301ca7bdbdb91f01729440e2fb08036f886d6ad86555bfc63bafd2b588f6a968",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "3a39c812033ae8d759a3f5d95902018ac6f5eadf67aed62c26e908414f90de26",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "13edfa2b04d971013d7a6889ea7e0a4c528a29205d1674a77b17bcfd49df1f17"
+  },
+  "physical_qualified": false,
+  "native_whole_token_qualified": false,
+  "artifacts": {
+    "calendar.json": "e15f2d2ce3158958166fb144b0c0aa8ffbe7054aa91aae5f2e12c12c7eb2fd77",
+    "source.sha256": "9d4c916997b0a05eb51a340e8055eb318e97e4d562ec5132a1f67781a39bf8f3",
+    "positive.log": "27ab29b0d81b8b3f1b83d681554a00bbed1f82cca583b1524c33cd94f255f32e",
+    "compiled_scope.json": "6368cf57700f1e52032b21a9657fb68993956b72826045f2cfaf75ddde06ee1a",
+    "wrong_txl.log": "83934ef4439bc9c9e74ec3224d32a719828cb8d8f963043487498e2b755710cf"
+  }
+}

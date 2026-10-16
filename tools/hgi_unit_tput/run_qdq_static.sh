@@ -9,6 +9,7 @@ src=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_program_static.sv
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_port_group.sv
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv
+ rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv
  rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
  rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v

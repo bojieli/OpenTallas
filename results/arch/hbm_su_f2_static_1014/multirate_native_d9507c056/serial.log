@@ -1,0 +1,283 @@
+{
+  "schema": "opentallas.hbm.su_programme.sram.v1",
+  "qualified": false,
+  "scope": "standalone programme producer; whole SU integration and physical closure unproven",
+  "source": "/home/ubuntu/hbm-su-multirate-1417-d9507c056/run/vec/phase/serial_prog.mem",
+  "source_sha256": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+  "edges": 7116,
+  "line_bits": 9688,
+  "columns": 38,
+  "index_groups": 3,
+  "index_banks": 56,
+  "index_pack": 1,
+  "dictionary_banks": [
+    3,
+    10,
+    9,
+    13,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    10,
+    9,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    10,
+    9,
+    13,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    2,
+    10,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "dictionary_entries": [
+    347,
+    1153,
+    1036,
+    1601,
+    133,
+    3,
+    3,
+    2,
+    2,
+    87,
+    133,
+    1153,
+    1057,
+    193,
+    67,
+    2,
+    2,
+    2,
+    7,
+    338,
+    1153,
+    1036,
+    1601,
+    67,
+    3,
+    3,
+    2,
+    2,
+    392,
+    130,
+    1153,
+    98,
+    129,
+    5,
+    2,
+    2,
+    2,
+    3
+  ],
+  "total_macros": 302,
+  "allocated_bits": 9895936,
+  "uncompressed_bits": 68939808,
+  "config_transactions": 34452,
+  "startup_present_edges": 3,
+  "startup_consumer_edges": 4,
+  "command_interval_edges": 1,
+  "first_dictionary_bank": 168,
+  "extra_source": null,
+  "extra_sha256": null,
+  "memory_model": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "clock_roots": {
+    "controller": "clk",
+    "macros": 302,
+    "index_groups": [
+      {
+        "first_macro": 0,
+        "count": 56
+      },
+      {
+        "first_macro": 56,
+        "count": 56
+      },
+      {
+        "first_macro": 112,
+        "count": 56
+      }
+    ],
+    "dictionary_columns": [
+      {
+        "first_macro": 168,
+        "count": 3
+      },
+      {
+        "first_macro": 171,
+        "count": 10
+      },
+      {
+        "first_macro": 181,
+        "count": 9
+      },
+      {
+        "first_macro": 190,
+        "count": 13
+      },
+      {
+        "first_macro": 203,
+        "count": 2
+      },
+      {
+        "first_macro": 205,
+        "count": 1
+      },
+      {
+        "first_macro": 206,
+        "count": 1
+      },
+      {
+        "first_macro": 207,
+        "count": 1
+      },
+      {
+        "first_macro": 208,
+        "count": 1
+      },
+      {
+        "first_macro": 209,
+        "count": 1
+      },
+      {
+        "first_macro": 210,
+        "count": 2
+      },
+      {
+        "first_macro": 212,
+        "count": 10
+      },
+      {
+        "first_macro": 222,
+        "count": 9
+      },
+      {
+        "first_macro": 231,
+        "count": 2
+      },
+      {
+        "first_macro": 233,
+        "count": 1
+      },
+      {
+        "first_macro": 234,
+        "count": 1
+      },
+      {
+        "first_macro": 235,
+        "count": 1
+      },
+      {
+        "first_macro": 236,
+        "count": 1
+      },
+      {
+        "first_macro": 237,
+        "count": 1
+      },
+      {
+        "first_macro": 238,
+        "count": 3
+      },
+      {
+        "first_macro": 241,
+        "count": 10
+      },
+      {
+        "first_macro": 251,
+        "count": 9
+      },
+      {
+        "first_macro": 260,
+        "count": 13
+      },
+      {
+        "first_macro": 273,
+        "count": 1
+      },
+      {
+        "first_macro": 274,
+        "count": 1
+      },
+      {
+        "first_macro": 275,
+        "count": 1
+      },
+      {
+        "first_macro": 276,
+        "count": 1
+      },
+      {
+        "first_macro": 277,
+        "count": 1
+      },
+      {
+        "first_macro": 278,
+        "count": 4
+      },
+      {
+        "first_macro": 282,
+        "count": 2
+      },
+      {
+        "first_macro": 284,
+        "count": 10
+      },
+      {
+        "first_macro": 294,
+        "count": 1
+      },
+      {
+        "first_macro": 295,
+        "count": 2
+      },
+      {
+        "first_macro": 297,
+        "count": 1
+      },
+      {
+        "first_macro": 298,
+        "count": 1
+      },
+      {
+        "first_macro": 299,
+        "count": 1
+      },
+      {
+        "first_macro": 300,
+        "count": 1
+      },
+      {
+        "first_macro": 301,
+        "count": 1
+      }
+    ]
+  },
+  "source_pins": {
+    "tools/hbm_static/su_top_compile.py": "629601cd70562c06948f9a35c58e2d02136063ac024e9786e5925eed68767590",
+    "tools/hbm_static/su_arith_compile.py": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+    "tools/hbm_static/su_programme_compile.py": "3bf115e87489b316100c86ee2ef06bb6c89aff6c7634399b876585362d8d7064",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  }
+}

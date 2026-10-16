@@ -69,4 +69,17 @@ python3 tools/w18/corner_sta_ref.py --orfs-dir $W/work/orfs --extra-sdc $W/signo
 src=$?
 echo "corner_rc=$src" >> $W/status
 echo "$(date -Is) done flow=$rc sta=$src" >> $W/STATUS
+# LAYOUT IMAGES (owner rule 20:45 PT 2026-10-15): floorplan / post-place density / GRT congestion PNGs of the routed tile
+# in $W/layout (tools/ref_tile/layout_png.py, standard library only); never changes the route verdict
+ORFSW=$W/work/orfs
+ODB=$(ls $ORFSW/results/asap7/*/base/6_final.odb $ORFSW/results/asap7/*/base/5_1_grt.odb $ORFSW/results/asap7/*/base/3_place.odb 2>/dev/null | head -1)
+if [ -n "$ODB" ]; then
+  printf 'read_db /work/%s\nsource /src/tools/ref_tile/layout_dump.tcl\nexit\n' "${ODB#$ORFSW/}" > $ORFSW/layout_dump_run.tcl
+  docker run --rm -e OT_LAYOUT_OUT=/work/layout_dump.json -e OT_LAYOUT_CLOCKS=$CLKPORT -e OT_LAYOUT_TOP=$TOP -v $SRC:/src:ro -v $ORFSW:/work \
+    ${OPENTALLAS_ORFS_IMAGE:-openroad/orfs:latest} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit \
+    /work/layout_dump_run.tcl > $W/layout_dump.log 2>&1
+  CRPT=$(ls $ORFSW/reports/asap7/*/base/congestion.rpt 2>/dev/null | head -1)
+  [ -s $ORFSW/layout_dump.json ] && python3 tools/ref_tile/layout_png.py $ORFSW/layout_dump.json $W/layout \
+    ${CRPT:+--congestion $CRPT} --title "$NAME" >> $W/STATUS 2>&1
+fi
 [ $rc -eq 0 ] && [ $src -eq 0 ]

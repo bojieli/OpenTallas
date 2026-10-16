@@ -1,0 +1,111 @@
+{
+ "name": "s81_a2f_control4_resetlocal_pilot_2118_r3",
+ "top": "s81_a2f_control4_resetlocal",
+ "kind": "tile",
+ "sources": [
+  "tools/s81_vm/area_a2f.sv",
+  "tools/s81_vm/area_a2f_control_resetlocal.sv"
+ ],
+ "clock_port": "ck_control",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "io_budget": {
+  "in": 0.6,
+  "out": 0.57
+ },
+ "outline": {
+  "w": 194.4,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "src_v",
+   "src_bank",
+   "header_epoch",
+   "payload_epoch"
+  ],
+  "N": [
+   "ids",
+   "dr_v",
+   "dr_s"
+  ],
+  "W": [
+   "ck_control",
+   "rst_n"
+  ],
+  "E": [
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_a2f_control_resetlocal_2118/s81_a2f_control4_resetlocal.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every data input already feeds dedicated unconditional pin registers (raw_src_v/s_bank/header_pin/payload_pin); every ids/dr_v/dr_s/fault output leaves dedicated registers. Preserve those existing stages with keep_pin_regs/pin_reg_split/io_flop_at_pins; adding generic wrapper registers would duplicate them and silently change the static schedule. Native gate must audit actual boundary placement."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "out_cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "s81_a2f_control4_resetlocal: actual control4 TT-109ps reset qualification moved after prefix; binary carry prefix replaced by monotone threshold merge to remove remaining CTS-2.9ps data->overflow path; ID priority mux replaced with onehot OR. Full53/4quarters/3slots unchanged; zero added cycles. Native launch/capture budgets tightened, no firm output hold chain. | r2 (S-VM 2210): r1 routed TT +46.1 / FF -5.95 / DRC 0 (s81_a2f_control4_resetlocal_pilot_2118_r1-split4-COMMIT-014095727): every reg D pin FF >= +8.01; the ONLY hold fails are 5 output ports ids[136,144,553,582,32] (-5.95..-0.27 ps) driven QN->INV->output BUFx2 straight from their dedicated pin registers, because r1 had outhold false (no pin hold pad on outputs) and the post-route ECO cannot add one at the port (least-bad FF -16.92). Fix = the recipe pin hold pad on every output (outhold true, HB1xp67, the weakest HB cell, same as inputs): a fixed boundary delay at every output, zero cycles, same RTL/pins/outline/root. | r3: r2 (2b4d4dbe2) routed TT +40.06 / FF -6.73 / DRC 0 with the HB1 output pad: reg D FF >= +18.16, only ids outputs fail (worst ids[251] -6.73): their launch flops sit on early clock leaves (146.8 ps vs IO reference L_min ~157), so clk->pin BUFx4f+HB1+BUFx2 = 78 ps < 85 ps needed. r3 = recipe-default HB2 output pad (out_cell), inputs keep HB1; zero cycles.",
+ "slot_change_request": {
+  "contract": "S81 VM A2-F front geometry candidate",
+  "version": "a2f-1015",
+  "why": "new hardened leaf; VM parent plan a2f_route_plan.py"
+ },
+ "job": {
+  "owner": "Claude:S-VM 2210",
+  "branch": "claude/s81-vm-widehub-2210",
+  "tag": "r3outhb2",
+  "extra_paths": [
+   "tools/s81_vm/area_a2f.sv",
+   "tools/s81_vm/area_a2f_control_resetlocal.sv",
+   "tools/s81_vm/area_a2f_control_resetlocal_gate.py",
+   "physical/s81_vm_a2f_control_resetlocal_2118"
+  ],
+  "purpose": "A2-F pilot: measured area/closure of the planned outline (cut screen input).",
+  "benches": [
+   {
+    "name": "a2f_control4_resetlocal_equiv",
+    "cmd": "python3 tools/s81_vm/area_a2f_control_resetlocal_gate.py --bench gold",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CONTROL_GATE PASS gold"
+   },
+   {
+    "name": "a2f_control4_resetlocal_mut_sel",
+    "cmd": "python3 tools/s81_vm/area_a2f_control_resetlocal_gate.py --bench S81_A2C_MUT_IDBIT",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CONTROL_GATE FAIL S81_A2C_MUT_IDBIT"
+   }
+  ],
+  "cycles_added": 0
+ }
+}

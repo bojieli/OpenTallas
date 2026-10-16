@@ -93,7 +93,8 @@ class Prog:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('out')
-    ap.add_argument('--rf-relay', type=int, default=8)
+    ap.add_argument('--rf-relay', type=int, default=36)  # H-DIE r2 route plan: 36 stages at 480 um (proof d9507c056)
+    ap.add_argument('--pin-reg', type=int, default=0, help='1: pin-registered lanes (requests +2, writes / reducer operands +4 edges)')
     ap.add_argument('--mlat', type=int, default=3); ap.add_argument('--alat', type=int, default=3); ap.add_argument('--leaf', type=int, default=0)
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
@@ -104,7 +105,7 @@ def main():
     ctl_lines = (arith / 'control.mem').read_text().split()
     nbase = len(SAC.OPS); assert len(ctl_lines) == nbase * 176 and len(gold) == nbase * 32768
     data = seed.view(np.float32).reshape(512, 512)          # [row][global lane]
-    R, FO = a.rf_relay, 8 + 23 + 4 * (a.mlat - 3) + (a.alat - 3) + a.leaf
+    R, FO = a.rf_relay, 8 + 23 + 4 * (a.mlat - 3) + (a.alat - 3) + a.leaf + 4 * a.pin_reg
     S0, PER = 1040, 176
     names = [n for n, _ in SAC.OPS] + ['BYP_KV', 'AB_RF']
     NOPS = len(names)
@@ -208,7 +209,7 @@ def main():
     # AB_RF: B = RF word G broadcast (class 1 held one edge ahead through the op)
     t_rf = nbase + 1
     assert S[t_rf] - 1 >= g_ready
-    for e in range(S[t_rf] - 1, S[t_rf] + 176):
+    for e in range(S[t_rf] - 1, S[t_rf] + 176 + 2 * a.pin_reg):   # pin-registered lanes request 2 edges later
         for q in range(4): P.rf_cmd(e, q, 1, G_ADDR)
     gw = f32(gsum)
     golds.append(to_bf16(A).view(np.uint32).ravel())                  # BYP_KV: KV write = bf16(out)
@@ -241,7 +242,7 @@ def main():
                     P.expw.append((D + e + 4, q, p, sec, 0xff, words))
     P.write(out)
     man = dict(schema='opentallas.hbm.su_static_top_programme.v1', qualified=False, edges=NE, ops=names, op_start=S,
-               first_output=FO, rf_relay=R, fill_edges=1024, expected_vm_writes=len(P.expw), expected_scalars=len(P.exps),
+               first_output=FO, rf_relay=R, pin_reg=a.pin_reg, fill_edges=1024, expected_vm_writes=len(P.expw), expected_scalars=len(P.exps),
                sum_lanes=lane_sum, max_lanes=lane_max, rf_words={str(k): f'{v:08x}' for k, v in sorted(rf_val.items())},
                global_sum_export=ex3, g_ready=g_ready, rf_drain_edge=Z,
                golden='hdc_golden add/mul/to_bf16 NumPy FP32 RNE (independent of the DUT); su_arith_compile seed/gold/control reused',

@@ -5242,12 +5242,23 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                 cursor[(mst, face, 'lo')] = centre + span / 2 + 1.0
                 M.face(port, nb, face, layer, centre, 1)
                 continue
-            c = cursor.get((mst, face), along - 4.0)
-            centre = c - span / 2 - 1.0
-            cursor[(mst, face)] = centre - span / 2 - 1.0
-            if centre - span / 2 < 1.0:
-                raise ValueError(f'{mst}.{port}: face {face} full')
-            M.face(port, nb, face, layer, centre, 1)
+            # Q-COMPUTE-DIE r8 (C23s fpq_s6: seq_su_static moved west, every peer east): a full preferred face spills to
+            # the perpendicular face toward the peer, then the remaining faces; fails only when all four are full
+            perp = ('N' if ot.cy >= me.cy else 'S') if not vert else ('E' if ot.cx >= me.cx else 'W')
+            order = [face, perp] + [f_ for f_ in 'EWNS' if f_ not in (face, perp)]
+            for f_ in order:
+                v_ = f_ in 'NS'
+                if v_ and not ns_faces and f_ != face:
+                    continue
+                along_ = M.w if v_ else M.h
+                c = cursor.get((mst, f_), along_ - 4.0)
+                centre = c - span / 2 - 1.0
+                if centre - span / 2 >= 1.0:
+                    cursor[(mst, f_)] = centre - span / 2 - 1.0
+                    M.face(port, nb, f_, 'M5' if v_ else 'M4', centre, 1)
+                    break
+            else:
+                raise ValueError(f'{mst}.{port}: faces {order} full')
         return out
     v.masters = masters
 
@@ -6423,6 +6434,11 @@ foreach net {VDD VSS} { if {[catch {check_power_grid -net $net} err]} { puts "OT
 mem check
 write_db /work/floorplan_pdn.odb
 """)
+    # Explicit modeled-PHY candidate revision, before any floorplan ODB exists.
+    from phy_pg.apply_case import maybe_apply as _assumed_phy_pg
+    phy_access = _assumed_phy_pg(work)
+    if phy_access:
+        man['assumed_phy_pg_access'] = 'assumed_phy_pg_access.json'
     man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
                **({'pdn_rev': rev} if rev != 'r4' else {}),
                execution_order=['run.tcl', 'run_pdn.tcl'])

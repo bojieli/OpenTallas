@@ -74,11 +74,13 @@ def tie_local(case, lines, p8):
     t = run.read_text()
     if 'ot_tie_rows' not in t:
         a = 'mem read\n'
-        b = 'source /work/pdn.tcl; pdngen;'
-        if a not in t or b not in t:
+        b = 'source /work/die_constant_pg_check.tcl'          # runs after pdngen in both run_pdn.tcl forms
+        if a not in t or b not in t or t.index(b) < t.index('pdngen'):
             raise SystemExit('r8: run_pdn.tcl hooks not found')
         t = t.replace(a, a + f'source /work/die_tie_rows.tcl\not_tie_rows {p8:.3f} 0.48 {p9:.3f} {w9:.3f}\nmem tie_rows\n', 1)
-        t = t.replace(b, b + f' ot_tie_rows_verify {p8:.3f} 0.48;', 1)
+        t = t.replace(b, f'ot_tie_rows_verify {p8:.3f} 0.48; ' + b, 1)
+        if 'mem pdn\n' in t:   # pre-PG database for an explicitly DIAGNOSTIC continuation (die_chain OT_PG_OPEN_DIAG)
+            t = t.replace('mem pdn\n', 'mem pdn\nwrite_db /work/floorplan_pdn_prepg.odb\n', 1)
         run.write_text(t)
     (case / 'die_tie_rows.tcl').write_text((Path(__file__).parent / 'die_tie_rows.tcl').read_text())
     return keep, dict(dropped_ladder_lines=len(dropped), m9_pitch=p9, m9_width=w9)
@@ -134,6 +136,11 @@ def regroup(case, p8, out, skip_prefix=(), pos_json=None, tie_local_pg=False):
                  f'-name {g} -starts_with GROUND -grid_over_boundary')
         L += [f'add_pdn_stripe -grid {g} -layer M8 -width .48 -pitch {p8:.3f} -offset {off:.3f}',
               f'add_pdn_connect -grid {g} -layers {{M7 M8}}', f'add_pdn_connect -grid {g} -layers {{M8 M9}}']
+        if tie_local_pg:
+            # r8: masters whose PG pins top out on M5 (stations xcst, cbuf_g, crom_g, band_upper, xs_tap) were joined to
+            # M8 only through the die-wide M5..M7 ladder r8 removes (C21sa-r8 check_power_grid: 784 such islands);
+            # their own macro grid now stacks M5 -> M8 where the M8 stripes cross the pins
+            L.append(f'add_pdn_connect -grid {g} -layers {{M5 M8}}')
     for g in m5:
         L += g['lines']
     (case / out).write_text('\n'.join(L) + '\n')
