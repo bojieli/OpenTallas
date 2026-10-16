@@ -1473,8 +1473,10 @@
    "evidence": "results/arch/hbm_su_f2_static_1014/spread/spread_qwen_lat4_mr1_r4.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "proposed",
-   "note": "H-SU 10-15 17:40 rebased on CURRENT source (su_f2_spread.py --mlat 4 --profile mr1_r4): 3:4 multirate SU/VM bridge (VM read visible +12 / write ack +10 serial edges, multirate_contract.md), routed reducer r4 RAW 10 (3f1686f20), cross-quarter reduction through root-core RF (export +12 + RF_RELAY 36, 2 dependent levels) and RF relay back to non-root home quarters. Qwen 1858 -> 2026 edges (softmax.max 391 -> 524); DS 2521/3272 = 0.770 (under price). Same S2 method as the 1858 row (added 6,080.8 -> 11,457.5 cycles on base 1,269,120). Measured terms: VM bridge latencies, reducer RAW, SFU/divider depths (full512 SFU-lane bench), full512 LAT4 arithmetic; the relay count is the H-DIE route plan and the reduction tree shape is a model. 32 SFU lanes/quarter kept (coordinator 10-15)."
+   "status": "accepted",
+   "note": "H-SU 10-15 17:40 rebased on CURRENT source (su_f2_spread.py --mlat 4 --profile mr1_r4): 3:4 multirate SU/VM bridge (VM read visible +12 / write ack +10 serial edges, multirate_contract.md), routed reducer r4 RAW 10 (3f1686f20), cross-quarter reduction through root-core RF (export +12 + RF_RELAY 36, 2 dependent levels) and RF relay back to non-root home quarters. Qwen 1858 -> 2026 edges (softmax.max 391 -> 524); DS 2521/3272 = 0.770 (under price). Same S2 method as the 1858 row (added 6,080.8 -> 11,457.5 cycles on base 1,269,120). Measured terms: VM bridge latencies, reducer RAW, SFU/divider depths (full512 SFU-lane bench), full512 LAT4 arithmetic; the relay count is the H-DIE route plan and the reduction tree shape is a model. 32 SFU lanes/quarter kept (coordinator 10-15).",
+   "accepted_date": "2026-10-15",
+   "acceptance_note": "Coordinator (Claude 45d437e0) 2026-10-15 ~20:00 PT: ACCEPTED, 1.215x / 0.895 % e2e qwen_ar, under the 5 % per-unit limit; measured on current source (3:4 multirate bridge, reducer r4 RAW10, RF_RELAY 36; proof 65e85ba7c), evidence 63cbbdef8"
   },
   {
    "design": "r25gq",
@@ -1538,13 +1540,13 @@
    "over_limit_by_owner_exception": true
   },
   "r25gq": {
-   "accepted_pct": 0,
+   "accepted_pct": 0.895,
    "proposed_pct": 113.581,
-   "accepted_plus_proposed_pct": 113.581,
+   "accepted_plus_proposed_pct": 114.476,
    "limit_pct": 15.0,
-   "accepted_rows": 0,
-   "proposed_rows": 21,
-   "headroom_pct": 15.0,
+   "accepted_rows": 1,
+   "proposed_rows": 20,
+   "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
   }
