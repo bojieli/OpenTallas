@@ -230,6 +230,14 @@ def main(argv=None):
             git(root, "push", "-q", "origin", f"HEAD:refs/heads/{br}")
     if a.commit_paths:
         push()
+    # the daemon refuses these as INVALID after the gate (b2 upper x2, xcal216 10-16): same check + message, locally first
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import bench_count
+    st = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    mcr_bad = bench_count.count_regex_errors(st.get("bench", []))
+    if mcr_bad:
+        print("REFUSED LOCALLY (INVALID spec, the daemon would reject it): " + "; ".join(mcr_bad))
+        return 1
     git(root, "fetch", "-q", "origin", "main", check=False)
     for attempt in (1, 2):
         commit = git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}")

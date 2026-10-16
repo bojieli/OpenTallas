@@ -309,8 +309,8 @@
       "element": "qkd_ahub",
       "path": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
       "module": "ot_qkd_ahub_die",
-      "body_sha256": "2c5f33425ace22c2b56ce3369694741c2314939c34729ab28f820c41cddb5ff7",
-      "reason": "Wires-only parent of qkd_ahub_core, four ot_nhb_zh, reciprocal, four pbst, four pvlg and parameterized ot_qkd_drly children. The drly nonzero stages are REAL child state and must remain in integration/relay closure; no arithmetic/state belongs to this parent. Physical expansion remains OPEN.",
+      "body_sha256": "3c05d51e9b956aba1f600411d0e711adcc75837a61c24214b02e21c17be42187",
+      "reason": "Wires-only parent of qkd_ahub_core, four ot_nhb_zh, reciprocal, four pbst, four pvlg and parameterized ot_qkd_drly children. The drly nonzero stages are REAL child state and must remain in integration/relay closure; no arithmetic/state belongs to this parent. Physical expansion remains OPEN. Re-hashed by ELEM-CENSUS 10-16 after the hd3 Z-bus split (4fb8759f4).",
       "evidence": [
         "tools/qwen_kv_die/kv_die.py",
         "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv"
@@ -358,6 +358,171 @@
       "evidence": [
         "/home/ubuntu/claude-takeover-20261007/takeover-s81-master-identity-0834/proof.json",
         "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv"
+      ]
+    },
+    {
+      "element": "qfd_band_upper_tp8",
+      "path": "rtl/qwen_split/qfd_band_upper_tp8.sv",
+      "module": "qfd_band_upper_tp8",
+      "body_sha256": "53f98cbbc980c435d1861a55f221b9295dea5a781733785f01820b98659e09c6",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children {'closed': ['ot_qfd_band_upper'], 'closed_count': '1/1'}; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/qwen_split/qfd_band_upper_tp8.sv"
+      ]
+    },
+    {
+      "element": "dsfd_bf_col",
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+      "module": "dsfd_bf_col",
+      "body_sha256": "09eabb86491d88bf2a75fd90a912caf219b6b9109934aad49a7e364ae5a09bff",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children [{'child': 'ot_v41_bf_col', 'category': 'closed (TT era)'}]; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv"
+      ]
+    },
+    {
+      "element": "dsfd_bk_selector_c1",
+      "path": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c1.sv",
+      "module": "dsfd_bk_selector_c1",
+      "body_sha256": "566446035cc88da6162c27e3bdea2a1f4138ddc1610b3164295d61bf37efd241",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children [{'child': 'dsfd_selt_q', 'category': 'superseded'}, {'child': 'dsfd_dw_ep_s', 'category': 'closed (TT era)'}, {'child': 'dsfd_selt_xq', 'category': 'needs rede; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c1.sv"
+      ]
+    },
+    {
+      "element": "dsfd_sp_capture_c",
+      "path": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv",
+      "module": "dsfd_sp_capture_c",
+      "body_sha256": "73ecfcc957291eeec8fffa676f8d0351752f6f59fec4466e2d5208d6427ddb8c",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children [{'child': 'dsfd_capt_x8_dual', 'category': 'closed (TT era)'}, {'child': 'dsfd_capt_x', 'category': 'closed (TT era)'}, {'child': 'dsfd_capt_g2', 'category': '; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv"
+      ]
+    },
+    {
+      "element": "dsfd_sp_pq_produced",
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv",
+      "module": "dsfd_sp_pq_produced",
+      "body_sha256": "640644f76954f76d52463ffb49b7491aaba855e9488c6a545736a9117952b127",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['dsfd_sp_pq_n', 'ot_s81_pq_calendar_rom', 'ot_s81_pq_command_endpoint']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv"
+      ]
+    },
+    {
+      "element": "dsfd_sp_vm",
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+      "module": "dsfd_sp_vm",
+      "body_sha256": "a698be1957e7cde93223ba7292cf5a14ae6a4ef7c68cc88c2cf581fbaaa529b9",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children [{'child': 'dsfd_vm_bgq28h', 'category': 'superseded'}, {'child': 'dsfd_vm_be_sl', 'category': 'closed (TT era)'}, {'child': 'dsfd_vm_fe_h', 'category': 'supers; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv"
+      ]
+    },
+    {
+      "element": "dsfd_svc_c",
+      "path": "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv",
+      "module": "dsfd_svc_c",
+      "body_sha256": "2a89eb89378884de33ca1cefd3ca79081f62342e2c2c4cd48cc0734174ee77ff",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children [{'child': 'dsfd_svch_pcs', 'category': 'closed (TT era)'}, {'child': 'dsfd_svch_rly', 'category': 'closed (TT era)'}, {'child': 'dsfd_svcio_x', 'category': 'cl; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv"
+      ]
+    },
+    {
+      "element": "hfd_hgi_vms_static_NE",
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+      "module": "hfd_hgi_vms_static_NE",
+      "body_sha256": "aaad32024bccdb17f9c1da68f7a787db7b06622e9f7a32399e8112ef8b2180ee",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_vms_slice_static']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv"
+      ]
+    },
+    {
+      "element": "hfd_hgi_vms_static_NW",
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+      "module": "hfd_hgi_vms_static_NW",
+      "body_sha256": "bd290e3c2536c2b56a151069d794b8a75b2f0dde560e47459e8b9e11ec7e8134",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_vms_slice_static']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv"
+      ]
+    },
+    {
+      "element": "hfd_hgi_vms_static_SE",
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+      "module": "hfd_hgi_vms_static_SE",
+      "body_sha256": "b5224af2062ddf524037f5b5939c91cc64168709e04b52056c29f8fbf68ca586",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_vms_slice_static']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv"
+      ]
+    },
+    {
+      "element": "hfd_hgi_vms_static_SW",
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+      "module": "hfd_hgi_vms_static_SW",
+      "body_sha256": "cffe6d91cc704c755ad7101e139ebeed373a45806e7973a2200fac22356e8ea3",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_vms_slice_static']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv"
+      ]
+    },
+    {
+      "element": "ot_hbm_idx_client_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
+      "module": "ot_hbm_idx_client_static",
+      "body_sha256": "f7a6edb57c8041e537d305df87c81068398d3b563dd9c8b2ad2f6c921cdac7b2",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_hbm_idx_scheduled_static', 'ot_hbm_idx_topk_static', 'ot_hbm_idx_vm_share_static']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv"
+      ]
+    },
+    {
+      "element": "ot_hbm_idx_scheduled_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+      "module": "ot_hbm_idx_scheduled_static",
+      "body_sha256": "0d621988962839bff378f1d5df52c55ba8c85275f69fd035c16b1877d6929fa4",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_hbm_idx_calendar_static', 'ot_hbm_idx_parent_static']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv"
+      ]
+    },
+    {
+      "element": "ot_hgi_coll_qslots",
+      "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+      "module": "ot_hgi_coll_qslots",
+      "body_sha256": "c9d314d9d050ed40267603fdaa0ac246fb1453afbfc0e38b96183cf4dbb6996e",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_hgi_coll_qslots_capture', 'ot_hgi_coll_qslots_output']; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv"
+      ]
+    },
+    {
+      "element": "ot_vms_slice_static",
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv",
+      "module": "ot_vms_slice_static",
+      "body_sha256": "2123354226bcef6b20db7eb9e3ce7c35120832ea28c33ddfb6de4fbebaa12272",
+      "reason": "ELEM-CENSUS 2026-10-16: wires-only parent (no always/reg/initial) of hardened children ['ot_vms_bank_native_physical', 'ot_vms_bank_static', 'ot_vms_bank_strap_physical', 'ot_vms_hub_static', 'ot_vms_rcl_static', 'ot_vms_rstop_static', 'ot_vms_sta; closes when its children close plus a parent kit, not a standalone route.",
+      "evidence": [
+        "results/arch/elem_census_1016/census.json",
+        "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv"
       ]
     }
   ],

@@ -1,14 +1,14 @@
 {
- "name": "qkd_hslice-v142-COMMIT",
+ "name": "qkd_hslice-ec1-6719d1048",
  "block": "qkd_host_pc_slice_die",
  "ref_tile": true,
- "owner": "Claude:el1015-fill-qwen",
- "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified (FILL-Q 10-15: Codex aa0c50c21 boot-pin capture candidate, v1.4.2 pins 233825580)",
+ "owner": "Claude:ELEM-CENSUS kit helper",
+ "purpose": "ELEM-CENSUS 10-16: submit the existing FILL-Q qkd_hslice kit (Codex aa0c50c21 boot-capture candidate, v1.4.2 pins 233825580; RTL unchanged since feceba3b2) regenerated on current main generator and re-gated on current main. qkd_hslice_dn = MX placement of this view (no separate master). Full parent remains unqualified.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/el1015-fillq-1015",
-  "commit": "COMMIT",
+  "branch": "claude/census-qkit-1016",
+  "commit": "6719d1048",
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_leaf_bench.sh",
    "rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv",
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hslice/qkd_hslice-v142-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_hslice/qkd_hslice-ec1-6719d1048"
   }
  ],
  "cycles_added": 0,

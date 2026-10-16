@@ -4063,6 +4063,29 @@ class Chains:
     def bus(self, bid, cls, bits, eps):
         self.B.append((bid, cls, bits, eps))
 
+    def _fallback_guard(self, name, target, planned, w, h, seen):
+        """Fail fast when the station fallback returns to a stop it already served: the displaced station cannot
+        re-anchor the chain (its hop exceeds the reach), so every later stop falls back again -- never finishes."""
+        key = round(target, 1)
+        seen[key] = seen.get(key, 0) + 1
+        if seen[key] < 2:
+            return
+        cx, cy = planned
+        fb = [f for f in self.m.get('station_fallback', []) if f.get('chain') == name]
+        block = sorted((abs(i_.x + i_.w / 2 - cx) + abs(i_.y + i_.h / 2 - cy), i_.name, getattr(i_, 'kind', '?'))
+                       for i_ in self.m.get('insts', [])
+                       if i_.x < cx + w / 2 + 200 and i_.x + i_.w > cx - w / 2 - 200
+                       and i_.y < cy + h / 2 + 200 and i_.y + i_.h > cy - h / 2 - 200)
+        kinds = {}
+        for _, _, k_ in block:
+            kinds[k_] = kinds.get(k_, 0) + 1
+        msg = (f'OT_STATION_FALLBACK_NO_PROGRESS station {name} s={key} planned ({cx:.1f}, {cy:.1f}) {w:.1f}x{h:.1f}: '
+               f'fallback {seen[key]}x at the same stop (displaced {[f["displaced_um"] for f in fb[-3:]]} um); '
+               f'blocking: {len(block)} instances within 200 um of the planned spot (by kind {kinds}), nearest '
+               f'{[n_ for _, n_, _ in block[:8]]} -- give this chain a free street / spot, the fallback cannot')
+        print(msg, file=sys.stderr, flush=True)
+        raise RuntimeError(msg)
+
     def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None, force_horiz=False):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
@@ -4089,7 +4112,13 @@ class Chains:
         out, pos, cur = [], 0.0, src
         end = path[-1]
         fi = 0
+        # PROGRESS GUARD (ROOT 2026-10-16; S-DIE v3i3/v3i4 GEN re-placed one station >4,000 times, drifting 10 mm): a
+        # chain needs at most ~L/step stations plus its forced stops; the fallback may place a stop's station once
+        fb_seen, max_stn = {}, int(L / 100.0) + len(stops) + 32
         while True:
+            if len(out) > max_stn:
+                raise RuntimeError(f'OT_CHAIN_NO_PROGRESS chain {name}: {len(out)} stations > bound {max_stn} for '
+                                   f'{L:.0f} um (last at s={pos:.0f}, cur={tuple(round(v, 1) for v in cur)}, end={end})')
             nxt = stops[fi] if fi < len(stops) else None
             R_ = reach or FWD_REACH
             if nxt is None and _mh(cur, end) <= R_ - 30.0 and L - pos <= R_ - 30.0:
@@ -4159,6 +4188,7 @@ class Chains:
                             at=[round(placed[0], 1), round(placed[1], 1)],
                             displaced_um=round(abs(placed[0] - cx) + abs(placed[1] - cy), 1)))
                         print('OT_STATION_FALLBACK', json.dumps(self.m['station_fallback'][-1]), file=sys.stderr, flush=True)
+                        self._fallback_guard(name, target, (cx, cy), w, h, fb_seen)
                         break
             if placed is None:
                 print('OT_CHAIN_NO_SPOT', name, [(round(p_[0], 1), round(p_[1], 1)) for p_ in path], file=sys.stderr, flush=True)
@@ -10265,6 +10295,12 @@ def _assigned_physical_pins(Mx, ports):
             Mx.order.append(port)
 
 
+def _require_physical_source_ports(master, ports):
+    missing = sorted(set(ports) - set(master.ports))
+    if missing:
+        raise ValueError(f'{master.name}: physical master omits live source ports {missing}')
+
+
 def masters_r8(m, k=1):
     pdir = m.get('pdir') or finalize_r8(m)
     if '_by' not in m:
@@ -10304,6 +10340,7 @@ def masters_r8(m, k=1):
         if k == 1:
             _assigned_physical_pins(Mx, ports)
             _resolve_pin_collisions(Mx)
+        _require_physical_source_ports(Mx, ports)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
@@ -10508,6 +10545,13 @@ def _faces_r8(m, Mx, it, ports):
         else:
             _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
             _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+        # fn is a distinct non-inverted clock path (two actual RTL inverters),
+        # whereas fo is the forwarded stage clock. Never alias or drop fn.
+        # This is diagnostic placeholder geometry; a bound native view replaces
+        # it with its literal physical contacts and insertion measurements.
+        copies = P_([f'fn{j}' for j in range(n)])
+        if copies:
+            _lay(Mx, 'E' if horiz else 'N', copies, 'M4' if horiz else 'M5', start=2.16)
     elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
         for p_, f_, at in (('fi', mst[-2], 2.16), ('fo', mst[-1], 6.48)):
             Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
@@ -10613,7 +10657,7 @@ def _faces_r8(m, Mx, it, ports):
         c1 = COL_W8 - RSC_W / 2 - CF_X
         if CFIFO_V2:              # 432 um outline: the return pins at its E end (the return column lies beyond it)
             c1 = min(c1, Mx.w - 30.0)
-        _lay(Mx, 'S', P_(['xf', 'xd']), 'M5', start=c0 - 15.0)
+        _lay(Mx, 'S', P_(['xf', 'xd', 'xf2', 'xd2']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'x2', 'cc', 'st']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
@@ -10691,6 +10735,9 @@ def _faces_r8(m, Mx, it, ports):
             Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
         _lay(Mx, 'N', P_(['rd', 'rq', 'rk', 'wd', 'hw', 'hc']), 'M5')   # s81-gen: rq / rk / wd (--ctrl-rq), host hw / hc
         _lay(Mx, 'N', P_(['ckh', 'rst']), 'M5', start=60.0)
+        # Actual controller status {fault, live}; retain its diagnostic contacts too.
+        # Give it a separate free interval so the existing data and clock pins stay put.
+        _lay(Mx, 'N', P_(['st']), 'M5', start=66.48)
         # die-gaps 2026-10-08: the stream-side clock entry sits at the face end under the stream peer's (dsfd_svc) clock
         # entry (svc 'ck' is laid toward the clk_stream root at the same end), so the hbm_read interface ctrl -> svc is
         # one clock region; at the west end (60 um) the two entries were 8.4 mm apart in two regions and the plan's

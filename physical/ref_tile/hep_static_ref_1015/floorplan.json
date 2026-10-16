@@ -16,7 +16,7 @@
   313.2
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 3459.0,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -115,15 +115,9 @@
  "findings": [
   [
    "WARN",
-   "util",
-   "utilisation 42% outside 45%-60% (std 3459 + macro 53294 in core 133872 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ],
-  [
-   "WARN",
    "fill",
-   "fill 41% = (macros/children 53294 + std 3459) / outline 137093 um2 < 50%",
-   ""
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
   ]
  ],
  "referenced": [

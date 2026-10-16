@@ -1,0 +1,91 @@
+{
+ "name": "dsfd_capt_cd_split1016n",
+ "top": "dsfd_capt_cd",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv"
+ ],
+ "params": {},
+ "clock_port": "ckv",
+ "reset_ports": [
+  "rsv"
+ ],
+ "outline": {
+  "w": 15.12,
+  "h": 15.12
+ },
+ "macros": [],
+ "pins": {
+  "ANY": [
+   "ckv",
+   "f_st",
+   "rsv",
+   "t_cd"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "m5_pg_pitch": 2.7,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-exact capture cones retain every used data/status/fault sampling edge. Native registered boundary capture/launch checks and recipe2 dedicated outputflops still apply; blanket recipe3 registers would insert unpriced semantic stages into this exact comparison."
+ },
+ "clock": "cts",
+ "io_tcl": "physical/s81_die_pins/capture_split_1016/dsfd_capt_cd.tcl",
+ "structural_change": "Successor of CLOSED split1016 (dsfd_capt_cd_split1016-split1-20fd9c125, TT +301.83/FF +29.76, DRC 0) that fails the native pin audit: f_st[2] capture 214.2 / f_st[0] 191.7 ps > 190 (both fed the 4-input enable of the 11-flop t_cd hold mux). Zero-cycle restructure: the registered term armed&!dr_q is precomputed one edge early (ok_q), fire = f_st[2]&!f_st[0]&ok_q is the ENA of one ICGx2; t_cd[9:0]/t_cd[11] are plain registers on the gated clock (ot_s81_vm_x34 NAT=1 pattern). Bit-exact vs the 2314b2b4d form (randomized lockstep, sim + ICG-netlist views), 0 cycles added; pins and outline unchanged.",
+ "job": {
+  "owner": "claude:S-VM-CAPT-CD",
+  "branch": "codex/s81-hub-parents-0811",
+  "tag": "split1n",
+  "purpose": "Native-capture successor of the closed split1016 dsfd_capt_cd view (zero-cycle enable restructure). Tile-local benches only (the shared capture-split cluster bench is mid-change by S-VM-CAPT-X8; this leaf's oracle is the frozen 2314b2b4d module).",
+  "extra_paths": [
+   "tools/s81_ph/capcd_eq_bench.sh",
+   "rtl/dsrom_sys/s81_ph/test/dsfd_capt_cd_ref1013.sv",
+   "rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_cd_eq.sv",
+   "physical/s81_die_pins/capture_split_1016/dsfd_capt_cd.tcl"
+  ],
+  "benches": [
+   {
+    "name": "capcd_eq",
+    "cmd": "bash tools/s81_ph/capcd_eq_bench.sh {RUN}/capcd '1 2 3 4 5 6 7 8'",
+    "expect": "pass",
+    "pass_regex": "^CAPCD_BENCH PASS runs=16$",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "capcd_notog_mutant",
+    "cmd": "bash tools/s81_ph/capcd_eq_bench.sh {RUN}/capcd_mut '1' S81PH_CAPCD_MUT_NOTOG",
+    "expect": "fail",
+    "fail_regex": "CAPCD_EQ .*mismatches=[1-9][0-9]* EQ_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "change": "dsfd_capt_cd zero-cycle enable restructure (precomputed ok_q = armed&!dr_q, ICG-gated t_cd bank); native audit of closed split1016 view: f_st[2] capture 214.2 / f_st[0] 191.7 > 190",
+  "source": "results/arch/s81_hub_parents_1016/native_audit_closed_capture_1016/dsfd_capt_cd_split1016.json"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

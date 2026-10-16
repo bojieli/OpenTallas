@@ -211,8 +211,8 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
                   "assign every port to a face")
     one = [p for p, (w, vec) in ports.items() if vec and w == 1]
     if one:
-        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
-              "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
+        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: retain declared indices for literal clock entries; "
+              "check actual mapped pin names for a hand pin list", "use the actual RTL and mapped pin names")
     for clock in RT.clock_ports(spec):
         # Entry-clock specs use literal bits, while the RTL header parser returns
         # vector base names. Keep pin-face plans grouped by base name, but accept
@@ -222,7 +222,7 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
         if bit and bit[1] in ports:
             width, vector = ports[bit[1]]
             bounds = getattr(ports, "ranges", {}).get(bit[1])
-            exists = bool(vector and bounds and bounds[0] != bounds[1] and bounds[0] <= int(bit[2]) <= bounds[1])
+            exists = bool(vector and bounds and bounds[0] <= int(bit[2]) <= bounds[1])
         if not exists:
             g.add("FAIL", "pins", f"clock port {clock} is not a port of {spec['top']}", "fix clock_port")
 
@@ -732,6 +732,13 @@ GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "14400"))
 # --------------------------------------------------------------------------------------------- remote
 REMOTE_SH = r"""set -uo pipefail
 R={R}; mkdir -p $R/src $R/bin
+# Keep the original full measurement stream on the host. GNU tee -p continues
+# writing this file if SSH closes its output pipe; the admitted job must finish
+# and retain its terminal receipt rather than dying at the next echo.
+exec > >(tee -p "$R/execution.log") 2>&1
+# Intentional early exits (for example failed floorplan geometry) are terminal
+# too. The trap records script status; tool status remains in GATE_*_RC.
+trap 'rc=$?; echo "GATE_SCRIPT_RC=$rc"; echo GATE_DONE' EXIT
 ACTUAL=$(sha256sum $R.tgz | cut -d' ' -f1)
 [ "$ACTUAL" = "{ARCHIVE_SHA256}" ] || {{ echo GATE_SOURCE_BINDING_FAIL; exit 1; }}
 echo "GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL"
@@ -829,7 +836,6 @@ if [ "{TRIAL}" = 1 ]; then
   [ -n "$CR" ] && python3 -c "import zlib,base64,sys;print('GATE_CONG_B64 '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read()[:20000000],9)).decode())" $CR
   ot_layout $NB/5_1_grt.odb placed
 fi
-echo GATE_DONE
 """
 
 
@@ -1112,7 +1118,25 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
+    # A dropped SSH session can leave the admitted container running. Its
+    # partial stdout must never become a terminal CTS/clock qualification.
+    # Preserve the source snapshot and handle; collect this original job.
+    terminal = re.search(r"^GATE_SCRIPT_RC=(\d+)$", out, re.M)
+    completed = (terminal is not None and int(terminal[1]) == p.returncode
+                 and re.search(r"^GATE_DONE$", out, re.M)
+                 and b"NOT COMPLETED" not in p.stderr)
+    if not completed:
+        g.add("FAIL", "remote_incomplete",
+              f"remote gate has no verified terminal completion (ot-run exit {p.returncode}); "
+              f"original job may still run at {host}:{R}; script {script}; log {logp}",
+              "inspect the original live handle and collect its terminal output; do not submit a duplicate")
+        g.clock = {"cts": bool(cts), "verdict": "REFUSE", "status": "REMOTE_INCOMPLETE",
+                   "text": "transport or script ended without verified GATE_DONE; no clock qualification"}
+        return
     analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
+    if p.returncode:
+        g.add("FAIL", "remote_script", f"remote script completed with exit {p.returncode}",
+              "read the original terminal log and fix the reported failure")
     gate_layout(g, kd, spec, out)
 
 
@@ -1649,6 +1673,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
          # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
          + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)]
+         # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
+         # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
+         + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

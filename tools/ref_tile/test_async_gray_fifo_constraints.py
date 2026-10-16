@@ -58,6 +58,7 @@ class Admission(unittest.TestCase):
             lambda s:s['clock_entry_domains']['hbm']['inputs'].remove('wr_valid'),
             lambda s:s['clock_ports'].reverse(),
             lambda s:s.update(clock='hybrid_entries'),
+            lambda s:s.update(sdc_extra=['rogue.sdc']),
             lambda s:s['sources'].append('rogue.sv'),
         ):
             s=spec();mutate(s)

@@ -109,6 +109,8 @@ PY
     ${OPENTALLAS_ORFS_IMAGE:-openroad/orfs:latest} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit \
     /work/layout_dump_run.tcl > $W/layout_dump.log 2>&1
   CRPT=$(ls $ORFSW/reports/asap7/*/base/congestion.rpt 2>/dev/null | head -1)
+  # a clean GRT writes no congestion report: still emit congestion.png (0 markers = clean) for every routed stage
+  case "${ODB##*/}" in 6_final.odb|5_1_grt.odb) [ -n "$CRPT" ] || { CRPT=$ORFSW/congestion_clean.rpt; : > "$CRPT"; };; esac
   [ -s $ORFSW/layout_dump.json ] && python3 tools/ref_tile/layout_png.py $ORFSW/layout_dump.json $W/layout \
     ${CRPT:+--congestion $CRPT} --title "$NAME ${ODB##*/}" >> $W/STATUS 2>&1
 fi
