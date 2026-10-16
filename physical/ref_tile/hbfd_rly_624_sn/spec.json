@@ -42,7 +42,7 @@
  "job": {
   "owner": "Claude:H-DIE-RLY",
   "branch": "claude/hdie-rly624",
-  "tag": "nl1",
+  "tag": "nl2",
   "purpose": "native launch re-kit of CLOSED hbfd_rly_624_sn-v2-212c3439c (hbfd_rly_624_SN: TT launch 288.2 ps > 220 on 310 outputs); flop at output pin, HB1 out pad, HB2 in pad; same RTL/outline/pins",
   "benches": [
    {
@@ -75,7 +75,7 @@
  "inter": [],
  "recipe": 3,
  "io_flop_at_pins": {
-  "cols": 4,
+  "cols": 15,
   "allow_none": true
  },
  "inhold": true,
@@ -83,14 +83,18 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R",
-  "out_cell": "HB1xp67_ASAP7_75t_R"
+  "out_cell": "HB2xp67_ASAP7_75t_R"
  },
  "pin_regs": {
   "enable": false,
   "reason": "ot_hbm_rly IS one register stage by contract (r <= i, o = r): its single flop per bit is the pin register; extra input/output pin registers would make the die relay 3 cycles and break the compiled static schedule. The flop is anchored at the OUTPUT pin (OT_OFLOP_PORT_RE ^o), the input pin keeps its HB2 pad + BUFx4f driver."
  },
  "orfs_vars": {
-  "OT_OFLOP_PORT_RE": "^o"
+  "OT_OFLOP_PORT_RE": "^o",
+  "OT_OUTHOLD_ABSORB_INV": "1",
+  "DONT_BUFFER_PORTS": "1",
+  "OT_OFLOP_AUTO": "0",
+  "OT_OFLOP_GAP": "4.3"
  },
  "reroute_reason": {
   "kind": "native_launch",
@@ -100,7 +104,7 @@
   "capture_ps": 161.5,
   "launch_over": 310,
   "closed_job": "hbfd_rly_624_sn-v2-212c3439c",
-  "fix": "flop anchored at its OUTPUT pin (was at the input face or free): DFFASRHQNx1 QN no longer drives a 10-20 um wire (108 ps clk->QN at 14 fF in NS o[533]); output pad BUF+HB1+BUF instead of BUF+HB4+BUF (-50 ps TT); input HB2 pad; same RTL/outline/pin faces"
+  "fix": "flop anchored at its OUTPUT pin (was at the input face or free): DFFASRHQNx1 QN no longer drives a 10-20 um wire (108 ps clk->QN at 14 fF in NS o[533]); output stage INV(FIRM at pin)+BUF+HB2+BUF, no port BUF, instead of BUF+HB4+BUF (-50 ps TT); input HB2 pad; same RTL/outline/pin faces"
  },
- "structural_change": "H-DIE-RLY 2026-10-16: native launch FAIL 288.2 ps (310 outputs) of CLOSED hbfd_rly_624_sn-v2-212c3439c. Measured root cause (NS routed STA, o[533]): the single relay flop sat at the INPUT face (io_flop_at_pins anchors i[] first), so DFFASRHQNx1/QN drove a 14 fF cross-tile wire (slew 147 ps, clk->QN 108 ps vs 62 ps at the pin) into INV + BUFx4f + HB4xp67 (68 ps) + BUF + port BUF; the HB4 output stage alone is ~130 ps of every launch (median 208-220 ps). Fix: anchor each flop at its output pin, output pad HB1xp67, input pad HB2xp67 (capture budget 190 has >= 25 ps room), hold margin 10 ps; RTL, outline, pin faces and port list unchanged; 0 cycles."
+ "structural_change": "H-DIE-RLY 2026-10-16: native launch FAIL 288.2 ps (310 outputs) of CLOSED hbfd_rly_624_sn-v2-212c3439c. Measured root cause (NS routed STA, o[533]): the single relay flop sat at the INPUT face (io_flop_at_pins anchors i[] first), so DFFASRHQNx1/QN drove a 14 fF cross-tile wire (slew 147 ps, clk->QN 108 ps vs 62 ps at the pin) into INV + BUFx4f + HB4xp67 (68 ps) + BUF + port BUF; the HB4 output stage alone is ~130 ps of every launch (median 208-220 ps). Fix: anchor each flop at its output pin, output pad HB1xp67, input pad HB2xp67 (capture budget 190 has >= 25 ps room), hold margin 10 ps; RTL, outline, pin faces and port list unchanged; 0 cycles. nl2 (nl1 GRT-0116 at the output face, measured on 5_1_grt-failed.odb of ew-nl1: flop x 5.0, its QN INV GPL-placed at x 9.1 BEHIND the flop, ORFS output port BUFx2 at x 9.5 (port at x 0): every bit zig-zagged across the flop band, M4 overflow 1002 / M2 518 at x 6-11 on a 10.5 pins/um M2/M4 face): QN INV seeded FIRM at the pin with the stage (leaf_iohold OT_OUTHOLD_ABSORB_INV, opt-in), no ORFS port buffers (DONT_BUFFER_PORTS: the BUFx4f stage drives the pin), out pad HB2 to keep FF out-hold without the port BUF, flops behind the 3.4-um stage band at an explicit 4.3-um gap (15 columns) so each bit is a straight in-pad -> flop -> INV/BUF/HB2/BUF -> pin line."
 }

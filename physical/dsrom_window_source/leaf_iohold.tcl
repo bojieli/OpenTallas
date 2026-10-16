@@ -17,6 +17,12 @@
 # repair build up to 6 x BUFx2 chains on the launch path (native launch 224.7..235.5 > 220).  The hold cell stays
 # dont_touch, so the hold delay is still one deterministic pad; only its location is free.
 set ot_oh_free [expr {[info exists ::env(OT_OUTHOLD_FREE)] && $::env(OT_OUTHOLD_FREE) eq "1"}]
+# OT_OUTHOLD_ABSORB_INV=1 (opt-in, H-DIE-RLY 2026-10-16, hbfd_rly_624_*): when the port is driven by a single-load INV whose
+# input is the launch flop's QN (ASAP7 DFFASRHQN has no Q pin), that INV is seeded FIRM at the pin with the stage cells.
+# Why: left free, GPL put it BEHIND the flop (hbfd_rly_624_ew-nl1: flop x 5.0, INV x 9.1, lead BUF x 3.5), so every bit's
+# QN net crossed the flop band twice on a pin-bound face (10.5 pins/um, M2/M4 only) -> GRT-0116 at x 6-11 um.
+set ot_oh_absorb [expr {!$ot_oh_free && [info exists ::env(OT_OUTHOLD_ABSORB_INV)] && $::env(OT_OUTHOLD_ABSORB_INV) eq "1"}]
+set ot_oh_na 0
 if {[info exists ::env(OT_IOHOLD_IN)] && $::env(OT_IOHOLD_IN)} {
   source /src/physical/dsrom_window_source/leaf_inhold.tcl
 }
@@ -40,7 +46,7 @@ foreach bt [$ot_oh_blk getBTerms] {
   if {[$bt getIoType] ne "OUTPUT"} continue
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] ne "SIGNAL"} continue
   # flop-driven: driver is a DFF, or a BUF/INV chain (<= 3) back to a DFF
-  set ok 0; set cn $net
+  set ok 0; set cn $net; set ot_oh_inv ""
   for {set k 0} {$k < 4} {incr k} {
     set dv ""
     foreach it [$cn getITerms] { if {[$it isOutputSignal]} { set dv $it; break } }
@@ -48,6 +54,7 @@ foreach bt [$ot_oh_blk getBTerms] {
     set di [$dv getInst]; set dm [[$di getMaster] getName]
     if {[string match "DFF*" $dm]} { set ok 1; break }
     if {![regexp {^(BUF|INV|HB)} $dm]} break
+    if {$k == 0 && [string match "INV*" $dm] && [llength [$cn getITerms]] == 1} { set ot_oh_inv $di } elseif {$k > 0} { set ot_oh_inv "" }
     set cn [[$di findITerm A] getNet]; if {$cn eq "NULL"} break
   }
   if {!$ok} { incr ot_oh_skip; continue }
@@ -81,6 +88,9 @@ foreach bt [$ot_oh_blk getBTerms] {
     if {$ot_oh_free} { $i setPlacementStatus PLACED } else { $i setPlacementStatus FIRM; lappend ot_oh_firm $nm }
     incr k
   }
+  if {$ot_oh_absorb && $ot_oh_inv ne "" && ![$ot_oh_inv isFixed]} {
+    $ot_oh_inv setLocation $x $y; $ot_oh_inv setPlacementStatus FIRM; lappend ot_oh_firm [$ot_oh_inv getName]; incr ot_oh_na
+  }
   incr ot_oh_n
 }
 if {$ot_oh_n > 0} {
@@ -90,4 +100,4 @@ if {$ot_oh_n > 0} {
 if {[info exists ::env(RESULTS_DIR)]} {
   set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt a]; if {[llength $ot_oh_firm]} { puts $fh [join $ot_oh_firm "\n"] }; close $fh
 }
-puts "OUTHOLD: $ot_oh_n output hold stages (BUF + [$ot_oh_hb getName] + BUF [expr {$ot_oh_free ? {PLACED (free) seeded} : {FIRM}}] at the pin, $ot_oh_ns with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), $ot_oh_skip outputs skipped (not flop-driven)"
+puts "OUTHOLD: $ot_oh_n output hold stages (BUF + [$ot_oh_hb getName] + BUF [expr {$ot_oh_free ? {PLACED (free) seeded} : {FIRM}}] at the pin, $ot_oh_ns with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), $ot_oh_skip outputs skipped (not flop-driven), $ot_oh_na QN inverters absorbed FIRM at the pin"
