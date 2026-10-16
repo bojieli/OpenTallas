@@ -16,3 +16,7 @@ PY
  physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > "$OUT/build_$MUT.log" 2>&1
 "$OUT/obj_$MUT/Vtb_qwen_repack45_native" | tee "$OUT/run_$MUT.log"
+# Legacy RTL diagnostics may print FAIL and call $finish (exit0). A native
+# qualification needs the completed positive marker, never only process status.
+grep -q '^REPACK45_NATIVE_PASS ' "$OUT/run_$MUT.log"
+! grep -q '^FAIL\|REPACK45_NATIVE_FAIL\|REPACK45_MISMATCH\|%Fatal\|%Error' "$OUT/run_$MUT.log"
