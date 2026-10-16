@@ -13,13 +13,23 @@ register every data input and output at the pin (+1 edge each; the VM round trip
 fields so that every tile CORE sees exactly the relative timeline it had before (same exact arithmetic, same
 internal fixed latencies); the shift of tile X is D_X = the summed pin edges on the path from the calendar to X's
 core minus X's own input edge. '--pins none' compiles the historical unregistered timeline (bench mutant).
+
+PIPELINED SELECTOR CORE (H-NETLIST/IDXP-SEL 2026-10-16, gate hidx_sel_pr REFUSE 55 levels): the selector core registers
+the SRAM read and pipelines compare / tie mask / pack / histogram. Two constant edges reach this schedule (the
+SEL_CORE entries of the table): sel_core_out = +2 edges on the selected stream (selected_v/selected_line -> link core,
+so every link field moves +2 with it), sel_scan_drain = +2 idle edges after each op4 scan before the first op5 (the
+histogram lands 4 edges after the last scan read instead of 2). op5's internal +2 (hist read, sums, recurrence) is
+covered by the existing 1-edge gap: its consumers (op3 found-clear, next op4's threshold, op6's ties) ride the same
+pipeline or come >= 2 edges later. '--pins none' keeps the historical core (both 0).
 """
 import argparse, json
 from pathlib import Path
 
 PIN_TABLES = {
-    'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=1, sel_out=1, link_in=1, link_out=1),
-    'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0),
+    'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=1, sel_out=1, link_in=1, link_out=1,
+                       sel_core_out=2, sel_scan_drain=2),
+    'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0,
+                 sel_core_out=0, sel_scan_drain=0),
 }
 FIELDS = dict(weight=(31, 1), query=(30, 1), head=(29, 1), beat=(28, 1), index=(20, 8), op=(16, 4), ps=(14, 2),
               addr=(6, 8), flush=(5, 1), link=(4, 1), group=(0, 4))
@@ -35,7 +45,7 @@ def shifts(pin):
     core['q'] = core['vmq'] + pin['vm_rt'] + pin['vmq_out'] + pin['q_in']   # operand block -> query core
     core['s'] = core['q'] + pin['q_out']                          # ql_* -> scorer (no pin regs)
     core['sel'] = core['s'] + pin['sel_in']                       # score -> selector core
-    core['link'] = core['sel'] + pin['sel_out'] + pin['link_in']  # selected -> link core
+    core['link'] = core['sel'] + pin['sel_core_out'] + pin['sel_out'] + pin['link_in']  # selected -> link core
     own_in = dict(vmq=pin['vmq_in'], q=pin['q_in'], s=0, sel=pin['sel_in'], link=pin['link_in'])
     cal = {t: core[t] - own_in[t] for t in core}
     base = min(cal.values())
@@ -89,7 +99,7 @@ def compile_program(pins='registered', gap=100):
             emit('sel', op=4, ps=ps, addr=a)
         # The final synchronous SRAM result is consumed on the first drain edge.
         # Its histogram decode uses the live pass field, even while op is idle.
-        wait(2, selector_pass=ps)
+        wait(2 + pin['sel_scan_drain'], selector_pass=ps)
         for b in range(63 if ps == 2 else 31, -1, -1):
             emit('sel', op=5, ps=ps, addr=b)
         wait(1)
