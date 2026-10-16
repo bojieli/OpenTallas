@@ -39,10 +39,10 @@
  "reset_ports": [],
  "outline": {
   "w": 144.18,
-  "h": 56.16,
+  "h": 72.9,
   "exact": true
  },
- "why_floorplan": "Return column 2 = ctra_column + ctrb_column (COLUMN 2, YB_STAGE 1, PAYLOAD_STAGE 0) merged into one 144.18 x 56.16 leaf (the v22 30.24 + 25.92 strips); Codex A/B maps 2431+1916 um2 class.",
+ "why_floorplan": "Return column 2 = ctra_column + ctrb_column (COLUMN 2, YB_STAGE 1, PAYLOAD_STAGE 0) merged into one 144.18 x 72.90 leaf (10-16: grown from 56.16, post-CTS util 75-79% at 56.16); Codex A/B maps 2431+1916 um2 class.",
  "macros": [],
  "pins": {
   "N": [
@@ -102,8 +102,8 @@
  },
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
-  "branch": "claude/s81-hccol-0600",
-  "tag": "a1",
+  "branch": "claude/s81-hccol-1016",
+  "tag": "a2",
   "purpose": "New cth_ntc return leaf, COLUMN 2: the four-column return with the y-beat / cs relays (y returns +1, requests and h returns unchanged).",
   "views_to": "physical/ref_tile/s81hc_retcol_c2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_retcol_c2_ref",
@@ -139,5 +139,5 @@
   "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
  },
  "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only.",
- "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: 16,540 joins, 0 > 500 um, max 494 um)."
+ "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16: parent 576.72 x 874.26)."
 }

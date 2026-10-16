@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """cth_ntc parent plan + top-down pins of its NEW leaves (HC-COLUMN 10-16, option A).
 
-Parent = ot_s81_hc_cth_ntc, 576.72 x 844.56 um, R0 rows (y from N): ctrn_col slices 0, ctnl j0 12.96 / j1 112.32,
+Parent = ot_s81_hc_cth_ntc, 576.72 x 874.26 um (10-16: was 844.56; ctrn_col 12.96->25.92, ret row 56.16->72.90 for post-CTS density; rows below shift), R0 rows (y from N): ctrn_col slices 0, ctnl j0 12.96 / j1 112.32,
 ctpl half0 211.68, ret_column row 330.48 (h 56.16), ctfxs 386.64, ctfn banks 412.56, ctfl 447.12, ctpl half1 473.04,
 ctnl j2 591.84 / j3 691.2, ctfs 790.56 (Codex 844.56 plan, the 2x30.24/25.92 return strips merged into one 56.16 leaf).
 The return chain runs bottom -> top: row p's slices (its N edge) feed row p-1's return leaves (457.9 um up).
@@ -22,14 +22,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/s81'))
 import v19_pins_1014 as V  # noqa: E402
 
-H, W = 844.56, 576.72
+H, W = 874.26, 576.72      # 10-16 outline growth: +12.96 (ctrn_col 25.92) +16.74 (ret row 72.90)
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
-RET_T, RET_H = 330.48, 56.16
-SL_H = 12.96
-CTNL_T = [12.96, 112.32, 591.84, 691.2]
+RET_T, RET_H = 343.44, 72.90
+SL_H = 25.92
+CTNL_T = [25.92, 125.28, 621.54, 720.90]
 CTNL_H = [95.04, 95.04, 99.36, 99.36]
-CTPL_T = [211.68, 473.04]
-CTFL_T = 447.12
+CTPL_T = [224.64, 502.74]
+CTFL_T = 476.82
 PITCH = 0.096
 HELD_L3 = '/home/ubuntu/artifacts/s81-hccol-0600/heldviews/ctnl_l3_native_ref-np2-granted-57b4f1931/physical/ref_tile/s81hc_ctnl_l3_native_ref/views/ot_s81_hc_ctnl_l3/ot_s81_hc_ctnl_l3.lef'
 

@@ -39,10 +39,10 @@
  "reset_ports": [],
  "outline": {
   "w": 144.18,
-  "h": 12.96,
+  "h": 25.92,
   "exact": true
  },
- "why_floorplan": "Per-column return slice (one register stage, 1,140 b: valid, header, own + partner (column c+2) payload); partner inputs on the W side (columns 2/3).",
+ "why_floorplan": "Per-column return slice, 25.92 tall (10-16: 12.96 failed DPL-0038 util 101% with recipe-2 pin flops on N+S) (one register stage, 1,140 b: valid, header, own + partner (column c+2) payload); partner inputs on the W side (columns 2/3).",
  "macros": [],
  "pins": {
   "S": [
@@ -76,8 +76,8 @@
  },
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
-  "branch": "claude/s81-hccol-0600",
-  "tag": "a1",
+  "branch": "claude/s81-hccol-1016",
+  "tag": "a2",
   "purpose": "New cth_ntc return slice replacing the 576.72-um ctrn strip: per-column bundles so every chain join stays inside its column.",
   "views_to": "physical/ref_tile/s81hc_ctrncol_w_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctrncol_w_ref",
@@ -110,5 +110,5 @@
   "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
  },
  "structural_change": "ctrn (one register) split into four per-column slices with header / valid x4 and payload x2 replication; 0 cycles.",
- "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: 16,540 joins, 0 > 500 um, max 494 um)."
+ "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16: parent 576.72 x 874.26)."
 }
