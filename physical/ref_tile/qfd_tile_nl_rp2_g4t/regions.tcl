@@ -5,8 +5,8 @@ set q45_why [dict create]
 dict set q45_why ck_fa2 {pin_anchored: fixed FIRM boundary registers}
 dict set q45_why ck_fa4 {pin_anchored: fixed FIRM boundary registers}
 dict set q45_boxes ck {{335.016 342.6 435.456 551.0}}
-dict set q45_boxes ck_rn {{201.528 693.36 266.328 714.96}}
-dict set q45_boxes ck_rs {{201.528 921.24 266.328 942.84}}
+dict set q45_boxes ck_rn {{201.528 550.8 266.328 572.4}}
+dict set q45_boxes ck_rs {{201.528 583.2 266.328 604.8}}
 dict set q45_boxes ck_rp3 {{20.304 639.312 146.448 654.432}}
 dict set q45_boxes ck_rp8 {{311.472 639.312 437.616 654.432}}
 dict set q45_boxes ck_rp4 {{20.304 656.616 146.448 671.736}}

@@ -33,8 +33,8 @@ def build(nl=False):
            '// Pure clock rewiring around the unchanged rp2_45 body: zero added edges.\n' + rtl)
     (ROOT / f'rtl/physical/{top}.sv').write_text(rtl)
     regions = {'ck': copy.deepcopy(g['regions']['ck']),
-               'ck_rn': [[201.528, 693.36, 266.328, 714.96]],
-               'ck_rs': [[201.528, 921.24, 266.328, 942.84]]}
+               'ck_rn': [[201.528, 550.8, 266.328, 572.4]],
+               'ck_rs': [[201.528, 583.2, 266.328, 604.8]]}
     # Each macro's read-facing half-gutter. A 2.16 um shared-logic corridor
     # separates the halves; column gutters and outer bands also stay unfenced.
     row_gutters = {3: (639.312, 654.432), 4: (656.616, 671.736),
@@ -59,6 +59,19 @@ def build(nl=False):
         x, y = m['at']
         w, h = (121.824, 62.91) if 'ot_rom' in m['view'] else (47.52, 432) if 'u_node' in m['inst'] else (99.792, 140.4)
         obstacles.append([x - 5.4, y - 5.4, x + w + 5.4, y + h + 5.4])
+    # Bound every complete-pair -> RQR and RQR -> core incident leg,
+    # including every point of the assigned rectangles (actual routes remain required).
+    def span(a, b):
+        return max(abs(x-u)+abs(y-v) for x in (a[0],a[2]) for y in (a[1],a[3])
+                   for u in (b[0],b[2]) for v in (b[1],b[3]))
+    reach = {}
+    for i in range(10):
+        bank = i % 5
+        target = 'ck_rs' if bank < 3 else 'ck_rn'
+        reach[f'ck_rp{i}->{target}'] = round(span(regions[f'ck_rp{i}'][0], regions[target][0]), 3)
+    for root in ('ck_rs', 'ck_rn'):
+        reach[f'{root}->ck'] = round(span(regions[root][0], regions['ck'][0]), 3)
+    assert max(reach.values()) <= 500, reach
     boxes = []
     for key, rs in regions.items():
         for box in rs:
@@ -93,7 +106,7 @@ def build(nl=False):
     assert set(clocks) == {p['name'] for p in pins if p['clock']}
     g.update(top=top, clocks=clocks, pins=pins, regions=regions,
              state='HELD local ROM-pair candidate; source, capacity and physical proof required',
-             macro_clock_roots=macro_by_root, normal_edges_added=0)
+             macro_clock_roots=macro_by_root, normal_edges_added=0, critical_region_span_bound_um=reach)
     (out / 'held_grant.json').write_text(json.dumps(g, indent=1) + '\n')
     s.update(name=name, top=top, clock_ports=clocks, clock_cts_roots=soft,
              io_tcl=f'physical/ref_tile/{name}/assigned_pins.tcl',
