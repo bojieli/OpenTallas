@@ -11,8 +11,17 @@
 // from 0 at reset).  Extra negative controls at PQ 1: OT_S81_CFG7_MUT_TAG, OT_S81_CFG7_MUT_NOFAULT, OT_S81_CFG7_MUT_NOHOLD.
 // +define+TB_CFG7_IL7 (FILL-S2 2026-10-15): the DUT at LAYOUT 1 with the seven macro models loaded in that layout (word k
 // of phase p in macro k % 7, row 4p + k / 7); the reference and every check are unchanged.
+// +define+TB_CFG7_PINREG (S-ELEM-PQ/COLL 2026-10-16): the DUT at PINREG 1 (every pin registered).  The reference is fed
+// the stimulus through one reset-cleared pin-flop stage and its outputs go through 3 reset-cleared stages (the DUT's
+// +2 capture-side edges and its output flops); go_tag is checked 4 edges after the stimulus go.  Everything else (words,
+// macro reads, extent, multi-enable) is unchanged.
 module tb_ot_s81_cfg7_seq;
     parameter integer PQ = 0;
+`ifdef TB_CFG7_PINREG
+    localparam integer PINREG = 1, OD = 3, GD = 4;
+`else
+    localparam integer PINREG = 0, OD = 0, GD = 0;
+`endif
 `ifdef TB_CFG7_IL7
     localparam integer LAYOUT = 1;
 `else
@@ -39,10 +48,31 @@ module tb_ot_s81_cfg7_seq;
     wire rv, rge, rbusy, rfault;
     wire [4:0] ra;
     wire [47:0] rd;
+    // reference input stage: PINREG 1 = one reset-cleared pin-flop stage (the DUT's lc/ef pin flops)
+    reg i_cgo = 0, i_go = 0; reg [PHW-1:0] i_ph = 0; reg [2:0] i_np = 0; reg [1:0] i_ef = 0;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin i_cgo <= 0; i_go <= 0; i_ph <= 0; i_np <= 0; i_ef <= 0; end
+        else begin i_cgo <= cfg_go; i_go <= go; i_ph <= phase; i_np <= np; i_ef <= ef; end
+    wire r_cgo = PINREG ? i_cgo : cfg_go, r_go = PINREG ? i_go : go;
+    wire [PHW-1:0] r_ph = PINREG ? i_ph : phase;
+    wire [2:0] r_np = PINREG ? i_np : np;
+    wire [1:0] r_ef = PINREG ? i_ef : ef;
+    wire rv0, rge0, rbusy0, rfault0; wire [4:0] ra0; wire [47:0] rd0;
     ot_v41_pair_pq_ld_frontend #(.PHW(PHW), .PQ(PQ)) ref_ld (
-        .clk(clk), .rst_n(rst_n), .cfg_go(cfg_go), .cfg_ph(phase), .cfg_np(np), .go(go), .e_sh_free(ef[0]),
-        .e_bank_free(ef[1]), .cm_a(cm_a), .cm_q(payload[cm_a]), .c_v(rv), .c_a(ra), .c_d(rd), .go_e(rge),
-        .ld_busy(rbusy), .fault(rfault));
+        .clk(clk), .rst_n(rst_n), .cfg_go(r_cgo), .cfg_ph(r_ph), .cfg_np(r_np), .go(r_go), .e_sh_free(r_ef[0]),
+        .e_bank_free(r_ef[1]), .cm_a(cm_a), .cm_q(payload[cm_a]), .c_v(rv0), .c_a(ra0), .c_d(rd0), .go_e(rge0),
+        .ld_busy(rbusy0), .fault(rfault0));
+    // reference output stages (OD, reset-cleared)
+    reg [56:0] rpipe [0:3];
+    integer pi;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) for (pi = 0; pi < 4; pi++) rpipe[pi] <= '0;
+        else begin
+            rpipe[0] <= {rv0, rge0, rbusy0, rfault0, ra0, rd0};
+            for (pi = 1; pi < 4; pi++) rpipe[pi] <= rpipe[pi-1];
+        end
+    wire [56:0] rsel = (OD == 0) ? {rv0, rge0, rbusy0, rfault0, ra0, rd0} : rpipe[OD-1];
+    assign {rv, rge, rbusy, rfault, ra, rd} = rsel;
     // DUT + seven real-macro functional models
     wire [11:0] a;
     wire [6:0] ce;
@@ -55,12 +85,12 @@ module tb_ot_s81_cfg7_seq;
     // run at PQ 0 only
     initial if (PQ != 0) $fatal(1, "TB_CFG7_BF is the PQ 0 master");
     assign gtag = 2'd0;
-    ot_s81_cfg7_seq_bf #(.LAYOUT(LAYOUT)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq_bf #(.LAYOUT(LAYOUT), .PINREG(PINREG)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
         .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
         .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st));
 `else
-    ot_s81_cfg7_seq #(.PQ(PQ), .LAYOUT(LAYOUT)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq #(.PQ(PQ), .LAYOUT(LAYOUT), .PINREG(PINREG)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
         .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
         .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st), .ef(ef), .go_tag(gtag));
@@ -68,9 +98,12 @@ module tb_ot_s81_cfg7_seq;
     // the PQ spine's op tag (bt_tag = ist): +1 per go broadcast, 0 at reset
     reg [1:0] stag = 0;
     integer tags = 0;
+    reg [3:0] gp = 0;      // gp[k] before an edge = go before the edge k + 1 earlier
+    always @(posedge clk or negedge rst_n) if (!rst_n) gp <= 4'd0; else gp <= {gp[2:0], go};
+    wire go_chk = (GD == 0) ? go : gp[GD-1];
     always @(posedge clk or negedge rst_n)
         if (!rst_n) stag <= 2'd0;
-        else if (go) begin
+        else if (go_chk) begin
             if (gtag !== (PQ != 0 ? stag : 2'd0)) $fatal(1, "go_tag %0d, spine tag %0d", gtag, stag);
             tags++;
             stag <= stag + 2'd1;
