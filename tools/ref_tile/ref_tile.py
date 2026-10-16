@@ -45,6 +45,7 @@ import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
 import clock_entry_constraints  # noqa: E402
+import raw_macro_clocks  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -1373,6 +1374,10 @@ HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
 def gen_hooks(s: dict, kd: str) -> dict:
+    try:
+        raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
+    except (ValueError, OSError) as error:
+        raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
@@ -1385,8 +1390,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
-            if s.get("soft_root_macro_masters"):
-                pre_cts.append("set ::ot_ce_soft_root_macros {" + " ".join(s["soft_root_macro_masters"]) + "}")
+            pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
@@ -1757,6 +1761,12 @@ def referenced_paths(s: dict, kd: str) -> list:
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
     if s["macros"] or s["children"]:
         out.append(f"{kd}/place.tcl")
+    if s.get("soft_root_macro_masters") or s.get("soft_root_macro_bindings"):
+        try:
+            _, raw_paths = raw_macro_clocks.contract(s, ROOT)
+        except (ValueError, OSError) as error:
+            raise SpecError(str(error)) from error
+        out += ["tools/ref_tile/raw_macro_clocks.py", *raw_paths]
     return out
 
 
@@ -2061,6 +2071,19 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
                    lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
                        tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
                    transform=not bool(grant))
+    # SCALAR-PIN LINT (ROOT 10-16, coordinator): a scalar RTL port must export as pin x, never x[0] (recipe-3 wrapper
+    # declared [0:0] before e3919f90e; such a view mis-binds every die netlist that connects .x(...))
+    try:
+        sys.path.insert(0, str(ROOT / "tools/ref_tile"))
+        from scalar_pin_view import scalar_pin_lint
+        bad_sc = scalar_pin_lint(o / f"{top}.lef", ROOT / kit, top) if (o / f"{top}.lef").is_file() else []
+    except Exception as e:  # noqa: BLE001
+        bad_sc = []
+        res.setdefault("warns", []).append(f"scalar_pin_lint not run: {type(e).__name__}: {e}")
+    if bad_sc:
+        res.setdefault("fails", []).append(f"scalar_pin_lint: RTL-scalar ports exported as one-bit buses {bad_sc[:8]} "
+                                           f"({len(bad_sc)}): rebuild with ot_pin_regs.tcl >= e3919f90e")
+        res["verdict"] = "FAIL"
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])
