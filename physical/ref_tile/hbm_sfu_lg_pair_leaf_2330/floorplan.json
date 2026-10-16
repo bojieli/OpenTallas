@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  43.2,
+  21.6,
   129.6
  ],
  "core": [
   2.16,
   2.16,
-  41.040000000000006,
+  19.44,
   127.44
  ],
  "why": "spec outline",
- "std_area_um2": 900,
+ "std_area_um2": 374,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -53,7 +53,7 @@
   [
    "WARN",
    "util",
-   "utilisation 18% outside 45%-60% (std 900 + macro 0 in core 4871 um2)",
+   "utilisation 17% outside 45%-60% (std 374 + macro 0 in core 2165 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
