@@ -493,7 +493,7 @@ class PinRegs(unittest.TestCase):
         s = {"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": True}}
         p = RT.pin_regs_plan(s)
         self.assertEqual((p["clock"], p["latency_cycles"]), ("clk", {"input": 1, "output": 1}))
-        self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK=clk"])
+        self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK='clk'", "--orfs-var OT_PIN_REGS_RESET_PORTS=''"])
         self.assertIsNone(RT.pin_regs_plan({"kind": "tile", "clock_port": "clk"}))
         with self.assertRaises(RT.SpecError):
             RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False}})       # no reason

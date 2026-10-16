@@ -55,6 +55,45 @@ def export(table: Path, wrapper: Path, top: str, source_commit: str) -> dict:
                 scope='Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification')
 
 
+def validate_roles(report, wrapper, spec, read_source):
+    """Require declared control ports to remain direct wires in actual wrapper.
+
+    Reset polarity and synchronous/asynchronous meaning remain owned by the
+    source RTL: a direct wire preserves both. No reset-name inference is used.
+    Literal partial buses are rejected by the synthesis helper, not widened.
+    """
+    from audit_registered_clocks import clock_ports as sdc_clocks
+    clocks = set(spec.get('clock_ports', []))
+    if spec.get('clock_port'):
+        clocks.add(spec['clock_port'])
+    source_hashes = {}
+    for source in spec.get('sdc_extra', []):
+        text = read_source(source)
+        if text is None:
+            raise ValueError('unresolved clock-role source: ' + source)
+        source_hashes[source] = hashlib.sha256(text.encode()).hexdigest()
+        found, unknown = sdc_clocks(text)
+        if unknown:
+            raise ValueError('unresolved clock-role expressions: ' + source)
+        clocks.update(found)
+    resets = set(spec.get('reset_ports', []))
+    base = lambda name: re.sub(r'\[\d+\]$', '', name)
+    clocks, resets = {base(n) for n in clocks}, {base(n) for n in resets}
+    if clocks & resets:
+        raise ValueError('conflicting clock/reset declarations: ' + ','.join(sorted(clocks & resets)))
+    text = wrapper.read_text()
+    for role, names in [('clock', clocks), ('reset', resets)]:
+        for name in names:
+            rec = report['ports'].get(name)
+            if not rec or rec['register_edges'] != 0:
+                raise ValueError('declared ' + role + ' selected as data or absent: ' + name)
+            direct = r'\.' + re.escape(name) + r'\s*\(\s*' + re.escape(name) + r'\s*\)'
+            if not re.search(direct, text) or re.search(r'(?<![A-Za-z0-9_$])' + re.escape(name) + r'__ot_q\b', text):
+                raise ValueError('declared ' + role + ' is not direct in transformed wrapper: ' + name)
+    return dict(clocks=sorted(clocks), resets=sorted(resets), source_sha256=source_hashes,
+                reset_meaning='source RTL polarity and reset semantics preserved by direct wiring')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('table', 'wrapper', 'out'):
