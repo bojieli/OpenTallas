@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81hc_ctfxsnt_ref-s2-2root-1da74f562/record/views/ot_s81_hc_ctfxs_nt/ot_s81_hc_ctfxs_nt.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxsnt_ref-s4-dlpin-74eadf261/record/views/ot_s81_hc_ctfxs_nt/ot_s81_hc_ctfxs_nt.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 3021 of 3025 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cs_n[0] M5 (80.016,24.277), cs_n[10] M5 (80.016,24.277), cs_n[11] M5 (80.016,24.277))"
- ],
- "summary": "ot_s81_hc_ctfxs_nt 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 3025 blocked-above 0 blocked-same 0; clock clk insertion 127 ps; clock clk_l insertion 200 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "ot_s81_hc_ctfxs_nt 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 3025 blocked-above 0 blocked-same 0; clock clk insertion 155 ps; clock clk_l insertion 203 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_hc_ctfxs_nt",
   "W": 576.72,
@@ -40,28 +38,21 @@
   "face": {
    "face_pins": 3025,
    "blocked_above": 0,
-   "covered_below": 183,
+   "covered_below": 141,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 3021,
-   "band_examples": [
-    "cs_n[0] M5 (80.016,24.277)",
-    "cs_n[10] M5 (80.016,24.277)",
-    "cs_n[11] M5 (80.016,24.277)",
-    "cs_n[12] M5 (80.016,24.277)",
-    "cs_n[13] M5 (80.016,24.277)",
-    "cs_n[14] M5 (80.016,24.277)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 126.53,
-    "min_ps": 85.95
+    "max_ps": 155.44,
+    "min_ps": 106.5
    },
    "clk_l": {
-    "max_ps": 200.17,
-    "min_ps": 103.61
+    "max_ps": 202.59,
+    "min_ps": 105.96
    }
   },
   "pockets": {
@@ -70,7 +61,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 282
+    "added": 526
    },
    "count": 0,
    "area_um2": 0,
