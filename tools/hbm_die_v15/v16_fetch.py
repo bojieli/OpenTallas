@@ -80,7 +80,8 @@ def main():
             w = V.get(c, {}).get('wrapper')
             if not w or (a.cells and c not in a.cells):
                 continue
-            ok = subprocess.run(['ssh', h, f'test -s {a.remote_root}/syn/{c}/{w}_synth_ff.lib && echo y'],
+            ok = subprocess.run(['ssh', h, f'test -s {a.remote_root}/syn/{c}/{w}_synth_ff.lib && '
+                                f'grep -qx OT_ETM_DONE_ff {a.remote_root}/syn/{c}/etm.log && echo y'],
                                 capture_output=True, text=True).stdout.strip()
             if ok == 'y':
                 found[c] = h
