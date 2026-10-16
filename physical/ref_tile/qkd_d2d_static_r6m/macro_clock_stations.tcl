@@ -70,7 +70,7 @@ foreach target $targets {
     if {$best eq "" || $score>21.6*$mu} {error "LOCAL_MACRO_CLK no local legal station for bank$bank distance $score DBU"}
     lassign $best ri x y orient
     set cell [odb::dbInst_create $mb $mm ot_local_macro_clk_$bank]
-    $cell setOrient $orient;$cell setLocation $x $y;$cell setPlacementStatus FIRM;$cell setDoNotTouch 1
+    $cell setOrient $orient;$cell setLocation $x $y;$cell setPlacementStatus FIRM
     set input [$cell findITerm A];set output [$cell findITerm Y]
     if {$input eq "NULL" || $output eq "NULL"} {error {LOCAL_MACRO_CLK BUFx24 pin ABI mismatch}}
     set leaf [odb::dbNet_create $mb ot_local_macro_clk_${bank}_net]
@@ -87,6 +87,7 @@ foreach cell $added {
         set it [$cell findITerm $power]
         if {$it eq "NULL" || [$it getNet] eq "NULL" || [[$it getNet] getName] ne $power} {error "LOCAL_MACRO_CLK missing actual $power connection for [$cell getName]"}
     }
+    $cell setDoNotTouch 1
 }
 if {[llength $added]!=4} {error {LOCAL_MACRO_CLK did not insert exactly four stations}}
 puts {LOCAL_MACRO_CLK exact4 legal local stations, actual VDD/VSS connected; no source clock ports/phases/edges changed}
