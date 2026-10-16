@@ -63,7 +63,7 @@ def main():
 
     defs = ' '.join('-D' + d for d in h['defines'])
     read = 'read_verilog -sv -defer -DSYNTHESIS ' + defs + ' ' + ' '.join(map(str,physical_sources)) + ';\n'
-    seed = read + 'hierarchy -check -top dsfd_sp_pq_produced;\nwrite_json ' + str((a.out/'hierarchy.json').resolve()) + ';\n'
+    seed = read + 'hierarchy -check -top dsfd_sp_pq_produced; proc;\nwrite_json ' + str((a.out/'hierarchy.json').resolve()) + ';\n'
     run(a.yosys, seed, a.out/'elaborate')
     design = json.loads((a.out/'hierarchy.json').read_text())
     blackboxes=[]
