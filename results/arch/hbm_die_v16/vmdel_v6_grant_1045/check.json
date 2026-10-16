@@ -1,0 +1,51 @@
+{
+ "verdict": "PASS",
+ "bits": 1490,
+ "faces": {
+  "S": {
+   "bits": 1121,
+   "length_um": 257.04,
+   "layer": "M5",
+   "whole_face_cut": 0.418674,
+   "worst_10um_window_cut": 0.4608,
+   "span_um": [
+    4.332,
+    252.684
+   ]
+  },
+  "N": {
+   "bits": 282,
+   "length_um": 257.04,
+   "layer": "M5",
+   "whole_face_cut": 0.105322,
+   "worst_10um_window_cut": 0.1248,
+   "span_um": [
+    4.332,
+    252.684
+   ]
+  },
+  "W": {
+   "bits": 80,
+   "length_um": 151.2,
+   "layer": "M4",
+   "whole_face_cut": 0.050794,
+   "worst_10um_window_cut": 0.2208,
+   "span_um": [
+    4.332,
+    39.948
+   ]
+  },
+  "E": {
+   "bits": 7,
+   "length_um": 151.2,
+   "layer": "M4",
+   "whole_face_cut": 0.004444,
+   "worst_10um_window_cut": 0.0288,
+   "span_um": [
+    121.212,
+    146.844
+   ]
+  }
+ },
+ "tcl_sha256": "98811b9aaf7f497e69d0e205b48c1f4cc2b0c490f290a31e2489dfc2a868e831"
+}

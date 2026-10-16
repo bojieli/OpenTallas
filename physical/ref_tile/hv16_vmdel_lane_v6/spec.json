@@ -1,0 +1,217 @@
+{
+ "name": "hv16_vmdel_lane_v6",
+ "top": "ot_hbm_svc_vmdel_lane_v6",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split_v6.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "S": [
+   "clk_cap",
+   "fill_v_i",
+   "fill_bank_i",
+   "fill_slot_i",
+   "fill_epoch_i",
+   "fill_data_i"
+  ],
+  "N": [
+   "clk",
+   "dq"
+  ],
+  "W": [
+   "rst_n",
+   "bank_id",
+   "begin_v_i",
+   "begin_bank_i",
+   "begin_epoch_i",
+   "start_i",
+   "start_bank_i",
+   "start_epoch_i",
+   "start_base_sector_i",
+   "full0_all",
+   "full1_all",
+   "pcbad_all"
+  ],
+  "E": [
+   "full0",
+   "full1",
+   "pcbad",
+   "block_ready",
+   "busy",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 4
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30
+  }
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/gates-1045",
+  "branch": "claude/hnl-vmd-1045",
+  "tag": "v6g1045",
+  "purpose": "VMDEL v6 lane leaf (v16 die: vmdel_<q><b> x32) for the H-DIE 10:25 grant: clk_cap S-mid + body clk N-mid, exact literal pins on the actual grid. Successor of native-FAIL v5b hv15_vmdel_lane-hv15-20b84db92. Benches: 20k-cycle seed 11/23 protocol equivalence + clock ownership (bench_delivery_v6_protocol.sh 0) PASS; semantic mutants 1 (group-select data), 2 (SRAM read slot), 4 (status pin flops bypassed) must FAIL.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "results/arch/hbm_die_v16/vmdel_v6_grant_1045",
+   "rtl/hbm_accel/loader/service_native",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hv16_vmdel_lane_v6",
+  "benches": [
+   {
+    "name": "v6_protocol",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6_protocol.sh {RUN}/bench/v6_protocol 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DELIVERY_V6_PROTOCOL_GATE PASS mutant=0"
+   },
+   {
+    "name": "mut1_group_data",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6_protocol.sh {RUN}/bench/mut1_group_data 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut2_sram_slot",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6_protocol.sh {RUN}/bench/mut2_sram_slot 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut4_status_bypass",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_v6_protocol.sh {RUN}/bench/mut4_status_bypass 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "outline": {
+  "w": 257.04,
+  "h": 151.2,
+  "exact": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "v6 RTL registers every pin: every input (incl. rst_n, bank_id strap and the 24 cross-lane status bits) lands on the D pin of one plain flop on clk_cap (no logic, no async clear); every output leaves from a body flop on clk. Synthesis pin registers would add a second, unpriced stage."
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_cap"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [],
+   "outputs": [
+    "full0",
+    "full1",
+    "pcbad",
+    "block_ready",
+    "busy",
+    "fault",
+    "dq"
+   ]
+  },
+  "cap": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cap"
+   ],
+   "inputs": [
+    "rst_n",
+    "bank_id",
+    "begin_v_i",
+    "begin_bank_i",
+    "begin_epoch_i",
+    "start_i",
+    "start_bank_i",
+    "start_epoch_i",
+    "start_base_sector_i",
+    "full0_all",
+    "full1_all",
+    "pcbad_all",
+    "fill_v_i",
+    "fill_bank_i",
+    "fill_slot_i",
+    "fill_epoch_i",
+    "fill_data_i"
+   ],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "io_tcl": "results/arch/hbm_die_v16/vmdel_v6_grant_1045/assigned_pins.tcl",
+ "slot_change_request": "H-DIE 10:25 grant results/arch/hbm_die_v16/vmdel_v6_grant_1045/grant.json (tools/hbm_v15_harden/vmdel_v6_pin_grant_1045.py): v6 master ot_hbm_svc_vmdel_lane_v6, same 257.04x151.2 outline; clk_cap S-mid 128.508 M5 (new related phase-0 capture root, input pin-flop band) + body clk N-mid 128.508 M5 (was W y40.6); 1,490 literal bits on the actual 0.012/0.048 grid, S cut 0.419 / worst 10-um window 0.461.",
+ "structural_change": "Native audit FAIL of CLOSED v5b hv15_vmdel_lane-hv15-20b84db92 (launch 346.6 dq[264..266] = bank_id strap in->flop->out at the W pins; capture 274.2 rst_n async clears + 63 pins >190: fill_data_i HB2-padded, full*/pcbad AND/OR before the pin flop; one root R 286.7 / spread 96.4 from a W-corner entry y40.6 ~250 um from the E half of the S face). v6 (source 25a390064): two related phase-0 CTS roots -- clk_cap (input pin-flop band only: rst_n -> one sync D-pin flop, bank_id in 3 band flops, 24 plain status pin flops with the 8-lane reduction after the flop) entering S-mid 128.508, and clk (body, 4 SRAMs, output flops) entering N-mid 128.508; W inputs banded at y 4.3-40 beside the S-mid cap entry, E outputs at y 121-147 beside the N-mid body entry. Function, LAT=2, STATUS_LAT=2 unchanged; 0 added normal cycles."
+}

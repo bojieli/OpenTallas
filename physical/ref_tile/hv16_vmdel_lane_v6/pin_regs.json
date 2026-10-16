@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_vmdel_lane_v6",
+ "enable": false,
+ "reason": "v6 RTL registers every pin: every input (incl. rst_n, bank_id strap and the 24 cross-lane status bits) lands on the D pin of one plain flop on clk_cap (no logic, no async clear); every output leaves from a body flop on clk. Synthesis pin registers would add a second, unpriced stage."
+}

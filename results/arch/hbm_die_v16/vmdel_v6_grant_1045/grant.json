@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.hbm.vmdel_v6_literal_pin_grant.v1",
+ "status": "GRANTED_H_DIE_1025_ISOLATED_MEASUREMENT",
+ "grant_issued": "2026-10-16T10:25-07:00 H-DIE -> H-NETLIST (el1011-hbmdie.log 10:27): VMDEL v6 clk_cap S-mid x=128.508 on M5 with body clk at N-mid",
+ "cell": "ot_hbm_svc_vmdel_lane_v6",
+ "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split_v6.sv",
+ "source_sha256": "05d548534244a9c6e726a0a089f73cda97918e3607a72f0b9f7644b4717ed2fe",
+ "source_commit": "25a390064",
+ "request": "results/rtl/hbm_vmdel_v6_0833/physical_request.json",
+ "request_sha256": "db243e5b96aec04ff336d7586d1c8ad0da44eaa5c54b1b675265830dff46fc39",
+ "outline_um": [
+  257.04,
+  151.2
+ ],
+ "layer_cap": "M5",
+ "pg_layer": "M5",
+ "strap_layer": "M6",
+ "clock_entries": [
+  {
+   "pin": "clk_cap",
+   "face": "S",
+   "layer": "M5",
+   "center_um": 128.508,
+   "role": "input capture band (every input pin incl. rst_n, bank_id)"
+  },
+  {
+   "pin": "clk",
+   "face": "N",
+   "layer": "M5",
+   "center_um": 128.508,
+   "role": "body: control, PC state, 4 SRAMs, output flops"
+  }
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "supersedes_request_clock": "S x 4.320..4.416 (W corner) -- revised per VIS-HBM/H-HARDEN 10:08: E half of S face was ~250 um from a corner entry",
+ "actual_grid": {
+  "M4": {
+   "phase": 0.012,
+   "pitch": 0.048
+  },
+  "M5": {
+   "phase": 0.012,
+   "pitch": 0.048
+  },
+  "evidence": "results/arch/hbm_idx_scheduled_0811/dense_actual_track_readback_0935.json"
+ },
+ "notch_rule": "N/S M5 pins clear of the M5 PG stripe pairs (core 2.16 + 0.300 + 5.4k, w 0.12, s 0.072), both offset readings",
+ "faces": {
+  "S": {
+   "bits": 1121,
+   "length_um": 257.04,
+   "layer": "M5",
+   "whole_face_cut": 0.418674,
+   "worst_10um_window_cut": 0.4608,
+   "span_um": [
+    4.332,
+    252.684
+   ]
+  },
+  "N": {
+   "bits": 282,
+   "length_um": 257.04,
+   "layer": "M5",
+   "whole_face_cut": 0.105322,
+   "worst_10um_window_cut": 0.1248,
+   "span_um": [
+    4.332,
+    252.684
+   ]
+  },
+  "W": {
+   "bits": 80,
+   "length_um": 151.2,
+   "layer": "M4",
+   "whole_face_cut": 0.050794,
+   "worst_10um_window_cut": 0.2208,
+   "span_um": [
+    4.332,
+    39.948
+   ]
+  },
+  "E": {
+   "bits": 7,
+   "length_um": 151.2,
+   "layer": "M4",
+   "whole_face_cut": 0.004444,
+   "worst_10um_window_cut": 0.0288,
+   "span_um": [
+    121.212,
+    146.844
+   ]
+  }
+ },
+ "bits": 1490,
+ "assigned_pins_tcl_sha256": "98811b9aaf7f497e69d0e205b48c1f4cc2b0c490f290a31e2489dfc2a868e831",
+ "instances": [
+  "vmdel_SW0",
+  "vmdel_SW1",
+  "vmdel_SW2",
+  "vmdel_SW3",
+  "vmdel_SW4",
+  "vmdel_SW5",
+  "vmdel_SW6",
+  "vmdel_SW7",
+  "vmdel_SE0",
+  "vmdel_SE1",
+  "vmdel_SE2",
+  "vmdel_SE3",
+  "vmdel_SE4",
+  "vmdel_SE5",
+  "vmdel_SE6",
+  "vmdel_SE7",
+  "vmdel_NW0",
+  "vmdel_NW1",
+  "vmdel_NW2",
+  "vmdel_NW3",
+  "vmdel_NW4",
+  "vmdel_NW5",
+  "vmdel_NW6",
+  "vmdel_NW7",
+  "vmdel_NE0",
+  "vmdel_NE1",
+  "vmdel_NE2",
+  "vmdel_NE3",
+  "vmdel_NE4",
+  "vmdel_NE5",
+  "vmdel_NE6",
+  "vmdel_NE7"
+ ],
+ "extra_clock_entries_per_die": 32,
+ "added_normal_cycles": 0,
+ "open": [
+  "actual ODB pin rectangle readback (gate floorplan.pin_geometry)",
+  "per-root insertion/spread, native launch<=220/capture<=190/spread<=80",
+  "TT setup / FF hold / DRC 0",
+  "die parent binding (d4 frozen; no view alias)"
+ ]
+}
