@@ -670,6 +670,16 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
         if s.get("m6_pin_grant") or (slot or {}).get("m6_pin_grant"):
             out["m6_pin_grant"] = s.get("m6_pin_grant") or slot["m6_pin_grant"]
+        stub = m6_pin_access_stub(s)
+        if stub:
+            # Q-XSLEAF 2026-10-16 (Q-COMPUTE-DIE option 1): M6 face pins above an M5 signal cap crash DRT pin access
+            # (V5 via outside the maze); route M2-M6 with M6 obstructed except the E/W pin stubs (m6_pin_access.tcl)
+            if not out.get("m6_pin_grant") or why != "pin-only grant":
+                raise SpecError("pin_access.m6_stub_um needs a named M6 pin grant (pin-only, cap M5)")
+            deep = min(float(p["max_depth_um"]) for p in out["m6_pin_grant"]["ports"])
+            if not 0 < stub <= deep:
+                raise SpecError(f"pin_access.m6_stub_um {stub} must be > 0 and <= the grant's max_depth_um {deep}")
+            out.update(rlayers=("M2", "M6"), m6_pin_access_stub_um=stub)
         if slot:
             ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
             if out["pg_layer"] not in ok:
@@ -708,6 +718,14 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out
+
+
+M6_PIN_ACCESS_TCL = "physical/common_flow/m6_pin_access.tcl"
+
+
+def m6_pin_access_stub(s: dict) -> float | None:
+    v = (s.get("pin_access") or {}).get("m6_stub_um")
+    return float(v) if v else None
 
 
 def clock_rlayers(lc: dict) -> tuple[str, str] | None:
@@ -1443,6 +1461,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
         lc = layer_contract(s, contract_slot(s))
         post_drt += ["source /src/tools/ref_tile/signal_layer_audit.tcl",
                      f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
+    if s["kind"] == "tile" and m6_pin_access_stub(s):
+        m6pa = [f"set ::ot_m6_stub_um {m6_pin_access_stub(s)}", f"source /src/{M6_PIN_ACCESS_TCL}"]
+        pre_grt += m6pa
+        post_drt += m6pa
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
@@ -1728,6 +1750,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
             (s["kind"] == "cluster" and cluster_signal_cap(s, contract_slot(s))[0] == "M6")):
         out.append("tools/ref_tile/signal_layer_audit.tcl")
+    if s["kind"] == "tile" and m6_pin_access_stub(s):
+        out.append(M6_PIN_ACCESS_TCL)
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
