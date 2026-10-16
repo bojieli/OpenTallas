@@ -48,7 +48,17 @@
     "tt_boundary_mean_ps": 286.6,
     "tt_leaf_max_ps": 318.6,
     "tt_spread_ps": 71.4,
-    "reason_for_successor": "default grouped IO placed105outputFF in10um requiring21columns; r2 spreads pins over full assigned faces"
+    "reason_for_successor": "default grouped IO placed105outputFF in10um requiring21columns; r2 spreads pins over full assigned faces",
+    "primary_after_r2": "Route pilot primary: positive actual pre-route setup and<=80ps spread; actualDRT/nativeports remain unqualified"
   },
-  "qualification": "UNQUALIFIED: routed TT setup/FF hold/DRC and actual SM seam remain required"
+  "qualification": "UNQUALIFIED: routed TT setup/FF hold/DRC and actual SM seam remain required",
+  "r2_gate": {
+    "verdict": "WARN but native UNQUALIFIED",
+    "setup_placement_ps": -57.7,
+    "hold_placement_ps": 20.2,
+    "tt_boundary_mean_ps": 322.3,
+    "tt_spread_ps": 103.6,
+    "images_inspected": true,
+    "cause": "source-native direct macro to pin-cloned sticky-fault flop; fullface output pin spread lengthens clock and fault path"
+  }
 }

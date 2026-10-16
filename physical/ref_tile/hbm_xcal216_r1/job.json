@@ -1,14 +1,14 @@
 {
- "name": "hbm_xcal216_r1-r1-COMMIT",
+ "name": "hbm_xcal216_r1-r1-a380caec1",
  "block": "ot_hbm_svc_sm_xcal",
  "ref_tile": true,
  "owner": "Codex:H-XC-physical-1016",
- "purpose": "Actual source-native XC leaf; source af261fbcb MUT0; 216x216 nested SM grant x3788.64 y1343.52 provisional faces. Per-XC SRAM 0.016206mm2 (all32 0.5186mm2), never 0.52mm2 per XC. Fixed compiler cycles retained.",
+ "purpose": "Source-native XC224.64x216 pilot at SM-local3788.64,1343.52. NativeCTS r1 setup+57.1ps/spread71.4ps; r2spread regresses\u221257.7ps/spread103.6ps, retain r1 actualsource. Exact38/38 and mutants1/2; sourcebench countcapture fix is jobmetadata only. PerXC SRAM0.016206mm2, all32~0.5186mm2. FullattentionSMseam remains unqualified.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/xc-physical-1016",
-  "commit": "COMMIT",
+  "commit": "a380caec1",
   "extra_paths": [
    "rtl/test/hbm_netlist_v16",
    "rtl/hbm_accel/loader/service_native",
@@ -32,7 +32,7 @@
     "cmd": "bash tools/hbm_die_v15/run_xcal_physical_bench.sh 0 {RUN}/bench/xcal0",
     "expect": "pass",
     "pass_regex": "XCAL_LOCKSTEP PASS",
-    "min_count_regex": "words matched 38 / expected 38",
+    "min_count_regex": "words matched (38) / expected 38",
     "threads": 1,
     "peak_ram_gb": 2
    },
