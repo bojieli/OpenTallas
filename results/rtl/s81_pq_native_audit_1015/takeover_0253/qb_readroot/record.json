@@ -1,0 +1,73 @@
+{
+  "scope": "Structural source candidate only. All actual native/related-root timing pending; no die or physical adoption",
+  "canonical_bank_reconstruction": "byte-identical after exactly module rename, new real clk_rd port, and existing256rd FF clock reassignment",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv": "8bbde3ed38fd6d94ae99821c11d73e0f009881e084a35476206990a98c2294d1",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_readroot_candidate.sv": "b061a7dd9f02d7c38110b823d1d921e7fee478c045f8f5f9c7f8dc03d7b2585c",
+    "tests/s81/tb_qb_bank_readroot.sv": "26eae44677fa9374b55241184d54b3a34613e4abaecdb83ae3a6224292a33304",
+    "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "positive": {
+    "checks": 1030,
+    "physical_rows": 128,
+    "read_bits": 256,
+    "selectors": 2,
+    "cycles_added": 0,
+    "new_FFs": 0
+  },
+  "negative": {
+    "name": "stopped actual read-output clock",
+    "exit_code": 1,
+    "fails_at_check": 513
+  },
+  "parent": {
+    "actual_four_bank_wrapper": "ot_s81_pq_qb_pipe_readroot",
+    "new_ports": "clk_rd[3:0], one real physical clock per existing bank read-output group",
+    "original_head_and_SRAM": "unchanged canonical source",
+    "parent_source_proof": "Full actual four-bank parent vs native v41 QB golden PASS345800bitchecks/384logicalwords/96rows4actualSRAMs, exponent fault detected; stoppedreadroot FAILcycle623"
+  },
+  "required_physical_checks": [
+    "actual root sink ownership256rd FF vs input/SRAM clocks",
+    "native launch<=220 capture<=190 spread<=80 independently eachroot",
+    "ordinary relatedroot SRAM->read and read->head setup/hold",
+    "real die-delivered phi-R per measuredroot and pin references",
+    "TTsetup/FFhold/DRC0",
+    "allincident cuts with power derating and approved current slots"
+  ],
+  "fullparent_source_sha256": {
+    "tests/s81/tb_s81_pq_qb_pipe_readroot.sv": "f957c74c89b701251dbe002528c1149722e952d553195b2c1a39a4d04afc5d71",
+    "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+  },
+  "b5_exact_routed_native_diagnostic": {
+    "cell": "ot_s81_pq_qb_bankp_native",
+    "view": "bankp-b5-diagnostic",
+    "lib_cell": "ot_s81_pq_qb_bankp_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 176.3,
+    "spread_ps": 65.2,
+    "outputs": 256,
+    "inputs": 545,
+    "launch_ps": 150.9,
+    "launch_pin": "rd[88]",
+    "capture_ps": 139.4,
+    "capture_pin": "i1[1]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "not_closed": "FFhold-14.70ps remains strict failure; native pass alone never tile closure"
+  },
+  "viewed_images": {
+    "/home/ubuntu/artifacts/s81-pq-takeover-0253/bankp-b5-diagnostic/images/floorplan.png": "3b06a0b0e3ce3e2c5cb9f3b2c8145e6cdea95be1ea6542f6c87b1d2090bd79fb",
+    "/home/ubuntu/artifacts/s81-pq-takeover-0253/bankp-b5-diagnostic/images/density.png": "0f2f9bcbb8f71a0871c03983a0cd16e6df32bf4677db386461c4fbc7125067f0"
+  },
+  "geometry_findings": "Actual final centred SRAM; N uniform read-output row; S fullwidth inputcapture/pad band with several near-red bins; W controls sparse. No raw diagonal corner knot. Separate N read and S input clock candidates follow actual sink bands; clock routing/native/hold still pending."
+}
