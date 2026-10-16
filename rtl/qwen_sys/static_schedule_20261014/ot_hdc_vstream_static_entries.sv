@@ -42,7 +42,13 @@ module ot_hdc_vstream_static_entries #(
                                       // kept relay copy per group of 8 lanes first); requires LOFF = 1.  Lanes see the
                                       // memories 2 + 2*RD edges later (their ML grows by that); outputs leave 1 + RD later.
     parameter integer RD = 2,         // LT: relay stages each way between the vstream ports / control and each lane tile
-    parameter integer RED_ENTRIES = 0 // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
+    parameter integer RED_ENTRIES = 0, // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
+    // Q-ELEM-SUC 2026-10-16 (opt-in, default 0 = unchanged): ORS = 1 takes the lane's REQUEST-side outputs (va/vb/vc and
+    // crom strobes + addresses, VM lane writes, reducer inputs l_ov/l_out/l_red/l_redsq/l_raddr/l_last) after RD - 1
+    // output relays instead of RD, so a parent pin register on the VM / constant-ROM faces (qfd_sp_su64_sfu PINREG)
+    // keeps every request/write at the far pin on the SAME edge.  KV writes, wrom, retire, l_last (progress) and l_fault
+    // keep RD.  Requires LT = 1 and RD >= 2.
+    parameter integer ORS = 0
 ) (
     input wire[SW-1:0]ck_head,ck_exp,ck_rcp,ck_rsq,
     input  wire [SW-1:0] ck_lane, input wire[8:0]ck_red,
@@ -180,6 +186,7 @@ module ot_hdc_vstream_static_entries #(
 
     // -- lanes --------------------------------------------------------------------------
     wire [SW-1:0]    l_ov, l_redsq, l_last, l_fault, l_wrom_re;
+    wire [SW-1:0]    l_last_red;                       // the reducer's l_last (ORS: request-side relay depth)
     wire [SW*32-1:0] l_out;
     wire [SW*2-1:0]  l_red;
     wire [SW*AW-1:0] l_raddr, l_wrom_addr;
@@ -240,6 +247,7 @@ module ot_hdc_vstream_static_entries #(
                 .sx_exp_v(), .sx_exp_x(), .sy_exp_y(32'd0), .sy_exp_vo(1'b0), .sy_exp_f(1'b0),
                 .sx_rcp_v(), .sx_rcp_x(), .sy_rcp_y(32'd0), .sy_rcp_f(1'b0),
                 .sx_rsq_v(), .sx_rsq_x(), .sy_rsq_y(32'd0), .sy_rsq_f(1'b0));
+            assign l_last_red[l] = l_last[l];
         end else begin : g_tile
             //: inbound -- broadcast fields from this lane's group relay (stage 1), then RD - 1 per-lane stages; per-lane
             //: fields (live, offsets, memory answers) RD per-lane stages; the tile adds its pin flop.
@@ -286,8 +294,27 @@ module ot_hdc_vstream_static_entries #(
                 .kv_we(o_v[4]), .kv_waddr(o_d[ODW-1-6*AW-32 -: AW]), .kv_wdata(o_d[ODW-1-7*AW-32 -: 32]),
                 .l_ov(o_v[3]), .l_out(o_d[AW+3 +: 32]), .l_red(o_d[AW+1 +: 2]), .l_redsq(o_d[AW]),
                 .l_raddr(o_d[0 +: AW]), .l_last(o_v[2]), .retire(o_v[1]), .l_fault(o_v[0]));
+            if (ORS == 0) begin : g_orl
             ot_hdc_delay #(.W(OVW), .D(RD), .RESET(1)) u_ov (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_v), .q(o_vq));
             ot_hdc_delay #(.W(ODW), .D(RD)) u_od (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_d), .q(o_dq));
+            assign l_last_red[l] = o_vq[2];
+            end else begin : g_ors
+            //: RD - 1 stages for every field, then one more stage on the long fields only
+            //: o_v: [10] va_re [9] vb_re [8] vc_re [7] wrom_re [6] crom_re [5] vm_we [4] kv_we [3] l_ov [2] l_last [1] retire [0] l_fault
+            wire [OVW-1:0] o_vs; wire [ODW-1:0] o_ds;
+            wire [4:0] lvl_q; wire [2*AW+32-1:0] ld_q;
+            ot_hdc_delay #(.W(OVW), .D(RD - 1), .RESET(1)) u_ov (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_v), .q(o_vs));
+            ot_hdc_delay #(.W(ODW), .D(RD - 1)) u_od (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_d), .q(o_ds));
+            ot_hdc_delay #(.W(5), .D(1), .RESET(1)) u_ovl (.clk(ck_lane[l]), .rst_n(rst_l),
+                .d({o_vs[7], o_vs[4], o_vs[2], o_vs[1], o_vs[0]}), .q(lvl_q));
+            //: o_d long fields: wrom_addr [ODW-1-3*AW -: AW], kv_waddr [ODW-1-6*AW-32 -: AW], kv_wdata [ODW-1-7*AW-32 -: 32]
+            ot_hdc_delay #(.W(2*AW+32), .D(1)) u_odl (.clk(ck_lane[l]), .rst_n(rst_l),
+                .d({o_ds[ODW-1-3*AW -: AW], o_ds[ODW-1-6*AW-32 -: AW+32]}), .q(ld_q));
+            assign o_vq = {o_vs[10:8], lvl_q[4], o_vs[6:5], lvl_q[3], o_vs[3], lvl_q[2:0]};
+            assign o_dq = {o_ds[ODW-1 -: 3*AW], ld_q[2*AW+32-1 -: AW], o_ds[ODW-1-4*AW -: 2*AW+32],
+                           ld_q[AW+32-1 -: AW+32], o_ds[ODW-1-7*AW-64 : 0]};
+            assign l_last_red[l] = o_vs[2];
+            end
             assign {va_re[l], vb_re[l], vc_re[l], l_wrom_re[l], crom_re[l], vm_we[l], kv_we[l], l_ov[l], l_last[l],
                     l_retire[l], l_fault[l]} = o_vq;
             assign {va_addr[l*AW +: AW], vb_addr[l*AW +: AW], vc_addr[l*AW +: AW], l_wrom_addr[l*AW +: AW],
@@ -310,7 +337,7 @@ module ot_hdc_vstream_static_entries #(
         else rd_v <= l_ov[0] && l_red[1:0] != 2'd0;
     end
     always @(posedge clk) begin
-        rd_mx <= (l_red[1:0] == 2'd2); rd_sq <= l_redsq[0]; rd_last <= l_last[0]; rd_addr <= l_raddr[0 +: AW];
+        rd_mx <= (l_red[1:0] == 2'd2); rd_sq <= l_redsq[0]; rd_last <= l_last_red[0]; rd_addr <= l_raddr[0 +: AW];
         for (li = 0; li < SW; li = li + 1)
             rd_x[32*li +: 32] <= l_ov[li] ? l_out[32*li +: 32] : (l_red[1:0] == 2'd2) ? l_out[31:0] : 32'd0;
     end
