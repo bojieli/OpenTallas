@@ -1,7 +1,7 @@
 // UNADOPTED parent source candidate. Full actual RTL is retained; residual write/control
 // logic is not yet hardened, and no parent timing/fit is claimed. Native bank clock
 // order is region-major,14banks/region,9pins/bank; old dormant bank-clock ABI pins
-// are removed from this physical top. Return/control/relay roots have no added RTL edges.
+// are removed from this physical top. Return transport RO=1: 0 additional normal edges versus production RO1.
 `timescale 1ns/1ps
 // Source-specialized parallel writeback VM. The fixed PAR_RB=1 binding survives
 // plain macro netlist emission; it does not depend on a parameter sidecar.
@@ -419,7 +419,7 @@ module qfd_sp_vector_memory_par_partitioned (
 );
     qfd_sp_vector_memory #(
         .USE_MACRO(1), .USE_LEAF_CLOCKS(1), .OBS_MUT(0), .MUT(0),
-        .PAR_RB(1), .PMUT(0), .NATIVE_BANKS(1),
+        .PAR_RB(1), .PMUT(0), .NATIVE_BANKS(1), .RETURN_RO(1),
         .USE_NATIVE_CLOCKS(1), .RETURN_LEAVES(1), .READ_CONTROL_LEAVES(1), .RETURN_CLOCKS(1), .RELAY_TILES(1)
     ) u_vm (
         .native_ck(native_ck), .return_ck(return_ck), .read_control_ck(read_control_ck), .relay_ck(relay_ck),

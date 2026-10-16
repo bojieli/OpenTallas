@@ -17334,3 +17334,12 @@ QWEN_VM_PARTITIONED_RELAY_1016 = dict(
     relay_area_um2=388327, parent_outline_um=(4872, 3239.36),
     independent_relay_clock_entries=289, physical_qualified=False,
     open="Actual placement, assigned pins, incident cuts, phi-R timing and write/control hardening")
+
+# Necessary return transport margin candidate (unadopted): paired-layout actual
+# 96-plane source radius >=2697.84um. Six relay stages give seven nominal
+# 400um segments; actual clock/pin/route budgets remain a hard admission gate.
+QWEN_VM_RETURN_RO6_1016 = dict(return_ro=6, old_return_ro=1,
+    source_radius_lower_bound_um=2697.84, nominal_segment_um=400,
+    relay_tiles=849, extra_relay_tiles=560, relay_area_um2=1140795.1872,
+    normal_latency_delta_cycles=5, su_vl=19, row_read_rl=18,
+    full_shape_sram_unchanged=True, physical_qualified=False, compiler_adopted=False)
