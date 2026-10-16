@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.vm_face_roots_source.v1",
+  "roots": [
+    "clk_in_n",
+    "clk_in_e",
+    "clk_in_s",
+    "clk_in_w",
+    "clk_ctrl",
+    "clk_s1",
+    "clk_s2",
+    "clk_ecc",
+    "clk_out_n",
+    "clk_out_e",
+    "clk_out_s",
+    "clk_out_w",
+    "clk_ma",
+    "clk_mb",
+    "clk_mc"
+  ],
+  "map_legend": "0N1E2S3W",
+  "quadrants": [
+    {
+      "q": 0,
+      "RG": 5,
+      "WG": 2,
+      "read_faces": [
+        3,
+        1,
+        0,
+        2,
+        3
+      ],
+      "write_faces": [
+        3,
+        1
+      ]
+    },
+    {
+      "q": 1,
+      "RG": 4,
+      "WG": 2,
+      "read_faces": [
+        3,
+        1,
+        0,
+        2
+      ],
+      "write_faces": [
+        3,
+        1
+      ]
+    },
+    {
+      "q": 2,
+      "RG": 5,
+      "WG": 3,
+      "read_faces": [
+        3,
+        1,
+        0,
+        3,
+        1
+      ],
+      "write_faces": [
+        3,
+        1,
+        0
+      ]
+    },
+    {
+      "q": 3,
+      "RG": 5,
+      "WG": 3,
+      "read_faces": [
+        3,
+        1,
+        0,
+        3,
+        1
+      ],
+      "write_faces": [
+        3,
+        1,
+        0
+      ]
+    }
+  ],
+  "normal_data_edges_added": 0,
+  "capture_write_edges": 3,
+  "response_read_edges": 6,
+  "source_scope": "Additive candidate, stableS unchanged; no physical views or native claims.",
+  "macro_floorplan_proposal": {
+    "outline_um": [
+      270,
+      313.2
+    ],
+    "macros": "3actual174.744x70.488 SRAMs with20um vertical channels; phase/legalisation must be exact before kit"
+  },
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_face_roots.sv": "8d66689bd321ff4c08aa29e78b2df928b0bf8bf7ec48b3d8caa3d2f3cd87793d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_face_physical.sv": "5a022bdda9dbaff6c67e4e4fbcf11eda05d28eae6275bc6df5d2af19c20e9f91",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q3.sv": "44f806580162baa4f2a073e3e41eec0d8ac7513948283c5d0cc64f83b1261c62",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q1.sv": "e6f9829e98debdf72bc399cffe4bdb0bb402d6df0229c6d1b48839373696adc4",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q0.sv": "12fb09a29089d18684d067d3bb52d27c54f9b58118fa5a1be6104423e2d8280a",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q2.sv": "9e80ce866f89813c050d3a4e63de8f268c1d78e4661441205a1893948b1f95f4"
+  }
+}
