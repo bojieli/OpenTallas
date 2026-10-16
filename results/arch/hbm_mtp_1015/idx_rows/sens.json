@@ -1,0 +1,27 @@
+{
+ "model": {
+  "topk_ii": 47.0,
+  "index_serial": false,
+  "verify_cycles": 1791389.6
+ },
+ "static_meas": {
+  "topk_ii": 139.8,
+  "index_serial": false,
+  "verify_cycles": 1809949.6
+ },
+ "rows_meas": {
+  "topk_ii": 49.2,
+  "index_serial": false,
+  "verify_cycles": 1791829.6
+ },
+ "static_meas_index_serial": {
+  "topk_ii": 139.8,
+  "index_serial": true,
+  "verify_cycles": 1816937.7
+ },
+ "none": {
+  "topk_ii": null,
+  "index_serial": false,
+  "verify_cycles": 1853298.5
+ }
+}

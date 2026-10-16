@@ -271,7 +271,8 @@ class Module:
             rhs = m.group(2).strip()
             if not re.fullmatch(r"[\s{}(),\d'bBhHdDoOxXzZ_]*", rhs):
                 self._kind = 'real'; return 'real'
-        for m in re.finditer(r'^\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
+        # (?:^|;): a one-line module ('module m (...); child #(..) u (...); endmodule') has its body start at ';'
+        for m in re.finditer(r'(?:^|;)\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
             if m.group(1) in idx and m.group(1) != self.name:
                 self._kind = 'real'; return 'real'
         # gate primitives count as behaviour (a hand netlist)

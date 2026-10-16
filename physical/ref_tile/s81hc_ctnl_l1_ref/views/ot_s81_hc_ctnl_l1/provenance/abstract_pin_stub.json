@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctnl_l1.lef",
+    "sha256": "76c56bd78595327c90a7f92a22706d7af2486feffa54b743d76568085a43289c"
+  },
+  "output": {
+    "path": "ot_s81_hc_ctnl_l1.lef",
+    "sha256": "0739466a07c3e50c78e178446f10e29b6142714a60f58111719bfa1674237a56"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "0d9e9dc8bc48d42688e2e3cc33271ad7dcafdd7a2989fa848dcbc59ba8af8acf",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py",
+    "basis": "job_source_commit",
+    "source_commit": "2f4ed494d"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/ot_s81_hc_ctnl_l1.lef",
+    "ot_s81_hc_ctnl_l1.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: sq_out[31]\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/s81-hccol-0600/physical/ref_tile/s81hc_ctnl_l1_ref/views/ot_s81_hc_ctnl_l1/ot_s81_hc_ctnl_l1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [
+      "(f) face-pin access: 1304 of 1395 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. acc_in[0] M4 (0.060,37.488), acc_in[10] M4 (0.060,37.488), acc_in[11] M4 (0.060,37.488))",
+      "(h) pockets: 1216 open own-layer pocket rects on M5 (1905.71 um2; gaps < 1.536 um between the child's own obstacles; largest (13.896,36.421)-(15.408,64.357), (59.4,24.469)-(60.576,43.861), (89.112,31.955)-(90.528,47.749)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)"
+    ],
+    "summary": "ot_s81_hc_ctnl_l1 142.56 x 95.04: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 1395 blocked-above 0 blocked-same 0; clock clk insertion 219 ps; pockets M5 1216 (legacy view)",
+    "info": {
+      "cell": "ot_s81_hc_ctnl_l1",
+      "W": 142.56,
+      "H": 95.04,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.947,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.947,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1395,
+        "blocked_above": 0,
+        "covered_below": 405,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 1304,
+        "band_examples": [
+          "acc_in[0] M4 (0.060,37.488)",
+          "acc_in[10] M4 (0.060,37.488)",
+          "acc_in[11] M4 (0.060,37.488)",
+          "acc_in[12] M4 (0.060,37.488)",
+          "acc_in[13] M4 (0.060,37.488)",
+          "acc_in[14] M4 (0.060,37.488)"
+        ]
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 219.42,
+          "min_ps": 166.67
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": null,
+        "count": 1216,
+        "area_um2": 1905.715,
+        "examples": [
+          "(13.896,36.421)-(15.408,64.357)",
+          "(59.4,24.469)-(60.576,43.861)",
+          "(89.112,31.955)-(90.528,47.749)"
+        ]
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81hc_ctnl_l1_ref-fixed-lane-2f4ed494d",
+    "source_commit": "2f4ed494d",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctnl_l1_ref-fixed-lane-2f4ed494d/routes/s81hc_ctnl_l1_ref_fixed_lane_2f4ed494d/work/orfs",
+    "kind": "verdict-replay re-export (tools/tt_views/view_export.py --require-check, main) of a pre-export-SDC-fix view",
+    "raw_matches_original_manifest": true,
+    "raw_matches_pre_fix_record": true,
+    "libs_byte_identical_to_published": true,
+    "final_matches_published_export": true,
+    "verdict_check": {
+      "ff": {
+        "export_ps": 4.004019338310627,
+        "verdict_ps": 4.0,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 73.00943183352615,
+        "verdict_ps": 73.01,
+        "ok": true
+      }
+    },
+    "admission": {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-2698561-1792157305",
+      "memory_gb": 12,
+      "threads": 3
+    },
+    "note": null
+  }
+}
