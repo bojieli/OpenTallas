@@ -182,11 +182,11 @@
  "structural_change": "Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
  "slot_change_request": "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice.json",
  "job": {
-  "owner": "Claude:el1015-fill-qwen",
-  "branch": "claude/el1015-fillq-1015",
-  "tag": "v142",
+  "owner": "Claude:ELEM-CENSUS kit helper",
+  "branch": "claude/census-qkit-1016",
+  "tag": "ec1",
   "cycles_added": 0,
-  "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified (FILL-Q 10-15: Codex aa0c50c21 boot-pin capture candidate, v1.4.2 pins 233825580)",
+  "purpose": "ELEM-CENSUS 10-16: submit the existing FILL-Q qkd_hslice kit (Codex aa0c50c21 boot-capture candidate, v1.4.2 pins 233825580; RTL unchanged since feceba3b2) regenerated on current main generator and re-gated on current main. qkd_hslice_dn = MX placement of this view (no separate master). Full parent remains unqualified.",
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_leaf_bench.sh",
    "rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv",
@@ -233,5 +233,9 @@
  "inter": [],
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "die-placed HOST PC slice of fixed-latency chains (one register a slot: station fi/fo 291 b, ci/co, ai/ao, fault, status sk/sd/so/sf, boot bgi/bgo; kv_die.py slice chain stages count exactly 1 edge per slot): the RTL already captures the station inputs (fdq/fvq/cq/aq/ffq, lpc_status, bgi_q) and drives every chain output from a flop (fod/fov, co, ao, fault_o, sko/sdo/soo/sfo, bgo); recipe-2 io_flop_at_pins allow_none=false anchors each pin's own flop at the face. Recipe-3 wrapper pin registers would add 2 edges per slot (64 over the 32-slot chain) and change the die's compiled chain latencies; kit stays recipe 2 (FILL-Q 10-15 kit, Codex aa0c50c21 candidate)."
  }
 }
