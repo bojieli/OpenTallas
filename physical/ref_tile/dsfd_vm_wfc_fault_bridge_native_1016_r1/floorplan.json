@@ -33,13 +33,16 @@
    "ck_t",
    "rst_t",
    "core_fault",
+   "core_fault_b",
    "core_summary"
   ],
   "E": [
    "ck_s",
    "rst_s",
    "serial_fault",
-   "serial_summary"
+   "serial_summary",
+   "g_q",
+   "e_q"
   ]
  },
  "clock_port": "ck_t",

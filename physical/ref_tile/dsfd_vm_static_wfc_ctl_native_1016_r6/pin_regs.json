@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "dsfd_vm_static_wfc_ctl",
- "enable": false,
- "reason": "Explicit xv/xd and e_v/e_d first-stage registers in RTL; returned tail registers are separate. Four-edge response epoch shift is proven in pipeline gate."
-}

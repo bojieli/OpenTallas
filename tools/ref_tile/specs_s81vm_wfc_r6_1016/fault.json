@@ -33,7 +33,8 @@
    ],
    "inputs": [
     "rst_t",
-    "core_fault"
+    "core_fault",
+    "core_fault_b"
    ],
    "outputs": [
     "core_summary"
@@ -52,7 +53,9 @@
     "serial_fault"
    ],
    "outputs": [
-    "serial_summary"
+    "serial_summary",
+    "g_q",
+    "e_q"
    ]
   }
  },
@@ -71,13 +74,16 @@
    "ck_t",
    "rst_t",
    "core_fault",
+   "core_fault_b",
    "core_summary"
   ],
   "E": [
    "ck_s",
    "rst_s",
    "serial_fault",
-   "serial_summary"
+   "serial_summary",
+   "g_q",
+   "e_q"
   ]
  },
  "macros": [],

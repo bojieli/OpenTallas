@@ -22,7 +22,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_t} {core_fault}} outputs {{core_summary}}} {serial} {clock ot_io_serial io_budget_ps 222.222 inputs {{rst_s} {serial_fault}} outputs {{serial_summary}}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_t} {core_fault} {core_fault_b}} outputs {{core_summary}}} {serial} {clock ot_io_serial io_budget_ps 222.222 inputs {{rst_s} {serial_fault}} outputs {{serial_summary} {g_q} {e_q}}}]
 set ::ot_ce_source_domains [dict create {ck_t} {core} {ck_s} {serial}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_t} {ck_s}}

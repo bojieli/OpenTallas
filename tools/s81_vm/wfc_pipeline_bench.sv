@@ -6,7 +6,7 @@ module tb_wfc_pipeline;
  reg[559:0] f=0; reg[3:0] ev=0,evd=0;reg[2047:0] ed=0,edd=0;
  wire[1028:0] tr,td;wire wr,wd;wire[13:0] ar,ad;wire[511:0] dr,dd;wire[3:0] vr,vd;wire[55:0] rr,rd;wire fr,fd;
  dsfd_vm_static_wfc_r5_ref #(.RLAT(RLAT),.RESPONSE_PAD(PAD)) ref_(cs,ct,cs,ct,cs,ct,rs,rt,rs,rt,rs,rt,f,tr,wr,ar,dr,vr,rr,ev,ed,1'b0,fr);
- dsfd_vm_static_wfc #(.RLAT(RLAT),.RESPONSE_PAD(PAD)) dut(cs,ct,cs,ct,rs,rt,cs,ct,cs,ct,rs,rt,rs,rt,rs,rt,f,td,wd,ad,dd,vd,rd,evd,edd,1'b0,fd);
+ dsfd_vm_static_wfc #(.RLAT(RLAT),.RESPONSE_PAD(PAD)) dut(cs,ct,cs,ct,rs,rt,ct,rt,cs,ct,cs,ct,rs,rt,rs,rt,rs,rt,f,td,wd,ad,dd,vd,rd,evd,edd,1'b0,fd);
  reg[526:0] whist=0;reg[59:0] ahist=0;
  reg[1025:0] shist[0:3];reg[1025:0] thist[0:2];reg[3:0] vhist=0;
  integer n=0,k,seed=1,seed0,reads=0,writes=0;
@@ -33,10 +33,10 @@ module tb_wfc_pipeline;
   end
   if(reads<100||writes<100)$fatal(1,"vacuous data traffic");
   // The legacy error ABI includes return-slot mismatch/core faults, even with healthy x43.
-  force dut.u_ctl.r_bad=1'b1;
+  force dut.u_ret.r_bad=1'b1;
   repeat(12)@(posedge cs);#1;
   if(td[1028]!==1'b1 || fd!==1'b1)$fatal(1,"core diagnostic not reported to BOTH domains");
-  release dut.u_ctl.r_bad;
+  release dut.u_ret.r_bad;
   // Reset and isolate the opposite diagnostic direction.
   rt=0;rs=0;repeat(8)@(posedge ct);#1;rt=1;rs=1;
   repeat(12)@(posedge ct);force dut.x43f=1'b1;

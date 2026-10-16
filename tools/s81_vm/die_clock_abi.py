@@ -74,10 +74,9 @@ DISPOSITION = {
     'ck_write_header_t': ('RETIRED_BY_A2F', 'legacy W0 header replaced by s81_a2_w0_header (A2-F keeps it; view owed)'),
     'ck_write_payload_t': ('RETIRED_BY_A2F', 'legacy W0 payloads replaced by s81_a2_w0_payload x4 (A2-F keeps them; '
                            'views owed)'),
-    'ck_wfc_control_s': ('LEAF_IN_FLIGHT', 'control flops extracted to the two-root hard leaf dsfd_vm_static_wfc_ctl '
-                         '(parent wires only; differential gate + full master gate PASS); route '
-                         'dsfd_vm_static_wfc_ctl_native_1015_r1-native1-COMMIT-60bbca547'),
-    'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'stream root of dsfd_vm_static_wfc_ctl (same route)'),
+    'ck_wfc_control_s': ('NO_SINK', 'r6 serial control/grant now in independent fault leaf ck_wfc_fault_s; retained source ABI port has no sink'),
+    'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'r6 request leaf dsfd_vm_wfc_request own root ck; native gate pending'),
+    'ck_wfc_return_t': ('LEAF_IN_FLIGHT', 'r6 return leaf dsfd_vm_wfc_return own root ck; native gate pending'),
     'ck_xio_control_s': ('OPEN_GLUE', 'dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three '
                          'combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* '
                          'is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs '
