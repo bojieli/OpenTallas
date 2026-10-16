@@ -3,14 +3,17 @@
 import collections
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
+SEED='5fce4c7b5607c476c206908187ebf6371fbb73ba'
 
 
 def main():
     old=ROOT/'physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s/pin_request.json'
-    request=json.loads(old.read_text());pins=request['pins'];mapping={}
+    seed_bytes=subprocess.check_output(['git','show',SEED+':'+str(old.relative_to(ROOT))],cwd=ROOT)
+    request=json.loads(seed_bytes);pins=request['pins'];mapping={}
     for i in range(1068):
         old_name=f'xb[{i}]'
         name=f'xb_data[{i}]' if i<1024 else f'xb_meta[{i-1024}]'
@@ -34,7 +37,7 @@ def main():
     assert min(spacing.values())>=.096-1e-6,spacing
     manifest=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/front_roots_source.json'
     source_hash=json.loads(manifest.read_text())['outputs']['rtl/s81/ot_s81_bf_front_roots.sv']
-    request.update(top='dsfd_bf_front_roots',status='PROPOSED_NEW_CLOCK_ABI_NOT_GRANTED',basis=dict(source_manifest=str(manifest.relative_to(ROOT)),source_manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),parent_pin_request_sha256=hashlib.sha256(old.read_bytes()).hexdigest(),all_3269_original_pin_shapes_unchanged=True,renamed_xb_pins=1068,old_to_new_mapping='legacy_xb_pin_mapping.json',new_clock_pins=added,min_sameface_samelayer_center_spacing_um=spacing,physical_qualification=False,slot_change_grant='PENDING',native_capture='PENDING'))
+    request.update(top='dsfd_bf_front_roots',status='PROPOSED_NEW_CLOCK_ABI_NOT_GRANTED',basis=dict(source_manifest=str(manifest.relative_to(ROOT)),source_manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),parent_pin_request_source_commit=SEED,parent_pin_request_sha256=hashlib.sha256(seed_bytes).hexdigest(),all_3269_original_pin_shapes_unchanged=True,renamed_xb_pins=1068,old_to_new_mapping='legacy_xb_pin_mapping.json',new_clock_pins=added,min_sameface_samelayer_center_spacing_um=spacing,physical_qualification=False,slot_change_grant='PENDING',native_capture='PENDING'))
     out=ROOT/'physical/ref_tile_specs/s81_bf_native_1015/front_five_roots';out.mkdir(exist_ok=True)
     (out/'pin_request.json').write_text(json.dumps(request,indent=2)+'\n')
     (out/'legacy_xb_pin_mapping.json').write_text(json.dumps(mapping,indent=2)+'\n')

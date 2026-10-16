@@ -12,8 +12,14 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 ROOT=Path(__file__).resolve().parents[2]
+SEED='5fce4c7b5607c476c206908187ebf6371fbb73ba'
+
+
+def read_seed(path):
+    return subprocess.check_output(['git','show',SEED+':'+str(path.relative_to(ROOT))],cwd=ROOT,text=True)
 
 
 def once(s,a,b):
@@ -23,7 +29,7 @@ def once(s,a,b):
 
 def main():
     fp=ROOT/'rtl/s81/ot_s81_bf_front.sv'
-    original=fp.read_text()
+    original=read_seed(fp)
     s=once(original,'module ot_s81_bf_front #(','module ot_s81_bf_front_roots #(')
     s=once(s,'    input wire io_clk,','    input wire io_n,io_w,io_e, // separate north/west/east physical roots\n    input wire io_clk,')
     pos=s.index('    // Keep all programme fields together')
@@ -74,8 +80,8 @@ def main():
     seam_input=ROOT/'rtl/s81/ot_s81_bf_seam.sv'
     core_output=ROOT/'rtl/v41rom/ot_v41_bf_front_core_roots.sv'
     seam_output=ROOT/'rtl/s81/ot_s81_bf_seam_roots.sv'
-    core_output.write_text(once(core_input.read_text(),'module ot_v41_bf_front_core #(','module ot_v41_bf_front_core_roots #('))
-    seam_output.write_text(once(seam_input.read_text(),'module ot_s81_bf_seam #(','module ot_s81_bf_seam_roots #('))
+    core_output.write_text(once(read_seed(core_input),'module ot_v41_bf_front_core #(','module ot_v41_bf_front_core_roots #('))
+    seam_output.write_text(once(read_seed(seam_input),'module ot_s81_bf_seam #(','module ot_s81_bf_seam_roots #('))
     body=once(body,'ot_v41_bf_front_core #(','ot_v41_bf_front_core_roots #(')
     assert body.count('ot_s81_bf_seam #(')==2
     body=body.replace('ot_s81_bf_seam #(','ot_s81_bf_seam_roots #(')
@@ -83,7 +89,7 @@ def main():
     # crossing is still a timed half-cycle path with no new architectural edge.
     out=ROOT/'rtl/s81/ot_s81_bf_front_roots.sv';out.write_text(head+relay+body)
     wp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv'
-    w=once(wp.read_text(),'module dsfd_bf_front_static #(','module dsfd_bf_front_roots #(')
+    w=once(read_seed(wp),'module dsfd_bf_front_static #(','module dsfd_bf_front_roots #(')
     w=once(w,'    input  wire [1067:0] xb,','    input wire [1023:0] xb_data,\n    input wire [43:0] xb_meta,')
     w=once(w,');\n    wire w_busy;',');\n    // Exact physical ABI reconstruction; no state or payload edge.\n    wire [1067:0] xb = {xb_meta,xb_data};\n    wire w_busy;')
     w=w.replace('// Actual compiler-programmed BF front: all legacy payload pins retained;', '// Actual compiler-programmed BF front: old xb physical ABI split by face;')
@@ -91,9 +97,9 @@ def main():
     w=once(w,'    ot_s81_bf_front #(','    ot_s81_bf_front_roots #(')
     w=once(w,'.io_clk(io_clk)', '.io_clk(io_clk), .io_n(io_n), .io_w(io_w), .io_e(io_e)')
     wo=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv';wo.write_text(w)
-    record=dict(status='SOURCE_CANDIDATE_UNPROVEN',payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,physical_xb_reconstruction='legacy_xb[1067:0] = {xb_meta[43:0], xb_data[1023:0]}',
+    record=dict(status='SOURCE_CANDIDATE_UNPROVEN',input_source_commit=SEED,payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,physical_xb_reconstruction='legacy_xb[1067:0] = {xb_meta[43:0], xb_data[1023:0]}',
       roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme, xb metadata/control, and IO-source lockups','io_n':'north xb[1023:0] data primary capture only','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
-      inputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [fp,wp,core_input,seam_input]},
+      inputs={str(p.relative_to(ROOT)):hashlib.sha256(read_seed(p).encode()).hexdigest() for p in [fp,wp,core_input,seam_input]},
       outputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [out,wo,core_output,seam_output]},
       physical_qualification=False,clock_pins_homes_and_slot_grant='PENDING',native_capture='PENDING')
     rp=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/front_roots_source.json'
