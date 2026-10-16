@@ -1,5 +1,5 @@
 {
- "name": "s81pq_qb_align_native-p4-sclk-1705-f534c3be5",
+ "name": "s81pq_qb_align_native-p4-sclk-1705-ea4e8c39d",
  "block": "ot_s81_pq_qb_align_native",
  "ref_tile": true,
  "owner": "Claude:S-ELEM-PQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-elempq-align-1705",
-  "commit": "f534c3be5",
+  "commit": "ea4e8c39d",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/test/dsrom_sys",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_qb_align_native/s81pq_qb_align_native-p4-sclk-1705-f534c3be5"
+   "to": "results/rtl/ref_tile/s81pq_qb_align_native/s81pq_qb_align_native-p4-sclk-1705-ea4e8c39d"
   }
  ],
  "cycles_added": 0,
