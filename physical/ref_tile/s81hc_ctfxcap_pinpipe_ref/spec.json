@@ -65,13 +65,13 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:S81-HC-takeover",
-  "branch": "codex/s81-hc-takeover-2116",
-  "tag": "ncap-slaunch-caps",
+  "owner": "Claude:s81-engnorm-2210",
+  "branch": "claude/s81-norm-2210",
+  "tag": "ck1",
   "purpose": "Held component structural successor; full HC schedule/adoption open.",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_pinpipe_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref",
-  "structural_change": "Existing v26 576.72x51.84 candidate peer geometry preserved. Explicit N capture plus S launch separates measured417um input-to-output-cloned-capture path. Adds1135 flops and1 fixed serial HC edge; no production adoption before whole HC schedule/cost proof.",
+  "structural_change": "ck1 (S-ENGRAM+NORM 2210): single CTS root (drop OT_CKS_K=4). Existing v26 576.72x51.84 candidate peer geometry preserved. Explicit N capture plus S launch separates measured417um input-to-output-cloned-capture path. Adds1135 flops and1 fixed serial HC edge; no production adoption before whole HC schedule/cost proof.",
   "benches": [
    {
     "name": "pinpipe_exact",
@@ -99,7 +99,15 @@
    }
   ],
   "hold_merge": "Actual canonical die capture slot/pin/peer geometry and native TTFFDRC0 qualification pending",
-  "cycles_added": 1
+  "cycles_added": 1,
+  "reroute_reason": {
+   "kind": "pin_register",
+   "source": "results/arch/s81_engnorm_2210/norm_native_audits_2210.json",
+   "cell": "ot_s81_hc_ctfx_cap_pinpipe",
+   "launch_ps": 223.39,
+   "capture_ps": 173.31,
+   "fix": "One CTS root instead of the OT_CKS_K=4 region split: the split tree is 9 BUFx24 levels (R 261.4 ps TT) and the FF-hold pads on every S launch path scale with that insertion (7 pads, 12 outputs fdx/fdx_local 222.6-223.4 > 220); ctfl_nt (one root, R 99.6) closes the same face style at launch 189.2. Same RTL, outline, pins, cycles."
+  }
  },
  "params": {},
  "children": [],
@@ -123,14 +131,16 @@
   "source": "Existing v26 held request, no die grant claimed"
  },
  "slot_change_request": "S-ENGRAM+NORM 1705 v26 CAP spread candidate: same 576.72x51.84 outline; the v21 pins crammed 1,136 inputs into x 225-342 (9.7 b/um) and 2,270 outputs into x 200-350 (~16 b/um over two layers) with clk at the W edge, which drove 13,759 boundary hold buffers into that span (k4 GRT-0116 M3 V 24,647). v26 spreads both faces over the full width in the original bit order (N 0.50 um, S 0.25 um pitch; the ctfn_nt/ctfs_nt chain above is already full-width 5.6 b/um) and puts clk/rst at the N-face centre like ctfn_nt/ctfs_nt. Request posted to S-DIE el1011-s81die.log.",
- "orfs_vars": {
-  "OT_CKS_K": "4"
- },
- "pre_cts_extra": [
-  "physical/common_flow/clock_split_x.tcl"
- ],
  "pin_regs": {
   "enable": false,
   "reason": "Actual RTL explicitly owns N input capture n_fd/n_fv and S output launch fdx/fv plus fdx_local/fv_local. Reset input is captured by rr. Generic recipe3 wrapper would duplicate these real pin registers and add2 more cycles. Distinct held pinpipe module has exactly1 extra explicit data/valid cycle, verified against old RTL; routed native placement/audit still required."
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/s81_engnorm_2210/norm_native_audits_2210.json",
+  "cell": "ot_s81_hc_ctfx_cap_pinpipe",
+  "launch_ps": 223.39,
+  "capture_ps": 173.31,
+  "fix": "One CTS root instead of the OT_CKS_K=4 region split: the split tree is 9 BUFx24 levels (R 261.4 ps TT) and the FF-hold pads on every S launch path scale with that insertion (7 pads, 12 outputs fdx/fdx_local 222.6-223.4 > 220); ctfl_nt (one root, R 99.6) closes the same face style at launch 189.2. Same RTL, outline, pins, cycles."
  }
 }
