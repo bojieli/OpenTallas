@@ -205,34 +205,26 @@ module ot_qwen_tp8_attention_native_service_w16 #(
    if(er_rsp_v[ea]&&!running)er_bad<=1;
   end
  generate for(s=0;s<2;s=s+1)begin:gp
-  // bank l of pair s takes lane l&3 of stack s (even step) or stack s+2 (odd step); the row's c[6] picks the half
-  wire [7:0] bv;wire [8191:0] bvrow;wire [511:0] bexp;wire [111:0] bt;wire [127:0] bep;reg [7:0] both;
-  genvar l;
-  for(l=0;l<8;l=l+1)begin:gl
-   localparam integer A=4*s+(l&3),B=4*(s+2)+(l&3);
-   wire sa=cv[A]&&ct[14*A+6]==1'(l>>2),sb=cv[B]&&ct[14*B+6]==1'(l>>2);
-   assign bv[l]=sa|sb;
-   assign bvrow[1024*l+:1024]=sb?crow[1024*B+:1024]:crow[1024*A+:1024];
-   assign bexp[64*l+:64]=sb?er_data[64*B+:64]:er_data[64*A+:64];
-   assign bt[14*l+:14]=sb?ct[14*B+:14]:ct[14*A+:14];
-   assign bep[16*l+:16]=sb?cep[16*B+:16]:cep[16*A+:16];
-   always @(posedge clk or negedge rst_n)if(!rst_n)both[l]<=0;else if(sa&&sb)both[l]<=1;
+  // the pair takes its 8 V ports as captured: {stack s lanes 0-3, stack s+2 lanes 0-3}; the columns map port -> bank
+  wire [7:0] bv;wire [8191:0] bvrow;wire [511:0] bexp;wire [111:0] bt;wire [127:0] bep;
+  genvar k2;
+  for(k2=0;k2<8;k2=k2+1)begin:gport
+   localparam integer K=(k2<4)?4*s+k2:4*(s+2)+k2-4;
+   assign bv[k2]=cv[K];assign bvrow[1024*k2+:1024]=crow[1024*K+:1024];assign bexp[64*k2+:64]=er_data[64*K+:64];
+   assign bt[14*k2+:14]=ct[14*K+:14];assign bep[16*k2+:16]=cep[16*K+:16];
   end
-  // V requests: the pair's static walk on its two stacks (ports {s lanes 0-3, s+2 lanes 0-3})
-  wire [7:0] rq;wire [111:0] rqt;wire vrf;
-  ot_qwen_tp8_vrow_wide #(.PAIR(s)) u_vreq(.clk(clk),.rst_n(rst_n),.start(start_pv),.context_len(ctx),
-   .req_valid(rq),.req_t(rqt),.fault(vrf));
+  wire [7:0] rq;wire [111:0] rqt;
   assign v_req_valid[4*s+:4]=rq[3:0];assign v_req_valid[4*(s+2)+:4]=rq[7:4];
   assign v_req_t[56*s+:56]=rqt[55:0];assign v_req_t[56*(s+2)+:56]=rqt[111:56];
   reg rqbad;
   always @(posedge clk or negedge rst_n)if(!rst_n)rqbad<=0;
    else if(((rq[3:0]&~v_req_ready[4*s+:4])!=0)||((rq[7:4]&~v_req_ready[4*(s+2)+:4])!=0))rqbad<=1;
-  assign vf[s]=vrf|rqbad|(|both);
+  assign vf[s]=rqbad;
   ot_qwen_tp8_pv_wide_pair #(.PAIR(s),.FIRST_INPUT_AGE(FIRST_INPUT_AGE),.MUT((DMUT==2&&s==0)?1:0)) u_pv(.clk(clk),.rst_n(rst_n),
-   .start(start_pv),.slice_clk({256{clk}}),.context_len(ctx),.epoch(ep),
-   .in_valid(bv),.in_v(bvrow),.in_e(bexp),.in_t(bt),.in_epoch(bep),
+   .start(start_pv),.col_clk({33{clk}}),.context_len(ctx),.epoch(ep),
+   .in_valid(bv),.in_v(bvrow),.in_e(bexp),.in_t(bt),.in_epoch(bep),.req_valid(rq),.req_t(rqt),
    .out_valid(pvalid[s]),.out_leaf(partial[16384*s+:16384]),.out_epoch(pep[16*s+:16]),.fault(pf[s]),
-   .accepted(),.busy(),.out_age(pv_out_age[16*s+:16]));
+   .busy(),.out_age(pv_out_age[16*s+:16]));
   always @(posedge clk or negedge rst_n)if(!rst_n)vcount[s]<=0;else if(start_pv)vcount[s]<=0;else vcount[s]<=vcount[s]+32'($countones(bv));
  end endgenerate
  assign v_words=vcount[0]+vcount[1];
