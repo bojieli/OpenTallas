@@ -1,0 +1,115 @@
+{
+ "name": "s81_bf_lane4_boundary_r2-ref-COMMIT",
+ "block": "ot_v41_bf_lane4",
+ "ref_tile": true,
+ "owner": "Codex:S81-BF-recovery0253",
+ "purpose": "Prototype localleaf, no pair/die adoption",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "main",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/s81",
+   "rtl/s81",
+   "rtl/v41rom",
+   "results/rtl/s81_bf_clock_1015/c10/recovery_0253",
+   "physical/ref_tile_specs/s81_bf_native_1015/lane4",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+   "results/rtl/s81_bf_programme_1015",
+   "physical/ref_tile_specs/s81_bf_native_1015/lane4_boundary_r2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_v41_bf_lane4 #(.NCHB(8), .TRW(7), .CUT(379), .RC(1), .GRADUAL_RNE(1), .GROUP(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/s81/ot_s81_bf_seam.sv rtl/s81/ot_s81_bf_native.sv rtl/common/ot_prefix.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fpu.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/v41rom/ot_v41_bf16_lanes.sv rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain.sv rtl/v41rom/ot_v41_chain2.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv rtl/v41rom/ot_v41_segtree.sv rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bmul2_rne_prepare.sv rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv rtl/v41rom/ot_v41_rom_elem_qx_w10.sv rtl/v41rom/ot_v41_chain2u2.sv rtl/v41rom/ot_v41_kreg.sv rtl/v41rom/ot_v41_chain3.sv rtl/v41rom/ot_v41_chain4.sv rtl/v41rom/ot_v41_fadd2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_bf16_lanes3.sv rtl/v41rom/ot_v41_tile_clk.sv rtl/v41rom/ot_bf_hdly.sv rtl/v41rom/ot_v41_bf_col.sv rtl/v41rom/ot_v41_bf_front_core.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv rtl/v41rom/ot_v41_segtree6.sv physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v rtl/s81/ot_s81_bf_front.sv rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv rtl/v41rom/ot_v41_bf_lane4.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_leaf_full_shape",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --work {RUN}/leaf_positive",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs"
+   },
+   {
+    "name": "mutant_leaf_clock_stop",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --work {RUN}/leaf_root_stop --mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81_bf_lane4_boundary_r2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81_bf_lane4_boundary_r2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81_bf_lane4_boundary_r2 --out {RUN}/record/views/ot_v41_bf_lane4  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81_bf_lane4_boundary_r2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/s81_die_views/bf_roots_1016/lane4_boundary_r2"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/physical/s81_bf_roots_1016/lane4_boundary_r2/s81_bf_lane4_boundary_r2-ref-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Move the final existing parent XST edge into each real lane4 boundary. Total production XST remains2, zero added compiler cycles, +50 RTL register bits per column; actual native boundary timing remains required.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Historical column one-root53493sinks/R535ps fails native",
+  "fix": "real repeated4lane local source leaf; no unchanged full-column route"
+ }
+}
