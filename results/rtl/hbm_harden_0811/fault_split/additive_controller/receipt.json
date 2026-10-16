@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.hbm_h7_additive_controller_receipt.v1",
+  "source_commit": "a3ece9139",
+  "basis": "Exact original H7 PHYS_WACT2 controller body, additive module declaration name; cfg_faults/reference explicitly bind it; legacy generic main controller unchanged",
+  "proof": {
+    "unit": "oth-ubuntu-2436606-1792167737",
+    "host": "ot-agidock128",
+    "exit": 0,
+    "controller_miter_edges": 49600,
+    "classes": 6,
+    "omission_mutants_rejected": 6
+  },
+  "source_manifest": "results/rtl/hbm_harden_0811/fault_split/additive_controller/sources.json",
+  "physical_qualified": false,
+  "whole_die_qualified": false,
+  "normal_or_fault_edges_added": 0
+}

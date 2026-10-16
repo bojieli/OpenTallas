@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       admits   191 GB (avail 418, growth 179, headroom 48, waiters 0/0 GB) load 81/128 running 37 disk 876 GB 
+ot-run: ot-pve1        admits   160 GB (avail 208, growth 15, headroom 32, waiters 0/0 GB) load 20/28 running 5 disk 1321 GB 
+ot-run: ot-agidock128  admits    51 GB (avail 97, growth 43, headroom 24, waiters 0/0 GB) load 21/64 running 10 disk 291 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2436606-1792167737 after 1 s
+Icarus Verilog version 12.0 (stable) ()
+ROW fault_mutant=none rc=0
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:176: $finish called at 79361000 (1fs)
+PC_CTRL_FAULTS_MITER PASS edges49600 acc_rd2075 acc_wr327 kr5126 wdone326 cols5484 rows6688 sticky_final1
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_faults_miter.sv:84: $finish called at 50814976000 (1fs)
+PC_CTRL_FAULTS_GATE_PASS
+ROW fault_mutant=0 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=0 scalar=01 split=000000
+       Time: 12801000  Scope: tb
+ROW fault_mutant=1 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=1 scalar=01 split=000000
+       Time: 26113000  Scope: tb
+ROW fault_mutant=2 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=2 scalar=01 split=000000
+       Time: 39425000  Scope: tb
+ROW fault_mutant=3 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=3 scalar=01 split=000000
+       Time: 52737000  Scope: tb
+ROW fault_mutant=4 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=4 scalar=01 split=000000
+       Time: 66049000  Scope: tb
+ROW fault_mutant=5 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=5 scalar=01 split=000000
+       Time: 79361000  Scope: tb
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2436606-1792167737): exit 0

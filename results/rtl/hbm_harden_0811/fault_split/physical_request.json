@@ -1,10 +1,10 @@
 {
   "schema": "opentallas.hbm_h7_fault_split_measurement_request.v1",
   "status": "REQUEST_MEASUREMENT_ONLY",
-  "generated": "2026-10-16T09:13:22.667141-07:00",
+  "generated": "2026-10-16T09:26:20.032207-07:00",
   "current_contract_commit": "0dc313220",
-  "source_receipt_commit": "1c4bb9025",
-  "source_receipt": "results/rtl/hbm_harden_0811/fault_split/receipt.json",
+  "source_receipt_commit": "a3ece9139",
+  "source_receipt": "results/rtl/hbm_harden_0811/fault_split/additive_controller/receipt.json",
   "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
   "params": {
     "OREG": 1,
@@ -14,7 +14,7 @@
     "WPAY": 1,
     "QREG": 1
   },
-  "source_sha256": "bd5be073a797d4c14508abd161de8c1e3f6caab5ddb078cba3d0cd0ecfc05af9",
+  "source_sha256": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
   "outline_um": [
     185.76,
     164.16
@@ -9982,5 +9982,13 @@
     "all_legacy_1224_signal_rectangles_on_track": true,
     "new_six_fault_rectangles_on_same_actual_grid": true,
     "note": "Canonical spread_face_pins.OFF M4=0.036 is not the actual M4 Y grid of either captured ODB. Use actual track readback; no invented snap."
-  }
+  },
+  "source_dependencies": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv": "bcdda846683fa0104f37594f8cabbc2df56ab898d715218c82e0fb1008258779",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+  },
+  "namespace_revision": "Exact original H7 controller dependency now additive *_strap_h7. No substitution by main PHYS_WACT1; no change to geometry/pins/params/normal edges/cost."
 }
