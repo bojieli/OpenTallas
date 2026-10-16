@@ -44,8 +44,8 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:qwen-edge-coverage-2240",
-  "branch": "codex/qwen-edge-coverage-2240",
+  "owner": "Claude:Q-ELEM-SU",
+  "branch": "claude/qelem-su-0150",
   "tag": "native45",
   "purpose": "Current-source actualML15/RD2/QLA4/QLM5 nativeCROM5 parent leaf candidate. Old943 dependency differs currentmultiply. VMVL7 unchanged; assignedphase/slots/PG/pins and functionalleafnegativebinding pending. No oldCLOSED alias.",
   "benches": [
@@ -76,5 +76,20 @@
  "reroute_reason": {
   "kind": "dependency_source_change",
   "why_route": "ot_hdc_fp32_mul_lat.sv currentbytehash differs943 actualoldview producer; noalias/promotion"
+ },
+ "pin_ranges": {
+  "clk": [
+   51.84,
+   56.16
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "SU lane / SFU interface is hardware fixed-latency, not compiler-scheduled: the lane body expects every vstream memory answer at exactly 1+ML edges through RD relays and each SFU result at a fixed lane pipeline slot (ot_hdc_vstream_lane_t cy_exp/cy_rcp/cy_rsq). +1 cycle per pin breaks that timing unless ML/RD and the SFU slot are re-parameterised and re-benched; current-source successor of the CLOSED view keeps its interface (Q-ELEM-SU 2026-10-16)"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
  }
 }
