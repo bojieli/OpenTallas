@@ -15,7 +15,7 @@
     "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
     "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
     "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv": "08bd9bf3123f065785ba6b6cc3946845688fde907b9bffd5b97cac949db6fe64",
-    "rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_status_contract.sv": "332912442000cb6a19240f6bf58a7e78dd31820ae2ed5ec17260a2669b6729ac",
+    "rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_status_contract.sv": "979544d3565a7abadd31d2508f4b876ff8fcc61d1bf475a3b7c7850e2de8ae26",
     "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747",
     "rtl/dsrom_sys/s81_static_control/test/run_issuer_status_contract.sh": "e7734475ffd59c7904f0005316eebbeea5a17327d6db1615eb58ff2e4cd508a4",
     "tools/s81_static_control/program.py": "0cc4b547f0251cd8e1a18fb5c5ca8cd95f4244216ce2236645c9a94e8bdd6ccb"
@@ -68,7 +68,7 @@
       "c10 valid",
       "c10 missing final completion"
     ],
-    "negative_control": "early KIT-only consumer fails",
+    "negative_control": "actual registered KIT-only consumer samples kd[53] and old t_st on edge210, falsely accepts c10 before fault status capture; must fail",
     "artifact_sha256": {
       "results/rtl/s81_static_status_1016/c10_early_mutant.log": "8463315da9615635a9ba8001d48e55ce0401eafb9cf600300f91a1f64cc514be",
       "results/rtl/s81_static_status_1016/c10_mode0.log": "1490ee47cbe2f34321c19deaa8c9e7790cc1b1172da2d1e39e72574be5325858",
@@ -76,6 +76,11 @@
       "results/rtl/s81_static_status_1016/c8_mode0.log": "a23e3df51ce68c6c0ac6c5bb74c857e4c17052f7f8f657e97efebe7b81168390",
       "results/rtl/s81_static_status_1016/c8_mode1.log": "bc403c5c5ae11e5647d5950183504ff0905bcd041fbae1f088aadb73e364fdd4"
     },
-    "does_not_qualify": "No actual production success consumer, physical related-clock epoch, recipe3 transformed RTL schedule or downstream HOST3ck status bridge qualification from this leaf boundary bench."
+    "does_not_qualify": "No actual production success consumer, physical related-clock epoch, recipe3 transformed RTL schedule or downstream HOST3ck status bridge qualification from this leaf boundary bench.",
+    "normal_preprocessed_bench_sha256": {
+      "c8": "fa30ff8214f583fc0815736ba7890b1e1264b3dc40cb24109eb5271d8c214361",
+      "c10": "a3888620d97084d550edce887da6024c375bfd7eab7329acc0072f9ce64315d1"
+    },
+    "normal_preprocessed_equality": "Byte-identical to the actual four NOPS128 passing runs at427f52cf7; the sole bench change tightens the independently rerun c10 negative control to trigger on actual kd[53]."
   }
 }

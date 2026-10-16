@@ -86,7 +86,7 @@ module tb_s81_issuer_status_contract;
   if(rn)begin
   if(kd[53])kit_seen<=1;
 `ifdef S81_STATUS_EARLY_MUTANT
-  if(consumer_serial==209)begin success<=!st[5];rejected<=st[5];end
+  if(kd[53])begin success<=!st[5];rejected<=st[5];end
 `else
   if(consumer_serial==ACCEPT_EDGE)begin
    if(!(kit_seen||kd[53]))$fatal(1,"fixed consumer edge lacks KIT token");
