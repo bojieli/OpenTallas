@@ -7,8 +7,8 @@ Composition (owner rule 10-14, all on-chip execution real hardware; only the PHY
   phy_<q>            ot_hbm3e_phy_rc_e8p5       PHY-ONLY abstract (row/column/data boundary), plan block, pins face the die
   ctl_<q>_pNN  (128) ot_hbm_svc_pc_ctrl_leaf    REAL controller per PC (r14 sequencer + FIFO + response SRAM), over its
                                                 PHY channel window (pcrow_rc placement of view_case.py)
-  svg_<q><k>   (32)  ot_hbm_svc_sm_feed_programmed (LBANKS 4)  SM k's service group (landing/cache/programme SRAMs +
-                                                four-PC producer), in PC band box pc_<q><k> above its four controllers
+  svg_<q><k>   (32)  ot_hbm_svc_sm_group        SM k's service group = issuer (descriptor SRAM) + feed (four-PC producer,
+                                                landing/cache/programme SRAMs), in PC band box pc_<q><k> above its controllers
   sm_<q><k>    (32)  ot_hbm_accel_smh_static    SM tile at its v6 grant slot (outline, orient, pins = the grant)
 Nets (bit exact, from the RTL of ot_hbm_svc_sm_stack_native/_programmed/_leaves): PHY <-> controller row/column/data per
 PC; controller p <-> service group p//4 K port lane p%4; service group -> SM packet (1099) + command (83, sm_command).
@@ -33,7 +33,7 @@ GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
 PLAN = ROOT / 'results/arch/hbm_die_v15/compact660_v5/compact.P.json'
 PHY_M = 'ot_hbm3e_phy_rc_e8p5'
 CTL_M = 'ot_hbm_svc_pc_ctrl_leaf'
-SVG_M = 'ot_hbm_svc_sm_feed_programmed'
+SVG_M = 'ot_hbm_svc_sm_group'
 SM_M = 'ot_hbm_accel_smh_static'
 PERIOD = dict(stream=833.333, hbm=1024.0)
 TILE = 9.6
@@ -164,7 +164,7 @@ def main():
     ap.add_argument('--ctrl-view', required=True, type=Path)
     ap.add_argument('--ctrl-kind', default='SYNTH (mapped netlist ETM + kit outline/faces)')
     ap.add_argument('--feed-view', required=True, type=Path, help='dir: feed.netlist.v + <SVG_M>_synth_{tt,ff}.lib')
-    ap.add_argument('--feed-wh', nargs=2, type=float, default=[1036.8, 194.4])
+    ap.add_argument('--feed-wh', nargs=2, type=float, default=[1036.8, 228.96])
     ap.add_argument('--sm-view', required=True, type=Path, help='dir: smh netlist + <SM_M>_synth_{tt,ff}.lib')
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
@@ -206,13 +206,13 @@ def main():
     fw, fh = a.feed_wh
     kport = ['k_v', 'k_rdy', 'k_addr', 'k_len', 'k_tag', 'k_we', 'k_wdata', 'k_wstrb', 'k_wr_done', 'kr_v', 'kr_rdy',
              'kr_tag', 'kr_beat', 'kr_data']
-    smside = ['packet_observe', 'sm_command']
+    smside = ['sm_packet', 'sm_command']
     rest = [p for p in svg_ports if p not in kport + smside]
     clocks = [p for p in rest if re.search(r'clk|rst', p)]
     ctlp = [p for p in rest if p not in clocks]
     synth_lef(SVG_M, fw, fh, face_pins(svg_ports, {'S': kport, 'N': smside, 'W': clocks, 'E': ctlp}, fw, fh),
               vd / f'{SVG_M}.lef')
-    kinds[SVG_M] = 'SYNTH (mapped netlist ETM, LBANKS 4, STACK 0 SM 0 representative; generated outline/faces)'
+    kinds[SVG_M] = 'SYNTH (mapped netlist ETM of issuer + feed, LBANKS 4, STACK 0 SM 0 representative; generated outline/faces)'
     sv = a.sm_view
     for c in ('tt', 'ff'):
         shutil.copy(next(sv.glob(f'*_synth_{c}.lib')), vd / f'{SM_M}_{c}.lib')
@@ -293,7 +293,7 @@ def main():
             leaves[f'sm_{q}{k}'] = dict(m=SM_M, x=s['origin']['x'], y=s['origin']['y'], o=s['origin']['orient'],
                                         w=s['outline']['w'], h=s['outline']['h'])
             for j in range(1099):
-                net(f'pk_{q}{k}_{j}', (g, f'packet_observe[{j}]'), [(f'sm_{q}{k}', f'packet[{j}]')])
+                net(f'pk_{q}{k}_{j}', (g, f'sm_packet[{j}]'), [(f'sm_{q}{k}', f'packet[{j}]')])
             for j in range(83):
                 net(f'cm_{q}{k}_{j}', (g, f'sm_command[{j}]'), [(f'sm_{q}{k}', f'command[{j}]')])
     ls = list(leaves.items())
