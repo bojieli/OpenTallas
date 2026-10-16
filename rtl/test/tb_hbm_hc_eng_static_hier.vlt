@@ -1,2 +1,8 @@
 `verilator_config
+// Hierarchical Verilator build of tb_hbm_hc_eng_static (0600): every replicated hard child is verilated once.
+// The flat build blew 40-80 GB: the bank tile (8x) carries 48 behavioural SRAM macro models with per-bit loops.
 hier_block -module "ot_hdc_v41x_hcp_lanes"
+hier_block -module "ot_hbm_hc_bank_static"
+hier_block -module "ot_hbm_hc_tail_unit_static"
+hier_block -module "ot_sram_1r1w_1024x256_m2_r2c2"
+hier_block -module "ot_sram_1r1w_128x256_m1_r2c2"

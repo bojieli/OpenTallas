@@ -33,6 +33,7 @@ def main():
     ap.add_argument('--mutant', type=int, choices=range(4), default=0)
     ap.add_argument('--jobs', type=int, default=16)
     ap.add_argument('--xwb', type=int, choices=(1, 4), default=4)
+    ap.add_argument('--vflags', default='', help='extra Verilator flags (space separated), e.g. -fno-dfg')
     ap.add_argument('--manifest-only', action='store_true')
     a = ap.parse_args()
     manifest = {s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SOURCES}
@@ -44,7 +45,7 @@ def main():
     ap_x = a.xwb
     cmd = ['verilator', '--binary', '--timing', '--hierarchical', '-j', str(a.jobs), '-CFLAGS', '-O1', '-Wno-fatal', '-Wno-WIDTH',
            '-Wno-TIMESCALEMOD', '-Wno-lint', '-Wno-style', f'-DMUT={a.mutant}', f'-DXWB={ap_x}', '--output-split', '20000',
-           '--top-module', 'tb_hbm_hc_eng_static', '-Mdir', str(a.objdir.resolve()), 'rtl/test/tb_hbm_hc_eng_static_hier.vlt', *SOURCES]
+           '--top-module', 'tb_hbm_hc_eng_static', '-Mdir', str(a.objdir.resolve()), *a.vflags.split(), 'rtl/test/tb_hbm_hc_eng_static_hier.vlt', *SOURCES]
     return subprocess.run(cmd, cwd=ROOT).returncode
 
 
