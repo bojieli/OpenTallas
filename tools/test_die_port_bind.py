@@ -39,6 +39,15 @@ class T(unittest.TestCase):
         self.assertEqual(rc, 0, r['summary'])
         self.assertEqual(r['verdict'], 'PASS')
 
+    def test_duplicate_port(self):
+        # r2h2/r2h4 GEN emitted .tt(actual) AND .tt(1538'h0) on one instance; Verilog keeps one silently -> FAIL
+        rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
+                    "  a u0 (.ck(ck), .i(n2), .o(n1), .en(ck), .i(16'h0));\n  wrap w (.ck(ck), .i(n1), .o(n2));\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['duplicate_port_connections'], 1)
+        self.assertIn('DUPLICATE_PORT', r['masters']['a']['fails'])
+        self.assertEqual(r['masters']['a']['duplicate_port'], ['i'])
+
     def test_findings(self):
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [7:0] n4;\n  wire [3:0] n3;\n"
                     "  a u1 (.ck(ck), .i(n4), .o(n1), .q(n3));\n  shell s (.x(n3), .y(n3));\n  missing m (.a(n1));\n"

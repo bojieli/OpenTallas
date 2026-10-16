@@ -22,8 +22,8 @@ pins the original image and lowering/RTL/memory sources and records capacity.
 Changing latency or command layout requires regenerating the compiler image.
 
 Use `.EDGES(manifest.edges)`, `.LINE_BITS(manifest.line_bits)`, and
-`.DICT_BANKS('{...manifest.dictionary_banks...})`, and `.MACROS(manifest.total_macros)` at elaboration. Capacity is a
-physical compile-time property. A different programme can be loaded only if its
+`.DICT_BANKS(PROGRAMME_DICT_BANKS)` from the generated `programme_params.svh`, and `.MACROS(manifest.total_macros)` at elaboration. Capacity is a
+physical compile-time property. The dictionary bank parameter is a packed vector with column c in bits `[32*c+:32]`; the generated constant lists columns in reverse order in its concatenation. Regenerate older unpacked-array parameter include files with the lowerer. A different programme can be loaded only if its
 column dictionaries and edge table fit that elaborated capacity. Rerunning the
 lowerer chooses the required capacities; physical implementation must accommodate
 them before deployment.

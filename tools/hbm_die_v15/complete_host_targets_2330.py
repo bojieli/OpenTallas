@@ -66,7 +66,7 @@ for k,q in enumerate(Q):
 # Universal calendar fields are zero-extended whole packed fields by the compiler.
 # Connect each original quadrant ABI to its low contiguous field bits, preserving its lane packing.
 s['drop_v15_edges']=[]
-for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NE=(2,1,2,8,2)).items():
+for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NW=(8,4,8,16,4),NE=(2,1,2,8,2)).items():
     for field,w in zip(('client_seq','response_enable','response_seq','bank_client','hub_ring_client'),widths):
         s['drop_v15_edges'].append(f'calendar_{q}_{field}')
         e([f'calendar_{q}',field,0,w],[f'hb_vms_{q}',field,0,w],w)
@@ -116,6 +116,13 @@ for t,ready,active,faults in rows:
                               clock='stream',basis=f'TARGET{t} actual sticky fault to host status'))
         nf+=1
     nt+=1
+# New static component safety faults are observations only, never production stalls.
+for spec_name, prefix in [('dmawb_0030', 'wbk_'), ('su_collport_0253', 'sucx_'), ('su_collport_0253', 'sfus_')]:
+    if not (SP / (spec_name + '.json')).exists(): continue
+    for q in Q:
+        c['edges'].append(dict(src=[prefix+q,'fault'],dst=['host_status','t_fault',nf,nf+1],bits=1,
+                              clock='stream',basis='Actual static component sticky fault observation; never reschedules execution'))
+        nf+=1
 all_targets=base_targets+[r[0] for r in rows]
 assert len(all_targets)==len(set(all_targets))==67+32+4
 root['params'].update(NT=nt,NF=nf,TGTS=f"{8*nt}'h"+''.join(f'{t:02x}' for t in reversed(all_targets)))
