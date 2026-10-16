@@ -104,7 +104,7 @@ def audit(man, contract, view_dir, limit):
             counts['over_limit_bits'] += edge['bits']
             violations.append(row)
     return dict(schema='opentallas.hbm.place_pin_reach.v1', native_complete=False,
-                scope='Consumed physical pin centres after placement; Manhattan lower bound, not routed length or timing.',
+                scope='Maximum Manhattan separation of consumed access-shape centres after placement; conservative access-choice screen, not routed length or timing. Over-limit is a review flag when a pin has alternate access shapes.',
                 contract_instances=len(expected), placed_instances=len(placed), exclusions=sorted(excluded),
                 missing_instances=missing, missing_relay_instances=relay_missing,
                 limit_um=limit, counts=dict(counts), worst=worst,
