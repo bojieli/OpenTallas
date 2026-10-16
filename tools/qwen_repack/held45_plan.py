@@ -71,8 +71,20 @@ def build(nl=False):
     # on these three regions and GPL-0304 divergence (-nan step).  They stay registered roots without a fence.
     # Output face roots (ck_fa2 t_out, ck_fa3 n_y + fy/mis) keep movable launch flops and keep their fences.
     PIN_ANCHORED = ('ck_fa0', 'ck_fa1', 'ck_fa4')
+    why = {c: 'pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins' for c in PIN_ANCHORED}
     for c in PIN_ANCHORED:
         regions[c] = []
+    # Bank-pair roots ck_rp0..9 are NOT fenced (gate e6a1b3c6a, DPL: 456 cells left illegal, 792 edge-spacing
+    # violations).  Their fences filled the 12.96 um placeable ROM side channels exclusively, but every channel serves
+    # the rd_out/addr pins of TWO macros of different roots plus unfenced shared buffers: 400+ unfenced
+    # BUFx16f/BUFx6f (repair_design wire buffers of rom7's E-edge rd_out) had no legal site in the rom7|rom3 channel
+    # owned by ck_rp3, and the rp3/rp8 FFs overfilled the channel next to their own pins.  Each bank root now drives
+    # ONE macro's capture/expansion/relay state (pair split), so its sinks cluster at that macro's pins by
+    # connectivity, and its relay stages must stay free to spread toward the LSL consumers (a fence at the ROM would
+    # turn the last relay hop into the long wire the relays exist to cut).  The CTS gate measures their spread.
+    for n in range(10):
+        regions['ck_rp%d' % n] = []
+        why['ck_rp%d' % n] = 'unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers'
     pins = []
     moved = {}
     def place(name, face, value, clock=False):
@@ -164,7 +176,9 @@ def build(nl=False):
     grant = dict(schema='qwen.tile.held_machine_grant.v1', state='HELD structural candidate; physical proof required', issuer='Q-TILE45 (Claude) from Codex Qwen dielead draft under root authorization 2026-10-15', home_um=[457.92, 820.8], top=top, normal_edges_added=0, clocks=ports, pins=pins, regions=regions, checks=dict(all_signal_pins_explicit=True, **{'all%d_clock_pins' % len(ports): True}, actual_track_phase_um=.012, track_pitch_um=.048, minimum_same_face_center_spacing_um=.096, fences_exclude_actual_macro_and_child_5p4um_halos=True, disjoint_root_fences=True), pending=['Actual mapped FF/exclusive-comb area and <60% per-region capacity', 'Actual pin PG access, CTS, route, TT>=0 FF>=0 DRC0', 'Native launch<=220 capture<=190 spread<=80 and phi-R per entry', ownership['die_clock_obligation']])
     (OUT / 'held_grant.json').write_text(json.dumps(grant, indent=1) + '\n')
     (OUT / 'assigned_pins.tcl').write_text('# HELD machine grant: all data and clock pins on actual routing tracks.\n' + ''.join('place_pin -pin_name {%s} -layer %s -location {%.3f %.3f}\n' % (p['name'], p['layer'], *p['xy_um']) for p in pins))
-    (OUT / 'regions.tcl').write_text('# HELD geometry only. No timing exceptions.\nset q45_boxes [dict create]\n' + ''.join('dict set q45_boxes %s {%s}\n' % (name, ' '.join('{%s}' % ' '.join(map(str, b)) for b in rects)) for name, rects in regions.items()) + 'source /src/tools/qwen_repack/localize45.tcl\n')
+    grant['unfenced_roots'] = {c: w for c, w in why.items() if c in regions}
+    (OUT / 'held_grant.json').write_text(json.dumps(grant, indent=1) + '\n')
+    (OUT / 'regions.tcl').write_text('# HELD geometry only. No timing exceptions.\nset q45_boxes [dict create]\nset q45_why [dict create]\n' + ''.join('dict set q45_why %s {%s}\n' % (c, w) for c, w in why.items() if c in regions) + ''.join('dict set q45_boxes %s {%s}\n' % (name, ' '.join('{%s}' % ' '.join(map(str, b)) for b in rects)) for name, rects in regions.items()) + 'source /src/tools/qwen_repack/localize45.tcl\n')
     s.update(name=NAME, top=top, clock_ports=ports, clock_cts_roots=soft, recipe=3, io_tcl=f'physical/ref_tile/{NAME}/assigned_pins.tcl', pin_hook_before_flops=[f'physical/ref_tile/{NAME}/regions.tcl'])
     s['required_hybrid_roots']['standard_cell_cts'] = soft
     s['sources'] = [p.replace('rtl/physical/qfd_tile_nk_rp1.sv', 'rtl/physical/%s.sv' % top) for p in s['sources']]

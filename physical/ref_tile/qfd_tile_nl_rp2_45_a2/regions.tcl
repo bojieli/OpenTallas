@@ -1,16 +1,28 @@
 # HELD geometry only. No timing exceptions.
 set q45_boxes [dict create]
+set q45_why [dict create]
+dict set q45_why ck_fa4 {pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins}
+dict set q45_why ck_rp0 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp1 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp2 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp3 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp4 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp5 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp6 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp7 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp8 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
+dict set q45_why ck_rp9 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
 dict set q45_boxes ck {{329.832 367.2 435.456 507.6}}
-dict set q45_boxes ck_rp0 {{22.464 513 144.288 536.76} {2.16 542.16 17.064 599.682}}
-dict set q45_boxes ck_rp5 {{313.632 513 435.456 536.76} {440.856 542.16 455.76 599.682}}
-dict set q45_boxes ck_rp1 {{149.688 542.16 228.96 599.682} {2.16 605.082 17.064 662.61}}
-dict set q45_boxes ck_rp6 {{228.96 542.16 308.232 599.682} {440.856 605.082 455.76 662.61}}
-dict set q45_boxes ck_rp2 {{149.688 605.082 228.96 662.61} {2.16 668.01 17.064 725.544}}
-dict set q45_boxes ck_rp7 {{228.96 605.082 308.232 636.93} {149.688 668.01 162.648 725.544}}
-dict set q45_boxes ck_rp3 {{295.272 668.01 308.232 725.544} {440.856 668.01 455.76 725.544} {302 799.254 368 818.64}}
-dict set q45_boxes ck_rp8 {{295.272 730.944 308.232 793.854} {440.856 730.944 455.76 793.854} {368 799.254 435.456 818.64}}
-dict set q45_boxes ck_rp4 {{2.16 730.944 17.064 793.854} {22.464 799.254 156 818.64}}
-dict set q45_boxes ck_rp9 {{228.96 636.93 308.232 662.61} {149.688 730.944 162.648 793.854}}
+dict set q45_boxes ck_rp0 {}
+dict set q45_boxes ck_rp5 {}
+dict set q45_boxes ck_rp1 {}
+dict set q45_boxes ck_rp6 {}
+dict set q45_boxes ck_rp2 {}
+dict set q45_boxes ck_rp7 {}
+dict set q45_boxes ck_rp3 {}
+dict set q45_boxes ck_rp8 {}
+dict set q45_boxes ck_rp4 {}
+dict set q45_boxes ck_rp9 {}
 dict set q45_boxes ck_rqr0 {{149.688 513 308.232 536.76}}
 dict set q45_boxes ck_rqr1 {{162.648 799.254 296.568 818.64}}
 dict set q45_boxes ck_tx0 {{75.384 367.2 84.672 507.6}}

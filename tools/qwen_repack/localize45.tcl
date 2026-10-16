@@ -63,9 +63,10 @@ set q45_report [open q45_actual_regions.tsv w]
 puts $q45_report "root\tff_sinks\texclusive_comb\tshared_comb\tcell_area_um2\tplaceable_um2\tutilization"
 dict for {root boxes} $q45_boxes {
   if {![llength $boxes]} {
-    # pin-anchored input face root: io_flop_at_pins fixes every sink FIRM at its pin (an all-FIRM fence diverges GPL)
-    puts "Q45_REGION $root FF=[llength [dict get $q45_regs $root]] PIN_ANCHORED no_fence"
-    puts $q45_report "$root\t[llength [dict get $q45_regs $root]]\t0\t0\t0\t0\tpin_anchored"
+    # a root without a fence carries its recorded reason (pin-anchored input face, or unfenced bank-pair root)
+    if {![info exists q45_why] || ![dict exists $q45_why $root]} {error "Q45 root $root has no fence and no recorded reason"}
+    puts "Q45_REGION $root FF=[llength [dict get $q45_regs $root]] NO_FENCE [dict get $q45_why $root]"
+    puts $q45_report "$root\t[llength [dict get $q45_regs $root]]\t0\t0\t0\t0\tno_fence"
     continue
   }
   set region [odb::dbRegion_create $q45_block q45_$root]
