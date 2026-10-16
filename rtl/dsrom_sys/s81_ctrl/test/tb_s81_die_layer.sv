@@ -237,7 +237,7 @@ module tb_s81_die_layer;
                 .job_v(jv), .job_rdy(jr), .job_user(10'(gd)), .job_pos(21'd1048575), .job_tok(21'd12345),
                 .job_done(jd_), .cmd_v(cv), .cmd_d(cd),
                 .dn_v({8'd0, cdn[gd][8], 3'd0}), .dn_tag({64'd0, cdn[gd][7:0], 24'd0}),
-                .busy(), .fault(pf), .fault_code(), .st_jobs(), .st_cmds(), .st_credit_stall());
+                .busy(), .fault(pf), .fault_code(), .st_jobs(), .st_cmds());
             assign ccmd[gd] = {cv[3], cd[3*84 +: 84]};
             integer njd = 0, ndn = 0;
             always @(posedge ck) if (rst) begin

@@ -59,7 +59,8 @@ for m in $MODES; do
 done
 wait
 for m in $MODES; do
-  v=$(grep -h "HCX_CHAIN \(PASS\|FAIL\|CAL\)" $OUT/run_$m.log 2>/dev/null | tail -1); [ -z "$v" ] && v="NO_RESULT $(grep -m1 -i '%Error' $OUT/build_$m.log)"
+  # -o: an assertion FAIL line is prefixed by "%Fatal: <file>:<line>: Assertion failed ...:"
+  v=$(grep -ho "HCX_CHAIN \(PASS\|FAIL\|CAL\).*" $OUT/run_$m.log 2>/dev/null | tail -1); [ -z "$v" ] && v="NO_RESULT $(grep -m1 -i '%Error' $OUT/build_$m.log)"
   exp=PASS; case $m in mut_*) exp=FAIL;; cal) exp=CAL;; esac
   echo "$m expect $exp: $v | $(grep -h '^HCX_CHAIN commands' $OUT/run_$m.log)"
 done | tee $OUT/verdicts.log
