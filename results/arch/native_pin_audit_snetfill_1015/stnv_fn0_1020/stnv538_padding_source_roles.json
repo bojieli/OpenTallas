@@ -1,0 +1,2644 @@
+{
+  "schema": "s81-stnv538-pad-source-role-freeze-v1",
+  "scope": "Immutable c26b17b model ONLY. Next fresh GEN must recompute census and actual ports; no old count may be promoted into successor.",
+  "model": {
+    "path": "/tmp/sdiehub/model.json.gz",
+    "sha256": "3e08661ecfa7c141b02d1f54ef0f69592205e577f1f940d0d249ec733c06a357",
+    "source_commit": null,
+    "instances": 84145,
+    "buses": 146146,
+    "old_stnv538": 1214,
+    "old_stnv566": 1636
+  },
+  "map_path": "results/arch/tile_dedupe_1015/s81_pad_map_1016.json",
+  "map_sha256": "d6dab364bdae50208344a5345eef26107c33cbd5e32beb3b7b08a148174ff156",
+  "entry": {
+    "to": "dsfd_stnv_566x1",
+    "ports": {
+      "di0": 538,
+      "do0": 538
+    },
+    "instances": 1214
+  },
+  "actual_source_abi": {
+    "dsfd_stnv_538x1": {
+      "sha256": "637ccbfe67603f65a88149234d158cc84c3e7ae9f3f4309c5673f33125cb0677",
+      "ports": {
+        "di0": [
+          "input",
+          538
+        ],
+        "do0": [
+          "output",
+          538
+        ],
+        "fi0": [
+          "input",
+          1
+        ],
+        "fn0": [
+          "output",
+          1
+        ],
+        "fo0": [
+          "output",
+          1
+        ]
+      }
+    },
+    "dsfd_stnv_566x1": {
+      "sha256": "69266cae4ca40731c40fbaae9437119a04af2e211fa1b66779982661820148d7",
+      "ports": {
+        "di0": [
+          "input",
+          566
+        ],
+        "do0": [
+          "output",
+          566
+        ],
+        "fi0": [
+          "input",
+          1
+        ],
+        "fn0": [
+          "output",
+          1
+        ],
+        "fo0": [
+          "output",
+          1
+        ]
+      }
+    }
+  },
+  "proof_commit": "b909ef69b",
+  "proof": "Actual byte-pinned old538 and target566, both edges, every old logical output including fn0. fi0/fn0/fo0 remain direction/width-identical; only di0/do0 high28 payload bits pad/drop. Spare canonical input bits zero per-instance; no logical data bit ties allowed.",
+  "clock_roles": [
+    {
+      "bus": "cx0_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx0_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf0",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx0_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx0_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf0",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx1_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx1_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf1",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx1_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx1_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf1",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx2_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx2_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf2",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx2_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx2_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf2",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx3_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx3_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf3",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx3_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx3_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf3",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx4_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx4_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf4",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx4_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx4_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf4",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx7_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx7_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf7",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx7_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx7_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf7",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx9_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx9_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf9",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx9_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx9_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf9",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx13_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx13_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf13",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx13_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx13_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf13",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx16_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx16_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf16",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx16_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx16_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf16",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx19_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx19_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf19",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx19_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx19_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf19",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx23_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx23_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf23",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx23_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx23_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf23",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx25_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx25_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf25",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx25_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx25_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf25",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx27_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx27_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf27",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx27_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx27_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf27",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx29_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx29_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf29",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx29_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx29_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf29",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx30_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx30_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf30",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx30_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx30_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf30",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx34_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx34_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf34",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx34_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx34_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf34",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx37_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx37_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf37",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx37_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx37_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf37",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx51_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx51_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf51",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx51_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx51_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf51",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx53_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx53_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf53",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx53_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx53_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf53",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx54_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx54_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf54",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx54_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx54_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf54",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx55_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx55_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf55",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx55_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx55_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf55",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx57_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx57_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf57",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx57_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx57_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf57",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx58_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx58_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf58",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx58_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx58_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf58",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx59_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx59_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf59",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx59_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx59_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf59",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx60_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx60_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf60",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx60_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx60_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf60",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx61_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx61_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf61",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx61_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx61_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf61",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx62_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx62_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf62",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx62_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx62_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf62",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx63_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx63_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf63",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx63_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx63_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf63",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx64_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx64_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf64",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx64_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx64_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf64",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx65_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx65_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf65",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx65_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx65_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf65",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx66_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx66_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf66",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx66_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx66_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf66",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx67_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx67_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf67",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx67_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx67_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf67",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx68_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx68_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf68",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx68_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx68_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf68",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx69_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx69_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf69",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx69_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx69_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf69",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx70_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx70_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf70",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx70_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx70_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf70",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx71_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx71_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf71",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx71_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx71_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf71",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx72_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx72_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf72",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx72_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx72_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf72",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx74_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx74_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf74",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx74_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx74_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf74",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx79_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx79_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf79",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx79_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx79_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf79",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx82_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx82_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf82",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx82_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx82_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf82",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx92_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx92_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf92",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx92_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx92_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf92",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx95_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx95_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf95",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx95_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx95_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf95",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx97_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx97_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf97",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx97_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx97_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf97",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx98_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx98_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf98",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx98_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx98_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf98",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx100_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx100_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf100",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx100_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx100_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf100",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx104_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx104_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf104",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx104_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx104_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf104",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx105_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx105_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf105",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx105_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx105_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf105",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx106_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx106_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf106",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx106_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx106_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf106",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx107_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx107_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf107",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx107_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx107_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf107",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx108_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx108_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf108",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx108_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx108_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf108",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx112_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx112_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf112",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx112_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx112_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf112",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx115_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx115_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf115",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx115_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx115_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf115",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx118_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx118_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf118",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx118_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx118_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf118",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx121_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx121_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf121",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx121_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx121_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf121",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx125_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx125_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf125",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx125_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx125_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf125",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx127_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx127_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf127",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx127_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx127_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf127",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx5_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx5_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf5",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx5_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx5_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf5",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx6_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx6_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf6",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx6_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx6_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf6",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx8_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx8_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf8",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx8_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx8_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf8",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx10_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx10_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf10",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx10_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx10_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf10",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx11_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx11_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf11",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx11_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx11_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf11",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx12_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx12_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf12",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx12_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx12_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf12",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx14_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx14_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf14",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx14_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx14_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf14",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx15_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx15_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf15",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx15_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx15_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf15",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx17_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx17_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf17",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx17_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx17_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf17",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx18_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx18_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf18",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx18_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx18_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf18",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx20_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx20_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf20",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx20_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx20_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf20",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx21_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx21_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf21",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx21_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx21_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf21",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx22_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx22_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf22",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx22_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx22_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf22",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx24_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx24_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf24",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx24_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx24_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf24",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx26_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx26_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf26",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx26_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx26_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf26",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx28_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx28_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf28",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx28_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx28_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf28",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx31_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx31_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf31",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx31_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx31_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf31",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx32_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx32_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf32",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx32_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx32_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf32",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx33_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx33_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf33",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx33_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx33_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf33",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx35_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx35_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf35",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx35_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx35_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf35",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx36_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx36_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf36",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx36_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx36_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf36",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx38_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx38_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf38",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx38_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx38_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf38",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx39_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx39_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf39",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx39_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx39_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf39",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx40_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx40_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf40",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx40_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx40_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf40",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx41_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx41_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf41",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx41_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx41_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf41",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx42_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx42_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf42",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx42_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx42_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf42",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx43_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx43_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf43",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx43_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx43_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf43",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx44_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx44_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf44",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx44_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx44_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf44",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx45_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx45_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf45",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx45_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx45_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf45",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx46_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx46_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf46",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx46_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx46_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf46",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx47_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx47_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf47",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx47_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx47_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf47",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx48_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx48_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf48",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx48_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx48_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf48",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx49_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx49_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf49",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx49_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx49_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf49",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx50_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx50_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf50",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx50_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx50_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf50",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx52_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx52_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf52",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx52_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx52_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf52",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx56_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx56_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf56",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx56_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx56_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf56",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx73_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx73_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf73",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx73_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx73_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf73",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx75_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx75_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf75",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx75_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx75_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf75",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx76_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx76_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf76",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx76_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx76_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf76",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx77_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx77_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf77",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx77_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx77_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf77",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx78_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx78_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf78",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx78_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx78_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf78",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx80_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx80_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf80",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx80_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx80_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf80",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx81_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx81_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf81",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx81_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx81_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf81",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx83_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx83_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf83",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx83_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx83_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf83",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx84_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx84_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf84",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx84_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx84_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf84",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx85_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx85_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf85",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx85_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx85_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf85",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx86_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx86_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf86",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx86_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx86_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf86",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx87_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx87_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf87",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx87_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx87_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf87",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx88_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx88_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf88",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx88_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx88_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf88",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx89_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx89_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf89",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx89_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx89_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf89",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx90_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx90_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf90",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx90_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx90_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf90",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx91_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx91_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf91",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx91_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx91_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf91",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx93_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx93_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf93",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx93_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx93_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf93",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx94_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx94_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf94",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx94_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx94_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf94",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx96_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx96_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf96",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx96_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx96_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf96",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx99_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx99_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf99",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx99_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx99_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf99",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx101_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx101_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf101",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx101_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx101_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf101",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx102_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx102_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf102",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx102_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx102_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf102",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx103_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx103_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf103",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx103_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx103_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf103",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx109_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx109_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf109",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx109_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx109_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf109",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx110_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx110_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf110",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx110_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx110_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf110",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx111_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx111_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf111",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx111_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx111_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf111",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx113_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx113_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf113",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx113_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx113_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf113",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx114_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx114_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf114",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx114_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx114_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf114",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx116_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx116_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf116",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx116_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx116_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf116",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx117_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx117_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf117",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx117_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx117_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf117",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx119_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx119_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf119",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx119_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx119_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf119",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx120_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx120_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf120",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx120_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx120_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf120",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx122_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx122_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf122",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx122_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx122_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf122",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx123_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx123_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf123",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx123_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx123_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf123",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx124_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx124_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf124",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx124_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx124_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf124",
+      "consumer_port": "xf2"
+    },
+    {
+      "bus": "cx126_fn",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx126_2",
+      "old_master": "dsfd_stnv_566x1",
+      "source_port": "fn0",
+      "consumer": "cf126",
+      "consumer_port": "xf"
+    },
+    {
+      "bus": "cx126_fn2",
+      "kind": "fclk",
+      "width": 1,
+      "station": "f_cx126_x2_2",
+      "old_master": "dsfd_stnv_538x1",
+      "source_port": "fn0",
+      "consumer": "cf126",
+      "consumer_port": "xf2"
+    }
+  ],
+  "clock_role_census": {
+    "dsfd_stnv_566x1->xf": 128,
+    "dsfd_stnv_538x1->xf2": 128
+  },
+  "physical_gate": "Target real f11 view60.48x25.92 with distinct fn0 pin. Parent home/pin/phase/clock source joins required. CFIFO xf2 native view remains OPEN."
+}
