@@ -1,0 +1,107 @@
+{
+ "schema": "opentallas.hgi_sim.ds_rates.v1",
+ "generated_utc": "2026-10-11T03:17:11Z",
+ "basis": "DS-V4.1 1M TP96 generic HBM die: G25 hardware COLL.ROW_GATHER (default lowering; software G24 via --rg-sw), SM weights as the SM record's line image, G22 HC rows, BF16 gains; bit-exact 96-die token (results/arch/hgi_sim_20261010/g25_proof, head token 21946, races 0); re-floorplan cost tables; G25 priced at the measured K x F / 4 + 150 (hgi-1010/a, main 5e588e11e)",
+ "AR": {
+  "fixed_rtl": {
+   "cycles": 565569.1,
+   "tok_s": 2121.8,
+   "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json S2"
+  },
+  "current_rtl": {
+   "cycles": 1165987.5,
+   "tok_s": 1029.2,
+   "source": "results/arch/hgi_sim_20261009/e2e_calibration.json sensitivity.ds_1M (grades per op); IDX.TOPK graded on report_topkw1 (TOPKW=1 production, 0.644x)"
+  },
+  "previous": {
+   "g24_software_gather": 1722.3,
+   "approved_path_analytic": 1747.5
+  }
+ },
+ "MTP": {
+  "method": "tau x CLK / (charged composed verify step + (native S2 - 543,456.7)), once per verify pass (token_path_systems 842b457a2); no native DS verify program yet",
+  "tau": 4.159,
+  "charged_step_cycles": 1348890.6,
+  "fixed_rtl": {
+   "delta_cycles": 22112.4,
+   "tok_s": 3640.3
+  },
+  "current_rtl": {
+   "delta_cycles": 622530.8,
+   "tok_s": 2531.6,
+   "note": "crude: one delta per pass on the composition"
+  }
+ },
+ "current_rtl_dominant": {
+  "method": "extra unit-busy cycles = sum over the G25 program's executed records of (ratio - 1) x the record's S2 cost (not critical-path cycles)",
+  "ranking": [
+   {
+    "op": "FUSED.HC_POST",
+    "ratio": 20.085,
+    "records_executed": 80,
+    "extra_cycles_unit_busy": 339975.6
+   },
+   {
+    "op": "FUSED.HC_PRE_NORM",
+    "ratio": 6.514,
+    "records_executed": 81,
+    "extra_cycles_unit_busy": 290013.7
+   },
+   {
+    "op": "FUSED.QDQ_FP8",
+    "ratio": 14.573,
+    "records_executed": 40,
+    "extra_cycles_unit_busy": 13030.1
+   },
+   {
+    "op": "HC.HC_MIX_POST",
+    "ratio": 1.282,
+    "records_executed": 80,
+    "extra_cycles_unit_busy": 12182.4
+   },
+   {
+    "op": "SU.VOP",
+    "ratio": 1.067,
+    "records_executed": 1356,
+    "extra_cycles_unit_busy": 9138.0
+   },
+   {
+    "op": "DMA.KVWB_DS",
+    "ratio": 3.817,
+    "records_executed": 40,
+    "extra_cycles_unit_busy": 6760.8
+   },
+   {
+    "op": "DMA.FENCE",
+    "ratio": 0.117,
+    "records_executed": 40,
+    "extra_cycles_unit_busy": -2119.2
+   },
+   {
+    "op": "IDX.TOPK",
+    "ratio": 0.644,
+    "records_executed": 40,
+    "extra_cycles_unit_busy": -4030.0
+   },
+   {
+    "op": "COLL.GROUP_REDUCE_MCAST",
+    "ratio": 0.908,
+    "records_executed": 40,
+    "extra_cycles_unit_busy": -4879.5
+   },
+   {
+    "op": "DMA.LOAD",
+    "ratio": 0.622,
+    "records_executed": 340,
+    "extra_cycles_unit_busy": -13412.9
+   },
+   {
+    "op": "COLL.ALL_GATHER",
+    "ratio": 0.716,
+    "records_executed": 584,
+    "extra_cycles_unit_busy": -64545.0
+   }
+  ],
+  "note": "HC_MIX_ROWS has no measured ratio applied (its 125x unit-bench grade is the pre-prefetch HBM form and is not in this program's scale); ATT / SM / IDX.INDEX / TOPK_MERGE / G25 ROW_GATHER stay at model cost"
+ }
+}

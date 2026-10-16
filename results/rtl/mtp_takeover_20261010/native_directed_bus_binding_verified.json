@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.mtp.native_bus_binding.v1",
+  "source_commit": "45b6394cc69a44168a201fc0bd247acb88fbf066",
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv": "ace49d415a5ec53e027dd07d407eeee84ff8d1f13e2abb5678d4b04178349f42",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "20ac6d0044c0865a4af05bdc050c9597c2905429ea2b556f217e95ec7287b5a3",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv": "1ba3e5b87d960be20fec40c62bc1c1bf60185a9d91526038c08b28a9eb2667ad",
+    "tools/dsrom_s81_fulldie.py": "b068954de9b38bd3fa2d64e5670c889b2e5e5d9f839aa9ce783aca1cfbf79379",
+    "tools/mtp_native_binding_audit.py": "968b6c4650864efc795ae9f2a0c7d38a5c3e30c97daffdc937e2e35702b23f6d"
+  },
+  "floorplan": "results/rtl/mtp_draftdie_20261009/dies/head631/floorplan.json",
+  "floorplan_sha256": "e4f990b575b424df9d2eb17ba8992c5d0e5413ea23c962d55de936294d8b3deb",
+  "port_elaboration_log": "PORT f_rv 1\nPORT f_rd 512\nPORT t_rg 1\nPORT t_tv 1\nPORT t_td 512\nPORT t_sv 1\nPORT t_sd 77\nPORT t_acc 57\nPORT f_tg 1\nPORT f_sg 1\nPORT f_wv 1\nPORT f_wd 10\nPORT f_qv 1\nPORT f_qd 34\nPORT f_hg 1\nPORT t_hv 1\nPORT t_hd 34\nPORT t_wg 1\nPORT t_qg 1\nPORT f_cfg 42\n",
+  "static_config_bits": 42,
+  "buses": [
+    {
+      "source": "capture",
+      "destination": "mtp",
+      "bits": 513,
+      "ports": {
+        "f_rv": 1,
+        "f_rd": 512
+      },
+      "chain": {
+        "chain": "hb_capture_mtp",
+        "lanes": [
+          514
+        ],
+        "stations": 5,
+        "length_um": 1108.9,
+        "max_hop_um": 210.4,
+        "last_hop_um": 60.5
+      },
+      "floorplan_chain_matches": false
+    },
+    {
+      "source": "mtp",
+      "destination": "capture",
+      "bits": 1,
+      "ports": {
+        "t_rg": 1
+      },
+      "chain": null,
+      "floorplan_chain_matches": false
+    },
+    {
+      "source": "mtp",
+      "destination": "collective",
+      "bits": 648,
+      "ports": {
+        "t_tv": 1,
+        "t_td": 512,
+        "t_sv": 1,
+        "t_sd": 77,
+        "t_acc": 57
+      },
+      "chain": {
+        "chain": "hb_mtp_collective",
+        "lanes": [
+          650
+        ],
+        "stations": 6,
+        "length_um": 1252.9,
+        "max_hop_um": 214.5,
+        "last_hop_um": 17.5
+      },
+      "floorplan_chain_matches": false
+    },
+    {
+      "source": "collective",
+      "destination": "mtp",
+      "bits": 2,
+      "ports": {
+        "f_tg": 1,
+        "f_sg": 1
+      },
+      "chain": null,
+      "floorplan_chain_matches": false
+    },
+    {
+      "source": "vm",
+      "destination": "mtp",
+      "bits": 47,
+      "ports": {
+        "f_wv": 1,
+        "f_wd": 10,
+        "f_qv": 1,
+        "f_qd": 34,
+        "f_hg": 1
+      },
+      "chain": {
+        "chain": "hb_vm_mtp",
+        "lanes": [
+          48
+        ],
+        "stations": 8,
+        "length_um": 1699.3,
+        "max_hop_um": 210.4,
+        "last_hop_um": 20.7
+      },
+      "floorplan_chain_matches": false
+    },
+    {
+      "source": "mtp",
+      "destination": "vm",
+      "bits": 37,
+      "ports": {
+        "t_hv": 1,
+        "t_hd": 34,
+        "t_wg": 1,
+        "t_qg": 1
+      },
+      "chain": {
+        "chain": "hb_mtp_vm",
+        "lanes": [
+          36
+        ],
+        "stations": 9,
+        "length_um": 1843.3,
+        "max_hop_um": 214.3,
+        "last_hop_um": 38.9
+      },
+      "floorplan_chain_matches": false
+    }
+  ],
+  "aggregate_bits": 1248,
+  "bus_binding_passed": true,
+  "floorplan_binding_passed": false,
+  "identity_composition_qualified": false,
+  "physical_qualified": false,
+  "remaining": [
+    "seed/draft native endpoint identity join",
+    "verify causal path",
+    "rollback committed-state join",
+    "full production head inventory",
+    "routed die timing and DRC"
+  ],
+  "scope": "Elaborated wrapper ports and generated head631 bus chains only; historical storage recipe."
+}

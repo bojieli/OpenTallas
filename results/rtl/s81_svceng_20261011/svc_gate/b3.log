@@ -1,0 +1,11 @@
+OKX st 3 src 1 jj 28 sf 1 jr 2 len 1 ky 7
+OKX st 0 src 2 jj 35 sf 1 jr 2 len 9 ky 8
+OKX st 1 src 4 jj 32 sf 0 jr 1 len 1 ky 17
+OKX st 0 src 1 jj 29 sf 0 jr 2 len 4 ky 4
+OKX st 0 src 1 jj 29 sf 0 jr 2 len 4 ky 4
+SVCJOB jobs=40 issued=40 dones=40 tag_errors=0 early_dones=0 frames_ok=362 frames_exp=362 frames_bad=0 fault=0 cycles=3656
+PASS
+- rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job.sv:222: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.014 s; speed 216.984 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB

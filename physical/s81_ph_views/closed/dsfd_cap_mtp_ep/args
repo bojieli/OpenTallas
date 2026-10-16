@@ -1,0 +1,1 @@
+SRC=/srv/opentallas-data/claude/closure-loop/fixlat-capmtp-ffbec0c86-tc/src die=contract master=dsfd_cap_mtp_ep top=rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv DW=32.4 DH=129.6 PD=0.30 MAXL=M7 SRCS=rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv CLK=ck SDCX= CTSA= 

@@ -37,15 +37,38 @@ ADP = {
     'dma': dict(unit=8, top='ot_hgi_dma_record', site='beside hfd_loader / the svc', record=['rec_*: header, desc A / O, n, pos1'],
                 peers={'mv_* / fence_*': 'DMA row mover (svc native read / write clients + VM packet client + format '
                        'converters): NO RTL PEER YET (gap)'}),
+    'fused': dict(unit=4, top='ot_hgi_fused_record', site='FUSED front (unit 4): forwards QDQ to hfd_quant',
+                  record=['rec_*: header, desc A B C O, n_A n_B n_O'],
+                  peers={'mv_*': 'ot_hgi_dma_mover (gain staging)', 'op_*': 'a vec op port (the FUSED stream unit)',
+                         'ne_*': 'DS norm engine / hc-post job (ot_hbm_accel_su_fused_stream KIND 0 / 4): binding is D1',
+                         'q_rec': 'the quant record bus (hfd_quant, unchanged)'}),
     'hc': dict(unit=10, top='ot_hgi_hc_record', site='hfd_hc', record=['rec_*: header, desc A / B / O, n_A / n_O'],
                peers={'job_*': 'HC unit = ot_hdc_v41x_hcp cmd + ot_hdc_v41x_hcp_hbm_window + the mix post stage: '
                       'EXISTING engines, the HC unit wrapper binding them is the gap'}),
 }
 
 
+PEERS = {
+    'dma_mover': ('ot_hgi_dma_mover', 'rtl/hbm_accel/generic/peers'),
+    'sm_xload': ('ot_hgi_sm_xload', 'rtl/hbm_accel/generic/peers'),
+    'sm_pub': ('ot_hgi_sm_pub', 'rtl/hbm_accel/generic/peers'),
+    'ds_mux': ('ot_hgi_ds_mux', 'rtl/hbm_accel/generic/peers'),
+    # D1 die bodies (adapter + local memory + the r25 engine + stage / drain through one VM packet client)
+    'su_unit': ('ot_hgi_su_unit', 'rtl/hbm_accel/generic/peers'),       # GLU = 1: the SFU unit
+    'hc_unit': ('ot_hgi_hc_unit', 'rtl/hbm_accel/generic/peers'),
+}
+
+
 def main():
     out = {}
+    for k, (top, d) in PEERS.items():
+        p = L.parse_module(str(ROOT / d / f"{top}.sv"), top, None)['ports']
+        out[k] = dict(top=top, kind='peer', ports={n: dict(dir=dd, bits=w) for n, (dd, w) in p.items()},
+                      in_bits=sum(w for dd, w in p.values() if dd == 'input'),
+                      out_bits=sum(w for dd, w in p.values() if dd == 'output'))
     for k, a in ADP.items():
+        if k in out:
+            continue
         p = L.parse_module(str(ROOT / A / f"{a['top']}.sv"), a['top'], None)['ports']
         out[k] = dict(a, ports={n: dict(dir=d, bits=w) for n, (d, w) in p.items()},
                       in_bits=sum(w for d, w in p.values() if d == 'input'),

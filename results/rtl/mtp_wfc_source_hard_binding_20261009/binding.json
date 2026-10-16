@@ -1,0 +1,39 @@
+{
+  "review": "Confirmed review0512 AB3 + root explicit physical PROMPT_EXTRA=2",
+  "implementation_source": "4b13388a5",
+  "physical_prompt_extra": 2,
+  "unchanged_literal_ports": {
+    "request": 36,
+    "response": 22,
+    "config": 52
+  },
+  "model_receipt": "results/rtl/mtp_wfc_hard_physical_20261009/prebuild_model.json",
+  "exact_receipt": "results/rtl/mtp_wfc_hard_physical_20261009/source_pair_summary.json",
+  "old_source_failure": "results/rtl/mtp_tokpipe_source_sta_recovery_20261009/recovered/summary.json",
+  "pins": {
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "4cdc0fe9c0a122db81dae32c34c9afe65185fc6673525c0caa644420b3ecf6e5",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": "27ec0d2a5f4cbd79c0aef026699d2275c4286a1237c22f22266d5128bd39ac22",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv": "466f0e2eccd8eacc5583a36043762dbe98962adbe16a4d5d5e128d09f85cf178",
+    "tools/dsrom_wfc_prompt_pipe_bench.py": "54addfe82d44afa66d77618b1d823f0454ba6fef54d07dfca1a06f1d1766263e",
+    "physical/dsrom_wfc_tokpipe/src_basis.json": "6ae538e876461e153e9641f4f87d776d9f1a50ea2f3ba43122e33ea4547b59f4",
+    "tools/dsrom_wfc_tokpipe_physical.py": "d3df49f3444606e48e2834a6bf3e2498de5ee3253f4d48447d758fce88d74bfb",
+    "tools/dsrom_wfc_source_scope_check.py": "dcac1b8632996a21891d3f4940ef99535ccd0965cae661d8baaee3a632b396f4",
+    "physical/dsrom_wfc_tokpipe/eco_scope/source_signoff_9f7a7f35e.sdc": "9e5eb8dd08d5c221c11ffcbeb3e469a428c657b8c7b9f301bef5ca1de6d5f9b8",
+    "physical/dsrom_wfc_tokpipe/eco_scope/source_region_die150_union.sdc": "892992fa6099feca20c8a11ed2d67d45bb8c6a629849472306e8afeb22137f6d"
+  },
+  "scope": "Adopt existing approved RTL only; no new engine architecture. All10 gate reruns remote; final electrical and union proof mandatory. No diekit adoption before this physical SOURCE closes.",
+  "resource": {
+    "source_job": "mtp-wfc-src-tokpipe-9f7a7f35e-tc",
+    "phase_peak_KiB": {
+      "synth": 278728,
+      "floorplan": 1055180,
+      "GP": 2477652,
+      "CTS": 2286880,
+      "GRT": 4283736,
+      "DRT": 21702448,
+      "report": 5465992
+    },
+    "reservation_GiB": 32,
+    "differences": "Same full866user/32768KVW/four SRAM source provider, added74metadataFF/PROMPT_EXTRA2.32GiB is conservative reservation, not measured new peak."
+  }
+}

@@ -1,0 +1,30 @@
+ERR case 0 id 37979, expected 37983
+REC 0 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 1 id 18997, expected 18993
+REC 1 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 2 id 7, expected 3
+REC 2 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 3 id 12657, expected 12661
+REC 3 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 4 value 80000000, expected 00000000
+REC 4 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 5 id 30486, expected 30482
+REC 5 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 6 id 151931, expected 151935
+REC 6 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 7 id 132949, expected 132945
+REC 7 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 8 id 113959, expected 113955
+REC 8 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 9 id 126609, expected 126613
+REC 9 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 10 value 80000000, expected 00000000
+REC 10 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 11 id 131194, expected 131198
+REC 11 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+summary: 12 records LPS 8 GAP 1 MUT 2: dispatch->retire total 57432, max last-beat->retire 36
+HGI_ARGMAX_TPUT FAIL errors=12
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_argmax_tput.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 116us; walltime 0.624 s; speed 185.267 us/s
+- Verilator: cpu 0.433 s on 1 threads; allocated 11 MB

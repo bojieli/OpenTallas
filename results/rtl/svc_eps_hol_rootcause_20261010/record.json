@@ -1,0 +1,69 @@
+{
+  "source_commit": "60ba7452a",
+  "scope": "one actual ot_svs_eps; one actual ot_svs_pcs; no engine RTL edits",
+  "root_cause": "Second stream descriptor blocks ingress read at FIFO head while first stream active. AW2 depth4 fills with blocked stream2 plus W516/KV/IK. Next W524 silently discarded by CDC FIFO we&&full. Full scoreboard trace independently identifies missing SM4 tag524 W1.",
+  "baseline": {
+    "verdict": "FAIL",
+    "streams": 2,
+    "W": 1,
+    "KV": 1,
+    "IK": 1,
+    "drops": 1,
+    "missing_tag": 524
+  },
+  "capacity_diagnostic": {
+    "verdict": "PASS",
+    "change": "diagnostic-only AW2->AW3 on EPS ingress FIFO",
+    "streams": 2,
+    "W": 2,
+    "KV": 1,
+    "IK": 1,
+    "drops": 0,
+    "adopted": false,
+    "limitation": "Depth8 only establishes capacity root cause for this6-command vehicle. Requires bounded admission contract or HOL repair before adoption."
+  },
+  "pcs_control": {
+    "verdict": "PASS",
+    "cases": 57344,
+    "ready_patterns": 4096,
+    "SM_arrival_phases": 14,
+    "drain_cycles": 36,
+    "negative_control": "SM hold forced0 fails pattern0 arrival1"
+  },
+  "model": {
+    "architecture_change": false,
+    "added_hardware": 0,
+    "commands_in_vehicle": 6,
+    "active_streams": 1,
+    "blocked_streams": 1,
+    "legacy_commands": 4,
+    "baseline_ingress_capacity": 4
+  },
+  "files": {
+    "tb_eps_hol.sv": "ea14dc8856c5aa216bf206f6859bf3732fd705e30f3301f9011631c2358fde05",
+    "tb_pcs_control.sv": "4d113f385c8aacfcd14fc5474c9495eacead27f73292980326148eeca971875a",
+    "eps_baseline.log": "36a2df55ca0d999f962752a1e4dfb73f4ba7c2e0a27a8e96cd727e94dd800662",
+    "eps_capacity_diagnostic.log": "36fcaeaf47f5fbbfc5e0041ede0871a346859dc961b00139bb7ca59d0cc02e4c",
+    "pcs_control.log": "c992895ae8de7b215df0f96612abfa137c48c136031db58046087ca540243843",
+    "pcs_drop_hold_mutant.log": "2d406e339b6572d1e1c3552090d86894d51af608f802fd665260aa14d516d718"
+  },
+  "stream_descriptor_checks": {
+    "row0": [
+      11,
+      22
+    ],
+    "nsec": [
+      4,
+      4
+    ],
+    "mask": [
+      1,
+      1
+    ],
+    "load_tag": [
+      101,
+      102
+    ],
+    "order": "first then queued second exact"
+  }
+}

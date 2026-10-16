@@ -1,0 +1,161 @@
+{
+  "schema": "opentallas.qwen.ctlm-deep-queue.v1",
+  "default_off": true,
+  "source": {
+    "rom_plan": "results/arch/qwen_kv_die_20261009/rom_r22k.json",
+    "sha256": "1f7d306ec9136948877927a835956796a57f09af1121b0371d3bc32bfe524f8f",
+    "RTL_sha256": "a81a87ff32a4677903de2e947d46372ea8c490e2acbba3cf8ba66ebc777b9e2f"
+  },
+  "model_precedes_variants": true,
+  "baseline_die_mm2": 770.329,
+  "variants": [
+    {
+      "name": "wide1036",
+      "slot_um": [
+        1036.8,
+        2073.6
+      ],
+      "slot_mm2": 2.14990848,
+      "hard_element_cycles_added": 0,
+      "RTL_unchanged": true,
+      "registered_boundaries": true,
+      "replicas": 1,
+      "MACs_per_cycle": 0,
+      "compute_intensity_macs_per_byte": 0,
+      "memory_ports_bytes_per_cycle": {
+        "program_copy_read": 128,
+        "program_copy_write": 8
+      },
+      "boundary_bits_per_cycle": {
+        "me_snapshot_out": 92,
+        "su_snapshot_in": 57,
+        "layer_start_in": 49,
+        "program_write_in": 75,
+        "vm_write_out": 553,
+        "vm_x_descriptor_out": 53
+      },
+      "routing_tracks": {
+        "existing_pin_density_limit_bits_per_um_per_layer": 12,
+        "layers_per_face": 2,
+        "minimum_S_capacity_tracks": 21600,
+        "control_upper_bus_bits": 28,
+        "port_element_request_bits": 114,
+        "per_band_scale_bits": 201,
+        "die_relay_pitch_um": 430.56
+      },
+      "replica_cost": {
+        "program_store_bits": 65536,
+        "read_mux": "64:1 x1024 unchanged",
+        "write_demux": "64 word enables unchanged",
+        "fanout": "existing registered reset and scale request copies unchanged"
+      },
+      "area_bound_um2": 846526.464,
+      "area_bound_basis": "analytical60% base-slot sizing ceiling; not measured cell area",
+      "bound_utilization": 0.39375000000000004,
+      "floorplan": {
+        "old_tree_slot_h_um": 3732.48,
+        "control_plus_four_upper_h_um": 3637.44,
+        "vertical_fit": true,
+        "extra_column_width_um": 259.19999999999993,
+        "preserve_external_relay_channel_um": 259.2,
+        "required_recipe_change": "widen tree/control spine column and shift eastern instances; retain259.2um relay channel",
+        "die_um": [
+          23743.584,
+          32801.76
+        ],
+        "die_mm2": 778.83134390784,
+        "added_die_mm2": 8.502216191999999,
+        "reticle_mm2": 858,
+        "reticle_fit": true
+      },
+      "latency": {
+        "clock_hz": 1200000000.0,
+        "hard_element_added_cycles": 0,
+        "extra_station_budget_per_crossing": 1,
+        "conservative_token_added_cycles_bound": 18688,
+        "conservative_token_added_ns_bound": 15573.333333333334,
+        "adoption_requires": "actual relay inventory and static program composition; bound is not a rate claim"
+      },
+      "adoption_holds": [
+        "actual controller-pair minimum exactness gate",
+        "source-matched hardened pin views and die clock/relay context",
+        "real widened recipe legality, routing-layer and pin-access checks",
+        "measured TT setup>=0,FF hold>=0,DRC0 under unchanged constraints"
+      ]
+    },
+    {
+      "name": "wide1296",
+      "slot_um": [
+        1296.0,
+        2073.6
+      ],
+      "slot_mm2": 2.6873856000000003,
+      "hard_element_cycles_added": 0,
+      "RTL_unchanged": true,
+      "registered_boundaries": true,
+      "replicas": 1,
+      "MACs_per_cycle": 0,
+      "compute_intensity_macs_per_byte": 0,
+      "memory_ports_bytes_per_cycle": {
+        "program_copy_read": 128,
+        "program_copy_write": 8
+      },
+      "boundary_bits_per_cycle": {
+        "me_snapshot_out": 92,
+        "su_snapshot_in": 57,
+        "layer_start_in": 49,
+        "program_write_in": 75,
+        "vm_write_out": 553,
+        "vm_x_descriptor_out": 53
+      },
+      "routing_tracks": {
+        "existing_pin_density_limit_bits_per_um_per_layer": 12,
+        "layers_per_face": 2,
+        "minimum_S_capacity_tracks": 27000,
+        "control_upper_bus_bits": 28,
+        "port_element_request_bits": 114,
+        "per_band_scale_bits": 201,
+        "die_relay_pitch_um": 430.56
+      },
+      "replica_cost": {
+        "program_store_bits": 65536,
+        "read_mux": "64:1 x1024 unchanged",
+        "write_demux": "64 word enables unchanged",
+        "fanout": "existing registered reset and scale request copies unchanged"
+      },
+      "area_bound_um2": 846526.464,
+      "area_bound_basis": "analytical60% base-slot sizing ceiling; not measured cell area",
+      "bound_utilization": 0.315,
+      "floorplan": {
+        "old_tree_slot_h_um": 3732.48,
+        "control_plus_four_upper_h_um": 3637.44,
+        "vertical_fit": true,
+        "extra_column_width_um": 518.4,
+        "preserve_external_relay_channel_um": 259.2,
+        "required_recipe_change": "widen tree/control spine column and shift eastern instances; retain259.2um relay channel",
+        "die_um": [
+          24002.784,
+          32801.76
+        ],
+        "die_mm2": 787.33356009984,
+        "added_die_mm2": 17.004432384,
+        "reticle_mm2": 858,
+        "reticle_fit": true
+      },
+      "latency": {
+        "clock_hz": 1200000000.0,
+        "hard_element_added_cycles": 0,
+        "extra_station_budget_per_crossing": 2,
+        "conservative_token_added_cycles_bound": 37376,
+        "conservative_token_added_ns_bound": 31146.666666666668,
+        "adoption_requires": "actual relay inventory and static program composition; bound is not a rate claim"
+      },
+      "adoption_holds": [
+        "actual controller-pair minimum exactness gate",
+        "source-matched hardened pin views and die clock/relay context",
+        "real widened recipe legality, routing-layer and pin-access checks",
+        "measured TT setup>=0,FF hold>=0,DRC0 under unchanged constraints"
+      ]
+    }
+  ]
+}

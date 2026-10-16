@@ -1,0 +1,175 @@
+{
+ "schema": "opentallas.hgi_unit_tput.v1 (hgi-e2e report.json compatible)",
+ "pass_": true,
+ "summary": {
+  "cycles": 503,
+  "records": 8,
+  "exact_records": 8
+ },
+ "per_unit": {
+  "FUSED": {
+   "records": 8,
+   "real": 8,
+   "exact": 8,
+   "rtl_busy": 503,
+   "sim_cost": 168.0
+  }
+ },
+ "per_op": {
+  "FUSED.QDQ_FP8": {
+   "records": 4,
+   "rtl_service": 263,
+   "sim_cost": 96.0,
+   "ratio": 2.74
+  },
+  "FUSED.QDQ_FP4_E8M0": {
+   "records": 2,
+   "rtl_service": 108,
+   "sim_cost": 24.0,
+   "ratio": 4.5
+  },
+  "FUSED.QDQ_FP4_E4M3": {
+   "records": 2,
+   "rtl_service": 132,
+   "sim_cost": 48.0,
+   "ratio": 2.75
+  }
+ },
+ "records": [
+  {
+   "k": 0,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "QDQ_FP8",
+   "real": 1,
+   "disp": 0,
+   "issue": 0,
+   "ret": 65,
+   "service": 65,
+   "cost": 24.0,
+   "ratio": 2.708,
+   "mismatch": 0
+  },
+  {
+   "k": 1,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "QDQ_FP8",
+   "real": 1,
+   "disp": 0,
+   "issue": 66,
+   "ret": 131,
+   "service": 66,
+   "cost": 24.0,
+   "ratio": 2.75,
+   "mismatch": 0
+  },
+  {
+   "k": 2,
+   "unit": "FUSED",
+   "op": 5,
+   "tag": "QDQ_FP4_E8M0",
+   "real": 1,
+   "disp": 0,
+   "issue": 132,
+   "ret": 185,
+   "service": 54,
+   "cost": 12.0,
+   "ratio": 4.5,
+   "mismatch": 0
+  },
+  {
+   "k": 3,
+   "unit": "FUSED",
+   "op": 6,
+   "tag": "QDQ_FP4_E4M3",
+   "real": 1,
+   "disp": 0,
+   "issue": 186,
+   "ret": 251,
+   "service": 66,
+   "cost": 24.0,
+   "ratio": 2.75,
+   "mismatch": 0
+  },
+  {
+   "k": 4,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "QDQ_FP8",
+   "real": 1,
+   "disp": 0,
+   "issue": 252,
+   "ret": 317,
+   "service": 66,
+   "cost": 24.0,
+   "ratio": 2.75,
+   "mismatch": 0
+  },
+  {
+   "k": 5,
+   "unit": "FUSED",
+   "op": 6,
+   "tag": "QDQ_FP4_E4M3",
+   "real": 1,
+   "disp": 0,
+   "issue": 318,
+   "ret": 383,
+   "service": 66,
+   "cost": 24.0,
+   "ratio": 2.75,
+   "mismatch": 0
+  },
+  {
+   "k": 6,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "QDQ_FP8",
+   "real": 1,
+   "disp": 0,
+   "issue": 384,
+   "ret": 449,
+   "service": 66,
+   "cost": 24.0,
+   "ratio": 2.75,
+   "mismatch": 0
+  },
+  {
+   "k": 7,
+   "unit": "FUSED",
+   "op": 5,
+   "tag": "QDQ_FP4_E8M0",
+   "real": 1,
+   "disp": 0,
+   "issue": 450,
+   "ret": 503,
+   "service": 54,
+   "cost": 12.0,
+   "ratio": 4.5,
+   "mismatch": 0
+  }
+ ],
+ "mutants": {
+  "m1.log": {
+   "pass_": false,
+   "expected": "FAIL",
+   "tail": [
+    "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:62: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)"
+   ]
+  },
+  "w1.log": {
+   "pass_": false,
+   "expected": "FAIL",
+   "tail": [
+    "MISMATCH rec 0 word 0: 3e400000 != be700000",
+    "MISMATCH rec 0 word 1: bd600000 != be800000",
+    "MISMATCH rec 0 word 2: 3e700000 != bea00000"
+   ]
+  }
+ },
+ "grade": "production_width",
+ "bench": "tb_hgi_quant_wide_tput (tools/hgi_unit_tput/run_qdq_wide.sh, Verilator 5.050 ot-epyc3)",
+ "structure": "ot_hgi_quant_unit WIDE=1 -> ot_hgi_quant_wide (registered boundary, ot_rst_relay, LD 4, NB 16, OD 32) on ot_hgi_vm_unit RP 32 / W2 32 LQ 16",
+ "price": "ceil(n/32)+8 (the token path's price, unchanged; owner 2026-10-11)",
+ "control": "w3 (forced packet path) PASS 2,319 cycles = the previous unit (14.6x)"
+}

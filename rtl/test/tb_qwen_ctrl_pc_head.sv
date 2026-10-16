@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 module tb_qwen_ctrl_pc;
- parameter integer PC=0,NEG=0;
+ parameter integer PC=0,NEG=0,PULLIN=0,WSETP=1;   // PULLIN: qwen-1010/b (both the DUT and the reference core)
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,cmd_v=0;reg [31:0] cmd=0;reg [2:0] read_credit=0;
  wire cmd_credit,row_v,col_v,col_we,busy,fault;
  wire [2:0] row_op;wire [4:0] row_bank,col_bank,col_col;wire [18:0] row_row;
- ot_qwen_ctrl_pc_head #(.ENABLE(1),.PC(PC)) dut(.*);
+ ot_qwen_ctrl_pc_head #(.ENABLE(1),.PC(PC),.PULLIN(PULLIN),.WSETP(WSETP)) dut(.*);
  // Independent software-like command queue, connected to the unmodified golden
  // controller. Captures packet ingress; compares all emitted command transactions.
  reg capv=0;reg [31:0] cap=0;
@@ -17,7 +17,7 @@ module tb_qwen_ctrl_pc;
  wire consume=sz!=0 && (malformed || (hd[31:30]==0 ? rd : hd[31:30]==2 ? wr : 1));
  wire push=capv && sz<8;
  ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(PC),.REF_MODE(1),.CRED(32),
-  .REF_PHASE((PC*118)/32),.WR_EN(1),.WQ(4),.PULLIN(0),.AQ_RD(0)) refpc(
+  .REF_PHASE((PC*118)/32),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0),.WSETP(WSETP)) refpc(
   .clk(clk),.rst_n(rst_n),.desc_v(sz!=0 && !malformed && hd[31:30]==0),.desc_r(rd),
   .desc_row(hd[18:0]),.desc_n(hd[29:19]),.go(sz!=0 && hd[31:30]==1),.next_posted(1'b0),
   .row_v(rv),.row_prio(),.row_gnt(1'b1),.row_op(ro),.row_bank(rb),.row_row(rr),
@@ -38,9 +38,12 @@ module tb_qwen_ctrl_pc;
   if(cmd_v) sent=sent+1;
   if(cmd_credit) acked=acked+1;
  end
+ generate if (PULLIN == 0) begin : g_elig   // the registered write-ready cut exists only without pull-in
+  always @(negedge clk) if(rst_n)
+   if(dut.core.on.write_ready_bank !== (dut.core.on.open & ~dut.core.on.stale & dut.core.on.rcdw_z & ~dut.core.on.blk)) fail("eligibility invariant");
+ end endgenerate
  always @(negedge clk) if(rst_n) begin
   cycles=cycles+1;
-  if(dut.core.on.write_ready_bank !== (dut.core.on.open & ~dut.core.on.stale & dut.core.on.rcdw_z & ~dut.core.on.blk)) fail("eligibility invariant");
   if(dut.count!=0 && dut.head !== dut.fifo[dut.rp]) fail("head invariant");
   if(row_v!==erow || col_v!==ecol || cmd_credit!==ecredit) fail("valid or credit");
   if(row_v) begin

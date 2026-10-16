@@ -54,7 +54,9 @@ ref = ["# die-context boundary per domain, referenced to the propagated arrival 
 for c, (i, q) in dom.items():
     ref.append(f"  {c} {90 if c in intra else 150} {{{' '.join(i)}}} {{{' '.join(q)}}}")
 ref += ["} {",
-        "  set ref [lindex [all_registers -clock $clk -clock_pins] 0]",
+        "  set ref {}",
+        "  if {[llength $ins]} { set ref [ot_pf_ref [get_ports $ins]] }",
+        "  if {![llength $ref]} { set ref [lindex [all_registers -clock $clk -clock_pins] 0] }",
         "  set lmax [get_property $ref arrival_max_rise]; set lmin [get_property $ref arrival_min_rise]",
         "  set T [get_property [get_clocks $clk] period]",
         "  puts \"QDM $clk ref [get_full_name $ref] L max $lmax min $lmin skew $sk\"",
@@ -65,6 +67,11 @@ ref += ["} {",
         "    set_output_delay [expr {0.2*$T - $lmax + $sk}] -max -clock $clk [get_ports $outs]",
         "    set_output_delay [expr {-$lmin - $ot_hk}]      -min -clock $clk [get_ports $outs] }",
         "}", f"set_false_path -from [get_ports {{{a.false}}}]"]
+# sign-off keeps the original reference (route-time PINFLOP only): the verdict re-times at the routed insertion anyway
+_new = ["  set ref {}", "  if {[llength $ins]} { set ref [ot_pf_ref [get_ports $ins]] }",
+        "  if {![llength $ref]} { set ref [lindex [all_registers -clock $clk -clock_pins] 0] }"]
+_k = ref.index(_new[0])
+ref_so = ref[:_k] + ["  set ref [lindex [all_registers -clock $clk -clock_pins] 0]"] + ref[_k + 3:]
 K = D / "mc" / a.master
 K.mkdir(parents=True, exist_ok=True)
 shutil.copy(D / "repair_budget.tcl", K / "repair_budget.tcl")
@@ -73,8 +80,10 @@ shutil.copy(D / "repair_budget.tcl", K / "repair_budget.tcl")
                                        ["set_max_fanout 32 [current_design]", "# die-wire context (r21 die STA): one <= 430.56 um hop + receiver pin", "set_load 80 [all_outputs]", "set_input_transition 150 [all_inputs -no_clocks]",
                                         "set_max_transition 260 [current_design]"]) + "\n")
 (K / "io_plain.sdc").write_text("\n".join(["unset_input_delay [all_inputs]", "unset_output_delay [all_outputs]"] + plainio()) + "\n")
-(K / "io_ref_skew.sdc").write_text("\n".join(ref) + "\n")
+PF = (D / "pinflop_ref.tcl").read_text()   # route-time PINFLOP reference procs (drive-0849 2026-10-10); not in sign-off
+_i = next(i for i, l in enumerate(ref) if not l.startswith("#"))
+(K / "io_ref_skew.sdc").write_text("\n".join(ref[:_i] + [PF.rstrip("\n")] + ref[_i:]) + "\n")
 (D / "signoff" / f"{a.master}.sdc").write_text("\n".join([f"# {a.master} sign-off at 833.333 ps (jobs/mk_mc_kit.py)"] + clocks(833.333)
                                                        + ["set_propagated_clock [all_clocks]"] + cross(833.333)
-                                                       + ["set ::env(OT_IO_HOLD_SKEW) 50"] + ref) + "\n")
+                                                       + ["set ::env(OT_IO_HOLD_SKEW) 50"] + ref_so) + "\n")
 print(K)

@@ -1,0 +1,103 @@
+{
+  "name": "qfd_seq_su_boundary_a-ea94d96ff-tc-hm0",
+  "block": "qfd_seq_su_boundary_a",
+  "owner": "Codex:qwen-seq-boundary",
+  "purpose": "Opt-in emitted-master boundary correction: real per-layer tp_seq launch49b, coherent endpoint-owned SU status57b. Old route input unchanged. Full system use requires SU endpoint acceptance24 successor and gate; physical view alone is not full-token qualification.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+    "branch": "codex/qwen-seq-boundary-20261010",
+    "commit": "ea94d96ff2f344c05d088a310dd56b648f74af7a",
+    "extra_paths": [
+      "tests/rtl/qwen_seq_boundary",
+      "results/rtl/qwen_seq_boundary_20261010"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module ot_qfd_seq_su_boundary rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_boundary.sv rtl/rom/ot_qwen_tp_seq_w12.sv rtl/rom/ot_rom_pkg_link.sv rtl/rom/ot_rom_pkg_ctrl.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_cg.sv && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "boundary_exact_and_mutants",
+        "cmd": "python3 tools/redesign_qwen/seq_boundary_gate.py",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+    },
+    "route": {
+      "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_seq_su_boundary_a.sdc' HM=0.000 SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_seq_su_boundary_a {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 128
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_seq_su_boundary_a --post-sdc physical/qwen_die_masters/signoff/qfd_seq_su_boundary_a.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_seq_su_boundary_a > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_seq_su_boundary_a.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/redesign_qwen_20261009/qfd_seq_su_boundary_a-a639399be-tc-hm0"
+    }
+  ],
+  "cycles_added": 1,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "route_corner": "TC",
+  "no_bench_reason": "Pinned minimum emitted-boundary mechanism gate results/rtl/qwen_seq_boundary_20261010/mechanism_gate.json:5 pipeline shapes PASS and4 mutants detected. Driver reruns all cases; full real controller/tp_seq/shell lint also required.",
+  "latency_accounting": "IS+OS snapshot and OS launch; with15 transport stations snapshot17cycles and launch16cycles. No claimed gain or system rate until composed full integration.",
+  "adoption_prerequisites": [
+    "SU accepted-operation counter24 pinned and bench-verified",
+    "endpoint/master/tree-top boundary integration exact gate"
+  ]
+}

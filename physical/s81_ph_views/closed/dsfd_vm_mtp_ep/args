@@ -1,0 +1,1 @@
+SRC=/srv/opentallas-scratch/claude/closure-loop/fixlat-vmmtp-189894fc2-tc-hm20/src die=contract master=dsfd_vm_mtp_ep top=rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv DW=43.2 DH=43.2 PD=0.30 MAXL=M7 SRCS=rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv CLK=ck SDCX= CTSA= 

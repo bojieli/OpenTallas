@@ -1,0 +1,30 @@
+REC 0 0 accept 0 retire 181
+REC 0 1 accept 3 retire 296
+REC 0 2 accept 44 retire 393
+REC 0 3 accept 196 retire 474
+REC 0 4 accept 323 retire 589
+REC 0 5 accept 375 retire 665
+REC 0 6 accept 489 retire 730
+REC 0 7 accept 610 retire 779
+REC 0 8 accept 683 retire 856
+REC 0 9 accept 732 retire 1008
+REC 0 10 accept 769 retire 1071
+REC 0 11 accept 872 retire 1166
+REC 0 12 accept 1023 retire 1255
+REC 0 13 accept 1070 retire 1320
+REC 0 14 accept 1184 retire 1843
+REC 0 15 accept 1273 retire 1953
+REC 0 16 accept 1389 retire 2025
+REC 0 17 accept 1741 retire 2092
+REC 0 18 accept 1972 retire 2154
+REC 0 19 accept 2010 retire 2233
+REC 0 20 accept 2107 retire 2883
+REC 0 21 accept 2170 retire 2899
+REC 0 22 accept 2708 retire 2965
+REC 0 23 accept 2815 retire 3031
+REC 0 24 accept 2918 retire 3095
+REC 0 25 accept 2984 retire 3618
+REC 0 26 accept 3048 retire 3634
+CASE 0 service 3635 span 1698 stage 1026 compute 2241 drain 647 other 0
+summary: 1 production-shape cases, 23792 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD PASS

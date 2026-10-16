@@ -1,0 +1,6 @@
+SVCJOB jobs=40 issued=12 dones=4 tag_errors=1 early_dones=0 frames_ok=89 frames_exp=358 frames_bad=0 fault=1 cycles=648
+FAIL
+- rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job.sv:222: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 541ns; walltime 0.004 s; speed 145.333 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

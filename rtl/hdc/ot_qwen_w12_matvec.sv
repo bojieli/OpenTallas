@@ -217,7 +217,12 @@ module ot_qwen_w12_matvec_part #(
     // LRST = 1: each lane group and each split-tree level takes its own kept reset copy (asserted with rst_n,
     // released one edge later); lanes see their first valid >= 4 edges after any go, so the later release is
     // invisible.  0: the original (rst_n everywhere).
-    parameter integer LRST = 0
+    // LRST = 3 (qwen-1010/c 2026-10-10): LRST 2 plus a second kept copy per LANE and per TREE ADDER, fed by its group /
+    // level copy (released two edges after rst_n, assert still asynchronous): the level copy drove every tree adder's
+    // reset flops through 13 buffer levels (rp1pcl-hm0).  0 cycles.
+    parameter integer LRST = 0,
+    parameter integer TMUT = 0,          // 2: one tree adder's reset copy never released (bench mutant, LRST 3)
+    parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -771,7 +776,18 @@ end endgenerate
     //: LRST: kept reset copies (async assert, released one edge after rst_n): one per lane group, one per tree level
     wire [G-1:0]  rst_g;
     wire [LG:0]   rst_t;
-    generate if (LRST != 0) begin : g_lrst
+    // LRST = 2 (struct-close 2026-10-09, "-cl"): the same copies as keep_hierarchy instances.  With LRST = 1 the ORFS
+    // yosys (0.68) opt_merge folds the identical (* keep *) flops back into ONE (qfd_tile_rp1p / tile_e_rp2np post-CTS:
+    // the only startpoint is u_me.g_lrst.rt[0] -> lane multipliers / tree adders, -45..-75 ps TT, fanout tree 200+ ps
+    // of wire).  Same reset behaviour (async assert, release one edge after rst_n), 0 cycles.
+    generate if (LRST >= 2) begin : g_lrst2
+        for (g = 0; g < G; g = g + 1) begin : g_rg
+            ot_qwen_lrst_ff u_rg (.clk(clk), .rst_n(rst_n), .q(rst_g[g]));
+        end
+        for (g = 0; g <= LG; g = g + 1) begin : g_rt
+            ot_qwen_lrst_ff u_rt (.clk(clk), .rst_n(rst_n), .q(rst_t[g]));
+        end
+    end else if (LRST != 0) begin : g_lrst
         (* keep *) reg [G-1:0] rg;
         (* keep *) reg [LG:0]  rt;
         always @(posedge clk or negedge rst_n) begin
@@ -786,16 +802,22 @@ end endgenerate
         for (g = 0; g < G; g = g + 1) begin : g_grp
             for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
                 localparam integer LI = g * W + gl;
+                wire rst_l;                              // LRST 3: the lane's own kept reset copy
+                if (LRST >= 3) begin : g_lr
+                    ot_qwen_lrst_ff u_rl (.clk(clk), .rst_n(rst_g[g]), .q(rst_l));
+                end else begin : g_lg
+                    assign rst_l = rst_g[g];
+                end
                 wire [31:0] prod, fb_pre, acc_in;
                 reg  [31:0] acc_q;
                 wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
                 if (MUL_LAT == 5) begin : g_legacy_mul
-                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
+                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end else begin : g_candidate_mul
-                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
+                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end
                 // add input at c+8; the circulating sum from IL cycles earlier.
@@ -806,13 +828,13 @@ end endgenerate
                 always @(posedge clk) acc_q <= fl_first[MUL_LAT-1] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
                 if (ACC_LAT == 5) begin : g_fadd
-                    ot_hdc_fadd u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
+                    ot_hdc_fadd u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                        sum[32*LI +: 32], f1);
                 end else begin : g_ladd
-                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
+                    ot_qwen_w12_ladd #(.LAT(ACC_LAT), .ANR(ANR)) u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                                        sum[32*LI +: 32], f1);
                 end
-                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_g[g]), .d(sum[32*LI +: 32]), .q(fb_pre));
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_l), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
         end
@@ -872,7 +894,13 @@ end endgenerate
             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_t[lv], vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+                wire rst_a;                              // LRST 3: the adder's own kept reset copy
+                if (LRST >= 3) begin : g_ra
+                    ot_qwen_lrst_ff u_ra (.clk(clk), .rst_n((TMUT == 2 && lv == LV0 + 1 && p == 0) ? 1'b0 : rst_t[lv]), .q(rst_a));
+                end else begin : g_rl
+                    assign rst_a = rst_t[lv];
+                end
+                ot_qwen_w12_tadd #(.LAT(TREE_LAT), .ANR(ANR)) u_add (clk, rst_a, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 if (ALWAYS) begin : g_a
@@ -1231,7 +1259,7 @@ endmodule
 
 // ot_qwen_w12_ladd #(LAT): ot_hdc_fp32_add_lat (bit-identical to ot_hdc_qadd / ot_hdc_fadd) with the qadd port
 // shape: fault = a valid result's err.
-module ot_qwen_w12_ladd #(parameter integer LAT = 7) (
+module ot_qwen_w12_ladd #(parameter integer LAT = 7, parameter integer ANR = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1242,13 +1270,19 @@ module ot_qwen_w12_ladd #(parameter integer LAT = 7) (
 );
     wire [1:0] err;
     wire vo;
-    ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
-                                        .valid_out(vo));
+    // ANR = 1 (hardcore-1010 D): ot_hdc_fp32_add_lat_nr (valid-only cut resets + HSPLIT), bit-identical
+    generate if (ANR != 0) begin : g_nr
+        ot_hdc_fp32_add_lat_nr #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                               .valid_out(vo));
+    end else begin : g_r
+        ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                            .valid_out(vo));
+    end endgenerate
     assign fault = vo && (err != 2'd0);
 endmodule
 
 // The split-tree pair adder: ot_hdc_qadd at LAT 3 (the legacy netlist), else ot_qwen_w12_ladd #(LAT).
-module ot_qwen_w12_tadd #(parameter integer LAT = 3) (
+module ot_qwen_w12_tadd #(parameter integer LAT = 3, parameter integer ANR = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1260,7 +1294,7 @@ module ot_qwen_w12_tadd #(parameter integer LAT = 3) (
     generate if (LAT == 3) begin : g_q
         ot_hdc_qadd u (clk, rst_n, v, a, b, y, fault);
     end else begin : g_l
-        ot_qwen_w12_ladd #(.LAT(LAT)) u (clk, rst_n, v, a, b, y, fault);
+        ot_qwen_w12_ladd #(.LAT(LAT), .ANR(ANR)) u (clk, rst_n, v, a, b, y, fault);
     end endgenerate
 endmodule
 
@@ -1325,4 +1359,11 @@ module ot_qwen_w12_ksum #(parameter integer W = 24, parameter integer N = 8) (
     wire [W-1:0] a, b;
     ot_qwen_w12_csa_tree #(.W(W), .N(N)) u_t (.rows(rows), .s(a), .c(b));
     ot_qwen_w12_kadd #(.W(W)) u_a (.a(a), .b(b), .s(s));
+endmodule
+
+// struct-close 2026-10-09: one kept local reset copy (ot_qwen_w12_matvec_part LRST = 2).  keep_hierarchy stops opt_merge
+// from folding the identical copies (plain (* keep *) regs are merged by the ORFS yosys).
+(* keep_hierarchy *)
+module ot_qwen_lrst_ff (input wire clk, input wire rst_n, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
 endmodule

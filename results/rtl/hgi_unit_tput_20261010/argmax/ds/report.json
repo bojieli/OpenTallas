@@ -1,0 +1,213 @@
+{
+ "pass_": true,
+ "bench_pass": true,
+ "grade": "measured_unit_bench",
+ "vehicle": "ot_hgi_argmax_record LPS 16 (opt-in: 16-lane STREAM beat, 1,043 b) + ot_hgi_argmax18_m GENERIC18 LP 16 + real ot_hgi_vm_unit; DeepSeek-V4.1 TP96 rank-0 head ARGMAX.LOCAL (A STREAM n 1,347 from the LM head matvec, imm_a 1,347; ranks 0 / 95); STREAM fed at full rate (1 beat / cycle); mutants MUT 1 (last beat dropped) / MUT 2 (beat halves swapped) FAIL",
+ "source_log": "results/rtl/hgi_unit_tput_20261010/argmax/ds/logs/l16_m0.log",
+ "summary": {
+  "records": 12,
+  "cycles": 1488,
+  "sim_cost": 1712.016,
+  "ratio": 0.869,
+  "n": 1347,
+  "imm_a": 1347,
+  "price_per_record": 142.668,
+  "price_how": "walk su:argmax_local (ds_native_timing.NativeCost)",
+  "max_ret": 124,
+  "max_tail_last_beat_to_retire": 37
+ },
+ "per_unit": {
+  "ARGMAX": {
+   "records": 12,
+   "real": 12,
+   "exact": 12,
+   "sim_cost": 1712.016
+  }
+ },
+ "mutants": [
+  {
+   "log": "results/rtl/hgi_unit_tput_20261010/argmax/ds/logs/l16_m1.log",
+   "verdict": "FAIL",
+   "errors": 4
+  },
+  {
+   "log": "results/rtl/hgi_unit_tput_20261010/argmax/ds/logs/l16_m2.log",
+   "verdict": "FAIL",
+   "errors": 10
+  }
+ ],
+ "records": [
+  {
+   "k": 0,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.max_last.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 1,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.tie_halves.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 2,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.tie_far.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 3,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.nan_first.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 4,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.zeros.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 5,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.gauss.r0",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 6,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.max_last.r95",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 7,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.tie_halves.r95",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 8,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.tie_far.r95",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 9,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.nan_first.r95",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 10,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.zeros.r95",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  },
+  {
+   "k": 11,
+   "unit": "ARGMAX",
+   "op": 0,
+   "tag": "ds.argmax_local.gauss.r95",
+   "real": 1,
+   "disp": 0,
+   "ret": 124,
+   "cost": 142.668,
+   "first_beat": 3,
+   "last_beat": 87,
+   "tail": 37,
+   "ratio": 0.869
+  }
+ ],
+ "source_commit": "445ca2a45 (+ worktree LPS change)",
+ "bench": "rtl/hbm_accel/generic/adapters/tb/tb_hgi_argmax_tput.sv via run_argmax_tput.sh ds OUT 16 {0,1,2} 1",
+ "host": "ot-epyc4 Verilator 5.050",
+ "baseline_lps8": "results/rtl/hgi_unit_tput_20261010/argmax/ds/baseline_lps8.json"
+}

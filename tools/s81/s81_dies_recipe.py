@@ -52,10 +52,18 @@ OUT = ROOT / 'results/rtl/dsrom_s81_fulldie_20261004/s81dies'
 LAYER1 = 'results/rtl/dsrom_s81_fulldie_20261004/m221pq/options.txt'
 
 
+LAYER1_FULL = 'results/physical/s81_gen_20261009/s81_layer1_full.opts'
+
+
 def _layer1_opts():
-    o = (ROOT / LAYER1).read_text().split()
+    """mtp-draftdie 2026-10-09: the s81-gen FULL layer1 recipe (r3 options + --face-pin-inset --host --wfc-hard
+    --nxt-reach --path-pick --hop-r-cc 500 --relay-tt-reach 600 --ctrl-rq; GEN_DONE + PLACE rc=0 on the die-evidence-2
+    chain).  The earlier base (r3 + --nxt-reach --host only) failed in _hop_fix on every die drawn from it: the frame_0
+    relay rt_0_8a_y1 (773.7 um hop at the 410 um common-clock reach; --hop-r-cc 500 clears it) and the 20 mm hw_SW host
+    chain (no box on the default L; --path-pick takes a corridor path)."""
+    o = (ROOT / LAYER1_FULL).read_text().split()
     i = o.index('--die')
-    return o[:i] + o[i + 2:] + ['--nxt-reach', '--host']   # r4b: r3 options + --nxt-reach; + dsfd_host (TA-17)
+    return o[:i] + o[i + 2:]
 
 
 def _sub(o, k, v=None):
@@ -105,6 +113,57 @@ def recipes():
                        role='MD-2 P2 draft die B (20 of the 40)',
                        note='layer1 recipe + draft ROM image B (mtp.1 + mtp.2 experts 64..127); expert outputs to die A '
                             'over the in-package UCIe; no WFC'),
+        'draftP': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5'],
+                       role='DSpark primary die (4 = TP4 group P.k0..k3; mtp-dsbind 2026-10-10)',
+                       note='layer1 recipe + primary image (non-expert mtp.0..2 on the S81 L0 runs + seed main_proj, '
+                            'results/uarch/dsrom_s81_mtp_binding_20261010) + 5 draft fan-out SerDes (one a row package); no WFC'),
+        # mtp-wfc 2026-10-10: WFC + accept integration (budget-audit dsrom_mtp_draft_hw (b))
+        'head631rtt': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '631', '--mtp-seq', '--mtp-links', '5',
+                                      '--mtp-seq-rtt'],
+                           role='head631 with the native sequencer dsfd_mtp_seq_rtt (accept/commit, RTT-sized receivers)',
+                           note='mtp-seq-rtt-native-61b4bc729-tc CLOSED; same ports as dsfd_mtp_seq'),
+        'head631ep': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '631', '--mtp-seq', '--mtp-links', '5',
+                                     '--mtp-seq-rtt', '--mtp-ep'],
+                          role='head631rtt + RTT-sized partner ends dsfd_cap_mtp_ep / dsfd_vm_mtp_ep (fixlat a7961fc6d)',
+                          note='sequencer buses terminate on the partner ends; core sides abut capture / VM'),
+        'draftAlnk': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'A', '--p2-lnk'],
+                          role='MD-2 P2 draft die A with the P2 core + dsfd_p2_lnk pair (fixlat a7961fc6d)',
+                          note='die-side P2 buses at the link; core <-> link abutting'),
+        'layer1kit': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit'],
+                          role='stage die with the WFC kit (STG tokpipe + lnk + vmx as own masters, exact ports)',
+                          note='rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv dsfd_wfc_stg; gate tools/dsrom_wfc_kit_bench.py'),
+        'layer1srckit': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--ctrl-role', 'source'],
+                             role='S0 (source) stage die with the WFC kit (SOURCE tokpipe + tok_hard + lnk + vmx)',
+                             note='dsfd_wfc_src; host cfg in + committed-token egress to the host slab'),
+        'layer1srckitm': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--ctrl-role', 'source', '--coll-split3-cr',
+                                                      '--coll-mtp-far', 's0', '--mtp-links', '1'],
+                              role='S0 die: WFC kit SOURCE + the far end of the head MTP lane (token return -> kit, accept -> host)',
+                              note='kit TOKIN; lane W4 = lk_W4 (one MTP SerDes)'),
+        'draftAlnkp2l': dict(opts=_layer1_opts() + ['--die', 'layer1', '--draft', 'A', '--coll-split3-cr', '--coll-p2-lane'],
+                             role='draft die A with the collective P2 lanes (the P2 link end dsfd_coll_p2_ep is inside the '
+                                  'collective composition: an alternative to --p2-lnk); t_p2flt -> host',
+                             note='mtp-colllane-1011 P2 variant + mtp-wfc binding'),
+        'layer1srccrp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--ctrl-role', 'source'],
+                             role='S0 die: WFC slab = dsfd_wfc_cr2 (crp credit-boundary tile + SOURCE kit)', note='main 10-11'),
+        'layer1crpseq': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp', '--stage-seq'],
+                             role='stage die, option A: WFC cr2 slab + dsfd_stage_seq (kit start / done, no capture placeholders)',
+                             note='main 10-11 decision A'),
+        'layer1crp': dict(opts=_layer1_opts() + ['--die', 'layer1', '--wfc-kit', '--wfc-crp'],
+                          role='stage die: WFC slab = dsfd_wfc_cr2 (crp + STG kit)', note='main 10-11'),
+        'scankit': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer', '--wfc-kit'],
+                        role='scan die (q-only flavour) with the WFC kit', note='dsfd_wfc_stg'),
+        'draftPs': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1', '--draft', 'P', '--mtp-links', '5', '--seedl',
+                                               '--coll-mtp-far', 'primary', '--coll-split3-cr'],
+                        role='DSpark primary die with the seed-descriptor consumer (mtp-dsbind 2026-10-10)',
+                        note='hub column 1,814.4 / VCH 1,468.8 um (the split3cr MTP-lane collective + seedl slab overflow '
+                             'the 1,728 um column: sp_su_s assert, as scan / layer1srckitm); draftP + dsfd_mtp_seed_launch slab (rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv) + the '
+                             'collective MTP lane far end (seed class -> seedl; token return / accept word -> host)'),
+        'draftPh': dict(opts=_sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8) + ['--die', 'layer1',
+                                               '--draft', 'P', '--mtp-links', '9', '--seedl', '--hrow',
+                                               '--coll-mtp-far', 'primary', '--coll-split3-cr'],
+                        role='DSpark primary die with the seed launcher and the main-hidden row store (mtp-dsbind 2026-10-10)',
+                        note='draftPs + dsfd_mtp_hrow (rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv); 9 MTP SerDes = 5 draft '
+                             'fan-out + the head seed lane + 3 hidden-part lanes (layer 37 / 38 / 39 stage dies, rank k)'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
                        role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '

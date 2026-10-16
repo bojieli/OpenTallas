@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.hbm_die_view.v1",
+ "master": "hgi_mtp_native",
+ "kind": "mtp_hgi",
+ "status": "closed",
+ "lef": "hgi_mtp_native.lef",
+ "lib": {
+  "ss": "hgi_mtp_native_ss.lib",
+  "ff": "hgi_mtp_native_ff.lib",
+  "tt": "hgi_mtp_native_tt.lib"
+ },
+ "files_sha256": {
+  "hgi_mtp_native.lef": "7027929f2938aef9cfa38c3295db8f8bb0dd2b15596f996a2bc9e635601c48c2",
+  "hgi_mtp_native_ss.lib": "bcc2696ba4b4fb19adcf52a55d07df438e101b7c8cba7cdf05742e59d6523239",
+  "hgi_mtp_native_ff.lib": "0f656c29b08e7c02ec30f5ce703dd644a0364768efe5487d2fdfcc0fc86f9409",
+  "hgi_mtp_native_tt.lib": "9bb84596b6ece2250b7ad74ee4cbd038671d2e388bc1fa71c19ce3e5cf737bf0"
+ },
+ "check": {
+  "macro": "hgi_mtp_native",
+  "size_um": [
+   286.56,
+   200.88
+  ],
+  "ports": {
+   "clk": {
+    "dir": "input",
+    "bits": 1
+   },
+   "f_cmdproc": {
+    "dir": "input",
+    "bits": 197
+   },
+   "rst_n": {
+    "dir": "input",
+    "bits": 1
+   },
+   "t_cmdproc": {
+    "dir": "output",
+    "bits": 517
+   }
+  },
+  "lef_pin_bits": 716,
+  "netlist_bits": 716,
+  "missing": [],
+  "n_missing": 0,
+  "extra": [],
+  "n_extra": 0,
+  "verdict": "MATCH",
+  "scope": "LEF vs routed netlist ports"
+ },
+ "size_um": [
+  286.56,
+  200.88
+ ],
+ "source": {
+  "job": "hgi_mtp_native-n14-lvt-5b9670b6d-tc-hm10",
+  "host": "ot-epyc4",
+  "installed_base": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_native-n14-lvt-5b9670b6d-tc-hm10/cl/eco/pass1/orfs/results/asap7/opentallas_hgi_mtp_native_asap7_mtp_hgi_mtp_native_n14_lvt_5b9670b6d_tc_hm10/base",
+  "record_commit": "db5a8e9a7",
+  "merged_main": "ae380d24e",
+  "installed_inputs_sha256": {
+   "6_final.odb": "a3a260136d905be2c016cdb07a3fafc0d939787a577446a55ee15bcabda9402a",
+   "6_final.sdc": "5ef1c2c9e760cd60ef636ae8b5b09728fbe7268256480b03bf1470b58a1d2e73",
+   "6_final.spef": "3640a35110d5f392c5c66806cc0a11c42e7f3c8a75b1ef62b05a5d16b53829d7"
+  },
+  "eco": "installed 2026-10-10T22:29:56-07:00 (post-route hold ECO cl/eco/pass1, +2,758 cells); exported from the installed 6_final.odb (the db the CLOSED corner_sta timed)"
+ },
+ "signoff_833": {
+  "tt_setup_ps": 39.14,
+  "ff_hold_ps": 8.8,
+  "ss_sensitivity_ps": -244.03,
+  "drc": 0
+ },
+ "die_binding": {
+  "variant": "R25GQN (main d98cc3409 N14 DROP: dedicated MTP <-> router / coll nets removed; the MTP kernels compile onto standard records)",
+  "status": "VIEW READY; ports = the N14 contract (no router / coll groups)",
+  "ports": "716 pin bits = clk, rst_n, f_cmdproc 197 in, t_cmdproc 517 out (port_check.json MATCH)",
+  "size_note": "view 286.56 x 200.88 (unchanged footprint)"
+ },
+ "note": "N14 re-close at main 5b9670b6d (h deleted the tied XSEL / union logic, 6499df7c8); supersedes the nreg-a-lvt eaea6da41 view (853 pins incl. router / coll MTP groups). hm0 sibling also CLOSED (TT +42.63 / FF +4.29, record 4cc345c28).",
+ "export": {
+  "tool": "physical/hbm_mtp/views/run_export.sh + mk_export.py (openroad/orfs:asap7lock)",
+  "sdc": "6_final.sdc of the installed database (the timing models carry the block SDC; sign-off numbers below are the loop corner_sta with its post-SDCs)",
+  "libraries": "ASAP7 RVT + LVT/SLVT twins (ECO / LVT cells present)"
+ },
+ "port_check": "port_check.json: abstract LEF pins == routed 6_final.v top ports, bit for bit"
+}

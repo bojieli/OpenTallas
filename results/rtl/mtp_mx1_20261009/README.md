@@ -34,3 +34,20 @@ hgi_mtp_native gate at PRL 4 (hgi_mtp_native_gate_prl4.json): PASS, connected 25
 wrong-job mutant FAIL, CP-result stop cases 6/6.
 
 Routes: hfd_cmdproc_s_mtp_native_mx1_rb-{hm0, hm15}-84549d5ee-tc (bench = this gate + the done-overtake mutant).
+
+## r3: r25gm die integration (ARGMAX dispatch), 2026-10-09 evening
+- MX1 t_hgi_argmax 683 / f_hgi_argmax 3 (S face 764.928-900.504 um, 0.192 pitch) behind a REGB pin-FIFO relay from the
+  N cross-band x_hgi_argmax_rec 683 / x_hgi_argmax_ret 3 (sequencer band; producer placement = hgi-takeover decision 5).
+  +1 cycle each way.  The dispatch plan's argmax span (0.50 x 1399.656, 2 tracks) lay on f_loader: r25gm overrides it
+  (cp_pin_override).  split.json cross entries added; N band record carries the two new ports.
+- ot_hgi_argmax_slot = closed ot_hgi_argmax_record (hgi-adapters) + ot_hgi_argmax18_m behind f/t_hgi_cmdproc, + die_id
+  (RANK) and the VM packet client (proposed to hgi-takeover: 'argmax' in VM_CLIENTS + die_id sideband, 683 -> 691).
+- gate_disp.json PASS: system / directed / legacy positives; mutants done-overtake, host-done, PRL 2, wrong job,
+  dispatch relay (MUT 3) FAIL; slot bench 41 records (2 over the su_red STREAM pins) + 11 refusals PASS, MUT_RANK FAIL.
+  hgi_mtp_native_gate_prl4_r2.json PASS on current sources (25,511 cyc).
+- Die check (tools/hgi_mtp_die_check.py) PASS 167 on r25gm and r25g4m (was 165): MX1 t/f_hgi_argmax now from MX1 RTL.
+  Remaining: hb_mtp_am master is still the bare engine view (needs ot_hgi_argmax_slot routed + the VM / die_id buses).
+- Note for hgi-adapters: tb_hgi_argmax_record now hangs on 2 cases (the compiler emits ARGMAX.LOCAL with A = STREAM since
+  spec batch 6644f1520; that bench ties the stream to 0).  The adapter itself is unaffected (PASS at c226d244d sources).
+- Routes: hfd_cmdproc_s_mtp_native_mx1_rb-disp-arcts-{hm25,hm10}-f7d744101-tc (the e573ce059 pair died in the bench on
+  the loop source sync; extra_paths added).

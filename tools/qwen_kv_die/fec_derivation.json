@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.qwen-rom.fec-derivation.v1",
+ "date": "2026-10-10",
+ "owner": "qwen-1010/a",
+ "question": "does the stream4 vehicle collective link latency (ot_rom_oneshot_allreduce LAT 339) already carry the board-SerDes RS(544,514) FEC?",
+ "sources": {
+  "vehicle_lat": {
+   "file": "tools/exactness/qwen_rom_fulltoken.py",
+   "ref": "COLL = [... \"-GLAT=339\" ...]",
+   "also": [
+    "tools/qwen_rom_rt_token_stream4_w12.py:143 --coll-lat default 339",
+    "tools/uarch_model.py:7580 QWEN_L0_RTL collective_lat_cycles=339 (W12b TP4 L0 4,669 cycles)"
+   ],
+   "rtl": "rtl/rom/ot_rom_oneshot_allreduce.sv ot_rom_ucie_link: LAT cycles of flight per link, credits return LAT cycles too (header lines 32-37); one-shot = every die sends once to every other die (one link crossing)"
+  },
+  "board_hop": {
+   "file": "configs/hardware/technology.json",
+   "ref": "links.rom_board_serdes.hop_latency_s",
+   "value_s": 2.09e-07,
+   "range_s": [
+    1.29e-07,
+    4.09e-07
+   ],
+   "components": "200 ns channel = 112G PAM4 TX/RX DSP 40-60 ns + RS(544,514) KP4 encode/decode incl. codeword accumulation 80-100 ns + PCS align/deskew 20-40 ns + ~2 ns flight; + 4 CDC cycles + 5 endpoint cycles (rtl/rom/ot_rom_pkg_link.sv) = 209 ns"
+  },
+  "origin_of_339": "not documented in source, commit messages or records (searched tools/, rtl/, results/, docs/, git log 09-29..10-03): introduced as the W12b TP4 command-line value (2026-10-01); the W12 tool default is LAT 11 = links.rom_package_ucie 10 ns"
+ },
+ "decomposition_cycles_at_1p2GHz": {
+  "vehicle_lat": 339,
+  "vehicle_lat_ns": 282.5,
+  "board_hop_incl_rs": 250.8,
+  "of_which_rs_fec": [
+   96.0,
+   120.0
+  ],
+  "residual_unattributed": 88.2
+ },
+ "topology": "TP4 = 2 packages x 2 ROM dies: each one-shot all-reduce word crosses at most one board-SerDes leg (the other two members of its package are UCIe, 10 ns); the collective latency is the slowest member = one board hop",
+ "verdict": "FEC_IN_LAT: the vehicle charges LAT 339 cycles = 282.5 ns per collective link crossing, which is >= the full technology.json board hop including RS(544,514) encode/decode (209 ns = 250.8 cycles; RS 96-120 cycles of it) with 88 cycles to spare; an extra FEC term would double-count it.  Extra FEC = 0 in the headline; the band +100 / +240 is kept as the sensitivity (a retimer / long-reach board hop up to 409 ns = 491 cycles would exceed LAT 339 by 152 cycles).",
+ "extra_fec_cycles_per_allreduce": {
+  "headline": 0,
+  "band": [
+   0,
+   100,
+   240
+  ],
+  "retimer_high": 151.8
+ }
+}

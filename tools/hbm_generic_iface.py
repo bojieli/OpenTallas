@@ -49,7 +49,7 @@ OPS = {
     "ARGMAX": ["LOCAL"],
     "DMA": ["LOAD", "STORE", "FENCE"],
     "IDX": ["INDEX_Q", "INDEX_SCORES", "TOPK_LOCAL", "SELECT"],
-    "HC": ["HC_MIX"],
+    "HC": ["HC_MIX", "HC_MIX_ROWS", "HC_MIX_POST"],
     "SIMT": ["RUN"],
 }
 PRED = ["ALWAYS", "POS0", "NOT_POS0", "LAST_ITER"]
@@ -76,12 +76,26 @@ D_MD_FIELDS = [
     ("ver_minor", 1, 0, 8, "u", "cp", "reject an incompatible layout"),
     ("ver_major", 1, 8, 8, "u", "cp", "reject an incompatible layout"),
     ("n_words", 1, 16, 8, "u", "cp", "fixed 64; guards a truncated load"),
-    # words 2-31: RESERVED (C8: section B moved to the per-layer model manifest)
+    # words 2-15, 27-31: RESERVED (C8: section B moved to the per-layer model manifest)
+    ("mtp_kernel_0", 16, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 0 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_1", 17, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 1 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_2", 18, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 2 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_3", 19, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 3 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_4", 20, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 4 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_5", 21, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 5 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_6", 22, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 6 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_7", 23, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 7 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_8", 24, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 8 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_9", 25, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 9 entry (16 B units; 0 = absent)"),
+    ("mtp_kernel_10", 26, 0, 32, "u", "hfd_cmdproc", "G23 MTP backend kernel 10 entry (16 B units; 0 = absent)"),
+    ("mtp_kstride", 49, 0, 32, "u", "hfd_cmdproc", "G26 MTP per-layer kernel stride for kinds 3 / 7 / 8 (16 B units; 0 = one body a kind)"),
+    ("mtp_noise", 53, 0, 18, "u", "hfd_cmdproc", "MTP draft-block noise / mask token id the translator puts on the demb launches of columns > 0 (DS: dspark_noise_token_id mod vocab = 128,799; 0 = none)"),
     ("manifest_sha256", 32, 0, 256, "u", "sw", "sha256 of the model manifest JSON (C8); binds MD to one model"),
     ("cp_vocab", 40, 0, 18, "u", "hfd_cmdproc", "doorbell / completion token range check (width 18 everywhere)"),
     ("cp_ctx_max", 41, 0, 21, "u", "hfd_cmdproc", "doorbell position range check"),
     ("coll_group_size", 46, 0, 8, "u", "hfd_coll", "aligned groups (C6 set); rank = die_id mod size"),
-    # word 49, 53-55: reserved for Qwen MTP (D4); words 50-52: reserved for C4 window/chunk parameters
+    ("link_session", 47, 0, 24, "u", "hfd_coll", "link session id carried on every die-to-die link (hfd_lk_ep, f_lk chain); software sets it per job (hgi-1010/c for hbm-phys [link])"),
+    # word 53 = mtp_noise (hgi-1010/h); words 54-55: reserved for MTP; word 49 = G26 mtp_kstride; words 50-52: reserved for C4 window/chunk parameters
     ("entry_ar", 56, 0, 32, "u", "hfd_cmdproc", "AR decode step: record offset in the image (16 B units)"),
     ("entry_verify", 57, 0, 32, "u", "hfd_cmdproc", "MTP verify pass (0 = absent)"),
     ("entry_draft", 58, 0, 32, "u", "hfd_cmdproc", "MTP draft pass (0 = absent)"),
@@ -129,7 +143,7 @@ for _n, _w in SUT_FIELDS:                                         # G1: packed f
     D_SUT_LAYOUT.append((_n, _o, _w))
     _o += _w
 D_PARAM = {
-    "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
+    "CTL.LOOP": "[15:0] static count, [16] level (0 inner L, 1 outer L1), [17] count from VM: U32(VM[imm_a]) read after the header wait bits; count 1..65535 and imm_a < 2^18, else E_RANGE (G24)",
     "CTL.TOKX": "PROPOSED (Q-MTP-1, hardware in hfd_cmdproc): A = U32 [1 + ncol]: A[0] = k (1 <= k <= ncol), A[1..k] = "
                 "the committed tokens; the CP emits k completion beats {token A[i], pos + i - 1, status 0}; END follows",
     "CTL.END": "token = A[0] (A required on r25: the ARGMAX / COLL.ARGMAX_MERGE output in VM); A-absent form (latest SIMT RESULT) only on dies with SIMT",
@@ -154,17 +168,20 @@ D_PARAM = {
     "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's "
                        "row store; row i is owned by rank (i div B) mod G and stored there at local row "
                        "(i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; "
-                       "O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, "
-                       "M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
+                       "[8] = 0 (software lowering, G21/G24): O = slot-major on every destination rank, owner r's j-th selected "
+                       "row (list order) at O row j * G + r (padded to M = the largest owned count), R = the list-order table; "
+                       "[8] = 1 (hardware, G25): O row x = selected row x (list order) on every destination rank, no padding, "
+                       "no table; A in HBM (S = ceil(A.n bits / 256) sectors a row, A.stride), I in VM (G14, G25)",
     "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); "
                  "the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by "
                  "CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
     "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
     "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
-    "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = keep bitmap (keep_en), O / R = local top-k ids (ascending) / values, D = candidates (cand_en)",
+    "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = the layer-20 candidate table [block ids U32 | values FP32 at C.stride] (keep_en, G18a: owned blocks listed with value > -inf are kept), O / R = local top-k ids (ascending) / values, D = candidates in the same [ids | values] layout (cand_en)",
     "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
     "IDX.MERGE": "[11:0] k (1..2048), [12] key (0 larger value first, -0 = +0, NaN last, ties lower id; 1 lower id first); A FP32 / B U32 = G = m rows (<= 128) of n key-sorted {value, id} pairs; O / R = the first k of the merged order; an unsorted row faults (G20)",
-    "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row r * M + j; D[0] = M (G21)",
+    "MDESC.STREAM": "space 2: base = stream id; 0 SM -> SU lanes, 1 SU reduction -> ARGMAX, 2 SM -> ARGMAX; element FIFO (P-slot producers publish slot-major); underrun / overrun / unwired id faults; ids >= 3 reserved (E_RANGE)",
+    "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96), [23:16] c (0 / 1 unbatched); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row j * G + r (slot-major); D[0] = M, D[1] = ceil(M / max(c, 1)) (G21, G24)",
     "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
@@ -182,7 +199,7 @@ def d_spec_json():
         md_fields=[dict(name=n, word=w, lsb=l, width=wd, kind=k, consumer=c, why=y, reset=D_RESET.get(n),
                         legal=(sorted(D_LEGAL[n]) if isinstance(D_LEGAL.get(n), set) else D_LEGAL.get(n)))
                    for n, w, l, wd, k, c, y in D_MD_FIELDS],
-        reserved_words=dict(geometry_in_manifest="2-31", static_reserved="42-45, 47-48, 46 bits 31:8",
+        reserved_words=dict(geometry_in_manifest="2-31", static_reserved="42-45, 48, 46 bits 31:8, 47 bits 31:24",
                             mtp="49, 53-55", window_chunk="50-52", other="59, 62"),
         coll_group_size_defined_rejected=D_GROUP_DEFINED_REJECTED, errors=ERR, fmt=FMT,
         uop=dict(bits=128, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_UOP_FIELDS], units=D_UNITS,
@@ -209,7 +226,8 @@ def d_spec_json():
             G11=dict(item="per-die program images of identical structure", needs="compiler only"),
             G12=dict(item="ATT second row source (C) and ring wrap", needs="small hardware: ATT row-fetch front end (second list, mask on a power-of-two ring counter)"),
             G13=dict(item="IDX.EHASH Engram ids", needs="existing DS Engram hash engine (ot_hdc_engram_hash) behind IDX; host-written ids are the bring-up fallback"),
-            G14=dict(item="COLL.ROW_GATHER", needs="owner reads (padded) + the collective gather bypass; no reorder hardware (compiler table)"),
+            G14=dict(item="COLL.ROW_GATHER", needs="software lowering (G21/G24): IDX.OWNED + VM-count LOOP of slot gathers on the collective gather bypass; "
+                     "hardware (G25, param[8]): owner-row source + RGX endpoint mode + list-order sink in the collective (ot_hgi_coll_rgx)"),
         ),
         linear_attention=dict(scope="in scope via software (owner decision 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
                               state="FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",

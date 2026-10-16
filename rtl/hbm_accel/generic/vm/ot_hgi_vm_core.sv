@@ -19,8 +19,19 @@
 module ot_hgi_vm_core #(
     parameter integer NC = 2,
     parameter integer OUT = 4,         // requests a client may have outstanding (VM fast path, review ~16:40); 1 = v1
+    parameter integer WP = 1,          // wide write lanes (DMA streaming port, coordinator 2026-10-10: up to ~1 KB / cycle)
+    parameter integer WDIRECT = 0,     // 1 (WP = 32): lane b writes bank b only (the DMA front routes by bank); a lane
+                                       // whose sector is in another bank is dropped and latches wl_conflict
+    parameter integer RP = 0,          // hgi-unitrate: wide READ lanes, 0 or 32 x groups (lane g*32 + b reads bank b
+                                       //   only; one 32-lane group per wide client: the SU and the SFU wide stage)
+    parameter integer W2 = 0,          // hgi-unitrate: wide WRITE lanes of the client groups, 0 or 32 x groups (lane
+                                       //   g*32 + b writes bank b only; the SU / SFU drain)
     parameter integer MUT = 0          // bench mutants: 1 no correction, 2 bank index from sector[5:1],
-                                       //   3 write responses skip the read pipeline (out of order: must FAIL)
+                                       //   3 write responses skip the read pipeline (out of order: must FAIL),
+                                       //   4 the wide port ignores its word mask, 5 a wide read response goes to
+                                       //   group 0 whatever group asked, 6 a packet client write does not yield
+                                       //   to a client-group wide write on its bank (one of the two is lost), 7 no
+                                       //   packet-write age promotion (a streaming drain starves packet writes)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -33,6 +44,34 @@ module ot_hgi_vm_core #(
     output reg  [15:0]       ce,
     output reg               ue,
     output reg               mask_fault,
+    // WIDE WRITE PORT (hgi-takeover 2026-10-10): WP lanes, each one whole-word-masked sector write a cycle
+    //   {v, sector 15, wdata 256, word mask 8}; lanes of one cycle must address distinct banks (consecutive sectors do).
+    //   Always accepted: a wide lane takes its bank's write port before any client (a client write to that bank waits
+    //   one cycle); wl_done[p] pulses when lane p's write is in the macro (2 edges), so the writer can retire on it.
+    input  wire [WP-1:0]     wl_v,
+    input  wire [WP*15-1:0]  wl_sec,
+    input  wire [WP*256-1:0] wl_d,
+    input  wire [WP*8-1:0]   wl_m,
+    output reg  [WP-1:0]     wl_done,
+    output reg               wl_conflict,  // two lanes on one bank in a cycle (producer bug): sticky
+    // WIDE READ LANES (hgi-unitrate 2026-10-10): lane b {v, sector 15} reads one sector of bank b; it is accepted
+    //   (rl_acc[b]) when no packet client reads bank b that cycle (clients first: they are rate-limited to OUT
+    //   outstanding, so a lane never starves); the decoded sector returns on rl_rsp lane b {v, data 256} 4 edges after
+    //   acceptance (the client pipeline's latency), in acceptance order.  A sector of another bank latches rl_conflict.
+    input  wire [(RP>0?RP:1)-1:0]      rl_v,
+    input  wire [(RP>0?RP:1)*15-1:0]   rl_sec,
+    output wire [(RP>0?RP:1)-1:0]      rl_acc,
+    output reg  [(RP>0?RP:1)*257-1:0]  rl_rsp,
+    // SECOND WIDE WRITE GROUP (hgi-unitrate): lane b {v, sector 15, wdata 256, word mask 8} writes bank b when the DMA
+    //   wide group does not (DMA first, then this group, then packet clients); w2_acc[b] = accepted this cycle,
+    //   w2_done[b] pulses when the write is in the macro (2 edges, as wl_done).
+    input  wire [(W2>0?W2:1)-1:0]      w2_v,
+    input  wire [(W2>0?W2:1)*15-1:0]   w2_sec,
+    input  wire [(W2>0?W2:1)*256-1:0]  w2_d,
+    input  wire [(W2>0?W2:1)*8-1:0]    w2_m,
+    output wire [(W2>0?W2:1)-1:0]      w2_acc,
+    output reg  [(W2>0?W2:1)-1:0]      w2_done,
+    output reg                         rl_conflict,
     // fault injection (bench only; tie 0): flip bit b of word w of bank k on its next write
     input  wire              inj_v,
     input  wire [4:0]        inj_bank,
@@ -41,18 +80,10 @@ module ot_hgi_vm_core #(
 );
     localparam integer NB = 32;
     // ---------------------------------------------------------------- (39,32) SECDED (Hsiao-style odd-weight columns)
-    function automatic [6:0] chk(input [31:0] d);
-        integer i; reg [6:0] c; reg [6:0] col;
-        begin
-            c = 7'd0;
-            for (i = 0; i < 32; i = i + 1) begin
-                col = colv(i);
-                if (d[i]) c = c ^ col;
-            end
-            chk = c;
-        end
-    endfunction
-    // column of data bit i: the i-th 7-bit vector with 3 ones (35 of them; the first 32 used)
+    // column of data bit i: the i-th 7-bit vector with 3 ones (35 of them; the first 32 used).  The H matrix is a
+    // constant computed ONCE at elaboration (COLS / ROWM): every encoder is 7 XOR trees over fixed data-bit masks and
+    // every decoder 32 constant compares, so the netlist is the same as before but elaboration no longer re-runs the
+    // column enumeration inside every encoder instance (hgi-1010: the WP 32 / NC 8 view spent hours in canonicalize).
     function automatic [6:0] colv(input integer i);
         integer a, b, c, n; reg [6:0] v;
         begin
@@ -66,6 +97,20 @@ module ot_hgi_vm_core #(
             colv = v;
         end
     endfunction
+    function automatic [32*7-1:0] cols_all(input integer dummy);
+        integer i; reg [32*7-1:0] r;
+        begin r = '0; for (i = 0; i < 32; i = i + 1) r[i*7 +: 7] = colv(i); cols_all = r; end
+    endfunction
+    localparam [32*7-1:0] COLS = cols_all(0);
+    function automatic [7*32-1:0] rows_all(input integer dummy);
+        integer i, j; reg [7*32-1:0] r;
+        begin r = '0; for (j = 0; j < 7; j = j + 1) for (i = 0; i < 32; i = i + 1) r[j*32 + i] = COLS[i*7 + j]; rows_all = r; end
+    endfunction
+    localparam [7*32-1:0] ROWM = rows_all(0);              // check bit j = XOR of the data bits in ROWM[j]
+    function automatic [6:0] chk(input [31:0] d);
+        integer j; reg [6:0] c;
+        begin for (j = 0; j < 7; j = j + 1) c[j] = ^(d & ROWM[j*32 +: 32]); chk = c; end
+    endfunction
     function automatic [38:0] enc(input [31:0] d);
         enc = {chk(d), d};
     endfunction
@@ -75,7 +120,7 @@ module ot_hgi_vm_core #(
         begin
             d = w[31:0]; syn = chk(w[31:0]) ^ w[38:32]; hit = 1'b0;
             if (syn != 7'd0) begin
-                for (i = 0; i < 32; i = i + 1) if (syn == colv(i)) begin d[i] = ~d[i]; hit = 1'b1; end
+                for (i = 0; i < 32; i = i + 1) if (syn == COLS[i*7 +: 7]) begin d[i] = ~d[i]; hit = 1'b1; end
                 // a check-bit error (weight-1 syndrome) leaves the data correct
                 if (syn == 7'd1 || syn == 7'd2 || syn == 7'd4 || syn == 7'd8 || syn == 7'd16 || syn == 7'd32 || syn == 7'd64) hit = 1'b1;
             end
@@ -89,6 +134,9 @@ module ot_hgi_vm_core #(
     wire [31:0]   c_bm   [0:NC-1];
     wire [15:0]   c_tag  [0:NC-1];
     wire [4:0]    c_bank [0:NC-1];
+    wire [311:0]  c_enc  [0:NC-1];                        // the client's write data, encoded once (not per bank)
+    wire [7:0]    c_wm   [0:NC-1];                        // whole-word write mask
+    wire          c_mf   [0:NC-1];                        // a partial word mask (mask fault)
     reg  [2:0]    ocnt [0:NC-1];                          // requests outstanding (granted, response not yet taken)
     reg  [NC-1:0] busy;
 
@@ -101,24 +149,96 @@ module ot_hgi_vm_core #(
         assign c_sec[g] = q[323:309];                     // byte address [335:304]: sector = byte >> 5
         assign c_we[g]  = q[336];
         assign c_bank[g] = (MUT == 2) ? c_sec[g][5:1] : c_sec[g][4:0];
+        for (k = 0; k < 8; k = k + 1) begin : g_w
+            assign c_enc[g][k*39 +: 39] = enc(c_wd[g][k*32 +: 32]);
+            assign c_wm[g][k] = &c_bm[g][k*4 +: 4];
+        end
+        assign c_mf[g] = |(c_bm[g] & ~{{4{c_wm[g][7]}}, {4{c_wm[g][6]}}, {4{c_wm[g][5]}}, {4{c_wm[g][4]}},
+                                         {4{c_wm[g][3]}}, {4{c_wm[g][2]}}, {4{c_wm[g][1]}}, {4{c_wm[g][0]}}});
+    end
+    // wide lanes, encoded once per lane
+    wire [311:0] l_enc [0:WP-1];
+    for (g = 0; g < WP; g = g + 1) begin : g_le
+        for (k = 0; k < 8; k = k + 1) begin : g_w
+            assign l_enc[g][k*39 +: 39] = enc(wl_d[g*256 + k*32 +: 32]);
+        end
     end
     // ---------------------------------------------------------------- per bank arbitration (lowest index wins)
     reg [NC-1:0] gr_r [0:NB-1];
     reg [NC-1:0] gr_w [0:NB-1];
     integer b, c;
+    // wide lanes per bank
+    reg [NB-1:0] wb_hit; reg [4:0] wb_lane [0:NB-1]; reg [NB-1:0] wb_dup;
+    always @* begin
+        wb_hit = {NB{1'b0}}; wb_dup = {NB{1'b0}};
+        for (integer ab = 0; ab < NB; ab = ab + 1) begin
+            wb_lane[ab] = 5'd0;
+            if (WDIRECT != 0) begin
+                if (ab < WP) begin
+                    wb_lane[ab] = 5'(ab);
+                    wb_hit[ab] = wl_v[ab] && wl_sec[ab*15 +: 5] == 5'(ab);
+                    wb_dup[ab] = wl_v[ab] && wl_sec[ab*15 +: 5] != 5'(ab);
+                end
+            end else
+            for (integer ap = WP - 1; ap >= 0; ap = ap - 1)
+                if (wl_v[ap] && wl_sec[ap*15 +: 5] == 5'(ab)) begin
+                    if (wb_hit[ab]) wb_dup[ab] = 1'b1;
+                    wb_hit[ab] = 1'b1; wb_lane[ab] = 5'(ap);
+                end
+        end
+    end
+    // client wide lane groups per bank (lane g*32 + b <-> bank b): the lowest group index with a request wins the bank.
+    // Packet-client writes are age-promoted: one that has waited CAGE edges for its bank's write port goes ahead of
+    // the client groups (never ahead of the DMA group, which is never back-pressured), so a streaming drain cannot
+    // starve a packet client.
+    localparam integer CAGE = 8;
+    reg [NC-1:0] acc;
+    reg [3:0] c_wait [0:NC-1]; reg [NB-1:0] c_old;
+    always @* begin
+        c_old = {NB{1'b0}};
+        for (integer ac = 0; ac < NC; ac = ac + 1)
+            if (req_v[ac] && !busy[ac] && c_we[ac] && c_wait[ac] >= 4'(CAGE)) c_old[c_bank[ac]] = 1'b1;
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) for (integer ac = 0; ac < NC; ac = ac + 1) c_wait[ac] <= 4'd0;
+        else for (integer ac = 0; ac < NC; ac = ac + 1)
+            c_wait[ac] <= (req_v[ac] && !busy[ac] && c_we[ac] && !acc[ac]) ? ((c_wait[ac] == 4'd15) ? 4'd15 : c_wait[ac] + 4'd1) : 4'd0;
+    localparam integer NGR = RP / 32, NGW = W2 / 32, RPL = RP > 0 ? RP : 1, W2L = W2 > 0 ? W2 : 1;
+    reg [NB-1:0] w2_hit, rl_hit, rl_bad, w2_bad, rl_any;
+    reg [1:0] rl_g [0:NB-1]; reg [1:0] w2_g [0:NB-1];
+    always @* begin
+        for (integer ab = 0; ab < NB; ab = ab + 1) begin
+            w2_hit[ab] = 1'b0; w2_bad[ab] = 1'b0; rl_any[ab] = 1'b0; rl_bad[ab] = 1'b0; rl_g[ab] = 2'd0; w2_g[ab] = 2'd0;
+            for (integer gg = NGW - 1; gg >= 0; gg = gg - 1) begin
+                if (w2_v[gg*32 + ab] && w2_sec[(gg*32 + ab)*15 +: 5] == 5'(ab) && !wb_hit[ab] && !(c_old[ab] && MUT != 7)) begin w2_hit[ab] = 1'b1; w2_g[ab] = 2'(gg); end
+                if (w2_v[gg*32 + ab] && w2_sec[(gg*32 + ab)*15 +: 5] != 5'(ab)) w2_bad[ab] = 1'b1;
+            end
+            for (integer gg = NGR - 1; gg >= 0; gg = gg - 1) begin
+                if (rl_v[gg*32 + ab] && rl_sec[(gg*32 + ab)*15 +: 5] == 5'(ab)) begin rl_any[ab] = 1'b1; rl_g[ab] = 2'(gg); end
+                if (rl_v[gg*32 + ab] && rl_sec[(gg*32 + ab)*15 +: 5] != 5'(ab)) rl_bad[ab] = 1'b1;
+            end
+        end
+    end
     always @* begin
         for (integer ab = 0; ab < NB; ab = ab + 1) begin
             gr_r[ab] = {NC{1'b0}}; gr_w[ab] = {NC{1'b0}};
             for (integer ac = NC - 1; ac >= 0; ac = ac - 1) begin
                 if (req_v[ac] && !busy[ac] && c_bank[ac] == ab && !c_we[ac]) gr_r[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
-                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac]) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
+                if (req_v[ac] && !busy[ac] && c_bank[ac] == ab &&  c_we[ac] && !wb_hit[ab] && (!w2_hit[ab] || MUT == 6)) gr_w[ab] = {NC{1'b0}} | ({{(NC-1){1'b0}}, 1'b1} << ac);
             end
         end
     end
-    reg [NC-1:0] acc;
     always @* begin
         acc = {NC{1'b0}};
         for (integer ab = 0; ab < NB; ab = ab + 1) acc = acc | gr_r[ab] | gr_w[ab];
+        for (integer ab = 0; ab < NB; ab = ab + 1)
+            rl_hit[ab] = rl_any[ab] && !(|gr_r[ab]);
+    end
+    for (g = 0; g < RPL; g = g + 1) begin : g_rlacc
+        assign rl_acc[g] = (RP > 0) && rl_hit[g % 32] && rl_g[g % 32] == 2'(g / 32);
+    end
+    for (g = 0; g < W2L; g = g + 1) begin : g_w2acc
+        assign w2_acc[g] = (W2 > 0) && w2_hit[g % 32] && w2_g[g % 32] == 2'(g / 32);
     end
     assign req_r = acc;
     // ---------------------------------------------------------------- banks
@@ -131,19 +251,37 @@ module ot_hgi_vm_core #(
     reg  [NB-1:0] word_ok;
     integer w;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin m_re <= {NB{1'b0}}; m_we <= {NB{1'b0}}; mask_fault <= 1'b0; end
+        if (!rst_n) begin m_re <= {NB{1'b0}}; m_we <= {NB{1'b0}}; mask_fault <= 1'b0; wl_conflict <= 1'b0; rl_conflict <= 1'b0; end
         else begin
+            if (|wb_dup || |w2_bad) wl_conflict <= 1'b1;
+            if (|rl_bad) rl_conflict <= 1'b1;
             for (b = 0; b < NB; b = b + 1) begin
-                m_re[b] <= |gr_r[b]; m_we[b] <= |gr_w[b];
+                m_re[b] <= |gr_r[b] | rl_hit[b]; m_we[b] <= |gr_w[b] | wb_hit[b] | w2_hit[b];
+                if (rl_hit[b]) m_ra[b] <= rl_sec[(32 * rl_g[b] + b)*15 + 5 +: 10];
+                if (w2_hit[b]) begin : wide2
+                    integer lq; lq = 32 * w2_g[b] + b;
+                    m_wa[b] <= w2_sec[lq*15 + 5 +: 10];
+                    for (w = 0; w < 8; w = w + 1) begin
+                        m_wd[b][w*39 +: 39] <= enc(w2_d[lq*256 + w*32 +: 32]);
+                        m_wm[b][w*39 +: 39] <= {39{w2_m[lq*8 + w]}};
+                    end
+                end
+                if (wb_hit[b]) begin : wide
+                    integer lp; lp = (WDIRECT != 0) ? b : wb_lane[b];      // WDIRECT: lane b is bank b (no lane mux)
+                    m_wa[b] <= wl_sec[lp*15 + 5 +: 10];
+                    m_wd[b] <= l_enc[lp];
+                    for (w = 0; w < 8; w = w + 1)
+                        m_wm[b][w*39 +: 39] <= {39{wl_m[lp*8 + w] | (MUT == 4)}};   // MUT 4: the word mask ignored
+                end
                 for (c = 0; c < NC; c = c + 1) begin
                     if (gr_r[b][c]) m_ra[b] <= c_sec[c][14:5];
                     if (gr_w[b][c]) begin
                         m_wa[b] <= c_sec[c][14:5];
                         for (w = 0; w < 8; w = w + 1) begin
-                            m_wd[b][w*39 +: 39] <= enc(c_wd[c][w*32 +: 32]) ^ ((inj_v && inj_bank == b && inj_word == w) ? inj_mask : 39'd0);
-                            m_wm[b][w*39 +: 39] <= {39{&c_bm[c][w*4 +: 4]}};
-                            if (|c_bm[c][w*4 +: 4] && !(&c_bm[c][w*4 +: 4])) mask_fault <= 1'b1;
+                            m_wd[b][w*39 +: 39] <= c_enc[c][w*39 +: 39] ^ ((inj_v && inj_bank == b && inj_word == w) ? inj_mask : 39'd0);
+                            m_wm[b][w*39 +: 39] <= {39{c_wm[c][w]}};
                         end
+                        if (c_mf[c]) mask_fault <= 1'b1;
                     end
                 end
             end
@@ -159,6 +297,43 @@ module ot_hgi_vm_core #(
             .w_ce_in(m_we[k]), .w_addr_in(m_wa[k]), .wd_in(wd[511:256]), .w_mask_in(wm[511:256]),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end
+    // wide read lanes: acceptance -> address at the pins (r1) -> macro read edge (rm) -> rd_out captured (r2) -> decoded
+    // response flop: the client pipeline's 4 edges
+    reg [NB-1:0] r1_v, rm_v, r2_v; reg [311:0] r2_raw [0:NB-1]; reg [1:0] r1_g [0:NB-1], rm_g [0:NB-1], r2_g [0:NB-1];
+    reg [33:0] dwr, dwc; reg [15:0] ce_w; reg ue_w;
+    // hardcore-1010/c: with RP = 0 the body below constant-folds to nothing, iverilog then finds no sensitivity and never
+    // runs the block (ce_w / ue_w stay x -> ce = x: tb_hgi_vm_core 'fault-free phase reported ce=x'); RP = 0 now drives
+    // constants (same logic as before for every RP: no wide read lane, no wide-lane correction count)
+    if (RP > 0) begin : g_cew
+        always @* begin                               // wide-lane corrected / uncorrectable words this edge
+            ce_w = 16'd0; ue_w = 1'b0;
+            for (integer lb = 0; lb < NB; lb = lb + 1)
+                if (r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
+                    dwc = dec(r2_raw[lb][q*39 +: 39]);
+                    if (dwc[32]) ce_w = ce_w + 16'd1;
+                    if (dwc[33]) ue_w = 1'b1;
+                end
+        end
+    end else begin : g_cew0
+        always_comb begin ce_w = 16'd0; ue_w = 1'b0; end   // always_comb runs at time 0 (an @* with no inputs never does)
+    end
+    reg [(W2>0?W2:1)-1:0] w2_d1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin r1_v <= {NB{1'b0}}; rm_v <= {NB{1'b0}}; r2_v <= {NB{1'b0}}; rl_rsp <= '0; w2_d1 <= '0; w2_done <= '0; end
+        else begin
+            r1_v <= rl_hit; rm_v <= r1_v; r2_v <= rm_v;
+            for (integer lb = 0; lb < NB; lb = lb + 1) begin r1_g[lb] <= rl_g[lb]; rm_g[lb] <= r1_g[lb]; r2_g[lb] <= rm_g[lb]; end
+            for (integer ln = 0; ln < RPL; ln = ln + 1) begin : rsp
+                integer lb; lb = ln % 32;
+                rl_rsp[ln*257 + 256] <= (RP > 0) && r2_v[lb] && ((MUT == 5) ? (ln / 32 == 0) : (r2_g[lb] == 2'(ln / 32)));
+                if (r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
+                    dwr = dec(r2_raw[lb][q*39 +: 39]);
+                    rl_rsp[ln*257 + q*32 +: 32] <= dwr[31:0];
+                end
+            end
+            w2_d1 <= w2_acc; w2_done <= w2_d1;
+        end
+    always @(posedge clk) for (integer lb = 0; lb < NB; lb = lb + 1) if (rm_v[lb]) r2_raw[lb] <= m_rd[lb][311:0];
     // ---------------------------------------------------------------- response pipeline (per client, one outstanding)
     reg [NC-1:0] p1_v, pm_v, p2_v;                // p1: address at the macro pins; pm: macro read edge; p2: rd_out captured
     reg [NC-1:0] p1_we, p2_we;
@@ -225,10 +400,14 @@ module ot_hgi_vm_core #(
                 ocnt[c] <= ocnt[c] + {2'd0, acc[c]} - {2'd0, pop};
                 busy[c] <= (ocnt[c] + {2'd0, acc[c]} - {2'd0, pop}) >= 3'(OUT);
             end
-            ce <= ce + ce_n;
-            if (ue_n) ue <= 1'b1;
+            ce <= ce + ce_n + ce_w;
+            if (ue_n || ue_w) ue <= 1'b1;
         end
     end
+    reg [WP-1:0] wl_d1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wl_d1 <= {WP{1'b0}}; wl_done <= {WP{1'b0}}; end
+        else begin wl_d1 <= wl_v; wl_done <= wl_d1; end
     // capture the macro output of the client's bank one edge after the access (rd_out is valid after the access edge)
     always @(posedge clk)
         for (integer pc = 0; pc < NC; pc = pc + 1)

@@ -13,7 +13,7 @@
 // cmd[31:30]: 0 descriptor {n[10:0],row[18:0]}, 1 go, 2 write
 // {20'b0,column[4:0],bank[4:0]}, 3 invalid. Eight initial command credits;
 // one returned on each consumed command. Read credits are separate [2:0].
-module ot_qwen_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0)(
+module ot_qwen_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0)(   // PULLIN: qwen-1010/b
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
  input wire [2:0] read_credit,
@@ -45,7 +45,7 @@ module ot_qwen_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STA
  wire pop=live && (malformed || (head[31:30]==0 ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1));
  wire push=(ENABLE!=0) && cmd_v_q && count<8;
  ot_hbm_r14_stream_pc_srow #(.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
-  .CRED(32),.REF_PHASE((PHASE+(PC*118)/32)%118),.WR_EN(1),.WQ(4),.PULLIN(0),.AQ_RD(0)) core(
+  .CRED(32),.REF_PHASE((PHASE+(PC*118)/32)%118),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
   .clk(clk),.rst_n(rst_n),.desc_v(live && !malformed && head[31:30]==0),
   .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(head[29:19]),
   .go(live && head[31:30]==1),.next_posted(1'b0),

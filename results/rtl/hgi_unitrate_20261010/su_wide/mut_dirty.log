@@ -1,0 +1,50 @@
+REC 0 0 accept 0 retire 181
+REC 0 1 accept 3 retire 296
+REC 0 2 accept 44 retire 393
+REC 0 3 accept 196 retire 474
+REC 0 4 accept 323 retire 589
+REC 0 5 accept 375 retire 665
+REC 0 6 accept 489 retire 730
+REC 0 7 accept 610 retire 779
+REC 0 8 accept 683 retire 856
+REC 0 9 accept 732 retire 1008
+REC 0 10 accept 769 retire 1071
+REC 0 11 accept 872 retire 1166
+REC 0 12 accept 1023 retire 1255
+REC 0 13 accept 1070 retire 1320
+REC 0 14 accept 1184 retire 1843
+REC 0 15 accept 1273 retire 1953
+REC 0 16 accept 1389 retire 2025
+REC 0 17 accept 1741 retire 2092
+REC 0 18 accept 1972 retire 2154
+REC 0 19 accept 2010 retire 2233
+REC 0 20 accept 2107 retire 2889
+REC 0 21 accept 2170 retire 2905
+REC 0 22 accept 2708 retire 2971
+REC 0 23 accept 2815 retire 3037
+REC 0 24 accept 2924 retire 3101
+REC 0 25 accept 2990 retire 3624
+REC 0 26 accept 3054 retire 3640
+CASE 0 service 3641 span 1704 stage 1026 compute 2241 drain 653 other 0
+ERR case 0 VM[40964] = bfc992c5 expected 3fed12c4
+ERR case 0 VM[40965] = 3f7f0116 expected c00d0557
+ERR case 0 VM[40966] = bfacef29 expected 3f6b7019
+ERR case 0 VM[40967] = 3ef3f523 expected 3f912e50
+ERR case 0 VM[49857] = 00000000 expected bee6651c
+ERR case 0 VM[49858] = 00000000 expected 3fc0c050
+ERR case 0 VM[49859] = 00000000 expected 3e27f134
+ERR case 0 VM[49860] = 00000000 expected 3f11c818
+ERR case 0 VM[49861] = 00000000 expected 40038f8e
+ERR case 0 VM[49862] = 00000000 expected beac0070
+ERR case 0 VM[49863] = 00000000 expected 3f59a105
+ERR case 0 VM[49921] = 00000000 expected bba04481
+ERR case 0 VM[49922] = 00000000 expected bfa2b6ea
+ERR case 0 VM[49923] = 00000000 expected bf5aef02
+ERR case 0 VM[49924] = 00000000 expected 3e82adaf
+ERR case 0 VM[49925] = 00000000 expected bf465719
+ERR case 0 VM[49926] = 00000000 expected 3f20d5a8
+ERR case 0 VM[49927] = 00000000 expected bf4afc5d
+ERR case 0 VM[54529] = 00000000 expected 3ef3d9c9
+ERR case 0 VM[54530] = 00000000 expected 3f6be333
+summary: 1 production-shape cases, 23792 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD FAIL errors=90

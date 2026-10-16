@@ -32,6 +32,9 @@ BENCH_KV = dict(seq_to_astk=27, hub_to_astk=4, astk_to_hub=4, hub_to_seq=21, seq
 # lack it, so it is ADDED (measured deltas, not modelled).
 SPLIT_BASE = 'results/rtl/token_exact_20261009/qwen_rom/L3_base.json'
 SPLIT_CUR = 'results/rtl/token_exact_20261009/qwen_rom/L3_s22ml7.json'
+# kv-die 10-09: the r22k plan's issue / status relay chains (tt_si / tt_so 35 / 34, SU 5 / 5, constant ROM 3 + 3), measured on the
+# same chain with the per-unit stations (split_relays.json): ADDED on top of the split stations
+SPLIT_RELAYS = 'results/arch/qwen_kv_die_20261009/split_relays.json'
 EMB = dict(port_fifo=7, dram_typ=71, dram_worst_extra=79 + 240, crossing=3, ingest=64,
            source='/home/ubuntu/claude-takeover-20261007/EMB_HBM_FEASIBILITY.md option 1 table (tagged-port FIFO, '
                   'DRAM row conflict, response crossing, 4 KiB ingest on eq; worst: AQ_STARVE + REFpb)')
@@ -47,6 +50,8 @@ def main():
     ap.add_argument('--kv', type=Path, required=True)
     ap.add_argument('--rom', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--bench-at-plan', action='store_true', help='qwen-1010/b: the bench was built at this plan\'s KV stage counts '
+                    '(QX / RX / KVL / LINK from kv_die critical_stages): no KV stage correction')
     a = ap.parse_args()
     basis = json.loads((ROOT / BASIS).read_text())
     tp4 = basis['tp4']
@@ -57,7 +62,10 @@ def main():
     sb = json.loads((ROOT / SPLIT_BASE).read_text())['stage_cycles']
     sc_ = json.loads((ROOT / SPLIT_CUR).read_text())['stage_cycles']
     split_l0, split_lk = sc_['L0'] - sb['L0'], sc_['L1'] - sb['L1']
-    split_token = split_l0 + 35 * split_lk
+    sr = json.loads((ROOT / SPLIT_RELAYS).read_text())
+    rr = sr['runs'][sr['adopted_for_price'].split()[0]]['vs_s22ml7']
+    relay_l0, relay_lk = rr['L0'], rr['L1']
+    split_token = split_l0 + 35 * split_lk + relay_l0 + 35 * relay_lk
     cs = kv['critical_stages']
     rs = rom['crossing_bus_stages']
     rom_q, rom_res = rs['x3'] + 1, rs['attn_ret'] + 1                 # + the registered endpoint port
@@ -82,7 +90,7 @@ def main():
         kvnow = dict(seq_to_astk=max(cs['seq_to_astk'].values()), hub_to_astk=max(cs['hub_to_astk'].values()),
                      astk_to_hub=max(cs['astk_to_hub'].values()), hub_to_seq=cs['hub_to_seq'],
                      seq_to_land=max(cs['seq_to_land'].values()))
-        kv_adj = sum(kvnow[k] - BENCH_KV[k] for k in BENCH_KV)
+        kv_adj = 0 if a.bench_at_plan else sum(kvnow[k] - BENCH_KV[k] for k in BENCH_KV)
         adj += kv_adj
         step_adj = step + adj
         layer = tp4['layer_cycles'] - rows['attn_kv'] - rows['softmax_norm'] + step_adj
@@ -114,15 +122,16 @@ def main():
         vs_r21c_die_mm2=round(rom['die_mm2'] + kvp - rom['r21c_die_mm2'], 1),
         package='2 ROM dies (N-N facing) + 2 KV dies (one off each ROM die S edge) + 8 HBM3E stacks beside the KV dies',
         interposer_mm=[29.0, 114.0], interposer_reticles=round(29.0 * 114.0 / 858.0, 1),
-        status=kv.get('frame_status', 'row engines sized from synthesis (re-cut D); stack aggregators / landings / '
+        status=kv.get('frame_status', 'row engines = re-cut H tiles (head 648 x 453.6 from its placed cells, control 648 x 129.6 from synthesis; routes in flight); stack aggregators / landings / '
                'centre blocks: see frames.json (review-0528 item 4)'))
     out['split_structure'] = dict(
-        source=[SPLIT_BASE, SPLIT_CUR], l0_delta=split_l0, layer_delta=split_lk, token_delta=split_token,
-        note='measured in RTL by stream token-exact (L0-L2 chained, exact): +%d on L0, +%d on every later layer. '
+        source=[SPLIT_BASE, SPLIT_CUR, SPLIT_RELAYS], l0_delta=split_l0 + relay_l0, layer_delta=split_lk + relay_lk,
+        stations_only=dict(l0=split_l0, layer=split_lk), issue_relays=dict(l0=relay_l0, layer=relay_lk), token_delta=split_token,
+        note='measured in RTL (L0-L2 chained, exact): the split stations +%d on L0 / +%d a layer (token-exact) PLUS the r22k issue / status relays (tt_si / tt_so 35 / 34, SU 5 / 5, constant ROM -> SU ML 10; split_relays.json). '
              'It is a ROM-die cost (stations / compensation / SU ML 7), present with or without the KV die, so the '
              'KV-die decision is judged against the TP4 die on the same structure (vs_tp4); vs_tp4_published compares '
              'with the published TP4 basis, which predates the split. Bound: the SU-ML share (ML 4 -> 7 = +48 a layer) '
-             'may partly fall on SU ops of the removed tile softmax_norm; it is charged in full here.' % (split_l0, split_lk))
+             'may partly fall on SU ops of the removed tile softmax_norm; it is charged in full here. The relay part is the CURRENT floorplan: the tree-top redesign (redesign-qwen) is its fix.' % (split_l0, split_lk))
     out['per_user_cost'] = dict(vs_tp4=c['vs_tp4'], vs_tp4_pct=round(100 * c['vs_tp4'], 2),
                                 vs_tp4_published_pct=round(100 * c['vs_tp4_published'], 2),
                                 statement=f"{round(100 * c['vs_tp4'], 2)} % per user against TP4 on the same split "

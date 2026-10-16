@@ -1,0 +1,25 @@
+{
+ "instances": 208,
+ "overlaps": 0,
+ "overlap_examples": [],
+ "outside": 0,
+ "outside_examples": [],
+ "reserved_regions": 0,
+ "reserved_overlaps": 0,
+ "reserved_overlap_examples": []
+}
+{"generated_pin_clashes": 0, "examples": [], "k16_clashes": 0, "k16_examples": []}
+{}
+{"die_mm2": 802.33, "W": 31734.288, "H": 25282.8, "notes": ["R25GQ: SM rows at [1812.24, 4153.68, 5847.12] (S), hub blocks 7626.96-17655.84 um, quadrant 4754.16 um; spine gap 142.56 um (+ abut 43.2 / cross 302.4)", "Placement plan only: die nets are the R25GPH logical nets carried over by tools/hbm_r25gq_plan.py (model); the dependent blocks are re-routed after the plan is on main."], "power": 358.0}
+{
+ "margin_lint": {
+  "mode": "chains",
+  "chains": 0,
+  "reach_um": 504.0,
+  "reach_violations": 0,
+  "far_side_relays": 0,
+  "reach_examples": [],
+  "far_side_examples": [],
+  "verdict": "PASS"
+ }
+}

@@ -9,11 +9,19 @@
 //                       freed landing slot.
 //   ot_link_credit_rx : link -> landing FIFO (DEPTH) -> core valid/ready (internal); a credit pulse per core pop.
 //                       A beat that lands with the FIFO full is a protocol fault (sticky; the beat is dropped).
+// Pin registers l_valid / l_credit are (* keep *) (ds-1010 2026-10-10; NOT l_data: its hold-mux feedback would then tap
+// the kept net and io_flop_at_pins could no longer anchor the data pin flops -- ct crpc 2214 output ports unanchored): synthesis otherwise merges identical
+// credit pulses of two links into one flop driving two face pins (coll ct crpb: u_lo7 l_credit anchored at the E face,
+// its merged twin's pin; lo7_r on the S face 250 ps away).  Function unchanged.
 // Full throughput needs DEPTH >= the credit round trip (2 x link latency + 4 cycles of pin/landing flops).
-module ot_link_credit_tx #(parameter integer W=8, CRED=8)(
+// DFREE=1 (ds-1010 2026-10-10, opt-in): l_data loads i_data every cycle (no load enable).  The receiver samples l_data
+// only with l_valid, so a non-send cycle's data is a don't-care; send (i_valid && credit, possibly a deep producer
+// decision) then reaches only the 1-bit l_valid flop, never a W-bit enable (TU iqs5-a TT -175.9 = retry base ->
+// ack/replay classification -> tx_valid -> 568-bit l_data enables).
+module ot_link_credit_tx #(parameter integer W=8, CRED=8, DFREE=0)(
     input wire clk, rst_n,
     input wire i_valid, output wire i_ready, input wire [W-1:0] i_data,
-    output reg l_valid, output reg [W-1:0] l_data, input wire l_credit
+    (* keep *) output reg l_valid, output reg [W-1:0] l_data, input wire l_credit
 );
     localparam integer CW = $clog2(CRED + 1);
     reg cr_q;
@@ -27,15 +35,32 @@ module ot_link_credit_tx #(parameter integer W=8, CRED=8)(
             cnt <= cnt + CW'(cr_q) - CW'(send);
             l_valid <= send;
         end
-    always @(posedge clk) if (send) l_data <= i_data;
+`ifdef OT_LINK_DFREE_MUT
+    // bench mutant: with DFREE the data stage lags its valid by one cycle (must be caught by the TU bench)
+    reg [W-1:0] mut_q; always @(posedge clk) mut_q <= i_data;
+    always @(posedge clk) if (DFREE) l_data <= mut_q; else if (send) l_data <= i_data;
 endmodule
+`else
+    always @(posedge clk) if (DFREE || send) l_data <= i_data;
+endmodule
+`endif
 
 // OREG=1: the landing FIFO drains into a two-entry output skid, so o_valid / o_data leave flops (no FIFO read
 // mux in front of the consumer's logic: HC join -lk TT -107 = rp -> 8:1 landing mux -> SECDED encode -> wd_q).  The
 // credit is returned when a beat leaves the FIFO; the skid adds 2 slots beyond DEPTH and 1 cycle of latency.
-module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0)(
+// WFREE=1 (redesign-ds 2026-10-10): the landing write does not wait for a pop (wr = the landed beat): credits already
+// guarantee a free slot, so the consumer's o_ready reaches only the read pointer / count / credit flops, never a W-bit
+// write or load enable (coll split3 ce pre-route -832 = consumer ready -> skid 553-bit enables).  Use with OREG=0: o_data
+// is the DEPTH:1 read mux of the landing flops.  A beat landing on a full FIFO is still a sticky fault.
+// WFREE=2 (ds-1010/coll-tu 2026-10-11, opt-in; OREG=0): as WFREE=1, plus (a) the landing register is written into the
+// free slot mem[wp] EVERY cycle the FIFO is not full (a non-valid cycle writes a don't-care into a slot that holds no
+// beat; wp advances only with a landed beat), with the per-slot write enables REGISTERED one-hot (computed from the
+// next wp / count), so no landed-valid -> 8 x W-bit enable cone (coll lane lcrpx v_q -> mem[7][*] SS -176) and (b)
+// o_valid is a registered non-empty flag, so the count compare is not in front of the consumer's accept (lane lcrpi
+// n -> pop -> rp SS -574).  Same cycle behaviour as WFREE=1.
+module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0, WFREE=0)(
     input wire clk, rst_n,
-    input wire l_valid, input wire [W-1:0] l_data, output reg l_credit,
+    input wire l_valid, input wire [W-1:0] l_data, (* keep *) output reg l_credit,
     output wire o_valid, input wire o_ready, output wire [W-1:0] o_data,
     output reg fault
 );
@@ -60,24 +85,39 @@ module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0)(
     reg [W-1:0] mem [0:DEPTH-1];
     reg [AW-1:0] wp, rp;
     reg [CW-1:0] n;
-    assign f_valid = n != 0;
+    reg nz_r;                        // WFREE 2: n != 0, registered
+    reg [DEPTH-1:0] we_r;            // WFREE 2: one-hot (wp == k) && !full, registered
+    assign f_valid = (WFREE == 2) ? nz_r : (n != 0);
     assign f_data = mem[rp];
     wire pop = f_valid && f_ready;
     wire full = n == CW'(DEPTH);
-    wire wr = v_q && (!full || pop);
+    wire wr = WFREE ? (v_q && !full) : (v_q && (!full || pop));
+    wire [AW-1:0] wp_nx = wr ? ((wp == AW'(DEPTH - 1)) ? '0 : wp + 1'b1) : wp;
+    wire [CW-1:0] n_nx = n + CW'(wr) - CW'(pop);
+    integer k, j;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin v_q <= 1'b0; wp <= 0; rp <= 0; n <= 0; l_credit <= 1'b0; fault <= 1'b0; end
+        if (!rst_n) begin v_q <= 1'b0; wp <= 0; rp <= 0; n <= 0; l_credit <= 1'b0; fault <= 1'b0; nz_r <= 1'b0;
+                          we_r <= DEPTH'(1); end
         else begin
             v_q <= l_valid;
             l_credit <= pop;
             if (v_q && full && !pop) fault <= 1'b1;
-            if (wr) wp <= (wp == AW'(DEPTH - 1)) ? '0 : wp + 1'b1;
+            wp <= wp_nx;
             if (pop) rp <= (rp == AW'(DEPTH - 1)) ? '0 : rp + 1'b1;
-            n <= n + CW'(wr) - CW'(pop);
+            n <= n_nx;
+            nz_r <= n_nx != 0;
+            for (k = 0; k < DEPTH; k = k + 1)
+`ifdef OT_LINK_WFREE2_MUT
+                we_r[k] <= (wp == AW'(k)) && (n_nx != CW'(DEPTH));      // bench mutant: enable one slot behind
+`else
+                we_r[k] <= (wp_nx == AW'(k)) && (n_nx != CW'(DEPTH));
+`endif
         end
     always @(posedge clk) begin
         d_q <= l_data;
-        if (wr) mem[wp] <= d_q;
+        if (WFREE == 2) begin
+            for (j = 0; j < DEPTH; j = j + 1) if (we_r[j]) mem[j] <= d_q;
+        end else if (wr) mem[wp] <= d_q;
     end
 endmodule
 

@@ -1,0 +1,88 @@
+{
+ "schema": "opentallas.qwen-split-relays.v1",
+ "date": "2026-10-09",
+ "question": "coordinator top risk: the r22k plan's sequencer <-> tree-top (tt_si 35 / tt_so 34 relay stages) and SU issue (5 / 5) and constant-ROM (3 + 3) relays, unpriced in the TP4 basis",
+ "vehicle": "token-exact's L0-L2 chain at P8191, src 4dc3e0062 + per-unit station overlay 8f58a3b7d (tools/qwen_missing/partition_token.py --dcu-me / --duc-me); stations = 2 pins + the relay stages",
+ "reference": {
+  "base": {
+   "L0": 6044,
+   "L1": 5282
+  },
+  "s22ml7": {
+   "L0": 6151,
+   "L1": 5480
+  }
+ },
+ "runs": {
+  "r22k_ml10": {
+   "params": {
+    "dcu": 7,
+    "duc": 7,
+    "su_ml": 10,
+    "dcu_me": 37,
+    "duc_me": 37
+   },
+   "L0": 6605,
+   "L1": 6103,
+   "exact": true,
+   "vs_s22ml7": {
+    "L0": 454,
+    "L1": 623
+   }
+  },
+  "r22k_ml7": {
+   "params": {
+    "dcu": 7,
+    "duc": 7,
+    "su_ml": 7,
+    "dcu_me": 37,
+    "duc_me": 37
+   },
+   "L0": 6581,
+   "L1": 6055,
+   "exact": true,
+   "vs_s22ml7": {
+    "L0": 430,
+    "L1": 575
+   }
+  },
+  "me_only": {
+   "params": {
+    "dcu": 2,
+    "duc": 2,
+    "su_ml": 7,
+    "dcu_me": 37,
+    "duc_me": 37
+   },
+   "L0": 6501,
+   "L1": 5900,
+   "exact": true,
+   "vs_s22ml7": {
+    "L0": 350,
+    "L1": 420
+   }
+  },
+  "su_only": {
+   "params": {
+    "dcu": 7,
+    "duc": 7,
+    "su_ml": 7
+   },
+   "L0": 6281,
+   "L1": 5695,
+   "exact": true,
+   "vs_s22ml7": {
+    "L0": 130,
+    "L1": 215
+   }
+  }
+ },
+ "sources": "ot-epyc1tb /srv/opentallas-scratch/claude/kv-die/split_me/L3_*/result.json (12/12 layer X + 12/12 current K/V each)",
+ "per_station": {
+  "me_cycles_per_station_per_layer": 6.0,
+  "su_cycles_per_station_per_layer": 21.5,
+  "su_ml_7_to_10_per_layer": 48
+ },
+ "adopted_for_price": "r22k_ml10 (the plan as built: ME 37/37, SU 7/7, constant-ROM relays raise the SU memory latency to 10)",
+ "token_delta_vs_s22ml7": 22259
+}

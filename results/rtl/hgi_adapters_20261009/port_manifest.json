@@ -2,6 +2,502 @@
  "schema": "opentallas.hgi_adapters.port_manifest.v1",
  "source": "rtl/hbm_accel/generic/adapters",
  "adapters": {
+  "dma_mover": {
+   "top": "ot_hgi_dma_mover",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "mv_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "mv_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "mv": {
+     "dir": "input",
+     "bits": 227
+    },
+    "mv_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "mv_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "fence_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "fence_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "fence_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "k_req_v": {
+     "dir": "output",
+     "bits": 1
+    },
+    "k_req_rdy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "k_req_we": {
+     "dir": "output",
+     "bits": 1
+    },
+    "k_req_addr": {
+     "dir": "output",
+     "bits": 37
+    },
+    "k_req_wdata": {
+     "dir": "output",
+     "bits": 256
+    },
+    "k_req_wstrb": {
+     "dir": "output",
+     "bits": 32
+    },
+    "k_req_tag": {
+     "dir": "output",
+     "bits": 16
+    },
+    "k_rsp_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "k_rsp_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "k_rsp_we": {
+     "dir": "input",
+     "bits": 1
+    },
+    "k_rsp_data": {
+     "dir": "input",
+     "bits": 256
+    },
+    "k_fault": {
+     "dir": "input",
+     "bits": 1
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    }
+   },
+   "in_bits": 765,
+   "out_bits": 687
+  },
+  "sm_xload": {
+   "top": "ot_hgi_sm_xload",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "x_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "x_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "x_base": {
+     "dir": "input",
+     "bits": 40
+    },
+    "x_n": {
+     "dir": "input",
+     "bits": 21
+    },
+    "x_p": {
+     "dir": "input",
+     "bits": 4
+    },
+    "x_stride": {
+     "dir": "input",
+     "bits": 32
+    },
+    "x_space": {
+     "dir": "input",
+     "bits": 2
+    },
+    "x_fmt": {
+     "dir": "input",
+     "bits": 2
+    },
+    "x_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "x_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "xw_en": {
+     "dir": "output",
+     "bits": 1
+    },
+    "xw_addr": {
+     "dir": "output",
+     "bits": 7
+    },
+    "xw_grp": {
+     "dir": "output",
+     "bits": 7
+    },
+    "xw_data": {
+     "dir": "output",
+     "bits": 2048
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 1352
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 1096
+    }
+   },
+   "in_bits": 1200,
+   "out_bits": 3418
+  },
+  "sm_pub": {
+   "top": "ot_hgi_sm_pub",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "pub_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "pub_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "pub_base": {
+     "dir": "input",
+     "bits": 40
+    },
+    "pub_stride": {
+     "dir": "input",
+     "bits": 32
+    },
+    "pub_space": {
+     "dir": "input",
+     "bits": 2
+    },
+    "pub_m": {
+     "dir": "input",
+     "bits": 20
+    },
+    "pub_q": {
+     "dir": "input",
+     "bits": 13
+    },
+    "pub_p": {
+     "dir": "input",
+     "bits": 4
+    },
+    "pub_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "pub_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "sm_rv": {
+     "dir": "input",
+     "bits": 32
+    },
+    "sm_rrow": {
+     "dir": "input",
+     "bits": 384
+    },
+    "sm_rdata": {
+     "dir": "input",
+     "bits": 8192
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 1352
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 1096
+    }
+   },
+   "in_bits": 9818,
+   "out_bits": 1355
+  },
+  "ds_mux": {
+   "top": "ot_hgi_ds_mux",
+   "kind": "peer",
+   "ports": {
+    "sel": {
+     "dir": "input",
+     "bits": 1
+    },
+    "legacy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "hgi": {
+     "dir": "input",
+     "bits": 1
+    },
+    "q": {
+     "dir": "output",
+     "bits": 1
+    }
+   },
+   "in_bits": 3,
+   "out_bits": 1
+  },
+  "su_unit": {
+   "top": "ot_hgi_su_unit",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_hdr": {
+     "dir": "input",
+     "bits": 128
+    },
+    "rec_sut": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_a": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_b": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_c": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_d": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_o": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_r": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_i": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_n_a": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "halted": {
+     "dir": "output",
+     "bits": 1
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    },
+    "s0_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "s0_idx": {
+     "dir": "input",
+     "bits": 20
+    },
+    "s0_data": {
+     "dir": "input",
+     "bits": 32
+    },
+    "am_stream": {
+     "dir": "output",
+     "bits": 523
+    },
+    "am_rdy": {
+     "dir": "input",
+     "bits": 1
+    }
+   },
+   "in_bits": 2528,
+   "out_bits": 865
+  },
+  "hc_unit": {
+   "top": "ot_hgi_hc_unit",
+   "kind": "peer",
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "cfg_norm_eps": {
+     "dir": "input",
+     "bits": 32
+    },
+    "rec_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_hdr": {
+     "dir": "input",
+     "bits": 128
+    },
+    "rec_a": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_b": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_o": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_n_a": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_n_o": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "halted": {
+     "dir": "output",
+     "bits": 1
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    },
+    "hq_v": {
+     "dir": "output",
+     "bits": 1
+    },
+    "hq_rdy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "hq_addr": {
+     "dir": "output",
+     "bits": 35
+    },
+    "hq_len": {
+     "dir": "output",
+     "bits": 3
+    },
+    "hq_tag": {
+     "dir": "output",
+     "bits": 11
+    },
+    "hr_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "hr_tag": {
+     "dir": "input",
+     "bits": 11
+    },
+    "hr_beat": {
+     "dir": "input",
+     "bits": 2
+    },
+    "hr_data": {
+     "dir": "input",
+     "bits": 256
+    }
+   },
+   "in_bits": 1518,
+   "out_bits": 392
+  },
   "sm": {
    "unit": 1,
    "top": "ot_hgi_sm_record",
@@ -258,6 +754,10 @@
      "dir": "output",
      "bits": 1
     },
+    "op_strm": {
+     "dir": "output",
+     "bits": 2
+    },
     "lg_v": {
      "dir": "input",
      "bits": 1
@@ -292,7 +792,7 @@
     }
    },
    "in_bits": 2875,
-   "out_bits": 677
+   "out_bits": 679
   },
   "sfu": {
    "unit": 3,
@@ -517,6 +1017,10 @@
      "dir": "input",
      "bits": 523
     },
+    "am_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
     "e_in_v": {
      "dir": "output",
      "bits": 1
@@ -575,7 +1079,7 @@
     }
    },
    "in_bits": 1544,
-   "out_bits": 890
+   "out_bits": 891
   },
   "dma": {
    "unit": 8,
@@ -699,6 +1203,168 @@
    },
    "in_bits": 941,
    "out_bits": 235
+  },
+  "fused": {
+   "unit": 4,
+   "top": "ot_hgi_fused_record",
+   "site": "FUSED front (unit 4): forwards QDQ to hfd_quant",
+   "record": [
+    "rec_*: header, desc A B C O, n_A n_B n_O"
+   ],
+   "peers": {
+    "mv_*": "ot_hgi_dma_mover (gain staging)",
+    "op_*": "a vec op port (the FUSED stream unit)",
+    "ne_*": "DS norm engine / hc-post job (ot_hbm_accel_su_fused_stream KIND 0 / 4): binding is D1",
+    "q_rec": "the quant record bus (hfd_quant, unchanged)"
+   },
+   "ports": {
+    "clk": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1
+    },
+    "cfg_scratch": {
+     "dir": "input",
+     "bits": 18
+    },
+    "rec_v": {
+     "dir": "input",
+     "bits": 1
+    },
+    "rec_rdy": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_hdr": {
+     "dir": "input",
+     "bits": 128
+    },
+    "rec_a": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_b": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_c": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_o": {
+     "dir": "input",
+     "bits": 256
+    },
+    "rec_n_a": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_n_b": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_n_o": {
+     "dir": "input",
+     "bits": 21
+    },
+    "rec_done": {
+     "dir": "output",
+     "bits": 1
+    },
+    "rec_fault": {
+     "dir": "output",
+     "bits": 1
+    },
+    "halted": {
+     "dir": "output",
+     "bits": 1
+    },
+    "mv_v": {
+     "dir": "output",
+     "bits": 1
+    },
+    "mv_rdy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "mv": {
+     "dir": "output",
+     "bits": 227
+    },
+    "mv_done": {
+     "dir": "input",
+     "bits": 1
+    },
+    "mv_fault": {
+     "dir": "input",
+     "bits": 1
+    },
+    "op_v": {
+     "dir": "output",
+     "bits": 1
+    },
+    "op_rdy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "op_w": {
+     "dir": "output",
+     "bits": 670
+    },
+    "su_idle": {
+     "dir": "input",
+     "bits": 1
+    },
+    "su_fault": {
+     "dir": "input",
+     "bits": 1
+    },
+    "vmq": {
+     "dir": "output",
+     "bits": 338
+    },
+    "vmr": {
+     "dir": "input",
+     "bits": 274
+    },
+    "ne_v": {
+     "dir": "output",
+     "bits": 1
+    },
+    "ne_rdy": {
+     "dir": "input",
+     "bits": 1
+    },
+    "ne_job": {
+     "dir": "output",
+     "bits": 149
+    },
+    "ne_done": {
+     "dir": "input",
+     "bits": 1
+    },
+    "ne_fault": {
+     "dir": "input",
+     "bits": 1
+    },
+    "q_rec": {
+     "dir": "output",
+     "bits": 683
+    },
+    "q_done": {
+     "dir": "input",
+     "bits": 1
+    },
+    "q_fault": {
+     "dir": "input",
+     "bits": 1
+    }
+   },
+   "in_bits": 1521,
+   "out_bits": 2074
   },
   "hc": {
    "unit": 10,

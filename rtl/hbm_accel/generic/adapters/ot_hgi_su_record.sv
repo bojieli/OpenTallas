@@ -30,7 +30,14 @@
 module ot_hgi_su_record #(
     parameter integer MUT_ISTRIDE = 0,     // mutant: Xsi = istride (no 0 -> 1, no ibcast)
     parameter integer MUT_EARLY = 0,       // mutant: retire on the unit's accept, not on its completion
-    parameter integer GLU = 0,             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
+    parameter integer GLU = 0,
+    parameter integer PAYLOAD_RESET = 1, // opt-in0: valid-qualified record/op payloads never drive the reset tree
+    parameter integer STREAM_OK = 0,       // 1 (the D1 SU unit): A may be STREAM (stream 0, SM -> SU), O may be STREAM
+                                           //    (SU -> ARGMAX); reported on op_strm with the op             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
+    parameter integer PIPED = 0,           // hgi-unitrate: 1 = the unit pipelines ops (ot_hgi_su_ctlw): issue whenever it
+                                           //    takes one (op_rdy), up to 3 in flight; retire one per su_ret pulse (the
+                                           //    unit's in-order completion: last drain write landed); refusals / empty
+                                           //    ops retire only with nothing in flight (order kept)
     parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
                                            //    adapter alone (records only, every output from a register; hgi_en unused)
 ) (
@@ -48,6 +55,7 @@ module ot_hgi_su_record #(
     output reg           rec_fault,
     output wire          halted,
     output wire          drained,         // no record held, decoded or executing
+    output reg  [1:0]    op_strm,         // {O STREAM, A STREAM} of the op on op_w (STREAM_OK)
     // legacy op port (the DS control path)
     input  wire          lg_v,
     output wire          lg_rdy,
@@ -57,7 +65,8 @@ module ot_hgi_su_record #(
     input  wire          op_rdy,
     output wire [669:0]  op_w,
     input  wire          su_idle,
-    input  wire          su_fault
+    input  wire          su_fault,
+    input  wire          su_ret                // PIPED: one op retired (in order)
 );
     // ---- PFIELDS offsets (tools/rtl_hdc_v41x_vec_campaign.py)
     localparam integer F_NOUT = 0, F_NIN = 16, F_ASRC = 32, F_BSRC = 34, F_CSRC = 36, F_DSRC = 38, F_ABASE = 40,
@@ -68,7 +77,7 @@ module ot_hgi_su_record #(
         F_RED = 478, F_REDSQ = 480, F_REDWHOLE = 481, F_REDTREE = 482, F_REDRND = 483, F_RBASE = 484, F_RSO = 508,
         F_IMM1 = 532, F_IMM2 = 564, F_IMM3 = 596, F_CH_SRC = 628;
     // ---- ISA codes (tools/hdc_isa_v41.py)
-    localparam [2:0] M1_AB = 3'd1, M1_DIVB = 3'd5, M1_MAXB = 3'd6;
+    localparam [2:0] M1_AB = 3'd1, M1_DIVB = 3'd4, M1_MAXB = 3'd6;   // hdc_isa_v41: BYP AB AA AIMM DIVB DIVIMM MAXB
     localparam [1:0] M2_C = 2'd1;
     localparam [2:0] AD_Q = 3'd1, AD_C = 3'd2, AD_NEGB = 3'd3, AD_D = 3'd5;
     localparam [2:0] E1_MULC = 3'd1, E1_ADDC = 3'd2;
@@ -77,6 +86,7 @@ module ot_hgi_su_record #(
     // ---- station: raw record (E0), decoded word (E1)
     reg          raw_v, dec_v, exec, halt_q, el_seen;
     reg  [1:0]   exec_ph;                 // edges since the unit accepted (idle is stale for 2 edges)
+    reg  [1:0]   nexec;                   // PIPED: ops in flight in the unit
     reg  [127:0] hdr_q;
     reg  [255:0] sut_q, a_q, b_q, c_q, d_q, o_q, r_q, i_q;
     reg  [20:0]  na_q;
@@ -89,7 +99,7 @@ module ot_hgi_su_record #(
     assign drained = !raw_v && !dec_v && !exec;
     wire   hen     = LEGACY ? hgi_en : 1'b1;
     assign rec_rdy = hen && !raw_v && !dec_v && !halt_q;
-    assign op_v    = hen ? (dec_v && !nop_q && !bad_q && !exec && !halt_q) : lg_v;
+    assign op_v    = hen ? (dec_v && !nop_q && !bad_q && (PIPED ? nexec != 2'd3 : !exec) && !halt_q) : lg_v;
     assign op_w    = hen ? w_q : lg_w;
     assign lg_rdy  = !hen && op_rdy;
 
@@ -116,13 +126,16 @@ module ot_hgi_su_record #(
                               (e1 == E1_ADDC));      // c_pair: C is A's pair element, not an operand
     wire use_d = (qm != 3'd0) || (ad == AD_D);
     function automatic not_vm(input p, input [255:0] d); not_vm = p && (d[1:0] != 2'd1); endfunction
+    function automatic not_vs(input p, input [255:0] d);
+        not_vs = p && !(d[1:0] == 2'd1 || (STREAM_OK && d[1:0] == 2'd2));
+    endfunction
     function automatic [23:0] isi(input [255:0] d);
         isi = MUT_ISTRIDE ? {8'd0, d[135:120]} : (d[5] ? 24'd0 : (d[135:120] == 16'd0) ? 24'd1 : {8'd0, d[135:120]});
     endfunction
     wire [19:0] nout = a_q[87:68];
     wire bad = glu_bad || (!GLU && ((hdr_q[127:124] != 4'd2) || (hdr_q[123:118] != 6'd0) || !hdr_q[92])) || (|sut_e[255:142]) ||
                (su_vec != 2'd0) || !pa ||
-               not_vm(pa, a_q) || not_vm(pb, b_q) || not_vm(pc, c_q) || not_vm(pd, d_q) || not_vm(po, o_q) ||
+               not_vs(pa, a_q) || not_vm(pb, b_q) || not_vm(pc, c_q) || not_vm(pd, d_q) || not_vs(po, o_q) ||
                not_vm(pr, r_q) || not_vm(pi, i_q) ||
                (a_src != 2'd0) || (b_src != 2'd0) || (c_src != 2'd0) || (d_src != 2'd0) ||
                (use_b && !pb) || (use_c && !pc) || (use_d && !pd) ||
@@ -144,27 +157,52 @@ module ot_hgi_su_record #(
         2'd0, 2'd0, 2'd0, 2'd0,                                                // dsrc, csrc, bsrc, asrc
         na_q[15:0], nout[15:0]};
 
+    // With reset payload disabled, only raw_v/dec_v/exec make these values observable.
+    // The landing bank still captures the accepted record at its first edge; no release bubble.
+    generate if (!PAYLOAD_RESET) begin : unreset_payload
+        always @(posedge clk) begin
+            hdr_q <= rec_hdr; sut_q <= rec_sut; a_q <= rec_a; b_q <= GLU ? rec_c : rec_b; c_q <= GLU ? rec_b : rec_c;
+            d_q <= rec_d; o_q <= rec_o; r_q <= rec_r; i_q <= rec_i; na_q <= rec_n_a;
+            if (raw_v) w_q <= w_dec;
+        end
+    end endgenerate
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            raw_v <= 1'b0; dec_v <= 1'b0; exec <= 1'b0; halt_q <= 1'b0; el_seen <= 1'b0; exec_ph <= 2'd0;
-            rec_done <= 1'b0; rec_fault <= 1'b0; nop_q <= 1'b0; bad_q <= 1'b0; w_q <= 670'd0;
-            hdr_q <= 128'd0; sut_q <= 256'd0; a_q <= 256'd0; b_q <= 256'd0; c_q <= 256'd0; d_q <= 256'd0;
-            o_q <= 256'd0; r_q <= 256'd0; i_q <= 256'd0; na_q <= 21'd0;
+            raw_v <= 1'b0; dec_v <= 1'b0; exec <= 1'b0; halt_q <= 1'b0; el_seen <= 1'b0; exec_ph <= 2'd0; nexec <= 2'd0;
+            rec_done <= 1'b0; rec_fault <= 1'b0; nop_q <= 1'b0; bad_q <= 1'b0;
+            if (PAYLOAD_RESET) begin
+                w_q <= 670'd0;
+                hdr_q <= 128'd0; sut_q <= 256'd0; a_q <= 256'd0; b_q <= 256'd0; c_q <= 256'd0; d_q <= 256'd0;
+                o_q <= 256'd0; r_q <= 256'd0; i_q <= 256'd0; na_q <= 21'd0;
+            end
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
             // pin flops: the record bus lands unconditionally (no enable fanout from the rec_v pin); raw_v marks the
             // accepted record, decoded at the next edge
+            if (PAYLOAD_RESET) begin
             hdr_q <= rec_hdr; sut_q <= rec_sut; a_q <= rec_a; b_q <= GLU ? rec_c : rec_b; c_q <= GLU ? rec_b : rec_c;
             d_q <= rec_d; o_q <= rec_o; r_q <= rec_r; i_q <= rec_i; na_q <= rec_n_a;
+            end
             if (rec_v && rec_rdy) raw_v <= 1'b1;
             if (raw_v) begin                                  // E1: the decoded word
-                raw_v <= 1'b0; dec_v <= 1'b1; w_q <= w_dec; nop_q <= nop; bad_q <= bad;
+                raw_v <= 1'b0; dec_v <= 1'b1; if (PAYLOAD_RESET) w_q <= w_dec; nop_q <= nop; bad_q <= bad;
+                op_strm <= {po && o_q[1:0] == 2'd2, a_q[1:0] == 2'd2};
             end
             // a refusal or an empty op retires in order: only once the op ahead of it has retired
             if (dec_v && !exec && !halt_q && (bad_q || nop_q)) begin
                 dec_v <= 1'b0;
                 if (bad_q) begin rec_fault <= 1'b1; halt_q <= 1'b1; end else rec_done <= 1'b1;
             end
+            if (PIPED) begin : piped
+                reg take;
+                take = op_v && op_rdy && hen;
+                if (take) dec_v <= 1'b0;
+                nexec <= nexec + {1'b0, take} - {1'b0, su_ret};
+                exec <= (nexec + {1'b0, take} - {1'b0, su_ret}) != 2'd0;
+                if (su_ret && !halt_q) rec_done <= 1'b1;
+                if (in_fault && (exec || take)) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
+            end else
             if (op_v && op_rdy && hen) begin                // the unit took the op
                 dec_v <= 1'b0; exec <= 1'b1; exec_ph <= 2'd0; el_seen <= 1'b0;
                 if (MUT_EARLY) begin rec_done <= 1'b1; exec <= 1'b0; end

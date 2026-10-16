@@ -1,0 +1,6 @@
+HOSTSD sent=606 delivered=400/198/0/0 pending=8 bad=0 acks_issued=598 acks_seen=598 host_credits=0 fault=0 cycles=162001
+FAIL
+- rtl/test/s81_native_ingest/tb_dsfd_host_sd.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 135us; walltime 0.044 s; speed 3.061 ms/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 9 MB

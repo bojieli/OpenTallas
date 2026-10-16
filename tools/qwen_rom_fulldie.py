@@ -39,6 +39,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import subprocess
 import sys
@@ -57,6 +58,8 @@ PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 GX, GY = 0.432, 2.16           # macro origin lattice (site 0.054 x 8, row 0.270 x 8; both multiples of 0.048)
 EDGE = 20.0
 SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.024 mod 0.048: mirror-legal on M4/M5)
+MINW_PINS = os.environ.get('OT_MINW_PINS') == '1'   # face pins at the layer minimum width (half widths below); kv_die turns it on; env OT_MINW_PINS=1 (closure-loop auto-react DRT-0073 successor)
+MIN_HW = dict(M6=0.016, M7=0.016, M8=0.020, M9=0.020)
 COLS, ROWS = 64, 24
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
@@ -673,7 +676,7 @@ def phy_pins():
 
 
 # ------------------------------------------------------------------------------------------------ abstracts
-TRK = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M8': (0.116, 0.080)}
+TRK = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064), 'M8': (0.116, 0.080)}
 
 
 class Master:
@@ -926,6 +929,9 @@ def pin_rects(mst, k, wmap):
             continue
         _, _, face, layer, centre, pitch = spec
         centre = PIN_CENTRE.get((mst.name, port), centre)
+        if '+' in layer:        # HBM R25GQ 10-10 (opt-in): two interleaved layers, every other track on each
+            out.extend(_interleaved_face(mst, port, names, face, layer, centre, k))
+            continue
         off, p = TRK[layer]
         step = p * k * pitch
         along = mst.h if face in 'EW' else mst.w
@@ -936,7 +942,10 @@ def pin_rects(mst, k, wmap):
         if start < 0:
             raise ValueError(f'{mst.name}.{port}: {n} pins x {step:.3f} um do not fit {along:.3f} um ({face})')
         first = off * k + math.ceil((start - off * k) / (p * k) - 1e-9) * p * k
-        hw = 0.012 * k
+        # kv-die 2026-10-10: a pin is at least its layer's minimum width (ASAP7 M6 / M7 0.032, M8 / M9 0.040); a 0.024
+        # M6 pin is sub-minimum and the first one of a macro gets no access point (die_kv7 DRT-0073 on reng so[0] /
+        # astk e0i[0], reproduced on one instance; 0.032 clears it).  Opt-in (MINW_PINS) so other dies' abstracts stay byte-identical
+        hw = (MIN_HW.get(layer, 0.012) if MINW_PINS else 0.012) * k
         depth = 0.192 * (k if k > 1 else 1)
         poss = [first + i * step for i in range(len(names))]
         cr = CORNER_RULE.get(mst.name)
@@ -953,6 +962,44 @@ def pin_rects(mst, k, wmap):
             else:
                 r = (pos - hw, mst.h - depth, pos + hw, mst.h)
             out.append((nm, layer, r))
+    return out
+
+
+def _interleaved_face(mst, port, names, face, layer, centre, k):
+    """pins of one port on two layers ('M5+M7' / 'M4+M6'): every other track of each, merged in position order,
+    centred on `centre`; each pin keeps its own layer"""
+    l1, l2 = layer.split('+')
+    (o1, p1), (o2, p2) = TRK[l1], TRK[l2]
+    s1, s2 = 2 * p1 * k, 2 * p2 * k
+    along = mst.h if face in 'EW' else mst.w
+    n = len(names)
+    span = n / (1.0 / s1 + 1.0 / s2)
+    lo = max(2 * max(p1, p2) * k, min(centre - span / 2, along - 2 * max(p1, p2) * k - span))
+    if lo < 0:
+        raise ValueError(f'{mst.name}.{port}: {n} pins on {layer} do not fit {along:.3f} um ({face})')
+    def grid(off, st):
+        x = off * k + math.ceil((lo - off * k) / st - 1e-9) * st
+        out_ = []
+        while len(out_) < n + 2 and x <= along:
+            out_.append(x)
+            x += st
+        return out_
+    cand = sorted([(x, l1) for x in grid(o1, s1)] + [(x, l2) for x in grid(o2, s2)])[:n]
+    if len(cand) < n or cand[-1][0] > along - 2 * max(p1, p2) * k + 1e-6:
+        raise ValueError(f'{mst.name}.{port}: {n} pins on {layer} do not fit {along:.3f} um ({face})')
+    depth = 0.192 * (k if k > 1 else 1)
+    out = []
+    for nm, (pos, ly) in zip(names, cand):
+        hw = MIN_HW.get(ly, 0.012) * k         # an interleaved M6 / M7 pin at its layer's minimum width
+        if face == 'W':
+            r = (0.0, pos - hw, depth, pos + hw)
+        elif face == 'E':
+            r = (mst.w - depth, pos - hw, mst.w, pos + hw)
+        elif face == 'S':
+            r = (pos - hw, 0.0, pos + hw, depth)
+        else:
+            r = (pos - hw, mst.h - depth, pos + hw, mst.h)
+        out.append((nm, ly, r))
     return out
 
 

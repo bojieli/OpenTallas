@@ -1,0 +1,38 @@
+[
+{
+"die": "P.k0",
+"pairs": 1792,
+"used_pairs": 1792,
+"used_addresses": 2614272,
+"max_pair_fill": 1752,
+"overlaps": 0,
+"applies_to": "all 4 primary rank dies"
+},
+{
+"die": "DA.r0.k0",
+"pairs": 1792,
+"used_pairs": 1792,
+"used_addresses": 13762560,
+"max_pair_fill": 8160,
+"overlaps": 0,
+"applies_to": "all 20 DA dies (5 rows x 4 ranks: rank-invariant layout)"
+},
+{
+"die": "DB.r0.k0",
+"pairs": 1792,
+"used_pairs": 1792,
+"used_addresses": 13762560,
+"max_pair_fill": 8160,
+"overlaps": 0,
+"applies_to": "all 20 DB dies (5 rows x 4 ranks: rank-invariant layout)"
+},
+{
+"die": "H.h0",
+"pairs": 631,
+"used_pairs": 127,
+"used_addresses": 1034240,
+"max_pair_fill": 8192,
+"overlaps": 0,
+"applies_to": "all 12 head dies"
+}
+]

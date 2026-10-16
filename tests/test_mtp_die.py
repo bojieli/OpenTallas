@@ -52,7 +52,7 @@ def test_s81_mtp_options_bind():
     try:
         S.apply_options(ap.parse_args(['--gen', 'r8', '--rev', 'r9', '--die', 'head', '--mtp-links', '5']))
         assert S.MTP_SEQ is S.MTP_SEQ_DEFAULT is True and S.MTP_LINKS == 5
-        assert S.WFC_HARD is S.WFC_HARD_DEFAULT          # flips with the one constant when the SOURCE partner closes
+        assert S.WFC_HARD is S.WFC_HARD_DEFAULT is True  # flipped: the SOURCE HARD partner closed (910e67c7b)
         S.apply_options(ap.parse_args(['--gen', 'r8', '--rev', 'r9', '--die', 'head', '--no-mtp-seq', '--wfc-hard']))
         assert S.MTP_SEQ is False and S.WFC_HARD is True
         S.apply_options(ap.parse_args(['--gen', 'r8', '--rev', 'r9', '--die', 'layer1', '--draft', 'B']))

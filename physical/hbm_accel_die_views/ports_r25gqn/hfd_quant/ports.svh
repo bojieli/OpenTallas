@@ -1,0 +1,12 @@
+    input wire [0:0] ck,
+    input wire [1:0] f_fused_ne,
+    input wire [682:0] f_hgi_cmdproc,
+    input wire [273:0] f_hgi_vmr,
+    input wire [8256:0] f_lgE_rdn,
+    input wire [64:0] f_lgE_wdn,
+    input wire [0:0] rst,
+    output wire [148:0] t_fused_ne,
+    output wire [2:0] t_hgi_cmdproc,
+    output wire [337:0] t_hgi_vmq,
+    output wire [512:0] t_lgE_rup,
+    output wire [8960:0] t_lgE_wup

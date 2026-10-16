@@ -41,6 +41,7 @@ module tb_rom_pkg_link;
     always @(posedge clk) cycle <= cycle + 1;
 
     integer errors = 0, total_errors = 0, seed = 7;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     integer rx_count, first_rx, last_rx, sent_start;
     reg backpressure = 0;
 

@@ -48,16 +48,26 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
  wire[7:0] ctag={c_cmd_d[83],c_cmd_d[6:0]};
  wire cv,cr;wire[83:0] cd;wire cmd_accept,cmd_fault;
  wire dv,dr;wire[7:0] dt;wire done_accept,done_fault;
- wire return_ok=dv&&cpending[dt]&&(cused!=0);
+ // the done leaves its CDC FIFO into a register first (+1 cycle; dr = 1: every done is taken)
+ reg dq_v; reg[7:0] dq_t;
+ always @(posedge c_clk or negedge c_run) if(!c_run) dq_v<=1'b0; else dq_v<=dv;
+ always @(posedge c_clk) dq_t<=dt;
+ wire return_ok=dq_v&&cpending[dq_t]&&(cused!=0);
  wire admit=c_cmd_v&&cmd_accept&&!cpending[ctag]&&((cused<QD)||return_ok);
  wire[83:0] payload=(MUT==1)?(c_cmd_d^(84'd1<<73)):c_cmd_d;
  ot_s81_pulse_cdc #(.W(84),.QD(QD)) u_cmd(
  .s_clk(c_clk),.s_rst_n(c_run),.i_v(admit),.i_d(payload),.i_accept(cmd_accept),.fault(cmd_fault),
  .d_clk(e_clk),.d_rst_n(e_run),.o_v(cv),.o_r(cr),.o_d(cd));
- wire[7:0] etag={cd[83],cd[6:0]};
- assign e_cmd_d=cd;
- assign e_cmd_v=cv&&e_inputs_present&&!epending[etag]&&(eused<QD);
- assign cr=e_cmd_v&&e_cmd_ready;
+ // s81-ctl-1011 timing (dsfd_dw_ep_s TT -297: CDC read pointer -> rd_data mux -> epending[tag] 256:1 -> 20 levels):
+ // the command leaves the CDC FIFO into a register first (+1 cycle); the pending lookup starts from that register
+ reg rv; reg[83:0] rq;
+ wire[7:0] etag={rq[83],rq[6:0]};
+ assign e_cmd_d=rq;
+ assign e_cmd_v=rv&&e_inputs_present&&!epending[etag]&&(eused<QD);
+ wire take=e_cmd_v&&e_cmd_ready;
+ assign cr=!rv||take;
+ always @(posedge e_clk or negedge e_run) if(!e_run) rv<=1'b0; else if(cr) rv<=cv;
+ always @(posedge e_clk) if(cr&&cv) rq<=cd;
  wire complete=e_done_v&&epending[e_done_tag]&&(eused!=0)&&done_accept;
  wire[7:0] completion=(MUT==2)?(e_done_tag^8'h80):e_done_tag;
  ot_s81_pulse_cdc #(.W(8),.QD(QD)) u_done(
@@ -69,19 +79,19 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
   else begin
    ef_c1<=ef;ef_c2<=ef_c1;eonline_c1<=e_run;eonline_c2<=eonline_c1;
    c_done_v<=return_ok;
-   if(return_ok) begin c_done_tag<=dt;cpending[dt]<=0;end
+   if(return_ok) begin c_done_tag<=dq_t;cpending[dq_t]<=0;end
    if(admit) cpending[ctag]<=1;
    case({admit,return_ok}) 2'b10:cused<=cused+1'b1;2'b01:cused<=cused-1'b1;default:cused<=cused;endcase
-   if((c_cmd_v&&!admit)||(dv&&!return_ok)||cmd_fault) cf<=1;
+   if((c_cmd_v&&!admit)||(dq_v&&!return_ok)||cmd_fault) cf<=1;
   end
  end
  always @(posedge e_clk or negedge e_run) begin
   if(!e_run) begin epending<=0;eused<=0;ef<=0;end
   else begin
    if(complete) epending[e_done_tag]<=0;
-   if(cr) epending[etag]<=1;
-   case({cr,complete}) 2'b10:eused<=eused+1'b1;2'b01:eused<=eused-1'b1;default:eused<=eused;endcase
-   if((e_done_v&&!complete)||(cv&&epending[etag])||done_fault) ef<=1;
+   if(take) epending[etag]<=1;
+   case({take,complete}) 2'b10:eused<=eused+1'b1;2'b01:eused<=eused-1'b1;default:eused<=eused;endcase
+   if((e_done_v&&!complete)||(rv&&epending[etag])||done_fault) ef<=1;
   end
  end
 endmodule

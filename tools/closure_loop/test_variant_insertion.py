@@ -82,7 +82,7 @@ class Assume(unittest.TestCase):
                 ("nocal", spec("recutcgl"), "2026-10-08T12:00:00-07:00 launched calibrate", 1, 1)]
         for n, sp, ev, ss, ff in jobs:
             (self.st / "jobs" / f"{n}.json").write_text(json.dumps(
-                {"name": n, "spec": sp, "events": [ev], "calibration": env(ss, ff)}))
+                {"name": n, "status": "CLOSED", "spec": sp, "events": [ev], "calibration": env(ss, ff)}))
         keep = dict(job="kept", ss=dict(mean=1, min=1, max=1), ff=dict(mean=1, min=1, max=1))
         (self.st / "measured_insertion.json").write_text(json.dumps(
             {"blocks": {}, "variants": {cl.variant_key(spec("halfphl")): keep}}))

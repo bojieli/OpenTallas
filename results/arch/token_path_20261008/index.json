@@ -12,7 +12,8 @@
     "verdict": "AR_MODE",
     "source": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
     "reason": "AR only by the owner's decision (2026-10-05, results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json verdict AR_MODE): the Qwen3-8B ROM is compute-balanced (weight read rate = MAC rate), so a multi-position verify costs about as much per position as an AR layer and DSpark measured below AR (best np3: 0.691-0.744x AR). DSpark stays built and exact but off; speculation pays only where the dominant per-token cost is shared across positions (the DS ROM and the HBM accelerator)."
-   }
+   },
+   "exactness": "stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned"
   },
   {
    "design": "ds_rom",
@@ -31,19 +32,41 @@
    }
   },
   {
-   "design": "hbm_ds",
-   "title": "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, AR",
-   "file": "hbm_ds.json",
-   "tok_s": 1716.3,
-   "cycles": 699175.7,
+   "design": "hbm_gen_qwen",
+   "title": "Generic HBM die (R25GP), Qwen3-8B TP4, 8K, AR: the compiled HGI-1 program",
+   "file": "hbm_gen_qwen.json",
+   "tok_s": 951.1,
+   "cycles": 1261736.1,
    "mtp": {
     "available": true,
-    "file": "hbm_ds_mtp.json",
-    "tok_s": 3700.3,
-    "tau": 4.159,
-    "step_cycles": 1348759.6,
-    "per_accepted_cycles": 324299.0,
+    "file": "hbm_gen_qwen_mtp.json",
+    "tok_s": 1785.8,
+    "tau": 8.01,
+    "step_cycles": 5382584.1,
+    "per_accepted_cycles": 671983.0,
     "reason": null
+   }
+  },
+  {
+   "design": "hbm_gen_ds",
+   "title": "Generic HBM die (R25GP), DeepSeek-V4.1-Flash TP96, 1M, AR: the compiled HGI-1 program",
+   "file": "hbm_gen_ds.json",
+   "tok_s": 2185.3,
+   "cycles": 549130.8,
+   "mtp": {
+    "available": false,
+    "reason": "AR only: the HGI compiler emits no DeepSeek DSpark (MTP) program yet. On the generic die the DSpark step runs as KERNEL doorbells (spec 6.11, entry 3) issued by the CP's backend operation translator, which is still open, so there is no compiled MTP record stream to show."
+   }
+  },
+  {
+   "design": "qwen_kvdie",
+   "title": "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)",
+   "file": "qwen_kvdie.json",
+   "tok_s": 5035.8,
+   "cycles": 238292.0,
+   "mtp": {
+    "available": false,
+    "reason": "no qualified speculative composition implemented"
    }
   }
  ]

@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.hgi_token18.ports.v1",
+  "source": "77f87268c fullcore/pins; bbd709a32 acceptpinfix; 84d4ba0ca facadebench",
+  "model_commit": "416766277",
+  "model": "tools/uarch_model.py:hgi_token18_contract_model",
+  "legacy_default": "GENERIC18=0,TW17",
+  "approved_mode": "GENERIC18=1,TW18",
+  "cmdproc_owned_by": "Claude",
+  "endpoints": {
+    "ot_hgi_mtp_accept18": {
+      "source": "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv",
+      "params": {
+        "GENERIC18": 1,
+        "PINREG": 1
+      },
+      "base": "rtl/hdc/ot_hdc_accept.sv NSLOT8 NW18",
+      "tokens": [
+        "start_tok18",
+        "tokx_tok18",
+        "amax_tok18",
+        "bonus18",
+        "stok144",
+        "ttok144"
+      ],
+      "new_cycles": 1,
+      "bench": "rtl/test/hbm_generic/tb_hgi_accept18.sv",
+      "gate": "PINREG1 108PASS+truncation/bonus mutantsFAIL; rtl_boundary0/0PASS",
+      "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
+      "simulator_vectors": "pendingprovider",
+      "model": "757907078 tools/uarch_model.py:hgi_token18_accept_seat_model",
+      "route_status": "original both TT>=0/FF>=0/electrical0/DRC1: bbd709a32 receipts; pinfix52d6df55b fleetintake requested"
+    },
+    "ot_hgi_mtp_ctl18": {
+      "source": "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv",
+      "params": {
+        "GENERIC18": 1,
+        "TW": 18,
+        "B": 5,
+        "PMAX": 8,
+        "NL": 40,
+        "MAXPOS": 1048576
+      },
+      "base": "physical/hbm_mtp/rtl/ot_dshbm_dspark_ctl_m.sv FAST1 PRL2 ACCEPT_LEAF0",
+      "tokens": [
+        "p_tok18",
+        "f_tok18",
+        "e_tok18",
+        "cmd_tok1_18",
+        "cmd_toks144",
+        "am_idx18",
+        "tw_tok18"
+      ],
+      "new_cycles": 0,
+      "bench": "rtl/test/hbm_generic/tb_hgi_ctl18_lockstep.sv",
+      "gate": "Verilator: DS low+high each200runs/161669cycles/1699steps/2352emits/0mismatches; compiled rollback MUT1 FATAL expectedrc134",
+      "simulator_vectors": "pendingprovider",
+      "remote": "ot-epyc4:/srv/opentallas-scratch2/scratch/codex/hgi-token18-11f",
+      "receipt": "results/rtl/hgi_token18_20261009/control",
+      "physical_route_status": "retired bare leaf; use fullcore registered endpoint"
+    },
+    "ot_hgi_mtp_core18": {
+      "source": "rtl/hbm_accel/generic/ot_hgi_mtp_core18.sv",
+      "base": "physical/hbm_mtp/rtl/ot_hfd_mtp_core.sv",
+      "params": {
+        "GENERIC18": 1,
+        "TW": 18,
+        "XSEL": 1,
+        "SPECF": 0,
+        "WR": 256,
+        "W": 128,
+        "SR": 10,
+        "MAXPOS": 1048576,
+        "NL": 40,
+        "PRL": 2
+      },
+      "ports": "same hfd_mtp_x except p_tok/f_tok/e_tok/cmd_tok1/am_idx/sa_tok18 and cmd_toks144",
+      "new_cycles_vs_qualified_fullcore": 0,
+      "new_cycles_vs_bare_controller": 4,
+      "gate": "SPECF0 matchingforcedTW18/XSEL1 positive livePID1984091; rollbackMUT1 terminalFAIL COMMAND#378pos10vs9,rc1",
+      "exact_state_warning": "039ca63d6 recipe is SPECF0; physical hfd_mtp_x SPECF1 evidence cannot substitute",
+      "route_status": "owninitialsynth/floorplanE4source77driver2005401live;2routevariantsnotyetqueued",
+      "model": "a28dcab37 tools/uarch_model.py:hgi_token18_fullcore_model"
+    }
+  },
+  "route_jobs": [],
+  "routes": "notqueued,noP&Rclosureclaim",
+  "die_facade": {
+    "source": "d7cdfd630",
+    "data_boundary_bits": 1297,
+    "cmdproc_in": 131,
+    "cmdproc_out": 506,
+    "reset_release_extra_cycles": 2,
+    "gate": "8588af822 actualproductionshape port/reset mechanism PASS220cycles62commands; genuine width17/resetbypass mutants build0/sim1. Numericalvectors, CPproducer, realwinningvalueconsumer still pending"
+  },
+  "fullcore_registered_boundary": {
+    "source": "77f87268c",
+    "evidence": "2d23c2ffd",
+    "strict": "PASS",
+    "input_to_output_bits": 0,
+    "input_to_register_levels": 3,
+    "register_to_output_levels": 0,
+    "actual_unmapped_cells": 914655,
+    "actual_peak_kib": 3416432
+  }
+}

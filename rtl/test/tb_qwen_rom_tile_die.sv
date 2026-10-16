@@ -7,8 +7,8 @@
 // NEG = 1 expects lo one cycle after li (must fail).
 `timescale 1ns/1ps
 module ot_qwen_rom_tile_w12 #(parameter integer NW = 18, GT = 6144, SMIN = 6, CODE_BANKS = 10, KV_VB = 262144,
-    KV_NH = 4, MEM_EXTRA = 0, ACC_LAT = 5, FAST_ISSUE = 0, KV_PREP = 0, MUL_LAT = 5, TREE_LAT = 3, ROM_PIPE = 0, ROM_ARELAY = 1, ROM_CAP2 = 0,
-    LRST = 0, BAW = 12) (
+    KV_NH = 4, MEM_EXTRA = 0, ACC_LAT = 5, FAST_ISSUE = 0, KV_PREP = 0, MUL_LAT = 5, TREE_LAT = 3, ROM_PIPE = 0, ROM_ARELAY = 1, ROM_CAP2 = 0, ROM_CAPX = 0,
+    LRST = 0, ARPB = 0, ANR = 0, BAW = 12) (
     input wire clk, input wire rst_n, input wire [15:0] tile_id, input wire ib_go, input wire [3*NW+13*24+13-1:0] ib,
     input wire [127:0] xl, output wire [511:0] t_out, output wire t_vout, input wire [511:0] n_a, input wire [511:0] n_b,
     input wire n_va, output wire [511:0] n_y, output wire n_vy, output wire fault,
@@ -46,6 +46,7 @@ module tb_qwen_rom_tile_die;
     always #1 clk = ~clk;
     reg [983:0] p1, p2;
     integer i, k, bad = 0, checks = 0, writes = 0, seed = 5;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     initial begin
         repeat (3) @(posedge clk); rst_n = 1;
         for (i = 0; i < N; i = i + 1) begin

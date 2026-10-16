@@ -2,7 +2,7 @@
 # usage: dietop_run.sh <dir> <tcl> <threads> <mem_gb> [env...]; RSS sampled every 30 s into <dir>/rss.tsv
 set -u
 D=$(readlink -f $1); TCL=$2; T=$3; M=$4; shift 4; EV=""; for e in "$@"; do EV="$EV -e $e"; done
-N=qfd_dietop_$(basename $D)
+N=qfd_dietop_$(basename $(dirname $D))_$(basename $D)   # run dir + stage dir: two runs of one die never share a container name
 date -u +%FT%TZ > $D/run.start
 ( while sleep 30; do s=$(docker stats --no-stream --format "{{.MemUsage}} {{.CPUPerc}}" $N 2>/dev/null) || break; [ -z "$s" ] && break; echo -e "$(date -u +%T)\t$s" >> $D/rss.tsv; done ) &
 docker run --rm --name $N --cpus=$T --memory=${M}g -e OT_THREADS=$T $EV -v $D:/work -w /work openroad/orfs:asap7lock \

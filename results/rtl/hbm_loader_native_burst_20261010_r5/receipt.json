@@ -1,0 +1,171 @@
+{
+  "verdict": "PASS_NATIVE_BURST_BOUNDARY",
+  "model": {
+    "scope": "native service burst lease before RTL; no physical/token claim",
+    "default_enable_native_burst": 0,
+    "sectors_min": 1,
+    "sectors_max": 8,
+    "MACs_per_cycle": 0,
+    "compute_intensity": 0,
+    "bytes_per_response_cycle": 32,
+    "bytes_per_burst_max": 256,
+    "request_bits": 51,
+    "response_bits": 277,
+    "replicas_per_stack": 32,
+    "stacks_per_die": 4,
+    "mux_demux": "existing one-active-PC stack response mux; one local length check per PC",
+    "register_bits_per_PC": 329,
+    "incremental_register_bits_per_PC": 13,
+    "normal_added_cycles": 0,
+    "latency": {
+      "request_capture": 1,
+      "first_response_capture": 1,
+      "one_burst_minimum_cycles": "sectors + 3 without downstream PHY wait",
+      "lease_released": "final response consumer acceptance",
+      "system_composition": "256 sectors at length8: 32 command admissions plus same 256 data cycles; downstream wait and dispatcher must be composed"
+    },
+    "elastic_response_depth": 1,
+    "backpressure": "PHY advances only when register empty or consumer accepts current beat",
+    "identity": "native tag and sequential beat 0..length-1 checked before PHY acceptance",
+    "routing": {
+      "request_incremental_tracks": 4,
+      "response_incremental_tracks": 0,
+      "channel_capacity": null,
+      "admitted": false
+    },
+    "area": {
+      "incremental_FF_per_die": 1664,
+      "slot_fit": "actual lease element measurement required",
+      "incremental_FF_per_die_including_boundary": 1680
+    },
+    "token_credit": false,
+    "physical_admitted": false,
+    "caller_address_contract": "All requested K sectors belong to selected PC; global address translator splits bursts at every PC boundary (mapped consecutive groups may limit length to4).",
+    "stack_boundary_length_bits": 4
+  },
+  "cases": [
+    {
+      "name": "opt_in_all_lengths_and_stream",
+      "passed": true,
+      "output": "MEASURE sectors=256 commands=32 cycles=352 bytes=8192 last_burst_beat_span=7\nPASS native burst=1 lengths 1..8 all32 PCs normal read/write debt and stalls\n",
+      "measurement": {
+        "sectors": 256,
+        "commands": 32,
+        "cycles": 352,
+        "bytes": 8192,
+        "last_burst_beat_span": 7
+      }
+    },
+    {
+      "name": "default_single_sector",
+      "passed": true,
+      "output": "MEASURE sectors=256 commands=256 cycles=1024 bytes=8192 last_burst_beat_span=0\nPASS native burst=0 lengths 1..1 all32 PCs normal read/write debt and stalls\n",
+      "measurement": {
+        "sectors": 256,
+        "commands": 256,
+        "cycles": 1024,
+        "bytes": 8192,
+        "last_burst_beat_span": 0
+      }
+    },
+    {
+      "name": "disabled_passthrough",
+      "passed": true,
+      "output": "PASS disabled native passthrough\n"
+    },
+    {
+      "name": "wrong_tag",
+      "passed": true,
+      "output": "PASS malformed mode 1\n"
+    },
+    {
+      "name": "out_of_range_beat",
+      "passed": true,
+      "output": "PASS malformed mode 2\n"
+    },
+    {
+      "name": "duplicate_beat",
+      "passed": true,
+      "output": "PASS malformed mode 3\n"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "ignore_response_identity",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:105: malformed beat did not fault closed\n       Time: 140000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "ignore_beat_identity",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:105: malformed beat did not fault closed\n       Time: 250000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "force_single_sector",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:95: native command burst metadata mismatch\n       Time: 191000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "release_boundary_first_beat",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:111: missing buffered reply\n       Time: 250000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "release_lease_first_beat",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:120: lease released before final beat\n       Time: 240000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "ignore_read_debt",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:73: native stole normal read debt\n       Time: 51000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "ignore_write_debt",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:83: accepted write debt bypassed\n       Time: 91000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "ignore_pending_write",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:81: pending write was bypassed\n       Time: 81000 Scope: tb_loader_service_burst\n"
+    },
+    {
+      "name": "ignore_response_backpressure",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-native-burst-20261010/rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv:133: elastic register overwrote stalled response\n       Time: 53901000 Scope: tb_loader_service_burst\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_pc_service_lease.sv": "6cf25f03a9022a1958e06f89b77b0c656dfedfc785d5f506bf14acb4abf923ee",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_service_boundary.sv": "c9714d09d62b522e45f6b70a3f9364458fb0fc4d9bde83b9d719b63cc0ea839c",
+    "rtl/hbm_accel/loader/service_native/tb_loader_service_burst.sv": "876bddbc2b4a58fb0d5ab1a3f0d7e519d20565d5dfa1cbd90a7c36e0b196fe4d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_core_native.sv": "f3434e71038960a316572bed1e9ac03e8167649ab5c1bc0ed257afb7beb1adcf",
+    "tools/hbm_loader_service_boundary_build.py": "34861c79deef0660a032b6876bde74c5441b356eb348e72ef55b3a82c35df136",
+    "tools/hbm_loader_service_core_bind.py": "ae4ee82a7ce7f2b4bc29179daee6eb22184d9c04af2551e845e9b2f12404147b",
+    "tools/hbm_loader_native_service_model.py": "6a3858209649edc0d178ec55e61f4b2065e989df2ab55bb5383761742c023905",
+    "tools/hbm_loader_native_burst_gate.py": "1c2b0819dddee51a31fe916448239d5a446cc940847226326d1ebf1339893209",
+    "rtl/hbm_accel/loader/service_native/tb_hfd_loader_kport.sv": "62c02a16a2b1a2c67518e665a22efc93e063b46be4d70022475373b100d32a8c",
+    "rtl/hbm_accel/loader/service_native/tb_loader_service_core_native.sv": "93870e20b0c03f743469524c7efc94fbf78486453824f59c9a14dc10f6dab88f",
+    "rtl/hbm_accel/loader/service_native/tb_loader_service_iks.sv": "c3eda7b10493dab17f405f455019a24274c6fe8c881601a6c0f91febfb6f64ce",
+    "rtl/hbm_accel/loader/service_native/tb_loader_service_kvs.sv": "0f06416657f5795470be4e45c7a4c2028fa5ef4755d177b80f422034ea0cd79d"
+  },
+  "source_parent_commit": "5ffc617501d6fa1acc97b2fbfb9e812c0d4d1cc2",
+  "physical_admitted": false,
+  "token_credit": false,
+  "limitations": [
+    "minimum boundary vehicle with ready PHY responses; actual PHY service, floorplan and host load not measured",
+    "caller must provide a PC-local sector burst; global mapped contiguous runs must split at every PC mapping boundary",
+    "one active transaction per stack remains; native burst alone does not establish 90% HBM bandwidth",
+    "no RTL route, timing closure, adoption or token-rate claim"
+  ]
+}

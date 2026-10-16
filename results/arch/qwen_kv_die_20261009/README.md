@@ -2,7 +2,17 @@
 
 **Owner decision (2026-10-09 ~04:00 PT).** The Qwen3-8B ROM design becomes a TP4 ROM die + KV die pair per package (option 1a). KV never crosses the link.
 
+**Exactness status (2026-10-10): stationed-exact on L0-L2 (option-4 masters); die closure pending.** The option-4 actual masters are token-exact on the L0-L2 chain at the r22ko4 relay counts (16/16/16), with the sequencer <-> VM all-reduce read bus and a read queue sized to the die round trip (main 6359dc7dc; the XMUT and VRL-1 mutants fail). **Plan of record: r22ko4 (option 4)**, 4,908.6 tok/s typical with FEC at +100 cycles per all-reduce, 4,714.2 at +240, until the FEC term is pinned.
+
 **Status.** Every number here is a priced candidate or a generator floorplan, not a closed rate.
+
+**Update 2026-10-10 ~04:30 PT (re-cut H on the die).**
+- **Re-cut H adopted** (`recut_h.json`): the row engine is 5 hard tiles: 4 x `qkd_rhead` (one master for all four heads: the head index is a die-top strap) + `qkd_ectl`. The engine column is head 0 / head 1 (MX), control, head 2 / head 3: 648 x 1,952.6 um. Frames: head 648 x 453.6 (152,960 um2 placed cells), control 648 x 129.6 (24,507 um2 synthesized). Routes `qkd_rhead_c` / `qkd_ectl_c` are in flight.
+- **Control-tile timing fix** (route `qkd_ectl_a` TT -92.6): n_s / gmax registered, exp_done captured at the pin. Measured step **1,814 / 1,804 / 1,818** cycles (typical / best / worst PHY), +8 typical. Exact on 14 / 14 runs per case, mutants as before.
+- **KV die 7,505.6 x 24,328.1 um = 182.6 mm2.** OpenROAD real case passes: OT_LEGAL 1,171 / 0 / 0, on-track assert PASS, **pin access DONE (0 DRT-0073)**.
+  - Root cause of the DRT-0073: the M6 face pins were 0.024 um tall, below the 0.032 M6 minimum. The fix is face pins at the layer minimum width.
+  - Mirrored tiles keep their horizontal pins on M4 only and vertical pins on M5 only: M6 / M7 / M8 pins have no legal mirrored origin.
+- **Re-price 4,810.9 tok/s** (range 4,801.9-4,818.0) = -0.67 % per user against TP4 same structure; pair 952.9 mm2.
 
 **Update 2026-10-09 ~07:45 PT (review-0528 KV1-KV4 confirmed items).**
 - **Re-cut D adopted** (`recut.json`): P.V levels 1-3 inside each row engine, q as a 519-b beat broadcast, one 4,096-b node beat stream per engine. Engine boundary 634 b in / ~4,530 b out (was 16.5 k / 16.8 k). Measured step **1,789 cycles** at ctx 8192 (fenced reference 1,863; C +735..+1,239 rejected; E +44 kept as the area-minimal fallback).

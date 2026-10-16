@@ -1,0 +1,19 @@
+{
+  "source": "Reservation from explicit1400x1250 hardened-tap slots and420x360 join slot; no actual ETM or timing credit",
+  "native_slot_um": [
+    2800.128,
+    3000.264
+  ],
+  "placement": "South/north W score grows800um inward at fixedx10732.608; E shiftsx16994.88->16194.912 so exterior edge preserved",
+  "extra_outline_mm2_per_die": 9.600460766208004,
+  "native_taps_per_die": 16,
+  "joins_per_die": 4,
+  "source_lane0_view": "hgi_idx_score_tap_b-95d226061-tc-cl-bt12r exporthfd_idx_score renamed through an exact abstract alias only",
+  "geometry_adoption": false,
+  "blockers": [
+    "Additional width overlaps other hub units must be checked in full generator before adoption",
+    "Each native slot includes actual four tap views and separate join view, not monolithic abstract timing",
+    "Query pipes and all cross-root lockups must be physical instances, not model-only arrows",
+    "HBM producer/consumer joins still unbound"
+  ]
+}

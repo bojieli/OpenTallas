@@ -1,0 +1,349 @@
+#!/usr/bin/env python3
+"""hgi-e2e harness driver: prepare a golden export for tb_hgi_e2e, emit the Verilator build / run script, and report.
+
+    python3 tools/hgi_e2e/run.py prep EXPORT_DIR                  -> recs.txt, prep.txt, host.mem, image_e2e.bin
+    python3 tools/hgi_e2e/run.py script --vehicle V --real dma,quant,idx --out RUN.sh [--flat 40 --klat 40 --vlat 6]
+    python3 tools/hgi_e2e/run.py report RUN_DIR [--out REC.json]  -> per-record / per-unit cycles vs the simulator, verdict
+
+Unit codes (spec 2.3): CTL 0, SM 1, SU 2, SFU 3, FUSED 4, ATT 5, COLL 6, ARGMAX 7, DMA 8, IDX 9, HC 10.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import struct
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+TOOLS = Path(__file__).resolve().parents[1]
+ROOT = TOOLS.parent
+sys.path.insert(0, str(TOOLS))
+
+UNITS = ["CTL", "SM", "SU", "SFU", "FUSED", "ATT", "COLL", "ARGMAX", "DMA", "IDX", "HC", "SIMT"]
+OPND = ["A", "B", "C", "D", "O", "R", "I"]
+END_TOKEN_VM = 0x3FFF0
+
+# RTL source list of the harness (main paths); a REAL unit adds its own
+SRC_BASE = [
+    "rtl/hbm_accel/generic/ot_hgi_cfg.sv", "rtl/hbm_accel/generic/ot_hgi_seq.sv", "rtl/hbm_accel/generic/ot_hgi_cp.sv",
+    "rtl/hbm_accel/generic/ot_hgi_cp_die.sv", "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv",
+    # REAL_FETCH 1 (default): the record-ring fetch through the die's loader memory port
+    "rtl/hbm_accel/loader/service_native/ot_hfd_loader_kport.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv",
+]
+SRC_REAL = {
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv",
+            # hgi-1010/c: the mover's landing RAM (a 256 x 256 macro; the sequencer ring stays USE_MACRO 0)
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"],
+    "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
+              "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+              "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"],
+    "idx": ["rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv", "rtl/hbm_accel/generic/idx/ot_hgi_idx_merge.sv",
+            "rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv"],
+}
+VEC = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+       "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fastfp_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+       "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
+       "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+       "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"]
+SRC_REAL["att"] = ["rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv",
+                   "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+                   "rtl/hdc/v41x/ot_hdc_v41x_attn.sv", "rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv"]
+SRC_REAL["hc"] = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+                  "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                  "rtl/hdc/ot_hdc_fastfp_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+                  "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
+                  "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+                  "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+                  "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv", "rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv"]
+SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
+SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
+SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+                    "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv",
+                    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv", "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+                    "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+                    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv", "rtl/hbm_accel/tu/ot_hcoll_port.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
+SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
+                           "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
+                           "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
+# hgi-1010/g3: --real idxn = REAL_IDX with IDX_NATIVE 1 (IDX.INDEX through the die's selector, 4 stack scorers and 4 svc
+# IKS stripes; tb_hgi_e2e / hgi_e2e_idxn.sv); the selector's SRAM line memories need the macro models
+SRC_REAL["idxn"] = SRC_REAL["idx"] + ["rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv",
+                                      "rtl/hbm_accel/generic/e2e/hgi_e2e_idxn.sv",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"]
+TB = ["rtl/hbm_accel/generic/peers/tb_hgi_rlanes.sv",   # hgi-1010/c: the mover's HBM lane model (hgi_e2e_rlanes)
+      "rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
+      "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
+
+
+_DEFS = None
+LAST_SRC = []
+SKIP_MODS = {"ot_sram_1r1w_256x256_m2_r2c2"}     # the sequencer ring macro: USE_MACRO = 0 in the harness
+
+
+def _defs():
+    """module name -> defining files under rtl/ (cached)"""
+    global _DEFS
+    if _DEFS is None:
+        _DEFS = {}
+        for f in (sorted((ROOT / "rtl").rglob("*.sv")) + sorted((ROOT / "rtl").rglob("*.v")) +
+                  sorted((ROOT / "physical").glob("*/*/rtl/*.sv")) + sorted((ROOT / "physical").glob("*/common/*.sv"))):
+            try:
+                txt = f.read_text(errors="replace")
+            except OSError:
+                continue
+            for m in re.findall(r"^\s*module\s+(\w+)", txt, re.M):
+                _DEFS.setdefault(m, []).append(str(f.relative_to(ROOT)))
+    return _DEFS
+
+
+def closure(roots, have=()):
+    """the source files a set of root files needs (instantiated modules, resolved to their rtl/ definition; a file
+    named after the module wins, test / pinned / recovered copies lose); `have` = files already in the list"""
+    defs = _defs()
+    bad = ("/test/", "pinned", "recovered", "/tb_", "_sim.sv")
+    files, todo, seen = [], list(roots), set()
+    known = {m for f in have for m in re.findall(r"^\s*module\s+(\w+)", (ROOT / f).read_text(errors="replace"), re.M)}
+    while todo:
+        f = todo.pop(0)
+        if f in files:
+            continue
+        files.append(f)
+        txt = re.sub(r"//.*", "", (ROOT / f).read_text(errors="replace"))
+        for m in sorted(set(re.findall(r"\b(\w+)\s*(?:#\s*\(|\s+\w+\s*\()", txt))):
+            if m not in defs or m in seen or m in known or m in SKIP_MODS:
+                continue
+            seen.add(m)
+            c = defs[m]
+            pick = sorted(c, key=lambda x: (any(b in x for b in bad) and "sram" not in m, x.startswith("physical/"),
+                                            not Path(x).name.startswith(m), len(x)))[0]
+            todo.append(pick)
+    return files
+
+
+def prep(d: Path):
+    from hgi_sim.records import Rec, MDesc, decode_program, encode_program
+    meta = json.loads((d / "meta.json").read_text())
+    image = (d / "image.bin").read_bytes()
+    recs = decode_program(image)
+    skip = []
+    vm_final = memoryview((d / "vm_final.bin").read_bytes()).cast("I")
+    if meta.get("needs_end"):
+        end = Rec("CTL", "END", wait=0xFFFE, desc=dict(A=MDesc(space="VM", fmt="U32", base=END_TOKEN_VM, n=1)))
+        image = image + end.encode()
+        exp_tok = 1234
+        skip.append((END_TOKEN_VM, exp_tok))
+    else:
+        e = recs[-1]
+        assert e.unit == "CTL" and e.op == "END", "the layer program must end with CTL.END"
+        exp_tok = int(vm_final[e.desc["A"].base])
+    (d / "image_e2e.bin").write_bytes(image)
+    md = list(meta["md_words"])
+    lines = []
+    for r in meta["records"]:
+        h = int(r["hdr"], 16)
+        hw = [(h >> (32 * i)) & 0xFFFFFFFF for i in (3, 2, 1, 0)]
+        ops = []
+        for nm in OPND:
+            e = r["eff"].get(nm)
+            ops.append(f"1 {e[0] & ((1 << 40) - 1):x} {e[1] & ((1 << 21) - 1)}" if e else "0 0 0")
+        u = UNITS.index(r["unit"])
+        from hgi_sim.records import OPS
+        op = OPS[r["unit"]].index(r["op"])
+        tag = re.sub(r"[^A-Za-z0-9_.+:-]", "_", r["tag"] or "-")[:120]
+        lines.append(f"{r['k']} {u} {op} " + " ".join(f"{x:08x}" for x in hw) + " " + " ".join(ops) +
+                     f" {r.get('cost', 1)} {r['vm_off']} {r['vm_n']} {r['hbm_off']} {r['hbm_n']} "
+                     f"{r.get('s2_disp', 0)} {r.get('s2_start', 0)} {r.get('s2_end', 0)} {tag}")
+    (d / "recs.txt").write_text("\n".join(lines) + "\n")
+    (d / "prep.txt").write_text(f"{meta['image_base_bytes']} image_e2e.bin\n{len(skip)}\n" +
+                                "".join(f"{a} {v}\n" for a, v in skip))
+    dyn = meta["dyn"]
+    # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
+    import numpy as np
+    used = np.zeros(1 << 18, bool)
+    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4")[:1 << 18] != 0      # (words past 2^18: the HC aperture)
+    wa = np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]
+    used[wa[wa < (1 << 18)]] = True
+    for r in meta["records"]:
+        for e in r["eff"].values():
+            if e[5] == "VM" and e[0] < (1 << 18):
+                b_, n_, m_, st_, ist_ = e[:5]
+                used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
+    used[END_TOKEN_VM] = True
+    if not meta.get("needs_end"):                     # the program's own CTL.END token word (not a dispatched record)
+        used[recs[-1].desc["A"].base] = True
+    best, i = (0, 0), 0
+    while i < used.size:
+        if not used[i]:
+            j = i
+            while j < used.size and not used[j]:
+                j += 1
+            best = max(best, (j - i, i))
+            i = j
+        else:
+            i += 1
+    scr = (best[1] + 7) & ~7
+    assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
+    tk = meta.get("tokx_golden") or []                # DFlash step: the CPU golden's committed tokens (CTL.TOKX beats)
+    # host words (tb_hgi_e2e, non-MTP): 64 token, 65 pos, 66 expected token, 67 rank, 68 ncol, 69 FUSED scratch;
+    # 104 = expected CTL.TOKX count k, 105.. = the tokens (70..103 belong to the MTP job layout)
+    host = md + [dyn[3], dyn[1], exp_tok, meta["rank"], meta.get("ncol", 1), scr] + [0] * 34 + [len(tk)] + \
+        [int(x) for x in tk] + [0] * (23 - len(tk))
+    assert len(host) == 128
+    (d / "host.mem").write_text("\n".join(f"{x & 0xFFFFFFFF:08x}" for x in host) + "\n")
+    print(f"prep {d}: {len(lines)} records, image {len(image)} B, expected token {exp_tok}")
+
+
+COLLAR = "physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv"
+TOKEDGE = "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"
+
+
+def mtp_sources():
+    """MTP=1 (hgi-1010/h): the native controller (tools/hgi_mtp_native_gate.py's source set) + the MX1 MTP collar's
+    queue / join; the collar module itself is extracted from its physical top file at script time (COLLAR)"""
+    import hgi_mtp_native_gate as GT
+    return ["rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv"] + GT.NATIVE + GT.FACADE + ["rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv",
+                                    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv"]
+
+
+def script(a):
+    gd = dict(g.split("=", 1) for g in a.g)
+    for key in ("FLAT", "KLAT", "VLAT"):                 # latency knobs are script flags, not extra -G
+        if key in gd:
+            setattr(a, key.lower(), int(gd.pop(key)))
+            a.g = [g for g in a.g if not g.startswith(key + "=")]
+    real = [x for x in a.real.split(",") if x]
+    src = list(dict.fromkeys(SRC_BASE + sum((SRC_REAL[x] for x in real), [])))
+    mtp = int(getattr(a, "mtp", 0) or 0)
+    if mtp:
+        src = list(dict.fromkeys(src + mtp_sources()))
+    src = list(dict.fromkeys(src + closure(src)))
+    gp = " ".join(f"-G{'REAL_' + ('idx' if x == 'idxn' else x).upper()}=1" for x in real)
+    gp += "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG")) + (" -GIDX_NATIVE=1" if "idxn" in real else "")
+    gp += (" +define+E2E_COLL_DEBUG +define+E2E_FUSED_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
+    gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
+    gp += " +define+E2E_FUSED" if "fused" in real else ""
+    gp += " +define+E2E_ATT" if "att" in real else ""
+    gp += " +define+E2E_HC" if "hc" in real else ""
+    tag = (f"mtp{mtp}_" if mtp else "") + ("_".join(sorted(real)) or "stubs") + "".join("_" + g.replace("=", "") for g in a.g)
+    mtp_pre = ""
+    if mtp:
+        gp += f" -GMTP={mtp}"
+        mtp_pre = (f"awk '/^module hfd_cmdproc_s_mtp_native_mx1_mtp /,/^endmodule/' $S/{COLLAR} > $O/collar_mtp.sv\n"
+               f"grep -q endmodule $O/collar_mtp.sv\n"
+               # Verilator 5.032 internal error (V3Delayed 'Multiple Write refs on LHS of NBA' on wrapfix's argument t when
+               # it is inlined into the NBAs) in the controller's spec-state edge: a bench-only copy with wrapfix as a
+               # macro of the same expression (t taken as 32 bits, as the function's input)
+               f"python3 $S/tools/hgi_e2e/wrapfix_copy.py $S/{TOKEDGE} $O/token_edge.sv\n")
+    wi = ""
+    if "coll" in real and ("COLL_BF16" in gd or "COLL_PFMAX" in gd):
+        # what-if copy of the collective block body: the PSG endpoint built with these parameters
+        bf, pfm = gd.get("COLL_BF16", "1"), gd.get("COLL_PFMAX", "64")
+        orig = "rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"
+        src = [x for x in src if x != orig]
+        wi = (f"sed 's/ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1),/ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .BF16({bf}), "
+              f".PFMAX({pfm}),/' $S/{orig} > $O/ot_hgi_coll_ep_whatif.sv\ngrep -q 'PFMAX({pfm})' $O/ot_hgi_coll_ep_whatif.sv\n")
+        src.append("WHATIF")
+    srcs = " ".join(("$O/ot_hgi_coll_ep_whatif.sv" if s_ == "WHATIF" else "$S/" + s_) for s_ in src)
+    if mtp:
+        srcs = srcs.replace("$S/" + TOKEDGE, "$O/token_edge.sv") + " $O/collar_mtp.sv"
+    LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"]
+                                                       if "WHATIF" in src else []) + ([COLLAR] if mtp else [])
+    return f"""#!/bin/bash
+# hgi-e2e run: vehicle {a.vehicle}, real units [{', '.join(real) or 'none'}]; FLAT {a.flat} KLAT {a.klat} VLAT {a.vlat}
+set -e
+S=${{SRC:-src}}; V=${{VEC:-vec}}/{a.vehicle}; O=${{OUT:-out}}/{a.vehicle}_{tag}_f{a.flat}k{a.klat}
+mkdir -p $O
+{mtp_pre}{wi}VER=${{VERILATOR:-verilator}}
+$VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
+  {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
+  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb{' -I$S/rtl/common' if 'idxn' in real else ''} \\
+  {srcs} \\
+  {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
+set +e
+$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt ${{E2E_PLUS:-}} > $O/run.log 2>&1; rc=$?
+echo "rc=$rc" >> $O/run.log
+"""
+
+
+def report(run: Path, vec: Path | None):
+    log = (run / "run.log").read_text(errors="replace")
+    rows = []
+    summ = {}
+    for line in (run / "e2e_records.txt").read_text().splitlines():
+        if line.startswith("#"):
+            continue
+        if line.startswith("SUMMARY"):
+            t = line.split()[1:]
+            summ = {t[i]: (int(t[i + 1]) if re.fullmatch(r"-?\d+", t[i + 1]) else t[i + 1]) for i in range(0, len(t) - 1, 2)
+                    if not t[i].startswith("dispatched")}
+            m = re.search(r"dispatched (\d+)/(\d+)", line)
+            summ["dispatched"], summ["golden_records"] = int(m.group(1)), int(m.group(2))
+            continue
+        f = line.split()
+        rows.append(dict(k=int(f[0]), unit=UNITS[int(f[1])], op=int(f[2]), tag=f[3], real=int(f[4]), disp=int(f[5]),
+                         ret=int(f[6]), cost=float(f[7]), s2_disp=float(f[8]), s2_start=float(f[9]), s2_end=float(f[10]),
+                         dispatch_mismatch=int(f[11], 16), vm_checked=int(f[12]), mismatch=int(f[13]), stray=int(f[14])))
+    per_unit = defaultdict(lambda: dict(records=0, real=0, exact=0, rtl_busy=0, sim_cost=0.0))
+    for r in rows:
+        p = per_unit[r["unit"]]
+        p["records"] += 1
+        p["real"] += r["real"]
+        p["exact"] += int(r["real"] and r["mismatch"] == 0 and r["stray"] == 0)
+        if r["ret"] >= 0 and r["disp"] >= 0:
+            p["rtl_busy"] += r["ret"] - r["disp"]
+        p["sim_cost"] += r["cost"]
+    t0 = min((r["disp"] for r in rows if r["disp"] >= 0), default=0)
+    out = dict(pass_="HGI_E2E PASS" in log, summary=summ,
+               cfg=re.search(r"E2E CFG status err (\d+) loaded (\d+)", log).groups() if "E2E CFG" in log else None,
+               completion=re.search(r"E2E completion token (-?\d+) \(golden (\d+)\) status (\d+) cp_cycles (\d+) "
+                                    r"doorbell->completion (-?\d+)", log).groups() if "E2E completion" in log else None,
+               per_unit={k: dict(v, sim_cost=round(v["sim_cost"], 1)) for k, v in per_unit.items()},
+               records=rows, first_dispatch_cycle=t0,
+               rtl_lines=[x for x in log.splitlines() if x.startswith("E2E") or "HGI_E2E" in x][:200])
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sp = ap.add_subparsers(dest="cmd", required=True)
+    p = sp.add_parser("prep"); p.add_argument("dir", type=Path)
+    s = sp.add_parser("script")
+    s.add_argument("--vehicle", required=True); s.add_argument("--real", default="")
+    s.add_argument("--flat", type=int, default=40); s.add_argument("--klat", type=int, default=40)
+    s.add_argument("--vlat", type=int, default=6); s.add_argument("--out", type=Path, required=True)
+    s.add_argument("--g", action="append", default=[], help="extra tb parameter KEY=VAL")
+    s.add_argument("--mtp", type=int, nargs="?", const=1, default=0,
+                   help="1: controller + collar (bench) + CP die translator (DS MTP job); 2: the collar inside the CP die")
+    r = sp.add_parser("report"); r.add_argument("run", type=Path); r.add_argument("--out", type=Path)
+    a = ap.parse_args()
+    if a.cmd == "prep":
+        prep(a.dir)
+    elif a.cmd == "script":
+        a.out.write_text(script(a))
+        a.out.chmod(0o755)
+        inc = set()
+        for f in LAST_SRC + TB:
+            for i in re.findall(r'`include\s+"([^"]+)"', (ROOT / f).read_text(errors="replace")):
+                for dd in (Path(f).parent, Path("rtl/hbm_accel/generic"), Path("rtl/hbm_accel/generic/tb")):
+                    if (ROOT / dd / i).exists():
+                        inc.add(str(dd / i))
+                        break
+        a.out.with_suffix(".src").write_text("\n".join(LAST_SRC + TB + sorted(inc)) + "\n")
+    else:
+        res = report(a.run, None)
+        txt = json.dumps(res, indent=1, default=int) + "\n"
+        if a.out:
+            a.out.write_text(txt)
+        print(json.dumps({k: v for k, v in res.items() if k not in ("records", "rtl_lines")}, indent=1, default=int))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

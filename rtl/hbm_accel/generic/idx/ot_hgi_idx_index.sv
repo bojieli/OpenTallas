@@ -6,7 +6,9 @@
 //   param [11:0] k (1 .. 512), [12] cand_en, [13] keep_en; imm_a = n (keys this die, <= 4 x 2,736); imm_b = layer
 //   A  VM FP32 [4,096] the post-RoPE index query, head-major (head h = words 128h .. 128h+127), base 8-word aligned
 //   B  VM FP32 [32]    the scaled head weights as BF16 values in FP32 words (low 16 bits must be 0)
-//   C  VM U32  [44]    keep bitmap (keep_en): quarter q bit j = word 11q + j/32, bit j%32 (j < 342)
+//   C  VM      (keep_en, G18a) the layer-20 candidate table: C.n block ids (U32) at C.base + j and their values (FP32)
+//                      at C.base + C.stride + j; the engine keeps its OWNED blocks listed with a value > -inf (block g is
+//                      owned by rank g mod 96 at die ordinal g div 96 -> quarter ord div 342, bit ord mod 342)
 //   O  VM U32  [k]     local top-k ids in the selector's order (quarter order = ascending id)
 //   R  VM FP32 [k]     their values: BF16 score << 16, or -inf (0xFF800000) for a masked (ninf) lane
 //   D  VM, cand_en: block candidates: ids (U32) at D.base + j, values (BF16 << 16) at D.base + D.stride + j
@@ -19,7 +21,8 @@
 // with up to 4 requests outstanding (in-order responses into a 4-sector buffer); B / C loads and the packer writes share
 // the same client.
 module ot_hgi_idx_index #(
-    parameter integer MUT = 0     // bench mutants: 1 head weight of the next head, 2 R written from the wrong lane
+    parameter integer MUT = 0     // bench mutants: 1 head weight of the next head, 2 R written from the wrong lane,
+                                  // 3 (hgi-1010/g) the historical 3-bit pointer empty test (a full 8-entry FIFO looks empty)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -32,6 +35,8 @@ module ot_hgi_idx_index #(
     input  wire [19:0]   pos,
     input  wire [17:0]   a_base, b_base, c_base, o_base, r_base, d_base,
     input  wire [17:0]   d_stride,
+    input  wire [17:0]   c_stride,
+    input  wire [11:0]   c_n,
     input  wire          has_r,
     output reg           done,
     output reg           fault,
@@ -51,7 +56,7 @@ module ot_hgi_idx_index #(
 );
     // ---------------------------------------------------------------- VM reader: word w -> one-sector cache
     reg [2:0] ocnt; wire vm_pend = ocnt != 3'd0; reg iss;
-    reg vm_rd; reg [14:0] c_sec; reg c_ok; reg [255:0] c_dat; reg [14:0] rd_sec;
+    reg vm_rd, kv_rd; reg [14:0] c_sec; reg c_ok; reg [255:0] c_dat; reg [14:0] rd_sec;
     // A stream: next sector to request, reads in flight, 4-sector in-order buffer
     reg [9:0] a_req; reg [2:0] a_fl; reg [255:0] af [0:3]; reg [1:0] af_h, af_t; reg [2:0] af_n; reg [1:0] qs;
     reg af_push, af_pop, a_iss;
@@ -64,7 +69,8 @@ module ot_hgi_idx_index #(
                S_DONE = 4'd7;
     reg [3:0] st;
     reg [15:0] wts [0:31];                 // head weights
-    reg [5:0] wi;                          // weight / keep word index
+    reg [11:0] wi;                         // weight / candidate-table index
+    reg [31:0] cid; reg [14:0] cq3; reg [10:0] cord; reg cvi_ok; reg [14:0] cvi_sec; reg [255:0] cvi_dat;
     reg [351:0] keep [0:3];
     reg [1:0] kq; reg [2:0] kgap;
     reg [7:0] qblk; reg [4:0] qw;          // query block being assembled, word within it (32 words)
@@ -95,6 +101,8 @@ module ot_hgi_idx_index #(
     wire [4:0] tl_r = (MUT == 2) ? ((tl + 5'd1) & 5'd15) : tl;
     wire [15:0] t_valr = th[36 + 16*tl_r +: 16]; wire t_ninfr = th[20 + tl_r];
     wire c_lv = ch[4 + cl]; wire [16:0] c_blk = ch[38 + 17*cl +: 17]; wire [15:0] c_val = ch[6 + 16*cl +: 16];
+    wire t_pop = st == S_RUN && (MUT == 3 ? tft != tfh : tfn != 0) && !pk_full[0] && (!has_r || !pk_full[1]) && tl == 15;
+    wire c_pop = st == S_RUN && (MUT == 3 ? cft != cfh : cfn != 0) && !pk_full[2] && !pk_full[3] && cl == 1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; done <= 1'b0; fault <= 1'b0; vmq <= 338'd0; ocnt <= 3'd0; c_ok <= 1'b0; a_fl <= 3'd0; af_n <= 3'd0;
@@ -115,6 +123,7 @@ module ot_hgi_idx_index #(
             iss = 1'b0; af_push = 1'b0; af_pop = 1'b0; a_iss = 1'b0;
             if (vmr[273]) begin
                 if (vmr[272:257] == 16'h0910 || vmr[272:257] == 16'h0911) begin c_ok <= 1'b1; c_sec <= rd_sec; c_dat <= vmr[255:0]; end
+                if (vmr[272:257] == 16'h0914) begin cvi_ok <= 1'b1; cvi_sec <= rd_sec; cvi_dat <= vmr[255:0]; end
                 if (vmr[272:257] == 16'h0912) begin af[af_t] <= vmr[255:0]; af_t <= af_t + 2'd1; af_push = 1'b1; end
             end
             case (st)
@@ -134,22 +143,35 @@ module ot_hgi_idx_index #(
                     if (c_ok && c_sec == (b_base + wi) >> 3) begin
                         if (c_dat[((b_base + wi) & 18'd7) * 32 +: 16] != 16'd0) bad <= 1'b1;
                         wts[wi[4:0]] <= c_dat[((b_base + wi) & 18'd7) * 32 + 16 +: 16];
-                        if (wi == 6'd31) begin wi <= 6'd0; st <= keep_en ? S_KEEP : S_FS; end
-                        else wi <= wi + 6'd1;
+                        if (wi == 12'd31) begin
+                            wi <= 12'd0; st <= keep_en ? S_KEEP : S_FS;
+                            for (i = 0; i < 4; i = i + 1) keep[i] <= 352'd0;
+                            c_ok <= 1'b0; cvi_ok <= 1'b0;
+                        end else wi <= wi + 12'd1;
                     end else begin
                         iss = 1'b1; vm_rd <= 1'b1; rd_sec <= (b_base + wi) >> 3;
                         vmq <= {1'b1, 1'b0, {12'd0, 15'((b_base + wi) >> 3), 5'd0}, 256'd0, 32'd0, 16'h0910};
                     end
                 end
                 // ---- keep bitmap C[0..43]
+                // ---- keep bits from the candidate table (G18a): id row in the c_* cache, value row in cvi_*
                 S_KEEP: if (!vm_pend) begin
-                    if (c_ok && c_sec == (c_base + wi) >> 3) begin
-                        keep[wi / 11][(wi % 11) * 32 +: 32] <= c_dat[((c_base + wi) & 18'd7) * 32 +: 32];
-                        if (wi == 6'd43) begin st <= S_KSEND; kq <= 2'd0; kgap <= 3'd0; end
-                        else wi <= wi + 6'd1;
-                    end else begin
-                        iss = 1'b1; vm_rd <= 1'b1; rd_sec <= (c_base + wi) >> 3;
+                    if (wi == 12'(c_n)) begin st <= S_KSEND; kq <= 2'd0; kgap <= 3'd0; end
+                    else if (!(c_ok && c_sec == (c_base + wi) >> 3)) begin
+                        iss = 1'b1; vm_rd <= 1'b1; rd_sec <= (c_base + wi) >> 3; kv_rd <= 1'b0;
                         vmq <= {1'b1, 1'b0, {12'd0, 15'((c_base + wi) >> 3), 5'd0}, 256'd0, 32'd0, 16'h0911};
+                    end else if (!(cvi_ok && cvi_sec == (c_base + c_stride + wi) >> 3)) begin
+                        iss = 1'b1; vm_rd <= 1'b1; rd_sec <= (c_base + c_stride + wi) >> 3; kv_rd <= 1'b1;
+                        vmq <= {1'b1, 1'b0, {12'd0, 15'((c_base + c_stride + wi) >> 3), 5'd0}, 256'd0, 32'd0, 16'h0914};
+                    end else begin
+                        cid = c_dat[((c_base + wi) & 18'd7) * 32 +: 32];
+                        cq3 = 15'(cid[19:5]);                 // block = 32 q + r: g mod 96 = (q mod 3) 32 + r, g div 96 = q div 3
+                        cord = 11'(cq3 / 15'd3);
+                        if (cvi_dat[((c_base + c_stride + wi) & 18'd7) * 32 +: 32] != 32'hFF80_0000 && cid[31:20] == 12'd0 &&
+                            7'({2'(cq3 % 15'd3), cid[4:0]}) == rank &&
+                            cord < 11'd1368)
+                            keep[cord / 342][cord % 342] <= 1'b1;
+                        wi <= wi + 12'd1;
                     end
                 end
                 S_KSEND: begin
@@ -181,7 +203,7 @@ module ot_hgi_idx_index #(
                         if (qs == 2'd3) begin qfull <= 1'b1; qblk <= qblk + 8'd1; end
                     end
                     // ---- top-k lanes -> O, R
-                    if (tft != tfh && pk_ok(0) && (!has_r || pk_ok(1))) begin
+                    if ((MUT == 3 ? tft != tfh : tfn != 0) && pk_ok(0) && (!has_r || pk_ok(1))) begin
                         if (t_lv) begin
                             pk_d[0][pk_a[0][2:0] * 32 +: 32] <= {12'd0, t_idx}; pk_m[0][pk_a[0][2:0]] <= 1'b1;
                             pk_s[0] <= pk_a[0][17:3]; pk_a[0] <= pk_a[0] + 18'd1;
@@ -199,7 +221,7 @@ module ot_hgi_idx_index #(
                         end else tl <= tl + 5'd1;
                     end
                     // ---- candidate lanes -> D
-                    if (cft != cfh && pk_ok(2) && pk_ok(3)) begin
+                    if ((MUT == 3 ? cft != cfh : cfn != 0) && pk_ok(2) && pk_ok(3)) begin
                         if (c_lv) begin
                             pk_d[2][pk_a[2][2:0] * 32 +: 32] <= {15'd0, c_blk}; pk_m[2][pk_a[2][2:0]] <= 1'b1;
                             pk_s[2] <= pk_a[2][17:3]; pk_a[2] <= pk_a[2] + 18'd1;
@@ -215,7 +237,7 @@ module ot_hgi_idx_index #(
                         end else cl <= cl + 2'd1;
                     end
                     if (bad) begin st <= S_IDLE; fault <= 1'b1; end
-                    else if (sel_done && to_last && co_last && tft == tfh && cft == cfh && qblk == 8'd128 && !qfull) begin
+                    else if (sel_done && to_last && co_last && tfn == 0 && cfn == 0 && qblk == 8'd128 && !qfull) begin
                         st <= S_FLUSH;
                         for (i = 0; i < 4; i = i + 1) if (pk_m[i] != 8'd0) pk_full[i] <= 1'b1;
                     end
@@ -230,6 +252,12 @@ module ot_hgi_idx_index #(
                         {{4{pk_m[wp][7]}}, {4{pk_m[wp][6]}}, {4{pk_m[wp][5]}}, {4{pk_m[wp][4]}},
                          {4{pk_m[wp][3]}}, {4{pk_m[wp][2]}}, {4{pk_m[wp][1]}}, {4{pk_m[wp][0]}}}, 16'h0913};
                 pk_full[wp] <= 1'b0; pk_m[wp] <= 8'd0;
+            end
+            // Occupancy distinguishes full8 from empty even when ring pointers agree.
+            if (st != S_IDLE) begin
+                tfn <= tfn + {3'd0,to[0]} - {3'd0,t_pop};
+                cfn <= cfn + {3'd0,co[0]} - {3'd0,c_pop};
+                if ((to[0] && tfn == 8 && !t_pop) || (co[0] && cfn == 8 && !c_pop)) bad <= 1'b1;
             end
             ocnt <= ocnt + {2'd0, iss} - {2'd0, vmr[273]};
             a_fl <= a_fl + {2'd0, a_iss} - {2'd0, af_push};

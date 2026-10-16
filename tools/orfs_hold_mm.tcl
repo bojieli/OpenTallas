@@ -373,3 +373,11 @@ proc ot_repair_timing {rt_args} {
     set prev $cur
   }
 }
+
+# MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so
+# it carries the flow-default macro clock clustering (clock_tree_synthesis wrapper; physical/common_flow/
+# macro_cts_cluster.tcl, which the closure loop ships into older snapshots next to this file).
+if {[info commands ot_mcc_cts_orig] eq ""} {
+  set ot_mcc_file [file join [file dirname [file dirname [file normalize [info script]]]] physical common_flow macro_cts_cluster.tcl]
+  if {[file exists $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
+}

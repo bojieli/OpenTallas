@@ -1,0 +1,4 @@
+case 0: n 300, stream -> scale -> argmax in 504 cycles
+case 1: n 1001, stream -> scale -> argmax in 1516 cycles
+case 2: n 37984, stream -> scale -> argmax in 53555 cycles
+HGI_SU_STREAM PASS

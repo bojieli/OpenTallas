@@ -64,4 +64,97 @@ class RegistryTest(unittest.TestCase):
             self.assertIn('exact +PASS / -PASS', model.md_path.read_text())
 
 
+    def test_override_variants_and_owners(self):
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td); model.log = print
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {}); model.revoked_jobs = lambda: {}; model.superseded = lambda: {}
+            model.registry = lambda: ({}, [])
+            model.overrides_path = model.repo / 'overrides.json'; model.ovk = (None, {})
+            model.superseded_path = model.repo / 'superseded'; model.revoked_path = model.repo / 'revoked'
+            def job(name, block, status, owner='Codex:t4'):
+                return Elements.reduce(dict(name=name, status=status, spec=dict(block=block, owner=owner),
+                                            metrics=dict(setup_corner='tt', ss_ps=1, ff_ps=1, drc=0)))
+            jobs = [job('p', 'ot_hbm_x', 'CLOSED'), job('a', 'ot_hbm_x_wide1036', 'RUNNING'),
+                    job('l0', 'hfd_tap', 'CLOSED'), job('l4', 'hfd_tap_lane4', 'RUNNING'),
+                    job('k', 'qfd_k', 'NEEDS_RTL', owner='Codex:qwen-deep-queue routine')]
+            model.jobs = lambda: jobs
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(len(rows), 5)   # no overrides: every block is its own element
+            model.overrides_path.write_text(json.dumps(dict(
+                variants={'ot_hbm_x_wide1036': dict(of='ot_hbm_x'), 'hfd_tap_lane4': dict(of='hfd_tap', kind='instance')},
+                owner_map={'Codex:qwen-deep-queue': 'Claude:qwen-1010', 'Codex:qwen': 'Claude:wrong'},
+                owners={'hfd_tap': 'Claude:hgi-1010'})))
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(sorted(rows), ['hfd_tap', 'ot_hbm_x', 'qfd_k'])
+            self.assertEqual(rows['ot_hbm_x']['variants'], ['ot_hbm_x_wide1036'])
+            self.assertTrue(rows['ot_hbm_x']['category'].startswith('closed'))   # alternative: any closure closes
+            self.assertEqual(rows['hfd_tap']['category'], 'first trial in flight')  # instance lane4 still open
+            self.assertIn('hfd_tap_lane4', rows['hfd_tap']['via'])
+            self.assertEqual(rows['hfd_tap']['owner'], 'Claude:hgi-1010')
+            self.assertEqual(rows['hfd_tap']['owner_orig'], 'Codex:t4')
+            self.assertEqual(rows['qfd_k']['owner'], 'Claude:qwen-1010')   # longest prefix, word boundary
+            self.assertEqual(Elements.remap_owner('Codex:qwen-elements', dict(owner_map={'Codex:qwen': 'X'})),
+                             'Codex:qwen-elements')
+            jobs[2] = job('l0', 'hfd_tap', 'RUNNING'); jobs[3] = job('l4', 'hfd_tap_lane4', 'CLOSED')
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(rows['hfd_tap']['category'], 'first trial in flight')   # the master instance is required too
+            jobs[2] = job('l0', 'hfd_tap', 'CLOSED')
+            model.superseded = lambda: {'ot_hbm_x': dict(by='ot_hbm_x_wide1036', reason='t')}
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertEqual(rows['ot_hbm_x_wide1036']['category'], 'first trial in flight')   # unfolded, still open
+            model.superseded = lambda: {}
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
+
+
+class SupersededInstanceFoldTest(unittest.TestCase):
+    def test_instance_fold_into_superseded_parent_does_not_break_compute(self):
+        """fill-9 2026-10-10: an 'instance' fold whose parent is superseded froze /api/elements (KeyError)."""
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td)
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {})
+            model.revoked_jobs = lambda: {}
+            model.superseded = lambda: {'parent_elem': dict(by='child_blk', reason='adopted')}
+            model.overrides = lambda: dict(variants={'child_blk': dict(of='parent_elem', kind='instance')},
+                                           owner_map={}, owners={})
+            model.overrides_path = model.repo / 'overrides'
+            model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
+            model.jobs = lambda: [Elements.reduce(dict(name='child_blk-0123456789-tc', status='CLOSED',
+                spec=dict(block='child_blk'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
+            rows = {r['element']: r for r in model.compute()['rows']}
+            self.assertIn('child_blk', rows)
+
+
+class ThroughputGateTest(unittest.TestCase):
+    def test_closed_timing_is_not_throughput_qualified(self):
+        """AGENTS.md throughput qualification (owner 2026-10-10): closure alone never qualifies a unit."""
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td); model.log = lambda *a: None; model.tpk = (None, {})
+            model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {})
+            model.revoked_jobs = lambda: {}
+            model.superseded = lambda: {}
+            model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
+            model.jobs = lambda: [Elements.reduce(dict(name='ot_hgi_hc_unit-0123456789-tc', status='CLOSED',
+                spec=dict(block='ot_hgi_hc_unit'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
+            row = lambda: {r['element']: r for r in model.compute()['rows']}['ot_hgi_hc_unit']
+            self.assertEqual(row()['gate'], 'CLOSED-TIMING, NO-THROUGHPUT-BUDGET-ROW')
+            b = model.repo / 'results/arch/throughput_budget_20261010'; b.mkdir(parents=True)
+            ent = lambda st, ratio: dict(status=st, ratio=ratio, limiting=dict(op='HC.HC_MIX_ROWS', model='DS', owner='d'))
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=ent('UNQUALIFIED', 125.2)))))
+            r = row()
+            self.assertEqual(r['gate'], 'CLOSED-TIMING, THROUGHPUT-UNQUALIFIED')
+            self.assertEqual(r['throughput']['ratio'], 125.2)
+            import os, time
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=ent('QUALIFIED', 1.04)))))
+            os.utime(b / 'budget.json', (time.time() + 5, time.time() + 5))
+            self.assertEqual(row()['gate'], 'CLOSED-TIMING, THROUGHPUT-QUALIFIED')
+            self.assertEqual(model.compute()['throughput_summary']['HBM accelerator'], {'QUALIFIED': 1})
+
+
 if __name__ == '__main__': unittest.main()

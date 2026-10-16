@@ -1,0 +1,25 @@
+E2E: 91 golden records, 10104 HBM sectors loaded
+E2E REAL 3 (x_projections_gather.qa) VM[46285] = 00000000 golden bd450000
+E2E REAL 3 (x_projections_gather.qa) VM[46286] = 00000000 golden bd0e0000
+E2E REAL 3 (x_projections_gather.qa) VM[46287] = 00000000 golden 3c160000
+E2E REAL 3 (x_projections_gather.qa) VM[46288] = 00000000 golden be2d0000
+E2E REAL 3 (x_projections_gather.qa) VM[46289] = 00000000 golden 3c990000
+E2E REAL 3 (x_projections_gather.qa) VM[46290] = 00000000 golden bbda0000
+E2E REAL 3 (x_projections_gather.qa) VM[46291] = 00000000 golden 3cd10000
+E2E REAL 3 (x_projections_gather.qa) VM[46292] = 00000000 golden bdf20000
+E2E FINAL VM[0] = bc4d0000 golden bcdc0000
+E2E FINAL VM[1] = bcae0000 golden bcab0000
+E2E FINAL VM[2] = bc1a0000 golden 3d940000
+E2E FINAL VM[3] = bc270000 golden bda70000
+E2E FINAL VM[4] = bd060000 golden 3cd80000
+E2E FINAL VM[5] = 3e1c0000 golden 3e090000
+E2E FINAL VM[6] = 3da40000 golden 3dc60000
+E2E FINAL VM[7] = be140000 golden be2d0000
+E2E SUMMARY cycles 401616 token -1 status 15 dispatched 4/91 dispatch_mismatch 0 final_vm_mismatch 91295 final_hbm_mismatch 992 unloaded_hbm_reads 0
+E2E CFG status err 0 loaded 1
+E2E COLL FAULT k 3: dec_err 0 pf_bad 0 pfg_bad 0 ep_fault 1 multi 0 gsz 3 pf 80 byp 1 mall 1 rank 0 g 96 st 7
+E2E COLL FAULT parts: ovf 0 dupe 0 mode 1 result 0
+E2E REAL COLL record 3: 1267 mismatches fault 1
+E2E WATCHDOG: no dispatch / retire for 400000 cycles at cyc 401616; ux_v 0000 ux_rdy fffe stub busy SU 0 SFU 0 DMA 0; real kq depth SU 0 SFU 0 DMA 0
+HGI_E2E FAIL (watchdog)
+rc=0

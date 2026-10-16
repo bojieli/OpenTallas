@@ -1,0 +1,1275 @@
+# ds_v41_tp96_L20_rank00: {"model": "DeepSeek-V4.1-Flash", "tp": 96, "layer": 20, "rank": 0, "position": 1048575, "dyn": [0, 1048575, 1048576, 16754, 0, 0, 0, 1048575], "token_in": 16754, "source": "../results/arch/hgi_sim_20261009/programs/ds_v41_1M_L20_per_die.json", "note": "one image per rank, identical structure (record k has the same unit/op on every rank; ops a rank does not run are CTL.NOP); entry = byte 0; no LOOP records; DYN at doorbell = [0, pos, pos+1, token, 0, rank, 0, pos]; trace = the effective operands the dispatcher hands the unit, from the bit-exact simulator run (indexed ids read from VM as in spec 3.3); the image is position-specific (compressor append address, selection count) as the w19 compiler emits it", "schema": "opentallas.hgi_program_listing.v1", "records": 120, "image_bytes": 12736, "image_sha256": "236c18167992fa98b31170be18ac0e2a221b50e0a6bbe055ee09c7027a7a6d17", "roundtrip": "image -> listing -> records -> encode_program == image (byte for byte)", "tool": "tools/hgi_sim/listing.py", "spec": "HGI-1 1.0"}
+
+[0000] @0x00000 FUSED.HC_PRE_NORM  tag=attn_norm
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0x1e3ce508 (u32 507307272, f32 9.99999968e-21)  imm_b=0
+       slot  space  fmt   base         n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP32  0x400000000   5120  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32        40960      4  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16        41152   5120  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x0 n 20480 m 1 stride 0]  B=[HBM FP32 base 0x400000000 n 5120 m 1 stride 0]  C=[VM FP32 base 0xa000 n 4 m 1 stride 0]  O=[VM BF16 base 0xa0c0 n 5120 m 1 stride 0]
+       hex  UOP 0000000008e53c1e000000e002000040
+            A   0100000000000050100000000000000000000000000000000000000000000000
+            B   0000000000040014100000000000000000000000000000000000000000000000
+            C   0100a00000000400100000000000000000000000000000000000000000000000
+            O   05c0a00000000014100000000000000000000000000000000000000000000000
+[0001] @0x00090 DMA.LOAD  tag=q_norm.gain
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x40000a000  1280  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        48064  1280  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x40000a000 n 1280 m 1 stride 0]  O=[VM FP32 base 0xbbc0 n 1280 m 1 stride 0]
+       hex  UOP 00000000000000000000002002000080
+            A   0000a00000040005100000000000000000000000000000000000000000000000
+            O   01c0bb0000000005100000000000000000000000000000000000000000000000
+[0002] @0x000e0 CTL.NOP  tag=indexer.weights_proj
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0003] @0x000f0 COLL.ALL_GATHER  tag=x_projections_gather.iwr
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  170240  32  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  170240  32  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x29900 n 32 m 1 stride 0]  O=[VM FP32 base 0x29900 n 32 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   0100990200002000100000000000000000000000000000000000000000000000
+            O   0100990200002000100000000000000000000000000000000000000000000000
+[0004] @0x00140 CTL.NOP  tag=cmp.norm.gain
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0005] @0x00150 CTL.NOP  tag=cmp.k_norm.gain
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0006] @0x00160 CTL.NOP  tag=cmp.k_rope.table
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0007] @0x00170 DMA.LOAD  tag=kv_rope.table
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x40000bc00  64  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        53312  64  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x40000bc00 n 64 m 1 stride 0]  O=[VM FP32 base 0xd040 n 64 m 1 stride 0]
+       hex  UOP 00000000000000000000002002000080
+            A   0000bc0000044000100000000000000000000000000000000000000000000000
+            O   0140d00000004000100000000000000000000000000000000000000000000000
+[0008] @0x001c0 DMA.LOAD  tag=kv_norm.gain
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x40000b400  512  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        49344  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x40000b400 n 512 m 1 stride 0]  O=[VM FP32 base 0xc0c0 n 512 m 1 stride 0]
+       hex  UOP 00000000000000000000002002000080
+            A   0000b40000040002100000000000000000000000000000000000000000000000
+            O   01c0c00000000002100000000000000000000000000000000000000000000000
+[0009] @0x00210 SU.VOP  tag=index_q.w_scale
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AIMM m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0x3c800000 (u32 1015021568, f32 0.015625) imm2=0 imm3=0
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  170240  32  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  187776  32  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x29900 n 32 m 1 stride 0]  O=[VM FP32 base 0x2dd80 n 32 m 1 stride 0]
+       hex  UOP 00000000000000000000003002100020 SUT 0000030018000000200f00000000000000000000000000000000000000000000
+            A   0100990200002000100000000000000000000000000000000000000000000000
+            O   0180dd0200002000100000000000000000000000000000000000000000000000
+[0010] @0x00280 SM.MATVEC  tag=wq_a
+       wait=0x0010 {FUSED}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x643f870000  5120  13    5120        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16            46272    13   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP8E4M3 base 0x643f870000 n 5120 m 13 stride 5120]  O=[VM BF16 base 0xb4c0 n 13 m 1 stride 0]
+       hex  UOP 00000000000000000100006002040010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   080000873f640014d00000001400000000000000000000000000000000000000
+            O   05c0b40000000d00100000000000000000000000000000000000000000000000
+[0011] @0x002f0 COLL.ALL_GATHER  tag=x_projections_gather.qa
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  46272  1280  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  46272  1280  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xb4c0 n 1280 m 1 stride 0]  O=[VM FP32 base 0xb4c0 n 1280 m 1 stride 0]
+       hex  UOP 00000000000000000000002082004060
+            A   01c0b40000000005100000000000000000000000000000000000000000000000
+            O   01c0b40000000005100000000000000000000000000000000000000000000000
+[0012] @0x00340 SM.MATVEC  tag=wkv
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x643feb1000  5120  5    5120        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16            47552     5  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP8E4M3 base 0x643feb1000 n 5120 m 5 stride 5120]  O=[VM BF16 base 0xb9c0 n 5 m 1 stride 0]
+       hex  UOP 00000000000000000100006002000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   080010eb3f640014500000001400000000000000000000000000000000000000
+            O   05c0b90000000500100000000000000000000000000000000000000000000000
+[0013] @0x003b0 SM.MATVEC  tag=compressor.wkv
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0 {format=BF16, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt   base          n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32         41152  5120  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    BF16  0x6440132000  5120  5   10240        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16        169216     5  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM BF16 base 0x6440132000 n 5120 m 5 stride 10240]  O=[VM BF16 base 0x29500 n 5 m 1 stride 0]
+       hex  UOP 00000000000000000000006002000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   0400201340640014500000002800000000000000000000000000000000000000
+            O   0500950200000500100000000000000000000000000000000000000000000000
+[0014] @0x00420 SU.VOP  tag=q_norm.ss
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=NONE red=SUM red_sq=1 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=1
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  46272  160  8     160        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  49856    1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xb4c0 n 160 m 8 stride 160]  R=[VM FP32 base 0xc2c0 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003004100020 SUT 0000000040210000000000000000000000000000000000000000000000000000
+            A   01c0b4000000a000800000a00000000000000000000000000000000000000000
+            R   01c0c20000000100100000000000000000000000000000000000000000000000
+[0015] @0x00490 SU.VOP  tag=q_norm.rs
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=DIVIMM m2=BYP qm=OFF ad=IMM
+            sfu=RSQRT e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0x44a00000 (u32 1151336448, f32 1280) imm2=0x1e3ce508 (u32 507307272, f32 9.99999968e-21) imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  49856  1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  49920  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xc2c0 n 1 m 1 stride 0]  O=[VM FP32 base 0xc300 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000020 SUT 0000051410000000281142398f07000000000000000000000000000000000000
+            A   01c0c20000000100100000000000000000000000000000000000000000000000
+            O   0100c30000000100100000000000000000000000000000000000000000000000
+[0016] @0x00500 COLL.ALL_GATHER  tag=x_projections_gather.kvraw
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  47552  512  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  47552  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xb9c0 n 512 m 1 stride 0]  O=[VM FP32 base 0xb9c0 n 512 m 1 stride 0]
+       hex  UOP 00000000000000000000002082004060
+            A   01c0b90000000002100000000000000000000000000000000000000000000000
+            O   01c0b90000000002100000000000000000000000000000000000000000000000
+[0017] @0x00550 COLL.ALL_GATHER  tag=x_projections_gather.cmp
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  169216  512  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  169216  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x29500 n 512 m 1 stride 0]  O=[VM FP32 base 0x29500 n 512 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   0100950200000002100000000000000000000000000000000000000000000000
+            O   0100950200000002100000000000000000000000000000000000000000000000
+[0018] @0x005a0 SU.VOP  tag=q_norm.y
+       wait=0x0100 {DMA}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AB m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=MULC e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  46272  1280  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  49920  1280  1       0        0        0         0  ZERO*0               0       1        0
+       C     VM     FP32  48064  1280  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  49984  1280  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xb4c0 n 1280 m 1 stride 0]  B=[VM FP32 base 0xc300 n 1280 m 1 stride 0]  C=[VM FP32 base 0xbbc0 n 1280 m 1 stride 0]  O=[VM FP32 base 0xc340 n 1280 m 1 stride 0]
+       hex  UOP 0000000000000000000000f002400020 SUT 0000014018000000000000000000000000000000000000000000000000000000
+            A   01c0b40000000005100000000000000000000000000000000000000000000000
+            B   2100c30000000005100000000000000000000000000000000000000000000000
+            C   01c0bb0000000005100000000000000000000000000000000000000000000000
+            O   0140c30000000005100000000000000000000000000000000000000000000000
+[0019] @0x00650 SM.MATVEC  tag=indexer.wq_b
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            49984  1280   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x644aea7000  1280  42    1280        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16           170304    42   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xc340 n 1280 m 1 stride 0]  B=[HBM FP8E4M3 base 0x644aea7000 n 1280 m 42 stride 1280]  O=[VM BF16 base 0x29940 n 42 m 1 stride 0]
+       hex  UOP 00000000000000000100006002010010
+            A   0140c30000000005100000000000000000000000000000000000000000000000
+            B   080070ea4a640005a00200000500000000000000000000000000000000000000
+            O   0540990200002a00100000000000000000000000000000000000000000000000
+[0020] @0x006c0 SU.VOP  tag=kv_norm.ss
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=NONE red=SUM red_sq=1 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=1
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  47552  64  8      64        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  49856   1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xb9c0 n 64 m 8 stride 64]  R=[VM FP32 base 0xc2c0 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003004100020 SUT 0000000040210000000000000000000000000000000000000000000000000000
+            A   01c0b90000004000800000400000000000000000000000000000000000000000
+            R   01c0c20000000100100000000000000000000000000000000000000000000000
+[0021] @0x00730 COLL.ALL_GATHER  tag=indexer.q_gather.iq
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  170304  4096  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  170304  4096  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x29940 n 4096 m 1 stride 0]  O=[VM FP32 base 0x29940 n 4096 m 1 stride 0]
+       hex  UOP 00000000000000000000002082004060
+            A   0140990200000010100000000000000000000000000000000000000000000000
+            O   0140990200000010100000000000000000000000000000000000000000000000
+[0022] @0x00780 SU.VOP  tag=kv_norm.rs
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=DIVIMM m2=BYP qm=OFF ad=IMM
+            sfu=RSQRT e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0x44000000 (u32 1140850688, f32 512) imm2=0x1e3ce508 (u32 507307272, f32 9.99999968e-21) imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  49856  1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  49920  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xc2c0 n 1 m 1 stride 0]  O=[VM FP32 base 0xc300 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000020 SUT 0000051410000000001142398f07000000000000000000000000000000000000
+            A   01c0c20000000100100000000000000000000000000000000000000000000000
+            O   0100c30000000100100000000000000000000000000000000000000000000000
+[0023] @0x007f0 SU.VOP  tag=kv_norm.y
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AB m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=MULC e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  47552  512  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  49920  512  1       0        0        0         0  ZERO*0               0       1        0
+       C     VM     FP32  49344  512  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  51776  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xb9c0 n 512 m 1 stride 0]  B=[VM FP32 base 0xc300 n 512 m 1 stride 0]  C=[VM FP32 base 0xc0c0 n 512 m 1 stride 0]  O=[VM FP32 base 0xca40 n 512 m 1 stride 0]
+       hex  UOP 0000000000000000000000f002000020 SUT 0000014018000000000000000000000000000000000000000000000000000000
+            A   01c0b90000000002100000000000000000000000000000000000000000000000
+            B   2100c30000000002100000000000000000000000000000000000000000000000
+            C   01c0c00000000002100000000000000000000000000000000000000000000000
+            O   0140ca0000000002100000000000000000000000000000000000000000000000
+[0024] @0x008a0 CTL.NOP  tag=cmp.norm.ss
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0025] @0x008b0 CTL.NOP  tag=cmp.norm.rs
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0026] @0x008c0 CTL.NOP  tag=cmp.norm.y
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0027] @0x008d0 CTL.NOP  tag=cmp.indexer_wk
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0028] @0x008e0 CTL.NOP  tag=cmp.k_norm.ss
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0029] @0x008f0 CTL.NOP  tag=cmp.k_norm.rs
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0030] @0x00900 CTL.NOP  tag=cmp.k_norm.y
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0031] @0x00910 CTL.NOP  tag=cmp.k_rope.tail
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0032] @0x00920 CTL.NOP  tag=cmp.lat_rope.head
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0033] @0x00930 CTL.NOP  tag=cmp.lat_rope.tail
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0034] @0x00940 CTL.NOP  tag=cmp.ik_qdq
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0035] @0x00950 CTL.NOP  tag=cmp.ckv_qdq
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0036] @0x00960 CTL.NOP  tag=cmp.store_IK
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0037] @0x00970 CTL.NOP  tag=cmp.store_CK
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000000000
+[0038] @0x00980 SU.VOP  tag=index_q.rope
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=1 c_src=VM c_pair=1 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AB m2=BYP qm=ALT_NP ad=Q
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base    n   m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  170368  64  32     128        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32   53312  64  32       0        0        0         0  ZERO*0               0       0        0
+       D     VM     FP32   53344  64  32       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  170368  64  32     128        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x29980 n 64 m 32 stride 128]  B=[VM FP32 base 0xd040 n 64 m 32 stride 0]  D=[VM FP32 base 0xd060 n 64 m 32 stride 0]  O=[VM FP32 base 0x29980 n 64 m 32 stride 128]
+       hex  UOP 00000000000000000000007003100020 SUT 4002610118000000000000000000000000000000000000000000000000000000
+            A   0180990200004000000200800000000000000000000000000000000000000000
+            B   0140d00000004000000200000000000000000000000000000000000000000000
+            D   0160d00000004000000200000000000000000000000000000000000000000000
+            O   0180990200004000000200800000000000000000000000000000000000000000
+[0039] @0x00a30 IDX.INDEX  tag=index frame (G18)
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x1200 {k=512, cand_en=1, keep_en=0}  imm_a=0x00100000 (u32 1048576)  imm_b=0x00000014 (u32 20)
+       slot  space  fmt   base    n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  170304  4096  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  187776    32  1       0        0        0         0  ZERO*0               0       0        0
+       D     VM     U32    57664  1366  2    2048        0        0         0  ZERO*0               0       0        0
+       O     VM     U32   187840   512  1       0        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  188352   512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x29940 n 4096 m 1 stride 0]  B=[VM FP32 base 0x2dd80 n 32 m 1 stride 0]  D=[VM U32 base 0xe140 n 1366 m 2 stride 2048]  O=[VM U32 base 0x2ddc0 n 512 m 1 stride 0]  R=[VM FP32 base 0x2dfc0 n 512 m 1 stride 0]
+       hex  UOP 14000000000010000012006007010090
+            A   0140990200000010100000000000000000000000000000000000000000000000
+            B   0180dd0200002000100000000000000000000000000000000000000000000000
+            D   1540e10000005605200000000800000000000000000000000000000000000000
+            O   15c0dd0200000002100000000000000000000000000000000000000000000000
+            R   01c0df0200000002100000000000000000000000000000000000000000000000
+[0040] @0x00ae0 SM.MATVEC  tag=wq_b (head-aligned: head h on die h)
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m    stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            49984  1280    1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x6440684000  1280  512    1280        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16            53376   512    1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xc340 n 1280 m 1 stride 0]  B=[HBM FP8E4M3 base 0x6440684000 n 1280 m 512 stride 1280]  O=[VM BF16 base 0xd080 n 512 m 1 stride 0]
+       hex  UOP 00000000000000000100006002000010
+            A   0140c30000000005100000000000000000000000000000000000000000000000
+            B   0800406840640005002000000500000000000000000000000000000000000000
+            O   0580d00000000002100000000000000000000000000000000000000000000000
+[0041] @0x00b50 SU.VOP  tag=kv_rope.tail
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=1 c_src=VM c_pair=1 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AB m2=BYP qm=ALT_NP ad=Q
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  52224  64  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  53312  64  1       0        0        0         0  ZERO*0               0       0        0
+       D     VM     FP32  53344  64  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  52224  64  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xcc00 n 64 m 1 stride 0]  B=[VM FP32 base 0xd040 n 64 m 1 stride 0]  D=[VM FP32 base 0xd060 n 64 m 1 stride 0]  O=[VM FP32 base 0xcc00 n 64 m 1 stride 0]
+       hex  UOP 00000000000000000000007003000020 SUT 4002610118000000000000000000000000000000000000000000000000000000
+            A   0100cc0000004000100000000000000000000000000000000000000000000000
+            B   0140d00000004000100000000000000000000000000000000000000000000000
+            D   0160d00000004000100000000000000000000000000000000000000000000000
+            O   0100cc0000004000100000000000000000000000000000000000000000000000
+[0042] @0x00c00 FUSED.QDQ_FP8  tag=kv_row_qdq
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  51776  512  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  52288  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xca40 n 512 m 1 stride 0]  O=[VM FP32 base 0xcc40 n 512 m 1 stride 0]
+       hex  UOP 00000000000000000000002002010041
+            A   0140ca0000000002100000000000000000000000000000000000000000000000
+            O   0140cc0000000002100000000000000000000000000000000000000000000000
+[0043] @0x00c50 DMA.KVWB_DS  tag=window_row_append
+       wait=0x0010 {FUSED}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n    m    stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32        52288  512    1       0        0        0         0  ZERO*0               0       0        0
+       O     HBM    FP32  0x40000c320  512  128    2048        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xcc40 n 512 m 1 stride 0]  O=[HBM FP32 base 0x40000c320 n 512 m 128 stride 2048]
+       hex  UOP 0000000000000000000000200204c080
+            A   0140cc0000000002100000000000000000000000000000000000000000000000
+            O   0020c30000040002000800000800000000000000000000000000000000000000
+[0044] @0x00ca0 COLL.TOPK_MERGE  tag=96 x 512 index merge
+       wait=0x0200 {IDX}  pred=ALWAYS  slot=0  param=0x0  imm_a=0x00000200 (u32 512)  imm_b=0
+       slot  space  fmt   base    n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  188352  512  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     U32   187840  512  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     U32   174400  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x2dfc0 n 512 m 1 stride 0]  B=[VM U32 base 0x2ddc0 n 512 m 1 stride 0]  O=[VM U32 base 0x2a940 n 512 m 1 stride 0]
+       hex  UOP 00000000000200000000006002808060
+            A   01c0df0200000002100000000000000000000000000000000000000000000000
+            B   15c0dd0200000002100000000000000000000000000000000000000000000000
+            O   1540a90200000002100000000000000000000000000000000000000000000000
+[0045] @0x00d10 SU.VOP  tag=q_rope.tail
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=1 c_src=VM c_pair=1 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AB m2=BYP qm=ALT_NP ad=Q
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  53824  64  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  53312  64  1       0        0        0         0  ZERO*0               0       0        0
+       D     VM     FP32  53344  64  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  53824  64  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xd240 n 64 m 1 stride 0]  B=[VM FP32 base 0xd040 n 64 m 1 stride 0]  D=[VM FP32 base 0xd060 n 64 m 1 stride 0]  O=[VM FP32 base 0xd240 n 64 m 1 stride 0]
+       hex  UOP 00000000000000000000007083000020 SUT 4002610118000000000000000000000000000000000000000000000000000000
+            A   0140d20000004000100000000000000000000000000000000000000000000000
+            B   0140d00000004000100000000000000000000000000000000000000000000000
+            D   0160d00000004000100000000000000000000000000000000000000000000000
+            O   0140d20000004000100000000000000000000000000000000000000000000000
+[0046] @0x00dc0 DMA.LOAD  tag=attend.sink_table
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x40000c300  1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        55936  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x40000c300 n 1 m 1 stride 0]  O=[VM FP32 base 0xda80 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000002002000080
+            A   0000c30000040100100000000000000000000000000000000000000000000000
+            O   0180da0000000100100000000000000000000000000000000000000000000000
+[0047] @0x00e10 HC.HC_MIX  tag=hc_attn (mixes + Sinkhorn)
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base          n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32             0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    BF16  0x643f86e000      1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32         41024     24  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x0 n 20480 m 1 stride 0]  B=[HBM BF16 base 0x643f86e000 n 1 m 1 stride 0]  O=[VM FP32 base 0xa040 n 24 m 1 stride 0]
+       hex  UOP 000000000000000000000060020000a0
+            A   0100000000000050100000000000000000000000000000000000000000000000
+            B   0400e0863f640100100000000000000000000000000000000000000000000000
+            O   0140a00000001800100000000000000000000000000000000000000000000000
+[0048] @0x00e80 SU.VOP  tag=attn.res_copy
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32      0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  20480  20480  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x0 n 20480 m 1 stride 0]  O=[VM FP32 base 0x5000 n 20480 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   0100000000000050100000000000000000000000000000000000000000000000
+            O   0100500000000050100000000000000000000000000000000000000000000000
+[0049] @0x00ef0 DMA.LOAD  tag=route.bias
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x40000bd00  384  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        87744  384  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x40000bd00 n 384 m 1 stride 0]  O=[VM FP32 base 0x156c0 n 384 m 1 stride 0]
+       hex  UOP 00000000000000000000002002000080
+            A   0000bd0000048001100000000000000000000000000000000000000000000000
+            O   01c0560100008001100000000000000000000000000000000000000000000000
+[0050] @0x00f40 DMA.LOAD  tag=route.one
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base         n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x400051320  1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        88774  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x400051320 n 1 m 1 stride 0]  O=[VM FP32 base 0x15ac6 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000002002000080
+            A   0020130500040100100000000000000000000000000000000000000000000000
+            O   01c65a0100000100100000000000000000000000000000000000000000000000
+[0051] @0x00f90 COLL.ROW_GATHER  tag=selected compressed-KV rows to the head dies
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x8 {owner_block=8}  imm_a=0x00000200 (u32 512)  imm_b=0x00000040 (u32 64)
+       slot  space  fmt   base         n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     HBM    FP32  0x204008000  512  1    2048        0        0         0  ZERO*0               0       0        0
+       O     HBM    FP32  0x800300000  512  1    2048        0        0         0  ZERO*0               0       0        0
+       I     VM     U32        174400  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[HBM FP32 base 0x204008000 n 512 m 1 stride 2048]  O=[HBM FP32 base 0x800300000 n 512 m 1 stride 2048]  I=[VM U32 base 0x2a940 n 512 m 1 stride 0]
+       hex  UOP 4000000000020000080000200a004061
+            A   0000800004020002100000000800000000000000000000000000000000000000
+            O   0000003000080002100000000800000000000000000000000000000000000000
+            I   1540a90200000002100000000000000000000000000000000000000000000000
+[0052] @0x01000 ATT.QK  tag=attend.qk
+       wait=0x0144 {SU,COLL,DMA}  pred=ALWAYS  slot=0  param=0x171 {head_lanes=1, slices_64=8, ring=1}  imm_a=0  imm_b=0
+       slot  space  fmt   base         n    m    stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32        53376  512    1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP32  0x40000c320  128  128    2048        0        0         0  ZERO*0               0       0        0
+       C     HBM    FP32  0x800300000  512    1    2048        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        53888  640    1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xd080 n 512 m 1 stride 0]  B=[HBM FP32 base 0x40000c320 n 128 m 128 stride 2048]  C=[HBM FP32 base 0x800300000 n 512 m 1 stride 2048]  O=[VM FP32 base 0xd280 n 640 m 1 stride 0]
+       hex  UOP 0000000000000000710100e002510050
+            A   0180d00000000002100000000000000000000000000000000000000000000000
+            B   0020c30000048000000800000800000000000000000000000000000000000000
+            C   0000003000080002100000000800000000000000000000000000000000000000
+            O   0180d20000008002100000000000000000000000000000000000000000000000
+[0053] @0x01090 COLL.TOPK_MERGE  tag=candidate merge
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0x00000800 (u32 2048)  imm_b=0
+       slot  space  fmt   base    n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32   59712  1366  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     U32    57664  1366  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     U32   188864  2048  1       0        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  190912  2048  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xe940 n 1366 m 1 stride 0]  B=[VM U32 base 0xe140 n 1366 m 1 stride 0]  O=[VM U32 base 0x2e1c0 n 2048 m 1 stride 0]  R=[VM FP32 base 0x2e9c0 n 2048 m 1 stride 0]
+       hex  UOP 00000000000800000000006006008060
+            A   0140e90000005605100000000000000000000000000000000000000000000000
+            B   1540e10000005605100000000000000000000000000000000000000000000000
+            O   15c0e10200000008100000000000000000000000000000000000000000000000
+            R   01c0e90200000008100000000000000000000000000000000000000000000000
+[0054] @0x01120 SU.VOP  tag=attend.max
+       wait=0x0020 {ATT}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AIMM m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=NONE red=MAX red_sq=0 red_whole=1 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0x3d3504f3 (u32 1026884851, f32 0.0441941731) imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  53888  640  1       0        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  54528    1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xd280 n 640 m 1 stride 0]  R=[VM FP32 base 0xd500 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003004080020 SUT 0000030080c23c414d0f00000000000000000000000000000000000000000000
+            A   0180d20000008002100000000000000000000000000000000000000000000000
+            R   0100d50000000100100000000000000000000000000000000000000000000000
+[0055] @0x01190 SU.VOP  tag=attend.exp_sum
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AIMM m2=BYP qm=OFF ad=NEGB
+            sfu=EXP e1=BYP e2=BYP rnd=0 dst=VM red=SUM red_sq=0 red_whole=1 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0x3d3504f3 (u32 1026884851, f32 0.0441941731) imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  53888  640  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  54528  640  1       0        0        0         0  ZERO*0               0       1        0
+       O     VM     FP32  54592  640  1       0        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  55232    1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xd280 n 640 m 1 stride 0]  B=[VM FP32 base 0xd500 n 640 m 1 stride 0]  O=[VM FP32 base 0xd540 n 640 m 1 stride 0]  R=[VM FP32 base 0xd7c0 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000007006000020 SUT 0000030b50c23c414d0f00000000000000000000000000000000000000000000
+            A   0180d20000008002100000000000000000000000000000000000000000000000
+            B   2100d50000008002100000000000000000000000000000000000000000000000
+            O   0140d50000008002100000000000000000000000000000000000000000000000
+            R   01c0d70000000100100000000000000000000000000000000000000000000000
+[0056] @0x01240 SU.VOP  tag=attend.bf16_p
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  54592  640  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  55296  640  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xd540 n 640 m 1 stride 0]  O=[VM FP32 base 0xd800 n 640 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000020 SUT 0000000018000000000000000000000000000000000000000000000000000000
+            A   0140d50000008002100000000000000000000000000000000000000000000000
+            O   0100d80000008002100000000000000000000000000000000000000000000000
+[0057] @0x012b0 ATT.PV  tag=attend.pv
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x171 {head_lanes=1, slices_64=8, ring=1}  imm_a=0  imm_b=0
+       slot  space  fmt   base         n    m    stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32        55296  640    1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP32  0x40000c320  128  128    2048        0        0         0  ZERO*0               0       0        0
+       C     HBM    FP32  0x800300000  512    1    2048        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32        56128  512    1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xd800 n 640 m 1 stride 0]  B=[HBM FP32 base 0x40000c320 n 128 m 128 stride 2048]  C=[HBM FP32 base 0x800300000 n 512 m 1 stride 2048]  O=[VM FP32 base 0xdb40 n 512 m 1 stride 0]
+       hex  UOP 0000000000000000710100e002014050
+            A   0100d80000008002100000000000000000000000000000000000000000000000
+            B   0020c30000048000000800000800000000000000000000000000000000000000
+            C   0000003000080002100000000800000000000000000000000000000000000000
+            O   0140db0000000002100000000000000000000000000000000000000000000000
+[0058] @0x01340 SU.VOP  tag=attend.den
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=NEGB
+            sfu=EXP e1=ADDC e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  55936  1  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  54528  1  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  55232  1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  56064  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xda80 n 1 m 1 stride 0]  B=[VM FP32 base 0xd500 n 1 m 1 stride 0]  C=[VM FP32 base 0xd7c0 n 1 m 1 stride 0]  O=[VM FP32 base 0xdb00 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000f002000020 SUT 0000008b10000000000000000000000000000000000000000000000000000000
+            A   0180da0000000100100000000000000000000000000000000000000000000000
+            B   0100d50000000100100000000000000000000000000000000000000000000000
+            C   01c0d70000000100100000000000000000000000000000000000000000000000
+            O   0100db0000000100100000000000000000000000000000000000000000000000
+[0059] @0x013f0 SU.VOP  tag=attend.norm
+       wait=0x0020 {ATT}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=DIVB m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  56128  512  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  56064  512  1       0        0        0         0  ZERO*0               0       1        0
+       O     VM     FP32  57152  512  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xdb40 n 512 m 1 stride 0]  B=[VM FP32 base 0xdb00 n 512 m 1 stride 0]  O=[VM FP32 base 0xdf40 n 512 m 1 stride 0]
+       hex  UOP 00000000000000000000007002080020 SUT 0000040018000000000000000000000000000000000000000000000000000000
+            A   0140db0000000002100000000000000000000000000000000000000000000000
+            B   2100db0000000002100000000000000000000000000000000000000000000000
+            O   0140df0000000002100000000000000000000000000000000000000000000000
+[0060] @0x01480 SU.VOP  tag=attend.inv_rope.tail
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=1 c_src=VM c_pair=1 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=AB m2=BYP qm=ALT_PN ad=Q
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  57600  64  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  53312  64  1       0        0        0         0  ZERO*0               0       0        0
+       D     VM     FP32  53344  64  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  57600  64  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xe100 n 64 m 1 stride 0]  B=[VM FP32 base 0xd040 n 64 m 1 stride 0]  D=[VM FP32 base 0xd060 n 64 m 1 stride 0]  O=[VM FP32 base 0xe100 n 64 m 1 stride 0]
+       hex  UOP 00000000000000000000007003000020 SUT 4002810118000000000000000000000000000000000000000000000000000000
+            A   0100e10000004000100000000000000000000000000000000000000000000000
+            B   0140d00000004000100000000000000000000000000000000000000000000000
+            D   0160d00000004000100000000000000000000000000000000000000000000000
+            O   0100e10000004000100000000000000000000000000000000000000000000000
+[0061] @0x01530 SM.MATVEC  tag=wo_a K-split: the die's head against its o-group's 1,024 rows
+       wait=0x0044 {SU,COLL}  pred=ALWAYS  slot=0  param=0x0 {format=BF16, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt   base          n     m     stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32         57152   512     1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    BF16  0x644b3a8000   512  1024    8192        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32         57664  1024     1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xdf40 n 512 m 1 stride 0]  B=[HBM BF16 base 0x644b3a8000 n 512 m 1024 stride 8192]  O=[VM FP32 base 0xe140 n 1024 m 1 stride 0]
+       hex  UOP 00000000000000000000006002110010
+            A   0140df0000000002100000000000000000000000000000000000000000000000
+            B   0400803a4b640002004000002000000000000000000000000000000000000000
+            O   0140e10000000004100000000000000000000000000000000000000000000000
+[0062] @0x015a0 COLL.GROUP_REDUCE_MCAST  tag=o-group tree reduce (8 contributors) + multicast
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x8 {subgroup=8}  imm_a=0  imm_b=0
+       slot  space  fmt   base   n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  57664   1024  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16  69952  12288  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xe140 n 1024 m 1 stride 0]  O=[VM BF16 base 0x11140 n 12288 m 1 stride 0]
+       hex  UOP 00000000000000000800002082000061
+            A   0140e10000000004100000000000000000000000000000000000000000000000
+            O   0540110100000030100000000000000000000000000000000000000000000000
+[0063] @0x015f0 SM.MATVEC  tag=wo_b
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            69952  8192   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x644f3a9000  8192  53    8192        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16            82240    53   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x11140 n 8192 m 1 stride 0]  B=[HBM FP8E4M3 base 0x644f3a9000 n 8192 m 53 stride 8192]  O=[VM BF16 base 0x14140 n 53 m 1 stride 0]
+       hex  UOP 00000000000000000100006002100010
+            A   0140110100000020100000000000000000000000000000000000000000000000
+            B   0800903a4f640020500300002000000000000000000000000000000000000000
+            O   0540410100003500100000000000000000000000000000000000000000000000
+[0064] @0x01660 COLL.ALL_GATHER  tag=attn_out_gather.y
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  82240  5120  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  82240  5120  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x14140 n 5120 m 1 stride 0]  O=[VM FP32 base 0x14140 n 5120 m 1 stride 0]
+       hex  UOP 00000000000000000000002082004060
+            A   0140410100000014100000000000000000000000000000000000000000000000
+            O   0140410100000014100000000000000000000000000000000000000000000000
+[0065] @0x016b0 FUSED.HC_POST  tag=hc_post attn
+       wait=0x0440 {COLL,HC}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  82240   5120  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  20480  20480  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  41028     20  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32      0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x14140 n 5120 m 1 stride 0]  B=[VM FP32 base 0x5000 n 20480 m 1 stride 0]  C=[VM FP32 base 0xa044 n 20 m 1 stride 0]  O=[VM FP32 base 0x0 n 20480 m 1 stride 0]
+       hex  UOP 0000000000000000000000e002108140
+            A   0140410100000014100000000000000000000000000000000000000000000000
+            B   0100500000000050100000000000000000000000000000000000000000000000
+            C   0144a00000001400100000000000000000000000000000000000000000000000
+            O   0100000000000050100000000000000000000000000000000000000000000000
+[0066] @0x01740 FUSED.HC_PRE_NORM  tag=ffn_norm
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0x1e3ce508 (u32 507307272, f32 9.99999968e-21)  imm_b=0
+       slot  space  fmt   base         n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP32  0x400005000   5120  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32        41024      4  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16        41152   5120  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x0 n 20480 m 1 stride 0]  B=[HBM FP32 base 0x400005000 n 5120 m 1 stride 0]  C=[VM FP32 base 0xa040 n 4 m 1 stride 0]  O=[VM BF16 base 0xa0c0 n 5120 m 1 stride 0]
+       hex  UOP 0000000008e53c1e000000e002000040
+            A   0100000000000050100000000000000000000000000000000000000000000000
+            B   0000500000040014100000000000000000000000000000000000000000000000
+            C   0140a00000000400100000000000000000000000000000000000000000000000
+            O   05c0a00000000014100000000000000000000000000000000000000000000000
+[0067] @0x017d0 SM.MATVEC  tag=router gate
+       wait=0x0010 {FUSED}  pred=ALWAYS  slot=0  param=0x0 {format=BF16, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt   base          n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32         41152  5120  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    BF16  0x6451bac000  5120  4   10240        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32         87360     4  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM BF16 base 0x6451bac000 n 5120 m 4 stride 10240]  O=[VM FP32 base 0x15540 n 4 m 1 stride 0]
+       hex  UOP 00000000000000000000006002040010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   0400c0ba51640014400000002800000000000000000000000000000000000000
+            O   0140550100000400100000000000000000000000000000000000000000000000
+[0068] @0x01840 HC.HC_MIX  tag=hc_ffn (mixes + Sinkhorn)
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base          n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32             0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    BF16  0x6451baa000      1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32         41088     24  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x0 n 20480 m 1 stride 0]  B=[HBM BF16 base 0x6451baa000 n 1 m 1 stride 0]  O=[VM FP32 base 0xa080 n 24 m 1 stride 0]
+       hex  UOP 000000000000000000000060020000a0
+            A   0100000000000050100000000000000000000000000000000000000000000000
+            B   0400a0ba51640100100000000000000000000000000000000000000000000000
+            O   0180a00000001800100000000000000000000000000000000000000000000000
+[0069] @0x018b0 SU.VOP  tag=router_act
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=SPSQRT e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  4  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  87360  4  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15540 n 4 m 1 stride 0]  O=[VM FP32 base 0x15540 n 4 m 1 stride 0]
+       hex  UOP 00000000000000000000003082000020 SUT 0000003010000000000000000000000000000000000000000000000000000000
+            A   0140550100000400100000000000000000000000000000000000000000000000
+            O   0140550100000400100000000000000000000000000000000000000000000000
+[0070] @0x01920 SM.MATVEC  tag=expert slot 6 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x655ff6f000  5120  24    5120        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16           251328    24   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP8E4M3 base 0x655ff6f000 n 5120 m 24 stride 5120]  O=[VM BF16 base 0x3d5c0 n 24 m 1 stride 0]
+       hex  UOP 00000000000000000100006002000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   0800f0f65f650014800100001400000000000000000000000000000000000000
+            O   05c0d50300001800100000000000000000000000000000000000000000000000
+[0071] @0x01990 SM.MATVEC  tag=expert slot 6 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x6560ab0000  5120  24    5120        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16           253632    24   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP8E4M3 base 0x6560ab0000 n 5120 m 24 stride 5120]  O=[VM BF16 base 0x3dec0 n 24 m 1 stride 0]
+       hex  UOP 00000000000000000100006002000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   080000ab60650014800100001400000000000000000000000000000000000000
+            O   05c0de0300001800100000000000000000000000000000000000000000000000
+[0072] @0x01a00 COLL.ALL_GATHER  tag=router_gather.gsc
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  384  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  87360  384  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15540 n 384 m 1 stride 0]  O=[VM FP32 base 0x15540 n 384 m 1 stride 0]
+       hex  UOP 00000000000000000000002002014060
+            A   0140550100008001100000000000000000000000000000000000000000000000
+            O   0140550100008001100000000000000000000000000000000000000000000000
+[0073] @0x01a50 SU.VOP  tag=pre <- ffn mix pre
+       wait=0x0400 {HC}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  41088  4  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  40960  4  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa080 n 4 m 1 stride 0]  O=[VM FP32 base 0xa000 n 4 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000120 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   0180a00000000400100000000000000000000000000000000000000000000000
+            O   0100a00000000400100000000000000000000000000000000000000000000000
+[0074] @0x01ac0 SU.VOP  tag=ffn.res_copy
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32      0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  20480  20480  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x0 n 20480 m 1 stride 0]  O=[VM FP32 base 0x5000 n 20480 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   0100000000000050100000000000000000000000000000000000000000000000
+            O   0100500000000050100000000000000000000000000000000000000000000000
+[0075] @0x01b30 SU.VOP  tag=route.scores_bias
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=C
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  384  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  87744  384  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  88128  384  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15540 n 384 m 1 stride 0]  C=[VM FP32 base 0x156c0 n 384 m 1 stride 0]  O=[VM FP32 base 0x15840 n 384 m 1 stride 0]
+       hex  UOP 0000000000000000000000b002100020 SUT 0000000210000000000000000000000000000000000000000000000000000000
+            A   0140550100008001100000000000000000000000000000000000000000000000
+            C   01c0560100008001100000000000000000000000000000000000000000000000
+            O   0140580100008001100000000000000000000000000000000000000000000000
+[0076] @0x01bc0 IDX.TOPK  tag=route.top6
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x1006 {k=6, order=ascending id}  imm_a=0  imm_b=0
+       slot  space  fmt   base   n    m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  88128  384  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     U32   88512    6  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15840 n 384 m 1 stride 0]  O=[VM U32 base 0x159c0 n 6 m 1 stride 0]
+       hex  UOP 00000000000000000610002002018090
+            A   0140580100008001100000000000000000000000000000000000000000000000
+            O   15c0590100000600100000000000000000000000000000000000000000000000
+[0077] @0x01c10 SU.VOP  tag=route.gather0
+       wait=0x0200 {IDX}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  1  1       0        0        0         0  ZERO*1               0       0        1
+       O     VM     FP32  88576  1  1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32   88512  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15569 n 1 m 1 stride 0]  O=[VM FP32 base 0x15a00 n 1 m 1 stride 0]  I=[VM U32 base 0x159c0 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000300a800020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   4140550100000100100000000000000000000000004000000000000000000000
+            O   01005a0100000100100000000000000000000000000000000000000000000000
+            I   15c0590100000100100000000000000000000000000000000000000000000000
+[0078] @0x01ca0 SU.VOP  tag=route.gather1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  1  1       0        0        0         0  ZERO*1               0       0        1
+       O     VM     FP32  88577  1  1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32   88513  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15581 n 1 m 1 stride 0]  O=[VM FP32 base 0x15a01 n 1 m 1 stride 0]  I=[VM U32 base 0x159c1 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000300a000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   4140550100000100100000000000000000000000004000000000000000000000
+            O   01015a0100000100100000000000000000000000000000000000000000000000
+            I   15c1590100000100100000000000000000000000000000000000000000000000
+[0079] @0x01d30 SM.MATVEC  tag=expert slot 0 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x6451f6d000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           192960    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88512     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x646060d000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x2f1c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c0 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00d0f651640014800100000a00000000000000000000801600000000000000
+            O   05c0f10200001800100000000000000000000000000000000000000000000000
+            I   15c0590100000100100000000000000000000000000000000000000000000000
+[0080] @0x01dc0 SU.VOP  tag=route.gather2
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  1  1       0        0        0         0  ZERO*1               0       0        1
+       O     VM     FP32  88578  1  1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32   88514  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x155de n 1 m 1 stride 0]  O=[VM FP32 base 0x15a02 n 1 m 1 stride 0]  I=[VM U32 base 0x159c2 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000300a000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   4140550100000100100000000000000000000000004000000000000000000000
+            O   01025a0100000100100000000000000000000000000000000000000000000000
+            I   15c2590100000100100000000000000000000000000000000000000000000000
+[0081] @0x01e50 SU.VOP  tag=route.gather3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  1  1       0        0        0         0  ZERO*1               0       0        1
+       O     VM     FP32  88579  1  1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32   88515  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x155e4 n 1 m 1 stride 0]  O=[VM FP32 base 0x15a03 n 1 m 1 stride 0]  I=[VM U32 base 0x159c3 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000300a000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   4140550100000100100000000000000000000000004000000000000000000000
+            O   01035a0100000100100000000000000000000000000000000000000000000000
+            I   15c3590100000100100000000000000000000000000000000000000000000000
+[0082] @0x01ee0 SM.MATVEC  tag=expert slot 0 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x64d8f6e000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           195264    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88512     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x64e760e000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x2fac0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c0 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00e0f6d8640014800100000a00000000000000000000801600000000000000
+            O   05c0fa0200001800100000000000000000000000000000000000000000000000
+            I   15c0590100000100100000000000000000000000000000000000000000000000
+[0083] @0x01f70 SU.VOP  tag=route.gather4
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  1  1       0        0        0         0  ZERO*1               0       0        1
+       O     VM     FP32  88580  1  1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32   88516  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15643 n 1 m 1 stride 0]  O=[VM FP32 base 0x15a04 n 1 m 1 stride 0]  I=[VM U32 base 0x159c4 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000300a000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   4140550100000100100000000000000000000000004000000000000000000000
+            O   01045a0100000100100000000000000000000000000000000000000000000000
+            I   15c4590100000100100000000000000000000000000000000000000000000000
+[0084] @0x02000 SM.MATVEC  tag=expert slot 1 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x6451f6d000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           202688    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88513     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x6468d0d000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x317c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c1 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00d0f651640014800100000a00000000000000000000801600000000000000
+            O   05c0170300001800100000000000000000000000000000000000000000000000
+            I   15c1590100000100100000000000000000000000000000000000000000000000
+[0085] @0x02090 SM.MATVEC  tag=expert slot 1 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x64d8f6e000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           204992    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88513     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x64efd0e000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x320c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c1 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00e0f6d8640014800100000a00000000000000000000801600000000000000
+            O   05c0200300001800100000000000000000000000000000000000000000000000
+            I   15c1590100000100100000000000000000000000000000000000000000000000
+[0086] @0x02120 SM.MATVEC  tag=expert slot 2 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x6451f6d000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           212416    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88514     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x648982d000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x33dc0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c2 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00d0f651640014800100000a00000000000000000000801600000000000000
+            O   05c03d0300001800100000000000000000000000000000000000000000000000
+            I   15c2590100000100100000000000000000000000000000000000000000000000
+[0087] @0x021b0 SU.VOP  tag=route.gather5
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  87360  1  1       0        0        0         0  ZERO*1               0       0        1
+       O     VM     FP32  88581  1  1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32   88517  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x1564a n 1 m 1 stride 0]  O=[VM FP32 base 0x15a05 n 1 m 1 stride 0]  I=[VM U32 base 0x159c5 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000000000300a000020 SUT 0000000010000000000000000000000000000000000000000000000000000000
+            A   4140550100000100100000000000000000000000004000000000000000000000
+            O   01055a0100000100100000000000000000000000000000000000000000000000
+            I   15c5590100000100100000000000000000000000000000000000000000000000
+[0088] @0x02240 SM.MATVEC  tag=expert slot 2 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x64d8f6e000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           214720    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88514     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x651082e000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x346c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c2 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00e0f6d8640014800100000a00000000000000000000801600000000000000
+            O   05c0460300001800100000000000000000000000000000000000000000000000
+            I   15c2590100000100100000000000000000000000000000000000000000000000
+[0089] @0x022d0 SM.MATVEC  tag=expert slot 3 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x6451f6d000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           222144    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88515     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x648b9ed000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x363c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c3 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00d0f651640014800100000a00000000000000000000801600000000000000
+            O   05c0630300001800100000000000000000000000000000000000000000000000
+            I   15c3590100000100100000000000000000000000000000000000000000000000
+[0090] @0x02360 SM.MATVEC  tag=expert slot 3 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x64d8f6e000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           224448    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88515     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x65129ee000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x36cc0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c3 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00e0f6d8640014800100000a00000000000000000000801600000000000000
+            O   05c06c0300001800100000000000000000000000000000000000000000000000
+            I   15c3590100000100100000000000000000000000000000000000000000000000
+[0091] @0x023f0 SU.VOP  tag=route.total
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=NONE red=SUM red_sq=0 red_whole=1 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  88576  6  1       0        0        0         0  ZERO*0               0       0        0
+       R     VM     FP32  88640  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15a00 n 6 m 1 stride 0]  R=[VM FP32 base 0x15a40 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003004000020 SUT 0000000040020000000000000000000000000000000000000000000000000000
+            A   01005a0100000600100000000000000000000000000000000000000000000000
+            R   01405a0100000100100000000000000000000000000000000000000000000000
+[0092] @0x02460 SM.MATVEC  tag=expert slot 4 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x6451f6d000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           231872    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88516     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x64ad04d000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x389c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c4 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00d0f651640014800100000a00000000000000000000801600000000000000
+            O   05c0890300001800100000000000000000000000000000000000000000000000
+            I   15c4590100000100100000000000000000000000000000000000000000000000
+[0093] @0x024f0 SM.MATVEC  tag=expert slot 4 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x64d8f6e000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           234176    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88516     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x653404e000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x392c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c4 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00e0f6d8640014800100000a00000000000000000000801600000000000000
+            O   05c0920300001800100000000000000000000000000000000000000000000000
+            I   15c4590100000100100000000000000000000000000000000000000000000000
+[0094] @0x02580 SM.MATVEC  tag=expert slot 5 w1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x6451f6d000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           241600    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88517     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x64af7ad000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x3afc0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c5 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00d0f651640014800100000a00000000000000000000801600000000000000
+            O   05c0af0300001800100000000000000000000000000000000000000000000000
+            I   15c5590100000100100000000000000000000000000000000000000000000000
+[0095] @0x02610 SM.MATVEC  tag=expert slot 5 w3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            41152  5120   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x64d8f6e000  5120  24    2560        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           243904    24   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88517     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0xa0c0 n 5120 m 1 stride 0]  B=[HBM FP4E2M1 base 0x65367ae000 n 5120 m 24 stride 2560]  O=[VM BF16 base 0x3b8c0 n 24 m 1 stride 0]  I=[VM U32 base 0x159c5 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01c0a00000000014100000000000000000000000000000000000000000000000
+            B   4c00e0f6d8640014800100000a00000000000000000000801600000000000000
+            O   05c0b80300001800100000000000000000000000000000000000000000000000
+            I   15c5590100000100100000000000000000000000000000000000000000000000
+[0096] @0x026a0 SU.VOP  tag=route.den
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=IMM
+            sfu=NONE e1=BYP e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0x1e3ce508 (u32 507307272, f32 9.99999968e-21) imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  88640  1  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  88704  1  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15a40 n 1 m 1 stride 0]  O=[VM FP32 base 0x15a80 n 1 m 1 stride 0]
+       hex  UOP 00000000000000000000003002000020 SUT 0000000410000000000042398f07000000000000000000000000000000000000
+            A   01405a0100000100100000000000000000000000000000000000000000000000
+            O   01805a0100000100100000000000000000000000000000000000000000000000
+[0097] @0x02710 SU.VOP  tag=route.weights
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=DIVB m2=BYP qm=OFF ad=BYP
+            sfu=NONE e1=MULIMM e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0x3fc00000 (u32 1069547520, f32 1.5) imm3=0
+       slot  space  fmt   base   n  m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  88576  6  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32  88704  6  1       0        0        0         0  ZERO*0               0       1        0
+       O     VM     FP32  88768  6  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15a00 n 6 m 1 stride 0]  B=[VM FP32 base 0x15a80 n 6 m 1 stride 0]  O=[VM FP32 base 0x15ac0 n 6 m 1 stride 0]
+       hex  UOP 00000000000000000000007002000020 SUT 000004c01000000000000000f00f000000000000000000000000000000000000
+            A   01005a0100000600100000000000000000000000000000000000000000000000
+            B   21805a0100000600100000000000000000000000000000000000000000000000
+            O   01c05a0100000600100000000000000000000000000000000000000000000000
+[0098] @0x027a0 SU.VOP  tag=swiglu
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=1 c_clip=1 m1=BYP m2=BYP qm=OFF ad=BYP
+            sfu=SILU e1=MULC e2=MULB rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0x41200000 (u32 1092616192, f32 10)
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  192960  24  7    9728        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32   88768  24  7       1        0        0         0  ZERO*0               0       1        0
+       C     VM     FP32  195264  24  7    9728        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32   88832  24  7    2304        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x2f1c0 n 24 m 7 stride 9728]  B=[VM FP32 base 0x15ac0 n 24 m 7 stride 1]  C=[VM FP32 base 0x2fac0 n 24 m 7 stride 9728]  O=[VM FP32 base 0x15b00 n 24 m 7 stride 2304]
+       hex  UOP 0000000000000000000000f082000020 SUT 00c000681a000000000000000000000048100000000000000000000000000000
+            A   01c0f10200001800700000002600000000000000000000000000000000000000
+            B   21c05a0100001800700000010000000000000000000000000000000000000000
+            C   01c0fa0200001800700000002600000000000000000000000000000000000000
+            O   01005b0100001800700000000900000000000000000000000000000000000000
+[0099] @0x02850 COLL.ALL_GATHER  tag=expert_intermediate_gather.s2
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  93440  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  93440  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x16d00 n 2304 m 1 stride 0]  O=[VM FP32 base 0x16d00 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002014060
+            A   01006d0100000009100000000000000000000000000000000000000000000000
+            O   01006d0100000009100000000000000000000000000000000000000000000000
+[0100] @0x028a0 COLL.ALL_GATHER  tag=expert_intermediate_gather.s5
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  100352  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  100352  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x18800 n 2304 m 1 stride 0]  O=[VM FP32 base 0x18800 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   0100880100000009100000000000000000000000000000000000000000000000
+            O   0100880100000009100000000000000000000000000000000000000000000000
+[0101] @0x028f0 SM.MATVEC  tag=expert slot 5 w2
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32           100352  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x65615f1000  2304  53    1152        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           246208    53   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88517     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x18800 n 2304 m 1 stride 0]  B=[HBM FP4E2M1 base 0x65bee31000 n 2304 m 53 stride 1152]  O=[VM BF16 base 0x3c1c0 n 53 m 1 stride 0]  I=[VM U32 base 0x159c5 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a100010
+            A   0100880100000009100000000000000000000000000000000000000000000000
+            B   4c00105f61650009500300800400000000000000000000801600000000000000
+            O   05c0c10300003500100000000000000000000000000000000000000000000000
+            I   15c5590100000100100000000000000000000000000000000000000000000000
+[0102] @0x02980 COLL.ALL_GATHER  tag=expert_intermediate_gather.s1
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  91136  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  91136  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x16400 n 2304 m 1 stride 0]  O=[VM FP32 base 0x16400 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   0100640100000009100000000000000000000000000000000000000000000000
+            O   0100640100000009100000000000000000000000000000000000000000000000
+[0103] @0x029d0 COLL.ALL_GATHER  tag=expert_intermediate_gather.s0
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  88832  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  88832  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15b00 n 2304 m 1 stride 0]  O=[VM FP32 base 0x15b00 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   01005b0100000009100000000000000000000000000000000000000000000000
+            O   01005b0100000009100000000000000000000000000000000000000000000000
+[0104] @0x02a20 SM.MATVEC  tag=expert slot 2 w2
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            93440  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x65615f1000  2304  53    1152        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           217024    53   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88514     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x16d00 n 2304 m 1 stride 0]  B=[HBM FP4E2M1 base 0x6598eb1000 n 2304 m 53 stride 1152]  O=[VM BF16 base 0x34fc0 n 53 m 1 stride 0]  I=[VM U32 base 0x159c2 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01006d0100000009100000000000000000000000000000000000000000000000
+            B   4c00105f61650009500300800400000000000000000000801600000000000000
+            O   05c04f0300003500100000000000000000000000000000000000000000000000
+            I   15c2590100000100100000000000000000000000000000000000000000000000
+[0105] @0x02ab0 COLL.ALL_GATHER  tag=expert_intermediate_gather.s4
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  98048  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  98048  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x17f00 n 2304 m 1 stride 0]  O=[VM FP32 base 0x17f00 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   01007f0100000009100000000000000000000000000000000000000000000000
+            O   01007f0100000009100000000000000000000000000000000000000000000000
+[0106] @0x02b00 SM.MATVEC  tag=expert slot 4 w2
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            98048  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x65615f1000  2304  53    1152        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           236480    53   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88516     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x17f00 n 2304 m 1 stride 0]  B=[HBM FP4E2M1 base 0x65bc6d1000 n 2304 m 53 stride 1152]  O=[VM BF16 base 0x39bc0 n 53 m 1 stride 0]  I=[VM U32 base 0x159c4 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a100010
+            A   01007f0100000009100000000000000000000000000000000000000000000000
+            B   4c00105f61650009500300800400000000000000000000801600000000000000
+            O   05c09b0300003500100000000000000000000000000000000000000000000000
+            I   15c4590100000100100000000000000000000000000000000000000000000000
+[0107] @0x02b90 COLL.ALL_GATHER  tag=expert_intermediate_gather.s3
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base   n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  95744  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  95744  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x17600 n 2304 m 1 stride 0]  O=[VM FP32 base 0x17600 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   0100760100000009100000000000000000000000000000000000000000000000
+            O   0100760100000009100000000000000000000000000000000000000000000000
+[0108] @0x02be0 DMA.FENCE  tag=routed-expert slices HBM -> SMEM (descriptors after the router; B2) (weights read in place through C3b)
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       hex  UOP 00000000000000000000000000008080
+[0109] @0x02bf0 SM.MATVEC  tag=expert slot 0 w2
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            88832  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x65615f1000  2304  53    1152        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           197568    53   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88512     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x15b00 n 2304 m 1 stride 0]  B=[HBM FP4E2M1 base 0x656fc91000 n 2304 m 53 stride 1152]  O=[VM BF16 base 0x303c0 n 53 m 1 stride 0]  I=[VM U32 base 0x159c0 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   01005b0100000009100000000000000000000000000000000000000000000000
+            B   4c00105f61650009500300800400000000000000000000801600000000000000
+            O   05c0030300003500100000000000000000000000000000000000000000000000
+            I   15c0590100000100100000000000000000000000000000000000000000000000
+[0110] @0x02c80 SM.MATVEC  tag=expert slot 1 w2
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            91136  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x65615f1000  2304  53    1152        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           207296    53   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88513     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x16400 n 2304 m 1 stride 0]  B=[HBM FP4E2M1 base 0x6578391000 n 2304 m 53 stride 1152]  O=[VM BF16 base 0x329c0 n 53 m 1 stride 0]  I=[VM U32 base 0x159c1 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a000010
+            A   0100640100000009100000000000000000000000000000000000000000000000
+            B   4c00105f61650009500300800400000000000000000000801600000000000000
+            O   05c0290300003500100000000000000000000000000000000000000000000000
+            I   15c1590100000100100000000000000000000000000000000000000000000000
+[0111] @0x02d10 SU.VOP  tag=moe_sum.0
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=IMM
+            sfu=NONE e1=ADDC e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  197568  53  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  207296  53  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x303c0 n 53 m 1 stride 0]  C=[VM FP32 base 0x329c0 n 53 m 1 stride 0]  O=[VM FP32 base 0x19a00 n 53 m 1 stride 0]
+       hex  UOP 0000000000000000000000b082000020 SUT 0000008410000000000000000000000000000000000000000000000000000000
+            A   01c0030300003500100000000000000000000000000000000000000000000000
+            C   01c0290300003500100000000000000000000000000000000000000000000000
+            O   01009a0100003500100000000000000000000000000000000000000000000000
+[0112] @0x02da0 SM.MATVEC  tag=expert slot 3 w2
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x2 {format=FP4 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32            95744  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP4E2M1  0x65615f1000  2304  53    1152        0        0         0  ZERO*5898240         0       0        1
+       O     VM     BF16           226752    53   1       0        0        0         0  ZERO*0               0       0        0
+       I     VM     U32             88515     1   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x17600 n 2304 m 1 stride 0]  B=[HBM FP4E2M1 base 0x659b071000 n 2304 m 53 stride 1152]  O=[VM BF16 base 0x375c0 n 53 m 1 stride 0]  I=[VM U32 base 0x159c3 n 1 m 1 stride 0]
+       hex  UOP 0000000000000000020000600a100010
+            A   0100760100000009100000000000000000000000000000000000000000000000
+            B   4c00105f61650009500300800400000000000000000000801600000000000000
+            O   05c0750300003500100000000000000000000000000000000000000000000000
+            I   15c3590100000100100000000000000000000000000000000000000000000000
+[0113] @0x02e30 COLL.ALL_GATHER  tag=expert_intermediate_gather.s6
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  102656  2304  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  102656  2304  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19100 n 2304 m 1 stride 0]  O=[VM FP32 base 0x19100 n 2304 m 1 stride 0]
+       hex  UOP 00000000000000000000002002004060
+            A   0100910100000009100000000000000000000000000000000000000000000000
+            O   0100910100000009100000000000000000000000000000000000000000000000
+[0114] @0x02e80 SU.VOP  tag=moe_sum.2
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=D
+            sfu=NONE e1=ADDC e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  226752  53  1       0        0        0         0  ZERO*0               0       0        0
+       D     VM     FP32  217024  53  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19a00 n 53 m 1 stride 0]  C=[VM FP32 base 0x375c0 n 53 m 1 stride 0]  D=[VM FP32 base 0x34fc0 n 53 m 1 stride 0]  O=[VM FP32 base 0x19a00 n 53 m 1 stride 0]
+       hex  UOP 0000000000000000000000b083000020 SUT 0000008510000000000000000000000000000000000000000000000000000000
+            A   01009a0100003500100000000000000000000000000000000000000000000000
+            C   01c0750300003500100000000000000000000000000000000000000000000000
+            D   01c04f0300003500100000000000000000000000000000000000000000000000
+            O   01009a0100003500100000000000000000000000000000000000000000000000
+[0115] @0x02f30 SM.MATVEC  tag=expert slot 6 w2
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x1 {format=FP8 block-dot, positions=1}  imm_a=0  imm_b=0
+       slot  space  fmt      base          n     m   stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32           102656  2304   1       0        0        0         0  ZERO*0               0       0        0
+       B     HBM    FP8E4M3  0x65e85f2000  2304  53    2304        0        0         0  ZERO*0               0       0        0
+       O     VM     BF16           255936    53   1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19100 n 2304 m 1 stride 0]  B=[HBM FP8E4M3 base 0x65e85f2000 n 2304 m 53 stride 2304]  O=[VM BF16 base 0x3e7c0 n 53 m 1 stride 0]
+       hex  UOP 00000000000000000100006002100010
+            A   0100910100000009100000000000000000000000000000000000000000000000
+            B   0800205fe8650009500300000900000000000000000000000000000000000000
+            O   05c0e70300003500100000000000000000000000000000000000000000000000
+[0116] @0x02fa0 SU.VOP  tag=moe_sum.4
+       wait=0x0000 {-}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=D
+            sfu=NONE e1=ADDC e2=BYP rnd=0 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  246208  53  1       0        0        0         0  ZERO*0               0       0        0
+       D     VM     FP32  236480  53  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19a00 n 53 m 1 stride 0]  C=[VM FP32 base 0x3c1c0 n 53 m 1 stride 0]  D=[VM FP32 base 0x39bc0 n 53 m 1 stride 0]  O=[VM FP32 base 0x19a00 n 53 m 1 stride 0]
+       hex  UOP 0000000000000000000000b003000020 SUT 0000008510000000000000000000000000000000000000000000000000000000
+            A   01009a0100003500100000000000000000000000000000000000000000000000
+            C   01c0c10300003500100000000000000000000000000000000000000000000000
+            D   01c09b0300003500100000000000000000000000000000000000000000000000
+            O   01009a0100003500100000000000000000000000000000000000000000000000
+[0117] @0x03050 SU.VOP  tag=moe_sum.6
+       wait=0x0002 {SM}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       SUT  a_src=VM a_ind=NONE b_src=VM b_half=0 c_src=VM c_pair=0 d_src=VM a_rnd=0 a_relu=0 a_min=0 c_clip=0 m1=BYP m2=BYP qm=OFF ad=C
+            sfu=NONE e1=BYP e2=BYP rnd=1 dst=VM red=NONE red_sq=0 red_whole=0 red_rnd=0 su_vec=SCALAR red_tree=0
+            imm1=0 imm2=0 imm3=0
+       slot  space  fmt   base    n   m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32  255936  53  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  104960  53  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19a00 n 53 m 1 stride 0]  C=[VM FP32 base 0x3e7c0 n 53 m 1 stride 0]  O=[VM FP32 base 0x19a00 n 53 m 1 stride 0]
+       hex  UOP 0000000000000000000000b082000020 SUT 0000000218000000000000000000000000000000000000000000000000000000
+            A   01009a0100003500100000000000000000000000000000000000000000000000
+            C   01c0e70300003500100000000000000000000000000000000000000000000000
+            O   01009a0100003500100000000000000000000000000000000000000000000000
+[0118] @0x030e0 COLL.ALL_GATHER  tag=ffn_out_gather.yf
+       wait=0x0004 {SU}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n     m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  104960  5120  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32  104960  5120  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19a00 n 5120 m 1 stride 0]  O=[VM FP32 base 0x19a00 n 5120 m 1 stride 0]
+       hex  UOP 00000000000000000000002002014060
+            A   01009a0100000014100000000000000000000000000000000000000000000000
+            O   01009a0100000014100000000000000000000000000000000000000000000000
+[0119] @0x03130 FUSED.HC_POST  tag=hc_post ffn
+       wait=0x0040 {COLL}  pred=ALWAYS  slot=0  param=0x0  imm_a=0  imm_b=0
+       slot  space  fmt   base    n      m  stride  istride  lstride  l1stride  dyn_sel*dyn_mul  n_sel  ibcast  indexed
+       A     VM     FP32  104960   5120  1       0        0        0         0  ZERO*0               0       0        0
+       B     VM     FP32   20480  20480  1       0        0        0         0  ZERO*0               0       0        0
+       C     VM     FP32   41092     20  1       0        0        0         0  ZERO*0               0       0        0
+       O     VM     FP32       0  20480  1       0        0        0         0  ZERO*0               0       0        0
+       effective: A=[VM FP32 base 0x19a00 n 5120 m 1 stride 0]  B=[VM FP32 base 0x5000 n 20480 m 1 stride 0]  C=[VM FP32 base 0xa084 n 20 m 1 stride 0]  O=[VM FP32 base 0x0 n 20480 m 1 stride 0]
+       hex  UOP 0000000000000000000000e002108040
+            A   01009a0100000014100000000000000000000000000000000000000000000000
+            B   0100500000000050100000000000000000000000000000000000000000000000
+            C   0184a00000001400100000000000000000000000000000000000000000000000
+            O   0100000000000050100000000000000000000000000000000000000000000000

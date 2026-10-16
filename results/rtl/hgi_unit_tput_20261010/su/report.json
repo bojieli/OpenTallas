@@ -1,0 +1,291 @@
+{
+ "pass_": true,
+ "grade": "measured_unit_bench",
+ "vehicle": "ot_hgi_su_unit WIDE=1 (ctlw 3-slot pipeline, 32-lane VM stage/drain) N512 M128 LV7 LWB18, DS-V4.1 L0 27 SU records back to back on real VM (ot_hgi_vm_unit RP/W2 32)",
+ "source_log": "results/rtl/hgi_unitrate_20261010/su_wide/ds_chain_wide_n512.log",
+ "summary": {
+  "cycles": 3063,
+  "records": 27
+ },
+ "per_unit": {
+  "SU": {
+   "records": 27,
+   "real": 27,
+   "exact": 27,
+   "rtl_busy": 0,
+   "sim_cost": 2870.0
+  }
+ },
+ "records": [
+  {
+   "k": 0,
+   "unit": "SU",
+   "op": 0,
+   "tag": "q_norm.ss",
+   "real": 1,
+   "disp": 0,
+   "ret": 181,
+   "cost": 164.0
+  },
+  {
+   "k": 1,
+   "unit": "SU",
+   "op": 0,
+   "tag": "q_norm.rs",
+   "real": 1,
+   "disp": 3,
+   "ret": 296,
+   "cost": 152.0
+  },
+  {
+   "k": 2,
+   "unit": "SU",
+   "op": 0,
+   "tag": "q_norm.y",
+   "real": 1,
+   "disp": 44,
+   "ret": 376,
+   "cost": 61.0
+  },
+  {
+   "k": 3,
+   "unit": "SU",
+   "op": 0,
+   "tag": "kv_norm.ss",
+   "real": 1,
+   "disp": 196,
+   "ret": 460,
+   "cost": 151.0
+  },
+  {
+   "k": 4,
+   "unit": "SU",
+   "op": 0,
+   "tag": "kv_norm.rs",
+   "real": 1,
+   "disp": 323,
+   "ret": 575,
+   "cost": 152.0
+  },
+  {
+   "k": 5,
+   "unit": "SU",
+   "op": 0,
+   "tag": "kv_norm.y",
+   "real": 1,
+   "disp": 361,
+   "ret": 644,
+   "cost": 60.0
+  },
+  {
+   "k": 6,
+   "unit": "SU",
+   "op": 0,
+   "tag": "kv_rope.tail",
+   "real": 1,
+   "disp": 475,
+   "ret": 709,
+   "cost": 60.0
+  },
+  {
+   "k": 7,
+   "unit": "SU",
+   "op": 0,
+   "tag": "q_rope.tail",
+   "real": 1,
+   "disp": 596,
+   "ret": 758,
+   "cost": 60.0
+  },
+  {
+   "k": 8,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attend.max",
+   "real": 1,
+   "disp": 662,
+   "ret": 839,
+   "cost": 139.0
+  },
+  {
+   "k": 9,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attend.exp_sum",
+   "real": 1,
+   "disp": 711,
+   "ret": 995,
+   "cost": 233.0
+  },
+  {
+   "k": 10,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attend.bf16_p",
+   "real": 1,
+   "disp": 748,
+   "ret": 1057,
+   "cost": 60.0
+  },
+  {
+   "k": 11,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attend.den",
+   "real": 1,
+   "disp": 855,
+   "ret": 1153,
+   "cost": 154.0
+  },
+  {
+   "k": 12,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attend.norm",
+   "real": 1,
+   "disp": 1010,
+   "ret": 1238,
+   "cost": 76.0
+  },
+  {
+   "k": 13,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attend.inv_rope.tail",
+   "real": 1,
+   "disp": 1057,
+   "ret": 1303,
+   "cost": 60.0
+  },
+  {
+   "k": 14,
+   "unit": "SU",
+   "op": 0,
+   "tag": "attn.res_copy",
+   "real": 1,
+   "disp": 1171,
+   "ret": 1546,
+   "cost": 79.0
+  },
+  {
+   "k": 15,
+   "unit": "SU",
+   "op": 0,
+   "tag": "router_act",
+   "real": 1,
+   "disp": 1256,
+   "ret": 1656,
+   "cost": 339.0
+  },
+  {
+   "k": 16,
+   "unit": "SU",
+   "op": 0,
+   "tag": "route.scores_bias",
+   "real": 1,
+   "disp": 1372,
+   "ret": 1723,
+   "cost": 60.0
+  },
+  {
+   "k": 17,
+   "unit": "SU",
+   "op": 0,
+   "tag": "route.total",
+   "real": 1,
+   "disp": 1444,
+   "ret": 1803,
+   "cost": 115.0
+  },
+  {
+   "k": 18,
+   "unit": "SU",
+   "op": 0,
+   "tag": "route.den",
+   "real": 1,
+   "disp": 1675,
+   "ret": 1865,
+   "cost": 60.0
+  },
+  {
+   "k": 19,
+   "unit": "SU",
+   "op": 0,
+   "tag": "route.weights",
+   "real": 1,
+   "disp": 1712,
+   "ret": 1944,
+   "cost": 75.0
+  },
+  {
+   "k": 20,
+   "unit": "SU",
+   "op": 0,
+   "tag": "swiglu",
+   "real": 1,
+   "disp": 1818,
+   "ret": 2592,
+   "cost": 181.0
+  },
+  {
+   "k": 21,
+   "unit": "SU",
+   "op": 0,
+   "tag": "moe_sum.0",
+   "real": 1,
+   "disp": 1881,
+   "ret": 2608,
+   "cost": 60.0
+  },
+  {
+   "k": 22,
+   "unit": "SU",
+   "op": 0,
+   "tag": "moe_sum.2",
+   "real": 1,
+   "disp": 2419,
+   "ret": 2674,
+   "cost": 60.0
+  },
+  {
+   "k": 23,
+   "unit": "SU",
+   "op": 0,
+   "tag": "moe_sum.4",
+   "real": 1,
+   "disp": 2524,
+   "ret": 2740,
+   "cost": 60.0
+  },
+  {
+   "k": 24,
+   "unit": "SU",
+   "op": 0,
+   "tag": "moe_sum.6",
+   "real": 1,
+   "disp": 2627,
+   "ret": 2804,
+   "cost": 60.0
+  },
+  {
+   "k": 25,
+   "unit": "SU",
+   "op": 0,
+   "tag": "ffn.res_copy",
+   "real": 1,
+   "disp": 2693,
+   "ret": 3047,
+   "cost": 79.0
+  },
+  {
+   "k": 26,
+   "unit": "SU",
+   "op": 0,
+   "tag": "pre <- ffn mix pre",
+   "real": 1,
+   "disp": 2757,
+   "ret": 3063,
+   "cost": 60.0
+  }
+ ]
+}

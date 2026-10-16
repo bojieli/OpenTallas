@@ -29,10 +29,16 @@ module hfd_hgi_vm (
     wire [1013:0] w_vmu_cq;
     wire [821:0] w_vmu_cr;
     wire [18:0] w_vmu_status;
+    wire [279:0] w_vmu_wq;
+    wire [0:0] w_vmu_wq_done;
     assign w_vmu_clk = {1{clk}};
     assign w_vmu_rst_n = {1{rst_n}};
     assign w_vmu_cq = {i_f_hgi_idx[337:0], i_f_hgi_quant[337:0], i_f_hgi_cp[337:0]};
-    ot_hgi_vm_unit #(.NC(3)) u_vmu (.clk(w_vmu_clk), .rst_n(w_vmu_rst_n), .cq(w_vmu_cq), .cr(w_vmu_cr), .status(w_vmu_status));
+    assign w_vmu_wq = 280'd0;
+    ot_hgi_vm_unit #(.NC(3)) u_vmu (.clk(w_vmu_clk), .rst_n(w_vmu_rst_n), .cq(w_vmu_cq), .cr(w_vmu_cr), .status(w_vmu_status), .wq(w_vmu_wq), .wq_done(w_vmu_wq_done));
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_vmu_wq_done
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_vmu_wq_done[k]), .q());
+    end
     wire [273:0] od_t_hgi_cp = {w_vmu_cr[273:0]};
     wire [273:0] o_t_hgi_cp;
     for (genvar k = 0; k < 274; k = k + 1) begin : g_o_t_hgi_cp

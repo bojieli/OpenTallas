@@ -122,3 +122,50 @@ def test_qwen_die_master_pin_regions_cover_every_port():
     bad = [r["cfg"] for r in map(lint.lint, ["qfd_sp_tree_top_b", "qfd_sp_su64_sfu_bv", "qfd_sp_res_ser_t",
                                              "qfd_sp_vector_memory_bv", "qfd_io_emb_root"]) if not r["ok"]]
     assert bad == []
+
+
+def _run_pin_tcl(tcl, ports):
+    """run the generated pin-region Tcl under tclsh against stub block terminals; returns (rc, output)"""
+    import subprocess, textwrap
+    stub = textwrap.dedent("""
+        namespace eval ord {}
+        proc ord::get_db_block {} { return blk }
+        proc blk {cmd} { set out {}; foreach p $::OT_PORTS { lappend out [list bt $p] }; return $out }
+        proc bt {name cmd} { if {$cmd eq "getName"} { return $name } ; return SIGNAL }
+        rename unknown _ot_unknown
+        proc unknown {args} {
+            set c [lindex $args 0]
+            if {[llength $c] == 2 && [lindex $c 0] eq "bt"} { return [bt [lindex $c 1] [lindex $args 1]] }
+            uplevel 1 [list _ot_unknown {*}$args]
+        }
+        proc set_io_pin_constraint {args} { puts "PINS [lindex $args end]" }
+    """)
+    import tempfile
+    src = stub + "set ::OT_PORTS {" + " ".join(ports) + "}\n" + tcl
+    with tempfile.NamedTemporaryFile("w", suffix=".tcl", delete=False) as f:
+        f.write(src)
+    p = subprocess.run(["tclsh", f.name], capture_output=True, text=True)
+    return p.returncode, p.stdout + p.stderr
+
+
+def test_pin_region_regex_matches_bus_bits_by_base_name():
+    # drive-1010: '^(a|b)$' missed every a[n] bit (fence_p: 4,105 pins without a face)
+    fp = flow.resolve_floorplan(None, None, [r"^(a|b)$=top", r"^c$=left"], None)
+    rc, out = _run_pin_tcl(flow.io_constraints_tcl(fp["pin_regions"]), ["a[0]", "a[1]", "b", "c[0]", "c[1]"])
+    assert rc == 0, out
+    assert "PINS {a[0]} {a[1]} b" in out and "PINS {c[0]} {c[1]}" in out
+
+
+def test_pin_region_partial_bus_fails():
+    fp = flow.resolve_floorplan(None, None, [r"^d\[[0-1]\]$=top"], None)
+    rc, out = _run_pin_tcl(flow.io_constraints_tcl(fp["pin_regions"]), ["d[0]", "d[1]", "d[2]", "d[3]"])
+    assert rc != 0 and "bus bits unassigned" in out and "d:2/4" in out
+    fp = flow.resolve_floorplan(None, None, [r"^d\[[0-1]\]$=top", r"^d\[[2-3]\]$=left"], None)
+    rc, out = _run_pin_tcl(flow.io_constraints_tcl(fp["pin_regions"]), ["d[0]", "d[1]", "d[2]", "d[3]"])
+    assert rc == 0, out
+
+
+def test_exhaustive_counts_bus_base_matches_once():
+    fp = flow.resolve_floorplan(None, None, [r"^(e|f)$=top", r"^g$=left"], None)
+    rc, out = _run_pin_tcl(flow.io_constraints_tcl(fp["pin_regions"], exhaustive=True), ["e[0]", "e[1]", "f", "g"])
+    assert rc == 0, out

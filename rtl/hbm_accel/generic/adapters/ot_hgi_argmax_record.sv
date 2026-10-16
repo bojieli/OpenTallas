@@ -16,9 +16,17 @@
 //   absent, A not VM / STREAM or not FP32, A.m != 1, A inner stride != 1, n = 0, O not VM, imm_a >= 2^18, the engine's
 //   range fault (id >= 2^18).  A NaN row is NOT a fault (numpy semantics): it raises the sticky nan_flag.
 // Latency: accept E0 (input register), decode E1, first VM read request E2.
+// LPS (hgi-1010/tput1-argmax, opt-in, default 8 = the closed build verbatim): lanes a STREAM beat / engine beat.  LPS 16:
+//   the STREAM port carries 16 lanes a beat ({bias_en, bias 512, vals 512, mask 16, last, v} = 3 + 65 x 16 = 1,043 b;
+//   lane j of beat b = index 16 b + j) and the engine runs LP 16 (16 compares a cycle: the ARGMAX.LOCAL.per_elem 1/16
+//   price); a VM-sourced row is read as sector pairs (even sector held, the odd one completes the 16-lane beat; a row
+//   ending on an even sector sends it with the upper lanes masked), id = engine id - (A.base mod 16).
+//   Measured: tb_hgi_argmax_tput (results/rtl/hgi_unit_tput_20261010/argmax).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_argmax_record #(
-    parameter integer MUT_OFFSET = 0      // mutant: no A.base mod 8 correction
+    parameter integer MUT_OFFSET = 0,     // mutant: no A.base mod 8 correction
+    parameter integer LPS = 8,            // lanes a beat: 8 (closed build) | 16 (opt-in wide STREAM / engine)
+    parameter integer MUT = 0             // bench mutants: 1 the last STREAM beat's lanes dropped, 2 beat halves swapped
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -30,11 +38,12 @@ module ot_hgi_argmax_record #(
     output reg  [337:0]  vmq,
     input  wire [273:0]  vmr,
     // logit STREAM from su_red (used when A.space = STREAM)
-    input  wire [522:0]  am_stream,
+    input  wire [3+65*LPS-1:0] am_stream,
+    output reg           am_rdy,           // a STREAM record is open: the producer (SU unit) may send its beats
     // the engine (ot_hgi_argmax18_m GENERIC18 = 1, LP = 8)
     output reg           e_in_v, e_in_last, e_bias_en,
-    output reg  [7:0]    e_mask,
-    output reg  [255:0]  e_vals, e_bias,
+    output reg  [LPS-1:0]    e_mask,
+    output reg  [LPS*32-1:0] e_vals, e_bias,
     output reg  [6:0]    e_rank,
     output reg  [17:0]   e_imm,
     input  wire          e_out_v,
@@ -69,8 +78,15 @@ module ot_hgi_argmax_record #(
             msk[j] = ({sec, 3'b000} + j >= a_base) && ({sec, 3'b000} + j < w_end);
     end
     // engine / VM inputs land in flops (registered boundary): the response and the result are used one edge later
-    reg [522:0] as_q; reg sl_pend;
+    localparam integer SWB = 3 + 65 * LPS, HL = LPS / 2;
+    reg [SWB-1:0] as_q; reg sl_pend;
+    reg [255:0] lo_d; reg [7:0] lo_m;    // LPS 16, VM source: the even sector of the pair
+    wire [LPS-1:0] s_mask = as_q[2 +: LPS];
+    wire [LPS*32-1:0] s_vals = as_q[2 + LPS +: LPS * 32], s_bias = as_q[2 + 33 * LPS +: LPS * 32];
+    wire [LPS-1:0] s_mask_m = (MUT == 2) ? {s_mask[HL-1:0], s_mask[LPS-1:HL]} : s_mask;
+    wire [LPS*32-1:0] s_vals_m = (MUT == 2) ? {s_vals[HL*32-1:0], s_vals[LPS*32-1:HL*32]} : s_vals;
     always @(posedge clk) as_q <= am_stream;
+    always @(posedge clk or negedge rst_n) if (!rst_n) am_rdy <= 1'b0; else am_rdy <= busy && stream_m && !rd_done_all;
     reg [273:0] vr; reg eo_v, eo_nan, eo_f, eo_rf; reg [17:0] eo_idx; reg [31:0] eo_val;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin vr <= 274'd0; eo_v <= 1'b0; end
@@ -80,7 +96,7 @@ module ot_hgi_argmax_record #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0; halt_q <= 1'b0; ret <= 3'b001; raw_v <= 1'b0; rq <= 683'd0; sl_pend <= 1'b0; nan_flag <= 1'b0; vmq <= 338'd0; stream_m <= 1'b0;
-            e_in_v <= 1'b0; e_in_last <= 1'b0; e_bias_en <= 1'b0; e_mask <= 8'd0; e_vals <= 256'd0; e_bias <= 256'd0;
+            e_in_v <= 1'b0; e_in_last <= 1'b0; e_bias_en <= 1'b0; e_mask <= '0; e_vals <= '0; e_bias <= '0; lo_d <= 256'd0; lo_m <= 8'd0;
             e_rank <= 7'd0; e_imm <= 18'd0; rd_pend <= 1'b0; rd_done_all <= 1'b0; got_out <= 1'b0; wr_phase <= 1'b0;
             wr_pend <= 1'b0; wr_n <= 2'd0; hdr <= 0; dA <= 0; dO <= 0; nA <= 0; sec <= 0; sec_last <= 0; w_end <= 0;
             res_val <= 0; res_id <= 0;
@@ -94,7 +110,7 @@ module ot_hgi_argmax_record #(
                 else begin
                     busy <= 1'b1; hdr <= rh; dA <= rA; dO <= rO; nA <= rnA; stream_m <= (rA[1:0] == 2'd2);
                     e_rank <= cfg_rank[6:0]; e_imm <= rh[49:32];
-                    w_end <= rA[47:8] + {19'd0, rnA}; sec <= rA[47:11]; sl_pend <= 1'b1;
+                    w_end <= rA[47:8] + {19'd0, rnA}; sec <= (LPS == 16) ? {rA[46:12], 1'b0} : rA[47:11]; sl_pend <= 1'b1;
                     rd_pend <= 1'b0; rd_done_all <= 1'b0; got_out <= 1'b0; wr_phase <= 1'b0; wr_pend <= 1'b0; wr_n <= 2'd0;
                 end
             end
@@ -103,18 +119,25 @@ module ot_hgi_argmax_record #(
                 vmq <= {1'b1, 1'b0, sec[26:0], 5'd0, 256'd0, 32'd0, 16'h7A00}; rd_pend <= 1'b1;
             end
             if (busy && rd_pend && vr[273] && !vr[256]) begin                  // read response: one engine beat
-                rd_pend <= 1'b0; e_in_v <= 1'b1; e_vals <= vr[255:0]; e_mask <= msk; e_bias_en <= 1'b0;
-                e_in_last <= (sec == sec_last);
+                rd_pend <= 1'b0;
+                if (LPS == 16 && !sec[0] && sec != sec_last) begin lo_d <= vr[255:0]; lo_m <= msk; end   // pair: hold even
+                else begin
+                    e_in_v <= 1'b1; e_bias_en <= 1'b0; e_in_last <= (sec == sec_last);
+                    if (LPS == 16) begin
+                        e_vals <= sec[0] ? {vr[255:0], lo_d} : {256'd0, vr[255:0]};
+                        e_mask <= sec[0] ? {msk, lo_m} : {8'd0, msk};
+                    end else begin e_vals <= vr[255:0]; e_mask <= msk; end
+                end
                 if (sec == sec_last) rd_done_all <= 1'b1; else sec <= sec + 35'd1;
             end
             if (busy && stream_m && !rd_done_all && as_q[0]) begin                // STREAM beats from su_red (pin flops)
-                e_in_v <= 1'b1; e_in_last <= as_q[1]; e_mask <= as_q[9:2]; e_vals <= as_q[265:10];
-                e_bias <= as_q[521:266]; e_bias_en <= as_q[522];
+                e_in_v <= 1'b1; e_in_last <= as_q[1]; e_mask <= (MUT == 1 && as_q[1]) ? '0 : s_mask_m; e_vals <= s_vals_m;
+                e_bias <= s_bias; e_bias_en <= as_q[SWB-1];
                 if (as_q[1]) rd_done_all <= 1'b1;
             end
             if (busy && eo_v && !got_out) begin
                 got_out <= 1'b1; res_val <= eo_val;
-                res_id <= {14'd0, eo_idx} - (MUT_OFFSET ? 32'd0 : {29'd0, stream_m ? 3'd0 : a_base[2:0]});
+                res_id <= {14'd0, eo_idx} - (MUT_OFFSET ? 32'd0 : {28'd0, stream_m ? 4'd0 : (LPS == 16) ? a_base[3:0] : {1'b0, a_base[2:0]}});
                 if (eo_nan) nan_flag <= 1'b1;
                 if (eo_rf || eo_f) begin ret[2] <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; end
                 else wr_phase <= 1'b1;

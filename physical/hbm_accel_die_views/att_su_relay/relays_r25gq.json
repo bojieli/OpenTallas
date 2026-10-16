@@ -1,0 +1,808 @@
+{
+ "schema": "opentallas.hbm_att_su_relay_plan.v1",
+ "generator": "tools/hbm_att_su_relay.py",
+ "floorplan": "r25gq",
+ "master": {
+  "name": "hfd_att_su_relay",
+  "w_um": 43.2,
+  "h_um": 108.0,
+  "bits": 529,
+  "pins": {
+   "i": "W M4 y 2.412..103.788",
+   "o": "E M4 y 2.412..103.788",
+   "ck": "S",
+   "rst": "S"
+  }
+ },
+ "rule": {
+  "step_um": 480.0,
+  "jog_um": 100.0,
+  "ends": "first relay abuts the root o pin, last abuts the SU a face"
+ },
+ "removed": [
+  "hb_index_NE_b0",
+  "hb_index_NE_b1",
+  "hb_index_NE_b2",
+  "hb_index_NE_b3",
+  "hb_index_NE_b4",
+  "hb_index_NE_b5",
+  "hb_index_NW_b0",
+  "hb_index_NW_b1",
+  "hb_index_NW_b2",
+  "hb_index_NW_b3",
+  "hb_index_NW_b4",
+  "hb_index_NW_b5",
+  "hb_index_SE_b0",
+  "hb_index_SE_b1",
+  "hb_index_SE_b2",
+  "hb_index_SE_b3",
+  "hb_index_SE_b4",
+  "hb_index_SE_b5",
+  "hb_index_SW_b0",
+  "hb_index_SW_b1",
+  "hb_index_SW_b2",
+  "hb_index_SW_b3",
+  "hb_index_SW_b4",
+  "hb_index_SW_b5"
+ ],
+ "buses": [
+  {
+   "bus": "tr_SW0",
+   "bits": 529,
+   "src": "at_SW_03_hi.o",
+   "dst": "hb_su_SW.a[528:0]",
+   "path_um": 2724.288,
+   "relays": 7,
+   "segments_um": [
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648
+   ],
+   "max_segment_um": 403.648,
+   "su_lane_pin_row_um": {
+    "abs_y": 9145.692,
+    "su_local_y": 1518.732,
+    "master_local_y": 1518.732,
+    "face": "W"
+   },
+   "added_cycles": 7
+  },
+  {
+   "bus": "tr_SW1",
+   "bits": 529,
+   "src": "at_SW_13_hi.o",
+   "dst": "hb_su_SW.a[1057:529]",
+   "path_um": 3405.356,
+   "relays": 8,
+   "segments_um": [
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108
+   ],
+   "max_segment_um": 437.108,
+   "su_lane_pin_row_um": {
+    "abs_y": 10313.584,
+    "su_local_y": 2686.624,
+    "master_local_y": 2686.624,
+    "face": "W"
+   },
+   "added_cycles": 8
+  },
+  {
+   "bus": "tr_SE0",
+   "bits": 529,
+   "src": "at_SE_00_hi.o",
+   "dst": "hb_su_SE.a[528:0]",
+   "path_um": 2724.288,
+   "relays": 7,
+   "segments_um": [
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648
+   ],
+   "max_segment_um": 403.648,
+   "su_lane_pin_row_um": {
+    "abs_y": 9145.692,
+    "su_local_y": 1518.732,
+    "master_local_y": 1518.732,
+    "face": "E"
+   },
+   "added_cycles": 7
+  },
+  {
+   "bus": "tr_SE1",
+   "bits": 529,
+   "src": "at_SE_10_hi.o",
+   "dst": "hb_su_SE.a[1057:529]",
+   "path_um": 3405.356,
+   "relays": 8,
+   "segments_um": [
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108
+   ],
+   "max_segment_um": 437.108,
+   "su_lane_pin_row_um": {
+    "abs_y": 10313.584,
+    "su_local_y": 2686.624,
+    "master_local_y": 2686.624,
+    "face": "E"
+   },
+   "added_cycles": 8
+  },
+  {
+   "bus": "tr_NW0",
+   "bits": 529,
+   "src": "at_NW_13_hi.o",
+   "dst": "hb_su_NW.a[528:0]",
+   "path_um": 2724.288,
+   "relays": 7,
+   "segments_um": [
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648
+   ],
+   "max_segment_um": 403.648,
+   "su_lane_pin_row_um": {
+    "abs_y": 16035.732,
+    "su_local_y": 1187.892,
+    "master_local_y": 1518.732,
+    "face": "W"
+   },
+   "added_cycles": 7
+  },
+  {
+   "bus": "tr_NW1",
+   "bits": 529,
+   "src": "at_NW_03_hi.o",
+   "dst": "hb_su_NW.a[1057:529]",
+   "path_um": 3405.356,
+   "relays": 8,
+   "segments_um": [
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108
+   ],
+   "max_segment_um": 437.108,
+   "su_lane_pin_row_um": {
+    "abs_y": 14867.84,
+    "su_local_y": 20.0,
+    "master_local_y": 2686.624,
+    "face": "W"
+   },
+   "added_cycles": 8
+  },
+  {
+   "bus": "tr_NE0",
+   "bits": 529,
+   "src": "at_NE_10_hi.o",
+   "dst": "hb_su_NE.a[528:0]",
+   "path_um": 2724.288,
+   "relays": 7,
+   "segments_um": [
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648,
+    403.648
+   ],
+   "max_segment_um": 403.648,
+   "su_lane_pin_row_um": {
+    "abs_y": 16035.732,
+    "su_local_y": 1187.892,
+    "master_local_y": 1518.732,
+    "face": "E"
+   },
+   "added_cycles": 7
+  },
+  {
+   "bus": "tr_NE1",
+   "bits": 529,
+   "src": "at_NE_00_hi.o",
+   "dst": "hb_su_NE.a[1057:529]",
+   "path_um": 3405.356,
+   "relays": 8,
+   "segments_um": [
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108,
+    437.108
+   ],
+   "max_segment_um": 437.108,
+   "su_lane_pin_row_um": {
+    "abs_y": 14867.84,
+    "su_local_y": 20.0,
+    "master_local_y": 2686.624,
+    "face": "E"
+   },
+   "added_cycles": 8
+  }
+ ],
+ "relays": [
+  {
+   "name": "rly_SW_0_0",
+   "master": "hfd_att_su_relay",
+   "x": 8448.96,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_0_1",
+   "master": "hfd_att_su_relay",
+   "x": 8895.808,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_0_2",
+   "master": "hfd_att_su_relay",
+   "x": 9342.656,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_0_3",
+   "master": "hfd_att_su_relay",
+   "x": 9789.504,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_0_4",
+   "master": "hfd_att_su_relay",
+   "x": 10236.352,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_0_5",
+   "master": "hfd_att_su_relay",
+   "x": 10683.2,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_0_6",
+   "master": "hfd_att_su_relay",
+   "x": 11130.048,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_0",
+   "master": "hfd_att_su_relay",
+   "x": 8448.96,
+   "y": 10992.24,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_1",
+   "master": "hfd_att_su_relay",
+   "x": 8548.96,
+   "y": 10611.932,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_2",
+   "master": "hfd_att_su_relay",
+   "x": 8728.508,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_3",
+   "master": "hfd_att_su_relay",
+   "x": 9208.816,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_4",
+   "master": "hfd_att_su_relay",
+   "x": 9689.124,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_5",
+   "master": "hfd_att_su_relay",
+   "x": 10169.432,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_6",
+   "master": "hfd_att_su_relay",
+   "x": 10649.74,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SW_1_7",
+   "master": "hfd_att_su_relay",
+   "x": 11130.048,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R0"
+  },
+  {
+   "name": "rly_SE_0_0",
+   "master": "hfd_att_su_relay",
+   "x": 22378.704,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_0_1",
+   "master": "hfd_att_su_relay",
+   "x": 21931.856,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_0_2",
+   "master": "hfd_att_su_relay",
+   "x": 21485.008,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_0_3",
+   "master": "hfd_att_su_relay",
+   "x": 21038.16,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_0_4",
+   "master": "hfd_att_su_relay",
+   "x": 20591.312,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_0_5",
+   "master": "hfd_att_su_relay",
+   "x": 20144.464,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_0_6",
+   "master": "hfd_att_su_relay",
+   "x": 19697.616,
+   "y": 9143.28,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_0",
+   "master": "hfd_att_su_relay",
+   "x": 22378.704,
+   "y": 10992.24,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_1",
+   "master": "hfd_att_su_relay",
+   "x": 22278.704,
+   "y": 10611.932,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_2",
+   "master": "hfd_att_su_relay",
+   "x": 22099.156,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_3",
+   "master": "hfd_att_su_relay",
+   "x": 21618.848,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_4",
+   "master": "hfd_att_su_relay",
+   "x": 21138.54,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_5",
+   "master": "hfd_att_su_relay",
+   "x": 20658.232,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_6",
+   "master": "hfd_att_su_relay",
+   "x": 20177.924,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_SE_1_7",
+   "master": "hfd_att_su_relay",
+   "x": 19697.616,
+   "y": 10311.172,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MY"
+  },
+  {
+   "name": "rly_NW_0_0",
+   "master": "hfd_att_su_relay",
+   "x": 8448.96,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_0_1",
+   "master": "hfd_att_su_relay",
+   "x": 8895.808,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_0_2",
+   "master": "hfd_att_su_relay",
+   "x": 9342.656,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_0_3",
+   "master": "hfd_att_su_relay",
+   "x": 9789.504,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_0_4",
+   "master": "hfd_att_su_relay",
+   "x": 10236.352,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_0_5",
+   "master": "hfd_att_su_relay",
+   "x": 10683.2,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_0_6",
+   "master": "hfd_att_su_relay",
+   "x": 11130.048,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_0",
+   "master": "hfd_att_su_relay",
+   "x": 8448.96,
+   "y": 14182.56,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_1",
+   "master": "hfd_att_su_relay",
+   "x": 8548.96,
+   "y": 14562.868,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_2",
+   "master": "hfd_att_su_relay",
+   "x": 8728.508,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_3",
+   "master": "hfd_att_su_relay",
+   "x": 9208.816,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_4",
+   "master": "hfd_att_su_relay",
+   "x": 9689.124,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_5",
+   "master": "hfd_att_su_relay",
+   "x": 10169.432,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_6",
+   "master": "hfd_att_su_relay",
+   "x": 10649.74,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NW_1_7",
+   "master": "hfd_att_su_relay",
+   "x": 11130.048,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "MX"
+  },
+  {
+   "name": "rly_NE_0_0",
+   "master": "hfd_att_su_relay",
+   "x": 22378.704,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_0_1",
+   "master": "hfd_att_su_relay",
+   "x": 21931.856,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_0_2",
+   "master": "hfd_att_su_relay",
+   "x": 21485.008,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_0_3",
+   "master": "hfd_att_su_relay",
+   "x": 21038.16,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_0_4",
+   "master": "hfd_att_su_relay",
+   "x": 20591.312,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_0_5",
+   "master": "hfd_att_su_relay",
+   "x": 20144.464,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_0_6",
+   "master": "hfd_att_su_relay",
+   "x": 19697.616,
+   "y": 16031.52,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_0",
+   "master": "hfd_att_su_relay",
+   "x": 22378.704,
+   "y": 14182.56,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_1",
+   "master": "hfd_att_su_relay",
+   "x": 22278.704,
+   "y": 14562.868,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_2",
+   "master": "hfd_att_su_relay",
+   "x": 22099.156,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_3",
+   "master": "hfd_att_su_relay",
+   "x": 21618.848,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_4",
+   "master": "hfd_att_su_relay",
+   "x": 21138.54,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_5",
+   "master": "hfd_att_su_relay",
+   "x": 20658.232,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_6",
+   "master": "hfd_att_su_relay",
+   "x": 20177.924,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  },
+  {
+   "name": "rly_NE_1_7",
+   "master": "hfd_att_su_relay",
+   "x": 19697.616,
+   "y": 14863.628,
+   "w": 43.2,
+   "h": 108.0,
+   "orient": "R180"
+  }
+ ],
+ "relay_count": 60,
+ "latency": {
+  "new_regs_per_row": {
+   "tr_SW0": 7,
+   "tr_SW1": 8,
+   "tr_SE0": 7,
+   "tr_SE1": 8,
+   "tr_NW0": 7,
+   "tr_NW1": 8,
+   "tr_NE0": 7,
+   "tr_NE1": 8
+  },
+  "old_index_band_regs_per_row": {
+   "a0": 18,
+   "a1": 9,
+   "a2": 10,
+   "a3": 18
+  },
+  "note": "old = index band chain registers (a0/a1 -> SU lane 0, a2/a3 -> lane 1) before the die wire stages on tr_* / ao_*; new = the relays (the whole die path)"
+ }
+}

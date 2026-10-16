@@ -38,6 +38,13 @@ HBM_BENCH = "results/rtl/hbm_mtp_20261008/bench/round1.json"
 SPEC_SWEEP = "results/rtl/mtp_exact_20261008/spec_state/sweep.json"
 OLD_STEP = "results/uarch/dsrom_mtp_rom_step_20261008/step.json"
 REPRICE = "results/arch/reprice_20261008/reprice.json"
+COLL_PROGS = "results/rtl/s81_ctrl_20261008/programs/index.json"
+BINDING = "results/uarch/dsrom_s81_mtp_binding_20261010/verdict.json"
+BINDING_DIES = "results/uarch/dsrom_s81_mtp_binding_20261010/die_set.json"
+ROWPACK = "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz"
+P2_MICRO = "results/uarch/dsrom_mtp_p2_20261009/microbench.json"
+SEEDL_GATE = "results/rtl/mtp_seed_launch_20261010/gate.json"
+HROW_GATE = "results/rtl/mtp_hrow_20261010/gate.json"
 
 
 def J(p):
@@ -94,6 +101,14 @@ def ds_rom():
     assert hops == hv.get("stages", 120) or hops == 120, hops
     lnk = 3 + 3                                    # dsfd_wfc_lnk +3 in / +3 out (mtp-rom benches)
     vmx = stg["start_mean"] + stg["done_mean"]     # dsfd_wfc_vmx start crossing + done path incl. the 46-word prefetch
+    # mtp-wfc 2026-10-10: on the die the VM sits behind the hub relay stations (13/13); the kit's grant-linked VM channels
+    # (VM_LINK 1, WOUTW 8, VMRQ 64) add the measured stationed delta to the vmx start + done path on every hop
+    vst_p = ROOT / "results/rtl/dsrom_wfc_integration_20261010/vm_station.json"
+    vst = json.loads(vst_p.read_text()) if vst_p.exists() else None
+    vst_d = vst["delta_per_hop_fast_cycles"] if vst else 0.0
+    # main decision A (2026-10-11): the stage start / done passes the stage-program sequencer dsfd_stage_seq (measured)
+    vst_s = vst.get("stage_seq_delta_per_hop_fast_cycles", 0.0) if vst else 0.0
+    vmx += vst_d + vst_s
     per_hop = wfc["hop_delta_cycles"] + lnk + vmx
     busy_cyc = hv["worst_stage"]["busy_us"] * CLK / 1e6
     handoff = busy_cyc * (wfc["measured_interval_overhead"] - 46 / 11271)
@@ -103,7 +118,7 @@ def ds_rom():
         hops * per_hop, anchor="wave.last", phase="verify",
         formula=f"{hops} stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x {per_hop:g} "
                 f"(WFC done->out + entry delta {wfc['hop_delta_cycles']} + lnk {lnk} + vmx start {stg['start_mean']:g} + "
-                f"vmx done/prefetch {stg['done_mean']:g})",
+                f"vmx done/prefetch {stg['done_mean']:g} + VM hub-station delta {vst_d:g} + stage sequencer {vst_s:g})",
         source=[WFC_CLOSURE + " charge.hop_delta_cycles", MTP_ROM_BENCH + " stg_vmnat MTP_STG_CYC",
                 "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"],
         note="the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; "
@@ -160,6 +175,33 @@ def ds_rom():
         variant="selected P2 path (routes queued, not closed); the composition's draft is the DP1-EP5 recovery placement",
         note="per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays "
              "(no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."))
+    # mtp-fixlat-1011: P2 die-bus link ends (dsfd_p2_lnk at the core pins + dsfd_coll_p2_ep / dsfd_vm_p2_ep): grant
+    # protocol RTT-sized to draft A's relay stations + transaction gate; the plain valid / ready core is not exact over them
+    p2_lnk = 6122 - 6113
+    ch.append(charge(
+        "p2.link_ends", "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)", p2_lnk * len(p2),
+        anchor="draft.blocks", phase="draft", grade="measured (bench log)",
+        formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
+        source=["tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0", "~/claude-takeover-20261007/mtp-fixlat-1011.log"],
+        note="the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"))
+    # mtp-colllane-1011 (ds-1010 decision): the token return / seed and the P2 die-to-die traffic ride DEDICATED collective
+    # lanes; the lane tiles / link layer / channel are the hop already charged, the new adapter tiles add their pipeline
+    #   head lane dsfd_coll_mtp_lane: TX pin flop + OUTPUT_PIPE + credit_tx = 3, RX landing v_q + FIFO + OREG + token
+    #   buffer bypass + ltx = 5 -> 8 a traversal; the token return (DRAFT flit + held results) and the seed both cross
+    #   P2 lanes dsfd_coll_p2_lane_pa / _ba: start in (8) and the last result row out (8, 2 beats: +1 TX) per transaction;
+    #   the die-B lane-1 words stream ahead of the start (waiting in the lane buffers), off the chain
+    ch.append(charge(
+        "mtp_lane.adapters", "dedicated MTP lane adapter (dsfd_coll_mtp_lane): token return + seed traversals", 2 * (3 + 5),
+        anchor="accept.commit", phase="accept", grade="rtl count (registered stages)",
+        formula="2 traversals (token return, seed) x (TX 3 + RX 5)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv", "tools/mtp_colllane_gate.py (exact / HOL / no-block gate)"],
+        note="upper bound: both traversals charged serially; the collective's lanes 0..7 are untouched (coll_done equal)"))
+    ch.append(charge(
+        "p2.lane_adapters", "P2 dedicated lane adapters (dsfd_coll_p2_lane_pa / _ba): start in + last row out", (8 + 9) * len(p2),
+        anchor="draft.blocks", phase="draft", grade="rtl count (registered stages)",
+        formula=f"{len(p2)} P2 transactions x (start 3 + 5, last row 2-beat 4 + 5)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv", "tools/mtp_p2lane_gate.py"],
+        note="lane-1 words from die B arrive ahead of the start (buffered), off the chain"))
     # ---- Markov head (MD-6): the composition's transfer ratio vs the measured row-pipeline latency
     mq = J(MARKOV_Q)
     mk_model = next(n["cycles"] for n in mtp["nodes"] if n["id"] == "draft.markov0")
@@ -171,6 +213,115 @@ def ds_rom():
         source=[MARKOV_Q + " first_result_cycles_no_bubbles", "results/arch/token_path_20261009/ds_rom_mtp.json draft.markov*"],
         note="lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the "
              "whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"))
+    # ---- fixed-latency pipelining added on the draft-head step chain (fe-push-ds-1010, 2026-10-10): each of the 5 serial
+    #      draft-head steps crosses the head-driver input relay (HBRELAY=1: +1, kept r_hb copies) and the VM partner end
+    #      (dsfd_vm_mtp_ep u_h OUTPUT_PIPE 1: +1, idle-sweep fix 189894fc2) -> +2 a draft-head step, critical (serial chain)
+    ch.append(charge(
+        "draft_head.pipe_regs", "draft-head step registers: ot_dsrom_markov_head_driver HBRELAY=1 + dsfd_vm_mtp_ep OUTPUT_PIPE 1",
+        5 * (1 + 1), anchor="draft.last", phase="draft",
+        formula="5 draft-head steps x (+1 HBRELAY head-input relay + 1 vm_mtp_ep OUTPUT_PIPE)",
+        source=["results/rtl/mtp_head_hbrelay_20261010/gate (full340 --hard NB4: HBRELAY=1 8,637 vs HBRELAY=0 8,636 cycles)",
+                "~/claude-takeover-20261007/idle-sweep-1010.log (fixlat-vmmtp 189894fc2: u_h OUTPUT_PIPE 1, +1 per draft-head step)"],
+        variant="HBRELAY=1 routes mtp-head340-mkdrv-hbr-{a,b}-d781e7cb0-tc (charged conservatively before adoption); "
+                "vm_mtp_ep 189894fc2 route fixlat-vmmtp-189894fc2-tc-hm20"))
+    # ---- S81 MTP binding (mtp-dsbind 2026-10-10): the draft dies the composition assumed, as bound
+    if (ROOT / BINDING).exists():
+        bv = J(BINDING)
+        assert bv["PASS"] and bv["primary_phase_reads_not_above_l0"], "S81 MTP binding verdict not PASS"
+        topo = J(BINDING_DIES)["topology"]
+        # (1) routed experts on the 40 MD-2 draft dies, rowpack layout: per block row, its 3 selected experts' GU and
+        #     W2 subphases (the rowpack's worst count) x the measured full-K phase cycles, replacing the DP1-EP5 phases
+        import gzip as _gz
+        rp = json.loads(_gz.open(ROOT / ROWPACK).read())
+        sub = {}
+        for ph in rp["phases"]:
+            k = (ph["stage"], ph["expert"], "gu" if "w1" in ph["ops"] else "w2")
+            sub[k] = sub.get(k, 0) + 1
+        mb = {c["case"]: c["cycles"]["phase_cycles"] for c in J(P2_MICRO)["cases"]}
+        gu_max = max(v for (s, e, o), v in sub.items() if o == "gu")
+        w2_max = max(v for (s, e, o), v in sub.items() if o == "w2")
+        row_gu, row_w2 = 3 * gu_max * mb["gu_packed"], 3 * w2_max * mb["w2_packed"]
+        ex = []
+        for st, s in dr["stages"].items():
+            cp = {p["node"]: p["us"] * CLK / 1e6 for p in s["critical_path"]}
+            ex.append((st, cp["ffn.experts_gu.r0"], cp["ffn.down.r0"]))
+        ch.append(charge(
+            "binding.expert_rowpack", "routed experts on the bound MD-2 draft dies (rowpack whole-superrow layout)",
+            sum(row_gu - g + row_w2 - w for _, g, w in ex), anchor="draft.blocks", phase="draft",
+            grade="measured (component phases)",
+            formula=" + ".join(f"({row_gu:g} - {st} experts_gu {g:.0f} + {row_w2:g} - down {w:.0f})" for st, g, w in ex)
+                    + f"; row = 3 experts x (GU {gu_max} subphases x {mb['gu_packed']} + W2 {w2_max} x {mb['w2_packed']}), "
+                      "all 3 on one die (upper bound; a split mtp.2 row runs A and B in parallel)",
+            source=[BINDING + " (2,401/2,401 mtp.* bound)", ROWPACK + " phases (GU / W2 subphases per expert)",
+                    P2_MICRO + " gu_packed / w2_packed phase_cycles (full-K released operands)",
+                    DRAFT_REC + " stages[*].critical_path ffn.experts_gu.r0 / ffn.down.r0 (DP1-EP5 phases replaced)"],
+            note="the composition timed the experts on DP1-EP5 replicas (L0-pair images, one phase per expert group); the bound "
+                 "40-die P2 home stores them in the rowpack, which needs up to 3 GU + 2 W2 subphases an expert"))
+        # (2) UCIe crossings of the package pair (A <-> B) on the block's critical row
+        hop = dr["rlinks"]["x_row"]
+        sm = dict(re.findall(r"(\w+)=([0-9]+)", hop["summary"]))
+        ucie = int(sm["first_flit"]) - int(sm["leg1_first_flit"])
+        nx = sum(topo["ucie_crossings_a_row"].values())
+        ch.append(charge(
+            "binding.ucie_pair", "MD-2 package-pair UCIe crossings (A -> B forward, B -> A expert return)", nx * ucie,
+            anchor="draft.blocks", phase="draft", grade="measured+vendor",
+            formula=f"{nx} crossings ({topo['ucie_crossings_a_row']}) x {ucie} (UCIe leg: leg1_first_flit -> first_flit, "
+                    "rec_x_row link RTL incl. the 11-cycle vendor channel)",
+            source=[BINDING_DIES + " topology.ucie_crossings_a_row", DRAFT_REC + " rlinks.x_row.summary"]))
+        # (3) the bound primary is its own TP4 group: block output -> head dies is a board hop the composition omitted
+        #     (the seed hop into the primary is already the measured mtp.0 hop_in)
+        hin = next(p["us"] for p in dr["stages"]["mtp.0"]["critical_path"] if p["node"] == "hop_in") * CLK / 1e6
+        ch.append(charge(
+            "binding.primary_to_head", "board hop P.k* -> head group (5 draft rows' hidden state to the LM-head sweep)", hin,
+            anchor="draft.blocks", phase="draft", grade="measured+vendor",
+            formula=f"one 5-row stage hop = the measured mtp.0 hop_in {hin:.1f} cycles (same link, same payload)",
+            source=[BINDING_DIES + " topology.draft_head", DRAFT_REC + " stages['mtp.0'].critical_path hop_in"],
+            note="P2's primary-on-head-dies home made this hop die-local, but it has no room for the seed (669 > 631 pairs) and "
+                 "packs ~8x the words a pair a phase; the bound primary keeps L0's per-phase pair reads"))
+    # ---- DSpark primary die: seed descriptor -> seed program (dsfd_mtp_seed_launch, mtp-dsbind 2026-10-10)
+    if (ROOT / SEEDL_GATE).exists():
+        sg = J(SEEDL_GATE)
+        assert sg["verdict"]["positives_and_rejections"] and sg["verdict"]["mutants_fail"], "seed launch gate not PASS"
+        cy = sg["cycles"]
+        tau = mtp["totals"]["tau"]
+        ch.append(charge(
+            "seedl.launch", "dsfd_mtp_seed_launch (descriptor receive / check, VM hidden-row fetch, x beats, program start)",
+            cy["desc_to_x"] + cy["done_to_ps"] + (tau - 1) * cy["row_gap"], anchor="accept.commit", phase="accept",
+            formula=f"desc_to_x {cy['desc_to_x']} + done_to_ps {cy['done_to_ps']} + (tau {tau} - 1) x row_gap {cy['row_gap']} "
+                    "(the committed rows of a step are seeded one after another; each extra row waits seed_ctl ready + "
+                    "the VM fetch)",
+            source=[SEEDL_GATE + " cycles (pos_basic)"],
+            note="bench stations: descriptor 9/9, VM 6/6 + 12-cycle VM latency, x / join 4/4; the 240 beats and seed_ctl "
+                 "itself are the composition's seed term"))
+    # ---- main-hidden rows to the primary die (dsfd_mtp_hrow + ot_dsrom_mtp_hrow_tx, mtp-dsbind 2026-10-10)
+    if (ROOT / HROW_GATE).exists():
+        hg = J(HROW_GATE)
+        assert hg["verdict"]["positives_and_rejections"] and hg["verdict"]["mutants_fail"], "hrow gate not PASS"
+        ch.append(charge(
+            "hrow.transport", "main-hidden row parts (L37/38/39 stage dies -> primary row store, one dedicated MTP lane a part)",
+            1 + 160 + 4, critical=False, anchor="accept.commit", phase="draft", grade="measured",
+            formula="per committed row and part: 1 header + 160 data flits on its own lane + 4 store cycles (write, complete)",
+            source=[HROW_GATE + " pos_steady / pos_late"],
+            proof="a position's three parts leave the layer-37/38/39 stage dies when that position passes them in verify; "
+                  "they reach the primary after ONE board hop + 161 flits, while the same position's result still crosses "
+                  "every later stage to the head and the head -> primary seed lane before the seed descriptor can read the "
+                  "row; a late row only delays the read (pos_late), never changes the value"))
+    # ---- s81-ctl-1011 (ADAPTER_CONTRACT_1011, engine 3): the collective's command endpoint dsfd_coll_job holds a coll
+    # message's records until its descriptor (queued ahead by dsfd_stage_seq) and releases them through its f_vm pin flop:
+    # +1 cycle per coll op on the record path (t_vm feedthrough +0); every coll op of the stage programs is charged as
+    # critical (the programs run <= 1 coll op at a time, so the QD 8 credit window never throttles)
+    progs = json.loads((ROOT / COLL_PROGS).read_text())
+    n_coll = sum(1 for f in sorted((ROOT / COLL_PROGS).parent.glob("S*.json"))
+                 for o in json.loads(f.read_text())["ops"] if o["eng"] == "coll")
+    assert progs["stages"] and n_coll > 0
+    coll_ep = n_coll * 1
+    ch.append(charge(
+        "coll.engine_endpoint", "collective command endpoint dsfd_coll_job (coll engine 3 under dsfd_stage_seq)", coll_ep,
+        anchor="wave.last", phase="verify", grade="rtl count (registered stages)",
+        formula=f"{n_coll} coll ops on one pass of the stage programs x 1 (f_vm pin flop of the endpoint tile)",
+        source=["rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv", "rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv",
+                "rtl/dsrom_sys/s81_ph/coll/run_coll_ctrl_gate.sh (exact + dropstart / wrongdesc / earlydone)", COLL_PROGS],
+        note="upper bound (every coll op taken as critical); the same cycles apply to every AR pass (ar_effect)"))
     # ---- sensitivity: the RTL-sequenced step (draft from the closing result), NOT credited
     old = J(OLD_STEP)["step_model"]["blend_harmonic"]
     sens = dict(rtl_sequenced_over_model=old["rtl_over_model"], source=OLD_STEP + " step_model.blend_harmonic",
@@ -179,10 +330,11 @@ def ds_rom():
                                  "positions' head passes. The bench proves the sequencing, not a conflict-free head "
                                  "schedule: overlap NOT proven, so not credited")
     return finish("ds_rom", ch, mtp, sens=sens, ar_effect=dict(
-        cycles=hops * per_hop, rule="the WFC kit's per-hop cycles on the AR pass; apply to the AR views when --wfc-hard is "
-        "default-on", AR_tok_s_before=hv["AR_tok_s"],
-        AR_tok_s_after=round(CLK / (hv["AR_us"] * CLK / 1e6 + hops * per_hop), 1)),
-        inputs=[MTP_ROM_BENCH, WFC_CLOSURE, DRAFT_REC, MARKOV_Q, P2_SRC, P2_MODEL, COMMIT_RTL, OLD_STEP])
+        cycles=hops * per_hop + coll_ep, rule="the WFC kit's per-hop cycles on the AR pass + the collective command endpoint "
+        f"(+1 a coll op, {coll_ep:g}); apply to the AR views when --wfc-hard is default-on", AR_tok_s_before=hv["AR_tok_s"],
+        AR_tok_s_after=round(CLK / (hv["AR_us"] * CLK / 1e6 + hops * per_hop + coll_ep), 1)),
+        inputs=[MTP_ROM_BENCH, WFC_CLOSURE, DRAFT_REC, MARKOV_Q, P2_SRC, P2_MODEL, COMMIT_RTL, OLD_STEP]
+        + ([BINDING, BINDING_DIES, ROWPACK, P2_MICRO] if (ROOT / BINDING).exists() else []))
 
 
 # ============================================================================================= HBM accelerator (TP-96)
@@ -194,6 +346,13 @@ def hbm_ds():
     hb = J(HBM_BENCH)
     assert hb["verdict"].startswith("PASS")
     ch = []
+    ch.append(charge(
+        "ctl_stop.nreg", "adopted NREG controller transition between successive MTP passes", 1,
+        anchor="draft.last", phase="draft",
+        formula="+1 per steady-state MTP pass after the first; single-pass/EOS/prefill cases add 0",
+        source=["results/rtl/mtp_hfdpipe_20261009/gates.json cycles_added and multistep_differential",
+                "results/rtl/mtp_lead_20261009/routes/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc"],
+        variant="adopted NREG=1; step throughput conservatively charges the recurring transition"))
     ch.append(charge(
         "hfd_mtp.round_trips", "hfd_mtp die master pin flops (command -> engine done round trips)", 7 * 2,
         anchor="draft.last", phase="draft",
@@ -241,24 +400,25 @@ def hbm_ds():
     draft_cyc = sum(n["cycles"] for n in nodes if n.get("phase") == "draft" and n["critical"] and not n["id"].startswith("mc."))
     rows = moe * 6
     ch.append(charge(
-        "dskv_wb_spec.rows", "ot_hbm_accel_dskv_wb_spec registered-boundary variant (+1 a row)", rows, anchor="step.start",
+        "dskv_wb_spec.rows", "adopted ot_hbm_accel_dskv_wb_spec PIPE=2 (+3 a row)", rows * 3, anchor="step.start",
         phase="draft", critical=False,
-        formula=f"{moe} layers x up to 6 accepted positions = {rows} KV rows x +1",
-        source=["results/rtl/mtp_lead_20261009/dskv_wb_spec_rb/README.md (PIPE=1 S_OWN +1 cycle/row)"],
-        variant="rb variant (mtprb-dskvwb_spec_rb-2426c04bd-tc); the a/b variants add 0",
+        formula=f"{moe} layers x up to 6 accepted positions = {rows} KV rows x +3",
+        source=["results/rtl/mtp_lead_20261009/dskv_wb_spec_p2/README.md (+3 a row vs PIPE 0)"],
+        variant="adopted mtprb-dskvwb_spec_p2a-5ce6c3c62-tc; wrapper pin FIFO costs retained",
         proof=f"the accepted rows of step s are written while step s+1 drafts: the draft phase ({draft_cyc:,.0f} cycles) runs "
               "on the DSpark stages' own state (main_x + their wkv window rows), and the first read of a main-model KV row is "
-              "verify layer 0 after the draft; the +1/row adds <= "
-              f"{rows} cycles to a write stream that must fit in {draft_cyc:,.0f} cycles"))
-    hbm_sim = dict(note="hbm-sim: the DS spec-conformant rate is the native record stream (results/arch/hgi_sim_20261009/"
-                        "ds_native_timing_1M.json result.S2 = 1,658.1 tok/s AR, not the 1,716.3 walk); these charges are "
-                        "per MTP step and carry over to that basis unchanged")
-    return finish("hbm_ds", ch, mtp, basis_note=hbm_sim, inputs=[HBM_BENCH, SPEC_SWEEP, COMMIT_RTL])
+              "verify layer 0 after the draft; the +3/row adds <= "
+              f"{rows * 3} cycles to a write stream that must fit in {draft_cyc:,.0f} cycles"))
+    hbm_sim = dict(note="The HBM native and approved gather paths are distinct; systems.json uses "
+                        "ds_sw_seq_pricing.json approved_path_c2_g22 and adds its delta relative to native S2 once "
+                        "per verify pass. These component charges carry over to either basis unchanged.")
+    return finish("hbm_ds", ch, mtp, basis_note=hbm_sim, inputs=[HBM_BENCH, SPEC_SWEEP, COMMIT_RTL, "results/rtl/mtp_hfdpipe_20261009/gates.json",
+                "results/rtl/mtp_lead_20261009/dskv_wb_spec_p2/README.md"])
 
 
 def finish(key, ch, mtp, sens=None, ar_effect=None, basis_note=None, inputs=()):
     tau = mtp["totals"]["tau"]
-    base = mtp["totals"]["cycles"] - sum(n["cycles"] for n in mtp["nodes"] if n["id"].startswith("mc."))
+    base = mtp["totals"]["cycles"] - sum(n["cycles"] for n in mtp["nodes"] if n["id"].startswith("mc.") and n["critical"])
     crit = sum(c["cycles"] for c in ch if c["critical"])
     crit_lo = sum(c.get("cycles_lower", c["cycles"]) for c in ch if c["critical"])
     rec = dict(

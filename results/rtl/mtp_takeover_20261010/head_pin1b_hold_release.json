@@ -1,0 +1,8 @@
+{
+  "job": "mtp-head340-mkdrv-pin1b-b0bd92a8e-tc",
+  "recorded_utc": "2026-10-10T12:31:44.053790+00:00",
+  "action": "release precautionary adoption hold",
+  "reason": "D23 actual gp_skip_io log contains no OT_IOFLOP invocation; preIO anchoring hypothesis unsupported. Placement progressing. No source/RTL/run changes. Existing actual pin-anchor verdict check remains required.",
+  "prior_hold_evidence": "results/rtl/mtp_takeover_20261010/head_pin1b_adoption_hold.json",
+  "physical_qualified": false
+}

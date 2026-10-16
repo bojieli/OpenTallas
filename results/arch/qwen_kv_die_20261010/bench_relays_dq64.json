@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.qwen-kv-die.bench.v1",
+ "date": "2026-10-10",
+ "source_commit": "f59633d08",
+ "bench": "rtl/test/qwen_kv_die/bench_run.sh STACK=h DQ=64 at the pin-to-pin relay plan stage counts (28 1 9 5 37 32 65: QX = seq->astk 35 + 2, RX = hub->seq 25 + 7, LINK = hub<->astk 7 + 2, KVL = seq->land 54 + 11), EPYC1 qwen-1010b/f_i64, ideal HBM model",
+ "hbm_model": "per-engine in-order queues, 750 B / cycle / stack, 16-cycle latency; t = T-1 rows poisoned",
+ "cases": {
+  "typical": {
+   "params": {
+    "ROM_ST": 28,
+    "KV_ST": 1,
+    "LINK": 9,
+    "QX": 37,
+    "RX": 32,
+    "KVL": 65,
+    "PHY_LAT": 5,
+    "DQ": 64
+   },
+   "adapter_plus_phy": 11,
+   "exact_all": true,
+   "runs": 14,
+   "layer_step_8192": 1844
+  }
+ },
+ "ok": true
+}

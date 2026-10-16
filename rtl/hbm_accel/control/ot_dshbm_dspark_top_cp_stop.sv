@@ -55,7 +55,10 @@ module ot_dshbm_dspark_top_cp_stop #(
     parameter integer UNF    = FAST,   // union FAST (registered scan; needs NE >= WB = 32, i.e. full shape)
     parameter integer AMF    = 0,      // argmax FAST (registered beat keys, +1 cycle a row; argmax_f1)
     parameter integer PRL    = 0,      // ctl prompt / forced-token read latency (registered host read ports)
-    parameter integer XSEL   = 0       // 1: no selectors here: the per-column top-K selections arrive on x_v /
+    parameter integer XSEL   = 0       // 2 (hgi-1010/h, audit N14): no selections and no expert union at all (the generic
+                                       //    die selects experts per record: IDX.TOPK + indexed descriptors); t_* / u_*
+                                       //    are constant 0 and rv_* / x_* / u_clr / u_flush / u_ready are not read.
+                                       // 1: no selectors here: the per-column top-K selections arrive on x_v /
                                        //    x_ids / x_col / x_draft (the die's hfd_router selector), rv_* unused
 ) (
     input  wire               clk,
@@ -186,6 +189,11 @@ module ot_dshbm_dspark_top_cp_stop #(
         assign am_fault=lg_v;
     end endgenerate
     // ---- router selectors ----
+    genvar gk;
+    generate if (XSEL == 2) begin : g_nounion
+    assign t_v = 1'b0; assign t_ids = {KV*IW{1'b0}}; assign t_col = 3'd0;
+    assign u_v = 1'b0; assign u_id = {IW{1'b0}}; assign u_mask = {PMAX{1'b0}}; assign u_last = 1'b0;
+    end else begin : g_union
     wire          tv_v, td_v;
     wire [KV*IW-1:0] tv_ids;
     wire [KD*IW-1:0] td_ids;
@@ -193,7 +201,7 @@ module ot_dshbm_dspark_top_cp_stop #(
     wire [KV*IW-1:0] s_ids;
     wire [2:0]    s_col;
     wire          s_inflight;
-    generate if (XSEL != 0) begin : g_xsel
+    if (XSEL != 0) begin : g_xsel
     // selections from outside (the die selector); the producer orders u_flush after the pass's last selection
     assign tv_v = x_v & ~x_draft; assign td_v = x_v & x_draft;
     assign tv_ids = x_ids; assign td_ids = x_ids[KD*IW-1:0];
@@ -222,16 +230,13 @@ module ot_dshbm_dspark_top_cp_stop #(
     end
     assign s_col = cq[cq_r[2:0]];
     assign s_inflight = (cq_w != cq_r) || (rv_v && rv_last);
-    end endgenerate
+    end
     assign t_v = tv_v | td_v;
     assign t_col = s_col;
-    genvar gk;
-    generate
-        for (gk = 0; gk < KV; gk = gk + 1) begin : g_ids
+    for (gk = 0; gk < KV; gk = gk + 1) begin : g_ids
             if (gk < KD) assign t_ids[gk*IW +: IW] = td_v ? td_ids[gk*IW +: IW] : tv_ids[gk*IW +: IW];
             else         assign t_ids[gk*IW +: IW] = td_v ? {IW{1'b0}} : tv_ids[gk*IW +: IW];
         end
-    endgenerate
     wire [KV-1:0] t_en = td_v ? {{(KV-KD){1'b0}}, {KD{1'b1}}} : {KV{1'b1}};
     // ---- union ----
     reg flush_pend;
@@ -244,4 +249,5 @@ module ot_dshbm_dspark_top_cp_stop #(
         .clk(clk), .rst_n(rst_n), .clr(u_clr), .add_v(t_v), .add_col(t_col), .add_ids(t_ids), .add_en(t_en),
         .flush(flush_pend && !inflight), .out_v(u_v), .out_ready(u_ready), .out_id(u_id), .out_mask(u_mask),
         .out_last(u_last), .busy(), .count());
+    end endgenerate
 endmodule

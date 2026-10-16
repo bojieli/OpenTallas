@@ -1,0 +1,832 @@
+#!/usr/bin/env python3
+"""kv-die 2026-10-09 (owner rule: every element good physical design): generate rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv,
+re-cut D with the ROW ENGINE split into HARD SUB-TILES.
+
+Every route of the monolithic row engine failed (_p a / b PREROUTE -6.0 / -4.4 ns at S3 -> product, E -3.6 ns at
+sc_addr -> lmax, D stuck in floorplan repair at -49 ns on the central reset leaf feeding the local-tree bank): 512
+lanes, 1 M instances and central broadcasts in one 531 x 1,998 um element.  H keeps the arithmetic, the order and the
+cycle-level schedule of D and cuts the engine along its natural seams:
+
+  ot_qwen_nearhbm_head_h   one per q head (4 a engine): the head's 128 lanes (product unit + lane adder + loop), its
+                           K score tree and scale, its 128 lanes of the local P.V tree (levels 1-3: a lane bank adder,
+                           three level registers and the node register a lane), its q rows (heads h and 4 + h, written
+                           from the q beat broadcast).  Inputs: the S1b-staged control / row / e / decision words, all
+                           captured at the tile pins (the parent's S2 register); outputs: the head's score (the
+                           parent's scd1 register), faults, and a 1,024-b node slice register.
+  ot_qwen_nearhbm_ectl_h   the engine control: registered boundary, request generator, row / e FIFOs, the K / V
+                           issue, pend / arm, the local-tree DECISIONS (now a staged 12-b decision word instead of
+                           a combinational 16 k-bit datapath), the score tags / running max, the node beat stream.
+                           S1 and the two S1b copies (one per tile pair) are its output registers.
+  ot_qwen_nearhbm_row_engine_h  the engine = 1 ectl + 4 head tiles (same ports as row_engine_d).
+
+Timing alignment (exact): a decision made centrally at t reaches the lanes at t + 8 (S1, S1b, S2 at the tile pin, S3 a
+group, the PLAT delay line -- the lane control path of the parent), where the slot's loop value is the one the parent
+read at t (a pending or just-taken slot keeps its value in the loop for >= 16 cycles).  The bank result the decision
+at t expects at t + ADD_LAT arrives at the lane at t + 8 + ADD_LAT, where the arrival decision (also delayed 8) uses it.
+The node beat: beat b of a node is the lanes d = LFB k + b of every head (each head tile drives its own 1,024-b slice of
+every beat from a register); the aggregator staging places it back (lane h HD + LFB k + b).
+
+    python3 tools/qwen_kv_die/stack_h_gen.py [--check]
+"""
+import re
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import stack_d_gen as D               # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[2]
+DST = ROOT / 'rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv'
+rep = D.rep
+
+HEAD = r'''
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_qwen_nearhbm_head_h: one q head of a row engine (HARD SUB-TILE, kv-die 2026-10-09; see the file header)
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_qwen_nearhbm_head_h #(
+    parameter integer HD = 128,
+    parameter integer H = 0,             // this head (0..3); its q rows are heads H and 4 + H
+    parameter integer ADD_LAT = 7,
+    parameter integer MUL_LAT = 6,
+    parameter [31:0]  SCALE = 32'h3DB504F3,
+    parameter integer LFB = 4,
+    parameter integer LTW = 12
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire [3:0]           c_in,         // S1b control {k issue, v issue of a real row, first round, g}
+    input  wire [HD*8-1:0]      row_in,
+    input  wire [15:0]          e_in,         // this head's e
+    input  wire [LTW-1:0]       lt_in,        // local-tree / node decision word (S1b)
+    input  wire [1:0]           hid,          // this tile's head (0..3): a die-top strap, so one hard tile serves every head
+    input  wire                 q_valid_in,   // the q beat broadcast (S1b)
+    input  wire [5:0]           q_beat_in,
+    input  wire [511:0]         q_data_in,
+    output reg  [31:0]          sc_d,         // the head's scaled score (the parent's scd1)
+    output reg                  sc_f,         // scale fault (the parent's tf1)
+    output reg                  g_f,          // lane / bank faults, ORed
+    output reg  [HD*32/LFB-1:0] nb_d          // this head's slice of a node beat
+);
+    localparam integer LV = $clog2(HD);
+    localparam integer GPH = HD / 16;
+    localparam integer PLAT = 4;
+    // ---- reset leaves: tile root, groups -------------------------------------------------------------------------------
+    wire rt;
+    wire [GPH-1:0] rgrp;
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rt (.clk(clk), .arst_n(rst_n), .d(1'b1), .q(rt));
+    genvar gg, d, l;
+    generate for (gg = 0; gg < GPH; gg = gg + 1) begin : g_rgrp
+        (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rt), .q(rgrp[gg]));
+    end endgenerate
+    // ---- S2: the tile pins ---------------------------------------------------------------------------------------------
+    reg  [3:0]       c2;
+    reg  [HD*8-1:0]  row2;
+    reg  [15:0]      e2;
+    reg  [LTW-1:0]   lt2;
+    reg              qv2;
+    reg  [5:0]       qb2;
+    reg  [511:0]     qd2;
+    always @(posedge clk or negedge rt)
+        if (!rt) begin c2[3:1] <= 3'd0; lt2 <= {LTW{1'b0}}; qv2 <= 1'b0; end
+        else begin c2[3:1] <= c_in[3:1]; lt2 <= lt_in; qv2 <= q_valid_in; end
+    always @(posedge clk) begin c2[0] <= c_in[0]; row2 <= row_in; e2 <= e_in; qb2 <= q_beat_in; qd2 <= q_data_in; end
+    // q rows of heads hid (g = 0) and 4 + hid (g = 1): beats NB hid .. + NB - 1 and NB (4 + hid) .. of the h-major
+    // broadcast (NB = HD 16 / 512 beats a row; a beat-aligned row is captured by the strap; else by the parameter H)
+    reg  [HD*16-1:0] q0, q1;
+    localparam integer NQB = 8 * HD * 16 / 512;
+    localparam integer NB = HD * 16 / 512;
+    genvar bi;
+    generate if ((HD * 16) % 512 == 0) begin : g_qa
+        for (bi = 0; bi < NB; bi = bi + 1) begin : g_qw
+            always @(posedge clk) begin
+                if (qv2 && qb2 == 6'(NB * {30'd0, hid} + bi))       q0[512*bi +: 512] <= qd2;
+                if (qv2 && qb2 == 6'(NB * (4 + {30'd0, hid}) + bi)) q1[512*bi +: 512] <= qd2;
+            end
+        end
+    end else for (bi = 0; bi < NQB; bi = bi + 1) begin : g_qw
+        // the part of beat bi inside head H's / head 4 + H's row (q is h-major: head x at bits x HD 16 ..)
+        localparam integer BO = 512 * bi;
+        localparam integer L0 = H * HD * 16, L1 = (4 + H) * HD * 16;
+        localparam integer A0 = (BO > L0) ? BO : L0, Z0 = (BO + 512 < L0 + HD * 16) ? BO + 512 : L0 + HD * 16;
+        localparam integer A1 = (BO > L1) ? BO : L1, Z1 = (BO + 512 < L1 + HD * 16) ? BO + 512 : L1 + HD * 16;
+        if (Z0 > A0) begin : g_w0
+            always @(posedge clk) if (qv2 && qb2 == 6'(bi)) q0[A0 - L0 +: Z0 - A0] <= qd2[A0 - BO +: Z0 - A0];
+        end
+        if (Z1 > A1) begin : g_w1
+            always @(posedge clk) if (qv2 && qb2 == 6'(bi)) q1[A1 - L1 +: Z1 - A1] <= qd2[A1 - BO +: Z1 - A1];
+        end
+    end endgenerate
+    // ---- S3 per 16-lane group + the adder-control / decision delay lines ------------------------------------------------
+    wire [HD*32-1:0] p_y, l_y, fb;
+    wire [HD-1:0]    p_vo, p_f, l_vo, l_f, b_f;
+    wire [4*GPH-1:0]    c3;
+    reg  [128*GPH-1:0]  row3;
+    wire [16*GPH-1:0]   e3;
+    wire [3*GPH-1:0]    kvz_d;
+    wire [LV*GPH-1:0]   kl_g;
+    wire [LTW*GPH-1:0]  lt3, lt_d;
+    reg  [GPH-1:0]      gfault;
+    generate
+        for (gg = 0; gg < GPH; gg = gg + 1) begin : g_s3
+            (* keep_hierarchy *) ot_nhb_repr_h #(.W(3)) u_c (.clk(clk), .rst_n(rgrp[gg]), .d(c2[3:1]), .q(c3[4*gg+1 +: 3]));
+            (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_g (.clk(clk), .d(c2[0]), .q(c3[4*gg]));
+            (* keep_hierarchy *) ot_nhb_rep_h #(.W(16)) u_e (.clk(clk), .d(e2), .q(e3[16*gg +: 16]));
+            (* keep_hierarchy *) ot_nhb_repr_h #(.W(LTW)) u_t (.clk(clk), .rst_n(rgrp[gg]), .d(lt2), .q(lt3[LTW*gg +: LTW]));
+            always @(posedge clk) row3[128*gg +: 128] <= row2[128*gg +: 128];
+            ot_hdc_delay #(.W(3), .D(PLAT), .RESET(1)) u_ctl (.clk(clk), .rst_n(rgrp[gg]), .d(c3[4*gg+1 +: 3]),
+                                                             .q(kvz_d[3*gg +: 3]));
+`ifdef KVD_HMUT
+            // bench mutant (must FAIL): the decision word one edge late -- the lanes read the next slot's loop value
+            ot_hdc_delay #(.W(LTW), .D(PLAT + 1), .RESET(1)) u_ltd (.clk(clk), .rst_n(rgrp[gg]), .d(lt3[LTW*gg +: LTW]),
+                                                               .q(lt_d[LTW*gg +: LTW]));
+`else
+            ot_hdc_delay #(.W(LTW), .D(PLAT), .RESET(1)) u_ltd (.clk(clk), .rst_n(rgrp[gg]), .d(lt3[LTW*gg +: LTW]),
+                                                               .q(lt_d[LTW*gg +: LTW]));
+`endif
+            assign kl_g[LV*gg] = kvz_d[3*gg + 2];
+            for (l = 2; l <= LV; l = l + 1) begin : g_kl
+                ot_hdc_delay #(.W(1), .D(ADD_LAT), .RESET(1)) u_kl (.clk(clk), .rst_n(rgrp[gg]), .d(kl_g[LV*gg + l - 2]),
+                                                                   .q(kl_g[LV*gg + l - 1]));
+            end
+            always @(posedge clk or negedge rgrp[gg])
+                if (!rgrp[gg]) gfault[gg] <= 1'b0;
+                else gfault[gg] <= (|(p_f[16*gg +: 16] & p_vo[16*gg +: 16])) || (|l_f[16*gg +: 16]) || (|b_f[16*gg +: 16]);
+        end
+    endgenerate
+    function automatic integer tbase(input integer lev);
+        integer k;
+        begin
+            tbase = 0;
+            for (k = 2; k < lev; k = k + 1) tbase = tbase + (HD >> k);
+        end
+    endfunction
+    function automatic integer tlev(input integer m);
+        integer k;
+        begin
+            tlev = 0;
+            for (k = LV; k >= 2; k = k - 1) if (m >= tbase(k) && m < tbase(k) + (HD >> k)) tlev = k;
+        end
+    endfunction
+    function automatic integer tnode(input integer lev, input integer idx);
+        tnode = (lev == 1) ? 2 * idx : 2 * (tbase(lev) + idx) + 1;
+    endfunction
+    // ---- the lanes -------------------------------------------------------------------------------------------------------
+    wire [HD*32-1:0] obw;
+    generate
+        for (d = 0; d < HD; d = d + 1) begin : g_d
+            localparam integer G = d / 16;
+            localparam integer TL = (d % 2 == 0) ? 1 : tlev((d - 1) / 2);
+            localparam integer TI = (d % 2 == 0) ? d / 2 : (d - 1) / 2 - tbase(TL > 1 ? TL : 2);
+            wire        g3k = c3[4*G + 3], g3v = c3[4*G + 2], g3g = c3[4*G];
+            wire [15:0] qv = g3g ? q1[d * 16 +: 16] : q0[d * 16 +: 16];
+            wire [15:0] ev = e3[16*G +: 16];
+            wire        kd = kvz_d[3*G + 2], vd = kvz_d[3*G + 1], czd = kvz_d[3*G];
+            (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rgrp[G]), .valid_in(g3k || g3v),
+                .a(g3k ? qv : ev), .k(row3[128*G + 8*(d % 16) +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]),
+                .valid_out(p_vo[d]));
+            wire [31:0] va = czd ? 32'd0 : fb[32*d +: 32];
+            wire [31:0] vb = vd ? p_y[32*d +: 32] : 32'd0;
+            wire [31:0] la, lb;
+            wire        kt;
+            if (TL == 1) begin : g_l1
+                assign kt = kd;
+                assign la = kt ? p_y[32*d +: 32] : va;
+                assign lb = kt ? p_y[32*(d+1) +: 32] : vb;
+            end else if (TL >= 2) begin : g_ln
+                localparam integer LA = tnode(TL - 1, 2 * TI);
+                localparam integer LB = tnode(TL - 1, 2 * TI + 1);
+                assign kt = kl_g[LV*G + TL - 1];
+                assign la = kt ? l_y[32*LA +: 32] : va;
+                assign lb = kt ? l_y[32*LB +: 32] : vb;
+            end else begin : g_free
+                assign kt = 1'b0;
+                assign la = va;
+                assign lb = vb;
+            end
+            wire [1:0] err;
+            (* keep_hierarchy *) ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(rgrp[G]), .valid_in(kt || vd),
+                .a(la), .b(lb), .y(l_y[32*d +: 32]), .err(err), .valid_out(l_vo[d]));
+            assign l_f[d] = l_vo[d] && (err != 2'd0);
+            ot_hdc_delay #(.W(32), .D(8 - ADD_LAT)) u_pad (.clk(clk), .rst_n(rgrp[G]), .d(l_y[32*d +: 32]),
+                                                           .q(fb[32*d +: 32]));
+            // the local P.V tree (levels 1-3) of this lane, executing the decision word delayed 8 (see the header)
+            wire [LTW-1:0] dw = lt_d[LTW*G +: LTW];
+            wire        lis = dw[0], lsel = dw[1], lst0 = dw[4], lsty = dw[5], lob = dw[8];
+            wire [1:0]  lal = dw[3:2], lsl = dw[7:6];
+            reg  [31:0] lp0, lp1, lp2, obr;
+            wire [31:0] ly;
+            wire [31:0] lpa = (lal == 2'd0) ? lp0 : ((lal == 2'd1) ? lp1 : lp2);
+            wire [1:0]  berr;
+            wire        bvo;
+            (* keep_hierarchy *) ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_b (.clk(clk), .rst_n(rgrp[G]), .valid_in(lis),
+                .a(lpa), .b(lsel ? ly : fb[32*d +: 32]), .y(ly), .err(berr), .valid_out(bvo));
+            assign b_f[d] = bvo && (berr != 2'd0);
+            always @(posedge clk) begin
+                if (lst0) lp0 <= fb[32*d +: 32];
+                if (lsty && lsl == 2'd0) lp0 <= ly;
+                if (lsty && lsl == 2'd1) lp1 <= ly;
+                if (lsty && lsl == 2'd2) lp2 <= ly;
+                if (lob) obr <= ly;
+            end
+            assign obw[32*d +: 32] = obr;
+        end
+    endgenerate
+    // node slice: beat b = the lanes d = LFB k + b, from the decision word {osend, beat} of group 0's delay line
+    wire [LTW-1:0] dw0 = lt_d[0 +: LTW];
+    integer k_;
+    always @(posedge clk) if (dw0[9]) for (k_ = 0; k_ < HD / LFB; k_ = k_ + 1)
+        nb_d[32*k_ +: 32] <= obw[32*(LFB*k_ + dw0[11:10]) +: 32];
+    // ---- K pass: this head's root x SCALE -------------------------------------------------------------------------------
+    localparam integer LR = tnode(LV, 0);
+    localparam integer GR = LR / 16;
+    wire kroot_h, sv;
+    wire [31:0] scd0;
+    wire [1:0] merr;
+    ot_hdc_delay #(.W(1), .D(ADD_LAT), .RESET(1)) u_kvm (.clk(clk), .rst_n(rt), .d(kl_g[LV*GR + LV - 1]), .q(kroot_h));
+    (* keep_hierarchy *) ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_scale (
+        .clk(clk), .rst_n(rt), .valid_in(kroot_h), .a(l_y[32*LR +: 32]), .b(SCALE), .y(scd0), .err(merr), .valid_out(sv));
+    always @(posedge clk) sc_d <= scd0;
+    always @(posedge clk or negedge rt)
+        if (!rt) begin sc_f <= 1'b0; g_f <= 1'b0; end
+        else begin sc_f <= sv && (merr != 2'd0); g_f <= |gfault; end
+endmodule
+'''
+
+
+def generate():
+    s = D.generate()
+    mods = re.findall(r'(?m)^module\s+(\w+)_d\b', s)
+    s = re.sub(r'\b(' + '|'.join(map(re.escape, mods)) + r')_d\b', r'\1_h', s)
+    s = rep(s, """// GENERATED by tools/qwen_kv_die/stack_d_gen.py from rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv (do not edit by
+// hand).  RE-CUT D of the near-HBM stack""", """// GENERATED by tools/qwen_kv_die/stack_h_gen.py (re-cut D with the row engine as hard sub-tiles: 4 head tiles + an
+// engine control tile; do not edit by hand).  RE-CUT H of the near-HBM stack""")
+    # ================= the engine: ectl from row_engine (central logic kept verbatim) =================
+    i = s.index('module ot_qwen_nearhbm_row_engine_h #(')
+    j = s.index('endmodule', i) + len('endmodule')
+    eng = s[i:j]
+    ectl = eng.replace('module ot_qwen_nearhbm_row_engine_h #(', 'module ot_qwen_nearhbm_ectl_h #(', 1)
+    # ports: the node data leaves from the head tiles; the tile interface is added
+    ectl = rep(ectl, """    output reg  [4*HD*32/LFB-1:0] nb_data,
+""", "")
+    ectl = rep(ectl, """    output reg                  ev_k_first,
+    output reg                  ev_v_first
+);""", """    output reg                  ev_k_first,
+    output reg                  ev_v_first,
+    // ---- the head tiles (hard sub-tiles): one S1b copy per tile pair (t0: heads 0 / 1 on the S face, t1: heads 2 / 3 on
+    //      the N face), the heads' returns on the same faces ----
+    output wire [3:0]           t0_c,
+    output wire [3:0]           t1_c,
+    output wire [HD*8-1:0]      t0_row,
+    output wire [HD*8-1:0]      t1_row,
+    output wire [31:0]          t0_e,       // e of the pair's two heads (16 b each)
+    output wire [31:0]          t1_e,
+    output wire [11:0]          t0_lt,
+    output wire [11:0]          t1_lt,
+    output wire                 t0_qv,
+    output wire                 t1_qv,
+    output wire [5:0]           t0_qb,
+    output wire [5:0]           t1_qb,
+    output wire [511:0]         t0_qd,
+    output wire [511:0]         t1_qd,
+    input  wire [2*32-1:0]      ts0_sc,     // {head 2P + 1, head 2P}
+    input  wire [2*32-1:0]      ts1_sc,
+    input  wire [1:0]           ts0_sf,
+    input  wire [1:0]           ts1_sf,
+    input  wire [1:0]           ts0_gf,
+    input  wire [1:0]           ts1_gf
+);""")
+    # q: no engine q registers (the tiles hold them); the count stays
+    # ectl timing (qkd_ectl_a TT -92.6: T -> n_s / gmax compare -> issue -> row FIFO pointer; exp_done pin -> request
+    # generator): the per-layer geometry n_s / gmax are registers (T is stable from start; first use one edge later),
+    # exp_done is captured at the pin (a V request opens one edge later)
+    ectl = rep(ectl, """    wire [4:0]  gmax = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));   // nonempty groups""",
+               """    wire [4:0]  gmax_c = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));   // nonempty groups
+    reg  [4:0]  gmax;""")
+    ectl = rep(ectl, """    wire [11:0] n_s = {T[13:9], 7'd0} + part[11:0];""", """    wire [11:0] n_s_c = {T[13:9], 7'd0} + part[11:0];
+    reg  [11:0] n_s;
+    reg  [31:0] exp_done_r;
+    always @(posedge clk) begin n_s <= n_s_c; gmax <= gmax_c; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) exp_done_r <= 32'd0; else exp_done_r <= exp_done;""")
+    ectl = rep(ectl, """    wire       rg_v_gate = exp_done[{rg_g, rg_gam[3:0]}];""", """    wire       rg_v_gate = exp_done_r[{rg_g, rg_gam[3:0]}];""")
+    ectl = rep(ectl, """    reg  [8*HD*16-1:0] q_bf16;
+""", "")
+    ectl = rep(ectl, """    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; if (qv_r) q_bf16[512*qb_r +: 512] <= qd_r; end""",
+               """    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; end""")
+    # lanes / local tree / K root: replaced by the decision word, the S1 / S1b registers and the tile returns
+    a = ectl.index('    // ---- the lanes ---')
+    b = ectl.index('    // running max per [g][h] of this engine')
+    ectl = ectl[:a] + CTL_MID + ectl[b:]
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) if (!rc) gfault_any <= 1'b0; else gfault_any <= |gfault;""",
+               """    always @(posedge clk or negedge rc) if (!rc) gfault_any <= 1'b0; else gfault_any <= |t_gf;""")
+    ectl = rep(ectl, """    wire        take;                                   // re-cut D: the local tree takes the leaf (below)
+""", """    wire        take;                                   // re-cut H: the local tree's decision (below)
+""")
+    ectl = rep(ectl, """                if ((|tf) || (|tree_fault) || mac_fault || lt_fault) fault <= 1'b1;""",
+               """                if ((|tf) || mac_fault || lt_fault) fault <= 1'b1;""")
+    ectl = rep(ectl, """    localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2, S3)""",
+               """    localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2 at the tile pin, S3)
+    localparam integer PLAT = 4;""")
+    # ---- qwen-1010/b 2026-10-10: ectl_c timing successor (route qkd_ectl_c-f8a6d7c30 EARLY_FAIL_SETUP TT -519 ps, 746
+    # endpoints).  Three structural causes, three exact fixes (transaction level; the bench re-measures the cycles):
+    #  (a) the request generator is fed by the E face (exp_done / n_s / gmax / start) but its requests leave on the W face
+    #      (the landing column): req_* crossed the 648-um tile in one cycle (629 ps of wire, reg -> out -543 ps).  The
+    #      requests now pass RQD registered relay stages to the W-face pin flops (+RQD cycles of request latency, inside
+    #      the DQ = 32 credit window).
+    #  (b) the q beat broadcast enters on the E face and leaves on both long faces (t0_qd S / t1_qd N, the far end ~700 um
+    #      away): one registered mid stage (qv / qb / qd), and q_ready counts the delayed valid, so the q rows still land in
+    #      the head tiles before the first K issue reaches them (+1 cycle at the layer start).
+    #  (c) the score / running-max block takes its own reset leaf (u_rc fanned out to the whole tile: lmax -16 ps).
+    ectl = re.sub(r'output reg(\s+)req_valid,', r'output wire\1req_valid,', ectl, count=1)
+    ectl = re.sub(r'output reg(\s+)req_v,', r'output wire\1req_v,', ectl, count=1)
+    ectl = re.sub(r'output reg(\s+)req_g,', r'output wire\1req_g,', ectl, count=1)
+    ectl = re.sub(r'output reg (\s*)\[12:0\](\s+)req_t,', r'output wire\1[12:0]\2req_t,', ectl, count=1)
+    n0 = len(re.findall(r'\breq_(?:valid|v|g|t)\b(?=\s*<=)', ectl))
+    assert n0 == 10, n0
+    ectl = re.sub(r'\breq_(valid|v|g|t)\b(?=\s*<=)', r'rq_\1', ectl)
+    ectl = rep(ectl, """    // ---- request generator -------------------------------------------------------------------------------------------
+""", """    // ---- request generator -------------------------------------------------------------------------------------------
+    reg        rq_valid, rq_v, rq_g;                    // the generator's request (relayed to the W-face pin flops below)
+    reg [12:0] rq_t;
+""")
+    ectl = rep(ectl, """    // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+""", """    // ---- request relay: RQD registered stages from the generator to the W-face pin flops (the last stage) -------------
+    localparam integer RQD = 2;
+    wire [RQD:0]        rqv_s;
+    wire [15*(RQD+1)-1:0] rqd_s;
+    assign rqv_s[0] = rq_valid;
+    assign rqd_s[14:0] = {rq_v, rq_g, rq_t};
+    genvar gq;
+    generate for (gq = 0; gq < RQD; gq = gq + 1) begin : g_rq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
+    end endgenerate
+    assign req_valid = rqv_s[RQD];
+    assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
+
+    // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+""")
+    # (b) q beat mid stage
+    ectl = rep(ectl, """    always @(posedge clk or negedge rst_n) if (!rst_n) qv_r <= 1'b0; else qv_r <= q_valid_in;
+    always @(posedge clk) begin qb_r <= q_beat_in; qd_r <= q_data_in; end""",
+               """    reg               qv_p;                    // pin flops (E face); qv_r / qb_r / qd_r are the mid stage
+    reg  [5:0]        qb_p;
+    reg  [511:0]      qd_p;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin qv_p <= 1'b0; qv_r <= 1'b0; end else begin qv_p <= q_valid_in; qv_r <= qv_p; end
+    always @(posedge clk) begin qb_p <= q_beat_in; qd_p <= q_data_in; qb_r <= qb_p; qd_r <= qd_p; end""")
+    # (c) score / running-max reset leaf
+    ectl = rep(ectl, """    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+""", """    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    wire rsc;                                                         // the score / running-max block's own leaf
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
+""")
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc)
+        if (!rc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end""", """    always @(posedge clk or negedge rsc)
+        if (!rsc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end""")
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) begin
+        if (!rc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""", """    always @(posedge clk or negedge rsc) begin
+        if (!rsc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""")
+    # (e) qwen-1010/b 2026-10-10 (timed HBM3E: DQ 128 engine credits): above DQ 32 the row FIFO is TWO-LEVEL -- an SRAM
+    # level (4 x ot_sram_1r1w_128x256 macros: 128 rows x 1,024 b) in front of the 8-row flop level with the pipelined
+    # read pointers.  Rows enter the flop level in order (direct only while the SRAM level is empty and no refill is in
+    # flight); the SRAM level refills it one row a cycle.  Same push / pop / dout / nonempty contract, rows later at most.
+    old_rows = """    ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                             .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));"""
+    assert old_rows in ectl, 'rows inst'
+    ectl = ectl.replace(old_rows, """    generate if (DQ > 32) begin : g_rows2
+        ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end else begin : g_rows1
+        ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end endgenerate""")
+    # (f) qwen-1010/b 2026-10-10: STREAM ORDER for the K (max) pass.  The KV-die controller streams each PC in its
+    # PC-local order j = {v, g, t[6], t[12:9], t[5:3]} (CONTRACT, stream bench: 0.966 TB/s worst over 8 refresh phases);
+    # the K pass consumes in that order (t[6] outer) whenever the stack holds more than 1,024 positions: the max pass and
+    # the score memory are order-free (scores land by their {g, idx} tag; max is exact in any order).  The V pass keeps
+    # the golden order.  The engine's linear counter L (step R) maps to the position index pidx = perm(L); an L whose
+    # pidx is not a position is skipped by both the request generator and the consumer.  KVD_VMUT (bench only):
+    # the V pass walks k in reverse (the P.V sum reordered) -- must be inexact.
+    ectl = rep(ectl, """    wire       rg_k_ok = rg_run && !rg_vph && (rg_idx < n_s);""",
+               """    wire       kord = (n_s > 12'd1024);                  // stream order for the K pass (see above)
+    wire [11:0] rg_pidx = kord ? {rg_idx[11], rg_idx[9:6], rg_idx[10], rg_idx[5:0]} : rg_idx;
+    wire       rg_klim = kord ? (rg_idx < 12'd2048) : (rg_idx < n_s);
+    wire       rg_k_ok = rg_run && !rg_vph && rg_klim && (rg_pidx < n_s);""")
+    ectl = rep(ectl, """                if (rg_idx < n_s) begin
+                    if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""", """                if (rg_klim) begin
+                    if (rg_pidx >= n_s) rg_idx <= rg_idx + R;             // not a position: skip
+                    else if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""")
+    ectl = rep(ectl, """    wire       k_issue = c_started && !c_vph && !c_fin && (c_idx < n_s) && row_ne && q_ready;""",
+               """    wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
+    wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
+    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && row_ne && q_ready;""")
+    ectl = rep(ectl, """                    if (c_idx < n_s) begin
+                        if (k_issue) begin
+                            c_idx <= c_idx + R;""", """                    if (c_klim) begin
+                        if (c_pidx >= n_s) c_idx <= c_idx + R;            // not a position: skip
+                        else if (k_issue) begin
+                            c_idx <= c_idx + R;""")
+    ectl = rep(ectl, """.d({c_g, c_idx[10:0]}), .q(tag_sc));""", """.d({c_g, c_pidx[10:0]}), .q(tag_sc));""")
+    ectl = rep(ectl, """    wire [13:0] c_vt = tpos(c_k, {c_gam[3:0], c_j});""", """`ifdef KVD_VMUT
+    wire [3:0]  c_kk = klast(c_gam[3:0]) - c_k;              // MUTANT: the V pass k order reversed (P.V sum reordered)
+`else
+    wire [3:0]  c_kk = c_k;
+`endif
+    wire [13:0] c_vt = tpos(c_kk, {c_gam[3:0], c_j});""")
+    ectl = rep(ectl, """    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});""", """`ifdef KVD_VMUT
+    wire [13:0] rg_vt = tpos(klast(rg_gam[3:0]) - rg_k, {rg_gam[3:0], rg_j});
+`else
+    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});
+`endif""")
+    # (g) qwen-1010/b: the e FIFO (DQ x 64 b) above DQ 32 is two-level too (one SRAM macro, padded), no memory override
+    ectl = rep(ectl, """    ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                        .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));""",
+               """    generate if (DQ > 32) begin : g_e2
+        ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                               .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
+    end else begin : g_e1
+        ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                        .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
+    end endgenerate""")
+    wrapper = ENGINE
+    s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
+    # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
+    s = rep(s, """            stg[swp][(LN*32/LFB)*bb +: LN*32/LFB] <= bd;""", """            for (hh_ = 0; hh_ < 4; hh_ = hh_ + 1)
+                for (kk_ = 0; kk_ < HD / LFB; kk_ = kk_ + 1)
+                    stg[swp][32*(HD*hh_ + LFB*kk_ + bb) +: 32] <= bd[32*((HD / LFB)*hh_ + kk_) +: 32];""")
+    s = rep(s, """        localparam integer SA = (ND > 1) ? $clog2(ND) : 1;
+        reg  [LN*32-1:0] stg [0:ND-1];""", """        localparam integer SA = (ND > 1) ? $clog2(ND) : 1;
+        integer          hh_, kk_;
+        reg  [LN*32-1:0] stg [0:ND-1];""")
+    # (d) qwen-1010/b 2026-10-10: the row FIFO's 32 read-pointer copies span the 648-um word; the pop (the K / V issue
+    # decision) reached all of them in one cycle (cyc8_r -> issue -> 450 ps of buffered wire -> u_rows.g_rp[*]: -204 ps,
+    # 92 endpoints).  The pop now reaches each slice through two registered stages (one of NQ quadrant copies, then the
+    # slice's own), the slice pointer advances on its stage, and the slice reads at q + ps + pq -- exactly the FIFO
+    # pointer (q counts the pops up to t - 3, ps = pop(t - 2), pq = pop(t - 1)).  0 cycles.
+    s = rep(s, """// read-pointer copy: advances on pop exactly as the FIFO's own pointer
+module ot_nhb_rp_h""", """// read-pointer copy (pop reaches it through two registered stages, pq then ps): reads at q + ps + pq = the FIFO pointer
+module ot_nhb_rp2_h #(parameter integer AW = 5, parameter integer D = 32) (input wire clk, input wire rst_n,
+                                                                           input wire pq, output wire [AW-1:0] ra);
+    reg [AW-1:0] q;
+    reg          ps;
+    wire [AW-1:0] q1 = (q == D - 1) ? {AW{1'b0}} : q + 1'b1;
+    wire [AW-1:0] q2 = (q1 == D - 1) ? {AW{1'b0}} : q1 + 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin q <= {AW{1'b0}}; ps <= 1'b0; end else begin ps <= pq; if (ps) q <= q1; end
+    assign ra = (ps && pq) ? q2 : ((ps || pq) ? q1 : q);
+endmodule
+// read-pointer copy: advances on pop exactly as the FIFO's own pointer
+module ot_nhb_rp_h""")
+    s = rep(s, """    wire [NC*AW-1:0] rpc;
+    genvar c;
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pop(pop), .q(rpc[AW*c +: AW]));""",
+           """    wire [NC*AW-1:0] rpc;
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
+    genvar c;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));""")
+    s = rep(s, """// FP32 a > b for finite operands""", ROWS2 + """// FP32 a > b for finite operands""")
+    return s
+
+
+ROWS2 = r'''// Flop level of the two-level FIFO: ot_nhb_fifo_rows_h with its D entries as EXPLICIT registers (qwen-1010/b
+// 2026-10-10, fe-push SYNTH_MEMORY_MAX_BITS audit: no memory array, so synthesis needs no memory-bits override).
+module ot_nhb_fifo_rows_r_h #(parameter integer W = 1024, parameter integer D = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+1)-1:0] count
+);
+    localparam integer AW = (D > 1) ? $clog2(D) : 1;
+    localparam integer NC = W / 32;
+    reg [AW-1:0] wpd;
+    reg [D-1:0]  we;
+    reg          pr;
+    reg [W-1:0]  dr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin wpd <= 0; we <= 0; pr <= 1'b0; count <= 0; end
+        else begin
+            pr <= push;
+            we <= push ? ({{(D-1){1'b0}}, 1'b1} << wpd) : {D{1'b0}};
+            if (push) wpd <= (wpd == D - 1) ? 0 : wpd + 1;
+            count <= count + (pr ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+    always @(posedge clk) dr <= din;
+    wire [W*D-1:0] ent;
+    genvar e, c;
+    generate for (e = 0; e < D; e = e + 1) begin : g_ent
+        reg [W-1:0] r;
+        always @(posedge clk) if (we[e]) r <= dr;
+        assign ent[W*e +: W] = r;
+    end endgenerate
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
+    wire [NC*AW-1:0] rpc;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));
+        assign dout[32*c +: 32] = ent[W*rpc[AW*c +: AW] + 32*c +: 32];
+    end endgenerate
+    assign nonempty = (count != 0);
+endmodule
+
+// Two-level row FIFO (qwen-1010/b 2026-10-10, DQ > 32): an SRAM level (NM x ot_sram_1r1w_128x256: 128 rows) in front of
+// the D1-row flop level ot_nhb_fifo_rows_h (pipelined read pointers).  Order: a row goes straight to the flop level only
+// while the SRAM level is empty and no refill read is in flight, else to the SRAM level, which refills the flop level
+// one row a cycle (read issued when the flop level, counting its in-flight rows, has room).  count = both levels.
+module ot_nhb_fifo_rows2_h #(parameter integer W = 1024, parameter integer D = 128, parameter integer D1 = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+D1+1)-1:0] count
+);
+    localparam integer NM = (W + 255) / 256;          // macros (the last one padded)
+    localparam integer SD = 128;
+    reg  [6:0] swp, srp;
+    reg  [7:0] scnt;                                   // rows in the SRAM level
+    reg        rd_v;                                   // a refill read issued last edge (its row arrives now)
+    reg  [3:0] l1_pend;                                // rows promised to the flop level (in flight or in it)
+`ifdef KVD_RMUT
+    wire       to_l1   = push && !rd_v && l1_pend < D1;                 // MUTANT: bypasses rows still in the SRAM level
+`else
+    wire       to_l1   = push && scnt == 8'd0 && !rd_v && l1_pend < D1;
+`endif
+    wire       to_sram = push && !to_l1;
+    wire       rd      = (scnt != 8'd0) && (l1_pend + (to_l1 ? 1 : 0) < D1);   // refill when the flop level has room
+    wire [256*NM-1:0] srdp;
+    wire [256*NM-1:0] dinp = {{(256*NM-W){1'b0}}, din};
+    wire [W-1:0] srd = srdp[W-1:0];
+    genvar m;
+    generate for (m = 0; m < NM; m = m + 1) begin : g_m
+        ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(rd), .r_addr_in(srp), .rd_out(srdp[256*m +: 256]),
+            .w_ce_in(to_sram), .w_addr_in(swp), .wd_in(dinp[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    wire        l1_push = to_l1 || rd_v;
+    wire [W-1:0] l1_din = rd_v ? srd : din;
+    wire [$clog2(D1+1)-1:0] l1_cnt;
+    ot_nhb_fifo_rows_r_h #(.W(W), .D(D1)) u_l1 (.clk(clk), .rst_n(rst_n), .push(l1_push), .din(l1_din), .pop(pop),
+                                              .dout(dout), .nonempty(nonempty), .count(l1_cnt));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin swp <= 0; srp <= 0; scnt <= 0; rd_v <= 1'b0; l1_pend <= 0; count <= 0; end
+        else begin
+            if (to_sram) swp <= swp + 7'd1;
+            if (rd) srp <= srp + 7'd1;
+            scnt <= scnt + (to_sram ? 8'd1 : 8'd0) - (rd ? 8'd1 : 8'd0);
+            rd_v <= rd;
+            l1_pend <= l1_pend + ((to_l1 || rd) ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+            count <= count + (push ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+endmodule
+
+'''
+
+CTL_MID = r'''    // ---- re-cut H: S1 (control, row, e, decision word) and its two S1b copies, one per head-tile pair ---------------
+    localparam integer LTW = 12;
+    reg  [3:0]       c1;
+    reg  [HD*8-1:0]  row1;
+    reg  [63:0]      e1;
+    reg  [LTW-1:0]   lt1;
+    wire [LTW-1:0]   ltw;
+    always @(posedge clk or negedge rc)
+        if (!rc) begin c1[3:1] <= 3'd0; lt1 <= {LTW{1'b0}}; end
+        else begin c1[3:1] <= {k_issue, v_issue && c_vrow, v_issue && (c_k == 4'd0)}; lt1 <= ltw; end
+    always @(posedge clk) begin c1[0] <= c_g; row1 <= row; e1 <= e_word; end
+    wire [2*4-1:0]    t_c;
+    wire [2*HD*8-1:0] t_row;
+    wire [2*32-1:0]   t_e;
+    wire [2*12-1:0]   t_lt;
+    wire [1:0]        t_qv;
+    wire [2*6-1:0]    t_qb;
+    wire [2*512-1:0]  t_qd;
+    wire [4*32-1:0]   t_sc = {ts1_sc, ts0_sc};
+    wire [3:0]        t_sf = {ts1_sf, ts0_sf};
+    wire [3:0]        t_gf = {ts1_gf, ts0_gf};
+    assign {t1_c, t0_c} = t_c;
+    assign {t1_row, t0_row} = t_row;
+    assign {t1_e, t0_e} = t_e;
+    assign {t1_lt, t0_lt} = t_lt;
+    assign {t1_qv, t0_qv} = t_qv;
+    assign {t1_qb, t0_qb} = t_qb;
+    assign {t1_qd, t0_qd} = t_qd;
+    genvar gg, h;
+    generate for (gg = 0; gg < 2; gg = gg + 1) begin : g_s1b
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(3)) u_c (.clk(clk), .rst_n(rhalf[gg]), .d(c1[3:1]), .q(t_c[4*gg+1 +: 3]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_g (.clk(clk), .d(c1[0]), .q(t_c[4*gg]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(HD*8)) u_r (.clk(clk), .d(row1), .q(t_row[HD*8*gg +: HD*8]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(32)) u_e (.clk(clk), .d(e1[32*gg +: 32]), .q(t_e[32*gg +: 32]));
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(LTW)) u_t (.clk(clk), .rst_n(rhalf[gg]), .d(lt1), .q(t_lt[LTW*gg +: LTW]));
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_qv (.clk(clk), .rst_n(rhalf[gg]), .d(qv_r), .q(t_qv[gg]));
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(6 + 512)) u_qd (.clk(clk), .d({qb_r, qd_r}), .q({t_qb[6*gg +: 6], t_qd[512*gg +: 512]}));
+    end endgenerate
+    // ---- re-cut H: the P.V tree's levels 1-3 -- the DECISIONS here, the data in the head tiles' lanes ---------------------
+    // The decision logic is re-cut D's, term for term (leaves in slot order, a pending left node per level, a completing
+    // pair always issues, a colliding leaf waits in its loop); the lanes execute it 8 edges later (the header).
+    localparam integer NLL = 3;
+    reg  [2:0]       lt_rho;
+    reg  [NLL-1:0]   LPv;
+    reg  [3:0]       lt_infl;
+    reg              lt_g;
+    reg  [3:0]       lt_gam;
+    reg              lt_fault;
+    wire [2:0]       lt_tag;
+    wire             lt_arr_v = lt_tag[2];
+    wire [1:0]       lt_arr_l = lt_tag[1:0] + 2'd1;
+    wire             lt_arr_issue = lt_arr_v && (lt_arr_l < NLL) && LPv[lt_arr_l];
+    reg              ob_busy;
+    reg              ob_g;
+    reg  [3:0]       ob_gam;
+    reg  [3:0]       ob_b;
+    reg  [3:0]       ob_wait;
+    reg  [$clog2(ND+1)-1:0] ocred;
+    reg              ocr_q;
+    wire             lt_room = (lt_rho != 3'd0) || (!ob_busy && (LPv == 0) && (lt_infl == 0) && !lt_arr_v);
+    assign take = offer && (os == lt_rho) && lt_room && (!LPv[0] || !lt_arr_issue);
+    wire             lt_leaf_issue = take && LPv[0];
+    wire             lt_issue = lt_arr_issue || lt_leaf_issue;
+    wire [1:0]       lt_l = lt_arr_issue ? lt_arr_l : 2'd0;
+    ot_hdc_delay #(.W(3), .D(ADD_LAT), .RESET(1)) u_lttag (.clk(clk), .rst_n(rc), .d({lt_issue, lt_l}), .q(lt_tag));
+    wire             ob_send = ob_busy && (ob_wait == 4'd0) && ((ob_b != 4'd0) || (ocred != 0));
+    // decision word {ob beat[1:0], osend, lob, lsl[1:0], lsty, lst0, lal[1:0], lsel, lis}
+    wire             d_lst0 = take && !LPv[0];
+    wire             d_lob  = lt_arr_v && (lt_arr_l == NLL);
+    wire             d_lsty = lt_arr_v && (lt_arr_l < NLL) && !LPv[lt_arr_l];
+    assign ltw = {ob_b[1:0], ob_send, d_lob, (d_lsty ? lt_arr_l : 2'd0), d_lsty, d_lst0, lt_l, lt_arr_issue, lt_issue};
+    // the node beat: the tiles register their slice 8 edges after the decision (valid at t + 9); the tags follow (1 + 7 + 1)
+    reg              nbv_n;
+    reg  [3:0]       nbb_n;
+    reg              nbg_n;
+    reg  [3:0]       nbgam_n;
+    wire [9:0]       nbt;
+    always @(posedge clk or negedge rc)
+        if (!rc) nbv_n <= 1'b0;
+        else nbv_n <= ob_send;
+    always @(posedge clk) begin nbb_n <= ob_b; nbg_n <= ob_g; nbgam_n <= ob_gam; end
+    ot_hdc_delay #(.W(10), .D(7), .RESET(1)) u_nbt (.clk(clk), .rst_n(rc), .d({nbv_n, nbb_n, nbg_n, nbgam_n}), .q(nbt));
+    always @(posedge clk or negedge rc) begin
+        if (!rc) begin
+            lt_rho <= 3'd0; LPv <= 0; lt_infl <= 0; lt_fault <= 1'b0; ob_busy <= 1'b0; ob_b <= 4'd0; ob_wait <= 4'd0;
+            ocred <= ND; ocr_q <= 1'b0; nb_valid <= 1'b0;
+        end else begin
+            ocr_q <= nb_cr;
+            nb_valid <= nbt[9];
+            nb_beat <= nbt[8:5]; nb_g <= nbt[4]; nb_gam <= nbt[3:0];
+            lt_infl <= lt_infl + (lt_issue ? 4'd1 : 4'd0) - (lt_arr_v ? 4'd1 : 4'd0);
+            if (start) lt_rho <= 3'd0;
+            if (lt_arr_v) begin
+                if (lt_arr_l == NLL) begin
+                    ob_busy <= 1'b1; ob_b <= 4'd0; ob_g <= lt_g; ob_gam <= lt_gam; ob_wait <= 4'd9;
+                    if (ob_busy) lt_fault <= 1'b1;
+                end else if (LPv[lt_arr_l]) LPv[lt_arr_l] <= 1'b0;
+                else LPv[lt_arr_l] <= 1'b1;
+            end else if (ob_wait != 4'd0) ob_wait <= ob_wait - 4'd1;
+            if (take) begin
+                if (LPv[0]) LPv[0] <= 1'b0;
+                else LPv[0] <= 1'b1;
+                lt_rho <= lt_rho + 3'd1;
+                if (lt_rho == 3'd0) begin lt_g <= pend_g[os]; lt_gam <= pend_gam[os]; end
+                else if ((pend_g[os] != lt_g) || (pend_gam[os] != lt_gam)) lt_fault <= 1'b1;
+            end
+            if (ob_send) begin
+                if (ob_b == 4'(LFB - 1)) begin ob_busy <= 1'b0; ob_b <= 4'd0; end
+                else ob_b <= ob_b + 4'd1;
+            end
+            ocred <= ocred - ((ob_send && ob_b == 4'd0) ? 1'b1 : 1'b0) + (ocr_q ? 1'b1 : 1'b0);
+        end
+    end
+    // ---- K pass: the scores come back from the head tiles (their scd1); tags as before ---------------------------------------
+    localparam integer SCD = KDEPTH + LANE_D + 2;
+    wire [11:0] tag_sc;
+    wire        sc_v_n;
+    ot_hdc_delay #(.W(12), .D(SCD - 1)) u_tag (.clk(clk), .rst_n(rc), .d({c_g, c_idx[10:0]}), .q(tag_sc));
+    ot_hdc_delay #(.W(1), .D(SCD - 1), .RESET(1)) u_scv (.clk(clk), .rst_n(rc), .d(k_issue), .q(sc_v_n));
+    reg tf2;
+    wire [3:0] tf = 4'd0;
+    always @(posedge clk or negedge rc)
+        if (!rc) begin sc_valid <= 1'b0; tf2 <= 1'b0; end
+        else begin sc_valid <= sc_v_n; tf2 <= |t_sf; end
+    always @(posedge clk) begin sc_data <= t_sc; sc_addr <= tag_sc; end
+
+'''
+
+ENGINE = r'''
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_qwen_nearhbm_row_engine_h: the row engine as hard sub-tiles -- 1 control tile + 4 head tiles (ports as re-cut D)
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_qwen_nearhbm_row_engine_h #(
+    parameter integer HD = 128,
+    parameter integer S = 0,
+    parameter integer R = 1,
+    parameter integer E = 0,
+    parameter integer ADD_LAT = 7,
+    parameter integer MUL_LAT = 6,
+    parameter integer DQ = 32,
+    parameter [31:0]  SCALE = 32'h3DB504F3,
+    parameter integer LFB = 4,
+    parameter integer ND = 1
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire                 start_in,
+    input  wire [13:0]          T_in,
+    input  wire [2:0]           cyc8_in,
+    input  wire                 q_valid_in,
+    input  wire [5:0]           q_beat_in,
+    input  wire [511:0]         q_data_in,
+    input  wire [31:0]          exp_done,
+    output wire                 req_valid,
+    output wire                 req_v,
+    output wire                 req_g,
+    output wire [12:0]          req_t,
+    input  wire                 rsp_valid_in,
+    input  wire [HD*8-1:0]      rsp_data_in,
+    output wire                 er_valid,
+    output wire [11:0]          er_addr,
+    input  wire [63:0]          er_data,
+    output wire                 sc_valid,
+    output wire [11:0]          sc_addr,
+    output wire [127:0]         sc_data,
+    output wire [2*4*32-1:0]    lmax,
+    output wire [1:0]           lmax_any,
+    output wire                 nb_valid,
+    output wire [3:0]           nb_beat,
+    output wire                 nb_g,
+    output wire [3:0]           nb_gam,
+    output wire [4*HD*32/LFB-1:0] nb_data,
+    input  wire                 nb_cr,
+    output wire                 k_done,
+    output wire                 v_done,
+    output wire                 fault,
+    output wire                 ev_k_first,
+    output wire                 ev_v_first
+);
+    wire [2*4-1:0]    t_c;
+    wire [2*HD*8-1:0] t_row;
+    wire [2*32-1:0]   t_e;
+    wire [2*12-1:0]   t_lt;
+    wire [1:0]        t_qv;
+    wire [2*6-1:0]    t_qb;
+    wire [2*512-1:0]  t_qd;
+    wire [4*32-1:0]   t_sc;
+    wire [3:0]        t_sf, t_gf;
+    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+                             .LFB(LFB), .ND(ND)) u_ctl (
+        .clk(clk), .rst_n(rst_n), .start_in(start_in), .T_in(T_in), .cyc8_in(cyc8_in), .q_valid_in(q_valid_in),
+        .q_beat_in(q_beat_in), .q_data_in(q_data_in), .exp_done(exp_done), .req_valid(req_valid), .req_v(req_v),
+        .req_g(req_g), .req_t(req_t), .rsp_valid_in(rsp_valid_in), .rsp_data_in(rsp_data_in), .er_valid(er_valid),
+        .er_addr(er_addr), .er_data(er_data), .sc_valid(sc_valid), .sc_addr(sc_addr), .sc_data(sc_data), .lmax(lmax),
+        .lmax_any(lmax_any), .nb_valid(nb_valid), .nb_beat(nb_beat), .nb_g(nb_g), .nb_gam(nb_gam), .nb_cr(nb_cr),
+        .k_done(k_done), .v_done(v_done), .fault(fault), .ev_k_first(ev_k_first), .ev_v_first(ev_v_first),
+        .t0_c(t_c[3:0]), .t1_c(t_c[7:4]), .t0_row(t_row[0 +: HD*8]), .t1_row(t_row[HD*8 +: HD*8]),
+        .t0_e(t_e[31:0]), .t1_e(t_e[63:32]), .t0_lt(t_lt[11:0]), .t1_lt(t_lt[23:12]), .t0_qv(t_qv[0]), .t1_qv(t_qv[1]),
+        .t0_qb(t_qb[5:0]), .t1_qb(t_qb[11:6]), .t0_qd(t_qd[511:0]), .t1_qd(t_qd[1023:512]),
+        .ts0_sc(t_sc[63:0]), .ts1_sc(t_sc[127:64]), .ts0_sf(t_sf[1:0]), .ts1_sf(t_sf[3:2]), .ts0_gf(t_gf[1:0]),
+        .ts1_gf(t_gf[3:2]));
+    genvar h;
+    generate for (h = 0; h < 4; h = h + 1) begin : g_head
+        localparam integer P = h / 2;          // the S1b copy of this head's tile pair
+        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+    end endgenerate
+endmodule
+'''
+
+
+def main():
+    txt = generate()
+    if '--check' in sys.argv:
+        sys.exit(0 if DST.exists() and DST.read_text() == txt else 1)
+    DST.write_text(txt)
+    print(DST)
+
+
+if __name__ == '__main__':
+    main()

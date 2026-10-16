@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qkd_kvwq_grp_a",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_grp_a-3b6caa6b2-tc-hm10/routes/qkd_kvwq_grp_a_3b6caa6b2_tc_hm10/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qkd_kvwq_grp_a.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-4.78741490894663e-11",
+  "ws_min": "8.762923719984883e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "1.8844392712935587e-10",
+  "ws_min": "4.87072326915694e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "3.0517102733718104e-10",
+  "ws_min": "2.657973841024841e-11"
+ },
+ "files": {
+  "qkd_kvwq_grp_a.lef": "1f6ca03c0fed7ff27dce1a51668a389a024dad7bb21c8d3a88c275edee6ebeab",
+  "qkd_kvwq_grp_a_ff.lib": "f6337a24be0aec9c9aba97fb6d983cf4f83f0c4175f063974d80260cc00b7057",
+  "qkd_kvwq_grp_a_ss.lib": "b3624ecc96ecb081c01ca28248f23602394da7a350e287cab8be48402d9268fb",
+  "qkd_kvwq_grp_a_tt.lib": "35a4f0f3037d067c1912e494b7cf5e86cc71374f3f2f4b5067418ed7a995b80e"
+ }
+}

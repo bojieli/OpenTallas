@@ -42,10 +42,12 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   wire [1:0] kind = ed[1:0];
   wire strm = ed[126] && (kind == 2'd1 || kind == 2'd2);
   reg [2:0] pend; reg spend, ph, kdv;
+  // The second stream owns a separate pending slot: its wait must not block unrelated legacy commands.
+  reg spq_v; reg [126:0] spq_d;
 `ifdef OT_PS_MUT_CONC
   wire e_re = !e_empty && ((kind == 2'd3) || (strm ? 1'b1 : !pend[kind]));   // NEGATIVE CONTROL: streams overlap
 `else
-  wire e_re = !e_empty && ((kind == 2'd3) || (strm ? !spend : !pend[kind]));
+  wire e_re = !e_empty && ((kind == 2'd3) || (strm ? !spq_v : !pend[kind]));
 `endif
   ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(e_wck), .wrst_n(rst), .we(e_f[0]), .wdata(e_f[127:1]),
     .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re), .rdata(ed), .empty(e_empty));
@@ -53,17 +55,26 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   assign ok_v = e_re && (kind == 2'd1) && !strm;
   assign oi_v = e_re && (kind == 2'd2) && !strm;
   assign o_d = {ed[47:38], ed[31:2]};           // {tag10, addr30}
+`ifdef OT_PS_MUT_CONC
+  wire launch_q = 1'b0, queue_stream = 1'b0;
   wire launch = e_re && strm;
-  wire idx = (kind == 2'd2);
-  wire [11:0] nsec_i = 12'(((17 * {3'd0, ed[69:61]}) + 12'd31) >> 5);   // IK: ceil(17 blocks / 32) sectors a PC
+`else
+  wire launch_q = spq_v && !spend;
+  wire queue_stream = e_re && strm && spend;
+  wire launch = launch_q || (e_re && strm && !spend && !spq_v);
+`endif
+  wire [126:0] stream_d = launch_q ? spq_d : ed;
+  wire idx = (stream_d[1:0] == 2'd2);
+  wire [11:0] nsec_i = 12'(((17 * {3'd0, stream_d[69:61]}) + 12'd31) >> 5);   // IK: ceil(17 blocks / 32) sectors a PC
   // done: both chains report every PC finished in the current phase (a side without PCs is always done)
   wire w_done = (WEMPTY != 0) || (dw_ok && dw_ph == ph);
   wire e_done = (EEMPTY != 0) || (de_ok && de_ph == ph);
   reg [3:0] hold;                                // the descriptor needs >= 1 cycle to leave before a done can count
   always @(posedge ck or negedge rn)
-    if (!rn) begin pend <= 3'b000; spend <= 1'b0; ph <= 1'b0; sd_v <= 1'b0; sg_v <= 1'b0; kdv <= 1'b0; hold <= 4'd0; end
+    if (!rn) begin pend <= 3'b000; spq_v <= 1'b0; spend <= 1'b0; ph <= 1'b0; sd_v <= 1'b0; sg_v <= 1'b0; kdv <= 1'b0; hold <= 4'd0; end
     else begin
       sd_v <= launch; sg_v <= launch; kdv <= 1'b0;
+      if (queue_stream) spq_v <= 1'b1; else if (launch_q) spq_v <= 1'b0;
       if (ow_v) pend[0] <= 1'b1; else if (bw) pend[0] <= 1'b0;
       if (ok_v) pend[1] <= 1'b1; else if (bk) pend[1] <= 1'b0;
       if (oi_v) pend[2] <= 1'b1; else if (bi) pend[2] <= 1'b0;
@@ -71,9 +82,10 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
       else if (hold != 0) hold <= hold - 4'd1;
       else if (spend && w_done && e_done) begin spend <= 1'b0; kdv <= 1'b1; end
     end
-  always @(posedge ck) if (launch) sg_d <= ed[83:71];
+  always @(posedge ck) if (queue_stream) spq_d <= ed;
+  always @(posedge ck) if (launch) sg_d <= stream_d[83:71];
   always @(posedge ck) if (launch)
-    sd_d <= {~ph, idx, ed[125], ed[16:2], idx ? nsec_i : ed[28:17], idx ? 32'hFFFF_FFFF : ed[60:29]};
+    sd_d <= {~ph, idx, stream_d[125], stream_d[16:2], idx ? nsec_i : stream_d[28:17], idx ? 32'hFFFF_FFFF : stream_d[60:29]};
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
   assign kd = {fck, kdv};
 endmodule
@@ -162,12 +174,25 @@ endmodule
 
 module ot_svs_grp #(parameter integer K = 0) (
   input wire ck, input wire rst, input wire rn,
-  input wire [3:0] sv, input wire [4*277-1:0] sq,         // stream beats of PCs 4K .. 4K+3 (tag 11)
+  input wire [3:0] sv_i, input wire [4*277-1:0] sq_i,     // stream beats of PCs 4K .. 4K+3 (tag 11)
   input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
   input wire sg_v, input wire [12:0] sg_d,                 // the running stream's load tag (from the e port)
   output wire [3:0] cr,                                    // credit pulse to PC 4K + j
   output wire [1101:0] ks,                                 // {fclk x3, meta64, row1024, rq10, v}
   output wire ovf);                                        // a beat found its row buffer still full / credit queue overflow (never)
+  // hbm-forks 2026-10-09 (svc SE_s2 routed c_rs13_1.q -> u_gp3.b -53.9 ps: a beat's index bits fanned out to the 2 x 4
+  // row-buffer write enables across the buffer array straight from the chain's last stage): the beat lands in the
+  // group unit's own input register (sv / sq, at the unit) with its write enables pre-decoded one-hot (we1h), and is
+  // written one edge later (+1 cycle on the stream path; the stream beats carry no backpressure)
+  reg [3:0] sv; reg [4*277-1:0] sq; reg [3:0] we1h [0:3];
+  integer pi_;
+  always @(posedge ck or negedge rn)
+    if (!rn) sv <= 4'd0;
+    else sv <= sv_i;
+  always @(posedge ck) begin
+    sq <= sq_i;
+    for (pi_ = 0; pi_ < 4; pi_ = pi_ + 1) we1h[pi_] <= 4'd1 << sq_i[pi_*277+260 +: 2];
+  end
   reg [255:0] b [0:3][0:1][0:3];
   reg [3:0] sm [0:3][0:1];
   reg [2:0] cnt [0:3][0:1];
@@ -213,17 +238,19 @@ module ot_svs_grp #(parameter integer K = 0) (
     end
   always @(posedge ck) begin
     for (p = 0; p < 4; p = p + 1) if (sv[p]) begin
-      b[p][ws[p]][sq[p*277+260 +: 2]] <= sq[p*277 +: 256];
+      for (s = 0; s < 4; s = s + 1) if (we1h[p][s]) b[p][ws[p]][s] <= sq[p*277 +: 256];
       rq[p][ws[p]] <= sq[p*277+265 +: 10];
       ix[p][ws[p]] <= sq[p*277+260+3];
       nc[p][ws[p]] <= sq[p*277+260+4];
     end
     if (any) begin asel <= sel; aslot <= rs[sel]; anc <= nc[sel][rs[sel]]; end
-    if (av) begin
+  end
+  // Boundary payloads remain defined during idle after reset, before the first row.
+  always @(posedge ck or negedge rn) if (!rn) begin od <= 1088'd0; ot <= 10'd0; end
+  else if (av) begin
       od <= {31'd0, lt, ix[asel][aslot], 5'(4 * K + asel), sm[asel][aslot], 10'd0,
              b[asel][aslot][3], b[asel][aslot][2], b[asel][aslot][1], b[asel][aslot][0]};
       ot <= rq[asel][aslot];
-    end
   end
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
   assign ks = {fck, fck, fck, od, ot, ov};

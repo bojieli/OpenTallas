@@ -23,6 +23,18 @@ module tb_hbm_stream_bw;
   parameter integer CRED = 32;
   parameter longint PERIOD_PS = 5234167;      // 6,281 cycles at 1.2 GHz
   parameter integer MUT = 0;                  // negative controls: 1 tRCD check +1 ns, 2 one corrupted sector, 3 REFpb interval check -2 ns
+  // qwen-1010/b 2026-10-10 KV DIE consumer (CONS = 1): a KV row (layer, g, v, t) is 4 sectors at the SAME PC-local index
+  // j on PCs {q, t[2:0]} (CONTRACT map), so the stack is 8 independent row groups (PCs {q, G}); each group's rows are
+  // consumed in its PCs' stream order (the KV-die row order: K rows of both heads, then V, each in the order the row
+  // engines consume them), a row only when all 4 sectors have landed, at most ENG_RATE rows per group per controller
+  // cycle (one row engine at 1.2 GHz = 1.17 rows per 1.024 ns).  OMUT = 1 (order mutant): a group consumes j with
+  // bits 8 / 9 swapped (the {g, v} vs {v, g} map mismatch) -- its head is never the row it wants: the bench stalls.
+  parameter integer CONS = 0;
+  parameter integer WR_EN = 0;                // qwen-1010/b: the KV-die controller element runs WR_EN 1 (WQ 4) and PULLIN
+  parameter integer PULLIN = 0;
+  parameter integer WSETP = 1;
+  parameter integer OMUT = 0;
+  parameter real    ENG_RATE = 1.171875;
   localparam integer NS = 1024;               // sectors per PC per layer
   localparam integer CYC = 1024;              // ps per controller cycle (CK/2)
   // timing (ps): ot_hdc_hbm_model.sv defaults; RFCPB from ot_hdc_v41x_idx_hbm.sv; RREFD assumed
@@ -35,7 +47,7 @@ module tb_hbm_stream_bw;
   wire [31:0] row_v, col_v, busy; wire [95:0] row_op; wire [159:0] row_bank, col_bank, col_col;
   wire [607:0] row_row; reg [95:0] cred_ret = 0; wire fault;
   reg [18:0] desc_row = 0;
-  ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(REF_MODE), .CRED(CRED), .PHASE(PHASE)) dut (
+  ot_hbm_r14_stream_stack #(.ENABLE(1), .REF_MODE(REF_MODE), .CRED(CRED), .PHASE(PHASE), .WR_EN(WR_EN), .PULLIN(PULLIN), .WSETP(WSETP)) dut (
     .clk(clk), .rst_n(rst_n), .desc_v(desc_v), .desc_r(desc_r), .desc_row(desc_row), .desc_n(11'(NS)),
     .go(go), .next_posted(B2B != 0), .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
     .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .cred_ret(cred_ret), .busy(busy), .fault(fault),
@@ -57,6 +69,13 @@ module tb_hbm_stream_bw;
   longint p_last_act [0:31], p_last_rd [0:31], p_last_ref [0:31], p_last_refpb_any [0:31];
   longint p_act_bg [0:31][0:3], p_rd_bg [0:31][0:3], p_faw [0:31][0:3];
   bit [31:0] p_round [0:31];
+  longint p_nref [0:31]; longint p_t0 [0:31];
+  function automatic longint p_due(input int p);   // REFpb slots due by now (one every REFI / 32 from the PC's first due)
+    p_due = (now < p_t0[p]) ? 0 : (now - p_t0[p]) / (REFI / 32) + 1;
+  endfunction
+  function automatic longint p_due_rtl(input int p);   // slots of the RTL's own (faster) period: 118 cycles = 120.8 ns
+    p_due_rtl = (now < p_t0[p]) ? 0 : (now - p_t0[p] + REFI / 32 - 118 * CYC) / (118 * CYC) + 1;
+  endfunction
   longint viol = 0, n_act = 0, n_pre = 0, n_rd = 0, n_ref = 0, n_preall = 0, max_ref_gap = 0;
   task automatic v(input string what, input integer pc, input integer bk);
     if (viol < 20) $display("VIOLATION t=%0d ps pc=%0d bank=%0d %s", now, pc, bk, what);
@@ -66,6 +85,10 @@ module tb_hbm_stream_bw;
   longint rq_due [0:31][$]; bit [255:0] rq_dat [0:31][$];
   // consumer landing FIFOs
   bit [255:0] land [0:31][$];
+  int land_j [0:31][$];                       // CONS: the PC-local index of each landed sector
+  int jq [0:31][$];                           //   (in flight, matching rq_dat)
+  int jcnt [0:31];                            //   RD count of the PC in the current layer
+  int gpos [0:7]; real gtok [0:7];
 
   integer layer_go [0:LAYERS-1]; longint layer_first [0:LAYERS-1], layer_last [0:LAYERS-1];
   longint cyc = 0; integer cur = -1;          // layer being consumed
@@ -136,17 +159,24 @@ module tb_hbm_stream_bw;
             if (now < p_last_refpb_any[p] + RREFD) v("tRREFD (REFpb after REFpb)", p, bk);
             if (p_round[p][bk]) v("REFpb bank twice in one round", p, bk);
             p_round[p][bk] = 1; if (&p_round[p]) p_round[p] = 0;
-            if (now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);
+            // PULLIN > 0 (qwen-1010/b): JEDEC pull-in -- a REFpb may come ahead of its slot and the slot is then skipped;
+            // the rule is cumulative (never fewer REFpb than slots due, at most 8 ahead), not the interval
+            if (PULLIN == 0 && now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);
             if (now - p_last_ref[p] > max_ref_gap) max_ref_gap = now - p_last_ref[p];
-            p_last_ref[p] = now; p_last_refpb_any[p] = now;
+            p_last_ref[p] = now; p_last_refpb_any[p] = now; p_nref[p]++;
+            if (PULLIN != 0 && p_nref[p] > p_due_rtl(p) + 8) v("REFpb pulled in more than 8 ahead", p, bk);
             b_ref_end[p][bk] = now + RFCPB;
           end
           default: v("unknown row op", p, bk);
         endcase
       end
       // a refresh may never be overdue (strict schedule), checked every cycle
-      if (now - p_last_ref[p] > (REF_MODE ? REFI / 32 : REFI)) begin
-        v("refresh overdue", p, 0); p_last_ref[p] = now;
+      if (PULLIN == 0 || REF_MODE == 0) begin
+        if (now - p_last_ref[p] > (REF_MODE ? REFI / 32 : REFI)) begin
+          v("refresh overdue", p, 0); p_last_ref[p] = now;
+        end
+      end else if (p_nref[p] < p_due(p) - 1) begin      // cumulative (one slot of issue latency)
+        v("refresh overdue (cumulative)", p, 0); p_nref[p] = p_due(p);
       end
       if (col_v[p]) begin
         automatic int bk = col_bank[p*5 +: 5], cl = col_col[p*5 +: 5], g = bk & 3;
@@ -159,6 +189,7 @@ module tb_hbm_stream_bw;
         p_last_rd[p] = now; p_rd_bg[p][g] = now; b_rd[p][bk] = now;
         rq_due[p].push_back((now + CL + BURST + RSP + CYC - 1) / CYC);
         rq_dat[p].push_back(mem[midx(p, bk, b_row[p][bk], cl)]);
+        jq[p].push_back(((bk >> 2) << 7) | (cl << 2) | (bk & 3));      // PC-local j = {set, column, BG}
       end
     end
     for (int c = 0; c < 16; c++) if (row_v[2*c] && row_v[2*c+1]) v("two row commands on one channel slot", 2*c, 0);
@@ -166,9 +197,45 @@ module tb_hbm_stream_bw;
     for (int p = 0; p < 32; p++)
       while (rq_due[p].size() != 0 && rq_due[p][0] <= cyc) begin
         land[p].push_back(rq_dat[p].pop_front()); void'(rq_due[p].pop_front());
+        land_j[p].push_back(jq[p].pop_front());
         if (land[p].size() > CRED) v("landing FIFO overflow (credit)", p, 0);
         if (land[p].size() > max_land) max_land = land[p].size();
       end
+    // ---------- KV-die consumer (CONS = 1): 8 row groups ----------
+    if (CONS != 0) begin
+      automatic int popped [0:31] = '{default: 0};
+      if (cur >= 0 && cur < LAYERS) begin
+        for (int G = 0; G < 8; G++) begin
+          gtok[G] = (gtok[G] + ENG_RATE > 2.0) ? 2.0 : gtok[G] + ENG_RATE;
+          while (gpos[G] < NS && gtok[G] >= 1.0) begin
+            automatic int jw = (OMUT != 0) ? ((gpos[G] & ~32'h300) | ((gpos[G] >> 1) & 32'h100) | ((gpos[G] << 1) & 32'h200)) : gpos[G];
+            automatic bit ok = 1;
+            for (int q = 0; q < 4; q++) begin
+              automatic int pc = q * 8 + G;
+              if (land[pc].size() == 0 || land_j[pc][0] != jw) ok = 0;
+            end
+            if (!ok) break;
+            for (int q = 0; q < 4; q++) begin
+              automatic int pc = q * 8 + G;
+              automatic int sidx = (((jw >> 7) & 7) << 12) | (((jw >> 2) & 31) << 7) | (pc << 2) | (jw & 3);
+              if (land[pc][0] !== src(cur, sidx)) begin
+                if (bad < 10) $display("DATA MISMATCH layer=%0d pc=%0d j=%0d", cur, pc, jw);
+                bad++;
+              end else good++;
+              void'(land[pc].pop_front()); void'(land_j[pc].pop_front()); popped[pc]++;
+            end
+            if (gpos[G] == 0 && G == 0) layer_first[cur] = cyc;
+            gpos[G]++; gtok[G] -= 1.0;
+          end
+        end
+        begin : layer_done
+          automatic bit all = 1;
+          for (int G = 0; G < 8; G++) if (gpos[G] != NS) all = 0;
+          if (all) begin layer_last[cur] = cyc; cur++; for (int G = 0; G < 8; G++) gpos[G] = 0; end
+        end
+      end
+      for (int p = 0; p < 32; p++) cred_ret[p*3 +: 3] <= 3'(popped[p]);
+    end else
     // ---------- in-order consumer ----------
     begin
       automatic int popped [0:31] = '{default: 0};
@@ -200,10 +267,14 @@ module tb_hbm_stream_bw;
       end
     end
     if (fault) begin $display("CONTROLLER FAULT at cycle %0d", cyc); $finish; end
+    if (cyc > longint'(go_cycle(LAYERS - 1)) + 200000) begin   // qwen-1010/b: a stalled consumer (OMUT) ends the run
+      $display("STALL at cycle %0d layer=%0d (consumer never got its row)", cyc, cur);
+      $display("SUMMARY verdict=FAIL"); $finish;
+    end
     cyc <= cyc + 1;
     if (cur == LAYERS) begin : done
       longint worst = 0, sum = 0, worst_first = 0, best_first = 1 << 30, over = 0, need = 1165084;
-      $display("RESULT ref_mode=%0d hint=%0d b2b=%0d phase=%0d cred=%0d layers=%0d", REF_MODE, HINT, B2B, PHASE, CRED, LAYERS);
+      $display("RESULT ref_mode=%0d hint=%0d b2b=%0d phase=%0d cred=%0d layers=%0d cons=%0d omut=%0d", REF_MODE, HINT, B2B, PHASE, CRED, LAYERS, CONS, OMUT);
       for (int L = 0; L < LAYERS; L++) begin
         automatic longint t = (layer_last[L] + 1 - layer_go[L]) * CYC;
         automatic longint f = (layer_first[L] - layer_go[L]) * CYC;
@@ -224,6 +295,7 @@ module tb_hbm_stream_bw;
   end
 
   initial begin
+    for (int G = 0; G < 8; G++) begin gpos[G] = 0; gtok[G] = 0.0; end
     for (int L = 0; L < LAYERS; L++)
       for (int s = 0; s < 32 * NS; s++)
         mem[midx((s >> 2) & 31, ((s >> 12) & 7) * 4 + (s & 3), L, (s >> 7) & 31)] = src(L, s);
@@ -234,8 +306,9 @@ module tb_hbm_stream_bw;
         automatic int P = REF_MODE ? 118 : 3808;                     // RTL refresh period (cycles)
         automatic int base = (PHASE + (p * P) / 32) % P;
         p_last_ref[p] = longint'(base + ((base + P + p) % 2)) * CYC;  // first due one period later
+        p_t0[p] = p_last_ref[p] + REFI / 32; p_nref[p] = 0;
       end p_last_refpb_any[p] = -1000000;
-      p_round[p] = 0;
+      p_round[p] = 0; jcnt[p] = 0;
       for (int g = 0; g < 4; g++) begin p_act_bg[p][g] = -1000000; p_rd_bg[p][g] = -1000000; p_faw[p][g] = -1000000; end
       for (int b = 0; b < 32; b++) begin
         b_open[p][b] = 0; b_act[p][b] = -1000000; b_pre[p][b] = -1000000; b_rd[p][b] = -1000000; b_ref_end[p][b] = 0;

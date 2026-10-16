@@ -860,6 +860,9 @@ def ds41_simulate(detail=True):
                 r.src_key = None if not x["src"] else f"{x['src'][0]}:{x['src'][1]}"
                 r.src_extra = [f"{x['src'][0]}:{e}" for e in x["src"][2]] if x["src"] and len(x["src"]) > 2 else []
                 one.append(r)
+            for r in one:                    # VM-count loops (G24): template estimate (M ~ 13 at c = 2)
+                if r.unit == "CTL" and r.op == "LOOP" and r.param & (1 << 17):
+                    r.dyn_count = 7
             sh = Counter((r.src_key, r.unit) for r in one if r.src_key)
             for r in one:                    # an op's price splits over its records within ONE layer instance
                 r.share = sh.get((r.src_key, r.unit), 1)
@@ -1106,7 +1109,7 @@ def main():
                             "serialisation the 1 KB calibration entry lacks",
                             "GDN: hgi_perf reuses the bit-exact gdn lowering; the residual (< 1 %) is the composition "
                             "of one layer and the SU HBM first-access charge the reference predates",
-                            "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~24 % "
+                            "DS-V4.1: the generic MLA front end prices DS UNFUSED and unscheduled, so it lands ~25 % "
                             "above the native stream (fused SU chains, CP-aware order); the native-template path (the "
                             "bit-exact records per layer type, steady increments) is within ~3 %; the published walk "
                             "is a fused-chain composition without a command processor, not a record stream"],

@@ -1,0 +1,22 @@
+{
+  "scope": "Real unit/dependencies Icarus elaboration plus complete exact native bit binding. Not arithmetic or finite-credit runtime gate; adoption remains open",
+  "elaboration": "PASS",
+  "output_bit_bijection": {
+    "fs": true,
+    "qb": true,
+    "kin": true,
+    "toc": true,
+    "coc": true
+  },
+  "input_bit_bijection": {
+    "qbr": true,
+    "to": true,
+    "co": true,
+    "ev": true
+  },
+  "native_output_bits": 1485,
+  "native_input_bits": 687,
+  "face_stages": 3,
+  "source_sha256": "604a0b155157f68c3845c931c59f0a37f17b03e32e70a52856e6deb511e11b03",
+  "adopted": false
+}

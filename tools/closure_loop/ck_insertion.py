@@ -17,6 +17,12 @@ TT reference, so CK_SS_* then carry the TT (route-corner) insertion; the SS-libr
 (CK_TT_* always hold the TT values, CK_ROUTE_REF names the reference).  Before this, a TC route referenced its outputs
 to the SS insertion (~190 ps above the TT boundary insertion): the router saw output setup credit sign-off removed
 (orphans-2 hfd_router: route -71.83 -> routed reference -152.67).
+
+MACRO-CLK (macro-clk-1010, 2026-10-10): the same session also measures every memory macro's clock pin (macro liberty read
+from the route's config.mk, /src = the job snapshot): active-edge arrival and slew per corner, and judges outliers
+(macro_outliers): slew above MC_SLEW_PS at any corner, or the FF arrival more than MC_LATE_PS after the register mean
+(the SRAM wd_in / addr hold stall of ds-1010 lcrph: one shallow macro leaf, 165-260 ps slew, ~60 ps late).  The verdict is
+rec["macro_clk"]; the closure loop flags it after CTS and its auto-react class f reads it.
 """
 import argparse, json, re, subprocess, tempfile
 from pathlib import Path
@@ -63,12 +69,14 @@ proc ot_ck_arr {p clk} {
 """
 
 
-def tcl(corner, db, sdc, routed, clock):
+def tcl(corner, db, sdc, routed, clock, mlibs=()):
     C = corner.upper()
+    ml = "\n".join(f"read_liberty {l}" for l in mlibs)
     par = "read_spef /base/6_final.spef" if routed else f"source {PLAT}/setRC.tcl\nestimate_parasitics -placement"
     return f"""
 foreach l [glob {PLAT}/lib/NLDM/*RVT_{C}*] {{ read_liberty $l }}
 foreach l [glob {PLAT}/lib/NLDM/*_LVT_{C}_* {PLAT}/lib/NLDM/*_SLVT_{C}_*] {{ if {{![string match *FAKE* $l]}} {{ read_liberty $l }} }}
+{ml}
 read_db /base/{db}
 read_sdc /base/{sdc}
 {par}
@@ -86,8 +94,77 @@ dict for {{i cp}} $regs {{
   if {{$a eq "" || $a eq "INF" || $a eq "-INF"}} continue
   puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a"
 }}
+foreach inst [[ord::get_db_block] getInsts] {{
+  if {{![[$inst getMaster] isBlock]}} continue
+  foreach it [$inst getITerms] {{
+    set n [$it getNet]
+    if {{$n eq "NULL" || $n eq ""}} continue
+    if {{[[$it getMTerm] getSigType] ne "CLOCK" && [$n getSigType] ne "CLOCK"}} continue
+    set p [get_pins -quiet "[$inst getName]/[[$it getMTerm] getName]"]
+    if {{![llength $p]}} continue
+    set a [ot_ck_arr $p $ot_ck_clk]
+    set sl [get_property $p slew_max_rise]
+    if {{$a eq "" || $a eq "INF" || $a eq "-INF" || ![string is double -strict $sl]}} continue
+    puts "OT_MC [get_full_name $p] $a $sl [$n getName]"
+  }}
+}}
 exit
 """
+
+
+MC_SLEW_PS = 120.0    # macro clock-pin slew bound (any corner); register clock pins sit at ~20-50 ps on ASAP7
+MC_LATE_PS = 30.0     # FF macro clock arrival after the register mean: the SRAM data / addr hold deficit grows 1:1
+LIB_RE = re.compile(r"(/src/\S+?)_(ss|tt|ff)\.lib\b")
+
+
+def macro_libs(base, corner):
+    """(host source root, [/src/... macro liberty paths for corner]) from the route's config.mk, else (None, [])"""
+    base = Path(base)
+    cfg = next((p / "config.mk" for p in base.parents if (p / "config.mk").is_file()), None)
+    if cfg is None:
+        return None, []
+    stems = sorted({m.group(1) for m in LIB_RE.finditer(cfg.read_text(errors="replace"))})
+    if not stems:
+        return None, []
+    rel = f"{stems[0][len('/src/'):]}_{corner}.lib"
+    root = next((r for p in base.parents for r in (p / "src", p) if (r / rel).is_file()), None)
+    if root is None:
+        return None, []
+    return root, [f"{x}_{corner}.lib" for x in stems if (root / f"{x[len('/src/'):]}_{corner}.lib").is_file()]
+
+
+def macro_summary(rows, reg_mean):
+    """per-corner macro clock-pin record: rows = [(pin, arrival, slew, net)]"""
+    if not rows:
+        return None
+    pins = [dict(pin=p, arr=round(a, 1), slew=round(sl, 1), late=round(a - reg_mean, 1) if reg_mean is not None else None,
+                 net=n) for p, a, sl, n in rows]
+    nets = {}
+    for x in pins:
+        nets[x["net"]] = nets.get(x["net"], 0) + 1
+    return dict(n=len(pins), nets=len(nets), max_per_net=max(nets.values()), reg_mean=reg_mean,
+                max_slew=max(x["slew"] for x in pins),
+                max_late=max((x["late"] for x in pins if x["late"] is not None), default=None), pins=pins)
+
+
+def macro_outliers(rec, slew_ps=MC_SLEW_PS, late_ps=MC_LATE_PS):
+    """the MACRO-CLK verdict: {"n", "outliers": [{pin, why}], "flag": bool} from the per-corner macro records"""
+    out, n = {}, 0
+    for corner in ("ss", "tt", "ff"):
+        m = (rec.get(corner) or {}).get("macros")
+        if not m:
+            continue
+        n = max(n, m["n"])
+        for x in m["pins"]:
+            why = []
+            if x["slew"] > slew_ps:
+                why.append(f"{corner} slew {x['slew']:.0f} ps > {slew_ps:.0f}")
+            if corner == "ff" and x["late"] is not None and x["late"] > late_ps:
+                why.append(f"ff {x['late']:.0f} ps after the register mean > {late_ps:.0f}")
+            if why:
+                out.setdefault(x["pin"], []).extend(why)
+    return dict(n=n, slew_ps=slew_ps, late_ps=late_ps, flag=bool(out),
+                outliers=[dict(pin=k, why="; ".join(v)) for k, v in sorted(out.items())])
 
 
 def stats(v):
@@ -132,10 +209,13 @@ def main():
     env = {}
     need_tt = a.route_corner.upper() in ("TC", "TT")
     for corner in ("ss", "tt", "ff"):
+        sroot, mlibs = macro_libs(base, corner)
         with tempfile.TemporaryDirectory() as td:
-            (Path(td) / "s.tcl").write_text(tcl(corner, db, sdc, a.routed, a.clock))
-            out = subprocess.run(["docker", "run", "--rm", "-v", f"{base}:/base:ro", "-v", f"{td}:/t:ro", a.image, "bash",
-                                  "-lc", "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl"],
+            (Path(td) / "s.tcl").write_text(tcl(corner, db, sdc, a.routed, a.clock, mlibs))
+            mnt = ["-v", f"{sroot}:/src:ro"] if sroot else []
+            out = subprocess.run(["docker", "run", "--rm", "-v", f"{base}:/base:ro", "-v", f"{td}:/t:ro", *mnt, a.image,
+                                  "bash", "-lc",
+                                  "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl"],
                                  capture_output=True, text=True).stdout
         b, al = [], []
         for m in re.finditer(r"^OT_CK (\d) (\S+)", out, re.M):
@@ -143,7 +223,11 @@ def main():
             al.append(x)
             if m[1] == "1":
                 b.append(x)
-        rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5])
+        mrows = [(m[1], float(m[2]), float(m[3]), m[4])
+                 for m in re.finditer(r"^OT_MC (\S+) (\S+) (\S+) (\S+)", out, re.M)]
+        rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
+                           macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
+                           macro_libs=len(mlibs))
         if not al and corner == "tt" and not need_tt:
             continue                     # TT is informational for an SS-corner route
         if not al:
@@ -154,6 +238,7 @@ def main():
             env[f"CK_{corner.upper()}_ALL_{k.upper()}"] = round(rec[corner]["all"][k])
     env = route_env(env, a.route_corner)
     rec["route_corner"] = a.route_corner or None
+    rec["macro_clk"] = macro_outliers(rec)
     rec["env"] = env
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(" ".join(f"{k}={v}" for k, v in env.items()))

@@ -1,0 +1,149 @@
+{
+ "schema": "opentallas.hgi_sim.ds_native.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-10T15:45:56Z",
+ "host": "ot-epyc1tb",
+ "context": 1048576,
+ "position": 1048575,
+ "layers": "39",
+ "head": true,
+ "results": [
+  {
+   "layer": 39,
+   "kind": "ratio1",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L39.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win39",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block39",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre39",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L39.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 122,
+   "image_bytes_all_dies": 1225216,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "CTL.NOP": 2,
+    "COLL.ALL_GATHER": 15,
+    "SM.MATVEC": 27,
+    "HC.HC_MIX_POST": 2,
+    "SU.VOP": 33,
+    "IDX.OWNED": 1,
+    "DMA.LOAD": 17,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "CTL.LOOP": 1,
+    "DMA.STORE": 10,
+    "CTL.ENDLOOP": 1,
+    "DMA.FENCE": 3,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1
+   },
+   "schedule": {
+    "input_cycles": 73121.6,
+    "list_alpha": 1.0,
+    "moves": 16,
+    "output_cycles": 65221.3,
+    "rounds": [
+     65287.9
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 39
+   },
+   "row_gather": [
+    {
+     "tag": "row_gather.owned",
+     "k": 512,
+     "G": 96,
+     "max_owned": 14,
+     "rounds": 7
+    }
+   ],
+   "wall_s": 8347.0
+  },
+  {
+   "layer": "head",
+   "verdict": "pass",
+   "fault": null,
+   "next_token": 21946,
+   "reference_next_token": 21946,
+   "logits_sha256": "241c577cb0e19ef9ffa7efb0e08c6d6004ef21827101ebfe21276582acf49ec2",
+   "reference_logits_sha256": "241c577cb0e19ef9ffa7efb0e08c6d6004ef21827101ebfe21276582acf49ec2",
+   "tokens_agree_all_dies": true,
+   "records_per_die": 4,
+   "wall_s": 8.6
+  }
+ ],
+ "spec": "HGI-1 1.0 (owner-approved encoding; records.py decodes from hbm_generic_iface D_* tables)",
+ "open_items": [
+  "G15 IDX.TOPK ascending-id order (param[12], provisional reading)",
+  "G16 DS indexer engines' operands / fields (engine-internal buffers)",
+  "G17 DS head uniform 1,347-row shards for ARGMAX imm_a",
+  "Engram ids host-provided (IDX.EHASH not modelled: G13 bring-up path)",
+  "program images compiled for the token's position (compressor append address, selection count), as the w19 compiler emits them",
+  "compressed KV rows stored as FP32 values on the FP4 grid (the shipped 9-channel FP4 layout is the gather readers' concern, spec 6.10)"
+ ],
+ "wall_s": 8429.4,
+ "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "source_sha256": {
+  "hgi_sim/ds_native.py": "d6fcbf7839cf953556755ad9ddebff28df42e957d1a056fe0e73bd7428bfbf89",
+  "hgi_sim/machine.py": "9a69c8741d7db70548456c197360b0be6428b75334a85c61475ce018d879dd6d",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+  "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ }
+}

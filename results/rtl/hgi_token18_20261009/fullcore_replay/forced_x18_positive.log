@@ -1,0 +1,6 @@
+WARNING: physical/hbm_generic/token18/tb_hfd_mtp_tw18_replay.sv:348: $readmemh(script.hex): Not enough words in the file for the requested range [0:2097151].
+WARNING: physical/hbm_generic/token18/tb_hfd_mtp_tw18_replay.sv:349: $readmemh(prompt.hex): Not enough words in the file for the requested range [0:255].
+WARNING: physical/hbm_generic/token18/tb_hfd_mtp_tw18_replay.sv:350: $readmemh(force.hex): Not enough words in the file for the requested range [0:4095].
+WARNING: physical/hbm_generic/token18/tb_hfd_mtp_tw18_replay.sv:351: $readmemh(expect.hex): Not enough words in the file for the requested range [0:4095].
+DSHBM PASS cmds=672 steps=8 emitted=24 rows=56 gathers=5057 writes=2716 router=2240 unions=640 union_ids=5614 lines=22456 final=48 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=32 cyc_total=502558 cyc_engine=501622 cyc_markov=0
+physical/hbm_generic/token18/tb_hfd_mtp_tw18_replay.sv:409: $finish called at 504263000 (1ps)

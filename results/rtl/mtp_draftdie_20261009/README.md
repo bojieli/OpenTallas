@@ -32,6 +32,30 @@ safetensors byte for byte. It also checks:
 Scope: storage exactness only. The read schedule on this layout is RTL-qualified for the full-K pair-0 phase only
 (`dsrom_mtp_p2_rowpack` bench); the field schedule is not qualified.
 
-## 2. Generator
+## 2. Generator: MTP on the dies
 
-See the commit message and the `MD-2` / `MTP defaults` comments in `tools/dsrom_s81_fulldie.py`.
+- `MTP_SEQ_DEFAULT = True`: every head die carries `dsfd_mtp_seq` (CLOSED c67a71fe5).
+- `WFC_HARD_DEFAULT = True`: the WFC kit is complete (SOURCE HARD 910e67c7b CLOSED TT +152.31 / FF +4.02 / DRC 0).
+  The `dsfd_wfc` slab is sized from the closed SOURCE (293.734 µm square) and STG (190.41 µm square)
+  outlines: 328.32 µm tall, was 231.12.
+- `--draft A|B`: the MD-2 draft die (layer1 recipe, no WFC; die A carries the `dsfd_p2` slab and its buses).
+- Recipe base (`tools/s81/s81_dies_recipe.py`) = the s81-gen full layer1 recipe
+  (`results/physical/s81_gen_20261009/s81_layer1_full.opts`). The older r3 + `--nxt-reach --host` base failed in
+  `_hop_fix` on every die drawn from it: `rt_0_8a_y1` (773.7 µm hop) and the 20 mm `hw_SW` host chain.
+  `--hop-r-cc 500` and `--path-pick` clear them.
+
+## 3. Die records (`dies/`, generator at main c7822c972, host ot-epyc3)
+
+| Die | Build | Placed mm² (util) | Legality / pin clashes / unbound | MTP masters | margin lint (edges): reach / far-side |
+|---|---|---|---|---|---|
+| layer1 full (s81-gen recipe, reference) | check | — | 0 / 0 / 0 | dsfd_wfc | 768 / 3,209 FAIL |
+| draftA | plan | 417.10 (48.6 %) | 0 / 0 / 0 | dsfd_p2 | 768 / 3,221 FAIL |
+| draftB | plan | 416.81 (48.6 %) | 0 / 0 / 0 | — | 768 / 3,209 FAIL |
+| scan (q-only) | plan | 450.31 (52.5 %) | 0 / 0 / 0 | dsfd_wfc | 0 / 1,814 FAIL |
+| head631 | plan | 322.34 (37.6 %) | 0 / 0 / 0 | dsfd_mtp_seq + 5 SerDes | 0 / 733 FAIL |
+| headp2 (511) | plan | 297.26 (34.7 %) | 0 / 0 / 0 | dsfd_mtp_seq | 0 / 585 FAIL |
+
+All six dies build legally with every functional pin bound. The margin-lint FAIL is the reference recipe's class,
+reproduced on the identical layer1 base: 768 column-relay TT-tier hops (`g_xb_*` 670 µm), link `txs` relays
+(far-side 280–400 µm) and `y_rt_*` return relays. The MTP homes add 12 far-side relays on draftA (the P2 buses)
+and nothing on draftB. They are owned by the s81-gen relay work, not by MTP.

@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qwen.ctlm-link-elaboration.v1",
+  "successor_sha256": "4bc430b0916d50272d222f403ee718f235b3a3af52e5b9b5e62bcbbf5876d8d8",
+  "scope": "full real dependency elaboration only; no exactness or physical closure claim",
+  "returncode": 0,
+  "parameters": {
+    "LNK": 1,
+    "CLNK": 2
+  },
+  "top": "ot_qfd_tt_ctlm_link",
+  "command_flags": [
+    "--lint-only",
+    "-Wno-fatal",
+    "-Wno-TIMESCALEMOD"
+  ],
+  "config_sources": "physical/qwen_die_masters/cfg/qfd_tt_ctlm_a.env; original ctlm source replaced with opt-in successor",
+  "log_sha256": "a140a8fd56e457e8f396e65901dc27583a0e0b6d2bc7881d9ee9aeca9f82be81",
+  "warnings": "existing width, select range and UNOPTFLAT warnings retained",
+  "initial_tool_trials": [
+    {
+      "returncode": 1,
+      "reason": "mixed existing module timescales produce TIMESCALEMOD errors"
+    },
+    {
+      "returncode": 1,
+      "reason": "timescale override still produces TIMESCALEMOD errors"
+    }
+  ],
+  "adoption_hold": [
+    "actual die station counts",
+    "upper-tile delay match",
+    "exact controller-pair gate",
+    "in-context physical closure"
+  ]
+}

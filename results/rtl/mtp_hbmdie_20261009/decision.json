@@ -45,5 +45,26 @@
   "2. replace the full20 backend by the generic backend translator + ot_hgi_seq running the DS manifest's entry_verify / entry_draft records with stub engines that return per-row logits from a golden trace; ARGMAX unit ot_hgi_argmax18_m on the STREAM; COLL.ARGMAX_MERGE as the existing coll merge model over 96 ranks (or 1 rank + offsets); CTL.AMAX -> f_am",
   "3. golden: the round-1 HBM DSpark traces (results/rtl/mtp_exact_20261008/hbm forced / forced_w16 / dspark) - emitted tokens and accept counts must match cycle-independently; mutants: wrong slot order at AMAX, bit-17 id through cp_vocab, stale job at the backend, dropped union beat",
   "4. lint the R25GM die top with die_top_lint once R25G has a full (non-probe) build"
- ]
+ ],
+ "update_2026_10_09_late": {
+  "controller": "hgi_mtp_native CLOSED (hgi_mtp_native-nreg-a-lvt-eaea6da41-tc TT +10.43 / FF +1.80, main 331227e92); view physical/hbm_accel_die_views/mtp_hgi (286.56 x 200.88, 853 pins)",
+  "argmax_unit": "ot_hgi_argmax18_m CLOSED (hgi_argmax18_pinsep-30853dbe1-pd55-tc-cl TT +52.2 / FF +11.54 / DRC 0); view exported from its installed db: physical/hbm_accel_die_views/argmax_hgi (180 x 140, 604 pins, LEF == routed netlist)",
+  "slot": "two-instance MD-7 slot 466.56 x 200.88: hb_mtp hgi_mtp_native (west, 286.56 x 200.88) + hb_mtp_am ot_hgi_argmax18_m (east, 180 x 140), bottom-aligned, exactly fills the width (variant key spine_slot_split; dispatch unit block argmax -> mtp_am via hgi_unit_block)",
+  "argmax_buses_from_view": {
+   "su_red_to_am": "in_v 1 / in_last 1 / in_bias_en 1 / in_mask 8 / in_vals 256 / in_bias 256 = 523",
+   "am_to_vm_se": "out_v 1 / out_idx 18 / out_nan 1 / fault 1 / out_range_fault 1 / out_value 32 = 54 (was 53 in the outline model)",
+   "dispatch_driven": "cfg_rank 7 / cfg_imm_a 18 (adapter)"
+  },
+  "presets": {
+   "r25gm": "R25G (fmt3 retile, network probe only)",
+   "r25g4m": "R25G4 (qualified 4 x 2 SM grid, full network build)"
+  },
+  "auto_on": "R25G -> R25GM and R25G4 -> R25G4M when hgi_mtp_native-* and hfd_cmdproc_s_mtp_native_mx1[_*]-* both have CLOSED verdicts (job-name match now accepts the _rb suffix); today: controller CLOSED, MX1 not closed -> off",
+  "checks": {
+   "die_check_r25g4m": "PASS 165 (results/rtl/mtp_hbmdie_20261009/die_check_r25g4m.json)",
+   "die_check_r25gm": "PASS 165",
+   "die_top_lint": "r25g4m rc 0, 54 real instances; MTP findings = obligations only (results/rtl/mtp_hbmdie_20261009/die_lint_r25g4m.json)"
+  },
+  "hgi_cp_conflict": "hgi canonical variants with hgi_dispatch \"cp\" replace the hfd_cmdproc split by ONE ot_hgi_cp_die block (cmdproc_hgi view); then the MX1 band (t_mtp 197 / f_mtp 517 / f_am 18 + transaction join + emit queue) does not exist. For the MTP master on the HGI-CP die, ot_hgi_cp_die must carry the MX1 join (ot_hbm_native_mtp_transaction_cp_join_mx1 + emit queue) and those ports. r25gm / r25g4m therefore keep the MX1 split CP (no \"cp\" unit)."
+ }
 }

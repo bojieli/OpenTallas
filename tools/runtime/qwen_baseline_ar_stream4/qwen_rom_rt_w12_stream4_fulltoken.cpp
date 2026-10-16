@@ -329,7 +329,7 @@ static void preload_slices_ideal(Fabric& f, const std::vector<uint8_t>& codes, i
 
 int main(int argc, char** argv) {
     if (argc < 5 || strcmp(argv[1], "--stages")) {
-        fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --pos P --token T [--kv-dir DIR] [--max-cycles N] [--stop-after S]\n", argv[0]);
+        fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --pos P --token T [--kv-dir DIR] [--max-cycles N] [--stop-after S] [--first-stage S]\n", argv[0]);
         return 2;
     }
     const std::string dir = argv[3], preload = argv[4];
@@ -339,6 +339,7 @@ int main(int argc, char** argv) {
     if(out_error || !std::filesystem::is_directory(dir,out_error) || out_error)
         fatal("cannot create/check output directory");
     long max_cycles = 0; // uncapped by default; no guessed runtime deadline
+    long first_stage = 0; // token-exact 10-09: start at stage index S (e.g. 36 = the head alone, PRELOAD = its input X)
     long stop_after = -1; // token-exact 10-09: end the run after stage index S retires (layer chain at the target
                           // position), drain the posted write-back and read back the current K/V of stages 0..S
     int POS = 0, TOKEN = 0;
@@ -351,6 +352,7 @@ int main(int argc, char** argv) {
         else if (k == "--kv-dir") kv_dir = argv[i + 1];
         else if (k == "--max-cycles") max_cycles = atol(argv[i + 1]);
         else if (k == "--stop-after") stop_after = atol(argv[i + 1]);
+        else if (k == "--first-stage") first_stage = atol(argv[i + 1]);
         else if (k == "--embed-bin") embed_bin = argv[i + 1];
         else if (k == "--kv-ideal") kv_ideal = atoi(argv[i + 1]) != 0;
         else if (k == "--early-go") early_go = atoi(argv[i + 1]) != 0;
@@ -390,6 +392,8 @@ int main(int argc, char** argv) {
             fatal("plain AR decoder stage order",l);
         if(RM_HBM_LAYERS!=36 || POS<0 || POS>=8192 || TOKEN<0 || TOKEN>=151936 || kv_ideal || kv_dir.empty())
             fatal("plain AR requires actual 36-layer bounded-position KV history");
+        if (first_stage < 0 || size_t(first_stage) >= stages.size()) fatal("--first-stage out of range", int(first_stage));
+        if (first_stage > 0) stages.erase(stages.begin(), stages.begin() + first_stage);   // validated list, then the tail
     }
     DieMem mem[D];
     auto x0 = QwenHex::load(preload, 1);

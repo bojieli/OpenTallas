@@ -13,7 +13,7 @@
 #   7. 4 guided representative-region DRTs on the GRT checkpoint (hub / attn / ioedge / svc-sm)
 # usage: [SKIP_IR=1] hbm_r25g_chain.sh <src dir> <run dir>   (re-launch resumes: a recorded clock plan is kept)
 set -u
-SRC=$(readlink -f $1); B=$2; mkdir -p $B; B=$(readlink -f $B); W=$B/case; V=r25g
+SRC=$(readlink -f $1); B=$2; mkdir -p $B; B=$(readlink -f $B); W=$B/case; V=${V:-r25g}
 ADMIT=/srv/opentallas-scratch/admit.sh
 say() { echo "$(date '+%F %T %Z') $*" >> $B/STATUS.log; }
 say "chain start src=$SRC ($(cat $SRC/SOURCE_COMMIT)) variant=$V (network_probe)"

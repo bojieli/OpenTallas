@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 // hgi-takeover 2026-10-09: IDX.MERGE (ot_hgi_idx_merge) against tools/hgi_idx_merge_vectors.py: every case's O / R in VM
 // must equal the golden lexsort prefix exactly (and nothing past it written); the unsorted case must fault.  VM model:
-// one request outstanding, random 2..6-cycle latency.  +DIR=<vectors>; MUT=1: ties to the higher id (must FAIL).
+// the fast path (4 outstanding, in order, 6..8 cycles).  +DIR=<vectors>; MUT 1 ties to the higher id, MUT 2 no
+// sortedness check, MUT 3 a full node FIFO loses a push: each must FAIL.
 module tb_hgi_idx_merge;
   parameter integer MUT = 0;
   reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
@@ -31,7 +32,7 @@ module tb_hgi_idx_merge;
       vqt[(qh2 + qn2) % 8] = tlast; qn2 = qn2 + 1; if (qn2 > maxo2) maxo2 = qn2;
     end
   end
-  reg [31:0] mv [0:65535]; reg [31:0] mi [0:65535]; reg [31:0] eo [0:4095]; reg [31:0] er [0:4095];
+  reg [31:0] mv [0:65535]; reg [31:0] mi [0:65535]; reg [31:0] eo [0:4095]; reg [31:0] er [0:4095];  // k <= 2048 (+ the guard word)
   string dir; integer fd, rc, nc, c, G, N, K, KEY, F, NE, t, bad, cyc;
   always @(posedge clk) cyc <= cyc + 1;
   initial begin

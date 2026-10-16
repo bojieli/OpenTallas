@@ -1,0 +1,32 @@
+{
+ "master": "hfd_hgi_idx_native",
+ "hgi_unit": "idx",
+ "note": "Opt-in actual native selector-frame ports; every functionalIDX port bound, historical tied-off wrapper unchanged; native frame streaming with real finite credits, no closure claim.",
+ "instances": [
+  {
+   "name": "ix",
+   "module": "ot_hgi_idx_unit_native",
+   "file": "rtl/hbm_accel/generic/idx/ot_hgi_idx_unit_native.sv",
+   "params": {},
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "rec": "die:f_hgi_cmdproc[0:1819]",
+    "ret": "die:t_hgi_cmdproc[0:3]",
+    "vmq": "die:t_hgi_vmq[0:338]",
+    "vmr": "die:f_hgi_vmr[0:274]",
+    "sel_fs": "die:t_sel_fs[0:90]",
+    "sel_qb": "die:t_sel_qb[0:1048]",
+    "sel_kin": "die:t_sel_kin[0:345]",
+    "sel_toc": "die:t_sel_toc[0:1]",
+    "sel_coc": "die:t_sel_coc[0:1]",
+    "sel_qbr": "die:f_sel_qbr[0:1]",
+    "sel_to": "die:f_sel_to[0:612]",
+    "sel_co": "die:f_sel_co[0:72]",
+    "sel_ev": "die:f_sel_ev[0:2]"
+   }
+  }
+ ],
+ "kept_out_regs": true,
+ "face_stages": 3
+}

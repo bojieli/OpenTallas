@@ -9,8 +9,17 @@
 //   host write: cmd_addr[5] = CFG window; cmd_addr[4:0] = descriptor word pair (2a, 2a+1); window + 5'h1F = CFG_COMMIT.
 module ot_hgi_cp #(
     parameter integer SETTLE = 64,
-    parameter integer RW = 512,
-    parameter integer USE_MACRO = 1
+    parameter integer RW = 4096,
+    parameter integer USE_MACRO = 1,
+    parameter integer FETCH_PIN_FIFO = 0,
+    // [cp] 2026-10-10 (route hgi_cp-mtp-0673da5ee hm0 TT -46.11: f_req_rdy input -> 8 levels / fanout -> the 41 front
+    // pin flops): FQ_LOCAL = 1 (with FETCH_PIN_FIFO) keeps the fetch credits HERE: FQCR loader queue slots, returned by
+    // f_req_ack, and at most 48 sectors in flight (f_rsp_v returns one).  f_req_v is a register that is 1 exactly on the
+    // cycle a request is SENT (the credit is checked at the edge before), so no live ready crosses the boundary;
+    // f_req_rdy is unused.  The parent sends on f_req_v alone.  MUT_FQ (bench): a send does not take a credit.
+    parameter integer FQ_LOCAL = 0,
+    parameter integer FQCR = 16,
+    parameter integer MUT_FQ = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -33,9 +42,15 @@ module ot_hgi_cp #(
     input  wire [3:0]    db_gen,
     input  wire [1:0]    db_entry,
     input  wire [3:0]    db_ncol,
+    input  wire [3:0]    db_kernel,     // G23 KERNEL entry index (entry 3)
+    input  wire [31:0]   db_loff,       // G26: per-layer offset L' x kstride (kinds 3 / 7 / 8; the MTP translator)
+    output wire [11*32-1:0] md_kent,    // G23 / G26: committed MD words 16 .. 26 and 49 (to the MTP translator)
+    output wire [31:0]   md_kstride,
+    output wire [17:0]   md_noise,      // MD word 53 (MTP noise / mask token id)
     // record fetch, VM read, dispatch, retire (ot_hgi_seq)
     output wire          f_req_v,
     input  wire          f_req_rdy,
+    input  wire          f_req_ack,      // FQ_LOCAL: one loader queue slot returned (credit)
     output wire [39:0]   f_req_addr,
     input  wire          f_rsp_v,
     input  wire [255:0]  f_rsp_data,
@@ -76,21 +91,85 @@ module ot_hgi_cp #(
     always @(posedge clk) begin a_q <= cmd_addr; wd_q <= cmd_wdata; end
     wire win = a_q[5];
     wire c_commit = we_q && win && (a_q[4:0] == 5'h1F);
-    wire c_wr = we_q && win && !c_commit;
+    wire c_wr = we_q && win;           // F1 (hgi_e2e 2026-10-09): the commit write stages MD words 62 / 63 too
     wire hold, seq_busy;
-    wire [5*32-1:0] md_d;
+    wire [5*32-1:0] md_d; wire [11*32-1:0] md_k; wire [31:0] md_ks; wire [17:0] md_nz;
+    assign md_kent = md_k; assign md_kstride = md_ks; assign md_noise = md_nz;
     ot_hgi_cfg_master #(.SETTLE(SETTLE)) u_cfg (.clk(clk), .rst_n(rst_n), .w_en(c_wr), .w_pair(a_q[4:0]),
         .w_data(wd_q), .commit(c_commit), .busy(ub_q || seq_busy), .bus(cfg_bus),
-        .st_loaded(cfg_loaded), .st_err(cfg_err), .st_hold(hold), .md_d(md_d));
+        .st_loaded(cfg_loaded), .st_err(cfg_err), .st_hold(hold), .md_d(md_d), .md_k(md_k), .md_ks(md_ks), .md_nz(md_nz));
     wire [2*32-1:0] cp_act;
     ot_hgi_cfg_rx #(.W0(40), .NW(2), .RST({HGI_RST_W41, HGI_RST_W40})) u_rx (.clk(clk), .rst_n(rst_n), .bus(cfg_bus),
         .act(cp_act));
     assign cfg_cp_act = cp_act;
+    // The sequencer's rqf[rqh] is a mux, so it cannot be the die pin stage.
+    // Two elastic slots put both address and valid on a register at the pin.
+    // Ready reserves the back slot; downstream stalls never lose a request.
+    wire sf_v, sf_rdy; wire [39:0] sf_addr;
+    generate if (FETCH_PIN_FIFO && FQ_LOCAL) begin : g_fetch_cr
+        // front slot + back slot as g_fetch_pin; the send decision for the NEXT cycle is registered (snd_q = f_req_v)
+        (* keep = 1 *) reg [39:0] front_addr, back_addr;
+        reg snd_q, snd_pin;                                  // snd_pin: a copy whose only load is the f_req_v pin (the anchored pin flop)
+        reg front_v, back_v;
+        reg [4:0] cr; reg [6:0] inn;
+        wire take_in = sf_v && sf_rdy;
+        wire take_out = snd_q;                               // registered: the front entry leaves this cycle
+        assign sf_rdy = !back_v;
+        assign f_req_v = snd_pin;
+        assign f_req_addr = front_addr;
+        // next state (same as g_fetch_pin with take_out = snd_q)
+        wire fv_n = take_out ? (back_v || take_in) : (front_v || take_in);
+        wire [4:0] cr_n = cr - {4'd0, take_out && MUT_FQ == 0} + {4'd0, f_req_ack};
+        wire [6:0] inn_n = inn + {6'd0, take_out} - {6'd0, f_rsp_v};
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin front_v <= 0; back_v <= 0; snd_q <= 0; snd_pin <= 0; cr <= 5'(FQCR); inn <= 7'd0; end
+            else begin
+                front_v <= fv_n;
+                if (take_out) back_v <= 0;
+                else if (take_in && front_v) back_v <= 1;
+                cr <= cr_n; inn <= inn_n;
+                snd_q <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
+                snd_pin <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
+            end
+        always @(posedge clk) begin
+            if (take_out && back_v) front_addr <= back_addr;
+            else if (take_in && (!front_v || take_out)) front_addr <= sf_addr;
+            if (take_in && front_v && !take_out) back_addr <= sf_addr;
+        end
+    end else if (FETCH_PIN_FIFO) begin : g_fetch_pin
+        (* keep = 1 *) reg [39:0] front_addr, back_addr;
+        (* keep = 1 *) reg front_v, back_v;
+        wire take_in = sf_v && sf_rdy;
+        wire take_out = front_v && f_req_rdy;
+        assign sf_rdy = !back_v;
+        assign f_req_v = front_v;
+        assign f_req_addr = front_addr;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin front_v <= 0; back_v <= 0; end
+            else begin
+                if (take_out) begin
+                    front_v <= back_v || take_in;
+                    back_v <= 0;
+                end else if (take_in) begin
+                    if (!front_v) front_v <= 1;
+                    else back_v <= 1;
+                end
+            end
+        always @(posedge clk) begin
+            if (take_out && back_v) front_addr <= back_addr;
+            else if (take_in && (!front_v || take_out)) front_addr <= sf_addr;
+            if (take_in && front_v && !take_out) back_addr <= sf_addr;
+        end
+    end else begin : g_fetch_legacy
+        assign f_req_v = sf_v;
+        assign f_req_addr = sf_addr;
+        assign sf_rdy = f_req_rdy;
+    end endgenerate
     ot_hgi_seq #(.RW(RW), .USE_MACRO(USE_MACRO)) u_seq (.clk(clk), .rst_n(rst_n), .md_d(md_d),
         .cfg_vocab(cp_act[HGI_CP_VOCAB_L +: HGI_CP_VOCAB_N]), .cfg_ctx_max(cp_act[32 + HGI_CP_CTX_MAX_L +: HGI_CP_CTX_MAX_N]),
         .rank(rank), .hold(hold), .busy(seq_busy),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(db_job), .db_gen(db_gen),
-        .db_entry(db_entry), .db_ncol(db_ncol), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr), .f_rsp_v(f_rsp_v),
+        .db_entry(db_entry), .db_ncol(db_ncol), .db_kernel(db_kernel), .db_loff(db_loff), .md_k(md_k), .f_req_v(sf_v), .f_req_rdy(sf_rdy), .f_req_addr(sf_addr), .f_rsp_v(f_rsp_v),
         .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
         .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),

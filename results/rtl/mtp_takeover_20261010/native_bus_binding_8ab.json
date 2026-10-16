@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.mtp.native_bus_binding.v1",
+  "source_commit": "8ab941dbdf9840b855bb450653b7bb11a115cd67",
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv": "ace49d415a5ec53e027dd07d407eeee84ff8d1f13e2abb5678d4b04178349f42",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "20ac6d0044c0865a4af05bdc050c9597c2905429ea2b556f217e95ec7287b5a3",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv": "1ba3e5b87d960be20fec40c62bc1c1bf60185a9d91526038c08b28a9eb2667ad",
+    "tools/dsrom_s81_fulldie.py": "4d1d38c54af1545c062f3eb0725de0ebfa8bc8e09bc6f8672dddb14f4e783093",
+    "tools/mtp_native_binding_audit.py": "5d6bdc7d27dd795fc933a1616e181777afbdd878d8a10e655c920c2c00ba9e94"
+  },
+  "floorplan": "results/rtl/mtp_draftdie_20261009/dies/head631/floorplan.json",
+  "floorplan_sha256": "e4f990b575b424df9d2eb17ba8992c5d0e5413ea23c962d55de936294d8b3deb",
+  "port_elaboration_log": "PORT f_rv 1\nPORT f_rd 512\nPORT t_rg 1\nPORT t_tv 1\nPORT t_td 512\nPORT f_tg 1\nPORT t_sv 1\nPORT t_sd 77\nPORT f_sg 1\nPORT t_acc 57\nPORT f_wv 1\nPORT f_wd 10\nPORT t_wg 1\nPORT f_qv 1\nPORT f_qd 34\nPORT t_qg 1\nPORT t_hv 1\nPORT t_hd 34\nPORT f_hg 1\nPORT f_cfg 42\n",
+  "static_config_bits": 42,
+  "buses": [
+    {
+      "source": "capture",
+      "destination": "mtp",
+      "bits": 514,
+      "ports": {
+        "f_rv": 1,
+        "f_rd": 512,
+        "t_rg": 1
+      },
+      "chain": {
+        "chain": "hb_capture_mtp",
+        "lanes": [
+          514
+        ],
+        "stations": 5,
+        "length_um": 1108.9,
+        "max_hop_um": 210.4,
+        "last_hop_um": 60.5
+      }
+    },
+    {
+      "source": "mtp",
+      "destination": "collective",
+      "bits": 650,
+      "ports": {
+        "t_tv": 1,
+        "t_td": 512,
+        "f_tg": 1,
+        "t_sv": 1,
+        "t_sd": 77,
+        "f_sg": 1,
+        "t_acc": 57
+      },
+      "chain": {
+        "chain": "hb_mtp_collective",
+        "lanes": [
+          650
+        ],
+        "stations": 6,
+        "length_um": 1252.9,
+        "max_hop_um": 214.5,
+        "last_hop_um": 17.5
+      }
+    },
+    {
+      "source": "vm",
+      "destination": "mtp",
+      "bits": 48,
+      "ports": {
+        "f_wv": 1,
+        "f_wd": 10,
+        "t_wg": 1,
+        "f_qv": 1,
+        "f_qd": 34,
+        "t_qg": 1
+      },
+      "chain": {
+        "chain": "hb_vm_mtp",
+        "lanes": [
+          48
+        ],
+        "stations": 8,
+        "length_um": 1699.3,
+        "max_hop_um": 210.4,
+        "last_hop_um": 20.7
+      }
+    },
+    {
+      "source": "mtp",
+      "destination": "vm",
+      "bits": 36,
+      "ports": {
+        "t_hv": 1,
+        "t_hd": 34,
+        "f_hg": 1
+      },
+      "chain": {
+        "chain": "hb_mtp_vm",
+        "lanes": [
+          36
+        ],
+        "stations": 9,
+        "length_um": 1843.3,
+        "max_hop_um": 214.3,
+        "last_hop_um": 38.9
+      }
+    }
+  ],
+  "aggregate_bits": 1248,
+  "bus_binding_passed": true,
+  "identity_composition_qualified": false,
+  "physical_qualified": false,
+  "remaining": [
+    "seed/draft native endpoint identity join",
+    "verify causal path",
+    "rollback committed-state join",
+    "full production head inventory",
+    "routed die timing and DRC"
+  ],
+  "scope": "Elaborated wrapper ports and generated head631 bus chains only; historical storage recipe."
+}

@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.hgi_idx_owned_g24.gate.v1",
+  "base_commit": "8ab941dbdf9840b855bb450653b7bb11a115cd67",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/idx/ot_hgi_idx_owned.sv": "a29d2ed968dc12d7ba0172748918de40790c7ab2a03db36f6ab44677cff4cd56",
+    "rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv": "efff7443849b70f9bd0f0dd541097ba9537a0a811e123797629515b01ff02fbf",
+    "rtl/hbm_accel/generic/idx/tb_hgi_idx_owned.sv": "ca813d69d7a54f20fb2ba81766b8abdcb6e27590f0703dc6dbad1184a9871c30",
+    "tools/hgi_idx_owned_vectors.py": "deaa6f7178313d33478e9f539e175ed2517c38a6d7170c1d3066fd0cfeb79058",
+    "tools/uarch_model.py": "3e48dc3e31453756c83d650a900682eb04d21af43146c5f26db04e09f323fc7b"
+  },
+  "positive": "PASS 16 cases, K<=2048, G96 full shape, max_outstanding4",
+  "negative_controls": {
+    "1": "FAIL wrong owner",
+    "2": "FAIL obsolete owner-major permutation",
+    "3": "FAIL unbatched D[1]"
+  },
+  "simulator": "Icarus Verilog version 11.0 (stable) ()",
+  "physical_qualified": false,
+  "model": {
+    "schema": "opentallas.hgi_idx_owned_g24.v1",
+    "MACs_per_cycle": 0,
+    "ids_per_cycle": 1,
+    "compute": "integer owner/local arithmetic and serial ceil division",
+    "memory_port_bytes_per_cycle": 32,
+    "vm_request_bits": 338,
+    "vm_response_bits": 274,
+    "communication_bytes": {
+      "input_twice": 16384,
+      "output_R": 8192,
+      "output_O_max": 8192,
+      "output_D": 8
+    },
+    "replicas_per_die": 1,
+    "replica_mux_demux": 0,
+    "vm_outstanding": 4,
+    "count_bits": 1152,
+    "added_storage_bits_estimate": 149,
+    "batch_division_cycles": 14,
+    "added_latency_cycles_estimate": 16,
+    "latency_composition": "two K-entry passes + 96-owner max + padded output + VM packer stalls + G24 division/D write",
+    "routing": {
+      "boundary_tracks": 622,
+      "channel_capacity": "inherits IDX unit physical slot; not yet measured"
+    },
+    "area": {
+      "added_ff_estimate": 149,
+      "slot_fit": "requires re-route of IDX unit",
+      "physical_qualified": false
+    },
+    "fanout": {
+      "slot_shift_add": 2,
+      "batch_to_division": 13
+    },
+    "physical_adoption": false
+  }
+}

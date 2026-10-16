@@ -1,0 +1,368 @@
+{
+ "schema": "opentallas.hgi_die_dispatch_evidence.v1",
+ "dispatch_model_r25g": {
+  "schema": "opentallas.hgi_die_dispatch.v1",
+  "abi": "ot_hgi_seq v1.0 (claude/hbm-forks-20261009 bf44b3032)",
+  "units": [
+   {
+    "unit": "quant",
+    "code": 4,
+    "block": "quant",
+    "descriptors": "AO",
+    "command_bits": 683,
+    "return_bits": 3,
+    "command_fields": [
+     {
+      "name": "valid",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "header",
+      "lo": 1,
+      "hi": 128
+     },
+     {
+      "name": "desc_A",
+      "lo": 129,
+      "hi": 384
+     },
+     {
+      "name": "desc_O",
+      "lo": 385,
+      "hi": 640
+     },
+     {
+      "name": "n_A",
+      "lo": 641,
+      "hi": 661
+     },
+     {
+      "name": "n_O",
+      "lo": 662,
+      "hi": 682
+     }
+    ],
+    "return_fields": [
+     {
+      "name": "ready",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "done",
+      "lo": 1,
+      "hi": 1
+     },
+     {
+      "name": "fault",
+      "lo": 2,
+      "hi": 2
+     }
+    ],
+    "centre_distance_um": 5078.16,
+    "relay_edges_each_way": 10,
+    "dispatch_to_unit_edges": 11,
+    "fp32_macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "records_per_cycle": 1
+   },
+   {
+    "unit": "coll",
+    "code": 6,
+    "block": "coll",
+    "descriptors": "AOI",
+    "command_bits": 960,
+    "return_bits": 3,
+    "command_fields": [
+     {
+      "name": "valid",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "header",
+      "lo": 1,
+      "hi": 128
+     },
+     {
+      "name": "desc_A",
+      "lo": 129,
+      "hi": 384
+     },
+     {
+      "name": "desc_O",
+      "lo": 385,
+      "hi": 640
+     },
+     {
+      "name": "desc_I",
+      "lo": 641,
+      "hi": 896
+     },
+     {
+      "name": "n_A",
+      "lo": 897,
+      "hi": 917
+     },
+     {
+      "name": "n_O",
+      "lo": 918,
+      "hi": 938
+     },
+     {
+      "name": "n_I",
+      "lo": 939,
+      "hi": 959
+     }
+    ],
+    "return_fields": [
+     {
+      "name": "ready",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "done",
+      "lo": 1,
+      "hi": 1
+     },
+     {
+      "name": "fault",
+      "lo": 2,
+      "hi": 2
+     }
+    ],
+    "centre_distance_um": 1615.68,
+    "relay_edges_each_way": 3,
+    "dispatch_to_unit_edges": 4,
+    "fp32_macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "records_per_cycle": 1
+   },
+   {
+    "unit": "argmax",
+    "code": 7,
+    "block": "mtp",
+    "descriptors": "AO",
+    "command_bits": 683,
+    "return_bits": 3,
+    "command_fields": [
+     {
+      "name": "valid",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "header",
+      "lo": 1,
+      "hi": 128
+     },
+     {
+      "name": "desc_A",
+      "lo": 129,
+      "hi": 384
+     },
+     {
+      "name": "desc_O",
+      "lo": 385,
+      "hi": 640
+     },
+     {
+      "name": "n_A",
+      "lo": 641,
+      "hi": 661
+     },
+     {
+      "name": "n_O",
+      "lo": 662,
+      "hi": 682
+     }
+    ],
+    "return_fields": [
+     {
+      "name": "ready",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "done",
+      "lo": 1,
+      "hi": 1
+     },
+     {
+      "name": "fault",
+      "lo": 2,
+      "hi": 2
+     }
+    ],
+    "centre_distance_um": 2444.04,
+    "relay_edges_each_way": 4,
+    "dispatch_to_unit_edges": 5,
+    "fp32_macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "records_per_cycle": 1
+   },
+   {
+    "unit": "idx",
+    "code": 9,
+    "block": "index_SW",
+    "descriptors": "ABOR",
+    "command_bits": 1237,
+    "return_bits": 3,
+    "command_fields": [
+     {
+      "name": "valid",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "header",
+      "lo": 1,
+      "hi": 128
+     },
+     {
+      "name": "desc_A",
+      "lo": 129,
+      "hi": 384
+     },
+     {
+      "name": "desc_B",
+      "lo": 385,
+      "hi": 640
+     },
+     {
+      "name": "desc_O",
+      "lo": 641,
+      "hi": 896
+     },
+     {
+      "name": "desc_R",
+      "lo": 897,
+      "hi": 1152
+     },
+     {
+      "name": "n_A",
+      "lo": 1153,
+      "hi": 1173
+     },
+     {
+      "name": "n_B",
+      "lo": 1174,
+      "hi": 1194
+     },
+     {
+      "name": "n_O",
+      "lo": 1195,
+      "hi": 1215
+     },
+     {
+      "name": "n_R",
+      "lo": 1216,
+      "hi": 1236
+     }
+    ],
+    "return_fields": [
+     {
+      "name": "ready",
+      "lo": 0,
+      "hi": 0
+     },
+     {
+      "name": "done",
+      "lo": 1,
+      "hi": 1
+     },
+     {
+      "name": "fault",
+      "lo": 2,
+      "hi": 2
+     }
+    ],
+    "centre_distance_um": 8077.32,
+    "relay_edges_each_way": 16,
+    "dispatch_to_unit_edges": 17,
+    "fp32_macs_per_cycle": 0,
+    "memory_bytes_per_cycle": 0,
+    "records_per_cycle": 1
+   }
+  ],
+  "total_signal_bits": 3575,
+  "scope": "die graph declaration; unit wrappers must bind every field (no ties) before adoption"
+ },
+ "lint_r25_quant_coll": {
+  "census": {
+   "instances": 562,
+   "buses": 941,
+   "net_bits": 841390,
+   "masters": 87,
+   "real_instances": 46,
+   "placeholder_instances": 516
+  },
+  "coll_interface": {
+   "rtl": "ot_hbm_accel_tu_endpoint",
+   "links": 9,
+   "checks": {
+    "su_delivery_and_inject_request": {
+     "rtl": 2218,
+     "die": 2218,
+     "note": "4 delivery lanes (545 + valid) one per SU quarter; inj_idx / inj_rd broadcast to every quarter",
+     "match": true
+    },
+    "su_inject_data": {
+     "rtl": 1024,
+     "die_per_quarter": [
+      1024
+     ],
+     "note": "each quarter drives inj_data; the fan-in inside the block selects one",
+     "match": true
+    },
+    "config_in": {
+     "rtl": 25,
+     "die": 25,
+     "match": true
+    },
+    "status_out": {
+     "rtl": 33,
+     "die": 33,
+     "match": true
+    },
+    "link_tx": {
+     "rtl": 4376,
+     "die": 4392,
+     "match": true
+    },
+    "link_rx": {
+     "rtl": 4376,
+     "die": 4392,
+     "match": true
+    },
+    "clocks": {
+     "rtl": "clk / rst_n / pclk / prst_n",
+     "die": [
+      "pll_hbm",
+      "pll_link",
+      "pll_serial",
+      "pll_stream",
+      "por_hbm",
+      "por_link",
+      "por_serial",
+      "por_stream"
+     ],
+     "match": true
+    },
+    "unmatched_die_ports": [
+     "f_hgi_cmdproc",
+     "t_hgi_cmdproc"
+    ]
+   },
+   "pass_": false
+  },
+  "verdict": "FAIL (expected): hfd_coll real view has no f_hgi_cmdproc / t_hgi_cmdproc; the generic coll wrapper (record -> ot_hgi_coll_decode -> endpoint config) must bind them"
+ },
+ "blocked": {
+  "r25g": "hbm_accel_die_fp.build(R25G) is geometry_only (retiled SM network unqualified, hbm-forks)",
+  "r25m": "die_top_lint has no direction rule for class loader_mem (baseline r25m fails the same way)"
+ },
+ "idx": "dispatch target needs the TOPK slot + native qend placement (hbm-forks geometry); declared at index_SW for the R25G model only"
+}

@@ -1,0 +1,3 @@
+FATAL: rtl/hbm_accel/generic/vm/tb_hgi_vm_wide_bank.sv:163: RAW_MISSING_RESERVATION
+       Time: 1439484 Scope: tb_hgi_vm_wide_bank
+Cause: test checked r_rdy immediately after changing r_addr without settling combinational hazard. Test repaired with 0.01ns settle before assertion; hardware unchanged.

@@ -1,0 +1,2850 @@
+{
+ "schema": "opentallas.hgi_sim.ds_sw_seq_pricing.v1",
+ "generated_utc": "2026-10-10T10:16:10Z",
+ "request": "hgi-takeover 2026-10-09 16:48 PT + 10-10 inputs (IDX.MERGE 594 + 1.37 k, G22 HC rows, ROW_GATHER c = 2, DMA full bandwidth)",
+ "program": "ds_rank0_program.json",
+ "run": "ds_full.json",
+ "measured": {
+  "idx_merge": {
+   "base": 594.0,
+   "per_output": 1.37,
+   "points": {
+    "512": 1297,
+    "2048": 3407
+   }
+  },
+  "idx_owned": {
+   "512": 1227.0,
+   "2048": 4510.0
+  }
+ },
+ "method": "  TOPK_MERGE (G20)  local IDX.TOPK (k = n) + 2 x COLL.ALL_GATHER (values, ids; G = 96) + IDX.MERGE key 0 (96 runs,\n                    k) + SU ids -> -float(id) + IDX.TOPK over -id (k = n = k) + an indexed VM read for the\n                    ascending table.  IDX.MERGE: 7,881 cycles MEASURED at 96 x 512 k 512; other k scaled\n                    linearly in the outputs from that point (head load 1,500 + per output).\n  ROW_GATHER (G21)  IDX.OWNED (K 512: 1,227 cycles MEASURED; K 2,048: 4,510) + per slot j < M: indexed DMA.LOAD of\n                    one 2 KB row, one exact ALL_GATHER (32 flits a rank, 96 ranks: 3,072 flits at 4 lanes / cycle\n                    = 768 cycles + the TU crossing / endpoint latency), and the head dies' DMA.STORE of the 96 rows;\n                    COLL-serial: M gathers back to back, each paying delivery + latency; the \"slots_pipelined\" variant\n                    lets the next slot's gather start while the previous delivers (M x 768 + the latency once).  M per layer is the\n                    bit-exact run's own selection (row_gather stats); the request's 11-12 is reported alongside.\n  ARGMAX_MERGE      an exact gather of 1 flit a rank + a 5-cycle fold.\nToday's pricing: TOPK_MERGE / ARGMAX_MERGE = the composition's measured collective classes (walk), ROW_GATHER = the\nbypass model of ds_native_timing.  Each priced program is scheduled (timing.py S2, CP modelled), so the token delta\nincludes the overlap the dependences allow.",
+ "result": {
+  "today": {
+   "cycles": 543456.7,
+   "tok_s": 2208.1
+  },
+  "rtl_ratios_applied": {
+   "COLL.ALL_GATHER": 2.26,
+   "FUSED.QDQ_FP8": 15.875,
+   "COLL.GROUP_REDUCE_MCAST": 0.909,
+   "IDX.TOPK": 4.477
+  },
+  "software_sequences_M_measured_per_layer": {
+   "cycles": 715547.6,
+   "tok_s": 1677.0,
+   "delta_cycles": 172091.0,
+   "delta_pct": 31.67,
+   "n_races": 0,
+   "ops": [
+    {
+     "layer": 2,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 19638.3,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 18214.6,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 13,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 19638.3,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 18214.6,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 13,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 1866.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14033.8,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 12610.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 9,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "candidate merge",
+     "today_cycles": 0.0,
+     "op": "TOPK_MERGE",
+     "k": 2048,
+     "n_local": 1366,
+     "cycles": 13416.8,
+     "parts": {
+      "local_topk": 105.4,
+      "gathers": 5568.4,
+      "idx_merge": 3407,
+      "su_neg_id": 92.0,
+      "topk_neg_id": 148.0,
+      "indexed_read": 4096.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2817.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 26643.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 25220.2,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 18,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2389.8,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 21039.4,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 19615.7,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 14,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": "head",
+     "tag": "argmax merge",
+     "today_cycles": 765.4,
+     "op": "ARGMAX_MERGE",
+     "cycles": 770.5
+    }
+   ],
+   "op_sum_today": 40401.7,
+   "op_sum_sequences": 213863.8
+  },
+  "software_sequences_M_12": {
+   "cycles": 705739.8,
+   "tok_s": 1700.3,
+   "delta_cycles": 162283.1,
+   "delta_pct": 29.86,
+   "n_races": 0,
+   "ops": [
+    {
+     "layer": 2,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 1866.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "candidate merge",
+     "today_cycles": 0.0,
+     "op": "TOPK_MERGE",
+     "k": 2048,
+     "n_local": 1366,
+     "cycles": 13416.8,
+     "parts": {
+      "local_topk": 105.4,
+      "gathers": 5568.4,
+      "idx_merge": 3407,
+      "su_neg_id": 92.0,
+      "topk_neg_id": 148.0,
+      "indexed_read": 4096.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2817.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2389.8,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 18237.2,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 16813.4,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": "head",
+     "tag": "argmax merge",
+     "today_cycles": 765.4,
+     "op": "ARGMAX_MERGE",
+     "cycles": 770.5
+    }
+   ],
+   "op_sum_today": 40401.7,
+   "op_sum_sequences": 204056.1
+  },
+  "software_sequences_slots_pipelined": {
+   "cycles": 655401.2,
+   "tok_s": 1830.9,
+   "delta_cycles": 111944.6,
+   "delta_pct": 20.6,
+   "n_races": 0,
+   "ops": [
+    {
+     "layer": 2,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 12040.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 10617.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 13,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 12040.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 10617.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 13,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 1866.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 8968.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 7545.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 9,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 11272.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 9849.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "candidate merge",
+     "today_cycles": 0.0,
+     "op": "TOPK_MERGE",
+     "k": 2048,
+     "n_local": 1366,
+     "cycles": 13416.8,
+     "parts": {
+      "local_topk": 105.4,
+      "gathers": 5568.4,
+      "idx_merge": 3407,
+      "su_neg_id": 92.0,
+      "topk_neg_id": 148.0,
+      "indexed_read": 4096.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 11272.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 9849.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2817.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 15880.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 14457.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 18,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 11272.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 9849.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 12,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2389.8,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 12808.9,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 11385.1,
+      "last_store": 92.1,
+      "per_gather": 1401.1,
+      "M": 14,
+      "slots_per_gather": 1
+     }
+    },
+    {
+     "layer": "head",
+     "tag": "argmax merge",
+     "today_cycles": 765.4,
+     "op": "ARGMAX_MERGE",
+     "cycles": 770.5
+    }
+   ],
+   "op_sum_today": 40401.7,
+   "op_sum_sequences": 153717.7
+  },
+  "approved_path_c2_g22": {
+   "cycles": 686691.7,
+   "tok_s": 1747.5,
+   "delta_cycles": 143235.0,
+   "delta_pct": 26.36,
+   "n_races": 0,
+   "ops": [
+    {
+     "layer": 0,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 0,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 1,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 1,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 2,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 2,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 16607.6,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 15183.8,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 13,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 3,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 3,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 4,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 4,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 5,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 5,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 6,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 6,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 7,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 7,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 8,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 8,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 16607.6,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 15183.8,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 13,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 9,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 9,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 10,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 10,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 11,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 11,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 12,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 12,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 13,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 13,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 14,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 14,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 1866.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 12269.3,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 10845.6,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 9,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 15,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 15,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 16,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 16,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 17,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 17,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 18,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 18,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 19,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 19,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 20,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 20,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14438.5,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 13014.7,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 12,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "candidate merge",
+     "today_cycles": 0.0,
+     "op": "TOPK_MERGE",
+     "k": 2048,
+     "n_local": 1366,
+     "cycles": 13416.8,
+     "parts": {
+      "local_topk": 105.4,
+      "gathers": 5568.4,
+      "idx_merge": 3407,
+      "su_neg_id": 92.0,
+      "topk_neg_id": 148.0,
+      "indexed_read": 4096.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 21,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 21,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 22,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 22,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 23,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 23,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 24,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 24,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14438.5,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 13014.7,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 12,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 25,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 25,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 26,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 26,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 27,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 27,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 28,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 28,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2817.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 20945.8,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 19522.1,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 18,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 29,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 29,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 30,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 30,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 31,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 31,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 32,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 32,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14438.5,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 13014.7,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 12,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 33,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 33,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 34,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 34,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 35,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 35,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 36,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 36,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2389.8,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 16607.6,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 15183.8,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 14,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 37,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 37,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 38,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 38,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 39,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 39,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": "head",
+     "tag": "argmax merge",
+     "today_cycles": 765.4,
+     "op": "ARGMAX_MERGE",
+     "cycles": 770.5
+    }
+   ],
+   "op_sum_today": 133201.7,
+   "op_sum_sequences": 292815.9
+  },
+  "approved_path_c2_g22_current_rtl_ratios": {
+   "cycles": 938002.9,
+   "tok_s": 1279.3,
+   "delta_cycles": 394546.2,
+   "delta_pct": 72.6,
+   "n_races": 0,
+   "ops": [
+    {
+     "layer": 0,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 0,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 1,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 1,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 2,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 2,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 16607.6,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 15183.8,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 13,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 2,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 3,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 3,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 4,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 4,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 5,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 5,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 6,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 6,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 7,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 7,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 8,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 8,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2294.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 16607.6,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 15183.8,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 13,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 8,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 9,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 9,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 10,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 10,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 11,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 11,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 12,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 12,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 13,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 13,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 14,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 14,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 1866.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 12269.3,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 10845.6,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 9,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 14,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 15,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 15,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 16,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 16,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 17,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 17,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 18,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 18,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 19,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 19,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 20,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 20,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14438.5,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 13014.7,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 12,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "candidate merge",
+     "today_cycles": 0.0,
+     "op": "TOPK_MERGE",
+     "k": 2048,
+     "n_local": 1366,
+     "cycles": 13416.8,
+     "parts": {
+      "local_topk": 105.4,
+      "gathers": 5568.4,
+      "idx_merge": 3407,
+      "su_neg_id": 92.0,
+      "topk_neg_id": 148.0,
+      "indexed_read": 4096.0
+     }
+    },
+    {
+     "layer": 20,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 21,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 21,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 22,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 22,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 23,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 23,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 24,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 24,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14438.5,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 13014.7,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 12,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 24,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 25,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 25,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 26,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 26,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 27,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 27,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 28,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 28,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2817.7,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 20945.8,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 19522.1,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 18,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 28,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 29,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 29,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 30,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 30,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 31,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 31,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 32,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 32,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2175.9,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 14438.5,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 13014.7,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 12,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 32,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 33,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 33,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 34,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 34,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 35,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 35,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 36,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 36,
+     "tag": "96 x 512 index merge",
+     "today_cycles": 2680.6,
+     "op": "TOPK_MERGE",
+     "k": 512,
+     "n_local": 512,
+     "cycles": 5496.4,
+     "parts": {
+      "local_topk": 52.0,
+      "gathers": 3003.4,
+      "idx_merge": 1297,
+      "su_neg_id": 68.0,
+      "topk_neg_id": 52.0,
+      "indexed_read": 1024.0
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "selected compressed-KV rows to the head dies",
+     "today_cycles": 2389.8,
+     "op": "ROW_GATHER",
+     "K": 512,
+     "cycles": 16607.6,
+     "parts": {
+      "idx_owned": 1227.0,
+      "first_load": 104.6,
+      "gathers": 15183.8,
+      "last_store": 92.1,
+      "per_gather": 2169.1,
+      "M": 14,
+      "slots_per_gather": 2
+     }
+    },
+    {
+     "layer": 36,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 37,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 37,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 38,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 38,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 39,
+     "tag": "hc_attn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": 39,
+     "tag": "hc_ffn (mixes + Sinkhorn)",
+     "today_cycles": 1160.0,
+     "op": "HC_MIX (G22 rows + gather + post)",
+     "cycles": 1353.8,
+     "was": 1160.0
+    },
+    {
+     "layer": "head",
+     "tag": "argmax merge",
+     "today_cycles": 765.4,
+     "op": "ARGMAX_MERGE",
+     "cycles": 770.5
+    }
+   ],
+   "op_sum_today": 133201.7,
+   "op_sum_sequences": 292815.9
+  },
+  "perf_generic_topk_merge_charge": 765.5
+ }
+}

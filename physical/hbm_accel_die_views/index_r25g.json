@@ -1,0 +1,5064 @@
+{
+ "schema": "opentallas.hbm_die_views_index.v1",
+ "die": "HBM accelerator DS die",
+ "round": "r25g",
+ "generator_sha256": "2946e2687be279467dc43685414bf9b7cfe2c59309100b090dcecb33aeedf06b",
+ "status_values": [
+  "closed",
+  "closed-below-margin",
+  "interim-not-closed",
+  "reservation",
+  "missing"
+ ],
+ "masters": {
+  "hfd_attn_half_hi": {
+   "kind": "attn_half",
+   "status": "missing",
+   "instances": 64
+  },
+  "hfd_attn_half_lo": {
+   "kind": "attn_half",
+   "status": "missing",
+   "instances": 64
+  },
+  "hfd_barrier": {
+   "kind": "barrier",
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/barrier",
+   "lef": "hfd_barrier.lef",
+   "lib": {
+    "ss": "hfd_barrier_ss.lib",
+    "ff": "hfd_barrier_ff.lib",
+    "tt": "hfd_barrier_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     36.696
+    ],
+    "size_gen": [
+     1399.656,
+     36.696
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/spine/routes/bm2_pd45",
+    "host": "ot-epyc1tb",
+    "SOURCE_COMMIT": "369b4c934fd63644fae5685479072e2f806fa53b",
+    "ss_setup_ps": 197.0,
+    "ff_hold_ps": 20.82,
+    "closes_signoff_SS60_FF25": true,
+    "clock_period_ns": 0.833,
+    "status": "pass",
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2": 388.134,
+    "seq_um2": 114.132,
+    "core_um2": 49504.8,
+    "macro_um2": 0
+   },
+   "files_sha256": {
+    "hfd_barrier.lef": "74bdd04c099997d76f0d2d4dfc0b7c9ae307f250ded52033ee3c88d3e8449031",
+    "hfd_barrier_ss.lib": "86076db0dcd336fe8246fc26a26a636b8a80c45a2b31fd14a21dc48c331b76a6",
+    "hfd_barrier_ff.lib": "23e3a09d644265ee3e23d5cb6b833c858e32e5593fd0e51ed55bc27bb5c30f15",
+    "hfd_barrier_tt.lib": "c6fc100864efbb9ea789925d8703b83cbe39266097e55a292175118f6fc1ccac"
+   },
+   "margin": {
+    "ss_setup_ps": 197.0,
+    "ff_hold_ps": 20.82,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   }
+  },
+  "hfd_cdist_r14": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_cdist_r14",
+   "lef": "hfd_cdist_r14.lef",
+   "lib": {
+    "ss": "hfd_cdist_r14_ss.lib",
+    "ff": "hfd_cdist_r14_ff.lib",
+    "tt": "hfd_cdist_r14_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     111.0,
+     215.976
+    ],
+    "size_gen": [
+     111.0,
+     215.976
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/N3_hfd_cdist_r14",
+    "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_cdist_r14 top=physical/hbm_accel_die_views/stations/hfd_cdist_r14/hfd_cdist_r14.sv DW=111.0 DH=215.976 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/N3_hfd_cdist_r14/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 62.8,
+    "ff_hold_ps": 17.21,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 295,
+     "route_sdc": ".views/N3_hfd_cdist_r14/route.sdc",
+     "signoff_sdc": ".views/N3_hfd_cdist_r14/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": -0.2,
+     "ff": 17.21
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_cdist_r14/hfd_cdist_r14.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_cdist_r14/hfd_cdist_r14.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 62.8,
+    "ff_hold_ps": 17.21,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_cdist_r14_tt.lib": "c79f28b5960b2f8d1200e454b6f47afed09925ec8b719f02e24ae733e3d4f9f0"
+   }
+  },
+  "hfd_cdist_r15": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_cdist_r15",
+   "lef": "hfd_cdist_r15.lef",
+   "lib": {
+    "ss": "hfd_cdist_r15_ss.lib",
+    "ff": "hfd_cdist_r15_ff.lib",
+    "tt": "hfd_cdist_r15_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     67.8,
+     203.016
+    ],
+    "size_gen": [
+     67.8,
+     203.016
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/Q1_hfd_cdist_r15",
+    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src23 master=hfd_cdist_r15 top=physical/hbm_accel_die_views/stations/hfd_cdist_r15/hfd_cdist_r15.sv DW=67.8 DH=203.016 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/Q1_hfd_cdist_r15/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 67.93,
+    "ff_hold_ps": 22.59,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 256,
+     "route_sdc": ".views/Q1_hfd_cdist_r15/route.sdc",
+     "signoff_sdc": ".views/Q1_hfd_cdist_r15/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 4.93,
+     "ff": 22.59
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_cdist_r15/hfd_cdist_r15.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_cdist_r15/hfd_cdist_r15.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 67.93,
+    "ff_hold_ps": 22.59,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_cdist_r15_tt.lib": "779a7a6924c507924e33f236dd70608a97862e3dfce58dccb0abd3fda1eaad7c"
+   }
+  },
+  "hfd_cmdproc_n": {
+   "kind": null,
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/cmdproc/view_n",
+   "lef": "hfd_cmdproc_n.lef",
+   "lib": {
+    "ss": "hfd_cmdproc_n_ss.lib",
+    "ff": "hfd_cmdproc_n_ff.lib",
+    "tt": "hfd_cmdproc_n_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "a75cb556b8ed177f55a23a6bd34272e268da74e7",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-data/claude/closure-loop/hbm_cmdproc_n_orph2_a75cb556b-ttref-hm25-ioreffix",
+    "ss_setup_ps": 67.15,
+    "ff_hold_ps": 25.83,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-09T02:41:06-07:00"
+   },
+   "files_sha256": {
+    "hfd_cmdproc_n.lef": "9d2e3005855a608ebfe31497f2becd82058fa36076d8c785e80b28464fce0755",
+    "hfd_cmdproc_n_ss.lib": "60a2913bdae0e38cad5404b90b2d3c79ddcc7a16e7f4e8d80087a03205020645",
+    "hfd_cmdproc_n_ff.lib": "849c7b170c47930001d221b16d4e7a053b9f31ebd90c0eaf5dae2c96c976ff26",
+    "corner_sta.json": "c1297552690bf4ddc7ff36fcb359e7811baa7fdd1eea8bd5c4c5ebd621a913ba",
+    "check.json": "4688171ee9b0b1493fccfc87e482d79e894fc8b9d3efd590ee67c577d24c24d5",
+    "hfd_cmdproc_n_tt.lib": "4a5094d3b5b08347024fe81c64736160cd1cf7bfe2c839333dd9f3ae75f6b89d"
+   },
+   "receipt": "results/closure_loop/hbm_cmdproc_n_orph2_a75cb556b-ttref-hm25-ioreffix/verdict.json",
+   "receipt_sha256": "6e01c900e2aad64ca121efa73bd3bd13ef6a2b65c3bde840059b362286f5f528",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 67.15,
+    "ff_hold_ps": 25.83,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     701.976
+    ],
+    "size_gen": [
+     1399.656,
+     701.976
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_cmdproc_s": {
+   "kind": null,
+   "status": "interim-not-closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/cmdproc/view_s",
+   "lef": "hfd_cmdproc_s.lef",
+   "lib": {
+    "ss": "hfd_cmdproc_s_ss.lib",
+    "ff": "hfd_cmdproc_s_ff.lib",
+    "tt": "hfd_cmdproc_s_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "a75cb556b8ed177f55a23a6bd34272e268da74e7",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-data/claude/closure-loop/hbm_cmdproc_s_orph2_a75cb556b-ttref-hm25-ioreffix",
+    "ss_setup_ps": 50.69,
+    "ff_hold_ps": 11.18,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-09T03:11:38-07:00"
+   },
+   "files_sha256": {
+    "hfd_cmdproc_s.lef": "48f8a46eca2ec268bc813eefaa206f333fbb644200d35d65b67cd26eec1bcde8",
+    "hfd_cmdproc_s_ss.lib": "07e0a00d4b3e1967948e848c3dec428bf83d30019175ae2db93087fd1444acc0",
+    "hfd_cmdproc_s_ff.lib": "a160688deae195d02a286d12521a5a29814faf35e09a3a0f400fcdcc28078f8c",
+    "corner_sta.json": "dd3d7a863b224410d6d358be6efe57f7c2a570d971ad0fe897b4be56adc69538",
+    "check.json": "fe38e469e6c9790f7516e0aeee9ffca6053266b0d72270174665957e45a93a34",
+    "hfd_cmdproc_s_tt.lib": "438f05556d2c1a07e0e7f288a8e8f2ae920a1bf0fa6b21e0e52bb6ab4dd4f3b2"
+   },
+   "receipt": "results/closure_loop/hbm_cmdproc_s_orph2_a75cb556b-ttref-hm25-ioreffix/verdict.json",
+   "receipt_sha256": "9184b3251635476abaf99af5e22119f2c0213fb496de1ab02b29d84e63551ba1",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 50.69,
+    "ff_hold_ps": 11.18,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 446 missing, 0 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     1399.66,
+     701.976
+    ],
+    "size_gen": [
+     1399.656,
+     701.976
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_coll": {
+   "kind": "coll",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_gath_r10": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r10",
+   "lef": "hfd_gath_r10.lef",
+   "lib": {
+    "ss": "hfd_gath_r10_ss.lib",
+    "ff": "hfd_gath_r10_ff.lib",
+    "tt": "hfd_gath_r10_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     166.728,
+     315.336
+    ],
+    "size_gen": [
+     166.728,
+     315.336
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/R2_hfd_gath_r10",
+    "SOURCE_COMMIT": "fc57071992a00809da3f33b33c39a34bc2785e6f",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src25 master=hfd_gath_r10 top=physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv DW=166.728 DH=315.336 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/R2_hfd_gath_r10/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.5",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 56.91,
+    "ff_hold_ps": 35.79,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +15 ps, FF >= +15 ps at 833.333 ps (owner 2026-10-06 18:15 PT)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/R2_hfd_gath_r10/route.sdc",
+     "signoff_sdc": ".views/R2_hfd_gath_r10/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": -6.09,
+     "ff": 35.79
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r10/hfd_gath_r10.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 56.91,
+    "ff_hold_ps": 35.79,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_gath_r10_tt.lib": "fe607821df32a9d57f8380f0213cd26732a70d268eac52ee17d961bd9d4a5192"
+   }
+  },
+  "hfd_gath_r24": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r24",
+   "lef": "hfd_gath_r24.lef",
+   "lib": {
+    "ss": "hfd_gath_r24_ss.lib",
+    "ff": "hfd_gath_r24_ff.lib",
+    "tt": "hfd_gath_r24_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     109.704,
+     110.136
+    ],
+    "size_gen": [
+     109.704,
+     110.136
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M5_hfd_gath_r24",
+    "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_gath_r24 top=physical/hbm_accel_die_views/stations/hfd_gath_r24/hfd_gath_r24.sv DW=109.704 DH=110.136 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M5_hfd_gath_r24/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 101.74,
+    "ff_hold_ps": 21.31,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 236,
+     "route_sdc": ".views/M5_hfd_gath_r24/route.sdc",
+     "signoff_sdc": ".views/M5_hfd_gath_r24/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 38.74,
+     "ff": 21.31
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r24/hfd_gath_r24.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r24/hfd_gath_r24.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 101.74,
+    "ff_hold_ps": 21.31,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_gath_r24_tt.lib": "f365375f8cfc67b0b4e82c953225056d42d2b4ef30bdda88138ae7b68750c4a1"
+   }
+  },
+  "hfd_gath_r25": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r25/route_cl",
+   "lef": "hfd_gath_r25.lef",
+   "lib": {
+    "ss": "hfd_gath_r25_ss.lib",
+    "ff": "hfd_gath_r25_ff.lib",
+    "tt": "hfd_gath_r25_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "cc34880fa668cde7bb1d61076e4820387daeef5c",
+    "host": "ot-epyc4",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_gath_r25_336e4655e_kw-sttt",
+    "ss_setup_ps": 67.5,
+    "ff_hold_ps": 18.76,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T05:03:47-07:00"
+   },
+   "files_sha256": {
+    "hfd_gath_r25.lef": "9034081258c403597417546871ef18a4ac365965e0374fe401f435da9bc9f4f0",
+    "hfd_gath_r25_ss.lib": "7d079823c8d6d68ca86b1499fa23018434e7fc3d247d3f050c485c6e5d9942af",
+    "hfd_gath_r25_ff.lib": "c6809d128512447492a94081c47f2d2da470be33113091f00401b170cb11949a",
+    "corner_sta.json": "20272127703dd75587416546c22bb84b49e389c747d42afcfd2590482fe26ded",
+    "check.json": "350c42e34bc73b279da58ed066a0ee69c06076780f304a545c2ca6aef47332dd",
+    "hfd_gath_r25_tt.lib": "80cdf6b50c5de7350006855b6aadf7079140535e8b810c1eb649c3a9d669a08a"
+   },
+   "receipt": "results/closure_loop/hbm_stn_gath_r25_336e4655e_kw-sttt/verdict.json",
+   "receipt_sha256": "ef8cfd6986325c11e7c5221d728192568bed564585ccc5e19e41f0cbc8bd252c",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 67.5,
+    "ff_hold_ps": 18.76,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     166.728,
+     315.336
+    ],
+    "size_gen": [
+     166.728,
+     315.336
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_gath_r8": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r8",
+   "lef": "hfd_gath_r8.lef",
+   "lib": {
+    "ss": "hfd_gath_r8_ss.lib",
+    "ff": "hfd_gath_r8_ff.lib",
+    "tt": "hfd_gath_r8_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     81.192,
+     82.056
+    ],
+    "size_gen": [
+     81.192,
+     82.056
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M3_hfd_gath_r8",
+    "SOURCE_COMMIT": "43295577ea2fb542666f5dd10917afa1ca9dce28",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src19 master=hfd_gath_r8 top=physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sv DW=81.192 DH=82.056 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M3_hfd_gath_r8/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0",
+     "resignoff_corner_rc=0",
+     "resignoff_export_rc=0"
+    ],
+    "ss_setup_ps": 194.29,
+    "ff_hold_ps": 160.33,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 137,
+     "route_sdc": ".views/M3_hfd_gath_r8/route.sdc",
+     "signoff_sdc": ".views/M3_hfd_gath_r8/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py",
+     "ckins_ff_min_ps": 66,
+     "ckins_ff_max_ps": 79,
+     "resignoff": "corner-true vclk (stn_resignoff.sh)"
+    },
+    "route_sta": {
+     "ss": 131.29,
+     "ff": 11.03
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_gath_r8/hfd_gath_r8.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 194.29,
+    "ff_hold_ps": 160.33,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_gath_r8_tt.lib": "caa2a06b1bd2f48e359748ad417011e61f7939bd3a8891bc8352504d95f43d62"
+   }
+  },
+  "hfd_gath_r9": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_gath_r9/route_cl",
+   "lef": "hfd_gath_r9.lef",
+   "lib": {
+    "ss": "hfd_gath_r9_ss.lib",
+    "ff": "hfd_gath_r9_ff.lib",
+    "tt": "hfd_gath_r9_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "fbf6b0da5cbbcb2afd95483e36182c40997774c0",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_gath_r9_pa_fbf6b0da5",
+    "ss_setup_ps": 113.06,
+    "ff_hold_ps": 23.2,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-06T20:18:07-07:00"
+   },
+   "files_sha256": {
+    "hfd_gath_r9.lef": "957814c398c81d3cc736771d263ad57c537b7110c61d2583295055ccfda27fa2",
+    "hfd_gath_r9_ss.lib": "be5a1b607a0ecfcf451f9ebf694661fe8dcf58415b635c58f41131793cc12490",
+    "hfd_gath_r9_ff.lib": "73f71a136e44d41846eda192b372334ba52da31c4d385334c37be6511e2a77f0",
+    "corner_sta.json": "70a6df679ae286da8362ac9b0c53eb3035873ff2f2b02a6eab0ebe28e99bb516",
+    "check.json": "9c2b44519fb22c9c148727ea4a4feb6e24c3970e616c3e9771fc4f423a20b62a",
+    "hfd_gath_r9_tt.lib": "6f4cd3a6f852ee3eee1265220ae954a6bf9766a5088bdaa09a200111e15cb48c"
+   },
+   "receipt": "results/closure_loop/hbm_stn_gath_r9_pa_fbf6b0da5/verdict.json",
+   "receipt_sha256": "efe0a5deed4669b7fcb3fc8c0649f776333c511d406052f60dfc3e2fe526ea15",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 113.06,
+    "ff_hold_ps": 23.2,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     109.704,
+     110.136
+    ],
+    "size_gen": [
+     109.704,
+     110.136
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_hc": {
+   "kind": "hc",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_host_slab": {
+   "kind": "host_slab",
+   "status": "reservation",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/host_slab",
+   "lef": "hfd_host_slab.lef",
+   "lib": null,
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     594.408,
+     16824.216
+    ],
+    "size_gen": [
+     594.408,
+     16824.216
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_idx_score_native_grid": {
+   "kind": null,
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_idx_sel_native_qend": {
+   "kind": null,
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_index_q_b0": {
+   "kind": "index_q",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_index_q_b1": {
+   "kind": "index_q",
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b1",
+   "lef": "hfd_index_q_b1.lef",
+   "lib": {
+    "ss": "hfd_index_q_b1_ss.lib",
+    "ff": "hfd_index_q_b1_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "48529891fce365eb8bb9ae4faf504b03af24b1d2",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b1_48529891f-mmq",
+    "ss_setup_ps": 21.15,
+    "ff_hold_ps": 24.17,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T07:11:54-07:00"
+   },
+   "files_sha256": {
+    "hfd_index_q_b1.lef": "225b5984a7fe16d25e89383c1e8d534f93cf09c5307a00d8bf0127046f54cf6b",
+    "hfd_index_q_b1_ss.lib": "41c48bb895e6513e3b2b1a8dd2cab90b59f0d6b04d5f13ecbaadf4493890b8f9",
+    "hfd_index_q_b1_ff.lib": "67bc9a7cb8cae0ff570ec110833e177a3fbb4f813aefe62c00e723de2263a6f9",
+    "corner_sta.json": "8730d70ae74684b4b1edbdf98c4e6bd4226bbe35b93602b0a5dcee73fe75ac1d",
+    "check.json": "ff0ee97cc99ca466599a77603d8a7428c2f0b94366552d296af51f0515ccc5b1"
+   },
+   "receipt": "results/closure_loop/hbm_idxq_b1_48529891f-mmq/verdict.json",
+   "receipt_sha256": "1153f9a6c1d8d753843aea5f33a4cf5a6a19ce5f81d39a5b31a6b4ecb77525b7",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 21.15,
+    "ff_hold_ps": 24.17,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     930.072,
+     970.056
+    ],
+    "size_gen": [
+     930.072,
+     970.056
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_index_q_b2": {
+   "kind": "index_q",
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/variant_fill/hbm_idxq_b2_tc_4aadc92bc-vf-lvt/hfd_index_q_b2_tt",
+   "lef": "hfd_index_q_b2.lef",
+   "lib": {
+    "ss": "hfd_index_q_b2_ss.lib",
+    "ff": "hfd_index_q_b2_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "0555dea8a06e03aede2e977cbf4d2e7082107ad3",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-data/claude/closure-loop/hbm_idxq_b2_tc_4aadc92bc-vf-lvt",
+    "ss_setup_ps": 15.96,
+    "ff_hold_ps": 22.13,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T22:03:15-07:00"
+   },
+   "files_sha256": {
+    "hfd_index_q_b2.lef": "1f5127e662ee7afd22aa6332a979f9e4f6a145800846bda610a88ce7e4c48523",
+    "hfd_index_q_b2_ss.lib": "77f4780e98118ca0cb16e40c1d4d6146eb6c95fec680d8e44e4aaacc46bc7d8f",
+    "hfd_index_q_b2_ff.lib": "108c27722cd264784ad11e21def59d9fecd9ee2db6a34c3a73e2eb471536d550",
+    "corner_sta.json": "72c96d9ad987483e567f8e651d8b21da5beb3d152d8db734dd5748f19b491e79",
+    "check.json": "936b4065cb853989b660a408a0193da3f439bb10ce90f6d47d67cb0e207ee0ab"
+   },
+   "receipt": "results/closure_loop/hbm_idxq_b2_tc_4aadc92bc-vf-lvt/verdict.json",
+   "receipt_sha256": "0cf8b3a170d8269a25fec1f78859d79f6e26f3e1008307e5be8791ff91848941",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 15.96,
+    "ff_hold_ps": 22.13,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     930.072,
+     959.976
+    ],
+    "size_gen": [
+     930.072,
+     959.976
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_index_q_b3": {
+   "kind": "index_q",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_index_q_b4": {
+   "kind": "index_q",
+   "status": "closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b4",
+   "lef": "hfd_index_q_b4.lef",
+   "lib": {
+    "ss": "hfd_index_q_b4_ss.lib",
+    "ff": "hfd_index_q_b4_ff.lib",
+    "tt": "hfd_index_q_b4_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     930.072,
+     829.896
+    ],
+    "size_gen": [
+     930.072,
+     829.896
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "/srv/opentallas-scratch/claude/hbm-abstracts/svcidx/routes/s1_b4",
+    "host": "ot-agidock128",
+    "SOURCE_COMMIT": "ee91d083df167b731ba06af9f877588a10b74eec",
+    "ss_setup_ps": 95.43,
+    "ff_hold_ps": 18.32,
+    "closes_signoff_SS60_FF25": true,
+    "clock_period_ns": 0.833,
+    "status": "not_met",
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2": 6013.08,
+    "seq_um2": 1270.09,
+    "core_um2": 770661,
+    "macro_um2": 0
+   },
+   "files_sha256": {
+    "hfd_index_q_b4.lef": "4d1391d59ae0ad4a3e03341d73a7963b9d032a7e369f5f6163fa17db6d414d20",
+    "hfd_index_q_b4_ss.lib": "3696a93cc05e3f74d3cbf059c3674036a7b4a818c6367eb308110326bbc558a2",
+    "hfd_index_q_b4_ff.lib": "0939e99d0f5161aef0ebdcc3c27da57e45da9e4869afbe57013609c51aec29e3",
+    "hfd_index_q_b4_tt.lib": "ac58bbae8c2636152e9a01d962dd65e95bd84676d2d86ed06d00531daee67a65"
+   },
+   "margin": {
+    "ss_setup_ps": 95.43,
+    "ff_hold_ps": 18.32,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   }
+  },
+  "hfd_index_q_b5": {
+   "kind": "index_q",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_loader": {
+   "kind": "loader",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_mcast_r5": {
+   "kind": "stations",
+   "status": "closed-below-margin",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/route_cl",
+   "lef": "hfd_mcast_r5.lef",
+   "lib": {
+    "ss": "hfd_mcast_r5_ss.lib",
+    "ff": "hfd_mcast_r5_ff.lib",
+    "tt": "hfd_mcast_r5_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "cc34880fa668cde7bb1d61076e4820387daeef5c",
+    "host": "ot-epyc4",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r5_56a4bdb6c-sttt",
+    "ss_setup_ps": 87.71,
+    "ff_hold_ps": 14.5,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T05:53:46-07:00"
+   },
+   "files_sha256": {
+    "hfd_mcast_r5.lef": "01f99f728b6ab819d92adbb924d6a1e3da57d3744eecd50e4b0f738c3bcc133b",
+    "hfd_mcast_r5_ss.lib": "2f1894d6fcaaa29c1a3e801bd4385d884d59d4b481083a88f8f3ea4029ab47f2",
+    "hfd_mcast_r5_ff.lib": "37a7985c426c847b5fac6b228a618dac14d7ea406a2f845a3879f7eb3eb5f28f",
+    "corner_sta.json": "5e3d5066fd71f2c58c9f37405b29fbf8b7fe64c07276c227da36c6642e5e4568",
+    "check.json": "ce2068452a9a1b6a7affc94377b4b8ab0ca33c29972cf4470941a7315cbfa0d2",
+    "hfd_mcast_r5_tt.lib": "86c9b945b26e84719d3c97d6d51ad7031ef2c2fee3cef602cd643fe5a07d6a50"
+   },
+   "receipt": "results/closure_loop/hbm_stn_mcast_r5_56a4bdb6c-sttt/verdict.json",
+   "receipt_sha256": "035bab1eee13779c5d5c17bf78dc3f93588976161f3d26c2786cacaab38a932b",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 87.71,
+    "ff_hold_ps": 14.5,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     241.896,
+     410.376
+    ],
+    "size_gen": [
+     241.896,
+     410.376
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_mcast_r6a": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r6a/route_cl",
+   "lef": "hfd_mcast_r6a.lef",
+   "lib": {
+    "ss": "hfd_mcast_r6a_ss.lib",
+    "ff": "hfd_mcast_r6a_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "f78eb159fb6cbe890b5600137c7895af59d375c8",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6a_f78eb159f-mmq",
+    "ss_setup_ps": 114.22,
+    "ff_hold_ps": 4.28,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T04:28:40-07:00"
+   },
+   "files_sha256": {
+    "hfd_mcast_r6a.lef": "8bae7d49cba1ea933eb8a1bdbf5f895dde80c6af5ede97b9a2e2961f5152ae16",
+    "hfd_mcast_r6a_ss.lib": "27c5483a3a516d3d295cfa830a91783a95d8e1e95a3f7d537c2f63ddfdc3d7d5",
+    "hfd_mcast_r6a_ff.lib": "e124ad3bb4757b6daee68c0bb93161b8a7ed082f2d7fa2a5b789e7e728398118",
+    "corner_sta.json": "99761b27351b37a5ed4a06e70e3fd0d896a9b6084546ce1c190d6bafa2532df1",
+    "check.json": "6b378722625dc0e024c3d92b4c03212687b1e169aafd60bf2cb71bdfa97b3189"
+   },
+   "receipt": "results/closure_loop/hbm_stn_mcast_r6a_f78eb159f-mmq/verdict.json",
+   "receipt_sha256": "509b05ae456c5d1880753df3779b89a53dd99b3d13fe7d95067963b2f645adae",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 114.22,
+    "ff_hold_ps": 4.28,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "1024 pins off the generator position (same face)"
+    ],
+    "positions": "1024 pins off the generator position (same face)",
+    "size_view": [
+     466.968,
+     120.936
+    ],
+    "size_gen": [
+     466.968,
+     120.936
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_mcast_r6b": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r6b/route_cl",
+   "lef": "hfd_mcast_r6b.lef",
+   "lib": {
+    "ss": "hfd_mcast_r6b_ss.lib",
+    "ff": "hfd_mcast_r6b_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "cc34880fa668cde7bb1d61076e4820387daeef5c",
+    "host": "ot-epyc4",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6b_f78eb159f-sttt",
+    "ss_setup_ps": 126.36,
+    "ff_hold_ps": 17.44,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T04:25:29-07:00"
+   },
+   "files_sha256": {
+    "hfd_mcast_r6b.lef": "040d568d4285665ac7c21ae54524ba77ae87288a625028df1787a17bb0bd7e35",
+    "hfd_mcast_r6b_ss.lib": "c52de8ebee4ace882d43dd1026928d0cee2fe39881f98acc4f5598ad374cbab2",
+    "hfd_mcast_r6b_ff.lib": "4c28355822a88a067c95cb305257f7bac004c4fe52efafa45622613676ff9eb4",
+    "corner_sta.json": "0ae09cd9993233247e8be550d613dba353921c2bf559404dba238174e8adeaa4",
+    "check.json": "b3145bec73c4d8dcea320a53e2a4e4e7d0e7db26ff763bd2116f079973011e3e"
+   },
+   "receipt": "results/closure_loop/hbm_stn_mcast_r6b_f78eb159f-sttt/verdict.json",
+   "receipt_sha256": "21269dd893fcd53304319e6edf1ea62a6f28857f189d78053832e758bca94202",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 126.36,
+    "ff_hold_ps": 17.44,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "1042 pins off the generator position (same face)"
+    ],
+    "positions": "1042 pins off the generator position (same face)",
+    "size_view": [
+     466.968,
+     120.936
+    ],
+    "size_gen": [
+     466.968,
+     120.936
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_mcast_r7": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_mcast_r7/route_cl",
+   "lef": "hfd_mcast_r7.lef",
+   "lib": {
+    "ss": "hfd_mcast_r7_ss.lib",
+    "ff": "hfd_mcast_r7_ff.lib",
+    "tt": "hfd_mcast_r7_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "336e4655eedd62111302f7e32aff1c32f7464e1e",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r7_336e4655e",
+    "ss_setup_ps": 75.07,
+    "ff_hold_ps": 29.36,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-07T01:03:27-07:00"
+   },
+   "files_sha256": {
+    "hfd_mcast_r7.lef": "b064b085e3b62f3bdf736bb046dd226e25b58559a1074af181df3362e879a778",
+    "hfd_mcast_r7_ss.lib": "8c3346b5f0da2a5d6a7e5b1520b45e6ddad60042724ab6d6be14b59150ecf960",
+    "hfd_mcast_r7_ff.lib": "2645dd9b23b4a033dbe78578b7fe5645ea89be95103b66d6492e37139989c534",
+    "corner_sta.json": "21985381abdc72da0e52e91fc90faca51a8e6d015c73518db7c987bd81a98e0d",
+    "check.json": "d58e389bad0fdb8d6094b2fc1d98bc083494d9c205216baf406afc1d19e7b0a2",
+    "hfd_mcast_r7_tt.lib": "42bb1b5741a13ec463a1f3b2e38f625f768db1ada76da5a141ec639b416ffe59"
+   },
+   "receipt": "results/closure_loop/hbm_stn_mcast_r7_336e4655e/verdict.json",
+   "receipt_sha256": "a900197b84710ab41b693825d2515cb01913245d098ad0544c4a73c285a42365",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 75.07,
+    "ff_hold_ps": 29.36,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "6194 pins off the generator position (same face)"
+    ],
+    "positions": "6194 pins off the generator position (same face)",
+    "size_view": [
+     466.968,
+     120.936
+    ],
+    "size_gen": [
+     466.968,
+     120.936
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_meso_454": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_460": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_465": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_470": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_475": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_480": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_485": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_489": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_492": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_496": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_499": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_502": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_505": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_507": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_510": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_512": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_521": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_530": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_539": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_540": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_542": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_545": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_547": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_550": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_553": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_557": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_561": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_566": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_571": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_576": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_581": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_587": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_593": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_602": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_608": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_617": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_627": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_636": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_643": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_649": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_654": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_659": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_664": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_669": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_674": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_678": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_681": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_685": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_688": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_691": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_694": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_696": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_699": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_701": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_705": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_708": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_712": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_713": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_715": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_718": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_720": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_723": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_726": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_730": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_734": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_739": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_744": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_749": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_754": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_760": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_766": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_775": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_781": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_785": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_788": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_792": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_meso_r1": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 16,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r1",
+   "lef": "hfd_meso_r1.lef",
+   "lib": {
+    "ss": "hfd_meso_r1_ss.lib",
+    "ff": "hfd_meso_r1_ff.lib",
+    "tt": "hfd_meso_r1_tt.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "1102 pins off the generator position (same face)"
+    ],
+    "positions": "1102 pins off the generator position (same face)",
+    "size_view": [
+     398.28,
+     71.256
+    ],
+    "size_gen": [
+     398.28,
+     71.256
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P1_hfd_meso_r1",
+    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src23 master=hfd_meso_r1 top=physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sv DW=398.28 DH=71.256 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P1_hfd_meso_r1/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 46.03,
+    "ff_hold_ps": 28.25,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 300,
+     "route_sdc": ".views/P1_hfd_meso_r1/route.sdc",
+     "signoff_sdc": ".views/P1_hfd_meso_r1/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": -16.97,
+     "ff": 28.25
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_meso_r1/hfd_meso_r1.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 46.03,
+    "ff_hold_ps": 28.25,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_meso_r1_tt.lib": "77a22aabf248d02f69fdad37c30eb8388990a87a7a93e6ffe2351ddcad475ab2"
+   }
+  },
+  "hfd_meso_r28": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r28",
+   "lef": "hfd_meso_r28.lef",
+   "lib": {
+    "ss": "hfd_meso_r28_ss.lib",
+    "ff": "hfd_meso_r28_ff.lib",
+    "tt": "hfd_meso_r28_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     63.48,
+     190.056
+    ],
+    "size_gen": [
+     63.48,
+     190.056
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/Q1_hfd_meso_r28",
+    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src23 master=hfd_meso_r28 top=physical/hbm_accel_die_views/stations/hfd_meso_r28/hfd_meso_r28.sv DW=63.48 DH=190.056 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/Q1_hfd_meso_r28/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 44.64,
+    "ff_hold_ps": 26.78,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 262,
+     "route_sdc": ".views/Q1_hfd_meso_r28/route.sdc",
+     "signoff_sdc": ".views/Q1_hfd_meso_r28/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": -18.36,
+     "ff": 26.78
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_meso_r28/hfd_meso_r28.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_meso_r28/hfd_meso_r28.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 44.64,
+    "ff_hold_ps": 26.78,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_meso_r28_tt.lib": "b353b0d50ca936643e5ce5159db5f72d6c10b76b671e8b9465f8b747eaee9d2d"
+   }
+  },
+  "hfd_meso_r32": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r32",
+   "lef": "hfd_meso_r32.lef",
+   "lib": {
+    "ss": "hfd_meso_r32_ss.lib",
+    "ff": "hfd_meso_r32_ff.lib",
+    "tt": "hfd_meso_r32_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     285.096
+    ],
+    "size_gen": [
+     39.288,
+     285.096
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/N3_hfd_meso_r32",
+    "SOURCE_COMMIT": "c1b875694483ead6f46679178a20e57a1c273979",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src21 master=hfd_meso_r32 top=physical/hbm_accel_die_views/stations/hfd_meso_r32/hfd_meso_r32.sv DW=39.288 DH=285.096 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/N3_hfd_meso_r32/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 53.48,
+    "ff_hold_ps": 17.43,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 294,
+     "route_sdc": ".views/N3_hfd_meso_r32/route.sdc",
+     "signoff_sdc": ".views/N3_hfd_meso_r32/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": -9.52,
+     "ff": 17.43
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_meso_r32/hfd_meso_r32.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_meso_r32/hfd_meso_r32.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 53.48,
+    "ff_hold_ps": 17.43,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_meso_r32_tt.lib": "61ee9a1111f6411f0d6b63b7125451485a64c8f0d91aaad1328d438f81b6508e"
+   }
+  },
+  "hfd_meso_r37": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_meso_r37/route_cl",
+   "lef": "hfd_meso_r37.lef",
+   "lib": {
+    "ss": "hfd_meso_r37_ss.lib",
+    "ff": "hfd_meso_r37_ff.lib",
+    "tt": "hfd_meso_r37_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_meso_r37_30f87bcc4",
+    "ss_setup_ps": 53.95,
+    "ff_hold_ps": 21.42,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-06T22:35:03-07:00"
+   },
+   "files_sha256": {
+    "hfd_meso_r37.lef": "2deacae32b1631887cb4ca3e93f16265f5cf00c4df9afa6752b8e16ee3475cd7",
+    "hfd_meso_r37_ss.lib": "1e53635883ab838793b22ad8cca62527f580612d9a23ca84d9f8c93c8192e37d",
+    "hfd_meso_r37_ff.lib": "66b0e06fbaead931b09410e5548b932ace4eebd0824f1fa536abc56bacf541bb",
+    "corner_sta.json": "e215812582932ee2fedd208930fe99ef459321315c2edc0f8d0e3be0920f3959",
+    "check.json": "b8e8998538912c0fa2935e7e46ae7444cacc4e50517b08973876249d27967f78",
+    "hfd_meso_r37_tt.lib": "e249aed40db7078ec01fe2a807836772648f1dd57a4c799a45023af17478aa2f"
+   },
+   "receipt": "results/closure_loop/hbm_stn_meso_r37_30f87bcc4/verdict.json",
+   "receipt_sha256": "f3052c1bad19bb32c8cef359f613ce06fd1f17b56f453de90e6d6d4e4017dee0",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 53.95,
+    "ff_hold_ps": 21.42,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "512 pins off the generator position (same face)"
+    ],
+    "positions": "512 pins off the generator position (same face)",
+    "size_view": [
+     269.976,
+     41.016
+    ],
+    "size_gen": [
+     269.976,
+     41.016
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_meso_r47": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_mtp": {
+   "kind": "mtp",
+   "status": "interim-not-closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/mtp",
+   "lef": "hfd_mtp.lef",
+   "lib": {
+    "ss": "hfd_mtp_ss.lib",
+    "tt": "hfd_mtp_tt.lib",
+    "ff": "hfd_mtp_ff.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1319 missing, 1358 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     466.56,
+     200.88
+    ],
+    "size_gen": [
+     466.56,
+     200.88
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-data/claude/closure-loop/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc",
+    "orfs_dir": "/srv/opentallas-data/claude/closure-loop/hfd-mtp-x-stop-nreg-hm10-7bebe74b7-tc/routes/hfd_mtp_x_stop_nreg_hm10_7bebe74b7_tc/work/orfs",
+    "odb_sha256": "696aef85ea0b4983bc354b0ff5e939078dd4b623114251f9d74cce4f3552c7d6",
+    "spef_sha256": "21291be37f3eabdfec3ac00e62dccba062979a1053f325ae0cb2f81f3c17a301",
+    "sdc_sha256": "d1ce92c423f34c20e45bb29607ff7c310bf743c32b3137f36f793ba96e3d44a1",
+    "db": "post-hold-ECO 6_final.odb (cl/eco pass1, installed into the route work dir; sha matches corner_sta.json)",
+    "SOURCE_COMMIT": "7bebe74b7a70f5adcf6b38075996219947dddca6",
+    "source_branch": "claude/mtp-hfdpipe-20261009",
+    "setup_corner": "tt",
+    "ss_setup_ps": 17.39,
+    "tt_setup_ps": 17.39,
+    "ss_sensitivity_ps": -283.2,
+    "ff_hold_ps": 8.65,
+    "ss_setup_ps_note": "ss_setup_ps carries the OPTION-B TT setup figure (same convention as hbm_die_views.receipt_views); the true SS figure is ss_sensitivity_ps",
+    "closes_signoff_SS60_FF25": false,
+    "closes_optionB_TT_FF": true,
+    "clock_period_ns": 0.833,
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2_pre_eco": 12363,
+    "seq_um2_pre_eco": 5151.22,
+    "core_um2": 92285.6,
+    "macro_um2": 0,
+    "eco_cells_added": 12719
+   },
+   "files_sha256": {
+    "hfd_mtp.lef": "6954ba3457ddb48f90879c3b7b1d5c3ff1e01f9257366a164fa3c3f6a3a7e9db",
+    "hfd_mtp_ss.lib": "0ef40f783faff987f36bb33629da5c7d75880af979d6c0dc3d6d224a4a7c1b44",
+    "hfd_mtp_tt.lib": "f9d2f04746f1c8be605e345b6e5b05535d35da014da412350a3a93153807ac7e",
+    "hfd_mtp_ff.lib": "6b92cf87c3ced4a546d790c747d14b3e6e96dcccef4375491e5bf1f85926166e"
+   },
+   "margin": {
+    "ss_setup_ps": 17.39,
+    "ff_hold_ps": 8.65,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   }
+  },
+  "hfd_quant": {
+   "kind": "quant",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_router": {
+   "kind": "router",
+   "status": "interim-not-closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/router",
+   "lef": "hfd_router.lef",
+   "lib": {
+    "ss": "hfd_router_ss.lib",
+    "ff": "hfd_router_ff.lib",
+    "tt": "hfd_router_tt.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 86 missing, 1022 extra, 0 wrong face, 0 wrong layer",
+     "900 pins off the generator position (same face)"
+    ],
+    "positions": "900 pins off the generator position (same face)",
+    "size_view": [
+     1399.66,
+     326.28
+    ],
+    "size_gen": [
+     1399.656,
+     326.28
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "/srv/opentallas-scratch2/scratch/claude/hbm-router/routes/dv10_ih60/work",
+    "host": "ot-epyc2",
+    "SOURCE_COMMIT": null,
+    "source_commit_note": "Remote SOURCE_COMMIT contains a descriptive label, not a git commit; provenance is the preserved source SHA256 list.",
+    "source_label": "dv9b: r5 cmp8k only (fclk chain reverted: TritonCTS initOneClockTree crash)",
+    "sources": [
+     {
+      "path": "physical/hbm_accel_die_views/router/rtl/hfd_router.sv",
+      "sha256": "1c375cab20b8d45f529eaec4acab1b85cdc65ab3da0b6c5aaf7506973f556427",
+      "size_bytes": 21742
+     },
+     {
+      "path": "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "sha256": "49da9ff0437d72340c17c38b4062074d821d3152c61092939a7df6a36ad10739",
+      "size_bytes": 1823
+     },
+     {
+      "path": "rtl/gpu/ot_gpu_router_topk_ps.sv",
+      "sha256": "2ee77de216f7edb129be12dd549b6d85fa8bb374f6046b178bdb8ac37ab578c2",
+      "size_bytes": 27087
+     },
+     {
+      "path": "rtl/gpu/ot_gpu_router_topk.sv",
+      "sha256": "1f131d8c59757cf55fbe391c2ecd1117c09ef4fd5f48938390e5fb265d885027",
+      "size_bytes": 7889
+     },
+     {
+      "path": "rtl/common/ot_fwd_link_stage.sv",
+      "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "size_bytes": 1611
+     }
+    ],
+    "ss_setup_ps": 30.68,
+    "ff_hold_ps": -48.74,
+    "closes_signoff_SS60_FF25": false,
+    "clock_period_ns": 0.833,
+    "status": "not_met",
+    "drc": 0,
+    "antenna": 0,
+    "cell_um2": 15071,
+    "seq_um2": 4281.04,
+    "core_um2": 454990,
+    "macro_um2": 0,
+    "record": "results/physical/hbm_leftovers_20261007/dv10/route/physical.json"
+   },
+   "files_sha256": {
+    "hfd_router.lef": "2b9c58fe3fee854e9253d62dfeaa087cfd73639da2d59123ae7f5f6dce0883d4",
+    "hfd_router_ss.lib": "b128170bdbc8286c903485ec48d0568dc7139588cbfd708f1d3f62fc05bf7708",
+    "hfd_router_ff.lib": "f370b8c00445c8b8004207bdf8eae09fdcf2c0892947f95e7def9456452323bc",
+    "hfd_router_tt.lib": "bd849077456c03c4a9e466b3b460bdd201b4c0cc13f031ae70902513e3d3e3c1"
+   },
+   "margin": {
+    "ss_setup_ps": 30.68,
+    "ff_hold_ps": -48.74,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   }
+  },
+  "hfd_serdes_slab": {
+   "kind": "serdes_slab",
+   "status": "reservation",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/serdes_slab",
+   "lef": "hfd_serdes_slab.lef",
+   "lib": null,
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     2462.376,
+     3656.856
+    ],
+    "size_gen": [
+     2462.376,
+     3656.856
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_sfu": {
+   "kind": "sfu",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_sm": {
+   "kind": "sm",
+   "status": "interim-not-closed",
+   "instances": 32,
+   "dir": "physical/hbm_accel_die_views/sm",
+   "lef": "hfd_sm.lef",
+   "lib": {
+    "ss": "hfd_sm_ss.lib",
+    "ff": "hfd_sm_ff.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "size 2202.77 x 2072.79 != 3214.08 x 1131.84",
+     "pins: 0 missing, 0 extra, 69 wrong face, 162 wrong layer",
+     "3419 pins off the generator position (same face)"
+    ],
+    "positions": "3419 pins off the generator position (same face)",
+    "size_view": [
+     2202.77,
+     2072.79
+    ],
+    "size_gen": [
+     3214.08,
+     1131.84
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-sm/routes/sm_r2/work/orfs (results .../base/4_cts.odb + 4_cts.sdc)",
+    "stage": "post-CTS placement (NOT routed): no whole-SM routed database exists; HBM-SM routes the element as pieces (back ends beE/beW r5 closed, tiles r5 routing, front r9 running; STATUS /srv/opentallas/scratch-overflow/claude/hbm-sm-struct/STATUS.md)",
+    "host": "ot-epyc1tb",
+    "rtl": "ot_hbm_accel_sm_v NC8 SUB4 LBS2 LSB16 XD128 RMAX4096 MAX_OUT512 DS3 DG3 DW4 PIO2 (sm_r2 provider, results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/capture.json source_sha256 3b4bd73f...)",
+    "parasitics": "estimate_parasitics -placement (setRC), propagated clock, sm_r2 4_cts.sdc",
+    "ss_worst_slack_ps": -4002.2,
+    "ff_worst_hold_slack_ps": -2356.6,
+    "drc": null,
+    "violators": "legacy-CTS STA (results/rtl/hbm_sm_structure_20261005/sta_legacy_cts/classes.json): setup 44,218 endpoints TNS -10,852 ns; hold 45,576 endpoints TNS -12,070 ns",
+    "sub_views": [
+     "physical/hbm_accel_sm_views/ot_hbm_accel_tc16",
+     "physical/hbm_accel_sm_views/ot_hbm_accel_bd_col",
+     "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "owner": "Claude HBM-SM (structural redesign: macro->G1 SS -482 / FF -107 ps; src8 15/15 exact; AR +1.07% / MTP -0.52%; branch claude/hbm-sm-structure-20261005)",
+    "export_tcl": "/srv/opentallas/scratch-overflow/claude/hbm-abstracts/sm/export_{ss,ff}.tcl"
+   }
+  },
+  "hfd_stn_448": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_449": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_450": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_451": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_452": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_453": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_455": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_456": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_457": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_458": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_459": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_461": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_462": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_463": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_464": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_466": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_467": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_468": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_469": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_471": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_472": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_473": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_474": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_476": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_477": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_478": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_479": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_481": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_482": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_483": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_484": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_486": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_487": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_488": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_490": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_491": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_493": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_494": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_495": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_497": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_498": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_500": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_501": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_503": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_504": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_506": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_508": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_509": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_511": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_513": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_514": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_515": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_516": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_517": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_518": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_519": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_520": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_522": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_523": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_524": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_525": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_526": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_527": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_528": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_529": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_531": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_532": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_533": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_534": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_535": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_536": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_537": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_538": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_541": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_543": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_544": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_546": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_548": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_549": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_551": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_552": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_554": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_555": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_556": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_558": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_559": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_560": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_562": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_563": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_564": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_565": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_567": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_568": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_569": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_570": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_572": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_573": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_574": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_575": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_577": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_578": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_579": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_580": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_582": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_583": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_584": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_585": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_586": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_588": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_589": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_590": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_591": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_592": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_594": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_595": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_596": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_597": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_598": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_599": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_600": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_601": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_603": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_604": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_605": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_606": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_607": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_609": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_610": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_611": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_612": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_613": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_614": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_615": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_616": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_618": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_619": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_620": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_621": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_622": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_623": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_624": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_625": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_626": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_628": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_629": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_630": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_631": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_632": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_633": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_634": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_635": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_637": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_638": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_639": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_640": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_641": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_642": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_644": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_645": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_646": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_647": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_648": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_650": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_651": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_652": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_653": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_655": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_656": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_657": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_658": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_660": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_661": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_662": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_663": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_665": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_666": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_667": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_668": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_670": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_671": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_672": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_673": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_675": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_676": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_677": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_679": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_680": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_682": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_683": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_684": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_686": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_687": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_689": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_690": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_692": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_693": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_695": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_697": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_698": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_700": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_702": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_703": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_704": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_706": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_707": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_709": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_710": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_711": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_714": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_716": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_717": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_719": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_721": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_722": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_724": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_725": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_727": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_728": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_729": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_731": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_732": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_733": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_735": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_736": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_737": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_738": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_740": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_741": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_742": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_743": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_745": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_746": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_747": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_748": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_750": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_751": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_752": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_753": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_755": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_756": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_757": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_758": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_759": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_761": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_762": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_763": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_764": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_765": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_767": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_768": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_769": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_770": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_771": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_772": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_773": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_774": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_776": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_777": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_778": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_779": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_780": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_782": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_783": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_784": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_786": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_787": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_789": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_790": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_791": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_stn_r11": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 18,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r11",
+   "lef": "hfd_stn_r11.lef",
+   "lib": {
+    "ss": "hfd_stn_r11_ss.lib",
+    "ff": "hfd_stn_r11_ff.lib",
+    "tt": "hfd_stn_r11_tt.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "2165 pins off the generator position (same face)"
+    ],
+    "positions": "2165 pins off the generator position (same face)",
+    "size_view": [
+     48.792,
+     127.416
+    ],
+    "size_gen": [
+     48.792,
+     127.416
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P1_hfd_stn_r11",
+    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src23 master=hfd_stn_r11 top=physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv DW=48.792 DH=127.416 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P1_hfd_stn_r11/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 93.64,
+    "ff_hold_ps": 444.32,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/P1_hfd_stn_r11/route.sdc",
+     "signoff_sdc": ".views/P1_hfd_stn_r11/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 30.64,
+     "ff": 444.32
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r11/hfd_stn_r11.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 93.64,
+    "ff_hold_ps": 444.32,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r11_tt.lib": "90fee952b560fef2ad49c77bd6a372d02dd9b0ae7eb6082e749863ad63e21203"
+   }
+  },
+  "hfd_stn_r12": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 18,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r12",
+   "lef": "hfd_stn_r12.lef",
+   "lib": {
+    "ss": "hfd_stn_r12_ss.lib",
+    "ff": "hfd_stn_r12_ff.lib",
+    "tt": "hfd_stn_r12_tt.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "828 pins off the generator position (same face)"
+    ],
+    "positions": "828 pins off the generator position (same face)",
+    "size_view": [
+     55.704,
+     64.776
+    ],
+    "size_gen": [
+     55.704,
+     64.776
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r12",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r12 top=physical/hbm_accel_die_views/stations/hfd_stn_r12/hfd_stn_r12.sv DW=55.704 DH=64.776 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r12/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 87.4,
+    "ff_hold_ps": 477.48,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r12/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r12/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 24.4,
+     "ff": 477.48
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r12/hfd_stn_r12.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r12/hfd_stn_r12.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 87.4,
+    "ff_hold_ps": 477.48,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r12_tt.lib": "d4e665fcd94c1b85a36257d092d8c822316761a08b004621c5466527f80c204a"
+   }
+  },
+  "hfd_stn_r13": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 18,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r13",
+   "lef": "hfd_stn_r13.lef",
+   "lib": {
+    "ss": "hfd_stn_r13_ss.lib",
+    "ff": "hfd_stn_r13_ff.lib",
+    "tt": "hfd_stn_r13_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     64.344,
+     56.136
+    ],
+    "size_gen": [
+     64.344,
+     56.136
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r13",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r13 top=physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sv DW=64.344 DH=56.136 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r13/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 80.8,
+    "ff_hold_ps": 480.14,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r13/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r13/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 17.8,
+     "ff": 480.14
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r13/hfd_stn_r13.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 80.8,
+    "ff_hold_ps": 480.14,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r13_tt.lib": "09541452f868e0dd764d763476b9dc6cc834d84e9748b068d313d0a19874e078"
+   }
+  },
+  "hfd_stn_r16": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 26,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r16",
+   "lef": "hfd_stn_r16.lef",
+   "lib": {
+    "ss": "hfd_stn_r16_ss.lib",
+    "ff": "hfd_stn_r16_ff.lib",
+    "tt": "hfd_stn_r16_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     18.984,
+     118.776
+    ],
+    "size_gen": [
+     18.984,
+     118.776
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r16",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r16 top=physical/hbm_accel_die_views/stations/hfd_stn_r16/hfd_stn_r16.sv DW=18.984 DH=118.776 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r16/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 74.33,
+    "ff_hold_ps": 474.75,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r16/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r16/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 11.33,
+     "ff": 474.75
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r16/hfd_stn_r16.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r16/hfd_stn_r16.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 74.33,
+    "ff_hold_ps": 474.75,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r16_tt.lib": "6a36838767b537136fdf24f0949758556ea0176969f853c12a29dfa19018a788"
+   }
+  },
+  "hfd_stn_r17": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 20,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r17",
+   "lef": "hfd_stn_r17.lef",
+   "lib": {
+    "ss": "hfd_stn_r17_ss.lib",
+    "ff": "hfd_stn_r17_ff.lib",
+    "tt": "hfd_stn_r17_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     115.752,
+     19.416
+    ],
+    "size_gen": [
+     115.752,
+     19.416
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r17",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r17 top=physical/hbm_accel_die_views/stations/hfd_stn_r17/hfd_stn_r17.sv DW=115.752 DH=19.416 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r17/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 89.09,
+    "ff_hold_ps": 484.87,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r17/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r17/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 26.09,
+     "ff": 484.87
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r17/hfd_stn_r17.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r17/hfd_stn_r17.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 89.09,
+    "ff_hold_ps": 484.87,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r17_tt.lib": "d2b49ed16599fbc3ff6e5bb2ff0348e3676a985ef0657a0dd59c69010b1212a2"
+   }
+  },
+  "hfd_stn_r18": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r18",
+   "lef": "hfd_stn_r18.lef",
+   "lib": {
+    "ss": "hfd_stn_r18_ss.lib",
+    "ff": "hfd_stn_r18_ff.lib",
+    "tt": "hfd_stn_r18_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     66.936,
+     60.456
+    ],
+    "size_gen": [
+     66.936,
+     60.456
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r18",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r18 top=physical/hbm_accel_die_views/stations/hfd_stn_r18/hfd_stn_r18.sv DW=66.936 DH=60.456 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r18/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 83.64,
+    "ff_hold_ps": 475.91,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r18/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r18/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 20.64,
+     "ff": 475.91
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r18/hfd_stn_r18.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r18/hfd_stn_r18.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 83.64,
+    "ff_hold_ps": 475.91,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r18_tt.lib": "34c5c4ef4afaf2fcab8e81923b230a43da32dcffc611e271d7691a623bf589f8"
+   }
+  },
+  "hfd_stn_r19": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r19/route_cl",
+   "lef": "hfd_stn_r19.lef",
+   "lib": {
+    "ss": "hfd_stn_r19_ss.lib",
+    "ff": "hfd_stn_r19_ff.lib",
+    "tt": "hfd_stn_r19_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "c50fcf0bae9091deb13a8ed2e3940d6994f28ba0",
+    "host": "ot-pve1",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r19_c50fcf0ba_k25",
+    "ss_setup_ps": 86.82,
+    "ff_hold_ps": 474.03,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-06T20:52:38-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r19.lef": "7fd74334daf40ceda6de755d5e46d6647d468d7d8af187433becb3f7f17a555e",
+    "hfd_stn_r19_ss.lib": "93ee3ceeae814fafc24e71b172b9d28b13d199eed1ad5dc1e317b5974e88fea0",
+    "hfd_stn_r19_ff.lib": "967524f11a460fcd2ab558d07759125d7717bf680e836a1b2b9d0e4472a14e55",
+    "corner_sta.json": "f60e36b751b3f1a0e965e844d31c17120beb0b0ce30a4e6da102c29d66dccc5b",
+    "check.json": "41676d7ea00029999f10ab9813cd82a631705e3ce0a29037f9d294df6fcc9ba0",
+    "hfd_stn_r19_tt.lib": "9cacdc1d177ef6a031291d5347722d96050910ca470768d64cb1958f8528ec76"
+   },
+   "receipt": "results/closure_loop/hbm_stn_r19_c50fcf0ba_k25/verdict.json",
+   "receipt_sha256": "7a8c61976fb25ddc570157219d0ecd35fca66324329aa3e888e02c6b8ee16f05",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 86.82,
+    "ff_hold_ps": 474.03,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     60.024,
+     66.936
+    ],
+    "size_gen": [
+     60.024,
+     66.936
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_stn_r22": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 16,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r22",
+   "lef": "hfd_stn_r22.lef",
+   "lib": {
+    "ss": "hfd_stn_r22_ss.lib",
+    "ff": "hfd_stn_r22_ff.lib",
+    "tt": "hfd_stn_r22_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     42.744,
+     73.416
+    ],
+    "size_gen": [
+     42.744,
+     73.416
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r22",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r22 top=physical/hbm_accel_die_views/stations/hfd_stn_r22/hfd_stn_r22.sv DW=42.744 DH=73.416 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r22/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 86.45,
+    "ff_hold_ps": 478.97,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r22/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r22/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 23.45,
+     "ff": 478.97
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r22/hfd_stn_r22.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r22/hfd_stn_r22.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 86.45,
+    "ff_hold_ps": 478.97,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r22_tt.lib": "8ce0b83c8e7db1f18f0cca7bef2c143b1295bbcadf0d5dfbdaef26b4b0a62b31"
+   }
+  },
+  "hfd_stn_r23": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 13,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r23",
+   "lef": "hfd_stn_r23.lef",
+   "lib": {
+    "ss": "hfd_stn_r23_ss.lib",
+    "ff": "hfd_stn_r23_ff.lib",
+    "tt": "hfd_stn_r23_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     72.552,
+     43.176
+    ],
+    "size_gen": [
+     72.552,
+     43.176
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P1_hfd_stn_r23",
+    "SOURCE_COMMIT": "94be19c0597534deb9e794207e9ad38a94ba0dd8",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src23 master=hfd_stn_r23 top=physical/hbm_accel_die_views/stations/hfd_stn_r23/hfd_stn_r23.sv DW=72.552 DH=43.176 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P1_hfd_stn_r23/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 105.63,
+    "ff_hold_ps": 472.06,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/P1_hfd_stn_r23/route.sdc",
+     "signoff_sdc": ".views/P1_hfd_stn_r23/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 42.63,
+     "ff": 472.06
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r23/hfd_stn_r23.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r23/hfd_stn_r23.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 105.63,
+    "ff_hold_ps": 472.06,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r23_tt.lib": "47129fa407b60abb10af4e8fdc9f6af51f11eb9d8ad0780d6f0862dfbded5af0"
+   }
+  },
+  "hfd_stn_r26": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 4,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r26",
+   "lef": "hfd_stn_r26.lef",
+   "lib": {
+    "ss": "hfd_stn_r26_ss.lib",
+    "ff": "hfd_stn_r26_ff.lib",
+    "tt": "hfd_stn_r26_tt.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "2166 pins off the generator position (same face)"
+    ],
+    "positions": "2166 pins off the generator position (same face)",
+    "size_view": [
+     126.12,
+     49.656
+    ],
+    "size_gen": [
+     126.12,
+     49.656
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/P1_hfd_stn_r26",
+    "SOURCE_COMMIT": "7df4dac6d829286610a3bf2b55477c7be1f4e119",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src22 master=hfd_stn_r26 top=physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv DW=126.12 DH=49.656 PD=0.55 POSTSYN=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl FCP= MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= PER=0.833 IOF=0.2 WSF= SDCA= --orfs-var SDC_FILE=/src/.views/P1_hfd_stn_r26/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 112.7,
+    "ff_hold_ps": 445.62,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/P1_hfd_stn_r26/route.sdc",
+     "signoff_sdc": ".views/P1_hfd_stn_r26/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 49.7,
+     "ff": 445.62
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r26/hfd_stn_r26.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 112.7,
+    "ff_hold_ps": 445.62,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r26_tt.lib": "48e52ac51fe57c408658933bff100637c229a5c7d86ee13452783fce1e3d9610"
+   }
+  },
+  "hfd_stn_r27": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 27,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r27",
+   "lef": "hfd_stn_r27.lef",
+   "lib": {
+    "ss": "hfd_stn_r27_ss.lib",
+    "ff": "hfd_stn_r27_ff.lib",
+    "tt": "hfd_stn_r27_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     63.48,
+     62.616
+    ],
+    "size_gen": [
+     63.48,
+     62.616
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r27",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r27 top=physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sv DW=63.48 DH=62.616 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r27/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 91.38,
+    "ff_hold_ps": 475.43,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r27/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r27/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 28.38,
+     "ff": 475.43
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r27/hfd_stn_r27.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 91.38,
+    "ff_hold_ps": 475.43,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r27_tt.lib": "0eb10cb10c0fc5dea4ed7884bca56b0abe7caed233f12b1af5375a98fde792c2"
+   }
+  },
+  "hfd_stn_r29": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r29",
+   "lef": "hfd_stn_r29.lef",
+   "lib": {
+    "ss": "hfd_stn_r29_ss.lib",
+    "ff": "hfd_stn_r29_ff.lib",
+    "tt": "hfd_stn_r29_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     60.456,
+     64.776
+    ],
+    "size_gen": [
+     60.456,
+     64.776
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r29",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r29 top=physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv DW=60.456 DH=64.776 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r29/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 101.33,
+    "ff_hold_ps": 475.14,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r29/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r29/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 38.33,
+     "ff": 475.14
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r29/hfd_stn_r29.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 101.33,
+    "ff_hold_ps": 475.14,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r29_tt.lib": "0e6aa8ed35fd66845243dc68366880eb71d7a5cce0d4dd4fc57c6edf4a42f5f6"
+   }
+  },
+  "hfd_stn_r3": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 8,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r3",
+   "lef": "hfd_stn_r3.lef",
+   "lib": {
+    "ss": "hfd_stn_r3_ss.lib",
+    "ff": "hfd_stn_r3_ff.lib",
+    "tt": "hfd_stn_r3_tt.lib"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "90 pins off the generator position (same face)"
+    ],
+    "positions": "90 pins off the generator position (same face)",
+    "size_view": [
+     14.664,
+     142.536
+    ],
+    "size_gen": [
+     14.664,
+     142.536
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r3",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src16 master=hfd_stn_r3 top=physical/hbm_accel_die_views/stations/hfd_stn_r3/hfd_stn_r3.sv DW=14.664 DH=142.536 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r3/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 85.66,
+    "ff_hold_ps": 502.81,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r3/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r3/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 22.66,
+     "ff": 502.81
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r3/hfd_stn_r3.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r3/hfd_stn_r3.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 85.66,
+    "ff_hold_ps": 502.81,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r3_tt.lib": "48c73bd4295ece29e827ba8953410aa5d0d936563e7ebdac84bbc44c3cfbe3b4"
+   }
+  },
+  "hfd_stn_r30": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 3,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r30",
+   "lef": "hfd_stn_r30.lef",
+   "lib": {
+    "ss": "hfd_stn_r30_ss.lib",
+    "ff": "hfd_stn_r30_ff.lib",
+    "tt": "hfd_stn_r30_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     77.736
+    ],
+    "size_gen": [
+     39.288,
+     77.736
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r30",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r30 top=physical/hbm_accel_die_views/stations/hfd_stn_r30/hfd_stn_r30.sv DW=39.288 DH=77.736 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r30/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 118.82,
+    "ff_hold_ps": 485.4,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r30/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r30/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 55.82,
+     "ff": 485.4
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r30/hfd_stn_r30.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r30/hfd_stn_r30.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 118.82,
+    "ff_hold_ps": 485.4,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r30_tt.lib": "03e78fd5a8bdbd3c77f5ccb9115c3b2f1d3df9e06f72bbce50bcb853d249bb7b"
+   }
+  },
+  "hfd_stn_r31": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 9,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r31",
+   "lef": "hfd_stn_r31.lef",
+   "lib": {
+    "ss": "hfd_stn_r31_ss.lib",
+    "ff": "hfd_stn_r31_ff.lib",
+    "tt": "hfd_stn_r31_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     72.984,
+     41.016
+    ],
+    "size_gen": [
+     72.984,
+     41.016
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc1tb:/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r31",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas/scratch-overflow/claude/hbm-abstracts/stn/src16 master=hfd_stn_r31 top=physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sv DW=72.984 DH=41.016 PD=0.55 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r31/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 84.08,
+    "ff_hold_ps": 486.85,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r31/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r31/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 24.29,
+     "ff": 486.85
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r31/hfd_stn_r31.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 84.08,
+    "ff_hold_ps": 486.85,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r31_tt.lib": "27fb0009d7ec0e9cbf6957ae4d3e2ad16560f72d6226c156042e4010dd7fc9f4"
+   }
+  },
+  "hfd_stn_r33": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r33/route_cl",
+   "lef": "hfd_stn_r33.lef",
+   "lib": {
+    "ss": "hfd_stn_r33_ss.lib",
+    "ff": "hfd_stn_r33_ff.lib",
+    "tt": "hfd_stn_r33_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "387a4d2acd525be5ef60432f735d120cc9e0c829",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_stn_r33_30f87bcc4-lbc",
+    "ss_setup_ps": 87.71,
+    "ff_hold_ps": 9.7,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-07T20:43:33-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r33.lef": "1665255d2521a542c3759421bac21e4dd875c366a047ddc1d5b234a4bbb974d4",
+    "hfd_stn_r33_ss.lib": "59635c965f3f6280aea8ab3796ce8c67b9b5d012dbc5c4357dcc45f1d159e2bc",
+    "hfd_stn_r33_ff.lib": "baeb52a25d0e756fe4640e5a0ea88e76ae3dfe685755c4720cd4ae9376315583",
+    "corner_sta.json": "4f9aab47db963abb611984c141eed5804f95d526d3a6708b7d8845c1d483bb4e",
+    "check.json": "a6b275f1f498be24146e05d553e3604e3deca392a6aee45658411371e8a6c9c5",
+    "hfd_stn_r33_tt.lib": "2f5e6bde4773c390824077ba7927c832a9cbe2976a8463195053679249d8f2f1"
+   },
+   "receipt": "results/closure_loop/hbm_stn_stn_r33_30f87bcc4-lbc/verdict.json",
+   "receipt_sha256": "9033993a6d38b856f1b7c12f3c1497b08b2372056538f49e5b1363b9ba2d574a",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 87.71,
+    "ff_hold_ps": 9.7,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "1026 pins off the generator position (same face)"
+    ],
+    "positions": "1026 pins off the generator position (same face)",
+    "size_view": [
+     39.288,
+     77.736
+    ],
+    "size_gen": [
+     39.288,
+     77.736
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_stn_r36": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 1,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r36/route_cl",
+   "lef": "hfd_stn_r36.lef",
+   "lib": {
+    "ss": "hfd_stn_r36_ss.lib",
+    "ff": "hfd_stn_r36_ff.lib",
+    "tt": "hfd_stn_r36_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "30f87bcc48a16e7ce591f2751a5afd0857dcf49c",
+    "host": "ot-epyc3",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_stn_r36_30f87bcc4",
+    "ss_setup_ps": 104.56,
+    "ff_hold_ps": 469.56,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-06T22:28:55-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r36.lef": "f845230d6c14c92afb8d1ad1c999b5794347e82c37b71e88dbb5eebc8c3cc5ac",
+    "hfd_stn_r36_ss.lib": "c6346e91054c474fd68d38ee37cf71df5bf2e2589493caed697299e3d5dfef21",
+    "hfd_stn_r36_ff.lib": "0a54b5b69522fd581bfa3a9830fc88bb99f157efde06220a329afd3d06d85158",
+    "corner_sta.json": "a97a5d511c5b85157baa188e69ed4e76aaad41f978a21a1826a99518a486b30d",
+    "check.json": "2f98f47b247c4f0fc1eb0f05492491fa3ff25edbe838817acf1f4eb50098cbf7",
+    "hfd_stn_r36_tt.lib": "0d6564db208e35475a7e6d15d04c1212c398e14c961bff1df571637b3840afb6"
+   },
+   "receipt": "results/closure_loop/hbm_stn_stn_r36_30f87bcc4/verdict.json",
+   "receipt_sha256": "3e3324981e882c861bdafd7e1fc2be1eeab5211769cb229c7fda9b0daa508be7",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 104.56,
+    "ff_hold_ps": 469.56,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     39.288,
+     77.736
+    ],
+    "size_gen": [
+     39.288,
+     77.736
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_stn_r39": {
+   "kind": "stations",
+   "status": "interim-not-closed",
+   "instances": 28,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r39/route_cl",
+   "lef": "hfd_stn_r39.lef",
+   "lib": {
+    "ss": "hfd_stn_r39_ss.lib",
+    "ff": "hfd_stn_r39_ff.lib",
+    "tt": "hfd_stn_r39_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "ad75a0248f8c2a99e9eefc2361a259c1198011f7",
+    "host": "ot-agidock128",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_r39_ad75a0248",
+    "ss_setup_ps": 48.58,
+    "ff_hold_ps": 462.04,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-07T08:23:57-07:00"
+   },
+   "files_sha256": {
+    "hfd_stn_r39.lef": "46c8e8743d7e0449ce76cc42a7c58fb3ed2bdec31b89d3c73de95f77a0868d20",
+    "hfd_stn_r39_ss.lib": "d73830cbef9f33cef52862b52bca453520c8085c9e1a4993ee64839d2d000907",
+    "hfd_stn_r39_ff.lib": "d28a8f66daf534ed1226096cf227fe398512b46321e9e69013970c0263929f82",
+    "corner_sta.json": "fff6ae5b34eae341d018422e746d11dde3973ef76c4dc8b1663d4d16e7490bd3",
+    "check.json": "a6411e6e5b6a0a397acf86c5e631f34cb5eaffce1350e2092676a2777cef0f94",
+    "hfd_stn_r39_tt.lib": "3c8b4316b1bcf068853fd3cc248f9946f99fc0d7db251294358c559f2049a9b0"
+   },
+   "receipt": "results/closure_loop/hbm_stn_r39_ad75a0248/verdict.json",
+   "receipt_sha256": "ba6894ec80612282d518c1e1589828c9701bfb918d094ac376e473705174b8da",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 48.58,
+    "ff_hold_ps": 462.04,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "size 50.088 x 120.936 != 58.296 x 71.256",
+     "pins: 0 missing, 1932 extra, 0 wrong face, 1 wrong layer",
+     "2204 pins off the generator position (same face)"
+    ],
+    "positions": "2204 pins off the generator position (same face)",
+    "size_view": [
+     50.088,
+     120.936
+    ],
+    "size_gen": [
+     58.296,
+     71.256
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_stn_r4": {
+   "kind": "stations",
+   "status": "closed",
+   "instances": 20,
+   "dir": "physical/hbm_accel_die_views/stations/hfd_stn_r4",
+   "lef": "hfd_stn_r4.lef",
+   "lib": {
+    "ss": "hfd_stn_r4_ss.lib",
+    "ff": "hfd_stn_r4_ff.lib",
+    "tt": "hfd_stn_r4_tt.lib"
+   },
+   "check": {
+    "verdict": "MATCH",
+    "problems": [],
+    "positions": "exact",
+    "size_view": [
+     120.936,
+     51.816
+    ],
+    "size_gen": [
+     120.936,
+     51.816
+    ],
+    "die_top_io_pins": []
+   },
+   "source": {
+    "route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/routes/M1_hfd_stn_r4",
+    "SOURCE_COMMIT": "f833ed3948d625727b2ad9803429f6c45e2712e4",
+    "args": "SRC=/srv/opentallas-scratch2/scratch/claude/hbm-abstracts/stn/src16 master=hfd_stn_r4 top=physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv DW=120.936 DH=51.816 PD=0.30 MAXL=M7 SRCS=rtl/common/ot_fwd_link_stage.sv rtl/common/ot_meso_fifo.sv physical/hbm_accel_die_views/stations/rtl/ot_hbm_stn_lib.sv MACROS= CTSA= WSF= SDCA= --orfs-var SDC_FILE=/src/.views/M1_hfd_stn_r4/route.sdc --orfs-var SYNTH_KEEP_MODULES=ot_fwd_clk_inv --step-tcl POST_SYNTH=physical/hbm_accel_die_views/stations/bench/stn_post_synth.tcl --step-tcl PRE_CTS=physical/hbm_accel_die_views/stations/bench/stn_pre_cts.tcl --orfs-var PLACE_DENSITY_LB_ADDON=",
+    "exit": [
+     "rc=0",
+     "corner_rc=0",
+     "export_rc=0",
+     "check_rc=0",
+     "signoff_corner_rc=0",
+     "signoff_export_rc=0"
+    ],
+    "ss_setup_ps": 100.28,
+    "ff_hold_ps": 452.67,
+    "drc": 0,
+    "closes_signoff": true,
+    "acceptance": "SS >= +40 ps, FF >= +15 ps at 833.333 ps (owner margin rule UPDATE 2)",
+    "margin": {
+     "margin": true,
+     "ckins_ps": 0,
+     "route_sdc": ".views/M1_hfd_stn_r4/route.sdc",
+     "signoff_sdc": ".views/M1_hfd_stn_r4/signoff.sdc",
+     "recipe": "bench/stn_margin_sdc.py"
+    },
+    "route_sta": {
+     "ss": 37.28,
+     "ff": 452.67
+    },
+    "rtl": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sv",
+    "sdc": "physical/hbm_accel_die_views/stations/hfd_stn_r4/hfd_stn_r4.sdc",
+    "generator": "tools/hbm_die_station_gen.py"
+   },
+   "margin": {
+    "ss_setup_ps": 100.28,
+    "ff_hold_ps": 452.67,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "files_sha256": {
+    "hfd_stn_r4_tt.lib": "8a6a6f2337babcc84d6dc4f1683b9019dcc25e1f8bc8e2d036e1b9ab66317da8"
+   }
+  },
+  "hfd_stn_r40": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 16
+  },
+  "hfd_stn_r41": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 20
+  },
+  "hfd_stn_r42": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 8
+  },
+  "hfd_stn_r43": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 24
+  },
+  "hfd_stn_r44": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 20
+  },
+  "hfd_stn_r45": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 24
+  },
+  "hfd_stn_r46": {
+   "kind": "stations",
+   "status": "missing",
+   "instances": 20
+  },
+  "hfd_su": {
+   "kind": "su",
+   "status": "missing",
+   "instances": 4
+  },
+  "hfd_su_full": {
+   "kind": null,
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_su_red": {
+   "kind": null,
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_svc_SE_s0": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s0_tt",
+   "lef": "hfd_svc_SE_s0.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s0_ss.lib",
+    "ff": "hfd_svc_SE_s0_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+    "host": "ot-epyc4",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_tt_c10b5fc9a",
+    "ss_setup_ps": 15.12,
+    "ff_hold_ps": 10.46,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-08T22:31:05-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s0.lef": "e3d18641bc246f21ddabb799bb5c493826993c11b4ed4e786a56bd26bb080725",
+    "hfd_svc_SE_s0_ss.lib": "0a96aa1df31fe2711ee2af6fd3494a9290a109f15abc630c282652120a21b597",
+    "hfd_svc_SE_s0_ff.lib": "7a878eb5676f481a25f5cb00cf0d84c8b4f83dbf40c88e6d4e552e9f736a6c9c",
+    "corner_sta.json": "08450d7fcf7ec5286a83462d68486f40c9919261b045f29c96ea5d01d9296483",
+    "check.json": "90789a56dd17369b2f6e704953ce79c99d18d001cbf1bc250364f517eaf8e9bf"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s0_tt_c10b5fc9a/verdict.json",
+   "receipt_sha256": "ebd1136d4ce71f5094660677a851351a2a633fa35c4cebe7736ce98e7388987e",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 15.12,
+    "ff_hold_ps": 10.46,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1100 missing, 0 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     1017.0,
+     259.176
+    ],
+    "size_gen": [
+     1017.0,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SE_s1": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s2": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s3": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s4": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SE_s5": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s5_tt",
+   "lef": "hfd_svc_SE_s5.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s5_ss.lib",
+    "ff": "hfd_svc_SE_s5_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+    "host": "ot-epyc4",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_tc_4aadc92bc",
+    "ss_setup_ps": 53.49,
+    "ff_hold_ps": 15.98,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T15:37:23-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s5.lef": "dc89a8328c47270cdb83e9b88976b725169bc3279a6790cd433b3ae5eb417ee6",
+    "hfd_svc_SE_s5_ss.lib": "2bf87484a0c9ec077c5a9b542731efff4f9d293689d32dce788e16476f8ac442",
+    "hfd_svc_SE_s5_ff.lib": "d037aece2a0281d97aa7d0224a22b19ec66d67d3da9a1be35e98962b766a4f16",
+    "corner_sta.json": "d8c22ff2569deb8c5d8b858ff6f6b09c794f2cc85092cf761c88c9c5625e2d7d",
+    "check.json": "63284cb8eb4e7392aae7d8b606b07db140bbcf14c15fe29f5bee7678c9e41df6"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s5_tc_4aadc92bc/verdict.json",
+   "receipt_sha256": "23d51cceae349a1b6ee87d46bf2f119a66c98365d86c97cf7d111a7a3a973be4",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 53.49,
+    "ff_hold_ps": 15.98,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1100 missing, 0 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     1094.95,
+     259.176
+    ],
+    "size_gen": [
+     1094.952,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SE_s6": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s6",
+   "lef": "hfd_svc_SE_s6.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s6_ss.lib",
+    "ff": "hfd_svc_SE_s6_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "58321d22f6e4b7ce0dda7b781243e0d84d7d37a3",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-data/claude/closure-loop/hbm_svc_SE_s6_ps_58321d22f_tc_hm25-cl",
+    "ss_setup_ps": 23.84,
+    "ff_hold_ps": 11.79,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-09T12:30:34-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s6.lef": "6f73254d498563ccd9cf7f26df12fc3c3545bd393505d2f9e23b1c94f1fa195b",
+    "hfd_svc_SE_s6_ss.lib": "9c1486be72158fb4de9ba2b80537e37d2b7ec7b1262dc6efe48db39bf4f4e4ac",
+    "hfd_svc_SE_s6_ff.lib": "04086e53c6b29d9de45ef65398cf2d0fe4d77f1f1cb3a23e4400473b23abe8e0",
+    "corner_sta.json": "7a49fb66ff15468d04aa2fae82be2dd599ceba64a5fb1c50e135c456b54d7cc0",
+    "check.json": "464a2823b79d2879ddffd3a62a63b09fa4414761bbe76c4868245482cd62e016"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s6_ps_58321d22f_tc_hm25-cl/verdict.json",
+   "receipt_sha256": "e7ff47380c43fcf0d4dd9638caab0d26b5d45a250d040b39f99e414310ea2c1e",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 23.84,
+    "ff_hold_ps": 11.79,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1100 missing, 164 extra, 0 wrong face, 769 wrong layer",
+     "306 pins off the generator position (same face)"
+    ],
+    "positions": "306 pins off the generator position (same face)",
+    "size_view": [
+     763.992,
+     259.176
+    ],
+    "size_gen": [
+     763.992,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SE_s7": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s7",
+   "lef": "hfd_svc_SE_s7.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s7_ss.lib",
+    "ff": "hfd_svc_SE_s7_ff.lib",
+    "tt": "hfd_svc_SE_s7_tt.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "9ffaeb8e2c1c9b9efed233365aa281652877f32f",
+    "host": "ot-epyc2",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s7_9ffaeb8e2_r23",
+    "ss_setup_ps": 40.4,
+    "ff_hold_ps": 26.91,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-07T12:09:46-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s7.lef": "58c6ee734b146a8267eb45cb5997a350a42014e97fd81b77284c59739eddefd1",
+    "hfd_svc_SE_s7_ss.lib": "95b1546bd798c75914f6cfe0afa3c720a4cceae1c705b1207f7f38837b517b04",
+    "hfd_svc_SE_s7_ff.lib": "49d7819dc955298c7005cd0d7adbf43b8da8edbcfe50049094a9c5c31b0a77e5",
+    "corner_sta.json": "28811eedea638d141d796ea4cc3cdffff5d772672ae6b1d71760abb60ee27477",
+    "check.json": "56e251f07e910d0fb1615e0ff13aec2658d94ab647286c9a04f5ef40ad213471",
+    "hfd_svc_SE_s7_tt.lib": "1beeda1e5e2bd4bf65b5b32b5b4bdb43d53613f12208b33ac1f0a9ed5257a10d"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s7_9ffaeb8e2_r23/verdict.json",
+   "receipt_sha256": "1cda8886b9048c481c4ff08f4b3c253afa9b24d36868300ea716fdce808efdb0",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 40.4,
+    "ff_hold_ps": 26.91,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1100 missing, 0 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     469.992,
+     259.176
+    ],
+    "size_gen": [
+     469.992,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SE_s8": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split_ps/hfd_svc_SE_s8",
+   "lef": "hfd_svc_SE_s8.lef",
+   "lib": {
+    "ss": "hfd_svc_SE_s8_ss.lib",
+    "ff": "hfd_svc_SE_s8_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "58321d22f6e4b7ce0dda7b781243e0d84d7d37a3",
+    "host": "ot-pve1",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s8_ps_58321d22f_tc_hm25-cl",
+    "ss_setup_ps": 71.38,
+    "ff_hold_ps": 14.43,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-09T12:19:42-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SE_s8.lef": "02546b84fed54c5a466d27445dfd041608e1cb8b285b54994639f52425093c76",
+    "hfd_svc_SE_s8_ss.lib": "e7e044cce342a4cac2ea06776bcf31ad35abe016bca9d654c6f4d391eaa6cae6",
+    "hfd_svc_SE_s8_ff.lib": "23580df1d98fd789c30d385c1b3523e109bc69a0d88d320bfc3b7e89831fc833",
+    "corner_sta.json": "c71df049e936e302fed0a7354a90e937f3377a27996c5f4d10c79d8b21e64df3",
+    "check.json": "12b866c465949fb5acfc3c7a456f48a46c67305592994d90bcbe17303e8c4234"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SE_s8_ps_58321d22f_tc_hm25-cl/verdict.json",
+   "receipt_sha256": "fa561359f4d9f12d3bf86509a9446006cb727959d952bf33d3bdf8cefcedef7d",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 71.38,
+    "ff_hold_ps": 14.43,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 0 missing, 67 extra, 0 wrong face, 165 wrong layer",
+     "139 pins off the generator position (same face)"
+    ],
+    "positions": "139 pins off the generator position (same face)",
+    "size_view": [
+     400.032,
+     259.176
+    ],
+    "size_gen": [
+     400.032,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SW_s0": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s0_tt",
+   "lef": "hfd_svc_SW_s0.lef",
+   "lib": {
+    "ss": "hfd_svc_SW_s0_ss.lib",
+    "ff": "hfd_svc_SW_s0_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s0_tc_4aadc92bc",
+    "ss_setup_ps": 38.85,
+    "ff_hold_ps": 13.55,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "ss",
+    "closed_at": "2026-10-08T23:42:17-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SW_s0.lef": "445576524692dce6548170374c0a5c13789ab7069d7e25296e34ba030c27a52e",
+    "hfd_svc_SW_s0_ss.lib": "d5f516c2d4749605c22b4853538f3409540ba227cc695619009a27e22508b45b",
+    "hfd_svc_SW_s0_ff.lib": "6c1aba30c23b23968382735faa68a90e4d9b67be99a9655c515c8ebffaeb9c6f",
+    "corner_sta.json": "84a743e38a69620aa4f91e544addda7af29f3091144a4203672540d6190905a8",
+    "check.json": "284c4d971cd667e83b5cdc8c3734601a4b29f83a1966c9d02bc861bdd7de3a38"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SW_s0_tc_4aadc92bc/verdict.json",
+   "receipt_sha256": "b7a58bd21f7d0e8809bb5c175367bea1b9b720de75547d68a28bc98cf76d1b39",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 38.85,
+    "ff_hold_ps": 13.55,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1100 missing, 0 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     1017.0,
+     259.176
+    ],
+    "size_gen": [
+     1017.0,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SW_s1": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s1_tt",
+   "lef": "hfd_svc_SW_s1.lef",
+   "lib": {
+    "ss": "hfd_svc_SW_s1_ss.lib",
+    "ff": "hfd_svc_SW_s1_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+    "host": "ot-epyc1tb",
+    "route": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s1_tc_4aadc92bc",
+    "ss_setup_ps": 59.47,
+    "ff_hold_ps": 6.86,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T21:10:59-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SW_s1.lef": "f04e3276872a262742bb50647faa46ff7396c868f034dbbdada9d868f1dbde43",
+    "hfd_svc_SW_s1_ss.lib": "e6728d4b0789eb8729c84092755f91259ca0325d0627fb6a07e2ee2007fbafd6",
+    "hfd_svc_SW_s1_ff.lib": "3089e9d61e5d9496db323daf6e70d559f3aed4d3afca39519ea4c946b806775e",
+    "corner_sta.json": "4c6a5c512324e51a12481d4012519eac160c2e1d9555398f15eecafdfc307b63",
+    "check.json": "c35db2a477aeae8bf2e7437b63d354d941dc273143c79a63cfa3979ae9e4dffc"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SW_s1_tc_4aadc92bc/verdict.json",
+   "receipt_sha256": "fa14f3e3a2d3ed278b2004c18eb2124615c488a6671122a9cbabe12190fe7251",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 59.47,
+    "ff_hold_ps": 6.86,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 1100 missing, 1026 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     1305.91,
+     259.176
+    ],
+    "size_gen": [
+     1305.912,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SW_s2": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s3": {
+   "kind": "svc",
+   "status": "interim-not-closed",
+   "instances": 2,
+   "dir": "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s3_tt",
+   "lef": "hfd_svc_SW_s3.lef",
+   "lib": {
+    "ss": "hfd_svc_SW_s3_ss.lib",
+    "ff": "hfd_svc_SW_s3_ff.lib"
+   },
+   "source": {
+    "SOURCE_COMMIT": "d4441ee392066c552658b3a7ce24382a3c7d78d4",
+    "host": "ot-epyc4",
+    "route": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s3_tc_hm25_d4441ee39",
+    "ss_setup_ps": 79.93,
+    "ff_hold_ps": 22.88,
+    "drc": 0,
+    "closes_signoff_SS60_FF25": true,
+    "setup_corner": "tt",
+    "closed_at": "2026-10-08T18:15:47-07:00"
+   },
+   "files_sha256": {
+    "hfd_svc_SW_s3.lef": "772afdb70598b09bc1479527372d45a1ddd4dc6df1d67fc9712ee7c73def76c8",
+    "hfd_svc_SW_s3_ss.lib": "1048877eae0909085b56dc864b450aed9bceef098fe7cff9d4af1bb4e62afdfa",
+    "hfd_svc_SW_s3_ff.lib": "396db6c81b4d7ba7ded7682a2e844b621323c797ea6c5ea395055bcc61b926b1",
+    "corner_sta.json": "633108219be69d28a489ae622cd5b0f9732cc2bf0fb0f43e0f271c7e116bfdd3",
+    "check.json": "d7be53ffe3df46fb7b748a7cc286c8e804c94cd22d7563da58ed8f2415e24322"
+   },
+   "receipt": "results/closure_loop/hbm_svc_SW_s3_tc_hm25_d4441ee39/verdict.json",
+   "receipt_sha256": "503cf3c4bc5bffe564ccf4ba92c137f32e2cfb314ef478edbbe3a792d6a732c2",
+   "functional_closure": false,
+   "die_context_closed": false,
+   "margin": {
+    "ss_setup_ps": 79.93,
+    "ff_hold_ps": 22.88,
+    "rule": "SS >= +15 ps, FF >= +15 ps (owner 2026-10-06 18:15 PT, lowered from +40)"
+   },
+   "check": {
+    "verdict": "MISMATCH",
+    "problems": [
+     "pins: 2006 missing, 0 extra, 0 wrong face, 0 wrong layer"
+    ],
+    "positions": "exact",
+    "size_view": [
+     1072.97,
+     259.176
+    ],
+    "size_gen": [
+     1072.968,
+     259.176
+    ],
+    "die_top_io_pins": []
+   }
+  },
+  "hfd_svc_SW_s4": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s5": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s6": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_svc_SW_s7": {
+   "kind": "svc",
+   "status": "missing",
+   "instances": 2
+  },
+  "hfd_vm_ne": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm_nw": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm_se": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  },
+  "hfd_vm_sw": {
+   "kind": "vm",
+   "status": "missing",
+   "instances": 1
+  }
+ },
+ "counts": {
+  "missing": 381,
+  "closed": 27,
+  "interim-not-closed": 23,
+  "reservation": 2,
+  "closed-below-margin": 1
+ }
+}

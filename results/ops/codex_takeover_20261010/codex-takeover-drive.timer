@@ -1,0 +1,8 @@
+[Unit]
+Description=Owner-authorized Codex takeover drive cadence
+[Timer]
+OnCalendar=*-*-* *:07,37:00
+Persistent=true
+AccuracySec=1s
+[Install]
+WantedBy=timers.target

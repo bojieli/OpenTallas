@@ -17,7 +17,10 @@
 module ot_qkvd_kv_merge #(
     parameter integer HD  = 128,
     parameter integer E   = 8,                 // row engines served
-    parameter integer PD  = 64,                // queued requests per engine (>= the engine's outstanding-request credit)
+    parameter integer DQ  = 32,                // the engine's outstanding-row credit (ectl DQ)
+    parameter integer PD  = DQ,                // queued requests / pending tags per engine: >= DQ (qwen-1010/b 2026-10-10:
+                                               // was a fixed 64 -- DQ 96 / 128 overran the pending-tag queue
+                                               // silently and merged the wrong rows; now derived and checked)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -77,7 +80,7 @@ module ot_qkvd_kv_merge #(
         assign row_ok[k] = row_v[k] && row_t[k] == tn && row_l[k] == L_cur;
     end endgenerate
     // ---- per engine: request queue (fence), pending-response tags, merged response ----
-    wire [E-1:0] m_hv, m_pe, m_qf, m_qv;
+    wire [E-1:0] m_hv, m_pe, m_qf, m_qv, m_pf, m_go;
     genvar e;
     generate for (e = 0; e < E; e = e + 1) begin : g_m
         reg        rq_v;
@@ -104,8 +107,10 @@ module ot_qkvd_kv_merge #(
         always @(posedge clk) if (hv) e_rsp_data[HD*8*e +: HD*8] <= (ph[2] && MUT != 1) ? row[ph[1:0]] : hd;
         always @(posedge clk or negedge rst_n) if (!rst_n) e_rsp_valid[e] <= 1'b0; else e_rsp_valid[e] <= hv;
         assign m_hv[e] = hv; assign m_pe[e] = pe; assign m_qf[e] = qf; assign m_qv[e] = rq_v;
+        assign m_pf[e] = pf; assign m_go[e] = go;
     end endgenerate
+    initial if (PD < DQ) $fdisplay(32'h80000002, "ot_qkvd_kv_merge: PD %0d < DQ %0d (the pending-tag queue can overrun)", PD, DQ);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
-        else if (|(m_hv & m_pe) || |(m_qv & m_qf)) fault <= 1'b1;
+        else if (|(m_hv & m_pe) || |(m_qv & m_qf) || |(m_go & m_pf & ~m_hv)) fault <= 1'b1;   // + a pending-tag overrun
 endmodule

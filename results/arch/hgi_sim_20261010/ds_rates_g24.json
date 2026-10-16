@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hgi_sim.ds_rates.v1",
+ "generated_utc": "2026-10-11T01:36:11Z",
+ "basis": "DS-V4.1 1M TP96 generic HBM die: the G24 compiler (software ROW_GATHER c=2 native, G22 HC rows, BF16 gains), bit-exact 96-die token (results/arch/hgi_sim_20261010/g24_proof, main 4e8dc95c3), re-floorplan cost tables (SU N512, SFU 1/2, IDX 36 lanes; SM 32, ATT 32, HC 4)",
+ "AR": {
+  "fixed_rtl": {
+   "cycles": 696743.8,
+   "tok_s": 1722.3,
+   "source": "results/arch/hgi_sim_20261009/ds_native_timing_1M.json S2 (races 0)"
+  },
+  "current_rtl": {
+   "cycles": 7312820.1,
+   "tok_s": 164.1,
+   "source": "results/arch/hgi_sim_20261009/e2e_calibration.json sensitivity.ds_1M (per-op grades there)"
+  },
+  "refloorplan_effect_cycles": 464.2,
+  "supersedes": "ds_sw_seq_pricing.json approved_path_c2_g22 1,747.5 (an analytic delta on the pre-G24 program): G24 is now compiled natively, the approved-path delta is 0"
+ },
+ "MTP": {
+  "method": "as token_path_systems 842b457a2: tau x CLK / (charged composed verify step + (native S2 - 543,456.7, the native S2 the composition mirrored)), once per verify pass; no native DS verify program yet",
+  "tau": 4.159,
+  "charged_step_cycles": 1348890.6,
+  "fixed_rtl": {
+   "delta_cycles": 153287.1,
+   "tok_s": 3322.4
+  },
+  "current_rtl": {
+   "delta_cycles": 6769363.4,
+   "tok_s": 614.8,
+   "note": "crude: one delta per pass on the composition"
+  }
+ },
+ "current_rtl_dominant": {
+  "note": "FUSED.HC_POST 290.7x and HC_PRE_NORM 29.3x (die-bench D1 non-WIDE body, N64/UN64), HC.HC_MIX_ROWS 125.2x (g's unit bench), QDQ 8-15x, IDX.TOPK 4.3x; SU.VOP 1.067x is b's WIDE N512 successor; ATT / SM / IDX.INDEX / TOPK_MERGE are stubs (model cost)"
+ }
+}

@@ -1,0 +1,157 @@
+{
+ "schema": "opentallas.hgi_unitrate.su_wide.v1",
+ "what": "SU / SFU / FUSED D1 die body WIDE successor (ot_hgi_su_unit WIDE=1 -> ot_hgi_su_ctlw): pipelined span (4 x 8x24 partial products, 3 edges a region), bank-aligned placement (lb == lo mod 256), 32-lane VM stage / drain (lane b <-> VM bank b <-> local bank b, LQ credits), 3-slot record pipeline (span+stage | run | drain, hazard: a source overlapping an older undrained sink waits; in-order retire through ot_hgi_su_record PIPED), shared lane groups (ot_hgi_vm_lanearb). VM: ot_hgi_vm_core/unit RP / W2 client lane groups (DMA WP keeps per-bank priority, packet writes age-promoted).",
+ "sources": {
+  "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "72608b3b74020dba3fe95054101adffad50a2629f2f535eb2ce4977592c4ca69",
+  "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv": "e944833f899f7196ecd988aa7c48e48fc6406ffacc2fd060c1866f977290df8b",
+  "rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv": "922d742a5b8157af0013d51862c8baf9467fa57dcdfc298246ac1f0c1cb25f34",
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv": "8f7f0ee013de95c07d6019f26853f4ca2fbbbc7dfae3ad89a732e823e29745c1",
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv": "80f06447815886bf1fdac175542cd938de4f00a4c304f57a42ab4d4f44ed642f",
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_lanearb.sv": "5bc890f6186a9298bfd81e4f32a15b8809700ffdc6a62b9b16d55dc787208925",
+  "rtl/hbm_accel/generic/vm/tb_hgi_vm_lanes.sv": "6d8e9fef24422fb89c7e44f51e49d4f05a9ae0bb90ef58718d0810bd248eb517",
+  "rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv": "2d4b5a607d3689c69c12b91f8487e05aa2295feeeda4f1342b8bbf9460d6da30",
+  "rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv": "5011ca8e1045bef3bc999f07f79cf24f61f2e197dc04c51ef06a6852a7ae92c7",
+  "tools/hgi_unitrate/su_prod_vec.py": "cee2f6a91f663d29911e7c1fe6241c2fe4d86cd71a8f59347a49d3eed9fcc01f",
+  "tools/hgi_adapters/fused_bench.py": "160ba97f09220a7394ee880da22a2224e54063c66d7e282dd1bc9df8c680557a"
+ },
+ "ds_layer_chain": {
+  "records": 27,
+  "priced_sum": 2870.0,
+  "d1_today_n64": 78306,
+  "wide_n64": 3635,
+  "wide_n512_m128": 3064,
+  "wide_shared_groups_n64": 4217,
+  "ratio_d1_today": 27.28,
+  "ratio_wide_n512": 1.068,
+  "verdicts": {
+   "ds_chain_d1_base_n64.log": "PASS",
+   "ds_chain_wide_n64.log": "PASS",
+   "ds_chain_wide_n512.log": "PASS",
+   "ds_chain_shared_groups.log": "PASS"
+  }
+ },
+ "ds_records_n64": {
+  "d1_today": {
+   "0": 591,
+   "1": 201,
+   "2": 1589,
+   "3": 337,
+   "4": 201,
+   "5": 761,
+   "6": 272,
+   "7": 272,
+   "8": 217,
+   "9": 408,
+   "10": 233,
+   "11": 281,
+   "12": 597,
+   "13": 272,
+   "14": 16451,
+   "15": 313,
+   "16": 581,
+   "17": 182,
+   "18": 148,
+   "19": 206,
+   "20": 36638,
+   "21": 232,
+   "22": 285,
+   "23": 285,
+   "24": 232,
+   "25": 16451,
+   "26": 148
+  },
+  "wide": {
+   "0": 182,
+   "1": 141,
+   "2": 131,
+   "3": 141,
+   "4": 141,
+   "5": 110,
+   "6": 99,
+   "7": 100,
+   "8": 128,
+   "9": 186,
+   "10": 89,
+   "11": 147,
+   "12": 119,
+   "13": 99,
+   "14": 574,
+   "15": 253,
+   "16": 102,
+   "17": 123,
+   "18": 88,
+   "19": 109,
+   "20": 684,
+   "21": 95,
+   "22": 100,
+   "23": 100,
+   "24": 94,
+   "25": 574,
+   "26": 88
+  },
+  "shared": {
+   "0": 192,
+   "1": 151,
+   "2": 141,
+   "3": 151,
+   "4": 151,
+   "5": 120,
+   "6": 109,
+   "7": 110,
+   "8": 138,
+   "9": 196,
+   "10": 99,
+   "11": 220,
+   "12": 129,
+   "13": 109,
+   "14": 602,
+   "15": 266,
+   "16": 112,
+   "17": 133,
+   "18": 98,
+   "19": 119,
+   "20": 749,
+   "21": 105,
+   "22": 110,
+   "23": 110,
+   "24": 104,
+   "25": 602,
+   "26": 98
+  }
+ },
+ "fused_hc": {
+  "note": "tb_hgi_fused_unit cases 8/9 = DS HC_PRE_NORM / HC_POST d 4096 (UN64 UM16)",
+  "d1_today": {
+   "8": 15847,
+   "9": 48025
+  },
+  "wide": {
+   "8": 3458,
+   "9": 3729
+  },
+  "verdicts": {
+   "base_un64": "PASS",
+   "wide_un64": "PASS"
+  },
+  "F10": "d 5120 at UN32: record FAULT (fail-closed, both bodies): 5120/32 = 160 vectors > 2^LV reducer span; UN >= 64 required (production N512)"
+ },
+ "mutants": {
+  "MUT_DIRTY (drain whole sectors)": "FAIL",
+  "MUT_W 2 (drain skips a lane last sector)": "FAIL",
+  "MUT_W 4 (no source/live-sink hazard)": "FAIL",
+  "VM MUT 5 (wide read response to the wrong group)": "FAIL",
+  "VM MUT 6 (packet write over a group write)": "FAIL",
+  "VM MUT 7 (no packet age promotion: starvation)": "FAIL",
+  "pending": "MUT_W 1 (landing slot), MUT_W 3 (retire before drain dones), lanearb MUT 1 (preempting grant) re-running with the hang watchdog"
+ },
+ "vm_lanes": {
+  "verdict": "PASS",
+  "rate": "read group 0: 0.970 sectors a lane an edge (2 groups sharing banks: 0.49 for the lower priority one); DMA every other edge, packets age-promoted"
+ },
+ "limits": [
+  "vec at N64 (and N512/M128 for the chain); price is the N1024 depth model",
+  "behavioural wide lmem (ot_hgi_su_lmemw): the banked N512 lmem is sub-agent d's contract (rebase pending)",
+  "Qwen per-record / chain runs at N64 (softmax 65,536) are slow and deprioritised (Option A)",
+  "physical: the lane data path is pin flops only -> 32 replicated lane slices at the lmem banks; closure after d's floorplan"
+ ]
+}

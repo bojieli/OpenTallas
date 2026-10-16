@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.mtp.seq_rtt_gate.v1",
+ "element": "dsrom_mtp_seq_native_binding",
+ "master": "dsfd_mtp_seq_rtt",
+ "system_bench": {
+  "host": "ot-epyc3",
+  "dir": "/srv/opentallas-scratch2/scratch/claude/mtp-head-1010/nb-9646a6d99/bench",
+  "source": "9646a6d99",
+  "pass_": [
+   "rtt_s0_tr_dspark",
+   "rtt_s0_tr_forced",
+   "rtt_s0_hash_u3",
+   "rtt_s0_hash_u1_fast",
+   "s0_tr_forced (closed baseline)"
+  ],
+  "fail_as_required": [
+   "rtt_s0_neg_off1"
+  ],
+  "note": "OT_MTP_SEQ_LEGACY / OT_MTP_NEG_SHORT_RTT also PASS in this system traffic (no receiver stall with flits in flight): not usable as negatives; stress negatives below",
+  "seq_forward_min_fast_cycles": {
+   "closed_no_relays": 8,
+   "rtt_with_relays": 19
+  }
+ },
+ "link_stress_gate": {
+  "tool": "tools/mtp_seq_rtt_link_gate.py all",
+  "rows": [
+   {
+    "case": "fail_legacy_r",
+    "expect": "FAIL",
+    "observed": "FAIL",
+    "line": "LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)"
+   },
+   {
+    "case": "fail_legacy_v",
+    "expect": "FAIL",
+    "observed": "FAIL",
+    "line": "LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)"
+   },
+   {
+    "case": "fail_short_r",
+    "expect": "FAIL",
+    "observed": "FAIL",
+    "line": "LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)"
+   },
+   {
+    "case": "pass_r",
+    "expect": "PASS",
+    "observed": "PASS",
+    "line": "PASS RTT_LINK W=512 F=5 R=6 H=14 D=15 SEL=0 ENABLE=1 STRESS=1 sent=1200 received=1200 cycles=2133 stalls=795 max_outstanding=15 first_latency=7"
+   },
+   {
+    "case": "pass_v",
+    "expect": "PASS",
+    "observed": "PASS",
+    "line": "PASS RTT_LINK W=512 F=9 R=10 H=22 D=23 SEL=0 ENABLE=1 STRESS=1 sent=1200 received=1200 cycles=2150 stalls=784 max_outstanding=23 first_latency=11"
+   }
+  ],
+  "verdict": "PASS"
+ },
+ "cycles_added_at_pin": 0,
+ "depth": {
+  "u_r": 15,
+  "u_w": 23,
+  "u_q": 23
+ },
+ "relay_chains": {
+  "capture": [
+   5,
+   6
+  ],
+  "vm": [
+   9,
+   10
+  ],
+  "collective": [
+   6,
+   7
+  ]
+ },
+ "partner_receivers_open": [
+  "collective side receivers of t_td/t_sd (6 fwd / 7 ret)",
+  "vm side receiver of t_hd (10 fwd / 9 ret)",
+  "capture / collective / vm hub masters have no t_mtp/f_mtp ports in RTL (native identity composition)"
+ ]
+}

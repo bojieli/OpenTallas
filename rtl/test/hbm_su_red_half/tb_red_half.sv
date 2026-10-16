@@ -47,6 +47,7 @@ module tb_red_half;
     endfunction
     reg [EW-1:0] rq [$]; integer rcq [$];
     integer cyc = 0, mism = 0, nev = 0, ndev = 0, lat = -1, latbad = 0, rfr = 0, dfr = 0, nbeat = 0, seed = SEED, w;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rf_q = 0, df_q = 0;
     always @(negedge clk) if (rst_n) begin
         if (|rwe || rev) begin rq.push_back(pack(rwe, rev, rm, ra, rd)); rcq.push_back(cyc); nev = nev + 1; end

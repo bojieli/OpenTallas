@@ -1,0 +1,10 @@
+[Unit]
+Description=Owner-authorized Claude continuation after initial takeover handoff
+After=codex-claude-reset-watch.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ubuntu/OpenTallas
+ExecStart=/usr/bin/python3 /home/ubuntu/OpenTallas/tools/takeover/claude_continue.py
+StandardOutput=journal
+StandardError=journal

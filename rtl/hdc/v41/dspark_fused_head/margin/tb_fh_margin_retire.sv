@@ -14,6 +14,7 @@ module tb_fh_margin_retire;
   .lane_veto(lv1),.write_veto(wv1),.fault(f1),.busy(b1));
  reg [1+64+64+4+1-1:0] q0,q00;
  integer i,seed=7,faults=0,vs=0,gfs=0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  always @(posedge clk) begin q00<={rv0,rp0,lv0,wv0,f0}; q0<=q00; end
  initial begin
   packet_v=0;packet=0;poison=0;af=0;gf=0;arith=0;

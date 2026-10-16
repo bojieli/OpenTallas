@@ -15,6 +15,7 @@ module tb_v41x_ins_ring3;
     ot_hdc_v41x_ins #(.W(W), .K(K), .DEPTHS(DEPTHS), .DMAX(DMAX), .RING(3)) u3 (clk, rst_n, v, sel, d, vo3, q3, c3, b3);
     integer i, err = 0, nvo = 0, ncoll = 0, k;
     integer seed = 12345;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 12345; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     task rnd; begin
         v = ($random(seed) % 4) != 0;
         k = ($unsigned($random(seed)) % K);

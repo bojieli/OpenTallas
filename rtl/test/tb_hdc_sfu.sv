@@ -44,6 +44,7 @@ module tb_hdc_sfu;
     end
 
     integer seed = 7, cyc = 0;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     initial begin
         begin : load
             reg [8*256-1:0] path;

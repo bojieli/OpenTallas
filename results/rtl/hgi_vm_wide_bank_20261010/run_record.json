@@ -1,0 +1,51 @@
+{
+  "records": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "gate_pass": true,
+      "expected": "BANK_PASS"
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "gate_pass": true,
+      "expected": "READ_EXACT"
+    },
+    {
+      "mutant": 2,
+      "returncode": 1,
+      "gate_pass": true,
+      "expected": "READ_EXACT"
+    },
+    {
+      "mutant": 3,
+      "returncode": 1,
+      "gate_pass": true,
+      "expected": "WRITE_ACK_TIME_OR_ID"
+    },
+    {
+      "mutant": 4,
+      "returncode": 1,
+      "gate_pass": true,
+      "expected": "READ_EXACT"
+    },
+    {
+      "mutant": 5,
+      "returncode": 1,
+      "gate_pass": true,
+      "expected": "WRITE_ACK_TIME_OR_ID"
+    },
+    {
+      "mutant": 6,
+      "returncode": 1,
+      "gate_pass": true,
+      "expected": "WRITE_II"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/ot_hgi_vm_wide_bank.sv": "2cd7d79262b4d39dadb188069d2cc892e9f1b53b8ed1b62bb832e411db700c0c",
+    "rtl/hbm_accel/generic/vm/tb_hgi_vm_wide_bank.sv": "41a583dbce507207629e6d2403a03969d7e6c06d647f5693c92e3b8786aa0fbd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  }
+}

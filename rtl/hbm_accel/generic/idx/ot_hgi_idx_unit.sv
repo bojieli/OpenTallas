@@ -16,11 +16,33 @@
 //   op 4 (EHASH, not bound here): record fault (fail-closed).
 // Return {fault, done, ready}: ready = no record in flight.
 module ot_hgi_idx_unit #(
-    parameter integer MUT = 0           // bench mutants: 1 ascending sort compares scores instead of ids
+    parameter integer MUT = 0,          // bench mutants: 1 ascending sort compares scores instead of ids
+    // hgi-1010/g (opt-in, default 0 = the reader above, unchanged): IDX.TOPK streaming reader.  PREF = 1: the A rows
+    // (inner stride 1) are prefetched sector by sector with up to 4 VM reads in flight (the VM fast path: in-order
+    // responses) into a 4-entry sector FIFO, and the engine input is fed back to back (a new word the cycle the engine
+    // takes the previous one) -- one word a cycle instead of one word every 2 cycles plus a VM round trip a sector.
+    // A non-unit inner stride keeps the one-sector-cache reader.  Writes issue only with no read in flight, reads only
+    // with no write in flight, so the in-order responses are unambiguous.  MUT_PREF = 1 (bench): the consumer pops the
+    // FIFO head one word early -> must FAIL.
+    parameter integer PREF = 0,
+    parameter integer MUT_PREF = 0,
+    // hgi-1010/g2 (opt-in, default 0 = unchanged): TOPKW = 1 (needs PREF = 1): IDX.TOPK on the banked-SRAM heap engine
+    // (rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv, ot_hgi_idx_topk_wreg IW 4 / W 4 heaps): the streaming
+    // reader hands a beat of up to 4 words of the FIFO head sector a cycle (a sector in 2 beats), and the id / value
+    // outputs are PACKED into sector writes (one packer a stream, sealed at the sector's last word, at the row's last
+    // index or when the next word targets another sector) instead of one VM write a word.  A non-unit inner stride keeps
+    // the one-word path (the heap engine is fed 1-word beats).
+    parameter integer TOPKW = 0,
+    // hgi-1010/g3: TWIW = the TOPKW engine's beat width and heap count (ot_hgi_idx_topk_wreg IW = W = TWIW): 8 = DEFAULT (production; 4 = the first build)
+    // or 8 (the production 8-wide engine: a whole sector a beat, 8 heaps; g2 heap bench IW8/W8 16 cases PASS)
+    parameter integer TWIW = 8,
+    // hgi-1010/g3 (opt-in, defaults 0 = unchanged): see the IDX.INDEX front below
+    parameter integer NGLOB = 0,
+    parameter integer IKS = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [1818:0] rec,           // {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
+    input  wire [2074:0] rec,           // {I 256 (IDX.INDEX key-region descriptor; hgi-1010/g), die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
     output reg  [2:0]    ret,
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
@@ -33,7 +55,9 @@ module ot_hgi_idx_unit #(
     output wire          sel_toc,
     input  wire [71:0]   sel_co,
     output wire          sel_coc,
-    input  wire [1:0]    sel_ev
+    input  wire [1:0]    sel_ev,
+    // index-key stream (IKS = 1): the four stacks' svc e beats {payload 127, valid} (ot_hgi_idx_iks_issue); 0 otherwise
+    output wire [511:0]  iks_e
 );
     reg [337:0] vmq_t;
     wire [337:0] vmq_x, vmq_m, vmq_w;
@@ -43,7 +67,7 @@ module ot_hgi_idx_unit #(
     reg busy, started, eng_done, eng_err;
     reg [31:0] w_sc;
     reg [11:0] o_k;                      // output index within the row (descending order)
-    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR; reg [19:0] rpos; reg [7:0] rdie;
+    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR; reg [19:0] rpos; reg [7:0] rdie; reg [255:0] dI;
     wire [5:0]  op    = hdr[123:118];
     wire [6:0]  opnd  = hdr[99:93];
     wire [11:0] k     = hdr[75:64];
@@ -60,26 +84,76 @@ module ot_hgi_idx_unit #(
     reg  e_cmd_v; wire e_cmd_r, e_in_r, e_out_v, e_last, e_vv, e_done; wire [3:0] e_err;
     wire [31:0] e_id, e_sc, e_row;
     reg  e_in_v; reg [31:0] e_in;
+    localparam integer TWB = $clog2(TWIW + 1);
+    reg  [TWIW*32-1:0] e_inw; reg [TWB-1:0] e_nw;     // TOPKW: a beat of up to TWIW words
     wire e_out_r;
+    generate if (TOPKW != 0) begin : g_tw
+    ot_hgi_idx_topk_wreg #(.ENABLE(1'b1), .MAX_K(2048), .IW(TWIW), .W(TWIW)) u_topk (.clk(clk), .rst_n(rst_n),
+        .cmd_valid(e_cmd_v), .cmd_ready(e_cmd_r), .cmd_unit(4'd9), .cmd_op(6'd2), .cmd_param({13'd0, k}),
+        .cmd_n({12'd0, a_n}), .cmd_m({12'd0, a_m}), .cmd_values(has_r),
+        .in_valid(e_in_v), .in_ready(e_in_r), .in_score(e_inw), .in_nw(e_nw),
+        .out_valid(e_out_v), .out_ready(e_out_r), .out_id(e_id), .out_score(e_sc), .out_row(e_row),
+        .out_last(e_last), .out_values_valid(e_vv), .done(e_done), .error(e_err));
+    end else begin : g_t1
     ot_hgi_idx_topk_registered #(.ENABLE(1'b1), .MAX_K(2048)) u_topk (.clk(clk), .rst_n(rst_n),
         .cmd_valid(e_cmd_v), .cmd_ready(e_cmd_r), .cmd_unit(4'd9), .cmd_op(6'd2), .cmd_param({13'd0, k}),
         .cmd_n({12'd0, a_n}), .cmd_m({12'd0, a_m}), .cmd_values(has_r),
         .in_valid(e_in_v), .in_ready(e_in_r), .in_score(e_in),
         .out_valid(e_out_v), .out_ready(e_out_r), .out_id(e_id), .out_score(e_sc), .out_row(e_row),
         .out_last(e_last), .out_values_valid(e_vv), .done(e_done), .error(e_err));
+    end endgenerate
     // ---------------------------------------------------------------- IDX.INDEX frame adapter (op 0)
     reg x_go; wire x_done, x_fault;
+    // ---- IDX.INDEX front (hgi-1010/g3, opt-in).
+    // NGLOB = 1: the compiler's / simulator's G18 semantics (tools/hgi_sim/machine.py u_idx_index): imm_a = n = the keys
+    //   of the whole group; this die scores the keys of the blocks it owns (block g of 8 keys on rank g mod 96).  The
+    //   frame gets n_die = the owned key count (fs n_die14) and pos = n - 1 (the newest key; its block is the pinned
+    //   candidate), derived over 2 registered stages: d = ceil(n / 8) - 1 - rank, blocks = d div 96 + 1 (d div 96 =
+    //   (d >> 5) div 3, exact as (y x 2,731) >> 13 for y < 2^13), minus the missing keys of a partial last block when
+    //   this rank owns it (d mod 96 = 0).  The adapter / issuer go is delayed 2 cycles to see them.  Legal: 1 <= n <= 2^20.
+    //   NGLOB = 0: n = imm_a taken as the die's own key count and pos = the record's token position (the legacy benches).
+    // IKS = 1: ot_hgi_idx_iks_issue starts the four stacks' key streams at the frame start from operand I (the key
+    //   region: I in HBM, byte address I.base; a record without I issues nothing).  A misaligned I.base (I.base[19:0] != 0 or
+    //   stack bits [36:35] != 0) is illegal (E_RANGE before the frame starts).
+    wire [6:0]  x_rank = rdie >= 8'd192 ? 7'(rdie - 8'd192) : rdie >= 8'd96 ? 7'(rdie - 8'd96) : rdie[6:0];
+    wire [31:0] x_ng = hdr[63:32];
+    wire [28:0] x_nb = x_ng[31:3] + {28'd0, |x_ng[2:0]};
+    wire [28:0] x_d  = x_nb - 29'd1 - {22'd0, x_rank};
+    reg  [11:0] nd_y; reg nd_any, nd_d0; reg [2:0] nd_sh; reg [13:0] x_ndie; reg [19:0] x_newest; reg x_go1, x_go2;
+    wire [24:0] nd_p = {13'd0, nd_y} * 25'd2731;
+    wire [11:0] nd_q = 12'(nd_p >> 13);
+    wire        nd_last = nd_d0 && (nd_y == 12'(nd_q * 12'd3));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin x_go1 <= 1'b0; x_go2 <= 1'b0; nd_y <= 12'd0; nd_any <= 1'b0; nd_d0 <= 1'b0; nd_sh <= 3'd0;
+            x_ndie <= 14'd0; x_newest <= 20'd0; end
+        else begin
+            x_go1 <= x_go; x_go2 <= x_go1;
+            nd_y <= 12'(x_d >> 5); nd_any <= x_nb > {22'd0, x_rank}; nd_d0 <= x_d[4:0] == 5'd0;
+            nd_sh <= 3'd0 - x_ng[2:0]; x_newest <= 20'(x_ng - 32'd1);
+            x_ndie <= !nd_any ? 14'd0 : 14'({nd_q + 12'd1, 3'd0} - (nd_last ? {12'd0, nd_sh} : 15'd0));
+        end
+    end
+    wire [39:0] x_ikb = dI[47:8];
+    wire x_iks_ok = (IKS == 0) || !opnd[6] || (dI[1:0] == 2'd0 && x_ikb[19:0] == 20'd0 && x_ikb[36:35] == 2'd0);
+    wire x_n_ok = (NGLOB == 0) || (x_ng != 32'd0 && x_ng <= 32'h0010_0000);
+    generate if (IKS != 0) begin : g_iks
+        wire [35:0] iks_blocks; wire iks_fault;
+        ot_hgi_idx_iks_issue u_iks (.clk(clk), .rst_n(rst_n), .go(x_go2 && opnd[6]), .n({18'd0, x_ndie}), .ik_base(x_ikb),
+            .tag(13'd0), .no_credit(1'b0), .e_d(iks_e), .blocks(iks_blocks), .fault(iks_fault));
+    end else begin : g_no_iks
+        assign iks_e = 512'd0;
+    end endgenerate
     wire [17:0] dB_b = dB[25:8], dC_b = dC[25:8], dD_b = dD[25:8], dD_s = dD[105:88];
     // legal: A VM FP32 n*m = 4,096, B VM FP32 >= 32, C VM U32 (keep_en), O VM U32, R VM FP32 (optional), D VM (cand_en)
     wire x_keep = hdr[77], x_cand = hdr[76];
     wire x_legal = opnd[0] && opnd[1] && opnd[4] && dA[1:0] == 2'd1 && dA[4:2] == 3'd0 && a_n * a_m == 20'd4096 &&
                    dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
-                   (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1)) &&
-                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0;
-    ot_hgi_idx_index #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(x_go), .k(k), .cand_en(x_cand),
-        .keep_en(x_keep), .n(hdr[63:32]), .rank(rdie >= 8'd192 ? 7'(rdie - 8'd192) : rdie >= 8'd96 ? 7'(rdie - 8'd96) : rdie[6:0]),
-        .pos(rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
-        .d_base(dD_b), .d_stride(dD_s), .has_r(has_r), .done(x_done), .fault(x_fault),
+                   (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1 && dC[67:48] != 20'd0 && dC[67:48] <= 20'd2048)) &&
+                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
+    ot_hgi_idx_index #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(NGLOB != 0 ? x_go2 : x_go), .k(k), .cand_en(x_cand),
+        .keep_en(x_keep), .n(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank(x_rank),
+        .pos(NGLOB != 0 ? x_newest : rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
+        .d_base(dD_b), .d_stride(dD_s), .c_stride(dC[105:88]), .c_n(dC[59:48]), .has_r(has_r), .done(x_done), .fault(x_fault),
         .vmq(vmq_x), .vmr(x_active ? vmr : 274'd0), .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to),
         .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
     // ---------------------------------------------------------------- IDX.MERGE (op 1, proposed G20)
@@ -97,8 +171,8 @@ module ot_hgi_idx_unit #(
     reg w_go; wire w_done, w_fault;
     wire w_legal = opnd[0] && opnd[3] && opnd[4] && opnd[5] && dA[1:0] == 2'd1 && dA[4:2] == 3'd5 && dO[1:0] == 2'd1 &&
                    dO[4:2] == 3'd5 && dR[1:0] == 2'd1 && dR[4:2] == 3'd5 && dD[1:0] == 2'd1 && dD[4:2] == 3'd5 &&
-                   hdr[88:80] == 9'd0;
-    ot_hgi_idx_owned u_owned (.clk(clk), .rst_n(rst_n), .go(w_go), .blk(hdr[71:64]), .grp(hdr[79:72]), .die(rdie),
+                   hdr[88] == 1'b0;
+    ot_hgi_idx_owned u_owned (.clk(clk), .rst_n(rst_n), .go(w_go), .blk(hdr[71:64]), .grp(hdr[79:72]), .die(rdie), .batch(hdr[87:80]),
         .k(a_n), .a_base(a_base[17:0]), .o_base(o_base[17:0]), .r_base(r_base[17:0]), .d_base(dD[25:8]),
         .done(w_done), .fault(w_fault), .vmq(vmq_w), .vmr(w_active ? vmr : 274'd0));
     // ---------------------------------------------------------------- output buffer (order = 1: k <= 8 ascending ids)
@@ -122,11 +196,37 @@ module ot_hgi_idx_unit #(
     reg [14:0] c_sec; reg c_ok; reg [255:0] c_dat;
     reg vm_pend, vm_rd;                                  // one VM request in flight; vm_rd: it is the reader's
     wire [39:0] rw_now = a_base + r_row * a_str + r_col * a_is;
+    // TOPKW packers (stream 0 = ids to O, 1 = values to R)
+    reg pk_v [0:1]; reg pk_seal [0:1]; reg [14:0] pk_sec [0:1]; reg [255:0] pk_d0, pk_d1; reg [31:0] pk_m0, pk_m1;
+    // PREF reader state (hgi-1010/g)
+    reg pf_act, pf_done; reg [19:0] pf_row; reg [39:0] pf_rb; reg [14:0] pf_sec, pf_end; reg [2:0] pf_out, pf_cnt;
+    reg [1:0] pf_h, pf_t; reg [14:0] pf_q_sec [0:3]; reg [255:0] pf_q_dat [0:3]; reg [14:0] vm_sec_q [0:3];
+    reg [1:0] pf_it;                               // request issue slot: the sector each in-flight read fetches
+    wire pf_on = PREF != 0 && pf_act;
+    wire [39:0] pf_re0 = a_base + {20'd0, a_n} - 40'd1;
+    wire [39:0] pf_rb_n = pf_rb + {8'd0, a_str};
+    wire [39:0] pf_re_n = pf_rb_n + {20'd0, a_n} - 40'd1;
+    // pop the head after the row's last word or the sector's last word (MUT_PREF: one word early)
+    wire pf_pop = (r_col + 20'd1 == a_n) || (rw_now[2:0] == (MUT_PREF ? 3'd6 : 3'd7));
+    // TOPKW beat: nw = min(TWIW, words left in the sector, words left in the row); pop when it ends the sector or the row
+    wire [3:0] tw_sec = 4'd8 - {1'b0, rw_now[2:0]};
+    wire [19:0] tw_row = a_n - r_col;
+    wire [3:0] tw_m1 = (tw_sec < 4'(TWIW)) ? tw_sec : 4'(TWIW);
+    wire [3:0] tw_nw4 = ({16'd0, tw_m1} < tw_row) ? tw_m1 : tw_row[3:0];
+    wire [TWB-1:0] tw_nw = tw_nw4[TWB-1:0];
+    wire tw_pop = (r_col + 20'(tw_nw) == a_n) || (5'(rw_now[2:0]) + 5'(tw_nw) == 5'd8);
+    wire [255:0] tw_hd = pf_q_dat[pf_h] >> (32 * rw_now[2:0]);
+    wire pf_feed = !r_done && (!e_in_v || e_in_r) && pf_cnt != 3'd0;
+    wire pf_dpop = TOPKW != 0 ? tw_pop : pf_pop;
+    wire pf_iss = pf_act && !pf_done && !w_v && !vm_pend && !pk_seal[0] && !pk_seal[1] && (pf_out + pf_cnt) < 3'd4;
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq_t <= 338'd0; vm_pend <= 1'b0; x_go <= 1'b0; x_active <= 1'b0; m_go <= 1'b0; m_active <= 1'b0; w_go <= 1'b0; w_active <= 1'b0;
             b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; w_v <= 1'b0; c_ok <= 1'b0; r_done <= 1'b1;
             started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0; w_cnt <= 32'd0;
+            pf_act <= 1'b0; pf_done <= 1'b1; pf_out <= 3'd0; pf_cnt <= 3'd0; pf_h <= 2'd0; pf_t <= 2'd0; pf_it <= 2'd0;
+            pk_v[0] <= 1'b0; pk_v[1] <= 1'b0; pk_seal[0] <= 1'b0; pk_seal[1] <= 1'b0; pk_m0 <= 32'd0; pk_m1 <= 32'd0;
         end else begin
             ret[2:1] <= 2'b00; vmq_t[337] <= 1'b0; x_go <= 1'b0; m_go <= 1'b0; w_go <= 1'b0;
             if (e_cmd_v && e_cmd_r) e_cmd_v <= 1'b0;
@@ -134,7 +234,7 @@ module ot_hgi_idx_unit #(
             // record intake
             if (!busy && rec[0]) begin
                 hdr <= rec[128:1]; dA <= rec[384:129]; dB <= rec[640:385]; dC <= rec[896:641]; dD <= rec[1152:897];
-                dO <= rec[1408:1153]; dR <= rec[1664:1409]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811];
+                dO <= rec[1408:1153]; dR <= rec[1664:1409]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811]; dI <= rec[2074:1819];
                 busy <= 1'b1; ret[0] <= 1'b0; e_cmd_v <= 1'b0; r_row <= 20'd0; r_col <= 20'd0; r_done <= 1'b0;
                 c_ok <= 1'b0; w_cnt <= 32'd0; b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; o_k <= 12'd0;
             end else if (busy && !e_cmd_v && r_row == 20'd0 && r_col == 20'd0 && !r_done && !e_in_v && !vm_pend && w_cnt == 32'd0 && !started) begin
@@ -142,17 +242,51 @@ module ot_hgi_idx_unit #(
                 else if (op == 6'd1 && m_legal) begin m_go <= 1'b1; m_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (op == 6'd3 && w_legal) begin w_go <= 1'b1; w_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
                 else if (!legal) begin busy <= 1'b0; ret <= 3'b101; r_done <= 1'b1; end
-                else begin e_cmd_v <= 1'b1; started <= 1'b1; end
+                else begin e_cmd_v <= 1'b1; started <= 1'b1;
+                    pf_act <= PREF != 0 && a_is == 16'd1; pf_done <= 1'b0; pf_row <= 20'd0; pf_rb <= a_base;
+                    pf_sec <= a_base[17:3]; pf_end <= pf_re0[17:3]; pf_h <= 2'd0; pf_t <= 2'd0; pf_it <= 2'd0; pf_cnt <= 3'd0; pf_out <= 3'd0; end
+            end
+            // PREF reader (opt-in): prefetch + back-to-back engine feed
+            if (pf_on && busy && started) begin
+                if (pf_iss) begin
+                    vmq_t <= {1'b1, 1'b0, {12'd0, pf_sec, 5'd0}, 256'd0, 32'd0, 16'h0902};
+                    vm_sec_q[pf_it] <= pf_sec; pf_it <= pf_it + 2'd1;
+                    if (pf_sec == pf_end) begin
+                        if (pf_row + 20'd1 == a_m) pf_done <= 1'b1;
+                        else begin pf_row <= pf_row + 20'd1; pf_rb <= pf_rb + {8'd0, a_str};
+                                   pf_sec <= pf_rb_n[17:3]; pf_end <= pf_re_n[17:3]; end
+                    end else pf_sec <= pf_sec + 15'd1;
+                end
+                if (pf_feed) begin
+                    if (pf_q_sec[pf_h] != rw_now[17:3]) eng_err <= 1'b1;            // never (fail closed)
+                    e_in_v <= 1'b1; e_in <= pf_q_dat[pf_h][rw_now[2:0]*32 +: 32];
+                    e_inw <= tw_hd[TWIW*32-1:0]; e_nw <= tw_nw;
+                    if (pf_dpop) begin pf_h <= pf_h + 2'd1; end
+                    if (r_col + (TOPKW != 0 ? 20'(tw_nw) : 20'd1) == a_n) begin
+                        r_col <= 20'd0;
+                        if (r_row + 20'd1 == a_m) r_done <= 1'b1; else r_row <= r_row + 20'd1;
+                    end else r_col <= r_col + (TOPKW != 0 ? 20'(tw_nw) : 20'd1);
+                end
+                if (vmr[273] && pf_out != 3'd0) begin
+                    pf_q_sec[pf_t] <= vm_sec_q[pf_t]; pf_q_dat[pf_t] <= vmr[255:0]; pf_t <= pf_t + 2'd1;
+                end
+                // hgi-1010/g2: ONE update of the in-flight count (a read issued and a response landing in the same cycle used
+                // to be two non-blocking writes of pf_out, the landing one winning: the count lost the issue and the
+                // 4-entry FIFO was overrun once the consumer kept up -- latent at one word a cycle, hit at 4)
+                pf_out <= pf_out + (pf_iss ? 3'd1 : 3'd0) - ((vmr[273] && pf_out != 3'd0) ? 3'd1 : 3'd0);
+                pf_cnt <= pf_cnt + ((vmr[273] && pf_out != 3'd0) ? 3'd1 : 3'd0)
+                                 - ((pf_feed && pf_dpop) ? 3'd1 : 3'd0);
             end
             // reader: next word of A into the engine
-            if (busy && started && !r_done && !e_in_v) begin
+            if (!pf_on && busy && started && !r_done && !e_in_v) begin
                 if (c_ok && c_sec == rw_now[17:3]) begin
                     e_in_v <= 1'b1; e_in <= c_dat[rw_now[2:0]*32 +: 32];
+                    e_inw <= {{(TWIW*32-32){1'b0}}, c_dat[rw_now[2:0]*32 +: 32]}; e_nw <= TWB'(1);
                     if (r_col + 20'd1 == a_n) begin
                         r_col <= 20'd0;
                         if (r_row + 20'd1 == a_m) r_done <= 1'b1; else r_row <= r_row + 20'd1;
                     end else r_col <= r_col + 20'd1;
-                end else if (!vm_pend && !w_v) begin
+                end else if (!vm_pend && !w_v && !pk_seal[0] && !pk_seal[1]) begin
                     vm_pend <= 1'b1; vm_rd <= 1'b1;
                     vmq_t <= {1'b1, 1'b0, {12'd0, rw_now[17:3], 5'd0}, 256'd0, 32'd0, 16'h0900};
                 end
@@ -175,8 +309,34 @@ module ot_hgi_idx_unit #(
                 b_v[pick] <= 1'b0; b_n <= b_n + 4'd1;
             end
             if (order && b_full && b_v == 8'd0 && !w_v) begin b_full <= 1'b0; b_n <= 4'd0; end
+            // TOPKW writer: merge the pending word into its stream's packer; flush sealed packers as sector writes
+            if (TOPKW != 0) begin : pk
+                reg ps; ps = w_r;
+                if (w_v) begin
+                    if (!pk_v[ps] || (pk_sec[ps] == w_a[17:3] && !pk_seal[ps])) begin
+                        pk_v[ps] <= 1'b1; pk_sec[ps] <= w_a[17:3];
+                        if (ps) begin pk_d1[w_a[2:0]*32 +: 32] <= w_d; pk_m1[w_a[2:0]*4 +: 4] <= 4'hf; end
+                        else    begin pk_d0[w_a[2:0]*32 +: 32] <= w_d; pk_m0[w_a[2:0]*4 +: 4] <= 4'hf; end
+                        if (w_a[2:0] == 3'd7 || {20'd0, w_idx} + 32'd1 == {20'd0, k}) pk_seal[ps] <= 1'b1;
+                        if (w_second) begin
+                            w_second <= 1'b0; w_r <= 1'b1; w_d <= w_sc;
+                            w_a <= r_base + b_row * r_str + w_idx;
+                        end else w_v <= 1'b0;
+                    end else if (pk_v[ps]) pk_seal[ps] <= 1'b1;               // another sector: seal, retry
+                end
+                if (!vm_pend && !(pf_on && pf_out != 3'd0) && (pk_seal[0] || pk_seal[1])) begin
+                    vm_pend <= 1'b1; vm_rd <= 1'b0;
+                    if (pk_seal[0]) begin
+                        vmq_t <= {1'b1, 1'b1, {12'd0, pk_sec[0], 5'd0}, pk_d0, pk_m0, 16'h0903};
+                        pk_v[0] <= 1'b0; pk_seal[0] <= 1'b0; pk_m0 <= 32'd0;
+                    end else begin
+                        vmq_t <= {1'b1, 1'b1, {12'd0, pk_sec[1], 5'd0}, pk_d1, pk_m1, 16'h0903};
+                        pk_v[1] <= 1'b0; pk_seal[1] <= 1'b0; pk_m1 <= 32'd0;
+                    end
+                end
+            end
             // writer: one word per VM write (word mask)
-            if (w_v && !vm_pend) begin
+            if (TOPKW == 0 && w_v && !vm_pend && !(pf_on && pf_out != 3'd0)) begin
                 vm_pend <= 1'b1; vm_rd <= 1'b0;
                 vmq_t <= {1'b1, 1'b1, {12'd0, w_a[17:3], 5'd0}, {8{w_d}}, 32'hf << (w_a[2:0] * 4), 16'h0901};
                 if (w_second) begin
@@ -193,14 +353,15 @@ module ot_hgi_idx_unit #(
             if (x_active && (x_done || x_fault)) begin
                 x_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= x_fault ? 3'b101 : 3'b011;
             end
-            if (vmr[273] && !x_active && !m_active && !w_active) begin
+            if (vmr[273] && !x_active && !m_active && !w_active && !(pf_on && pf_out != 3'd0)) begin
                 vm_pend <= 1'b0;
                 if (vm_rd) begin c_ok <= 1'b1; c_sec <= rw_now[17:3]; c_dat <= vmr[255:0]; end
             end
             // completion
             if (busy && started && !x_active && !m_active && !w_active && e_done) eng_done <= 1'b1;
             if (busy && started && e_done && e_err != 4'd0) eng_err <= 1'b1;
-            if (busy && !x_active && !m_active && !w_active && eng_done && !w_v && !vm_pend && !b_full && !e_out_v) begin
+            if (busy && !x_active && !m_active && !w_active && eng_done && !w_v && !vm_pend && !b_full && !e_out_v &&
+                !(pf_on && pf_out != 3'd0) && !pk_v[0] && !pk_v[1]) begin
                 busy <= 1'b0; started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0;
                 ret <= eng_err ? 3'b101 : 3'b011;
             end

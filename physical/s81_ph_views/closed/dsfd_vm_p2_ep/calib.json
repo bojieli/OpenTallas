@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc_cal/work/orfs/results/asap7/opentallas_dsfd_vm_p2_ep_asap7_s81ph_fixlat_vmp2_ffbec0c86_tc_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 609,
+   "mean": 145.2,
+   "min": 138.8,
+   "max": 151.1
+  },
+  "all": {
+   "n": 609,
+   "mean": 145.2,
+   "min": 138.8,
+   "max": 151.1
+  },
+  "errors": []
+ },
+ "tt": {
+  "boundary": {
+   "n": 609,
+   "mean": 111.2,
+   "min": 105.2,
+   "max": 116.6
+  },
+  "all": {
+   "n": 609,
+   "mean": 111.2,
+   "min": 105.2,
+   "max": 116.6
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 609,
+   "mean": 91.0,
+   "min": 85.2,
+   "max": 96.1
+  },
+  "all": {
+   "n": 609,
+   "mean": 91.0,
+   "min": 85.2,
+   "max": 96.1
+  },
+  "errors": []
+ },
+ "route_corner": "TC",
+ "env": {
+  "CK_SS_MEAN": 111,
+  "CK_SS_ALL_MEAN": 111,
+  "CK_SS_MIN": 105,
+  "CK_SS_ALL_MIN": 105,
+  "CK_SS_MAX": 117,
+  "CK_SS_ALL_MAX": 117,
+  "CK_TT_MEAN": 111,
+  "CK_TT_ALL_MEAN": 111,
+  "CK_TT_MIN": 105,
+  "CK_TT_ALL_MIN": 105,
+  "CK_TT_MAX": 117,
+  "CK_TT_ALL_MAX": 117,
+  "CK_FF_MEAN": 91,
+  "CK_FF_ALL_MEAN": 91,
+  "CK_FF_MIN": 85,
+  "CK_FF_ALL_MIN": 85,
+  "CK_FF_MAX": 96,
+  "CK_FF_ALL_MAX": 96,
+  "CK_SSLIB_MEAN": 145,
+  "CK_SSLIB_MIN": 139,
+  "CK_SSLIB_MAX": 151,
+  "CK_SSLIB_ALL_MEAN": 145,
+  "CK_SSLIB_ALL_MIN": 139,
+  "CK_SSLIB_ALL_MAX": 151,
+  "CK_ROUTE_REF": "TT"
+ }
+}

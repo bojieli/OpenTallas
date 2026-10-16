@@ -1,0 +1,32 @@
+{
+ "macro": "hgi_mtp_native",
+ "size_um": [
+  286.56,
+  200.88
+ ],
+ "ports": {
+  "clk": {
+   "dir": "input",
+   "bits": 1
+  },
+  "f_cmdproc": {
+   "dir": "input",
+   "bits": 197
+  },
+  "rst_n": {
+   "dir": "input",
+   "bits": 1
+  },
+  "t_cmdproc": {
+   "dir": "output",
+   "bits": 517
+  }
+ },
+ "lef_pin_bits": 716,
+ "netlist_bits": 716,
+ "missing": [],
+ "n_missing": 0,
+ "extra": [],
+ "n_extra": 0,
+ "verdict": "MATCH"
+}

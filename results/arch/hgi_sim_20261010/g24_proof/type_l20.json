@@ -1,0 +1,162 @@
+{
+ "schema": "opentallas.hgi_sim.ds_native.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-10T17:00:33Z",
+ "host": "ot-epyc1tb",
+ "context": 1048576,
+ "position": 1048575,
+ "layers": "20",
+ "head": false,
+ "results": [
+  {
+   "layer": 20,
+   "kind": "ratio1+compressor+indexer+candidates",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L20.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win20",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L20.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block20",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre20",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "ckv20",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "ik20",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L20.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L20.index_select",
+     "bit_exact": true,
+     "ranks_checked": 96
+    },
+    {
+     "region": "L20.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 150,
+   "image_bytes_all_dies": 1371264,
+   "unit_ops": {
+    "FUSED.HC_PRE_NORM": 2,
+    "DMA.LOAD": 17,
+    "CTL.NOP": 20,
+    "COLL.ALL_GATHER": 18,
+    "SU.VOP": 35,
+    "SM.MATVEC": 29,
+    "IDX.INDEX": 1,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "COLL.TOPK_MERGE": 2,
+    "IDX.OWNED": 1,
+    "HC.HC_MIX_POST": 2,
+    "CTL.LOOP": 1,
+    "DMA.STORE": 10,
+    "CTL.ENDLOOP": 1,
+    "DMA.FENCE": 3,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1
+   },
+   "schedule": {
+    "input_cycles": 83771.4,
+    "list_alpha": 0.2,
+    "moves": 13,
+    "output_cycles": 76321.1,
+    "rounds": [
+     76386.6
+    ],
+    "seed": "given",
+    "ils_moves": 5,
+    "layer": 20
+   },
+   "row_gather": [
+    {
+     "tag": "row_gather.owned",
+     "k": 512,
+     "G": 96,
+     "max_owned": 12,
+     "rounds": 6
+    }
+   ],
+   "wall_s": 13001.1
+  }
+ ],
+ "spec": "HGI-1 1.0 (owner-approved encoding; records.py decodes from hbm_generic_iface D_* tables)",
+ "open_items": [
+  "G15 IDX.TOPK ascending-id order (param[12], provisional reading)",
+  "G16 DS indexer engines' operands / fields (engine-internal buffers)",
+  "G17 DS head uniform 1,347-row shards for ARGMAX imm_a",
+  "Engram ids host-provided (IDX.EHASH not modelled: G13 bring-up path)",
+  "program images compiled for the token's position (compressor append address, selection count), as the w19 compiler emits them",
+  "compressed KV rows stored as FP32 values on the FP4 grid (the shipped 9-channel FP4 layout is the gather readers' concern, spec 6.10)"
+ ],
+ "wall_s": 13086.2,
+ "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "source_sha256": {
+  "hgi_sim/ds_native.py": "d6fcbf7839cf953556755ad9ddebff28df42e957d1a056fe0e73bd7428bfbf89",
+  "hgi_sim/machine.py": "9a69c8741d7db70548456c197360b0be6428b75334a85c61475ce018d879dd6d",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+  "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.rtl.dsrom_wfc_vm_station.v1",
+ "what": "dsfd_wfc_vmx start / done latency per stage job, abutting VM vs the VM behind 13/13 hub relay stations (kit VM_LINK 1, WOUTW 8, VMRQ 64), same stimulus (tb_mtp_rom_stg_tokpipe stg_r1, 60 jobs)",
+ "bench": "tools/dsrom_wfc_kit_bench.py cases stg_r1 / vmrly_stg_r1 --vmrq 64 (EPYC3 /srv/opentallas-scratch/claude/wfc-kit-gen-bb953449b/kitgate4, kitgate4_rq64; source 8a21e4667)",
+ "abutting": {
+  "start_mean": 14.5,
+  "done_mean": 98.67,
+  "cycles": 17433
+ },
+ "stationed": {
+  "start_mean": 51.97,
+  "done_mean": 135.92,
+  "cycles": 21877,
+  "vf": 13,
+  "vr": 13,
+  "vmrq": 64
+ },
+ "rq_sweep_stationed_cycles": {
+  "16": 24845,
+  "32": 21911,
+  "64": 21877
+ },
+ "s0_hash_u3_cycles": {
+  "abutting": 89901,
+  "stationed_rq32": 116751,
+  "stationed_rq64": 110815,
+  "stationed_rq16": "bench watchdog stall"
+ },
+ "delta_per_hop_fast_cycles": 29.03,
+ "split": "RD2 + posted: START +15.93 over abutting (doorbell through the stations) + done +13.10 (46 words as 23 pairs on VM ports 0+1 through the stations)",
+ "fenced_vmnat": {
+  "abutting": {
+   "start_mean": 15.0,
+   "done_mean": 79.0
+  },
+  "stationed": {
+   "start_mean": 52.0,
+   "done_mean": 116.53
+  },
+  "delta": 74.53,
+  "bench": "stg_vmnat / vmrly_stg_vmnat (kitgate5, a7527c037)"
+ },
+ "posted_vmnat": {
+  "stationed": {
+   "start_mean": 30.98,
+   "done_mean": 123.0
+  },
+  "delta": 59.98,
+  "bench": "post_stg_vmnat (kitgate7, f71c50c9d): VM_LINK 1, POSTED 1, VMRQ 64, dsfd_vm_wfc_ep PIPE 2 RL 6, KS 1",
+  "cycles": {
+   "post_stg_r1": 19863,
+   "post_stg_vmnat": 13301,
+   "post_stg_r2_slowvm": 19861
+  }
+ },
+ "adopted": "RD2 (2-port prefetch) over posted writes (main GO 2026-10-11, step 1 of the AR-hop fix)",
+ "rd2_vmnat": {
+  "stationed": {
+   "start_mean": 30.93,
+   "done_mean": 92.1
+  },
+  "delta": 29.03,
+  "bench": "rd2_stg_vmnat (kit gate rd2-gate-d406936bf on EPYC4: WFC_KIT_GATE PASS positives=27 negatives=9; RD2 + POSTED + VM_LINK, VMRQ 64)",
+  "cycles": {
+   "rd2_stg_vmnat": 12031
+  }
+ },
+ "stage_seq": {
+  "what": "main decision A: the kit's start / done through dsfd_stage_seq (ot_s81_stage_seq) to the engines",
+  "bench": "sseq_stg_vmnat vs stg_vmnat (kit gate sseq-gate-5021e7c22 on EPYC4: WFC_KIT_GATE PASS positives=30 negatives=11; mutants drop-start / early-done FAIL)",
+  "abutting": {
+   "start_mean": 15.0,
+   "done_mean": 79.0
+  },
+  "with_stage_seq": {
+   "start_mean": 25.0,
+   "done_mean": 87.5
+  }
+ },
+ "stage_seq_delta_per_hop_fast_cycles": 18.5
+}

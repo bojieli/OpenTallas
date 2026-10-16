@@ -1,0 +1,131 @@
+{
+ "schema": "opentallas.rtl.dsrom_wfc_integration.v1",
+ "owner": "Claude:mtp-wfc-1010",
+ "date": "2026-10-10",
+ "gap": "budget-audit dsrom_mtp_draft_hw (b): WFC + accept not integrated on the S81 die",
+ "root_cause": "the --wfc-hard slab was one blackbox master dsfd_wfc with no RTL, sized for SOURCE + STG only (no lnk / vmx / tok), wired by six aggregate buses matching no element port (stage link 514 without reverse grants, VM in 512 vs 516, capture 64/64 vs 53/54) and no committed-token egress from the S0 SOURCE; accept.commit pointed at the HBM ot_hdc_accept (on no S81 die)",
+ "integration_qualified": false,
+ "qualification_pending": [
+  "physical route of the kit slab masters dsfd_wfc_stg / dsfd_wfc_src at their die pins (option B: TT setup >= 0, FF hold >= 0, DRC 0)",
+  "die-level link STA (GRT parasitics) binding the kit's die buses (collective / VM / capture / host)",
+  "die link STA chain on layer1srckit (EPYC3 chain_l1srckit) and closure of the posted vmx / dsfd_vm_wfc_ep"
+ ],
+ "rtl": {
+  "kit": "rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv (dsfd_wfc_src = ot_dsrom_wfc_tokpipe_src PROMPT_EXTRA 2 + dsfd_wfc_tok_hard + dsfd_wfc_lnk + dsfd_wfc_vmx RQFREE 2; dsfd_wfc_stg = ot_dsrom_wfc_tokpipe_stg + lnk + vmx), closed parameters, no logic between elements",
+  "elements_closed": {
+   "ot_dsrom_wfc_tokpipe_src": "mtp-wfc-src-hard-mxb-910e67c7b-tc-cx TT +152.31 / FF +4.02 DRC 0",
+   "ot_dsrom_wfc_tokpipe_stg": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc TT +141.65 / FF +22.80 DRC 0",
+   "dsfd_wfc_tok_hard": "mtp-wfc_tok-hard-e829cb457-r2-tc-cx TT +8.85 / FF +22.26 DRC 0",
+   "dsfd_wfc_lnk": "mtp-wfc_lnk-b-0cd6caa1b-tc TT +7.75 / FF +18.60 DRC 0",
+   "dsfd_wfc_vmx": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl TT +3.59 / FF +0.22 DRC 0 (RQFREE 2)",
+   "dsfd_mtp_seq_rtt (accept)": "mtp-seqrtt-c/d-20ec697d1-tc TT +34.32 / FF +8.52 DRC 0; mtp-seq-rtt-native-61b4bc729-tc TT +27.44 / FF +8.17 DRC 0"
+  }
+ },
+ "exactness": {
+  "gate": "tools/dsrom_wfc_kit_bench.py (s0 / stg tokpipe system benches rebuilt on ONE kit instance at the die-facing ports)",
+  "result": "WFC_KIT_GATE PASS positives=10 negatives=5 (EPYC1 /srv/opentallas-scratch/claude/wfc-kit-gate-20300dbb4, source 20300dbb4)",
+  "positives": [
+   "s0_tr_dspark",
+   "s0_tr_forced",
+   "s0_tr_forced_w16",
+   "s0_hash_u3",
+   "s0_hash_u1_fast",
+   "s0_hash_u4_ar1",
+   "stg_r1",
+   "stg_vmnat",
+   "stg_lag1",
+   "stg_r2_slowvm"
+  ],
+  "negatives_fail_as_required": [
+   "s0_neg_noepoch",
+   "s0_neg_nohold",
+   "s0_neg_predoff",
+   "stg_neg_nocred",
+   "stg_neg_predoff"
+  ],
+  "accept_native": "dsfd_mtp_seq_rtt exact behind the head631 relay stations (tb_mtp_rom_s0 SEQ_RTT=1 RLY=1: 5 positives); pinned dsfd_mtp_seq receiver overflows behind F5/R6 and F9/R10 under stress (LINK_REG overflow)"
+ },
+ "die_binding": {
+  "generator": "tools/dsrom_s81_fulldie.py --wfc-hard --wfc-kit (role source with --ctrl-role source), --mtp-seq-rtt; recipes tools/s81/s81_dies_recipe.py layer1kit / layer1srckit / scankit / head631rtt",
+  "source_commit": "eb2fcca89",
+  "run": "ot-epyc3:/srv/opentallas-scratch/claude/wfc-kit-gen-bb953449b/plans",
+  "plans": {
+   "layer1kit": {
+    "fits": true,
+    "placed_mm2": 398.4,
+    "instances": 55324,
+    "overlaps": 0,
+    "outside": 0,
+    "pin_clashes": 0,
+    "margin_lint": {
+     "verdict": "FAIL",
+     "reach_violations": 768,
+     "far_side_relays": 2313
+    }
+   },
+   "layer1srckit": {
+    "fits": true,
+    "placed_mm2": 398.41,
+    "instances": 55364,
+    "overlaps": 0,
+    "outside": 0,
+    "pin_clashes": 0,
+    "margin_lint": {
+     "verdict": "FAIL",
+     "reach_violations": 768,
+     "far_side_relays": 2313
+    }
+   },
+   "scankit": {
+    "fits": true,
+    "placed_mm2": 431.38,
+    "instances": 53328,
+    "overlaps": 0,
+    "outside": 0,
+    "pin_clashes": 0,
+    "margin_lint": {
+     "verdict": "FAIL",
+     "reach_violations": 0,
+     "far_side_relays": 1546
+    }
+   },
+   "head631rtt": {
+    "fits": true,
+    "placed_mm2": 322.5,
+    "instances": 25847,
+    "overlaps": 0,
+    "outside": 0,
+    "pin_clashes": 0,
+    "margin_lint": {
+     "verdict": "FAIL",
+     "reach_violations": 0,
+     "far_side_relays": 732
+    }
+   }
+  },
+  "margin_lint_note": "the FAIL classes are die-wide generator classes owned elsewhere (reach 768 = qs5f g_xb_*_7, ds-1010 option B x1b; far-side = S81 field relay classes, s81-gen); no WFC or MTP chain among the reported examples; head631 classified exhaustively by mtp-head-1010 (none on the six MTP chains)",
+  "connectivity": "real_src die.v (layer1srckit): dsfd_wfc_src sp_wfc with all 10 die ports connected (f_li, t_lir, t_lo, f_lor, t_sw_sr, f_sw_sr, t_ks, f_kd, f_c, t_tok)"
+ },
+ "token_path": "accept.commit -> dsfd_mtp_seq_rtt (status built); wave.p2-p6 stay partial until integration_qualified",
+ "price": "MTP 4,171.7 tok/s (results/arch/mtp_step_20261009/ds_rom_step.json; posted station delta 59.98 cyc/hop, vm_station.json)",
+ "posted_writes": {
+  "decision": "main 2026-10-10: posted VM writes on the in-order channel (same-ID rule)",
+  "proof": "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv header: one channel (writes then START doorbell) -> FIFO stations -> one endpoint op pipe -> VM global issue order with in-order bank queues; no bank reordering",
+  "raw_bench": "tools/dsrom_wfc_kit_bench.py post_* (13/13 stations) PASS; post_stg_neg_early (START at the pipe entry) FAIL as required",
+  "error_reporting": "per-write ACK replaced by a sticky VM status level checked by the vmx at k_done",
+  "jobs": [
+   "mtp-wfc_vmx-post-f38c0046d-tc-cl",
+   "mtp-vm_wfc_ep-f38c0046d-tc"
+  ],
+  "fenced_fallback": "mtp-wfc_vmx-rq64w8-dcf337601-tc-cl"
+ },
+ "vm_link": "kit VM_LINK 1 (grant links) + vmx VMRQ 64 / WOUTW 8: RQ 16 stalls behind 13/13 stations (vm_station.json)",
+ "far_end_consumers": {
+  "s0_token_return": "kit TOKIN: collective MTP lane t_mrt/f_mrt -> SOURCE link-in (tokin_* PASS)",
+  "accept_word": "t_macc -> host",
+  "p2_fault": "t_p2flt -> host",
+  "generator": "--coll-mtp-far s0 / --coll-p2-lane recipes layer1srckitm, draftAlnkp2l",
+  "blocker": "both recipes do not fit: the split3cr lane collective + WFC kit slab overflow the layer1 hub column (sp_su_s y 2,829.6 below the band floor); die floorplan decision (ds-1010)",
+  "open": "primary-die seed descriptor (t_mrs) has no consumer element: ot_dsrom_mtp_seed_ctl takes x vectors; a descriptor -> program-start element is needed (P-die owner)"
+ }
+}

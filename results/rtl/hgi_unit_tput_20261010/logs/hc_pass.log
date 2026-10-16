@@ -1,0 +1,35 @@
+preload done at 717607
+RETIRE 0 at 6050 (HBM beats so far 2560)
+RETIRE 1 at 6743 (HBM beats so far 2564)
+RETIRE 2 at 12792 (HBM beats so far 5124)
+RETIRE 3 at 13484 (HBM beats so far 5128)
+RETIRE 4 at 19533 (HBM beats so far 7688)
+RETIRE 5 at 20225 (HBM beats so far 7692)
+RETIRE 6 at 26274 (HBM beats so far 10252)
+RETIRE 7 at 26966 (HBM beats so far 10256)
+RETIRE 8 at 102286 (HBM beats so far 71700)
+TPUT 0 op 1 issue 1 ret 6050 cost_milli 48334
+TPUT 1 op 2 issue 2 ret 6743 cost_milli 540000
+TPUT 2 op 1 issue 6051 ret 12792 cost_milli 48334
+TPUT 3 op 2 issue 6744 ret 13484 cost_milli 540000
+TPUT 4 op 1 issue 12793 ret 19533 cost_milli 48334
+TPUT 5 op 2 issue 13485 ret 20225 cost_milli 540000
+TPUT 6 op 1 issue 19534 ret 26274 cost_milli 48334
+TPUT 7 op 2 issue 20226 ret 26966 cost_milli 540000
+TPUT 8 op 0 issue 26275 ret 102286 cost_milli 1160008
+HBM beats 71700 (2294400 B) over 102286 cycles
+EXACT 0 mismatch 0
+EXACT 1 mismatch 0
+EXACT 2 mismatch 0
+EXACT 3 mismatch 0
+EXACT 4 mismatch 0
+EXACT 5 mismatch 0
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+EXACT 8 mismatch 0
+summary: 9 HC records back to back, 124 O words, 102286 cycles
+HGI_HC_TPUT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_hc_tput.sv:109: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 342.398 s; speed 4.795 us/s
+- Verilator: cpu 269.031 s on 1 threads; allocated 31 MB

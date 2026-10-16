@@ -1,0 +1,212 @@
+{
+ "schema": "opentallas.s81.ctrl-adapter-contract.v1",
+ "date": "2026-10-10",
+ "owner": "Claude:ds-1010 (s81-ctl-1011)",
+ "decision": "dsfd_sp_ctrl engine ports + ot_s81_engine_adapter are THE command/start/done interface of every S81 slab; retire only hop_tx (ot_s81_hop_tx / --ctrl-slab handoff); keep ot_s81_stage_seq + engine adapters. WFC kit = single stage controller (mtp-wfc-1010 owns kit<->stage_seq).",
+ "controller": {
+  "shell": "physical/s81_ctrl/rtl/dsfd_sp_ctrl.sv",
+  "shell_sha256": "c5f063ae2eae1d1540a457ed9569c9ad930af9cb407f636e7d46181259f539c1",
+  "ports": {
+   "cv": "output [11:0] one-cycle command pulse per engine (no ready: credit-governed)",
+   "cd": "output [12*84-1:0] engine e at [e*84 +: 84]",
+   "dv": "input [11:0] one-cycle done pulse per engine",
+   "dt": "input [12*8-1:0] done tag per engine"
+  },
+  "clock": "ck stream 1.2 GHz",
+  "engine_index": {
+   "fld": 0,
+   "su": 1,
+   "hc": 2,
+   "coll": 3,
+   "svc": 4,
+   "sel": 5,
+   "col": 6,
+   "hop": 7,
+   "head": 8,
+   "emb": 9,
+   "eng": 10,
+   "spare": 11
+  }
+ },
+ "command_word": {
+  "bits": 84,
+  "fields_msb_to_lsb": [
+   {
+    "name": "slot",
+    "bits": 1,
+    "lsb": 83
+   },
+   {
+    "name": "user",
+    "bits": 10,
+    "lsb": 73
+   },
+   {
+    "name": "pos",
+    "bits": 21,
+    "lsb": 52
+   },
+   {
+    "name": "tok",
+    "bits": 21,
+    "lsb": 31
+   },
+   {
+    "name": "arg",
+    "bits": 24,
+    "lsb": 7
+   },
+   {
+    "name": "op",
+    "bits": 7,
+    "lsb": 0
+   }
+  ],
+  "tag": "{slot, op} = {cmd[83], cmd[6:0]} (8 bits): the done tag must echo it",
+  "source": "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv cmd_d packing; op = program entry index, arg = compiler-owned native descriptor (tools/s81_ctrl/native_descriptors.py, native_registry.json)"
+ },
+ "adapter": {
+  "rtl": "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "sha256": "f01f0b3d0f6000005376d2816a0dc482025103e11a74f3627cba722fa0348e91",
+  "module": "ot_s81_engine_adapter #(QD=8)",
+  "placement": "inside each slab master at the slab boundary (engine clock e_clk = the slab clock); the die nets between dsfd_sp_ctrl and the slab carry only c_cmd_v/c_cmd_d (85 b) and c_done_v/c_done_tag (9 b) pulses",
+  "controller_side": {
+   "c_clk": "ctrl ck",
+   "c_cmd_v": "<- cv[e] (pulse)",
+   "c_cmd_d": "<- cd[e] (84)",
+   "c_done_v": "-> dv[e] (pulse)",
+   "c_done_tag": "-> dt[e] (8)",
+   "fault": "-> slab fault vector",
+   "online": "-> slab status"
+  },
+  "engine_side": {
+   "e_clk": "slab clock",
+   "e_cmd_v": "-> engine start (valid)",
+   "e_cmd_d": "-> engine descriptor (84)",
+   "e_cmd_ready": "<- engine can accept a descriptor this cycle",
+   "e_inputs_present": "<- engine operands for the head descriptor are present (VM row-completion counter / landing FIFO non-empty); gates issue",
+   "e_done_v": "<- engine REAL completion (last result beat committed, never a constant)",
+   "e_done_tag": "<- tag of the completed descriptor"
+  },
+  "handshake": "controller: QD=8 credits per engine, one credit returned only by a validated done (no ready on the die net). Adapter: depth-8 pulse CDC queue each way (ot_s81_pulse_cdc over ot_async_fifo); engine side is valid/ready on e_cmd, pulse on e_done. Faults: command without credit, duplicate pending tag, done for a non-pending tag.",
+  "latency": {
+   "cmd_issue_to_e_cmd_v": "async FIFO: ~2 synchroniser + 2 register cycles of e_clk (+ die relay stations on cv/cd: fixed, priced per hop by the generator) + 1 output register (2026-10-11 timing fix)",
+   "e_done_to_dv": "~2 sync + 2 register cycles of c_clk (+ relay stations) + 1 output register (2026-10-11 timing fix)",
+   "priced_in": "tools/s81_ctrl/die_binding_contract.py model: stage_handoff_extra_cycles 3, ar_stage_handoffs 121; generator must add the relay-station count per engine net"
+  },
+  "transport": "cv/cd/dv/dt are pulse nets with no back-pressure: die relay stations are plain pipeline flops (fixed latency), allowed on any hop; every die input/output lands in a pin flop"
+ },
+ "bindings": {
+  "fld": {
+   "slab": [
+    "sp_gather",
+    "sp_capture"
+   ],
+   "start": "sp_gather (VM operand read + field broadcast of the phase)",
+   "done": "sp_capture (last captured row of the phase committed to the VM write port)",
+   "clock_domain": "stream_1p2"
+  },
+  "su": {
+   "slab": [
+    "sp_su_s",
+    "sp_su_n"
+   ],
+   "start": "SU slab master (s81-suhc-1011)",
+   "done": "SU result written back to VM",
+   "clock_domain": "serial_0p9"
+  },
+  "hc": {
+   "slab": [
+    "sp_hc"
+   ],
+   "start": "HC slab master (s81-suhc-1011); hc_input_capture schema in tools/s81_ctrl/native_registry.json",
+   "done": "HC/Sinkhorn result committed",
+   "clock_domain": "serial_0p9"
+  },
+  "coll": {
+   "slab": [
+    "sp_collective"
+   ],
+   "start": "collective slab (all-reduce / all-gather issue)",
+   "done": "collective result landed in VM",
+   "clock_domain": "stream_1p2"
+  },
+  "svc": {
+   "slab": [
+    "svc_<stack>"
+   ],
+   "start": "HBM scan service",
+   "done": "scan complete",
+   "clock_domain": "stream_1p2"
+  },
+  "sel": {
+   "slab": [
+    "selector"
+   ],
+   "start": "selector",
+   "done": "selection committed",
+   "clock_domain": "stream_1p2"
+  },
+  "col": {
+   "slab": [
+    "collector"
+   ],
+   "start": "collector",
+   "done": "collector output committed",
+   "clock_domain": "stream_1p2"
+  },
+  "hop": {
+   "slab": [
+    "(inside dsfd_sp_ctrl)"
+   ],
+   "start": "RETIRED: ot_s81_hop_tx / pkg_ctrl handoff removed (decision 10-10 22:02); the stage hand-off rides the collective slab ctrl lanes (ot_s81_ctrl_lane_adapter, dsfd_sp_collective_ctrl)",
+   "done": "-",
+   "clock_domain": "stream_1p2"
+  },
+  "head": {
+   "slab": [
+    "head (head-root die only)"
+   ],
+   "start": "head",
+   "done": "head",
+   "clock_domain": "stream_1p2"
+  },
+  "emb": {
+   "slab": [
+    "embedding (source die only)"
+   ],
+   "start": "emb",
+   "done": "emb",
+   "clock_domain": "stream_1p2"
+  },
+  "eng": {
+   "slab": [
+    "engram (home dies only)"
+   ],
+   "start": "engram",
+   "done": "engram",
+   "clock_domain": "stream_1p2"
+  },
+  "spare": {
+   "slab": [
+    "WFC kit (dsfd_wfc_cr2) if bound by mtp-wfc-1010, else UNUSED (gate must see no descriptor routed here)"
+   ],
+   "start": "-",
+   "done": "-",
+   "clock_domain": "stream_1p2"
+  }
+ },
+ "die_gate": {
+  "rule": "die_port_audit (generator): FAIL if any functional slab or dsfd_sp_ctrl port is tied off, constant, or unconnected; per-slab report; ck/rs bound to the streaming clock/reset trees. The binding manifest validates via tools/s81_ctrl/die_binding_contract.py --validate (qualification NATIVE_BINDING_READY only when every engine has a pinned adapter and a real endpoint)."
+ },
+ "bench": {
+  "rule": "die bench drives programs through dsfd_sp_ctrl pw_* / i_* (no host-driven stand-ins); checks done ordering and slab outputs vs golden; mutants: dropped done, early start (ignore e_inputs_present), wrong done tag -> FAIL (adapter MUT=1/2 exist for payload / tag)"
+ },
+ "consumers": [
+  "s81-ctl-1011 (fld/coll/sel/svc/col binding, generator, gate, die bench)",
+  "s81-suhc-1011 (su, hc masters)",
+  "s81-vm-1011 (VM master: e_inputs_present from the row-completion counter; dsfd_sp_ctrl VM port vwe/vwa/vwd/vre/vra/vrq/vrv with vm_read_cycles == 1)",
+  "mtp-wfc-1010 (spare / WFC kit)"
+ ],
+ "status": "v1 PROPOSED: slab-to-engine mapping for capture/gather (fld) to be confirmed by s81-ctl-1011 against the generator buses"
+}

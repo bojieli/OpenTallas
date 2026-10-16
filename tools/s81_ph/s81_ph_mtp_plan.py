@@ -11,6 +11,7 @@ sized by the pin perimeter (the logic is small: yosys census below) at <= ~25 % 
   dsfd_wfc_tok   S0 layer die (abutting the SOURCE WFC)        108.0 x 108.0      ~2,400 (4.7k flops)
   dsfd_wfc_lnk   every WFC (layer dies)                        216.0 x 151.2      ~2,100 (5.7k flops)
   dsfd_wfc_vmx   every WFC (between WFC and sp_vm)             248.4 x 241.92     ~20,900 (51k flops; routed std 32.7k um2 -> ~54 % util, reviewer DR6)
+  dsfd_wfc_crp   every WFC (credit die ports, fe-push 10-10)   302.4 x 237.6      ~4k flops + 3 SRAM 128x256
   dsfd_drf_fan   draft dies (primary rank + replica 0)         302.4 x 410.4      ~4,700 (12.4k flops)
 
     python3 tools/s81_ph/s81_ph_mtp_plan.py   -> physical/s81_ph_views/ports/contract/<master>/{ports.json,io_place.tcl,
@@ -45,6 +46,23 @@ SPECS = [
                 ['t_qg', 1, 'output', 'N', 'M5', 1, 0.90],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.05], ['rst', 1, 'input', 'S', 'M5', 1, 0.08],
                 ['f_cfg', 2 * NW, 'input', 'S', 'M5', 4, 0.3], ['t_acc', 2 * NW + UW + 5, 'output', 'S', 'M5', 4, 0.72]]),
+    # mtp-wfc 2026-10-10: VM-side end of the WFC kit's VM channels (posted writes, START doorbell): N = kit side through
+    # the hub stations, S = one VM request port + its fixed-latency read return, E = START toward the capture
+    dict(master='dsfd_vm_wfc_ep', w_um=345.6, h_um=345.6,   # RD2: second VM port + 2-word responses
+         domain='serial_0p9',
+         note='dsfd_vm_wfc_ep: N kit channels (grant links), S VM port, E START',
+         ports=[['f_swv', 1, 'input', 'N', 'M5', 1, 0.03], ['f_swd', VWA + FLIT, 'input', 'N', 'M5', 4, 0.30],
+                ['t_swg', 1, 'output', 'N', 'M5', 1, 0.57], ['f_srv', 1, 'input', 'N', 'M5', 1, 0.60],
+                ['f_srd', 2 * VWA + 1, 'input', 'N', 'M5', 4, 0.63], ['t_srg', 1, 'output', 'N', 'M5', 1, 0.66],
+                ['t_srq', 2 * FLIT + 2, 'output', 'E', 'M4', 4, 0.5], ['t_err', 1, 'output', 'N', 'M5', 1, 0.97],
+                ['m_v', 1, 'output', 'S', 'M5', 1, 0.10], ['m_we', 1, 'output', 'S', 'M5', 1, 0.11],
+                ['m_row', VWA, 'output', 'S', 'M5', 4, 0.14], ['m_d', FLIT, 'output', 'S', 'M5', 4, 0.36],
+                ['m_ov', 1, 'input', 'S', 'M5', 1, 0.58], ['m_od', FLIT, 'input', 'S', 'M5', 4, 0.78],
+                ['m_fault', 1, 'input', 'S', 'M5', 1, 0.96], ['ck', 1, 'input', 'S', 'M5', 1, 0.02],
+                ['rst', 1, 'input', 'S', 'M5', 1, 0.04],
+                ['m1_v', 1, 'output', 'W', 'M4', 1, 0.05], ['m1_row', VWA, 'output', 'W', 'M4', 4, 0.10],
+                ['m1_ov', 1, 'input', 'W', 'M4', 1, 0.16], ['m1_od', FLIT, 'input', 'W', 'M4', 4, 0.55],
+                ['t_ks', USER_W_ := UW + 2 * NW + 1, 'output', 'N', 'M5', 4, 0.88]]),
     dict(master='dsfd_wfc_tok', w_um=108.0, h_um=108.0, domain='stream_1p2',
          note='S0 cfg / prompt / draft store: W = DRAFT flits from dsfd_wfc_lnk, E = the WFC (prompt port in, '
               'response + cfg out; abutting, fixed one-edge read), S = config port / clock',
@@ -67,7 +85,8 @@ SPECS = [
                 ['t_dw', FLIT + 1, 'output', 'S', 'M5', 4, 0.5], ['f_vc', 1, 'input', 'S', 'M5', 1, 0.96],
                 ['t_ft', 1, 'output', 'S', 'M5', 1, 0.985],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.015], ['rst', 1, 'input', 'S', 'M5', 1, 0.03]]),
-    dict(master='dsfd_wfc_vmx', w_um=291.6, h_um=280.8, domain='stream_1p2+serial_0p9',
+    dict(master='dsfd_wfc_vmx', w_um=345.6, h_um=324.0,   # mtp-wfc 10-10: RQ 64 + WOUTW 8 for the stationed VM
+         domain='stream_1p2+serial_0p9',
          note='WFC VM / core transport: W = the WFC (VM write, VM read, read data; abutting, fixed one-edge read), '
               'E = sp_vm (0.9 GHz write / read), N = the WFC core start / done + VM credit, S = stage core (0.9 GHz) '
               '+ clocks',
@@ -75,14 +94,40 @@ SPECS = [
                 ['t_vq', FLIT, 'output', 'W', 'M4', 3, 0.78],
                 ['t_swv', 1, 'output', 'E', 'M4', 1, 0.02], ['t_swd', VWA + FLIT, 'output', 'E', 'M4', 3, 0.26],
                 ['f_swr', 1, 'input', 'E', 'M4', 1, 0.495], ['f_swa', 1, 'input', 'E', 'M4', 1, 0.505],
-                ['f_srq', FLIT + 1, 'input', 'E', 'M4', 3, 0.74],
+                ['f_srq', 2 * FLIT + 2, 'input', 'E', 'M4', 3, 0.75],   # RD2 (adopted 9c9ac6963): {rv1, rq1, rv, rq}
                 ['f_cs', UW + 2 * NW + 1, 'input', 'N', 'M5', 4, 0.25], ['t_cd', NW + 33, 'output', 'N', 'M5', 4, 0.65],
                 ['t_vc', 1, 'output', 'N', 'M5', 1, 0.95],
                 ['t_ks', UW + 2 * NW + 1, 'output', 'S', 'M5', 4, 0.3], ['f_kd', NW + 33, 'input', 'S', 'M5', 4, 0.62],
-                ['t_srv', 1, 'output', 'S', 'M5', 1, 0.78], ['t_srd', VWA, 'output', 'S', 'M5', 4, 0.83],
+                ['t_srv', 1, 'output', 'S', 'M5', 1, 0.78], ['t_srd', 2 * VWA + 1, 'output', 'S', 'M5', 4, 0.83],   # RD2 {v1, a1, a0}
                 ['f_srr', 1, 'input', 'S', 'M5', 1, 0.88], ['t_ft', 1, 'output', 'S', 'M5', 1, 0.97],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.02], ['ckv', 1, 'input', 'S', 'M5', 1, 0.05],
                 ['rst', 1, 'input', 'S', 'M5', 1, 0.08], ['rsv', 1, 'input', 'S', 'M5', 1, 0.11]]),
+    # fe-push-ds-1010 2026-10-10: the WFC kit's credit die ports as one tile (rtl/dsrom_sys/mtp/dsfd_wfc_crp.sv; hardcore
+    # row dsfd_wfc_cr): W = die link in / out (station chains), E = die VM write / read request (0.9 GHz chains),
+    # N = the kit's link valid / ready (abutting), S = the kit's VM valid / ready (abutting, 0.9 GHz) + clocks / resets.
+    # 3 x ot_sram_1r1w_128x256 macros (link-in landing); ~4k flops.
+    dict(master='dsfd_wfc_crp', w_um=302.4, h_um=237.6, domain='stream_1p2+serial_0p9',
+         note='WFC credit-port tile: W = die link in / out, E = die VM write / read request, N = kit link (abutting), '
+              'S = kit VM (abutting) + clocks / resets / relay reset copies to the kit',
+         ports=[['f_liv', 1, 'input', 'W', 'M4', 1, 0.01], ['f_lid', FLIT + 1, 'input', 'W', 'M4', 4, 0.24],
+                ['t_lic', 1, 'output', 'W', 'M4', 1, 0.47],
+                ['t_lov', 1, 'output', 'W', 'M4', 1, 0.52], ['t_lod', FLIT + 1, 'output', 'W', 'M4', 4, 0.75],
+                ['f_loc', 1, 'input', 'W', 'M4', 1, 0.98],
+                ['t_swv', 1, 'output', 'E', 'M4', 1, 0.02], ['t_swd', VWA + FLIT, 'output', 'E', 'M4', 4, 0.3],
+                ['f_swc', 1, 'input', 'E', 'M4', 1, 0.55], ['f_swa', 1, 'input', 'E', 'M4', 1, 0.57],
+                ['t_srv', 1, 'output', 'E', 'M4', 1, 0.62], ['t_srd', VWA, 'output', 'E', 'M4', 4, 0.68],
+                ['f_src', 1, 'input', 'E', 'M4', 1, 0.75],
+                ['t_kliv', 1, 'output', 'N', 'M5', 1, 0.01], ['t_klid', FLIT + 1, 'output', 'N', 'M5', 4, 0.18],
+                ['f_klir', 1, 'input', 'N', 'M5', 1, 0.36],
+                ['f_klov', 1, 'input', 'N', 'M5', 1, 0.39], ['f_klod', FLIT + 1, 'input', 'N', 'M5', 4, 0.62],
+                ['t_klor', 1, 'output', 'N', 'M5', 1, 0.82], ['t_ft', 1, 'output', 'N', 'M5', 1, 0.97],
+                ['f_kswv', 1, 'input', 'S', 'M5', 1, 0.01], ['f_kswd', VWA + FLIT, 'input', 'S', 'M5', 4, 0.2],
+                ['t_kswr', 1, 'output', 'S', 'M5', 1, 0.38], ['t_kswa', 1, 'output', 'S', 'M5', 1, 0.40],
+                ['f_ksrv', 1, 'input', 'S', 'M5', 1, 0.43], ['f_ksrd', VWA, 'input', 'S', 'M5', 4, 0.47],
+                ['t_ksrr', 1, 'output', 'S', 'M5', 1, 0.51],
+                ['ck', 1, 'input', 'S', 'M5', 1, 0.60], ['ckv', 1, 'input', 'S', 'M5', 1, 0.63],
+                ['rst', 1, 'input', 'S', 'M5', 1, 0.66], ['rsv', 1, 'input', 'S', 'M5', 1, 0.69],
+                ['t_krst', 1, 'output', 'S', 'M5', 1, 0.75], ['t_krsv', 1, 'output', 'S', 'M5', 1, 0.78]]),
     dict(master='dsfd_drf_fan', w_um=302.4, h_um=410.4, domain='stream_1p2',
          note='draft-die fan-out node (N 4): N = parent link, S = this die (local engine), W = children 0 / 1, '
               'E = children 2 / 3 (bit-sliced child buses: child k = bits k*513 ..)',

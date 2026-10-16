@@ -1,0 +1,72 @@
+{
+  "name": "hgi_idx_score_tap_lane4-83a41eefb-tc-cl",
+  "block": "hfd_idx_score_lane4",
+  "owner": "Codex:hbm-native-t4",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc1tb"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "source": {
+    "branch": "codex/hbm-norm-selector-takeover-20261010",
+    "commit": "83a41eefbf901f233556d215fb2ffbd043431dea",
+    "paths": [
+      "tools",
+      "physical/qwen_die_masters",
+      "physical/hbm_accel_die_views/index",
+      "rtl",
+      "configs",
+      "Makefile"
+    ],
+    "extra_paths": [
+      "results/uarch/hbm_indexer_t4_20261010"
+    ]
+  },
+  "purpose": "Missing full L4 FA6 CRED128 native T4 tap LANE0=4; exact same arithmetic source as existing LANE0=0 route95d226061. Harden each actual parameter variant rather than treating one tap as all four. T4 arithmetic gate already live in existing job, no duplicated benchmark. Physical closure is component-only, composite adoption remains held.",
+  "registered_io": false,
+  "stages": {
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_idx_score_tap_lane4.sdc' CORNER=WC SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh hgi_idx_score_tap_lane4 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 12,
+      "peak_ram_gb": 40
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_idx_score_tap_lane4.sdc' CORNER=WC SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh hgi_idx_score_tap_lane4 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{NAME}/status && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/status",
+      "logs": [
+        "{RUN}/routes/{NAME}/flow.log"
+      ],
+      "peak_ram_gb": 96
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name hfd_idx_score_lane4 --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_idx_score_tap_lane4.sdc"
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "cycles_added": 0,
+  "merge_target": null,
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/physical/hbm_native_t4_taps_20261010/lane4"
+    }
+  ],
+  "budget": {
+    "enabled": false,
+    "reason": "standalone element pathfinding; die budget sheet written when the view closes (gap 6)"
+  },
+  "no_bench_reason": "Shared live fullT4 exact benchmark remains hgi_idx_score_tap_b-95d226061-tc-cl-bt12r EPYC4, same RTL and FA6 CRED128 parameters; allLANE0 offsets4/8/12 instantiated there. Component verdict is not die adoption; positive and negative fullT4 gate required before adopting composite."
+}

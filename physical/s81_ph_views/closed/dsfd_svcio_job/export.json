@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_svcio_job",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/svcio_job-a6cf4500f-tc/routes/svcio_job_a6cf4500f_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_svcio_job.lef": "769be1844cd07c7a182bbd01c5590a5f6a368fc22238d94e72e2b83e65302e68",
+    "dsfd_svcio_job_ff.lib": "0f1ce6594588ccc7c8a1f3342084e1fda468a8a6163ed15a71436464c2f031bc",
+    "dsfd_svcio_job_ss.lib": "6d7cdf1cce3fdfb16cabaf1648fe3402df8ba62923026f2ea2e89c8050110e53"
+  },
+  "ok": true
+}

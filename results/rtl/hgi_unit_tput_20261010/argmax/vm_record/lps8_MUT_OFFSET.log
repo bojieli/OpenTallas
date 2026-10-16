@@ -1,0 +1,49 @@
+case 0 kind 0: 37984 VM words, retire after 42768 cycles
+case 1 kind 0: 1347 VM words, retire after 1557 cycles
+case 2 kind 0: 37984 VM words, retire after 42768 cycles
+ERR case 4 id 12, expected 8
+ERR case 5 id 243, expected 236
+ERR case 6 id 61967, expected 61962
+ERR case 7 id 45808, expected 45805
+ERR case 8 id 6, expected 0
+ERR case 9 id 105071, expected 105066
+case 10 kind 0: 8 VM words, retire after 54 cycles
+ERR case 10 id 119853, expected 119851
+ERR case 11 id 56779, expected 56773
+ERR case 12 id 7, expected 0
+ERR case 13 id 6758, expected 6753
+ERR case 14 id 136093, expected 136090
+ERR case 15 id 241453, expected 241448
+ERR case 16 id 4047, expected 4041
+ERR case 17 id 52544, expected 52538
+ERR case 18 id 99, expected 94
+ERR case 19 id 45748, expected 45745
+case 20 kind 0: 4096 VM words, retire after 4653 cycles
+ERR case 20 id 123460, expected 123458
+ERR case 21 id 6761, expected 6758
+ERR case 22 id 66010, expected 66003
+ERR case 23 id 2808, expected 2801
+ERR case 24 id 75973, expected 75971
+ERR case 25 id 3, expected 0
+ERR case 26 id 37987, expected 37984
+ERR case 27 id 92969, expected 92967
+ERR case 29 id 113979, expected 113974
+case 30 kind 0: 223 VM words, retire after 297 cycles
+ERR case 30 id 12, expected 9
+ERR case 31 id 55, expected 54
+ERR case 33 id 184, expected 180
+ERR case 34 id 55228, expected 55227
+ERR case 35 id 126130, expected 126128
+ERR case 36 id 8363, expected 8359
+ERR case 37 id 49868, expected 49865
+ERR case 38 id 75981, expected 75974
+ERR case 39 id 7, expected 4
+case 40 kind 0: 64 VM words, retire after 117 cycles
+ERR case 40 id 54, expected 51
+case 50 kind 2: 0 VM words, retire after 1 cycles
+summary: 41 argmax records run, 11 negatives refused
+HGI_ARGMAX FAIL errors=35
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_argmax_record.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 9.154 s; speed 265.357 us/s
+- Verilator: cpu 6.751 s on 1 threads; allocated 11 MB

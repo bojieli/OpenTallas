@@ -1,0 +1,213 @@
+{
+ "tool": "tools/s81/hub_stage_count.py",
+ "options": "--gen r8 --rev r9 --elem-h 198.72 --cc-reach-um 215 --vch-interleave --link-fix --corr-interleave --hop-fix --meso-d8 --cfifo-v2 --hc-xface --link-split --sel-xstg --pin-relay --ch-heights 259.2,302.4,388.8,388.8,302.4,259.2,259.2 --bf-per-region 4 --geometry-fix --vch-w 1641.6 --hc-corr 1512 --hub-column-width 1728 --su-mm2 25.61188 --pairs 1664 --q-elem-h 221.4 --pq-place --face-pin-inset --host --wfc-hard --nxt-reach --path-pick --hop-r-cc 500 --relay-tt-reach 600 --ctrl-rq --fwd-iface --die layer1 --draft A\n",
+ "stages": {
+  "sp_capture.t_vm->sp_vm.f_capture": 8,
+  "sp_collective.t_host->sp_host.f_collective": 10,
+  "sp_collective.t_p2->sp_p2.f_collective": 8,
+  "sp_collective.t_vm->sp_vm.f_collective": 11,
+  "sp_collective.tdE0->f_KE0t_1.di0": 1,
+  "sp_collective.tdE1->f_KE1t_1.di0": 1,
+  "sp_collective.tdE2->f_KE2t_1.di0": 1,
+  "sp_collective.tdE3->f_KE3t_1.di0": 1,
+  "sp_collective.tdW0->f_KW0t_1.di0": 1,
+  "sp_collective.tdW1->f_KW1t_1.di0": 1,
+  "sp_collective.tdW2->f_KW2t_1.di0": 1,
+  "sp_collective.tdW3->f_KW3t_1.di0": 0,
+  "sp_collective.tfW3->f_KW3t_1.fi0": 0,
+  "sp_gather.t_capture->sp_capture.f_gather": 11,
+  "sp_gather.t_pq->sp_pq.f_gather": 11,
+  "sp_hc_n.t_s->sp_hc_s.f_n": 9,
+  "sp_hc_n.t_vm->sp_vm.f_hc": 10,
+  "sp_hc_s.t_n->sp_hc_n.f_s": 8,
+  "sp_host.t_collective->sp_collective.f_host": 11,
+  "sp_host.twSWd->f_hwSW_1.di0": 1,
+  "sp_p2.t_collective->sp_collective.f_p2": 9,
+  "sp_p2.t_vm->sp_vm.f_p2": 14,
+  "sp_pq.ra0->pqrom0.a": 0,
+  "sp_pq.ra1->pqrom1.a": 0,
+  "sp_pq.ra2->pqrom2.a": 0,
+  "sp_pq.rc0->pqrom0.ce": 0,
+  "sp_pq.rc1->pqrom1.ce": 0,
+  "sp_pq.rc2->pqrom2.ce": 0,
+  "sp_pq.t_gather->sp_gather.f_pq": 10,
+  "sp_pq.xe->hx_E.i": 0,
+  "sp_pq.xw->hx_W.i": 0,
+  "sp_su_n.t_hc->sp_hc_n.f_su_n": 9,
+  "sp_su_s.t_hc->sp_hc_s.f_su_s": 9,
+  "sp_vm.qSW->hq_SW.i": 1,
+  "sp_vm.t_gather->sp_gather.f_vm": 4,
+  "sp_vm.t_hc->sp_hc_s.f_vm": 15,
+  "sp_vm.t_p2->sp_p2.f_vm": 12,
+  "sp_vm.t_pq->sp_pq.f_vm": 2,
+  "sp_vm.t_su_n->sp_su_n.f_vm": 16,
+  "sp_vm.t_su_s->sp_su_s.f_vm": 8
+ },
+ "chain_record": {
+  "hr_W0_o": {
+   "path_um": 359.4,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W1_o": {
+   "path_um": 363.5,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W2_o": {
+   "path_um": 363.5,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W3_o": {
+   "path_um": 363.5,
+   "stations": 1,
+   "floor_added": 0
+  },
+  "hr_W4_o": {
+   "path_um": 411.7,
+   "stations": 2,
+   "floor_added": 0
+  },
+  "hr_W5_o": {
+   "path_um": 667.8,
+   "stations": 3,
+   "floor_added": 1
+  },
+  "hr_E0_o": {
+   "path_um": 976.8,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hr_E1_o": {
+   "path_um": 1139.8,
+   "stations": 5,
+   "floor_added": 2
+  },
+  "hr_E2_o": {
+   "path_um": 980.9,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hr_E3_o": {
+   "path_um": 980.9,
+   "stations": 5,
+   "floor_added": 2
+  },
+  "hr_E4_o": {
+   "path_um": 822.3,
+   "stations": 4,
+   "floor_added": 1
+  },
+  "hr_E5_o": {
+   "path_um": 976.8,
+   "stations": 4,
+   "floor_added": 2
+  },
+  "hb_vm_su_s": {
+   "path_um": 1221.2,
+   "stations": 6,
+   "floor_added": 2
+  },
+  "hb_vm_su_n": {
+   "path_um": 2853.4,
+   "stations": 14,
+   "floor_added": 6
+  },
+  "hb_vm_hc_s": {
+   "path_um": 2496.0,
+   "stations": 14,
+   "floor_added": 5
+  },
+  "hb_hc_n_vm": {
+   "path_um": 1804.8,
+   "stations": 8,
+   "floor_added": 4
+  },
+  "hb_vm_gather": {
+   "path_um": 532.9,
+   "stations": 2,
+   "floor_added": 1
+  },
+  "hb_gather_capture": {
+   "path_um": 1990.2,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_capture_vm": {
+   "path_um": 1443.0,
+   "stations": 6,
+   "floor_added": 3
+  },
+  "hb_collective_vm": {
+   "path_um": 2148.6,
+   "stations": 10,
+   "floor_added": 4
+  },
+  "hb_su_s_hc_s": {
+   "path_um": 1641.6,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_su_n_hc_n": {
+   "path_um": 1641.6,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_hc_s_hc_n": {
+   "path_um": 1512.0,
+   "stations": 7,
+   "floor_added": 3
+  },
+  "hb_hc_n_hc_s": {
+   "path_um": 1512.0,
+   "stations": 8,
+   "floor_added": 3
+  },
+  "hb_vm_pq": {
+   "path_um": 172.8,
+   "stations": 0,
+   "floor_added": 0
+  },
+  "hb_pq_gather": {
+   "path_um": 1855.8,
+   "stations": 8,
+   "floor_added": 4
+  },
+  "hb_gather_pq": {
+   "path_um": 1999.8,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_collective_p2": {
+   "path_um": 1396.9,
+   "stations": 6,
+   "floor_added": 3
+  },
+  "hb_vm_p2": {
+   "path_um": 2400.6,
+   "stations": 11,
+   "floor_added": 5
+  },
+  "hb_p2_collective": {
+   "path_um": 1684.9,
+   "stations": 8,
+   "floor_added": 3
+  },
+  "hb_p2_vm": {
+   "path_um": 2688.6,
+   "stations": 13,
+   "floor_added": 6
+  },
+  "hb_collective_host": {
+   "path_um": 1972.9,
+   "stations": 9,
+   "floor_added": 4
+  },
+  "hb_host_collective": {
+   "path_um": 2116.9,
+   "stations": 10,
+   "floor_added": 4
+  }
+ }
+}

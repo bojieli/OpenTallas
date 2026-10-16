@@ -94,15 +94,20 @@ module tb_hfd_idx_die;
     return (lfsr[3:0] < sixteenths[3:0]);
   endfunction
   // svc line model
+  // hgi-1010/g2: every always block loops over its OWN variables.  The module-level q / p are the frame sequencer's;
+  // the svc model and the score recorder used to share q, so at every clock edge they left q = 4 / NB_ under the
+  // sequencer's keep loop (which waits on clock edges): only stack 0 ever got its keep bitmap (F1 keep frame: stacks
+  // 1..3 scored every key -inf, 2,624 of 10,928 keys wrong).
+  integer qs, ps;
   always @(posedge ck) begin
-    for (q = 0; q < 4; q = q + 1) for (p = 0; p < 8; p = p + 1) begin
-      if (ikc[q][p]) cred[q][p] = cred[q][p] + 1;
-      ik[q][p*1099] <= 1'b0;
-      if (run_lines && sent[q][p] * 8 + p < f_nl[fr][q] && cred[q][p] > 0 && !rnd_gap(gap16)) begin
-        ik[q][p*1099] <= 1'b1;
-        ik[q][p*1099+1 +: 10] <= 10'(sent[q][p] * 8 + p);
-        ik[q][p*1099+11 +: 1088] <= lines[f_loff[fr][q] + sent[q][p] * 8 + p];
-        sent[q][p] = sent[q][p] + 1; cred[q][p] = cred[q][p] - 1;
+    for (qs = 0; qs < 4; qs = qs + 1) for (ps = 0; ps < 8; ps = ps + 1) begin
+      if (ikc[qs][ps]) cred[qs][ps] = cred[qs][ps] + 1;
+      ik[qs][ps*1099] <= 1'b0;
+      if (run_lines && sent[qs][ps] * 8 + ps < f_nl[fr][qs] && cred[qs][ps] > 0 && !rnd_gap(gap16)) begin
+        ik[qs][ps*1099] <= 1'b1;
+        ik[qs][ps*1099+1 +: 10] <= 10'(sent[qs][ps] * 8 + ps);
+        ik[qs][ps*1099+11 +: 1088] <= lines[f_loff[fr][qs] + sent[qs][ps] * 8 + ps];
+        sent[qs][ps] = sent[qs][ps] + 1; cred[qs][ps] = cred[qs][ps] - 1;
       end
     end
   end
@@ -116,7 +121,7 @@ module tb_hfd_idx_die;
     end
   end
   // sinks (credit return after a registered cycle) and monitors
-  integer z, lanes_t, lanes_c;
+  integer z, lanes_t, lanes_c, qr;
   always @(posedge ck) begin
     toc <= to[0]; coc <= co[0];
     // to = {idx20 x16 [611:292], val16 x16 [291:36], ninf16 [35:20], lv16 [19:4], q2 [3:2], last [1], v [0]}
@@ -125,11 +130,11 @@ module tb_hfd_idx_die;
     if (co[0]) for (z = 0; z < 2; z = z + 1) if (co[4 + z])
       $fdisplay(fd_c, "%0d %0d %04h", fr, co[38 + 17*z +: 17], co[6 + 16*z +: 16]);
     // score beat {idx20 x L, score16 x L, kv L, fault L, last, v}
-    for (q = 0; q < NB_; q = q + 1) if (so[q][0]) begin
+    for (qr = 0; qr < NB_; qr = qr + 1) if (so[qr][0]) begin
       if (t_first_score < 0) t_first_score = cyc;
       t_last_score = cyc;
-      for (z = 0; z < L; z = z + 1) if (so[q][2 + L + z])
-        $fdisplay(fd_s, "%0d %0d %04h %0d", fr, so[q][2 + 18*L + 20*z +: 20], so[q][2 + 2*L + 16*z +: 16], so[q][2 + z]);
+      for (z = 0; z < L; z = z + 1) if (so[qr][2 + L + z])
+        $fdisplay(fd_s, "%0d %0d %04h %0d", fr, so[qr][2 + 18*L + 20*z +: 20], so[qr][2 + 2*L + 16*z +: 16], so[qr][2 + z]);
     end
   end
   // ------------------------------------------------------------------ frame sequencer

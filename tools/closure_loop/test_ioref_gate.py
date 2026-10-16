@@ -100,3 +100,27 @@ class IorefGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TwoClockIoref(unittest.TestCase):
+    """cont-takeover 2026-10-10: an IO path of an uncalibrated clock group keeps its own register clock arrival"""
+    def _p(self, clk):
+        return dict(slack_ps=-500.0, start="r", start_kind="(rising edge-triggered flip-flop clocked by x)",
+                    end="o", end_kind=f"(output port clocked by {clk})", vlat_capture=80.0, vlat_launch=None,
+                    flop_ck_ps=840.0, group=clk)
+
+    def test_pclk_io_uses_own_arrival(self):
+        j = dict(calibration=dict(env=dict(CK_SS_MEAN=81)), spec=dict(stages=dict(calibrate=dict(clock="core_clk"))))
+        r = ss.ioref_rejudge(dict(worst=dict(paths=[self._p("ot_lb_v_pclk")]), period=833.333), j)
+        self.assertAlmostEqual(r["paths"][0]["ioref_ps"], -500 + 840 - 80, places=1)
+        self.assertIn("pclk", r["source"])
+
+    def test_core_io_uses_calibrated_insertion(self):
+        j = dict(calibration=dict(env=dict(CK_SS_MEAN=1221)), spec=dict(stages=dict(calibrate=dict(clock="core_clk"))))
+        r = ss.ioref_rejudge(dict(worst=dict(paths=[self._p("ot_lb_v_core_clk")]), period=833.333), j)
+        self.assertAlmostEqual(r["paths"][0]["ioref_ps"], -500 + 1221 - 80, places=1)
+
+    def test_port_clock_parse(self):
+        self.assertEqual(ss.port_clock("(input port clocked by pclk)"), "pclk")
+        self.assertIsNone(ss.port_clock("(rising edge-triggered flip-flop)"))
+

@@ -23,8 +23,17 @@
 //       cpl_status [79:76], cpl_cycles [111:80], cpl_tokx [112], f_req_v [113], f_req_addr [153:114],
 //       cfg_loaded [154], cfg_err [157:155], cfg_cp_act [221:158] (CF-0 read-back)
 // The record-ring fetch (f_req / f_rsp) rides the loader's memory lane 1 (ot_hfd_loader_kport), read only.
+// BURST = 1 (hgi-1010 2026-10-10; svc F5(3) native bursts, hbm-phys [svc]): the fetch queue is 16 deep and the head
+// run of contiguous sector addresses (up to 8) leaves as ONE lane request with m_req_len = run length (the kport answers
+// every sector as its own in-order response); the CP's queue credits return one f_req_ack pulse per popped entry (a
+// backlog counter paces them one a cycle).  The CP die must hold 16 credits (ot_hgi_cp_die FQCR 16).  BURST 0 = as before.
 module ot_hgi_loader_cp #(
-    parameter integer CPL_DEPTH = 4
+    parameter integer CPL_DEPTH = 4,
+    parameter integer BURST = 0,
+    parameter integer RUNPRE = 0,      // fe-push-hgi-1010 (feasibility (b)): 1 = contiguity bit computed at push (entry ==
+                                       //   previous push + 32 B) and the head run is a leading-ones count of those bits,
+                                       //   instead of 7 chained 16:1 x 37-b selects + 37-b add / compare in one cycle
+    parameter integer MUT = 0          // bench mutant: 1 a burst one sector longer than its contiguous run
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -45,6 +54,7 @@ module ot_hgi_loader_cp #(
     input  wire [221:0]  cpl,
     // record-ring fetch on memory lane 1 (to ot_hfd_loader_kport)
     output reg           m_req_v, input wire m_req_rdy, output reg [36:0] m_req_addr,
+    output reg  [3:0]    m_req_len,             // BURST: sectors in this request (1 .. 8); 1 when BURST = 0
     input  wire          m_rsp_v, input wire [255:0] m_rsp_data,
     output reg           fault
 );
@@ -79,12 +89,31 @@ module ot_hgi_loader_cp #(
     // CP link fields
     wire c_db_taken = cpl[0], c_cpl_v = cpl[1];
     wire c_freq_v = cpl[113]; wire [39:0] c_freq_a = cpl[153:114];
-    reg pend_fetch; reg [36:0] fetch_a;
+    // F5 (hgi-e2e): the record-ring fetch is a 4-entry request queue (the CP holds 4 credits; f_req_ack = a request
+    // accepted by the memory lane returns one) feeding lane 1 back to back; responses return in order, any number in
+    // flight (the sequencer bounds them: NOS 48).  Was: one request until its data, a second request faulted.
+    localparam integer FQD = BURST ? 16 : 4;
+    reg [36:0] fq [0:15]; reg [3:0] fq_h, fq_t; reg [4:0] fq_n; reg [4:0] ack_bl;
+    // BURST: the run of contiguous sectors at the head (1 .. 8, at most fq_n)
+    reg [3:0] run; integer j;
+    // RUNPRE: fq_c[k] = entry k is the previous push + 32 (registered at push; a head's own bit is never read, and a
+    // non-head entry's predecessor in the queue is exactly the push before it, so the chain equals the head compare)
+    reg [15:0] fq_c; reg [36:0] fq_nx;
+    always @* begin
+        run = (fq_n != 5'd0) ? 4'd1 : 4'd0;
+        if (BURST) for (j = 1; j < 8; j = j + 1)
+            if (run == 4'(j) && fq_n > 5'(j) && (RUNPRE != 0 ? fq_c[4'(fq_h + 4'(j))] :
+                                                  fq[4'(fq_h + 4'(j))] == fq[fq_h] + 37'(32 * j))) run = 4'(j + 1);
+    end
+    always @(posedge clk) if (RUNPRE != 0 && c_freq_v) begin
+        fq_c[FQD == 4 ? {2'd0, fq_t[1:0]} : fq_t] <= c_freq_a[36:0] == fq_nx;
+        fq_nx <= c_freq_a[36:0] + 37'd32;
+    end
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             lb_v <= 1'b0; lr_v <= 1'b0; db_pend <= 1'b0; cq_n <= 3'd0; cq_h <= 2'd0; cq_t <= 2'd0; lcp <= 419'd0;
-            m_req_v <= 1'b0; pend_fetch <= 1'b0; fault <= 1'b0;
+            m_req_v <= 1'b0; m_req_len <= 4'd1; fq_h <= 4'd0; fq_t <= 4'd0; fq_n <= 5'd0; ack_bl <= 5'd0; fault <= 1'b0;
             d_tok <= 18'd0; d_pos <= 20'd0; d_job <= 32'd0; d_gen <= 4'd0; d_ent <= 2'd0; d_ncol <= 4'd0;
         end else begin
             lcp[0] <= 1'b0; lcp[71] <= 1'b0; lcp[148] <= 1'b0; lcp[406] <= 1'b0;   // pulses
@@ -139,13 +168,27 @@ module ot_hgi_loader_cp #(
                 if (pop) begin cq_h <= cq_h + 2'd1; lcp[148] <= 1'b1; end      // cpl_ack: the CP may send the next
                 cq_n <= cq_n + push - pop;
             end
-            // record-ring fetch: one in flight on memory lane 1
-            if (c_freq_v) begin
-                if (pend_fetch || |c_freq_a[39:37]) fault <= 1'b1;
-                pend_fetch <= 1'b1; m_req_v <= 1'b1; m_req_addr <= c_freq_a[36:0];
+            // record-ring fetch: request queue -> memory lane 1 (one request register, refilled the cycle it is taken)
+            begin : fetch
+                reg take; reg [4:0] npop; take = m_req_v && m_req_rdy; npop = 5'd0;
+                if (!BURST) begin if (take) lcp[406] <= 1'b1; end                 // f_req_ack: a credit back to the CP
+                else begin                                                       // BURST: one ack a popped entry
+                    if (ack_bl != 5'd0) lcp[406] <= 1'b1;
+                end
+                if ((!m_req_v || take) && fq_n != 5'd0) begin
+                    m_req_v <= 1'b1; m_req_addr <= fq[fq_h]; m_req_len <= BURST ? ((MUT == 1 && run < 4'd8) ? run + 4'd1 : run) : 4'd1;
+                    npop = BURST ? {1'b0, run} : 5'd1; fq_h <= fq_h + npop[3:0];
+                    if (FQD == 4) fq_h <= {2'd0, 2'(fq_h + 4'd1)};
+                end else if (take) m_req_v <= 1'b0;
+                if (BURST) ack_bl <= ack_bl + npop - {4'd0, ack_bl != 5'd0};
+                if (c_freq_v) begin
+                    if ((fq_n == 5'(FQD) && npop == 5'd0) || |c_freq_a[39:37]) fault <= 1'b1;   // credit overrun / address
+                    fq[FQD == 4 ? {2'd0, fq_t[1:0]} : fq_t] <= c_freq_a[36:0];
+                    fq_t <= (FQD == 4) ? {2'd0, 2'(fq_t + 4'd1)} : fq_t + 4'd1;
+                end
+                fq_n <= fq_n + {4'd0, c_freq_v} - npop;
             end
-            if (m_req_v && m_req_rdy) begin m_req_v <= 1'b0; lcp[406] <= 1'b1; end   // f_req_ack
-            if (m_rsp_v) begin lcp[149] <= 1'b1; lcp[405:150] <= m_rsp_data; pend_fetch <= 1'b0; end
+            if (m_rsp_v) begin lcp[149] <= 1'b1; lcp[405:150] <= m_rsp_data; end
             else lcp[149] <= 1'b0;
         end
     end

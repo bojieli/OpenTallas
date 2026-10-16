@@ -1,0 +1,48 @@
+{
+  "variant": "R25GPHT4",
+  "scope": "Actual k1 abstract geometry only; no routed ETM, GRT, exact native controller integration or key-prefetch closure",
+  "geometry": {
+    "instances": 1250,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": [],
+    "reserved_regions": 32,
+    "reserved_overlaps": 0,
+    "reserved_overlap_examples": []
+  },
+  "pin_clashes": 2,
+  "margin_lint": {
+    "mode": "chains",
+    "chains": 2045,
+    "reach_um": 504.0,
+    "reach_violations": 0,
+    "far_side_relays": 0,
+    "reach_examples": [],
+    "far_side_examples": [],
+    "verdict": "PASS"
+  },
+  "adopted": false,
+  "synthetic_k16_failure": "hfd_stn_969 face S: 2.3 um of pins on 8.4 um",
+  "verdict": "OPEN_SU_PIN_CLASH_AND_SYNTHETIC_K16_FAILURE",
+  "source_sha256": {
+    "tools/hbm_accel_die_fp.py": "97d0f42b7f9d7a89b8d79ae13db90a43e3b50193e3f84d4c0a66e87cf755f9a3",
+    "tools/hbm_indexer_die_topology.py": "64592d8bb2e04141fafb0f465df898592dc5feffad74bcfa4bb0c82cd3cbf32c",
+    "tools/hgi_die_dispatch.py": "7b38e6abed3c1090f6de5c3794c13a415a99c60da8236fa7b23c3bc1639438c8",
+    "physical/hbm_accel_die_views/hgi_idx_native/rtl/hfd_hgi_idx_native.sv": "604a0b155157f68c3845c931c59f0a37f17b03e32e70a52856e6deb511e11b03"
+  },
+  "pin_clash_examples": [
+    [
+      "hfd_su",
+      "M4",
+      "qid[0]",
+      "t_sfu[0]"
+    ],
+    [
+      "hfd_su",
+      "M4",
+      "qid[1]",
+      "t_sfu[1]"
+    ]
+  ]
+}

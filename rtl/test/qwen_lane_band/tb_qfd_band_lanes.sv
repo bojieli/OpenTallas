@@ -53,6 +53,7 @@ module tb_qfd_band_lanes;
     reg [3:0]  hs [0:HN-1];
     reg [48*NL*32-1:0] yh [0:127];   // the lane's y by cycle (mod 128)
     integer n = 0, i, k, g, s, ops = 0, checks = 0, groups = 0, errors = 0, seed = SEED;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     integer lv, d;
     reg rstick = 0, dstick = 0;
     function automatic [31:0] rfp(input integer dummy);

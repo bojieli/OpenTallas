@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.s81_bf_tcg_pinlat.v1",
+  "default_off": true,
+  "adopted": false,
+  "physical_qualified": false,
+  "targets": [
+    "DeepSeek-V4.1 ROM"
+  ],
+  "source_baselines": {
+    "full": "948dc49b1117040aae4ba7c98c9eda2016e2a5cf",
+    "pinlat": "fada135e4"
+  },
+  "parameters": {
+    "RECUT": 2,
+    "QZE": 1,
+    "TCG": 1,
+    "BXST": 2,
+    "FXST": 2,
+    "PINLAT": 1,
+    "HALF": 0,
+    "HCOL": 0
+  },
+  "MACs_per_cycle_peak": {
+    "FP4": 128,
+    "FP8": 64,
+    "BF16": 32
+  },
+  "added_MACs_per_cycle": 0,
+  "compute_intensity_MACs_per_ROM_byte": {
+    "FP4": 1.8686131386861313,
+    "FP8": 0.9343065693430657,
+    "BF16": 0.46715328467153283
+  },
+  "memory": {
+    "installed_macros": 4,
+    "rows_per_macro": 4096,
+    "bits_per_macro_word": 274,
+    "active_macros_per_issue": 2,
+    "ROM_bytes_per_issue_cycle": 68.5,
+    "installed_raw_port_bytes_per_cycle": 137,
+    "new_ports": 0,
+    "new_bytes_per_cycle": 0,
+    "ECC": false
+  },
+  "communication": {
+    "added_external_bits_per_cycle": 0,
+    "input_BF_payload_bits": 1024,
+    "input_FP_payload_bits": 512,
+    "output_partial_bits": 126,
+    "producer_consumer_flow_control": "unchanged finite x FIFO and original issue schedule"
+  },
+  "replicas": {
+    "elements_per_layer_die": 1792,
+    "columns_per_element": 2,
+    "BF_lanes_per_column": 16,
+    "tile_ICGs_per_element": 37,
+    "latch_bits_per_element": 1614
+  },
+  "mux_demux_fanout": {
+    "new_data_mux_inputs": 0,
+    "new_demuxes": 0,
+    "pin_register_to_lockup_fanout": 1,
+    "lockup_output_fanout": "inherits original consumer, no new broadcast",
+    "new_pin_clock_sinks_per_element": 1614
+  },
+  "routing": {
+    "new_external_tracks": 0,
+    "local_lockup_data_tracks": 1614,
+    "lockup_data_must_remain_at_pin_register": true,
+    "gross_pin_face_capacity_tracks": 10969,
+    "local_clock_root_crossings": "low-level lockups; pin regs and lockups share spatial CTS group",
+    "internal_lane_skew": "TCG retained; full routing still measures gated-to-gated carry hops"
+  },
+  "area": {
+    "slot_um": [
+      1002.888,
+      190.08
+    ],
+    "slot_um2": 190628.95104,
+    "usable_stdcell_site_area_um2": 145342.231168,
+    "full_stdcell_area_estimate_um2": 73300,
+    "added_latch_area_DFF_body_proxy_um2": 470.64240000000007,
+    "utilization_estimate_pct": 50.75650883240471,
+    "headroom_at_55pct_um2": 6167.584742400007,
+    "added_die_latch_area_proxy_mm2": 0.8433911808000001,
+    "actual_latch_CTS_and_hold_inventory_pending": true,
+    "outline_and_die_count_delta": 0
+  },
+  "latency": {
+    "relative_to_full_added_cycles": 0,
+    "relative_to_flat_QZE_partial_added_cycles": 2,
+    "full_rate_initiation_interval_unchanged": true,
+    "lockup_clock_half_cycle_ps": {
+      "stream_1p2": 416.6665,
+      "serial_0p9": 555.5555
+    },
+    "serial_token_contribution": "retain +2 edges for every exposed full partial; PINLAT adds zero edges",
+    "frequency_effect": "900 MHz BF work takes 4/3 of 1.2 GHz BF work; no speculative token credit"
+  },
+  "compact_hierarchy": {
+    "existing_column_um": [
+      520.128,
+      190.08
+    ],
+    "front_um": [
+      280.152,
+      190.08
+    ],
+    "existing_die_um": [
+      39358,
+      26000
+    ],
+    "reticle_um": [
+      33000,
+      26000
+    ],
+    "pair_synthesized_cell_area_um2": 114213,
+    "original_pair_raw_util_pct": 59.91377457458415,
+    "qualified": false,
+    "next_legal_capacity_candidate": "8 columns/half: 1344 pairs/die, +33% layer dies; PQ r128 re-binning required",
+    "compact_route_admitted": false
+  },
+  "exact_gate": "full pair transaction scoreboard positive plus PINLAT/TCG/XST/FXST/DP/RECUT negatives",
+  "physical_gate": "TT setup >=0, FF hold >=0, DRC0; unchanged signoff and own routed-insertion re-STA",
+  "qualification": "model sizing only; no measured closure or adoption credit"
+}

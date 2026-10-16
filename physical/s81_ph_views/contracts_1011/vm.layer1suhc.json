@@ -1,0 +1,417 @@
+{
+ "schema": "opentallas.s81.slab-contract.v1",
+ "version": "v2",
+ "slab": "vm",
+ "owner": "s81-vm-1011",
+ "recipe": {
+  "opts": "results/physical/s81_gen_20261011/s81_layer1_full_efs_suhc.opts",
+  "extra": "",
+  "tag": "layer1suhc",
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "q_lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "hub_column_width_um": 1728.0,
+  "ecol_slabs": []
+ },
+ "source_commit": "9590e91a6",
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "tool": "tools/s81_ph/slab_contracts.py",
+ "adapter_contract": "physical/s81_ctrl/ADAPTER_CONTRACT_1011.json",
+ "engines": [],
+ "stage_controller": "not in this recipe (--ctrl-slab off): reserved groups face the W hub-column centre; the dsfd_sp_ctrl slab position is fixed when s81-ctl binds it",
+ "rules": [
+  "outline and existing pins are what the die build places: a slab master must keep them (or publish a new contract version) so the generator netlist binds unchanged",
+  "RESERVED groups: pin names are placeholders; widths, face, layer and span are the contract. Each engine adapter (ot_s81_engine_adapter QD 8) sits inside the slab at that face; the die nets are fixed-latency pulse nets (relay stations allowed, every die pin lands in a pin flop)",
+  "clock: slab ck from the die domain tree (domain field); serial_0p9 slabs need the adapter CDC"
+ ],
+ "instances": [
+  {
+   "instance": "sp_vm",
+   "master": "dsfd_sp_vm",
+   "domain": "serial_0p9",
+   "outline_um": [
+    1520.184,
+    2421.336
+   ],
+   "die_origin_um": [
+    14046.912,
+    12245.04
+   ],
+   "orient": "R0",
+   "pins": {
+    "aSW": {
+     "bits": 1027,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      407.328,
+      456.6
+     ],
+     "nets": [
+      {
+       "net": "ha_SW_o_g1_sp_vm",
+       "cls": "local",
+       "bits": 1027,
+       "peers": [
+        "g_ha_SW_o_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "qSW": {
+     "bits": 513,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      827.904,
+      852.504
+     ],
+     "nets": [
+      {
+       "net": "hq_SW_i_g0_hq_SW",
+       "cls": "local",
+       "bits": 513,
+       "peers": [
+        "g_hq_SW_i_hq_SW_0.di"
+       ]
+      }
+     ]
+    },
+    "qSWs": {
+     "bits": 3,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      874.704,
+      874.824
+     ],
+     "nets": [
+      {
+       "net": "hq_SW_s_g1_sp_vm",
+       "cls": "local",
+       "bits": 3,
+       "peers": [
+        "g_hq_SW_s_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_su_s": {
+     "bits": 1024,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      0.432,
+      49.56
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_su_s_d0_g0_f_hb_vm_su_s_1",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "g_hb_vm_su_s_d0_f_hb_vm_su_s_1_0.di"
+       ]
+      }
+     ]
+    },
+    "t_gather": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      51.552,
+      76.104
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_gather_d0_g0_f_hb_vm_gather_1",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_vm_gather_d0_f_hb_vm_gather_1_0.di"
+       ]
+      }
+     ]
+    },
+    "t_hc": {
+     "bits": 1024,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      78.144,
+      127.272
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_hc_s_d0_g0_f_hb_vm_hc_s_1",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "g_hb_vm_hc_s_d0_f_hb_vm_hc_s_1_0.di"
+       ]
+      }
+     ]
+    },
+    "sel": {
+     "bits": 515,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      207.936,
+      232.632
+     ],
+     "nets": [
+      {
+       "net": "hsel_o_g1_sp_vm",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "g_hsel_o_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "f_hc": {
+     "bits": 2048,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      1067.568,
+      1165.848
+     ],
+     "nets": [
+      {
+       "net": "hb_hc_n_vm_d8",
+       "cls": "hub",
+       "bits": 2048,
+       "peers": [
+        "f_hb_hc_n_vm_8.dq"
+       ]
+      }
+     ]
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      1470.288,
+      1470.312
+     ],
+     "nets": [
+      {
+       "net": "clk_serial",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_serial",
+        "sp_wfc.ckv",
+        "sp_sseq.ckv",
+        "hx_W.ck"
+       ]
+      }
+     ]
+    },
+    "col": {
+     "bits": 515,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      2147.616,
+      2172.312
+     ],
+     "nets": [
+      {
+       "net": "hcol_o_g1_sp_vm",
+       "cls": "local",
+       "bits": 515,
+       "peers": [
+        "g_hcol_o_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_su_n": {
+     "bits": 1024,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      2263.776,
+      2312.904
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_su_n_d0_g0_f_hb_vm_su_n_1",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "g_hb_vm_su_n_d0_f_hb_vm_su_n_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_collective": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      2314.896,
+      2339.448
+     ],
+     "nets": [
+      {
+       "net": "hb_collective_vm_d12_g1_sp_vm",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_collective_vm_d12_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "f_wfc": {
+     "bits": 544,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      2341.488,
+      2367.576
+     ],
+     "nets": [
+      {
+       "net": "hb_wfc_vm_d6_g1_sp_vm",
+       "cls": "hub",
+       "bits": 544,
+       "peers": [
+        "g_hb_wfc_vm_d6_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "f_capture": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      2369.616,
+      2394.168
+     ],
+     "nets": [
+      {
+       "net": "hb_capture_vm_d6_g1_sp_vm",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_capture_vm_d6_sp_vm_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_wfc": {
+     "bits": 516,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      2396.16,
+      2420.904
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_wfc_d0_g0_f_hb_vm_wfc_1",
+       "cls": "hub",
+       "bits": 516,
+       "peers": [
+        "g_hb_vm_wfc_d0_f_hb_vm_wfc_1_0.di"
+       ]
+      }
+     ]
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      758.4,
+      758.424
+     ],
+     "nets": [
+      {
+       "net": "rst_serial",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_serial",
+        "sp_wfc.rsv",
+        "sp_sseq.rsv",
+        "hx_W.rs"
+       ]
+      }
+     ]
+    },
+    "t_pq": {
+     "bits": 2162,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      760.464,
+      864.216
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_pq_g0_sp_pq",
+       "cls": "hub",
+       "bits": 2162,
+       "peers": [
+        "g_hb_vm_pq_sp_pq_0.di"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "ctl_vw": {
+     "bits": 527,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      620.784,
+      646.056
+     ],
+     "direction": "in",
+     "carries": "vwe + vwa[14] + vwd[512] (controller VM write)",
+     "controller_port": "vwe/vwa/vwd",
+     "status": "RESERVED"
+    },
+    "ctl_vr": {
+     "bits": 15,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      650.064,
+      650.76
+     ],
+     "direction": "in",
+     "carries": "vre + vra[14] (controller VM read request)",
+     "controller_port": "vre/vra",
+     "status": "RESERVED"
+    },
+    "ctl_vq": {
+     "bits": 513,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      654.816,
+      679.416
+     ],
+     "direction": "out",
+     "carries": "vrq[512] + vrv (VM read response, one cycle: die_binding_contract vm_read_cycles 1)",
+     "controller_port": "vrq/vrv",
+     "status": "RESERVED"
+    }
+   }
+  }
+ ]
+}

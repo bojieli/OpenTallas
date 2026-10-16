@@ -120,9 +120,24 @@ QWEN_R21C = dict(QWEN_R21B, emb_hbm=True)
 # the bottom of spine column M (tools/qwen_kv_die/rom_r22k.py, results/arch/qwen_kv_die_20261009/CONTRACT.md)
 from qwen_kv_die import rom_r22k as _R22K   # noqa: E402
 QWEN_R22K = dict(QWEN_R21C, before_relays=_R22K.surgery)
+# r22kcs (die-evidence-2 2026-10-09, opt-in): r22k with the CLOSED compact sequencer (259.2 x 333.36) + the constant ROM
+# as its own frame inside the old constants+sequencer reservation (rom_r22k._compact_seq)
+QWEN_R22KCS = dict(QWEN_R21C, before_relays=_R22K.surgery_cs)
+# r22ks (qwen-1010/d 2026-10-10, opt-in): r22k with seam-free default pin faces (qwen_rom_fulldie_b3r2._abutter): the
+# r22k4 full-die GRT put all 159,448 overflow in one window where the tree top's ty and the VM's rb3-rb5 left the
+# zero-width tree-top / VM abutment seam
+QWEN_R22KS = dict(QWEN_R22K, before_relays=_R22K.surgery_s, seam_free=True)   # + non-overlapping face pin groups (qwen-1010/a)
+# r22ko4 (qwen-1010/a 2026-10-10, opt-in): r22k with the option-4 control plane (tree-top control tile + 4 upper tiles,
+# seq_su by the SU, constant buffer / ROM group tiles; rom_r22k._option4), seam-free pin faces as r22ks (the control
+# tile's S face meets the VM)
+QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True)
+# r22ksv (qwen-1010/a, opt-in): r22ks + the sequencer <-> VM all-reduce word path (rom_r22k._vm_ar; r22ko4 has it too)
+QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
+R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
-                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K}
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
+                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -201,8 +216,20 @@ def _strip(t):
     return re.sub(r'^\s*`(ifdef|ifndef|else|endif|elsif)\b[^\n]*', '', t, flags=re.M)
 
 
+_TERN = re.compile(r'\(([^()?:]+)\?([^()?:]+):([^()?:]+)\)')
+
+
+def _untern(expr):
+    """parenthesised SV ternaries (a ? b : c) -> python ((b) if (a) else (c)), innermost first"""
+    while True:
+        e = _TERN.sub(lambda m: f'(({m.group(2)}) if ({m.group(1)}) else ({m.group(3)}))', expr)
+        if e == expr:
+            return e
+        expr = e
+
+
 def _eval(expr, env):
-    e = expr.replace('$clog2', 'clog2')
+    e = _untern(expr).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
@@ -259,7 +286,7 @@ def parse_module(path, module, params=None):
         if dm:
             cur_dir = dm.group(1)
             if dm.group(2):
-                hi, lo = dm.group(2)[1:-1].split(':')
+                hi, lo = _untern(dm.group(2)[1:-1]).split(':')     # a ternary in the range (vm_unit RP) is one term
                 cur_w = abs(_eval(hi, env) - _eval(lo, env)) + 1
             else:
                 cur_w = 1
@@ -403,6 +430,38 @@ def real_blocks(die, m=None):
             bind={pn:([pn] if n==1 else _bus(pn,n)) for pn,(_,n) in pm['ports'].items()}
             out[mn]=dict(module=mn,file=directory+filename,kind='full-shape native index RTL',
                          params=prm,ports=pm['ports'],binding=bind)
+    if die == 'hbm' and V.get('mtp_x_stop') and V.get('mtp_master') != 'hgi_native' and not V.get('native_mtp_wb'):
+        # hgi-takeover 2026-10-09: the R25G MTP slot = the CLOSED view hfd_mtp_x_stop (renamed hfd_mtp in its LEF / ETMs);
+        # the die buses (stop_model groups) bind bit by bit to its raw RTL ports (the generator's pins are those pins)
+        from hbm_mtp_native_contract import stop_model
+        f = 'rtl/hbm_accel/control/hfd_mtp_x_stop.sv'
+        pm = parse_module(f, 'hfd_mtp_x_stop', {})
+        bind = {}
+        for g, gr in stop_model(ROOT)['groups'].items():
+            bind[g] = [fl['port'] if fl['width'] == 1 else f"{fl['port']}[{b}]" for fl in gr['fields'] for b in range(fl['width'])]
+        bind['ck'], bind['rst'] = ['clk'], ['rst_n']
+        out['hfd_mtp'] = dict(module='hfd_mtp_x_stop', file=f, kind='RTL of the CLOSED view mtp (hfd_mtp_x_stop), die buses '
+                              'bound bit by bit to its raw ports', params={}, ports=pm['ports'], binding=bind)
+    if die == 'hbm' and V.get('mtp_master') == 'hgi_native':
+        # mtp-lead 2026-10-09: the generic-die MTP slot (controller + ARGMAX unit, both CLOSED views) and the MX1 CP band
+        for mn, f, prm, kind in (
+                ('hgi_mtp_native', 'rtl/hbm_accel/generic/hgi_mtp_native.sv', {}, 'RTL of the CLOSED view mtp_hgi'),
+                ('ot_hgi_argmax18_m', 'physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv',
+                 dict(LP=8, FLAT=7, FAST=1, GENERIC18=1), 'RTL of the CLOSED view argmax_hgi (pinsep pd55)'),
+                ('hfd_cmdproc_s_mtp_native_mx1', 'physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv', {},
+                 'MX1 CP-south RTL (route open)'),
+                # hgi-takeover decision (3): on the single-CP die the slot's ARGMAX instance is the dispatched unit
+                ('hfd_hgi_am', 'rtl/hbm_accel/generic/hfd_hgi_am.sv', {},
+                 'ARGMAX unit die master: ot_hgi_argmax_slot (closed adapter + closed engine) + VM client, 691-b record (route open)')):
+            if not (ROOT / f).exists():
+                continue
+            pm = parse_module(f, mn, prm)
+            bind = {pn: ([pn] if n == 1 else _bus(pn, n)) for pn, (_, n) in pm['ports'].items()}
+            if 'clk' in bind and 'rst_n' in bind:
+                # die clock / reset nets are 'ck' / 'rst' (active high); the slot wrapper's 2-flop synchroniser +
+                # inversion (as in every hfd_* wrapper) is a slot-wrapper obligation, bound here by name
+                bind['ck'], bind['rst'] = bind.pop('clk'), bind.pop('rst_n')
+            out[mn] = dict(module=mn, file=f, kind=kind, params=prm, ports=pm['ports'], binding=bind)
     return out
 
 
@@ -448,6 +507,19 @@ def real_blocks_kv():
     out['qkd_cdc'] = dict(module='ot_qwen_stream4_cdc_pc', file=QCDC_RTL, kind='RTL (routed per-PC CDC element, the '
                           'r21c qfd_cdc, on the KV die)', params=dict(TAGW=9),
                           ports=parse_module(QCDC_RTL, 'ot_qwen_stream4_cdc_pc', dict(TAGW=9))['ports'], binding=bind)
+    # qwen-1010/b 2026-10-10: the write-leaf plan variants (kv_die.build kv_wq_*) split the CDC's core face into its
+    # read side (co, the landing) and its write side (wi / wr / cf, the per-PC leaf): the same RTL, bound by its ports
+    cports = out['qkd_cdc']['ports']
+    def _bits(names):
+        r = []
+        for pn in names:
+            w = cports[pn][1]
+            r += [pn] if w == 1 else [f'{pn}[{i}]' for i in range(w)]
+        return r
+    wb = dict(ho=bind['ho'], hi=bind['hi'], co=co,
+              wi=_bits(['w_v', 'w_sec', 'w_data', 'w_tag']), wr=_bits(['w_room', 'wd_v', 'wd_tag']), cf=_bits(['c_fault']))
+    wb.update({p: [p] for p in ('clk', 'hclk', 'c_arst_n', 'h_arst_n')})
+    out['qkd_cdc_wleaf'] = dict(out['qkd_cdc'], binding=wb, kind=out['qkd_cdc']['kind'] + ' -- write side to its leaf')
     out[KV_UCIE] = _kv_macro(KV_UCIE_BB, KV_UCIE)
     out[KV_SERDES] = _kv_macro(KV_SERDES_BB, KV_SERDES)
     return out
@@ -619,7 +691,9 @@ def build(die, top_fix=False):
         return m, S.port_widths(m, 1), S.masters(m, 1), 'tools/dsrom_s81_fulldie.py --gen r8'
     if die == 'qwen_kv':
         from qwen_kv_die import kv_die as KV
-        m = KV.build()
+        # qwen-1010/b 2026-10-10: --variant names KV-die write-queue plan options (comma list of kv_die.build flags,
+        # e.g. kv_wq_mirror); '' = the generator default
+        m = KV.build(**{k: True for k in VARIANT.split(',') if k})
         m['buses'] = [(bid, cls, bits, [(i, p.lstrip('*')) for i, p in eps]) for bid, cls, bits, eps in m['buses']]
         m['clock_regions'] = [dict(name=r['name'], rect=r['rect']) for r in m['regions']]
         return m, KV.port_widths(m, 1), KV.masters(m, 1), 'tools/qwen_kv_die/kv_die.py'
@@ -734,6 +808,8 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls in ('hbm_cdc', 'cdc_core', 'phy_dfi', 'd2d_fdi'):
         return 'complement'
+    if cls == 'constant':                             # kv-die write leaves: a die-top tie (chain tail, lane strap) into one input
+        return [(0, bits, 'in')]
     if cls == 'kvn':                                  # kv-die: word + valid down, one credit back
         return flow(j, bits, bits - 1)
     if cls == 'd2d_face':                             # kv-die: N class words (529 b each) down, N credits back
@@ -760,6 +836,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
+               'idx_sel', 'kv_credit',       # R25GQ 10-10: one class a net type, endpoint 0 drives
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
@@ -780,7 +857,18 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
         return seg
     if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
         return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
+    if cls == 'link_flit':          # R25GQ decision (b): coll <-> link endpoint TU flit bus, {v, flit 545, credit} each
+        #                             way (endpoint 0 = coll), then session[23:0] down and {fault, locked} up
+        d_, u_ = ('out', 'in') if j == 0 else ('in', 'out')
+        seg = [(0, 547, d_), (547, 1094, u_)]
+        if bits >= 1120:
+            seg += [(1094, 1118, d_), (1118, 1120, u_)]
+        return seg
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
+        if cls == 'host' and V.get('host_h') and bits == sum(V['host_h']):
+            # R25GQ ([svc] 2026-10-10): the host port is sized exactly (HOST_H_HGI tx / rx); the even split gave the
+            # loader 394 out / 393 in for its 406 / 381 host-facing ports
+            return flow(j, bits, V['host_h'][0])
         return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
@@ -907,6 +995,12 @@ def lint_connectivity(die, m, real, ports_w):
                 add('undirected_bits', cls, f'{mst}.{port}', bid, int((~cov).sum()))
         sig = ' + '.join(sorted({(by[i].master if i != 'TOP' else 'TOP') + '.' + re.sub(r'[SN][WE]$|\d+$', '*', p)
                                  for i, p in eps}))
+        if cls == 'constant':
+            # qwen-1010/b 2026-10-10: a die-top tie (tie cells next to the one input it straps: KV write-leaf chain tail,
+            # lane index); driven by construction, so only a driver on the net would be a defect
+            if int((drv > 0).sum()) or len(eps) != 1:
+                add('constant_not_a_tie', cls, sig, bid, bits)
+            continue
         for check, mask in (('undriven', (ld > 0) & (drv == 0)), ('unloaded', (drv > 0) & (ld == 0)),
                             ('multi_driven', drv > 1), ('floating', (drv == 0) & (ld == 0))):
             n = int(mask.sum())
@@ -1038,7 +1132,7 @@ def real_lefs(die):
     if die == 'qwen_kv':
         return (QPHY_LEF, KV_UCIE_LEF, KV_SERDES_LEF)
     if die == 'qwen_rom':
-        return (QPHY_LEF, KV_UCIE_LEF) if QWEN_RECIPE == 'r22k' else (QPHY_LEF,)
+        return (QPHY_LEF, KV_UCIE_LEF) if QWEN_RECIPE in R22K_FAMILY else (QPHY_LEF,)
     return (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF) + ((S.HEAD_A_LEF, S.HEAD_B_LEF) if S.HEAD_BUNDLES else ())
 
 
@@ -2173,7 +2267,7 @@ def margin(die, m):
             return S.margin_lint(m)
         if die == 'hbm':
             return H.margin_lint(m)
-        if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE == 'r22k'):
+        if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE in R22K_FAMILY):
             import fp_margin_lint as FPL
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
@@ -2181,6 +2275,34 @@ def margin(die, m):
     except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
         return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
     return dict(verdict='N/A')
+
+
+def leaf_offsets(m):
+    """coordinator 2026-10-09: face clock taps (svc --fc segments) need their die leaf LATER than the segment's ck leaf by
+    the segment's interior insertion (set_clock_latency -source on ckw / cke in the block timing model).  Check: every
+    ckw / cke endpoint on a clock trunk has a plan row on the same net, the reference ck leaf of the same instance is on
+    that net, and the offset is resolved (0 < offset < the hbm period); unresolved rows are PENDING (segment open)."""
+    rows = m.get('clock_leaf_offsets') or []
+    have = {(r['inst'], r['pin']): r for r in rows}
+    nets = {bid: set(eps) for bid, cls, bits, eps in m['buses'] if cls == 'clock_trunk'}
+    errors, pending = [], []
+    for bid, eps in nets.items():
+        for inst, pin in eps:
+            if pin not in ('ckw', 'cke'):
+                continue
+            r = have.get((inst, pin))
+            if r is None:
+                errors.append(f'{inst}.{pin} on {bid}: no clock-plan offset row')
+            elif r['net'] != bid or (inst, r['ref_pin']) not in eps:
+                errors.append(f'{inst}.{pin}: offset row on {r["net"]} / ref {r["ref_pin"]} does not match net {bid}')
+            elif r['offset_ps'] is None:
+                pending.append(f'{inst}.{pin}')
+            elif not (0 < r['offset_ps'] < 1024):
+                errors.append(f'{inst}.{pin}: offset {r["offset_ps"]} ps outside (0, 1024)')
+    return dict(rows=len(rows), resolved=sum(r['offset_ps'] is not None for r in rows), pending=len(pending),
+                pending_examples=pending[:8], errors=errors,
+                verdict='FAIL' if errors else ('PENDING' if pending else ('PASS' if rows else 'NONE')),
+                rule='face tap leaf arrival = segment ck leaf arrival + offset_ps (die CTS per-leaf delay / tap)')
 
 
 def hbm_wrapper_ledgers(masters, root=None, generate=None):
@@ -2286,6 +2408,7 @@ def run_lint(die, out, top_fix=False, tag=''):
         placeholder_port_direction_conflicts=conflicting,
         clocking=[dict(master=k[0], view=k[1], clock=k[2], instances=n) for k, n in sorted(ck_rows.items())],
         clock_sources={i: sorted(p) for i, p in ck_ports.items() if any(x.startswith('pll') for x in p)},
+        clock_leaf_offsets=leaf_offsets(m) if die == 'hbm' else None,
         reset=[dict(master=k[0], net=k[1], instances=n) for k, n in sorted(rst_rows.items())],
         interfaces=interfaces(die, m, pw) if die == 'hbm' else {},
         top_ports=list(LAST_TOP) if R8_ACTIVE[0] else 0,
@@ -2313,7 +2436,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k'])
+                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

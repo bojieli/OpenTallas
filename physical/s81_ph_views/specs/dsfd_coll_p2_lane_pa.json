@@ -1,0 +1,164 @@
+{
+ "master": "dsfd_coll_p2_lane_pa",
+ "w_um": 345.6,
+ "h_um": 340.2,
+ "domain": "stream_1p2",
+ "note": "P2 primary-lane adapter: W = the W4 lane tile (abutting), N = dsfd_coll_p2_ep (row out of it, start into it) + the P2 core events, S = clock / reset",
+ "ports": [
+  [
+   "x_v",
+   1,
+   "input",
+   "N",
+   "M5",
+   1,
+   0.01
+  ],
+  [
+   "x_d",
+   594,
+   "input",
+   "N",
+   "M5",
+   3,
+   0.15
+  ],
+  [
+   "x_r",
+   1,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.3
+  ],
+  [
+   "x_ev",
+   3,
+   "input",
+   "N",
+   "M5",
+   2,
+   0.32
+  ],
+  [
+   "r_v",
+   1,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.5
+  ],
+  [
+   "r_d",
+   101,
+   "output",
+   "N",
+   "M5",
+   3,
+   0.55
+  ],
+  [
+   "r_r",
+   1,
+   "input",
+   "N",
+   "M5",
+   1,
+   0.6
+  ],
+  [
+   "r_ev",
+   1,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.62
+  ],
+  [
+   "t_flt",
+   1,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.64
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.48
+  ],
+  [
+   "rs",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.5
+  ],
+  [
+   "lo_v",
+   1,
+   "output",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "lo_r",
+   1,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "lo_d",
+   553,
+   "output",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "li_v",
+   1,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "li_r",
+   1,
+   "output",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "li_d",
+   553,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "f_lflt",
+   3,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ]
+ ]
+}

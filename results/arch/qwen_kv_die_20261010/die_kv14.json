@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.qwen-kv-die.die-run.v1",
+ "date": "2026-10-10",
+ "run": "die_kv14",
+ "host": "ot-epyc1tb:/srv/opentallas-scratch/claude/kv-die/die_kv14",
+ "source": "ff55a5909 (pin-to-pin relays 479b5d141 + PHY PDN M5 straps onto the core M8)",
+ "plan": "default write queue (case() refuses the leaf plan until its gates pass), 182.596 mm2, 1,381 instances",
+ "real_case": "OT_LEGAL 1,381 / 0 overlaps / 0 outside, OT_ASSERT PASS, OT_PA DONE",
+ "pdn": "PASS; check_power_grid VDD PASS, VSS PASS (die_kv11 / die_kv12: VSS PSM-0069)",
+ "grt": {
+  "overflow": 0,
+  "wirelength_um": 289712256
+ },
+ "sta": {
+  "parasitics": "estimate_parasitics -global_routing -spef_file (SPEF read)",
+  "tt": {
+   "wns_ps": 0.0,
+   "tns_ps": 0.0,
+   "worst_slack_ps": 309.78,
+   "worst_path": "ectl_WS_0/t1 -> head_WS_0_3/ti (256 ps wire)"
+  },
+  "ff": {
+   "wns_ps": 0.0,
+   "worst_hold_ps": -5.74,
+   "class": "abutted zero-wire hops between ASSUMED single-flop element views under ideal clocks (embgw/gr -> seq/gr, ectl<->head, cdc): view-constant hold, closed by real ETMs / die hold fix"
+  }
+ },
+ "before": {
+  "die_kv12_tt_ps": -38611.27,
+  "cause": "land -> ectl rs hops ~3 mm pin to pin, no relay"
+ },
+ "sta_rerun_port_buffer_views": {
+  "views": "tools/qwen_die_element_lib.py with the ORFS port-buffer stage (SS 25 / FF 12 ps)",
+  "tt": {
+   "wns_ps": 0.0,
+   "worst_slack_ps": 259.78
+  },
+  "ff": {
+   "wns_ps": 0.0,
+   "worst_hold_ps": 18.26
+  }
+ }
+}

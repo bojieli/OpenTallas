@@ -42,7 +42,7 @@ def ref_word(d):
     pres = {nm: bool(op['opnd'] >> j & 1) for j, nm in enumerate(C.OPND)}
     D = {nm: d['eff'][j] for j, nm in enumerate(C.OPND)}
     sp = {nm: C.fld(D[nm], 'space') for nm in C.OPND}
-    use_b = s['m1'] in (1, 5, 6) or s['ad'] == 3 or s['e2'] == 1
+    use_b = s['m1'] in (1, 4, 6) or s['ad'] == 3 or s['e2'] == 1
     use_c = (s['m2'] == 1 or s['qm'] != 0 or s['ad'] in (1, 2) or s['e1'] in (1, 2)) and not s['c_pair']
     use_d = s['qm'] != 0 or s['ad'] == 5
     no, ni = C.fld(D['A'], 'm'), d['n'][0]
@@ -223,7 +223,11 @@ def main():
         if key not in seen:
             seen.add(key)
             uq.append(d)
-    add_case(1, 'qwen3_8b_token_su_unique', uq)
+    # records the SU refuses (e.g. STREAM operands: the stream unit has no stream data port) are negative cases of
+    # their own (a refusal halts the adapter)
+    add_case(1, 'qwen3_8b_token_su_unique', [d for d in uq if ref_word(d)[0] != 2])
+    for k, d in enumerate([d for d in uq if ref_word(d)[0] == 2]):
+        add_case(2, f'qwen3_8b_token_su_refused_{k}', [d])
     # random legal records over the template space (fields only)
     rng = random.Random(20261009)
     rl = []

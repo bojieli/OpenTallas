@@ -1,0 +1,15 @@
+FIXLAT pep_s1 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2250 | rtl/dsrom_sys/mtp/tb/tb_mtp_partner_ep.sv:85: $finish called at 2258500 (1ps)
+FIXLAT pep_s7 PASS (expect pass) :: PEP PASS FC=6 RC=7 FV=11 RV=11 VM-end hops 11/11 flits=4x1200 cycles=2285 | rtl/dsrom_sys/mtp/tb/tb_mtp_partner_ep.sv:85: $finish called at 2293500 (1ps)
+FIXLAT pep_lat1 FAIL (expect fail) :: LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant) | FATAL: rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv:134: LINK_REG overflow |        Time: 159500  Scope: tb_mtp_partner_ep.vme.u_h.g_rtt.u_rx
+FIXLAT pep_stale FAIL (expect fail) :: LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant) | FATAL: rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv:134: LINK_REG overflow |        Time: 170500  Scope: tb_mtp_partner_ep.vme.u_h.g_rtt.u_rx
+FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12693 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish called at 10591383000 (1fs)
+FIXLAT p2_s5 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12696 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish called at 10593885000 (1fs)
+FIXLAT p2_lat1 FAIL (expect fail) :: LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant) | FATAL: rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv:134: LINK_REG overflow |        Time: 50457000  Scope: tb_mtp_p2_fixlat.dut.u_lnk.u_l1.g_rtt.u_rx
+FIXLAT p2_naive FAIL (expect fail) :: FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:100: P2FL unexpected fault cycle 314 |        Time: 267297000  Scope: tb_mtp_p2_fixlat
+FIXLAT p2_naive_1tx FAIL (expect fail) :: FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:100: P2FL unexpected fault cycle 15 |        Time: 17931000  Scope: tb_mtp_p2_fixlat
+FIXLAT p2_lat_direct0 PASS (expect pass) :: P2FL PASS FV=0 RV=0 FC=0 RC=0 transactions=1 rows=80 lane0=160 lane1=80 cycles=6113 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish called at 5103663000 (1fs)
+FIXLAT p2_lat_lnk0 PASS (expect pass) :: P2FL PASS FV=0 RV=0 FC=0 RC=0 transactions=1 rows=80 lane0=160 lane1=80 cycles=6123 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish called at 5112003000 (1fs)
+FIXLAT p2_lat_lnk PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=1 rows=80 lane0=160 lane1=80 cycles=6278 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:119: $finish called at 5241273000 (1fs)
+FIXLAT p2_nogate FAIL (expect fail) :: FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:100: P2FL unexpected fault cycle 414 |        Time: 350697000  Scope: tb_mtp_p2_fixlat
+FIXLAT GATE PASS
+rc=0

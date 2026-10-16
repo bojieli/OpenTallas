@@ -1,0 +1,124 @@
+{
+ "name": "qkd_ectl_c-f8a6d7c30-tc-hm10-cl",
+ "block": "ot_qwen_nearhbm_ectl_h",
+ "owner": "Claude:kv-die",
+ "purpose": "kv-die re-cut H (owner rule: good physical design): the near-HBM row engine as hard sub-tiles. This job: ot_qwen_nearhbm_ectl_h (the engine control tile), variant c. Every monolithic engine route failed (-6.0 / -4.4 / -3.6 ns pre-route, D -49 ns in floorplan repair). Exact: recut_h.json (layer step through the link, 14 runs exact, mutants as expected; step 1,806). Variant c (2026-10-10): 648 wide so the far head of each pair stays inside the wire reach of the control tile; control 648 x 108 sized from the measured 24.5 k um2, per-pair faces; control-tile timing fix (n_s / gmax / exp_done registered, +8 cycles at 8192). Mirror-legal pin layers (M4 [+ M6 control] horizontal, M5 vertical): the die places heads MX / R180 and col-1 engines MY. 648 x 129.6, all horizontal pins on M4.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 160,
+ "source": {
+  "branch": "claude/kv-die-20261009",
+  "commit": "f8a6d7c30",
+  "required_files": [
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+   "rtl/hdc/ot_hdc_sfu_q.sv",
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/qwen_die_masters/cfg/qkd_ectl_c.env",
+   "physical/qwen_die_masters/signoff/qkd_ectl_c.sdc",
+   "results/arch/qwen_kv_die_20261009/bench.json",
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+   "results/arch/qwen_kv_die_20261009/recut_h.json",
+   "physical/qwen_die_masters/cfg/qkd_ectl_c.env",
+   "physical/qwen_die_masters/signoff/qkd_ectl_c.sdc"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_nearhbm_ectl_h rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv ; rc=$?; echo \"lint rc=$rc\"; exit $rc",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "recut_h_exact_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/recut_h.json')); sys.exit(0 if d['ok'] and d['exact_all'] else 1)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "merge_off_mutant_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/recut_h.json')); sys.exit(1 if not d['mutants']['mut2']['exact'] else 0)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_nearhbm_ectl_h rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_ectl_c.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qkd_ectl_c {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 160
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_ectl_c --post-sdc physical/qwen_die_masters/signoff/qkd_ectl_c.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_ectl_c > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qkd_ectl_c.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "current corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no KV-die budget sheet yet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_kv_die_20261009/qkd_ectl_c-f8a6d7c30-tc-hm10-cl"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "KV-die element; its cycles are inside the measured layer step (reprice.json)",
+ "merge_target": "main"
+}

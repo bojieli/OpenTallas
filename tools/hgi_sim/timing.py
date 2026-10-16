@@ -90,6 +90,11 @@ def cv(sec, key):
     return CAL[sec][key]["value"]
 
 
+def fp(key, default):
+    """re-floorplan unit counts (calibration.json "floorplan"; absent -> the pre-10-10 die)"""
+    return CAL.get("floorplan", {}).get(key, {}).get("value", default)
+
+
 # ----------------------------------------------------------------------------------------------------------------
 # execution list and footprints
 # ----------------------------------------------------------------------------------------------------------------
@@ -107,7 +112,24 @@ def expand(recs, pos, token=0, rank=0):
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "LOOP":
-            loops.append([pc + 1, r.param & 0xFFFF, 0, (r.param >> 16) & 1])
+            cnt = r.param & 0xFFFF
+            if r.param & (1 << 17):                    # count from VM (G24): the timing caller sets r.dyn_count
+                cnt = getattr(r, "dyn_count", None)
+                if cnt is None:
+                    raise ValueError(f"LOOP {r.tag}: count from VM needs dyn_count for timing")
+            if cnt == 0:
+                depth, j = 0, pc
+                while True:
+                    if recs[j].unit == "CTL" and recs[j].op == "LOOP":
+                        depth += 1
+                    elif recs[j].unit == "CTL" and recs[j].op == "ENDLOOP":
+                        depth -= 1
+                        if depth == 0:
+                            break
+                    j += 1
+                pc = j + 1
+                continue
+            loops.append([pc + 1, cnt, 0, (r.param >> 16) & 1])
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "ENDLOOP":
@@ -168,11 +190,16 @@ def footprint(r, dyn, L):
     """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
     lowering declares for DS engines whose inputs are not all descriptors)."""
     reads, writes = [], []
+    if r.unit == "CTL" and r.op == "LOOP" and r.param & (1 << 17):
+        reads.append(("VM", r.imm_a, r.imm_a + 1))
     for kind, iv in getattr(r, "implicit", ()):
         (writes if kind == "w" else reads).append(iv)
     half = r.unit == "SU" and r.sut is not None and r.sut.get("b_half")
     for k, d in r.desc.items():
         if d.space not in ("VM", "HBM"):
+            continue
+        if d.indexed and d.n_sel == 63 and d.space == "HBM":     # indexed row stream: any row of the region
+            reads.append(("HBM", d.base, d.base + (1 << 30)))
             continue
         if half and k in ("B", "D") and not (0 < d.n_sel < 63):
             # b_half: B / D are read at inner index i >> 1 (adjacent-pair tables), so the span is ceil(n / 2)
@@ -225,7 +252,7 @@ def su_cost(r, dyn, L):
         strides(k, s)
     if "R" in r.desc:
         f["rso"] = max(1, r.desc["R"].stride)
-    lay = VC.layout(f, 1024, 256)
+    lay = VC.layout(f, int(fp("su_lanes", 1024)), int(fp("su_sfu_lanes", 256)))
     depth = lay["dR"] if t["red"] else lay["dP"]
     hbm = any(d.space == "HBM" for d in r.desc.values())       # an HBM source pays the first access before row 0
     fa = first_access() if hbm else 0.0
@@ -270,7 +297,8 @@ def cost(r, dyn, L, cfg=None):
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
         return c, "estimate", f"ROW_NORM seg {seg}"
     if u == "SFU":
-        return cv("units", "SFU.GLU"), "estimate", "GLU fast path"
+        w = fp("sfu_width", 1.0)
+        return cv("units", "SFU.GLU") / w, "estimate", "GLU fast path" + (f" (width {w})" if w != 1.0 else "")
     if u == "ATT":
         b = r.desc["B"]
         _, P, _, st, _ = eff(b, dyn, L)
@@ -426,7 +454,8 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
         u = r.unit
         if mode == "S0":
             t0 = max([end[j] for j in deps[i]] + [start[j] for j in ddeps[i]] +
-                     [last_end_unit[u] if u not in PIPELINED else 0.0])
+                     [last_end_unit[u] if u not in PIPELINED else 0.0] +
+                     [outstanding_end["DMA"] if (u == "DMA" and r.op == "FENCE") else 0.0])
             if u in PIPELINED and unit_starts[u]:
                 t0 = max(t0, unit_starts[u][-1] + PIPELINED[u])
             start[i] = t0
@@ -472,6 +501,8 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                 cp_t = d_t
             disp[i] = d_t
             t0 = max(d_t + (wire_of(r) if mode != "S1" else 0.0), last_end_unit[u] if u not in PIPELINED else 0.0)
+            if u == "DMA" and r.op == "FENCE":           # posted HBM writes: the fence completes after every DMA record
+                t0 = max(t0, outstanding_end["DMA"])
             if u in PIPELINED and q:
                 t0 = max(t0, q[-1] + PIPELINED[u])
             start[i] = t0
@@ -493,8 +524,11 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     if mode != "S0":
         for i in range(n):
             for j in deps[i]:
-                if end[j] > start[i] + 1e-9 and not (recs[ex[i][0]].unit == recs[ex[j][0]].unit and j < i
-                                                       and recs[ex[i][0]].unit not in PIPELINED):
+                same = recs[ex[i][0]].unit == recs[ex[j][0]].unit and j < i
+                war_only = same and not any(overlap(w_, x) for w_ in fps[i][1] for x in fps[j][1]) and \
+                    not any(overlap(x, w_) for x in fps[i][0] for w_ in fps[j][1])
+                if end[j] > start[i] + 1e-9 and not (same and recs[ex[i][0]].unit not in PIPELINED) and \
+                        not (war_only and start[j] <= start[i]):
                     races.append(dict(rec=ex[i][0], L=ex[i][1], tag=recs[ex[i][0]].tag, producer=recs[ex[j][0]].tag,
                                       early=round(end[j] - start[i], 1)))
             for j in ddeps[i]:
@@ -699,11 +733,57 @@ def _hazard(a, b):
     return bool(wa & (rb | wb)) or bool(ra & wb)
 
 
-def improve_order(recs, pos, cost_fn=cost, rounds=6, **kw):
-    """improve_order_once repeated on its own output until a round gains < 1 cycle (the list schedules restart from
-    the improved order, so a later round can escape the previous round's local optimum)."""
+def asap_seed(recs):
+    """A restart point: each record (in program order) placed directly after the last earlier record it has a hazard
+    with (CTL barriers stay), so every producer -> consumer chain starts at its earliest legal slot."""
+    out = []
+    for r in recs:
+        p = len(out)
+        while p > 0 and not _hazard(out[p - 1], r):
+            p -= 1
+        out.insert(p, r)
+    return out
+
+
+def improve_order(recs, pos, cost_fn=cost, rounds=6, seeds=("given", "asap"), ils=True, **kw):
+    """The compiler's CP-aware order: improve_order_seed from each seed (the given order; the ASAP re-seed), the
+    cheaper kept; then one iterated-local-search sweep (each record relocated to its ASAP slot, a short re-search,
+    kept when the objective drops) to leave the local optimum."""
     for i, r in enumerate(recs):                 # ids of the INPUT order (the caller maps the permutation by them)
         r._cid = i
+    best = None
+    for sd in seeds:
+        start = list(recs) if sd == "given" else asap_seed(list(recs))
+        o, info = improve_order_seed(start, pos, cost_fn=cost_fn, rounds=rounds, **kw)
+        info = dict(info, seed=sd)
+        if best is None or info["output_cycles"] < best[1]["output_cycles"] - 0.5:
+            best = (o, info)
+    order, info = best
+    if ils:
+        bt, moved = info["output_cycles"], 0
+        cf = info.pop("_cf")
+        idx = 0
+        while idx < len(order):
+            r = order[idx]
+            p = idx
+            if not (r.unit == "CTL" and r.op != "NOP"):
+                while p > 0 and not _hazard(order[p - 1], r):
+                    p -= 1
+            if p < idx:
+                o = order[:p] + [r] + order[p:idx] + order[idx + 1:]
+                o2, i2 = improve_order_once(o, pos, cost_fn=cf, passes=2, alphas=(), **kw)
+                if i2["output_cycles"] < bt - 0.5:
+                    order, bt, moved = [x for x in o2], i2["output_cycles"], moved + 1
+            idx += 1
+        info = dict(info, ils_moves=moved, output_cycles=bt)
+        order = rebuild_waits(order)
+    info.pop("_cf", None)
+    return order, info
+
+
+def improve_order_seed(recs, pos, cost_fn=cost, rounds=6, **kw):
+    """improve_order_once repeated on its own output until a round gains < 1 cycle (the list schedules restart from
+    the improved order, so a later round can escape the previous round's local optimum)."""
     out, info = improve_order_once(recs, pos, cost_fn=cost_fn, **kw)
     first = info["input_cycles"]
     hist = [info["output_cycles"]]
@@ -713,7 +793,7 @@ def improve_order(recs, pos, cost_fn=cost, rounds=6, **kw):
             break
         out, info = o2, i2
         hist.append(i2["output_cycles"])
-    info = dict(info, input_cycles=first, rounds=hist)
+    info = dict(info, input_cycles=first, rounds=hist, _cf=info.get("_cf"))
     return out, info
 
 
@@ -786,4 +866,4 @@ def improve_order_once(recs, pos, cost_fn=cost, passes=16, alphas=(0.05, 0.2, 1.
         if not improved:
             break
     return rebuild_waits(order), dict(input_cycles=round(t_in, 1), list_alpha=ba, moves=moves,
-                                      output_cycles=round(bt, 1))
+                                      output_cycles=round(bt, 1), _cf=cf)

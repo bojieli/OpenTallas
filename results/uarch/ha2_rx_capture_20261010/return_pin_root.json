@@ -1,0 +1,16 @@
+{
+  "stage": "CAP-only CTS placement timing, pathfinding only",
+  "TT_setup_ps": -110.527145,
+  "FF_hold_ps": 9.81792,
+  "reg_to_reg_TT_setup_ps": 0.210942,
+  "start": "u_core.return_tag[8]$_DFFE_PN0P_/QN",
+  "end": "return_tag[8]",
+  "worst_output_last_wire_ps": 380.35,
+  "successor": "New34-bit return tag/valid edge separates north send and south return pins; all IO flops own their face, no IO/reference change.",
+  "actual_hook_probe": {
+    "capture_flops": 1120,
+    "source_database": "8e003d00e failed3_2",
+    "meaning": "Hook syntax and input/output driver traversal validated on real ODB; final CP route still required."
+  },
+  "adopted": false
+}

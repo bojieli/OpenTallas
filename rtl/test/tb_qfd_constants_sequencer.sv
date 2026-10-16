@@ -5,6 +5,9 @@
 // earlier (4-state).  MUT = 1 inverts one input-station bit (tp_token[0]): must FAIL.
 module tb_qfd_constants_sequencer;
     parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0, MSTN = 0;
+    // VMS = 1 (qwen-1010/a, default): the vector memory answers each side's vm_re at ITS pins one edge later (the DUT's
+    // through its output / input stations); 0 = the old free-running random vm_rq (blind to read-response timing)
+    parameter integer VMS = 1;
     // MMUT = 1 (with MSTN = 1): the bench still presents me_mem_ok IS edges late to the stationed master (double delay): must FAIL
     parameter integer MMUT = 0;
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, PAW = 12, SW = 64, LV = 7, D = 4;
@@ -152,7 +155,7 @@ module tb_qfd_constants_sequencer;
         .kv_write_drained(kv_write_drained),
         .kv_ok(kv_ok),
         .me_mem_ok((MSTN != 0 && MMUT == 0) ? me_mem_ok : me_mem_ok_m),
-        .vm_rq(vm_rq),
+        .vm_rq((VMS != 0) ? vm_rq_m : vm_rq),
         .c_ready(c_ready),
         .r_valid(r_valid),
         .r_data(r_data),
@@ -274,6 +277,12 @@ module tb_qfd_constants_sequencer;
         .po_su_i_rso(m_po_su_i_rso),
         .po_su_i_imm1(m_po_su_i_imm1),
         .po_su_i_imm2(m_po_su_i_imm2));
+    reg [511:0] vmem_r [0:255], vmem_m [0:255]; reg [511:0] vm_rq_r, vm_rq_m; integer vi;
+    initial for (vi = 0; vi < 256; vi = vi + 1) begin vmem_r[vi] = {16{$random(vi)}}; vmem_m[vi] = vmem_r[vi]; end
+    always @(posedge clk) begin
+        if (r_vm_re) vm_rq_r <= vmem_r[r_vm_raddr]; if (m_vm_re) vm_rq_m <= vmem_m[m_vm_raddr];
+        if (r_vm_we) vmem_r[r_vm_waddr] <= r_vm_wdata; if (m_vm_we) vmem_m[m_vm_waddr] <= m_vm_wdata;
+    end
     // ---- reference: controller + TP sequencer + stores as the runtime die wires them ----
     wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok; wire [31:0] core_nval;
     wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q; wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
@@ -486,7 +495,7 @@ module tb_qfd_constants_sequencer;
         .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
         .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(r_vm_re), .vm_raddr(r_vm_raddr),
-        .vm_rq(vm_rq), .vm_we(r_vm_we), .vm_waddr(r_vm_waddr), .vm_wdata(r_vm_wdata), .c_valid(r_c_valid),
+        .vm_rq((VMS != 0) ? vm_rq_r : vm_rq), .vm_we(r_vm_we), .vm_waddr(r_vm_waddr), .vm_wdata(r_vm_wdata), .c_valid(r_c_valid),
         .c_ready(c_ready), .c_data(r_c_data), .c_last(r_c_last), .c_mode(r_c_mode), .c_tag(r_c_tag),
         .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(r_rank), .r_err(r_err));
     localparam integer OW = (1) + (NW) + (32) + (1) + (1) + (1) + (1) + (1) + (AW) + (AW) + (AW) + (AW) + (AW) + (4) + (3) + (NW) + (NW) + (NW) + (1) + (NW) + (1) + (8) + (1) + (8) + (512) + (1) + (512) + (1) + (1) + (32) + (1) + (1) + (NW) + (1) + (NW) + (NW) + (NW) + (1) + (AW) + (AW) + (AW) + (AW) + (AW) + (AW) + (AW) + (AW) + (3) + (4) + (AW) + (1) + (AW) + (AW) + (AW) + (1) + (1) + (1) + (1) + (AW) + (1) + (NW) + (NW) + (1) + (AW) + (AW) + (AW) + (1) + (AW) + (AW) + (AW) + (1) + (AW) + (AW) + (AW) + (2) + (2) + (3) + (3) + (1) + (1) + (2) + (AW) + (AW) + (AW) + (2) + (1) + (AW) + (AW) + (32) + (32);
@@ -546,7 +555,7 @@ module tb_qfd_constants_sequencer;
         // program and descriptor images through the configuration ports (random words; unit field 0..2)
         for (k = 0; k < 1024; k = k + 1) begin @(negedge clk); pw_v = 1; pw_addr = k; pw_data = {$random(seed), $random(seed)}; rnd_inputs; end
         for (k = 0; k < 8; k = k + 1) begin @(negedge clk); pw_v = 0; dw_v = 1; dw_addr = k;
-            dw_data = {$random(seed), 8'd0, 6'd0, 2'd0, $random(seed) & 32'h0000ff3c} | (k == 7 ? 64'd3 : 64'd0); rnd_inputs; end
+            dw_data = {$random(seed), 8'd0, 6'd0, 2'd0, $random(seed) & 32'h0000ff3c} | (k == 7 ? 64'd3 : 64'd0) | ((VMS != 0 && k < 7) ? 64'd1 : 64'd0); rnd_inputs; end
         @(negedge clk); dw_v = 0;
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);

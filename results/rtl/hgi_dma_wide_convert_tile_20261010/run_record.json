@@ -1,0 +1,34 @@
+{
+  "records": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "expected": "CONVERT_PASS",
+      "gate_pass": true
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "expected": "CONVERT_EXACT_OR_DUP",
+      "gate_pass": true
+    },
+    {
+      "mutant": 2,
+      "returncode": 1,
+      "expected": "CONVERT_EXACT_OR_DUP",
+      "gate_pass": true
+    },
+    {
+      "mutant": 3,
+      "returncode": 1,
+      "expected": "CONVERT_DROP",
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_dma_wide_convert_tile.sv": "8d551aaa09bb62f31ef9d3e46af2e851ff5a8209c09fcb6f2a248f382f21f91c",
+    "rtl/hbm_accel/generic/peers/tb_hgi_dma_wide_convert_tile.sv": "43b3c41bf7475b914fdbfe686b6e2f60bee2adcc56c538cd5fbc1fb9ba3eb33f",
+    "rtl/hbm_accel/generic/vm/ot_hgi_vm_wide_bank.sv": "2cd7d79262b4d39dadb188069d2cc892e9f1b53b8ed1b62bb832e411db700c0c",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  }
+}

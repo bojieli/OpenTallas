@@ -1,0 +1,9 @@
+BAD HDR slab 1 src 2 job 3
+BAD WORD slab 1 src 2 job 3
+BAD WORD slab 1 src 2 job 3
+SVCJOB jobs=40 issued=11 dones=3 tag_errors=0 early_dones=0 frames_ok=56 frames_exp=358 frames_bad=141 fault=1 cycles=480
+FAIL
+- rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job.sv:222: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 401ns; walltime 0.004 s; speed 97.658 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

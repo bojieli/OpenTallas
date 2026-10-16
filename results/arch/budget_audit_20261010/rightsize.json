@@ -1,0 +1,220 @@
+{
+ "schema": "opentallas.budget_audit.rightsize.v1",
+ "die": "R25G generic (tools/hbm_accel_die_fp.py plan --die ds: 753.19 mm2 die, 475.84 mm2 placed, peak in-phase 468.0 W vs 474.56 W)",
+ "rule": "minimum count that keeps the designed tok/s within 1% (sweeps: S2 schedule, one unit varied, everything else at budget; load/compute overlap as the schedule models it); generic die = max over Qwen TP4 8K and DS TP96 1M",
+ "power_basis": "peak in-phase W/mm2 of the floorplan tool (SM 1.20, attention tile 161.35 W / 64, hub 1.05) -- peak, not workload-average",
+ "units": [
+  {
+   "unit": "SM",
+   "current": 32,
+   "qwen_required": 32,
+   "ds_required": 28,
+   "generic_required": 32,
+   "binding": "Qwen AR (SM-issue bound: gu/down lines > weight stream)",
+   "basis": "sweep of R = ceil(m/N_SM) in timing.cost (measured sm_v lines/row-k, first access, overhead) on the Qwen P8191 program and DS walk WC.N_SM on the native rank-0 program, S2 schedule",
+   "evidence": {
+    "qwen": {
+     "sm8": {
+      "cycles": 4033256.1,
+      "delta_pct": 219.66
+     },
+     "sm12": {
+      "cycles": 2803048.1,
+      "delta_pct": 122.16
+     },
+     "sm16": {
+      "cycles": 2185576.1,
+      "delta_pct": 73.22
+     },
+     "sm20": {
+      "cycles": 1818856.1,
+      "delta_pct": 44.16
+     },
+     "sm24": {
+      "cycles": 1570472.1,
+      "delta_pct": 24.47
+     },
+     "sm28": {
+      "cycles": 1397032.1,
+      "delta_pct": 10.72
+     },
+     "sm32": {
+      "cycles": 1261736.1,
+      "delta_pct": 0.0
+     },
+     "sm40": {
+      "cycles": 1081205.6,
+      "delta_pct": -14.31
+     },
+     "sm48": {
+      "cycles": 1071980.0,
+      "delta_pct": -15.04
+     }
+    },
+    "ds": {
+     "sm8": {
+      "cycles": 702372.4,
+      "delta_pct": 28.89
+     },
+     "sm12": {
+      "cycles": 632993.6,
+      "delta_pct": 16.16
+     },
+     "sm16": {
+      "cycles": 606389.1,
+      "delta_pct": 11.28
+     },
+     "sm20": {
+      "cycles": 591544.1,
+      "delta_pct": 8.55
+     },
+     "sm24": {
+      "cycles": 561374.2,
+      "delta_pct": 3.02
+     },
+     "sm28": {
+      "cycles": 548798.8,
+      "delta_pct": 0.71
+     },
+     "sm32": {
+      "cycles": 544926.6,
+      "delta_pct": 0.0
+     },
+     "sm40": {
+      "cycles": 543618.9,
+      "delta_pct": -0.24
+     },
+     "sm48": {
+      "cycles": 541774.8,
+      "delta_pct": -0.58
+     }
+    }
+   },
+   "area_saved_mm2": 0.0,
+   "power_saved_w": 0.0,
+   "note": "Qwen: 28 SMs = +10.6% cycles (binding). DS: 28 SMs +0.71%, 24 SMs +3.02% (DS SM work is small, but the expert matvecs still feel it). OPPORTUNITY: Qwen at 40 SMs = -14.3% cycles (953.8 -> ~1,113 tok/s); 48 SMs add only 0.7% more (HBM-bound). +8 SMs = +36.5 mm2 / +43.9 W, fundable from the savings below."
+  },
+  {
+   "unit": "attention tiles",
+   "current": 64,
+   "qwen_required": 52,
+   "ds_required": 32,
+   "generic_required": 52,
+   "binding": "Qwen AR (G4 GQA mapping: 4 q heads on 16 lanes = 25% lane use)",
+   "basis": "Qwen: tile compute 36.9k cyc/token at 64 tiles vs KV stream 47.7k (results/arch/qwen_on_r25_20261008/PLAN.md G4) -> N >= 64 x 36.9/47.7 = 49.5 -> 52 (13/stack, 26 per KV head); at the MEASURED KV sweep rate (0.80 of peak, svc_kvs.json) the stream is 56.6k -> N >= 41.7 -> 44. DS: the T128/T640 tile prices (225/609 cyc) are measured on ot_hdc_v41x_attn NL 4 x S 8 = 32 tiles (results/rtl/v41_full_attention_numeric NL=4)",
+   "area_saved_mm2": 28.9,
+   "power_saved_w": 30.3,
+   "note": "44 tiles (20 saved: 48.1 mm2 / 50.4 W) if the KV stream stays at the measured 0.80; MTP verify p=4 fills 16 lanes (4x the useful MACs/row) -> re-check against the Qwen DFlash/MTP verify program before cutting below 52"
+  },
+  {
+   "unit": "SU lanes (N)",
+   "current": 1024,
+   "qwen_required": 512,
+   "ds_required": 512,
+   "generic_required": 512,
+   "binding": "Qwen AR (+0.41% cycles at N512)",
+   "basis": "sweep of VC.layout(f, N, 256) in timing.su_cost (the SU depth model the RTL benches check) on both programs",
+   "evidence": {
+    "qwen": {
+     "su256": {
+      "cycles": 1277444.1,
+      "delta_pct": 1.24
+     },
+     "su512": {
+      "cycles": 1266960.1,
+      "delta_pct": 0.41
+     },
+     "su768": {
+      "cycles": 1266960.1,
+      "delta_pct": 0.41
+     },
+     "su1024": {
+      "cycles": 1261736.1,
+      "delta_pct": 0.0
+     }
+    },
+    "ds": {
+     "su256": {
+      "cycles": 545848.6,
+      "delta_pct": 0.17
+     },
+     "su512": {
+      "cycles": 545224.6,
+      "delta_pct": 0.05
+     },
+     "su768": {
+      "cycles": 545224.6,
+      "delta_pct": 0.05
+     },
+     "su1024": {
+      "cycles": 544926.6,
+      "delta_pct": 0.0
+     }
+    }
+   },
+   "area_saved_mm2": 7.8,
+   "power_saved_w": 8.2,
+   "note": "lanes are not the SU bound; stage/drain (hgi-1010/b) is. N256 costs Qwen +1.25%, DS +0.17%"
+  },
+  {
+   "unit": "SFU",
+   "current": "1 (8.819 mm2 model)",
+   "qwen_required": "1/2 width",
+   "ds_required": 0,
+   "generic_required": "1/2 width",
+   "binding": "Qwen AR (SFU.GLU 36 records x 60 cyc = 2,160 cyc/token; DS has no SFU records)",
+   "basis": "qwen_timing_P8191_v10 per_unit SFU busy 2,160; ds_native_timing per_unit has no SFU; half width -> 120 cyc a record -> +2,160 cyc (+0.17%)",
+   "area_saved_mm2": 4.4,
+   "power_saved_w": 4.6,
+   "note": "area is a uarch_model estimate, not a record"
+  },
+  {
+   "unit": "HC",
+   "current": "4 quarters (6.087 mm2 model)",
+   "qwen_required": 0,
+   "ds_required": 4,
+   "generic_required": 4,
+   "binding": "DS AR (HC busy 92.8k of 543k cyc, critical)",
+   "basis": "ds_native_timing S2 per_unit HC; priced from the walk hc_mixes (measured mixes); any throughput cut adds directly",
+   "area_saved_mm2": 0.0,
+   "power_saved_w": 0.0,
+   "note": "keep; the RTL HC is already far below its price (budget audit ds_hc_mix_*), so it needs MORE effective throughput (wide VM lanes), not fewer quarters"
+  },
+  {
+   "unit": "index score lanes",
+   "current": 64,
+   "qwen_required": 0,
+   "ds_required": 36,
+   "generic_required": 36,
+   "binding": "DS AR (30 keys/cycle needed: 43,712 keys/token, scores node 253-364 cyc/layer)",
+   "basis": "physical/hbm_accel_die_views/index/DESIGN.md sec.2 (16 keys/cycle/stack = 4 x score slices); 36 = 9/stack gives margin 1.2",
+   "area_saved_mm2": 9.0,
+   "power_saved_w": 9.4,
+   "note": "UPPER BOUND: 20.57 mm2 is the whole indexer (array + sel + sel_cand + l20 topk + actquant; uarch model); only the score array scales. The key stream (one PC, budget audit ds_idx_key_stream_one_pc) is the real bound"
+  },
+  {
+   "unit": "quant",
+   "current": "0.5 mm2",
+   "qwen_required": "-",
+   "ds_required": "1",
+   "generic_required": "1",
+   "binding": "DS",
+   "basis": "trivial",
+   "area_saved_mm2": 0.0,
+   "power_saved_w": 0.0,
+   "note": "-"
+  }
+ ],
+ "total_saved": {
+  "area_mm2": 50.1,
+  "peak_power_w": 52.5
+ },
+ "reinvest_option": {
+  "what": "+8 SMs (40)",
+  "area_mm2": 36.5,
+  "peak_power_w": 43.9,
+  "qwen_tok_s": 1113.0,
+  "ds": "~0% (+-0.2%)",
+  "note": "net vs today: area -13.6 mm2, peak power -8.6 W (within 474.56 W)"
+ }
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+# ot-heavy: run a large build / bench (Verilator, big C++ compiles, yosys, iverilog sims) under a memory cap and a
+# per-host concurrency slot.  Fleet rule 2026-10-10 (EPYC2/3/4 hung at 2-7 GB free: Verilator -O2/-O3 C++ builds grew to
+# 36-118 GB after launch, dozens of cc1plus at 15-22 GB, agent benches outside the closure loop).
+#   ot-heavy --mem 96 [--slots-class big|small] -- <command...>
+# --mem GB   hard memory cap (cgroup MemoryMax, no swap) -- REQUIRED; the command is killed if it exceeds it, the host is not
+# Slots: /etc/ot-heavy.conf (BIG_SLOTS=2 SMALL_SLOTS=8 by default); big = --mem >= 32 GB.  Waits for a free slot.
+set -u
+MEM=""; CLASS=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --mem) MEM="$2"; shift 2;;
+    --slots-class) CLASS="$2"; shift 2;;
+    --) shift; break;;
+    *) break;;
+  esac
+done
+[ -n "$MEM" ] && [ $# -gt 0 ] || { echo "usage: ot-heavy --mem <GB> [--slots-class big|small] -- <command...>" >&2; exit 2; }
+BIG_SLOTS=2; SMALL_SLOTS=8
+[ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf
+[ -n "$CLASS" ] || { [ "$MEM" -ge 32 ] && CLASS=big || CLASS=small; }
+N=$([ "$CLASS" = big ] && echo $BIG_SLOTS || echo $SMALL_SLOTS)
+D=/var/tmp/ot-heavy; mkdir -p $D 2>/dev/null; chmod 1777 $D 2>/dev/null
+exec 9>/dev/null
+waited=0
+while :; do
+  for i in $(seq 0 $((N-1))); do
+    exec 9>"$D/$CLASS.$i.lock"
+    if flock -n 9; then
+      echo "$(date -Is) pid $$ user $(id -un) slot $CLASS.$i mem ${MEM}G: $*" > "$D/$CLASS.$i.owner"
+      exec systemd-run --user --scope -q -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "$@"
+    fi
+  done
+  [ $waited = 0 ] && echo "ot-heavy: all $N $CLASS slots busy on $(hostname); waiting ($(cat $D/$CLASS.*.owner 2>/dev/null | cut -c1-120 | tr '\n' ';'))" >&2
+  waited=1; sleep 20
+done

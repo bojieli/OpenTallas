@@ -1,0 +1,143 @@
+{
+ "schema": "opentallas.actual-def-pin-origin.v1",
+ "source_sha256": "e396636d1152208da0654d391ad80b03ab623b490d478d6f54fd8c1972d5cdf7",
+ "size_nm": [
+  129600,
+  183600
+ ],
+ "signal_pin_shapes": 896,
+ "orientations": {
+  "R0": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       0,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       0,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": true
+  },
+  "MY": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       24,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      24
+     ],
+     "compatible": true
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       0,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": true
+  },
+  "MX": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       0,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      0
+     ],
+     "compatible": true
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       24,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      24
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": true
+  },
+  "R180": {
+   "axes": {
+    "x": {
+     "constraints": [
+      [
+       "M5",
+       24,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      24
+     ],
+     "compatible": true
+    },
+    "y": {
+     "constraints": [
+      [
+       "M4",
+       24,
+       48
+      ]
+     ],
+     "period_nm": 48,
+     "allowed_origin_residues_nm": [
+      24
+     ],
+     "compatible": true
+    }
+   },
+   "compatible": true
+  }
+ }
+}

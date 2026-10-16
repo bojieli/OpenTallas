@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.hgi_unitrate.coll_pipe.v1",
+ "what": "ot_hgi_coll_ep PIPE=1 (pipelined epoch-tagged ALL_GATHER, EQ 4, parking PPK 512) vs PIPE=0 on the real DS-V4.1 L0 ALL_GATHER record sequence (13 records: x_projections qa 1280 / kvraw 512, attn_out y 5120, router gsc 384, expert_intermediate s5 s4 s3 s0 s1 s2 s6 2304, ffn_out yf 5120 words; FP32 sliced, G 96 TU), back to back, one rank, 95 SPMD-lockstep peers via the switch stub (LAT 453 = 377.6 ns crossing, CRED 137)",
+ "sources": {
+  "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv": "ac11a1d7413e423c1c82c2451bd4529e78de0f310bdc8bbc5dc3b64f802f2a16",
+  "rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv": "fe3c535f27274ae547f601d20af7d45cdead7c3bfcd107cb96d9206e6e3c21fa",
+  "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv": "4e700a8317d65577292f1c821fb145094d2e8b15ef52dcb6ca0d0db3894856b5",
+  "rtl/hbm_accel/generic/collective/tb_hgi_coll_pipe.sv": "838f446e0118a7dd2bee38d916ea56e3c08ee0371aaaae41d58fbd957708f429",
+  "rtl/hbm_accel/generic/collective/run_coll_pipe.sh": "48dd28489b7b82d43ef2069c39e2c6979c0135e900857b99c44a8904c65a623c",
+  "rtl/hbm_accel/generic/collective/run_coll_regress.sh": "705bff450593d99756ba3a0dcfd134064fa1a5a5f0e7ffa56a5a351407677706"
+ },
+ "price": {
+  "cycles": 4117.4,
+  "how": "ds_L0 NativeCost per record (e2e sim_cost) for the 13 bench records"
+ },
+ "runs": {
+  "run_base": {
+   "gathers": 13,
+   "cycles": 9752,
+   "verdict": "PASS"
+  },
+  "run_m1": {
+   "gathers": 13,
+   "cycles": 9000392,
+   "verdict": "FAIL"
+  },
+  "run_m2": {
+   "gathers": 13,
+   "cycles": 11018148,
+   "verdict": "FAIL"
+  },
+  "run_m3": {
+   "gathers": 13,
+   "cycles": 8000514,
+   "verdict": "FAIL"
+  },
+  "run_pipe": {
+   "gathers": 13,
+   "cycles": 2950,
+   "verdict": "PASS"
+  },
+  "run_pipe_lead1": {
+   "gathers": 13,
+   "cycles": 19805,
+   "verdict": "PASS"
+  },
+  "run_pipe_lead2": {
+   "gathers": 26,
+   "cycles": 78417,
+   "verdict": "PASS"
+  },
+  "run_pipe_r95": {
+   "gathers": 13,
+   "cycles": 2459,
+   "verdict": "PASS"
+  },
+  "run_pipe_reps3": {
+   "gathers": 39,
+   "cycles": 7724,
+   "verdict": "PASS"
+  }
+ },
+ "baseline": {
+  "cycles": 9752,
+  "ratio": 2.368
+ },
+ "pipelined": {
+  "cycles": 2950,
+  "ratio": 0.716
+ },
+ "mutants": {
+  "MUT_PIPE=1 tag ignored": "FAIL",
+  "MUT_PIPE=2 no parking (LEAD 1 GAP 1500)": "FAIL",
+  "MUT_PIPE=3 epoch completes one flit early": "FAIL"
+ },
+ "parking": "LEAD 1 GAP 1500 and LEAD 2 GAP 3000 REPS 2: peers start gathers before this rank (slow CP) -> flits parked per epoch and replayed, exact; cycles there are CP-gap bound",
+ "regression_pipe0": "tb_hgi_coll_bypass (endpoint + record forms, G8/G96, dupe, AMX, multi) + mode guard (pos/mut): verdicts identical old vs new source (regress_pipe0_*.txt)",
+ "limits": [
+  "one-rank bench with a lockstep switch stub (the established method of tb_hgi_coll_bypass / hgi_e2e_coll_slot); the switch tier must multicast dst 0xF0-0xF7 (epoch-tagged results) like 0xFF",
+  "PIPE pipelines ALL_GATHER only; reductions / ARGMAX_MERGE / ROW_GATHER stay single and wait for an empty pipe",
+  "issue rate is now the record setup (S_DIV 21 + S_TAB G+1 edges ~124 cycles a sliced gather)",
+  "PIPE adds EQ x PPK x 545 b parking (1.1 Mb) + 4 slice tables: physical closure of the PIPE=1 coll element pending"
+ ],
+ "price_correction": {
+  "previous": {
+   "cycles": 3991.2,
+   "how": "tools/hgi_sim/ds_native_timing.py NativeCost: perf.coll_cycles per w19 op shared over its records (= e2e_calibration sim_cost 3991.2 on ds_L0)"
+  },
+  "reason": "the bench sequence has 13 gathers (8 expert_intermediate records: s0..s6 plus one more 2,304-word gather) while the ds_L0 calibration has 12; price of the 13 = 3,991.2 + 126.2"
+ }
+}

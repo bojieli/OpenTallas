@@ -44,7 +44,7 @@ KIND_OF = {      # master prefix -> view kind directory
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_vm_': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
-    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab'}
+    'hfd_host_slab': 'host_slab', 'hfd_serdes_slab': 'serdes_slab', 'hfd_mtp': 'mtp'}
 
 
 def kind_of(master):
@@ -121,7 +121,13 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
-    native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
+    pin_root = os.environ.get('OT_VIEW_PORTS_ROOT')
+    if pin_root:    # [svc] 2026-10-10: a committed per-variant pin record (route hosts have no scipy for the r25gqn net)
+        f = ROOT / pin_root / name / 'ports.json'
+        if f.exists():
+            return dict(json.loads(f.read_text()), _alt_split=f'pinned:{pin_root}')
+    native_root = Path(os.environ.get('OT_NATIVE_PIN_CONTRACT_ROOT', ROOT / 'physical/hbm_accel_die_views/index/native'))
+    native = native_root / name / 'ports.json'
     if native.exists():
         return json.loads(native.read_text())
     alt = os.environ.get('OT_SVC_SPLIT')      # hbm-forks 2026-10-09: route a svc successor split (e.g. split_ps)
@@ -153,8 +159,17 @@ def master_record(name):
     pdir, narrow = port_dirs()
     insts = [it for it in m['insts'] if it.master == name]
     ports = {}
+    # hgi-takeover 2026-10-09: a fixed 'rects' plan may name its pins after a closed view's raw ports (hfd_mtp: group
+    # bit i -> the controller pin, e.g. t_cmdproc bit 0 = cmd_v): map such names back to (port, bit)
+    alias = {}
+    for p_, sp_ in mst.ports.items():
+        if sp_ and sp_[0] == 'rects':
+            for i_, x_ in enumerate(sp_[1]):
+                if isinstance(x_, (list, tuple)) and isinstance(x_[0], str):
+                    alias[x_[0]] = (p_, i_)
     for nm, layer, r in rects:
-        base, idx = re.match(r'^(.*)\[(\d+)\]$', nm).groups()
+        mm = re.match(r'^(.*)\[(\d+)\]$', nm)
+        base, idx = alias[nm] if nm in alias else mm.groups()
         p = ports.setdefault(base, dict(bits=0, layer=layer, pins=[]))
         p['bits'] = max(p['bits'], int(idx) + 1)
         p['pins'].append([nm, layer] + [round(v, 4) for v in r])
@@ -179,11 +194,23 @@ def master_record(name):
                                round=H.FINAL_ROUND))
 
 
+def native_scalar_pin_name(rec, port, name):
+    """Exact native-qend scalar ABI; keep its historical physical record intact."""
+    if (rec.get('schema') == 'opentallas.hbm_native_indexer_ports.v1'
+            and rec['master'] == 'hfd_idx_sel_native_qend'
+            and rec['ports'][port]['bits'] == 1):
+        if name != f'{port}[0]':
+            raise ValueError(f'unexpected native scalar pin: {name}')
+        return port
+    return name
+
+
 def io_tcl(rec):
     L_ = [f"# {rec['master']}: every die pin at the generator's position (tools/hbm_die_views.py ports, "
           f"{rec['generator']['round']})"]
     for p in sorted(rec['ports']):
         for nm, layer, x0, y0, x1, y1 in rec['ports'][p]['pins']:
+            nm = native_scalar_pin_name(rec, p, nm)
             L_.append(f'place_pin -pin_name {{{nm}}} -layer {layer} -location {{{(x0 + x1) / 2:.4f} {(y0 + y1) / 2:.4f}}} '
                       f'-pin_size {{{x1 - x0:.4f} {y1 - y0:.4f}}}')
     return '\n'.join(L_) + '\n'
@@ -196,7 +223,9 @@ def svh(rec):
 
 def cmd_ports(a):
     native_only = a.master and all((derived_record(n) or {}).get('schema') ==
-                                  'opentallas.hbm_native_indexer_ports.v1' for n in a.master)
+                                  'opentallas.hbm_native_indexer_ports.v1' or
+                                  str((derived_record(n) or {}).get('_alt_split', '')).startswith('pinned:')
+                                  for n in a.master)
     if native_only:
         M = {}
     else:
@@ -282,6 +311,7 @@ def check_lef(master, lef, tol=0.0125, allow_extra=()):
     gen = {}
     for p, v in rec['ports'].items():
         for nm, layer, x0, y0, x1, y1 in v['pins']:
+            nm = native_scalar_pin_name(rec, p, nm)
             gen[nm] = (p, layer, (x0 + x1) / 2, (y0 + y1) / 2)
     missing = sorted(set(gen) - set(r['pins']))
     extra = sorted(set(r['pins']) - set(gen))

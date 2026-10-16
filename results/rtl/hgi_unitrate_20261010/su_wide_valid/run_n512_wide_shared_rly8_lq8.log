@@ -1,0 +1,31 @@
+SHARED case 0: agent bursts read 28 write 18 (group shared with the SU)
+REC 0 0 accept 0 retire 253
+REC 0 1 accept 3 retire 465
+REC 0 2 accept 95 retire 711
+REC 0 3 accept 344 retire 954
+REC 0 4 accept 549 retire 1120
+REC 0 5 accept 608 retire 1231
+REC 0 6 accept 999 retire 1473
+REC 0 7 accept 1162 retire 1510
+REC 0 8 accept 1270 retire 1587
+REC 0 9 accept 1340 retire 1830
+REC 0 10 accept 1475 retire 1934
+REC 0 11 accept 1624 retire 2051
+REC 0 12 accept 1866 retire 2294
+REC 0 13 accept 1934 retire 2572
+REC 0 14 accept 2122 retire 3163
+REC 0 15 accept 2333 retire 3405
+REC 0 16 accept 2614 retire 3658
+REC 0 17 accept 2703 retire 3696
+REC 0 18 accept 3445 retire 3826
+REC 0 19 accept 3503 retire 4132
+REC 0 20 accept 3758 retire 5732
+REC 0 21 accept 3863 retire 5974
+REC 0 22 accept 5538 retire 6233
+REC 0 23 accept 5643 retire 6341
+REC 0 24 accept 6014 retire 6606
+REC 0 25 accept 6273 retire 7042
+REC 0 26 accept 6404 retire 7284
+CASE 0 service 7285 span 3876 stage 2724 compute 1662 drain 3687 other 0
+summary: 1 production-shape cases, 23792 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD PASS

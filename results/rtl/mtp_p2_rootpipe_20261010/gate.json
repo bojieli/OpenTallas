@@ -1,0 +1,42 @@
+{
+  "path": {
+    "rc": 0,
+    "expected": "pass",
+    "ok": true
+  },
+  "order": {
+    "rc": 1,
+    "expected": "fail",
+    "ok": true
+  },
+  "prefix": {
+    "rc": 0,
+    "expected": "pass",
+    "ok": true
+  },
+  "copy": {
+    "rc": 1,
+    "expected": "fail",
+    "ok": true
+  },
+  "ue": {
+    "rc": 0,
+    "expected": "pass",
+    "ok": true
+  },
+  "native": {
+    "rc": 0,
+    "expected": "pass",
+    "ok": true
+  },
+  "pin": {
+    "rc": 0,
+    "expected": "pass",
+    "ok": true
+  },
+  "overwrite": {
+    "rc": 1,
+    "expected": "fail",
+    "ok": true
+  }
+}

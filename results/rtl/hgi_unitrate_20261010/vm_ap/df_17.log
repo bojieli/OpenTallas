@@ -1,0 +1,25 @@
+LOAD f 1 m 3 n 4096: 258 cycles, 190.5 destination B / cycle, 95.3 source B / cycle = 3.0 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 2 m 2 n 4096: 151 cycles, 217.0 destination B / cycle, 54.3 source B / cycle = 1.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 4 m 5 n 1024: 95 cycles, 215.6 destination B / cycle, 53.9 source B / cycle = 1.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 4 n 2048: 104 cycles, 315.1 destination B / cycle, 315.1 source B / cycle = 9.9 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 2 m 4 n 8192: 288 cycles, 455.1 destination B / cycle, 113.8 source B / cycle = 3.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 64 n 8: 122 cycles, 16.8 destination B / cycle, 16.8 source B / cycle = 0.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 0 m 4 n 16384: 603 cycles, 434.7 destination B / cycle, 434.7 source B / cycle = 13.7 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+LOAD f 1 m 4 n 32768: 1117 cycles, 469.4 destination B / cycle, 234.7 source B / cycle = 7.4 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+ILOAD f 0 rows 256 n 1024: 2773 cycles, 378.1 destination B / cycle, 378.1 source B / cycle = 11.9 % of 3.80 TB/s
+FAIL f 0 row 0 elem 0: vm a5a90000 want a2bad11d
+FAIL f 0 row 0 elem 1: vm a5a90001 want c90c0b9c
+FAIL f 0 row 0 elem 2: vm a5a90002 want e35812dc
+FAIL f 0 row 0 elem 3: vm a5a90003 want a0be5f08
+FAIL f 0 row 0 elem 4: vm a5a90004 want bc79db1d
+FAIL f 0 row 0 elem 5: vm a5a90005 want 9812dc3b
+FAIL f 0 row 0 elem 6: vm a5a90006 want 0ae81735
+FAIL f 0 row 0 elem 7: vm a5a90007 want eb224889
+FAIL f 0: 32768 words outside the destination changed
+  load f 0: 32769 errors
+LOAD f 0 m 8 n 4096: 1003 cycles, 130.7 destination B / cycle, 130.7 source B / cycle = 4.1 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+FAIL f 1: 32768 words outside the destination changed
+  load f 1: 32769 errors
+LOAD f 1 m 8 n 4096: 305 cycles, 429.7 destination B / cycle, 214.9 source B / cycle = 6.8 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+APERTURE: a load past the two slots faults
+FATAL HGI_DMA_FRONT errors=65538

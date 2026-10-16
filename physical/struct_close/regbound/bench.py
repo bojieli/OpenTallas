@@ -171,8 +171,54 @@ def cvp_tb():
     return t
 L_ = "rtl/hbm_accel/tu/link_retry_sram_20261008"
 CASES["coll_vm_pub"] = dict(rtl=[f"{D}/ot_hbm_collective_vm_publication_rb.sv", "rtl/common/ot_secded.sv", f"{L_}/ot_hbm_replay_sram.sv",
-     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"], tb=cvp_tb,
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "rtl/lib/ot_reset_sync.sv"], tb=cvp_tb,
      top="tb_hbm_collective_vm_publication", ok="PASS_ALL", neg_defines=["OT_HBM_PUBLICATION_MUT_QID"], neg_ok="quarter read ownership lost")
+def cvp_fix_tb():
+    """sys-takeover PUBFIX=1: indexed read 7 edges on the wrapper (+1 MUXREG), everything else unchanged"""
+    t = cvp_tb()
+    for a, b in (("if(cycles-expected_cycle[seen]!=6)", "if(cycles-expected_cycle[seen]!=7)"),
+                 ("ot_hbm_collective_vm_publication #(", "ot_hbm_collective_vm_publication #(.PUBFIX(1),")):
+        assert t.count(a) == 1, a
+        t = t.replace(a, b)
+    return t
+CASES["coll_vm_pub_fix"] = dict(CASES["coll_vm_pub"], tb=cvp_fix_tb)
+def cvp_fix2_tb():
+    """sys-takeover PUBFIX=2: same latency as PUBFIX=1 (7 edges indexed read); the header-change fault is +1 edge"""
+    t = cvp_fix_tb(); a = "ot_hbm_collective_vm_publication #(.PUBFIX(1),"; assert t.count(a) == 1
+    return t.replace(a, "ot_hbm_collective_vm_publication #(.PUBFIX(2),")
+CASES["coll_vm_pub_fix2"] = dict(CASES["coll_vm_pub"], tb=cvp_fix2_tb)
+CASES["coll_vm_pub_fix2_qoh"] = dict(CASES["coll_vm_pub"], tb=cvp_fix2_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_QOH"],
+     neg_ok="published FP32 order")
+def cvp_fix3_tb():
+    """sys-takeover PUBFIX=3: indexed read 8 edges on the wrapper (+1 replay decoder DECPIPE); responses take a pin flop"""
+    t = cvp_fix2_tb()
+    for a, b in (("ot_hbm_collective_vm_publication #(.PUBFIX(2),", "ot_hbm_collective_vm_publication #(.PUBFIX(3),"),
+                 ("if(cycles-expected_cycle[seen]!=7)", "if(cycles-expected_cycle[seen]!=8)")):
+        assert t.count(a) == 1, a
+        t = t.replace(a, b)
+    return t
+CASES["coll_vm_pub_fix3"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb)
+def cvp_fix4_tb():
+    """sys-takeover 2026-10-10 PUBFIX=4 = 3 + per-macro replicated address / enable flops (ADDRREP): same cycles"""
+    t = cvp_fix3_tb(); a = "ot_hbm_collective_vm_publication #(.PUBFIX(3),"
+    assert t.count(a) == 1, a
+    return t.replace(a, "ot_hbm_collective_vm_publication #(.PUBFIX(4),")
+CASES["coll_vm_pub_fix4"] = dict(CASES["coll_vm_pub"], tb=cvp_fix4_tb)
+CASES["coll_vm_pub_fix4_rep"] = dict(CASES["coll_vm_pub"], tb=cvp_fix4_tb, neg_defines=["OT_REPLAY_MUT_ADDRREP"], neg_ok="FATAL")
+def cvp_fix5_tb():
+    """ds-1010 2026-10-10 PUBFIX=5 = 4 + per-bank SECDED encoders (WDREP) + boundary reset conditioner: same cycles"""
+    t = cvp_fix3_tb()
+    # the conditioned reset releases two edges after rst_n (the priced cost): this golden raises start_valid for ONE edge
+    # without looking at start_ready, so it starts two edges later (start_ready is held low until the release)
+    for a, b in (("ot_hbm_collective_vm_publication #(.PUBFIX(3),", "ot_hbm_collective_vm_publication #(.PUBFIX(5),"),
+                 ("repeat(4)tick;@(negedge clk);rst=1;tick;\n", "repeat(4)tick;@(negedge clk);rst=1;tick;tick;tick;\n")):
+        assert t.count(a) == 1, a
+        t = t.replace(a, b)
+    return t
+CASES["coll_vm_pub_fix5"] = dict(CASES["coll_vm_pub"], tb=cvp_fix5_tb)
+CASES["coll_vm_pub_fix5_wdrep"] = dict(CASES["coll_vm_pub"], tb=cvp_fix5_tb, neg_defines=["OT_REPLAY_MUT_WDREP"], neg_ok="")
+CASES["coll_vm_pub_fix3_tagq"] = dict(CASES["coll_vm_pub"], tb=cvp_fix3_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_TAGQ"],
+     neg_ok="actual VM read ABI")
 def artok(mode, w):
     """tools/hbm_native_ar_token_join_gate.py (4 positive vectors, MUT and owner-17 truncation mutants) on the wrapper"""
     import os, json as _j

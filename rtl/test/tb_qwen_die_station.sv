@@ -11,6 +11,7 @@ module tb_qwen_die_station;
     always #1 clk = ~clk;
     reg [DW-1:0] dprev; reg rq [0:3];
     integer i, k, bad = 0, seed = 7;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     initial begin
         repeat (3) @(posedge clk); rst_n = 1;
         for (i = 0; i < N; i = i + 1) begin

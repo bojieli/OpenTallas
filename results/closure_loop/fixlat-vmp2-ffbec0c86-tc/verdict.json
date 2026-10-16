@@ -1,0 +1,278 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "fixlat-vmp2-ffbec0c86-tc",
+ "block": "dsfd_vm_p2_ep",
+ "owner": "Claude:mtp-fixlat-1011",
+ "source_branch": "main",
+ "record_branch": "codex/closure-record-fixlat-vmp2-ffbec0c86-tc",
+ "source_commit": "ffbec0c86dd71c69af1072ca63f651d41fabf0fa",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 119.26,
+  "ff_ps": 8.67,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 23.42,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/work/orfs/logs/asap7/opentallas_dsfd_vm_p2_ep_asap7_s81ph_fixlat_vmp2_ffbec0c86_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_pass_p2_s1": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "FIXLAT p2_s1 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12692 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:117: $finish called at 10590549000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_pass_p2_s5": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "FIXLAT p2_s5 PASS (expect pass) :: P2FL PASS FV=12 RV=14 FC=8 RC=9 transactions=2 rows=160 lane0=320 lane1=160 cycles=12695 | rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:117: $finish called at 10593051000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_fail_p2_lat1": {
+   "expect": "fail",
+   "rc": 0,
+   "ok": true,
+   "tail": "FIXLAT p2_lat1 FAIL (expect fail) :: LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant) | FATAL: rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv:134: LINK_REG overflow |        Time: 50457000  Scope: tb_mtp_p2_fixlat.dut.u_lnk.u_l1.g_rtt.u_rx\n",
+   "track": "parallel"
+  },
+  "bench_fail_p2_naive_1tx": {
+   "expect": "fail",
+   "rc": 0,
+   "ok": true,
+   "tail": "FIXLAT p2_naive_1tx FAIL (expect fail) :: FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:98: P2FL unexpected fault cycle 15 |        Time: 17931000  Scope: tb_mtp_p2_fixlat\n",
+   "track": "parallel"
+  },
+  "bench_fail_p2_nogate": {
+   "expect": "fail",
+   "rc": 0,
+   "ok": true,
+   "tail": "FIXLAT p2_nogate FAIL (expect fail) :: FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_fixlat.sv:98: P2FL unexpected fault cycle 414 |        Time: 350697000  Scope: tb_mtp_p2_fixlat\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 609,
+    "mean": 145.2,
+    "min": 138.8,
+    "max": 151.1
+   },
+   "all": {
+    "n": 609,
+    "mean": 145.2,
+    "min": 138.8,
+    "max": 151.1
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 609,
+    "mean": 91.0,
+    "min": 85.2,
+    "max": 96.1
+   },
+   "all": {
+    "n": 609,
+    "mean": 91.0,
+    "min": 85.2,
+    "max": 96.1
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 111,
+   "CK_SS_ALL_MEAN": 111,
+   "CK_SS_MIN": 105,
+   "CK_SS_ALL_MIN": 105,
+   "CK_SS_MAX": 117,
+   "CK_SS_ALL_MAX": 117,
+   "CK_TT_MEAN": 111,
+   "CK_TT_ALL_MEAN": 111,
+   "CK_TT_MIN": 105,
+   "CK_TT_ALL_MIN": 105,
+   "CK_TT_MAX": 117,
+   "CK_TT_ALL_MAX": 117,
+   "CK_FF_MEAN": 91,
+   "CK_FF_ALL_MEAN": 91,
+   "CK_FF_MIN": 85,
+   "CK_FF_ALL_MIN": 85,
+   "CK_FF_MAX": 96,
+   "CK_FF_ALL_MAX": 96,
+   "CK_SSLIB_MEAN": 145,
+   "CK_SSLIB_MIN": 139,
+   "CK_SSLIB_MAX": 151,
+   "CK_SSLIB_ALL_MEAN": 145,
+   "CK_SSLIB_ALL_MIN": 139,
+   "CK_SSLIB_ALL_MAX": 151,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T20:06:00-07:00",
+ "job_spec": {
+  "name": "fixlat-vmp2-ffbec0c86-tc",
+  "block": "dsfd_vm_p2_ep",
+  "owner": "Claude:mtp-fixlat-1011",
+  "purpose": "mtp-fixlat-1011 2026-10-10 (ds-1010 latency audit eff5a6f0a: links AT RISK of the fixed-latency grant bug fixed on seq<->WFC). VM-slab end of P2 lane 0 (ltx 604 b, one flit per grant seen: correct over the 12 / 14 draft-A stations). Gates: tools/mtp_fixlat_gate.py stationed benches (relay stations at the generator counts) + latency-1 / stale / as-is negatives; option B TT>=0 FF>=0 DRC0. Cycles: 0 at full rate for the seq ends; P2 link ends +9 cycles per P2 transaction (measured, tb_mtp_p2_fixlat NOSTALL lnk 6,122 vs direct core 6,113 at 0 stations). | RELAUNCH idle-sweep-1010: c4de433dd failed floorplan PPL-0061 (plan pins name[0] vs scalar RTL ports); ffbec0c86 declares 1-bit ports [0:0].",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc4"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "main",
+   "commit": "ffbec0c86dd71c69af1072ca63f651d41fabf0fa",
+   "extra_paths": [
+    "results/rtl/dshbm_dspark_rtl_20261003/traces"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "pass_p2_s1",
+     "cmd": "python3 tools/mtp_fixlat_gate.py one p2_s1 --out {RUN}/bench",
+     "expect": "pass",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "FIXLAT p2_s1 PASS \\(expect pass\\)"
+    },
+    {
+     "name": "pass_p2_s5",
+     "cmd": "python3 tools/mtp_fixlat_gate.py one p2_s5 --out {RUN}/bench",
+     "expect": "pass",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "FIXLAT p2_s5 PASS \\(expect pass\\)"
+    },
+    {
+     "name": "fail_p2_lat1",
+     "cmd": "python3 tools/mtp_fixlat_gate.py one p2_lat1 --out {RUN}/bench",
+     "expect": "fail",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "fail_regex": "FIXLAT p2_lat1 FAIL \\(expect fail\\)"
+    },
+    {
+     "name": "fail_p2_naive_1tx",
+     "cmd": "python3 tools/mtp_fixlat_gate.py one p2_naive_1tx --out {RUN}/bench",
+     "expect": "fail",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "fail_regex": "FIXLAT p2_naive_1tx FAIL \\(expect fail\\)"
+    },
+    {
+     "name": "fail_p2_nogate",
+     "cmd": "python3 tools/mtp_fixlat_gate.py one p2_nogate --out {RUN}/bench",
+     "expect": "fail",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ],
+     "fail_regex": "FIXLAT p2_nogate FAIL \\(expect fail\\)"
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=24 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_vm_p2_ep rtl/experimental/mtp_p2_ordered_20261009/dsfd_p2_lnk.sv  $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 12,
+    "peak_ram_gb": 24
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=24 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_vm_p2_ep rtl/experimental/mtp_p2_ordered_20261009/dsfd_p2_lnk.sv ",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_vm_p2_ep"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": "main",
+  "budget": {
+   "enabled": false,
+   "reason": "new MTP link-end element: no budget sheet (mtp-die owns the MTP die budget); routed on the calibrated measured insertion (standard S81-PH flow)"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

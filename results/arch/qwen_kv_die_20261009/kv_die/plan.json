@@ -1,20 +1,20 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
+ "generator_sha256": "2423b1ee52dd60954d75401ee4b784512ec7a7541d0eecc9aea2f8a528ccf67a",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
  },
  "die_um": [
-  7894.368,
+  7505.568,
   24328.08
  ],
- "die_mm2": 192.055,
- "instances": 988,
- "buses": 1524,
- "instance_mm2": 131.141,
- "fill": 0.6828,
+ "die_mm2": 182.596,
+ "instances": 1381,
+ "buses": 2237,
+ "instance_mm2": 120.009,
+ "fill": 0.6572,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -33,8 +33,12 @@
    "mm2": 0.4199
   },
   "qkd_astk": {
-   "n": 4,
-   "mm2": 24.8776
+   "n": 2,
+   "mm2": 3.4441
+  },
+  "qkd_astk_n": {
+   "n": 2,
+   "mm2": 3.4441
   },
   "qkd_cdc": {
    "n": 128,
@@ -52,6 +56,10 @@
    "n": 1,
    "mm2": 0.4031
   },
+  "qkd_ectl": {
+   "n": 32,
+   "mm2": 2.6868
+  },
   "qkd_embgw": {
    "n": 1,
    "mm2": 0.1511
@@ -61,60 +69,64 @@
    "mm2": 0.4031
   },
   "qkd_land": {
-   "n": 4,
-   "mm2": 8.3909
+   "n": 2,
+   "mm2": 4.1955
+  },
+  "qkd_land_n": {
+   "n": 2,
+   "mm2": 4.1955
   },
   "qkd_pll": {
    "n": 1,
    "mm2": 0.105
   },
-  "qkd_reng": {
-   "n": 32,
-   "mm2": 33.9711
+  "qkd_rhead": {
+   "n": 128,
+   "mm2": 37.62
   },
   "qkd_rly_1": {
-   "n": 156,
-   "mm2": 0.2482
+   "n": 192,
+   "mm2": 0.3055
   },
   "qkd_rly_10": {
-   "n": 43,
-   "mm2": 0.0684
+   "n": 52,
+   "mm2": 0.0827
   },
   "qkd_rly_1025": {
-   "n": 88,
-   "mm2": 0.2501
+   "n": 150,
+   "mm2": 0.4263
   },
   "qkd_rly_1048": {
-   "n": 54,
-   "mm2": 0.1596
+   "n": 70,
+   "mm2": 0.2069
   },
   "qkd_rly_16": {
-   "n": 85,
-   "mm2": 0.1352
+   "n": 142,
+   "mm2": 0.2259
   },
   "qkd_rly_21": {
    "n": 4,
    "mm2": 0.0064
   },
   "qkd_rly_36": {
-   "n": 18,
-   "mm2": 0.0286
+   "n": 26,
+   "mm2": 0.0414
   },
   "qkd_rly_520": {
-   "n": 21,
-   "mm2": 0.0334
+   "n": 25,
+   "mm2": 0.0398
   },
   "qkd_rly_530": {
-   "n": 260,
-   "mm2": 0.4137
+   "n": 309,
+   "mm2": 0.4916
   },
   "qkd_rly_540": {
-   "n": 56,
-   "mm2": 0.0891
+   "n": 72,
+   "mm2": 0.1146
   },
   "qkd_rly_563": {
-   "n": 18,
-   "mm2": 0.0307
+   "n": 26,
+   "mm2": 0.0443
   },
   "qkd_seq": {
    "n": 1,
@@ -128,131 +140,131 @@
   "edge": "N (abuts the ROM die S edge under spine column M)"
  },
  "relay_stages": {
-  "af_EN": 1,
-  "af_ES": 27,
-  "af_WN": 1,
-  "af_WS": 27,
-  "am_EN": 5,
-  "am_ES": 5,
-  "am_WN": 4,
-  "am_WS": 4,
-  "ap_EN": 4,
-  "ap_ES": 4,
-  "ap_WN": 5,
-  "ap_WS": 5,
-  "aq_EN": 2,
-  "aq_ES": 27,
-  "aq_WN": 1,
-  "aq_WS": 26,
-  "ares": 21,
+  "af_EN": 3,
+  "af_ES": 34,
+  "af_WN": 3,
+  "af_WS": 33,
+  "am_EN": 6,
+  "am_ES": 6,
+  "am_WN": 7,
+  "am_WS": 7,
+  "ap_EN": 7,
+  "ap_ES": 7,
+  "ap_WN": 6,
+  "ap_WS": 6,
+  "aq_EN": 3,
+  "aq_ES": 32,
+  "aq_WN": 3,
+  "aq_WS": 34,
+  "ares": 25,
   "emf_EN": 4,
-  "emf_ES": 25,
-  "emf_WN": 4,
-  "emf_WS": 25,
-  "emr_EN": 4,
-  "emr_ES": 25,
+  "emf_ES": 28,
+  "emf_WN": 5,
+  "emf_WS": 30,
+  "emr_EN": 5,
+  "emr_ES": 31,
   "emr_WN": 4,
-  "emr_WS": 25,
-  "hc": 43,
-  "hf": 21,
-  "hs": 21,
-  "ing_EN": 25,
+  "emr_WS": 29,
+  "hc": 52,
+  "hf": 25,
+  "hs": 25,
+  "ing_EN": 29,
   "ing_ES": 4,
-  "ing_WN": 25,
-  "ing_WS": 4,
-  "krq_EN_0": 2,
-  "krq_EN_1": 8,
-  "krq_EN_2": 8,
-  "krq_EN_3": 3,
-  "krq_ES_0": 2,
-  "krq_ES_1": 8,
-  "krq_ES_2": 8,
-  "krq_ES_3": 3,
-  "krq_WN_4": 3,
-  "krq_WN_5": 8,
-  "krq_WN_6": 8,
-  "krq_WN_7": 3,
-  "krq_WS_4": 2,
-  "krq_WS_5": 8,
-  "krq_WS_6": 8,
-  "krq_WS_7": 3,
-  "krs_EN_0": 3,
-  "krs_EN_1": 8,
-  "krs_EN_2": 8,
-  "krs_EN_3": 3,
-  "krs_ES_0": 3,
-  "krs_ES_1": 8,
-  "krs_ES_2": 8,
-  "krs_ES_3": 3,
-  "krs_WN_4": 3,
-  "krs_WN_5": 8,
-  "krs_WN_6": 8,
-  "krs_WN_7": 3,
-  "krs_WS_4": 3,
-  "krs_WS_5": 8,
-  "krs_WS_6": 8,
-  "krs_WS_7": 3,
-  "kst": 43,
+  "ing_WN": 31,
+  "ing_WS": 5,
+  "krq_EN_4": 6,
+  "krq_EN_5": 11,
+  "krq_EN_6": 11,
+  "krq_EN_7": 6,
+  "krq_ES_4": 6,
+  "krq_ES_5": 11,
+  "krq_ES_6": 11,
+  "krq_ES_7": 6,
+  "krq_WN_4": 6,
+  "krq_WN_5": 12,
+  "krq_WN_6": 12,
+  "krq_WN_7": 7,
+  "krq_WS_4": 6,
+  "krq_WS_5": 12,
+  "krq_WS_6": 12,
+  "krq_WS_7": 7,
+  "krs_EN_4": 7,
+  "krs_EN_5": 12,
+  "krs_EN_6": 12,
+  "krs_EN_7": 8,
+  "krs_ES_4": 7,
+  "krs_ES_5": 12,
+  "krs_ES_6": 12,
+  "krs_ES_7": 8,
+  "krs_WN_4": 6,
+  "krs_WN_5": 12,
+  "krs_WN_6": 11,
+  "krs_WN_7": 8,
+  "krs_WS_4": 6,
+  "krs_WS_5": 11,
+  "krs_WS_6": 11,
+  "krs_WS_7": 7,
+  "kst": 52,
   "kvn_EN": 4,
-  "kvn_ES": 23,
-  "kvn_WN": 4,
-  "kvn_WS": 23,
+  "kvn_ES": 30,
+  "kvn_WN": 5,
+  "kvn_WS": 31,
   "lt_EN": 1,
   "lt_ES": 1,
   "lt_WN": 1,
   "lt_WS": 1,
-  "mf_EN": 4,
-  "mf_ES": 25,
+  "mf_EN": 5,
+  "mf_ES": 31,
   "mf_WN": 4,
-  "mf_WS": 25,
-  "tk": 43
+  "mf_WS": 29,
+  "tk": 52
  },
  "critical_stages": {
   "d2d_to_seq": 0,
   "seq_to_astk": {
-   "WS": 26,
-   "WN": 1,
-   "ES": 27,
-   "EN": 2
+   "WS": 34,
+   "WN": 3,
+   "ES": 32,
+   "EN": 3
   },
   "astk_to_hub": {
-   "WS": 5,
-   "WN": 5,
-   "ES": 4,
-   "EN": 4
+   "WS": 6,
+   "WN": 6,
+   "ES": 7,
+   "EN": 7
   },
   "hub_to_astk": {
-   "WS": 4,
-   "WN": 4,
-   "ES": 5,
-   "EN": 5
+   "WS": 7,
+   "WN": 7,
+   "ES": 6,
+   "EN": 6
   },
-  "hub_to_seq": 21,
+  "hub_to_seq": 25,
   "seq_to_d2d": 0,
   "seq_to_land": {
-   "WS": 23,
-   "WN": 4,
-   "ES": 23,
+   "WS": 31,
+   "WN": 5,
+   "ES": 30,
    "EN": 4
   },
   "gw_to_land": {
-   "WS": 25,
-   "WN": 4,
-   "ES": 25,
+   "WS": 30,
+   "WN": 5,
+   "ES": 28,
    "EN": 4
   },
   "land_to_gw": {
-   "WS": 25,
+   "WS": 29,
    "WN": 4,
-   "ES": 25,
-   "EN": 4
+   "ES": 31,
+   "EN": 5
   },
   "seq_to_gw": 0,
   "gw_to_seq": 0
  },
  "assumed": {
-  "row_engine_frame": "re-cut D qkd_reng 531.36 x 1,998 (~529 k um2 cells composed from synthesis, 0.50)",
-  "astk_w": 777.6,
+  "row_engine_frame": "re-cut H: 4 x qkd_rhead 648.0 x 453.6 + qkd_ectl 648.0 x 129.6 (measured cells: head 152,960 um2 placed, control 24,507 um2 synthesized; routes qkd_rhead_c / qkd_ectl_c)",
+  "astk_w": 220.32,
   "land_w": 172.8,
   "frames": {
    "qkd_ckbump": [
@@ -308,15 +320,30 @@
    "h": 12141.312,
    "ports": 91
   },
-  "qkd_astk": {
-   "w": 777.576,
-   "h": 7998.456,
-   "ports": 23
+  "qkd_land_n": {
+   "w": 172.776,
+   "h": 12141.312,
+   "ports": 91
   },
-  "qkd_reng": {
-   "w": 531.336,
-   "h": 1997.976,
+  "qkd_astk": {
+   "w": 220.296,
+   "h": 7817.016,
+   "ports": 55
+  },
+  "qkd_rhead": {
+   "w": 647.976,
+   "h": 453.576,
    "ports": 6
+  },
+  "qkd_ectl": {
+   "w": 647.976,
+   "h": 129.576,
+   "ports": 16
+  },
+  "qkd_astk_n": {
+   "w": 220.296,
+   "h": 7817.016,
+   "ports": 55
   },
   "ot_qkvd_ucie_x64_phy": {
    "w": 777.576,
@@ -424,13 +451,22 @@
   "failures": [],
   "rows": [
    {
-    "master": "qkd_reng",
-    "module": "ot_qwen_nearhbm_row_engine_d",
-    "rtl_ports": 34,
-    "die_ports": 6,
+    "master": "qkd_ectl",
+    "module": "ot_qwen_nearhbm_ectl_h",
+    "rtl_ports": 53,
+    "die_ports": 16,
     "classed": {
      "ev_k_first": "debug",
      "ev_v_first": "debug"
+    }
+   },
+   {
+    "master": "qkd_rhead",
+    "module": "ot_qwen_nearhbm_head_h",
+    "rtl_ports": 14,
+    "die_ports": 6,
+    "classed": {
+     "hid": "by_design: die-top strap (tie cells), the head index of this tile"
     }
    },
    {
@@ -459,12 +495,19 @@
   ],
   "frame_only": {
    "qkd_astk": "ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, P.V levels 4-7; recut.json)",
+   "qkd_astk_n": "as qkd_astk, N-stack pin plan (hub words on the S face)",
    "qkd_land": "qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip",
    "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
    "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
    "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
-   "qkd_ctrl": "qfd_ctrl (r21c element, unchanged)",
+   "qkd_ctrl": "qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion, no new die port)",
    "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
   }
+ },
+ "pin_reach": {
+  "hops": 1183,
+  "reach_um": 504.0,
+  "violations": 0,
+  "worst": []
  }
 }

@@ -4,12 +4,20 @@
 // Three complete expert rows drain in ascending selected-ID order, then shared.
 // Each SRAM flit is eight SECDED72 words. The consumer MUST correct/decode and
 // reject UE before arithmetic; sink_abort poisons this transaction on that path.
-module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0) (
+// mtp-lead 2026-10-09 (P2 route EARLY_FAIL_SETUP -1,003 / -96): SB_REG=1 gates with a registered state_bad (detection
+// still sets fault directly; the gating reacts one cycle later), ACC_REG=1 registers the accepted beat before the SECDED
+// encoders (+1 cycle from accept to write/complete).  PRE_DEC=1 (rb-a TT -53 / SS -440: pin-FIFO head -> identity /
+// expert compare -> accept mux -> acc_data_q, 23 levels) decodes each lane (target bank, identity / expert match) into a
+// per-lane register-output skid (ot_mtp_p2_regskid: out_data IS a register, no FIFO head select), so the accept sees
+// registered flags and acc_data_q's D is a 2:1 of registers (+1 cycle input latency, full rate).  All default 0:
+// the original logic.
+module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0, parameter integer PRIMARY_SHARED=0,
+  parameter integer SB_REG=0, parameter integer ACC_REG=0, parameter integer PRE_DEC=0) (
   input wire clk, rst_n,
   input wire start_v, output wire start_r,
   input wire [73:0] start_identity, // {frame3,rank2,stage2,epoch4,position21,user10,transaction32}
   input wire [26:0] start_ids,      // three ascending distinct 9-bit IDs, low ID first
-  input wire [1:0] in_v, output reg [1:0] in_r,
+  input wire [1:0] in_v, output wire [1:0] in_r,
   input wire [147:0] in_identity,
   input wire [17:0] in_expert,
   input wire [1:0] in_shared, in_last,
@@ -64,13 +72,47 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
       (wp!=wp_copy)||(rp!=rp_copy)||(pending!=pending_copy)||(pending_meta!=pending_meta_copy)||
       (count[0]!=count_copy[0])||(count[1]!=count_copy[1])||
       (count[2]!=count_copy[2])||(count[3]!=count_copy[3]);
+    reg state_bad_q;
+    wire sbad=SB_REG?state_bad_q:state_bad;
+    reg [1:0] x_r;
+    wire [1:0] x_v, x_last; wire [13:0] x_word; wire [1023:0] x_data;
+    wire [3:0] s_tgt; wire [1:0] s_vid, s_vexp;
+    function automatic [3:0] dec(input [73:0] li, input [8:0] le, input ls, input [73:0] cid, input [26:0] cids);
+      reg [1:0] t; reg ve; integer k;
+      begin t=0; ve=ls&&!PRIMARY_SHARED;
+        if(ls) t=3; else for(k=0;k<3;k=k+1) if(le==cids[9*k+:9]) begin t=k[1:0]; ve=1; end
+        dec={t, li==cid, ve};
+      end
+    endfunction
+    wire [3:0] rd0=dec(in_identity[73:0],in_expert[8:0],in_shared[0],identity,ids);
+    wire [3:0] rd1=dec(in_identity[147:74],in_expert[17:9],in_shared[1],identity,ids);
+    wire lane_open=busy&&!fault&&!sbad;
+    if(PRE_DEC) begin: predec
+      wire [1:0] pr; wire [523:0] fd[0:1];
+      for(genvar pl=0;pl<2;pl=pl+1) begin: lanes
+        ot_mtp_p2_regskid #(.W(524)) q(.clk(clk),.rst_n(rst_n),
+          .in_valid(in_v[pl]&&lane_open),.in_ready(pr[pl]),
+          .in_data({in_data[512*pl+:512],in_word[7*pl+:7],in_last[pl],pl?rd1:rd0}),
+          .out_valid(x_v[pl]),.out_ready(x_r[pl]),.out_data(fd[pl]));
+      end
+      assign in_r=pr&{2{lane_open}};
+      assign x_data={fd[1][523:12],fd[0][523:12]}; assign x_word={fd[1][11:5],fd[0][11:5]};
+      assign x_last={fd[1][4],fd[0][4]}; assign s_tgt={fd[1][3:2],fd[0][3:2]};
+      assign s_vid={fd[1][1],fd[0][1]}; assign s_vexp={fd[1][0],fd[0][0]};
+    end else begin: direct
+      assign in_r=x_r; assign x_v=in_v; assign x_last=in_last; assign x_word=in_word; assign x_data=in_data;
+      assign s_tgt={rd1[3:2],rd0[3:2]}; assign s_vid={rd1[1],rd0[1]}; assign s_vexp={rd1[0],rd0[0]};
+    end
+    reg [3:0] acc_bank_q, acc_last_q;
+    reg [511:0] acc_data_q[0:3];
+    reg [6:0] acc_word_q[0:3];
     wire queue_bad=(queue_meta[rp[2:0]]!=queue_meta_copy[rp[2:0]]);
     wire [3:0] occupancy=wp-rp;
-    wire issue=busy&&!fault&&!state_bad&&!all_issued&&
+    wire issue=busy&&!fault&&!sbad&&!all_issued&&
       complete[read_bank]&&(occupancy+pending<8);
     wire pop=out_v&&out_r;
-    assign start_r=!busy&&!fault&&!state_bad;
-    assign out_v=busy&&!fault&&!state_bad&&(wp!=rp)&&!queue_bad;
+    assign start_r=!busy&&!fault&&!sbad;
+    assign out_v=busy&&!fault&&!sbad&&(wp!=rp)&&!queue_bad;
     assign out_secded=queue[rp[2:0]];
     assign out_word=queue_meta[rp[2:0]][6:0];
     assign out_shared=queue_meta[rp[2:0]][8:7]==3;
@@ -80,23 +122,19 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     assign out_transaction_last=(queue_meta[rp[2:0]][8:7]==LAST_BANK)&&out_row_last;
 
     always @* begin
-      accept_bank=0; accept_last=0; in_r=0;
+      accept_bank=0; accept_last=0; x_r=0;
       for(b=0;b<4;b=b+1) begin accepted_data[b]=0;accepted_word[b]=0;end
       for(l=0;l<2;l=l+1) begin
-        target[l]=0;valid_expert[l]=in_shared[l]&&!PRIMARY_SHARED;
-        lane_word[l]=in_word[7*l+:7];
-        if(in_shared[l]) target[l]=3;
-        else for(b=0;b<3;b=b+1)
-          if(in_expert[9*l+:9]==ids[9*b+:9]) begin target[l]=b;valid_expert[l]=1;end
-        valid_identity[l]=(in_identity[74*l+:74]==identity);
+        target[l]=s_tgt[2*l+:2]; valid_identity[l]=s_vid[l]; valid_expert[l]=s_vexp[l];
+        lane_word[l]=x_word[7*l+:7];
         // Two input lanes may write different row banks simultaneously. Lane0
         // wins a bank conflict; the other producer holds its full beat.
-        in_r[l]=busy&&!fault&&!state_bad&&
-          !(l==1&&in_v[0]&&in_r[0]&&target[0]==target[1]);
-        if(in_v[l]&&in_r[l]&&valid_identity[l]&&valid_expert[l]&&
-           count[target[l]]<80&&lane_word[l]==count[target[l]]&&in_last[l]==(lane_word[l]==79)) begin
-          accept_bank[target[l]]=1;accept_last[target[l]]=in_last[l];
-          accepted_data[target[l]]=in_data[512*l+:512];
+        x_r[l]=lane_open&&
+          !(l==1&&x_v[0]&&x_r[0]&&target[0]==target[1]);
+        if(x_v[l]&&x_r[l]&&valid_identity[l]&&valid_expert[l]&&
+           count[target[l]]<80&&lane_word[l]==count[target[l]]&&x_last[l]==(lane_word[l]==79)) begin
+          accept_bank[target[l]]=1;accept_last[target[l]]=x_last[l];
+          accepted_data[target[l]]=x_data[512*l+:512];
           accepted_word[target[l]]=lane_word[l];
         end
       end
@@ -107,7 +145,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     for(genvar bank=0;bank<BANKS;bank=bank+1) begin: banks
       for(genvar slice=0;slice<8;slice=slice+1) begin: codes
         ot_secded_enc #(.K(64),.R(8)) enc(.clk(clk),
-          .d(accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
+          .d(ACC_REG?acc_data_q[bank][64*slice+:64]:accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
       end
       wire [767:0] macro_word={192'd0,encoded[bank]};
       for(genvar macro_index=0;macro_index<3;macro_index=macro_index+1) begin: macros
@@ -126,15 +164,22 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
         read_word<=0;read_word_copy<=0;all_issued<=0;all_issued_copy<=0;
         wp<=0;rp<=0;wp_copy<=0;rp_copy<=0;pending<=0;pending_copy<=0;
         pending_meta<=0;pending_meta_copy<=0;wr_commit<=0;wr_commit_last<=0;
-        wr_address<=0;done<=0;fault<=0;
+        wr_address<=0;done<=0;fault<=0;state_bad_q<=0;acc_bank_q<=0;acc_last_q<=0;
+        for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=0;acc_word_q[sb]<=0;end
         for(sb=0;sb<4;sb=sb+1) begin count[sb]<=0;count_copy[sb]<=0;end
       end else begin
-        done<=0;wr_commit<=accept_bank;wr_commit_last<=accept_last;
-        for(sb=0;sb<4;sb=sb+1) wr_address[7*sb+:7]<=accepted_word[sb];
+        done<=0;state_bad_q<=state_bad;
+        if(ACC_REG) begin
+          acc_bank_q<=accept_bank;acc_last_q<=accept_last;wr_commit<=acc_bank_q;wr_commit_last<=acc_last_q;
+          for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=accepted_data[sb];acc_word_q[sb]<=accepted_word[sb];wr_address[7*sb+:7]<=acc_word_q[sb];end
+        end else begin
+          wr_commit<=accept_bank;wr_commit_last<=accept_last;
+          for(sb=0;sb<4;sb=sb+1) wr_address[7*sb+:7]<=accepted_word[sb];
+        end
         if(state_bad||sink_abort||(busy&&wp!=rp&&queue_bad)) fault<=1;
-        for(si=0;si<2;si=si+1) if(in_v[si]&&in_r[si]&&
+        for(si=0;si<2;si=si+1) if(x_v[si]&&x_r[si]&&
           (!valid_identity[si]||!valid_expert[si]||count[target[si]]>=80||lane_word[si]!=count[target[si]]||
-           in_last[si]!=(lane_word[si]==79))) fault<=1;
+           x_last[si]!=(lane_word[si]==79))) fault<=1;
         for(sb=0;sb<4;sb=sb+1) begin
           if(accept_bank[sb]) begin count[sb]<=count[sb]+1;count_copy[sb]<=count_copy[sb]+1;end
           if(wr_commit[sb]&&wr_commit_last[sb]) begin complete[sb]<=1;complete_copy[sb]<=1;end
@@ -148,7 +193,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
             else begin read_bank<=read_bank+1;read_bank_copy<=read_bank_copy+1;end
           end else begin read_word<=read_word+1;read_word_copy<=read_word_copy+1;end
         end
-        if(pending&&!fault&&!state_bad) begin
+        if(pending&&!fault&&!sbad) begin
           queue[wp[2:0]]<=bank_q[pending_meta[8:7]][575:0];
           queue_meta[wp[2:0]]<=pending_meta;queue_meta_copy[wp[2:0]]<=pending_meta_copy;
           wp<=wp+1;wp_copy<=wp_copy+1;
@@ -164,12 +209,30 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
             ids<=start_ids;ids_copy<=start_ids;complete<=0;complete_copy<=0;
             read_bank<=MUT_ORDER?1:0;read_bank_copy<=MUT_ORDER?1:0;read_word<=0;read_word_copy<=0;
             all_issued<=0;all_issued_copy<=0;wp<=0;rp<=0;wp_copy<=0;rp_copy<=0;
-            pending<=0;pending_copy<=0;wr_commit<=0;wr_commit_last<=0;
+            pending<=0;pending_copy<=0;wr_commit<=0;wr_commit_last<=0;acc_bank_q<=0;acc_last_q<=0;
             for(sb=0;sb<4;sb=sb+1) begin count[sb]<=0;count_copy[sb]<=0;end
           end
         end
       end
     end
   end endgenerate
+endmodule
+// Register-output skid buffer: out_data / out_valid are flops (no read-select mux), in_ready = !skid_full (a flop).
+// Full rate; a stalled head parks the next beat in the skid register.
+module ot_mtp_p2_regskid #(parameter integer W=8)(
+  input wire clk, rst_n, input wire in_valid, output wire in_ready, input wire [W-1:0] in_data,
+  output reg out_valid, input wire out_ready, output reg [W-1:0] out_data);
+  reg sv; reg [W-1:0] sq;
+  assign in_ready=!sv;
+  wire push=in_valid&&!sv;
+  wire load=!out_valid||out_ready;
+  always @(posedge clk or negedge rst_n)
+    if(!rst_n) begin out_valid<=0; sv<=0; end
+    else if(load) begin out_valid<=sv||push; sv<=0; end
+    else if(push) sv<=1;
+  always @(posedge clk) begin
+    if(load) out_data<=sv?sq:in_data;
+    else if(push) sq<=in_data;
+  end
 endmodule
 `default_nettype wire

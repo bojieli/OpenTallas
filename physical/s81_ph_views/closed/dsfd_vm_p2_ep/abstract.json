@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_vm_p2_ep",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/fixlat-vmp2-ffbec0c86-tc/routes/fixlat_vmp2_ffbec0c86_tc/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_vm_p2_ep.lef": "52aaeaf645972d3d94e651687439cfa46df7d27a72922bb3052590cc6ba88d8d",
+    "dsfd_vm_p2_ep_ff.lib": "2191bcb9aeff97a9344f4a28885fe9a1ccb8e4b63d52972ecd7a920231a81f98",
+    "dsfd_vm_p2_ep_ss.lib": "69ac82fcaafd996fae6fcc1a833da49340c2bbcc11027ece546bb3a3f947a349"
+  },
+  "ok": true
+}

@@ -12,6 +12,10 @@ RR=8; RST=24
 if [ "${STACK:-p}" = c ]; then
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_c.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv"
   DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_LBD=${LBD:-2}"
+elif [ "${STACK:-p}" = h ]; then
+  # STACK=h: re-cut H (re-cut D with the row engine as hard sub-tiles: 4 head tiles + an engine control tile)
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv"
+  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${HMUT:++define+KVD_HMUT} ${RMUT:++define+KVD_RMUT} ${VMUT:++define+KVD_VMUT}"
 elif [ "${STACK:-p}" = e ]; then
   # STACK=e: re-cut E (D with levels 1-3 on the lane loop adders; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv)
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_e.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv"
@@ -33,7 +37,9 @@ SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd
  $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv \
  $W/hdc/ot_hdc_sfu.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_fpu.sv $W/hdc/ot_hdc_fp32_mul_pipe.sv \
  $W/proto/ot_fp32_add_rne_pipe.sv \
- $W/test/nearhbm/sim_nhb_fp_lat_dpi.sv $W/test/sim_hdc_v41x_fastfp_dpi.sv $W/test/sim_hdc_v41x_fastfp_wrap.sv"
+ $W/test/nearhbm/sim_nhb_fp_lat_dpi.sv $W/test/sim_hdc_v41x_fastfp_dpi.sv $W/test/sim_hdc_v41x_fastfp_wrap.sv \
+ $W/test/qwen_kv_die/ot_qkvd_hbm_timed_stack.sv $W/hdc/v41x/ot_hdc_v41x_idx_hbm.sv \
+ $P/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 CPP="$W/test/qwen_kv_die/tb_qkvd_layer.cpp $W/test/nearhbm/sim_nhb_fp_lat_dpi.cpp $W/test/sim_hdc_v41x_fastfp_dpi.cpp"
 mkdir -p $OUT
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \

@@ -23,3 +23,15 @@ endmodule
 module ot_attn_bank_ew544 (input wire clk, input wire [543:0] d, output wire [543:0] q);
     ot_attn_bank #(.W(544)) u (.clk(clk), .d(d), .q(q));
 endmodule
+
+// hbm-phys-1010 [att]: the RIGHT-SIZED bank for the 136-bit quad-result pipes ({gov 4, oflt 4, oy 128} of one quad):
+// same pin pitch / phase / faces / clock pin as the 544 banks (bit b at 0.396 + 0.192 b), 28.08 x 11.88 (SN) and
+// 11.88 x 28.08 (EW).  A 136-bit pipe in a 544 bank routed 408 dead spare wires every hop (ot_attn_bpipe passes the
+// whole bank); these banks carry only the 136 live bits and fit the 91-94 um quad side channels.
+module ot_attn_bank_sn136 (input wire clk, input wire [135:0] d, output wire [135:0] q);
+    ot_attn_bank #(.W(136)) u (.clk(clk), .d(d), .q(q));
+endmodule
+
+module ot_attn_bank_ew136 (input wire clk, input wire [135:0] d, output wire [135:0] q);
+    ot_attn_bank #(.W(136)) u (.clk(clk), .d(d), .q(q));
+endmodule

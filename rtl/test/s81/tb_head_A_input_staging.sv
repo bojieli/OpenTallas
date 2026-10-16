@@ -32,6 +32,7 @@ module tb;
    for(s=1;s<4;s=s+1) results[s]<=results[s-1];
  end
  integer i,j,age=0,seed=53119,checked=0,valids=0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 53119; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  initial begin
    repeat(3) @(negedge clk);
    for(i=0;i<1500;i=i+1) begin

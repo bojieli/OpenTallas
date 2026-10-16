@@ -39,7 +39,21 @@ module ot_dsrom_wfc_vmx #(
     parameter integer RQ     = 16,       // slow-side read-response queue
     parameter integer RDEPTH = 8,       // slow -> fast ratio FIFO entries
     parameter integer RQFREE = `ifdef OT_WFCVMX_PRED 2 `elsif OT_WFCVMX_RQ_FREE 1 `else 0 `endif,   // struct-close: vm_rq without the vm_re enable
+    parameter integer POSTED = 0,       // mtp-wfc 2026-10-10 (main decision: posted writes, same-ID rule): 1 = no ACK fence;
+                                        //   START travels the write channel as an in-order doorbell (row all-ones, payload
+                                        //   {user, token, pos}) and the VM endpoint starts the core once every earlier write
+                                        //   is at the VM pins; sw_ack becomes a sticky error level checked at k_done
+    parameter integer RD2    = 0,       // mtp-wfc 2026-10-11 (main GO): 2-port outbound prefetch: even / odd words on two read
+                                        //   channels issued as a pair in one cycle, returned as a pair in one entry (CDC 2 words)
+    parameter integer WOUTW  = 5,       // mtp-wfc 2026-10-10: unACKed-write counter width; >= log2 of the writes in flight over
+                                        //   the stationed write / ACK round trip + 1 (5 = the closed abutting-VM value)
+    parameter integer RQSRAM = 2,       // mtp-lead 2026-10-11: 1 = the read-response queue (RQ x RWE) in ot_sram_1r1w_128x256
+                                        //   macros (ot_fifo_sram_fwft, 2-entry flop out buffer, bypass when empty): RQ 64 x
+                                        //   1032 (RD2) as flops is 66k flops and exceeds SYNTH_MEMORY_MAX_BITS; same order,
+                                        //   same occupancy accounting (rq_n), overflow -> fault;
+                                        //   2 (default) = auto: SRAM when RQ x RWE > 32768 bits, flops otherwise
     parameter integer LAG    = 0        // ot_ratio_cdc_fifo LAG on both crossings (route variant: mem -> shadow arcs become
+
                                         // a max-delay write-period path with no hold check; +1 write cycle each way)
 ) (
     // ---- fast (WFC) domain
@@ -70,6 +84,11 @@ module ot_dsrom_wfc_vmx #(
     output wire              sr_valid,
     input  wire              sr_ready,
     output wire [VWA-1:0]    sr_addr,
+    output wire              sr1_valid,         // RD2: second read channel (odd words); unused (0) otherwise
+    input  wire              sr1_ready,
+    output wire [VWA-1:0]    sr1_addr,
+    input  wire              sr1_rv,
+    input  wire [FLIT-1:0]   sr1_rq,
     input  wire              sr_rv,             // read response, in order
     input  wire [FLIT-1:0]   sr_rq,
     output reg               k_start,
@@ -86,6 +105,8 @@ module ot_dsrom_wfc_vmx #(
     localparam integer SP = USER_W + 2 * NW;
     localparam integer PW = 1 + ((VWA + FLIT > SP) ? VWA + FLIT : SP);
     localparam integer RW = 1 + ((IB + FLIT > NW + 32) ? IB + FLIT : NW + 32);
+    localparam integer RWE = RD2 ? RW + 1 + FLIT : RW;   // RD2: {marker, v1, d1, idx0 / d0 or DONE payload}
+    localparam integer RQS = (RQSRAM == 2) ? ((RQ * RWE > 32768) ? 1 : 0) : RQSRAM;
     localparam integer PB = $clog2(PRE);
     initial if (PRE < 2 || (PRE & (PRE - 1)) != 0 || RQ < 2 || (RQ & (RQ - 1)) != 0)
         $fatal(1, "ot_dsrom_wfc_vmx: PRE and RQ powers of two >= 2");
@@ -114,8 +135,8 @@ module ot_dsrom_wfc_vmx #(
         end
     end
     // core_done: a level; dropped on the WFC's core_start (one gate from the pin), set by the DONE marker
-    wire r_v; wire [RW-1:0] r_d;
-    wire r_done = r_v && r_d[RW-1];
+    wire r_v; wire [RWE-1:0] r_d;
+    wire r_done = r_v && r_d[RWE-1];
     localparam integer SDP = 1 << IB;              // staging entries rounded to a power of two (every index in range)
     reg [SDP-1:0] got;                             // staging words written since the last start
     reg [FLIT-1:0] stg [0:SDP-1];
@@ -124,9 +145,18 @@ module ot_dsrom_wfc_vmx #(
         if (!frst_n) begin core_done <= 1'b0; got <= 0; fault_f <= 1'b0; end
         else begin
             if (core_start) begin core_done <= 1'b0; got <= 0; end
-            if (r_v && !r_d[RW-1]) begin
+            if (r_v && !r_d[RWE-1]) begin
                 stg[r_d[FLIT +: IB]] <= r_d[FLIT-1:0];
                 got[r_d[FLIT +: IB]] <= 1'b1;
+                if (RD2 && r_d[RW - 1 + FLIT]) begin                       // the pair's odd word: index + 1
+`ifdef OT_WFCVMX_MUT_RD2_SWAP
+                    stg[r_d[FLIT +: IB]] <= r_d[RW - 1 +: FLIT];              // MUTANT: the pair's words swapped
+                    stg[r_d[FLIT +: IB] + 1'b1] <= r_d[FLIT-1:0];
+`else
+                    stg[r_d[FLIT +: IB] + 1'b1] <= r_d[RW - 1 +: FLIT];
+`endif
+                    got[r_d[FLIT +: IB] + 1'b1] <= 1'b1;
+                end
             end
             if (r_done) begin
                 core_done <= 1'b1;
@@ -184,29 +214,31 @@ module ot_dsrom_wfc_vmx #(
     wire s_v; wire [PW-1:0] s_d; wire s_rdy;
     ot_ratio_cdc_fifo #(.W(PW), .DEPTH(DEPTH), .LAG(LAG)) u_f2s (.wclk(fclk), .wrst_n(frst_n), .w_v(f_wv), .w_rdy(f_wr), .w_d(f_wd),
         .rclk(sclk), .rrst_n(srst_n), .r_v(s_v), .r_rdy(s_rdy), .r_d(s_d), .w_live(), .r_live());
-    wire q_v; wire [RW-1:0] q_d; wire q_rdy;
-    ot_ratio_cdc_fifo #(.W(RW), .DEPTH(RDEPTH), .LAG(LAG)) u_s2f (.wclk(sclk), .wrst_n(srst_n), .w_v(q_v), .w_rdy(q_rdy), .w_d(q_d),
+    wire q_v; wire [RWE-1:0] q_d; wire q_rdy;
+    ot_ratio_cdc_fifo #(.W(RWE), .DEPTH(RDEPTH), .LAG(LAG)) u_s2f (.wclk(sclk), .wrst_n(srst_n), .w_v(q_v), .w_rdy(q_rdy), .w_d(q_d),
         .rclk(fclk), .rrst_n(frst_n), .r_v(r_v), .r_rdy(1'b1), .r_d(r_d), .w_live(), .r_live());
 
     // =========================================================== slow domain
     // writes: issued in FIFO order; a START waits for every earlier write's ACK
-    reg [4:0] wout;                                 // writes issued, not yet ACKed
+    reg [WOUTW-1:0] wout;                           // writes issued, not yet ACKed
     reg       busy;                                 // a job started, k_done not yet seen
     wire s_is_w = s_v && !s_d[PW-1];
     wire s_is_s = s_v && s_d[PW-1];
 `ifdef OT_WFCVMX_MUT_STARTEARLY
     wire s_go = s_is_s && !busy && !k_start;
 `else
-    wire s_go = s_is_s && !busy && !k_start && wout == 0 && !sw_ack;
+    wire s_go = POSTED ? (s_is_s && !busy && !k_start && sw_ready)
+                       : (s_is_s && !busy && !k_start && wout == 0 && !sw_ack);
 `endif
-    assign sw_valid = s_is_w;
-    assign sw_addr = s_d[FLIT +: VWA];
-    assign sw_data = s_d[FLIT-1:0];
+    wire s_mark = POSTED && s_is_s && !busy && !k_start;     // the START doorbell rides the write channel
+    assign sw_valid = s_is_w || s_mark;
+    assign sw_addr = s_mark ? {VWA{1'b1}} : s_d[FLIT +: VWA];
+    assign sw_data = s_mark ? FLIT'(s_d[SP-1:0]) : s_d[FLIT-1:0];
     wire sw_fire = sw_valid && sw_ready;
-    assign s_rdy = sw_fire || s_go;
+    assign s_rdy = POSTED ? sw_fire : (sw_fire || s_go);
     // outbound prefetch after k_done
     reg pf; reg [IB-1:0] pf_i, pf_n; reg [NW-1:0] pf_tok; reg [31:0] pf_val; reg pf_dn;
-    reg [RW-1:0] rq [0:RQ-1]; reg [$clog2(RQ):0] rq_n, r_out; reg [$clog2(RQ)-1:0] rq_r, rq_w;
+    reg [RWE-1:0] rq [0:RQ-1]; reg [$clog2(RQ):0] rq_n, r_out; reg [$clog2(RQ)-1:0] rq_r, rq_w;
     // read address: no compare when there is no SIDE region (the ORFS ABC flow asserts in &dch on the redundant
     // pf_i < XWORDS / pf_i < SD pair, aigDup.c:602; the issue-done state is a flop instead of a compare)
     reg pf_all;                                     // every outbound word's read issued
@@ -216,12 +248,35 @@ module ot_dsrom_wfc_vmx #(
     end else begin : g_pfa_side
         assign pf_a = (pf_i < XWORDS) ? TXB[VWA-1:0] + pf_i : SIDE_TXB[VWA-1:0] + (pf_i - XWORDS[IB-1:0]);
     end endgenerate
-    assign sr_valid = pf && !pf_all && (rq_n + r_out) < RQ;
+    // RD2: a pair (pf_i even, pf_i + 1 odd) issues only when both channels accept; the odd last word goes alone.
+    // r_out / rq_n count ENTRIES (a pair is one entry), so the response-queue reservation is unchanged.
+    wire rd_ok = pf && !pf_all && (rq_n + r_out) < RQ;
+    wire pair = RD2 && (pf_i + 1'b1 < SD);
+    wire both_rdy = sr_ready && (!pair || sr1_ready);   // one widened channel in the wrapper: sr1_ready = sr_ready
+    assign sr_valid = rd_ok && both_rdy;
+    assign sr1_valid = rd_ok && both_rdy && pair;
     assign sr_addr = pf_a;
+    assign sr1_addr = pf_a + 1'b1;
     wire sr_fire = sr_valid && sr_ready;
-    assign q_v = rq_n != 0;
-    assign q_d = rq[rq_r];
     wire q_pop = q_v && q_rdy;
+    // response-queue push (data words in order, then the DONE marker), combinational for the SRAM variant
+    wire rq_push_d = sr_rv;
+`ifdef OT_WFCVMX_MUT_DONEEARLY
+    wire rq_push_m = pf && !pf_dn && !sr_rv;                         // DONE before the outbound words
+`else
+    wire rq_push_m = pf && !pf_dn && pf_n == SD && !sr_rv;
+`endif
+    wire [RWE-1:0] rq_wd = sr_rv ? (RD2 ? {1'b0, sr1_rv, sr1_rq, (RW-1)'({pf_n, sr_rq})} : RWE'({pf_n, sr_rq}))   // data (MSB 0)
+                                 : (RWE'({pf_tok, pf_val}) | (RWE'(1) << (RWE - 1)));                        // DONE (MSB 1)
+    wire rq_ovf;
+    generate if (RQS) begin : g_rqs
+        ot_fifo_sram_fwft #(.W(RWE), .DEPTH(RQ), .MACRO(2)) u_rq (.clk(sclk), .rst_n(srst_n),
+            .push(rq_push_d || rq_push_m), .wdata(rq_wd), .pop(q_pop), .hv(q_v), .head(q_d), .ovf(rq_ovf));
+    end else begin : g_rqf
+        assign q_v = rq_n != 0;
+        assign q_d = rq[rq_r];
+        assign rq_ovf = 1'b0;
+    end endgenerate
     reg fault_s;
     always @(posedge sclk) begin
         k_start <= 1'b0;
@@ -229,36 +284,39 @@ module ot_dsrom_wfc_vmx #(
             wout <= 0; busy <= 1'b0; pf <= 1'b0; rq_n <= 0; r_out <= 0; rq_r <= 0; rq_w <= 0; wcnt_s <= 0;
             fault_s <= 1'b0; pf_dn <= 1'b0; pf_all <= 1'b1;
         end else begin
-            wout <= wout + (sw_fire ? 1'b1 : 1'b0) - (sw_ack ? 1'b1 : 1'b0);
-            if (sw_fire) wcnt_s <= wcnt_s + 1'b1;
-            if (sw_ack && wout == 0) fault_s <= 1'b1;
+            if (!POSTED) begin
+                wout <= wout + (sw_fire ? 1'b1 : 1'b0) - (sw_ack ? 1'b1 : 1'b0);
+                if (sw_ack && wout == 0) fault_s <= 1'b1;
+                if (WOUTW != 5 && sw_fire && !sw_ack && &wout) fault_s <= 1'b1;   // would wrap (closed default unchanged)
+            end
+            if (sw_fire && !(POSTED && s_mark)) wcnt_s <= wcnt_s + 1'b1;
             if (s_go) begin
-                k_start <= 1'b1; busy <= 1'b1;
+                k_start <= !POSTED; busy <= 1'b1;                 // POSTED: the VM endpoint starts the core
                 {k_user, k_token, k_pos} <= s_d[SP-1:0];
             end
             if (k_done) begin
                 if (!busy || pf) fault_s <= 1'b1;
+                if (POSTED && sw_ack) fault_s <= 1'b1;            // sticky VM status checked at the transaction end
                 busy <= 1'b0; pf <= 1'b1; pf_i <= 0; pf_n <= 0; pf_tok <= k_next_token; pf_val <= k_next_val;
                 pf_dn <= 1'b0; pf_all <= 1'b0;
             end
-            if (sr_fire) begin pf_i <= pf_i + 1'b1; if (pf_i == SD - 1) pf_all <= 1'b1; end
+            if (sr_fire) begin
+                pf_i <= pf_i + (pair ? 2'd2 : 2'd1);
+                if (pair ? (pf_i + 2'd2 >= SD) : (pf_i == SD - 1)) pf_all <= 1'b1;
+            end
             // response queue: data words in order, then the DONE marker
             begin : rqq
                 reg push_d, push_m;
-                push_d = sr_rv;
-`ifdef OT_WFCVMX_MUT_DONEEARLY
-                push_m = pf && !pf_dn && !sr_rv;                     // DONE before the outbound words
-`else
-                push_m = pf && !pf_dn && pf_n == SD && !sr_rv;
-`endif
+                push_d = rq_push_d;
+                push_m = rq_push_m;
+                if (RQS == 0 && (push_d || push_m)) rq[rq_w] <= rq_wd;
+                if (rq_ovf) fault_s <= 1'b1;
                 if (sr_rv) begin
-                    rq[rq_w] <= RW'({pf_n, sr_rq});                              // data word (MSB 0)
-                    pf_n <= pf_n + 1'b1;
+                    pf_n <= pf_n + 1'b1 + (RD2 && sr1_rv ? 1'b1 : 1'b0);
                 end else if (push_m) begin
-                    rq[rq_w] <= RW'({pf_tok, pf_val}) | (RW'(1) << (RW - 1));     // DONE marker (MSB 1)
                     pf_dn <= 1'b1;
                 end
-                if (pf && (pf_dn || push_m) && (sr_rv ? pf_n + 1'b1 : pf_n) == SD) pf <= 1'b0;
+                if (pf && (pf_dn || push_m) && (sr_rv ? pf_n + 1'b1 + (RD2 && sr1_rv ? 1'b1 : 1'b0) : pf_n) == SD) pf <= 1'b0;
                 if (push_d || push_m) rq_w <= rq_w + 1'b1;
                 if (q_pop) rq_r <= rq_r + 1'b1;
                 rq_n <= rq_n + ((push_d || push_m) ? 1'b1 : 1'b0) - (q_pop ? 1'b1 : 1'b0);

@@ -1,0 +1,17 @@
+BUILD K512 G8 shape0 cycles16527
+BUILD K2048 G96 shape1 cycles67263
+BAD lane0 tag6179 owner3 slot32 idx2047 filt1 err0 want32
+BAD lane0 tag6211 owner3 slot64 idx2047 filt1 err0 want64
+BUILD K2048 G96 shape0 cycles67263
+BAD lane0 tag32 owner0 slot32 idx2029 filt1 err0 want896
+BAD lane0 tag4130 owner2 slot32 idx2 filt0 err0 want226
+BAD lane0 tag4131 owner2 slot33 idx30 filt0 err0 want233
+BAD lane0 tag4132 owner2 slot34 idx58 filt0 err0 want240
+BAD lane0 tag4133 owner2 slot35 idx86 filt0 err0 want247
+BAD lane0 tag4134 owner2 slot36 idx114 filt0 err0 want254
+BUILD K2048 G1 shape0 cycles65553
+BUILD K17 G4 shape0 cycles615
+BUILD K7 G2 shape0 cycles259
+FAULT malformed PASS
+FATAL: rtl/hbm_accel/generic/collective/inverse/tb_hgi_inverse_selected.sv:57: 1338 mismatches
+       Time: 458362000000 Scope: tb_hgi_inverse_selected

@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "bfh_front280_28fa6290c-cl",
+ "block": "ot_s81_bf_front",
+ "owner": "Claude:bf-arch",
+ "source_branch": "claude/bf-arch-20261009",
+ "record_branch": "codex/closure-record-bfh_front280_28fa6290c-cl",
+ "source_commit": "28fa6290c775347f1b0469d78962dddd1a254404",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/bfh_front280_28fa6290c-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 1.47,
+  "ff_ps": 7.1,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -208.93,
+  "ss_sensitivity_tns_ps": -320870.5,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/bfh_front280_28fa6290c-cl/routes/bfh_front280_28fa6290c_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/s81_native_bf/margin/signoff_ref.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/bfh_front280_28fa6290c-cl/routes/bfh_front280_28fa6290c_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/bfh_front280_28fa6290c-cl/routes/bfh_front280_28fa6290c_cl/work/orfs/logs/asap7/opentallas_ot_s81_bf_front_asap7_bfh_front280_28fa6290c_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "bench beside the route: ot-epyc1tb /srv/opentallas-scratch/claude/bfarch/hcol (bf_txn_bench recut L2 HCOL=1 + mutants); gates adoption",
+ "checks": {},
+ "calibration": null,
+ "cycles_added": "HCOL +1 cycle (column boundary registers) on top of BXST2/FXST2 (+2): partials +3 cycles vs the flat QZE element; transaction-level exact",
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T00:01:28-07:00",
+ "job_spec": {
+  "name": "bfh_front280_28fa6290c-cl",
+  "block": "ot_s81_bf_front",
+  "owner": "Claude:bf-arch",
+  "purpose": "BF-ARCH HIERARCHY 2026-10-09 (coordinator: hardened column tiles with registered abutted boundaries, widen the column slot; keeps the 4 flat bfa_* routes). front block (pin regs + front core), 280.152 x 190.08, column interface on W/E faces. RTL f2c75c4f7 (tools/s81/gen_bf_hier.py): ot_v41_bf_col = one macro column with every input registered at its boundary on the free clock (+1 cycle, exact by construction), TCG tiles, BXST2/FXST2 relays; ot_s81_bf_front = pin regs + front core. Pair slot 2 x 520 + 280 = 1,320 um (was 1,003). Die composition coordinated with s81-gen. See bf-arch.log.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc4",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 60,
+  "source": {
+   "branch": "claude/bf-arch-20261009",
+   "commit": "28fa6290c775347f1b0469d78962dddd1a254404"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "enabled": false,
+    "reason": "new CTS topology but the route reference is only the TT boundary mean for route-time setup IO; same-RTL measurement 841 (bfk_recut_qze_ttref calib.json) used; the verdict re-STAs at the routed insertion (BF-PINCLK owner deadline: no serial calibrate)"
+   },
+   "route": {
+    "cmd": "export CK_SS_MEAN=841; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/s81_native_bf/margin/pinclk_group.tcl'; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; export SIGNOFF_SDC=physical/s81_native_bf/margin/signoff_ref.sdc; OUT={RUN}/routes SRC={SRC} BLOCK=front bash physical/s81_bf_hier/route_hier.sh {LABEL} --die-w 280.152 --hm 0.000 --bxst 2 --fxst 2",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ],
+    "peak_ram_gb": 60
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && (grep -h \"BF_PINCLK\\|BF_INHOLD_PAD\\|BF_IO\" {RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/4_1_cts.log > {RUN}/record/pinclk_cts.txt || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/s81_native_bf/margin/signoff_ref.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "reason": "Guarded rev3 reproduces SS/FF sign-off independently; owner BF recovery requests first hold-only ECO",
+   "session": "mm"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/s81_bf_arch_20261009/bfh_front280_28fa6290c-cl"
+   }
+  ],
+  "cycles_added": "HCOL +1 cycle (column boundary registers) on top of BXST2/FXST2 (+2): partials +3 cycles vs the flat QZE element; transaction-level exact",
+  "merge_target": null,
+  "no_bench_reason": "bench beside the route: ot-epyc1tb /srv/opentallas-scratch/claude/bfarch/hcol (bf_txn_bench recut L2 HCOL=1 + mutants); gates adoption",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "fp_lint": {
+   "set": {
+    "sliver_um": 10.0
+   },
+   "why": "sliver_um 12->10 (bf-fplint 2026-10-08 21:20 PT): the two flagged gaps are the 10.49 um channels between the stacked ROM pair of each column (place.tcl: rom0 R0 / rom1 MX, 2x5.4 um clearance), ~38 placement rows, ROM pins on the outer W/E faces (none face the gap). Not the r23h class (1.5-3.6 um, 2-5 rows -> DPL-0033): the identical floorplan (place.tcl md5 25d7794e at 8db5411e3/f5363befb/6cd23db2b/a12f3c7e7/6e8f0b698/e4272b562) legalised with no DPL error in bfh2_recutcgl50_hm0 cal + route (3_5_place_dp, util 55.3%). All other checks stay FAIL."
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

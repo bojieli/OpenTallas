@@ -28,6 +28,13 @@ module ot_qkvd_layer_tb #(
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
     parameter integer W      = 528,
+    parameter integer DQ     = 32,     // qwen-1010/b: row-engine outstanding-row credit (row / e FIFO depth)
+    parameter integer MERGE_PD = DQ,   //   the landing merge's per-engine queue depth (mutant: < DQ must be caught)
+    parameter integer HBMT   = 0,      // qwen-1010/b: 1 = rows timed by ot_qkvd_hbm_timed_stack (timed HBM3E, REFpb) per stack
+    parameter integer HBMT_SLOT = 64,  //   reorder slots per engine
+    parameter integer HBMT_PULLIN = 0, //   REFpb pull-in (model PULLIN)
+    parameter integer RQ_FAR = 0,      //   die relay stations on the far engines' rq / rs (kv_die.py relay_stages)
+    parameter integer RS_FAR = 0,
     parameter integer E      = 4 * R
 ) (
     input  wire              clk,
@@ -57,6 +64,11 @@ module ot_qkvd_layer_tb #(
     output wire [E-1:0]      req_v,
     output wire [E-1:0]      req_g,
     output wire [13*E-1:0]   req_t,
+    output wire [E-1:0]      hrow_rdy,     // HBMT: row of engine x is back (in request order) -> the harness drives it
+    output wire [E-1:0]      hrow_v,
+    output wire [E-1:0]      hrow_g,
+    output wire [13*E-1:0]   hrow_t,
+    output wire [3:0]        hrow_fault,
     input  wire [E-1:0]      rsp_valid,
     input  wire [E*HD*8-1:0] rsp_data,
     output wire              kvw_v,
@@ -172,7 +184,7 @@ module ot_qkvd_layer_tb #(
                                                                    .q({kl_vg, kl_t, kl_l, kl_d}));
     genvar s;
     generate for (s = 0; s < 4; s = s + 1) begin : g_land
-        ot_qkvd_kv_merge #(.HD(HD), .E(R), .MUT(MUT == 2 ? 1 : (MUT == 7 ? 2 : 0))) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
+        ot_qkvd_kv_merge #(.HD(HD), .E(R), .DQ(DQ), .PD(MERGE_PD), .MUT(MUT == 2 ? 1 : (MUT == 7 ? 2 : 0))) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
             .kvw_vg(kl_vg), .kvw_t(kl_t), .kvw_layer(kl_l), .kvw_d(kl_d), .lay_start(x_start), .lay_T(x_T), .lay_idx(x_L),
             .e_req_valid(m_rq_v[R*s +: R]), .e_req_v(m_rq_vv[R*s +: R]), .e_req_g(m_rq_g[R*s +: R]),
             .e_req_t(m_rq_t[13*R*s +: 13*R]), .h_req_valid(req_valid[R*s +: R]), .h_req_v(req_v[R*s +: R]),
@@ -192,11 +204,23 @@ module ot_qkvd_layer_tb #(
     ot_hdc_delay #(.W(14 + 6 + 6 + 512), .D(QX)) u_qxd (.clk(clk), .rst_n(rst_n), .d({a_T, a_L, a_qb, a_qd}), .q({x_T, x_L, x_qb, x_qd}));
     ot_hdc_delay #(.W(1), .D(RX), .RESET(1)) u_rxv (.clk(clk), .rst_n(rst_n), .d(h_ov), .q(a_ov));
     ot_hdc_delay #(.W(1 + 6 + 512), .D(RX)) u_rxd (.clk(clk), .rst_n(rst_n), .d({h_og, h_ob, h_od}), .q({a_og, a_ob, a_od}));
-    ot_qwen_nearhbm_attn_die_tb #(.HD(HD), .R(R), .LINK(LINK), .SCALE(SCALE)) u_attn (
+    ot_qwen_nearhbm_attn_die_tb #(.HD(HD), .R(R), .LINK(LINK), .SCALE(SCALE), .DQ(DQ)) u_attn (
         .clk(clk), .rst_n(rst_n), .start(x_start), .T(x_T), .q_valid(x_qv), .q_beat(x_qb), .q_data(x_qd),
         .req_valid(m_rq_v), .req_v(m_rq_vv), .req_g(m_rq_g), .req_t(m_rq_t), .rsp_valid(e_rv), .rsp_data(e_rd),
         .out_valid(h_ov), .out_g(h_og), .out_beat(h_ob), .out_data(h_od), .fault(af), .ev_stack(), .ev_hub());
     assign faults[3] = |af;
     assign a_start_o = a_start;
     assign a_out_valid_o = a_ov;
+    // qwen-1010/b 2026-10-10: the timed HBM3E stacks (HBMT = 1); HBMT = 0 leaves the harness's idealised model in charge
+    genvar hs;
+    generate if (HBMT) begin : g_hbmt
+        for (hs = 0; hs < 4; hs = hs + 1) begin : g_s
+            ot_qkvd_hbm_timed_stack #(.R(R), .NSLOT(HBMT_SLOT), .PULLIN(HBMT_PULLIN), .RQ_FAR(RQ_FAR), .RS_FAR(RS_FAR)) u_hs (.clk(clk), .rst_n(rst_n),
+                .rq_v_i(req_valid[R*hs +: R]), .rq_vv_i(req_v[R*hs +: R]), .rq_g_i(req_g[R*hs +: R]), .rq_t_i(req_t[13*R*hs +: 13*R]),
+                .row_rdy(hrow_rdy[R*hs +: R]), .row_vv(hrow_v[R*hs +: R]), .row_g(hrow_g[R*hs +: R]),
+                .row_t(hrow_t[13*R*hs +: 13*R]), .fault(hrow_fault[hs]));
+        end
+    end else begin : g_nohbmt
+        assign hrow_rdy = '0; assign hrow_v = '0; assign hrow_g = '0; assign hrow_t = '0; assign hrow_fault = '0;
+    end endgenerate
 endmodule

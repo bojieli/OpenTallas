@@ -1,0 +1,10 @@
+BAD stack 0 word 1333
+BAD stack 0 word 1334
+BAD stack 0 word 1335
+BAD stack 0 word 1336
+HOSTSD sent=4000 delivered=2681/1318/0/0 pending=1 bad=1348 acks_issued=3999 acks_seen=3999 host_credits=8 fault=1 cycles=162001
+FAIL
+- rtl/test/s81_native_ingest/tb_dsfd_host_sd.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 135us; walltime 0.040 s; speed 3.360 ms/s
+- Verilator: cpu 0.040 s on 1 threads; allocated 9 MB

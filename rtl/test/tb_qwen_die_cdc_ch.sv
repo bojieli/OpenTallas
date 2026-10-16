@@ -14,6 +14,7 @@ module tb_qwen_die_cdc_ch;
         .rclk(rclk), .rrst_n(rst_n), .o_v(o_v), .o_d(o_d), .o_cr(o_cr), .r_fault(r_fault));
     reg [W-1:0] sent [0:N-1];
     integer ns = 0, nr = 0, bad = 0, credits = 4, seed = 3, k;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg [3:0] crpipe = 0;
     // sender (wclk)
     reg go = 0;

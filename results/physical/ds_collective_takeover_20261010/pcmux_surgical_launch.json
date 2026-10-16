@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.physical.diagnosis.v1",
+  "status": "SURGICAL_ECO_IN_FLIGHT_NOT_CLOSED",
+  "records": [
+    {
+      "job": "ob_a",
+      "host": "ot-agidock128",
+      "log": "/srv/opentallas-scratch/claude/closure-loop/pcmux_ob_a-c60bc4ed7-tc-rd/cl/eco/pass1/eco_mm.log",
+      "log_sha256_at_collection": "53c75dbb34d20a2fb7ff92edd11e028309d7f9cb0b263b0c5fb6fb5235c469ca",
+      "excerpt": "ob_a_hold_window.txt"
+    },
+    {
+      "job": "pre2_a",
+      "host": "ot-epyc2",
+      "log": "/srv/opentallas-data/claude/closure-loop/pcmux_pre2_a-abe11f639-tc/cl/eco/pass1/eco_mm.log",
+      "log_sha256_at_collection": "d0da5ecdc2b6796469fccb883aefde841a05ca85978f5d5c86e8c40dc05b9903",
+      "excerpt": "pre2_a_hold_window.txt"
+    },
+    {
+      "job": "pre2_b",
+      "host": "ot-epyc3",
+      "log": "/srv/opentallas-scratch2/scratch/claude/closure-loop/pcmux_pre2_b-abe11f639-tc/cl/eco/pass1/eco_mm.log",
+      "log_sha256_at_collection": "c994f749ad2bcf10c744dd329f718da7c21c4392c0222705ffc988c13376e040",
+      "excerpt": "pre2_b_hold_window.txt"
+    }
+  ],
+  "finding": "The repair objective30ps selects16,072 ob_a endpoints, including10,876 already passing queue feedback endpoints atFF>=9.9ps; initial exact pre-scene TT49.496185FF-5.49516 agrees with signoff. Broad target adds15,705cells and finalFF-10.68 per immutable closure state. No constraint-relaxation or source-reference mismatch inferred.",
+  "surgical": {
+    "parent_job": "pcmux_ob_a-c60bc4ed7-tc-rd",
+    "rtl_source": "c60bc4ed7920fc012812dfa5927182768ab2f602",
+    "flow_commit": "b532f5cad6786b3c577a975deaaf0b06b26c2b50",
+    "flow_sha256": {
+      "hold_eco.sh": "502e591f0f994ad39132fc5752095633603e3fbceaa7d3299ac8bb2ee6c4807a",
+      "hold_eco.tcl": "d4dfc4c58eaaf2dcd6ae32859323af2b6c2d050652df7de0796339aa9487c905",
+      "hold_eco_corner.tcl": "549caa13cf4be6b08be160d72de3df1043ca582a94f722d2e9390963fd72dead",
+      "hold_eco_window.tcl": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+      "hold_eco_sdc.py": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+      "tt_resta.sh": "4b663918cc4a82c8b9839b31062e377eca1134e3ed45729f2cb4dde9dc5dc49b"
+    },
+    "knobs": {
+      "HM": 0,
+      "ALLOW": 4,
+      "PASSES": 1,
+      "ACC_SS": 0,
+      "ACC_FF": 0,
+      "SETUP_LIB": "TT"
+    },
+    "acceptance": "owner TT >=0 FF >=0 DRC0; loop independent reSTA required before adoption",
+    "admission": "host admit.sh peak32GiB; measured37GiB MemAvailable114GiB disk; preserve every live job/output"
+  },
+  "physical_adoption": "Only after sidecar TT>=0 FF>=0 DRC0 and independent closure-loop reSTA passes; preserve historical failures."
+}

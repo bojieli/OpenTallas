@@ -49,7 +49,13 @@ module ot_dsrom_markov_head_driver #(
  // IOREG (mtp-lead 2026-10-09, margin-first; default 0 = unchanged): every input captured in a pin flop, every
  // output launched from a flop, and the embedding write split into check -> registered one-hot bank enable -> write
  // (the 32-bit id compare and the 4->16 decode no longer reach the 4,096 vector enables). +2 cycles to head_go.
- parameter integer IOREG=0
+ parameter integer IOREG=0,
+ parameter integer RINGDLY=0,      // ot_dsrom_markov_row RINGDLY (hold-safe ring delay lines)
+ // HBRELAY (fe-push-ds-1010, default 0 = unchanged): the head rowstream (head_valid / head_bits / head_fault) reaches the
+ // head queue through one more register stage after the pin flop (+1 cycle on the rowstream; it is never backpressured,
+ // so only latency moves). The bits stage is two (* keep *) copies, one per queue seat (hq[0] / hq[1]), so the pin-flop ->
+ // queue hop is cut in two and no copy fans out to both seats. 2 = bench mutant: the seat-1 copy is one cycle late.
+ parameter integer HBRELAY=0
 )(input wire clk,rst_n,input wire start,output wire start_ready,
  input wire[16:0] row0,input wire[31:0] transaction,
  input wire embed_valid,output wire embed_ready,input wire[255:0] embed_data,
@@ -72,6 +78,15 @@ module ot_dsrom_markov_head_driver #(
   assign {i_start,i_ev,i_el,i_hv,i_hf,i_row0,i_tx,i_eid,i_hb,i_ed,i_eb}={start,embed_valid,embed_last,head_valid,head_fault,row0,transaction,embed_id,head_bits,embed_data,embed_beat};
   assign start_ready=start_ready_int;assign embed_ready=embed_ready_int;assign best_valid=best_valid_int;
  end endgenerate
+ wire h_v,h_f;wire[31:0] h_b0,h_b1;
+ generate if(HBRELAY!=0)begin:g_hbr
+  reg rv,rf;(* keep *) reg[31:0] rb0;(* keep *) reg[31:0] rb1;reg[31:0] rbm;
+  always @(posedge clk or negedge rst_n) if(!rst_n)begin rv<=0;rf<=0;end else begin rv<=i_hv;rf<=i_hf;end
+  always @(posedge clk)begin rb0<=i_hb;rbm<=i_hb;rb1<=(HBRELAY==2)?rbm:i_hb;end
+  assign h_v=rv;assign h_f=rf;assign h_b0=rb0;assign h_b1=rb1;
+ end else begin:g_nohbr
+  assign h_v=i_hv;assign h_f=i_hf;assign h_b0=i_hb;assign h_b1=i_hb;
+ end endgenerate
  // IOREG embedding write: check -> registered one-hot bank enable + data -> write
  reg[15:0] w_en;reg[255:0] w_d;reg w_last;
  wire e_take=i_ev&&embed_ready_int;
@@ -92,7 +107,7 @@ module ot_dsrom_markov_head_driver #(
  wire wtake=wv&&mk_in_ready;
  assign start_ready_int=ENABLE&&!busy&&!fault;
  assign best_valid_int=have&&!fault;
- wire push_head=i_hv&&busy&&vector_ready&&emitted<valid_count&&!fault;
+ wire push_head=h_v&&busy&&vector_ready&&emitted<valid_count&&!fault;
  assign embed_ready_int=busy&&!vector_ready&&!fault&&embed_next<16;
  wire embed_take=i_ev&&embed_ready_int;
  wire embed_good=embed_take&&i_eid==identity&&i_eb==embed_next&&i_el==(embed_next==15);
@@ -112,7 +127,7 @@ module ot_dsrom_markov_head_driver #(
  integer cache_bank,cache_bit;
  ot_dsrom_markov_weight32 #(.INSTANCE(INSTANCE)) weights(.clk(clk),.rst_n(rst_n),
   .req_valid(launch),.req_ready(wr_ready),.row(rq[hr]),.out_valid(wv),.out_ready(mk_in_ready),.out_data(wd),.out_beat(wb),.out_last(wl));
- ot_dsrom_markov_row #(.K(256),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD)) dot(
+ ot_dsrom_markov_row #(.K(256),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD),.RINGDLY(RINGDLY)) dot(
   .clk(clk),.rst_n(rst_n),.start(launch),.start_ready(mk_ready),.head_logit(hq[hr]),
   .in_valid(wv),.in_ready(mk_in_ready),.weight_bf16(wd),.embed_bf16(vector[read_beat]),
   .out_valid(mk_valid),.out_ready(1'b1),.out_bits(mk_bits),.fault(mk_fault));
@@ -147,14 +162,14 @@ module ot_dsrom_markov_head_driver #(
     for(wb_i=0;wb_i<16;wb_i=wb_i+1) if(w_en[wb_i]) vector[wb_i]<=w_d;
     if(w_last&&!fault)begin vector_ready<=1;head_go<=1;end
    end
-   if(i_hv)begin
+   if(h_v)begin
     if(!busy||!vector_ready||emitted>=32 || (push_head&&hn==2&&!launch))fault<=1;
-    else begin emitted<=emitted+1;if(push_head)begin hq[hw]<=i_hb;rq[hw]<=emitted[4:0];hw<=!hw;end end
+    else begin emitted<=emitted+1;if(push_head)begin if(hw)hq[1]<=h_b1;else hq[0]<=h_b0;rq[hw]<=emitted[4:0];hw<=!hw;end end
    end
    if(launch)begin hr<=!hr;active<=1;active_row<=rq[hr];read_beat<=0;end
    case({push_head,launch})2'b10:hn<=hn+1;2'b01:hn<=hn-1;default:;endcase
    if(wtake)begin if(wb!=read_beat||wl!=(read_beat==15))fault<=1;read_beat<=read_beat+1;end
-   if(i_hf||mk_fault)fault<=1;
+   if(h_f||mk_fault)fault<=1;
    if(mk_valid)begin
     if(!active||mk_bits[30:23]==8'hff||fault)fault<=1;
     else begin

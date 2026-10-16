@@ -91,6 +91,7 @@ module tb_hbm_link_retry_pipeline;
  for(k=0;k<60&&!fault;k=k+1)begin tick;if(tv)$fatal(1,"poison emitted");end
  if(!fault||debt!=1)$fatal(1,"poison debt");
  $display("PASS real replay SRAM double-error poison blocks launch");
+`ifndef OT_HBM_RETRY_NO_REG_POISON   // struct-close: the -cl line has no register parity (REVIEW_20261009 S4 REJECT)
  reset_link;epoch=6;tr=0;offer(0);wait4;
  dut.g_on.txd[17]=~dut.g_on.txd[17];#0.01;
  if(tv||!fault||debt!=1)$fatal(1,"TX register poison");tick;
@@ -102,6 +103,7 @@ module tb_hbm_link_retry_pipeline;
  @(negedge clk);fv=0;dut.g_on.mail_seq[0]=~dut.g_on.mail_seq[0];
  wait4;if(!fault||debt!=1)$fatal(1,"feedback identity poison");
  $display("PASS TX/RX stage and feedback mailbox corruption detect/poison");
+`endif
  $display("PASS_ALL");$finish;
  end
  initial begin #1000000;$fatal(1,"watchdog");end

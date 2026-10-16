@@ -1,0 +1,436 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 231 input pin flops, median arrival 435.451111 (range 430.722717 .. 442.784790)
+QDM reference pin pd[130]$_DFF_P_/CLK clock arrival max 435.451111 min 417.426025 skew 90 hold 50
+[WARNING STA-0441] set_input_delay relative to a clock defined on the same port/pin not allowed.
+[WARNING STA-0440] set_output_delay not allowed on power port 'VDD'.
+[WARNING STA-0440] set_output_delay not allowed on ground port 'VSS'.
+OT_IO_INTER 1124 inputs 565 outputs at 150 ps
+[WARNING STA-0471] no valid objects specified for -from.
+OT_CORNER ss
+OT_WS -1.5014844922944803e-10
+OT_TNS -1.4090975497538238e-8
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: fault$_DFFE_PN0P_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 752.12  752.12 ^ input external delay
+   0.00  752.12 ^ rst_n (in)
+  56.29  808.41 ^ hold10915/Y (BUFx2_ASAP7_75t_R)
+  39.44  847.85 ^ input1680/Y (BUFx3_ASAP7_75t_R)
+  40.09  887.94 ^ place9325/Y (BUFx6f_ASAP7_75t_R)
+ 113.26 1001.20 ^ place9324/Y (BUFx3_ASAP7_75t_R)
+  42.97 1044.18 ^ wire13181/Y (BUFx12f_ASAP7_75t_R)
+   7.79 1051.97 ^ fault$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        1051.97   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  37.87  871.21 ^ wire9686/Y (BUFx16f_ASAP7_75t_R)
+  63.27  934.48 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  44.99  979.47 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  33.72 1013.19 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  46.02 1059.21 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  36.94 1096.15 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  38.18 1134.33 ^ clkbuf_3_4_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  37.94 1172.27 ^ clkbuf_4_9_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  42.06 1214.32 ^ clkbuf_6_36_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  45.98 1260.30 ^ clkbuf_leaf_36_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.97 1261.27 ^ fault$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1201.27   clock uncertainty
+   0.00 1201.27   clock reconvergence pessimism
+  29.99 1231.26   library recovery time
+        1231.26   data required time
+---------------------------------------------------------
+        1231.26   data required time
+        -1051.97   data arrival time
+---------------------------------------------------------
+         179.29   slack (MET)
+
+
+Startpoint: rqf_ptr[3]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: mb[3][6]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  39.56   39.56 ^ wire9686/Y (BUFx16f_ASAP7_75t_R)
+  65.24  104.80 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  46.58  151.38 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  34.12  185.50 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  47.51  233.01 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  38.06  271.07 ^ clkbuf_2_2_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  39.73  310.80 ^ clkbuf_3_5_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  41.13  351.93 ^ clkbuf_4_10_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  47.28  399.21 ^ clkbuf_6_42_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  54.77  453.97 ^ clkbuf_leaf_80_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   1.45  455.42 ^ rqf_ptr[3]$_DFF_P_/CLK (DFFHQNx2_ASAP7_75t_R)
+  90.71  546.13 ^ rqf_ptr[3]$_DFF_P_/QN (DFFHQNx2_ASAP7_75t_R)
+  37.34  583.47 ^ place8835/Y (BUFx16f_ASAP7_75t_R)
+  45.52  628.99 ^ rebuffer9701/Y (BUFx3_ASAP7_75t_R)
+ 104.77  733.76 ^ rebuffer9700/Y (BUFx3_ASAP7_75t_R)
+  81.62  815.38 ^ place8823/Y (BUFx6f_ASAP7_75t_R)
+  90.21  905.58 ^ place8809/Y (BUFx3_ASAP7_75t_R)
+ 139.64 1045.22 ^ place8808/Y (BUFx3_ASAP7_75t_R)
+ 137.15 1182.37 ^ place8807/Y (BUFx3_ASAP7_75t_R)
+  33.06 1215.43 v _20729_/Y (NAND2x1_ASAP7_75t_R)
+  58.46 1273.89 v _20730_/Y (OA211x2_ASAP7_75t_R)
+  38.85 1312.74 v _20731_/Y (AO21x1_ASAP7_75t_R)
+  40.21 1352.95 v _20740_/Y (OA21x2_ASAP7_75t_R)
+   0.12 1353.07 v mb[3][6]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+        1353.07   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  37.87  871.21 ^ wire9686/Y (BUFx16f_ASAP7_75t_R)
+  63.27  934.48 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  44.99  979.47 ^ clkbuf_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  33.72 1013.19 ^ clkbuf_1_1_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  46.02 1059.21 ^ clkbuf_1_1_1_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  36.75 1095.96 ^ clkbuf_2_3_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  38.27 1134.22 ^ clkbuf_3_7_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  38.89 1173.12 ^ clkbuf_4_15_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  45.56 1218.68 ^ clkbuf_6_62_0_clk_regs/Y (BUFx24_ASAP7_75t_R)
+  39.38 1258.07 ^ clkbuf_leaf_226_clk_regs/Y (BUFx24_ASAP7_75t_R)
+   0.91 1258.98 ^ mb[3][6]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00 1198.98   clock uncertainty
+   7.14 1206.11   clock reconvergence pessimism
+  -3.19 1202.92   library setup time
+        1202.92   data required time
+---------------------------------------------------------
+        1202.92   data required time
+        -1353.07   data arrival time
+---------------------------------------------------------
+        -150.15   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 297
+OT_WS_REG_D -150.148453
+OT_WS_OUT 116.231522
+OT_WS_R2R -150.148453
+OT_WS_I2R 179.291367
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][6]$_DFF_P_/D -150.148453
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][10]$_DFF_P_/D -148.854370
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][12]$_DFF_P_/D -148.319809
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][36]$_DFF_P_/D -147.914795
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][13]$_DFF_P_/D -147.795105
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][11]$_DFF_P_/D -143.686066
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][32]$_DFF_P_/D -143.595245
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][7]$_DFF_P_/D -140.904068
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][15]$_DFF_P_/D -139.175339
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][5]$_DFF_P_/D -138.956070
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][28]$_DFF_P_/D -134.727234
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][29]$_DFF_P_/D -125.412567
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][9]$_DFF_P_/D -124.253609
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][6]$_DFF_P_/D -121.706978
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][2]$_DFF_P_/D -120.216171
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][18]$_DFF_P_/D -119.228516
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][0]$_DFF_P_/D -119.134483
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][26]$_DFF_P_/D -118.437813
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][18]$_DFF_P_/D -117.861610
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][30]$_DFF_P_/D -114.408264
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][34]$_DFF_P_/D -110.812363
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][14]$_DFF_P_/D -110.252922
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][31]$_DFF_P_/D -109.277473
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][22]$_DFF_P_/D -108.363319
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][33]$_DFF_P_/D -107.709061
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][27]$_DFF_P_/D -106.515465
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][32]$_DFF_P_/D -106.063606
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][1]$_DFF_P_/D -104.465324
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][4]$_DFF_P_/D -104.070755
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][37]$_DFF_P_/D -103.709373
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][33]$_DFF_P_/D -103.234085
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][23]$_DFF_P_/D -100.629837
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][27]$_DFF_P_/D -97.597267
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][35]$_DFF_P_/D -97.426292
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][25]$_DFF_P_/D -96.666008
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][8]$_DFF_P_/D -95.841888
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][21]$_DFF_P_/D -95.568108
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][6]$_DFF_P_/D -94.546928
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][25]$_DFF_P_/D -94.454781
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][30]$_DFF_P_/D -94.029671
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][13]$_DFF_P_/D -91.698540
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][15]$_DFF_P_/D -90.825790
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][2]$_DFF_P_/D -90.430771
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[0][35]$_DFF_P_/D -90.003113
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][16]$_DFF_P_/D -90.002892
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][33]$_DFF_P_/D -89.622307
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][20]$_DFF_P_/D -88.952957
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][3]$_DFF_P_/D -88.659523
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][9]$_DFF_P_/D -88.265839
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][8]$_DFF_P_/D -87.710175
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][19]$_DFF_P_/D -86.401665
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][26]$_DFF_P_/D -85.877747
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][11]$_DFF_P_/D -85.181198
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][14]$_DFF_P_/D -84.158127
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][12]$_DFF_P_/D -83.789642
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][3]$_DFF_P_/D -83.472786
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][11]$_DFF_P_/D -83.192451
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][6]$_DFF_P_/D -81.132545
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][29]$_DFF_P_/D -81.118782
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][15]$_DFF_P_/D -80.245148
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][16]$_DFF_P_/D -77.379326
+OT_PATH h2$_DFF_PN0_/QN od[52]$_DFF_P_/D -77.158279
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][29]$_DFF_P_/D -77.153397
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][18]$_DFF_P_/D -76.562981
+OT_PATH h2$_DFF_PN0_/QN od[6]$_DFF_P_/D -76.505135
+OT_PATH h2$_DFF_PN0_/QN od[249]$_DFF_P_/D -75.786934
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][0]$_DFF_P_/D -74.560799
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][24]$_DFF_P_/D -74.430237
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][7]$_DFF_P_/D -74.142471
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][17]$_DFF_P_/D -74.038002
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][26]$_DFF_P_/D -73.939964
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][9]$_DFF_P_/D -73.360321
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][37]$_DFF_P_/D -70.636276
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][12]$_DFF_P_/D -70.301430
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][7]$_DFF_P_/D -69.040443
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][20]$_DFF_P_/D -68.698936
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][4]$_DFF_P_/D -68.484772
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][18]$_DFF_P_/D -68.324455
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][26]$_DFF_P_/D -68.032471
+OT_PATH h2$_DFF_PN0_/QN od[39]$_DFF_P_/D -67.685638
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][8]$_DFF_P_/D -67.642784
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][19]$_DFF_P_/D -67.460594
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][28]$_DFF_P_/D -66.628700
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][15]$_DFF_P_/D -65.622841
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][13]$_DFF_P_/D -64.495186
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][10]$_DFF_P_/D -64.174332
+OT_PATH h2$_DFF_PN0_/QN od[48]$_DFF_P_/D -63.378082
+OT_PATH h2$_DFF_PN0_/QN od[5]$_DFF_P_/D -63.073769
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][37]$_DFF_P_/D -62.377991
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][16]$_DFF_P_/D -62.194363
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][25]$_DFF_P_/D -61.431637
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][21]$_DFF_P_/D -61.314621
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][5]$_DFF_P_/D -61.307735
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][4]$_DFF_P_/D -61.246231
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][29]$_DFF_P_/D -59.525162
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][31]$_DFF_P_/D -59.069748
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][31]$_DFF_P_/D -58.630322
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][22]$_DFF_P_/D -58.351990
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][7]$_DFF_P_/D -58.123505
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][13]$_DFF_P_/D -57.824078
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][33]$_DFF_P_/D -57.091110
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][19]$_DFF_P_/D -56.917915
+OT_PATH h2$_DFF_PN0_/QN od[14]$_DFF_P_/D -56.908588
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][10]$_DFF_P_/D -55.884296
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][5]$_DFF_P_/D -55.475735
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][12]$_DFF_P_/D -54.756088
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][14]$_DFF_P_/D -53.924198
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][28]$_DFF_P_/D -53.659634
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][28]$_DFF_P_/D -53.168468
+OT_PATH cv$_DFF_PN0_/QN meta[52][8]$_DFFE_PP_/D -52.721939
+OT_PATH h2$_DFF_PN0_/QN od[0]$_DFF_P_/D -52.402748
+OT_PATH cv$_DFF_PN0_/QN meta[52][9]$_DFFE_PP_/D -52.332249
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][37]$_DFF_P_/D -52.201355
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][1]$_DFF_P_/D -52.079784
+OT_PATH cv$_DFF_PN0_/QN meta[36][9]$_DFFE_PP_/D -51.710526
+OT_PATH cv$_DFF_PN0_/QN meta[36][8]$_DFFE_PP_/D -51.276096
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][34]$_DFF_P_/D -50.805695
+OT_PATH h2$_DFF_PN0_/QN od[2]$_DFF_P_/D -50.585979
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][3]$_DFF_P_/D -50.138893
+OT_PATH cv$_DFF_PN0_/QN meta[36][2]$_DFFE_PP_/D -50.072060
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][28]$_DFF_P_/D -49.809380
+OT_PATH cv$_DFF_PN0_/QN meta[52][2]$_DFFE_PP_/D -49.243389
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[2][11]$_DFF_P_/D -49.128811
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][27]$_DFF_P_/D -49.096172
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][8]$_DFF_P_/D -48.310799
+OT_PATH cv$_DFF_PN0_/QN meta[44][8]$_DFFE_PP_/D -47.800652
+OT_PATH h2$_DFF_PN0_/QN od[28]$_DFF_P_/D -47.746586
+OT_PATH cv$_DFF_PN0_/QN meta[44][9]$_DFFE_PP_/D -47.438610
+OT_PATH cv$_DFF_PN0_/QN meta[44][2]$_DFFE_PP_/D -46.909698
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][9]$_DFF_P_/D -46.050720
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][0]$_DFF_P_/D -46.045723
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][29]$_DFF_P_/D -45.986214
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][23]$_DFF_P_/D -45.370819
+OT_PATH cv$_DFF_PN0_/QN meta[28][8]$_DFFE_PP_/D -45.158432
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][3]$_DFF_P_/D -45.031979
+OT_PATH cv$_DFF_PN0_/QN meta[20][8]$_DFFE_PP_/D -44.206970
+OT_PATH h2$_DFF_PN0_/QN od[9]$_DFF_P_/D -43.583359
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][14]$_DFF_P_/D -43.274052
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][32]$_DFF_P_/D -43.220428
+OT_PATH h2$_DFF_PN0_/QN od[10]$_DFF_P_/D -42.339020
+OT_PATH cv$_DFF_PN0_/QN meta[12][1]$_DFFE_PP_/D -41.610825
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][11]$_DFF_P_/D -41.258663
+OT_PATH cv$_DFF_PN0_/QN meta[12][2]$_DFFE_PP_/D -41.024296
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][29]$_DFF_P_/D -40.738411
+OT_PATH h2$_DFF_PN0_/QN od[38]$_DFF_P_/D -40.433880
+OT_PATH cv$_DFF_PN0_/QN meta[52][6]$_DFFE_PP_/D -39.628857
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][17]$_DFF_P_/D -39.201641
+OT_PATH cv$_DFF_PN0_/QN meta[12][9]$_DFFE_PP_/D -39.027893
+OT_PATH cv$_DFF_PN0_/QN meta[20][9]$_DFFE_PP_/D -38.071434
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][18]$_DFF_P_/D -37.616131
+OT_PATH h2$_DFF_PN0_/QN od[301]$_DFF_P_/D -37.545635
+OT_PATH cv$_DFF_PN0_/QN meta[12][8]$_DFFE_PP_/D -37.258198
+OT_PATH cv$_DFF_PN0_/QN meta[12][14]$_DFFE_PP_/D -37.024384
+OT_PATH cv$_DFF_PN0_/QN meta[12][4]$_DFFE_PP_/D -36.948112
+OT_PATH cv$_DFF_PN0_/QN meta[28][9]$_DFFE_PP_/D -36.526005
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][0]$_DFF_P_/D -36.185944
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][11]$_DFF_P_/D -35.223602
+OT_PATH h2$_DFF_PN0_/QN od[1]$_DFF_P_/D -34.448223
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][12]$_DFF_P_/D -34.358517
+OT_PATH h2$_DFF_PN0_/QN od[25]$_DFF_P_/D -33.858807
+OT_PATH h2$_DFF_PN0_/QN od[50]$_DFF_P_/D -33.798077
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][24]$_DFF_P_/D -33.711369
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][17]$_DFF_P_/D -33.578030
+OT_PATH h2$_DFF_PN0_/QN od[55]$_DFF_P_/D -33.478886
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][6]$_DFF_P_/D -33.303028
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][35]$_DFF_P_/D -32.788773
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][5]$_DFF_P_/D -32.666870
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][19]$_DFF_P_/D -31.647907
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][13]$_DFF_P_/D -31.406099
+OT_PATH cv$_DFF_PN0_/QN meta[20][14]$_DFFE_PP_/D -31.088243
+OT_PATH cv$_DFF_PN0_/QN meta[52][14]$_DFFE_PP_/D -30.848434
+OT_PATH cv$_DFF_PN0_/QN meta[20][7]$_DFFE_PP_/D -30.506153
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][32]$_DFF_P_/D -30.458303
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][30]$_DFF_P_/D -30.432768
+OT_PATH h2$_DFF_PN0_/QN od[20]$_DFF_P_/D -29.951818
+OT_PATH cv$_DFF_PN0_/QN meta[36][6]$_DFFE_PP_/D -29.900082
+OT_PATH h2$_DFF_PN0_/QN od[45]$_DFF_P_/D -29.784508
+OT_PATH cv$_DFF_PN0_/QN meta[28][14]$_DFFE_PP_/D -29.681923
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][33]$_DFF_P_/D -29.604874
+OT_PATH cv$_DFF_PN0_/QN meta[12][7]$_DFFE_PP_/D -29.599768
+OT_PATH h2$_DFF_PN0_/QN od[257]$_DFF_P_/D -29.395487
+OT_PATH cv$_DFF_PN0_/QN meta[36][14]$_DFFE_PP_/D -28.857361
+OT_PATH cv$_DFF_PN0_/QN meta[44][14]$_DFFE_PP_/D -28.579916
+OT_PATH cv$_DFF_PN0_/QN meta[44][6]$_DFFE_PP_/D -28.558268
+OT_PATH cv$_DFF_PN0_/QN meta[28][7]$_DFFE_PP_/D -28.159920
+OT_PATH cv$_DFF_PN0_/QN meta[52][7]$_DFFE_PP_/D -27.866709
+OT_PATH h2$_DFF_PN0_/QN od[239]$_DFF_P_/D -27.398417
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][34]$_DFF_P_/D -27.272295
+OT_PATH cv$_DFF_PN0_/QN meta[52][11]$_DFFE_PP_/D -26.942448
+OT_PATH h2$_DFF_PN0_/QN od[16]$_DFF_P_/D -26.509684
+OT_PATH h2$_DFF_PN0_/QN od[46]$_DFF_P_/D -26.431190
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][29]$_DFF_P_/D -26.279978
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][10]$_DFF_P_/D -25.982660
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][21]$_DFF_P_/D -25.753843
+OT_PATH cv$_DFF_PN0_/QN meta[12][6]$_DFFE_PP_/D -25.617731
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][31]$_DFF_P_/D -25.465963
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][2]$_DFF_P_/D -25.458969
+OT_PATH h2$_DFF_PN0_/QN od[44]$_DFF_P_/D -25.133896
+OT_PATH h2$_DFF_PN0_/QN od[13]$_DFF_P_/D -24.990788
+OT_PATH h2$_DFF_PN0_/QN od[253]$_DFF_P_/D -24.731884
+OT_PATH cv$_DFF_PN0_/QN meta[20][11]$_DFFE_PP_/D -24.702684
+OT_PATH cv$_DFF_PN0_/QN meta[20][6]$_DFFE_PP_/D -24.569124
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][27]$_DFF_P_/D -24.531378
+OT_PATH h2$_DFF_PN0_/QN od[319]$_DFF_P_/D -23.955393
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][4]$_DFF_P_/D -23.497093
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][35]$_DFF_P_/D -23.294922
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][23]$_DFF_P_/D -22.756908
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][37]$_DFF_P_/D -21.778580
+OT_PATH cv$_DFF_PN0_/QN meta[28][6]$_DFFE_PP_/D -21.433300
+OT_PATH cv$_DFF_PN0_/QN meta[28][11]$_DFFE_PP_/D -21.319168
+OT_PATH h2$_DFF_PN0_/QN od[56]$_DFF_P_/D -21.253222
+OT_PATH h2$_DFF_PN0_/QN od[256]$_DFF_P_/D -21.171843
+OT_PATH h2$_DFF_PN0_/QN od[252]$_DFF_P_/D -21.167957
+OT_PATH h2$_DFF_PN0_/QN od[62]$_DFF_P_/D -20.977665
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][7]$_DFF_P_/D -20.699997
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][30]$_DFF_P_/D -20.586088
+OT_PATH h2$_DFF_PN0_/QN od[68]$_DFF_P_/D -20.536795
+OT_PATH h2$_DFF_PN0_/QN od[76]$_DFF_P_/D -20.432655
+OT_PATH h2$_DFF_PN0_/QN od[283]$_DFF_P_/D -20.394686
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][14]$_DFF_P_/D -20.114687
+OT_PATH h2$_DFF_PN0_/QN od[17]$_DFF_P_/D -19.760305
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][10]$_DFF_P_/D -19.719227
+OT_PATH h2$_DFF_PN0_/QN od[81]$_DFF_P_/D -19.546253
+OT_PATH h2$_DFF_PN0_/QN od[318]$_DFF_P_/D -19.542034
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][36]$_DFF_P_/D -18.496204
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][1]$_DFF_P_/D -17.481571
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][30]$_DFF_P_/D -16.480150
+OT_PATH h2$_DFF_PN0_/QN od[51]$_DFF_P_/D -16.464718
+OT_PATH h2$_DFF_PN0_/QN od[26]$_DFF_P_/D -16.137648
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][36]$_DFF_P_/D -14.911628
+OT_PATH h2$_DFF_PN0_/QN od[37]$_DFF_P_/D -14.352963
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][33]$_DFF_P_/D -14.006463
+OT_PATH h2$_DFF_PN0_/QN od[33]$_DFF_P_/D -13.948842
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][22]$_DFF_P_/D -13.839596
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][1]$_DFF_P_/D -13.546497
+OT_PATH h2$_DFF_PN0_/QN od[75]$_DFF_P_/D -13.150370
+OT_PATH h2$_DFF_PN0_/QN od[69]$_DFF_P_/D -13.147150
+OT_PATH h2$_DFF_PN0_/QN od[29]$_DFF_P_/D -12.942536
+OT_PATH h2$_DFF_PN0_/QN od[24]$_DFF_P_/D -12.112200
+OT_PATH h2$_DFF_PN0_/QN od[241]$_DFF_P_/D -11.973422
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][36]$_DFF_P_/D -11.966650
+OT_PATH h2$_DFF_PN0_/QN od[42]$_DFF_P_/D -11.933343
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][8]$_DFF_P_/D -11.550982
+OT_PATH h2$_DFF_PN0_/QN od[72]$_DFF_P_/D -11.037837
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][4]$_DFF_P_/D -10.697110
+OT_PATH h2$_DFF_PN0_/QN od[66]$_DFF_P_/D -10.375479
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][24]$_DFF_P_/D -10.092815
+OT_PATH h2$_DFF_PN0_/QN od[40]$_DFF_P_/D -9.939605
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[3][21]$_DFF_P_/D -9.856782
+OT_PATH cv$_DFF_PN0_/QN meta[12][13]$_DFFE_PP_/D -8.874790
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][11]$_DFF_P_/D -8.845147
+OT_PATH h2$_DFF_PN0_/QN od[296]$_DFF_P_/D -8.551715
+OT_PATH cv$_DFF_PN0_/QN meta[12][10]$_DFFE_PP_/D -8.251288
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[7][34]$_DFF_P_/D -7.679635
+OT_PATH h2$_DFF_PN0_/QN od[74]$_DFF_P_/D -7.560730
+OT_PATH h2$_DFF_PN0_/QN od[36]$_DFF_P_/D -7.410739
+OT_PATH h2$_DFF_PN0_/QN od[30]$_DFF_P_/D -7.201684
+OT_PATH h2$_DFF_PN0_/QN od[73]$_DFF_P_/D -6.528000
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][35]$_DFF_P_/D -6.247114
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[1][10]$_DFF_P_/D -6.239009
+OT_PATH cv$_DFF_PN0_/QN meta[28][13]$_DFFE_PP_/D -5.751400
+OT_PATH cv$_DFF_PN0_/QN meta[52][26]$_DFFE_PP_/D -5.385470
+OT_PATH cv$_DFF_PN0_/QN meta[28][10]$_DFFE_PP_/D -5.223932
+OT_PATH cv$_DFF_PN0_/QN meta[28][12]$_DFFE_PP_/D -4.981682
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][26]$_DFF_P_/D -4.964807
+OT_PATH h2$_DFF_PN0_/QN od[174]$_DFF_P_/D -4.917178
+OT_PATH cv$_DFF_PN0_/QN meta[44][5]$_DFFE_PP_/D -4.748646
+OT_PATH cv$_DFF_PN0_/QN meta[20][10]$_DFFE_PP_/D -4.569900
+OT_PATH cv$_DFF_PN0_/QN meta[36][26]$_DFFE_PP_/D -4.561795
+OT_PATH cv$_DFF_PN0_/QN meta[36][13]$_DFFE_PP_/D -4.552470
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[6][2]$_DFF_P_/D -4.378498
+OT_PATH cv$_DFF_PN0_/QN meta[44][13]$_DFFE_PP_/D -4.333200
+OT_PATH cv$_DFF_PN0_/QN meta[36][5]$_DFFE_PP_/D -4.308775
+OT_PATH cv$_DFF_PN0_/QN meta[28][5]$_DFFE_PP_/D -4.222511
+OT_PATH cv$_DFF_PN0_/QN meta[20][5]$_DFFE_PP_/D -4.096834
+OT_PATH cv$_DFF_PN0_/QN meta[20][12]$_DFFE_PP_/D -3.968270
+OT_PATH cv$_DFF_PN0_/QN meta[52][13]$_DFFE_PP_/D -3.902989
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][19]$_DFF_P_/D -3.673506
+OT_PATH cv$_DFF_PN0_/QN meta[52][12]$_DFFE_PP_/D -3.501199
+OT_PATH h2$_DFF_PN0_/QN od[41]$_DFF_P_/D -3.492207
+OT_PATH h2$_DFF_PN0_/QN od[321]$_DFF_P_/D -3.056111
+OT_PATH h2$_DFF_PN0_/QN od[65]$_DFF_P_/D -2.435940
+OT_PATH h2$_DFF_PN0_/QN od[64]$_DFF_P_/D -2.081779
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][28]$_DFF_P_/D -1.987188
+OT_PATH h2$_DFF_PN0_/QN od[178]$_DFF_P_/D -1.909584
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][7]$_DFF_P_/D -1.784350
+OT_PATH h2$_DFF_PN0_/QN od[434]$_DFF_P_/D -1.715406
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][17]$_DFF_P_/D -1.412537
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][29]$_DFF_P_/D -1.224132
+OT_PATH cv$_DFF_PN0_/QN meta[44][26]$_DFFE_PP_/D -1.037725
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[5][15]$_DFF_P_/D -0.951572
+OT_PATH h2$_DFF_PN0_/QN od[22]$_DFF_P_/D -0.849099
+OT_PATH rqf_ptr[3]$_DFF_P_/QN mb[4][21]$_DFF_P_/D -0.378919
+OT_PATH cv$_DFF_PN0_/QN meta[12][5]$_DFFE_PP_/D -0.371259
+OT_PATH h2$_DFF_PN0_/QN od[98]$_DFF_P_/D -0.235922
+OT_PATH h2$_DFF_PN0_/QN od[58]$_DFF_P_/D -0.147660

@@ -62,6 +62,7 @@ module tb_rom_fabric_router #(
         .cfg_we(cfg_we), .cfg_dest(cfg_dest), .cfg_mask(cfg_mask), .drops(drops), .overflow(overflow));
 
     integer seed_v = SEED;
+    initial begin seed_v = SEED; $display("SEED=%0d", seed_v); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     function integer rnd(input integer unused);
         rnd = $random(seed_v);
     endfunction

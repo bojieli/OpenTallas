@@ -1,0 +1,66 @@
+{
+  "name": "dsfd_selt_q2",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/routes/s81b_selt_q2_frprck4a_ec8eee351_tc_rd/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-frprck4a-ec8eee351-tc-rd/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_selt_q2.lef": "9458b4c7fef5fe4c3dd2c4b5291399b720c74fe112b40ac1bb224733284f91ee",
+    "dsfd_selt_q2_ff.lib": "0c9c821ec31199ae6fee87084df6d170e3a1f2e1ed6cf8f23838a2d76e1aad80",
+    "dsfd_selt_q2_ss.lib": "5af1e7da278ca347d594afa4d5714322f04c1bba641fd1b97031e45b3795ab83"
+  },
+  "ok": true
+}

@@ -75,6 +75,8 @@ module ot_hbm_r14_stream_pc #(
   parameter integer REF_PHASE = 0,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
   parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
+  parameter integer WSETP = 1,                // qwen-1010/b: 1 = rank the descriptor's last set (write-back set) last for REFpb (stream4
+                                               //   map); 0 = the KV die (CONTRACT map: written rows anywhere): no write-set rank
   parameter integer WR_EN = 0, WQ = 4, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
   parameter integer PULLIN = 0,
   parameter integer AQ_RD = 0,
@@ -209,7 +211,7 @@ module ot_hbm_r14_stream_pc #(
       wire ahead = (S >= k && S <= last) || next_posted;
       // WR_EN: the descriptor's last set holds the token's write-back sectors (the service writes
       // only there): its closed banks rank 20, after every other closed bank, streaming or not.
-      wire wset = W && S == last && !open[b];
+      wire wset = W && (WSETP != 0) && S == last && !open[b];
       wire [6:0] base = wset ? 7'd20 :
                         !streaming ? 7'(idle_rank(S)) + (open[b] ? 7'd32 : 7'd0) :
                         open[b] ? ((done[b] || stale[b]) ? 7'd24 : 7'd32) :
@@ -380,7 +382,13 @@ module ot_hbm_r14_stream_pc #(
     reg r_w;
     always @* begin
       r_v = 0; r_prio = 0; r_op = PRE; r_bank = 0; r_oh = 0; r_w = 0;
+`ifdef OT_HBM_REFMUT
+      // MUTANT (qwen-1010/b bench negative control): the due REFpb goes to the neighbouring set's bank, not the one the
+      // scheduler closed and chose -- it refreshes a bank the stream may hold open / a bank twice in a round
+      if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb ^ 5'd4; r_oh = blk; end
+`else
       if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
+`endif
       else if (!REF_MODE && ref_due_n) begin r_v = 1; r_prio = 1; r_op = REFAB; end
       else if (preall_ok) begin r_v = 1; r_prio = 1; r_op = PREALL; end
       else if (ep_rdy) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end

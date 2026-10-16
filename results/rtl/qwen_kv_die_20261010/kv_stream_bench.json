@@ -1,0 +1,360 @@
+{
+ "schema": "opentallas.qwen-kv-die.stream-bench.v1",
+ "date": "2026-10-10",
+ "owner": "qwen-1010/b",
+ "question": "Does the KV die's own HBM controller RTL stream a layer's KV (4.19 MB / die = 1,024 sectors a PC, 32 PCs a stack) fast enough for the priced attention step (0.9 TB/s = 1,165 ns a layer a stack)?",
+ "bench": "rtl/test/model_ready_hbm_r14/tb_hbm_stream_bw.sv CONS=1 (tests/rtl/run_hbm_stream_bw.sh): ot_hbm_r14_stream_stack (32 x ot_hbm_r14_stream_pc) against the picosecond HBM3E timing checker (every command checked; REFpb strictly on schedule), KV-die consumer = 8 row groups of 4 PCs, a row only when its 4 sectors have landed, 1.17 rows / controller cycle a group (one row engine), every byte checked through the CONTRACT map; 36 layers per run at the 5,234-ns layer period, HINT 320",
+ "controller_identity": "the KV-die element ot_qwen_ctrl_pc_head (ot_hbm_r14_stream_pc_ready) is command-identical to ot_hbm_r14_stream_pc at CRED 32 / REF_MODE 1 / WR_EN 1 / WQ 4 / WSETP 0 (rtl/test/tb_qwen_ctrl_pc_head.sv, iverilog: PASS; NEG mutant FAIL); closed route qfd_ctrl_ready_hbm_00w0-5cd97c9a8-tt TT +267.67 / FF +37.72 ps DRC 0",
+ "config": {
+  "WR_EN": 1,
+  "WSETP": 0,
+  "PULLIN": 0,
+  "CRED": 32,
+  "HINT": 320,
+  "phases_controller_cycles": [
+   0,
+   15,
+   29,
+   44,
+   59,
+   74,
+   88,
+   103
+  ],
+  "layers_per_phase": 36
+ },
+ "result": {
+  "worst_ns": 1085.44,
+  "mean_ns": 1081.0,
+  "need_ns": 1165.1,
+  "worst_TBps": 0.966,
+  "layers_over_need": 0,
+  "layers": 288,
+  "all_pass": true,
+  "stream_ratio": 0.932
+ },
+ "root_cause_fixed": "WR_EN 1 with the stream4 write-back-set REFpb rank (WSETP 1) deferred 4 banks to every round end and forced their refresh mid-stream: worst 1.70 us, 7 / 36 layers over; WSETP 0 (KV-die CONTRACT map: written rows anywhere) removes it",
+ "negative_controls": {
+  "OMUT_map_order_mismatch": "FAIL",
+  "MUT2_corrupted_sector": "FAIL",
+  "OT_HBM_REFMUT_wrong_refresh_bank": "FAIL"
+ },
+ "sensitivity": {
+  "hint_ns": {
+   "h4k_ph15": {
+    "worst_ns": 2242.56,
+    "mean_ns": 1279.914,
+    "layers_over_1165ns": 15,
+    "verdict": "PASS"
+   },
+   "h4k_ph44": {
+    "worst_ns": 2241.536,
+    "mean_ns": 1280.682,
+    "layers_over_1165ns": 15,
+    "verdict": "PASS"
+   },
+   "h4k_ph0": {
+    "worst_ns": 2242.56,
+    "mean_ns": 1279.601,
+    "layers_over_1165ns": 14,
+    "verdict": "PASS"
+   },
+   "h4k_ph88": {
+    "worst_ns": 2241.536,
+    "mean_ns": 1280.625,
+    "layers_over_1165ns": 15,
+    "verdict": "PASS"
+   },
+   "h4k_ph74": {
+    "worst_ns": 2242.56,
+    "mean_ns": 1279.914,
+    "layers_over_1165ns": 15,
+    "verdict": "PASS"
+   },
+   "h4k_ph103": {
+    "worst_ns": 2241.536,
+    "mean_ns": 1280.682,
+    "layers_over_1165ns": 15,
+    "verdict": "PASS"
+   },
+   "h4k_ph59": {
+    "worst_ns": 2242.56,
+    "mean_ns": 1279.601,
+    "layers_over_1165ns": 14,
+    "verdict": "PASS"
+   },
+   "h4k_ph29": {
+    "worst_ns": 2241.536,
+    "mean_ns": 1280.625,
+    "layers_over_1165ns": 15,
+    "verdict": "PASS"
+   },
+   "h100_ph59": {
+    "worst_ns": 1243.136,
+    "mean_ns": 1107.512,
+    "layers_over_1165ns": 5,
+    "verdict": "PASS"
+   },
+   "h0_ph59": {
+    "worst_ns": 1344.512,
+    "mean_ns": 1165.568,
+    "layers_over_1165ns": 10,
+    "verdict": "PASS"
+   },
+   "h0_ph0": {
+    "worst_ns": 1344.512,
+    "mean_ns": 1165.568,
+    "layers_over_1165ns": 10,
+    "verdict": "PASS"
+   },
+   "h100_ph0": {
+    "worst_ns": 1243.136,
+    "mean_ns": 1107.512,
+    "layers_over_1165ns": 5,
+    "verdict": "PASS"
+   }
+  },
+  "pullin8": {
+   "w0p8_ph103": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1095.054,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph29": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1095.054,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph0": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1093.404,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph74": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1093.404,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph44": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1095.054,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph88": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1095.054,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph59": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1093.404,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   },
+   "w0p8_ph15": {
+    "worst_ns": 1463.296,
+    "mean_ns": 1093.404,
+    "layers_over_1165ns": 2,
+    "verdict": "FAIL"
+   }
+  }
+ },
+ "conditions": [
+  "the per-PC stream order equals the row engines' consumption order: CONTRACT map v2 {layer, v, g, t[6], t[13:9], t[5:3]} (24f017eb7) and the K (max) pass issued in that order (bdca027d2; layer bench exact 14/14 at DQ 64 / 128, mutants incl. V-sum reorder caught)",
+  "the next layer's stream descriptor posted ~320 controller cycles before go (100: 1,243 ns; 0: 1,345 ns; 4,000: 2,242 ns) -- the timed pre-hint on the ROM->KV link is RTL still open"
+ ],
+ "label": "STREAM-ONLY: the composed layer step on this controller is not yet measured",
+ "runs": {
+  "w0p0_ph29": {
+   "worst_ns": 1085.44,
+   "mean_ns": 1081.059,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph44": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1081.031,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph15": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1081.031,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph88": {
+   "worst_ns": 1085.44,
+   "mean_ns": 1081.059,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph0": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1080.86,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph74": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1081.031,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph59": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1080.86,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p0_ph103": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1081.031,
+   "layers_over_1165ns": 0,
+   "verdict": "PASS"
+  },
+  "w0p8_ph103": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1095.054,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph29": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1095.054,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph0": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1093.404,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph74": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1093.404,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph44": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1095.054,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph88": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1095.054,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph59": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1093.404,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "w0p8_ph15": {
+   "worst_ns": 1463.296,
+   "mean_ns": 1093.404,
+   "layers_over_1165ns": 2,
+   "verdict": "FAIL"
+  },
+  "m_refmut": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1083.904,
+   "layers_over_1165ns": 0,
+   "verdict": "FAIL"
+  },
+  "m_omut": {
+   "verdict": "FAIL"
+  },
+  "m_mut2": {
+   "worst_ns": 1084.416,
+   "mean_ns": 1083.904,
+   "layers_over_1165ns": 0,
+   "verdict": "FAIL"
+  },
+  "h4k_ph15": {
+   "worst_ns": 2242.56,
+   "mean_ns": 1279.914,
+   "layers_over_1165ns": 15,
+   "verdict": "PASS"
+  },
+  "h4k_ph44": {
+   "worst_ns": 2241.536,
+   "mean_ns": 1280.682,
+   "layers_over_1165ns": 15,
+   "verdict": "PASS"
+  },
+  "h4k_ph0": {
+   "worst_ns": 2242.56,
+   "mean_ns": 1279.601,
+   "layers_over_1165ns": 14,
+   "verdict": "PASS"
+  },
+  "h4k_ph88": {
+   "worst_ns": 2241.536,
+   "mean_ns": 1280.625,
+   "layers_over_1165ns": 15,
+   "verdict": "PASS"
+  },
+  "h4k_ph74": {
+   "worst_ns": 2242.56,
+   "mean_ns": 1279.914,
+   "layers_over_1165ns": 15,
+   "verdict": "PASS"
+  },
+  "h4k_ph103": {
+   "worst_ns": 2241.536,
+   "mean_ns": 1280.682,
+   "layers_over_1165ns": 15,
+   "verdict": "PASS"
+  },
+  "h4k_ph59": {
+   "worst_ns": 2242.56,
+   "mean_ns": 1279.601,
+   "layers_over_1165ns": 14,
+   "verdict": "PASS"
+  },
+  "h4k_ph29": {
+   "worst_ns": 2241.536,
+   "mean_ns": 1280.625,
+   "layers_over_1165ns": 15,
+   "verdict": "PASS"
+  },
+  "h100_ph59": {
+   "worst_ns": 1243.136,
+   "mean_ns": 1107.512,
+   "layers_over_1165ns": 5,
+   "verdict": "PASS"
+  },
+  "h0_ph59": {
+   "worst_ns": 1344.512,
+   "mean_ns": 1165.568,
+   "layers_over_1165ns": 10,
+   "verdict": "PASS"
+  },
+  "h0_ph0": {
+   "worst_ns": 1344.512,
+   "mean_ns": 1165.568,
+   "layers_over_1165ns": 10,
+   "verdict": "PASS"
+  },
+  "h100_ph0": {
+   "worst_ns": 1243.136,
+   "mean_ns": 1107.512,
+   "layers_over_1165ns": 5,
+   "verdict": "PASS"
+  }
+ },
+ "host": "ot-epyc3:/srv/opentallas-scratch/claude/qwen-1010b/sb2",
+ "source_commit": "0a0d4c616 (claude/qwen-1010-b)"
+}

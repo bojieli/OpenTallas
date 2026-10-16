@@ -1,0 +1,120 @@
+{
+  "schema": "opentallas.qwen-su-endpoint-accept-gate.v1",
+  "verdict": "PASS",
+  "shape": "SW64 production, actual embedding-prefetch and vstream acceptance/control FSM",
+  "isolated": "lane arithmetic and lane retirement datapath; fixed3-edge retirement events supplied",
+  "unsupported_claims": [
+    "whole-SU arithmetic exactness",
+    "full-token exactness",
+    "physical closure"
+  ],
+  "files": {
+    "tests/rtl/qwen_seq_boundary/tb_endpoint.sv": "b3ddc870ecb3f8a3ce196f267fa72c7b93b874f6191e4dcdbec68972e85af7ab",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv": "52c527a6bed85c76cd7622f7cf57169b6946fc65fdcad6541454fd00fd393895",
+    "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv": "db048d369c768267c437597c3ef488248dde588bb1c2c4c29c39a2e7bc9e55e2",
+    "rtl/hdc/ot_hdc_vstream.sv": "59b18011c1da9b921f30524bbfaad72b0385483cbcb0b30e8a97c4b99cfc180d",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv": "13d08003d49223b16cc750263e755f6a5388742a6f4d44491ee25b6b230e17d2"
+  },
+  "cases": [
+    {
+      "case": "baseline",
+      "IS": 0,
+      "OS": 0,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS endpoint SW64 IS0 OS0 accept5 reject3 prefetchwait66\n",
+      "stderr": "",
+      "source_sha256": "52c527a6bed85c76cd7622f7cf57169b6946fc65fdcad6541454fd00fd393895"
+    },
+    {
+      "case": "baseline",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS endpoint SW64 IS1 OS1 accept5 reject3 prefetchwait68\n",
+      "stderr": "",
+      "source_sha256": "52c527a6bed85c76cd7622f7cf57169b6946fc65fdcad6541454fd00fd393895"
+    },
+    {
+      "case": "baseline",
+      "IS": 1,
+      "OS": 2,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS endpoint SW64 IS1 OS2 accept5 reject3 prefetchwait69\n",
+      "stderr": "",
+      "source_sha256": "52c527a6bed85c76cd7622f7cf57169b6946fc65fdcad6541454fd00fd393895"
+    },
+    {
+      "case": "baseline",
+      "IS": 2,
+      "OS": 1,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS endpoint SW64 IS2 OS1 accept5 reject3 prefetchwait69\n",
+      "stderr": "",
+      "source_sha256": "52c527a6bed85c76cd7622f7cf57169b6946fc65fdcad6541454fd00fd393895"
+    },
+    {
+      "case": "baseline",
+      "IS": 2,
+      "OS": 2,
+      "expected_pass": true,
+      "observed_pass": true,
+      "exit_code": 0,
+      "stdout": "PASS endpoint SW64 IS2 OS2 accept5 reject3 prefetchwait86\n",
+      "stderr": "",
+      "source_sha256": "52c527a6bed85c76cd7622f7cf57169b6946fc65fdcad6541454fd00fd393895"
+    },
+    {
+      "case": "premature_go_q",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb_endpoint.sv:45: count wrong n=4 got2 want1\n       Time: 106000 Scope: tb_endpoint\n",
+      "stderr": "",
+      "source_sha256": "59da3eec00b82993a708eb9a7d7da113b706cd96d192eae8515435dcc6e53747"
+    },
+    {
+      "case": "ignores_ready",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb_endpoint.sv:45: count wrong n=4 got2 want1\n       Time: 106000 Scope: tb_endpoint\n",
+      "stderr": "",
+      "source_sha256": "5265598b65292a5da7d2ff089c0a9aca120e841592abaeaea693695a6079b21e"
+    },
+    {
+      "case": "wrong_epoch",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb_endpoint.sv:45: count wrong n=0 gotx want0\n       Time: 66000 Scope: tb_endpoint\n",
+      "stderr": "",
+      "source_sha256": "1e0ebe0dc5b15177bd864a77ca24bce1eccaa76a0961195421b77e964fe2aa33"
+    },
+    {
+      "case": "status_pipeline",
+      "IS": 1,
+      "OS": 1,
+      "expected_pass": false,
+      "observed_pass": false,
+      "exit_code": 1,
+      "stdout": "FATAL: /home/ubuntu/wt-codex-qwen-seq-boundary-20261010/tests/rtl/qwen_seq_boundary/tb_endpoint.sv:46: snapshot wrong n=0 got000000000000000 want000000100000000\n       Time: 66000 Scope: tb_endpoint\n",
+      "stderr": "",
+      "source_sha256": "55c08d4b32d57ba6920ea529244549f42fa0fb7755bfad96e0cc5f9c70e61cd3"
+    }
+  ]
+}

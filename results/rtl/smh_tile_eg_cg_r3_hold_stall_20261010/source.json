@@ -1,0 +1,12 @@
+{
+  "source_commit": "44351241fd787c0f0c7e05ca69a628dffaa95101",
+  "job": "hbm_smh_tile_eg_cg-44351241f-tc-cl-r3",
+  "status": "EARLY_FAIL_HOLD",
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/hbm_smh_tile_eg_cg-44351241f-tc-cl-r3",
+  "events": [
+    "2026-10-10T04:30:19-07:00 ot-epyc2 unreachable while polling calibrate (will keep polling)",
+    "2026-10-10T04:31:19-07:00 ot-epyc2 reachable again; calibrate still running",
+    "2026-10-10T05:29:59-07:00 EARLY_FAIL_HOLD: Measured hold stall: 93170->96160 iterations,188369->197150 buffers, WNS unchanged -321.422ps and TNS unchanged -2555643.5ps; >2990 iterations zero gain. Wrong-reference/cloned-ICG successor already admitted; preserve logs/placement/source instead of growing buffer forest."
+  ]
+}

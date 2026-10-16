@@ -25,6 +25,7 @@ module tb_s81_bf_native_pinreg;
  reg [OW-1:0] o0d; reg [1:0] b0d,f0d;
  always @(posedge clk) begin o0d<=o0; b0d<={b0d[0],b0}; f0d<={f0d[0],f0}; end
  integer i,k,seed=11,pvs=0,busys=0,gos=0,faults=0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  function [31:0] rnd; input integer d; rnd=$random(seed); endfunction
  initial begin
   {cfg_v,go,go_bf,xs_v,xb_v,cfg_a,cfg_d,xs_p,xs_b,xs_pos,xb_pos,xb_b,xs_sv,xs_q0,xs_q1,xs_e0,xs_e1,xb_sv,xb_u,xb_d}=0;

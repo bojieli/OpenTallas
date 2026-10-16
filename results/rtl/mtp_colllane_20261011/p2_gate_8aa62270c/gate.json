@@ -1,0 +1,98 @@
+{
+ "tool": "tools/mtp_p2lane_gate.py",
+ "defines": [
+  "OT_S81PH_GBX_FMT1",
+  "OT_S81PH_EP_PIPE2",
+  "OT_S81PH_COLL_OQPIPE",
+  "OT_S81PH_COLL_QPIPE",
+  "OT_S81PH_COLL_SPLIT",
+  "OT_S81PH_COLL_CR",
+  "OT_S81PH_LANE_CR",
+  "OT_S81PH_COLL_PULL",
+  "OT_S81PH_COLL_TREP",
+  "OT_S81PH_COLL_P2L",
+  "OT_S81PH_PLL_MODEL"
+ ],
+ "cases": {
+  "p2l_s1": {
+   "expect": "pass",
+   "got": "pass",
+   "ok": true,
+   "defines": [],
+   "params": {
+    "SEED": 1
+   },
+   "tail": [
+    "P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26803 abort_latency=94 starts=3"
+   ]
+  },
+  "p2l_s5": {
+   "expect": "pass",
+   "got": "pass",
+   "ok": true,
+   "defines": [],
+   "params": {
+    "SEED": 5
+   },
+   "tail": [
+    "P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26600 abort_latency=94 starts=3"
+   ]
+  },
+  "neg_seg": {
+   "expect": "fail",
+   "got": "fail",
+   "ok": true,
+   "defines": [
+    "OT_P2L_MUT_SEG"
+   ],
+   "params": {
+    "SEED": 1
+   },
+   "tail": [
+    "[997000000] %Fatal: tb_mtp_p2_lanes.sv:101: Assertion failed in tb_mtp_p2_lanes: P2L transport lane-1 word 0 mismatch: got id 02c0002000000005678 exp 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345678 got lo c10b000080000000 exp lo c10b000080000000"
+   ]
+  },
+  "neg_cred": {
+   "expect": "fail",
+   "got": "fail",
+   "ok": true,
+   "defines": [
+    "OT_P2L_MUT_CRED"
+   ],
+   "params": {
+    "SEED": 1
+   },
+   "tail": [
+    "P2L lane FAULT a=00 p=1 b=0 cycle 8270",
+    "[10177000000] %Fatal: tb_mtp_p2_lanes.sv:130: Assertion failed in tb_mtp_p2_lanes: P2L metadata row 1 (word 9 last 0)"
+   ]
+  },
+  "neg_hol": {
+   "expect": "fail",
+   "got": "fail",
+   "ok": true,
+   "defines": [
+    "OT_P2L_MUT_DIRECT"
+   ],
+   "params": {
+    "SEED": 1
+   },
+   "tail": [
+    "[18913000000] %Fatal: tb_mtp_p2_lanes.sv:143: Assertion failed in tb_mtp_p2_lanes: P2L abort event late / lost (HOL): sent 1700 arrived 2521 (max 400)"
+   ]
+  },
+  "neg_lat1": {
+   "expect": "fail",
+   "got": "fail",
+   "ok": true,
+   "defines": [
+    "OT_FIXLAT_MUT_LAT1"
+   ],
+   "params": {
+    "SEED": 1
+   },
+   "tail": []
+  }
+ },
+ "verdict": "PASS"
+}

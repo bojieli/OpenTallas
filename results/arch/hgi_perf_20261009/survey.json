@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hgi_perf.survey.v1",
- "generated_utc": "2026-10-09T23:03:27Z",
+ "generated_utc": "2026-10-10T04:39:58Z",
  "configs": "../compiler/models/survey_20261009",
  "method": "hgi_perf: a FAST performance simulator for any model on the generic HBM die (HGI-1 records, timing only).\n\n    python3 -m hgi_sim.perf --config CONFIG.json [--ctx 8192] [--tp 4] [--batch 1] [--out REC.json]\n    python3 -m hgi_sim.perf --validate --out results/arch/hgi_perf_20261009/validation.json\n    python3 -m hgi_sim.perf --survey DIR_OF_CONFIGS --out results/arch/hgi_perf_20261009/survey.json\n\nWHAT IT RUNS.  The same kind of HGI-1 record stream the bit-exact compilers emit (unit, op, every operand as a memory\ndescriptor with its real shape and format, wait masks from region hazards), but no arithmetic: a generic front end\nmaps a Hugging Face config.json onto per-layer specs (mixer: GQA / sliding-window GQA / MLA / MLA + DSA indexer /\nGated-DeltaNet-style linear attention; FFN: dense GLU / MoE with shared experts) and a generic lowering emits the\nrecords of each layer type with the 28+ op families of spec 7.2 (MoE experts through indexed SM descriptors over the\nIDX.TOPK ids, GDN through tools/hgi_sim/gdn.py's lowering).  hgi_sim.timing schedules them: event-driven per-unit\nqueues, the command processor (fetch, decode, wait masks, in-order dispatch, head-of-line blocking, wires).\n\nCOSTS (1.2 GHz cycles): hgi_sim.timing.cost -- SM lines on the measured BF16-lane rate (13 exact sm_v RTL cases) or\nthe HBM stream, whichever binds; HBM at the measured sustained 3,166.7 B / cycle a die (95 % of 4.0 TB/s, refresh and\nbank effects included) with the measured first access (worst of 64 refresh phases); SU by the measured-depth model\n(== RTL emit -> write for every op class); ATT tile fixed 225 (measured) + the row stream -- plus the collective model\nmeasured on the TU endpoint RTL (results/rtl/dshbm_1m_allmeasured_20261004/collectives.json: endpoint cycles a flit,\nthe labelled crossing budget, the striping tail) for groups beyond one package, and the in-package TP <= 8 all-reduce\ncalibration (1,350 cycles at 1 KB) plus serialisation.  Estimates stay labelled (calibration.json grades).\n\nSPEED.  A layer type is simulated alone, not the whole model: the token time is composed from the schedule of the\nembedding + one layer of each type + the head, plus (count - 1) x the steady-state increment of each layer type\n(measured by scheduling two consecutive layers of that type), exactly as the per-stage benches compose (AGENTS:\nsimulate the minimum component).  Seconds per model on one core.\n\nBATCH.  b users share every dense weight read (SM.MATVEC param[4:2] positions: up to 8 slots a weight pass; the lane\narray still issues every slot's MACs); routed experts are read per user (b x top-k distinct experts, conservative while\nb x top-k << experts); attention, KV, SU and collective payloads scale with b.  Per-user rate = 1 / step time; aggregate = b / step time.\n",
  "die": {
@@ -1687,56 +1687,56 @@
      "ctx": 1048576,
      "tp": 96,
      "batch": 1,
-     "step_cycles": 533524.0,
-     "step_us": 444.6,
-     "tok_s_per_user": 2249.2,
-     "tok_s_aggregate": 2249.2,
+     "step_cycles": 526592.5,
+     "step_us": 438.83,
+     "tok_s_per_user": 2278.8,
+     "tok_s_aggregate": 2278.8,
      "dies": 96,
      "layer_types": [
       {
-       "template": "44904ee9a0ee",
+       "template": "84c4c710a4a8",
        "first_layer": 0,
        "layers": 31,
-       "cycles_per_layer": 11901.7,
+       "cycles_per_layer": 11696.9,
        "records": 91
       },
       {
-       "template": "6002437975e2",
+       "template": "74d42fdad2f6",
        "first_layer": 1,
        "layers": 1,
-       "cycles_per_layer": 13785.1,
+       "cycles_per_layer": 13580.3,
        "records": 154
       },
       {
-       "template": "af842f2799bd",
+       "template": "7c29bee82243",
        "first_layer": 2,
        "layers": 2,
-       "cycles_per_layer": 17651.7,
+       "cycles_per_layer": 17618.9,
        "records": 130
       },
       {
-       "template": "922784fa4c0a",
+       "template": "a7af044d3649",
        "first_layer": 14,
        "layers": 1,
-       "cycles_per_layer": 19664.8,
+       "cycles_per_layer": 19608.8,
        "records": 193
       },
       {
-       "template": "950e6b12733f",
+       "template": "33ea1933448d",
        "first_layer": 20,
        "layers": 1,
-       "cycles_per_layer": 18160.0,
+       "cycles_per_layer": 18127.2,
        "records": 120
       },
       {
-       "template": "a1fcb43fc657",
+       "template": "df2974908d6d",
        "first_layer": 24,
        "layers": 4,
-       "cycles_per_layer": 18099.6,
+       "cycles_per_layer": 18043.6,
        "records": 100
       }
      ],
-     "wall_s": 2.3,
+     "wall_s": 1.4,
      "note": "the bit-exact native record stream of rank 0 (a head die) per layer type; 1M context only",
      "tp_rule": "the bit-exact native record stream (template path), 1M, 96 dies"
     }
@@ -2059,56 +2059,56 @@
      "ctx": 1048576,
      "tp": 96,
      "batch": 1,
-     "step_cycles": 533524.0,
-     "step_us": 444.6,
-     "tok_s_per_user": 2249.2,
-     "tok_s_aggregate": 2249.2,
+     "step_cycles": 526592.5,
+     "step_us": 438.83,
+     "tok_s_per_user": 2278.8,
+     "tok_s_aggregate": 2278.8,
      "dies": 96,
      "layer_types": [
       {
-       "template": "44904ee9a0ee",
+       "template": "84c4c710a4a8",
        "first_layer": 0,
        "layers": 31,
-       "cycles_per_layer": 11901.7,
+       "cycles_per_layer": 11696.9,
        "records": 91
       },
       {
-       "template": "6002437975e2",
+       "template": "74d42fdad2f6",
        "first_layer": 1,
        "layers": 1,
-       "cycles_per_layer": 13785.1,
+       "cycles_per_layer": 13580.3,
        "records": 154
       },
       {
-       "template": "af842f2799bd",
+       "template": "7c29bee82243",
        "first_layer": 2,
        "layers": 2,
-       "cycles_per_layer": 17651.7,
+       "cycles_per_layer": 17618.9,
        "records": 130
       },
       {
-       "template": "922784fa4c0a",
+       "template": "a7af044d3649",
        "first_layer": 14,
        "layers": 1,
-       "cycles_per_layer": 19664.8,
+       "cycles_per_layer": 19608.8,
        "records": 193
       },
       {
-       "template": "950e6b12733f",
+       "template": "33ea1933448d",
        "first_layer": 20,
        "layers": 1,
-       "cycles_per_layer": 18160.0,
+       "cycles_per_layer": 18127.2,
        "records": 120
       },
       {
-       "template": "a1fcb43fc657",
+       "template": "df2974908d6d",
        "first_layer": 24,
        "layers": 4,
-       "cycles_per_layer": 18099.6,
+       "cycles_per_layer": 18043.6,
        "records": 100
       }
      ],
-     "wall_s": 3.0,
+     "wall_s": 1.4,
      "note": "the bit-exact native record stream of rank 0 (a head die) per layer type; 1M context only",
      "tp_rule": "the bit-exact native record stream (template path), 1M, 96 dies"
     }
@@ -27859,8 +27859,8 @@
   }
  ],
  "sources": {
-  "hgi_sim/perf.py": "6826df5e0029a0d3899b2e8cd6ab2242601f310a1630ae10a8fdd6db8b62dadb",
-  "hgi_sim/timing.py": "11f385cb75b1b1aaad37ce762bcb9da8c9981cd97d3cb37ab3d9b0ac8c98c4c3",
+  "hgi_sim/perf.py": "e91b65689d7ff4f34bdc44d469dbf7ff55c93418acfcf97de76fe5fe338d69c8",
+  "hgi_sim/timing.py": "5a83aff54f25b2234ec8ab87c5ba667f903ed1808c11eacf8acbb6c4a634b810",
   "hgi_sim/gdn.py": "3e5d140241ee6ddc81d3ed888c231d4cee761bbbf2aa36e41ab6e8d57d31275f",
   "hgi_sim/calibration.json": "be4fc155dd99b7c1704ea49d2ed91a055393c4fc58f0979091cc841b66d37bcc"
  }

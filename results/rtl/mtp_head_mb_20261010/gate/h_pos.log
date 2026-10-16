@@ -1,0 +1,8 @@
+DIEMETRICS nb=4 rows=405 start=9 head_go=41 done=8645 start_to_done=8636 head_go_to_done=8604
+PASS full340 nb=4 sharedlookup joined=405 argmax row=10371
+- /srv/opentallas-scratch/claude/mtp-head-mb/gate-75ccbb9b3/h_pos/tb.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 7us; walltime 60.455 s; speed 119.969 ns/s
+- Verilator: cpu 60.102 s on 1 threads; alloced 1120 MB
+ 
+rc=0

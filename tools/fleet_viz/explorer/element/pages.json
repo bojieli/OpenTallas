@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.explorer_elem.pages.v2",
+  "note": "Element pages of the Chip Explorer (/explorer/element/). Layout / timing / clock / RTL data (data/<id>.json, .cells.bin, .clk.bin, .rtl.json) is written by tools/explorer_elem_export.py into the fleet-viz deploy dir, not committed. The per-element prose below (function, algorithm summary with RTL line links, bench provenance, design-intent rates) is written by hand from the RTL at the closure's source commit; every line reference is to that commit.",
+  "throughput_budget": "results/arch/throughput_budget_20261010/budget.json",
+  "pages": [
+    {
+      "id": "bf-hier-vs-halfphl",
+      "title": "BF element: hierarchical column vs flat half-rate",
+      "blocks": ["ot_s81_bf_native", "ot_v41_bf_col"],
+      "elements": ["bf_halfphl", "bf_col600"],
+      "short": {"bf_halfphl": "flat", "bf_col600": "column"},
+      "summary": "Two routed versions of the BF weight-multiply element: the flat half-rate pair that closed first and one column of the hierarchical full-rate design the owner adopted, each from its final routed database and its RTL at the closure's source commit."
+    }
+  ],
+  "elements": {
+    "bf_col600": {
+      "function": "Takes the activation slice the front block issues — two 256-bit FP8/FP4 halves with their 10-bit exponents (i2x_q0/i2x_e0, i2x_q1/i2x_e1), the 17-bit issue tag (i1_t) and the per-segment row/index tables (so_row, so_idx, so_n) — and multiplies it by weights read from the column's own two 4096 × 274 ROMs. It emits one FP32 partial dot product per segment and position (pval, 32 bit) with its row (prow), segment (pseg, pnseg), position (ppos) and error flag. Each cycle the column consumes one 274-bit weight word: 32 FP8 or 64 FP4 weights with a shared power-of-two scale, or 16 BF16 weights.",
+      "summary": [
+        {"t": "Register every input at the column boundary on the free clock (one cycle), including the gate enable and reset.", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 132, 154]]},
+        {"t": "Read one 274-bit weight word per cycle from two ROMs used alternately (ping-pong, each read a 2-cycle path); capture it at the macro pins.", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 21, 23], ["rtl/v41rom/ot_v41_bf_col.sv", 252, 292]]},
+        {"t": "FP8/FP4: two lane units each form one 32-product block dot exactly, round it once to FP32 (RNE), then scale by 2^(x exponent + weight exponent).", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 348, 378], ["rtl/v41rom/ot_v41_bterm4_w10.sv", 1, 40]]},
+        {"t": "Accumulate a unit's 8 block terms in issue order, one FP32 RNE add per term (two chains, one per lane unit).", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 460, 467], ["rtl/v41rom/ot_v41_chain4.sv", 1, 40]]},
+        {"t": "FP4: add the two sibling chunks (pair adder); FP8: both chunks go to the tree as separate nodes.", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 510, 519]]},
+        {"t": "BF16: 16 lanes each multiply and sequentially add 8 products, then a pairwise tree combines the lanes.", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 552, 578], ["rtl/v41rom/ot_v41_bf16_lanes3.sv", 1, 60]]},
+        {"t": "Pairwise FP32 tree over the segment's nodes (zero-padded to a power of two), early exit when the segment is complete.", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 599, 604], ["rtl/v41rom/ot_v41_segtree5.sv", 1, 40]]},
+        {"t": "Output registers: the tree result with its row, segment, count and position tags; idle halves emit nothing.", "r": [["rtl/v41rom/ot_v41_bf_col.sv", 620, 640]]}
+      ],
+      "golden": {
+        "path": "tools/dsrom_actual_element_numerical_oracle.py",
+        "commit": "28fa6290c775347f1b0469d78962dddd1a254404",
+        "entry": "partial(image, phase, macro, seg, pos)",
+        "bench": "tools/s81/bf_txn_bench.py --variant recut (QZE=1, TCG=1, BXST=2, FXST=2, HCOL=1) inside tb_bfcolumn (rtl/test/tb_dsrom_actual_element_rne_wake.sv)",
+        "record": "main:results/rtl/s81_bf_arch_20261009/bench/hcol.json (commit 61b87db5c)",
+        "positive": "PASS independent-numerical rows=456 value_assertions=912 (the original element's partials equal the golden model's values bit for bit); TXN MATCH: the column's 456 partials are identical, in order, to the original element's (transaction level; +3 cycles lag).",
+        "mutants": "QP_MUTANT_DP, W10_MUTANT_RECUT, FXST_MUTANT_TAG, TCG_MUTANT_EN: all four FAIL with a DIFF TXN, as required.",
+        "rtl_pin": "Bench run at 61b87db5c; the 16 RTL files this column elaborates are identical at the closure source 28fa6290c (git diff empty).",
+        "chain": "The golden model computes the expected values; the bench asserts the original element against them, and the column against the original, partial by partial."
+      },
+      "key": [
+        {"k": "clock", "v": "1.2 GHz (core_clk 833.333 ps), every register every cycle", "src": "6_final.sdc via export; rtl/v41rom/ot_v41_bf_col.sv"},
+        {"k": "added latency", "v": "+1 cycle at the column boundary; +3 cycles vs the flat QZE element in total (with BXST/FXST relays)", "src": "rtl/v41rom/ot_v41_bf_col.sv l.3-6; job spec cycles_added; hcol bench lag"},
+        {"k": "absolute latency", "v": "not recorded by a committed bench", "src": "—"},
+        {"k": "work per cycle (design intent)", "v": "1 weight word of 274 bit: 32 FP8 / 64 FP4 / 16 BF16 weights", "src": "rtl/v41rom/ot_v41_bf_col.sv l.21-23 (PP ping-pong); word layout from the golden model"}
+      ]
+    },
+    "bf_halfphl": {
+      "function": "Takes the BF pair's pins — configuration writes (cfg_v/cfg_a/cfg_d), go/go_bf, the 256-bit FP8/FP4 activation halves with exponents (xs_q0/xs_e0, xs_q1/xs_e1) and the 1,024-bit BF16 activation block (xb_d) with their positions — and multiplies them by weights read from four 4096 × 274 ROMs (two per MAC). It emits two FP32 partial dot products, one per MAC, per segment and position (pval, 2 × 32 bit) with row, segment, position and error tags, plus busy/fault and the half-rate phase (hph). The element's registers are clocked every other cycle, so each MAC consumes one 274-bit weight word every two clock cycles.",
+      "summary": [
+        {"t": "Capture every pin in a register on the clock (pin registers).", "r": [["rtl/s81/ot_s81_bf_native.sv", 191, 254]]},
+        {"t": "Generate the half-rate element clock: a phase flop toggles every cycle and gates the clock (eclk), so the element runs on every other edge; a second toggle on eclk proves the phase each cycle.", "r": [["rtl/s81/ot_s81_bf_native.sv", 114, 142]]},
+        {"t": "Inside the element, register the issued activations, then fan them to the two MACs.", "r": [["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 150, 174], ["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 758, 766]]},
+        {"t": "Per MAC: read one weight word from two ROMs used alternately (ping-pong).", "r": [["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 792, 817]]},
+        {"t": "FP8/FP4: two lane units form 32-product block dots exactly, round once to FP32 and scale by the two exponents.", "r": [["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 839, 844], ["rtl/v41rom/ot_v41_bterm2_w10.sv", 1, 40]]},
+        {"t": "Accumulate 8 block terms per chain in order (FP32 RNE), pair FP4 chunks, BF16 lanes multiply-accumulate then tree.", "r": [["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 921, 967], ["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 1006, 1018]]},
+        {"t": "Pairwise FP32 segment tree, then the MAC's output registers.", "r": [["rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv", 1039, 1063]]},
+        {"t": "Re-time outputs to the full-rate clock: valid only in the cycle after the slow edge.", "r": [["rtl/s81/ot_s81_bf_native.sv", 143, 160]]}
+      ],
+      "golden": {
+        "path": "tools/dsrom_actual_element_numerical_oracle.py",
+        "commit": "f5363befbe0b419a2c2f5f8a0fda0c40fe03f9a1",
+        "entry": "partial(image, phase, macro, seg, pos)",
+        "bench": "tools/s81/bf_txn_bench.py --variant halfphl (HALF=1, HALF_PHL=1, PINREG=1, HITFIX=1) inside tb_bfcolumn (rtl/test/tb_dsrom_actual_element_rne_wake.sv), Verilator 5.050",
+        "record": "6d26df595:results/rtl/s81_bf_native_20261007/halfphl_exact/terminal.json (branch claude/bf-insertion-phl-20261008)",
+        "positive": "PASS independent-numerical rows=456 value_assertions=912 (the original element matches the golden model bit for bit); TXN MATCH: 456 partials identical to the original element's, in order; in-RTL ph_d == ph asserted every cycle.",
+        "mutants": "W10_MUTANT_FRONT_PAIR, BF_HALF_MUTANT_PV, BF_HALF_MUTANT_PHL: all three FAIL, as required.",
+        "rtl_pin": "Bench run at 4000b1ea7; between it and the closure source f5363befb only ot_v41_bterm5_w10.sv and ot_v41_segtree6.sv differ, and neither is elaborated in this configuration.",
+        "chain": "The golden model computes the expected values; the bench asserts the original element against them, and the half-rate pair against the original, partial by partial."
+      },
+      "key": [
+        {"k": "clock", "v": "1.2 GHz pins (core_clk 833.333 ps); element registers on eclk, every other cycle (600 MHz effective)", "src": "rtl/s81/ot_s81_bf_native.sv l.114-121; physical/s81_native_bf/margin/half_mc.sdc"},
+        {"k": "added latency", "v": "0 wrapper cycles at the element; outputs leave on the clk cycle after the slow edge", "src": "rtl/s81/ot_s81_bf_native.sv header l.7, l.143-160"},
+        {"k": "absolute latency", "v": "not recorded by a committed bench", "src": "—"},
+        {"k": "work per cycle (design intent)", "v": "per MAC 1 weight word of 274 bit every 2 cycles (2 MACs): 32 FP8 / 64 FP4 / 16 BF16 weights per word", "src": "rtl/s81/ot_s81_bf_native.sv l.114-121 (half rate); word layout from the golden model"}
+      ]
+    }
+  }
+}

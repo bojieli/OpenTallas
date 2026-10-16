@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.qwen-kv-write-binary-feed.v1",
+ "default_off": true,
+ "adopted": false,
+ "model_precedes_rtl": true,
+ "models": [
+  "Qwen3-8B ROM companion KV die"
+ ],
+ "stacks_per_die": 4,
+ "replicas": {
+  "controller": 4,
+  "leaf": 128,
+  "standalone_encoder": 0
+ },
+ "macs_per_cycle": 0,
+ "compute_intensity_macs_per_byte": 0,
+ "communication_intensity_bits_per_posted_row": 1180,
+ "memory_ports": [
+  {
+   "name": "posted_row_queue",
+   "depth": 4,
+   "storage_bits": 4184,
+   "write_bytes_per_cycle": 130.75,
+   "read_bytes_per_cycle": 130.75
+  }
+ ],
+ "boundary_bits_per_cycle": {
+  "posted_row": 1048,
+  "physical_feed_per_group": 298,
+  "chain_feed_per_group": 293,
+  "done_per_group": 2,
+  "cdc_write_per_pc": 290,
+  "cdc_return_per_pc": 11
+ },
+ "routing": {
+  "controller_feed_tracks": 1200,
+  "controller_two_layer_face_capacity": 10800,
+  "leaf_chain_tracks": 295,
+  "leaf_cdc_tracks": 301,
+  "leaf_two_layer_vertical_capacity": 3825,
+  "physical_high5_lane_bits": "constant-zero pins retained, not routed to leaf",
+  "final_segment_target_um": 100,
+  "SS_reach_sensitivity_um": 504
+ },
+ "replica_cost": {
+  "read_mux": "4:1 x1024 row and 4:1 x22 identity, unchanged",
+  "write_demux": "4 queue entries, unchanged",
+  "feed_data_mux": "four fixed256-bit row slices, unchanged",
+  "lane_mux": "3 bits per group from row identity; old8-bit one-hot removed",
+  "lane_fanout": 4,
+  "quarter_valid_fanout": 1,
+  "cdc_handshake_fanout": 1
+ },
+ "area": {
+  "controller_slot_um": [
+   172.8,
+   518.4
+  ],
+  "leaf_slot_um": [
+   86.4,
+   183.6
+  ],
+  "control_storage_bits": 4184,
+  "controller_ff_delta": -20,
+  "analytical_ff_area_delta_um2": -5.832000000000001,
+  "removed_standalone_encoder_or2_equivalent": 144,
+  "removed_encoder_reserved_mm2": 0.029859840000000002,
+  "measured_successor_cell_area_um2": null,
+  "slot_fit": "reuse closed ctl outline; synthesis/floorplan measures actual utilization"
+ },
+ "latency": {
+  "feed_hop_edges": 2,
+  "done_hop_edges": 1,
+  "max_leaf_hops": 7,
+  "max_feed_chain_edges": 14,
+  "max_done_chain_edges": 7,
+  "relay_forward_edges": 14,
+  "relay_return_edges": 13,
+  "posted_row_overhead_edges_vs_abutted_leaf": 48,
+  "added_controller_edges": 0,
+  "single_user_token_added_edges": 0,
+  "token_overlap_credit": "none claimed; posted writes can backpressure if credits exhaust",
+  "steady_state": "one row in flight per quarter; actual retire period must come from component trace"
+ },
+ "exact_contract": "Same sector bytes/address/tag/durable identity, binary low3 selects t[2:0]; four sectors per row",
+ "qualification": {
+  "physical": "TT setup>=0, FF hold>=0, DRC0 under unchanged1.2GHz/60ps/25ps and die budgets",
+  "exact": "full32PC ctl+leaves+CDC+KVW2 path, representative rows, lane/address/data mutants",
+  "pinned_default": "old ctl RTL and closed views byte-identical",
+  "adoption": "exact gate and physical record plus closed-view pin/context mapping"
+ },
+ "source_sha256": "2602b343c95e2c3d0c1535f53b1a5642844a3b8da5ab068a263e06750b93b17e"
+}

@@ -1,0 +1,27 @@
+{
+  "status": "CONFIGURATION_VALIDATED_NOT_ROUTED",
+  "cycles_added": 0,
+  "rtl_changed": false,
+  "selector": {
+    "original_contract_sha256": "d78a0405e4e8cdfb0feeec4cf9e213e78117e81a2b495ec1738e82830be69a53",
+    "successor_contract_sha256": "e0f052a9f87aaa767b8f94789079fa00c407a627169ba6355f2730dec357e4e9",
+    "all_payload_pins_identical": true,
+    "clock_reset_centres_identical": true,
+    "pin_width_um": 0.032,
+    "macro_gap_blockage_threshold_um": 12,
+    "qualification": "isolated pathfinding; die contract composition still required"
+  },
+  "norm": {
+    "die_um": [
+      1104,
+      1104
+    ],
+    "core_inset_um": 16,
+    "macro_halo_um": 8,
+    "pin_group_max": 32,
+    "face_density_target_bits_per_um_per_layer": 6,
+    "macro_gap_blockage_threshold_um": 12,
+    "architecture": "unchanged N64 D5120 MEM1 model and committed component exact gate",
+    "qualification": "same RTL; physical validation pending"
+  }
+}

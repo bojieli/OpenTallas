@@ -1,0 +1,38 @@
+{
+  "all_ok": true,
+  "cases": [
+    {
+      "case": "original",
+      "expected": "PASS",
+      "ok": true,
+      "returncode": 0,
+      "result": "MTP_TOK_HARD PASS reads=636 hits=376 stale=120 invalid_users=20 bubbles=24 latency_edges=1 II=1\n/srv/opentallas-scratch/codex/mtp-wfc-hard/src/rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv:83: $finish called at 1997100 (1ps)"
+    },
+    {
+      "case": "r3",
+      "expected": "PASS",
+      "ok": true,
+      "returncode": 0,
+      "result": "MTP_TOK_HARD PASS reads=636 hits=376 stale=120 invalid_users=20 bubbles=24 latency_edges=2 II=1\n/srv/opentallas-scratch/codex/mtp-wfc-hard/src/rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv:83: $finish called at 1997100 (1ps)"
+    },
+    {
+      "case": "exact",
+      "expected": "PASS",
+      "ok": true,
+      "returncode": 0,
+      "result": "MTP_TOK_HARD PASS reads=636 hits=376 stale=120 invalid_users=20 bubbles=24 latency_edges=4 II=1\n/srv/opentallas-scratch/codex/mtp-wfc-hard/src/rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv:83: $finish called at 1997100 (1ps)"
+    },
+    {
+      "case": "epoch_mutant",
+      "expected": "FAIL",
+      "ok": true,
+      "returncode": 0,
+      "result": "MTP_TOK_HARD FAIL read=277 got=1/90000 expected=0/90000\n/srv/opentallas-scratch/codex/mtp-wfc-hard/src/rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv:42: $finish called at 1187100 (1ps)"
+    }
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv": "b23b3a831d014de7ad2f074a327c867c92200c4068bdfdb8ca98d0a22cf8fa65",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv": "466f0e2eccd8eacc5583a36043762dbe98962adbe16a4d5d5e128d09f85cf178",
+    "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv": "0ea90127772b889a572eee50364c0304b55d9f7d428ec679ebeb7382eec5454c"
+  }
+}

@@ -1,14 +1,16 @@
 {
  "master": "hfd_cmdproc",
  "hgi_unit": "cp",
- "note": "HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact.",
+ "note": "HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact. MTP=2 (hgi-1010/h 2026-10-10): the MTP backend translator + the MX1 MTP collar inside: controller nets f_mtp 517 / t_mtp 197 to hgi_mtp_native; RTL sources add physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv (module hfd_cmdproc_s_mtp_native_mx1_mtp + its join / emit queue) and rtl/hbm_accel/generic/ot_hgi_mtp_xlate.sv.",
  "instances": [
   {
    "name": "cpd",
    "module": "ot_hgi_cp_die",
    "file": "rtl/hbm_accel/generic/ot_hgi_cp_die.sv",
    "params": {
-    "USE_MACRO": 1
+    "USE_MACRO": 1,
+    "FQCR": 16,
+    "MTP": 2
    },
    "bind": {
     "clk": "clk",
@@ -27,9 +29,51 @@
     "ux_rdy": "cfg",
     "ux_done": "cfg",
     "ux_fault": "cfg",
-    "wr_quiet": "cfg",
+    "wr_quiet": "const:1",
     "idx_rec": "die:t_hgi_idx[0:1819]",
-    "idx_ret": "die:f_hgi_idx[0:3]"
+    "idx_ret": "die:f_hgi_idx[0:3]",
+    "am_rec": "fold",
+    "am_ret": "const:0",
+    "sm_rec": "fold",
+    "sm_ret": "const:0",
+    "su_rec": "fold",
+    "su_ret": "const:0",
+    "sfu_rec": "fold",
+    "sfu_ret": "const:0",
+    "att_rec": "fold",
+    "att_ret": "const:0",
+    "dma_rec": "fold",
+    "dma_ret": "const:0",
+    "hc_rec": "fold",
+    "hc_ret": "const:0",
+    "f_mtp": "die:f_mtp[0:517]",
+    "t_mtp": "die:t_mtp[0:197]",
+    "x_cmd_v": "const:0",
+    "x_cmd": "const:0",
+    "x_cmd_job": "const:0",
+    "x_cmd_gen": "const:0",
+    "x_cmd_seq": "const:0",
+    "x_cpl_ready": "const:0",
+    "x_ext_fault": "const:0",
+    "x_noise": "const:0",
+    "x_cmd_ready": "open",
+    "x_cpl_v": "open",
+    "x_cpl_job": "open",
+    "x_cpl_gen": "open",
+    "x_cpl_seq": "open",
+    "x_cpl_fault": "open",
+    "x_am_v": "open",
+    "x_am_idx": "open",
+    "x_drained_ready": "open",
+    "mh_f_host": "cfg",
+    "mh_f_provider": "cfg",
+    "mh_f_emit_host": "cfg",
+    "mh_t_host": "fold",
+    "mh_t_provider": "fold",
+    "mh_t_emit": "fold",
+    "mh_t_emit_host": "fold",
+    "mh_t_abort": "fold",
+    "mh_t_drained": "fold"
    }
   }
  ],
@@ -39,7 +83,237 @@
  "kept_out_regs": true,
  "face_stages": 5,
  "open_items": [
-  "ux_* (12 units) wait for the hgi-adapters record adapters",
-  "wr_quiet needs the DMA / svc write-visibility signal"
- ]
+  "MX1 collar host / provider side (mh_*) to the loader link (proposal in hgi-1010.log, hgi-1010/h 2026-10-10)"
+ ],
+ "replaced_when_hgi": "argmax",
+ "ties": {
+  "cpd.am_rec": {
+   "class": "by_design",
+   "reason": "no ARGMAX unit on this die ('argmax' not in hgi_dispatch): the unit-7 record bus has no consumer; am_ret = 0 (never ready), so a unit-7 record waits at dispatch (fail-closed, as the earlier ux_* path); the single-CP die with the MTP slot unit hfd_hgi_am binds both (cmdproc_hgi_am)"
+  },
+  "cpd.am_ret": {
+   "class": "by_design",
+   "reason": "no ARGMAX unit on this die ('argmax' not in hgi_dispatch): the unit-7 record bus has no consumer; am_ret = 0 (never ready), so a unit-7 record waits at dispatch (fail-closed, as the earlier ux_* path); the single-CP die with the MTP slot unit hfd_hgi_am binds both (cmdproc_hgi_am)"
+  },
+  "cpd.sm_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.sm_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.su_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.su_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.sfu_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.sfu_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.att_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.att_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.dma_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.dma_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.hc_rec": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.hc_ret": {
+   "class": "by_design",
+   "reason": "this die variant has no record bus for the unit ('su' / 'sfu' / 'dma' / 'hc' / 'sm' / 'att' not in hgi_dispatch): ready = 0, a record of the unit waits at dispatch (fail-closed)"
+  },
+  "cpd.wr_quiet": {
+   "class": "by_design",
+   "reason": "no DMA unit on this die variant (dma_ret const 0): no posted HBM writer, so every posted write is trivially visible (wr_quiet = 1)"
+  },
+  "cpd.ux_v": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "cpd.ux_rdy": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "cpd.ux_done": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "cpd.ux_fault": {
+   "class": "by_design",
+   "reason": "ot_hgi_cp_die RECU = 16'b0000_0111_1111_1110: every record-capable unit (1-10) has its own die record bus; ux_* carries only unit 0 (CTL, executed inside the sequencer), 11 (SIMT, absent on HGI-1) and 12-15 (undefined op codes, faulted at decode), and the CP masks it with ~RECU: unused by design"
+  },
+  "die:cSW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:cSE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:cNW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:cNE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); SM launch tree lane (the SMs are driven by ot_hgi_sm_record inside this CP through the SM die leaf)"
+  },
+  "die:t_su_SW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:t_su_SE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:t_su_NW": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:t_su_NE": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy SU command lane (HGI SU / SFU records ride hgi_su_cmd / hgi_sfu_cmd)"
+  },
+  "die:f_barrier": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy barrier (HGI collectives synchronise in their endpoints by group sequence)"
+  },
+  "die:t_barrier": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy barrier (HGI collectives synchronise in their endpoints by group sequence)"
+  },
+  "die:f_coll": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy collective config / status bus (HGI: hgi_coll_cmd / _ret and hgi_cfg_coll)"
+  },
+  "die:t_coll": {
+   "class": "by_design",
+   "reason": "legacy r16g net not driven by the HGI-1 CP on R25GPH: the CP drives units only through the hgi_* record buses (tools/hgi_die_dispatch.py); legacy collective config / status bus (HGI: hgi_coll_cmd / _ret and hgi_cfg_coll)"
+  },
+  "cpd.x_cmd_v": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cmd": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cmd_job": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cmd_gen": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cmd_seq": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cpl_ready": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_ext_fault": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cmd_ready": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cpl_v": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cpl_job": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cpl_gen": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cpl_seq": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_cpl_fault": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_am_v": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_am_idx": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_drained_ready": {
+   "class": "by_design",
+   "reason": "MTP=2 (hgi-1010/h 2026-10-10, decision 3 finished): the translator's native side is wired to the MX1 MTP collar INSIDE ot_hgi_cp_die; the x_* ports are the MTP=1 bench form (inputs unused, outputs constant 0)"
+  },
+  "cpd.x_noise": {
+   "class": "by_design",
+   "reason": "unused port (hgi-1010/h): the translator's noise / mask token id is MD word 53 mtp_noise (programmed per model through the CFG window); x_noise is kept only for the MTP=1 bench form"
+  },
+  "cpd.mh_f_host": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_f_provider": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_f_emit_host": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_t_host": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_t_provider": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_t_emit": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_t_emit_host": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_t_abort": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.mh_t_drained": {
+   "class": "by_design",
+   "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  }
+ }
 }

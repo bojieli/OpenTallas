@@ -33,7 +33,10 @@ module ot_qwen_rom_tile_die #(
     parameter integer ROM_PIPE = 0,       // ot_qwen_rom_tile_w12 ROM_PIPE / ROM_ARELAY / LRST (qwen-blocks 2026-10-07)
     parameter integer ROM_ARELAY = 1,
     parameter integer ROM_CAP2 = 0,       // ot_qwen_rom_tile_w12 ROM_CAP2 (safe-qwen S-A1)
+    parameter integer ROM_CAPX = 0,       // ot_qwen_rom_tile_w12 ROM_CAPX (redesign-qwen)
     parameter integer LRST = 0,
+    parameter integer ARPB = 0,
+    parameter integer ANR = 0,            // ot_qwen_rom_tile_w12 ANR (hardcore-1010 D)           // ot_qwen_rom_tile_w12 ARPB (qwen-1010/c)
     parameter integer BAW = 12
 ) (
     input  wire              clk,
@@ -95,7 +98,7 @@ module ot_qwen_rom_tile_die #(
     wire tile_fault;
     ot_qwen_rom_tile_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
-        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .LRST(LRST), .BAW(BAW)) u_tile (
+        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .ANR(ANR), .BAW(BAW)) u_tile (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .t_out(t_out), .t_vout(t_vout),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
         .kvw_ce(kvw_ce), .kvw_addr(kvw_addr), .kvw_data(kvw_data), .kvw_mask(kvw_mask));

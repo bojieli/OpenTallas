@@ -1,0 +1,50 @@
+REC 0 0 accept 0 retire 172
+REC 0 1 accept 3 retire 279
+REC 0 2 accept 44 retire 375
+REC 0 3 accept 187 retire 448
+REC 0 4 accept 306 retire 555
+REC 0 5 accept 358 retire 630
+REC 0 6 accept 463 retire 687
+REC 0 7 accept 576 retire 736
+REC 0 8 accept 648 retire 812
+REC 0 9 accept 697 retire 955
+REC 0 10 accept 734 retire 1010
+REC 0 11 accept 828 retire 1105
+REC 0 12 accept 970 retire 1193
+REC 0 13 accept 1017 retire 1250
+REC 0 14 accept 1123 retire 1780
+REC 0 15 accept 1211 retire 1883
+REC 0 16 accept 1327 retire 1954
+REC 0 17 accept 1679 retire 2013
+REC 0 18 accept 1902 retire 2067
+REC 0 19 accept 1940 retire 2138
+REC 0 20 accept 2028 retire 2781
+REC 0 21 accept 2083 retire 2789
+REC 0 22 accept 2613 retire 2847
+REC 0 23 accept 2720 retire 2905
+REC 0 24 accept 2808 retire 2961
+REC 0 25 accept 2866 retire 3491
+REC 0 26 accept 2922 retire 3499
+CASE 0 service 3500 span 1572 stage 1026 compute 2241 drain 469 other 0
+ERR case 0 VM[40704] = 3f8b602a expected bfdeef98
+ERR case 0 VM[40705] = bf287a25 expected 3f45d95d
+ERR case 0 VM[40706] = bed34f2a expected be19e9c8
+ERR case 0 VM[40707] = 3ff7fd98 expected bf9c2052
+ERR case 0 VM[40708] = bfb1cc5e expected 3f4b64ae
+ERR case 0 VM[40709] = be827623 expected 3ed15558
+ERR case 0 VM[40710] = bf2e7b89 expected 3eb82275
+ERR case 0 VM[40711] = 3fbf426a expected bf05af7c
+ERR case 0 VM[40712] = 3f8f53eb expected 3f80987f
+ERR case 0 VM[40713] = 3ff13a25 expected bf2fdd72
+ERR case 0 VM[40714] = 3f13d1f2 expected bf49d2b9
+ERR case 0 VM[40715] = 3e8f28f1 expected be066b0c
+ERR case 0 VM[40716] = 3d3cb226 expected bfd1dec8
+ERR case 0 VM[40717] = 3ece953d expected 40025ae2
+ERR case 0 VM[40718] = bf5978a2 expected bd686060
+ERR case 0 VM[40719] = be96e3ac expected bf9a9788
+ERR case 0 VM[40720] = 3f9093c4 expected 3fb48d95
+ERR case 0 VM[40721] = 3f7f49ec expected 3fad4f95
+ERR case 0 VM[40722] = bf4ab526 expected 3f694882
+ERR case 0 VM[40723] = be2ad2b3 expected bf59c57f
+summary: 1 production-shape cases, 23792 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD FAIL errors=3382

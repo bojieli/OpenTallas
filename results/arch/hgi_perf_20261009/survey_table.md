@@ -19,11 +19,11 @@ Pathfinding estimates from hgi_sim.perf (see survey.json `method`, validation.js
 | DeepSeek-V4.1-Flash | 557.3 / 22.2 | mla 40 | 8,192 | 4 | 458 | 96 | 1,886 | 116 / 926 (TP 8) | SM (83 %) |
 | DeepSeek-V4.1-Flash | 557.3 / 22.2 | mla 40 | 131,072 | 8 | 748 | 96 | 1,870 | 110 / 883 (TP 8) |  |
 | DeepSeek-V4.1-Flash | 557.3 / 22.2 | mla 40 | 1,048,576 | 8 | 578 | 96 | 1,762 |  |  |
-| DeepSeek-V4.1-Flash (native bit-exact records) | | | 1,048,576 | | | 96 | 2,249 | | template path (error vs the full stream: validation.json) |
+| DeepSeek-V4.1-Flash (native bit-exact records) | | | 1,048,576 | | | 96 | 2,279 | | template path (error vs the full stream: validation.json) |
 | DeepSeek-V4.1-Flash-NVFP4 | 557.3 / 22.2 | mla 40 | 8,192 | 4 | 458 | 96 | 1,886 | 116 / 926 (TP 8) | SM (83 %) |
 | DeepSeek-V4.1-Flash-NVFP4 | 557.3 / 22.2 | mla 40 | 131,072 | 8 | 748 | 96 | 1,870 | 110 / 883 (TP 8) |  |
 | DeepSeek-V4.1-Flash-NVFP4 | 557.3 / 22.2 | mla 40 | 1,048,576 | 8 | 578 | 96 | 1,762 |  |  |
-| DeepSeek-V4.1-Flash-NVFP4 (native bit-exact records) | | | 1,048,576 | | | 96 | 2,249 | | template path (error vs the full stream: validation.json) |
+| DeepSeek-V4.1-Flash-NVFP4 (native bit-exact records) | | | 1,048,576 | | | 96 | 2,279 | | template path (error vs the full stream: validation.json) |
 | Devstral-2-123B-Instruct-2512 | 125.0 / 125.0 | gqa 88 | 8,192 | 1 | 24 | 96 | 1,000 | 3 / 24 (TP 1) | SM (97 %) |
 | Devstral-2-123B-Instruct-2512 | 125.0 / 125.0 | gqa 88 | 131,072 | 2 | 37 | 96 | 560 | 9 / 74 (TP 4) |  |
 | Devstral-2-123B-Instruct-2512 | 125.0 / 125.0 | gqa 88 | 262,144 | 2 | 30 | 96 | 382 | 8 / 61 (TP 4) |  |

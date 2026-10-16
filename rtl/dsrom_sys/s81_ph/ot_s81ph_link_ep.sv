@@ -34,6 +34,21 @@ module ot_s81ph_link_ep #(
     parameter integer PHY_NUM        = 0,
     parameter integer PHY_DEN        = 1,
     parameter integer SRAM           = 0,
+    // RXPIPE (ds-1010 2026-10-10, opt-in; RX_STAGES >= 3): the receive sequence classification is precomputed one stage
+    // early against the NEXT expected sequence (exp_seq + this cycle's accept, both arms in parallel, selected at the
+    // flop), so c_acc = registered in-order flag && !full: the 10-bit seq subtract / compare no longer sits in front of
+    // fill / tail / exp_seq / the landing SRAM write in one cycle (coll lane lcrpe TT -560 exp_seq -> fill).  0 cycles.
+    // TOREG (ds-1010 2026-10-10, opt-in): the ACK timeout limit (static ch_b select) is registered and the timer keeps a
+    // registered at-limit flag, so timeout = occ && !progress && at_lim (coll lane lcrpg TT -470 = ch_b_q -> limit mux ->
+    // timer == limit compare -> retry / rewind across the tile).  0 cycles.
+    // MWR (ds-1010/coll-tu 2026-10-11, opt-in): the replay buffer and the receive FIFO use ot_s81ph_mem1r1w WREG = 1
+    // (registered write ports beside the macros, read-after-write forwarded inside the wrapper; caller-visible timing
+    // unchanged), and the replay forward word rb_fwd_d loads every cycle (it is read only when rb_fwd, i.e. right after an
+    // accept, so its accept load enable was redundant): accept no longer drives 553-bit enables or macro pins directly
+    // (lane lcrpi: hold stuck -68 at u_rb w_addr_in = nxt_i, a setup-critical register).  0 cycles.
+    parameter integer MWR            = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
+    parameter integer TOREG          = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
+    parameter integer RXPIPE         = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer PIPE           = 0,     // CLAUDE S81-PH coll lane v3: 1 = sender pipelined (see the PIPE notes below)
                                               // CLAUDE s81-blocks 2026-10-07: 2 = PIPE 1 + (a) the freed-count difference
                                               // d_fr registered in S2 (fr_seen only changes in S2-apply cycles, as una for
@@ -105,6 +120,10 @@ module ot_s81ph_link_ep #(
     reg ch_b_q;                                // static pin, registered
     always @(posedge clk) ch_b_q <= ch_b;
     wire [TW-1:0]         ATO_W  = ch_b_q ? ATO_WB : ATO_WA;
+    reg  [TW-1:0]         ato_q;                 // TOREG: registered limit (static after reset)
+    always @(posedge clk) ato_q <= ATO_W;
+    reg                   at_lim;                // TOREG: timer == limit, registered with the timer
+    wire [TW-1:0]         ATO_S  = TOREG ? ato_q : ATO_W;
     localparam [RCW-1:0]  MR_W   = MR32[RCW-1:0];
     localparam integer    HB   = FPW / 2;           // CRC split point
 
@@ -226,7 +245,11 @@ module ot_s81ph_link_ep #(
     wire            progress = ack_ok && (d_ack != 0);
     wire [SEQW-1:0] una_n   = ack_ok ? rr_ack : una;
     wire [IW-1:0]   una_i_n = ack_ok ? rr_ack[IW-1:0] : una_i;   // = una_i + d_ack (indices are seq mod RP)
-    wire            timeout = (occ != 0) && !progress && (timer == ATO_W);
+`ifdef OT_S81PH_EP_TOREG_MUT
+    wire            timeout = (occ != 0) && !progress && (TOREG ? 1'b0 : (timer == ATO_W));  // mutant: the registered timeout never fires
+`else
+    wire            timeout = (occ != 0) && !progress && (TOREG ? at_lim : (timer == ATO_W));
+`endif
 `ifdef OT_DSROM_LINK_MUT_NOREPLAY
     wire            rewind  = 1'b0;
 `else
@@ -239,7 +262,7 @@ module ot_s81ph_link_ep #(
     wire            ack_skip  = ack_ok && (d_ack > snd_off);
     wire [IW-1:0]   snd_i_nx  = (rewind || ack_skip) ? una_i_n : snd_i_l;
 
-    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM)) u_rb (.clk(clk),
+    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM), .WREG(MWR)) u_rb (.clk(clk), .rst_n(rst_n),
         .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(PIPE ? snd_i : snd_i_nx), .q(rb_q));
 
     // TX pipe: stage 0 = {payload, partial CRCs}; stage 1 = {payload, CRC}; stages 2.. copies
@@ -320,13 +343,28 @@ module ot_s81ph_link_ep #(
     assign out_data  = fifo_q[W-1:0];
     assign out_last  = fifo_q[W];
 
-    wire [SEQW-1:0] c_diff   = c_seq - exp_seq;
-    wire [SEQW-1:0] c_back   = exp_seq - c_seq;
+    wire [SEQW-1:0] c_diff, c_back;
+    wire            c_acc;
+    generate if (RXPIPE != 0) begin : g_rxp
+        // seq of the flit entering the last RX stage next edge, against exp_seq as it will be after this edge
+        wire [SEQW-1:0] n_seq = xp_f[RX_STAGES-2][FFW-1 -: SEQW];
+        reg  [SEQW-1:0] d_q;
+`ifdef OT_S81PH_EP_RXPIPE_MUT
+        always @(posedge clk or negedge rst_n) if (!rst_n) d_q <= 0; else d_q <= n_seq - exp_seq;   // mutant: ignores this cycle's accept
+`else
+        always @(posedge clk or negedge rst_n) if (!rst_n) d_q <= 0; else d_q <= c_acc ? (n_seq - exp_seq - 1'b1) : (n_seq - exp_seq);
+`endif
+        assign c_diff = d_q;
+        assign c_back = {SEQW{1'b0}} - d_q;
+    end else begin : g_rxc
+        assign c_diff = c_seq - exp_seq;
+        assign c_back = exp_seq - c_seq;
+    end endgenerate
     wire            c_good   = c_v && c_crc_ok;
     wire            c_crcerr = c_v && !c_crc_ok;
     wire            c_inord  = c_good && (c_diff == 0);
     wire            c_full   = (fill == CREDITS[CW-1:0]);
-    wire            c_acc    = c_inord && !c_full;
+    assign          c_acc    = c_inord && !c_full;
     wire            c_ovf    = c_inord && c_full;
     wire            c_ahead  = c_good && (c_diff != 0) && (c_diff < HALF);
     wire            c_behind = c_good && (c_diff >= HALF);
@@ -334,7 +372,7 @@ module ot_s81ph_link_ep #(
     wire            c_nak    = (c_crcerr || c_ahead) && !nak_sent;
     wire            drain    = (fill != 0) && (!out_valid_r || out_ready);
 
-    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM)) u_fifo (.clk(clk),
+    ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM), .WREG(MWR)) u_fifo (.clk(clk), .rst_n(rst_n),
         .we(c_acc), .wa(tail), .wd({c_last, c_data}), .re(drain), .ra(head), .q(fifo_q));
 
     reg  [SEQW-1:0] tx_ack;
@@ -398,7 +436,7 @@ module ot_s81ph_link_ep #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             una <= 0; snd <= 0; nxt <= 0; una_i <= 0; snd_i <= 0; nxt_i <= 0; rdy_r <= 1'b1; rep_r <= 1'b0;
-            credits <= CREDITS[CW-1:0]; fr_seen <= 0; timer <= 0; retry <= 0;
+            credits <= CREDITS[CW-1:0]; fr_seen <= 0; timer <= 0; at_lim <= 1'b0; retry <= 0;
             pace <= PCOST_W; pace_ok_r <= 1'b1; rb_fwd <= 1'b0; rb_fwd_d <= 0;
             rr_v <= 1'b0; rr_f <= 0; rr_crc_ok <= 1'b0;
             exp_seq <= 0; nak_sent <= 1'b0; nak_req <= 1'b0; dup_req <= 1'b0;
@@ -415,7 +453,7 @@ module ot_s81ph_link_ep #(
                 else if (!pace_ok) begin pace <= pace + PNUM_W;           pace_ok_r <= pace_ok_inc;    end
             end
             rb_fwd <= accept && (nxt_i == snd_i_nx);
-            if (accept) rb_fwd_d <= {in_last, in_data};
+            if (accept || MWR != 0) rb_fwd_d <= {in_last, in_data};
             if (accept) begin
                 nxt   <= nxt + 1'b1;
                 nxt_i <= idx_add(nxt_i, 1);
@@ -444,8 +482,8 @@ module ot_s81ph_link_ep #(
             else credits <= credits - {{(CW-1){1'b0}}, accept} + ((rr_ok && !fr_bad) ? d_fr : {CW{1'b0}});
 `endif
             if (rr_ok) fr_seen <= rr_fr;
-            if (occ == 0 || progress || rewind) timer <= 0;
-            else if (timer != ATO_W) timer <= timer + 1'b1;
+            if (occ == 0 || progress || rewind) begin timer <= 0; at_lim <= 1'b0; end
+            else if (TOREG ? !at_lim : (timer != ATO_W)) begin timer <= timer + 1'b1; at_lim <= (timer + 1'b1 == ATO_S); end
             if (progress) retry <= {{(RCW-1){1'b0}}, rewind};
             else if (rewind && retry <= MR_W) retry <= retry + 1'b1;
             rr_v <= r_rx_v; rr_f <= r_rx; rr_crc_ok <= (r_rx_crc == r_rx[31:0]);

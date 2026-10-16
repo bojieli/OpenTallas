@@ -1,0 +1,7 @@
+{"master": "dsfd_host_sd", "w_um": 129.6, "h_um": 129.6, "domain": "stream_1p2",
+ "ports": [["o_d", 256, "input", "W", "M4", 2, 0.3], ["o_addr", 32, "input", "W", "M4", 2, 0.62], ["o_v", 1, "input", "W", "M4", 1, 0.7],
+           ["o_we", 1, "input", "W", "M4", 1, 0.72], ["o_cr", 1, "output", "W", "M4", 1, 0.74], ["host_ack_n", 8, "output", "W", "M4", 2, 0.8],
+           ["fault", 1, "output", "W", "M4", 1, 0.86],
+           ["ck", 1, "input", "S", "M5", 1, 0.5], ["rst_n", 1, "input", "S", "M5", 1, 0.56],
+           ["hw", 584, "output", "E", "M4", 2, 0.45], ["hc", 18, "input", "E", "M4", 2, 0.92]],
+ "scalar_ports": ["o_v", "o_we", "o_cr", "ck", "rst_n", "fault"]}

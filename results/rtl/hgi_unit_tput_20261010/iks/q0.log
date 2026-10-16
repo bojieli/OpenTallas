@@ -1,0 +1,6 @@
+IKS quarter 0: B 342 blocks, 1368 lines, 186048 bytes, go->ik_done 460 cycles, 5888 DRAM beats, 404.5 B/cycle (priced 791.7 B/cycle a stack, scan priced 339.0 cycles)
+PASS HGI_IDX_IKS
+- rtl/hbm_accel/generic/idx/tb_hgi_idx_iks.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400ns; walltime 0.016 s; speed 25.436 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

@@ -109,6 +109,80 @@
     "kv-die landing HBM write queue (posted KVN rows -> CDC w_v/w_sec/w_data)"
    ],
    "recorded_at": "2026-10-09T22:22:25.381482+00:00"
+  },
+  {
+   "element": "dsfd_engram_lkp",
+   "target": "DS ROM",
+   "owner": "sys-takeover",
+   "description": "Engram lookup (HBM-resident tables) with CRCMAT: CRC terms as constant-masked reduction XORs (balanced, depth ~8) instead of 32 chained crc_byte calls",
+   "source": {
+    "commit": "b17ee03d4",
+    "paths": [
+     "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv"
+    ]
+   },
+   "implementation": {
+    "status": "CRCMAT=1 (opt-in), PIPE=1; 0 cycles; same CRC values"
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS lookup campaign incl. CRC error-injection modes"
+    },
+    "negative": {
+     "status": "PASS offset-not-subtracted mutant"
+    }
+   },
+   "physical": {
+    "status": "CLOSED",
+    "corners": {
+     "TT_setup_ps": 22.96,
+     "FF_hold_ps": 2.33,
+     "DRC": 0,
+     "SS_sensitivity_ps": -334.31
+    },
+    "evidence": [
+     "engram_lkp_crcmat2_a-b17ee03d4-tc (record 2310917c5, on main 589a77609)"
+    ]
+   },
+   "recorded_at": "2026-10-10T09:51:27.423878+00:00"
+  },
+  {
+   "element": "dsfd_host_native",
+   "target": "DS ROM",
+   "owner": "sys-takeover",
+   "description": "S81 native host ingest: fence PIPE 2 (registered head-ready + snapshot check), engine ENG_TRIM (dead QKV path removed) + APIPE 2 (address terms in two registered stages)",
+   "source": {
+    "commit": "18f1b50d4",
+    "paths": [
+     "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+     "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+     "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv"
+    ]
+   },
+   "implementation": {
+    "status": "opt-in; cost +1 clk_h per completion, +1/+2 clk_i per row or key (window bench 7,268 -> 8,074 ck, +11.1 %)"
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS exact HBM image + per-done visibility on 5 cases (raw, v41 window, 8 fenced b2b, 10 mixed, 8 behind MSTALL 90)"
+    },
+    "negative": {
+     "status": "PASS fence release-flag mutant caught by the visibility check alone (fencevis); stale-address mutant caught; sector-count-lag and dropped-fault-check mutants need fault injection (not caught)"
+    }
+   },
+   "physical": {
+    "status": "CLOSED",
+    "corners": {
+     "TT_setup_ps": 46.85,
+     "FF_hold_ps": 5.13,
+     "DRC": 0,
+     "SS_sensitivity_ps": -315.42
+    },
+    "evidence": [
+     "hostnative_pipec_a-18f1b50d4-tc (record 1ab54de47, on main 9bdcd6d92)"
+    ]
+   },
+   "recorded_at": "2026-10-10T09:51:27.423878+00:00"
   }
  ]
 }

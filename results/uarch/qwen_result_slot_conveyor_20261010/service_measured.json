@@ -1,0 +1,21 @@
+{
+  "full_bursts": 360,
+  "full_beats": 2880,
+  "full_first_output_cycle": 26,
+  "full_last_output_cycle": 4337,
+  "full_burst_span_cycles": 12.008356545961004,
+  "full_raw_ingress_to_firstbeat_cycles": 24,
+  "empty_bursts": 360,
+  "empty_beats": 360,
+  "empty_first_output_cycle": 33,
+  "empty_last_output_cycle": 4172,
+  "empty_burst_span_cycles": 11.529247910863509,
+  "empty_raw_ingress_to_firstbeat_cycles": 31,
+  "scope": "saturated element service including16 finite credits; not per-user token rate",
+  "previous_model": "model_r2.json",
+  "superseding_model": "model_r3.json",
+  "raw_ingress_latency_extra_vs_legacy5": [
+    19,
+    26
+  ]
+}

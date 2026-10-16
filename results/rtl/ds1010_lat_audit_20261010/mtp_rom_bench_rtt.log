@@ -1,0 +1,7 @@
+OK         rtt_s0_tr_dspark         expect=pass MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=16 steps_closed=32 accepted=0 seeds=28 dh=120 draft_flits=28 issues=164 rejects=28 squashed=120 hidden=166 s0_starts=166 cycles=67505
+OK         rtt_s0_tr_forced         expect=pass MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=42263
+OK         rtt_s0_hash_u3           expect=pass MTP_S0 PASS mode=1 users=3 (ar 0) plen=5 ngen=48 steps_closed=49 accepted=95 seeds=46 dh=214 draft_flits=46 issues=272 rejects=33 squashed=119 hidden=275 s0_starts=275 cycles=99391
+OK         rtt_s0_hash_u1_fast      expect=pass MTP_S0 PASS mode=1 users=1 (ar 0) plen=5 ngen=60 steps_closed=13 accepted=47 seeds=12 dh=56 draft_flits=12 issues=72 rejects=3 squashed=9 hidden=73 s0_starts=73 cycles=55063
+OK         rtt_s0_neg_off1          expect=fail MTP_S0 FAIL: u0 step 1 closed at 9 a 0, golden anchor 8 a 1 (g 5)
+UNEXPECTED rtt_s0_neg_stale_rtt     expect=fail MTP_S0 PASS mode=1 users=1 (ar 0) plen=5 ngen=60 steps_closed=13 accepted=47 seeds=12 dh=56 draft_flits=12 issues=72 rejects=3 squashed=9 hidden=73 s0_starts=73 cycles=55063
+exit 1

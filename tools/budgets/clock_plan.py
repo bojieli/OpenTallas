@@ -61,7 +61,7 @@ def s81_clock_family(inst):
         return "SELECT"
     if inst == "bk_collector" or inst.startswith(("xsco_", "hco_")):
         return "COLLECT"
-    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_")):
+    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_", "hr_")):
         return "GATHER"
     return None
 
@@ -76,6 +76,20 @@ def plan_regions(d, trees, max_ext=MAX_REGION_UM, max_merge=None):
     x, y)]}}"""
     max_merge = max_merge or MAX_MERGE_UM
     reg = C.sink_regions(d, trees)
+    # ds-1010/s81die 2026-10-10: a block on a column tree AND a die trunk (S81 --cfifo-colck: cfifo ck = stream trunk,
+    # cr = its own column tree) is registered under whichever tree came first; its trunk region comes from its rect
+    rects = [(r['name'], r['rect']) for r in d['regions'] if not r['name'].startswith('frame_')
+             and r.get('kind') not in ('channel', 'soft_child_reservation')]
+
+    def trunk_rect(inst, t):
+        r_ = reg.get(inst)
+        if r_ and r_[0] == t and ':' in r_[1]:
+            return r_[1].split(':', 1)[1]
+        if r_ is None:
+            return 'die'
+        it = d['by'][inst]
+        c = (it[5] + it[7] / 2, it[6] + it[8] / 2)
+        return next((n for n, rr in rects if C.in_rect(c, rr)), 'die')
     out = defaultdict(dict)
     for t, tr in trees.items():
         if tr['cls'] == 'col_clock':
@@ -83,7 +97,7 @@ def plan_regions(d, trees, max_ext=MAX_REGION_UM, max_merge=None):
         groups = defaultdict(list)
         for inst, port in dict.fromkeys(tr['sinks']):
             (x, y), _ = C.port_xy(d, d['by'][inst], port)
-            rect = reg.get(inst, (t, f'{t}:die'))[1].split(':', 1)[1]     # rect part (a block on two trees: per tree)
+            rect = trunk_rect(inst, t)     # rect part (a block on two trees: per tree)
             if S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81'):
                 rect = s81_clock_family(inst) or rect
             groups[f'{t}:{rect}'].append((inst, port, x, y))

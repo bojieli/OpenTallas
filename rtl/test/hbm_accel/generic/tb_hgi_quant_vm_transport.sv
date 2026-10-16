@@ -1,3 +1,6 @@
+`ifndef SERIAL_SHAPE
+ `define SERIAL_SHAPE 0
+`endif
 `timescale 1ns/1ps
 module tb_hgi_quant_vm_transport;
 `ifndef MUTANT
@@ -13,11 +16,11 @@ module tb_hgi_quant_vm_transport;
  wire [682:0] rec={1'b0,cmd[1153+48+:20],1'b0,cmd[385+48+:20],cmd[1153+:256],cmd[385+:256],cmd[128:1],cmd[0]};
  ot_hgi_quant_record #(.MUT_NOCHECK(0)) recb(.clk(clk),.rst_n(rst_n),.rec(rec),.cmd(cmd_int),.nfault(nfault));
  always @(posedge clk) if(nfault)$fatal(1,"record count consistency fault on a legal record");
- ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.clk(clk),.rst_n(rst_n),.cmd(cmd_int),.ready(ready),
+ ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT),.SERIAL_SHAPE(`SERIAL_SHAPE)) dut(.clk(clk),.rst_n(rst_n),.cmd(cmd_int),.ready(ready),
   .done(done),.fault(fault),.drained(drained),.req_v(req_v),.req_r(req_r),.req(req),.rsp_v(rsp_v),.rsp_r(rsp_r),
   .rsp(rsp),.provider_fault(provider_fault));
 `else
- ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.*);
+ ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT),.SERIAL_SHAPE(`SERIAL_SHAPE)) dut(.*);
 `endif
  reg [31:0] vm[0:8191];reg [31:0] expected[0:8191];
  reg corrupt_tag=0;reg pv=0;reg [336:0] held;integer delay_count=0;
@@ -177,6 +180,8 @@ module tb_hgi_quant_vm_transport;
    cases=cases+1;
   end
   @(negedge clk);rst_n=0;repeat(3)@(negedge clk);rst_n=1;#0.01;
+  if(ready||req_v)$fatal(1,"ready before the registered reset released");   // hgi-takeover: rn = rst_n + 2 edges
+  repeat(3)@(negedge clk);
   if(!ready||req_v||!drained)$fatal(1,"cold reset leftovers");
   $display("PASS QUANT_TRANSPORT cases=%0d words=%0d arbitraryCPstall ACKdelay tail16/48 illegalUE",cases,nwords);$finish;
  end

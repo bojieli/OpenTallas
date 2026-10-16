@@ -1,0 +1,144 @@
+{
+ "model": "ds",
+ "n": 1347,
+ "imm_a": 1347,
+ "o_base": 93952,
+ "o_istride": 0,
+ "price": 142.668,
+ "price_grade": "measured",
+ "price_how": "walk su:argmax_local (ds_native_timing.NativeCost)",
+ "cases": [
+  {
+   "k": 0,
+   "tag": "ds.argmax_local.max_last.r0",
+   "rank": 0,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "42800000",
+   "id": 1346,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 1,
+   "tag": "ds.argmax_local.tie_halves.r0",
+   "rank": 0,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "42480000",
+   "id": 673,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 2,
+   "tag": "ds.argmax_local.tie_far.r0",
+   "rank": 0,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "42200000",
+   "id": 3,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 3,
+   "tag": "ds.argmax_local.nan_first.r0",
+   "rank": 0,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "7fc00001",
+   "id": 449,
+   "nan": true,
+   "cost": 142.668
+  },
+  {
+   "k": 4,
+   "tag": "ds.argmax_local.zeros.r0",
+   "rank": 0,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "00000000",
+   "id": 0,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 5,
+   "tag": "ds.argmax_local.gauss.r0",
+   "rank": 0,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "414eff39",
+   "id": 910,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 6,
+   "tag": "ds.argmax_local.max_last.r95",
+   "rank": 95,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "42800000",
+   "id": 129311,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 7,
+   "tag": "ds.argmax_local.tie_halves.r95",
+   "rank": 95,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "42480000",
+   "id": 128638,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 8,
+   "tag": "ds.argmax_local.tie_far.r95",
+   "rank": 95,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "42200000",
+   "id": 127968,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 9,
+   "tag": "ds.argmax_local.nan_first.r95",
+   "rank": 95,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "7fc00001",
+   "id": 128414,
+   "nan": true,
+   "cost": 142.668
+  },
+  {
+   "k": 10,
+   "tag": "ds.argmax_local.zeros.r95",
+   "rank": 95,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "00000000",
+   "id": 127965,
+   "nan": false,
+   "cost": 142.668
+  },
+  {
+   "k": 11,
+   "tag": "ds.argmax_local.gauss.r95",
+   "rank": 95,
+   "n": 1347,
+   "imm_a": 1347,
+   "value": "41586761",
+   "id": 129207,
+   "nan": false,
+   "cost": 142.668
+  }
+ ]
+}
