@@ -68,8 +68,9 @@ def propose(packet):
         edges.append(dict(link_pin=n,seq_pin=sn,control_bit=bits.index(n) if n in bits else None,
                           direction='seq_to_link' if n in bits else 'link_to_seq',
                           delta_um=delta,manhattan_um=round(abs(delta[0])+abs(delta[1]),6),extra_relay_edges=0))
-    for i,n in enumerate(('ck','rst_n','reload','tok_go')):
-        pinlist.append(dict(name=n,layer='M5',face='S',center_um=[round(4.332+8.64*i,6),.072],size_um=[.024,.144]))
+    for n,x in (('ck',21.612),('rst_n',23.772),('reload',10.812),('tok_go',30.252)):
+        if n in ports:
+            pinlist.append(dict(name=n,layer='M5',face='S',center_um=[x,.072],size_um=[.024,.144]))
     status=['cal_ready','running']+[f'layer[{i}]' for i in range(6)]+['adm_done','tok_start','fault']
     for i,n in enumerate(status):
         pinlist.append(dict(name=n,layer='M4',face='E',center_um=[size-.072,round(4.332+1.728*i,6)],size_um=[.144,.024]))
@@ -107,6 +108,7 @@ def propose(packet):
                               EP_SKEW='package_epoch_edges - extra_epoch_relay_edges - extra_control_relay_edges',
                               no_implicit_package_skew=True,local_epoch_capture_edges=(1 if TOP.endswith('_pin') else 0),
                               local_compensation='EP_SKEW-1 internally' if TOP.endswith('_pin') else 'raw source'),
+                by_design_connections=({'u_seq.tok_go':'constant0; raw AUTO=1 ignores this input; no physical port'} if TOP.endswith('_pin') else {}),
                 remaining=['die lead actual home/collision/all-incident-port assignment','clock phase-minus-insertion and pair reach TT/FF',
                            'sequencer source synthesis/CTS/route/native audit','route final DEF readback and exact matched-pin proof',
                            'HOST reload/rst/status/fault producer-consumer wiring','physical package_epoch_edges'],

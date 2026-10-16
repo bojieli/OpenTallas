@@ -2,7 +2,7 @@
   "scope": "PROPOSED_DIE_DRIVEN_PINS_AND_SOURCE_MAP_ONLY",
   "top": "qkd_d2d_cal_seq_pin",
   "source": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
-  "source_sha256": "d6003fb91568d42edd812989bf5c0286384d3e66a2e82ab7bb1766a74c4f98fa",
+  "source_sha256": "17a3d11dcab01a092b96408b56ac9debc8d9b50c547cf064187731ac23df5f64",
   "link_interface_source": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
   "link_interface_sha256": "13edfa2b04d971013d7a6889ea7e0a4c528a29205d1674a77b17bcfd49df1f17",
   "link_packet": {
@@ -1273,7 +1273,7 @@
       "layer": "M5",
       "face": "S",
       "center_um": [
-        4.332,
+        21.612,
         0.072
       ],
       "size_um": [
@@ -1286,7 +1286,7 @@
       "layer": "M5",
       "face": "S",
       "center_um": [
-        12.972,
+        23.772,
         0.072
       ],
       "size_um": [
@@ -1299,20 +1299,7 @@
       "layer": "M5",
       "face": "S",
       "center_um": [
-        21.612,
-        0.072
-      ],
-      "size_um": [
-        0.024,
-        0.144
-      ]
-    },
-    {
-      "name": "tok_go",
-      "layer": "M5",
-      "face": "S",
-      "center_um": [
-        30.252,
+        10.812,
         0.072
       ],
       "size_um": [
@@ -2051,9 +2038,6 @@
       "reload": [
         "reload"
       ],
-      "tok_go": [
-        "tok_go"
-      ],
       "epoch_go": [
         "epoch_go"
       ],
@@ -2111,7 +2095,7 @@
       1,
       "S",
       "M5",
-      4.38,
+      21.66,
       2
     ],
     "rst_n": [
@@ -2119,7 +2103,7 @@
       1,
       "S",
       "M5",
-      13.02,
+      23.82,
       2
     ],
     "reload": [
@@ -2127,15 +2111,7 @@
       1,
       "S",
       "M5",
-      21.66,
-      2
-    ],
-    "tok_go": [
-      "face",
-      1,
-      "S",
-      "M5",
-      30.3,
+      10.86,
       2
     ],
     "epoch_go": [
@@ -2267,6 +2243,9 @@
     "no_implicit_package_skew": true,
     "local_epoch_capture_edges": 1,
     "local_compensation": "EP_SKEW-1 internally"
+  },
+  "by_design_connections": {
+    "u_seq.tok_go": "constant0; raw AUTO=1 ignores this input; no physical port"
   },
   "remaining": [
     "die lead actual home/collision/all-incident-port assignment",

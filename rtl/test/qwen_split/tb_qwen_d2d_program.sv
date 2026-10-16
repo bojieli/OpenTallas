@@ -104,7 +104,7 @@ module tb_qwen_d2d_program;
         .halt(c_abort), .cfg_tx_we(q_c_tx), .cfg_rx_we(q_c_rx), .cfg_addr(q_c_a), .cfg_data(q_c_d), .cal_start(q_c_cs), .cal_seg(q_c_sg),
         .cal_ready(q_c_rdy), .running(q_c_run), .layer(q_c_l), .adm_done(q_c_ad), .tok_start(q_c_ts), .fault(q_c_f));
     generate if(KV_PIN_SEQ) begin: pin_calendar
-    qkd_d2d_cal_seq_pin #(.EP_SKEW(MUT == 7 ? 2 : 3)) u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(1'b0), .epoch_go(fwd_ep), .halt(k_abort),
+    qkd_d2d_cal_seq_pin #(.EP_SKEW(MUT == 7 ? 2 : 3)) u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .epoch_go(fwd_ep), .halt(k_abort),
         .cfg_tx_we(q_k_tx), .cfg_rx_we(q_k_rx), .cfg_addr(q_k_a), .cfg_data(q_k_d), .cal_start(q_k_cs), .cal_seg(q_k_sg),
         .cal_ready(q_k_rdy), .running(q_k_run), .layer(q_k_l), .adm_done(q_k_ad), .tok_start(q_k_ts), .fault(q_k_f));
     end else begin: raw_calendar

@@ -6,26 +6,27 @@
 // Reload and halt are exceptional inputs, observed one edge later explicitly.
 // All cfg/cal outputs remain the actual sequencer output registers (no extra
 // output cycle); internal EP_SKEW-1 compensates the epoch input capture.
+// KV AUTO has no external tok_go port; the unused raw input is tied0 here.
 // Must be re-proved/physically gated with its own name; no inherited raw view.
 module qkd_d2d_cal_seq_pin #(parameter integer GO_OFS = 0, parameter [20*36-1:0] START_ADJ = '0, parameter integer EP_SKEW = 3) (
-    input wire ck, rst_n, reload, tok_go, epoch_go, halt,
+    input wire ck, rst_n, reload, epoch_go, halt,
     output wire cfg_tx_we, cfg_rx_we, output wire [5:0] cfg_addr, output wire [31:0] cfg_data,
     output wire cal_start, cal_seg, cal_ready, running, output wire [5:0] layer, output wire adm_done, tok_start, fault);
     // Pin capture consumes exactly one epoch edge. Keep the output calendar
     // at the same declared package anchor by subtracting this fixed edge.
     // No ready/credit/arrival signal can reschedule the normal programme.
     reg [1:0] release_q;
-    reg reload_q,tok_go_q,epoch_go_q,halt_q;
+    reg reload_q,epoch_go_q,halt_q;
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
-            release_q<=0;reload_q<=0;tok_go_q<=0;epoch_go_q<=0;halt_q<=1;
+            release_q<=0;reload_q<=0;epoch_go_q<=0;halt_q<=1;
         end else begin
             release_q<={release_q[0],1'b1};
-            reload_q<=reload;tok_go_q<=tok_go;epoch_go_q<=epoch_go;halt_q<=halt;
+            reload_q<=reload;epoch_go_q<=epoch_go;halt_q<=halt;
         end
     end
     qkd_d2d_cal_seq #(.GO_OFS(GO_OFS),.START_ADJ(START_ADJ),.EP_SKEW(EP_SKEW-1)) u_seq(
-        .ck(ck),.rst_n(release_q[1]),.reload(reload_q),.tok_go(tok_go_q),.epoch_go(epoch_go_q),.halt(halt_q),
+        .ck(ck),.rst_n(release_q[1]),.reload(reload_q),.tok_go(1'b0),.epoch_go(epoch_go_q),.halt(halt_q),
         .cfg_tx_we(cfg_tx_we),.cfg_rx_we(cfg_rx_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .cal_start(cal_start),.cal_seg(cal_seg),.cal_ready(cal_ready),.running(running),.layer(layer),
         .adm_done(adm_done),.tok_start(tok_start),.fault(fault));

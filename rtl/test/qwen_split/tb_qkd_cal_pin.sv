@@ -6,7 +6,7 @@ module tb_qkd_cal_pin;
  parameter integer MUT=0;
  reg ck=0,rst_n=0,reload=0,epoch_go=0,halt=0;always #5 ck=~ck;
  wire tw,rw,cs,sg,ready,running,ad,ts,fault;wire[5:0] addr,layer;wire[31:0] data;
- qkd_d2d_cal_seq_pin #(.EP_SKEW(MUT?2:3)) u(.ck(ck),.rst_n(rst_n),.reload(reload),.tok_go(1'b0),
+ qkd_d2d_cal_seq_pin #(.EP_SKEW(MUT?2:3)) u(.ck(ck),.rst_n(rst_n),.reload(reload),
   .epoch_go(epoch_go),.halt(halt),.cfg_tx_we(tw),.cfg_rx_we(rw),.cfg_addr(addr),.cfg_data(data),
   .cal_start(cs),.cal_seg(sg),.cal_ready(ready),.running(running),.layer(layer),.adm_done(ad),.tok_start(ts),.fault(fault));
  integer cyc=0,release_c=0,init_words=0,starts=0,origin=0,next_c=0,li=63,tok=0;

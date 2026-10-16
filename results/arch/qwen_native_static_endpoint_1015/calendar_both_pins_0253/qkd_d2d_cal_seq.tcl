@@ -44,10 +44,9 @@ place_pin -pin_name {cal_start} -layer M4 -location {0.072000 10.812000} -pin_si
 place_pin -pin_name {cal_seg} -layer M4 -location {0.072000 10.668000} -pin_size {0.144000 0.024000}
 place_pin -pin_name {epoch_go} -layer M4 -location {0.072000 27.516000} -pin_size {0.144000 0.024000}
 place_pin -pin_name {halt} -layer M4 -location {0.072000 27.084000} -pin_size {0.144000 0.024000}
-place_pin -pin_name {ck} -layer M5 -location {4.332000 0.072000} -pin_size {0.024000 0.144000}
-place_pin -pin_name {rst_n} -layer M5 -location {12.972000 0.072000} -pin_size {0.024000 0.144000}
-place_pin -pin_name {reload} -layer M5 -location {21.612000 0.072000} -pin_size {0.024000 0.144000}
-place_pin -pin_name {tok_go} -layer M5 -location {30.252000 0.072000} -pin_size {0.024000 0.144000}
+place_pin -pin_name {ck} -layer M5 -location {21.612000 0.072000} -pin_size {0.024000 0.144000}
+place_pin -pin_name {rst_n} -layer M5 -location {23.772000 0.072000} -pin_size {0.024000 0.144000}
+place_pin -pin_name {reload} -layer M5 -location {10.812000 0.072000} -pin_size {0.024000 0.144000}
 place_pin -pin_name {cal_ready} -layer M4 -location {43.128000 4.332000} -pin_size {0.144000 0.024000}
 place_pin -pin_name {running} -layer M4 -location {43.128000 6.060000} -pin_size {0.144000 0.024000}
 place_pin -pin_name {layer[0]} -layer M4 -location {43.128000 7.788000} -pin_size {0.144000 0.024000}
