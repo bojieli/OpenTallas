@@ -1,0 +1,59 @@
+{
+ "route_images": {
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/density.png": {
+   "sha256": "b67391947883fcf3cb134d27e49c33a16cf01b0b72bf7205dbe65daf8f736f35",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c/floorplan.png": {
+   "sha256": "0334504d12b98aeaf158a8fac367762838f78d9e89ed7e0b7d6d6609e0c0603b",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq3_ref-bank-native2330-COMMIT-85e95731c/density.png": {
+   "sha256": "fd0779139bbb805707636a2caa833675f09cbaecba550b996d0cfcf438746c7c",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq3_ref-bank-native2330-COMMIT-85e95731c/floorplan.png": {
+   "sha256": "4cd430991c1c5dcd6b8fb85d152619af6a4dca64fa6fa20bbfefd53158bf2e38",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c/density.png": {
+   "sha256": "9baff0bb2753c52e53100dcbe9506c120c303bd3842fb0ba0ef2a782a37fad5a",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c/floorplan.png": {
+   "sha256": "427998f5faa1a70a83b0f34f13b73d5f2f3a5cbdde3a85be79f9b652e2904e13",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c/density.png": {
+   "sha256": "5b2f8da9d5a5e46f086e48ec6334b77493d539cb6423f2ff30d72800f974cd1a",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c/floorplan.png": {
+   "sha256": "8295ceff6598d802208b64e7579469f93e2ad810dd4e03868742737646cc2541",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/density.png": {
+   "sha256": "60ba9f36b608531c431d90781fd3d80f5016a662982a83841518a315cdc6ef13",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c/floorplan.png": {
+   "sha256": "4a6bafb258f36d0522d97d2ee73b3b980db1eacab875620674833686b19e4112",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/density.png": {
+   "sha256": "73f5f922a308889a24ab07cf9dcb5f306fa1195bb1b337cbe8c5a5b2cf5fdd94",
+   "looked_at": true
+  },
+  "/home/ubuntu/artifacts/s81-hc-2330/route-images/s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c/floorplan.png": {
+   "sha256": "3cc80d1f3ea1c2b2a4440d974b88c72ad87a74ccf582a18ec2340d5ff95e412e",
+   "looked_at": true
+  }
+ },
+ "observations": [
+  "FN bank data flops stay on N/S pin rows, central clock entry and low-fill interior are intentional pin-bound geometry",
+  "Q0 active data ranges leave a central x gap; no macro obstruction or inaccessible packed macro channel",
+  "XS lane/control sinks compact beside lane pins; actual core and lane spreads32.0/21.3ps, no macro obstacles",
+  "All six final floorplan and density PNGs inspected; physical signoff remains tied to routed record metrics",
+  "Parent41-child and MIX4 conservative38-child layouts inspected; no parent route/adoption implied"
+ ]
+}
