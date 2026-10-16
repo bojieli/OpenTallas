@@ -91,7 +91,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    out = census()
+    # The old wrapper-only census remains available to historical geometry screens.
+    # The published census follows the current hardened graph, including ckvb.
+    from capture_source_binding import elaborate
+    mod, scalar_buses, source_hashes = elaborate()
+    types = Counter(c["type"] for c in mod["cells"].values())
+    out = dict(schema="opentallas.s81.capture_split_census.v2", adopted=False, physical_qualified=False,
+               counts=dict(children=len(mod["cells"]), masters=len(types), parent_logic_cells=0,
+                           parent_clock_bits=sum(len(v["bits"]) for p,v in mod["ports"].items() if p.startswith("ck")),
+                           clock_entry_bits=sum(len(bits) for c in mod["cells"].values() for p,bits in c["connections"].items() if p in ("ck","ckv","ckvb"))),
+               cell_types=dict(types), ports=mod["ports"], single_bit_bus_ports=scalar_buses,
+               children={n:dict(master=c["type"],connections=c["connections"],port_directions=c["port_directions"],parameters=c.get("parameters",{})) for n,c in mod["cells"].items()},
+               source_sha256=source_hashes,
+               reset_contract="rst/rsv epoch 0; status s uses compensated rv0/rv1 reset stage; x8 s has literal ckv and ckvb",
+               cycle_cost="cd PINREG=1 adds one ckv DONE edge; status reset and x8 split add zero")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(out, indent=2) + "\n")
     print("CAPTURE_SPLIT_CENSUS PASS", json.dumps(out["counts"]))
