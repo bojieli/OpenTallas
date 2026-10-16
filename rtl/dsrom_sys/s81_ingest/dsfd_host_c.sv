@@ -233,6 +233,14 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     reg [7:0] pl1;
     always @(posedge ckv) begin pl1 <= plen_seam; t_sseq_plen <= pl1; end
     `endif
+    // Fixed diagnostic-status contract: if C0 is the first ck edge that
+    // samples the source's declared f_sseq_st status edge, to exports that
+    // status at C0+2 ck (ss1 -> ss2 -> to). This is recurring status transport,
+    // not a token-success decision. This module has no t_kd/KIT/raw-END input.
+    // tv_core/td_core below are native ingest physical-write completions and
+    // MUST NOT be interpreted as successful token execution. The actual KIT
+    // consumer must evaluate its compiler-declared fault-status edge; it must
+    // not wait dynamically for status or declare success from raw END/KIT alone.
     // ---------------- status (ck): sequencer status (ckv, 2-flop), WFC faults, ingest / decode / crossing faults
     reg [5:0] ss1, ss2; reg [3:0] wf;
     always @(posedge ck) begin ss1 <= f_sseq_st; ss2 <= ss1; wf <= f_wfc_ft; end

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_host_sd_control",
+ "enable": false,
+ "reason": "Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages."
+}

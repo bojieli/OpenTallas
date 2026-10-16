@@ -1,0 +1,92 @@
+{
+ "name": "s81_host_sd_data64_s3",
+ "top": "dsfd_host_sd_data64",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "NS": 1,
+  "KVS": 1,
+  "ENG": -1,
+  "SLICE": 3
+ },
+ "clock": "ck",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 93.96,
+  "h": 25.92,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "o_d",
+   "ck",
+   "rst_n",
+   "hc_cr"
+  ],
+  "S": [
+   "hw_data",
+   "hw_valid"
+  ],
+  "E": [
+   "o_addr",
+   "o_v",
+   "o_we",
+   "marker_class"
+  ],
+  "W": [
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s3.tcl",
+ "recipe": 3,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages."
+ },
+ "structural_change": "Source-backed HOST split: each64-bit S-face datapath localizes prior hw full425um spread to <=93.96um; original decoder projected by output observability with local equal pointers, independently conditioned reset and die phi-R clock. STATIC1 head-service faults instead of waiting for credits. Source-specific exact256/header/calendar +4 mutants +missingcredit no-reschedule proof. WholeHOST/native die qualification remains OPEN.",
+ "slot_change_request": "S81-HOST-SD-SPLIT-1016",
+ "job": {
+  "owner": "Codex:S81-HOST0253",
+  "branch": "codex/s81-host-recovery-0253",
+  "tag": "s1",
+  "purpose": "Harden actual projected HOST local clock leaf; native pin timing/TT/FF/DRC required.",
+  "views_to": "physical/ref_tile/s81_host_sd_data64_s3/views",
+  "record_to": "results/rtl/ref_tile/s81_host_sd_data64_s3",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/lib",
+   "tests/s81",
+   "tools/s81_static_control",
+   "physical/s81_die_pins/host_sd_sliced_1016"
+  ],
+  "benches": [
+   {
+    "name": "actual_sliced_sd_exact",
+    "cmd": "bash tools/s81_static_control/host_sd_sliced_gate.sh {RUN}/sd_split",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_SD_SLICED_GATE PASS"
+   }
+  ]
+ }
+}
