@@ -188,10 +188,26 @@ endmodule
 //  ck[0] shctl | ck[4:1] shcol_b[3:0] | ck[5] control | ck[36:6] arithmetic leaves (ot_s81_engram_mix ck_leaf order)
 //  ck[37] central relay | ck[41:38] band relay rt0[3:0] | ck[45:42] rt1[3:0] | ck[49:46] rb[3:0] | ck[50] rsl | ck[51] rsr.
 //  52 clock entries.
+// Banded copy cluster with the old single return port (dsfd_engram_mix4_banded top): wires only, slices the return word
+// per shell column and drives the per-column core.
 module ot_s81_engram_mixq_b #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1, HLAYOUT=1, N=32, D=5120, LM=5, LA=4)(
  input wire [51:0] ck,input wire rst,input wire start,input wire [223:0] desc,
  output wire [4:0] rq_v,output wire [69:0] rq_row,output wire vtag,
  input wire [4:0] rs_v,input wire [2559:0] rs_d,
+ output wire wq_v,output wire [13:0] wq_row,output wire [15:0] wq_mask,output wire [511:0] wq_d,
+ output wire done,output wire fault);
+ wire [2559:0] dc;
+ genvar c;
+ generate for(c=0;c<4;c=c+1)begin:sl assign dc[640*c+:640]={rs_d[1536+256*c+:256],rs_d[512+256*c+:256],rs_d[128*c+:128]};end endgenerate
+ ot_s81_engram_mixq_bc #(.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT),.N(N),.D(D),.LM(LM),.LA(LA)) core(
+  .ck(ck),.rst(rst),.start(start),.desc(desc),.rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v_col({4{rs_v}}),.rs_d_col(dc),
+  .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),.done(done),.fault(fault));
+endmodule
+
+module ot_s81_engram_mixq_bc #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1, HLAYOUT=1, N=32, D=5120, LM=5, LA=4)(
+ input wire [51:0] ck,input wire rst,input wire start,input wire [223:0] desc,
+ output wire [4:0] rq_v,output wire [69:0] rq_row,output wire vtag,
+ input wire [19:0] rs_v_col,input wire [2559:0] rs_d_col,     // per shell column c: rs_v_col[5c+:5], rs_d_col[640c+:640]
  output wire wq_v,output wire [13:0] wq_row,output wire [15:0] wq_mask,output wire [511:0] wq_d,
  output wire done,output wire fault);
  localparam integer MM=(MUT==1)?1:(MUT==22)?22:0;   // multiplier-leaf mutants, as ot_s81_engram_mixq
@@ -202,16 +218,16 @@ module ot_s81_engram_mixq_b #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LA
  wire [3:0] c_iv,c_ph;                      // own-column issue valid / phase from shcol_b[c]
  wire [7:0] copy_b;wire [127:0] gate_b;   // relayed per band
  ot_s81_engram_mixq_shctl #(.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT)) ctl(
-  .ck(ck[0]),.rst(rst),.start(start),.desc(desc),.rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),
+  .ck(ck[0]),.rst(rst),.start(start),.desc(desc),.rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v_col[10+:5]),
   .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.done(done),.fault(fault),
   .go(go),.iv(iv),.phase(phase),.copy(copy),.eps(eps),.scale(scale),.gv(gv),.ov(ov),.mf(mf),.gc(gc),.oc(oc),.fr(fr),.fa(fa));
- // the shell's write-row counter takes the result valid of band 2's add8 (the inner band whose add8 pins face the spine) (all four add8 run in lockstep; the control
+ // the shell's write-row counter takes the result valid of band 2's add8 (its add8 pins face the spine) (all four add8 run in lockstep; the control
  // checks it); each payload column takes its own add8's valid (own-column, as the localized candidate).
  assign ov=avalid[2];assign oc=add_copy[5:4];
  genvar c;
  generate for(c=0;c<4;c=c+1)begin:col
-  ot_s81_engram_mixq_shcol_b #(.MUT(MUT)) u(.ck(ck[c+1]),.rst(rst),.rs_v(rs_v),
-   .rs_d({rs_d[1536+256*c+:256],rs_d[512+256*c+:256],rs_d[128*c+:128]}),
+  ot_s81_engram_mixq_shcol_b #(.MUT(MUT)) u(.ck(ck[c+1]),.rst(rst),.rs_v(rs_v_col[5*c+:5]),
+   .rs_d(rs_d_col[640*c+:640]),
    .ov((MUT==26&&c==3)?1'b0:avalid[c]),.result(oy[256*c+:256]),
    .h(h[256*c+:256]),.kv(kv[256*c+:256]),.w(w[256*c+:256]),.wq_d(wq_d[128*c+:128]),.iv(c_iv[c]),.ph(c_ph[c]));
  end endgenerate
@@ -233,16 +249,16 @@ module ot_s81_engram_mixq_b #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LA
   // Three band relays per band, placed where their traffic is (the band is a vertical column: shell payload leaf at the
   // bottom, add8, mul4 pair, chunk8 rows at the top):
   //  rt0 (top)    up {pad, fault r1, fault r0, vo r1, vo r0, sum r1, sum r0}                    dn 36 pad bits
-  //  rt1 (top)    up {pad 33, fault r2, vo r2, sum r2}                                         dn 36 pad bits
-  //  rb  (bottom) up {pad 61, add_copy 2, af, avalid, mfault 2, mvalid 2}                       dn = side relay dn
+  //  rt1 (top)    up {pad 31, mfault 2, mvalid 2, fault r2, vo r2, sum r2}                     dn 36 pad bits
+  //  rb  (bottom) up {pad 65, add_copy 2, af, avalid}                                        dn = side relay dn
   wire [68:0] t0_up,t1_up,b_up;wire [35:0] b_dn,t0_dn_unused,t1_dn_unused;
   wire [31:0] s0,s1,s2;
   ot_s81_engram_rly rt0(ck[38+b],rst,
    {1'b0,chunk_fault[4*1+b],chunk_fault[4*0+b],chunk_valid[4*1+b],chunk_valid[4*0+b],chunk_sums[32*(4*1+b)+:32],chunk_sums[32*(4*0+b)+:32]},
    36'd0,t0_up,t0_dn_unused);
-  ot_s81_engram_rly rt1(ck[42+b],rst,{33'd0,chunk_fault[4*2+b],chunk_valid[4*2+b],chunk_sums[32*(4*2+b)+:32]},36'd0,t1_up,t1_dn_unused);
-  ot_s81_engram_rly rb(ck[46+b],rst,{61'd0,add_copy[2*b+:2],af[b],avalid[b],mfault[2*b+:2],mvalid[2*b+:2]},side_dn[b/2],b_up,b_dn);
-  assign band_up[8*b+:8]=b_up[7:0];
+  ot_s81_engram_rly rt1(ck[42+b],rst,{31'd0,mfault[2*b+:2],mvalid[2*b+:2],chunk_fault[4*2+b],chunk_valid[4*2+b],chunk_sums[32*(4*2+b)+:32]},36'd0,t1_up,t1_dn_unused);
+  ot_s81_engram_rly rb(ck[46+b],rst,{65'd0,add_copy[2*b+:2],af[b],avalid[b]},side_dn[b/2],b_up,b_dn);
+  assign band_up[8*b+:8]={b_up[3:2],b_up[1],b_up[0],t1_up[37:36],t1_up[35:34]};   // {add_copy, af, avalid, mfault, mvalid}
   assign {s1,s0}=t0_up[63:0];assign s2=t1_up[31:0];
   assign chunk_sums_r[32*(4*0+b)+:32]=(MUT==27&&b==2)?chunk_sums[32*(4*0+b)+:32]:s0;
   assign chunk_sums_r[32*(4*1+b)+:32]=(MUT==27&&b==2)?chunk_sums[32*(4*1+b)+:32]:s1;
@@ -250,7 +266,7 @@ module ot_s81_engram_mixq_b #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LA
   assign chunk_valid_r[4*0+b]=t0_up[64];assign chunk_valid_r[4*1+b]=t0_up[65];
   assign chunk_fault_r[4*0+b]=t0_up[66];assign chunk_fault_r[4*1+b]=t0_up[67];
   assign chunk_valid_r[4*2+b]=t1_up[32];assign chunk_fault_r[4*2+b]=t1_up[33];
-  assign mvalid_b[2*b+:2]=b_up[1:0];                     // one edge: the sums' reference valid (aligned with chunks)
+  assign mvalid_b[2*b+:2]=t1_up[35:34];                  // one edge: the sums' reference valid (aligned with chunks)
   assign gate_b[32*b+:32]=b_dn[35:4];assign copy_b[2*b+:2]=b_dn[1:0];
  end endgenerate
  // Side relays at the spine's W and E edges (second stage between the band relays and the control, which gathers from
