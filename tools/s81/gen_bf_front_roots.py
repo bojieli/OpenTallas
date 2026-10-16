@@ -74,6 +74,16 @@ def main():
     assert len(north)==1,north
     south='\n'.join(line for line in block.splitlines() if line not in north)
     body=body[:start]+south+'\n        always @(posedge north_clk) begin\n'+'\n'.join(north)+'\n        end'+body[end:]
+    # The data FF and its low-phase hold latch must share their source root.
+    # Keeping this latch on S after the N capture split created a measured
+    # -56.989ps hold plateau across N->S (9k+ inserted buffers, no progress).
+    lat_start=body.index('        if (PINLAT != 0) begin : g_lat')
+    lat_end=body.index('`ifndef SYNTHESIS',lat_start)
+    lat=body[lat_start:lat_end]
+    payload=lat[lat.index('`ifdef PINLAT_MUTANT_B0'):lat.index('`endif')+len('`endif')]
+    lat=once(lat,payload,'')
+    lat+='            always_latch if (!north_clk) begin\n'+payload+'\n            end\n'
+    body=body[:lat_start]+lat+body[lat_end:]
     body=once(body,'u_seam0 (.clk(pin_clk), .rst_n(core_rst),','u_seam0 (.clk(io_w), .rst_n(west_rst),')
     body=once(body,'u_seam1 (.clk(pin_clk), .rst_n(core_rst),','u_seam1 (.clk(io_e), .rst_n(east_rst),')
     core_input=ROOT/'rtl/v41rom/ot_v41_bf_front_core.sv'
@@ -85,8 +95,8 @@ def main():
     body=once(body,'ot_v41_bf_front_core #(','ot_v41_bf_front_core_roots #(')
     assert body.count('ot_s81_bf_seam #(')==2
     body=body.replace('ot_s81_bf_seam #(','ot_s81_bf_seam_roots #(')
-    # Keep source-low IO lockups on the south physical root. The north->south
-    # crossing is still a timed half-cycle path with no new architectural edge.
+    # Every low-phase lockup follows the source root: N data on io_n, S
+    # metadata/control on io_clk; ordinary related-root checks stay enabled.
     out=ROOT/'rtl/s81/ot_s81_bf_front_roots.sv';out.write_text(head+relay+body)
     wp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv'
     w=once(read_seed(wp),'module dsfd_bf_front_static #(','module dsfd_bf_front_roots #(')
@@ -98,7 +108,7 @@ def main():
     w=once(w,'.io_clk(io_clk)', '.io_clk(io_clk), .io_n(io_n), .io_w(io_w), .io_e(io_e)')
     wo=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv';wo.write_text(w)
     record=dict(status='SOURCE_CANDIDATE_UNPROVEN',input_source_commit=SEED,payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,physical_xb_reconstruction='legacy_xb[1067:0] = {xb_data[1023:0], xb_meta[43:0]}',
-      roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme, xb metadata/control, and IO-source lockups','io_n':'north xb[1023:0] data primary capture only','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
+      roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme, xb metadata/control and their source-low lockups','io_n':'north xb data primary capture and its source-low lockups','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
       inputs={str(p.relative_to(ROOT)):hashlib.sha256(read_seed(p).encode()).hexdigest() for p in [fp,wp,core_input,seam_input]},
       outputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [out,wo,core_output,seam_output]},
       physical_qualification=False,clock_pins_homes_and_slot_grant='PENDING',native_capture='PENDING')

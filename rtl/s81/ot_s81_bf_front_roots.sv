@@ -310,6 +310,9 @@ module ot_s81_bf_front_roots #(
                 r_lxs_p = r_xs_p; r_lxs_b = r_xs_b; r_lxs_sv = r_xs_sv; r_lxs_q0 = r_xs_q0; r_lxs_e0 = r_xs_e0;
                 r_lxs_q1 = r_xs_q1; r_lxs_e1 = r_xs_e1; r_lxs_pos = r_xs_pos; r_lxb_pos = r_xb_pos; r_lxb_b = r_xb_b;
                 r_lxb_sv = r_xb_sv; r_lxb_u = r_xb_u;
+
+            end
+            always_latch if (!north_clk) begin
 `ifdef PINLAT_MUTANT_B0
                 r_lxb_d = {r_xb_d[1023:1], 1'b0};   // negative control: one data bit lost through the latch
 `else

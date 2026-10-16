@@ -8,8 +8,8 @@
   "physical_xb_reconstruction": "legacy_xb[1067:0] = {xb_data[1023:0], xb_meta[43:0]}",
   "roots": {
     "ck": "existing core and core-source seam lockup",
-    "io_clk": "south primary capture/status/programme, xb metadata/control, and IO-source lockups",
-    "io_n": "north xb[1023:0] data primary capture only",
+    "io_clk": "south primary capture/status/programme, xb metadata/control and their source-low lockups",
+    "io_n": "north xb data primary capture and its source-low lockups",
     "io_w": "west c0 seam flops",
     "io_e": "east c1 seam flops"
   },
@@ -20,7 +20,7 @@
     "rtl/s81/ot_s81_bf_seam.sv": "cc40967fc956cbd25a09d2b320aa8f75e4786d97a85aaee5f2620e9e58ab08ff"
   },
   "outputs": {
-    "rtl/s81/ot_s81_bf_front_roots.sv": "b24bcdfeb9b1cb48db05df9894b1ebfe6ad293b5e4c3222e591defc5f44f04a3",
+    "rtl/s81/ot_s81_bf_front_roots.sv": "1f3ec5b8008dfdecd16305cd5519bfbb677b379b349fe933ef5571a8467f84a2",
     "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
     "rtl/v41rom/ot_v41_bf_front_core_roots.sv": "53cd0a80ecc0a52f6306eaa21b8981aba1cd4a831ff6870a9e8f0963997e38dd",
     "rtl/s81/ot_s81_bf_seam_roots.sv": "44fddea07f7e616799c56814f76ed1bc5ef57e2917ffdc4cb95cda52849ac71e"
