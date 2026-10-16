@@ -18,11 +18,11 @@ module tb_bf_xst;
    localparam integer TW=g==0?2:7;
    wire av,bv,af,bf,ae,be,ax,bx;
    wire[31:0]aq,bq;wire[TW-1:0]at,bt;
-   ot_v41_bf16_lanes3 #(.XST(XS),.RC(RC),.TRW(TW),.GRADUAL_RNE(1)) flat
+   ot_v41_bf16_lanes3 #(.XST(XS),.RC(RC),.TRW(TW),.GRADUAL_RNE(RC)) flat
     (.fclk(clk),.rst_pin(rst),.ze_d(1'b1),.v(v),.w(w),.x(x),.slot(slot),
      .first(first),.last(last),.tree(tree[TW-1:0]),.final_i(final_i),
      .ov(av),.oval(aq),.otree(at),.ofinal(af),.oerr(ae),.fault(ax));
-   ot_v41_bf16_lanes3_roots #(.XST(XS),.RC(RC),.TRW(TW),.GRADUAL_RNE(1)) split
+   ot_v41_bf16_lanes3_roots #(.XST(XS),.RC(RC),.TRW(TW),.GRADUAL_RNE(RC)) split
     (.leaf_clk({6{clk}}),.fclk(clk),.rst_pin(rst),.ze_d(1'b1),.v(v),.w(w),.x(x),.slot(slot),
      .first(first),.last(last),.tree(tree[TW-1:0]),.final_i(final_i),
      .ov(bv),.oval(bq),.otree(bt),.ofinal(bf),.oerr(be),.fault(bx));
