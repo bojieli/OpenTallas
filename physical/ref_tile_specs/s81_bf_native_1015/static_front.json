@@ -109,6 +109,39 @@
           "iverilog"
         ],
         "pass_regex": "PASS actual BF static die front:64 public-pin slots"
+      },
+      {
+        "name": "mutant_programme_register_bypass",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant programme_register_bypass",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT programme_register_bypass FAIL"
+      },
+      {
+        "name": "mutant_read_pointer_copy_stall",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant read_pointer_copy_stall",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT read_pointer_copy_stall FAIL"
+      },
+      {
+        "name": "mutant_control_latch_go_lost",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant control_latch_go_lost",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT control_latch_go_lost FAIL"
       }
     ],
     "extra_paths": [

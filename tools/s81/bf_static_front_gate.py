@@ -30,6 +30,9 @@ MUTANTS = {
 }
 
 def main():
+    import sys
+    # --mutant NAME: run ONLY that mutant as a plain bench (exit = the tb's exit; a closure-loop expect=fail bench)
+    only = sys.argv[sys.argv.index('--mutant')+1] if '--mutant' in sys.argv else None
     sources = {f:(ROOT/f).read_text() for f in FILES}
     # Packed die-pin ABI differs from the internal CPIN concat ordering.
     for n, name in [(0,'issue'),(15,'i1_v')]:
@@ -42,7 +45,7 @@ def main():
     results = {}
     with tempfile.TemporaryDirectory(prefix='bf-static-front-') as td:
         td=Path(td)
-        for name in ['positive', *MUTANTS]:
+        for name in ([only] if only else ['positive', *MUTANTS]):
             files = dict(sources)
             defines=[]
             if name != 'positive':
@@ -59,6 +62,11 @@ def main():
             build=subprocess.run(['iverilog','-g2012','-s','tb_bf_static_front',*defines,'-o',str(binary),*paths],capture_output=True,text=True)
             if build.returncode: raise RuntimeError(build.stderr)
             run=subprocess.run(['vvp',str(binary)],capture_output=True,text=True)
+            if only:
+                print(run.stdout + run.stderr)
+                code = 1 if (run.returncode != 0 or 'FATAL' in run.stdout) else 0
+                print(f'MUTANT {only} ' + ('FAIL (detected)' if code else 'PASS (NOT detected)'))
+                raise SystemExit(code)
             if name=='positive':
                 assert run.returncode==0 and 'PASS actual BF static die front' in run.stdout,run.stdout+run.stderr
             else:
