@@ -1,0 +1,35 @@
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(cal.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(pre.mem): Not enough words in the file for the requested range [0:4095].
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(chk.mem): Not enough words in the file for the requested range [0:1023].
+END_EDGE 114  done
+END_EDGE 474  done
+END_EDGE 589  done
+SLICE STATUS ecnt 697 bank 000000000000000000000000000000020000 hub 000
+SLICE STATUS ecnt 698 bank 000000000000000000000000000800020000 hub 000
+SLICE STATUS ecnt 699 bank 000000000000000000000020000800020000 hub 000
+SLICE STATUS ecnt 700 bank 000000000000000000800020000800020000 hub 000
+SLICE STATUS ecnt 701 bank 000000000000020000800020000800020000 hub 000
+SLICE STATUS ecnt 702 bank 000000000800020000800020000800020000 hub 000
+SLICE STATUS ecnt 703 bank 000020000800020000800020000800020000 hub 000
+SLICE STATUS ecnt 704 bank 800020000800020000800020000800020000 hub 000
+SLICE STATUS ecnt 705 bank 800020000800020000800020000800020000 hub 000
+END_EDGE 954 fault
+END_EDGE 1313  done
+END_EDGE 1679 fault
+END_EDGE 1759 fault
+END_EDGE 1812 fault
+END_EDGE 1871  done
+END_EDGE 1934  done
+END_EDGE 2061 fault
+END_EDGE 2120  done
+END_EDGE 2239  done
+END_EDGE 2281  done
+END_EDGE 2480  done
+END_EDGE 2615 fault
+END_EDGE 2786  done
+END_EDGE 2851  done
+END_EDGE 2854 fault
+END_EDGE 2857 fault
+IDX_TOPK_ROWS ENGINE1 MUT2 MUTH0 records20 dones12 faults8 sectors_checked143 errors3243 schedule_edges2861
+FATAL: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:154: static TOPK on actual SW slice mismatch
+       Time: 41420000  Scope: tb_idx_topk_rows

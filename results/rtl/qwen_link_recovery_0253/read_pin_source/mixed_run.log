@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   424 GB (avail 669, growth 197, headroom 48, waiters 0/0 GB) load 123/128 running 36 disk 842 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm_read_pin_mixed_0253
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm_read_pin_mixed_0253
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2169000-1792148919 after 0 s
+PASS read_pin leaf checks=129 good=128 invalid=1 added_read_edges=1 same_tile_II=8 write_update_edges_added=0
+[58000] %Fatal: tb_qfd_xs_leaf_read_pin.sv:31: Assertion failed in tb_qfd_xs_leaf_read_pin: FAIL read_pin payload got=402a400b402c400d/0 expected=112a110b112c110d/0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2169000-1792148919): exit 0

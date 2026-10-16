@@ -7,13 +7,12 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
 read_liberty /mv0/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
-read_db /work/results/asap7/opentallas_qkd_ectl_a_tp8_epoch_direct_asap7_ref_qkd_ectl_a_tp8_epoch_direct_pg16_pg16_e833e9771/base/6_final.odb
+read_db /work/results/asap7/opentallas_qkd_ectl_a_tp8_epoch_direct_asap7_ref_qkd_ectl_a_tp8_epoch_direct_pg16_pg16s_5852a26e6/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_qkd_ectl_a_tp8_epoch_direct_asap7_ref_qkd_ectl_a_tp8_epoch_direct_pg16_pg16_e833e9771/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_qkd_ectl_a_tp8_epoch_direct_asap7_ref_qkd_ectl_a_tp8_epoch_direct_pg16_pg16_e833e9771/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_qkd_ectl_a_tp8_epoch_direct_asap7_ref_qkd_ectl_a_tp8_epoch_direct_pg16_pg16s_5852a26e6/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_qkd_ectl_a_tp8_epoch_direct_asap7_ref_qkd_ectl_a_tp8_epoch_direct_pg16_pg16s_5852a26e6/base/6_final.spef
 set_propagated_clock [all_clocks]
-read_sdc /src/physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_pg16/signoff.sdc
-read_sdc /src/physical/common_flow/io_ref_routed.sdc
+read_sdc /work/w18_extra.sdc
 read_sdc /meas/app0_io_ref_routed.sdc
 puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 write_timing_model -library_name qkd_ectl_a_tp8_epoch_direct_ss /out/qkd_ectl_a_tp8_epoch_direct_ss.lib

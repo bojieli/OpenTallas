@@ -113,12 +113,12 @@
   "macro_halo_um": 5.4
  },
  "recipe": 3,
- "structural_change": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant: rs W face M4+M6 (4.5 / 4.7 pins/um/layer, was 8.6 M4-only), each row-bus half over its own SRAM on N/S (was right half only), HB4 pin pad on rs (routed FF measured the HB2 pad short by 1.3 ps -> ECO hold pairs -> native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)). Same RTL / outline / 0 cycles; HXK 13 production (netlist identical to h5). Pin registers (rsp_data_p at the W pins) kept, spine clock kept.",
+ "structural_change": "Q-ELEM-ECTLA 2026-10-16 native-launch re-route (QKV-02): symmetric insertion-aware clock spine (OT_SPINE_SYM=1 bbox-centred nodes, OT_SPINE_TREE_PAD=1 pads in the tree, OT_SPINE_SAFE_BALANCE=1): the count-centroid spine hung the E rs_o launch band (rsd_o) on a long wire-dominated branch balanced by 3-4 leaf pads on the W pin-flop band; routed, E sinks arrive 370 ps vs the W IO-reference band 407 ps TT, so every output took in-flow BUFx2 + routed-ECO 2xHB2 hold cells (rs_o mean 72.6 ps TT) -> launch 228.3 ps. Same RTL, pins, outline, pads, cycles. Pin grant c3043acc2 unchanged.",
  "job": {
-  "owner": "claude:Q-ELEM-ECTL",
-  "branch": "claude/qelem-ectl-0200",
-  "tag": "pg16",
-  "purpose": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant: rs W face M4+M6 (4.5 / 4.7 pins/um/layer, was 8.6 M4-only), each row-bus half over its own SRAM on N/S (was right half only), HB4 pin pad on rs (routed FF measured the HB2 pad short by 1.3 ps -> ECO hold pairs -> native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)). Same RTL / outline / 0 cycles; HXK 13 production (netlist identical to h5). Pin registers (rsp_data_p at the W pins) kept, spine clock kept.",
+  "owner": "claude:Q-ELEM-ECTLA",
+  "branch": "claude/qelem-ectla-0630",
+  "tag": "pg16s",
+  "purpose": "Q-ELEM-ECTLA 2026-10-16 native-launch re-route (QKV-02): symmetric insertion-aware clock spine (OT_SPINE_SYM=1 bbox-centred nodes, OT_SPINE_TREE_PAD=1 pads in the tree, OT_SPINE_SAFE_BALANCE=1): the count-centroid spine hung the E rs_o launch band (rsd_o) on a long wire-dominated branch balanced by 3-4 leaf pads on the W pin-flop band; routed, E sinks arrive 370 ps vs the W IO-reference band 407 ps TT, so every output took in-flow BUFx2 + routed-ECO 2xHB2 hold cells (rs_o mean 72.6 ps TT) -> launch 228.3 ps. Same RTL, pins, outline, pads, cycles. Pin grant c3043acc2 unchanged.",
   "benches": [
    {
     "name": "ectl_h13_exact",
@@ -161,7 +161,7 @@
    "ot-epyc4",
    "ot-pve1"
   ],
-  "structural_change": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant: rs W face M4+M6 (4.5 / 4.7 pins/um/layer, was 8.6 M4-only), each row-bus half over its own SRAM on N/S (was right half only), HB4 pin pad on rs (routed FF measured the HB2 pad short by 1.3 ps -> ECO hold pairs -> native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)). Same RTL / outline / 0 cycles; HXK 13 production (netlist identical to h5). Pin registers (rsp_data_p at the W pins) kept, spine clock kept."
+  "structural_change": "Q-ELEM-ECTLA 2026-10-16 native-launch re-route (QKV-02): symmetric insertion-aware clock spine (OT_SPINE_SYM=1 bbox-centred nodes, OT_SPINE_TREE_PAD=1 pads in the tree, OT_SPINE_SAFE_BALANCE=1): the count-centroid spine hung the E rs_o launch band (rsd_o) on a long wire-dominated branch balanced by 3-4 leaf pads on the W pin-flop band; routed, E sinks arrive 370 ps vs the W IO-reference band 407 ps TT, so every output took in-flow BUFx2 + routed-ECO 2xHB2 hold cells (rs_o mean 72.6 ps TT) -> launch 228.3 ps. Same RTL, pins, outline, pads, cycles. Pin grant c3043acc2 unchanged."
  },
  "boundary_tcl": [
   "physical/qwen_die_masters/sram_edge_guard.tcl"
@@ -188,12 +188,21 @@
   "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
  },
  "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant (KV die lead, same outline / RTL / 0 cycles): t0_row / t1_row [255:0] over SRAM 0 (x 23.5..116.3), [511:256] over SRAM 1 (x 138.6..231.4), bit-ascending; A and B identical row maps (parent columns repeat at the 254.88-um leaf pitch); exact pins results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_a_tp8_epoch_direct.tcl, parent face map results/arch/qwen_split_1014/ectl_pin_grant_1016/pin_grant.json",
-  "why": "pin plan moved (rs W M4+M6, t0_row, t1_row) per Q-KVSYS-DIE 2026-10-16 ECTL A pin grant",
-  "native_audit": "native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)"
+  "kind": "pin_register",
+  "source": "results/arch/qwen_split_1014/ectla_native_0630/diagnosis.json",
+  "cell": "qkd_ectl_a_tp8_epoch_direct",
+  "launch_ps": 228.3,
+  "capture_ps": 151.4,
+  "fix": "symmetric insertion-aware clock spine (OT_SPINE_SYM=1 bbox-centred nodes, OT_SPINE_TREE_PAD=1 pads in the tree, OT_SPINE_SAFE_BALANCE=1): the count-centroid spine hung the E rs_o launch band (rsd_o) on a long wire-dominated branch balanced by 3-4 leaf pads on the W pin-flop band; routed, E sinks arrive 370 ps vs the W IO-reference band 407 ps TT, so every output took in-flow BUFx2 + routed-ECO 2xHB2 hold cells (rs_o mean 72.6 ps TT) -> launch 228.3 ps. Same RTL, pins, outline, pads, cycles.",
+  "closed_job": "qkd_ectl_a_tp8_epoch_direct_pg16-pg16-e833e9771",
+  "why": "native-fail: launch 228.3 ps > 220 on 16 rs_o pins (R 389.3, spread 68.4)"
  },
  "purpose": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
  "io_tcl": "results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_a_tp8_epoch_direct.tcl",
- "layer_cap_grant": "Q-KVSYS-DIE: Q-KVSYS-DIE 2026-10-16 ECTL A pin grant -- the 1,025-bit rs bus on the W face over M4 + M6 (even bits M4, odd bits M6, <= 4.7 pins/um/layer; was 8.6 /um M4 only, VIS-ROM QKV-02); PG M6 stripes, parent strap M7 over this leaf"
+ "layer_cap_grant": "Q-KVSYS-DIE: Q-KVSYS-DIE 2026-10-16 ECTL A pin grant -- the 1,025-bit rs bus on the W face over M4 + M6 (even bits M4, odd bits M6, <= 4.7 pins/um/layer; was 8.6 /um M4 only, VIS-ROM QKV-02); PG M6 stripes, parent strap M7 over this leaf",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
+ }
 }

@@ -1,0 +1,7 @@
+MISMATCH t=110000 v 0/0 act 0/0 conf 0/0 tf 1/0
+MISMATCH t=120000 v 0/0 act 0/0 conf 0/0 tf 1/0
+MISMATCH t=130000 v 0/0 act 0/0 conf 0/0 tf 1/0
+MISMATCH t=140000 v 0/0 act 0/0 conf 0/0 tf 1/0
+CAL_F20_EQ FAIL errors=836 checks=844 active_edges=181
+FATAL: fill_universal_0600/tb_vm_calendar_f20_eq.sv:60: eq
+       Time: 8466000 Scope: tb_vm_calendar_f20_eq

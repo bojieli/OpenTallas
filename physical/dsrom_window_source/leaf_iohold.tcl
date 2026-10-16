@@ -34,6 +34,13 @@ if {$ot_oh_sre ne ""} {
   if {$ot_oh_shb eq "NULL"} { error "OUTHOLD: strong pad master missing" }
 }
 set ot_oh_ns 0
+# OT_HOLD_PAD_STRONG_STAGES (opt-in, S-ELEM-PQ 10-16, QB bankp b6): number of strong pads in SERIES on the
+# OT_HOLD_PAD_STRONG_RE ports (default 1 = unchanged kits).  bankp b5: rd[*] R2O FF hold -14.70 ps with one HB3
+# (launch flop clock 117 ps vs routed boundary reference 149 ps at FF; path cq 34 + INV 8 + BUF 12 + HB3 26 + BUF 13);
+# one HB4 adds only ~8 ps, so two pads are the deterministic boundary delay stage (owner 10-10: hold-only miss ->
+# delay stage at the boundary, no ECO loops).
+set ot_oh_sst [expr {[info exists ::env(OT_HOLD_PAD_STRONG_STAGES)] && $::env(OT_HOLD_PAD_STRONG_STAGES) ne "" ? int($::env(OT_HOLD_PAD_STRONG_STAGES)) : 1}]
+if {$ot_oh_sst < 1} { error "OUTHOLD: OT_HOLD_PAD_STRONG_STAGES must be >= 1" }
 set ot_oh_ca [$ot_oh_blk getCoreArea]
 set ot_oh_firm {}; set ot_oh_dt {}; set ot_oh_n 0; set ot_oh_skip 0
 foreach bt [$ot_oh_blk getBTerms] {
@@ -56,18 +63,19 @@ foreach bt [$ot_oh_blk getBTerms] {
     set x [expr {([$bx xMin] + [$bx xMax]) / 2}]; set y [expr {([$bx yMin] + [$bx yMax]) / 2}]; break }; break }
   set x [expr {max([$ot_oh_ca xMin], min($x, [$ot_oh_ca xMax] - [$ot_oh_hb getWidth]))}]
   set y [expr {max([$ot_oh_ca yMin], min($y, [$ot_oh_ca yMax] - [$ot_oh_hb getHeight]))}]
-  set hb $ot_oh_hb
-  if {$ot_oh_shb ne "NULL" && [regexp -- $ot_oh_sre [$bt getName]]} { set hb $ot_oh_shb; incr ot_oh_ns }
+  set hb $ot_oh_hb; set hbs [list $ot_oh_hb]
+  if {$ot_oh_shb ne "NULL" && [regexp -- $ot_oh_sre [$bt getName]]} { set hb $ot_oh_shb; set hbs [lrepeat $ot_oh_sst $ot_oh_shb]; incr ot_oh_ns }
   set pn [odb::dbNet_create $ot_oh_blk [format "ot_outhold_p%05d" $ot_oh_n]]
   $bt disconnect
   $bt connect $pn
   set cur $net; set k 0
-  foreach m [list $ot_oh_bf $hb $ot_oh_bf] {
-    set hold [expr {$m eq $hb}]
+  set nst [expr {[llength $hbs] + 2}]
+  foreach m [concat [list $ot_oh_bf] $hbs [list $ot_oh_bf]] {
+    set hold [expr {$k > 0 && $k < $nst - 1}]
     set nm [format "%s_%05d_%d" [expr {$hold ? "ot_outhold" : "ot_ohdrv"}] $ot_oh_n $k]
     set i [odb::dbInst_create $ot_oh_blk $m $nm]
     [$i findITerm A] connect $cur
-    if {$k == 2} {
+    if {$k == $nst - 1} {
       [$i findITerm Y] connect $pn
     } else {
       set n2 [odb::dbNet_create $ot_oh_blk [format "ot_outhold_n%05d_%d" $ot_oh_n $k]]
