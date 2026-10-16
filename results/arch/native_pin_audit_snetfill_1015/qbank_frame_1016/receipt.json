@@ -42,12 +42,23 @@
   "unmoved_glue_new_overlaps": 16970,
   "cfg_Q_native_pairs": 1549,
   "BF_sequence_view_missing_pairs": 424,
-  "all_cfg_Q_bit_checks": 752814
+  "all_cfg_Q_bit_checks": 752814,
+  "source_core_includes_slot_stations_only": true,
+  "unmoved_glue_overlap_breakdown": {
+   "Q/rly": 8808,
+   "BFcol/rly": 5582,
+   "BFfront/rly": 2408,
+   "FIFO/forwarded_stn": 148,
+   "CFG/forwarded_stn": 19,
+   "node/forwarded_stn": 3,
+   "Q/forwarded_stn": 2
+  },
+  "new_other_fixed_hub_PHY_overlaps": 0
  },
  "source_guards": "Explicit nr1 reset RTL and pinned real bank views; current qs5f_efs QLEF hash; fresh --hop-fix --hop-iter>=2, --rly-face-pins, --col-reset-tree>0, no existing hop plan, old face/bank/probe caches cleared. Repeated canonical transform and insufficient actual FIFO street rejected.",
  "orientation_legality": "OPEN: geometric MY/MX bit matching is not physical legality. Actual closed cfg7 lacks SYMMETRY;753 MY Qcfg7 cases remain with root generic reconciliation, no header patch or waiver.",
  "personally_viewed_image": "/home/ubuntu/artifacts/s81-netfill-0253/qbank/frame_candidate/frame0_before_candidate.png",
- "visual_findings": "Actual S/N bank rectangles now fit between element/ROM rows; L/R cfg7 geometric chirality preserved; BF component height unchanged while row may translate; FIFO moves downward inside measured remaining street. Figure excludes old relay/reset glue; their16970 new intersections are fully exposed separately.",
+ "visual_findings": "Actual S/N bank rectangles now fit between element/ROM rows; L/R cfg7 geometric chirality preserved; BF component height unchanged while row may translate; FIFO moves downward inside measured remaining street. Figure excludes old relay/reset glue; their16970 new intersections are fully exposed separately. Forwarded stations(stn) are excluded alongside old relays; SLOT stations(sstn) are included in the zero-new-core-intersection proof.",
  "validation": [
   "128 actual old default source pack values unchanged,128 candidate source/canonical rows agree",
   "1549 qelements old default _q_banks values identical and match actual pinned slots;3098 candidate bank dimensions checked",
