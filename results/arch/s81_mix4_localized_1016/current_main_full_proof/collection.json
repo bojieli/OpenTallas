@@ -1,0 +1,30 @@
+{
+ "status": "SOURCE_CURRENT_MAIN_NUMERIC_AND_MUTANT_PROOF",
+ "source_candidate": "32969443092453b27535626dd3091c5085ac69d0",
+ "main_base": "4c848475bf976b2e7e21288550e06a1fdaaf4611",
+ "comment_only_successor": "37f2fc669ce40539694eaefa50a0dedc8da04ef7",
+ "comment_source_scope": "Actual executable proof bound329 bytes; successor37 token-equality receipt independently proves comments only. No binary sourcebyte rebinding.",
+ "source_count": 34,
+ "fifo_sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+ "fifo_main_blob_equal": true,
+ "defines": [],
+ "OT_S81_HOST_PHASESAFE": "UNDEFINED; default directaliases, no latch branch enabled",
+ "result": "20480words/640writes/4161reads/write639..798/810cycles actual all-FP-RTL positive;MUT26 genuine5120word mismatch after successful build",
+ "jobs": [
+  {
+   "mutant": 0,
+   "receipt_sha256": "3f718b508a66caf36a10d7260a3536e8babbcf0b66d9f42cb64ee17a9ea629f7",
+   "all34git_blob_hashes_match": true,
+   "status": "ACTUAL_FULL_SHAPE_COMPONENT_PASS",
+   "run_returncode": 0
+  },
+  {
+   "mutant": 26,
+   "receipt_sha256": "92f9b73d38e4453f5023a07e90e579753bd769211fac80a93870b12865462bd9",
+   "all34git_blob_hashes_match": true,
+   "status": "ACTUAL_LOCAL_RESULT_VALID_DROP_REJECTED",
+   "run_returncode": 1
+  }
+ ],
+ "scope": "Component declared fixed VM boundary only. No fullparent allnets/VM/physical/native clock/PG qualification."
+}
