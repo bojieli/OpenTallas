@@ -1,0 +1,59 @@
+{
+  "scope": "Actual die-front control and payload boundary component; not BF numerical columns, CFG7 workload, production throughput or physical skew qualification",
+  "source_sha256": {
+    "tests/s81/tb_bf_static_front.sv": "03e176a52531c3b80069a41a40ab2622c75a09b106e7804a52dbbdceaa69c899",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
+    "rtl/s81/ot_s81_bf_front.sv": "4ca4bf9e8477afcab99a0aa64adeb7d54cc5185a27ae2897251ac6bd49da4e47",
+    "rtl/s81/ot_s81_bf_seam.sv": "cc40967fc956cbd25a09d2b320aa8f75e4786d97a85aaee5f2620e9e58ab08ff",
+    "rtl/v41rom/ot_v41_bf_front_core.sv": "8e0d3d9f55836bbf5ac74a3bce983c7fe3aaac48c93aabafb31b067719f857d1",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+  },
+  "pin_age_edges": {
+    "issue": 2,
+    "i1_valid_and_tag": 3,
+    "operand_q0": 4
+  },
+  "compiled_slots": 64,
+  "clock_roots": "ck and io_clk: two physical roots of one die clock (tied at the die); every io_clk->ck crossing register->lockup latch->register; tied in the functional bench",
+  "results": {
+    "positive": {
+      "exit": 0,
+      "output": "PASS actual BF static die front:64 public-pin slots, fixed pin+programme+CPIN ages; dropped payload and address mutant fault without schedule shifts\n/srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:78: $finish called at 4550000 (1ps)"
+    },
+    "programme_register_bypass": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:33: public pin issue edge shifted variant=          0\n       Time: 634000  Scope: tb_bf_static_front.$ivl_for_loop0"
+    },
+    "control_latch_go_lost": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:35: public pin address shifted\n       Time: 644000  Scope: tb_bf_static_front.$ivl_for_loop0"
+    },
+    "read_pointer_copy_stall": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:51: public operand payload mismatch or data age shifted\n       Time: 674000  Scope: tb_bf_static_front"
+    },
+    "seam_lockup_bit_flip": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:33: public pin issue edge shifted variant=          0\n       Time: 54000  Scope: tb_bf_static_front.$ivl_for_loop0"
+    },
+    "cpin_register_bypass": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:33: public pin issue edge shifted variant=          0\n       Time: 634000  Scope: tb_bf_static_front.$ivl_for_loop0"
+    },
+    "address_check_removed": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:76: public sticky fault qualification 00/11/00\n       Time: 4550000  Scope: tb_bf_static_front"
+    },
+    "pinlat_payload_lsb_loss": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:51: public operand payload mismatch or data age shifted\n       Time: 664000  Scope: tb_bf_static_front"
+    },
+    "seam_issue_slot_inversion": {
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/claude/bench3-1825/c4-tmp/bf-static-front-dtjm121i/0.sv:33: public pin issue edge shifted variant=          0\n       Time: 54000  Scope: tb_bf_static_front.$ivl_for_loop0"
+    }
+  }
+}
