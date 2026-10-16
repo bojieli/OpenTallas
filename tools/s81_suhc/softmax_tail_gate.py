@@ -15,7 +15,7 @@ import hc_gate as H
 import su_gate as S
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--physical-wrapper',action='store_true')
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
     rng=np.random.default_rng(1014133)
     x=np.full(144,-np.inf,np.float32);x[:133]=rng.uniform(-20,1,133).astype(np.float32);x[0]=1
@@ -24,17 +24,25 @@ def main():
         (a.out/(n+'.mem')).write_text(''.join(f'{b:08x}\n' for b in d.view(np.uint32)))
     lane=ROOT/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv'
     tb=ROOT/'rtl/dsrom_sys/s81_suhc/test/tb_s81_su_softmax_tail.sv'
+    wrapper=ROOT/'rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv'
+    actual_tb=a.out/'tb_actual_tail.sv'
+    tbtext=tb.read_text()
+    if a.physical_wrapper:
+        tbtext=tbtext.replace('ot_s81_su_sml dut(.clk(clk), .rst_in(rst)', 'dsfd_su_t_sml dut(.ck(clk), .rst(rst)')
+    actual_tb.write_text(tbtext)
     results=[]
     for mutant in (False,True):
         src=a.out/('mutant.sv' if mutant else 'lane.sv')
         txt=lane.read_text()
         if mutant:
+            assert txt.count("inactive[LA + D_EXP] ? 32'd0 : be")==1
             txt=txt.replace("inactive[LA + D_EXP] ? 32'd0 : be",'be')
         src.write_text(txt)
         obj=a.out/('obj_mut' if mutant else 'obj')
         paths=list(dict.fromkeys(H.FP['rtl']+S.RTL))
+        if a.physical_wrapper:paths.append(str(wrapper.relative_to(ROOT)))
         cmd=[H.VERILATOR,'--binary','--timing','-O2','-Wno-fatal','-Wno-WIDTH','--top-module','tb_s81_su_softmax_tail',
-             '-Mdir',str(obj),'-j','8',*map(str,[ROOT/s for s in paths]),str(src),str(tb)]
+             '-Mdir',str(obj),'-j','8',*map(str,[ROOT/s for s in paths]),str(src),str(actual_tb)]
         b=subprocess.run(cmd,capture_output=True,text=True)
         (a.out/('build_mut.log' if mutant else 'build.log')).write_text(b.stdout+b.stderr)
         if b.returncode: raise RuntimeError('build failed: '+str(a.out))
@@ -44,6 +52,7 @@ def main():
         results.append(dict(mutant=mutant,ok=ok,returncode=r.returncode))
         print(results[-1],flush=True)
     record=dict(schema='opentallas.s81_su.tail.v1',results=results,
+        dut='dsfd_su_t_sml' if a.physical_wrapper else 'ot_s81_su_sml',positions=133,vector_beats=9,capacity_beats=40,capacity_positions=640,inactive_tail_positions=11,generated_tb_sha256=H.sha(actual_tb),
         status='pass' if results[0]['ok'] and not results[1]['ok'] else 'fail',fp='real RTL, no DPI',
         source_sha256={str(s.relative_to(ROOT)):H.sha(s) for s in [lane,tb]+[ROOT/s for s in paths]})
     (a.out/'result.json').write_text(json.dumps(record,indent=2)+'\n')

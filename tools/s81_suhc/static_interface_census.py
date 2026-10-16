@@ -23,6 +23,6 @@ def main():
  for name,(params,ports) in modules.items():stubs.append('(* blackbox *) module '+name+(' #(parameter '+', parameter '.join(k+'='+v for k,v in params.items())+')' if params else '')+' ('+ports+'); endmodule\n')
  (out/'stubs.sv').write_text('\n'.join(stubs));source='rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_static.sv';raw=(R/source).read_bytes();(out/'dsfd_sp_su_static.sv').write_bytes(raw)
  (out/'source_identity.json').write_text(json.dumps(dict(scope='INTERFACE GRAPH CENSUS ONLY, never functional qualification',top=dict(path=source,sha256=hashlib.sha256(raw).hexdigest(),params={'RXH':2}),native_interfaces=sources),indent=1)+'\n')
- (out/'census.ys').write_text('read_verilog -sv -DSYNTHESIS stubs.sv dsfd_sp_su_static.sv\nhierarchy -top dsfd_sp_su_static -chparam RXH 2\nproc\nwrite_json census.json\n')
+ (out/'census.ys').write_text('read_verilog -sv -DSYNTHESIS stubs.sv dsfd_sp_su_static.sv\nhierarchy -top dsfd_sp_su_static -chparam RXH 2\nproc\nopt_clean\nwrite_json census.json\n')
  print(json.dumps(dict(interface_modules=len(modules),out=str(out))))
 if __name__=='__main__':main()

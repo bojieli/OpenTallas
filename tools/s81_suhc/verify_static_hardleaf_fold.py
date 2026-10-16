@@ -51,5 +51,15 @@ def verify(original,design,manifest):
  return dict(status='PASS',proof='all native/state/comb data connections + exact fixed delay stage chain identity; functional common epoch only',native_owners=len(native),delay_chains=len(delays),delay_stage_owners=sum(map(len,delays.values())),state_owners=len(seq),state_bits=sum(len(old['cells'][n]['connections']['Q']) for n in seq),comb_copies_checked=comb_matches,clock_entries=manifest['clock_entries'],scope='structural composition identity, not numerical fullshape/native physical/fulltoken qualification')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--census',required=True);p.add_argument('--design',required=True);p.add_argument('--manifest',required=True);p.add_argument('--out',required=True);a=p.parse_args();paths={k:Path(getattr(a,k)) for k in ['census','design','manifest']};data={k:p.read_bytes() for k,p in paths.items()};r=verify(json.loads(data['census']),json.loads(data['design']),json.loads(data['manifest']));r['input_sha256']={k:hashlib.sha256(v).hexdigest() for k,v in data.items()};Path(a.out).write_text(json.dumps(r,indent=1)+'\n');print(json.dumps(r))
+ p=argparse.ArgumentParser();p.add_argument('--census',required=True);p.add_argument('--design',required=True);p.add_argument('--manifest',required=True);p.add_argument('--out',required=True);p.add_argument('--negative-controls',action='store_true');a=p.parse_args();paths={k:Path(getattr(a,k)) for k in ['census','design','manifest']};data={k:p.read_bytes() for k,p in paths.items()};original=json.loads(data['census']);design=json.loads(data['design']);manifest=json.loads(data['manifest']);r=verify(original,design,manifest);r['negative_controls']=[]
+ if a.negative_controls:
+  for kind,port in [('glue_state','D'),('native_core',None),('delay_stage','d')]:
+   owner=next(o for o in manifest['owners'] if o['kind']==kind);cell=design['modules'][owner['module']]['cells']['state' if kind=='glue_state' else 'native']
+   if port is None:port=next(p for p,v in cell['connections'].items() if cell['port_directions'][p]=='input' and p not in ('clk','ck','rst_in','rst_n','ck_leaf','rs_leaf'))
+   saved=cell['connections'][port][0];cell['connections'][port][0]='1' if saved!='1' else '0';caught=False
+   try:verify(original,design,manifest)
+   except AssertionError:caught=True
+   finally:cell['connections'][port][0]=saved
+   assert caught,('unobserved graph mutant',kind,port);r['negative_controls'].append(dict(kind=kind,port=port,status='REJECTED'))
+ r['input_sha256']={k:hashlib.sha256(v).hexdigest() for k,v in data.items()};Path(a.out).write_text(json.dumps(r,indent=1)+'\n');print(json.dumps(r))
 if __name__=='__main__':main()
