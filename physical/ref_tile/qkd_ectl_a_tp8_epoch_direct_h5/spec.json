@@ -187,5 +187,15 @@
  "pin_regs": {
   "enable": false,
   "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
+ },
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "STATIC_QK": 1,
+   "QK_ISSUE_AGE": 34,
+   "ROW_RETURN_LAT": 21,
+   "HXK": 5
+  },
+  "why": "KV die v1.4.3 production parameters (Q-KVSYS-DIE 10-15 request): closed qkd_ectl_a_tp8_epoch_direct ep1 used defaults STATIC_QK 0 / ROW_RETURN_LAT 9 / HXK 0"
  }
 }
