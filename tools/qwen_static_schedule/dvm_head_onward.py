@@ -63,4 +63,3 @@ def column_offset(contract, column):
     if c is None:
         raise ScheduleError(f'no DVM head column {column}')
     return c['arrival'] + c['equalise']
-
