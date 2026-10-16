@@ -1,0 +1,132 @@
+{
+ "scope": "Actual CTS-gate fixed floorplan port shapes. Macro local coordinates only; physical homes NOT assigned; detailed route shapes still pending.",
+ "master": "dsfd_vm_xio_serial",
+ "params": {},
+ "outline_um": [
+  43.2,
+  43.2
+ ],
+ "gate_result_sha256": "375849617c1f2b30b6efe30bd70d997105b4e0000d73af82fdf837822b292bb8",
+ "raw_floorplan_sha256": "cf36720790c503c8e76e4f10a8bf9c246308c769efec386e9a5516ba67828a58",
+ "remote_host": "ot-agidock128",
+ "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_xio_serial_native_1016_r2-20261016-034839",
+ "pins": [
+  {
+   "port": "ck",
+   "layer": "M5",
+   "bbox_um": [
+    21.552,
+    43.116,
+    21.576,
+    43.2
+   ],
+   "x_um": 21.564,
+   "y_um": 43.158,
+   "face": "N"
+  },
+  {
+   "port": "fault",
+   "layer": "M4",
+   "bbox_um": [
+    43.116,
+    21.552,
+    43.2,
+    21.576
+   ],
+   "x_um": 43.158,
+   "y_um": 21.564,
+   "face": "E"
+  },
+  {
+   "port": "gf",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    20.976,
+    0.084,
+    21.0
+   ],
+   "x_um": 0.042,
+   "y_um": 20.988,
+   "face": "W"
+  },
+  {
+   "port": "qSWs[0]",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.264,
+    0.084,
+    21.288
+   ],
+   "x_um": 0.042,
+   "y_um": 21.276,
+   "face": "W"
+  },
+  {
+   "port": "qSWs[1]",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.36,
+    0.084,
+    21.384
+   ],
+   "x_um": 0.042,
+   "y_um": 21.372,
+   "face": "W"
+  },
+  {
+   "port": "qSWs[2]",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.456,
+    0.084,
+    21.48
+   ],
+   "x_um": 0.042,
+   "y_um": 21.468,
+   "face": "W"
+  },
+  {
+   "port": "qf",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.072,
+    0.084,
+    21.096
+   ],
+   "x_um": 0.042,
+   "y_um": 21.084,
+   "face": "W"
+  },
+  {
+   "port": "qo_v",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.168,
+    0.084,
+    21.192
+   ],
+   "x_um": 0.042,
+   "y_um": 21.18,
+   "face": "W"
+  },
+  {
+   "port": "rst_n",
+   "layer": "M5",
+   "bbox_um": [
+    21.648,
+    43.116,
+    21.672,
+    43.2
+   ],
+   "x_um": 21.66,
+   "y_um": 43.158,
+   "face": "N"
+  }
+ ]
+}

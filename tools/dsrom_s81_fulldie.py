@@ -501,6 +501,61 @@ BOUND_TOL = SHAVE + 1e-6
 BOUND_ORIENTS = ('R0', 'MY', 'MX', 'R180')
 
 
+def bound_view_orientation_contract(view, master=None):
+    """Declared transforms of this hash-verified LEF, within placer support.
+
+    No SYMMETRY declares R0 only. A placer accepting MY/MX is not evidence that
+    an individual hard macro permits those transforms. This does not add any
+    physical symmetry or qualify mirrored clock/PG/native timing invariants.
+    """
+    lines = view['text'].splitlines()
+    macros = [(j, z.group(1)) for j, line in enumerate(lines)
+              if (z := re.fullmatch(r'\s*MACRO\s+(\S+)\s*', line))]
+    errors, symmetry = [], []
+    targets = [(j, name) for j, name in macros if master is None or name == master]
+    if len(targets) != 1:
+        errors.append(f'expected exactly one verified MACRO {master!r}, found {len(targets)}')
+    else:
+        start, name = targets[0]
+        next_macro = next((j for j, _ in macros if j > start), len(lines))
+        end = next((j for j in range(start + 1, next_macro)
+                    if lines[j].strip() == f'END {name}'), None)
+        if end is None:
+            errors.append(f'MACRO {name} has no matching END')
+        else:
+            declarations = []
+            for line in lines[start + 1:end]:
+                line = line.strip()
+                if re.match(r'^(PIN|OBS)\b', line):
+                    break
+                if re.match(r'^SYMMETRY\b', line):
+                    declarations.append(line)
+            if len(declarations) > 1:
+                errors.append('duplicate MACRO-header SYMMETRY declarations')
+            elif declarations:
+                match = re.fullmatch(r'SYMMETRY\s+([^;]+)\s*;\s*', declarations[0])
+                if match is None:
+                    errors.append('malformed MACRO-header SYMMETRY declaration')
+                else:
+                    symmetry = match.group(1).split()
+                    if not symmetry or set(symmetry) - {'X', 'Y', 'R90'} or len(symmetry) != len(set(symmetry)):
+                        errors.append(f'unknown or duplicate SYMMETRY tokens {symmetry}')
+    legal = {'R0'}
+    if 'X' in symmetry:
+        legal.add('MX')
+    if 'Y' in symmetry:
+        legal.add('MY')
+    if 'X' in symmetry and 'Y' in symmetry:
+        legal.add('R180')
+    if 'R90' in symmetry:
+        legal.update(('R90', 'R180', 'R270'))
+        if 'X' in symmetry or 'Y' in symmetry:
+            legal.update(('MX', 'MY', 'MXR90', 'MYR90'))
+    return dict(symmetry=symmetry, declared=sorted(legal) if not errors else [],
+                supported=[o for o in BOUND_ORIENTS if o in legal] if not errors else [],
+                errors=errors)
+
+
 def apply_view_binding(m, pdir):
     """Bind the table's masters present on this die (end of finalize_r8, before any LEF / DEF / netlist is written):
     hard error on a pin-name mismatch with the die netlist, on a non-R0 instance and on a real outline larger than the
@@ -510,7 +565,7 @@ def apply_view_binding(m, pdir):
         return m['bound_views']
     bv = bound_views()
     rec = {}
-    if bv and os.environ.get('OT_S81_VIEW_BINDING_SKIP_MISFIT') == '1':
+    if os.environ.get('OT_S81_VIEW_BINDING_SKIP_MISFIT') == '1':
         # S-DIE 2026-10-16 (pathfinding trials, ROOT: bind every closed view): a master whose real view does not fit
         # its die slot (pin names / directions, non-R0 instance, outline larger than the generated slot) is NOT bound
         # and is listed in m['view_binding_misfits'] for its owner; nothing is relaxed for the masters that do bind
@@ -524,19 +579,36 @@ def apply_view_binding(m, pdir):
             why = bound_view_pin_faults(mst, v, pdir.get(mst, {}))[:4]
             if mst in REAL_FILES:
                 why.append('constant-bound hard macro')
-            nr = [i.name for i in its if i.orient not in BOUND_ORIENTS]
+            orientation = bound_view_orientation_contract(v, mst)
+            nr = [dict(instance=i.name, orient=i.orient) for i in its if i.orient not in orientation['supported']]
             if nr:
-                why.append(f'{len(nr)} instance(s) not in {BOUND_ORIENTS}, e.g. {nr[0]}')
+                why.append(f'{len(nr)} instance(s) outside literal LEF orientation contract '
+                           f'{orientation["supported"]}, e.g. {nr[0]}')
             big = [i for i in its if v['w'] > i.w + BOUND_TOL or v['h'] > i.h + BOUND_TOL]
             if big:
                 why.append(f'real {v["w"]} x {v["h"]} > slot {big[0].w:.3f} x {big[0].h:.3f} ({len(big)} inst)')
             if why:
                 mis[mst] = dict(instances=len(its), lef=v['lef'], why=why)
+                if nr:
+                    mis[mst].update(orientation_contract=orientation, unsupported_orientations=nr)
         m['view_binding_misfits'] = mis
         bv = {k: v for k, v in bv.items() if k not in mis}
         print('OT_VIEW_BINDING_MISFITS %d masters not bound' % len(mis), file=sys.stderr)
         for k_, v_ in sorted(mis.items()):
             print('OT_VIEW_MISFIT ' + json.dumps(dict(master=k_, **v_)), file=sys.stderr)
+        unbound = defaultdict(list)
+        for it in m['insts']:
+            if it.master not in bv and it.master not in REAL_FILES:
+                unbound[it.master].append(it.name)
+        m['view_binding_unbound_generated'] = {
+            mst: dict(reason='VIEW_MISFIT' if mst in mis else 'NO_VERIFIED_TABLE_VIEW',
+                      instances=len(names), example_instances=names[:8])
+            for mst, names in sorted(unbound.items())}
+        m['view_binding_qualification'] = dict(
+            complete=not bool(unbound), native_qualification=False,
+            scope='DIAGNOSTIC_BINDING_NOT_NATIVE_PARENT_PROOF',
+            unsupported_orientation_instances=sum(len(v.get('unsupported_orientations', [])) for v in mis.values()),
+            unbound_generated_instances=sum(len(names) for names in unbound.values()))
     for it in m['insts'] if bv else ():
         v = bv.get(it.master)
         if v is None:
@@ -552,8 +624,13 @@ def apply_view_binding(m, pdir):
             r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
                                        generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0,
                                        binding_scope=v.get('binding_scope', 'QUALIFIED'))
-        if it.orient not in BOUND_ORIENTS:
-            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed {BOUND_ORIENTS} only')
+        orientation = bound_view_orientation_contract(v, it.master)
+        if it.orient not in orientation['supported']:
+            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: literal LEF '
+                             f'SYMMETRY {orientation["symmetry"]} permits {orientation["supported"]} '
+                             f'(parse errors: {orientation["errors"]}); '
+                             'within placer support; no physical symmetry may be inferred')
+        r_['orientation_contract'] = orientation
         if v['w'] > it.w + BOUND_TOL or v['h'] > it.h + BOUND_TOL:
             raise SystemExit(f'VIEW_BINDING: {it.master} real outline {v["w"]} x {v["h"]} exceeds the generated slot '
                              f'{it.w:.3f} x {it.h:.3f} of {it.name}: the placer sizes slots from the generated outline '
@@ -5215,6 +5292,18 @@ def buses_r8(m):
             allowed = list(allowed) + [cor['hub_w']]
         elif wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
             allowed = list(allowed) + [wide_return_strip(cor), cor['hub_w']]
+        if HEND_BOUND_FOOTPRINT:
+            # --hend-bound-footprint (S-NET+FILL 2026-10-16): reserve the CLOSED view's real outline of this hub end
+            # (finalize_r8 names it <master>__<name>) before the neighbour search; c26b left all 37 hub end views
+            # unbound as OT_VIEW_MISFIT 'real > slot' (end_spec's estimate is 0.02-1.75 um short of the demand-sized kits)
+            v_ = bound_views().get(f'{master}__{name}')
+            if v_ is not None:
+                if side == 'W':
+                    xx += w - v_['w']        # keep the W-side block's E edge (the face toward the slab)
+                w, h = v_['w'], v_['h']
+                m.setdefault('hend_bound_footprints', {})[name] = dict(
+                    master=f'{master}__{name}', reserved_um=[w, h],
+                    status='GEOMETRY_CANDIDATE_NOT_CLOCK_OR_ROUTE_QUALIFICATION')
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -5619,6 +5708,7 @@ SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations /
                                 # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
 NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
 NODE_WIN = 2                    # --node-win: sibling window of the static return node (edges)
+QBANK_S_RSTREG = False          # --qbank-s-rstreg: one reset pin sink; +1 initialization release edge, 0 data edges
 NODE_RSTREG = False             # --node-rstreg (S-NET+FILL 2026-10-15, native audit): the static node's rst_n drives ONE
                                 # reset pin register (async assert, release +1 edge); every node flop resets from it
 HEND_STATIC = False             # --hend-static (S-NET 2026-10-15, owner static rule): hub end/start blocks and xstg cross on
@@ -6155,6 +6245,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
@@ -10639,12 +10730,17 @@ def glue_rtl(m):
                                 f'.rst_n(1\'b1), .i_v(1\'b1), .i_d(di{j}[{hi - 1}:{lo}]), .fclk_o({fo}), .o_v(), '
                                 f'.o_d(do{j}[{hi - 1}:{lo}]));')
         elif mst.startswith('dsfd_qbank'):
+            qrs = 'rs[0]'
+            if mst == 'dsfd_qbank_S' and QBANK_S_RSTREG:
+                body.append("    reg rn; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rn <= 1'b0; else rn <= 1'b1;"
+                            ' // initialization only: async assert, release +1 edge; no normal data edge')
+                qrs = 'rn'
             for p_ in sorted(ports, key=_pnum):
                 if p_[:2] in ('i_', 'e_'):
                     q_ = ('o_' if p_[:2] == 'i_' else 'd_') + p_[2:]
                     w = ports[p_][1]
                     body.append(f'    reg [{w - 1}:0] r_{p_[2:]};')
-                    body.append(f'    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r_{p_[2:]} <= {w}\'d0; '
+                    body.append(f'    always @(posedge ck[0] or negedge {qrs}) if (!{qrs}) r_{p_[2:]} <= {w}\'d0; '
                                 f'else r_{p_[2:]} <= {p_};')
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
@@ -11112,6 +11208,8 @@ def die_options(ap):
                     'node strip NS_W = width + 8.64, every field column 43.2 um narrower')
     ap.add_argument('--node-rstreg', action='store_true', help='S-NET+FILL (native audit 10-15): with --node-static, rst_n '
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
+    ap.add_argument('--qbank-s-rstreg', action='store_true', help='S-NET+FILL S81F-05: dsfd_qbank_S rs drives one reset '
+                    'pin register (async assert, release +1 initialization edge); normal data remains one edge')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
                     'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
                     'FIFO, credits, ready or trained placement')
@@ -11125,6 +11223,9 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
+                    'SIZE of every hub end / start block (<master>__<inst>) before placement (c26b: 37 hub end views '
+                    'OT_VIEW_MISFIT real > slot by 0.02-1.75 um); geometry only, does not qualify clocks or routes')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
                     'selector / collector buses (+1 cycle; default off)')
     ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
@@ -11300,16 +11401,16 @@ def die_options(ap):
                     'adopt with a regenerated pin set')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
-    ap.add_argument('--rly-face-pins', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
+    ap.add_argument('--rly-face-pins', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-rly-face-pins to disable). S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
                     'relay takes its (in, out) faces from driver / load PIN positions (closed masters of its width only; '
                     'better non-closed variants are recorded as kit requests), not from instance centres')
-    ap.add_argument('--col-reset-tree', type=int, default=0, metavar='G', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
+    ap.add_argument('--col-reset-tree', type=int, default=32, metavar='G', help='DEFAULT 32 since S-DIE 10-16 0600 (0 = one net per column, disabled). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
                     'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
     ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
-    ap.add_argument('--stn-pin-pitch2', action='store_true', help='VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
+    ap.add_argument('--stn-pin-pitch2', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-stn-pin-pitch2 to disable). VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
                     'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
                     'the face; the abutting link-end ports take the same pitch')
-    ap.add_argument('--lef-pin-dir', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
+    ap.add_argument('--lef-pin-dir', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-lef-pin-dir to disable). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
                     'abstracts declare DIRECTION INPUT / OUTPUT from the die netlist (were all INOUT)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
                     'the out face nearest its worst load when the default face centre is > UM from a load pin (straight '
@@ -11447,6 +11548,8 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
+    global HEND_BOUND_FOOTPRINT
+    HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
@@ -11459,6 +11562,8 @@ def apply_options(a):
     NODE_WIN = int(getattr(a, 'node_win', 2) or 2)
     global NODE_RSTREG
     NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
+    global QBANK_S_RSTREG
+    QBANK_S_RSTREG = bool(getattr(a, 'qbank_s_rstreg', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
@@ -11679,11 +11784,11 @@ def apply_options(a):
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
     global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
-    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', False))
-    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', False))
-    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 0) or 0)
+    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', True))
+    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', True))
+    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 32) or 0)
     COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
-    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', False))
+    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))

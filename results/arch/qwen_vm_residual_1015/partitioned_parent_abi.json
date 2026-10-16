@@ -119,10 +119,11 @@
   "new_clock_pins": {
     "native_ck": 1008,
     "return_ck": 96,
-    "read_control_ck": 3
+    "read_control_ck": 3,
+    "relay_ck": 289
   },
-  "active_clock_entries_including_residual_parent_ck": 1483,
-  "port_bits": 15864,
+  "active_clock_entries_including_residual_parent_ck": 1772,
+  "port_bits": 16153,
   "normal_edges_added": 0,
-  "open": "Remaining residual write/control/relay FFs; die homes/cuts/actual phase timing/parent route"
+  "open": "Remaining residual write/control FFs; die homes/cuts/actual phase timing/parent route"
 }

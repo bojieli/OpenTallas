@@ -16,8 +16,10 @@ import csv
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import re
+import subprocess
 
 
 def export(table: Path, wrapper: Path, top: str, source_commit: str) -> dict:
@@ -53,6 +55,76 @@ def export(table: Path, wrapper: Path, top: str, source_commit: str) -> dict:
                 evidence={p.name: hashlib.sha256(data).hexdigest()
                           for p, data in ((table, raw), (wrapper, wrapped))},
                 scope='Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification')
+
+
+def excluded_ports(pattern, names):
+    """Use the production helper's Tcl regexp semantics, with data passed as data."""
+    if not pattern:
+        return set()
+    if any('\n' in name or '\r' in name for name in names):
+        raise ValueError('nonliteral port name in pin-register exclusion audit')
+    env = dict(os.environ, OT_AUDIT_PATTERN=pattern, OT_AUDIT_PORTS='\n'.join(names))
+    script = '''if {[catch {
+foreach name [split $::env(OT_AUDIT_PORTS) "\\n"] {
+    if {[regexp -- $::env(OT_AUDIT_PATTERN) $name]} {puts $name}
+}
+} message]} {puts stderr $message; exit 1}
+exit 0
+'''
+    try:
+        run = subprocess.run(['tclsh'], input=script, env=env, text=True,
+                             capture_output=True, timeout=10)
+    except (OSError, subprocess.TimeoutExpired) as ex:
+        raise ValueError('cannot evaluate intended Tcl pin-register exclusions') from ex
+    if run.returncode:
+        raise ValueError('invalid intended Tcl pin-register exclusion: ' + run.stderr.strip())
+    return set(run.stdout.splitlines())
+
+
+def validate_roles(report, wrapper, spec, read_source):
+    """Require declared control ports to remain direct wires in actual wrapper.
+
+    Reset polarity and synchronous/asynchronous meaning remain owned by the
+    source RTL: a direct wire preserves both. No reset-name inference is used.
+    Literal partial buses are rejected by the synthesis helper, not widened.
+    """
+    from audit_registered_clocks import clock_ports as sdc_clocks
+    clocks = set(spec.get('clock_ports', []))
+    if spec.get('clock_port'):
+        clocks.add(spec['clock_port'])
+    source_hashes = {}
+    for source in spec.get('sdc_extra', []):
+        text = read_source(source)
+        if text is None:
+            raise ValueError('unresolved clock-role source: ' + source)
+        source_hashes[source] = hashlib.sha256(text.encode()).hexdigest()
+        found, unknown = sdc_clocks(text)
+        if unknown:
+            raise ValueError('unresolved clock-role expressions: ' + source)
+        clocks.update(found)
+    resets = set(spec.get('reset_ports', []))
+    base = lambda name: re.sub(r'\[\d+\]$', '', name)
+    clocks, resets = {base(n) for n in clocks}, {base(n) for n in resets}
+    if clocks & resets:
+        raise ValueError('conflicting clock/reset declarations: ' + ','.join(sorted(clocks & resets)))
+    excluded = excluded_ports((spec.get('pin_regs') or {}).get('exclude', ''), sorted(report['ports']))
+    text = wrapper.read_text()
+    for role, names in [('clock', clocks), ('reset', resets), ('excluded data', excluded)]:
+        for name in names:
+            rec = report['ports'].get(name)
+            if not rec or rec['register_edges'] != 0:
+                raise ValueError('declared ' + role + ' selected as data or absent: ' + name)
+            direct = r'\.' + re.escape(name) + r'\s*\(\s*' + re.escape(name) + r'\s*\)'
+            if not re.search(direct, text) or re.search(r'(?<![A-Za-z0-9_$])' + re.escape(name) + r'__ot_q\b', text):
+                raise ValueError('declared ' + role + ' is not direct in transformed wrapper: ' + name)
+    for name, rec in report['ports'].items():
+        expected = 0 if name in clocks | resets | excluded or rec['dir'] == 'inout' else 1
+        if rec['register_edges'] != expected:
+            raise ValueError(f'intended data pin-register stages differ for {name}: '
+                             f"actual {rec['register_edges']}, expected {expected}")
+    return dict(clocks=sorted(clocks), resets=sorted(resets), excluded_data_ports=sorted(excluded - clocks - resets),
+                source_sha256=source_hashes,
+                reset_meaning='source RTL polarity and reset semantics preserved by direct wiring')
 
 
 def main():

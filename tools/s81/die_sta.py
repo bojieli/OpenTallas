@@ -339,6 +339,12 @@ def arcs_insertion(mst, view, mi, libpath=None, parts=None):
             ss, ff = j['ss']['boundary']['mean'], j['ff']['boundary']['mean']
             return [ss, ff, (ss + ff) / 2]
     if view == 'assembled':
+        if mst in ('dsfd_sp_capture_c', 'dsfd_sp_gather_c'):
+            # Their literal inventory is useful for diagnostics, but each child
+            # has its own entry. A scalar mean of unrelated roots would corrupt
+            # phi-R delivery. A future assembled view needs per-pin references.
+            raise ValueError(f'{mst}: multi-root assembled view requires per-pin insertion references; '
+                             'a mean over child masters is not a valid clock reference')
         src = [x for x in (parts or PARTS).get(mst, ()) if x in mi]
         if src:
             return [sum(mi[x][c] for x in src) / len(src) for c in ('ss', 'ff', 'tt')]

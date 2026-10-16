@@ -26,6 +26,13 @@ class PartitionCoverage(unittest.TestCase):
         idx['ff']['a'] = ('a.lib', 'assembled')
         self.assertEqual(D.partition_record('cluster', idx, parts)['tiles_closed'], [])
 
+    def test_modern_multiroot_parent_refuses_scalar_child_mean(self):
+        mi = {'dsfd_capt_x8_dual': {'ss': 300, 'ff': 200, 'tt': 250}}
+        with self.assertRaisesRegex(ValueError, 'per-pin insertion'):
+            D.arcs_insertion('dsfd_sp_capture_c', 'assembled', mi)
+        # An interim diagnostic does not pretend to carry child insertion.
+        self.assertEqual(D.arcs_insertion('dsfd_sp_capture_c', 'partitioned', mi), [0, 0, 0])
+
     def test_unknown_parent_does_not_inherit_inventory(self):
         self.assertEqual(D.partition_record('dsfd_sp_capture_unknown', {}), {})
 

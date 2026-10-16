@@ -1,0 +1,35 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO ot_mts_ww_stub
+  CLASS BLOCK ;
+  FOREIGN ot_mts_ww_stub 0 0 ;
+  ORIGIN 0 0 ;
+  SIZE 4.32 BY 2.16 ;
+  PIN a
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 1.056 0.084 1.080 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.050 0.900 0.090 1.080 ;
+    END
+  END a
+  PIN b
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  2.016 1.968 2.040 2.160 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  1.900 2.100 2.200 2.110 ;
+    END
+  END b
+END ot_mts_ww_stub
+END LIBRARY
