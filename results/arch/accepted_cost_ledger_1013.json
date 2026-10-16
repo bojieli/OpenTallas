@@ -137,6 +137,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "KV.SEQ_STATIC aq start (qkd_seq_static vs qkd_seq: +1 edge per layer)",
+   "group": "KV.SEQ_STATIC aq start (qkd_seq_static vs qkd_seq: +1 edge per layer)",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.014,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 249467.0,
+     "added_cycles": 36.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 36.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.014
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_1014/kvsys_v1_5_static/seq_static_1016/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "Q-KVSYS PVJOIN 10-16: static formatter successor of the credit/event qkd_seq (lead-approved); the attention start leaves the KV sequencer one edge later than the legacy launch (fixed CMD+47 at the quadrant face); rows / descriptors unchanged; measured on tb_seq_static, 36 layers bit-exact"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "TT.ROMCMD qfd_tt_head_static h4 rom_cmd output register (+1 ROM-tree command edge)",
    "group": "TT.ROMCMD",
    "measured": 2.0,
@@ -1767,11 +1800,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 4.331,
-   "accepted_plus_proposed_pct": 5.396,
+   "proposed_pct": 4.345,
+   "accepted_plus_proposed_pct": 5.41,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 7,
+   "proposed_rows": 8,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
