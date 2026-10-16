@@ -1,6 +1,6 @@
 # ref_tile: exact abutment pins first (IO_CONSTRAINTS is otherwise sourced only at 3_2_place_iop, where it
 # re-applies the same placement), then the spec's POST_TAPCELL hook (boundary flops FIRM at their pins)
-source /src/physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl
+source /src/physical/ref_tile_specs/s81pq_native/s81pq_ix_rb_native_spread_pins.tcl
 source /src/physical/ref_tile_specs/s81pq_native/ix_rb_macro_escape.tcl
 # then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when
 # a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)
