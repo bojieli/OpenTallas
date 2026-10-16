@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hgi_dma_back_landing_bank.lef",
+    "sha256": "ba0324d25f09f7074a3afe8acc0b34c2bad1d66668445daee5f0e6895c0ea4da"
+  },
+  "output": {
+    "path": "ot_hgi_dma_back_landing_bank.lef",
+    "sha256": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "bda78a0adc617d0af8afa52407422fc31357772b",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/ot_hgi_dma_back_landing_bank.lef",
+    "ot_hgi_dma_back_landing_bank.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 3 OBS rects moved into 3 pins: clk, read_en, rst_n; pockets: 81 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/hnl-harden-2210/physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hgi_dma_back_landing_bank 140.4 x 87.48: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 596 blocked-above 0 blocked-same 0; clock clk insertion 147 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hgi_dma_back_landing_bank",
+      "W": 140.4,
+      "H": 87.48,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.962,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.962,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 596,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 147.03,
+          "min_ps": 111.17
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 81
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "hv15_dbk_bank-geo1-bda78a0ad",
+    "source_commit": "bda78a0adc617d0af8afa52407422fc31357772b",
+    "published_record_commit": "cb0485ed874358eff13cf724d4a858b560bf8c62",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/hv15_dbk_bank-geo1-bda78a0ad/routes/hv15_dbk_bank_geo1_bda78a0ad/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "298aeac6579dfcf6438e1eddb014b7ead56fcce42dbe0913794252a1dc391d16",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+      "abstract.json": "e51d0da0da3cfffe6faffc346f2ec4c8401e8c06e69b638ed81654881433d18e",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+      "child_lint.json": "15a8340e975bf93e343f505de95a48b10a2684c9a7c2f958ec4a9db7f1952b37"
+    },
+    "admission": {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-3730582-1792134773",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}

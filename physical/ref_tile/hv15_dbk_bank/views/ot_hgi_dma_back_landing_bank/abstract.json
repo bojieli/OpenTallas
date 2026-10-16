@@ -185,11 +185,18 @@
     "/srv/opentallas-scratch2/claude/closure-loop/hv15_dbk_bank-geo1-bda78a0ad/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "files": {
-    "ot_hgi_dma_back_landing_bank.lef": "ba0324d25f09f7074a3afe8acc0b34c2bad1d66668445daee5f0e6895c0ea4da",
+    "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
     "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
     "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
     "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139"
   },
   "ok": true,
-  "checked": true
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "e51d0da0da3cfffe6faffc346f2ec4c8401e8c06e69b638ed81654881433d18e",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe"
+  }
 }

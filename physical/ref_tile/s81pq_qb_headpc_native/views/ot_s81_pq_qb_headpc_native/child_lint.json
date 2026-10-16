@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81pq_qb_headpc_native-p9-pinload-1705-a71cd9050/record/views/ot_s81_pq_qb_headpc_native/ot_s81_pq_qb_headpc_native.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/s81pq_qb_headpc_native-p10-wcap-elaunch-15f4db476/record/views/ot_s81_pq_qb_headpc_native/ot_s81_pq_qb_headpc_native.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 1540 of 1696 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. consume M4 (0.181,5.040), rst_n M4 (0.181,5.040), hq0[0] M3 (4.428,0.108))"
- ],
- "summary": "ot_s81_pq_qb_headpc_native 142.56 x 120.96: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 1696 blocked-above 0 blocked-same 0; clock clk insertion 227 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "ot_s81_pq_qb_headpc_native 142.56 x 120.96: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 1696 blocked-above 0 blocked-same 0; clock clk insertion 221 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_pq_qb_headpc_native",
   "W": 142.56,
@@ -40,24 +38,17 @@
   "face": {
    "face_pins": 1696,
    "blocked_above": 0,
-   "covered_below": 10,
+   "covered_below": 11,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 1540,
-   "band_examples": [
-    "consume M4 (0.181,5.040)",
-    "rst_n M4 (0.181,5.040)",
-    "hq0[0] M3 (4.428,0.108)",
-    "hq0[100] M3 (4.428,0.108)",
-    "hq0[102] M3 (4.428,0.108)",
-    "hq0[104] M3 (4.428,0.108)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 227.32,
-    "min_ps": 168.14
+    "max_ps": 220.74,
+    "min_ps": 165.05
    }
   },
   "pockets": {
@@ -66,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 831
+    "added": 810
    },
    "count": 0,
    "area_um2": 0,

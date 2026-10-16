@@ -45,6 +45,31 @@ def _commit(j):
     return str(j.get("commit_full") or ((j.get("spec") or {}).get("source") or {}).get("commit") or "")
 
 
+def pin_wrapper_args(text):
+    """Actual RTL-generation knobs, distinct from physical placement/hold knobs.
+
+    Read the generated EXTRA array as a whole: _cfg_vars stops at parentheses
+    inside quoted regexes. Unknown shell construction is not evidence of change.
+    """
+    match = re.search(r'^EXTRA=\((.*)\)\s*$', text, re.M)
+    if not match:
+        return None if 'OT_PIN_REGS=' in text else {'enable': False}
+    try:
+        tokens = shlex.split(match[1])
+    except ValueError:
+        return None
+    values = dict(t.split('=', 1) for t in tokens if '=' in t and t.split('=', 1)[0] in
+                  ('OT_PIN_REGS', 'OT_PIN_REGS_CLOCK', 'OT_PIN_REGS_EXCLUDE', 'OT_PIN_REGS_RESET'))
+    if values.get('OT_PIN_REGS', '0') == '0':
+        return {'enable': False}
+    if values.get('OT_PIN_REGS') != '1' or not values.get('OT_PIN_REGS_CLOCK'):
+        return None
+    if any(re.search(r'\$[A-Za-z_{(]|`', v) for v in values.values()):
+        return None
+    return dict(enable=True, clock=values['OT_PIN_REGS_CLOCK'],
+                exclude=values.get('OT_PIN_REGS_EXCLUDE', ''), reset=values.get('OT_PIN_REGS_RESET', ''))
+
+
 def route_recipe(spec, show):
     """{"top", "sources", "params", "geom"} of the job's route at its source commit, or None when it cannot be read"""
     try:
@@ -60,7 +85,8 @@ def route_recipe(spec, show):
             ptoks = shlex.split(v.get("PARAMS", "()").strip("()")) if v.get("PARAMS") else []
             geom = {k: ln.split("=", 1)[1].strip() for ln in text.splitlines()
                     for k in GEOM_KEYS if ln.startswith(k + "=")}
-            return {"top": spec.get("block"), "sources": srcs, "params": rtl_boundary._params(ptoks), "geom": geom}
+            return {"top": spec.get("block"), "sources": srcs, "params": rtl_boundary._params(ptoks), "geom": geom,
+                    "pin_wrapper": pin_wrapper_args(text)}
         r = rtl_boundary.recipe(spec, show)
         return dict(r, geom={}) if r else None
     except Exception:  # noqa: BLE001
@@ -100,13 +126,18 @@ def rtl_compare(new_rec, new_commit, closed_job, closed_rec, blob):
     cc = _commit(closed_job)
     if not new_rec or not new_rec.get("sources"):
         return "unknown", "the new job's RTL sources cannot be read from its route command"
-    if cc and new_commit and (cc.startswith(new_commit) or new_commit.startswith(cc)):
+    new_wrapper, old_wrapper = new_rec.get('pin_wrapper'), (closed_rec or {}).get('pin_wrapper')
+    wrapper_changed = new_wrapper is not None and old_wrapper is not None and new_wrapper != old_wrapper
+    if not wrapper_changed and cc and new_commit and (cc.startswith(new_commit) or new_commit.startswith(cc)):
         return "same", f"same source commit {cc[:9]}"
     new = {s: blob(new_commit, s) for s in sorted(set(new_rec["sources"]))}
     if any(v is None for v in new.values()):
         return "unknown", f"source missing at {new_commit[:9]}: {[k for k, v in new.items() if v is None][:3]}"
     if not cc or blob(cc, "") is None:
         return "unknown", f"closed commit {cc[:9] or '?'} is not in the object store"
+    if wrapper_changed:
+        return 'differs', ('generic pin-wrapper RTL generation differs: '
+                           f'{old_wrapper} -> {new_wrapper}; core sources may remain unchanged')
     if {s: blob(cc, s) for s in new} == new:
         return "same", f"{len(new)} RTL source file(s) byte-identical at {cc[:9]} and {new_commit[:9]}"
     if closed_rec and closed_rec.get("sources"):

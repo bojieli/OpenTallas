@@ -222,16 +222,50 @@ if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: add"; ot_meg_apply add }
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
+set snap [dict create]
+foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
+# Source-pinned opt-in for the diagnosed A input overpadding only. It changes
+# physical buffers, not constraints or RTL stages. Normal repair follows; the
+# resulting netlist must be rerouted/extracted and judged by unchanged signoff.
+set ot_native [envd OT_ECO_NATIVE_NORMALIZE ""]
+if {$ot_native ne ""} {
+  if {[$block getName] ne "qkd_ectl_a_tp8_epoch_direct"} {error "native normalization is A-scoped"}
+  if {![file isfile $ot_native]} {error "native normalization source missing"}
+  set ot_native_sha [envd OT_ECO_NATIVE_NORMALIZE_SHA256 ""]
+  if {![regexp {^[0-9a-f]{64}$} $ot_native_sha] || [lindex [exec sha256sum $ot_native] 0] ne $ot_native_sha} {
+    error "native normalization source hash mismatch"
+  }
+  # Reconnected sinks keep their instance location/master, so the dirty census
+  # below would miss their nets: kept or frozen wires would be stale topology.
+  if {[envd OT_KEEP_UNTOUCHED 0] || [envd OT_FREEZE_MACRO_NETS 0]} {
+    error "native normalization rejects OT_KEEP_UNTOUCHED/OT_FREEZE_MACRO_NETS (full strip required; OT_KEEP_CLOCK allowed)"
+  }
+  # Default: apply the plan INSIDE the incremental GRT session of the original guides (as the resizer's own buffer
+  # removal does), so only the changed nets re-route and the routed clock tree / untouched guides stand. Measured
+  # 2026-10-15 (ECTL A r1): a fresh GRT of the whole tile re-routed the clock tree to reg2reg TT -106 / FF -297 ps,
+  # and fresh GRT + KEEPCLK left kept clock wires without guides (DRT-0206 on 596 terms). OT_NATIVE_FRESH_GRT=1 keeps
+  # the explicit fresh-route variant (requires OT_ALLOW_FRESH_GRT=1).
+  if {[envd OT_NATIVE_FRESH_GRT 0]} {
+    if {![envd OT_ALLOW_FRESH_GRT 0]} { error "native normalization fresh variant requires OT_ALLOW_FRESH_GRT=1" }
+    set guides 0
+  } elseif {!$guides} {
+    error "native normalization (incremental) needs the original route guides in the db"
+  }
+}
 if {$guides} {
   puts "OT_ECO route_strategy incremental_original_guides"
   global_route -start_incremental
 } elseif {$allow_fresh} {
-  puts "OT_ECO route_strategy fresh_global reason missing_original_guides explicit_opt_in 1"
+  set native_reason [expr {$ot_native ne "" ? "native_topology_normalization" : "missing_original_guides"}]
+  puts "OT_ECO route_strategy fresh_global reason $native_reason explicit_opt_in 1"
 } else {
   error "OT_ECO original guides unavailable; fresh GRT requires OT_ALLOW_FRESH_GRT=1"
 }
-set snap [dict create]
-foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
+if {$ot_native ne ""} {
+  source $ot_native
+  puts "OT_ECO native normalization applied ([expr {$guides ? {incremental, original guides} : {fresh GRT}}]); canonical route/signoff still required"
+}
+
 if {[llength [dict get $win fixable]]} {
   if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 30] -verbose} err]} {
     # the buffer cap (RSZ-0060) keeps what was inserted: continue and let the sign-off judge it (hfd_stn_r38 pass 2 died
@@ -334,7 +368,9 @@ set fz [dict create]; foreach nt $frozen { dict set fz [$nt getName] 1 }
 set nstrip 0
 foreach net [$block getNets] {
   if {[$net getSigType] in {POWER GROUND}} continue
-  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK"} continue
+  # KEEPCLK keeps the routed clock tree, except a clock net on a new / moved / resized instance (the repair's DPL can move
+  # a clock buffer: its kept wire no longer reaches the pin -> DRT-0206, ECTL A recovery 2026-10-15); those re-route.
+  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK" && ![dict exists $dirty [$net getName]]} continue
   if {[dict exists $fz [$net getName]]} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nstrip }
 }

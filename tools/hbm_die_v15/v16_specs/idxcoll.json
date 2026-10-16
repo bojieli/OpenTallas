@@ -1,0 +1,2872 @@
+{
+ "region": "idxcoll",
+ "author": "Claude H-NETLIST sub-agent idxcoll (2026-10-15 22:30)",
+ "basis_commit": "4b43cd77c",
+ "instances": [
+  {
+   "name": "ep_S0",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_S0",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_SW link 0 <-> lk_S0: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_S1",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_S1",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_SW link 1 <-> lk_S1: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_S2",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_S2",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_SW link 2 <-> lk_S2: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_S3",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_S3",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_SE link 0 <-> lk_S3: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_S4",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_S4",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_SE link 1 <-> lk_S4: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_N0",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_N0",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_NW link 0 <-> lk_N0: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_N1",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_N1",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_NW link 1 <-> lk_N1: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_N2",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_N2",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_NE link 0 <-> lk_N2: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  },
+  {
+   "name": "ep_N3",
+   "master": "hfd_ep_static",
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "params": {},
+   "slot": "ep_N3",
+   "owner": "H-LKEP",
+   "region": "idxcoll",
+   "note": "link endpoint of hb_coll_NE link 1 <-> lk_N3: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges"
+  }
+ ],
+ "retire_v15": [],
+ "edges": [
+  {
+   "src": [
+    "svg_SW0",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW0",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    1,
+    11
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW0",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    11,
+    1099
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW1",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    1099,
+    1100
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW1",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    1100,
+    1110
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW1",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    1110,
+    2198
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW2",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    2198,
+    2199
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW2",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    2199,
+    2209
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW2",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    2209,
+    3297
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW3",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    3297,
+    3298
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW3",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    3298,
+    3308
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW3",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    3308,
+    4396
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW4",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    4396,
+    4397
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW4",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    4397,
+    4407
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW4",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    4407,
+    5495
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW5",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    5495,
+    5496
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW5",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    5496,
+    5506
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW5",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    5506,
+    6594
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW6",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    6594,
+    6595
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW6",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    6595,
+    6605
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW6",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    6605,
+    7693
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW7",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    7693,
+    7694
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW7",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    7694,
+    7704
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SW7",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    7704,
+    8792
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE0",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    8792,
+    8793
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE0",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    8793,
+    8803
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE0",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    8803,
+    9891
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE1",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    9891,
+    9892
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE1",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    9892,
+    9902
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE1",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    9902,
+    10990
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE2",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    10990,
+    10991
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE2",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    10991,
+    11001
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE2",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    11001,
+    12089
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE3",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    12089,
+    12090
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE3",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    12090,
+    12100
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE3",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    12100,
+    13188
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE4",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    13188,
+    13189
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE4",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    13189,
+    13199
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE4",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    13199,
+    14287
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE5",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    14287,
+    14288
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE5",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    14288,
+    14298
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE5",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    14298,
+    15386
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE6",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    15386,
+    15387
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE6",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    15387,
+    15397
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE6",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    15397,
+    16485
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE7",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    16485,
+    16486
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE7",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    16486,
+    16496
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_SE7",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    16496,
+    17584
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW0",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    17584,
+    17585
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW0",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    17585,
+    17595
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW0",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    17595,
+    18683
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW1",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    18683,
+    18684
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW1",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    18684,
+    18694
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW1",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    18694,
+    19782
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW2",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    19782,
+    19783
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW2",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    19783,
+    19793
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW2",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    19793,
+    20881
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW3",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    20881,
+    20882
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW3",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    20882,
+    20892
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW3",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    20892,
+    21980
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW4",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    21980,
+    21981
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW4",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    21981,
+    21991
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW4",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    21991,
+    23079
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW5",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    23079,
+    23080
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW5",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    23080,
+    23090
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW5",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    23090,
+    24178
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW6",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    24178,
+    24179
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW6",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    24179,
+    24189
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW6",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    24189,
+    25277
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW7",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    25277,
+    25278
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW7",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    25278,
+    25288
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NW7",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    25288,
+    26376
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE0",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    26376,
+    26377
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE0",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    26377,
+    26387
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE0",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    26387,
+    27475
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE1",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    27475,
+    27476
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE1",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    27476,
+    27486
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE1",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    27486,
+    28574
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE2",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    28574,
+    28575
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE2",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    28575,
+    28585
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE2",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    28585,
+    29673
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE3",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    29673,
+    29674
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE3",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    29674,
+    29684
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE3",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    29684,
+    30772
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE4",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    30772,
+    30773
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE4",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    30773,
+    30783
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE4",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    30783,
+    31871
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE5",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    31871,
+    31872
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE5",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    31872,
+    31882
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE5",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    31882,
+    32970
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE6",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    32970,
+    32971
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE6",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    32971,
+    32981
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE6",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    32981,
+    34069
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE7",
+    "sm_packet",
+    1098,
+    1099
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    34069,
+    34070
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE7",
+    "sm_packet",
+    1088,
+    1098
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    34070,
+    34080
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "svg_NE7",
+    "sm_packet",
+    0,
+    1088
+   ],
+   "dst": [
+    "hb_idx",
+    "key_lines",
+    34080,
+    35168
+   ],
+   "bits": 1088,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:24,46 (scorer line p of stack q: [0] valid, [10:1] tag10 == 128*p+beat_index, [1098:11] = key pair 2p,2p+1 of the 16-key beat) == rtl/hbm_accel/sm/static/ot_smh_static_feed.sv:8 packet {valid,tag10,data1088} of ot_hbm_svc_sm_group.sm_packet (packed136: one 136-B HBM record per packet, ot_hbm_svc_static_sm_packed136.sv) ; rtl/hbm_accel/index/static_1015/key_format_v1.json service: 8 ports/stack, 136-B pair, pair_tag10 = (128*port+beat)%1024; scorer j <-> stack SID j (svg STACK=QID)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tx_pin_v",
+    0,
+    1
+   ],
+   "dst": [
+    "ep_S0",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tx_pin_flit",
+    0,
+    612
+   ],
+   "dst": [
+    "ep_S0",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S0",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S0",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S0",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S0",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_S0",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S0",
+    "rx"
+   ],
+   "dst": [
+    "ep_S0",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S0",
+    "st"
+   ],
+   "dst": [
+    "ep_S0",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tx_pin_v",
+    1,
+    2
+   ],
+   "dst": [
+    "ep_S1",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tx_pin_flit",
+    612,
+    1224
+   ],
+   "dst": [
+    "ep_S1",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S1",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rx_pin_v",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S1",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rx_pin_flit",
+    612,
+    1224
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S1",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "phy_up",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S1",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_S1",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S1",
+    "rx"
+   ],
+   "dst": [
+    "ep_S1",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S1",
+    "st"
+   ],
+   "dst": [
+    "ep_S1",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tx_pin_v",
+    2,
+    3
+   ],
+   "dst": [
+    "ep_S2",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "tx_pin_flit",
+    1224,
+    1836
+   ],
+   "dst": [
+    "ep_S2",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S2",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rx_pin_v",
+    2,
+    3
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S2",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rx_pin_flit",
+    1224,
+    1836
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S2",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "phy_up",
+    2,
+    3
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S2",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_S2",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S2",
+    "rx"
+   ],
+   "dst": [
+    "ep_S2",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S2",
+    "st"
+   ],
+   "dst": [
+    "ep_S2",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "tx_pin_v",
+    0,
+    1
+   ],
+   "dst": [
+    "ep_S3",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "tx_pin_flit",
+    0,
+    612
+   ],
+   "dst": [
+    "ep_S3",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S3",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S3",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S3",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S3",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_S3",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S3",
+    "rx"
+   ],
+   "dst": [
+    "ep_S3",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S3",
+    "st"
+   ],
+   "dst": [
+    "ep_S3",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "tx_pin_v",
+    1,
+    2
+   ],
+   "dst": [
+    "ep_S4",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "tx_pin_flit",
+    612,
+    1224
+   ],
+   "dst": [
+    "ep_S4",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S4",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rx_pin_v",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S4",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rx_pin_flit",
+    612,
+    1224
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S4",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "phy_up",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_S4",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_S4",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S4",
+    "rx"
+   ],
+   "dst": [
+    "ep_S4",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_S4",
+    "st"
+   ],
+   "dst": [
+    "ep_S4",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "tx_pin_v",
+    0,
+    1
+   ],
+   "dst": [
+    "ep_N0",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "tx_pin_flit",
+    0,
+    612
+   ],
+   "dst": [
+    "ep_N0",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N0",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N0",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N0",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N0",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_N0",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N0",
+    "rx"
+   ],
+   "dst": [
+    "ep_N0",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N0",
+    "st"
+   ],
+   "dst": [
+    "ep_N0",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "tx_pin_v",
+    1,
+    2
+   ],
+   "dst": [
+    "ep_N1",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "tx_pin_flit",
+    612,
+    1224
+   ],
+   "dst": [
+    "ep_N1",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N1",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rx_pin_v",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N1",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rx_pin_flit",
+    612,
+    1224
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N1",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "phy_up",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N1",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_N1",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N1",
+    "rx"
+   ],
+   "dst": [
+    "ep_N1",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N1",
+    "st"
+   ],
+   "dst": [
+    "ep_N1",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "tx_pin_v",
+    0,
+    1
+   ],
+   "dst": [
+    "ep_N2",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "tx_pin_flit",
+    0,
+    612
+   ],
+   "dst": [
+    "ep_N2",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N2",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N2",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N2",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N2",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_N2",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N2",
+    "rx"
+   ],
+   "dst": [
+    "ep_N2",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N2",
+    "st"
+   ],
+   "dst": [
+    "ep_N2",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "tx_pin_v",
+    1,
+    2
+   ],
+   "dst": [
+    "ep_N3",
+    "tx_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "tx_pin_flit",
+    612,
+    1224
+   ],
+   "dst": [
+    "ep_N3",
+    "tx_frame"
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N3",
+    "rx_pin_v"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rx_pin_v",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N3",
+    "rx_pin_flit"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rx_pin_flit",
+    612,
+    1224
+   ],
+   "bits": 612,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N3",
+    "phy_up"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "phy_up",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "ep_N3",
+    "sd_tx"
+   ],
+   "dst": [
+    "lk_N3",
+    "tx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N3",
+    "rx"
+   ],
+   "dst": [
+    "ep_N3",
+    "sd_rx"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  },
+  {
+   "src": [
+    "lk_N3",
+    "st"
+   ],
+   "dst": [
+    "ep_N3",
+    "sd_st"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "hfd_ep_static (H-LKEP fe628e131, origin/claude/h-lkep-1015): COLL face tx_v/tx_frame[611:0] <- ot_hgi_coll_static_link_capture tx_pin (ot_hfd_coll_q_static_v4.sv:266 tx_pin_flit[k*612+:612]); rx_pin_v/rx_pin_flit/phy_up -> capture rx_pin/phy_up; SerDes face sd_tx/sd_rx/sd_st <-> ot_pdie_serdes tx/rx/st (tb_hfd_ep_static: two endpoints back to back through two real ot_pdie_serdes, 768 frames each way bit-exact)"
+  }
+ ],
+ "drop_v15_edges": [],
+ "clocks": [
+  {
+   "inst": "ep_S0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_S0",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_S1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_S1",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_S2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_S2",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_S3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_S3",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_S4",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_S4",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_N0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_N0",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_N1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_N1",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_N2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_N2",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "ep_N3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "ep_N3",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [],
+ "gaps": [],
+ "notes": "KEY LINES (G-CIL-IDXKEY / G-SMVM-KEYSTAGE): the service key staging producer IS the stack's eight SM service groups (their landing + canonical-row SRAMs are the staging). hb_idx.key_lines[j*8792 + p*1099 +: 1099] = svg_<Q[j]><p>.sm_packet, field order permuted by wires ({valid,tag10,data1088} MSB-first -> [0] valid, [10:1] tag, [1098:11] pair). Two RTL changes make it exact (both in this branch, bench rtl/test/hbm_idx_static/run_idx_key_service.sh PASS + 4 mutants FAIL): (1) ot_hbm_idx_score_static tag check (128*p + beat) % 1024 = the packed136 service tag tag_base+row with tag_base = 128*p + block first beat (the old (beat*8+p) % 1024 cannot be produced by any sequential-tag service block); tools/hbm_idx_static_parent_vectors.py follows. (2) ot_hbm_svc_sm_issuer / ot_hbm_svc_sm_group parameter FIXED_GO (default 0 = unchanged event go): with FIXED_GO=1 the programme go is the descriptor's compiler slot go_at [142:119] (missed slot = sticky fault, never waits). MEASURED: with the event go the eight groups of one stack start 0..20 edges apart (HBM residency), so key beats are not aligned and the scorer faults; with FIXED_GO=1 skew 0, 128 beats exact, scorer fault 0. => the die must instantiate svg_<q><k> with FIXED_GO=1 (engine_region, VMSM / H-DIE: gap G-CIL-IDXKEY-FIXEDGO until then). The same net also reaches sm_<q><p>.packet: the svg programme gives the SM idle slots that expect the packet (command[29]=1, tag, command[25]=0: no issue, no fault; bench sm_issue 0). key_slot/key_index stay unconsumed observation outputs (the schedule is compiled; the IDX calendar beat = the svg programme slot + the fixed relay latency of the long key_lines edges, H-IDX price +20..24 edges, S2 +0.03 %). KEY LAYOUT (H-IDX keypack/keystore, key_format_v1 service note): pair (stack s, beat b, port p) is the 136-B record at row b of a per-SM key region inside svg_<s><p>'s own four PCs (record byte 0 = bits 7:0: key 16b+2p = bytes 0..67), not the linear stack byteaddr; tag_base per 64-row block = 128*p + first beat. Throughput: an IDX.INDEX record occupies 171 packet slots of all 32 groups (keys share the SM service). LINK EP (G-CIL-EP): 9 x hfd_ep_static (H-LKEP master, bench PASS + 4 mutants FAIL on its branch), COLL link k <-> ep <-> lk_* in the G-CIL-EP order. CLOCK: hfd_ep_static is one-clock (COLL face and SerDes ck are the same clock) and every COLL clock incl. clk_link is the stream edge, so ep_* AND lk_* run on the stream domain (coll_idx_link.json lk_* clk/rst moved link -> stream); pll_link is then unused by the link group. QUESTION (owner/H-DIE): if the SerDes ck must differ from stream, the ep needs a CDC (off-die boundary elastic is allowed there) and a second clock pin. ep RX block calendar: gap G-CIL-EPRXCAL. RANK: die_inputs die_rank[7:0] (generator patch pending, gap G-CIL-RANK until then). IDX TX: G-CIL-IDXTX stays in coll_idx_link.json (COLL SW needs an IDX source face, see its note). | Codex23:30 integration: all32 svg instances now explicitly FIXED_GO=1. Rank remains the already-integrated cp2 configured operand row (sameactualcol_idx.prm producer for IDXrank and ARGMAXdie_id), no conflicting package driver added. Both rank values must be installed consistently by the compiler. Physical clock/long-wire latency remains OPEN."
+}
