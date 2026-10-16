@@ -1,5 +1,5 @@
 {
- "name": "s81engm_dispatch_c35-c1-72a547760",
+ "name": "s81engm_dispatch_c35-c1-COMMIT",
  "block": "ot_s81_engram_dispatch",
  "ref_tile": true,
  "owner": "Claude:s81-engnorm-2210",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-engnorm-2210",
-  "commit": "72a54776034029c0d89775a002fd57b2f4fee822",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/s81_die_pins/v21_engram_arithmetic",
    "physical/s81_die_pins/v29_engram_dispatch_compact",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_dispatch_c35/s81engm_dispatch_c35-c1-72a547760"
+   "to": "results/rtl/ref_tile/s81engm_dispatch_c35/s81engm_dispatch_c35-c1-COMMIT"
   }
  ],
  "cycles_added": 0,
