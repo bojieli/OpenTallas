@@ -39,6 +39,9 @@
 module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD = 16) (
     input  wire          ck,
     input  wire          rst,
+`ifdef OT_S81_HOST_BOOT300
+    input wire ck_boot, // real die-delivered300MHz initialization root:4ck=3ckv
+`endif
     input  wire          ckv,
     input  wire          rsv,
 `ifdef DSFD_HOST_C_STATIC
@@ -90,7 +93,11 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     wire csr_l = hv && hcl == 2'd0 && hd[7:0] == 8'h11;
     `ifdef DSFD_HOST_PQ_BOOT
     wire csr_pq = hv && hcl == 2'd0 && hd[7:0] == 8'h12;
+`ifdef OT_S81_HOST_BOOT300
+    localparam PWW=37; // {kind2, data35}:0stage,1PQ,2length
+`else
     localparam PWW=36;
+`endif
 `else
     wire csr_pq = 1'b0;
     localparam PWW=35;
@@ -106,10 +113,12 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     always @* if (!ingest_h_ck) ret_seam={hf,t_v,t_d};
     wire hf_core=ret_seam[65],tv_core=ret_seam[64];
     wire [63:0] td_core=ret_seam[63:0];
+    `ifndef OT_S81_HOST_BOOT300
     reg pop_seam;
     always @* if (!rvn) pop_seam=0;else if (!ckv) pop_seam=pop_t;
     reg [7:0] plen_seam;
     always @* if (!ck) plen_seam=plen;
+    `endif
 `else
     wire hf_core=hf,tv_core=t_v;
     wire [63:0]td_core=t_d;
@@ -140,6 +149,12 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     // ---------------- intercepted CSR words: program -> ckv FIFO, length register; their receive credit returned here:
     // a length word's at once, a program word's when it LEAVES the crossing FIFO on ckv (pop toggle, synchronised), so
     // the sender's credit window (<= PWD words) bounds the FIFO: it never overflows
+`ifdef OT_S81_HOST_BOOT300
+    // Static layer host has no credit return. Do not synthesize a dormant
+    // serial->core pop-toggle counter solely to feed a false overflow alarm.
+    wire [6:0]crn_x=0;wire[5:0]crn_sum=0;
+    reg pop_t;
+`else
     reg [6:0] crn_x;                     // credits owed to the sender beyond the ingest's own h_crn
     wire [5:0] crn_sum = crn + ((crn_x != 0) ? 6'd1 : 6'd0);
     reg pop_t; (* async_reg = "true" *) reg [2:0] pop_s;
@@ -148,6 +163,31 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
         if (!rn) crn_x <= 0;
         else crn_x <= crn_x + ((csr_l && (MUT != 2)) ? 7'd1 : 7'd0) + (((pop_s[2] ^ pop_s[1]) && (MUT != 2)) ? 7'd1 : 7'd0)
                       - ((crn_x != 0 && crn_sum <= 6'd31) ? 7'd1 : 7'd0);
+`endif
+`ifdef OT_S81_HOST_BOOT300
+    wire boot_rn;
+    ot_reset_sync boot_rs(.clk(ck_boot),.async_rst_n(rst&&rsv),.sync_rst_n(boot_rn));
+    wire bridge_v,bridge_ready,up_ov,up_un,down_ov;
+    wire[PWW-1:0]bridge_d;
+    wire boot_write=csr_l||((csr_p||csr_pq)&&(MUT!=1));
+    wire[PWW-1:0]boot_data=csr_l?{2'd2,27'd0,hd[39:32]}:
+      {1'b0,(csr_pq^(MUT==5)),hd[102:96],hd[59:32]};
+    ot_async_fifo #(.WIDTH(PWW),.DEPTH(PWD),.EXT_RST(1))u_pw_source(
+      .wr_clk(ck),.wr_rst_n(pwrn),.wr_valid(boot_write),.wr_ready(pw_wr),.wr_data(boot_data),.wr_overflow(up_ov),
+      .rd_clk(ck_boot),.rd_rst_n(boot_rn),.rd_valid(bridge_v),.rd_ready(1'b1),.rd_data(bridge_d),.rd_underflow(up_un));
+    // Every boot edge services the head. Fullness only detects a violated
+    // initialization capacity contract; it never reschedules a transfer.
+    ot_async_fifo #(.WIDTH(PWW),.DEPTH(PWD),.EXT_RST(1))u_pw(
+      .wr_clk(ck_boot),.wr_rst_n(boot_rn),.wr_valid(bridge_v),.wr_ready(bridge_ready),.wr_data(bridge_d),.wr_overflow(down_ov),
+      .rd_clk(ckv),.rd_rst_n(pwrrn),.rd_valid(pw_v),.rd_ready(pw_take),.rd_data(pw_d),.rd_underflow(pw_unf));
+    reg boot_bad;
+    always @(posedge ck_boot or negedge boot_rn)if(!boot_rn)boot_bad<=0;
+       else if(bridge_v&&!bridge_ready)boot_bad<=1;
+    reg boot_bad_seam;reg[1:0]boot_bad_sync;
+    always @*if(!boot_rn)boot_bad_seam=0;else if(!ck_boot)boot_bad_seam=boot_bad;
+    always @(posedge ck or negedge rn)if(!rn)boot_bad_sync<=0;else boot_bad_sync<={boot_bad_sync[0],boot_bad_seam};
+    assign pw_ovf=up_ov|boot_bad_sync[1];
+`else
     ot_async_fifo #(.WIDTH(PWW), .DEPTH(PWD)
 `ifdef OT_S81_HOST_PHASESAFE
         ,.EXT_RST(1)
@@ -159,32 +199,49 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
         .wr_data({hd[102:96], hd[59:32]}),
 `endif .wr_overflow(pw_ovf), .rd_clk(ckv), .rd_rst_n(pwrrn), .rd_valid(pw_v),
         .rd_ready(pw_take), .rd_data(pw_d), .rd_underflow(pw_unf));
+    `endif
     assign pw_take = pw_v && pace == 2'd0;
     always @(posedge ckv or negedge rvn)
-        if (!rvn) begin pace <= 0; t_sseq_pw <= 36'd0;
+        if (!rvn) begin
+`ifdef OT_S81_HOST_BOOT300
+            t_sseq_plen<=0;
+`endif
+            pace <= 0; t_sseq_pw <= 36'd0;
 `ifdef DSFD_HOST_PQ_BOOT
             t_pq_pw <= 36'd0;
 `endif
             pop_t <= 1'b0; end
         else begin
+`ifdef OT_S81_HOST_BOOT300
+            t_pq_pw<=pw_take&&pw_d[36:35]==1?{1'b1,pw_d[34:0]}:36'd0;
+            t_sseq_pw<=pw_take&&pw_d[36:35]==0?{1'b1,pw_d[34:0]}:36'd0;
+            if(pw_take&&pw_d[36:35]==2)t_sseq_plen<=pw_d[7:0];
+`else
             `ifdef DSFD_HOST_PQ_BOOT
             t_pq_pw <= pw_take && pw_d[35] ? {1'b1,pw_d[34:0]} : 36'd0;
             t_sseq_pw <= pw_take && !pw_d[35] ? {1'b1,pw_d[34:0]} : 36'd0;
 `else
             t_sseq_pw <= pw_take ? {1'b1, pw_d} : 36'd0;
 `endif
+            `endif
             if (pw_take) pop_t <= ~pop_t;
             pace <= pw_take ? 2'd3 : (pace != 0 ? pace - 1'b1 : 2'd0);
         end
+`ifndef OT_S81_HOST_BOOT300
     reg [7:0] plen;
     always @(posedge ck or negedge rn) if (!rn) plen <= 8'd0; else if (csr_l) plen <= hd[39:32];
     reg [7:0] pl1;
     always @(posedge ckv) begin pl1 <= plen_seam; t_sseq_plen <= pl1; end
+    `endif
     // ---------------- status (ck): sequencer status (ckv, 2-flop), WFC faults, ingest / decode / crossing faults
     reg [5:0] ss1, ss2; reg [3:0] wf;
     always @(posedge ck) begin ss1 <= f_sseq_st; ss2 <= ss1; wf <= f_wfc_ft; end
     reg xf;
-    always @(posedge ck or negedge rn) if (!rn) xf <= 1'b0; else if (pw_ovf || ((csr_p || csr_pq) && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
+    always @(posedge ck or negedge rn) if (!rn) xf <= 1'b0; else if (pw_ovf || ((csr_p || csr_pq
+`ifdef OT_S81_HOST_BOOT300
+        || csr_l
+`endif
+    ) && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
 `ifdef DSFD_HOST_C_STATIC
     // lane faults (odd bits of f_lf), pin-registered
 `ifdef OT_S81_HOST_PHASESAFE

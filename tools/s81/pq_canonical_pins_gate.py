@@ -2,7 +2,7 @@
 import argparse,os,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--mut',choices=['PHW','SAW','CALGO','PQSLOT','PRIME','HOSTDROP']);p.add_argument('--calcap',action='store_true');p.add_argument('--produced',action='store_true');p.add_argument('--sequenced',action='store_true',help='real host CSR/FIFO -> c9 engine13 -> actual PHW10 PQ + mapped memories');p.add_argument('--rom4',action='store_true',help='DSFD_PQ_ROM4: die stream ROM = four 4096-row macros, select in dsfd_sp_pq_n');p.add_argument('--host-phase-safe',action='store_true',help='HOST-only source lockups, local resets and APIPE3 candidate');a=p.parse_args();
+p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--mut',choices=['PHW','SAW','CALGO','PQSLOT','PRIME','HOSTDROP']);p.add_argument('--calcap',action='store_true');p.add_argument('--produced',action='store_true');p.add_argument('--sequenced',action='store_true',help='real host CSR/FIFO -> c9 engine13 -> actual PHW10 PQ + mapped memories');p.add_argument('--rom4',action='store_true',help='DSFD_PQ_ROM4: die stream ROM = four 4096-row macros, select in dsfd_sp_pq_n');p.add_argument('--host-boot300',action='store_true',help='Real300MHz common-divisor initialization bridge');p.add_argument('--host-phase-safe',action='store_true',help='HOST-only source lockups, local resets and APIPE3 candidate');a=p.parse_args();
 if a.host_phase_safe and not a.sequenced:p.error('--host-phase-safe requires --sequenced')
 if a.sequenced:a.produced=True;a.calcap=True;a.rom4=True
 a.work.mkdir(parents=True,exist_ok=True)
@@ -45,7 +45,8 @@ if a.sequenced:
 else:defs_extra=[]
 defs=['OT_PQ_ROM_PORTS' ,'OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2']
 defs+=defs_extra
-if a.host_phase_safe:defs.append("OT_S81_HOST_PHASESAFE")
+if a.host_phase_safe or a.host_boot300:defs.append("OT_S81_HOST_PHASESAFE")
+if a.host_boot300:defs.append("OT_S81_HOST_BOOT300")
 if a.produced:defs+=['OT_PQ_CTL_STATE_PINS','OT_PQ_CTL_INCAP','OT_PQ_AQ_PIN_LAUNCH']  # captured-input ctl leaf; AQ leaves launch from its registered aq_vin
 if a.calcap:defs.append('OT_PQ_CTL_CALCAP')
 if a.rom4:defs.append('DSFD_PQ_ROM4')

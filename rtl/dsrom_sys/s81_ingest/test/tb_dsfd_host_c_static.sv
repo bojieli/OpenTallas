@@ -12,9 +12,17 @@ module tb_dsfd_host_c_static;
     reg ck = 0, ckv = 0, rst = 0, rsv = 0;
     always #0.41667 ck = ~ck;
     always #0.55556 ckv = ~ckv;
+`ifdef OT_S81_HOST_BOOT300
+    reg[1:0]boot_div=0;
+    always @(posedge ck)boot_div<=boot_div+1'b1;
+    wire ck_boot=boot_div[1];
+`endif
     reg [514:0] fc = 0; wire [76:0] tc; wire [35:0] pw; wire [7:0] plen; reg [5:0] sst = 6'd0; reg [3:0] wft = 0;
     wire [291:0] hw; reg [8:0] hc = 0; reg [3:0] lf = 4'b0101;
     dsfd_host_c #(.NS(1), .KVS(1), .ENG(-1), .MUT(MUT)) dut (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_collective(fc),
+`ifdef OT_S81_HOST_BOOT300
+        .ck_boot(ck_boot),
+`endif
         .t_collective(tc), .f_lf(lf),
 `ifdef DSFD_HOST_PQ_BOOT
         .ck_ingest({ck,ck}), .t_pq_pw(),
