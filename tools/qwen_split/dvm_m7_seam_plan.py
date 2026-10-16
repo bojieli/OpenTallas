@@ -77,6 +77,16 @@ def audit(p, origins):
     errors=[]
     if len(p['ports']) != 1170 or len({x['index'] for x in p['ports']}) != 1170:
         errors.append('Missing or duplicate production word bit')
+    expected=[]
+    for inp,out,suffix,n in FIELDS:
+        for bit in range(n):
+            expected.append({k:v+(f'[{bit}]' if n>1 else '') for k,v in
+                             {'leaf_S':inp,'leaf_N':out,'head_N':'cn_'+suffix,'head_S':'cs_'+suffix}.items()})
+    for pin in p['ports']:
+        if pin['index'] >= len(expected) or pin['names'] != expected[pin['index']]:
+            errors.append('Contact name/bit does not match unchanged production seam')
+        if pin['edge_depth_nm'] > DEPTH_NM or pin['edge_depth_nm'] <= 0:
+            errors.append('Contact exceeds bounded edge strip')
     for origin in origins:
         for pin in p['ports']:
             pitch,offset,width=TRACKS[pin['layer']]
