@@ -754,7 +754,7 @@
     },
     {
       "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
-      "sha256": "c14943557d2492e3041e9e9d0864dfa8a226181d1e9efb7b4787032b0ae5c387",
+      "sha256": "c0ba736b4ec8154802a8d278bfb0e0e2add480a643f736ae6d9dc17b7938ae73",
       "top": "qfd_tt_ctlm_b2",
       "ports": {
         "ck_xpf": {
@@ -1019,7 +1019,7 @@
         },
         "uf": {
           "direction": "input",
-          "bits": 4
+          "bits": 8
         },
         "xm": {
           "direction": "output",

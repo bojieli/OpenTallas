@@ -41,7 +41,7 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     input  wire rsi,
     output wire [25:0] sel,
     input  wire [48:0] st,
-    input  wire [3:0] uf,
+    input  wire [7:0] uf,
     output wire [91:0] xm,
     input  wire [56:0] xs,
     input  wire kok,
@@ -158,7 +158,7 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     assign w_pos[17:0] = st[29:12];
     assign w_token[17:0] = st[47:30];
     assign w_h_start = st[48];
-    assign w_up_fault = |uf; // Four real upper leaves; existing downstream fault capture is retained.
+    assign w_up_fault = |uf; // Eight real NL2 upper leaves; existing downstream fault capture is retained.
     wire [91:0] m_xm = {w_me_acc_o[23:0], w_me_idle_o, w_me_prog_o[15:0], w_m_fin_o, w_m_fidx_o[17:0], w_m_fval_o[31:0]};
 `ifdef OT_QFD_TT_CTLM_SLOT_MUT
     assign xm = {m_xm[91:2], m_xm[0], m_xm[1]};
