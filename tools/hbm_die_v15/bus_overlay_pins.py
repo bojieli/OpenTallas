@@ -2,7 +2,7 @@
 """Pin-to-pin bus overlay of the compact660_v5 plan (H-DIE 2026-10-15): every planned link drawn between its two PLANNED
 PIN windows (compact660_v5.pins.json), not block centres; colour = relay stages at the 480-um reach (ceil(d/480)-1),
 width ~ log2(bits).  Also writes the per-class stage table (centre model vs pin model).
-    bus_overlay_pins.py OUT.png OUT.json"""
+    bus_overlay_pins.py OUT.png OUT.json [PLAN_DIR TAG PREFIX]"""
 import json, math, sys
 from collections import defaultdict
 from pathlib import Path
@@ -11,9 +11,11 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 ROOT = Path(__file__).resolve().parents[2]
-D = ROOT / 'results/arch/hbm_die_v15/compact660_v5'
-pins = json.loads((D / 'pins/compact660_v5.pins.json').read_text())
-P = json.loads((D / 'compact.P.json').read_text()); g = json.loads((D / 'compact.graph.json').read_text())
+D = ROOT / (sys.argv[3] if len(sys.argv) > 3 else 'results/arch/hbm_die_v15/compact660_v5')
+TAG = sys.argv[4] if len(sys.argv) > 4 else 'compact660_v5'
+PRE = sys.argv[5] if len(sys.argv) > 5 else 'compact'
+pins = json.loads((D / f'pins/{TAG}.pins.json').read_text())
+P = json.loads((D / f'{PRE}.P.json').read_text()); g = json.loads((D / f'{PRE}.graph.json').read_text())
 W, H = pins['die_outline_um']
 pin = {}
 for b, v in pins['blocks'].items():
@@ -39,7 +41,7 @@ for l in sorted(g['links'], key=lambda l: l['bits']):
             alpha=0.8)
 sm = plt.cm.ScalarMappable(cmap=cm, norm=plt.Normalize(0, 12)); fig.colorbar(sm, ax=ax, label='relay stages (pin to pin, 480 um)')
 ax.set_xlim(0, W); ax.set_ylim(0, H); ax.set_aspect('equal')
-ax.set_title('compact660_v5 buses PIN-TO-PIN (L routes between planned pin windows); width ~ log2 bits', fontsize=9)
+ax.set_title(f'{TAG} buses PIN-TO-PIN (L routes between planned pin windows); width ~ log2 bits', fontsize=9)
 fig.savefig(sys.argv[1], dpi=110, bbox_inches='tight')
 tab = {k: dict(links=v['links'], bits=v['bits'], max_stages_pin=v['max_pin'], mean_stages_pin=round(v['sum_pin'] / v['bits'], 1),
                mean_stages_centre_model=round(v['sum_ctr'] / v['bits'], 1)) for k, v in sorted(agg.items(), key=lambda t: -t[1]['bits'])}
