@@ -127,6 +127,8 @@ def main() -> int:
                     'M4 66 %% on a 30-um face carrying 513 pins): grow the DATA FACE to the pin demand at cut <= 0.6 (N/S: '
                     'M3/M5 alternation 0.12 um a pin; W/E: M4 0.16 um a pin; + 2 x 4.32 um) and spread every face evenly '
                     '(tools/ref_tile/spread_face_pins.py); no M6 PORT-only pins needed (W/E <= 6.25 b/um on M4)')
+    ap.add_argument('--face-depth-util', type=float, default=0.0, help='with --face-cut: re-derive the depth from the flop '
+                    'content at this utilisation on the grown face (0 = keep the depth)')
     a = ap.parse_args()
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -176,6 +178,14 @@ def main() -> int:
                 if need > dw:
                     dw, face_grown = need, True
             grown = grown or face_grown
+            if face_grown and a.face_depth_util:
+                # depth back to what the flop rows need on the longer face (recipe-2 content at util <= --face-depth-util),
+                # never below the generator slot depth: area, not the f5 narrow-face growth, sets it
+                core = (AREA_BIT * wb + AREA_FIX) / a.face_depth_util
+                if horiz_of(mst):
+                    dw = max(snap(mac['w']), snap(core / (dh - 2 * MARGIN) + 2 * MARGIN))
+                else:
+                    dh = max(snap(mac['h']), snap(core / (dw - 2 * MARGIN) + 2 * MARGIN))
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text(txt)
         horiz = mst.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))

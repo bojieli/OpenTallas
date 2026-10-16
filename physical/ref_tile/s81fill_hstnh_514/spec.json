@@ -10,7 +10,7 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 36.72,
+  "w": 17.28,
   "h": 92.88,
   "exact": true
  },
@@ -38,7 +38,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnh_514 (7 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a9c75b7e6ed82d81, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 30.216 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 36.72 x 92.88 (data-pin coordinates unchanged). | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face grown to the pin demand at cut <= 0.6 -> 36.72 x 92.88; pins spread evenly per face (spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die adopts this footprint + pin file (slot_change_request)",
+ "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnh_514 (7 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a9c75b7e6ed82d81, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 30.216 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 17.28 x 92.88 (data-pin coordinates unchanged). | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face grown to the pin demand at cut <= 0.6 -> 17.28 x 92.88; pins spread evenly per face (spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die adopts this footprint + pin file (slot_change_request)",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
@@ -83,7 +83,7 @@
  "slot_change_request": {
   "reason": "f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, 0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)",
   "outline": [
-   36.72,
+   17.28,
    92.88
   ],
   "generator_slot": [
