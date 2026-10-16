@@ -229,6 +229,18 @@ FOLD_RULES = [
 ]
 # parameters that became identity strap pins (H-SM DEDUPE 2026-10-16): one hardened master for every value
 PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
+# H-NETLIST 0600: logical array wrappers whose RTL is "physically N independently hardened leaves" are FLATTENED in the
+# die netlist into their N leaf instances <inst>_b<k> (one hardened leaf master, bit-sliced edges, same clock root bit).
+_VMS = 'rtl/hbm_accel/generic/vm/static/'
+FLATTEN = {
+    'ot_hbm_vm_lg_static_split': dict(leaf='ot_hbm_vm_lg_static_bank', source=_VMS + 'ot_hbm_vm_lg_static_bank.sv', n=8,
+        ports=dict(clk=1, local_rq=17, far_rq=17, local_wq=281, far_wq=281, local_read=1, local_write=1, near_rq=17,
+                   near_wq=281, near_rr=257, near_w_done=1, local_rr=257, far_rr=257, local_w_done=1, far_w_done=1,
+                   bank_fault=('fault', 1)), shared=('rst_n',)),
+    'ot_hbm_vm_lg_static_split_term': dict(leaf='ot_hbm_vm_lg_static_bank_term', source=_VMS + 'ot_hbm_vm_lg_static_bank_term.sv', n=8,
+        ports=dict(clk=1, local_rq=17, local_wq=281, local_read=1, local_write=1, near_rq=17, near_wq=281, near_rr=257,
+                   near_w_done=1, local_rr=257, local_w_done=1, bank_fault=('fault', 1)), shared=('rst_n',)),
+}
 
 
 def universal_calendar_fields():
@@ -338,6 +350,21 @@ def build(specs_dir, out):
         del insts[t]
     specs.append(dict(region='fill_calendar_universal', edges=[], instances=[], gaps=[], straps=[],
                       clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]))
+    flat = {}
+    for n in list(insts):
+        r = FLATTEN.get(insts[n]['master'])
+        if not r:
+            continue
+        i = insts.pop(n)
+        flat[n] = r
+        for k in range(r['n']):
+            insts[f'{n}_b{k}'] = dict(i, master=r['leaf'], source=r['source'], rtl_deps=[],
+                                     note=(i.get('note') or '') + f' | H-NETLIST 0600: leaf {k} of flattened {n} ({i["master"]})')
+    for s_ in specs:
+        for c_ in list(s_.get('clocks', [])):
+            if c_['inst'] in flat:
+                s_['clocks'].remove(c_)
+                s_['clocks'].extend(dict(c_, inst=f"{c_['inst']}_b{k}", port=c_['port']) for k in range(flat[c_['inst']]['n']))
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])
@@ -365,6 +392,40 @@ def build(specs_dir, out):
             e.setdefault('name', f"{s['region']}_{k}")
             e['region'] = s['region']
             edges.append(e)
+    if flat:
+        fe = []
+        def _split(end, lo_hi_other):
+            pass
+        for e in edges:
+            parts = [e]
+            for side in ('src', 'dst'):
+                nxt = []
+                for x in parts:
+                    end = x[side]
+                    if end[0] not in flat:
+                        nxt.append(x); continue
+                    r = flat[end[0]]
+                    if end[1] in r['shared']:
+                        for k in range(r['n']):
+                            nxt.append(dict(x, **{side: [f'{end[0]}_b{k}'] + list(end[1:])}, name=f"{x['name']}__b{k}"))
+                        continue
+                    spec_ = r['ports'][end[1]]
+                    lp, w = (spec_ if isinstance(spec_, tuple) else (end[1], spec_))
+                    lo = end[2] if len(end) > 2 else 0
+                    hi = end[3] if len(end) > 3 else w * r['n']
+                    other = 'dst' if side == 'src' else 'src'
+                    olo = x[other][2] if len(x[other]) > 2 else 0
+                    for k in range(lo // w, (hi - 1) // w + 1):
+                        a, b = max(lo, k * w), min(hi, (k + 1) * w)
+                        ox = list(x[other])
+                        if len(ox) < 4:
+                            ox = ox[:2] + [0, 0]
+                        ox[2], ox[3] = olo + a - lo, olo + b - lo
+                        nxt.append(dict(x, **{side: [f'{end[0]}_b{k}', lp, a - k * w, b - k * w], other: ox},
+                                        name=f"{x['name']}__b{k}"))
+                parts = nxt
+            fe.extend(parts)
+        edges = fe
     if folded:
         inv = {}
         consumers_rule = {}
@@ -437,6 +498,11 @@ def build(specs_dir, out):
     # ---------------- clocks / resets
     ckdom = {}
     for r in v15['clock_roots']:
+        if r['instance'] in flat:
+            dm = {v[0]: k for k, v in DOM.items()}[r['source'][1]]
+            for k in range(flat[r['instance']]['n']):
+                ckdom[(f"{r['instance']}_b{k}", r['port'])] = (dm, 'clock')
+            continue
         if r['instance'] in insts and r['instance'] not in redefined:
             dm = {v[0]: k for k, v in DOM.items()}[r['source'][1]]
             ckdom[(r['instance'], r['port'])] = (dm, 'clock')
@@ -502,6 +568,8 @@ def build(specs_dir, out):
             aff = []
             for a in g.get('affects', []):
                 i, p = a[0], a[1]
+                if i in flat:
+                    continue        # accounting range on a flattened array wrapper (its leaves carry the bits)
                 if i in folded.values() and i in ports and p not in ports[i]:
                     continue        # programme pins internal to a folded calendar+target master (H-NETLIST 0600)
                 if i not in ports or p not in ports[i]:

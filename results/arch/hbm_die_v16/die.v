@@ -121,25 +121,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] calendar_SW__replay_source;
   wire [23:0] calendar_SW__lg_local_read;
   wire [23:0] calendar_SW__lg_local_write;
-  wire [135:0] lg_SW_0__near_rq;
-  wire [2247:0] lg_SW_0__near_wq;
-  wire [2055:0] lg_SW_0__local_rr;
-  wire [2055:0] lg_SW_0__far_rr;
-  wire [7:0] lg_SW_0__local_w_done;
-  wire [7:0] lg_SW_0__far_w_done;
-  wire [7:0] lg_SW_0__bank_fault;
-  wire [135:0] lg_SW_1__near_rq;
-  wire [2247:0] lg_SW_1__near_wq;
-  wire [2055:0] lg_SW_1__local_rr;
-  wire [2055:0] lg_SW_1__far_rr;
-  wire [7:0] lg_SW_1__local_w_done;
-  wire [7:0] lg_SW_1__far_w_done;
-  wire [7:0] lg_SW_1__bank_fault;
-  wire [135:0] lg_SW_2__near_rq;
-  wire [2247:0] lg_SW_2__near_wq;
-  wire [2055:0] lg_SW_2__local_rr;
-  wire [7:0] lg_SW_2__local_w_done;
-  wire [7:0] lg_SW_2__bank_fault;
   wire [0:0] calendar_SE__tgt_configured;
   wire [0:0] calendar_SE__tgt_fault;
   wire [0:0] calendar_SE__calendar_v;
@@ -164,25 +145,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] calendar_SE__replay_source;
   wire [23:0] calendar_SE__lg_local_read;
   wire [23:0] calendar_SE__lg_local_write;
-  wire [135:0] lg_SE_0__near_rq;
-  wire [2247:0] lg_SE_0__near_wq;
-  wire [2055:0] lg_SE_0__local_rr;
-  wire [2055:0] lg_SE_0__far_rr;
-  wire [7:0] lg_SE_0__local_w_done;
-  wire [7:0] lg_SE_0__far_w_done;
-  wire [7:0] lg_SE_0__bank_fault;
-  wire [135:0] lg_SE_1__near_rq;
-  wire [2247:0] lg_SE_1__near_wq;
-  wire [2055:0] lg_SE_1__local_rr;
-  wire [2055:0] lg_SE_1__far_rr;
-  wire [7:0] lg_SE_1__local_w_done;
-  wire [7:0] lg_SE_1__far_w_done;
-  wire [7:0] lg_SE_1__bank_fault;
-  wire [135:0] lg_SE_2__near_rq;
-  wire [2247:0] lg_SE_2__near_wq;
-  wire [2055:0] lg_SE_2__local_rr;
-  wire [7:0] lg_SE_2__local_w_done;
-  wire [7:0] lg_SE_2__bank_fault;
   wire [0:0] calendar_NW__tgt_configured;
   wire [0:0] calendar_NW__tgt_fault;
   wire [0:0] calendar_NW__calendar_v;
@@ -207,25 +169,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] calendar_NW__replay_source;
   wire [23:0] calendar_NW__lg_local_read;
   wire [23:0] calendar_NW__lg_local_write;
-  wire [135:0] lg_NW_0__near_rq;
-  wire [2247:0] lg_NW_0__near_wq;
-  wire [2055:0] lg_NW_0__local_rr;
-  wire [2055:0] lg_NW_0__far_rr;
-  wire [7:0] lg_NW_0__local_w_done;
-  wire [7:0] lg_NW_0__far_w_done;
-  wire [7:0] lg_NW_0__bank_fault;
-  wire [135:0] lg_NW_1__near_rq;
-  wire [2247:0] lg_NW_1__near_wq;
-  wire [2055:0] lg_NW_1__local_rr;
-  wire [2055:0] lg_NW_1__far_rr;
-  wire [7:0] lg_NW_1__local_w_done;
-  wire [7:0] lg_NW_1__far_w_done;
-  wire [7:0] lg_NW_1__bank_fault;
-  wire [135:0] lg_NW_2__near_rq;
-  wire [2247:0] lg_NW_2__near_wq;
-  wire [2055:0] lg_NW_2__local_rr;
-  wire [7:0] lg_NW_2__local_w_done;
-  wire [7:0] lg_NW_2__bank_fault;
   wire [0:0] calendar_NE__tgt_configured;
   wire [0:0] calendar_NE__tgt_fault;
   wire [0:0] calendar_NE__calendar_v;
@@ -250,25 +193,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] calendar_NE__replay_source;
   wire [23:0] calendar_NE__lg_local_read;
   wire [23:0] calendar_NE__lg_local_write;
-  wire [135:0] lg_NE_0__near_rq;
-  wire [2247:0] lg_NE_0__near_wq;
-  wire [2055:0] lg_NE_0__local_rr;
-  wire [2055:0] lg_NE_0__far_rr;
-  wire [7:0] lg_NE_0__local_w_done;
-  wire [7:0] lg_NE_0__far_w_done;
-  wire [7:0] lg_NE_0__bank_fault;
-  wire [135:0] lg_NE_1__near_rq;
-  wire [2247:0] lg_NE_1__near_wq;
-  wire [2055:0] lg_NE_1__local_rr;
-  wire [2055:0] lg_NE_1__far_rr;
-  wire [7:0] lg_NE_1__local_w_done;
-  wire [7:0] lg_NE_1__far_w_done;
-  wire [7:0] lg_NE_1__bank_fault;
-  wire [135:0] lg_NE_2__near_rq;
-  wire [2247:0] lg_NE_2__near_wq;
-  wire [2055:0] lg_NE_2__local_rr;
-  wire [7:0] lg_NE_2__local_w_done;
-  wire [7:0] lg_NE_2__bank_fault;
   wire [18:0] vm_status4__vmstat;
   wire [0:0] hb_coll_SW__program_configured;
   wire [0:0] hb_coll_SW__program_init_busy;
@@ -7306,6 +7230,614 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] vmdel_NE7__busy;
   wire [0:0] vmdel_NE7__fault;
   wire [280:0] vmdel_NE7__dq;
+  wire [16:0] lg_SW_0_b0__near_rq;
+  wire [280:0] lg_SW_0_b0__near_wq;
+  wire [256:0] lg_SW_0_b0__local_rr;
+  wire [256:0] lg_SW_0_b0__far_rr;
+  wire [0:0] lg_SW_0_b0__local_w_done;
+  wire [0:0] lg_SW_0_b0__far_w_done;
+  wire [0:0] lg_SW_0_b0__fault;
+  wire [16:0] lg_SW_0_b1__near_rq;
+  wire [280:0] lg_SW_0_b1__near_wq;
+  wire [256:0] lg_SW_0_b1__local_rr;
+  wire [256:0] lg_SW_0_b1__far_rr;
+  wire [0:0] lg_SW_0_b1__local_w_done;
+  wire [0:0] lg_SW_0_b1__far_w_done;
+  wire [0:0] lg_SW_0_b1__fault;
+  wire [16:0] lg_SW_0_b2__near_rq;
+  wire [280:0] lg_SW_0_b2__near_wq;
+  wire [256:0] lg_SW_0_b2__local_rr;
+  wire [256:0] lg_SW_0_b2__far_rr;
+  wire [0:0] lg_SW_0_b2__local_w_done;
+  wire [0:0] lg_SW_0_b2__far_w_done;
+  wire [0:0] lg_SW_0_b2__fault;
+  wire [16:0] lg_SW_0_b3__near_rq;
+  wire [280:0] lg_SW_0_b3__near_wq;
+  wire [256:0] lg_SW_0_b3__local_rr;
+  wire [256:0] lg_SW_0_b3__far_rr;
+  wire [0:0] lg_SW_0_b3__local_w_done;
+  wire [0:0] lg_SW_0_b3__far_w_done;
+  wire [0:0] lg_SW_0_b3__fault;
+  wire [16:0] lg_SW_0_b4__near_rq;
+  wire [280:0] lg_SW_0_b4__near_wq;
+  wire [256:0] lg_SW_0_b4__local_rr;
+  wire [256:0] lg_SW_0_b4__far_rr;
+  wire [0:0] lg_SW_0_b4__local_w_done;
+  wire [0:0] lg_SW_0_b4__far_w_done;
+  wire [0:0] lg_SW_0_b4__fault;
+  wire [16:0] lg_SW_0_b5__near_rq;
+  wire [280:0] lg_SW_0_b5__near_wq;
+  wire [256:0] lg_SW_0_b5__local_rr;
+  wire [256:0] lg_SW_0_b5__far_rr;
+  wire [0:0] lg_SW_0_b5__local_w_done;
+  wire [0:0] lg_SW_0_b5__far_w_done;
+  wire [0:0] lg_SW_0_b5__fault;
+  wire [16:0] lg_SW_0_b6__near_rq;
+  wire [280:0] lg_SW_0_b6__near_wq;
+  wire [256:0] lg_SW_0_b6__local_rr;
+  wire [256:0] lg_SW_0_b6__far_rr;
+  wire [0:0] lg_SW_0_b6__local_w_done;
+  wire [0:0] lg_SW_0_b6__far_w_done;
+  wire [0:0] lg_SW_0_b6__fault;
+  wire [16:0] lg_SW_0_b7__near_rq;
+  wire [280:0] lg_SW_0_b7__near_wq;
+  wire [256:0] lg_SW_0_b7__local_rr;
+  wire [256:0] lg_SW_0_b7__far_rr;
+  wire [0:0] lg_SW_0_b7__local_w_done;
+  wire [0:0] lg_SW_0_b7__far_w_done;
+  wire [0:0] lg_SW_0_b7__fault;
+  wire [16:0] lg_SW_1_b0__near_rq;
+  wire [280:0] lg_SW_1_b0__near_wq;
+  wire [256:0] lg_SW_1_b0__local_rr;
+  wire [256:0] lg_SW_1_b0__far_rr;
+  wire [0:0] lg_SW_1_b0__local_w_done;
+  wire [0:0] lg_SW_1_b0__far_w_done;
+  wire [0:0] lg_SW_1_b0__fault;
+  wire [16:0] lg_SW_1_b1__near_rq;
+  wire [280:0] lg_SW_1_b1__near_wq;
+  wire [256:0] lg_SW_1_b1__local_rr;
+  wire [256:0] lg_SW_1_b1__far_rr;
+  wire [0:0] lg_SW_1_b1__local_w_done;
+  wire [0:0] lg_SW_1_b1__far_w_done;
+  wire [0:0] lg_SW_1_b1__fault;
+  wire [16:0] lg_SW_1_b2__near_rq;
+  wire [280:0] lg_SW_1_b2__near_wq;
+  wire [256:0] lg_SW_1_b2__local_rr;
+  wire [256:0] lg_SW_1_b2__far_rr;
+  wire [0:0] lg_SW_1_b2__local_w_done;
+  wire [0:0] lg_SW_1_b2__far_w_done;
+  wire [0:0] lg_SW_1_b2__fault;
+  wire [16:0] lg_SW_1_b3__near_rq;
+  wire [280:0] lg_SW_1_b3__near_wq;
+  wire [256:0] lg_SW_1_b3__local_rr;
+  wire [256:0] lg_SW_1_b3__far_rr;
+  wire [0:0] lg_SW_1_b3__local_w_done;
+  wire [0:0] lg_SW_1_b3__far_w_done;
+  wire [0:0] lg_SW_1_b3__fault;
+  wire [16:0] lg_SW_1_b4__near_rq;
+  wire [280:0] lg_SW_1_b4__near_wq;
+  wire [256:0] lg_SW_1_b4__local_rr;
+  wire [256:0] lg_SW_1_b4__far_rr;
+  wire [0:0] lg_SW_1_b4__local_w_done;
+  wire [0:0] lg_SW_1_b4__far_w_done;
+  wire [0:0] lg_SW_1_b4__fault;
+  wire [16:0] lg_SW_1_b5__near_rq;
+  wire [280:0] lg_SW_1_b5__near_wq;
+  wire [256:0] lg_SW_1_b5__local_rr;
+  wire [256:0] lg_SW_1_b5__far_rr;
+  wire [0:0] lg_SW_1_b5__local_w_done;
+  wire [0:0] lg_SW_1_b5__far_w_done;
+  wire [0:0] lg_SW_1_b5__fault;
+  wire [16:0] lg_SW_1_b6__near_rq;
+  wire [280:0] lg_SW_1_b6__near_wq;
+  wire [256:0] lg_SW_1_b6__local_rr;
+  wire [256:0] lg_SW_1_b6__far_rr;
+  wire [0:0] lg_SW_1_b6__local_w_done;
+  wire [0:0] lg_SW_1_b6__far_w_done;
+  wire [0:0] lg_SW_1_b6__fault;
+  wire [16:0] lg_SW_1_b7__near_rq;
+  wire [280:0] lg_SW_1_b7__near_wq;
+  wire [256:0] lg_SW_1_b7__local_rr;
+  wire [256:0] lg_SW_1_b7__far_rr;
+  wire [0:0] lg_SW_1_b7__local_w_done;
+  wire [0:0] lg_SW_1_b7__far_w_done;
+  wire [0:0] lg_SW_1_b7__fault;
+  wire [16:0] lg_SW_2_b0__near_rq;
+  wire [280:0] lg_SW_2_b0__near_wq;
+  wire [256:0] lg_SW_2_b0__local_rr;
+  wire [0:0] lg_SW_2_b0__local_w_done;
+  wire [0:0] lg_SW_2_b0__fault;
+  wire [16:0] lg_SW_2_b1__near_rq;
+  wire [280:0] lg_SW_2_b1__near_wq;
+  wire [256:0] lg_SW_2_b1__local_rr;
+  wire [0:0] lg_SW_2_b1__local_w_done;
+  wire [0:0] lg_SW_2_b1__fault;
+  wire [16:0] lg_SW_2_b2__near_rq;
+  wire [280:0] lg_SW_2_b2__near_wq;
+  wire [256:0] lg_SW_2_b2__local_rr;
+  wire [0:0] lg_SW_2_b2__local_w_done;
+  wire [0:0] lg_SW_2_b2__fault;
+  wire [16:0] lg_SW_2_b3__near_rq;
+  wire [280:0] lg_SW_2_b3__near_wq;
+  wire [256:0] lg_SW_2_b3__local_rr;
+  wire [0:0] lg_SW_2_b3__local_w_done;
+  wire [0:0] lg_SW_2_b3__fault;
+  wire [16:0] lg_SW_2_b4__near_rq;
+  wire [280:0] lg_SW_2_b4__near_wq;
+  wire [256:0] lg_SW_2_b4__local_rr;
+  wire [0:0] lg_SW_2_b4__local_w_done;
+  wire [0:0] lg_SW_2_b4__fault;
+  wire [16:0] lg_SW_2_b5__near_rq;
+  wire [280:0] lg_SW_2_b5__near_wq;
+  wire [256:0] lg_SW_2_b5__local_rr;
+  wire [0:0] lg_SW_2_b5__local_w_done;
+  wire [0:0] lg_SW_2_b5__fault;
+  wire [16:0] lg_SW_2_b6__near_rq;
+  wire [280:0] lg_SW_2_b6__near_wq;
+  wire [256:0] lg_SW_2_b6__local_rr;
+  wire [0:0] lg_SW_2_b6__local_w_done;
+  wire [0:0] lg_SW_2_b6__fault;
+  wire [16:0] lg_SW_2_b7__near_rq;
+  wire [280:0] lg_SW_2_b7__near_wq;
+  wire [256:0] lg_SW_2_b7__local_rr;
+  wire [0:0] lg_SW_2_b7__local_w_done;
+  wire [0:0] lg_SW_2_b7__fault;
+  wire [16:0] lg_SE_0_b0__near_rq;
+  wire [280:0] lg_SE_0_b0__near_wq;
+  wire [256:0] lg_SE_0_b0__local_rr;
+  wire [256:0] lg_SE_0_b0__far_rr;
+  wire [0:0] lg_SE_0_b0__local_w_done;
+  wire [0:0] lg_SE_0_b0__far_w_done;
+  wire [0:0] lg_SE_0_b0__fault;
+  wire [16:0] lg_SE_0_b1__near_rq;
+  wire [280:0] lg_SE_0_b1__near_wq;
+  wire [256:0] lg_SE_0_b1__local_rr;
+  wire [256:0] lg_SE_0_b1__far_rr;
+  wire [0:0] lg_SE_0_b1__local_w_done;
+  wire [0:0] lg_SE_0_b1__far_w_done;
+  wire [0:0] lg_SE_0_b1__fault;
+  wire [16:0] lg_SE_0_b2__near_rq;
+  wire [280:0] lg_SE_0_b2__near_wq;
+  wire [256:0] lg_SE_0_b2__local_rr;
+  wire [256:0] lg_SE_0_b2__far_rr;
+  wire [0:0] lg_SE_0_b2__local_w_done;
+  wire [0:0] lg_SE_0_b2__far_w_done;
+  wire [0:0] lg_SE_0_b2__fault;
+  wire [16:0] lg_SE_0_b3__near_rq;
+  wire [280:0] lg_SE_0_b3__near_wq;
+  wire [256:0] lg_SE_0_b3__local_rr;
+  wire [256:0] lg_SE_0_b3__far_rr;
+  wire [0:0] lg_SE_0_b3__local_w_done;
+  wire [0:0] lg_SE_0_b3__far_w_done;
+  wire [0:0] lg_SE_0_b3__fault;
+  wire [16:0] lg_SE_0_b4__near_rq;
+  wire [280:0] lg_SE_0_b4__near_wq;
+  wire [256:0] lg_SE_0_b4__local_rr;
+  wire [256:0] lg_SE_0_b4__far_rr;
+  wire [0:0] lg_SE_0_b4__local_w_done;
+  wire [0:0] lg_SE_0_b4__far_w_done;
+  wire [0:0] lg_SE_0_b4__fault;
+  wire [16:0] lg_SE_0_b5__near_rq;
+  wire [280:0] lg_SE_0_b5__near_wq;
+  wire [256:0] lg_SE_0_b5__local_rr;
+  wire [256:0] lg_SE_0_b5__far_rr;
+  wire [0:0] lg_SE_0_b5__local_w_done;
+  wire [0:0] lg_SE_0_b5__far_w_done;
+  wire [0:0] lg_SE_0_b5__fault;
+  wire [16:0] lg_SE_0_b6__near_rq;
+  wire [280:0] lg_SE_0_b6__near_wq;
+  wire [256:0] lg_SE_0_b6__local_rr;
+  wire [256:0] lg_SE_0_b6__far_rr;
+  wire [0:0] lg_SE_0_b6__local_w_done;
+  wire [0:0] lg_SE_0_b6__far_w_done;
+  wire [0:0] lg_SE_0_b6__fault;
+  wire [16:0] lg_SE_0_b7__near_rq;
+  wire [280:0] lg_SE_0_b7__near_wq;
+  wire [256:0] lg_SE_0_b7__local_rr;
+  wire [256:0] lg_SE_0_b7__far_rr;
+  wire [0:0] lg_SE_0_b7__local_w_done;
+  wire [0:0] lg_SE_0_b7__far_w_done;
+  wire [0:0] lg_SE_0_b7__fault;
+  wire [16:0] lg_SE_1_b0__near_rq;
+  wire [280:0] lg_SE_1_b0__near_wq;
+  wire [256:0] lg_SE_1_b0__local_rr;
+  wire [256:0] lg_SE_1_b0__far_rr;
+  wire [0:0] lg_SE_1_b0__local_w_done;
+  wire [0:0] lg_SE_1_b0__far_w_done;
+  wire [0:0] lg_SE_1_b0__fault;
+  wire [16:0] lg_SE_1_b1__near_rq;
+  wire [280:0] lg_SE_1_b1__near_wq;
+  wire [256:0] lg_SE_1_b1__local_rr;
+  wire [256:0] lg_SE_1_b1__far_rr;
+  wire [0:0] lg_SE_1_b1__local_w_done;
+  wire [0:0] lg_SE_1_b1__far_w_done;
+  wire [0:0] lg_SE_1_b1__fault;
+  wire [16:0] lg_SE_1_b2__near_rq;
+  wire [280:0] lg_SE_1_b2__near_wq;
+  wire [256:0] lg_SE_1_b2__local_rr;
+  wire [256:0] lg_SE_1_b2__far_rr;
+  wire [0:0] lg_SE_1_b2__local_w_done;
+  wire [0:0] lg_SE_1_b2__far_w_done;
+  wire [0:0] lg_SE_1_b2__fault;
+  wire [16:0] lg_SE_1_b3__near_rq;
+  wire [280:0] lg_SE_1_b3__near_wq;
+  wire [256:0] lg_SE_1_b3__local_rr;
+  wire [256:0] lg_SE_1_b3__far_rr;
+  wire [0:0] lg_SE_1_b3__local_w_done;
+  wire [0:0] lg_SE_1_b3__far_w_done;
+  wire [0:0] lg_SE_1_b3__fault;
+  wire [16:0] lg_SE_1_b4__near_rq;
+  wire [280:0] lg_SE_1_b4__near_wq;
+  wire [256:0] lg_SE_1_b4__local_rr;
+  wire [256:0] lg_SE_1_b4__far_rr;
+  wire [0:0] lg_SE_1_b4__local_w_done;
+  wire [0:0] lg_SE_1_b4__far_w_done;
+  wire [0:0] lg_SE_1_b4__fault;
+  wire [16:0] lg_SE_1_b5__near_rq;
+  wire [280:0] lg_SE_1_b5__near_wq;
+  wire [256:0] lg_SE_1_b5__local_rr;
+  wire [256:0] lg_SE_1_b5__far_rr;
+  wire [0:0] lg_SE_1_b5__local_w_done;
+  wire [0:0] lg_SE_1_b5__far_w_done;
+  wire [0:0] lg_SE_1_b5__fault;
+  wire [16:0] lg_SE_1_b6__near_rq;
+  wire [280:0] lg_SE_1_b6__near_wq;
+  wire [256:0] lg_SE_1_b6__local_rr;
+  wire [256:0] lg_SE_1_b6__far_rr;
+  wire [0:0] lg_SE_1_b6__local_w_done;
+  wire [0:0] lg_SE_1_b6__far_w_done;
+  wire [0:0] lg_SE_1_b6__fault;
+  wire [16:0] lg_SE_1_b7__near_rq;
+  wire [280:0] lg_SE_1_b7__near_wq;
+  wire [256:0] lg_SE_1_b7__local_rr;
+  wire [256:0] lg_SE_1_b7__far_rr;
+  wire [0:0] lg_SE_1_b7__local_w_done;
+  wire [0:0] lg_SE_1_b7__far_w_done;
+  wire [0:0] lg_SE_1_b7__fault;
+  wire [16:0] lg_SE_2_b0__near_rq;
+  wire [280:0] lg_SE_2_b0__near_wq;
+  wire [256:0] lg_SE_2_b0__local_rr;
+  wire [0:0] lg_SE_2_b0__local_w_done;
+  wire [0:0] lg_SE_2_b0__fault;
+  wire [16:0] lg_SE_2_b1__near_rq;
+  wire [280:0] lg_SE_2_b1__near_wq;
+  wire [256:0] lg_SE_2_b1__local_rr;
+  wire [0:0] lg_SE_2_b1__local_w_done;
+  wire [0:0] lg_SE_2_b1__fault;
+  wire [16:0] lg_SE_2_b2__near_rq;
+  wire [280:0] lg_SE_2_b2__near_wq;
+  wire [256:0] lg_SE_2_b2__local_rr;
+  wire [0:0] lg_SE_2_b2__local_w_done;
+  wire [0:0] lg_SE_2_b2__fault;
+  wire [16:0] lg_SE_2_b3__near_rq;
+  wire [280:0] lg_SE_2_b3__near_wq;
+  wire [256:0] lg_SE_2_b3__local_rr;
+  wire [0:0] lg_SE_2_b3__local_w_done;
+  wire [0:0] lg_SE_2_b3__fault;
+  wire [16:0] lg_SE_2_b4__near_rq;
+  wire [280:0] lg_SE_2_b4__near_wq;
+  wire [256:0] lg_SE_2_b4__local_rr;
+  wire [0:0] lg_SE_2_b4__local_w_done;
+  wire [0:0] lg_SE_2_b4__fault;
+  wire [16:0] lg_SE_2_b5__near_rq;
+  wire [280:0] lg_SE_2_b5__near_wq;
+  wire [256:0] lg_SE_2_b5__local_rr;
+  wire [0:0] lg_SE_2_b5__local_w_done;
+  wire [0:0] lg_SE_2_b5__fault;
+  wire [16:0] lg_SE_2_b6__near_rq;
+  wire [280:0] lg_SE_2_b6__near_wq;
+  wire [256:0] lg_SE_2_b6__local_rr;
+  wire [0:0] lg_SE_2_b6__local_w_done;
+  wire [0:0] lg_SE_2_b6__fault;
+  wire [16:0] lg_SE_2_b7__near_rq;
+  wire [280:0] lg_SE_2_b7__near_wq;
+  wire [256:0] lg_SE_2_b7__local_rr;
+  wire [0:0] lg_SE_2_b7__local_w_done;
+  wire [0:0] lg_SE_2_b7__fault;
+  wire [16:0] lg_NW_0_b0__near_rq;
+  wire [280:0] lg_NW_0_b0__near_wq;
+  wire [256:0] lg_NW_0_b0__local_rr;
+  wire [256:0] lg_NW_0_b0__far_rr;
+  wire [0:0] lg_NW_0_b0__local_w_done;
+  wire [0:0] lg_NW_0_b0__far_w_done;
+  wire [0:0] lg_NW_0_b0__fault;
+  wire [16:0] lg_NW_0_b1__near_rq;
+  wire [280:0] lg_NW_0_b1__near_wq;
+  wire [256:0] lg_NW_0_b1__local_rr;
+  wire [256:0] lg_NW_0_b1__far_rr;
+  wire [0:0] lg_NW_0_b1__local_w_done;
+  wire [0:0] lg_NW_0_b1__far_w_done;
+  wire [0:0] lg_NW_0_b1__fault;
+  wire [16:0] lg_NW_0_b2__near_rq;
+  wire [280:0] lg_NW_0_b2__near_wq;
+  wire [256:0] lg_NW_0_b2__local_rr;
+  wire [256:0] lg_NW_0_b2__far_rr;
+  wire [0:0] lg_NW_0_b2__local_w_done;
+  wire [0:0] lg_NW_0_b2__far_w_done;
+  wire [0:0] lg_NW_0_b2__fault;
+  wire [16:0] lg_NW_0_b3__near_rq;
+  wire [280:0] lg_NW_0_b3__near_wq;
+  wire [256:0] lg_NW_0_b3__local_rr;
+  wire [256:0] lg_NW_0_b3__far_rr;
+  wire [0:0] lg_NW_0_b3__local_w_done;
+  wire [0:0] lg_NW_0_b3__far_w_done;
+  wire [0:0] lg_NW_0_b3__fault;
+  wire [16:0] lg_NW_0_b4__near_rq;
+  wire [280:0] lg_NW_0_b4__near_wq;
+  wire [256:0] lg_NW_0_b4__local_rr;
+  wire [256:0] lg_NW_0_b4__far_rr;
+  wire [0:0] lg_NW_0_b4__local_w_done;
+  wire [0:0] lg_NW_0_b4__far_w_done;
+  wire [0:0] lg_NW_0_b4__fault;
+  wire [16:0] lg_NW_0_b5__near_rq;
+  wire [280:0] lg_NW_0_b5__near_wq;
+  wire [256:0] lg_NW_0_b5__local_rr;
+  wire [256:0] lg_NW_0_b5__far_rr;
+  wire [0:0] lg_NW_0_b5__local_w_done;
+  wire [0:0] lg_NW_0_b5__far_w_done;
+  wire [0:0] lg_NW_0_b5__fault;
+  wire [16:0] lg_NW_0_b6__near_rq;
+  wire [280:0] lg_NW_0_b6__near_wq;
+  wire [256:0] lg_NW_0_b6__local_rr;
+  wire [256:0] lg_NW_0_b6__far_rr;
+  wire [0:0] lg_NW_0_b6__local_w_done;
+  wire [0:0] lg_NW_0_b6__far_w_done;
+  wire [0:0] lg_NW_0_b6__fault;
+  wire [16:0] lg_NW_0_b7__near_rq;
+  wire [280:0] lg_NW_0_b7__near_wq;
+  wire [256:0] lg_NW_0_b7__local_rr;
+  wire [256:0] lg_NW_0_b7__far_rr;
+  wire [0:0] lg_NW_0_b7__local_w_done;
+  wire [0:0] lg_NW_0_b7__far_w_done;
+  wire [0:0] lg_NW_0_b7__fault;
+  wire [16:0] lg_NW_1_b0__near_rq;
+  wire [280:0] lg_NW_1_b0__near_wq;
+  wire [256:0] lg_NW_1_b0__local_rr;
+  wire [256:0] lg_NW_1_b0__far_rr;
+  wire [0:0] lg_NW_1_b0__local_w_done;
+  wire [0:0] lg_NW_1_b0__far_w_done;
+  wire [0:0] lg_NW_1_b0__fault;
+  wire [16:0] lg_NW_1_b1__near_rq;
+  wire [280:0] lg_NW_1_b1__near_wq;
+  wire [256:0] lg_NW_1_b1__local_rr;
+  wire [256:0] lg_NW_1_b1__far_rr;
+  wire [0:0] lg_NW_1_b1__local_w_done;
+  wire [0:0] lg_NW_1_b1__far_w_done;
+  wire [0:0] lg_NW_1_b1__fault;
+  wire [16:0] lg_NW_1_b2__near_rq;
+  wire [280:0] lg_NW_1_b2__near_wq;
+  wire [256:0] lg_NW_1_b2__local_rr;
+  wire [256:0] lg_NW_1_b2__far_rr;
+  wire [0:0] lg_NW_1_b2__local_w_done;
+  wire [0:0] lg_NW_1_b2__far_w_done;
+  wire [0:0] lg_NW_1_b2__fault;
+  wire [16:0] lg_NW_1_b3__near_rq;
+  wire [280:0] lg_NW_1_b3__near_wq;
+  wire [256:0] lg_NW_1_b3__local_rr;
+  wire [256:0] lg_NW_1_b3__far_rr;
+  wire [0:0] lg_NW_1_b3__local_w_done;
+  wire [0:0] lg_NW_1_b3__far_w_done;
+  wire [0:0] lg_NW_1_b3__fault;
+  wire [16:0] lg_NW_1_b4__near_rq;
+  wire [280:0] lg_NW_1_b4__near_wq;
+  wire [256:0] lg_NW_1_b4__local_rr;
+  wire [256:0] lg_NW_1_b4__far_rr;
+  wire [0:0] lg_NW_1_b4__local_w_done;
+  wire [0:0] lg_NW_1_b4__far_w_done;
+  wire [0:0] lg_NW_1_b4__fault;
+  wire [16:0] lg_NW_1_b5__near_rq;
+  wire [280:0] lg_NW_1_b5__near_wq;
+  wire [256:0] lg_NW_1_b5__local_rr;
+  wire [256:0] lg_NW_1_b5__far_rr;
+  wire [0:0] lg_NW_1_b5__local_w_done;
+  wire [0:0] lg_NW_1_b5__far_w_done;
+  wire [0:0] lg_NW_1_b5__fault;
+  wire [16:0] lg_NW_1_b6__near_rq;
+  wire [280:0] lg_NW_1_b6__near_wq;
+  wire [256:0] lg_NW_1_b6__local_rr;
+  wire [256:0] lg_NW_1_b6__far_rr;
+  wire [0:0] lg_NW_1_b6__local_w_done;
+  wire [0:0] lg_NW_1_b6__far_w_done;
+  wire [0:0] lg_NW_1_b6__fault;
+  wire [16:0] lg_NW_1_b7__near_rq;
+  wire [280:0] lg_NW_1_b7__near_wq;
+  wire [256:0] lg_NW_1_b7__local_rr;
+  wire [256:0] lg_NW_1_b7__far_rr;
+  wire [0:0] lg_NW_1_b7__local_w_done;
+  wire [0:0] lg_NW_1_b7__far_w_done;
+  wire [0:0] lg_NW_1_b7__fault;
+  wire [16:0] lg_NW_2_b0__near_rq;
+  wire [280:0] lg_NW_2_b0__near_wq;
+  wire [256:0] lg_NW_2_b0__local_rr;
+  wire [0:0] lg_NW_2_b0__local_w_done;
+  wire [0:0] lg_NW_2_b0__fault;
+  wire [16:0] lg_NW_2_b1__near_rq;
+  wire [280:0] lg_NW_2_b1__near_wq;
+  wire [256:0] lg_NW_2_b1__local_rr;
+  wire [0:0] lg_NW_2_b1__local_w_done;
+  wire [0:0] lg_NW_2_b1__fault;
+  wire [16:0] lg_NW_2_b2__near_rq;
+  wire [280:0] lg_NW_2_b2__near_wq;
+  wire [256:0] lg_NW_2_b2__local_rr;
+  wire [0:0] lg_NW_2_b2__local_w_done;
+  wire [0:0] lg_NW_2_b2__fault;
+  wire [16:0] lg_NW_2_b3__near_rq;
+  wire [280:0] lg_NW_2_b3__near_wq;
+  wire [256:0] lg_NW_2_b3__local_rr;
+  wire [0:0] lg_NW_2_b3__local_w_done;
+  wire [0:0] lg_NW_2_b3__fault;
+  wire [16:0] lg_NW_2_b4__near_rq;
+  wire [280:0] lg_NW_2_b4__near_wq;
+  wire [256:0] lg_NW_2_b4__local_rr;
+  wire [0:0] lg_NW_2_b4__local_w_done;
+  wire [0:0] lg_NW_2_b4__fault;
+  wire [16:0] lg_NW_2_b5__near_rq;
+  wire [280:0] lg_NW_2_b5__near_wq;
+  wire [256:0] lg_NW_2_b5__local_rr;
+  wire [0:0] lg_NW_2_b5__local_w_done;
+  wire [0:0] lg_NW_2_b5__fault;
+  wire [16:0] lg_NW_2_b6__near_rq;
+  wire [280:0] lg_NW_2_b6__near_wq;
+  wire [256:0] lg_NW_2_b6__local_rr;
+  wire [0:0] lg_NW_2_b6__local_w_done;
+  wire [0:0] lg_NW_2_b6__fault;
+  wire [16:0] lg_NW_2_b7__near_rq;
+  wire [280:0] lg_NW_2_b7__near_wq;
+  wire [256:0] lg_NW_2_b7__local_rr;
+  wire [0:0] lg_NW_2_b7__local_w_done;
+  wire [0:0] lg_NW_2_b7__fault;
+  wire [16:0] lg_NE_0_b0__near_rq;
+  wire [280:0] lg_NE_0_b0__near_wq;
+  wire [256:0] lg_NE_0_b0__local_rr;
+  wire [256:0] lg_NE_0_b0__far_rr;
+  wire [0:0] lg_NE_0_b0__local_w_done;
+  wire [0:0] lg_NE_0_b0__far_w_done;
+  wire [0:0] lg_NE_0_b0__fault;
+  wire [16:0] lg_NE_0_b1__near_rq;
+  wire [280:0] lg_NE_0_b1__near_wq;
+  wire [256:0] lg_NE_0_b1__local_rr;
+  wire [256:0] lg_NE_0_b1__far_rr;
+  wire [0:0] lg_NE_0_b1__local_w_done;
+  wire [0:0] lg_NE_0_b1__far_w_done;
+  wire [0:0] lg_NE_0_b1__fault;
+  wire [16:0] lg_NE_0_b2__near_rq;
+  wire [280:0] lg_NE_0_b2__near_wq;
+  wire [256:0] lg_NE_0_b2__local_rr;
+  wire [256:0] lg_NE_0_b2__far_rr;
+  wire [0:0] lg_NE_0_b2__local_w_done;
+  wire [0:0] lg_NE_0_b2__far_w_done;
+  wire [0:0] lg_NE_0_b2__fault;
+  wire [16:0] lg_NE_0_b3__near_rq;
+  wire [280:0] lg_NE_0_b3__near_wq;
+  wire [256:0] lg_NE_0_b3__local_rr;
+  wire [256:0] lg_NE_0_b3__far_rr;
+  wire [0:0] lg_NE_0_b3__local_w_done;
+  wire [0:0] lg_NE_0_b3__far_w_done;
+  wire [0:0] lg_NE_0_b3__fault;
+  wire [16:0] lg_NE_0_b4__near_rq;
+  wire [280:0] lg_NE_0_b4__near_wq;
+  wire [256:0] lg_NE_0_b4__local_rr;
+  wire [256:0] lg_NE_0_b4__far_rr;
+  wire [0:0] lg_NE_0_b4__local_w_done;
+  wire [0:0] lg_NE_0_b4__far_w_done;
+  wire [0:0] lg_NE_0_b4__fault;
+  wire [16:0] lg_NE_0_b5__near_rq;
+  wire [280:0] lg_NE_0_b5__near_wq;
+  wire [256:0] lg_NE_0_b5__local_rr;
+  wire [256:0] lg_NE_0_b5__far_rr;
+  wire [0:0] lg_NE_0_b5__local_w_done;
+  wire [0:0] lg_NE_0_b5__far_w_done;
+  wire [0:0] lg_NE_0_b5__fault;
+  wire [16:0] lg_NE_0_b6__near_rq;
+  wire [280:0] lg_NE_0_b6__near_wq;
+  wire [256:0] lg_NE_0_b6__local_rr;
+  wire [256:0] lg_NE_0_b6__far_rr;
+  wire [0:0] lg_NE_0_b6__local_w_done;
+  wire [0:0] lg_NE_0_b6__far_w_done;
+  wire [0:0] lg_NE_0_b6__fault;
+  wire [16:0] lg_NE_0_b7__near_rq;
+  wire [280:0] lg_NE_0_b7__near_wq;
+  wire [256:0] lg_NE_0_b7__local_rr;
+  wire [256:0] lg_NE_0_b7__far_rr;
+  wire [0:0] lg_NE_0_b7__local_w_done;
+  wire [0:0] lg_NE_0_b7__far_w_done;
+  wire [0:0] lg_NE_0_b7__fault;
+  wire [16:0] lg_NE_1_b0__near_rq;
+  wire [280:0] lg_NE_1_b0__near_wq;
+  wire [256:0] lg_NE_1_b0__local_rr;
+  wire [256:0] lg_NE_1_b0__far_rr;
+  wire [0:0] lg_NE_1_b0__local_w_done;
+  wire [0:0] lg_NE_1_b0__far_w_done;
+  wire [0:0] lg_NE_1_b0__fault;
+  wire [16:0] lg_NE_1_b1__near_rq;
+  wire [280:0] lg_NE_1_b1__near_wq;
+  wire [256:0] lg_NE_1_b1__local_rr;
+  wire [256:0] lg_NE_1_b1__far_rr;
+  wire [0:0] lg_NE_1_b1__local_w_done;
+  wire [0:0] lg_NE_1_b1__far_w_done;
+  wire [0:0] lg_NE_1_b1__fault;
+  wire [16:0] lg_NE_1_b2__near_rq;
+  wire [280:0] lg_NE_1_b2__near_wq;
+  wire [256:0] lg_NE_1_b2__local_rr;
+  wire [256:0] lg_NE_1_b2__far_rr;
+  wire [0:0] lg_NE_1_b2__local_w_done;
+  wire [0:0] lg_NE_1_b2__far_w_done;
+  wire [0:0] lg_NE_1_b2__fault;
+  wire [16:0] lg_NE_1_b3__near_rq;
+  wire [280:0] lg_NE_1_b3__near_wq;
+  wire [256:0] lg_NE_1_b3__local_rr;
+  wire [256:0] lg_NE_1_b3__far_rr;
+  wire [0:0] lg_NE_1_b3__local_w_done;
+  wire [0:0] lg_NE_1_b3__far_w_done;
+  wire [0:0] lg_NE_1_b3__fault;
+  wire [16:0] lg_NE_1_b4__near_rq;
+  wire [280:0] lg_NE_1_b4__near_wq;
+  wire [256:0] lg_NE_1_b4__local_rr;
+  wire [256:0] lg_NE_1_b4__far_rr;
+  wire [0:0] lg_NE_1_b4__local_w_done;
+  wire [0:0] lg_NE_1_b4__far_w_done;
+  wire [0:0] lg_NE_1_b4__fault;
+  wire [16:0] lg_NE_1_b5__near_rq;
+  wire [280:0] lg_NE_1_b5__near_wq;
+  wire [256:0] lg_NE_1_b5__local_rr;
+  wire [256:0] lg_NE_1_b5__far_rr;
+  wire [0:0] lg_NE_1_b5__local_w_done;
+  wire [0:0] lg_NE_1_b5__far_w_done;
+  wire [0:0] lg_NE_1_b5__fault;
+  wire [16:0] lg_NE_1_b6__near_rq;
+  wire [280:0] lg_NE_1_b6__near_wq;
+  wire [256:0] lg_NE_1_b6__local_rr;
+  wire [256:0] lg_NE_1_b6__far_rr;
+  wire [0:0] lg_NE_1_b6__local_w_done;
+  wire [0:0] lg_NE_1_b6__far_w_done;
+  wire [0:0] lg_NE_1_b6__fault;
+  wire [16:0] lg_NE_1_b7__near_rq;
+  wire [280:0] lg_NE_1_b7__near_wq;
+  wire [256:0] lg_NE_1_b7__local_rr;
+  wire [256:0] lg_NE_1_b7__far_rr;
+  wire [0:0] lg_NE_1_b7__local_w_done;
+  wire [0:0] lg_NE_1_b7__far_w_done;
+  wire [0:0] lg_NE_1_b7__fault;
+  wire [16:0] lg_NE_2_b0__near_rq;
+  wire [280:0] lg_NE_2_b0__near_wq;
+  wire [256:0] lg_NE_2_b0__local_rr;
+  wire [0:0] lg_NE_2_b0__local_w_done;
+  wire [0:0] lg_NE_2_b0__fault;
+  wire [16:0] lg_NE_2_b1__near_rq;
+  wire [280:0] lg_NE_2_b1__near_wq;
+  wire [256:0] lg_NE_2_b1__local_rr;
+  wire [0:0] lg_NE_2_b1__local_w_done;
+  wire [0:0] lg_NE_2_b1__fault;
+  wire [16:0] lg_NE_2_b2__near_rq;
+  wire [280:0] lg_NE_2_b2__near_wq;
+  wire [256:0] lg_NE_2_b2__local_rr;
+  wire [0:0] lg_NE_2_b2__local_w_done;
+  wire [0:0] lg_NE_2_b2__fault;
+  wire [16:0] lg_NE_2_b3__near_rq;
+  wire [280:0] lg_NE_2_b3__near_wq;
+  wire [256:0] lg_NE_2_b3__local_rr;
+  wire [0:0] lg_NE_2_b3__local_w_done;
+  wire [0:0] lg_NE_2_b3__fault;
+  wire [16:0] lg_NE_2_b4__near_rq;
+  wire [280:0] lg_NE_2_b4__near_wq;
+  wire [256:0] lg_NE_2_b4__local_rr;
+  wire [0:0] lg_NE_2_b4__local_w_done;
+  wire [0:0] lg_NE_2_b4__fault;
+  wire [16:0] lg_NE_2_b5__near_rq;
+  wire [280:0] lg_NE_2_b5__near_wq;
+  wire [256:0] lg_NE_2_b5__local_rr;
+  wire [0:0] lg_NE_2_b5__local_w_done;
+  wire [0:0] lg_NE_2_b5__fault;
+  wire [16:0] lg_NE_2_b6__near_rq;
+  wire [280:0] lg_NE_2_b6__near_wq;
+  wire [256:0] lg_NE_2_b6__local_rr;
+  wire [0:0] lg_NE_2_b6__local_w_done;
+  wire [0:0] lg_NE_2_b6__fault;
+  wire [16:0] lg_NE_2_b7__near_rq;
+  wire [280:0] lg_NE_2_b7__near_wq;
+  wire [256:0] lg_NE_2_b7__local_rr;
+  wire [0:0] lg_NE_2_b7__local_w_done;
+  wire [0:0] lg_NE_2_b7__fault;
   hfd_hgi_vms_static_SW hb_vms_SW (
     .clk_bank({8{hb_ckgen__pll_stream[0]}}),
     .clk_hub(hb_ckgen__pll_stream[0]),
@@ -7325,9 +7857,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_SW__wslot_v[7:0]),
     .rslot(calendar_SW__rslot[23:0]),
     .wslot(calendar_SW__wslot[23:0]),
-    .rq({hb_idx__vm_rq[135:0], hb_coll_SW__vm_rq[135:0], xl_SW_ctl__rq[135:0], hb_dbk_SW__rq[135:0], lg_SW_0__near_rq[135:0]}),
+    .rq({hb_idx__vm_rq[135:0], hb_coll_SW__vm_rq[135:0], xl_SW_ctl__rq[135:0], hb_dbk_SW__rq[135:0], lg_SW_0_b7__near_rq[16:0], lg_SW_0_b6__near_rq[16:0], lg_SW_0_b5__near_rq[16:0], lg_SW_0_b4__near_rq[16:0], lg_SW_0_b3__near_rq[16:0], lg_SW_0_b2__near_rq[16:0], lg_SW_0_b1__near_rq[16:0], lg_SW_0_b0__near_rq[16:0]}),
     .rr(hb_vms_SW__rr),
-    .wq({smw_SW__wq[2247:0], lg_SW_0__near_wq[2247:0]}),
+    .wq({smw_SW__wq[2247:0], lg_SW_0_b7__near_wq[280:0], lg_SW_0_b6__near_wq[280:0], lg_SW_0_b5__near_wq[280:0], lg_SW_0_b4__near_wq[280:0], lg_SW_0_b3__near_wq[280:0], lg_SW_0_b2__near_wq[280:0], lg_SW_0_b1__near_wq[280:0], lg_SW_0_b0__near_wq[280:0]}),
     .wq_done(hb_vms_SW__wq_done),
     .dq({vmdel_SW7__dq[280:0], vmdel_SW6__dq[280:0], vmdel_SW5__dq[280:0], vmdel_SW4__dq[280:0], vmdel_SW3__dq[280:0], vmdel_SW2__dq[280:0], vmdel_SW1__dq[280:0], vmdel_SW0__dq[280:0]}),
     .kq(hb_coll_SW__vm_kq[2247:0]),
@@ -7364,9 +7896,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_SE__wslot_v[7:0]),
     .rslot(calendar_SE__rslot[23:0]),
     .wslot(calendar_SE__wslot[23:0]),
-    .rq({hb_coll_SE__vm_rq[135:0], xl_SE_ctl__rq[135:0], hb_dbk_SE__rq[135:0], lg_SE_0__near_rq[135:0]}),
+    .rq({hb_coll_SE__vm_rq[135:0], xl_SE_ctl__rq[135:0], hb_dbk_SE__rq[135:0], lg_SE_0_b7__near_rq[16:0], lg_SE_0_b6__near_rq[16:0], lg_SE_0_b5__near_rq[16:0], lg_SE_0_b4__near_rq[16:0], lg_SE_0_b3__near_rq[16:0], lg_SE_0_b2__near_rq[16:0], lg_SE_0_b1__near_rq[16:0], lg_SE_0_b0__near_rq[16:0]}),
     .rr(hb_vms_SE__rr),
-    .wq({smw_SE__wq[2247:0], lg_SE_0__near_wq[2247:0]}),
+    .wq({smw_SE__wq[2247:0], lg_SE_0_b7__near_wq[280:0], lg_SE_0_b6__near_wq[280:0], lg_SE_0_b5__near_wq[280:0], lg_SE_0_b4__near_wq[280:0], lg_SE_0_b3__near_wq[280:0], lg_SE_0_b2__near_wq[280:0], lg_SE_0_b1__near_wq[280:0], lg_SE_0_b0__near_wq[280:0]}),
     .wq_done(hb_vms_SE__wq_done),
     .dq({vmdel_SE7__dq[280:0], vmdel_SE6__dq[280:0], vmdel_SE5__dq[280:0], vmdel_SE4__dq[280:0], vmdel_SE3__dq[280:0], vmdel_SE2__dq[280:0], vmdel_SE1__dq[280:0], vmdel_SE0__dq[280:0]}),
     .kq(hb_coll_SE__vm_kq[2247:0]),
@@ -7403,9 +7935,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_NW__wslot_v[7:0]),
     .rslot(calendar_NW__rslot[23:0]),
     .wslot(calendar_NW__wslot[23:0]),
-    .rq({hb_coll_NW__vm_rq[135:0], hb_quant_NW__rq[135:0], xl_NW_ctl__rq[135:0], hb_dbk_NW__rq[135:0], lg_NW_0__near_rq[135:0]}),
+    .rq({hb_coll_NW__vm_rq[135:0], hb_quant_NW__rq[135:0], xl_NW_ctl__rq[135:0], hb_dbk_NW__rq[135:0], lg_NW_0_b7__near_rq[16:0], lg_NW_0_b6__near_rq[16:0], lg_NW_0_b5__near_rq[16:0], lg_NW_0_b4__near_rq[16:0], lg_NW_0_b3__near_rq[16:0], lg_NW_0_b2__near_rq[16:0], lg_NW_0_b1__near_rq[16:0], lg_NW_0_b0__near_rq[16:0]}),
     .rr(hb_vms_NW__rr),
-    .wq({hb_quant_NW__wq[2247:0], smw_NW__wq[2247:0], lg_NW_0__near_wq[2247:0]}),
+    .wq({hb_quant_NW__wq[2247:0], smw_NW__wq[2247:0], lg_NW_0_b7__near_wq[280:0], lg_NW_0_b6__near_wq[280:0], lg_NW_0_b5__near_wq[280:0], lg_NW_0_b4__near_wq[280:0], lg_NW_0_b3__near_wq[280:0], lg_NW_0_b2__near_wq[280:0], lg_NW_0_b1__near_wq[280:0], lg_NW_0_b0__near_wq[280:0]}),
     .wq_done(hb_vms_NW__wq_done),
     .dq({vmdel_NW7__dq[280:0], vmdel_NW6__dq[280:0], vmdel_NW5__dq[280:0], vmdel_NW4__dq[280:0], vmdel_NW3__dq[280:0], vmdel_NW2__dq[280:0], vmdel_NW1__dq[280:0], vmdel_NW0__dq[280:0]}),
     .kq(hb_coll_NW__vm_kq[2247:0]),
@@ -7442,9 +7974,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_NE__wslot_v[7:0]),
     .rslot(calendar_NE__rslot[23:0]),
     .wslot(calendar_NE__wslot[23:0]),
-    .rq({hb_coll_NE__vm_rq[135:0], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
+    .rq({hb_coll_NE__vm_rq[135:0], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0_b7__near_rq[16:0], lg_NE_0_b6__near_rq[16:0], lg_NE_0_b5__near_rq[16:0], lg_NE_0_b4__near_rq[16:0], lg_NE_0_b3__near_rq[16:0], lg_NE_0_b2__near_rq[16:0], lg_NE_0_b1__near_rq[16:0], lg_NE_0_b0__near_rq[16:0]}),
     .rr(hb_vms_NE__rr),
-    .wq({smw_NE__wq[2247:0], lg_NE_0__near_wq[2247:0]}),
+    .wq({smw_NE__wq[2247:0], lg_NE_0_b7__near_wq[280:0], lg_NE_0_b6__near_wq[280:0], lg_NE_0_b5__near_wq[280:0], lg_NE_0_b4__near_wq[280:0], lg_NE_0_b3__near_wq[280:0], lg_NE_0_b2__near_wq[280:0], lg_NE_0_b1__near_wq[280:0], lg_NE_0_b0__near_wq[280:0]}),
     .wq_done(hb_vms_NE__wq_done),
     .dq({vmdel_NE7__dq[280:0], vmdel_NE6__dq[280:0], vmdel_NE5__dq[280:0], vmdel_NE4__dq[280:0], vmdel_NE3__dq[280:0], vmdel_NE2__dq[280:0], vmdel_NE1__dq[280:0], vmdel_NE0__dq[280:0]}),
     .kq(hb_coll_NE__vm_kq[2247:0]),
@@ -7516,59 +8048,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_local_read(calendar_SW__lg_local_read),
     .lg_local_write(calendar_SW__lg_local_write)
   );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({su_SW3__lg_rq[33:0], su_SW2__lg_rq[33:0], su_SW1__lg_rq[33:0], su_SW0__lg_rq[33:0]}),
-    .far_rq(lg_SW_1__near_rq[135:0]),
-    .local_wq({su_SW3__lg_wq[561:0], su_SW2__lg_wq[561:0], su_SW1__lg_wq[561:0], su_SW0__lg_wq[561:0]}),
-    .far_wq(lg_SW_1__near_wq[2247:0]),
-    .local_read(calendar_SW__lg_local_read[7:0]),
-    .local_write(calendar_SW__lg_local_write[7:0]),
-    .near_rq(lg_SW_0__near_rq),
-    .near_wq(lg_SW_0__near_wq),
-    .near_rr(hb_vms_SW__rr[2055:0]),
-    .near_w_done(hb_vms_SW__wq_done[7:0]),
-    .local_rr(lg_SW_0__local_rr),
-    .far_rr(lg_SW_0__far_rr),
-    .local_w_done(lg_SW_0__local_w_done),
-    .far_w_done(lg_SW_0__far_w_done),
-    .bank_fault(lg_SW_0__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({sfu_SW3__lg_rq[33:0], sfu_SW2__lg_rq[33:0], sfu_SW1__lg_rq[33:0], sfu_SW0__lg_rq[33:0]}),
-    .far_rq(lg_SW_2__near_rq[135:0]),
-    .local_wq({sfu_SW3__lg_wq[561:0], sfu_SW2__lg_wq[561:0], sfu_SW1__lg_wq[561:0], sfu_SW0__lg_wq[561:0]}),
-    .far_wq(lg_SW_2__near_wq[2247:0]),
-    .local_read(calendar_SW__lg_local_read[15:8]),
-    .local_write(calendar_SW__lg_local_write[15:8]),
-    .near_rq(lg_SW_1__near_rq),
-    .near_wq(lg_SW_1__near_wq),
-    .near_rr(lg_SW_0__far_rr[2055:0]),
-    .near_w_done(lg_SW_0__far_w_done[7:0]),
-    .local_rr(lg_SW_1__local_rr),
-    .far_rr(lg_SW_1__far_rr),
-    .local_w_done(lg_SW_1__local_w_done),
-    .far_w_done(lg_SW_1__far_w_done),
-    .bank_fault(lg_SW_1__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({hc_SW3__lg_rq[33:0], hc_SW2__lg_rq[33:0], hc_SW1__lg_rq[33:0], hc_SW0__lg_rq[33:0]}),
-    .local_wq({hc_SW3__lg_wq[561:0], hc_SW2__lg_wq[561:0], hc_SW1__lg_wq[561:0], hc_SW0__lg_wq[561:0]}),
-    .local_read(calendar_SW__lg_local_read[23:16]),
-    .local_write(calendar_SW__lg_local_write[23:16]),
-    .near_rq(lg_SW_2__near_rq),
-    .near_wq(lg_SW_2__near_wq),
-    .near_rr(lg_SW_1__far_rr[2055:0]),
-    .near_w_done(lg_SW_1__far_w_done[7:0]),
-    .local_rr(lg_SW_2__local_rr),
-    .local_w_done(lg_SW_2__local_w_done),
-    .bank_fault(lg_SW_2__bank_fault)
-  );
   hfd_hgi_vm_calendar_f20 calendar_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .clk_cap(hb_ckgen__pll_stream[0]),
@@ -7608,59 +8087,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .replay_source(calendar_SE__replay_source),
     .lg_local_read(calendar_SE__lg_local_read),
     .lg_local_write(calendar_SE__lg_local_write)
-  );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({su_SE3__lg_rq[33:0], su_SE2__lg_rq[33:0], su_SE1__lg_rq[33:0], su_SE0__lg_rq[33:0]}),
-    .far_rq(lg_SE_1__near_rq[135:0]),
-    .local_wq({su_SE3__lg_wq[561:0], su_SE2__lg_wq[561:0], su_SE1__lg_wq[561:0], su_SE0__lg_wq[561:0]}),
-    .far_wq(lg_SE_1__near_wq[2247:0]),
-    .local_read(calendar_SE__lg_local_read[7:0]),
-    .local_write(calendar_SE__lg_local_write[7:0]),
-    .near_rq(lg_SE_0__near_rq),
-    .near_wq(lg_SE_0__near_wq),
-    .near_rr(hb_vms_SE__rr[2055:0]),
-    .near_w_done(hb_vms_SE__wq_done[7:0]),
-    .local_rr(lg_SE_0__local_rr),
-    .far_rr(lg_SE_0__far_rr),
-    .local_w_done(lg_SE_0__local_w_done),
-    .far_w_done(lg_SE_0__far_w_done),
-    .bank_fault(lg_SE_0__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({sfu_SE3__lg_rq[33:0], sfu_SE2__lg_rq[33:0], sfu_SE1__lg_rq[33:0], sfu_SE0__lg_rq[33:0]}),
-    .far_rq(lg_SE_2__near_rq[135:0]),
-    .local_wq({sfu_SE3__lg_wq[561:0], sfu_SE2__lg_wq[561:0], sfu_SE1__lg_wq[561:0], sfu_SE0__lg_wq[561:0]}),
-    .far_wq(lg_SE_2__near_wq[2247:0]),
-    .local_read(calendar_SE__lg_local_read[15:8]),
-    .local_write(calendar_SE__lg_local_write[15:8]),
-    .near_rq(lg_SE_1__near_rq),
-    .near_wq(lg_SE_1__near_wq),
-    .near_rr(lg_SE_0__far_rr[2055:0]),
-    .near_w_done(lg_SE_0__far_w_done[7:0]),
-    .local_rr(lg_SE_1__local_rr),
-    .far_rr(lg_SE_1__far_rr),
-    .local_w_done(lg_SE_1__local_w_done),
-    .far_w_done(lg_SE_1__far_w_done),
-    .bank_fault(lg_SE_1__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({hc_SE3__lg_rq[33:0], hc_SE2__lg_rq[33:0], hc_SE1__lg_rq[33:0], hc_SE0__lg_rq[33:0]}),
-    .local_wq({hc_SE3__lg_wq[561:0], hc_SE2__lg_wq[561:0], hc_SE1__lg_wq[561:0], hc_SE0__lg_wq[561:0]}),
-    .local_read(calendar_SE__lg_local_read[23:16]),
-    .local_write(calendar_SE__lg_local_write[23:16]),
-    .near_rq(lg_SE_2__near_rq),
-    .near_wq(lg_SE_2__near_wq),
-    .near_rr(lg_SE_1__far_rr[2055:0]),
-    .near_w_done(lg_SE_1__far_w_done[7:0]),
-    .local_rr(lg_SE_2__local_rr),
-    .local_w_done(lg_SE_2__local_w_done),
-    .bank_fault(lg_SE_2__bank_fault)
   );
   hfd_hgi_vm_calendar_f20 calendar_NW (
     .clk(hb_ckgen__pll_stream[0]),
@@ -7702,59 +8128,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_local_read(calendar_NW__lg_local_read),
     .lg_local_write(calendar_NW__lg_local_write)
   );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({su_NW3__lg_rq[33:0], su_NW2__lg_rq[33:0], su_NW1__lg_rq[33:0], su_NW0__lg_rq[33:0]}),
-    .far_rq(lg_NW_1__near_rq[135:0]),
-    .local_wq({su_NW3__lg_wq[561:0], su_NW2__lg_wq[561:0], su_NW1__lg_wq[561:0], su_NW0__lg_wq[561:0]}),
-    .far_wq(lg_NW_1__near_wq[2247:0]),
-    .local_read(calendar_NW__lg_local_read[7:0]),
-    .local_write(calendar_NW__lg_local_write[7:0]),
-    .near_rq(lg_NW_0__near_rq),
-    .near_wq(lg_NW_0__near_wq),
-    .near_rr(hb_vms_NW__rr[2055:0]),
-    .near_w_done(hb_vms_NW__wq_done[7:0]),
-    .local_rr(lg_NW_0__local_rr),
-    .far_rr(lg_NW_0__far_rr),
-    .local_w_done(lg_NW_0__local_w_done),
-    .far_w_done(lg_NW_0__far_w_done),
-    .bank_fault(lg_NW_0__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({sfu_NW3__lg_rq[33:0], sfu_NW2__lg_rq[33:0], sfu_NW1__lg_rq[33:0], sfu_NW0__lg_rq[33:0]}),
-    .far_rq(lg_NW_2__near_rq[135:0]),
-    .local_wq({sfu_NW3__lg_wq[561:0], sfu_NW2__lg_wq[561:0], sfu_NW1__lg_wq[561:0], sfu_NW0__lg_wq[561:0]}),
-    .far_wq(lg_NW_2__near_wq[2247:0]),
-    .local_read(calendar_NW__lg_local_read[15:8]),
-    .local_write(calendar_NW__lg_local_write[15:8]),
-    .near_rq(lg_NW_1__near_rq),
-    .near_wq(lg_NW_1__near_wq),
-    .near_rr(lg_NW_0__far_rr[2055:0]),
-    .near_w_done(lg_NW_0__far_w_done[7:0]),
-    .local_rr(lg_NW_1__local_rr),
-    .far_rr(lg_NW_1__far_rr),
-    .local_w_done(lg_NW_1__local_w_done),
-    .far_w_done(lg_NW_1__far_w_done),
-    .bank_fault(lg_NW_1__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({hc_NW3__lg_rq[33:0], hc_NW2__lg_rq[33:0], hc_NW1__lg_rq[33:0], hc_NW0__lg_rq[33:0]}),
-    .local_wq({hc_NW3__lg_wq[561:0], hc_NW2__lg_wq[561:0], hc_NW1__lg_wq[561:0], hc_NW0__lg_wq[561:0]}),
-    .local_read(calendar_NW__lg_local_read[23:16]),
-    .local_write(calendar_NW__lg_local_write[23:16]),
-    .near_rq(lg_NW_2__near_rq),
-    .near_wq(lg_NW_2__near_wq),
-    .near_rr(lg_NW_1__far_rr[2055:0]),
-    .near_w_done(lg_NW_1__far_w_done[7:0]),
-    .local_rr(lg_NW_2__local_rr),
-    .local_w_done(lg_NW_2__local_w_done),
-    .bank_fault(lg_NW_2__bank_fault)
-  );
   hfd_hgi_vm_calendar_f20 calendar_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .clk_cap(hb_ckgen__pll_stream[0]),
@@ -7794,59 +8167,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .replay_source(calendar_NE__replay_source),
     .lg_local_read(calendar_NE__lg_local_read),
     .lg_local_write(calendar_NE__lg_local_write)
-  );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({su_NE3__lg_rq[33:0], su_NE2__lg_rq[33:0], su_NE1__lg_rq[33:0], su_NE0__lg_rq[33:0]}),
-    .far_rq(lg_NE_1__near_rq[135:0]),
-    .local_wq({su_NE3__lg_wq[561:0], su_NE2__lg_wq[561:0], su_NE1__lg_wq[561:0], su_NE0__lg_wq[561:0]}),
-    .far_wq(lg_NE_1__near_wq[2247:0]),
-    .local_read(calendar_NE__lg_local_read[7:0]),
-    .local_write(calendar_NE__lg_local_write[7:0]),
-    .near_rq(lg_NE_0__near_rq),
-    .near_wq(lg_NE_0__near_wq),
-    .near_rr(hb_vms_NE__rr[2055:0]),
-    .near_w_done(hb_vms_NE__wq_done[7:0]),
-    .local_rr(lg_NE_0__local_rr),
-    .far_rr(lg_NE_0__far_rr),
-    .local_w_done(lg_NE_0__local_w_done),
-    .far_w_done(lg_NE_0__far_w_done),
-    .bank_fault(lg_NE_0__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({sfu_NE3__lg_rq[33:0], sfu_NE2__lg_rq[33:0], sfu_NE1__lg_rq[33:0], sfu_NE0__lg_rq[33:0]}),
-    .far_rq(lg_NE_2__near_rq[135:0]),
-    .local_wq({sfu_NE3__lg_wq[561:0], sfu_NE2__lg_wq[561:0], sfu_NE1__lg_wq[561:0], sfu_NE0__lg_wq[561:0]}),
-    .far_wq(lg_NE_2__near_wq[2247:0]),
-    .local_read(calendar_NE__lg_local_read[15:8]),
-    .local_write(calendar_NE__lg_local_write[15:8]),
-    .near_rq(lg_NE_1__near_rq),
-    .near_wq(lg_NE_1__near_wq),
-    .near_rr(lg_NE_0__far_rr[2055:0]),
-    .near_w_done(lg_NE_0__far_w_done[7:0]),
-    .local_rr(lg_NE_1__local_rr),
-    .far_rr(lg_NE_1__far_rr),
-    .local_w_done(lg_NE_1__local_w_done),
-    .far_w_done(lg_NE_1__far_w_done),
-    .bank_fault(lg_NE_1__bank_fault)
-  );
-  ot_hbm_vm_lg_static_split_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2 (
-    .clk({8{hb_ckgen__pll_stream[0]}}),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .local_rq({hc_NE3__lg_rq[33:0], hc_NE2__lg_rq[33:0], hc_NE1__lg_rq[33:0], hc_NE0__lg_rq[33:0]}),
-    .local_wq({hc_NE3__lg_wq[561:0], hc_NE2__lg_wq[561:0], hc_NE1__lg_wq[561:0], hc_NE0__lg_wq[561:0]}),
-    .local_read(calendar_NE__lg_local_read[23:16]),
-    .local_write(calendar_NE__lg_local_write[23:16]),
-    .near_rq(lg_NE_2__near_rq),
-    .near_wq(lg_NE_2__near_wq),
-    .near_rr(lg_NE_1__far_rr[2055:0]),
-    .near_w_done(lg_NE_1__far_w_done[7:0]),
-    .local_rr(lg_NE_2__local_rr),
-    .local_w_done(lg_NE_2__local_w_done),
-    .bank_fault(lg_NE_2__bank_fault)
   );
   ot_vms_status4_static vm_status4 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18413,8 +18733,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SW0__c_w_done),
     .lg_rq(hc_SW0__lg_rq),
     .lg_wq(hc_SW0__lg_wq),
-    .lg_rr(lg_SW_2__local_rr[513:0]),
-    .lg_w_done(lg_SW_2__local_w_done[1:0])
+    .lg_rr({lg_SW_2_b1__local_rr[256:0], lg_SW_2_b0__local_rr[256:0]}),
+    .lg_w_done({lg_SW_2_b1__local_w_done[0], lg_SW_2_b0__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_SW1 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18425,8 +18745,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SW1__c_w_done),
     .lg_rq(hc_SW1__lg_rq),
     .lg_wq(hc_SW1__lg_wq),
-    .lg_rr(lg_SW_2__local_rr[1027:514]),
-    .lg_w_done(lg_SW_2__local_w_done[3:2])
+    .lg_rr({lg_SW_2_b3__local_rr[256:0], lg_SW_2_b2__local_rr[256:0]}),
+    .lg_w_done({lg_SW_2_b3__local_w_done[0], lg_SW_2_b2__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_SW2 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18437,8 +18757,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SW2__c_w_done),
     .lg_rq(hc_SW2__lg_rq),
     .lg_wq(hc_SW2__lg_wq),
-    .lg_rr(lg_SW_2__local_rr[1541:1028]),
-    .lg_w_done(lg_SW_2__local_w_done[5:4])
+    .lg_rr({lg_SW_2_b5__local_rr[256:0], lg_SW_2_b4__local_rr[256:0]}),
+    .lg_w_done({lg_SW_2_b5__local_w_done[0], lg_SW_2_b4__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_SW3 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18449,8 +18769,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SW3__c_w_done),
     .lg_rq(hc_SW3__lg_rq),
     .lg_wq(hc_SW3__lg_wq),
-    .lg_rr(lg_SW_2__local_rr[2055:1542]),
-    .lg_w_done(lg_SW_2__local_w_done[7:6])
+    .lg_rr({lg_SW_2_b7__local_rr[256:0], lg_SW_2_b6__local_rr[256:0]}),
+    .lg_w_done({lg_SW_2_b7__local_w_done[0], lg_SW_2_b6__local_w_done[0]})
   );
   ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_SE (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18515,8 +18835,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SE0__c_w_done),
     .lg_rq(hc_SE0__lg_rq),
     .lg_wq(hc_SE0__lg_wq),
-    .lg_rr(lg_SE_2__local_rr[513:0]),
-    .lg_w_done(lg_SE_2__local_w_done[1:0])
+    .lg_rr({lg_SE_2_b1__local_rr[256:0], lg_SE_2_b0__local_rr[256:0]}),
+    .lg_w_done({lg_SE_2_b1__local_w_done[0], lg_SE_2_b0__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_SE1 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18527,8 +18847,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SE1__c_w_done),
     .lg_rq(hc_SE1__lg_rq),
     .lg_wq(hc_SE1__lg_wq),
-    .lg_rr(lg_SE_2__local_rr[1027:514]),
-    .lg_w_done(lg_SE_2__local_w_done[3:2])
+    .lg_rr({lg_SE_2_b3__local_rr[256:0], lg_SE_2_b2__local_rr[256:0]}),
+    .lg_w_done({lg_SE_2_b3__local_w_done[0], lg_SE_2_b2__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_SE2 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18539,8 +18859,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SE2__c_w_done),
     .lg_rq(hc_SE2__lg_rq),
     .lg_wq(hc_SE2__lg_wq),
-    .lg_rr(lg_SE_2__local_rr[1541:1028]),
-    .lg_w_done(lg_SE_2__local_w_done[5:4])
+    .lg_rr({lg_SE_2_b5__local_rr[256:0], lg_SE_2_b4__local_rr[256:0]}),
+    .lg_w_done({lg_SE_2_b5__local_w_done[0], lg_SE_2_b4__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_SE3 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18551,8 +18871,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_SE3__c_w_done),
     .lg_rq(hc_SE3__lg_rq),
     .lg_wq(hc_SE3__lg_wq),
-    .lg_rr(lg_SE_2__local_rr[2055:1542]),
-    .lg_w_done(lg_SE_2__local_w_done[7:6])
+    .lg_rr({lg_SE_2_b7__local_rr[256:0], lg_SE_2_b6__local_rr[256:0]}),
+    .lg_w_done({lg_SE_2_b7__local_w_done[0], lg_SE_2_b6__local_w_done[0]})
   );
   ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_NW (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18617,8 +18937,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NW0__c_w_done),
     .lg_rq(hc_NW0__lg_rq),
     .lg_wq(hc_NW0__lg_wq),
-    .lg_rr(lg_NW_2__local_rr[513:0]),
-    .lg_w_done(lg_NW_2__local_w_done[1:0])
+    .lg_rr({lg_NW_2_b1__local_rr[256:0], lg_NW_2_b0__local_rr[256:0]}),
+    .lg_w_done({lg_NW_2_b1__local_w_done[0], lg_NW_2_b0__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_NW1 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18629,8 +18949,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NW1__c_w_done),
     .lg_rq(hc_NW1__lg_rq),
     .lg_wq(hc_NW1__lg_wq),
-    .lg_rr(lg_NW_2__local_rr[1027:514]),
-    .lg_w_done(lg_NW_2__local_w_done[3:2])
+    .lg_rr({lg_NW_2_b3__local_rr[256:0], lg_NW_2_b2__local_rr[256:0]}),
+    .lg_w_done({lg_NW_2_b3__local_w_done[0], lg_NW_2_b2__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_NW2 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18641,8 +18961,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NW2__c_w_done),
     .lg_rq(hc_NW2__lg_rq),
     .lg_wq(hc_NW2__lg_wq),
-    .lg_rr(lg_NW_2__local_rr[1541:1028]),
-    .lg_w_done(lg_NW_2__local_w_done[5:4])
+    .lg_rr({lg_NW_2_b5__local_rr[256:0], lg_NW_2_b4__local_rr[256:0]}),
+    .lg_w_done({lg_NW_2_b5__local_w_done[0], lg_NW_2_b4__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_NW3 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18653,8 +18973,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NW3__c_w_done),
     .lg_rq(hc_NW3__lg_rq),
     .lg_wq(hc_NW3__lg_wq),
-    .lg_rr(lg_NW_2__local_rr[2055:1542]),
-    .lg_w_done(lg_NW_2__local_w_done[7:6])
+    .lg_rr({lg_NW_2_b7__local_rr[256:0], lg_NW_2_b6__local_rr[256:0]}),
+    .lg_w_done({lg_NW_2_b7__local_w_done[0], lg_NW_2_b6__local_w_done[0]})
   );
   ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_NE (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18719,8 +19039,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NE0__c_w_done),
     .lg_rq(hc_NE0__lg_rq),
     .lg_wq(hc_NE0__lg_wq),
-    .lg_rr(lg_NE_2__local_rr[513:0]),
-    .lg_w_done(lg_NE_2__local_w_done[1:0])
+    .lg_rr({lg_NE_2_b1__local_rr[256:0], lg_NE_2_b0__local_rr[256:0]}),
+    .lg_w_done({lg_NE_2_b1__local_w_done[0], lg_NE_2_b0__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_NE1 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18731,8 +19051,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NE1__c_w_done),
     .lg_rq(hc_NE1__lg_rq),
     .lg_wq(hc_NE1__lg_wq),
-    .lg_rr(lg_NE_2__local_rr[1027:514]),
-    .lg_w_done(lg_NE_2__local_w_done[3:2])
+    .lg_rr({lg_NE_2_b3__local_rr[256:0], lg_NE_2_b2__local_rr[256:0]}),
+    .lg_w_done({lg_NE_2_b3__local_w_done[0], lg_NE_2_b2__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_NE2 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18743,8 +19063,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NE2__c_w_done),
     .lg_rq(hc_NE2__lg_rq),
     .lg_wq(hc_NE2__lg_wq),
-    .lg_rr(lg_NE_2__local_rr[1541:1028]),
-    .lg_w_done(lg_NE_2__local_w_done[5:4])
+    .lg_rr({lg_NE_2_b5__local_rr[256:0], lg_NE_2_b4__local_rr[256:0]}),
+    .lg_w_done({lg_NE_2_b5__local_w_done[0], lg_NE_2_b4__local_w_done[0]})
   );
   ot_hgi_sfu_lg_pair_leaf hc_NE3 (
     .clk(hb_ckgen__pll_stream[0]),
@@ -18755,8 +19075,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(hc_NE3__c_w_done),
     .lg_rq(hc_NE3__lg_rq),
     .lg_wq(hc_NE3__lg_wq),
-    .lg_rr(lg_NE_2__local_rr[2055:1542]),
-    .lg_w_done(lg_NE_2__local_w_done[7:6])
+    .lg_rr({lg_NE_2_b7__local_rr[256:0], lg_NE_2_b6__local_rr[256:0]}),
+    .lg_w_done({lg_NE_2_b7__local_w_done[0], lg_NE_2_b6__local_w_done[0]})
   );
   ot_hbm_hc_eng_static hc_eng (
     .clk(hb_ckgen__pll_stream[0]),
@@ -20196,8 +20516,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SW0__slice_x),
     .lg_rq(su_SW0__lg_rq),
     .lg_wq(su_SW0__lg_wq),
-    .lg_rr(lg_SW_0__local_rr[513:0]),
-    .lg_w_done(lg_SW_0__local_w_done[1:0]),
+    .lg_rr({lg_SW_0_b1__local_rr[256:0], lg_SW_0_b0__local_rr[256:0]}),
+    .lg_w_done({lg_SW_0_b1__local_w_done[0], lg_SW_0_b0__local_w_done[0]}),
     .inj_rd(hb_coll_SW__inj_rd[1:0]),
     .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
     .inj_q(su_SW0__inj_q),
@@ -20229,8 +20549,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SW1__slice_x),
     .lg_rq(su_SW1__lg_rq),
     .lg_wq(su_SW1__lg_wq),
-    .lg_rr(lg_SW_0__local_rr[1027:514]),
-    .lg_w_done(lg_SW_0__local_w_done[3:2]),
+    .lg_rr({lg_SW_0_b3__local_rr[256:0], lg_SW_0_b2__local_rr[256:0]}),
+    .lg_w_done({lg_SW_0_b3__local_w_done[0], lg_SW_0_b2__local_w_done[0]}),
     .inj_rd(hb_coll_SW__inj_rd[1:0]),
     .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
     .inj_q(su_SW1__inj_q),
@@ -20262,8 +20582,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SW2__slice_x),
     .lg_rq(su_SW2__lg_rq),
     .lg_wq(su_SW2__lg_wq),
-    .lg_rr(lg_SW_0__local_rr[1541:1028]),
-    .lg_w_done(lg_SW_0__local_w_done[5:4]),
+    .lg_rr({lg_SW_0_b5__local_rr[256:0], lg_SW_0_b4__local_rr[256:0]}),
+    .lg_w_done({lg_SW_0_b5__local_w_done[0], lg_SW_0_b4__local_w_done[0]}),
     .inj_rd(hb_coll_SW__inj_rd[1:0]),
     .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
     .inj_q(su_SW2__inj_q),
@@ -20295,8 +20615,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SW3__slice_x),
     .lg_rq(su_SW3__lg_rq),
     .lg_wq(su_SW3__lg_wq),
-    .lg_rr(lg_SW_0__local_rr[2055:1542]),
-    .lg_w_done(lg_SW_0__local_w_done[7:6]),
+    .lg_rr({lg_SW_0_b7__local_rr[256:0], lg_SW_0_b6__local_rr[256:0]}),
+    .lg_w_done({lg_SW_0_b7__local_w_done[0], lg_SW_0_b6__local_w_done[0]}),
     .inj_rd(hb_coll_SW__inj_rd[1:0]),
     .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
     .inj_q(su_SW3__inj_q),
@@ -20353,8 +20673,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SE0__slice_x),
     .lg_rq(su_SE0__lg_rq),
     .lg_wq(su_SE0__lg_wq),
-    .lg_rr(lg_SE_0__local_rr[513:0]),
-    .lg_w_done(lg_SE_0__local_w_done[1:0]),
+    .lg_rr({lg_SE_0_b1__local_rr[256:0], lg_SE_0_b0__local_rr[256:0]}),
+    .lg_w_done({lg_SE_0_b1__local_w_done[0], lg_SE_0_b0__local_w_done[0]}),
     .inj_rd(hb_coll_SE__inj_rd[1:0]),
     .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
     .inj_q(su_SE0__inj_q),
@@ -20386,8 +20706,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SE1__slice_x),
     .lg_rq(su_SE1__lg_rq),
     .lg_wq(su_SE1__lg_wq),
-    .lg_rr(lg_SE_0__local_rr[1027:514]),
-    .lg_w_done(lg_SE_0__local_w_done[3:2]),
+    .lg_rr({lg_SE_0_b3__local_rr[256:0], lg_SE_0_b2__local_rr[256:0]}),
+    .lg_w_done({lg_SE_0_b3__local_w_done[0], lg_SE_0_b2__local_w_done[0]}),
     .inj_rd(hb_coll_SE__inj_rd[1:0]),
     .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
     .inj_q(su_SE1__inj_q),
@@ -20419,8 +20739,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SE2__slice_x),
     .lg_rq(su_SE2__lg_rq),
     .lg_wq(su_SE2__lg_wq),
-    .lg_rr(lg_SE_0__local_rr[1541:1028]),
-    .lg_w_done(lg_SE_0__local_w_done[5:4]),
+    .lg_rr({lg_SE_0_b5__local_rr[256:0], lg_SE_0_b4__local_rr[256:0]}),
+    .lg_w_done({lg_SE_0_b5__local_w_done[0], lg_SE_0_b4__local_w_done[0]}),
     .inj_rd(hb_coll_SE__inj_rd[1:0]),
     .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
     .inj_q(su_SE2__inj_q),
@@ -20452,8 +20772,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_SE3__slice_x),
     .lg_rq(su_SE3__lg_rq),
     .lg_wq(su_SE3__lg_wq),
-    .lg_rr(lg_SE_0__local_rr[2055:1542]),
-    .lg_w_done(lg_SE_0__local_w_done[7:6]),
+    .lg_rr({lg_SE_0_b7__local_rr[256:0], lg_SE_0_b6__local_rr[256:0]}),
+    .lg_w_done({lg_SE_0_b7__local_w_done[0], lg_SE_0_b6__local_w_done[0]}),
     .inj_rd(hb_coll_SE__inj_rd[1:0]),
     .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
     .inj_q(su_SE3__inj_q),
@@ -20510,8 +20830,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NW0__slice_x),
     .lg_rq(su_NW0__lg_rq),
     .lg_wq(su_NW0__lg_wq),
-    .lg_rr(lg_NW_0__local_rr[513:0]),
-    .lg_w_done(lg_NW_0__local_w_done[1:0]),
+    .lg_rr({lg_NW_0_b1__local_rr[256:0], lg_NW_0_b0__local_rr[256:0]}),
+    .lg_w_done({lg_NW_0_b1__local_w_done[0], lg_NW_0_b0__local_w_done[0]}),
     .inj_rd(hb_coll_NW__inj_rd[1:0]),
     .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
     .inj_q(su_NW0__inj_q),
@@ -20543,8 +20863,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NW1__slice_x),
     .lg_rq(su_NW1__lg_rq),
     .lg_wq(su_NW1__lg_wq),
-    .lg_rr(lg_NW_0__local_rr[1027:514]),
-    .lg_w_done(lg_NW_0__local_w_done[3:2]),
+    .lg_rr({lg_NW_0_b3__local_rr[256:0], lg_NW_0_b2__local_rr[256:0]}),
+    .lg_w_done({lg_NW_0_b3__local_w_done[0], lg_NW_0_b2__local_w_done[0]}),
     .inj_rd(hb_coll_NW__inj_rd[1:0]),
     .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
     .inj_q(su_NW1__inj_q),
@@ -20576,8 +20896,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NW2__slice_x),
     .lg_rq(su_NW2__lg_rq),
     .lg_wq(su_NW2__lg_wq),
-    .lg_rr(lg_NW_0__local_rr[1541:1028]),
-    .lg_w_done(lg_NW_0__local_w_done[5:4]),
+    .lg_rr({lg_NW_0_b5__local_rr[256:0], lg_NW_0_b4__local_rr[256:0]}),
+    .lg_w_done({lg_NW_0_b5__local_w_done[0], lg_NW_0_b4__local_w_done[0]}),
     .inj_rd(hb_coll_NW__inj_rd[1:0]),
     .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
     .inj_q(su_NW2__inj_q),
@@ -20609,8 +20929,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NW3__slice_x),
     .lg_rq(su_NW3__lg_rq),
     .lg_wq(su_NW3__lg_wq),
-    .lg_rr(lg_NW_0__local_rr[2055:1542]),
-    .lg_w_done(lg_NW_0__local_w_done[7:6]),
+    .lg_rr({lg_NW_0_b7__local_rr[256:0], lg_NW_0_b6__local_rr[256:0]}),
+    .lg_w_done({lg_NW_0_b7__local_w_done[0], lg_NW_0_b6__local_w_done[0]}),
     .inj_rd(hb_coll_NW__inj_rd[1:0]),
     .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
     .inj_q(su_NW3__inj_q),
@@ -20667,8 +20987,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NE0__slice_x),
     .lg_rq(su_NE0__lg_rq),
     .lg_wq(su_NE0__lg_wq),
-    .lg_rr(lg_NE_0__local_rr[513:0]),
-    .lg_w_done(lg_NE_0__local_w_done[1:0]),
+    .lg_rr({lg_NE_0_b1__local_rr[256:0], lg_NE_0_b0__local_rr[256:0]}),
+    .lg_w_done({lg_NE_0_b1__local_w_done[0], lg_NE_0_b0__local_w_done[0]}),
     .inj_rd(hb_coll_NE__inj_rd[1:0]),
     .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
     .inj_q(su_NE0__inj_q),
@@ -20700,8 +21020,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NE1__slice_x),
     .lg_rq(su_NE1__lg_rq),
     .lg_wq(su_NE1__lg_wq),
-    .lg_rr(lg_NE_0__local_rr[1027:514]),
-    .lg_w_done(lg_NE_0__local_w_done[3:2]),
+    .lg_rr({lg_NE_0_b3__local_rr[256:0], lg_NE_0_b2__local_rr[256:0]}),
+    .lg_w_done({lg_NE_0_b3__local_w_done[0], lg_NE_0_b2__local_w_done[0]}),
     .inj_rd(hb_coll_NE__inj_rd[1:0]),
     .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
     .inj_q(su_NE1__inj_q),
@@ -20733,8 +21053,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NE2__slice_x),
     .lg_rq(su_NE2__lg_rq),
     .lg_wq(su_NE2__lg_wq),
-    .lg_rr(lg_NE_0__local_rr[1541:1028]),
-    .lg_w_done(lg_NE_0__local_w_done[5:4]),
+    .lg_rr({lg_NE_0_b5__local_rr[256:0], lg_NE_0_b4__local_rr[256:0]}),
+    .lg_w_done({lg_NE_0_b5__local_w_done[0], lg_NE_0_b4__local_w_done[0]}),
     .inj_rd(hb_coll_NE__inj_rd[1:0]),
     .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
     .inj_q(su_NE2__inj_q),
@@ -20766,8 +21086,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .slice_x(su_NE3__slice_x),
     .lg_rq(su_NE3__lg_rq),
     .lg_wq(su_NE3__lg_wq),
-    .lg_rr(lg_NE_0__local_rr[2055:1542]),
-    .lg_w_done(lg_NE_0__local_w_done[7:6]),
+    .lg_rr({lg_NE_0_b7__local_rr[256:0], lg_NE_0_b6__local_rr[256:0]}),
+    .lg_w_done({lg_NE_0_b7__local_w_done[0], lg_NE_0_b6__local_w_done[0]}),
     .inj_rd(hb_coll_NE__inj_rd[1:0]),
     .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
     .inj_q(su_NE3__inj_q),
@@ -24285,8 +24605,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SW0__c_w_done),
     .lg_rq(sfu_SW0__lg_rq),
     .lg_wq(sfu_SW0__lg_wq),
-    .lg_rr(lg_SW_1__local_rr[513:0]),
-    .lg_w_done(lg_SW_1__local_w_done[1:0])
+    .lg_rr({lg_SW_1_b1__local_rr[256:0], lg_SW_1_b0__local_rr[256:0]}),
+    .lg_w_done({lg_SW_1_b1__local_w_done[0], lg_SW_1_b0__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_SW0_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -24429,8 +24749,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SW1__c_w_done),
     .lg_rq(sfu_SW1__lg_rq),
     .lg_wq(sfu_SW1__lg_wq),
-    .lg_rr(lg_SW_1__local_rr[1027:514]),
-    .lg_w_done(lg_SW_1__local_w_done[3:2])
+    .lg_rr({lg_SW_1_b3__local_rr[256:0], lg_SW_1_b2__local_rr[256:0]}),
+    .lg_w_done({lg_SW_1_b3__local_w_done[0], lg_SW_1_b2__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_SW1_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -24573,8 +24893,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SW2__c_w_done),
     .lg_rq(sfu_SW2__lg_rq),
     .lg_wq(sfu_SW2__lg_wq),
-    .lg_rr(lg_SW_1__local_rr[1541:1028]),
-    .lg_w_done(lg_SW_1__local_w_done[5:4])
+    .lg_rr({lg_SW_1_b5__local_rr[256:0], lg_SW_1_b4__local_rr[256:0]}),
+    .lg_w_done({lg_SW_1_b5__local_w_done[0], lg_SW_1_b4__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_SW2_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -24717,8 +25037,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SW3__c_w_done),
     .lg_rq(sfu_SW3__lg_rq),
     .lg_wq(sfu_SW3__lg_wq),
-    .lg_rr(lg_SW_1__local_rr[2055:1542]),
-    .lg_w_done(lg_SW_1__local_w_done[7:6])
+    .lg_rr({lg_SW_1_b7__local_rr[256:0], lg_SW_1_b6__local_rr[256:0]}),
+    .lg_w_done({lg_SW_1_b7__local_w_done[0], lg_SW_1_b6__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_SW3_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -24905,8 +25225,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SE0__c_w_done),
     .lg_rq(sfu_SE0__lg_rq),
     .lg_wq(sfu_SE0__lg_wq),
-    .lg_rr(lg_SE_1__local_rr[513:0]),
-    .lg_w_done(lg_SE_1__local_w_done[1:0])
+    .lg_rr({lg_SE_1_b1__local_rr[256:0], lg_SE_1_b0__local_rr[256:0]}),
+    .lg_w_done({lg_SE_1_b1__local_w_done[0], lg_SE_1_b0__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_SE0_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25049,8 +25369,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SE1__c_w_done),
     .lg_rq(sfu_SE1__lg_rq),
     .lg_wq(sfu_SE1__lg_wq),
-    .lg_rr(lg_SE_1__local_rr[1027:514]),
-    .lg_w_done(lg_SE_1__local_w_done[3:2])
+    .lg_rr({lg_SE_1_b3__local_rr[256:0], lg_SE_1_b2__local_rr[256:0]}),
+    .lg_w_done({lg_SE_1_b3__local_w_done[0], lg_SE_1_b2__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_SE1_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25193,8 +25513,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SE2__c_w_done),
     .lg_rq(sfu_SE2__lg_rq),
     .lg_wq(sfu_SE2__lg_wq),
-    .lg_rr(lg_SE_1__local_rr[1541:1028]),
-    .lg_w_done(lg_SE_1__local_w_done[5:4])
+    .lg_rr({lg_SE_1_b5__local_rr[256:0], lg_SE_1_b4__local_rr[256:0]}),
+    .lg_w_done({lg_SE_1_b5__local_w_done[0], lg_SE_1_b4__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_SE2_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25337,8 +25657,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_SE3__c_w_done),
     .lg_rq(sfu_SE3__lg_rq),
     .lg_wq(sfu_SE3__lg_wq),
-    .lg_rr(lg_SE_1__local_rr[2055:1542]),
-    .lg_w_done(lg_SE_1__local_w_done[7:6])
+    .lg_rr({lg_SE_1_b7__local_rr[256:0], lg_SE_1_b6__local_rr[256:0]}),
+    .lg_w_done({lg_SE_1_b7__local_w_done[0], lg_SE_1_b6__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_SE3_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25525,8 +25845,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NW0__c_w_done),
     .lg_rq(sfu_NW0__lg_rq),
     .lg_wq(sfu_NW0__lg_wq),
-    .lg_rr(lg_NW_1__local_rr[513:0]),
-    .lg_w_done(lg_NW_1__local_w_done[1:0])
+    .lg_rr({lg_NW_1_b1__local_rr[256:0], lg_NW_1_b0__local_rr[256:0]}),
+    .lg_w_done({lg_NW_1_b1__local_w_done[0], lg_NW_1_b0__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_NW0_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25669,8 +25989,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NW1__c_w_done),
     .lg_rq(sfu_NW1__lg_rq),
     .lg_wq(sfu_NW1__lg_wq),
-    .lg_rr(lg_NW_1__local_rr[1027:514]),
-    .lg_w_done(lg_NW_1__local_w_done[3:2])
+    .lg_rr({lg_NW_1_b3__local_rr[256:0], lg_NW_1_b2__local_rr[256:0]}),
+    .lg_w_done({lg_NW_1_b3__local_w_done[0], lg_NW_1_b2__local_w_done[0]})
   );
   hbfd_rly_624_NS sfr_NW1_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25813,8 +26133,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NW2__c_w_done),
     .lg_rq(sfu_NW2__lg_rq),
     .lg_wq(sfu_NW2__lg_wq),
-    .lg_rr(lg_NW_1__local_rr[1541:1028]),
-    .lg_w_done(lg_NW_1__local_w_done[5:4])
+    .lg_rr({lg_NW_1_b5__local_rr[256:0], lg_NW_1_b4__local_rr[256:0]}),
+    .lg_w_done({lg_NW_1_b5__local_w_done[0], lg_NW_1_b4__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_NW2_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -25957,8 +26277,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NW3__c_w_done),
     .lg_rq(sfu_NW3__lg_rq),
     .lg_wq(sfu_NW3__lg_wq),
-    .lg_rr(lg_NW_1__local_rr[2055:1542]),
-    .lg_w_done(lg_NW_1__local_w_done[7:6])
+    .lg_rr({lg_NW_1_b7__local_rr[256:0], lg_NW_1_b6__local_rr[256:0]}),
+    .lg_w_done({lg_NW_1_b7__local_w_done[0], lg_NW_1_b6__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_NW3_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -26145,8 +26465,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NE0__c_w_done),
     .lg_rq(sfu_NE0__lg_rq),
     .lg_wq(sfu_NE0__lg_wq),
-    .lg_rr(lg_NE_1__local_rr[513:0]),
-    .lg_w_done(lg_NE_1__local_w_done[1:0])
+    .lg_rr({lg_NE_1_b1__local_rr[256:0], lg_NE_1_b0__local_rr[256:0]}),
+    .lg_w_done({lg_NE_1_b1__local_w_done[0], lg_NE_1_b0__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_NE0_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -26289,8 +26609,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NE1__c_w_done),
     .lg_rq(sfu_NE1__lg_rq),
     .lg_wq(sfu_NE1__lg_wq),
-    .lg_rr(lg_NE_1__local_rr[1027:514]),
-    .lg_w_done(lg_NE_1__local_w_done[3:2])
+    .lg_rr({lg_NE_1_b3__local_rr[256:0], lg_NE_1_b2__local_rr[256:0]}),
+    .lg_w_done({lg_NE_1_b3__local_w_done[0], lg_NE_1_b2__local_w_done[0]})
   );
   hbfd_rly_624_WE sfr_NE1_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -26433,8 +26753,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NE2__c_w_done),
     .lg_rq(sfu_NE2__lg_rq),
     .lg_wq(sfu_NE2__lg_wq),
-    .lg_rr(lg_NE_1__local_rr[1541:1028]),
-    .lg_w_done(lg_NE_1__local_w_done[5:4])
+    .lg_rr({lg_NE_1_b5__local_rr[256:0], lg_NE_1_b4__local_rr[256:0]}),
+    .lg_w_done({lg_NE_1_b5__local_w_done[0], lg_NE_1_b4__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_NE2_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -26577,8 +26897,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .c_w_done(sfu_NE3__c_w_done),
     .lg_rq(sfu_NE3__lg_rq),
     .lg_wq(sfu_NE3__lg_wq),
-    .lg_rr(lg_NE_1__local_rr[2055:1542]),
-    .lg_w_done(lg_NE_1__local_w_done[7:6])
+    .lg_rr({lg_NE_1_b7__local_rr[256:0], lg_NE_1_b6__local_rr[256:0]}),
+    .lg_w_done({lg_NE_1_b7__local_w_done[0], lg_NE_1_b6__local_w_done[0]})
   );
   hbfd_rly_624_EW sfr_NE3_f00 (
     .ck(hb_ckgen__pll_stream[0]),
@@ -27795,6 +28115,1702 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .busy(vmdel_NE7__busy),
     .fault(vmdel_NE7__fault),
     .dq(vmdel_NE7__dq)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW0__lg_rq[16:0]),
+    .far_rq(lg_SW_1_b0__near_rq[16:0]),
+    .local_wq(su_SW0__lg_wq[280:0]),
+    .far_wq(lg_SW_1_b0__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[0]),
+    .local_write(calendar_SW__lg_local_write[0]),
+    .near_rq(lg_SW_0_b0__near_rq),
+    .near_wq(lg_SW_0_b0__near_wq),
+    .near_rr(hb_vms_SW__rr[256:0]),
+    .near_w_done(hb_vms_SW__wq_done[0]),
+    .local_rr(lg_SW_0_b0__local_rr),
+    .far_rr(lg_SW_0_b0__far_rr),
+    .local_w_done(lg_SW_0_b0__local_w_done),
+    .far_w_done(lg_SW_0_b0__far_w_done),
+    .fault(lg_SW_0_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW0__lg_rq[33:17]),
+    .far_rq(lg_SW_1_b1__near_rq[16:0]),
+    .local_wq(su_SW0__lg_wq[561:281]),
+    .far_wq(lg_SW_1_b1__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[1]),
+    .local_write(calendar_SW__lg_local_write[1]),
+    .near_rq(lg_SW_0_b1__near_rq),
+    .near_wq(lg_SW_0_b1__near_wq),
+    .near_rr(hb_vms_SW__rr[513:257]),
+    .near_w_done(hb_vms_SW__wq_done[1]),
+    .local_rr(lg_SW_0_b1__local_rr),
+    .far_rr(lg_SW_0_b1__far_rr),
+    .local_w_done(lg_SW_0_b1__local_w_done),
+    .far_w_done(lg_SW_0_b1__far_w_done),
+    .fault(lg_SW_0_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW1__lg_rq[16:0]),
+    .far_rq(lg_SW_1_b2__near_rq[16:0]),
+    .local_wq(su_SW1__lg_wq[280:0]),
+    .far_wq(lg_SW_1_b2__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[2]),
+    .local_write(calendar_SW__lg_local_write[2]),
+    .near_rq(lg_SW_0_b2__near_rq),
+    .near_wq(lg_SW_0_b2__near_wq),
+    .near_rr(hb_vms_SW__rr[770:514]),
+    .near_w_done(hb_vms_SW__wq_done[2]),
+    .local_rr(lg_SW_0_b2__local_rr),
+    .far_rr(lg_SW_0_b2__far_rr),
+    .local_w_done(lg_SW_0_b2__local_w_done),
+    .far_w_done(lg_SW_0_b2__far_w_done),
+    .fault(lg_SW_0_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW1__lg_rq[33:17]),
+    .far_rq(lg_SW_1_b3__near_rq[16:0]),
+    .local_wq(su_SW1__lg_wq[561:281]),
+    .far_wq(lg_SW_1_b3__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[3]),
+    .local_write(calendar_SW__lg_local_write[3]),
+    .near_rq(lg_SW_0_b3__near_rq),
+    .near_wq(lg_SW_0_b3__near_wq),
+    .near_rr(hb_vms_SW__rr[1027:771]),
+    .near_w_done(hb_vms_SW__wq_done[3]),
+    .local_rr(lg_SW_0_b3__local_rr),
+    .far_rr(lg_SW_0_b3__far_rr),
+    .local_w_done(lg_SW_0_b3__local_w_done),
+    .far_w_done(lg_SW_0_b3__far_w_done),
+    .fault(lg_SW_0_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW2__lg_rq[16:0]),
+    .far_rq(lg_SW_1_b4__near_rq[16:0]),
+    .local_wq(su_SW2__lg_wq[280:0]),
+    .far_wq(lg_SW_1_b4__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[4]),
+    .local_write(calendar_SW__lg_local_write[4]),
+    .near_rq(lg_SW_0_b4__near_rq),
+    .near_wq(lg_SW_0_b4__near_wq),
+    .near_rr(hb_vms_SW__rr[1284:1028]),
+    .near_w_done(hb_vms_SW__wq_done[4]),
+    .local_rr(lg_SW_0_b4__local_rr),
+    .far_rr(lg_SW_0_b4__far_rr),
+    .local_w_done(lg_SW_0_b4__local_w_done),
+    .far_w_done(lg_SW_0_b4__far_w_done),
+    .fault(lg_SW_0_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW2__lg_rq[33:17]),
+    .far_rq(lg_SW_1_b5__near_rq[16:0]),
+    .local_wq(su_SW2__lg_wq[561:281]),
+    .far_wq(lg_SW_1_b5__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[5]),
+    .local_write(calendar_SW__lg_local_write[5]),
+    .near_rq(lg_SW_0_b5__near_rq),
+    .near_wq(lg_SW_0_b5__near_wq),
+    .near_rr(hb_vms_SW__rr[1541:1285]),
+    .near_w_done(hb_vms_SW__wq_done[5]),
+    .local_rr(lg_SW_0_b5__local_rr),
+    .far_rr(lg_SW_0_b5__far_rr),
+    .local_w_done(lg_SW_0_b5__local_w_done),
+    .far_w_done(lg_SW_0_b5__far_w_done),
+    .fault(lg_SW_0_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW3__lg_rq[16:0]),
+    .far_rq(lg_SW_1_b6__near_rq[16:0]),
+    .local_wq(su_SW3__lg_wq[280:0]),
+    .far_wq(lg_SW_1_b6__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[6]),
+    .local_write(calendar_SW__lg_local_write[6]),
+    .near_rq(lg_SW_0_b6__near_rq),
+    .near_wq(lg_SW_0_b6__near_wq),
+    .near_rr(hb_vms_SW__rr[1798:1542]),
+    .near_w_done(hb_vms_SW__wq_done[6]),
+    .local_rr(lg_SW_0_b6__local_rr),
+    .far_rr(lg_SW_0_b6__far_rr),
+    .local_w_done(lg_SW_0_b6__local_w_done),
+    .far_w_done(lg_SW_0_b6__far_w_done),
+    .fault(lg_SW_0_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SW3__lg_rq[33:17]),
+    .far_rq(lg_SW_1_b7__near_rq[16:0]),
+    .local_wq(su_SW3__lg_wq[561:281]),
+    .far_wq(lg_SW_1_b7__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[7]),
+    .local_write(calendar_SW__lg_local_write[7]),
+    .near_rq(lg_SW_0_b7__near_rq),
+    .near_wq(lg_SW_0_b7__near_wq),
+    .near_rr(hb_vms_SW__rr[2055:1799]),
+    .near_w_done(hb_vms_SW__wq_done[7]),
+    .local_rr(lg_SW_0_b7__local_rr),
+    .far_rr(lg_SW_0_b7__far_rr),
+    .local_w_done(lg_SW_0_b7__local_w_done),
+    .far_w_done(lg_SW_0_b7__far_w_done),
+    .fault(lg_SW_0_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW0__lg_rq[16:0]),
+    .far_rq(lg_SW_2_b0__near_rq[16:0]),
+    .local_wq(sfu_SW0__lg_wq[280:0]),
+    .far_wq(lg_SW_2_b0__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[8]),
+    .local_write(calendar_SW__lg_local_write[8]),
+    .near_rq(lg_SW_1_b0__near_rq),
+    .near_wq(lg_SW_1_b0__near_wq),
+    .near_rr(lg_SW_0_b0__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b0__far_w_done[0]),
+    .local_rr(lg_SW_1_b0__local_rr),
+    .far_rr(lg_SW_1_b0__far_rr),
+    .local_w_done(lg_SW_1_b0__local_w_done),
+    .far_w_done(lg_SW_1_b0__far_w_done),
+    .fault(lg_SW_1_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW0__lg_rq[33:17]),
+    .far_rq(lg_SW_2_b1__near_rq[16:0]),
+    .local_wq(sfu_SW0__lg_wq[561:281]),
+    .far_wq(lg_SW_2_b1__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[9]),
+    .local_write(calendar_SW__lg_local_write[9]),
+    .near_rq(lg_SW_1_b1__near_rq),
+    .near_wq(lg_SW_1_b1__near_wq),
+    .near_rr(lg_SW_0_b1__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b1__far_w_done[0]),
+    .local_rr(lg_SW_1_b1__local_rr),
+    .far_rr(lg_SW_1_b1__far_rr),
+    .local_w_done(lg_SW_1_b1__local_w_done),
+    .far_w_done(lg_SW_1_b1__far_w_done),
+    .fault(lg_SW_1_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW1__lg_rq[16:0]),
+    .far_rq(lg_SW_2_b2__near_rq[16:0]),
+    .local_wq(sfu_SW1__lg_wq[280:0]),
+    .far_wq(lg_SW_2_b2__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[10]),
+    .local_write(calendar_SW__lg_local_write[10]),
+    .near_rq(lg_SW_1_b2__near_rq),
+    .near_wq(lg_SW_1_b2__near_wq),
+    .near_rr(lg_SW_0_b2__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b2__far_w_done[0]),
+    .local_rr(lg_SW_1_b2__local_rr),
+    .far_rr(lg_SW_1_b2__far_rr),
+    .local_w_done(lg_SW_1_b2__local_w_done),
+    .far_w_done(lg_SW_1_b2__far_w_done),
+    .fault(lg_SW_1_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW1__lg_rq[33:17]),
+    .far_rq(lg_SW_2_b3__near_rq[16:0]),
+    .local_wq(sfu_SW1__lg_wq[561:281]),
+    .far_wq(lg_SW_2_b3__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[11]),
+    .local_write(calendar_SW__lg_local_write[11]),
+    .near_rq(lg_SW_1_b3__near_rq),
+    .near_wq(lg_SW_1_b3__near_wq),
+    .near_rr(lg_SW_0_b3__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b3__far_w_done[0]),
+    .local_rr(lg_SW_1_b3__local_rr),
+    .far_rr(lg_SW_1_b3__far_rr),
+    .local_w_done(lg_SW_1_b3__local_w_done),
+    .far_w_done(lg_SW_1_b3__far_w_done),
+    .fault(lg_SW_1_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW2__lg_rq[16:0]),
+    .far_rq(lg_SW_2_b4__near_rq[16:0]),
+    .local_wq(sfu_SW2__lg_wq[280:0]),
+    .far_wq(lg_SW_2_b4__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[12]),
+    .local_write(calendar_SW__lg_local_write[12]),
+    .near_rq(lg_SW_1_b4__near_rq),
+    .near_wq(lg_SW_1_b4__near_wq),
+    .near_rr(lg_SW_0_b4__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b4__far_w_done[0]),
+    .local_rr(lg_SW_1_b4__local_rr),
+    .far_rr(lg_SW_1_b4__far_rr),
+    .local_w_done(lg_SW_1_b4__local_w_done),
+    .far_w_done(lg_SW_1_b4__far_w_done),
+    .fault(lg_SW_1_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW2__lg_rq[33:17]),
+    .far_rq(lg_SW_2_b5__near_rq[16:0]),
+    .local_wq(sfu_SW2__lg_wq[561:281]),
+    .far_wq(lg_SW_2_b5__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[13]),
+    .local_write(calendar_SW__lg_local_write[13]),
+    .near_rq(lg_SW_1_b5__near_rq),
+    .near_wq(lg_SW_1_b5__near_wq),
+    .near_rr(lg_SW_0_b5__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b5__far_w_done[0]),
+    .local_rr(lg_SW_1_b5__local_rr),
+    .far_rr(lg_SW_1_b5__far_rr),
+    .local_w_done(lg_SW_1_b5__local_w_done),
+    .far_w_done(lg_SW_1_b5__far_w_done),
+    .fault(lg_SW_1_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW3__lg_rq[16:0]),
+    .far_rq(lg_SW_2_b6__near_rq[16:0]),
+    .local_wq(sfu_SW3__lg_wq[280:0]),
+    .far_wq(lg_SW_2_b6__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[14]),
+    .local_write(calendar_SW__lg_local_write[14]),
+    .near_rq(lg_SW_1_b6__near_rq),
+    .near_wq(lg_SW_1_b6__near_wq),
+    .near_rr(lg_SW_0_b6__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b6__far_w_done[0]),
+    .local_rr(lg_SW_1_b6__local_rr),
+    .far_rr(lg_SW_1_b6__far_rr),
+    .local_w_done(lg_SW_1_b6__local_w_done),
+    .far_w_done(lg_SW_1_b6__far_w_done),
+    .fault(lg_SW_1_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SW3__lg_rq[33:17]),
+    .far_rq(lg_SW_2_b7__near_rq[16:0]),
+    .local_wq(sfu_SW3__lg_wq[561:281]),
+    .far_wq(lg_SW_2_b7__near_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[15]),
+    .local_write(calendar_SW__lg_local_write[15]),
+    .near_rq(lg_SW_1_b7__near_rq),
+    .near_wq(lg_SW_1_b7__near_wq),
+    .near_rr(lg_SW_0_b7__far_rr[256:0]),
+    .near_w_done(lg_SW_0_b7__far_w_done[0]),
+    .local_rr(lg_SW_1_b7__local_rr),
+    .far_rr(lg_SW_1_b7__far_rr),
+    .local_w_done(lg_SW_1_b7__local_w_done),
+    .far_w_done(lg_SW_1_b7__far_w_done),
+    .fault(lg_SW_1_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW0__lg_rq[16:0]),
+    .local_wq(hc_SW0__lg_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[16]),
+    .local_write(calendar_SW__lg_local_write[16]),
+    .near_rq(lg_SW_2_b0__near_rq),
+    .near_wq(lg_SW_2_b0__near_wq),
+    .near_rr(lg_SW_1_b0__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b0__far_w_done[0]),
+    .local_rr(lg_SW_2_b0__local_rr),
+    .local_w_done(lg_SW_2_b0__local_w_done),
+    .fault(lg_SW_2_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW0__lg_rq[33:17]),
+    .local_wq(hc_SW0__lg_wq[561:281]),
+    .local_read(calendar_SW__lg_local_read[17]),
+    .local_write(calendar_SW__lg_local_write[17]),
+    .near_rq(lg_SW_2_b1__near_rq),
+    .near_wq(lg_SW_2_b1__near_wq),
+    .near_rr(lg_SW_1_b1__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b1__far_w_done[0]),
+    .local_rr(lg_SW_2_b1__local_rr),
+    .local_w_done(lg_SW_2_b1__local_w_done),
+    .fault(lg_SW_2_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW1__lg_rq[16:0]),
+    .local_wq(hc_SW1__lg_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[18]),
+    .local_write(calendar_SW__lg_local_write[18]),
+    .near_rq(lg_SW_2_b2__near_rq),
+    .near_wq(lg_SW_2_b2__near_wq),
+    .near_rr(lg_SW_1_b2__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b2__far_w_done[0]),
+    .local_rr(lg_SW_2_b2__local_rr),
+    .local_w_done(lg_SW_2_b2__local_w_done),
+    .fault(lg_SW_2_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW1__lg_rq[33:17]),
+    .local_wq(hc_SW1__lg_wq[561:281]),
+    .local_read(calendar_SW__lg_local_read[19]),
+    .local_write(calendar_SW__lg_local_write[19]),
+    .near_rq(lg_SW_2_b3__near_rq),
+    .near_wq(lg_SW_2_b3__near_wq),
+    .near_rr(lg_SW_1_b3__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b3__far_w_done[0]),
+    .local_rr(lg_SW_2_b3__local_rr),
+    .local_w_done(lg_SW_2_b3__local_w_done),
+    .fault(lg_SW_2_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW2__lg_rq[16:0]),
+    .local_wq(hc_SW2__lg_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[20]),
+    .local_write(calendar_SW__lg_local_write[20]),
+    .near_rq(lg_SW_2_b4__near_rq),
+    .near_wq(lg_SW_2_b4__near_wq),
+    .near_rr(lg_SW_1_b4__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b4__far_w_done[0]),
+    .local_rr(lg_SW_2_b4__local_rr),
+    .local_w_done(lg_SW_2_b4__local_w_done),
+    .fault(lg_SW_2_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW2__lg_rq[33:17]),
+    .local_wq(hc_SW2__lg_wq[561:281]),
+    .local_read(calendar_SW__lg_local_read[21]),
+    .local_write(calendar_SW__lg_local_write[21]),
+    .near_rq(lg_SW_2_b5__near_rq),
+    .near_wq(lg_SW_2_b5__near_wq),
+    .near_rr(lg_SW_1_b5__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b5__far_w_done[0]),
+    .local_rr(lg_SW_2_b5__local_rr),
+    .local_w_done(lg_SW_2_b5__local_w_done),
+    .fault(lg_SW_2_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW3__lg_rq[16:0]),
+    .local_wq(hc_SW3__lg_wq[280:0]),
+    .local_read(calendar_SW__lg_local_read[22]),
+    .local_write(calendar_SW__lg_local_write[22]),
+    .near_rq(lg_SW_2_b6__near_rq),
+    .near_wq(lg_SW_2_b6__near_wq),
+    .near_rr(lg_SW_1_b6__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b6__far_w_done[0]),
+    .local_rr(lg_SW_2_b6__local_rr),
+    .local_w_done(lg_SW_2_b6__local_w_done),
+    .fault(lg_SW_2_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SW_2_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SW3__lg_rq[33:17]),
+    .local_wq(hc_SW3__lg_wq[561:281]),
+    .local_read(calendar_SW__lg_local_read[23]),
+    .local_write(calendar_SW__lg_local_write[23]),
+    .near_rq(lg_SW_2_b7__near_rq),
+    .near_wq(lg_SW_2_b7__near_wq),
+    .near_rr(lg_SW_1_b7__far_rr[256:0]),
+    .near_w_done(lg_SW_1_b7__far_w_done[0]),
+    .local_rr(lg_SW_2_b7__local_rr),
+    .local_w_done(lg_SW_2_b7__local_w_done),
+    .fault(lg_SW_2_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE0__lg_rq[16:0]),
+    .far_rq(lg_SE_1_b0__near_rq[16:0]),
+    .local_wq(su_SE0__lg_wq[280:0]),
+    .far_wq(lg_SE_1_b0__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[0]),
+    .local_write(calendar_SE__lg_local_write[0]),
+    .near_rq(lg_SE_0_b0__near_rq),
+    .near_wq(lg_SE_0_b0__near_wq),
+    .near_rr(hb_vms_SE__rr[256:0]),
+    .near_w_done(hb_vms_SE__wq_done[0]),
+    .local_rr(lg_SE_0_b0__local_rr),
+    .far_rr(lg_SE_0_b0__far_rr),
+    .local_w_done(lg_SE_0_b0__local_w_done),
+    .far_w_done(lg_SE_0_b0__far_w_done),
+    .fault(lg_SE_0_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE0__lg_rq[33:17]),
+    .far_rq(lg_SE_1_b1__near_rq[16:0]),
+    .local_wq(su_SE0__lg_wq[561:281]),
+    .far_wq(lg_SE_1_b1__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[1]),
+    .local_write(calendar_SE__lg_local_write[1]),
+    .near_rq(lg_SE_0_b1__near_rq),
+    .near_wq(lg_SE_0_b1__near_wq),
+    .near_rr(hb_vms_SE__rr[513:257]),
+    .near_w_done(hb_vms_SE__wq_done[1]),
+    .local_rr(lg_SE_0_b1__local_rr),
+    .far_rr(lg_SE_0_b1__far_rr),
+    .local_w_done(lg_SE_0_b1__local_w_done),
+    .far_w_done(lg_SE_0_b1__far_w_done),
+    .fault(lg_SE_0_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE1__lg_rq[16:0]),
+    .far_rq(lg_SE_1_b2__near_rq[16:0]),
+    .local_wq(su_SE1__lg_wq[280:0]),
+    .far_wq(lg_SE_1_b2__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[2]),
+    .local_write(calendar_SE__lg_local_write[2]),
+    .near_rq(lg_SE_0_b2__near_rq),
+    .near_wq(lg_SE_0_b2__near_wq),
+    .near_rr(hb_vms_SE__rr[770:514]),
+    .near_w_done(hb_vms_SE__wq_done[2]),
+    .local_rr(lg_SE_0_b2__local_rr),
+    .far_rr(lg_SE_0_b2__far_rr),
+    .local_w_done(lg_SE_0_b2__local_w_done),
+    .far_w_done(lg_SE_0_b2__far_w_done),
+    .fault(lg_SE_0_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE1__lg_rq[33:17]),
+    .far_rq(lg_SE_1_b3__near_rq[16:0]),
+    .local_wq(su_SE1__lg_wq[561:281]),
+    .far_wq(lg_SE_1_b3__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[3]),
+    .local_write(calendar_SE__lg_local_write[3]),
+    .near_rq(lg_SE_0_b3__near_rq),
+    .near_wq(lg_SE_0_b3__near_wq),
+    .near_rr(hb_vms_SE__rr[1027:771]),
+    .near_w_done(hb_vms_SE__wq_done[3]),
+    .local_rr(lg_SE_0_b3__local_rr),
+    .far_rr(lg_SE_0_b3__far_rr),
+    .local_w_done(lg_SE_0_b3__local_w_done),
+    .far_w_done(lg_SE_0_b3__far_w_done),
+    .fault(lg_SE_0_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE2__lg_rq[16:0]),
+    .far_rq(lg_SE_1_b4__near_rq[16:0]),
+    .local_wq(su_SE2__lg_wq[280:0]),
+    .far_wq(lg_SE_1_b4__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[4]),
+    .local_write(calendar_SE__lg_local_write[4]),
+    .near_rq(lg_SE_0_b4__near_rq),
+    .near_wq(lg_SE_0_b4__near_wq),
+    .near_rr(hb_vms_SE__rr[1284:1028]),
+    .near_w_done(hb_vms_SE__wq_done[4]),
+    .local_rr(lg_SE_0_b4__local_rr),
+    .far_rr(lg_SE_0_b4__far_rr),
+    .local_w_done(lg_SE_0_b4__local_w_done),
+    .far_w_done(lg_SE_0_b4__far_w_done),
+    .fault(lg_SE_0_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE2__lg_rq[33:17]),
+    .far_rq(lg_SE_1_b5__near_rq[16:0]),
+    .local_wq(su_SE2__lg_wq[561:281]),
+    .far_wq(lg_SE_1_b5__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[5]),
+    .local_write(calendar_SE__lg_local_write[5]),
+    .near_rq(lg_SE_0_b5__near_rq),
+    .near_wq(lg_SE_0_b5__near_wq),
+    .near_rr(hb_vms_SE__rr[1541:1285]),
+    .near_w_done(hb_vms_SE__wq_done[5]),
+    .local_rr(lg_SE_0_b5__local_rr),
+    .far_rr(lg_SE_0_b5__far_rr),
+    .local_w_done(lg_SE_0_b5__local_w_done),
+    .far_w_done(lg_SE_0_b5__far_w_done),
+    .fault(lg_SE_0_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE3__lg_rq[16:0]),
+    .far_rq(lg_SE_1_b6__near_rq[16:0]),
+    .local_wq(su_SE3__lg_wq[280:0]),
+    .far_wq(lg_SE_1_b6__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[6]),
+    .local_write(calendar_SE__lg_local_write[6]),
+    .near_rq(lg_SE_0_b6__near_rq),
+    .near_wq(lg_SE_0_b6__near_wq),
+    .near_rr(hb_vms_SE__rr[1798:1542]),
+    .near_w_done(hb_vms_SE__wq_done[6]),
+    .local_rr(lg_SE_0_b6__local_rr),
+    .far_rr(lg_SE_0_b6__far_rr),
+    .local_w_done(lg_SE_0_b6__local_w_done),
+    .far_w_done(lg_SE_0_b6__far_w_done),
+    .fault(lg_SE_0_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_SE3__lg_rq[33:17]),
+    .far_rq(lg_SE_1_b7__near_rq[16:0]),
+    .local_wq(su_SE3__lg_wq[561:281]),
+    .far_wq(lg_SE_1_b7__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[7]),
+    .local_write(calendar_SE__lg_local_write[7]),
+    .near_rq(lg_SE_0_b7__near_rq),
+    .near_wq(lg_SE_0_b7__near_wq),
+    .near_rr(hb_vms_SE__rr[2055:1799]),
+    .near_w_done(hb_vms_SE__wq_done[7]),
+    .local_rr(lg_SE_0_b7__local_rr),
+    .far_rr(lg_SE_0_b7__far_rr),
+    .local_w_done(lg_SE_0_b7__local_w_done),
+    .far_w_done(lg_SE_0_b7__far_w_done),
+    .fault(lg_SE_0_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE0__lg_rq[16:0]),
+    .far_rq(lg_SE_2_b0__near_rq[16:0]),
+    .local_wq(sfu_SE0__lg_wq[280:0]),
+    .far_wq(lg_SE_2_b0__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[8]),
+    .local_write(calendar_SE__lg_local_write[8]),
+    .near_rq(lg_SE_1_b0__near_rq),
+    .near_wq(lg_SE_1_b0__near_wq),
+    .near_rr(lg_SE_0_b0__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b0__far_w_done[0]),
+    .local_rr(lg_SE_1_b0__local_rr),
+    .far_rr(lg_SE_1_b0__far_rr),
+    .local_w_done(lg_SE_1_b0__local_w_done),
+    .far_w_done(lg_SE_1_b0__far_w_done),
+    .fault(lg_SE_1_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE0__lg_rq[33:17]),
+    .far_rq(lg_SE_2_b1__near_rq[16:0]),
+    .local_wq(sfu_SE0__lg_wq[561:281]),
+    .far_wq(lg_SE_2_b1__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[9]),
+    .local_write(calendar_SE__lg_local_write[9]),
+    .near_rq(lg_SE_1_b1__near_rq),
+    .near_wq(lg_SE_1_b1__near_wq),
+    .near_rr(lg_SE_0_b1__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b1__far_w_done[0]),
+    .local_rr(lg_SE_1_b1__local_rr),
+    .far_rr(lg_SE_1_b1__far_rr),
+    .local_w_done(lg_SE_1_b1__local_w_done),
+    .far_w_done(lg_SE_1_b1__far_w_done),
+    .fault(lg_SE_1_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE1__lg_rq[16:0]),
+    .far_rq(lg_SE_2_b2__near_rq[16:0]),
+    .local_wq(sfu_SE1__lg_wq[280:0]),
+    .far_wq(lg_SE_2_b2__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[10]),
+    .local_write(calendar_SE__lg_local_write[10]),
+    .near_rq(lg_SE_1_b2__near_rq),
+    .near_wq(lg_SE_1_b2__near_wq),
+    .near_rr(lg_SE_0_b2__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b2__far_w_done[0]),
+    .local_rr(lg_SE_1_b2__local_rr),
+    .far_rr(lg_SE_1_b2__far_rr),
+    .local_w_done(lg_SE_1_b2__local_w_done),
+    .far_w_done(lg_SE_1_b2__far_w_done),
+    .fault(lg_SE_1_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE1__lg_rq[33:17]),
+    .far_rq(lg_SE_2_b3__near_rq[16:0]),
+    .local_wq(sfu_SE1__lg_wq[561:281]),
+    .far_wq(lg_SE_2_b3__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[11]),
+    .local_write(calendar_SE__lg_local_write[11]),
+    .near_rq(lg_SE_1_b3__near_rq),
+    .near_wq(lg_SE_1_b3__near_wq),
+    .near_rr(lg_SE_0_b3__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b3__far_w_done[0]),
+    .local_rr(lg_SE_1_b3__local_rr),
+    .far_rr(lg_SE_1_b3__far_rr),
+    .local_w_done(lg_SE_1_b3__local_w_done),
+    .far_w_done(lg_SE_1_b3__far_w_done),
+    .fault(lg_SE_1_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE2__lg_rq[16:0]),
+    .far_rq(lg_SE_2_b4__near_rq[16:0]),
+    .local_wq(sfu_SE2__lg_wq[280:0]),
+    .far_wq(lg_SE_2_b4__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[12]),
+    .local_write(calendar_SE__lg_local_write[12]),
+    .near_rq(lg_SE_1_b4__near_rq),
+    .near_wq(lg_SE_1_b4__near_wq),
+    .near_rr(lg_SE_0_b4__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b4__far_w_done[0]),
+    .local_rr(lg_SE_1_b4__local_rr),
+    .far_rr(lg_SE_1_b4__far_rr),
+    .local_w_done(lg_SE_1_b4__local_w_done),
+    .far_w_done(lg_SE_1_b4__far_w_done),
+    .fault(lg_SE_1_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE2__lg_rq[33:17]),
+    .far_rq(lg_SE_2_b5__near_rq[16:0]),
+    .local_wq(sfu_SE2__lg_wq[561:281]),
+    .far_wq(lg_SE_2_b5__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[13]),
+    .local_write(calendar_SE__lg_local_write[13]),
+    .near_rq(lg_SE_1_b5__near_rq),
+    .near_wq(lg_SE_1_b5__near_wq),
+    .near_rr(lg_SE_0_b5__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b5__far_w_done[0]),
+    .local_rr(lg_SE_1_b5__local_rr),
+    .far_rr(lg_SE_1_b5__far_rr),
+    .local_w_done(lg_SE_1_b5__local_w_done),
+    .far_w_done(lg_SE_1_b5__far_w_done),
+    .fault(lg_SE_1_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE3__lg_rq[16:0]),
+    .far_rq(lg_SE_2_b6__near_rq[16:0]),
+    .local_wq(sfu_SE3__lg_wq[280:0]),
+    .far_wq(lg_SE_2_b6__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[14]),
+    .local_write(calendar_SE__lg_local_write[14]),
+    .near_rq(lg_SE_1_b6__near_rq),
+    .near_wq(lg_SE_1_b6__near_wq),
+    .near_rr(lg_SE_0_b6__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b6__far_w_done[0]),
+    .local_rr(lg_SE_1_b6__local_rr),
+    .far_rr(lg_SE_1_b6__far_rr),
+    .local_w_done(lg_SE_1_b6__local_w_done),
+    .far_w_done(lg_SE_1_b6__far_w_done),
+    .fault(lg_SE_1_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_SE3__lg_rq[33:17]),
+    .far_rq(lg_SE_2_b7__near_rq[16:0]),
+    .local_wq(sfu_SE3__lg_wq[561:281]),
+    .far_wq(lg_SE_2_b7__near_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[15]),
+    .local_write(calendar_SE__lg_local_write[15]),
+    .near_rq(lg_SE_1_b7__near_rq),
+    .near_wq(lg_SE_1_b7__near_wq),
+    .near_rr(lg_SE_0_b7__far_rr[256:0]),
+    .near_w_done(lg_SE_0_b7__far_w_done[0]),
+    .local_rr(lg_SE_1_b7__local_rr),
+    .far_rr(lg_SE_1_b7__far_rr),
+    .local_w_done(lg_SE_1_b7__local_w_done),
+    .far_w_done(lg_SE_1_b7__far_w_done),
+    .fault(lg_SE_1_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE0__lg_rq[16:0]),
+    .local_wq(hc_SE0__lg_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[16]),
+    .local_write(calendar_SE__lg_local_write[16]),
+    .near_rq(lg_SE_2_b0__near_rq),
+    .near_wq(lg_SE_2_b0__near_wq),
+    .near_rr(lg_SE_1_b0__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b0__far_w_done[0]),
+    .local_rr(lg_SE_2_b0__local_rr),
+    .local_w_done(lg_SE_2_b0__local_w_done),
+    .fault(lg_SE_2_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE0__lg_rq[33:17]),
+    .local_wq(hc_SE0__lg_wq[561:281]),
+    .local_read(calendar_SE__lg_local_read[17]),
+    .local_write(calendar_SE__lg_local_write[17]),
+    .near_rq(lg_SE_2_b1__near_rq),
+    .near_wq(lg_SE_2_b1__near_wq),
+    .near_rr(lg_SE_1_b1__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b1__far_w_done[0]),
+    .local_rr(lg_SE_2_b1__local_rr),
+    .local_w_done(lg_SE_2_b1__local_w_done),
+    .fault(lg_SE_2_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE1__lg_rq[16:0]),
+    .local_wq(hc_SE1__lg_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[18]),
+    .local_write(calendar_SE__lg_local_write[18]),
+    .near_rq(lg_SE_2_b2__near_rq),
+    .near_wq(lg_SE_2_b2__near_wq),
+    .near_rr(lg_SE_1_b2__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b2__far_w_done[0]),
+    .local_rr(lg_SE_2_b2__local_rr),
+    .local_w_done(lg_SE_2_b2__local_w_done),
+    .fault(lg_SE_2_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE1__lg_rq[33:17]),
+    .local_wq(hc_SE1__lg_wq[561:281]),
+    .local_read(calendar_SE__lg_local_read[19]),
+    .local_write(calendar_SE__lg_local_write[19]),
+    .near_rq(lg_SE_2_b3__near_rq),
+    .near_wq(lg_SE_2_b3__near_wq),
+    .near_rr(lg_SE_1_b3__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b3__far_w_done[0]),
+    .local_rr(lg_SE_2_b3__local_rr),
+    .local_w_done(lg_SE_2_b3__local_w_done),
+    .fault(lg_SE_2_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE2__lg_rq[16:0]),
+    .local_wq(hc_SE2__lg_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[20]),
+    .local_write(calendar_SE__lg_local_write[20]),
+    .near_rq(lg_SE_2_b4__near_rq),
+    .near_wq(lg_SE_2_b4__near_wq),
+    .near_rr(lg_SE_1_b4__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b4__far_w_done[0]),
+    .local_rr(lg_SE_2_b4__local_rr),
+    .local_w_done(lg_SE_2_b4__local_w_done),
+    .fault(lg_SE_2_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE2__lg_rq[33:17]),
+    .local_wq(hc_SE2__lg_wq[561:281]),
+    .local_read(calendar_SE__lg_local_read[21]),
+    .local_write(calendar_SE__lg_local_write[21]),
+    .near_rq(lg_SE_2_b5__near_rq),
+    .near_wq(lg_SE_2_b5__near_wq),
+    .near_rr(lg_SE_1_b5__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b5__far_w_done[0]),
+    .local_rr(lg_SE_2_b5__local_rr),
+    .local_w_done(lg_SE_2_b5__local_w_done),
+    .fault(lg_SE_2_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE3__lg_rq[16:0]),
+    .local_wq(hc_SE3__lg_wq[280:0]),
+    .local_read(calendar_SE__lg_local_read[22]),
+    .local_write(calendar_SE__lg_local_write[22]),
+    .near_rq(lg_SE_2_b6__near_rq),
+    .near_wq(lg_SE_2_b6__near_wq),
+    .near_rr(lg_SE_1_b6__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b6__far_w_done[0]),
+    .local_rr(lg_SE_2_b6__local_rr),
+    .local_w_done(lg_SE_2_b6__local_w_done),
+    .fault(lg_SE_2_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_SE_2_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_SE3__lg_rq[33:17]),
+    .local_wq(hc_SE3__lg_wq[561:281]),
+    .local_read(calendar_SE__lg_local_read[23]),
+    .local_write(calendar_SE__lg_local_write[23]),
+    .near_rq(lg_SE_2_b7__near_rq),
+    .near_wq(lg_SE_2_b7__near_wq),
+    .near_rr(lg_SE_1_b7__far_rr[256:0]),
+    .near_w_done(lg_SE_1_b7__far_w_done[0]),
+    .local_rr(lg_SE_2_b7__local_rr),
+    .local_w_done(lg_SE_2_b7__local_w_done),
+    .fault(lg_SE_2_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW0__lg_rq[16:0]),
+    .far_rq(lg_NW_1_b0__near_rq[16:0]),
+    .local_wq(su_NW0__lg_wq[280:0]),
+    .far_wq(lg_NW_1_b0__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[0]),
+    .local_write(calendar_NW__lg_local_write[0]),
+    .near_rq(lg_NW_0_b0__near_rq),
+    .near_wq(lg_NW_0_b0__near_wq),
+    .near_rr(hb_vms_NW__rr[256:0]),
+    .near_w_done(hb_vms_NW__wq_done[0]),
+    .local_rr(lg_NW_0_b0__local_rr),
+    .far_rr(lg_NW_0_b0__far_rr),
+    .local_w_done(lg_NW_0_b0__local_w_done),
+    .far_w_done(lg_NW_0_b0__far_w_done),
+    .fault(lg_NW_0_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW0__lg_rq[33:17]),
+    .far_rq(lg_NW_1_b1__near_rq[16:0]),
+    .local_wq(su_NW0__lg_wq[561:281]),
+    .far_wq(lg_NW_1_b1__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[1]),
+    .local_write(calendar_NW__lg_local_write[1]),
+    .near_rq(lg_NW_0_b1__near_rq),
+    .near_wq(lg_NW_0_b1__near_wq),
+    .near_rr(hb_vms_NW__rr[513:257]),
+    .near_w_done(hb_vms_NW__wq_done[1]),
+    .local_rr(lg_NW_0_b1__local_rr),
+    .far_rr(lg_NW_0_b1__far_rr),
+    .local_w_done(lg_NW_0_b1__local_w_done),
+    .far_w_done(lg_NW_0_b1__far_w_done),
+    .fault(lg_NW_0_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW1__lg_rq[16:0]),
+    .far_rq(lg_NW_1_b2__near_rq[16:0]),
+    .local_wq(su_NW1__lg_wq[280:0]),
+    .far_wq(lg_NW_1_b2__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[2]),
+    .local_write(calendar_NW__lg_local_write[2]),
+    .near_rq(lg_NW_0_b2__near_rq),
+    .near_wq(lg_NW_0_b2__near_wq),
+    .near_rr(hb_vms_NW__rr[770:514]),
+    .near_w_done(hb_vms_NW__wq_done[2]),
+    .local_rr(lg_NW_0_b2__local_rr),
+    .far_rr(lg_NW_0_b2__far_rr),
+    .local_w_done(lg_NW_0_b2__local_w_done),
+    .far_w_done(lg_NW_0_b2__far_w_done),
+    .fault(lg_NW_0_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW1__lg_rq[33:17]),
+    .far_rq(lg_NW_1_b3__near_rq[16:0]),
+    .local_wq(su_NW1__lg_wq[561:281]),
+    .far_wq(lg_NW_1_b3__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[3]),
+    .local_write(calendar_NW__lg_local_write[3]),
+    .near_rq(lg_NW_0_b3__near_rq),
+    .near_wq(lg_NW_0_b3__near_wq),
+    .near_rr(hb_vms_NW__rr[1027:771]),
+    .near_w_done(hb_vms_NW__wq_done[3]),
+    .local_rr(lg_NW_0_b3__local_rr),
+    .far_rr(lg_NW_0_b3__far_rr),
+    .local_w_done(lg_NW_0_b3__local_w_done),
+    .far_w_done(lg_NW_0_b3__far_w_done),
+    .fault(lg_NW_0_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW2__lg_rq[16:0]),
+    .far_rq(lg_NW_1_b4__near_rq[16:0]),
+    .local_wq(su_NW2__lg_wq[280:0]),
+    .far_wq(lg_NW_1_b4__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[4]),
+    .local_write(calendar_NW__lg_local_write[4]),
+    .near_rq(lg_NW_0_b4__near_rq),
+    .near_wq(lg_NW_0_b4__near_wq),
+    .near_rr(hb_vms_NW__rr[1284:1028]),
+    .near_w_done(hb_vms_NW__wq_done[4]),
+    .local_rr(lg_NW_0_b4__local_rr),
+    .far_rr(lg_NW_0_b4__far_rr),
+    .local_w_done(lg_NW_0_b4__local_w_done),
+    .far_w_done(lg_NW_0_b4__far_w_done),
+    .fault(lg_NW_0_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW2__lg_rq[33:17]),
+    .far_rq(lg_NW_1_b5__near_rq[16:0]),
+    .local_wq(su_NW2__lg_wq[561:281]),
+    .far_wq(lg_NW_1_b5__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[5]),
+    .local_write(calendar_NW__lg_local_write[5]),
+    .near_rq(lg_NW_0_b5__near_rq),
+    .near_wq(lg_NW_0_b5__near_wq),
+    .near_rr(hb_vms_NW__rr[1541:1285]),
+    .near_w_done(hb_vms_NW__wq_done[5]),
+    .local_rr(lg_NW_0_b5__local_rr),
+    .far_rr(lg_NW_0_b5__far_rr),
+    .local_w_done(lg_NW_0_b5__local_w_done),
+    .far_w_done(lg_NW_0_b5__far_w_done),
+    .fault(lg_NW_0_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW3__lg_rq[16:0]),
+    .far_rq(lg_NW_1_b6__near_rq[16:0]),
+    .local_wq(su_NW3__lg_wq[280:0]),
+    .far_wq(lg_NW_1_b6__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[6]),
+    .local_write(calendar_NW__lg_local_write[6]),
+    .near_rq(lg_NW_0_b6__near_rq),
+    .near_wq(lg_NW_0_b6__near_wq),
+    .near_rr(hb_vms_NW__rr[1798:1542]),
+    .near_w_done(hb_vms_NW__wq_done[6]),
+    .local_rr(lg_NW_0_b6__local_rr),
+    .far_rr(lg_NW_0_b6__far_rr),
+    .local_w_done(lg_NW_0_b6__local_w_done),
+    .far_w_done(lg_NW_0_b6__far_w_done),
+    .fault(lg_NW_0_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NW3__lg_rq[33:17]),
+    .far_rq(lg_NW_1_b7__near_rq[16:0]),
+    .local_wq(su_NW3__lg_wq[561:281]),
+    .far_wq(lg_NW_1_b7__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[7]),
+    .local_write(calendar_NW__lg_local_write[7]),
+    .near_rq(lg_NW_0_b7__near_rq),
+    .near_wq(lg_NW_0_b7__near_wq),
+    .near_rr(hb_vms_NW__rr[2055:1799]),
+    .near_w_done(hb_vms_NW__wq_done[7]),
+    .local_rr(lg_NW_0_b7__local_rr),
+    .far_rr(lg_NW_0_b7__far_rr),
+    .local_w_done(lg_NW_0_b7__local_w_done),
+    .far_w_done(lg_NW_0_b7__far_w_done),
+    .fault(lg_NW_0_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW0__lg_rq[16:0]),
+    .far_rq(lg_NW_2_b0__near_rq[16:0]),
+    .local_wq(sfu_NW0__lg_wq[280:0]),
+    .far_wq(lg_NW_2_b0__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[8]),
+    .local_write(calendar_NW__lg_local_write[8]),
+    .near_rq(lg_NW_1_b0__near_rq),
+    .near_wq(lg_NW_1_b0__near_wq),
+    .near_rr(lg_NW_0_b0__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b0__far_w_done[0]),
+    .local_rr(lg_NW_1_b0__local_rr),
+    .far_rr(lg_NW_1_b0__far_rr),
+    .local_w_done(lg_NW_1_b0__local_w_done),
+    .far_w_done(lg_NW_1_b0__far_w_done),
+    .fault(lg_NW_1_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW0__lg_rq[33:17]),
+    .far_rq(lg_NW_2_b1__near_rq[16:0]),
+    .local_wq(sfu_NW0__lg_wq[561:281]),
+    .far_wq(lg_NW_2_b1__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[9]),
+    .local_write(calendar_NW__lg_local_write[9]),
+    .near_rq(lg_NW_1_b1__near_rq),
+    .near_wq(lg_NW_1_b1__near_wq),
+    .near_rr(lg_NW_0_b1__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b1__far_w_done[0]),
+    .local_rr(lg_NW_1_b1__local_rr),
+    .far_rr(lg_NW_1_b1__far_rr),
+    .local_w_done(lg_NW_1_b1__local_w_done),
+    .far_w_done(lg_NW_1_b1__far_w_done),
+    .fault(lg_NW_1_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW1__lg_rq[16:0]),
+    .far_rq(lg_NW_2_b2__near_rq[16:0]),
+    .local_wq(sfu_NW1__lg_wq[280:0]),
+    .far_wq(lg_NW_2_b2__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[10]),
+    .local_write(calendar_NW__lg_local_write[10]),
+    .near_rq(lg_NW_1_b2__near_rq),
+    .near_wq(lg_NW_1_b2__near_wq),
+    .near_rr(lg_NW_0_b2__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b2__far_w_done[0]),
+    .local_rr(lg_NW_1_b2__local_rr),
+    .far_rr(lg_NW_1_b2__far_rr),
+    .local_w_done(lg_NW_1_b2__local_w_done),
+    .far_w_done(lg_NW_1_b2__far_w_done),
+    .fault(lg_NW_1_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW1__lg_rq[33:17]),
+    .far_rq(lg_NW_2_b3__near_rq[16:0]),
+    .local_wq(sfu_NW1__lg_wq[561:281]),
+    .far_wq(lg_NW_2_b3__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[11]),
+    .local_write(calendar_NW__lg_local_write[11]),
+    .near_rq(lg_NW_1_b3__near_rq),
+    .near_wq(lg_NW_1_b3__near_wq),
+    .near_rr(lg_NW_0_b3__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b3__far_w_done[0]),
+    .local_rr(lg_NW_1_b3__local_rr),
+    .far_rr(lg_NW_1_b3__far_rr),
+    .local_w_done(lg_NW_1_b3__local_w_done),
+    .far_w_done(lg_NW_1_b3__far_w_done),
+    .fault(lg_NW_1_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW2__lg_rq[16:0]),
+    .far_rq(lg_NW_2_b4__near_rq[16:0]),
+    .local_wq(sfu_NW2__lg_wq[280:0]),
+    .far_wq(lg_NW_2_b4__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[12]),
+    .local_write(calendar_NW__lg_local_write[12]),
+    .near_rq(lg_NW_1_b4__near_rq),
+    .near_wq(lg_NW_1_b4__near_wq),
+    .near_rr(lg_NW_0_b4__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b4__far_w_done[0]),
+    .local_rr(lg_NW_1_b4__local_rr),
+    .far_rr(lg_NW_1_b4__far_rr),
+    .local_w_done(lg_NW_1_b4__local_w_done),
+    .far_w_done(lg_NW_1_b4__far_w_done),
+    .fault(lg_NW_1_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW2__lg_rq[33:17]),
+    .far_rq(lg_NW_2_b5__near_rq[16:0]),
+    .local_wq(sfu_NW2__lg_wq[561:281]),
+    .far_wq(lg_NW_2_b5__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[13]),
+    .local_write(calendar_NW__lg_local_write[13]),
+    .near_rq(lg_NW_1_b5__near_rq),
+    .near_wq(lg_NW_1_b5__near_wq),
+    .near_rr(lg_NW_0_b5__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b5__far_w_done[0]),
+    .local_rr(lg_NW_1_b5__local_rr),
+    .far_rr(lg_NW_1_b5__far_rr),
+    .local_w_done(lg_NW_1_b5__local_w_done),
+    .far_w_done(lg_NW_1_b5__far_w_done),
+    .fault(lg_NW_1_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW3__lg_rq[16:0]),
+    .far_rq(lg_NW_2_b6__near_rq[16:0]),
+    .local_wq(sfu_NW3__lg_wq[280:0]),
+    .far_wq(lg_NW_2_b6__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[14]),
+    .local_write(calendar_NW__lg_local_write[14]),
+    .near_rq(lg_NW_1_b6__near_rq),
+    .near_wq(lg_NW_1_b6__near_wq),
+    .near_rr(lg_NW_0_b6__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b6__far_w_done[0]),
+    .local_rr(lg_NW_1_b6__local_rr),
+    .far_rr(lg_NW_1_b6__far_rr),
+    .local_w_done(lg_NW_1_b6__local_w_done),
+    .far_w_done(lg_NW_1_b6__far_w_done),
+    .fault(lg_NW_1_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NW3__lg_rq[33:17]),
+    .far_rq(lg_NW_2_b7__near_rq[16:0]),
+    .local_wq(sfu_NW3__lg_wq[561:281]),
+    .far_wq(lg_NW_2_b7__near_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[15]),
+    .local_write(calendar_NW__lg_local_write[15]),
+    .near_rq(lg_NW_1_b7__near_rq),
+    .near_wq(lg_NW_1_b7__near_wq),
+    .near_rr(lg_NW_0_b7__far_rr[256:0]),
+    .near_w_done(lg_NW_0_b7__far_w_done[0]),
+    .local_rr(lg_NW_1_b7__local_rr),
+    .far_rr(lg_NW_1_b7__far_rr),
+    .local_w_done(lg_NW_1_b7__local_w_done),
+    .far_w_done(lg_NW_1_b7__far_w_done),
+    .fault(lg_NW_1_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW0__lg_rq[16:0]),
+    .local_wq(hc_NW0__lg_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[16]),
+    .local_write(calendar_NW__lg_local_write[16]),
+    .near_rq(lg_NW_2_b0__near_rq),
+    .near_wq(lg_NW_2_b0__near_wq),
+    .near_rr(lg_NW_1_b0__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b0__far_w_done[0]),
+    .local_rr(lg_NW_2_b0__local_rr),
+    .local_w_done(lg_NW_2_b0__local_w_done),
+    .fault(lg_NW_2_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW0__lg_rq[33:17]),
+    .local_wq(hc_NW0__lg_wq[561:281]),
+    .local_read(calendar_NW__lg_local_read[17]),
+    .local_write(calendar_NW__lg_local_write[17]),
+    .near_rq(lg_NW_2_b1__near_rq),
+    .near_wq(lg_NW_2_b1__near_wq),
+    .near_rr(lg_NW_1_b1__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b1__far_w_done[0]),
+    .local_rr(lg_NW_2_b1__local_rr),
+    .local_w_done(lg_NW_2_b1__local_w_done),
+    .fault(lg_NW_2_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW1__lg_rq[16:0]),
+    .local_wq(hc_NW1__lg_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[18]),
+    .local_write(calendar_NW__lg_local_write[18]),
+    .near_rq(lg_NW_2_b2__near_rq),
+    .near_wq(lg_NW_2_b2__near_wq),
+    .near_rr(lg_NW_1_b2__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b2__far_w_done[0]),
+    .local_rr(lg_NW_2_b2__local_rr),
+    .local_w_done(lg_NW_2_b2__local_w_done),
+    .fault(lg_NW_2_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW1__lg_rq[33:17]),
+    .local_wq(hc_NW1__lg_wq[561:281]),
+    .local_read(calendar_NW__lg_local_read[19]),
+    .local_write(calendar_NW__lg_local_write[19]),
+    .near_rq(lg_NW_2_b3__near_rq),
+    .near_wq(lg_NW_2_b3__near_wq),
+    .near_rr(lg_NW_1_b3__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b3__far_w_done[0]),
+    .local_rr(lg_NW_2_b3__local_rr),
+    .local_w_done(lg_NW_2_b3__local_w_done),
+    .fault(lg_NW_2_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW2__lg_rq[16:0]),
+    .local_wq(hc_NW2__lg_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[20]),
+    .local_write(calendar_NW__lg_local_write[20]),
+    .near_rq(lg_NW_2_b4__near_rq),
+    .near_wq(lg_NW_2_b4__near_wq),
+    .near_rr(lg_NW_1_b4__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b4__far_w_done[0]),
+    .local_rr(lg_NW_2_b4__local_rr),
+    .local_w_done(lg_NW_2_b4__local_w_done),
+    .fault(lg_NW_2_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW2__lg_rq[33:17]),
+    .local_wq(hc_NW2__lg_wq[561:281]),
+    .local_read(calendar_NW__lg_local_read[21]),
+    .local_write(calendar_NW__lg_local_write[21]),
+    .near_rq(lg_NW_2_b5__near_rq),
+    .near_wq(lg_NW_2_b5__near_wq),
+    .near_rr(lg_NW_1_b5__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b5__far_w_done[0]),
+    .local_rr(lg_NW_2_b5__local_rr),
+    .local_w_done(lg_NW_2_b5__local_w_done),
+    .fault(lg_NW_2_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW3__lg_rq[16:0]),
+    .local_wq(hc_NW3__lg_wq[280:0]),
+    .local_read(calendar_NW__lg_local_read[22]),
+    .local_write(calendar_NW__lg_local_write[22]),
+    .near_rq(lg_NW_2_b6__near_rq),
+    .near_wq(lg_NW_2_b6__near_wq),
+    .near_rr(lg_NW_1_b6__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b6__far_w_done[0]),
+    .local_rr(lg_NW_2_b6__local_rr),
+    .local_w_done(lg_NW_2_b6__local_w_done),
+    .fault(lg_NW_2_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NW_2_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NW3__lg_rq[33:17]),
+    .local_wq(hc_NW3__lg_wq[561:281]),
+    .local_read(calendar_NW__lg_local_read[23]),
+    .local_write(calendar_NW__lg_local_write[23]),
+    .near_rq(lg_NW_2_b7__near_rq),
+    .near_wq(lg_NW_2_b7__near_wq),
+    .near_rr(lg_NW_1_b7__far_rr[256:0]),
+    .near_w_done(lg_NW_1_b7__far_w_done[0]),
+    .local_rr(lg_NW_2_b7__local_rr),
+    .local_w_done(lg_NW_2_b7__local_w_done),
+    .fault(lg_NW_2_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE0__lg_rq[16:0]),
+    .far_rq(lg_NE_1_b0__near_rq[16:0]),
+    .local_wq(su_NE0__lg_wq[280:0]),
+    .far_wq(lg_NE_1_b0__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[0]),
+    .local_write(calendar_NE__lg_local_write[0]),
+    .near_rq(lg_NE_0_b0__near_rq),
+    .near_wq(lg_NE_0_b0__near_wq),
+    .near_rr(hb_vms_NE__rr[256:0]),
+    .near_w_done(hb_vms_NE__wq_done[0]),
+    .local_rr(lg_NE_0_b0__local_rr),
+    .far_rr(lg_NE_0_b0__far_rr),
+    .local_w_done(lg_NE_0_b0__local_w_done),
+    .far_w_done(lg_NE_0_b0__far_w_done),
+    .fault(lg_NE_0_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE0__lg_rq[33:17]),
+    .far_rq(lg_NE_1_b1__near_rq[16:0]),
+    .local_wq(su_NE0__lg_wq[561:281]),
+    .far_wq(lg_NE_1_b1__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[1]),
+    .local_write(calendar_NE__lg_local_write[1]),
+    .near_rq(lg_NE_0_b1__near_rq),
+    .near_wq(lg_NE_0_b1__near_wq),
+    .near_rr(hb_vms_NE__rr[513:257]),
+    .near_w_done(hb_vms_NE__wq_done[1]),
+    .local_rr(lg_NE_0_b1__local_rr),
+    .far_rr(lg_NE_0_b1__far_rr),
+    .local_w_done(lg_NE_0_b1__local_w_done),
+    .far_w_done(lg_NE_0_b1__far_w_done),
+    .fault(lg_NE_0_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE1__lg_rq[16:0]),
+    .far_rq(lg_NE_1_b2__near_rq[16:0]),
+    .local_wq(su_NE1__lg_wq[280:0]),
+    .far_wq(lg_NE_1_b2__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[2]),
+    .local_write(calendar_NE__lg_local_write[2]),
+    .near_rq(lg_NE_0_b2__near_rq),
+    .near_wq(lg_NE_0_b2__near_wq),
+    .near_rr(hb_vms_NE__rr[770:514]),
+    .near_w_done(hb_vms_NE__wq_done[2]),
+    .local_rr(lg_NE_0_b2__local_rr),
+    .far_rr(lg_NE_0_b2__far_rr),
+    .local_w_done(lg_NE_0_b2__local_w_done),
+    .far_w_done(lg_NE_0_b2__far_w_done),
+    .fault(lg_NE_0_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE1__lg_rq[33:17]),
+    .far_rq(lg_NE_1_b3__near_rq[16:0]),
+    .local_wq(su_NE1__lg_wq[561:281]),
+    .far_wq(lg_NE_1_b3__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[3]),
+    .local_write(calendar_NE__lg_local_write[3]),
+    .near_rq(lg_NE_0_b3__near_rq),
+    .near_wq(lg_NE_0_b3__near_wq),
+    .near_rr(hb_vms_NE__rr[1027:771]),
+    .near_w_done(hb_vms_NE__wq_done[3]),
+    .local_rr(lg_NE_0_b3__local_rr),
+    .far_rr(lg_NE_0_b3__far_rr),
+    .local_w_done(lg_NE_0_b3__local_w_done),
+    .far_w_done(lg_NE_0_b3__far_w_done),
+    .fault(lg_NE_0_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE2__lg_rq[16:0]),
+    .far_rq(lg_NE_1_b4__near_rq[16:0]),
+    .local_wq(su_NE2__lg_wq[280:0]),
+    .far_wq(lg_NE_1_b4__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[4]),
+    .local_write(calendar_NE__lg_local_write[4]),
+    .near_rq(lg_NE_0_b4__near_rq),
+    .near_wq(lg_NE_0_b4__near_wq),
+    .near_rr(hb_vms_NE__rr[1284:1028]),
+    .near_w_done(hb_vms_NE__wq_done[4]),
+    .local_rr(lg_NE_0_b4__local_rr),
+    .far_rr(lg_NE_0_b4__far_rr),
+    .local_w_done(lg_NE_0_b4__local_w_done),
+    .far_w_done(lg_NE_0_b4__far_w_done),
+    .fault(lg_NE_0_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE2__lg_rq[33:17]),
+    .far_rq(lg_NE_1_b5__near_rq[16:0]),
+    .local_wq(su_NE2__lg_wq[561:281]),
+    .far_wq(lg_NE_1_b5__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[5]),
+    .local_write(calendar_NE__lg_local_write[5]),
+    .near_rq(lg_NE_0_b5__near_rq),
+    .near_wq(lg_NE_0_b5__near_wq),
+    .near_rr(hb_vms_NE__rr[1541:1285]),
+    .near_w_done(hb_vms_NE__wq_done[5]),
+    .local_rr(lg_NE_0_b5__local_rr),
+    .far_rr(lg_NE_0_b5__far_rr),
+    .local_w_done(lg_NE_0_b5__local_w_done),
+    .far_w_done(lg_NE_0_b5__far_w_done),
+    .fault(lg_NE_0_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE3__lg_rq[16:0]),
+    .far_rq(lg_NE_1_b6__near_rq[16:0]),
+    .local_wq(su_NE3__lg_wq[280:0]),
+    .far_wq(lg_NE_1_b6__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[6]),
+    .local_write(calendar_NE__lg_local_write[6]),
+    .near_rq(lg_NE_0_b6__near_rq),
+    .near_wq(lg_NE_0_b6__near_wq),
+    .near_rr(hb_vms_NE__rr[1798:1542]),
+    .near_w_done(hb_vms_NE__wq_done[6]),
+    .local_rr(lg_NE_0_b6__local_rr),
+    .far_rr(lg_NE_0_b6__far_rr),
+    .local_w_done(lg_NE_0_b6__local_w_done),
+    .far_w_done(lg_NE_0_b6__far_w_done),
+    .fault(lg_NE_0_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(su_NE3__lg_rq[33:17]),
+    .far_rq(lg_NE_1_b7__near_rq[16:0]),
+    .local_wq(su_NE3__lg_wq[561:281]),
+    .far_wq(lg_NE_1_b7__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[7]),
+    .local_write(calendar_NE__lg_local_write[7]),
+    .near_rq(lg_NE_0_b7__near_rq),
+    .near_wq(lg_NE_0_b7__near_wq),
+    .near_rr(hb_vms_NE__rr[2055:1799]),
+    .near_w_done(hb_vms_NE__wq_done[7]),
+    .local_rr(lg_NE_0_b7__local_rr),
+    .far_rr(lg_NE_0_b7__far_rr),
+    .local_w_done(lg_NE_0_b7__local_w_done),
+    .far_w_done(lg_NE_0_b7__far_w_done),
+    .fault(lg_NE_0_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE0__lg_rq[16:0]),
+    .far_rq(lg_NE_2_b0__near_rq[16:0]),
+    .local_wq(sfu_NE0__lg_wq[280:0]),
+    .far_wq(lg_NE_2_b0__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[8]),
+    .local_write(calendar_NE__lg_local_write[8]),
+    .near_rq(lg_NE_1_b0__near_rq),
+    .near_wq(lg_NE_1_b0__near_wq),
+    .near_rr(lg_NE_0_b0__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b0__far_w_done[0]),
+    .local_rr(lg_NE_1_b0__local_rr),
+    .far_rr(lg_NE_1_b0__far_rr),
+    .local_w_done(lg_NE_1_b0__local_w_done),
+    .far_w_done(lg_NE_1_b0__far_w_done),
+    .fault(lg_NE_1_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE0__lg_rq[33:17]),
+    .far_rq(lg_NE_2_b1__near_rq[16:0]),
+    .local_wq(sfu_NE0__lg_wq[561:281]),
+    .far_wq(lg_NE_2_b1__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[9]),
+    .local_write(calendar_NE__lg_local_write[9]),
+    .near_rq(lg_NE_1_b1__near_rq),
+    .near_wq(lg_NE_1_b1__near_wq),
+    .near_rr(lg_NE_0_b1__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b1__far_w_done[0]),
+    .local_rr(lg_NE_1_b1__local_rr),
+    .far_rr(lg_NE_1_b1__far_rr),
+    .local_w_done(lg_NE_1_b1__local_w_done),
+    .far_w_done(lg_NE_1_b1__far_w_done),
+    .fault(lg_NE_1_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE1__lg_rq[16:0]),
+    .far_rq(lg_NE_2_b2__near_rq[16:0]),
+    .local_wq(sfu_NE1__lg_wq[280:0]),
+    .far_wq(lg_NE_2_b2__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[10]),
+    .local_write(calendar_NE__lg_local_write[10]),
+    .near_rq(lg_NE_1_b2__near_rq),
+    .near_wq(lg_NE_1_b2__near_wq),
+    .near_rr(lg_NE_0_b2__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b2__far_w_done[0]),
+    .local_rr(lg_NE_1_b2__local_rr),
+    .far_rr(lg_NE_1_b2__far_rr),
+    .local_w_done(lg_NE_1_b2__local_w_done),
+    .far_w_done(lg_NE_1_b2__far_w_done),
+    .fault(lg_NE_1_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE1__lg_rq[33:17]),
+    .far_rq(lg_NE_2_b3__near_rq[16:0]),
+    .local_wq(sfu_NE1__lg_wq[561:281]),
+    .far_wq(lg_NE_2_b3__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[11]),
+    .local_write(calendar_NE__lg_local_write[11]),
+    .near_rq(lg_NE_1_b3__near_rq),
+    .near_wq(lg_NE_1_b3__near_wq),
+    .near_rr(lg_NE_0_b3__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b3__far_w_done[0]),
+    .local_rr(lg_NE_1_b3__local_rr),
+    .far_rr(lg_NE_1_b3__far_rr),
+    .local_w_done(lg_NE_1_b3__local_w_done),
+    .far_w_done(lg_NE_1_b3__far_w_done),
+    .fault(lg_NE_1_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE2__lg_rq[16:0]),
+    .far_rq(lg_NE_2_b4__near_rq[16:0]),
+    .local_wq(sfu_NE2__lg_wq[280:0]),
+    .far_wq(lg_NE_2_b4__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[12]),
+    .local_write(calendar_NE__lg_local_write[12]),
+    .near_rq(lg_NE_1_b4__near_rq),
+    .near_wq(lg_NE_1_b4__near_wq),
+    .near_rr(lg_NE_0_b4__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b4__far_w_done[0]),
+    .local_rr(lg_NE_1_b4__local_rr),
+    .far_rr(lg_NE_1_b4__far_rr),
+    .local_w_done(lg_NE_1_b4__local_w_done),
+    .far_w_done(lg_NE_1_b4__far_w_done),
+    .fault(lg_NE_1_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE2__lg_rq[33:17]),
+    .far_rq(lg_NE_2_b5__near_rq[16:0]),
+    .local_wq(sfu_NE2__lg_wq[561:281]),
+    .far_wq(lg_NE_2_b5__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[13]),
+    .local_write(calendar_NE__lg_local_write[13]),
+    .near_rq(lg_NE_1_b5__near_rq),
+    .near_wq(lg_NE_1_b5__near_wq),
+    .near_rr(lg_NE_0_b5__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b5__far_w_done[0]),
+    .local_rr(lg_NE_1_b5__local_rr),
+    .far_rr(lg_NE_1_b5__far_rr),
+    .local_w_done(lg_NE_1_b5__local_w_done),
+    .far_w_done(lg_NE_1_b5__far_w_done),
+    .fault(lg_NE_1_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE3__lg_rq[16:0]),
+    .far_rq(lg_NE_2_b6__near_rq[16:0]),
+    .local_wq(sfu_NE3__lg_wq[280:0]),
+    .far_wq(lg_NE_2_b6__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[14]),
+    .local_write(calendar_NE__lg_local_write[14]),
+    .near_rq(lg_NE_1_b6__near_rq),
+    .near_wq(lg_NE_1_b6__near_wq),
+    .near_rr(lg_NE_0_b6__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b6__far_w_done[0]),
+    .local_rr(lg_NE_1_b6__local_rr),
+    .far_rr(lg_NE_1_b6__far_rr),
+    .local_w_done(lg_NE_1_b6__local_w_done),
+    .far_w_done(lg_NE_1_b6__far_w_done),
+    .fault(lg_NE_1_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(sfu_NE3__lg_rq[33:17]),
+    .far_rq(lg_NE_2_b7__near_rq[16:0]),
+    .local_wq(sfu_NE3__lg_wq[561:281]),
+    .far_wq(lg_NE_2_b7__near_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[15]),
+    .local_write(calendar_NE__lg_local_write[15]),
+    .near_rq(lg_NE_1_b7__near_rq),
+    .near_wq(lg_NE_1_b7__near_wq),
+    .near_rr(lg_NE_0_b7__far_rr[256:0]),
+    .near_w_done(lg_NE_0_b7__far_w_done[0]),
+    .local_rr(lg_NE_1_b7__local_rr),
+    .far_rr(lg_NE_1_b7__far_rr),
+    .local_w_done(lg_NE_1_b7__local_w_done),
+    .far_w_done(lg_NE_1_b7__far_w_done),
+    .fault(lg_NE_1_b7__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b0 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE0__lg_rq[16:0]),
+    .local_wq(hc_NE0__lg_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[16]),
+    .local_write(calendar_NE__lg_local_write[16]),
+    .near_rq(lg_NE_2_b0__near_rq),
+    .near_wq(lg_NE_2_b0__near_wq),
+    .near_rr(lg_NE_1_b0__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b0__far_w_done[0]),
+    .local_rr(lg_NE_2_b0__local_rr),
+    .local_w_done(lg_NE_2_b0__local_w_done),
+    .fault(lg_NE_2_b0__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b1 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE0__lg_rq[33:17]),
+    .local_wq(hc_NE0__lg_wq[561:281]),
+    .local_read(calendar_NE__lg_local_read[17]),
+    .local_write(calendar_NE__lg_local_write[17]),
+    .near_rq(lg_NE_2_b1__near_rq),
+    .near_wq(lg_NE_2_b1__near_wq),
+    .near_rr(lg_NE_1_b1__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b1__far_w_done[0]),
+    .local_rr(lg_NE_2_b1__local_rr),
+    .local_w_done(lg_NE_2_b1__local_w_done),
+    .fault(lg_NE_2_b1__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b2 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE1__lg_rq[16:0]),
+    .local_wq(hc_NE1__lg_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[18]),
+    .local_write(calendar_NE__lg_local_write[18]),
+    .near_rq(lg_NE_2_b2__near_rq),
+    .near_wq(lg_NE_2_b2__near_wq),
+    .near_rr(lg_NE_1_b2__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b2__far_w_done[0]),
+    .local_rr(lg_NE_2_b2__local_rr),
+    .local_w_done(lg_NE_2_b2__local_w_done),
+    .fault(lg_NE_2_b2__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b3 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE1__lg_rq[33:17]),
+    .local_wq(hc_NE1__lg_wq[561:281]),
+    .local_read(calendar_NE__lg_local_read[19]),
+    .local_write(calendar_NE__lg_local_write[19]),
+    .near_rq(lg_NE_2_b3__near_rq),
+    .near_wq(lg_NE_2_b3__near_wq),
+    .near_rr(lg_NE_1_b3__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b3__far_w_done[0]),
+    .local_rr(lg_NE_2_b3__local_rr),
+    .local_w_done(lg_NE_2_b3__local_w_done),
+    .fault(lg_NE_2_b3__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b4 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE2__lg_rq[16:0]),
+    .local_wq(hc_NE2__lg_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[20]),
+    .local_write(calendar_NE__lg_local_write[20]),
+    .near_rq(lg_NE_2_b4__near_rq),
+    .near_wq(lg_NE_2_b4__near_wq),
+    .near_rr(lg_NE_1_b4__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b4__far_w_done[0]),
+    .local_rr(lg_NE_2_b4__local_rr),
+    .local_w_done(lg_NE_2_b4__local_w_done),
+    .fault(lg_NE_2_b4__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b5 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE2__lg_rq[33:17]),
+    .local_wq(hc_NE2__lg_wq[561:281]),
+    .local_read(calendar_NE__lg_local_read[21]),
+    .local_write(calendar_NE__lg_local_write[21]),
+    .near_rq(lg_NE_2_b5__near_rq),
+    .near_wq(lg_NE_2_b5__near_wq),
+    .near_rr(lg_NE_1_b5__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b5__far_w_done[0]),
+    .local_rr(lg_NE_2_b5__local_rr),
+    .local_w_done(lg_NE_2_b5__local_w_done),
+    .fault(lg_NE_2_b5__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b6 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE3__lg_rq[16:0]),
+    .local_wq(hc_NE3__lg_wq[280:0]),
+    .local_read(calendar_NE__lg_local_read[22]),
+    .local_write(calendar_NE__lg_local_write[22]),
+    .near_rq(lg_NE_2_b6__near_rq),
+    .near_wq(lg_NE_2_b6__near_wq),
+    .near_rr(lg_NE_1_b6__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b6__far_w_done[0]),
+    .local_rr(lg_NE_2_b6__local_rr),
+    .local_w_done(lg_NE_2_b6__local_w_done),
+    .fault(lg_NE_2_b6__fault)
+  );
+  ot_hbm_vm_lg_static_bank_term #(.READ_RETURN(18), .WRITE_RETURN(15)) lg_NE_2_b7 (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .local_rq(hc_NE3__lg_rq[33:17]),
+    .local_wq(hc_NE3__lg_wq[561:281]),
+    .local_read(calendar_NE__lg_local_read[23]),
+    .local_write(calendar_NE__lg_local_write[23]),
+    .near_rq(lg_NE_2_b7__near_rq),
+    .near_wq(lg_NE_2_b7__near_wq),
+    .near_rr(lg_NE_1_b7__far_rr[256:0]),
+    .near_w_done(lg_NE_1_b7__far_w_done[0]),
+    .local_rr(lg_NE_2_b7__local_rr),
+    .local_w_done(lg_NE_2_b7__local_w_done),
+    .fault(lg_NE_2_b7__fault)
   );
 endmodule
 `default_nettype wire

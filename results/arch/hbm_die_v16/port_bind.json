@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g10/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g11/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
  "summary": {
   "masters": 61,
-  "instances": 1454,
+  "instances": 1538,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -1123,21 +1123,21 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hbm_vm_lg_static_split": {
+  "ot_hbm_vm_lg_static_bank": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 8,
-   "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+   "instances": 64,
+   "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
-    "lg_SW_0",
-    "lg_SW_1",
-    "lg_SE_0"
+    "lg_SW_0_b0",
+    "lg_SW_0_b1",
+    "lg_SW_0_b2"
    ],
    "param_sets": {
-    "{\"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 4,
-    "{\"READ_RETURN\": \"14\", \"WRITE_RETURN\": \"11\"}": 4
+    "{\"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 32,
+    "{\"READ_RETURN\": \"14\", \"WRITE_RETURN\": \"11\"}": 32
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1149,20 +1149,20 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hbm_vm_lg_static_split_term": {
+  "ot_hbm_vm_lg_static_bank_term": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 4,
-   "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
+   "instances": 32,
+   "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
-    "lg_SW_2",
-    "lg_SE_2",
-    "lg_NW_2"
+    "lg_SW_2_b0",
+    "lg_SW_2_b1",
+    "lg_SW_2_b2"
    ],
    "param_sets": {
-    "{\"READ_RETURN\": \"18\", \"WRITE_RETURN\": \"15\"}": 4
+    "{\"READ_RETURN\": \"18\", \"WRITE_RETURN\": \"15\"}": 32
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1589,7 +1589,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "9b98b30c87695f635a32af3d3dbd606a559518477d1420694dde6c957fea2c8b",
+ "die_sha256": "416e2aacf1df7933d3b436a8a255a6612f01fec7b893f03a1e0c1e1e344f687e",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "ot_hbm_sm_vm_wr_q_t:quad",
