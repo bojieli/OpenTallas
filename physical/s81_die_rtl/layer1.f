@@ -51,6 +51,11 @@ rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
 # default parameters are the pinned behaviour (el1011-q-sp: L = 3 = the original adders), so they serve both.
 +define+OT_PQ_ROM_PORTS
+# S-DIE-NETLIST 2026-10-16 (S-DIE/ROOT/S-ELEM-PQ): the CANONICAL PQ leaf set = tools/s81/pq_native_hierarchy.py defines
+# (pipelined / physically split QB, split AQ, bank-split IX, sliced BC, state-pin + input-capture static controller,
+# AQ pin launch); pq_rtl_clock_ports() derives the clock entries from these
++define+OT_PQ_QB_PIPE+OT_PQ_QB_PHYS_SPLIT+OT_PQ_AQ_PHYS_SPLIT+OT_PQ_IX_PHYS_SPLIT+OT_PQ_IX_BANK_SPLIT+OT_PQ_BC_SLICED
++define+OT_PQ_CTL_STATE_PINS+OT_PQ_CTL_INCAP+OT_PQ_AQ_PIN_LAUNCH
 # S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): stream ROM = 4 die macros pqrom2a..d (ra2 12 shared, rc2[3:0], rq2[191:0]);
 # select = ot_s81_pq_stream_rom4_sel inside dsfd_sp_pq_n (gates results/rtl/s81_pq_rom4_bind_1015); generator pq_rom4() reads this
 +define+DSFD_PQ_ROM4
@@ -63,6 +68,12 @@ rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
 rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv
 rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv
 rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_state_phw10.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv

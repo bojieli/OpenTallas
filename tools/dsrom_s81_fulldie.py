@@ -5881,6 +5881,7 @@ PQ_RTL_MASTER = 'dsfd_sp_pq_n'  # --rtl-bind PQ slot: rtl/dsrom_sys/s81_die_bind
 # c10), host PQ boot words (dsfd_host_c +define+DSFD_HOST_PQ_BOOT: t_pq_pw, two ingest clock roots ck_ingest[1:0]).
 PQ_PRODUCER = False
 PQ_PRODUCED_MASTER = 'dsfd_sp_pq_produced'
+ASSIGNED_PIN_ALIAS = {'dsfd_sp_pq_produced': 'dsfd_sp_pq_n'}   # wrapper master -> the wrapped slot's assigned-pin record
 PQ_PRODUCER_BUSES = (('host', 'sseq', 36, 't_pq_pw', 'f_pq_pw'), ('sseq', 'pq', 36, 't_pq_desc_pw', 'f_desc_pw'),
                      ('sseq', 'pq', 1, 'calendar_prime', 'calendar_prime'), ('sseq', 'pq', 1, 'stage_start', 'stage_start'),
                      ('sseq', 'pq', 12, 'calendar_base', 'calendar_base'),
@@ -5918,7 +5919,8 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
         vec.append(('ck_aq_aux', 16))
     if 'OT_PQ_IX_PHYS_SPLIT' in defs:
         vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
-    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+    sc = ['ck_qb_align'] if 'OT_PQ_QB_PIPE' in defs else []    # S-DIE-NETLIST: the QB pipe's align root
+    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + sc + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
 
 
 def pq_rom4(manifest='physical/s81_die_rtl/layer1.f'):
@@ -9469,7 +9471,16 @@ def _assigned_record(master):
         # ':'-separated overlay (S-DIE r11): the first directory holding the master's record wins
         path = next((ROOT / d_ / (master + '.json') for d_ in ASSIGNED_PINS_DIR.split(':')
                      if (ROOT / d_ / (master + '.json')).exists()), ROOT / ASSIGNED_PINS_DIR.split(':')[-1] / (master + '.json'))
+        if not path.exists() and master in ASSIGNED_PIN_ALIAS:
+            # S-DIE-NETLIST 2026-10-16: dsfd_sp_pq_produced wraps dsfd_sp_pq_n (.*): the datapath slot's assigned pins
+            # stand; the producer's own ports (command / calendar / clocks) are laid by the generator
+            al_ = ASSIGNED_PIN_ALIAS[master]
+            path = next((ROOT / d_ / (al_ + '.json') for d_ in ASSIGNED_PINS_DIR.split(':')
+                         if (ROOT / d_ / (al_ + '.json')).exists()), path)
         rec = json.loads(path.read_text()) if path.exists() else None
+        if rec and rec['master'] != master and ASSIGNED_PIN_ALIAS.get(master) == rec['master']:
+            # data / ROM / lane pins only: the wrapper's clock entries follow the die manifest's PQ leaf set (laid here)
+            rec = dict(rec, master=master, ports={k_: v_ for k_, v_ in rec['ports'].items() if not k_.startswith('ck_')})
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
             # Reject an impossible shared origin before constructing thousands
