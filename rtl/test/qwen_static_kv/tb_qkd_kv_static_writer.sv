@@ -1,14 +1,14 @@
 `timescale 1ns/1ps
 // Independent inverse address/data oracle, not a copy of sec_of forward logic.
 module tb_qkd_kv_static_writer;
- parameter integer MUT=0, BAD=0;
+ parameter integer MUT=0, BAD=0, VMAP=0;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg v=0,slot=0;reg[10:0]tag;reg[511:0]data;
  reg[58:0]id,cid;reg[1:0]gen,cgen,ix;
  wire[1151:0]es;wire[19:0]pc,epc;wire[1:0]stack,estack,og,eg;
  wire[58:0]oi,ei;wire[1023:0]mask;wire[3:0]native,ev;
  wire[28:0]ea;wire[317:0]ctx;wire[60:0]eci;wire fault;wire[7:0]fc;
- qkd_kv_static_writer #(.MUT(MUT))dut(.ck(ck),.rst_n(rst_n),.word_valid(v),.word_tag(tag),.word_data(data),.word_identity(id),.word_generation(gen),.compiled_word_slot(slot),.compiled_word_index(ix),.compiled_identity(cid),.compiled_generation(cgen),.es(es),.dest_pc(pc),.dest_stack(stack),.identity(oi),.generation(og),.write_mask(mask),.native_kv(native),.expected_valid(ev),.expected_pc(epc),.expected_stack(estack),.expected_identity(ei),.expected_generation(eg),.expected_address(ea),.es_context(ctx),.es_expected_identity(eci),.fault(fault),.fault_code(fc));
+ qkd_kv_static_writer #(.MUT(MUT),.VMAP(VMAP))dut(.ck(ck),.rst_n(rst_n),.word_valid(v),.word_tag(tag),.word_data(data),.word_identity(id),.word_generation(gen),.compiled_word_slot(slot),.compiled_word_index(ix),.compiled_identity(cid),.compiled_generation(cgen),.es(es),.dest_pc(pc),.dest_stack(stack),.identity(oi),.generation(og),.write_mask(mask),.native_kv(native),.expected_valid(ev),.expected_pc(epc),.expected_stack(estack),.expected_identity(ei),.expected_generation(eg),.expected_address(ea),.es_context(ctx),.es_expected_identity(eci),.fault(fault),.fault_code(fc));
  integer cases=0,writes=0,errors=0,layer,pos,i,b,q,j,r,ba,co,e,dim,kind,tok,logical_e;
  function automatic[7:0]bytecode(input integer l,t,k,d);
   bytecode=(l*37+t*13+k*91+d*17+(t>>8))%256;
@@ -25,7 +25,10 @@ module tb_qkd_kv_static_writer;
     // Invert actual controller bank/column packing back to canonical sector j.
     j=(ba>>2)*128+co*4+(ba&3);kind=j>>9;
     logical_e=ungroup(pc[q*5+:5]>>2);
-    tok=(((j>>3)&15)<<9)|(stack<<7)|(((j>>7)&1)<<6)|((j&7)<<3)|logical_e;
+    if(VMAP!=0&&kind!=0) // PV16 V layout inverse: group {t[5:4],t[0]}, sector low3 = t[3:1]
+     tok=(((j>>3)&15)<<9)|(stack<<7)|(((j>>7)&1)<<6)|((logical_e>>1)<<4)|((j&7)<<1)|(logical_e&1);
+    else
+     tok=(((j>>3)&15)<<9)|(stack<<7)|(((j>>7)&1)<<6)|((j&7)<<3)|logical_e;
     if((j>>8&1)!=0||r<64||r>=100||oi!==ei||og!==eg||stack!==estack||pc[q*5+:5]!==epc[q*5+:5]||{19'(r),5'(ba),5'(co)}!==ea||mask[q*256+:256]!=={256{1'b1}})errors=errors+1;
     if(tok!==ei[18:6]||r-64!==ei[42:37]-1)errors=errors+1;
     for(b=0;b<32;b=b+1)begin
