@@ -1,0 +1,490 @@
+{
+ "shell.ctl.ALL": {
+  "fanout_bit_joins": 141,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    890.3819605263159,
+    508.5924605263158
+   ],
+   "x-y": [
+    74.91123684210572,
+    -243.53396052631564
+   ]
+  },
+  "impossible_even_without_obstacles": true,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[3].u",
+     "fa"
+    ],
+    "reach_um": 506.5845394736842
+   },
+   "x+y_upper": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_mult[1].leaf",
+     "phase"
+    ],
+    "reach_um": 478.5129605263158
+   },
+   "x-y_lower": {
+    "source": [
+     "shell.ctl",
+     "eps[22]"
+    ],
+    "target": [
+     "mix.g_norm[1].leaf",
+     "eps[22]"
+    ],
+    "reach_um": 483.18476315789474
+   },
+   "x-y_upper": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[2].u",
+     "fa"
+    ],
+    "reach_um": 506.5845394736842
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "shell.ctl.iv": {
+  "fanout_bit_joins": 13,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    783.621473684209,
+    530.9960526315789
+   ],
+   "x-y": [
+    -53.49205263157842,
+    -93.48394736842124
+   ]
+  },
+  "impossible_even_without_obstacles": true,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "v"
+    ],
+    "reach_um": 502.6990263157894
+   },
+   "x+y_upper": {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "target": [
+     "mix.g_mult[1].leaf",
+     "v"
+    ],
+    "reach_um": 501.49255263157886
+   },
+   "x-y_lower": {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "target": [
+     "mix.g_mult[3].leaf",
+     "v"
+    ],
+    "reach_um": 501.49255263157886
+   },
+   "x-y_upper": {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "target": [
+     "mix.g_mult[5].leaf",
+     "v"
+    ],
+    "reach_um": 501.49255263157886
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "shell.ctl.phase": {
+  "fanout_bit_joins": 13,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    804.628526315788,
+    508.5924605263158
+   ],
+   "x-y": [
+    -31.088460526315373,
+    -116.4635394736843
+   ]
+  },
+  "impossible_even_without_obstacles": true,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "phase"
+    ],
+    "reach_um": 481.69197368421044
+   },
+   "x+y_upper": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_mult[1].leaf",
+     "phase"
+    ],
+    "reach_um": 478.5129605263158
+   },
+   "x-y_lower": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_mult[3].leaf",
+     "phase"
+    ],
+    "reach_um": 478.5129605263158
+   },
+   "x-y_upper": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_mult[5].leaf",
+     "phase"
+    ],
+    "reach_um": 478.5129605263158
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "shell.ctl.fr": {
+  "fanout_bit_joins": 4,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    890.3710131578946,
+    844.8514868421053
+   ],
+   "x-y": [
+    -217.737486842105,
+    -241.6570131578946
+   ]
+  },
+  "impossible_even_without_obstacles": true,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "target": [
+     "shell.col[3].u",
+     "fr"
+    ],
+    "reach_um": 507.5044868421052
+   },
+   "x+y_upper": {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "target": [
+     "shell.col[0].u",
+     "fr"
+    ],
+    "reach_um": 507.5044868421052
+   },
+   "x-y_lower": {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "target": [
+     "shell.col[1].u",
+     "fr"
+    ],
+    "reach_um": 507.5044868421052
+   },
+   "x-y_upper": {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "target": [
+     "shell.col[2].u",
+     "fr"
+    ],
+    "reach_um": 507.5044868421052
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "shell.ctl.fa": {
+  "fanout_bit_joins": 4,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    890.3819605263159,
+    843.0225394736842
+   ],
+   "x-y": [
+    -217.77453947368394,
+    -243.53396052631564
+   ]
+  },
+  "impossible_even_without_obstacles": true,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[3].u",
+     "fa"
+    ],
+    "reach_um": 506.5845394736842
+   },
+   "x+y_upper": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[0].u",
+     "fa"
+    ],
+    "reach_um": 506.5845394736842
+   },
+   "x-y_lower": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[1].u",
+     "fa"
+    ],
+    "reach_um": 506.5845394736842
+   },
+   "x-y_upper": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[2].u",
+     "fa"
+    ],
+    "reach_um": 506.5845394736842
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "shell.ctl.copy": {
+  "fanout_bit_joins": 10,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    854.810578947367,
+    1061.3014210526314
+   ],
+   "x-y": [
+    -156.06942105263244,
+    2.9014210526315196
+   ]
+  },
+  "impossible_even_without_obstacles": false,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "shell.ctl",
+     "copy[0]"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "copy[0]"
+    ],
+    "reach_um": 486.64542105263155
+   },
+   "x+y_upper": {
+    "source": [
+     "shell.ctl",
+     "copy[0]"
+    ],
+    "target": [
+     "mix.g_add[0].leaf",
+     "copy[0]"
+    ],
+    "reach_um": 486.64542105263155
+   },
+   "x-y_lower": {
+    "source": [
+     "shell.ctl",
+     "copy[0]"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "copy[0]"
+    ],
+    "reach_um": 486.64542105263155
+   },
+   "x-y_upper": {
+    "source": [
+     "shell.ctl",
+     "copy[0]"
+    ],
+    "target": [
+     "mix.g_add[2].leaf",
+     "copy[0]"
+    ],
+    "reach_um": 486.64542105263155
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "mix.control.ALL": {
+  "fanout_bit_joins": 69,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    806.6976973684203,
+    1131.0434210526314
+   ],
+   "x-y": [
+    17.805697368421306,
+    404.3999210526317
+   ]
+  },
+  "impossible_even_without_obstacles": false,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "mix.control",
+     "g_x[18]"
+    ],
+    "target": [
+     "mix.gate_leaf.magnitude",
+     "x[18]"
+    ],
+    "reach_um": 501.734302631579
+   },
+   "x+y_upper": {
+    "source": [
+     "mix.control",
+     "fault"
+    ],
+    "target": [
+     "mix.relay",
+     "dn_i[0]"
+    ],
+    "reach_um": 521.7479210526316
+   },
+   "x-y_lower": {
+    "source": [
+     "mix.control",
+     "g_x[18]"
+    ],
+    "target": [
+     "mix.gate_leaf.magnitude",
+     "x[18]"
+    ],
+    "reach_um": 501.734302631579
+   },
+   "x-y_upper": {
+    "source": [
+     "mix.control",
+     "fault"
+    ],
+    "target": [
+     "mix.relay",
+     "dn_i[0]"
+    ],
+    "reach_um": 521.7479210526316
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ },
+ "mix.relay.ALL": {
+  "fanout_bit_joins": 204,
+  "necessary_anchor_strips_um": {
+   "x+y": [
+    800.4494078947353,
+    944.5063157894737
+   ],
+   "x-y": [
+    -167.39859210526402,
+    4.333749999999895
+   ]
+  },
+  "impossible_even_without_obstacles": false,
+  "conflict_witness": {
+   "x+y_lower": {
+    "source": [
+     "mix.relay",
+     "dn_o[13]"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "gate[9]"
+    ],
+    "reach_um": 495.10659210526313
+   },
+   "x+y_upper": {
+    "source": [
+     "mix.relay",
+     "up_o[36]"
+    ],
+    "target": [
+     "mix.ksum",
+     "go"
+    ],
+    "reach_um": 505.03481578947367
+   },
+   "x-y_lower": {
+    "source": [
+     "mix.relay",
+     "dn_o[13]"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "gate[9]"
+    ],
+    "reach_um": 495.10659210526313
+   },
+   "x-y_upper": {
+    "source": [
+     "mix.relay",
+     "dn_o[26]"
+    ],
+    "target": [
+     "mix.g_add[2].leaf",
+     "gate[22]"
+    ],
+    "reach_um": 494.06575
+   }
+  },
+  "scope": "Necessary L1-strip enclosure over all actual pin shapes; failure proves no translation of this existing source master can serve these fixed sinks under actual ETM pair budgets. It does not price/implement new pipeline or replicated logic."
+ }
+}

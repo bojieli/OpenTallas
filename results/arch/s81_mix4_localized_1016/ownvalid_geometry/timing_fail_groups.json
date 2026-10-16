@@ -1,0 +1,967 @@
+{
+ "status": "NECESSARY_ONLY_ACTUAL_REGISTERED_PAIR_CLASSIFICATION",
+ "negative_bit_joins": 248,
+ "groups": [
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.phase -> ot_s81_engram_mul4.phase",
+   "negative_bit_joins": 5,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "shell.ctl -> mix.g_mult[0].leaf",
+    "shell.ctl -> mix.g_mult[1].leaf",
+    "shell.ctl -> mix.g_mult[3].leaf",
+    "shell.ctl -> mix.g_mult[5].leaf",
+    "shell.ctl -> mix.g_mult[6].leaf"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_mult[1].leaf",
+     "phase"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_mul4",
+    "distance_um": 671.9205000000001,
+    "O_minus_R_ps": 161.34428999999997,
+    "S_plus_R_ps": 158.31886,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 399.56559210526314,
+    "source_R_ps": 97.9,
+    "target_R_ps": 247.4,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -146.98973000000007,
+    "child_boundary_defect": false,
+    "setup90_ps": -146.98973000000007,
+    "setup150_ps": -206.98973000000007,
+    "ff_no_wire_reserve_ps": 95.93660999999997
+   },
+   "wire_ps": 510.65958000000006,
+   "pair_reach_selected_um": 478.5129605263158,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_add8.fault -> ot_s81_engram_rly.up_i",
+   "negative_bit_joins": 1,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "mix.g_add[3].leaf -> mix.relay"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_add[3].leaf",
+     "fault"
+    ],
+    "target": [
+     "mix.relay",
+     "up_i[40]"
+    ],
+    "source_master": "ot_s81_engram_add8",
+    "target_master": "ot_s81_engram_rly",
+    "distance_um": 711.8064999999988,
+    "O_minus_R_ps": 164.26326,
+    "S_plus_R_ps": 121.63748000000001,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 443.9898157894736,
+    "source_R_ps": 210.3,
+    "target_R_ps": 60.7,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -143.54067999999916,
+    "child_boundary_defect": false,
+    "setup90_ps": -143.54067999999916,
+    "setup150_ps": -203.54067999999916,
+    "ff_no_wire_reserve_ps": 85.21158999999997
+   },
+   "wire_ps": 540.9729399999991,
+   "pair_reach_selected_um": 522.9371842105262,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.fa -> ot_s81_engram_mixq_shcol.fa",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "shell.ctl -> shell.col[2].u",
+    "shell.ctl -> shell.col[3].u"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "target": [
+     "shell.col[3].u",
+     "fa"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_mixq_shcol",
+    "distance_um": 694.9664999999997,
+    "O_minus_R_ps": 161.6358,
+    "S_plus_R_ps": 136.69295,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "ck"
+    ],
+    "pair_reach150_um": 427.6371710526315,
+    "source_R_ps": 97.9,
+    "target_R_ps": 149.1,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -143.1702899999998,
+    "child_boundary_defect": false,
+    "setup90_ps": -143.1702899999998,
+    "setup150_ps": -203.1702899999998,
+    "ff_no_wire_reserve_ps": 86.26443999999998
+   },
+   "wire_ps": 528.1745399999998,
+   "pair_reach_selected_um": 506.5845394736842,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.fr -> ot_s81_engram_mixq_shcol.fr",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "shell.ctl -> shell.col[2].u",
+    "shell.ctl -> shell.col[3].u"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "target": [
+     "shell.col[3].u",
+     "fr"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_mixq_shcol",
+    "distance_um": 695.8754999999996,
+    "O_minus_R_ps": 161.36769999999999,
+    "S_plus_R_ps": 136.26189,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "ck"
+    ],
+    "pair_reach150_um": 428.55711842105256,
+    "source_R_ps": 97.9,
+    "target_R_ps": 149.1,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -143.16196999999977,
+    "child_boundary_defect": false,
+    "setup90_ps": -143.16196999999977,
+    "setup150_ps": -203.16196999999977,
+    "ff_no_wire_reserve_ps": 85.76978
+   },
+   "wire_ps": 528.8653799999997,
+   "pair_reach_selected_um": 507.5044868421052,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mul4.vo -> ot_s81_engram_sum.v",
+   "negative_bit_joins": 1,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "mix.g_mult[4].leaf -> mix.dsum"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_mult[4].leaf",
+     "vo"
+    ],
+    "target": [
+     "mix.dsum",
+     "v"
+    ],
+    "source_master": "ot_s81_engram_mul4",
+    "target_master": "ot_s81_engram_sum",
+    "distance_um": 681.8090000000004,
+    "O_minus_R_ps": 168.10592,
+    "S_plus_R_ps": 127.88012,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 430.7196842105263,
+    "source_R_ps": 247.4,
+    "target_R_ps": 153.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -130.8278800000004,
+    "child_boundary_defect": false,
+    "setup90_ps": -130.8278800000004,
+    "setup150_ps": -190.8278800000004,
+    "ff_no_wire_reserve_ps": 86.87783999999999
+   },
+   "wire_ps": 518.1748400000004,
+   "pair_reach_selected_um": 509.6670526315789,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.iv -> ot_s81_engram_mul4.v",
+   "negative_bit_joins": 4,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "shell.ctl -> mix.g_mult[1].leaf",
+    "shell.ctl -> mix.g_mult[3].leaf",
+    "shell.ctl -> mix.g_mult[5].leaf",
+    "shell.ctl -> mix.g_mult[6].leaf"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "target": [
+     "mix.g_mult[1].leaf",
+     "v"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_mul4",
+    "distance_um": 672.4965000000002,
+    "O_minus_R_ps": 161.96880000000002,
+    "S_plus_R_ps": 140.22986,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 422.54518421052626,
+    "source_R_ps": 97.9,
+    "target_R_ps": 247.4,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -129.9630000000002,
+    "child_boundary_defect": false,
+    "setup90_ps": -129.9630000000002,
+    "setup150_ps": -189.9630000000002,
+    "ff_no_wire_reserve_ps": 83.91803000000002
+   },
+   "wire_ps": 511.09734000000014,
+   "pair_reach_selected_um": 501.49255263157886,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_add8.copy_out -> ot_s81_engram_rly.up_i",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "mix.g_add[3].leaf -> mix.relay"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_add[3].leaf",
+     "copy_out[1]"
+    ],
+    "target": [
+     "mix.relay",
+     "up_i[52]"
+    ],
+    "source_master": "ot_s81_engram_add8",
+    "target_master": "ot_s81_engram_rly",
+    "distance_um": 709.9679999999987,
+    "O_minus_R_ps": 169.33900999999997,
+    "S_plus_R_ps": 103.59093,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 461.0566578947368,
+    "source_R_ps": 210.3,
+    "target_R_ps": 60.7,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -129.17261999999909,
+    "child_boundary_defect": false,
+    "setup90_ps": -129.17261999999909,
+    "setup150_ps": -189.17261999999909,
+    "ff_no_wire_reserve_ps": 75.41199
+   },
+   "wire_ps": 539.575679999999,
+   "pair_reach_selected_um": 540.0040263157894,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mul4.fault -> ot_s81_engram_rly.up_i",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "mix.g_mult[3].leaf -> mix.relay",
+    "mix.g_mult[6].leaf -> mix.relay"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_mult[6].leaf",
+     "fault"
+    ],
+    "target": [
+     "mix.relay",
+     "up_i[59]"
+    ],
+    "source_master": "ot_s81_engram_mul4",
+    "target_master": "ot_s81_engram_rly",
+    "distance_um": 701.2320000000001,
+    "O_minus_R_ps": 172.77791999999997,
+    "S_plus_R_ps": 104.09146000000001,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 455.8731842105263,
+    "source_R_ps": 247.4,
+    "target_R_ps": 60.7,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -126.47270000000003,
+    "child_boundary_defect": false,
+    "setup90_ps": -126.47270000000003,
+    "setup150_ps": -186.47270000000003,
+    "ff_no_wire_reserve_ps": 79.73422000000002
+   },
+   "wire_ps": 532.93632,
+   "pair_reach_selected_um": 534.820552631579,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.eps -> ot_s81_engram_norm.eps",
+   "negative_bit_joins": 32,
+   "unique_source_bits": 32,
+   "instance_pairs": [
+    "shell.ctl -> mix.g_norm[1].leaf"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "eps[22]"
+    ],
+    "target": [
+     "mix.g_norm[1].leaf",
+     "eps[22]"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_norm",
+    "distance_um": 646.6560000000004,
+    "O_minus_R_ps": 175.25508999999997,
+    "S_plus_R_ps": 140.85749,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 404.2373947368421,
+    "source_R_ps": 97.9,
+    "target_R_ps": 214.8,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -124.23814000000033,
+    "child_boundary_defect": false,
+    "setup90_ps": -124.23814000000033,
+    "setup150_ps": -184.23814000000033,
+    "ff_no_wire_reserve_ps": 105.62510999999998
+   },
+   "wire_ps": 491.4585600000003,
+   "pair_reach_selected_um": 483.18476315789474,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.copy -> ot_s81_engram_add8.copy",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "shell.ctl -> mix.g_add[3].leaf"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "copy[0]"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "copy[0]"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_add8",
+    "distance_um": 639.4559999999983,
+    "O_minus_R_ps": 176.69070000000002,
+    "S_plus_R_ps": 136.79178000000002,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 407.6980526315789,
+    "source_R_ps": 97.9,
+    "target_R_ps": 210.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -116.13603999999879,
+    "child_boundary_defect": false,
+    "setup90_ps": -116.13603999999879,
+    "setup150_ps": -176.1360399999988,
+    "ff_no_wire_reserve_ps": 103.47832
+   },
+   "wire_ps": 485.98655999999875,
+   "pair_reach_selected_um": 486.64542105263155,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_add8.vo -> ot_s81_engram_rly.up_i",
+   "negative_bit_joins": 1,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "mix.g_add[3].leaf -> mix.relay"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_add[3].leaf",
+     "vo"
+    ],
+    "target": [
+     "mix.relay",
+     "up_i[44]"
+    ],
+    "source_master": "ot_s81_engram_add8",
+    "target_master": "ot_s81_engram_rly",
+    "distance_um": 684.5564999999987,
+    "O_minus_R_ps": 164.43541,
+    "S_plus_R_ps": 103.27844999999999,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 467.9199210526316,
+    "source_R_ps": 210.3,
+    "target_R_ps": 60.7,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -104.64379999999892,
+    "child_boundary_defect": false,
+    "setup90_ps": -104.64379999999892,
+    "setup150_ps": -164.64379999999892,
+    "ff_no_wire_reserve_ps": 74.04874000000001
+   },
+   "wire_ps": 520.2629399999989,
+   "pair_reach_selected_um": 546.8672894736842,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_rly.dn_o -> ot_s81_engram_add8.gate",
+   "negative_bit_joins": 62,
+   "unique_source_bits": 32,
+   "instance_pairs": [
+    "mix.relay -> mix.g_add[1].leaf",
+    "mix.relay -> mix.g_add[3].leaf"
+   ],
+   "worst": {
+    "source": [
+     "mix.relay",
+     "dn_o[13]"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "gate[9]"
+    ],
+    "source_master": "ot_s81_engram_rly",
+    "target_master": "ot_s81_engram_add8",
+    "distance_um": 625.9559999999988,
+    "O_minus_R_ps": 167.15649000000002,
+    "S_plus_R_ps": 139.89550000000003,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 416.1592236842104,
+    "source_R_ps": 60.7,
+    "target_R_ps": 210.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -99.44554999999906,
+    "child_boundary_defect": false,
+    "setup90_ps": -99.44554999999906,
+    "setup150_ps": -159.44554999999906,
+    "ff_no_wire_reserve_ps": 97.18440999999999
+   },
+   "wire_ps": 475.72655999999904,
+   "pair_reach_selected_um": 495.10659210526313,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mul4.vo -> ot_s81_engram_rly.up_i",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "mix.g_mult[1].leaf -> mix.relay",
+    "mix.g_mult[6].leaf -> mix.relay"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_mult[6].leaf",
+     "vo"
+    ],
+    "target": [
+     "mix.relay",
+     "up_i[67]"
+    ],
+    "source_master": "ot_s81_engram_mul4",
+    "target_master": "ot_s81_engram_rly",
+    "distance_um": 656.8685,
+    "O_minus_R_ps": 168.10592,
+    "S_plus_R_ps": 103.96006,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 462.19344736842106,
+    "source_R_ps": 247.4,
+    "target_R_ps": 60.7,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -87.95304000000004,
+    "child_boundary_defect": false,
+    "setup90_ps": -87.95304000000004,
+    "setup150_ps": -147.95304000000004,
+    "ff_no_wire_reserve_ps": 76.15432999999999
+   },
+   "wire_ps": 499.22006000000005,
+   "pair_reach_selected_um": 541.1408157894737,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.phase -> ot_s81_engram_add8.phase",
+   "negative_bit_joins": 1,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "shell.ctl -> mix.g_add[3].leaf"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "phase"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_add8",
+    "distance_um": 584.3204999999983,
+    "O_minus_R_ps": 161.34428999999997,
+    "S_plus_R_ps": 155.90281000000002,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 402.7446052631578,
+    "source_R_ps": 97.9,
+    "target_R_ps": 210.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -77.99767999999881,
+    "child_boundary_defect": false,
+    "setup90_ps": -77.99767999999881,
+    "setup150_ps": -137.9976799999988,
+    "ff_no_wire_reserve_ps": 93.24921
+   },
+   "wire_ps": 444.08357999999873,
+   "pair_reach_selected_um": 481.69197368421044,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mixq_shctl.iv -> ot_s81_engram_add8.v",
+   "negative_bit_joins": 1,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "shell.ctl -> mix.g_add[3].leaf"
+   ],
+   "worst": {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "target": [
+     "mix.g_add[3].leaf",
+     "v"
+    ],
+    "source_master": "ot_s81_engram_mixq_shctl",
+    "target_master": "ot_s81_engram_add8",
+    "distance_um": 584.3204999999982,
+    "O_minus_R_ps": 161.96880000000002,
+    "S_plus_R_ps": 139.31294000000003,
+    "source_clocks": [
+     "ck"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 423.75165789473675,
+    "source_R_ps": 97.9,
+    "target_R_ps": 210.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -62.03231999999872,
+    "child_boundary_defect": false,
+    "setup90_ps": -62.03231999999872,
+    "setup150_ps": -122.03231999999872,
+    "ff_no_wire_reserve_ps": 82.63521
+   },
+   "wire_ps": 444.0835799999987,
+   "pair_reach_selected_um": 502.6990263157894,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_sum.y -> ot_s81_engram_norm.sum",
+   "negative_bit_joins": 32,
+   "unique_source_bits": 32,
+   "instance_pairs": [
+    "mix.ksum -> mix.g_norm[1].leaf"
+   ],
+   "worst": {
+    "source": [
+     "mix.ksum",
+     "y[19]"
+    ],
+    "target": [
+     "mix.g_norm[1].leaf",
+     "sum[19]"
+    ],
+    "source_master": "ot_s81_engram_sum",
+    "target_master": "ot_s81_engram_norm",
+    "distance_um": 533.6040000000005,
+    "O_minus_R_ps": 173.97066,
+    "S_plus_R_ps": 136.35634000000002,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 411.84999999999997,
+    "source_R_ps": 153.3,
+    "target_R_ps": 214.8,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -32.533040000000426,
+    "child_boundary_defect": false,
+    "setup90_ps": -32.533040000000426,
+    "setup150_ps": -92.53304000000043,
+    "ff_no_wire_reserve_ps": 96.20595
+   },
+   "wire_ps": 405.5390400000004,
+   "pair_reach_selected_um": 490.79736842105257,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_chunk8.sum -> ot_s81_engram_sum.chunks",
+   "negative_bit_joins": 67,
+   "unique_source_bits": 67,
+   "instance_pairs": [
+    "mix.g_reduce[1].g_chunk[2].leaf -> mix.ksum",
+    "mix.g_reduce[1].g_chunk[3].leaf -> mix.ksum",
+    "mix.g_reduce[2].g_chunk[2].leaf -> mix.dsum",
+    "mix.g_reduce[2].g_chunk[3].leaf -> mix.dsum"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_reduce[1].g_chunk[3].leaf",
+     "sum[22]"
+    ],
+    "target": [
+     "mix.ksum",
+     "chunks[118]"
+    ],
+    "source_master": "ot_s81_engram_chunk8",
+    "target_master": "ot_s81_engram_sum",
+    "distance_um": 540.4440000000002,
+    "O_minus_R_ps": 165.02064,
+    "S_plus_R_ps": 131.75314,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 429.6831842105263,
+    "source_R_ps": 158.1,
+    "target_R_ps": 153.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -24.17822000000018,
+    "child_boundary_defect": false,
+    "setup90_ps": -24.17822000000018,
+    "setup150_ps": -84.17822000000018,
+    "ff_no_wire_reserve_ps": 90.15775
+   },
+   "wire_ps": 410.73744000000016,
+   "pair_reach_selected_um": 508.6305526315789,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_sum.vo -> ot_s81_engram_norm.v",
+   "negative_bit_joins": 1,
+   "unique_source_bits": 1,
+   "instance_pairs": [
+    "mix.ksum -> mix.g_norm[1].leaf"
+   ],
+   "worst": {
+    "source": [
+     "mix.ksum",
+     "vo"
+    ],
+    "target": [
+     "mix.g_norm[1].leaf",
+     "v"
+    ],
+    "source_master": "ot_s81_engram_sum",
+    "target_master": "ot_s81_engram_norm",
+    "distance_um": 533.6040000000005,
+    "O_minus_R_ps": 160.42928,
+    "S_plus_R_ps": 128.69330000000002,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 439.75055263157884,
+    "source_R_ps": 153.3,
+    "target_R_ps": 214.8,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -11.328620000000399,
+    "child_boundary_defect": false,
+    "setup90_ps": -11.328620000000399,
+    "setup150_ps": -71.3286200000004,
+    "ff_no_wire_reserve_ps": 79.60275999999999
+   },
+   "wire_ps": 405.5390400000004,
+   "pair_reach_selected_um": 518.6979210526316,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_chunk8.vo -> ot_s81_engram_sum.chunk_valid",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "mix.g_reduce[1].g_chunk[2].leaf -> mix.ksum",
+    "mix.g_reduce[1].g_chunk[3].leaf -> mix.ksum"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "vo"
+    ],
+    "target": [
+     "mix.ksum",
+     "chunk_valid[2]"
+    ],
+    "source_master": "ot_s81_engram_chunk8",
+    "target_master": "ot_s81_engram_sum",
+    "distance_um": 538.9364999999999,
+    "O_minus_R_ps": 154.92576,
+    "S_plus_R_ps": 129.6159,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 445.7780789473684,
+    "source_R_ps": 158.1,
+    "target_R_ps": 153.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -10.800399999999968,
+    "child_boundary_defect": false,
+    "setup90_ps": -10.800399999999968,
+    "setup150_ps": -70.80039999999997,
+    "ff_no_wire_reserve_ps": 81.27932999999999
+   },
+   "wire_ps": 409.59173999999996,
+   "pair_reach_selected_um": 524.725447368421,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mul4.dot -> ot_s81_engram_chunk8.x",
+   "negative_bit_joins": 11,
+   "unique_source_bits": 11,
+   "instance_pairs": [
+    "mix.g_mult[4].leaf -> mix.g_reduce[2].g_chunk[2].leaf",
+    "mix.g_mult[5].leaf -> mix.g_reduce[2].g_chunk[2].leaf"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_mult[5].leaf",
+     "dot[95]"
+    ],
+    "target": [
+     "mix.g_reduce[2].g_chunk[2].leaf",
+     "x[223]"
+    ],
+    "source_master": "ot_s81_engram_mul4",
+    "target_master": "ot_s81_engram_chunk8",
+    "distance_um": 465.2280000000002,
+    "O_minus_R_ps": 196.16885,
+    "S_plus_R_ps": 143.60487999999998,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 373.1043026315789,
+    "source_R_ps": 247.4,
+    "target_R_ps": 158.1,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -10.014010000000155,
+    "child_boundary_defect": false,
+    "setup90_ps": -10.014010000000155,
+    "setup150_ps": -70.01401000000016,
+    "ff_no_wire_reserve_ps": 121.22867999999997
+   },
+   "wire_ps": 353.5732800000001,
+   "pair_reach_selected_um": 452.05167105263155,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_chunk8.fault -> ot_s81_engram_sum.chunk_fault",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "mix.g_reduce[1].g_chunk[2].leaf -> mix.ksum",
+    "mix.g_reduce[1].g_chunk[3].leaf -> mix.ksum"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_reduce[1].g_chunk[3].leaf",
+     "fault"
+    ],
+    "target": [
+     "mix.ksum",
+     "chunk_fault[3]"
+    ],
+    "source_master": "ot_s81_engram_chunk8",
+    "target_master": "ot_s81_engram_sum",
+    "distance_um": 539.2725,
+    "O_minus_R_ps": 153.10316000000003,
+    "S_plus_R_ps": 130.04828,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 447.60731578947366,
+    "source_R_ps": 158.1,
+    "target_R_ps": 153.3,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -9.665540000000021,
+    "child_boundary_defect": false,
+    "setup90_ps": -9.665540000000021,
+    "setup150_ps": -69.66554000000002,
+    "ff_no_wire_reserve_ps": 79.40929999999997
+   },
+   "wire_ps": 409.8471,
+   "pair_reach_selected_um": 526.5546842105263,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mul4.kk -> ot_s81_engram_chunk8.x",
+   "negative_bit_joins": 11,
+   "unique_source_bits": 11,
+   "instance_pairs": [
+    "mix.g_mult[6].leaf -> mix.g_reduce[1].g_chunk[3].leaf"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_mult[6].leaf",
+     "kk[114]"
+    ],
+    "target": [
+     "mix.g_reduce[1].g_chunk[3].leaf",
+     "x[114]"
+    ],
+    "source_master": "ot_s81_engram_mul4",
+    "target_master": "ot_s81_engram_chunk8",
+    "distance_um": 473.24399999999974,
+    "O_minus_R_ps": 185.79519000000002,
+    "S_plus_R_ps": 146.97695,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 382.31692105263147,
+    "source_R_ps": 247.4,
+    "target_R_ps": 158.1,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -9.104579999999885,
+    "child_boundary_defect": false,
+    "setup90_ps": -9.104579999999885,
+    "setup150_ps": -69.10457999999988,
+    "ff_no_wire_reserve_ps": 115.90468999999999
+   },
+   "wire_ps": 359.6654399999998,
+   "pair_reach_selected_um": 461.26428947368413,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  },
+  {
+   "registered_master_port_pair": "ot_s81_engram_mul4.hh -> ot_s81_engram_chunk8.x",
+   "negative_bit_joins": 2,
+   "unique_source_bits": 2,
+   "instance_pairs": [
+    "mix.g_mult[0].leaf -> mix.g_reduce[0].g_chunk[0].leaf"
+   ],
+   "worst": {
+    "source": [
+     "mix.g_mult[0].leaf",
+     "hh[114]"
+    ],
+    "target": [
+     "mix.g_reduce[0].g_chunk[0].leaf",
+     "x[114]"
+    ],
+    "source_master": "ot_s81_engram_mul4",
+    "target_master": "ot_s81_engram_chunk8",
+    "distance_um": 458.004,
+    "O_minus_R_ps": 191.23098000000002,
+    "S_plus_R_ps": 146.97695,
+    "source_clocks": [
+     "clk"
+    ],
+    "target_clocks": [
+     "clk"
+    ],
+    "pair_reach150_um": 375.1645657894736,
+    "source_R_ps": 247.4,
+    "target_R_ps": 158.1,
+    "selected_skew_ps": 90,
+    "selected_setup_ps": -2.9579700000001026,
+    "child_boundary_defect": false,
+    "setup90_ps": -2.9579700000001026,
+    "setup150_ps": -62.9579700000001,
+    "ff_no_wire_reserve_ps": 119.22448
+   },
+   "wire_ps": 348.08304000000004,
+   "pair_reach_selected_um": 454.1119342105262,
+   "cause": "optimistic geometric wire reach exceeds actual registered-pair budget"
+  }
+ ]
+}
