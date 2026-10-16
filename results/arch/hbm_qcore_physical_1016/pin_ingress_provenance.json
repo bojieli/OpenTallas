@@ -78,7 +78,23 @@
     ],
     "boundary": "RF tuple N; RR/SFU E; slice W. RF raw capture now clk_ctl, followed by actual clk_ctl-to64RF commit paths at n+1.",
     "native_retained_core_fill": 0.4915,
-    "parent_geometry_source": "1c372d83f diagnostic; compact qcore overhangs low join column54um, no die growth; not adoption"
+    "parent_geometry_source": "1c372d83f diagnostic; compact qcore overhangs low join column54um, no die growth; not adoption",
+    "actual_pre_cts_image": {
+      "path": "images/native_r2_floorplan_before_cts.png",
+      "dump": "images/native_r2_floorplan_dump.json",
+      "actual_database_stage": "3_2_place_iop.odb",
+      "viewed": true,
+      "observations": "Both real SRAMs have legal24um gap and~24um core margin. RF roots are actually spread on E across bank body; RR/SFU occupy E near N/front. Controller clock is NW and reducer clock NE. RF tuple is N; slice interfaces W; no inherited views or placement overlay.",
+      "limits": "Pre-CTS floorplan/IO/PG only; no standard-cell density or clock timing qualification yet."
+    },
+    "native_ownership_ss_ff": {
+      "roots": 66,
+      "sequential_cells_including_macros": 76222,
+      "inputs": 717,
+      "outputs": 487,
+      "async_control_pins": 130,
+      "pass": true
+    }
   },
   "qualification": "UNQUALIFIED until real native physical gate and routed TT/FF/DRC; no inherited hard view",
   "native_retained_replica_synthesis": {
