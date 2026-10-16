@@ -5673,5 +5673,24 @@
     "Actual256slice+32join+ctl homes and every incident source port",
     "625 existing relay frames must move and all their incident cuts/routes be regenerated",
     "Pin registration/native clock delivery/TT setup/FF hold/DRC0 and static calendar"
-  ]
+  ],
+  "minimum_child_channel_screen": {
+    "source": "Qwen KV element owner source/pin screen ea749bd75; 21.6um hardchild gaps; 32 blocks at2x16",
+    "required_tiles_only_outline_um": [
+      1144.8,
+      9309.6
+    ],
+    "center_available_width_um": 1693.464,
+    "two_side_relay_channels_um": 518.4,
+    "remaining_width_um": 30.264,
+    "north_available_y_um": [
+      12696.456,
+      21641.04
+    ],
+    "north_available_height_um": 8944.584,
+    "north_height_deficit_um": 365.016,
+    "verdict": "REJECT_NORTH_ENVELOPE_BEFORE_CTL_OR_EXTRA_CHANNELS",
+    "incident_parent_source": "Actual static V/e/command pipeline and final16 layout missing, so no native whole-parent fit or throughput claim",
+    "next": "Compare actual interleaved P0/P1 column+final16 homes with redistributed fixed-slot fanout/collection trees and all incident source ports"
+  }
 }
