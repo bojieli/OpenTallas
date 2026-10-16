@@ -40,7 +40,7 @@ module tb_hbm_sm_vm_wr_q_t_faces;
         .program_fault(1'b0), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .fault(ing_fault));
-    ot_hbm_sm_vm_wr_q_t_faces #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .clk_in(clk), .clk_out(clk), .rst_n(rst_n), .tgt(8'd160), .quad(2'(Q)),
+    ot_hbm_sm_vm_wr_q_t_faces #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .clk_in(clk), .clk_out(clk), .clk_cal(clk), .rst_n(rst_n), .tgt(8'd160), .quad(2'(Q)),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
         .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .rv(rv), .rrow(rrow), .rdata_lo(rdata[1023:0]), .rdata_hi(rdata[2047:1024]), .sm_fault(smf), .sm_sched_fault(8'd0), .wq_lo(wq_sm[1123:0]), .wq_hi(wq_sm[2247:1124]),
