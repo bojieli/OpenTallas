@@ -1,0 +1,484 @@
+{
+  "schema": "opentallas.s81.offdefault-start-epoch.v1",
+  "source_sha256": {
+    "dsfd_wfc_stg_cl.sv": "2f713d8d51165c7a0d9696d8d4557bb96f6fc5e2ca8d6427d0258dfdb4001ed5",
+    "ot_ratio_cdc_fifo.sv": "056f400898f3c1d669b9ba7a17083e63a39da980d0d4647a5ec96b11ba03300f",
+    "ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "ot_dsrom_mtp_skid.sv": "fe43c9c8afcc19ef27870da54405869d390f0565bccec12fcdb865a6d5d9fe09",
+    "ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+    "ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
+    "bench": "7c078f88b6f4d04304f34768551b228121cebee1c900a07ed2e632d4da0ca0e4"
+  },
+  "rows": [
+    {
+      "variant": "positive",
+      "phase": 0,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=0 sp=3 door=156 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=0 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 0,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=0 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=0 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 0,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=0 sp=3 door=185 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=0 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 0,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=0 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=0 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 0,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=0 sp=3 door=156 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=0 mode=4 command_core=261 kit_serial=204 firstfault_core=212 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 1,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=1 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=1 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 1,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=1 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=1 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 1,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=1 sp=3 door=186 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=1 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 1,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=1 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=1 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 1,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=1 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=1 mode=4 command_core=261 kit_serial=204 firstfault_core=213 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 2,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=2 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=2 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 2,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=2 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=2 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 2,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=2 sp=3 door=186 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=2 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 2,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=2 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=2 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 2,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=2 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=2 mode=4 command_core=261 kit_serial=204 firstfault_core=213 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 3,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=3 sp=3 door=158 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=3 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 3,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=3 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=3 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 3,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=3 sp=3 door=187 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=3 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 3,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=3 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=3 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 3,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=3 sp=3 door=158 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=3 mode=4 command_core=261 kit_serial=204 firstfault_core=214 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 4,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=4 sp=3 door=159 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=4 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 4,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=4 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=4 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 4,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=4 sp=3 door=188 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=4 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 4,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=4 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=4 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 4,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=4 sp=3 door=159 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=4 mode=4 command_core=261 kit_serial=204 firstfault_core=216 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 5,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=5 sp=3 door=160 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=5 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 5,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=5 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=5 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 5,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=5 sp=3 door=189 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=5 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 5,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=5 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=5 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 5,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=5 sp=3 door=160 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=5 mode=4 command_core=261 kit_serial=204 firstfault_core=217 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 6,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=6 sp=3 door=160 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=6 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 6,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=6 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=6 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 6,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=6 sp=3 door=189 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=6 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 6,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=6 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=6 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 6,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=6 sp=3 door=160 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=6 mode=4 command_core=261 kit_serial=204 firstfault_core=217 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 7,
+      "mode": 0,
+      "rc": 0,
+      "start": "phase=7 sp=3 door=161 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "epoch": "phase=7 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 7,
+      "mode": 1,
+      "rc": 0,
+      "start": "phase=7 sp=3 door=-1 tks=163 fks=192 doors=0 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=7 mode=1 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 7,
+      "mode": 2,
+      "rc": 0,
+      "start": "phase=7 sp=3 door=190 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=7 mode=2 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 7,
+      "mode": 3,
+      "rc": 0,
+      "start": "phase=7 sp=3 door=209 tks=163 fks=192 doors=2 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=7 mode=3 command_core=261 kit_serial=204 firstfault_core=282 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 7,
+      "mode": 4,
+      "rc": 0,
+      "start": "phase=7 sp=3 door=161 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=1",
+      "epoch": "phase=7 mode=4 command_core=261 kit_serial=204 firstfault_core=218 timing_errors=0"
+    },
+    {
+      "variant": "positive",
+      "phase": 7,
+      "mode": 5,
+      "rc": 0,
+      "start": "phase=7 sp=3 door=162 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=1",
+      "epoch": "phase=7 mode=5 command_core=261 kit_serial=204 firstfault_core=220 timing_errors=0"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 0,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=0 sp=3 door=156 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=0 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 1,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=1 sp=3 door=157 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=1 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 2,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=2 sp=3 door=157 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=2 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 3,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=3 sp=3 door=158 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=3 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 4,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=4 sp=3 door=159 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=4 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 5,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=5 sp=3 door=160 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=5 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 6,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=6 sp=3 door=160 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "epoch": "phase=6 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1"
+    },
+    {
+      "variant": "one_edge_early_slot",
+      "phase": 7,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=7 sp=3 door=161 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=1 status=2a ft=1",
+      "epoch": "phase=7 mode=0 command_core=-1 kit_serial=-1 firstfault_core=218 timing_errors=1"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 0,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=0 sp=3 door=156 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=0 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 1,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=1 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=1 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 2,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=2 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=2 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 3,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=3 sp=3 door=158 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=3 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 4,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=4 sp=3 door=159 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=4 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 5,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=5 sp=3 door=160 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=5 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 6,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=6 sp=3 door=160 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=6 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    },
+    {
+      "variant": "wrong_token",
+      "phase": 7,
+      "mode": 0,
+      "rc": 1,
+      "start": "phase=7 sp=3 door=161 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0",
+      "epoch": "phase=7 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0"
+    }
+  ],
+  "one_fixed_programme_start_phase": 3,
+  "one_fixed_epoch": {
+    "FIRST_SLOT_S": 148,
+    "PERIOD_S": 12,
+    "SLOT_COUNT": 1
+  },
+  "production_admissible": false,
+  "common_physical_epoch_bound": false,
+  "actual_compiler_parameter_producer": "UNBOUND",
+  "native_physical_image": null,
+  "scope": "actual vmx_w +40generatedstationsemantics+actualc8PW36; declaredidealcommonreset only; no mappedSRAM in this gate"
+}

@@ -1,0 +1,14 @@
+EPOCH_DOOR phase=1 mode=2 j=0 serial=157
+EPOCH_LAUNCH j=0 serial=163 payload=b4ef52a6ad365
+EPOCH_COMMAND j=0 core=261 context=0 payload=5a6ad365bd4a988149c00
+EPOCH_KIT j=0 serial=204 token=17a953
+EPOCH_LAUNCH j=1 serial=223 payload=0000000000000
+EPOCH_DOOR phase=1 mode=2 j=1 serial=246
+EPOCH_COMMAND j=1 core=341 context=1 payload=800000000000008149c00
+EPOCH_KIT j=1 serial=264 token=000000
+EPOCH_DOOR phase=1 mode=2 j=2 serial=277
+EPOCH_LAUNCH j=2 serial=283 payload=b56f52eaad377
+EPOCH_COMMAND j=2 core=421 context=0 payload=5aaad377bd4ba88149c00
+EPOCH_KIT j=2 serial=324 token=17a975
+EPOCH_MULTI_RESULT phase=1 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300
+/srv/opentallas-scratch/codex/s81-wfc-epoch-1016/wfc_start_epoch_multi.sv:70: $finish called at 6249000 (1ps)

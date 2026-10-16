@@ -1,0 +1,169 @@
+{
+  "schema": "opentallas.s81.offdefault-start-epoch-multislot.v1",
+  "source_sha256": {
+    "dsfd_wfc_stg_cl.sv": "2f713d8d51165c7a0d9696d8d4557bb96f6fc5e2ca8d6427d0258dfdb4001ed5",
+    "ot_ratio_cdc_fifo.sv": "056f400898f3c1d669b9ba7a17083e63a39da980d0d4647a5ec96b11ba03300f",
+    "ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "ot_dsrom_mtp_skid.sv": "fe43c9c8afcc19ef27870da54405869d390f0565bccec12fcdb865a6d5d9fe09",
+    "ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+    "ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
+    "bench": "ae5e5b7cdd85f8e318579613f851092292ce3a6a20191d2f504c423f68a47535"
+  },
+  "one_fixed_programme_start_phase": 3,
+  "one_fixed_epoch": {
+    "FIRST_SLOT_S": 148,
+    "PERIOD_S": 60,
+    "SLOT_COUNT": 3
+  },
+  "source_f_vw_and_f_cs_core_edges": "200+offset,280+offset,360+offset; middlemissing/late mutants explicit",
+  "fixed_t_ks_serial": [
+    163,
+    223,
+    283
+  ],
+  "fixed_command_core": [
+    261,
+    341,
+    421
+  ],
+  "fixed_KIT_serial": [
+    204,
+    264,
+    324
+  ],
+  "context_sequence": [
+    0,
+    1,
+    0
+  ],
+  "rows": [
+    {
+      "phase": 0,
+      "mode": 0,
+      "result": "phase=0 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 0,
+      "mode": 1,
+      "result": "phase=0 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 0,
+      "mode": 2,
+      "result": "phase=0 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 1,
+      "mode": 0,
+      "result": "phase=1 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 1,
+      "mode": 1,
+      "result": "phase=1 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 1,
+      "mode": 2,
+      "result": "phase=1 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 2,
+      "mode": 0,
+      "result": "phase=2 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 2,
+      "mode": 1,
+      "result": "phase=2 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 2,
+      "mode": 2,
+      "result": "phase=2 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 3,
+      "mode": 0,
+      "result": "phase=3 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 3,
+      "mode": 1,
+      "result": "phase=3 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 3,
+      "mode": 2,
+      "result": "phase=3 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 4,
+      "mode": 0,
+      "result": "phase=4 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 4,
+      "mode": 1,
+      "result": "phase=4 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 4,
+      "mode": 2,
+      "result": "phase=4 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 5,
+      "mode": 0,
+      "result": "phase=5 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 5,
+      "mode": 1,
+      "result": "phase=5 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 5,
+      "mode": 2,
+      "result": "phase=5 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 6,
+      "mode": 0,
+      "result": "phase=6 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 6,
+      "mode": 1,
+      "result": "phase=6 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 6,
+      "mode": 2,
+      "result": "phase=6 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 7,
+      "mode": 0,
+      "result": "phase=7 mode=0 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=0 firstfault=-1"
+    },
+    {
+      "phase": 7,
+      "mode": 1,
+      "result": "phase=7 mode=1 doors=2 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    },
+    {
+      "phase": 7,
+      "mode": 2,
+      "result": "phase=7 mode=2 doors=3 pulses=3 captures=3 commands=3 kits=3 errors=0 status=00 ft=1 firstfault=300"
+    }
+  ],
+  "production_admissible": false,
+  "physical_common_epoch_bound": false,
+  "actual_compiler_parameter_producer": "UNBOUND",
+  "native_physical_image": null,
+  "scope": "realvmx_w/40generatedstationsemantics/c8PW36; logical ideal common reset; no mappedSRAM; PERIOD60 componentexample only, notnativeII"
+}

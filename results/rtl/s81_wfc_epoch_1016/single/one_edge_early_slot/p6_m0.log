@@ -1,0 +1,5 @@
+START_CAL phase=6 sp=1 tc=258
+START_RESULT phase=6 sp=3 door=160 tks=162 fks=191 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0
+EPOCH_RESULT phase=6 mode=0 command_core=-1 kit_serial=-1 firstfault_core=-1 timing_errors=1
+FATAL: /srv/opentallas-scratch/codex/s81-wfc-epoch-1016/gate/tb_wfc_epoch.sv:59: fixed epoch command/KIT schedule moved
+       Time: 4009000  Scope: tb_wfc_start

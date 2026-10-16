@@ -1,0 +1,5 @@
+START_CAL phase=2 sp=3 tc=260
+START_RESULT phase=2 sp=3 door=157 tks=163 fks=192 doors=1 pulses=1 commands=1 kits=1 errors=3 status=00 ft=0
+EPOCH_RESULT phase=2 mode=0 command_core=261 kit_serial=204 firstfault_core=-1 timing_errors=0
+FATAL: /srv/opentallas-scratch/codex/s81-wfc-epoch-1016/gate/tb_wfc_epoch.sv:61: normal epoch metadata/fault
+       Time: 4009000  Scope: tb_wfc_start

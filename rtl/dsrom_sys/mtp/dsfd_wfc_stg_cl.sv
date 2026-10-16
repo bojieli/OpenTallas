@@ -37,7 +37,12 @@ module dsfd_wfc_vmx_w #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10, parameter integer VWA = 15,
     parameter integer DEPTH = 8, parameter integer PRE = 4, parameter integer LAG = 0, parameter integer WOUTW = 8,
     parameter integer POSTED = 1, parameter bit VM_LINK = 1,
-    parameter integer START_DELAY_S = 1 // fixed serial edges from outgoing doorbell to t_ks
+    parameter integer START_DELAY_S = 1, // immediate mode only: outgoing doorbell to t_ks
+    // OFF DEFAULT diagnostic epoch vehicle. The actual compiler/startup clock
+    // binding is deliberately absent; this flag cannot qualify a physical epoch.
+    parameter bit EPOCH_START_ENABLE = 0,
+    parameter bit EPOCH_COMMON_RESET_CONTRACT = 0,
+    parameter integer FIRST_SLOT_S = 0, PERIOD_S = 3, SLOT_COUNT = 0
 ) (
     input  wire [0:0]        ck, ckv, rst, rsv,
     input  wire [VWA+FLIT:0] f_vw,           // {we, waddr, wdata} from the WFC (flops there)
@@ -160,7 +165,46 @@ module dsfd_wfc_vmx_w #(
     // after the last data write. Availability faults never move the launch edge.
     wire posted_doorbell = t_swv[0] && (&t_swd[FLIT +: VWA]);
     reg posted_fault;
-    generate if (POSTED) begin : g_posted_start
+    generate if (POSTED && EPOCH_START_ENABLE) begin : g_epoch_start
+        // Epoch0 is the first serial edge whose pre-edge srst_n is high.
+        // The output register launches at FIRST_SLOT_S+n*PERIOD_S relative to
+        // that declared epoch. The downstream consumer sees its pin next edge.
+        // PERIOD_S multiple3 preserves the core modulo4 phase for ideal3:4.
+        // This is NOT a claim about the final die's reset/clock delivery.
+        reg [31:0] epoch_s, next_slot_s, slots_sent;
+        reg pending; reg [SP-1:0] pending_meta; reg [SP:0] slot_q;
+        wire slot_now = slots_sent < SLOT_COUNT && epoch_s == next_slot_s;
+`ifndef SYNTHESIS
+        initial begin
+            if (!EPOCH_COMMON_RESET_CONTRACT || FIRST_SLOT_S < 1 ||
+                PERIOD_S < 3 || PERIOD_S % 3 != 0 || SLOT_COUNT < 1)
+                $fatal(1, "epoch START requires explicit reset contract and literal slots");
+        end
+`endif
+        always @(posedge sclk) begin
+            if (!srst_n) begin
+                epoch_s <= 0; next_slot_s <= FIRST_SLOT_S; slots_sent <= 0;
+                pending <= 0; pending_meta <= 0; slot_q <= 0; posted_fault <= 0;
+            end else begin
+                epoch_s <= epoch_s + 1'b1;
+                slot_q[SP] <= slot_now;
+                if (posted_doorbell) begin
+                    if (pending || slot_now || slots_sent >= SLOT_COUNT) posted_fault <= 1'b1;
+                    pending <= 1'b1; pending_meta <= t_swd[SP-1:0];
+                end
+                if (slot_now) begin
+                    // Neither ready nor metadata availability changes this edge.
+                    slot_q[SP-1:0] <= pending ? pending_meta : {SP{1'b0}};
+                    if (!pending) posted_fault <= 1'b1;
+                    pending <= 1'b0;
+                    next_slot_s <= next_slot_s + PERIOD_S;
+                    slots_sent <= slots_sent + 1'b1;
+                end
+                if (t_swv[0] && !f_swr[0]) posted_fault <= 1'b1;
+            end
+        end
+        assign t_ks = slot_q;
+    end else if (POSTED) begin : g_posted_start
         reg [SP:0] start_pipe [0:START_DELAY_S-1];
         integer pi;
         initial begin
