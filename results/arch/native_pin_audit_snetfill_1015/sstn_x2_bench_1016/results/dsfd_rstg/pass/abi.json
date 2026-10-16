@@ -1,0 +1,25 @@
+{
+ "master": "dsfd_rstg",
+ "ports": {
+  "ck": {
+   "direction": "input",
+   "width": 1
+  },
+  "i": {
+   "direction": "input",
+   "width": 66
+  },
+  "o": {
+   "direction": "output",
+   "width": 66
+  },
+  "rs": {
+   "direction": "input",
+   "width": 1
+  }
+ },
+ "source_sha256": "c0418ae8430a525fbaad9ed4fba879d1b5daebf2578b4ea567af67d30a69f896",
+ "normal_capture_edge": "posedge ck[0]",
+ "reset": "active-low rs[0], asynchronous control clear",
+ "x2": false
+}

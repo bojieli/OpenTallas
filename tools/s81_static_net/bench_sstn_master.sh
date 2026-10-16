@@ -6,10 +6,13 @@ cd "$(dirname "$0")/../.."
 mode=${1:?}; mst=${2:?}; glue=${3:?}; out=${4:?}; mkdir -p "$out"
 awk "/^module $mst /,/^endmodule/" "$glue" > "$out/master.sv"
 grep -qE "& rs\[0\]" "$out/master.sv" && { echo "SSTN_REG FAIL logic behind the output flop (rs AND) in $mst"; exit 1; }
+consumer=rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv
+abi_flags=$(python3 tools/s81_static_net/sstn_abi.py flags "$out/master.sv" "$consumer" "$out/abi.json")
 if [ $mode = mut_noreset ]; then
   sed -i "s/if (!rs\[0\]) xv <= 1'b0; else xv <= xai\[282\];/xv <= xai[282];/; s/if (!rs\[0\]) v <= 1'b0; else v <= i\[0\];/v <= i[0];/" "$out/master.sv"
 fi
-defs="-DDUT=$mst"
+case $mode in mut_x2_*) python3 tools/s81_static_net/sstn_abi.py "$mode" "$out/master.sv" "$consumer" "$out/abi.json";; esac
+defs="-DDUT=$mst $abi_flags"
 case $mst in dsfd_rstg*) defs="$defs -DRSTG";; esac
 grep -q "output wire \[14:0\] cc" "$out/master.sv" && defs="$defs -DHAS_CC"
 grep -q "input wire \[1:0\] e1" "$out/master.sv" && defs="$defs -DHAS_E1"

@@ -1,0 +1,69 @@
+{
+ "master": "dsfd_sstn_e0e1c0c1sinf",
+ "ports": {
+  "cc": {
+   "direction": "output",
+   "width": 15
+  },
+  "cci": {
+   "direction": "input",
+   "width": 15
+  },
+  "ck": {
+   "direction": "input",
+   "width": 1
+  },
+  "nf": {
+   "direction": "input",
+   "width": 1
+  },
+  "rs": {
+   "direction": "input",
+   "width": 1
+  },
+  "si": {
+   "direction": "input",
+   "width": 2
+  },
+  "so": {
+   "direction": "output",
+   "width": 2
+  },
+  "xa": {
+   "direction": "output",
+   "width": 283
+  },
+  "xai": {
+   "direction": "input",
+   "width": 283
+  },
+  "xb": {
+   "direction": "output",
+   "width": 266
+  },
+  "xbi": {
+   "direction": "input",
+   "width": 266
+  },
+  "c0": {
+   "direction": "input",
+   "width": 2
+  },
+  "e0": {
+   "direction": "input",
+   "width": 2
+  },
+  "c1": {
+   "direction": "input",
+   "width": 2
+  },
+  "e1": {
+   "direction": "input",
+   "width": 2
+  }
+ },
+ "source_sha256": "f335cb63783fe71dc75c0daefdce786a9acf6942b52e4c72dad220fe5b5df8c4",
+ "normal_capture_edge": "posedge ck[0]",
+ "reset": "active-low rs[0], asynchronous control clear",
+ "x2": false
+}

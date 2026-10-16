@@ -1,0 +1,349 @@
+{
+ "emitted_case": "c21h/nl/die_glue.sv",
+ "emitted_source_commit": "aa9e7cfae195c2243e15418e7614dbef66048b66",
+ "full_emitted_glue_sha256": "80fe6f5456a3f10525a1a3d95bb47090bb06aac68d7d3aa2694e7d4ba2287c63",
+ "current_generator_basis": "f747219c1 tools/dsrom_s81_fulldie.py; --sstn-reg --bf-x2-static; actual emitted pdir ports",
+ "scope": "component ABI/RTL only; current c26b/c26n final graph and physical bindings pending",
+ "masters": [
+  {
+   "master": "dsfd_sstn_e0c0_x2",
+   "emitted_sha256": "2614d2a61afb74c4c6ab3b1e2b0b4bb05e5913b57ce0768685b6753698bf5974",
+   "current_generator_sha256": "2614d2a61afb74c4c6ab3b1e2b0b4bb05e5913b57ce0768685b6753698bf5974",
+   "current_generator_matches_emitted": true,
+   "ports": {
+    "cc": [
+     "output",
+     15
+    ],
+    "cci": [
+     "input",
+     15
+    ],
+    "ck": [
+     "input",
+     1
+    ],
+    "rs": [
+     "input",
+     1
+    ],
+    "so": [
+     "output",
+     2
+    ],
+    "x2i": [
+     "input",
+     536
+    ],
+    "xa": [
+     "output",
+     283
+    ],
+    "xai": [
+     "input",
+     283
+    ],
+    "xb": [
+     "output",
+     266
+    ],
+    "xbi": [
+     "input",
+     266
+    ],
+    "c0": [
+     "input",
+     2
+    ],
+    "e0": [
+     "input",
+     2
+    ],
+    "x2": [
+     "output",
+     536
+    ]
+   }
+  },
+  {
+   "master": "dsfd_sstn_e0c0si_x2",
+   "emitted_sha256": "81db6a1c4f953d93edef8d7e98e36fd42b5ecaeaed61c435859890118b294203",
+   "current_generator_sha256": "81db6a1c4f953d93edef8d7e98e36fd42b5ecaeaed61c435859890118b294203",
+   "current_generator_matches_emitted": true,
+   "ports": {
+    "cc": [
+     "output",
+     15
+    ],
+    "cci": [
+     "input",
+     15
+    ],
+    "ck": [
+     "input",
+     1
+    ],
+    "rs": [
+     "input",
+     1
+    ],
+    "si": [
+     "input",
+     2
+    ],
+    "so": [
+     "output",
+     2
+    ],
+    "x2i": [
+     "input",
+     536
+    ],
+    "xa": [
+     "output",
+     283
+    ],
+    "xai": [
+     "input",
+     283
+    ],
+    "xb": [
+     "output",
+     266
+    ],
+    "xbi": [
+     "input",
+     266
+    ],
+    "c0": [
+     "input",
+     2
+    ],
+    "e0": [
+     "input",
+     2
+    ],
+    "x2": [
+     "output",
+     536
+    ]
+   }
+  },
+  {
+   "master": "dsfd_sstn_e0c0sinf_x2",
+   "emitted_sha256": "c342a1e214bd2cc70149f101a93ae84ae40406d1a965150f1257f67833efbab5",
+   "current_generator_sha256": "c342a1e214bd2cc70149f101a93ae84ae40406d1a965150f1257f67833efbab5",
+   "current_generator_matches_emitted": true,
+   "ports": {
+    "cc": [
+     "output",
+     15
+    ],
+    "cci": [
+     "input",
+     15
+    ],
+    "ck": [
+     "input",
+     1
+    ],
+    "nf": [
+     "input",
+     1
+    ],
+    "rs": [
+     "input",
+     1
+    ],
+    "si": [
+     "input",
+     2
+    ],
+    "so": [
+     "output",
+     2
+    ],
+    "x2i": [
+     "input",
+     536
+    ],
+    "xa": [
+     "output",
+     283
+    ],
+    "xai": [
+     "input",
+     283
+    ],
+    "xb": [
+     "output",
+     266
+    ],
+    "xbi": [
+     "input",
+     266
+    ],
+    "c0": [
+     "input",
+     2
+    ],
+    "e0": [
+     "input",
+     2
+    ],
+    "x2": [
+     "output",
+     536
+    ]
+   }
+  },
+  {
+   "master": "dsfd_sstn_e0e1c0c1si_x2",
+   "emitted_sha256": "d6acbeb23c92564926a2ef4e7304d530e0cfbe66ab05c4089693e0f8e044e9ac",
+   "current_generator_sha256": "d6acbeb23c92564926a2ef4e7304d530e0cfbe66ab05c4089693e0f8e044e9ac",
+   "current_generator_matches_emitted": true,
+   "ports": {
+    "cc": [
+     "output",
+     15
+    ],
+    "cci": [
+     "input",
+     15
+    ],
+    "ck": [
+     "input",
+     1
+    ],
+    "rs": [
+     "input",
+     1
+    ],
+    "si": [
+     "input",
+     2
+    ],
+    "so": [
+     "output",
+     2
+    ],
+    "x2i": [
+     "input",
+     536
+    ],
+    "xa": [
+     "output",
+     283
+    ],
+    "xai": [
+     "input",
+     283
+    ],
+    "xb": [
+     "output",
+     266
+    ],
+    "xbi": [
+     "input",
+     266
+    ],
+    "c0": [
+     "input",
+     2
+    ],
+    "e0": [
+     "input",
+     2
+    ],
+    "c1": [
+     "input",
+     2
+    ],
+    "e1": [
+     "input",
+     2
+    ],
+    "x2": [
+     "output",
+     536
+    ]
+   }
+  },
+  {
+   "master": "dsfd_sstn_e0e1c0c1sinf_x2",
+   "emitted_sha256": "edd39928e85ac2cb971b7c641d26a4d6381419a609fb128b0a6d70420d732237",
+   "current_generator_sha256": "edd39928e85ac2cb971b7c641d26a4d6381419a609fb128b0a6d70420d732237",
+   "current_generator_matches_emitted": true,
+   "ports": {
+    "cc": [
+     "output",
+     15
+    ],
+    "cci": [
+     "input",
+     15
+    ],
+    "ck": [
+     "input",
+     1
+    ],
+    "nf": [
+     "input",
+     1
+    ],
+    "rs": [
+     "input",
+     1
+    ],
+    "si": [
+     "input",
+     2
+    ],
+    "so": [
+     "output",
+     2
+    ],
+    "x2i": [
+     "input",
+     536
+    ],
+    "xa": [
+     "output",
+     283
+    ],
+    "xai": [
+     "input",
+     283
+    ],
+    "xb": [
+     "output",
+     266
+    ],
+    "xbi": [
+     "input",
+     266
+    ],
+    "c0": [
+     "input",
+     2
+    ],
+    "e0": [
+     "input",
+     2
+    ],
+    "c1": [
+     "input",
+     2
+    ],
+    "e1": [
+     "input",
+     2
+    ],
+    "x2": [
+     "output",
+     536
+    ]
+   }
+  }
+ ]
+}

@@ -220,6 +220,17 @@ def main() -> int:
                       '(--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); '
                       + ('the undeclared cc driver removed; ' if mst == 'dsfd_sstn_e0c0' else '') + '0 cycles, same ports')
             extra = [SNET, 'tools/s81_static_net']
+            if re.search(r'input wire \[\d+:0\] x2i\b', txt):
+                # Full-shape extension coverage is mandatory before hardening.
+                # The ABI checker derives width from the emitted module and
+                # reset-sensitive bit positions from the real BF consumer.
+                extra.append('rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv')
+                for mode in ('mut_x2_drop', 'mut_x2_payload', 'mut_x2_reset', 'mut_x2_edge'):
+                    benches.append({'name': 'sstn_' + mode,
+                                    'cmd': f'bash {bench} {mode} {mst} {rtl} {{RUN}}/sstn_{mode}',
+                                    'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED',
+                                    'threads': 1, 'peak_ram_gb': 2})
+                change += '; full declared x2 payload/control checked at the rising edge, with lane/payload/reset/edge mutants'
         elif kd == 'hend':
             sources = [LANE_CROSS, f'{SNET}/ot_s81_static_lane_end.sv', RATIO_SRC, rtl]
             clock, resets = 'ck', ['rs'] + (['rss'] if 'input wire [0:0] rss' in txt else [])
