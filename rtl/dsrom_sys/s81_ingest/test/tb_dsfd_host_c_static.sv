@@ -15,7 +15,10 @@ module tb_dsfd_host_c_static;
     reg [514:0] fc = 0; wire [76:0] tc; wire [35:0] pw; wire [7:0] plen; reg [5:0] sst = 6'd0; reg [3:0] wft = 0;
     wire [291:0] hw; reg [8:0] hc = 0; reg [3:0] lf = 4'b0101;
     dsfd_host_c #(.NS(1), .KVS(1), .ENG(-1), .MUT(MUT)) dut (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_collective(fc),
-        .t_collective(tc), .f_lf(lf), .t_sseq_pw(pw), .t_sseq_plen(plen), .f_sseq_st(sst), .f_wfc_ft(wft), .hw(hw), .hc(hc));
+        .t_collective(tc), .f_lf(lf),
+`ifdef DSFD_HOST_PQ_BOOT
+        .ck_ingest({ck,ck}), .t_pq_pw(),
+`endif .t_sseq_pw(pw), .t_sseq_plen(plen), .f_sseq_st(sst), .f_wfc_ft(wft), .hw(hw), .hc(hc));
     integer sent = 0, sent_pw = 0, sent_sh = 0, cyc = 0, got_pw = 0, bad_pw = 0, ing = 0, early_fault = 0, lane_fault_seen = 0;
     reg [34:0] expw [0:NPW-1];
     integer i;

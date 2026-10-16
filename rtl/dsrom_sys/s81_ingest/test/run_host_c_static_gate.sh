@@ -6,7 +6,7 @@ export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 SRC=$1; OUT=$2; mkdir -p $OUT
 F=$(cd $SRC && python3 tools/die_port_bind.py none --closure dsfd_host_c | tr '\n' ' ')
 run() { l=$1; shift
-  verilator --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC --top-module tb_dsfd_host_c_static "$@" --Mdir $OUT/$l -o tb $F $SRC/rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c_static.sv > $OUT/build_$l.log 2>&1 || { echo "$l BUILD_FAIL"; return 2; }
+  verilator --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC ${OT_HOST_C_EXTRA_DEFINES:-} --top-module tb_dsfd_host_c_static "$@" --Mdir $OUT/$l -o tb $F $SRC/rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c_static.sv > $OUT/build_$l.log 2>&1 || { echo "$l BUILD_FAIL"; return 2; }
   $OUT/$l/tb > $OUT/run_$l.log 2>&1; grep TB_DSFD_HOST_C_STATIC $OUT/run_$l.log | tail -1
 }
 a=$(run base); echo "$a"; m1=$(run mut1 -GMUT=1); echo "$m1"; m4=$(run mut4 -GMUT=4); echo "$m4"
