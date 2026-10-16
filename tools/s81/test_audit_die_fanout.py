@@ -21,3 +21,16 @@ def test_fanout_keeps_unknown_direction_and_branch_vs_pair_difference():
     assert d['categories']['clock']['buses']==1
     assert d['categories']['data_or_control']['age_qualified']==0
     assert d['unresolved_endpoints']==[dict(bus='unresolved',inst='missing',port='i')]
+
+
+def test_actual_rtl_driver_can_be_last_without_inventing_direction():
+    m=dict(insts=[[n,'m','hub','','',x,0,10,10,'R0']for n,x in [('a',0),('b',500),('driver',2000)]],ports={},buses=[
+        ['real','hub',8,[['a','i','in'],['b','i','in'],['driver','o','out']]],
+        ['mixed','hub',8,[['a','i','in'],['b','i','io'],['driver','o','mixed']]],
+    ])
+    d=audit(m);rows={r['bus']:r for r in d['rows']}
+    assert rows['real']['rtl_driver']==['driver','o']
+    assert rows['real']['rtl_driver_branch_um']==2000
+    assert rows['real']['rtl_driver_same_pair_box_gap_lower_bound_um']==1990
+    assert rows['mixed']['rtl_driver'] is None
+    assert d['categories']['data_or_control']['rtl_direction_resolved']==1
