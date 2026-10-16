@@ -10,7 +10,7 @@
       "PCs_each": 4,
       "fixed_edges": 2,
       "macros": 0,
-      "estimated_registers_each": 2688,
+      "estimated_registers_each": 2689,
       "payload_in_bits": 1152,
       "actual_metadata_bits": 83,
       "independent_expected_bits": 116,
@@ -28,7 +28,7 @@
       "clock_roots": 128,
       "fixed_forward_edges": 1,
       "fixed_HOST_return_edges": 1,
-      "estimated_registers_each": 970,
+      "estimated_registers_each": 971,
       "native_es_bits": 288,
       "host_es_bits": 288,
       "context_bits": 318,
@@ -68,20 +68,27 @@
   ],
   "no_physical_area_claim": true,
   "accepted_cost": null,
-  "total_added_register_bits_before_synthesis": 210176,
+  "total_added_register_bits_before_synthesis": 210336,
   "pin_geometry_requirement": {
     "group_ports": {
       "input_bits_with_clock_reset_and_straps": 1358,
-      "output_bits_with_fault": 1587
+      "output_bits_with_fault_and_idle": 1588
     },
     "PC_mux_ports": {
       "input_bits_with_mode_clock_reset": 1259,
-      "output_bits_with_fault": 968
+      "output_bits_with_fault_and_idle": 969
     },
     "conservative_track_capacity_per_um": 7,
     "max_cut": 0.6,
-    "minimum_group_output_face_height_um": 377.85714285714283,
+    "minimum_group_output_face_height_um": 378.0952380952381,
     "minimum_mux_input_face_height_um": 299.76190476190476,
     "status": "traffic/capacity lower bounds only; final faces/homes/constant-pin semantic reductions and actual relays remain ungranted; do not fit at minimum clearance"
+  },
+  "drain_observation": {
+    "ports": "idle_group32, idle_pc128; K idle_issuer separate",
+    "registered_observation_edges": 1,
+    "data_edges_added": 0,
+    "source": "actual raw/captured/output valids and actual controller/HOST return activity; sticky faults prevent quiet",
+    "compiler_obligation": "price observed-empty edge plus actual observation relay/clock latency in fixed ownership leave/deadline; never gate normal issue"
   }
 }
