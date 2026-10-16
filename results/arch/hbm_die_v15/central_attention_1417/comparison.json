@@ -1,0 +1,400 @@
+{
+ "schema": "opentallas.hbm.central-attention-placement-screen.v1",
+ "die_mm2": 660,
+ "die_um": [
+  31018.4,
+  21277.693
+ ],
+ "carried_envelope_mm2": 535.1681966413439,
+ "new_service_macros_die": 576,
+ "dualprogramme_additional_macros_die": 32,
+ "dedicated_PV_additional_macros_die": 64,
+ "additional_source_area_reconciliation": "OPEN: native576 service SRAM includes32 existing programme macros; cannot add or absorb areas until old SM/PC source hierarchy is reconciled. New sources are not spatially assigned in either comparison.",
+ "planning_graph_links": 709,
+ "source_graph_binding_status": "These709 planning links are NOT current83-instance695-edge source graph; SM_HBM formatted packet shortcut and SM_X collapsed provenance remain unbound.",
+ "source_current_full_die_GRT": "BLOCKED missing actual source-specific masters/views; no unchanged full route retry.",
+ "variants": {
+  "stack_local_baseline": {
+   "overlaps": [],
+   "outside": [],
+   "unplaced": [],
+   "class_metrics": {
+    "HBM_K": {
+     "links": 32,
+     "bits_mm": 1415.6799999999484,
+     "maximum_outline_gap_mm": 0.02,
+     "qwen_byte_mm": 40860385.27999847,
+     "ds_byte_mm": 3893903.359999858
+    },
+    "SM_HBM": {
+     "links": 32,
+     "bits_mm": 155657.96928000005,
+     "maximum_outline_gap_mm": 8.305240000000001,
+     "qwen_byte_mm": 8779047864.238083,
+     "ds_byte_mm": 836623632.93696
+    },
+    "SM_OUT": {
+     "links": 32,
+     "bits_mm": 34394.45759999999,
+     "maximum_outline_gap_mm": 7.92168,
+     "qwen_byte_mm": 66201942.44095999,
+     "ds_byte_mm": 30574851.174016
+    },
+    "SM_X": {
+     "links": 256,
+     "bits_mm": 204904.52236799992,
+     "maximum_outline_gap_mm": 8.283831999999999,
+     "qwen_byte_mm": 181492867.19692814,
+     "ds_byte_mm": 1733531288.6661124
+    },
+    "HBM_VM": {
+     "links": 32,
+     "bits_mm": 83476.15232000001,
+     "maximum_outline_gap_mm": 13.888760000000003,
+     "qwen_byte_mm": 18747635.143423997,
+     "ds_byte_mm": 22361500.381440002
+    },
+    "VM_HBM": {
+     "links": 32,
+     "bits_mm": 83476.15232000001,
+     "maximum_outline_gap_mm": 13.888760000000003,
+     "qwen_byte_mm": 187821.34272,
+     "ds_byte_mm": 108145637.8816
+    },
+    "VM_HUB": {
+     "links": 32,
+     "bits_mm": 128195.15647999996,
+     "maximum_outline_gap_mm": 11.426392,
+     "qwen_byte_mm": 31850110.45555201,
+     "ds_byte_mm": 18387831.917952
+    },
+    "LG_SU": {
+     "links": 32,
+     "bits_mm": 355.83999999999725,
+     "maximum_outline_gap_mm": 0.020000000000000226,
+     "qwen_byte_mm": 895331.839999993,
+     "ds_byte_mm": 1020728.6399999924
+    },
+    "LG_SFU": {
+     "links": 32,
+     "bits_mm": 457.8771200000053,
+     "maximum_outline_gap_mm": 0.06588000000000192,
+     "qwen_byte_mm": 39845.19168000046,
+     "ds_byte_mm": 0.0
+    },
+    "LG_HC": {
+     "links": 32,
+     "bits_mm": 2776.263680000002,
+     "maximum_outline_gap_mm": 0.30504000000000087,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 1023822.1312000009
+    },
+    "COLL_VM": {
+     "links": 32,
+     "bits_mm": 115053.54239999998,
+     "maximum_outline_gap_mm": 10.486632,
+     "qwen_byte_mm": 15284168.640512,
+     "ds_byte_mm": 72391668.14771202
+    },
+    "SU_CORE": {
+     "links": 12,
+     "bits_mm": 12387.336192,
+     "maximum_outline_gap_mm": 6.728583999999999,
+     "qwen_byte_mm": 7969115.483596798,
+     "ds_byte_mm": 27486975.773375995
+    },
+    "SFU_CORE": {
+     "links": 12,
+     "bits_mm": 14691.336192000002,
+     "maximum_outline_gap_mm": 7.478584000000002,
+     "qwen_byte_mm": 1250564.1394176004,
+     "ds_byte_mm": 0.0
+    },
+    "HC_CORE": {
+     "links": 12,
+     "bits_mm": 14691.336192000002,
+     "maximum_outline_gap_mm": 7.478584000000002,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 5299596.377856
+    },
+    "HC_ENG": {
+     "links": 4,
+     "bits_mm": 38917.385461904734,
+     "maximum_outline_gap_mm": 25.24605924014134,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 124681573.67357728
+    },
+    "COLL_EP": {
+     "links": 9,
+     "bits_mm": 73423.40256,
+     "maximum_outline_gap_mm": 7.492360000000001,
+     "qwen_byte_mm": 7862566.658256001,
+     "ds_byte_mm": 39933824.915448
+    },
+    "EP_SERDES": {
+     "links": 9,
+     "bits_mm": 6673.683456,
+     "maximum_outline_gap_mm": 1.2848880000000014,
+     "qwen_byte_mm": 828348.2077823998,
+     "ds_byte_mm": 4207164.6240192
+    },
+    "COLL_RING": {
+     "links": 8,
+     "bits_mm": 49195.54567199999,
+     "maximum_outline_gap_mm": 9.589692999999997,
+     "qwen_byte_mm": 35129312.25367199,
+     "ds_byte_mm": 178421047.10320798
+    },
+    "VM_RING": {
+     "links": 8,
+     "bits_mm": 101526.24940799999,
+     "maximum_outline_gap_mm": 7.112573,
+     "qwen_byte_mm": 13462887.389742,
+     "ds_byte_mm": 63765400.64746199
+    },
+    "QUANT_VM": {
+     "links": 8,
+     "bits_mm": 1221.000000000001,
+     "maximum_outline_gap_mm": 0.2750000000000009,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 45056.00000000003
+    },
+    "IDX_VM": {
+     "links": 8,
+     "bits_mm": 15258.117439999998,
+     "maximum_outline_gap_mm": 10.895031999999999,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 2114195.9369599996
+    },
+    "IDX_INT": {
+     "links": 10,
+     "bits_mm": 14854.108607999999,
+     "maximum_outline_gap_mm": 5.160296000000001,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 2484827.9258879996
+    },
+    "IDX_COLL": {
+     "links": 1,
+     "bits_mm": 15261.517279999998,
+     "maximum_outline_gap_mm": 7.000696,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 265788.424336
+    },
+    "KV_DESC": {
+     "links": 32,
+     "bits_mm": 8152.76032,
+     "maximum_outline_gap_mm": 7.92168,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 407638.01599999995
+    }
+   },
+   "total_bits_mm": 1176417.3923499042,
+   "SM_to_existing_COLL_placeholder_outline_gap_mm": {
+    "max": 8.176879999999999,
+    "mean": 4.10844
+   },
+   "attention_metric_is_actual_624lane_graph": false
+  },
+  "central_3column_island": {
+   "overlaps": [],
+   "outside": [],
+   "unplaced": [],
+   "class_metrics": {
+    "HBM_K": {
+     "links": 32,
+     "bits_mm": 37335.25527199999,
+     "maximum_outline_gap_mm": 2.68952,
+     "qwen_byte_mm": 1077597278.298112,
+     "ds_byte_mm": 102692611.28934395
+    },
+    "SM_HBM": {
+     "links": 32,
+     "bits_mm": 144781.90685200001,
+     "maximum_outline_gap_mm": 9.398823999999998,
+     "qwen_byte_mm": 8165642247.606272,
+     "ds_byte_mm": 778167449.1472641
+    },
+    "SM_OUT": {
+     "links": 32,
+     "bits_mm": 59291.52480000001,
+     "maximum_outline_gap_mm": 18.036459999999998,
+     "qwen_byte_mm": 114123448.54208,
+     "ds_byte_mm": 52707025.29236798
+    },
+    "SM_X": {
+     "links": 256,
+     "bits_mm": 168023.3790690001,
+     "maximum_outline_gap_mm": 11.3500335,
+     "qwen_byte_mm": 148825630.93742406,
+     "ds_byte_mm": 1421509791.3768973
+    },
+    "HBM_VM": {
+     "links": 32,
+     "bits_mm": 90732.802816,
+     "maximum_outline_gap_mm": 22.323890499999997,
+     "qwen_byte_mm": 20377382.467436194,
+     "ds_byte_mm": 24305403.979346998
+    },
+    "VM_HBM": {
+     "links": 32,
+     "bits_mm": 90732.802816,
+     "maximum_outline_gap_mm": 22.323890499999997,
+     "qwen_byte_mm": 204148.80633599998,
+     "ds_byte_mm": 117546827.023205
+    },
+    "VM_HUB": {
+     "links": 32,
+     "bits_mm": 159468.29835699996,
+     "maximum_outline_gap_mm": 17.315951999999996,
+     "qwen_byte_mm": 39619928.36774429,
+     "ds_byte_mm": 22873533.969185542
+    },
+    "LG_SU": {
+     "links": 32,
+     "bits_mm": 155173.56211799997,
+     "maximum_outline_gap_mm": 14.710096500000004,
+     "qwen_byte_mm": 390433427.6373181,
+     "ds_byte_mm": 445116060.6583342
+    },
+    "LG_SFU": {
+     "links": 32,
+     "bits_mm": 169780.834706,
+     "maximum_outline_gap_mm": 14.5886565,
+     "qwen_byte_mm": 14774596.953983998,
+     "ds_byte_mm": 0.0
+    },
+    "LG_HC": {
+     "links": 32,
+     "bits_mm": 16612.458232000023,
+     "maximum_outline_gap_mm": 3.4361600000000063,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 6126292.150880008
+    },
+    "COLL_VM": {
+     "links": 32,
+     "bits_mm": 48932.715802499995,
+     "maximum_outline_gap_mm": 8.0881465,
+     "qwen_byte_mm": 6500415.934726199,
+     "ds_byte_mm": 30788455.966227453
+    },
+    "SU_CORE": {
+     "links": 12,
+     "bits_mm": 532.4800000000001,
+     "maximum_outline_gap_mm": 1.82,
+     "qwen_byte_mm": 309307.752,
+     "ds_byte_mm": 1066860.5600000003
+    },
+    "SFU_CORE": {
+     "links": 12,
+     "bits_mm": 81.92,
+     "maximum_outline_gap_mm": 0.04,
+     "qwen_byte_mm": 6967.296000000001,
+     "ds_byte_mm": 0.0
+    },
+    "HC_CORE": {
+     "links": 12,
+     "bits_mm": 6217.423104000003,
+     "maximum_outline_gap_mm": 6.352284500000001,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 2387944.3319600015
+    },
+    "HC_ENG": {
+     "links": 4,
+     "bits_mm": 19295.798784000002,
+     "maximum_outline_gap_mm": 23.974880500000005,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 61818915.35424
+    },
+    "COLL_EP": {
+     "links": 9,
+     "bits_mm": 27285.67789199999,
+     "maximum_outline_gap_mm": 7.463649999999998,
+     "qwen_byte_mm": 2921894.8422641996,
+     "ds_byte_mm": 14840247.736381095
+    },
+    "EP_SERDES": {
+     "links": 9,
+     "bits_mm": 31133.864256000004,
+     "maximum_outline_gap_mm": 6.1604905,
+     "qwen_byte_mm": 3864384.7626024,
+     "ds_byte_mm": 19627135.924329203
+    },
+    "COLL_RING": {
+     "links": 8,
+     "bits_mm": 54720.45152,
+     "maximum_outline_gap_mm": 8.58849,
+     "qwen_byte_mm": 39074509.73152,
+     "ds_byte_mm": 198458623.12928003
+    },
+    "VM_RING": {
+     "links": 8,
+     "bits_mm": 6951.690240000005,
+     "maximum_outline_gap_mm": 0.7614400000000006,
+     "qwen_byte_mm": 921828.8217600007,
+     "ds_byte_mm": 4366135.023360004
+    },
+    "QUANT_VM": {
+     "links": 8,
+     "bits_mm": 6717.919800000009,
+     "maximum_outline_gap_mm": 3.4361600000000063,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 247897.29280000032
+    },
+    "IDX_VM": {
+     "links": 8,
+     "bits_mm": 2997.8668799999996,
+     "maximum_outline_gap_mm": 2.71528,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 415390.56191999995
+    },
+    "IDX_INT": {
+     "links": 10,
+     "bits_mm": 65605.070723,
+     "maximum_outline_gap_mm": 29.76184,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 10986681.814699003
+    },
+    "IDX_COLL": {
+     "links": 1,
+     "bits_mm": 29321.18747999999,
+     "maximum_outline_gap_mm": 13.450085999999995,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 510645.96507599985
+    },
+    "KV_DESC": {
+     "links": 32,
+     "bits_mm": 14054.28736,
+     "maximum_outline_gap_mm": 18.036459999999998,
+     "qwen_byte_mm": 0.0,
+     "ds_byte_mm": 702714.368
+    }
+   },
+   "total_bits_mm": 1405781.1788795,
+   "SM_to_existing_COLL_placeholder_outline_gap_mm": {
+    "max": 3.614780000000001,
+    "mean": 1.1481799999999998
+   },
+   "attention_metric_is_actual_624lane_graph": false
+  }
+ },
+ "qualified": false,
+ "winner": null,
+ "fixed_roots_phase_PG_pin_cuts": "OPEN both alternatives; no clock insertion/PG waiver or extra feedthrough capacity assumed",
+ "constraints": [
+  "Original PHY outlines and positions retained",
+  "Every195 carried master rectangle retained with no90degree rotation",
+  "32 SM arranged three columns10/12/10; 1100um central corridors",
+  "Four SFU groups each four500x800 leaves arranged2x2 with20um internal gaps; native remote-bank source transport still required",
+  "Eight actual source PC owners grouped per stack unchanged; all709 carried incident links measured",
+  "Four existing COLL envelopes placed in island corridors as placeholders; actual624-adder tree/stager source footprints not inherited",
+  "660mm2 retained; no growth claimed",
+  "SM frames and all carried outlines are historical envelopes, not physical adoption of new producers/consumers"
+ ],
+ "open": [
+  "Actual624-lane ordered tree graph and relay edges required",
+  "Actual native service/cache/stager placement with all576/608/672 macro alternatives reconciled",
+  "32SM actual arithmetic command producer and two-word protected programme source join",
+  "Exact pins, clock entries, PG cuts, halo, feedthrough FF home and route area",
+  "All source-current unresolved ports remain unresolved unless actual RTL connection is published"
+ ]
+}
