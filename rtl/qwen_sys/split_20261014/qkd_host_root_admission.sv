@@ -7,6 +7,9 @@ module qkd_host_rank_services_admission #(
  parameter NL=6
 )(
  output wire[5:0]host_upstream_quiet,
+ input wire static_setup_ready,
+ output wire[142:0]boot_pr,output wire[3:0]boot_image_target,
+ output wire boot_image_ready,boot_image_fault,output wire[15:0]boot_image_epoch,output wire[63:0]boot_image_digest,
  input wire native_reserved,ownership_valid,
  output wire host_admission_open,host_launch_quiet,host_deferred,
  input wire[7:0]ck_phy,input wire ck_pad,ck_phy_rx_w,ck_phy_rx_r,ck_phy_tx_w,ck_phy_tx_r,
@@ -65,29 +68,32 @@ module qkd_host_rank_services_admission #(
  output wire step_issue_v,output wire[15:0]step_client_tag,output wire[7:0]step_slot,output wire[17:0]step_pos,output wire step_retire_v,step_retire_cq,output wire[15:0]step_retire_client_tag,output wire[7:0]step_retire_slot,output wire[17:0]step_retire_pos,step_retire_token,
  output wire host_idle,host_observer_fault
 );
- wire[142:0]pr;wire[1:0]local_boot;
+ wire[142:0]pr,raw_pr;
+ wire[3:0]image_target,auth_target,replay_target;
+ assign pr=(replay_target==0)?raw_pr:143'b0;
+ assign boot_pr=raw_pr;assign boot_image_target=replay_target;assign boot_image_ready=replay_done&&!program_fault&&!ingress_fault&&!begin_image;assign boot_image_fault=program_fault|ingress_fault;assign boot_image_epoch=program_epoch;assign boot_image_digest=program_digest;wire[1:0]local_boot;
  wire[127:0]boot_done_pc=slice_boot_done,boot_ok_pc=slice_boot_ok,boot_fault_pc=slice_boot_fault;
  assign local_boot={&boot_ok_pc,&boot_done_pc};
  // g_boot: per-PC qkd_hbm_boot_static_completion in qkd_host_pc_slice (die-placed)
  wire ingress_fault,program_fault;wire begin_image,word_v,word_desc,seal,auth_v;
  wire[15:0]image_epoch,auth_epoch;wire[10:0]pw_count;wire[3:0]dw_count;
  wire[9:0]word_addr;wire[63:0]word_data,auth_digest;wire replay_done;
- assign program_begin_epoch=image_epoch;assign program_begin_v=begin_image;assign program_auth_v=auth_v;assign program_expected_pw=pw_count;assign program_expected_dw=dw_count;assign program_auth_epoch=auth_epoch;assign program_auth_digest=auth_digest;
+ assign program_begin_epoch=image_epoch;assign program_begin_v=begin_image&&image_target==0;assign program_auth_v=auth_v&&auth_target==0;assign program_expected_pw=pw_count;assign program_expected_dw=dw_count;assign program_auth_epoch=auth_epoch;assign program_auth_digest=auth_digest;
  reg committed,commit_fault;
  always @(posedge ck_program_loader or negedge host_rst_n)begin
   if(!host_rst_n)begin committed<=0;commit_fault<=0;end
   else begin
    if(begin_image||!program_installed_valid)committed<=0;
-   else if(program_commit_v)begin
+   else if(program_commit_v&&replay_target==0)begin
     if(!replay_done||program_commit_epoch!=program_epoch||program_commit_digest!=program_digest)commit_fault<=1;
     else committed<=1;
    end
   end
  end
- assign program_ready=program_installed_valid&&replay_done&&committed&&!program_fault&&!commit_fault&&!begin_image;
- qkd_host_program_loader u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
+ assign program_ready=static_setup_ready&&replay_target==0&&program_installed_valid&&replay_done&&committed&&!program_fault&&!ingress_fault&&!commit_fault&&!begin_image;
+ qkd_host_program_loader_target u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
- .execution_active(execution_active),.pr(pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));
+ .image_target(image_target),.auth_target(auth_target),.replay_target(replay_target),.execution_active(execution_active),.pr(raw_pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));
  wire[7:0]observed_physical_faults=physical_fault|((8'((|boot_fault_pc)||(|ctrl_completion_fault)||ingress_fault||program_fault||commit_fault||host_observer_fault||peer_link_fault))<<die_id);
  wire d_rv,d_rcr,d_cv,d_ccr;wire[1023:0]d_rd,d_cd;wire adapter_fault;
  wire raw_rx_v,raw_rx_cr,program_rx_v,program_rx_cr;wire[527:0]raw_rx_d,program_rx_d;
@@ -101,8 +107,8 @@ module qkd_host_rank_services_admission #(
  qkd_host_phy_cdc5 u_phy(.ck_pad(ck_pad),.rx_wck(ck_phy_rx_w),.rx_rck(ck_phy_rx_r),.tx_wck(ck_phy_tx_w),.tx_rck(ck_phy_tx_r),.rst_n(host_rst_n),
  .phy_rx_v(d_rv),.phy_rx_d(d_rd),.phy_rx_cr(d_rcr),.phy_tx_v(d_cv),.phy_tx_d(d_cd),.phy_tx_cr(d_ccr),
  .core_rx_v(raw_rx_v),.core_rx_d(raw_rx_d),.core_rx_cr(raw_rx_cr),.core_tx_v(physical_tx_v),.core_tx_d(physical_tx_d),.core_tx_cr(physical_tx_cr),.faults(phy_faults));
- qkd_host_program_rx u_program_rx(.ck(ck_program_rx),.rst_n(host_rst_n),.rx_v(program_rx_v),.rx_d(program_rx_d),.rx_cr(program_rx_cr),
- .normal_v(rx_v),.normal_d(rx_d),.normal_cr(rx_cr),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
+ qkd_host_program_rx_target u_program_rx(.ck(ck_program_rx),.rst_n(host_rst_n),.rx_v(program_rx_v),.rx_d(program_rx_d),.rx_cr(program_rx_cr),
+ .normal_v(rx_v),.normal_d(rx_d),.normal_cr(rx_cr),.begin_image(begin_image),.image_epoch(image_epoch),.image_target(image_target),.auth_target(auth_target),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),.fault(ingress_fault));
  wire ing_v,done_v,done_cr;wire[1:0]ing_cls;wire[511:0]ing_d;wire[4:0]ing_crn;wire[63:0]done_d;
  wire source_fault;wire[3:0]packet_faults;
@@ -180,6 +186,7 @@ endmodule
 
 
 
+
 module qkd_host_root_admission #(
  parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,
  parameter ENABLE_SERVICE=0,ENABLE_NATIVE=0,ENABLE_TOKEN=0,
@@ -187,6 +194,9 @@ module qkd_host_root_admission #(
  parameter NL=6
 )(
  output wire[5:0]host_upstream_quiet,
+ input wire static_setup_ready,
+ output wire[142:0]boot_pr,output wire[3:0]boot_image_target,
+ output wire boot_image_ready,boot_image_fault,output wire[15:0]boot_image_epoch,output wire[63:0]boot_image_digest,
  input wire native_reserved,ownership_valid,
  output wire host_admission_open,host_launch_quiet,host_deferred,
  input wire[7:0] ck_phy,
@@ -434,6 +444,7 @@ module qkd_host_root_admission #(
  wire peer_retrain_request,request_aborted;
  wire codec_allocated_valid,codec_allocated_delivered;wire[15:0]codec_allocated_epoch;wire[17:0]codec_allocated_token,codec_allocated_position;wire[1:0]codec_allocated_gen;
  qkd_host_rank_services_admission #(.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_rank(
+ .static_setup_ready(static_setup_ready),.boot_pr(boot_pr),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),.boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
  .host_upstream_quiet(host_upstream_quiet),
  .native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),
  .ck_phy(ck_phy),
