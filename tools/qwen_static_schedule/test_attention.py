@@ -11,7 +11,7 @@ from qwen_static_schedule.calendar import compile_calendar, ScheduleError, sha
 class Attention(unittest.TestCase):
     def test_service_lengths_are_the_measured_w16(self):
         # measured on the w16 production binary (results/arch/qwen_attention_rate_1015/receipt.json)
-        self.assertEqual(A.per_layer_table((1, 1000, 8192)), {1: 882, 1000: 943, 8192: 1555})
+        self.assertEqual(A.per_layer_table((1, 1000, 8192)), {1: 887, 1000: 948, 8192: 1560})   # measured w16 + v1.4.3 head +5
         with self.assertRaises(ScheduleError):
             A.service(8192, pv='w1')
         with self.assertRaises(ScheduleError):
@@ -42,7 +42,7 @@ class Attention(unittest.TestCase):
             out = compile_calendar([prog], contract, root)
             t = [i['time_fs'] for i in out['issues']]
             self.assertEqual(t[0], P)                                 # strictly after the reset-boundary q
-            self.assertEqual(t[1], t[0] + (30 + 1555 + 35) * P + P)  # strictly after the landed result
+            self.assertEqual(t[1], t[0] + (30 + 1560 + 35) * P + P)  # strictly after the landed result
             self.assertEqual(out['buffer_peaks'], {'attn.service': 1})
             instr[1]['events'][0]['requires'] = ['q:L0']             # overlap: second request while the service is busy
             with self.assertRaises(ScheduleError):

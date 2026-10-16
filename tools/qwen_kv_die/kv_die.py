@@ -70,6 +70,7 @@ FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 5
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
 TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this from its cluster leader
+RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chain depth limit (the host holds reset >= this + 4)
 RELAY_FLUSH = 128               # kv_relays.RELAY_FLUSH: reset release >= this many core cycles after the clock runs
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
@@ -322,6 +323,9 @@ SPLIT_BINDINGS['qkd_rhead_ft'] = dict(SPLIT_BINDINGS['qkd_rhead'], module='ot_qk
     file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_ft.sv',
     ports=dict(SPLIT_BINDINGS['qkd_rhead']['ports'], ft_ti_a=['ft_ti_a'], ft_e_a=['ft_e_a'], ft_ti_b=['ft_ti_b'],
                ft_e_b=['ft_e_b'], ft_s_a=['ft_s_a'], ft_s_b=['ft_s_b'], ck_ft_t=['ck_ft_t'], ck_ft_s=['ck_ft_s']))
+SPLIT_BINDINGS['qkd_rst_region'] = dict(module='qkd_rst_region', file='rtl/qwen_sys/split_20261014/qkd_rst_region.sv',
+    ports=dict(a=['a'], b=['b'], ck=['ck'], dly=['dly']),
+    classed={'por_n': 'by_design: package POR pad (off-chip signal), async assert, synchronised inside the root'})
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
@@ -825,7 +829,7 @@ def _band(T, side, Wk):
 _PIN_HINT = {}
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
     """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
     shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
@@ -834,6 +838,8 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         HOST_V14['on'] = bool(host_v14)          # v1.4 (die_top_lint --variant ...,host_v14); None keeps the CLI setting
     if host_north is not None:
         HOST_V14['north'] = bool(host_north)    # v1.4.1 (die_top_lint --variant ...,host_north)
+    if v143 is not None:
+        V143['on'] = bool(v143)                 # v1.4.3 (die_top_lint --variant ...,v143 / kvsys_window --v143)
     if host_trees is not None:
         HOST_V14['trees'] = bool(host_trees)    # v1.4.2 (die_top_lint --variant ...,host_trees): reset / boot relay trees
     _set_geometry(split, reserve_static_memory=reserve_static_memory, reserve_native_astk=reserve_native_astk)
@@ -1539,6 +1545,7 @@ def _relays(m):
     # last relay drives the cluster's <= TREE_FAN loads (leaf) or the next level's chains.  Depth per load is a fixed,
     # recorded compiler/boot constant (m['tree_depth']); reset release waits >= RELAY_FLUSH core cycles (kv_relays).
     tree_meta = {}                                 # segment bid -> dict(root, children=[...], members=[...])
+    region_roots = bool(m['geo'].get('split') and V143['on'])
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -1580,7 +1587,7 @@ def _relays(m):
             segs = []
             for j_, (lead, g_) in enumerate(clusters(loads, TREE_BOX[lvl], TREE_FAN if lvl == len(TREE_BOX) - 1 else 0)):
                 sid = f'{name}{j_}'
-                meta = dict(root=root, rdrv='host', lead=lead, children=[], members=[])
+                meta = dict(root=root, rdrv='host', lead=lead, children=[], members=[], level=lvl)
                 if lvl == len(TREE_BOX) - 1:
                     meta['members'] = [e for e in g_ if e != lead]
                 else:
@@ -1814,6 +1821,14 @@ def _relays(m):
             tm = tree_meta[bid]
             src_ = st_['prev_ep'] if n else (a, pa)
             tm['depth'] = tm.get('pdepth', 0) + n
+            if region_roots and tm.get('level') == 0 and tm['root'].startswith('rst_') and n:
+                # v1.4.3 regional reset root (coordinator 2026-10-15): the last stage of this region's chain becomes a
+                # qkd_rst_region (POR-held local reset, chain ignored until flushed, release calendar dly = D - d_r);
+                # the region's local tree depth restarts at the root, the chain depth d_r is compensated by the strap
+                rr_ = f'rly_{bid}_{n - 1}'
+                by[rr_].master = 'qkd_rst_region'
+                m.setdefault('reset_regions', []).append(dict(root=tm['root'], inst=rr_, d=n, lead=list(tm['lead'])))
+                tm['depth'] = 0
             for e in tm['members']:
                 nb.append((f'{bid}__m', 'reset', 1, [src_, e]))
                 m['tree_depth'][(tm['root'], e)] = tm['depth']
@@ -1864,6 +1879,22 @@ def _relays(m):
         m['tree_depth_max'] = dep
         if max(dep.values()) >= RELAY_FLUSH:
             raise ValueError(f'kv die reset trees: depth {dep} >= RELAY_FLUSH {RELAY_FLUSH}')
+        if m.get('reset_regions'):
+            # v1.4.3: per reset root, D = its deepest region chain; every region root is strapped dly = D - d_r so all
+            # its regions release on host release + D + 2 (each load L later: tree_depth, now the LOCAL depth)
+            dmax = {}
+            for r_ in m['reset_regions']:
+                dmax[r_['root']] = max(dmax.get(r_['root'], 0), r_['d'])
+            ties_ = m.setdefault('host_ties', {})
+            for r_ in m['reset_regions']:
+                if r_['d'] > RST_REGION_IGNORE:
+                    raise ValueError(f"kv die reset region {r_['inst']}: chain depth {r_['d']} > IGNORE {RST_REGION_IGNORE}")
+                r_['dly'] = dmax[r_['root']] - r_['d']
+                cb_ = f"rdly_{r_['inst']}"
+                nb.append((cb_, 'constant', 8, [(r_['inst'], 'dly')]))
+                ties_[cb_] = (8, r_['dly'])
+            m['reset_region_calendar'] = dict(D=dmax, release='host release + D + 2 + local depth', ignore=RST_REGION_IGNORE,
+                hold=RELAY_FLUSH, host_min_hold_cycles=RST_REGION_IGNORE + 4, regions=len(m['reset_regions']))
         m['tree_depth'] = {f'{r_}:{e[0]}.{e[1]}': d_ for (r_, e), d_ in sorted(m['tree_depth'].items())}
     trunk = {}
     for i, (bid_, cl_, _b, eps_) in enumerate(nb):
@@ -1993,7 +2024,7 @@ def masters(m, k=1, port_bits=None):
             M[mst] = F.Master(mst, w, h, 4, 'HBM3E PHY abstract, PHY only: per-PC DFI po (in) / pi (out) on the controller face')
             continue
         if mst not in M:
-            M[mst] = F.Master(mst, w, h, 7 if not mst.startswith('qkd_rly') else 3, RTL.get(mst, mst))
+            M[mst] = F.Master(mst, w, h, 7 if not mst.startswith(('qkd_rly', 'qkd_rst_region')) else 3, RTL.get(mst, mst))
     # auto pins: every used port not yet on its master goes to the face nearest its peer, spread along the face
     peer = {}
     for bid, cl, bits, eps in m['buses']:
@@ -2700,6 +2731,8 @@ def record(m):
                 die_um=[die['w'], die['h']], die_mm2=die['mm2'], instances=len(m['insts']), buses=len(m['buses']),
                 instance_mm2=round(inst_mm2, 3), fill=round(inst_mm2 / die['mm2'], 4),
                 elastic_boundary=kv_elastic_boundary.inventory(ROOT, m, BINDINGS),
+                reset_region_calendar=m.get('reset_region_calendar'), reset_regions=m.get('reset_regions'),
+                tree_depth_max=m.get('tree_depth_max'),
                 static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
                     land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
                 native_astk_reservation=dict(enabled=ASTK_W>324, parent_width_um=ASTK_W,

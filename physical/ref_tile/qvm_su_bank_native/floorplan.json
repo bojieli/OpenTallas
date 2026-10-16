@@ -48,10 +48,12 @@
   "S": [
    "ck_mem_lo",
    "ck_mem_hi",
-   "ck_cap_lo",
-   "ck_cap_hi",
    "ck_out_lo",
    "ck_out_hi"
+  ],
+  "N": [
+   "ck_cap_lo",
+   "ck_cap_hi"
   ]
  },
  "clock_port": "ck_ctrl",

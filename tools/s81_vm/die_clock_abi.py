@@ -64,7 +64,7 @@ DISPOSITION = {
                      'front because both change the core files pinned by service profile s81_vm_r4_c2_w1'),
     'ck_landing_x34_s': ('FIX_IN_FLIGHT', 'W514 u_xsel/u_xcol -> ot_s81_vm_x34_s_w514_1015_f4; W1026 u_xsw n1 view CLOSED '
                          'TT +29.68 / FF +14.59 DRC 0 but native FAIL launch 234.5 > 220 (74 bank pins, R 250.1): '
-                         'kit n2 (86.4-um outline) submitted'),
+                         'kit n3 (recipe-3 pin registers, 86.4-um outline; n2 cancelled) ot_s81_vm_x34_s_w1026_1015_n3-n3-COMMIT-557a0c89e'),
     'ck_write_control_t': ('RETIRED_BY_A2F', 'legacy wcontrol (no view, never hardened) replaced by the A2-F front roots'),
     'ck_write_dispatch_t': ('RETIRED_BY_A2F', 'legacy wdispatch128 x16 replaced by s81_a2f_control4 x4 (pilot in flight)'),
     'ck_write_stage_t': ('RETIRED_BY_A2F', 'legacy wstage128 x128 replaced by s81_a2f_field16 x32 + s81_a2f_meta26 x4 '
@@ -72,11 +72,14 @@ DISPOSITION = {
     'ck_write_header_t': ('RETIRED_BY_A2F', 'legacy W0 header replaced by s81_a2_w0_header (A2-F keeps it; view owed)'),
     'ck_write_payload_t': ('RETIRED_BY_A2F', 'legacy W0 payloads replaced by s81_a2_w0_payload x4 (A2-F keeps them; '
                            'views owed)'),
-    'ck_wfc_control_s': ('OPEN_GLUE', 'dsfd_vm_static_wfc control flops (decode/return/t_err) are parent glue: extract to a '
-                         'two-root hard leaf dsfd_vm_static_wfc_ctl (owed, S-VM)'),
-    'ck_wfc_control_t': ('OPEN_GLUE', 'as ck_wfc_control_s (stream half of the same leaf)'),
-    'ck_xio_control_s': ('OPEN_GLUE', 'dsfd_vm_static_xio control flops are parent glue: extract to hard leaf '
-                         'dsfd_vm_static_xio_ctl (owed, S-VM)'),
+    'ck_wfc_control_s': ('LEAF_IN_FLIGHT', 'control flops extracted to the two-root hard leaf dsfd_vm_static_wfc_ctl '
+                         '(parent wires only; differential gate + full master gate PASS); route '
+                         'dsfd_vm_static_wfc_ctl_native_1015_r1-native1-COMMIT-60bbca547'),
+    'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'stream root of dsfd_vm_static_wfc_ctl (same route)'),
+    'ck_xio_control_s': ('OPEN_GLUE', 'dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three '
+                         'combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* '
+                         'is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs '
+                         'edge (L12 -> L14), needs S-FUNC + static-collective sign-off (owed, S-VM)'),
     'ck_xio_control_t': ('OPEN_GLUE', 'as ck_xio_control_s'),
 }
 
