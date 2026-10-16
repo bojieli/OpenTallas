@@ -1,0 +1,21 @@
+GATE INFO pin_regs: pin registers opted out: Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['hc_cr', 'hw_valid']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO oflop: S face 6.5 pins/um (hw_data, hw_valid): recipe-2 hold stages take 2.18 um behind the face, the pin flops need gap 2.8 um and 13 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81_host_sd_data64_s2_20261016-031608.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81_host_sd_data64_s2_20261016-031608.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81_host_sd_data64_s2-20261016-031608
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 30 s (gate total 126 s)
+GATE WARN util: synthesized std area 601 um2 + macros 0 in core 1936: util 31%  -> FIX: set "std_area_um2": 601 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_host_sd_data64 cells 4,218 flops 979 depth 381.7 ps util 0.3108 reach 0.0 um (0.1 s)
+GATE WARN textbook.util_channel: utilisation 31.1% outside 45%-65% (std 602 + macro 0 um2 in 1936 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 137.2..146.7 ps (spread 9.5), boundary mean 142.5; tt insertion all 102.6..111.8 ps (spread 9.2), boundary mean 107.7; ff insertion all 82.6..91.5 ps (spread 8.9), boundary mean 87.4; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81_host_sd_data64_s2/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      323 paths, worst slack 103.6 ps (e.g. u_sd.hw[191]$_DFFE_PP_/D)
+GATE INFO path_classes: in->reg         2 paths, worst slack 398.8 ps (e.g. rs.reset_pipe[1]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 1.0364487046388149e-10 hold WNS 4.5852793784106893e-11
+GATE INFO clock_rule: root port:ck: 979 sinks on the largest root <= 15,000; measured TT insertion 111.8 ps, leaf spread 9.2 ps
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_sd_data64_s2/gate_layout/floorplan.png; density /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_sd_data64_s2/gate_layout/density.png
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: s81_host_sd_data64_s2/gate_result.json written (exact staged source binding; commit it with the kit)

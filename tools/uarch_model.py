@@ -17331,3 +17331,15 @@ def hbm_host_static_ingress_model():
       area_slot_um=[432,432], slot_area_um2=186624,
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+
+def s81_bf_ten_root_candidate_model(**kwargs):
+    """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
+    from uarch_model_s81_bf_ten_root import model
+    return model(**kwargs)
+
+
+def s81_host_native_split_candidate_model(**kwargs):
+    """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
+    from uarch_model_s81_host_split import model
+    return model(**kwargs)

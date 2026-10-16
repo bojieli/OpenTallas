@@ -22,6 +22,7 @@ class PortLatencyTest(unittest.TestCase):
             script = '''
 set ::env(DESIGN_NAME) example
 set ::env(OT_PIN_REGS_CLOCK) ck
+set ::env(OT_PIN_REGS_RESET_PORTS) rst_n
 set ::env(OT_PIN_REGS_EXCLUDE) {^cfg$}
 set ::env(RESULTS_DIR) [lindex $argv 0]
 proc yosys {args} {
@@ -103,6 +104,7 @@ source [lindex $argv 1]
 GATE_STUB = '''
 set ::env(DESIGN_NAME) example
 set ::env(OT_PIN_REGS_CLOCK) ck
+set ::env(OT_PIN_REGS_RESET_PORTS) {}
 set ::env(RESULTS_DIR) [lindex $argv 0]
 proc yosys {args} {
  if {[lindex $args 0] eq "tee"} {
