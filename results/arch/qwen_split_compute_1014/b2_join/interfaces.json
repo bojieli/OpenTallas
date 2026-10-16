@@ -1,0 +1,3997 @@
+{
+  "status": "SOURCE_ONLY_UNQUALIFIED",
+  "sources": [
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
+      "sha256": "b92fb30b7f178a0780440beb18c2cc56ab3da1e42141154da6619907f3e4e748",
+      "top": "qfd_tt_ctlm_b2",
+      "ports": {
+        "ck_xpf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_me_sched": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp_active": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp": {
+          "direction": "output",
+          "bits": 56
+        },
+        "su_image_ready": {
+          "direction": "input",
+          "bits": 1
+        },
+        "control_stores_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "program_obs": {
+          "direction": "output",
+          "bits": 76
+        },
+        "layer_context_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "native_tok": {
+          "direction": "output",
+          "bits": 18
+        },
+        "native_pos": {
+          "direction": "output",
+          "bits": 18
+        },
+        "native_cmd": {
+          "direction": "output",
+          "bits": 380
+        },
+        "native_ret": {
+          "direction": "input",
+          "bits": 95
+        },
+        "command_stage": {
+          "direction": "output",
+          "bits": 6
+        },
+        "ib": {
+          "direction": "output",
+          "bits": 380
+        },
+        "su_observe": {
+          "direction": "input",
+          "bits": 16
+        },
+        "xpf": {
+          "direction": "output",
+          "bits": 72
+        },
+        "mer0": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rf0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "xflt": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_head": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_tree": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tc0": {
+          "direction": "output",
+          "bits": 341
+        },
+        "tc1": {
+          "direction": "output",
+          "bits": 341
+        },
+        "am0": {
+          "direction": "input",
+          "bits": 52
+        },
+        "am1": {
+          "direction": "input",
+          "bits": 52
+        },
+        "lc0": {
+          "direction": "output",
+          "bits": 26
+        },
+        "lc1": {
+          "direction": "output",
+          "bits": 26
+        },
+        "tc2": {
+          "direction": "output",
+          "bits": 341
+        },
+        "tc3": {
+          "direction": "output",
+          "bits": 341
+        },
+        "am2": {
+          "direction": "input",
+          "bits": 52
+        },
+        "am3": {
+          "direction": "input",
+          "bits": 52
+        },
+        "lc2": {
+          "direction": "output",
+          "bits": 26
+        },
+        "lc3": {
+          "direction": "output",
+          "bits": 26
+        },
+        "tc4": {
+          "direction": "output",
+          "bits": 341
+        },
+        "tc5": {
+          "direction": "output",
+          "bits": 341
+        },
+        "am4": {
+          "direction": "input",
+          "bits": 52
+        },
+        "am5": {
+          "direction": "input",
+          "bits": 52
+        },
+        "lc4": {
+          "direction": "output",
+          "bits": 26
+        },
+        "lc5": {
+          "direction": "output",
+          "bits": 26
+        },
+        "ld": {
+          "direction": "input",
+          "bits": 16
+        },
+        "mee": {
+          "direction": "output",
+          "bits": 8
+        },
+        "meok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "mx": {
+          "direction": "output",
+          "bits": 553
+        },
+        "pw": {
+          "direction": "input",
+          "bits": 75
+        },
+        "rsi": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sel": {
+          "direction": "output",
+          "bits": 26
+        },
+        "st": {
+          "direction": "input",
+          "bits": 49
+        },
+        "uf": {
+          "direction": "input",
+          "bits": 4
+        },
+        "xm": {
+          "direction": "output",
+          "bits": 92
+        },
+        "xs": {
+          "direction": "input",
+          "bits": 57
+        },
+        "kok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "kwd": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fab": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cf": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ovf": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2.sv",
+      "sha256": "bb676fe236c94aef802b04e026013c2658f90330a034994ca198934dc4fe92d2",
+      "top": "qfd_sp_vector_memory_b2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "native_ck": {
+          "direction": "input",
+          "bits": 1008
+        },
+        "return_ck": {
+          "direction": "input",
+          "bits": 96
+        },
+        "read_control_ck": {
+          "direction": "input",
+          "bits": 3
+        },
+        "write_ck": {
+          "direction": "input",
+          "bits": 240
+        },
+        "relay_ck": {
+          "direction": "input",
+          "bits": 289
+        },
+        "ck_r0_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sa": {
+          "direction": "input",
+          "bits": 2367
+        },
+        "sq": {
+          "direction": "output",
+          "bits": 6144
+        },
+        "mx": {
+          "direction": "input",
+          "bits": 553
+        },
+        "rb0": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb1": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb2": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb3": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb4": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb5": {
+          "direction": "input",
+          "bits": 551
+        },
+        "ld": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mo": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mee": {
+          "direction": "input",
+          "bits": 1
+        },
+        "svr": {
+          "direction": "input",
+          "bits": 21
+        },
+        "svr_rdy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svq": {
+          "direction": "output",
+          "bits": 512
+        },
+        "svq_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svw": {
+          "direction": "input",
+          "bits": 533
+        },
+        "ar": {
+          "direction": "input",
+          "bits": 520
+        },
+        "xaw": {
+          "direction": "output",
+          "bits": 553
+        },
+        "q_epoch": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_committed": {
+          "direction": "output",
+          "bits": 1
+        },
+        "q": {
+          "direction": "output",
+          "bits": 524
+        },
+        "q_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "write_commit_v": {
+          "direction": "output",
+          "bits": 39
+        },
+        "write_commit_line": {
+          "direction": "output",
+          "bits": 312
+        },
+        "write_commit_mask": {
+          "direction": "output",
+          "bits": 624
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3.sv",
+      "sha256": "a8d5b04ed1672a85ab6293ecfcda173099a042c30d5312531a5df8287d0b20df",
+      "top": "qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3",
+      "ports": {
+        "native_ck": {
+          "direction": "input",
+          "bits": 1008
+        },
+        "return_ck": {
+          "direction": "input",
+          "bits": 96
+        },
+        "read_control_ck": {
+          "direction": "input",
+          "bits": 3
+        },
+        "write_ck": {
+          "direction": "input",
+          "bits": 240
+        },
+        "relay_ck": {
+          "direction": "input",
+          "bits": 849
+        },
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sa": {
+          "direction": "input",
+          "bits": 2367
+        },
+        "sq": {
+          "direction": "output",
+          "bits": 6144
+        },
+        "mx": {
+          "direction": "input",
+          "bits": 553
+        },
+        "rb0": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb1": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb2": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb3": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb4": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb5": {
+          "direction": "input",
+          "bits": 551
+        },
+        "ld": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mo": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mee": {
+          "direction": "input",
+          "bits": 1
+        },
+        "svr": {
+          "direction": "input",
+          "bits": 21
+        },
+        "svr_rdy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svq": {
+          "direction": "output",
+          "bits": 512
+        },
+        "svq_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svw": {
+          "direction": "input",
+          "bits": 533
+        },
+        "ar": {
+          "direction": "input",
+          "bits": 520
+        },
+        "xaw": {
+          "direction": "output",
+          "bits": 553
+        },
+        "q_epoch": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_committed": {
+          "direction": "output",
+          "bits": 1
+        },
+        "q": {
+          "direction": "output",
+          "bits": 524
+        },
+        "q_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "write_commit_v": {
+          "direction": "output",
+          "bits": 39
+        },
+        "write_commit_line": {
+          "direction": "output",
+          "bits": 312
+        },
+        "write_commit_mask": {
+          "direction": "output",
+          "bits": 624
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    }
+  ],
+  "cycles": {
+    "controller_added": 0,
+    "vm_ingress_added": 0,
+    "return_ro": 6,
+    "return_pin_input": 1
+  },
+  "calendar": "six sources shared24; HB5 slot3 final; source-specific native macro VM; no physical inheritance"
+}
