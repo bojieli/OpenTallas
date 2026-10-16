@@ -1164,6 +1164,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "H-SU bank r12 submit REFUSED LOCALLY 00:58: FileNotFoundError ot-run (tool not on PATH), nothing submitted"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:25",
+     "status": "partially-refuted (estimate)",
+     "evidence": "H-SU: kit generator keeps >=20 um macro-to-pin-face + 2.16 um core margin and the 151.2 height is fixed by the row/track lattice; only the 33-um W/E margins shrink to 21.6 um -> bank6 slot 369.36 x 151.2 (accepted by H-DIE), -5.5% / -1.672 mm2 over 512 banks, not the ~20% I estimated. bank r12 re-gating. reduce r4 (ot_hbm_su_reduce_static, Codex:HBM-SU-structural job) ownership queried."
     }
    ]
   },
@@ -1498,7 +1504,7 @@
    "refuted": 0,
    "withdrawn": 1,
    "open": 13,
-   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1",
+   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted",
    "new_findings": 1
   }
  }
