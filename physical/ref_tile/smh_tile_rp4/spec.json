@@ -310,7 +310,7 @@
    {
     "name": "rp4_lockstep",
     "expect": "pass",
-    "pass_regex": "CG_LOCKSTEP mismatches 0",
+    "pass_regex": "PASS total_cycles [1-9]",
     "threads": 8,
     "peak_ram_gb": 72,
     "cmd": "python3 tools/hbm_sm_repack_1015/local_clock_lockstep.py --out {RUN}/positive.json --workdir {RUN}/positive --jobs 8"
@@ -318,7 +318,7 @@
    {
     "name": "rp4_clockdrop",
     "expect": "fail",
-    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "fail_regex": "FAIL total_cycles",
     "threads": 8,
     "peak_ram_gb": 72,
     "cmd": "python3 tools/hbm_sm_repack_1015/local_clock_lockstep.py --mut-clockdrop --out {RUN}/mutant.json --workdir {RUN}/mutant --jobs 8"
