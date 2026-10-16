@@ -1,0 +1,36 @@
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(cal.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(pre.mem): Not enough words in the file for the requested range [0:4095].
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(chk.mem): Not enough words in the file for the requested range [0:1023].
+END MISMATCH ecnt 154 done 0 fault 1 expected 1/0
+END_EDGE 154 fault
+END_EDGE 1007 fault
+END MISMATCH ecnt 1007 done 0 fault 1 expected 1/0
+END_EDGE 1163 fault
+END MISMATCH ecnt 1163 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 2024 done 0 fault 1 expected 1/0
+END_EDGE 2024 fault
+END_EDGE 2873 fault
+END MISMATCH ecnt 2873 done 0 fault 1 expected 1/0
+END_EDGE 3743 fault
+END MISMATCH ecnt 3743 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 3908 done 0 fault 1 expected 1/0
+END_EDGE 3908 fault
+END_EDGE 3973 fault
+END MISMATCH ecnt 3973 done 0 fault 1 expected 1/0
+END_EDGE 4087 fault
+END MISMATCH ecnt 4087 done 0 fault 1 expected 1/0
+END_EDGE 4182 fault
+END_EDGE 4221 fault
+END_EDGE 4274 fault
+END_EDGE 4351 fault
+END_EDGE 4394 fault
+END_EDGE 4467 fault
+END_EDGE 4566 fault
+END_EDGE 4723 fault
+END_EDGE 4818 fault
+END_EDGE 4821 fault
+END_EDGE 4824 fault
+VM MISMATCH sector 1389 got c903af89d20bc9e48349980d6c4af09fb4503f0d4979ebcf88bda03bb2cb0523 expected 0000003600000019000000170000000e0000000c0000000888bda03bb2cb0523
+IDX_TOPK_ROWS ENGINE0 MUT4 MUTH0 records20 dones0 faults20 sectors_checked141 errors110 schedule_edges4828
+FATAL: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:154: static TOPK on actual SW slice mismatch
+       Time: 60630000  Scope: tb_idx_topk_rows
