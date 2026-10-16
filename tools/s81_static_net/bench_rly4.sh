@@ -12,7 +12,7 @@ case "$mode" in
  reset) def=-DOT_RLY4_RESET_MUT ;;
  *) exit 2 ;;
 esac
-iverilog -g2012 $def -s tb -o "$out/sim" tools/s81_static_net/tb_rly4.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv
+iverilog -g2012 $def -s tb -o "$out/sim" tools/s81_static_net/tb_rly4.sv results/arch/native_pin_audit_snetfill_1015/rly4_1016/actual_reference.sv rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv
 if vvp "$out/sim" > "$out/run.log" 2>&1;then rc=0;else rc=$?;fi
 cat "$out/run.log"
 if [ "$mode" = pass ];then test "$rc" = 0;grep -q 'RLY4_EXACT PASS' "$out/run.log";else

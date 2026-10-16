@@ -4,7 +4,7 @@ module tb;
  wire [3:0] result; wire reference;
  ot_s81_rly4 dut(ck,rs,data[0],data[1],data[2],data[3],result[0],result[1],result[2],result[3]);
  reg selected=0;
- ot_s81_rly #(.W(1),.RSREG(0)) ref_u(ck,rs,selected,reference);
+ dsfd_rly_1_EW ref_u(.ck(ck),.rs(rs),.i(selected),.o(reference));
  integer fi,fo,n,k,checks=0; reg [31:0] rng=32'h9234517b;
  task check;begin
   for(k=0;k<4;k=k+1) begin
