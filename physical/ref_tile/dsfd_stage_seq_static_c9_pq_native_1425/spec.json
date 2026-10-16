@@ -200,11 +200,11 @@
   "why": "Held die-owned successor grant;283 N pins moved to actual129.6 edge;940 unchanged; no native/view inheritance.",
   "grant_commit": "27eeb499e0c4daec83dc0c2ff4db95ec7e1ed424"
  },
- "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15): outline 302.4x108 -> 302.4x129.6 (n1 route FLOORPLAN_MARGIN util 66%: std 20,396 um2 -> ~54.6%); issuer fault_code resolved from registered per-code event flags one edge later and engine availability checked against the per-engine issue set after the row loop (n1 lint: age->fault_code 40 levels / ~1,444 ps, s7->fault_code 39 levels). run_fault/cfg_fault and all issue/KIT/END edges unchanged. | n3-pinfix: die owner grant27eeb499e assigns actual283 N pins at129.6 edge; preceding n2 Tcl still108. All1223 names/order/layers and other940 positions preserved; actual NOPS128/STAGE0 unchanged, no native view inherited.",
+ "structural_change": "n4 issuer timing (c9 n2 CTS gate: reg->reg -527.4 ps at u_s.u_issue.run_fault, 653 paths; age -> 24-bit calendar compare -> per-row seen_cmd priority chain -> run_fault): (a) every row's issue/done hit is registered one edge ahead (compare against the value age takes on this edge), so every runtime event cone starts at a flop; (b) duplicate-issue, legit-completion and bad-completion detection are per-engine parallel OR / at-least-two trees (Codex 2154 candidate, fixed: its row_hit function in a continuous assignment did not track tag_oh -> false fault 6 in c8); (c) run_fault/cfg_fault are sticky ORs of the registered event flags. Same command/KIT/END edges and payloads (differential bench vs the frozen n3 issuer, 0 mismatches); one stricter protocol check: a calendar write on the job-accept edge is a run fault (n3 started the job on a half-written calendar). +512 flops. Kit, pins, outline unchanged from n3 (h1296 grant).",
  "job": {
-  "owner": "Codex:S-ELEM-PQ",
-  "branch": "claude/s81-bf-clk-1825",
-  "tag": "n3-pinfix",
+  "owner": "Claude:S-ELEM-PQ",
+  "branch": "claude/s81-pq-2210",
+  "tag": "n4-issuepred",
   "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
   "views_to": "physical/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/views",
   "record_to": "results/rtl/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425",
@@ -254,6 +254,27 @@
      "verilator"
     ],
     "fail_regex": "PQPRODUCER FAIL prime"
+   },
+   {
+    "name": "issuer_diff_vs_frozen_n3",
+    "cmd": "bash tools/s81_static_control/issue_diff_gate.sh {RUN}/issue_diff 6",
+    "expect": "pass",
+    "pass_regex": "ISSUE_DIFF GATE PASS",
+    "threads": 7,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "issuer_component_and_mutants",
+    "cmd": "bash tools/s81_static_control/component_gate.sh",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
    }
   ]
  },
