@@ -1,0 +1,4093 @@
+{
+ "schema": "opentallas.hgi_sim.ds_mtp_rows.v1",
+ "generated_utc": "2026-10-16T04:06:00Z",
+ "target": {
+  "tok_s": 3500.0,
+  "step_cycles_max": 1425943,
+  "basis": "H-MTP2: DeepSeek-V4.1-Flash DSpark MTP on the generic HBM die at 1M -- the multi-position (P-row) record design,\nranked top-down from a throughput target, timed on the batched verify compiler (hgi_sim.ds_mtp_verify) with the\ncommand processor modelled (timing.schedule S2, per layer segment).\n\nTARGET (stated basis): >= 3,500 tok/s MTP at 1M context, tau 4.159 (DSpark gamma 5, owner 6-class blend; the DS ROM\nbasis), 1.2 GHz: one DSpark step <= tau x 1.2e9 / 3,500 = 1,426,029 cycles.  3,500 = 1.74 x the same die's AR\n(2,010 tok/s, option B attention on the SM engines, same program and price table): MTP must pay at least the\naccepted-cost ledger's worth over AR (owner: MTP is required and paying) with margin for the unpriced 4-PC service /\nv15 VM costs; it is 83 % of the DS ROM design's 4,238 tok/s (the same tau).\n\n"
+ },
+ "tau": 4.159,
+ "P": 6,
+ "clock_hz": 1200000000.0,
+ "position": 1048575,
+ "program": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
+ "program_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+ "source_sha256": {
+  "ds_mtp_verify.py": "b22365302f6feed7d3af07b181a6f9cba2d7dfe6efd57979622fa7621916a523",
+  "ds_mtp_rows.py": "07cb386f7a5fec284765ad13245008d81600ac287a56d180fa18a622979cff28",
+  "timing.py": "b53ac4b726e0de68bd4a8c81f675a3ddabe7bf03170228debd5fcfc6839b0826"
+ },
+ "draft_source": "results/arch/hbm_mtp_1015/sim1M_B/sim.json",
+ "draft_att_pricing": "option B: measured SM attention spans, /home/ubuntu/wt/hbm-mtp-1015/results/hbm_sm_attention_1015/b_measured_model.json exposed",
+ "draft": {
+  "draft_cycles": 330664.0,
+  "draft_by_kind": {
+   "swapin": 11756.5,
+   "demb": 1630.0,
+   "dsa": 66105.0,
+   "swapout": 7230.0,
+   "dsb": 204227.5,
+   "dhead": 24887.5,
+   "markov": 14827.5
+  },
+  "seed_cycles": 43663.2,
+  "seed_columns": 6,
+  "mh_store_cycles": 7002.0,
+  "note": "row-serial DSpark draft as lowered (5 block rows one at a time per stage, column swaps), priced at the sim's --price-pos"
+ },
+ "current_measured": {
+  "FUSED.HC_PRE_NORM": [
+   0.715,
+   "fused/hc_pre_norm_d5120_ll/report.json (LL engine 464 cyc vs 649.4)"
+  ],
+  "FUSED.HC_POST": [
+   1.096,
+   "fused/hc_post_d5120_ll/report.json (LL engine 244 vs 222.7)"
+  ],
+  "FUSED.QDQ_FP8": [
+   2.74,
+   "qdq_wide/report.json (production width)"
+  ],
+  "FUSED.QDQ_FP4_E8M0": [
+   4.5,
+   "qdq_wide/report.json"
+  ],
+  "FUSED.QDQ_FP4_E4M3": [
+   2.75,
+   "qdq_wide/report.json"
+  ],
+  "IDX.TOPK": [
+   0.676,
+   "idx/ds_L0_tput/report_topkw1_w8_r4.json (8-wide heap, production)"
+  ],
+  "COLL.TOPK_MERGE": [
+   1.057,
+   "coll/tkm_tput_480f631d5.json"
+  ]
+ },
+ "scales": {
+  "fixed": null,
+  "sens_1010": {
+   "FUSED.HC_PRE_NORM": 6.514,
+   "COLL.ALL_GATHER": 0.716,
+   "SU.VOP": 1.067,
+   "FUSED.QDQ_FP8": 14.573,
+   "COLL.GROUP_REDUCE_MCAST": 0.908,
+   "FUSED.HC_POST": 20.085,
+   "IDX.TOPK": 0.644,
+   "HC.HC_MIX_POST": 1.282
+  },
+  "sens_current": {
+   "FUSED.HC_PRE_NORM": 0.715,
+   "COLL.ALL_GATHER": 0.716,
+   "SU.VOP": 1.067,
+   "FUSED.QDQ_FP8": 2.74,
+   "COLL.GROUP_REDUCE_MCAST": 0.908,
+   "FUSED.HC_POST": 1.096,
+   "IDX.TOPK": 0.676,
+   "HC.HC_MIX_POST": 1.282,
+   "FUSED.QDQ_FP4_E8M0": 4.5,
+   "FUSED.QDQ_FP4_E4M3": 2.75,
+   "COLL.TOPK_MERGE": 1.057
+  }
+ },
+ "items": {
+  "COLL": {
+   "owner": "H-COLL",
+   "change": "COLL.ROW_GATHER / TOPK_MERGE / kv_gather / ARGMAX_MERGE take R = P rows: one message train of P payloads (I operand m = P id lists, O stride a row); the endpoint/crossing/tail paid once",
+   "area_mm2": 0.02,
+   "area_basis": "record decode row counter + descriptor stride adders in the COLL record adapter",
+   "config": {
+    "rows": [
+     "COLL"
+    ]
+   }
+  },
+  "SU_DMA": {
+   "owner": "H-SU / H-DIE (DMA) / H-IDX (ARGMAX)",
+   "change": "indexed SU.VOP (route gathers), DMA.KVWB_DS (P rows, window ring 256 slots), position-addressed DMA.LOAD rows, FUSED.QDQ, ARGMAX.LOCAL take R = P rows",
+   "area_mm2": 0.05,
+   "area_basis": "row counters + per-row I / dyn_sel stepping in four record adapters",
+   "config": {
+    "rows": [
+     "ARGMAX",
+     "DMA",
+     "FUSED.QDQ",
+     "SU"
+    ]
+   }
+  },
+  "IDX": {
+   "owner": "H-IDX",
+   "change": "IDX.TOPK route top-6 R = P rows (heap reset a row) + the verify expert-UNION record; IDX.INDEX P queries over ONE key stream (query slots x P, compute serial)",
+   "area_mm2": 0.1,
+   "area_basis": "P x 4,096-word query store (SRAM) + union bitmap 384 b + heap row reset",
+   "config": {
+    "rows": [
+     "IDX.INDEX",
+     "IDX.TOPK"
+    ]
+   }
+  },
+  "FUSED": {
+   "owner": "H-SU (FUSED owner)",
+   "change": "FUSED.HC_PRE_NORM / HC_POST R = P rows on the LL lanes: gain sectors kept across rows, two r slots (row p+1's phase A overlaps row p's csum / rsqrt tail), per-row scalar set (PRE 4 / POST 20 words a row)",
+   "area_mm2": 0.1,
+   "area_basis": "32 lanes x (x buffer 2 x 20 sectors + 6 x 20 scalar words) flops ~ 200k DFF x 0.486 um2",
+   "config": {
+    "rows": [
+     "FUSED.POST",
+     "FUSED.PRE"
+    ]
+   }
+  },
+  "HC": {
+   "owner": "H-SU (HC owner)",
+   "change": "HC.HC_MIX R = P rows: HCP streams P h rows against stationary mix weights (measured x6 mode, II 250), SU pre/post rows, Sinkhorn x 3 units (II 634 / 3 < 250)",
+   "area_mm2": 0.15,
+   "area_basis": "2 more ot_hdc_sinkhorn (16 quotient paths + 512-entry seed each, ~0.06 mm2) + row sequencing",
+   "config": {
+    "rows": [
+     "HC"
+    ]
+   }
+  },
+  "ATT": {
+   "owner": "H-SM (SM attention)",
+   "change": "option-B attention records R = P query rows: fixed spans (first access, dispatch, publish, cross-SM merge) once, the KV line stream once per pass, component span x ceil(P / query slots) (query slots = the SM MAC slot sets)",
+   "area_mm2": 0.64,
+   "area_basis": "per SM: 6 query-slot stores (512 FP32 each, SRAM) + row tags; 32 SMs",
+   "config": {
+    "rows": [
+     "ATT"
+    ],
+    "att_k": 1
+   }
+  },
+  "SM_HOLD": {
+   "owner": "H-SM",
+   "change": "SM line hold (slot port k = 1): one HBM read of each weight line serves P slots in P issue passes (op_xb + slot field [4:2] + per-slot x base); never faster than the HBM share",
+   "area_mm2": 0.32,
+   "area_basis": "per SM one 136 B line held x IL 8 + slot tag; 32 SMs",
+   "config": {
+    "sm_mode": "slots",
+    "sm_k": 1
+   }
+  },
+  "SM_K2": {
+   "owner": "H-SM",
+   "change": "SM MAC slot sets k = 2 (the P-slot port of HGI-1 spec 6.7 at 2 slots a pass): ceil(6 / 2) = 3 passes, 3 / 1.374 of the HBM-bound line time",
+   "area_mm2": 9.661508266666667,
+   "area_basis": "1 more block-dot set a SM (32 ot_gpu_bd_col LB2 at 9,123 um2 = 5,474 um2 std cells routed / 0.6) x 32 SMs + the line hold -- ESTIMATE from the routed bd_col, H-SM to measure",
+   "config": {
+    "sm_mode": "slots",
+    "sm_k": 2,
+    "att_k": 2
+   }
+  },
+  "SM_K3": {
+   "owner": "H-SM",
+   "change": "SM MAC slot sets k = 3 (spec 6.7 P-slot port at 3 slots a pass): ceil(6 / 3) = 2 passes, 2 / 1.374 of the HBM-bound line time",
+   "area_mm2": 19.003016533333334,
+   "area_basis": "2 more block-dot sets a SM (same basis) -- ESTIMATE, H-SM to measure",
+   "config": {
+    "sm_mode": "slots",
+    "sm_k": 3,
+    "att_k": 3
+   }
+  },
+  "SM_K6": {
+   "owner": "H-SM",
+   "change": "SM MAC slot sets k = 6 (one pass, spec 6.7 'issue unchanged')",
+   "area_mm2": 47.02754133333333,
+   "area_basis": "5 more block-dot sets a SM (same basis) -- ESTIMATE",
+   "config": {
+    "sm_mode": "slots",
+    "sm_k": 6,
+    "att_k": 6
+   }
+  },
+  "VM": {
+   "owner": "H-DIE",
+   "change": "VM +150k words: the P verify columns' h / PRE resident (no per-layer column swap)",
+   "area_mm2": 0.9,
+   "area_basis": "+150k x 32 b SRAM at the VM's 1.5 mm2 / 256k-word density",
+   "config": {
+    "swap": false
+   }
+  }
+ },
+ "ar_cycles": {
+  "fixed": 596948.7,
+  "sens_current": 545688.3,
+  "sens_1010": 1196619.8
+ },
+ "asbuilt_verify": 2527073.6,
+ "rank_alone": [
+  {
+   "item": "COLL",
+   "owner": "H-COLL",
+   "saves_cycles": 67206.2,
+   "area_mm2": 0.02,
+   "cycles_per_mm2": 3360310.0
+  },
+  {
+   "item": "FUSED",
+   "owner": "H-SU (FUSED owner)",
+   "saves_cycles": 247248.3,
+   "area_mm2": 0.1,
+   "cycles_per_mm2": 2472483.0
+  },
+  {
+   "item": "HC",
+   "owner": "H-SU (HC owner)",
+   "saves_cycles": 234836.5,
+   "area_mm2": 0.15,
+   "cycles_per_mm2": 1565576.7
+  },
+  {
+   "item": "SU_DMA",
+   "owner": "H-SU / H-DIE (DMA) / H-IDX (ARGMAX)",
+   "saves_cycles": 47035.4,
+   "area_mm2": 0.05,
+   "cycles_per_mm2": 940708.0
+  },
+  {
+   "item": "IDX",
+   "owner": "H-IDX",
+   "saves_cycles": 74983.0,
+   "area_mm2": 0.1,
+   "cycles_per_mm2": 749830.0
+  },
+  {
+   "item": "SM_HOLD",
+   "owner": "H-SM",
+   "saves_cycles": 125644.1,
+   "area_mm2": 0.32,
+   "cycles_per_mm2": 392637.8
+  },
+  {
+   "item": "ATT",
+   "owner": "H-SM (SM attention)",
+   "saves_cycles": 136000.0,
+   "area_mm2": 0.64,
+   "cycles_per_mm2": 212500.0
+  },
+  {
+   "item": "SM_K2",
+   "owner": "H-SM",
+   "saves_cycles": 327007.9,
+   "area_mm2": 9.661508266666667,
+   "cycles_per_mm2": 33846.5
+  },
+  {
+   "item": "VM",
+   "owner": "H-DIE",
+   "saves_cycles": 26932.8,
+   "area_mm2": 0.9,
+   "cycles_per_mm2": 29925.3
+  },
+  {
+   "item": "SM_K3",
+   "owner": "H-SM",
+   "saves_cycles": 376250.3,
+   "area_mm2": 19.003016533333334,
+   "cycles_per_mm2": 19799.5
+  },
+  {
+   "item": "SM_K6",
+   "owner": "H-SM",
+   "saves_cycles": 401514.2,
+   "area_mm2": 47.02754133333333,
+   "cycles_per_mm2": 8537.9
+  }
+ ],
+ "ladder": [
+  {
+   "items": [
+    "COLL"
+   ],
+   "area_mm2": 0.02,
+   "fixed": {
+    "step_cycles": 2842012.6,
+    "verify_cycles": 2459867.4,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.6919,
+    "mtp_tok_s": 1756.1,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 0.874
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 2737605.9,
+    "verify_cycles": 2459867.4,
+    "draft_cycles": 239709.5,
+    "seed_cycles": 30211.0,
+    "r5": 0.6919,
+    "mtp_tok_s": 1823.1,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 0.907
+   },
+   "sens_current": {
+    "step_cycles": 2685882.7,
+    "verify_cycles": 2336482.5,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.6919,
+    "mtp_tok_s": 1858.2,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 0.845
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 2590441.4,
+    "verify_cycles": 2336482.5,
+    "draft_cycles": 219125.5,
+    "seed_cycles": 27616.7,
+    "r5": 0.6919,
+    "mtp_tok_s": 1926.6,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 0.876
+   },
+   "sens_1010": {
+    "step_cycles": 6961602.1,
+    "verify_cycles": 6196388.6,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.6919,
+    "mtp_tok_s": 716.9,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 0.715
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 6752312.4,
+    "verify_cycles": 6196388.6,
+    "draft_cycles": 480512.2,
+    "seed_cycles": 60559.7,
+    "r5": 0.6919,
+    "mtp_tok_s": 739.1,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 0.737
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED"
+   ],
+   "area_mm2": 0.12,
+   "fixed": {
+    "step_cycles": 2594764.3,
+    "verify_cycles": 2212619.1,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.6158,
+    "mtp_tok_s": 1923.4,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 0.957
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 2464557.6,
+    "verify_cycles": 2212619.1,
+    "draft_cycles": 217233.7,
+    "seed_cycles": 26886.8,
+    "r5": 0.6158,
+    "mtp_tok_s": 2025.0,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.007
+   },
+   "sens_current": {
+    "step_cycles": 2472633.0,
+    "verify_cycles": 2123232.8,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.6158,
+    "mtp_tok_s": 2018.4,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 0.918
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 2353607.2,
+    "verify_cycles": 2123232.8,
+    "draft_cycles": 198579.7,
+    "seed_cycles": 24578.0,
+    "r5": 0.6158,
+    "mtp_tok_s": 2120.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 0.964
+   },
+   "sens_1010": {
+    "step_cycles": 3532007.1,
+    "verify_cycles": 2766793.6,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.6158,
+    "mtp_tok_s": 1413.0,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.409
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 3270999.8,
+    "verify_cycles": 2766793.6,
+    "draft_cycles": 435458.0,
+    "seed_cycles": 53896.2,
+    "r5": 0.6158,
+    "mtp_tok_s": 1525.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.521
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC"
+   ],
+   "area_mm2": 0.27,
+   "fixed": {
+    "step_cycles": 2359927.8,
+    "verify_cycles": 1977782.6,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.5432,
+    "mtp_tok_s": 2114.8,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.052
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 2205116.2,
+    "verify_cycles": 1977782.6,
+    "draft_cycles": 195799.0,
+    "seed_cycles": 23716.6,
+    "r5": 0.5432,
+    "mtp_tok_s": 2263.3,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.126
+   },
+   "sens_current": {
+    "step_cycles": 2204994.7,
+    "verify_cycles": 1855594.5,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.5432,
+    "mtp_tok_s": 2263.4,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.029
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 2063476.9,
+    "verify_cycles": 1855594.5,
+    "draft_cycles": 178985.6,
+    "seed_cycles": 21680.0,
+    "r5": 0.5432,
+    "mtp_tok_s": 2418.6,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.1
+   },
+   "sens_1010": {
+    "step_cycles": 3263395.3,
+    "verify_cycles": 2498181.8,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.5432,
+    "mtp_tok_s": 1529.3,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.525
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2953066.1,
+    "verify_cycles": 2498181.8,
+    "draft_cycles": 392491.0,
+    "seed_cycles": 47541.4,
+    "r5": 0.5432,
+    "mtp_tok_s": 1690.0,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.685
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA"
+   ],
+   "area_mm2": 0.32,
+   "fixed": {
+    "step_cycles": 2312892.4,
+    "verify_cycles": 1930747.2,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.529,
+    "mtp_tok_s": 2157.8,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.073
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 2153290.7,
+    "verify_cycles": 1930747.2,
+    "draft_cycles": 191626.1,
+    "seed_cycles": 23099.4,
+    "r5": 0.529,
+    "mtp_tok_s": 2317.8,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.153
+   },
+   "sens_current": {
+    "step_cycles": 2154831.7,
+    "verify_cycles": 1805431.5,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.529,
+    "mtp_tok_s": 2316.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.053
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 2008935.1,
+    "verify_cycles": 1805431.5,
+    "draft_cycles": 175171.0,
+    "seed_cycles": 21115.9,
+    "r5": 0.529,
+    "mtp_tok_s": 2484.3,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.13
+   },
+   "sens_1010": {
+    "step_cycles": 3206097.5,
+    "verify_cycles": 2440884.0,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.529,
+    "mtp_tok_s": 1556.7,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.552
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2886166.3,
+    "verify_cycles": 2440884.0,
+    "draft_cycles": 384126.2,
+    "seed_cycles": 46304.2,
+    "r5": 0.529,
+    "mtp_tok_s": 1729.2,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.724
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX"
+   ],
+   "area_mm2": 0.42,
+   "fixed": {
+    "step_cycles": 2237909.4,
+    "verify_cycles": 1855764.2,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.5148,
+    "mtp_tok_s": 2230.1,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.109
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 2073480.8,
+    "verify_cycles": 1855764.2,
+    "draft_cycles": 187421.1,
+    "seed_cycles": 22477.5,
+    "r5": 0.5148,
+    "mtp_tok_s": 2407.0,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.197
+   },
+   "sens_current": {
+    "step_cycles": 2098187.6,
+    "verify_cycles": 1748787.4,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.5148,
+    "mtp_tok_s": 2378.6,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.082
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1947878.6,
+    "verify_cycles": 1748787.4,
+    "draft_cycles": 171327.1,
+    "seed_cycles": 20547.3,
+    "r5": 0.5148,
+    "mtp_tok_s": 2562.2,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.165
+   },
+   "sens_1010": {
+    "step_cycles": 3151264.7,
+    "verify_cycles": 2386051.2,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.5148,
+    "mtp_tok_s": 1583.7,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.579
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2821657.5,
+    "verify_cycles": 2386051.2,
+    "draft_cycles": 375696.9,
+    "seed_cycles": 45057.5,
+    "r5": 0.5148,
+    "mtp_tok_s": 1768.7,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.764
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT"
+   ],
+   "area_mm2": 1.06,
+   "fixed": {
+    "step_cycles": 2101909.4,
+    "verify_cycles": 1719764.2,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.4737,
+    "mtp_tok_s": 2374.4,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.181
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 1923547.9,
+    "verify_cycles": 1719764.2,
+    "draft_cycles": 175283.4,
+    "seed_cycles": 20682.3,
+    "r5": 0.4737,
+    "mtp_tok_s": 2594.6,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.291
+   },
+   "sens_current": {
+    "step_cycles": 1962187.6,
+    "verify_cycles": 1612787.4,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.4737,
+    "mtp_tok_s": 2543.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.157
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1799142.2,
+    "verify_cycles": 1612787.4,
+    "draft_cycles": 160231.7,
+    "seed_cycles": 18906.3,
+    "r5": 0.4737,
+    "mtp_tok_s": 2774.0,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.261
+   },
+   "sens_1010": {
+    "step_cycles": 3015264.7,
+    "verify_cycles": 2250051.2,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.4737,
+    "mtp_tok_s": 1655.2,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.651
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2657728.3,
+    "verify_cycles": 2250051.2,
+    "draft_cycles": 351366.2,
+    "seed_cycles": 41459.0,
+    "r5": 0.4737,
+    "mtp_tok_s": 1877.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.873
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM"
+   ],
+   "area_mm2": 1.96,
+   "fixed": {
+    "step_cycles": 2074976.6,
+    "verify_cycles": 1692831.4,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.4678,
+    "mtp_tok_s": 2405.2,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.197
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 1894613.2,
+    "verify_cycles": 1692831.4,
+    "draft_cycles": 173539.4,
+    "seed_cycles": 20424.4,
+    "r5": 0.4678,
+    "mtp_tok_s": 2634.2,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.31
+   },
+   "sens_current": {
+    "step_cycles": 1935254.8,
+    "verify_cycles": 1585854.6,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.4678,
+    "mtp_tok_s": 2578.9,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.173
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1770379.3,
+    "verify_cycles": 1585854.6,
+    "draft_cycles": 158637.5,
+    "seed_cycles": 18670.5,
+    "r5": 0.4678,
+    "mtp_tok_s": 2819.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.282
+   },
+   "sens_1010": {
+    "step_cycles": 2988331.8,
+    "verify_cycles": 2223118.3,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.4678,
+    "mtp_tok_s": 1670.1,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.665
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2626782.4,
+    "verify_cycles": 2223118.3,
+    "draft_cycles": 347870.3,
+    "seed_cycles": 40941.9,
+    "r5": 0.4678,
+    "mtp_tok_s": 1900.0,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.895
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_HOLD"
+   ],
+   "area_mm2": 2.28,
+   "fixed": {
+    "step_cycles": 1921309.7,
+    "verify_cycles": 1539164.5,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.4342,
+    "mtp_tok_s": 2597.6,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.292
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 1729553.9,
+    "verify_cycles": 1539164.5,
+    "draft_cycles": 163614.9,
+    "seed_cycles": 18956.5,
+    "r5": 0.4342,
+    "mtp_tok_s": 2885.6,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.435
+   },
+   "sens_current": {
+    "step_cycles": 1782215.9,
+    "verify_cycles": 1432815.7,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.4342,
+    "mtp_tok_s": 2800.3,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.273
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1606926.3,
+    "verify_cycles": 1432815.7,
+    "draft_cycles": 149565.2,
+    "seed_cycles": 17328.7,
+    "r5": 0.4342,
+    "mtp_tok_s": 3105.8,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.412
+   },
+   "sens_1010": {
+    "step_cycles": 2834930.7,
+    "verify_cycles": 2069717.2,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.4342,
+    "mtp_tok_s": 1760.5,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.756
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2450544.6,
+    "verify_cycles": 2069717.2,
+    "draft_cycles": 327976.0,
+    "seed_cycles": 37999.5,
+    "r5": 0.4342,
+    "mtp_tok_s": 2036.6,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 2.031
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.62,
+   "fixed": {
+    "step_cycles": 1610223.0,
+    "verify_cycles": 1228077.8,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.3612,
+    "mtp_tok_s": 3099.4,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.542
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 1393738.0,
+    "verify_cycles": 1228077.8,
+    "draft_cycles": 142071.9,
+    "seed_cycles": 15770.3,
+    "r5": 0.3612,
+    "mtp_tok_s": 3580.9,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.781
+   },
+   "sens_current": {
+    "step_cycles": 1469477.5,
+    "verify_cycles": 1120077.3,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.3612,
+    "mtp_tok_s": 3396.3,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.544
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1271582.2,
+    "verify_cycles": 1120077.3,
+    "draft_cycles": 129872.1,
+    "seed_cycles": 14416.1,
+    "r5": 0.3612,
+    "mtp_tok_s": 3924.9,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.785
+   },
+   "sens_1010": {
+    "step_cycles": 2522192.3,
+    "verify_cycles": 1756978.8,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.3612,
+    "mtp_tok_s": 1978.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 1.973
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 2088235.0,
+    "verify_cycles": 1756978.8,
+    "draft_cycles": 284791.7,
+    "seed_cycles": 31612.6,
+    "r5": 0.3612,
+    "mtp_tok_s": 2390.0,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 2.383
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.96,
+   "fixed": {
+    "step_cycles": 1525445.3,
+    "verify_cycles": 1143300.1,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.334,
+    "mtp_tok_s": 3271.7,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.628
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 1299761.7,
+    "verify_cycles": 1143300.1,
+    "draft_cycles": 134058.5,
+    "seed_cycles": 14585.1,
+    "r5": 0.334,
+    "mtp_tok_s": 3839.8,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.91
+   },
+   "sens_current": {
+    "step_cycles": 1384641.1,
+    "verify_cycles": 1035240.9,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.334,
+    "mtp_tok_s": 3604.4,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.639
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1178337.1,
+    "verify_cycles": 1035240.9,
+    "draft_cycles": 122546.8,
+    "seed_cycles": 13332.7,
+    "r5": 0.334,
+    "mtp_tok_s": 4235.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.926
+   },
+   "sens_1010": {
+    "step_cycles": 2445131.4,
+    "verify_cycles": 1679917.9,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.334,
+    "mtp_tok_s": 2041.1,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 2.035
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 1992734.9,
+    "verify_cycles": 1679917.9,
+    "draft_cycles": 268728.3,
+    "seed_cycles": 29236.8,
+    "r5": 0.334,
+    "mtp_tok_s": 2504.5,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 2.497
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K6"
+   ],
+   "area_mm2": 48.99,
+   "fixed": {
+    "step_cycles": 1467601.8,
+    "verify_cycles": 1085456.6,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "r5": 0.317,
+    "mtp_tok_s": 3400.6,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.692
+   },
+   "fixed|draft_batched": {
+    "step_cycles": 1236134.8,
+    "verify_cycles": 1085456.6,
+    "draft_cycles": 129020.2,
+    "seed_cycles": 13840.0,
+    "r5": 0.317,
+    "mtp_tok_s": 4037.4,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 2.008
+   },
+   "sens_current": {
+    "step_cycles": 1328829.6,
+    "verify_cycles": 979429.4,
+    "draft_cycles": 302269.7,
+    "seed_cycles": 39913.8,
+    "r5": 0.317,
+    "mtp_tok_s": 3755.8,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.708
+   },
+   "sens_current|draft_batched": {
+    "step_cycles": 1117238.8,
+    "verify_cycles": 979429.4,
+    "draft_cycles": 117941.2,
+    "seed_cycles": 12651.5,
+    "r5": 0.317,
+    "mtp_tok_s": 4467.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 2.031
+   },
+   "sens_1010": {
+    "step_cycles": 2390719.7,
+    "verify_cycles": 1625506.2,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "r5": 0.317,
+    "mtp_tok_s": 2087.6,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 2.082
+   },
+   "sens_1010|draft_batched": {
+    "step_cycles": 1926730.1,
+    "verify_cycles": 1625506.2,
+    "draft_cycles": 258628.9,
+    "seed_cycles": 27743.1,
+    "r5": 0.317,
+    "mtp_tok_s": 2590.3,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 2.583
+   }
+  }
+ ],
+ "first_meeting_target": {
+  "items": [
+   "COLL",
+   "FUSED",
+   "HC",
+   "SU_DMA",
+   "IDX",
+   "ATT",
+   "VM",
+   "SM_K2"
+  ],
+  "area_mm2": 11.62,
+  "step_cycles": 1393738.0,
+  "verify_cycles": 1228077.8,
+  "draft_cycles": 142071.9,
+  "seed_cycles": 15770.3,
+  "r5": 0.3612,
+  "mtp_tok_s": 3580.9,
+  "ar_tok_s": 2010.2,
+  "mtp_over_ar": 1.781
+ },
+ "minimal_search": [
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.62,
+   "fixed": {
+    "step_cycles": 1393738.0,
+    "verify_cycles": 1228077.8,
+    "draft_cycles": 142071.9,
+    "seed_cycles": 15770.3,
+    "r5": 0.3612,
+    "mtp_tok_s": 3580.9,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.781
+   },
+   "sens_current": {
+    "step_cycles": 1271582.2,
+    "verify_cycles": 1120077.3,
+    "draft_cycles": 129872.1,
+    "seed_cycles": 14416.1,
+    "r5": 0.3612,
+    "mtp_tok_s": 3924.9,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.785
+   }
+  },
+  {
+   "items": [
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.6,
+   "fixed": {
+    "step_cycles": 1460944.2,
+    "verify_cycles": 1295284.0,
+    "draft_cycles": 142071.9,
+    "seed_cycles": 15770.3,
+    "r5": 0.3612,
+    "mtp_tok_s": 3416.1,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.699
+   },
+   "sens_current": {
+    "step_cycles": 1340479.5,
+    "verify_cycles": 1188974.6,
+    "draft_cycles": 129872.1,
+    "seed_cycles": 14416.1,
+    "r5": 0.3612,
+    "mtp_tok_s": 3723.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.693
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.52,
+   "fixed": {
+    "step_cycles": 1666786.3,
+    "verify_cycles": 1475326.1,
+    "draft_cycles": 164547.7,
+    "seed_cycles": 19094.5,
+    "r5": 0.4373,
+    "mtp_tok_s": 2994.3,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.49
+   },
+   "sens_current": {
+    "step_cycles": 1508416.5,
+    "verify_cycles": 1333327.0,
+    "draft_cycles": 150417.9,
+    "seed_cycles": 17454.9,
+    "r5": 0.4373,
+    "mtp_tok_s": 3308.6,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.505
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.47,
+   "fixed": {
+    "step_cycles": 1712540.4,
+    "verify_cycles": 1516900.8,
+    "draft_cycles": 168188.6,
+    "seed_cycles": 19633.0,
+    "r5": 0.4496,
+    "mtp_tok_s": 2914.3,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.45
+   },
+   "sens_current": {
+    "step_cycles": 1613964.2,
+    "verify_cycles": 1435054.3,
+    "draft_cycles": 153746.1,
+    "seed_cycles": 17947.1,
+    "r5": 0.4496,
+    "mtp_tok_s": 3092.3,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.406
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.57,
+   "fixed": {
+    "step_cycles": 1449330.7,
+    "verify_cycles": 1278880.4,
+    "draft_cycles": 146244.8,
+    "seed_cycles": 16387.5,
+    "r5": 0.3753,
+    "mtp_tok_s": 3443.5,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.713
+   },
+   "sens_current": {
+    "step_cycles": 1331563.5,
+    "verify_cycles": 1175679.8,
+    "draft_cycles": 133686.7,
+    "seed_cycles": 14980.3,
+    "r5": 0.3753,
+    "mtp_tok_s": 3748.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.704
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "ATT",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 11.52,
+   "fixed": {
+    "step_cycles": 1474815.5,
+    "verify_cycles": 1304180.8,
+    "draft_cycles": 146405.5,
+    "seed_cycles": 16411.3,
+    "r5": 0.3759,
+    "mtp_tok_s": 3384.0,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.683
+   },
+   "sens_current": {
+    "step_cycles": 1333893.6,
+    "verify_cycles": 1177841.3,
+    "draft_cycles": 133833.5,
+    "seed_cycles": 15002.0,
+    "r5": 0.3759,
+    "mtp_tok_s": 3741.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.701
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "VM",
+    "SM_K2"
+   ],
+   "area_mm2": 10.98,
+   "fixed": {
+    "step_cycles": 1625964.8,
+    "verify_cycles": 1442893.8,
+    "draft_cycles": 157239.4,
+    "seed_cycles": 18013.6,
+    "r5": 0.4126,
+    "mtp_tok_s": 3069.4,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.527
+   },
+   "sens_current": {
+    "step_cycles": 1502314.0,
+    "verify_cycles": 1334893.3,
+    "draft_cycles": 143737.2,
+    "seed_cycles": 16466.8,
+    "r5": 0.4126,
+    "mtp_tok_s": 3322.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.511
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "SM_K2"
+   ],
+   "area_mm2": 10.72,
+   "fixed": {
+    "step_cycles": 1422672.9,
+    "verify_cycles": 1255010.7,
+    "draft_cycles": 143815.9,
+    "seed_cycles": 16028.3,
+    "r5": 0.3671,
+    "mtp_tok_s": 3508.0,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.745
+   },
+   "sens_current": {
+    "step_cycles": 1300345.1,
+    "verify_cycles": 1147010.1,
+    "draft_cycles": 131466.3,
+    "seed_cycles": 14651.9,
+    "r5": 0.3671,
+    "mtp_tok_s": 3838.1,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.745
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.96,
+   "fixed": {
+    "step_cycles": 1299761.7,
+    "verify_cycles": 1143300.1,
+    "draft_cycles": 134058.5,
+    "seed_cycles": 14585.1,
+    "r5": 0.334,
+    "mtp_tok_s": 3839.8,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.91
+   },
+   "sens_current": {
+    "step_cycles": 1178337.1,
+    "verify_cycles": 1035240.9,
+    "draft_cycles": 122546.8,
+    "seed_cycles": 13332.7,
+    "r5": 0.334,
+    "mtp_tok_s": 4235.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.926
+   }
+  },
+  {
+   "items": [
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.94,
+   "fixed": {
+    "step_cycles": 1366967.9,
+    "verify_cycles": 1210506.3,
+    "draft_cycles": 134058.5,
+    "seed_cycles": 14585.1,
+    "r5": 0.334,
+    "mtp_tok_s": 3651.0,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.816
+   },
+   "sens_current": {
+    "step_cycles": 1247234.4,
+    "verify_cycles": 1104138.2,
+    "draft_cycles": 122546.8,
+    "seed_cycles": 13332.7,
+    "r5": 0.334,
+    "mtp_tok_s": 4001.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.82
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.86,
+   "fixed": {
+    "step_cycles": 1572810.4,
+    "verify_cycles": 1390548.3,
+    "draft_cycles": 156534.7,
+    "seed_cycles": 17909.4,
+    "r5": 0.4102,
+    "mtp_tok_s": 3173.2,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.579
+   },
+   "sens_current": {
+    "step_cycles": 1415171.8,
+    "verify_cycles": 1248490.6,
+    "draft_cycles": 143093.0,
+    "seed_cycles": 16371.5,
+    "r5": 0.4102,
+    "mtp_tok_s": 3526.6,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.604
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.81,
+   "fixed": {
+    "step_cycles": 1629310.7,
+    "verify_cycles": 1441386.4,
+    "draft_cycles": 161467.4,
+    "seed_cycles": 18638.9,
+    "r5": 0.4269,
+    "mtp_tok_s": 3063.1,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.524
+   },
+   "sens_current": {
+    "step_cycles": 1531304.1,
+    "verify_cycles": 1359446.9,
+    "draft_cycles": 147602.1,
+    "seed_cycles": 17038.4,
+    "r5": 0.4269,
+    "mtp_tok_s": 3259.2,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.482
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "IDX",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.91,
+   "fixed": {
+    "step_cycles": 1355354.4,
+    "verify_cycles": 1194102.7,
+    "draft_cycles": 138231.4,
+    "seed_cycles": 15202.3,
+    "r5": 0.3482,
+    "mtp_tok_s": 3682.3,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.832
+   },
+   "sens_current": {
+    "step_cycles": 1245309.3,
+    "verify_cycles": 1097834.3,
+    "draft_cycles": 126361.3,
+    "seed_cycles": 13896.9,
+    "r5": 0.3482,
+    "mtp_tok_s": 4007.7,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.822
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "ATT",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.86,
+   "fixed": {
+    "step_cycles": 1380839.6,
+    "verify_cycles": 1219403.0,
+    "draft_cycles": 138392.5,
+    "seed_cycles": 15226.1,
+    "r5": 0.3487,
+    "mtp_tok_s": 3614.3,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.798
+   },
+   "sens_current": {
+    "step_cycles": 1240649.0,
+    "verify_cycles": 1093005.0,
+    "draft_cycles": 126508.6,
+    "seed_cycles": 13918.7,
+    "r5": 0.3487,
+    "mtp_tok_s": 4022.7,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.829
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "VM",
+    "SM_K3"
+   ],
+   "area_mm2": 20.32,
+   "fixed": {
+    "step_cycles": 1559999.5,
+    "verify_cycles": 1384388.1,
+    "draft_cycles": 150740.9,
+    "seed_cycles": 17052.5,
+    "r5": 0.3905,
+    "mtp_tok_s": 3199.2,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.591
+   },
+   "sens_current": {
+    "step_cycles": 1436930.5,
+    "verify_cycles": 1276328.9,
+    "draft_cycles": 137796.7,
+    "seed_cycles": 15588.2,
+    "r5": 0.3905,
+    "mtp_tok_s": 3473.2,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.579
+   }
+  },
+  {
+   "items": [
+    "COLL",
+    "FUSED",
+    "HC",
+    "SU_DMA",
+    "IDX",
+    "ATT",
+    "SM_K3"
+   ],
+   "area_mm2": 20.06,
+   "fixed": {
+    "step_cycles": 1328696.4,
+    "verify_cycles": 1170232.9,
+    "draft_cycles": 135802.5,
+    "seed_cycles": 14843.1,
+    "r5": 0.3399,
+    "mtp_tok_s": 3756.2,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.869
+   },
+   "sens_current": {
+    "step_cycles": 1207099.9,
+    "verify_cycles": 1062173.7,
+    "draft_cycles": 124141.0,
+    "seed_cycles": 13568.5,
+    "r5": 0.3399,
+    "mtp_tok_s": 4134.5,
+    "ar_tok_s": 2199.1,
+    "mtp_over_ar": 1.88
+   }
+  }
+ ],
+ "smallest_meeting_target": {
+  "items": [
+   "COLL",
+   "FUSED",
+   "HC",
+   "SU_DMA",
+   "IDX",
+   "ATT",
+   "SM_K2"
+  ],
+  "area_mm2": 10.72,
+  "fixed": {
+   "step_cycles": 1422672.9,
+   "verify_cycles": 1255010.7,
+   "draft_cycles": 143815.9,
+   "seed_cycles": 16028.3,
+   "r5": 0.3671,
+   "mtp_tok_s": 3508.0,
+   "ar_tok_s": 2010.2,
+   "mtp_over_ar": 1.745
+  },
+  "sens_current": {
+   "step_cycles": 1300345.1,
+   "verify_cycles": 1147010.1,
+   "draft_cycles": 131466.3,
+   "seed_cycles": 14651.9,
+   "r5": 0.3671,
+   "mtp_tok_s": 3838.1,
+   "ar_tok_s": 2199.1,
+   "mtp_over_ar": 1.745
+  }
+ },
+ "runs": {
+  "asbuilt|fixed": {
+   "cycles": 2527073.6,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "AR|fixed": {
+   "cycles": 596948.7,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 71369.3,
+    "SM": 180122.7,
+    "COLL": 259471.7,
+    "SU": 136388.0,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 18833.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "AR|sens_current": {
+   "cycles": 545688.3,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 59760.3,
+    "SM": 180122.7,
+    "COLL": 208662.6,
+    "SU": 145525.6,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 15165.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "AR|sens_1010": {
+   "cycles": 1196619.8,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 714389.7,
+    "SM": 180122.7,
+    "COLL": 207440.2,
+    "SU": 145525.6,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 14804.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "AR_L0|fixed": {
+   "cycles": 12861.8,
+   "records": 91,
+   "unit_busy": {
+    "FUSED": 1768.0,
+    "SM": 3934.0,
+    "COLL": 5317.3,
+    "SU": 3272.0,
+    "DMA": 746.8,
+    "HC": 2320.0,
+    "IDX": 283.0
+   },
+   "compile": {
+    "shared": 73,
+    "per_position": 18,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "asbuilt_L0P5|fixed": {
+   "cycles": 44496.0,
+   "records": 294,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 64,
+    "per_position": 225,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:COLL|fixed": {
+   "cycles": 2459867.4,
+   "records": 14763,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 529696.6,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2751,
+    "per_position": 11526,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:COLL|fixed": {
+   "cycles": 44496.0,
+   "records": 294,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 64,
+    "per_position": 225,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:SU_DMA|fixed": {
+   "cycles": 2480038.2,
+   "records": 12568,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 426616.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 165544.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3190,
+    "per_position": 8892,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:SU_DMA|fixed": {
+   "cycles": 43587.0,
+   "records": 258,
+   "unit_busy": {
+    "DMA": 2442.3,
+    "FUSED": 8808.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 73,
+    "per_position": 180,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:IDX|fixed": {
+   "cycles": 2452090.6,
+   "records": 14613,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 36899.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2781,
+    "per_position": 11346,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:IDX|fixed": {
+   "cycles": 43580.0,
+   "records": 290,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 471.0
+   },
+   "compile": {
+    "shared": 65,
+    "per_position": 220,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:FUSED|fixed": {
+   "cycles": 2279825.3,
+   "records": 14048,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 180969.3,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2894,
+    "per_position": 10668,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:FUSED|fixed": {
+   "cycles": 39600.0,
+   "records": 278,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 3944.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 68,
+    "per_position": 205,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:HC|fixed": {
+   "cycles": 2292237.1,
+   "records": 14453,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 192800.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2813,
+    "per_position": 11154,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:HC|fixed": {
+   "cycles": 39826.8,
+   "records": 286,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 4320.0,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 66,
+    "per_position": 215,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:ATT|fixed": {
+   "cycles": 2391073.6,
+   "records": 14453,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 944743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2813,
+    "per_position": 11154,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:ATT|fixed": {
+   "cycles": 41852.0,
+   "records": 286,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 17026.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 66,
+    "per_position": 215,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone:SM_HOLD|fixed": {
+   "cycles": 2401429.5,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 918606.9,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 22098.4
+   },
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "alone_L0P5:SM_HOLD|fixed": {
+   "cycles": 42859.0,
+   "records": 241,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 17403.7,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1698.0
+   },
+   "compile": {
+    "shared": 145,
+    "per_position": 90,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "alone:SM_K2|fixed": {
+   "cycles": 2200065.7,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 653276.8,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 11415.9
+   },
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "alone_L0P5:SM_K2|fixed": {
+   "cycles": 39349.2,
+   "records": 241,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 12828.9,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1698.0
+   },
+   "compile": {
+    "shared": 145,
+    "per_position": 90,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "alone:SM_K3|fixed": {
+   "cycles": 2150823.3,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 583531.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 7855.0
+   },
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "alone_L0P5:SM_K3|fixed": {
+   "cycles": 38215.2,
+   "records": 241,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 11267.8,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1698.0
+   },
+   "compile": {
+    "shared": 145,
+    "per_position": 90,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "alone:SM_K6|fixed": {
+   "cycles": 2125559.4,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "alone_L0P5:SM_K6|fixed": {
+   "cycles": 37634.8,
+   "records": 241,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 10291.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1698.0
+   },
+   "compile": {
+    "shared": 145,
+    "per_position": 90,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "alone:VM|fixed": {
+   "cycles": 2500140.8,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "alone_L0P5:VM|fixed": {
+   "cycles": 44116.1,
+   "records": 289,
+   "unit_busy": {
+    "FUSED": 8840.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "DMA": 1403.2,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 64,
+    "per_position": 225,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL|fixed": {
+   "cycles": 2459867.4,
+   "records": 14763,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 529696.6,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2751,
+    "per_position": 11526,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL|sens_current": {
+   "cycles": 2336482.5,
+   "records": 14763,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 358561.6,
+    "SM": 1080743.5,
+    "COLL": 445922.5,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 90997.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2751,
+    "per_position": 11526,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL|sens_1010": {
+   "cycles": 6196388.6,
+   "records": 14763,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 1080743.5,
+    "COLL": 440279.0,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2751,
+    "per_position": 11526,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL|fixed": {
+   "cycles": 44496.0,
+   "records": 294,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 8840.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 64,
+    "per_position": 225,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED|fixed": {
+   "cycles": 2212619.1,
+   "records": 13958,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 180969.3,
+    "SM": 1080743.5,
+    "COLL": 529696.6,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2912,
+    "per_position": 10560,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED|sens_current": {
+   "cycles": 2123232.8,
+   "records": 13958,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 145312.3,
+    "SM": 1080743.5,
+    "COLL": 445922.5,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 90997.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2912,
+    "per_position": 10560,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED|sens_1010": {
+   "cycles": 2766793.6,
+   "records": 13958,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 856737.7,
+    "SM": 1080743.5,
+    "COLL": 440279.0,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2912,
+    "per_position": 10560,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL+FUSED|fixed": {
+   "cycles": 39600.0,
+   "records": 278,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 3944.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 11600.1,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 68,
+    "per_position": 205,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC|fixed": {
+   "cycles": 1977782.6,
+   "records": 13558,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 180969.3,
+    "SM": 1080743.5,
+    "COLL": 529696.6,
+    "SU": 236344.0,
+    "HC": 192800.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2992,
+    "per_position": 10080,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC|sens_current": {
+   "cycles": 1855594.5,
+   "records": 13558,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 145312.3,
+    "SM": 1080743.5,
+    "COLL": 445922.5,
+    "SU": 252180.3,
+    "HC": 192800.0,
+    "IDX": 90997.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2992,
+    "per_position": 10080,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC|sens_1010": {
+   "cycles": 2498181.8,
+   "records": 13558,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 856737.7,
+    "SM": 1080743.5,
+    "COLL": 440279.0,
+    "SU": 252180.3,
+    "HC": 192800.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "compile": {
+    "shared": 2992,
+    "per_position": 10080,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC|fixed": {
+   "cycles": 34930.8,
+   "records": 270,
+   "unit_busy": {
+    "DMA": 3082.7,
+    "FUSED": 3944.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "HC": 4320.0,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 70,
+    "per_position": 195,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA|fixed": {
+   "cycles": 1930747.2,
+   "records": 11273,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 179369.3,
+    "SM": 1080743.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "HC": 192800.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3449,
+    "per_position": 7338,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA|sens_current": {
+   "cycles": 1805431.5,
+   "records": 11273,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 135360.3,
+    "SM": 1080743.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 90997.1,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3449,
+    "per_position": 7338,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA|sens_1010": {
+   "cycles": 2440884.0,
+   "records": 11273,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 789989.7,
+    "SM": 1080743.5,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3449,
+    "per_position": 7338,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA|fixed": {
+   "cycles": 34021.8,
+   "records": 234,
+   "unit_busy": {
+    "DMA": 2442.3,
+    "FUSED": 3912.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "HC": 4320.0,
+    "IDX": 1415.0
+   },
+   "compile": {
+    "shared": 79,
+    "per_position": 150,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX|fixed": {
+   "cycles": 1855764.2,
+   "records": 11033,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 179369.3,
+    "SM": 1080743.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "HC": 192800.0,
+    "IDX": 36899.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3497,
+    "per_position": 7050,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX|sens_current": {
+   "cycles": 1748787.4,
+   "records": 11033,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 135360.3,
+    "SM": 1080743.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 33232.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3497,
+    "per_position": 7050,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX|sens_1010": {
+   "cycles": 2386051.2,
+   "records": 11033,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 789989.7,
+    "SM": 1080743.5,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 32871.5,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3497,
+    "per_position": 7050,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX|fixed": {
+   "cycles": 33105.8,
+   "records": 230,
+   "unit_busy": {
+    "DMA": 2442.3,
+    "FUSED": 3912.0,
+    "SM": 19670.1,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "HC": 4320.0,
+    "IDX": 471.0
+   },
+   "compile": {
+    "shared": 80,
+    "per_position": 145,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT|fixed": {
+   "cycles": 1719764.2,
+   "records": 10633,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 179369.3,
+    "SM": 944743.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "HC": 192800.0,
+    "IDX": 36899.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3577,
+    "per_position": 6570,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT|sens_current": {
+   "cycles": 1612787.4,
+   "records": 10633,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 135360.3,
+    "SM": 944743.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 33232.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3577,
+    "per_position": 6570,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT|sens_1010": {
+   "cycles": 2250051.2,
+   "records": 10633,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 789989.7,
+    "SM": 944743.5,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 32871.5,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3577,
+    "per_position": 6570,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT|fixed": {
+   "cycles": 30461.8,
+   "records": 222,
+   "unit_busy": {
+    "DMA": 2442.3,
+    "FUSED": 3912.0,
+    "SM": 17026.1,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "HC": 4320.0,
+    "IDX": 471.0
+   },
+   "compile": {
+    "shared": 82,
+    "per_position": 135,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM|fixed": {
+   "cycles": 1692831.4,
+   "records": 10147,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 944743.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 36899.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3577,
+    "per_position": 6570,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM|sens_current": {
+   "cycles": 1585854.6,
+   "records": 10147,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 944743.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 33232.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3577,
+    "per_position": 6570,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM|sens_1010": {
+   "cycles": 2223118.3,
+   "records": 10147,
+   "unit_busy": {
+    "FUSED": 789989.7,
+    "SM": 944743.5,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 32871.5,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 3577,
+    "per_position": 6570,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM|fixed": {
+   "cycles": 30081.9,
+   "records": 217,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 17026.1,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 471.0
+   },
+   "compile": {
+    "shared": 82,
+    "per_position": 135,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_HOLD|fixed": {
+   "cycles": 1539164.5,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 782606.9,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 21385.1
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_HOLD|sens_current": {
+   "cycles": 1432815.7,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 782606.9,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 21385.1
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_HOLD|sens_1010": {
+   "cycles": 2069717.2,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 789989.7,
+    "SM": 782606.9,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40160.2,
+    "CTL": 0.0,
+    "ARGMAX": 21385.1
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_HOLD|fixed": {
+   "cycles": 27920.0,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 14759.7,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 1228077.8,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1120077.3,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|sens_1010": {
+   "cycles": 1756978.8,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 789989.7,
+    "SM": 438460.8,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40160.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 23227.2,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 1143300.1,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1035240.9,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|sens_1010": {
+   "cycles": 1679917.9,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 789989.7,
+    "SM": 342443.5,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40160.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 21481.6,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K6|fixed": {
+   "cycles": 1085456.6,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 272534.2,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K6|sens_current": {
+   "cycles": 979429.4,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 272534.2,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladder:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K6|sens_1010": {
+   "cycles": 1625506.2,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 789989.7,
+    "SM": 272534.2,
+    "COLL": 440279.0,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40160.2,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "ladderL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K6|fixed": {
+   "cycles": 20384.1,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 6327.1,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 1228077.8,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 23227.2,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1120077.3,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 1295284.0,
+   "records": 6962,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 596897.8,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6814,
+    "per_position": 108,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 23227.2,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1188974.6,
+   "records": 6962,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 438460.8,
+    "COLL": 514814.6,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6814,
+    "per_position": 108,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 1475326.1,
+   "records": 7677,
+   "unit_busy": {
+    "FUSED": 426616.0,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6671,
+    "per_position": 966,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+HC+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 28123.2,
+   "records": 180,
+   "unit_busy": {
+    "FUSED": 8808.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 159,
+    "per_position": 20,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+HC+SU_DMA+IDX+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1333327.0,
+   "records": 7677,
+   "unit_busy": {
+    "FUSED": 348609.6,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6671,
+    "per_position": 966,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 1516900.8,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 556804.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+SU_DMA+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 28916.3,
+   "records": 172,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 11600.1,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 161,
+    "per_position": 10,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+SU_DMA+IDX+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1435054.3,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 556804.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 1278880.4,
+   "records": 9157,
+   "unit_busy": {
+    "FUSED": 180969.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 11415.9
+   },
+   "compile": {
+    "shared": 6375,
+    "per_position": 2742,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+IDX+ATT+VM+SM_K2|fixed": {
+   "cycles": 24136.2,
+   "records": 200,
+   "unit_busy": {
+    "FUSED": 3944.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "DMA": 1403.2,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 154,
+    "per_position": 45,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+IDX+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1175679.8,
+   "records": 9157,
+   "unit_busy": {
+    "FUSED": 145312.3,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 11415.9
+   },
+   "compile": {
+    "shared": 6375,
+    "per_position": 2742,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+ATT+VM+SM_K2|fixed": {
+   "cycles": 1304180.8,
+   "records": 7112,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6784,
+    "per_position": 288,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+ATT+VM+SM_K2|fixed": {
+   "cycles": 24171.2,
+   "records": 168,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 1698.0
+   },
+   "compile": {
+    "shared": 162,
+    "per_position": 5,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+ATT+VM+SM_K2|sens_current": {
+   "cycles": 1177841.3,
+   "records": 7112,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 98649.1,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6784,
+    "per_position": 288,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+VM+SM_K2|fixed": {
+   "cycles": 1442893.8,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 653276.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+IDX+VM+SM_K2|fixed": {
+   "cycles": 26531.2,
+   "records": 172,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 12828.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 161,
+    "per_position": 10,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+VM+SM_K2|sens_current": {
+   "cycles": 1334893.3,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 653276.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+SM_K2|fixed": {
+   "cycles": 1255010.7,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 179369.3,
+    "SM": 438460.8,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+SM_K2|fixed": {
+   "cycles": 23607.1,
+   "records": 169,
+   "unit_busy": {
+    "DMA": 2442.3,
+    "FUSED": 3912.0,
+    "SM": 9524.9,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+SM_K2|sens_current": {
+   "cycles": 1147010.1,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 135360.3,
+    "SM": 438460.8,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 10702.5
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 1143300.1,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 21481.6,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1035240.9,
+   "records": 6872,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 1210506.3,
+   "records": 6962,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 342443.5,
+    "COLL": 596897.8,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6814,
+    "per_position": 108,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 21481.6,
+   "records": 164,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:FUSED+HC+SU_DMA+IDX+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1104138.2,
+   "records": 6962,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 342443.5,
+    "COLL": 514814.6,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6814,
+    "per_position": 108,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 1390548.3,
+   "records": 7677,
+   "unit_busy": {
+    "FUSED": 426616.0,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6671,
+    "per_position": 966,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+HC+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 26377.7,
+   "records": 180,
+   "unit_busy": {
+    "FUSED": 8808.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 159,
+    "per_position": 20,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+HC+SU_DMA+IDX+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1248490.6,
+   "records": 7677,
+   "unit_busy": {
+    "FUSED": 348609.6,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6671,
+    "per_position": 966,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 1441386.4,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 556804.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+SU_DMA+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 27452.2,
+   "records": 172,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 11600.1,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 161,
+    "per_position": 10,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+SU_DMA+IDX+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1359446.9,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 556804.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 1194102.7,
+   "records": 9157,
+   "unit_busy": {
+    "FUSED": 180969.3,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7855.0
+   },
+   "compile": {
+    "shared": 6375,
+    "per_position": 2742,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+IDX+ATT+VM+SM_K3|fixed": {
+   "cycles": 22390.6,
+   "records": 200,
+   "unit_busy": {
+    "FUSED": 3944.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 5203.0,
+    "DMA": 1403.2,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 154,
+    "per_position": 45,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+IDX+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1097834.3,
+   "records": 9157,
+   "unit_busy": {
+    "FUSED": 145312.3,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7855.0
+   },
+   "compile": {
+    "shared": 6375,
+    "per_position": 2742,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+ATT+VM+SM_K3|fixed": {
+   "cycles": 1219403.0,
+   "records": 7112,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6784,
+    "per_position": 288,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+ATT+VM+SM_K3|fixed": {
+   "cycles": 22425.7,
+   "records": 168,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 1698.0
+   },
+   "compile": {
+    "shared": 162,
+    "per_position": 5,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+ATT+VM+SM_K3|sens_current": {
+   "cycles": 1093005.0,
+   "records": 7112,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 98649.1,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6784,
+    "per_position": 288,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+VM+SM_K3|fixed": {
+   "cycles": 1384388.1,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 179369.3,
+    "SM": 583531.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+IDX+VM+SM_K3|fixed": {
+   "cycles": 25115.6,
+   "records": 172,
+   "unit_busy": {
+    "FUSED": 3912.0,
+    "SM": 11267.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "DMA": 762.8,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 161,
+    "per_position": 10,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+VM+SM_K3|sens_current": {
+   "cycles": 1276328.9,
+   "records": 7272,
+   "unit_busy": {
+    "FUSED": 135360.3,
+    "SM": 583531.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "DMA": 42109.8,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6752,
+    "per_position": 480,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+SM_K3|fixed": {
+   "cycles": 1170232.9,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 179369.3,
+    "SM": 342443.5,
+    "COLL": 529696.6,
+    "SU": 165544.0,
+    "HC": 192800.0,
+    "IDX": 48220.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "minL0P5:COLL+FUSED+HC+SU_DMA+IDX+ATT+SM_K3|fixed": {
+   "cycles": 21861.5,
+   "records": 169,
+   "unit_busy": {
+    "DMA": 2442.3,
+    "FUSED": 3912.0,
+    "SM": 7633.8,
+    "COLL": 8417.0,
+    "SU": 3787.0,
+    "HC": 4320.0,
+    "IDX": 754.0
+   },
+   "compile": {
+    "shared": 163,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 1
+   }
+  },
+  "min:COLL+FUSED+HC+SU_DMA+IDX+ATT+SM_K3|sens_current": {
+   "cycles": 1062173.7,
+   "records": 7358,
+   "unit_busy": {
+    "DMA": 183036.9,
+    "FUSED": 135360.3,
+    "SM": 342443.5,
+    "COLL": 445922.5,
+    "SU": 176636.3,
+    "HC": 192800.0,
+    "IDX": 40884.2,
+    "CTL": 0.0,
+    "ARGMAX": 7141.7
+   },
+   "compile": {
+    "shared": 6832,
+    "per_position": 0,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  }
+ }
+}

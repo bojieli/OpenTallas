@@ -1,0 +1,1110 @@
+{
+"plan": "mtp",
+"readers": 1056,
+"bad": 0,
+"dead_loads": 0,
+"rank3": [
+{
+"rank": 3,
+"launch": 2,
+"kind": "layer",
+"lp": 0,
+"token": 1,
+"pos": 0,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+1,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 2,
+"kind": "layer",
+"lp": 0,
+"token": 1,
+"pos": 0,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+2,
+"layer",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 126,
+"kind": "dsa",
+"lp": 0,
+"token": 0,
+"pos": 1,
+"slot": 0,
+"needs": [
+40,
+"attn",
+0
+],
+"holds": [
+40,
+"attn",
+0
+],
+"loaded_by": [
+125,
+"demb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 130,
+"kind": "dsa",
+"lp": 0,
+"token": 1,
+"pos": 2,
+"slot": 0,
+"needs": [
+40,
+"attn",
+0
+],
+"holds": [
+40,
+"attn",
+0
+],
+"loaded_by": [
+129,
+"demb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 134,
+"kind": "dsa",
+"lp": 0,
+"token": 2,
+"pos": 3,
+"slot": 0,
+"needs": [
+40,
+"attn",
+0
+],
+"holds": [
+40,
+"attn",
+0
+],
+"loaded_by": [
+133,
+"demb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 138,
+"kind": "dsa",
+"lp": 0,
+"token": 3,
+"pos": 4,
+"slot": 0,
+"needs": [
+40,
+"attn",
+0
+],
+"holds": [
+40,
+"attn",
+0
+],
+"loaded_by": [
+137,
+"demb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 142,
+"kind": "dsa",
+"lp": 0,
+"token": 4,
+"pos": 5,
+"slot": 0,
+"needs": [
+40,
+"attn",
+0
+],
+"holds": [
+40,
+"attn",
+0
+],
+"loaded_by": [
+141,
+"demb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 145,
+"kind": "dsb",
+"lp": 0,
+"token": 0,
+"pos": 1,
+"slot": 1,
+"needs": [
+40,
+"ffn",
+0
+],
+"holds": [
+40,
+"ffn",
+0
+],
+"loaded_by": [
+142,
+"dsa",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 148,
+"kind": "dsb",
+"lp": 0,
+"token": 1,
+"pos": 2,
+"slot": 1,
+"needs": [
+40,
+"ffn",
+0
+],
+"holds": [
+40,
+"ffn",
+0
+],
+"loaded_by": [
+142,
+"dsa",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 151,
+"kind": "dsb",
+"lp": 0,
+"token": 2,
+"pos": 3,
+"slot": 1,
+"needs": [
+40,
+"ffn",
+0
+],
+"holds": [
+40,
+"ffn",
+0
+],
+"loaded_by": [
+142,
+"dsa",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 154,
+"kind": "dsb",
+"lp": 0,
+"token": 3,
+"pos": 4,
+"slot": 1,
+"needs": [
+40,
+"ffn",
+0
+],
+"holds": [
+40,
+"ffn",
+0
+],
+"loaded_by": [
+142,
+"dsa",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 157,
+"kind": "dsb",
+"lp": 0,
+"token": 4,
+"pos": 5,
+"slot": 1,
+"needs": [
+40,
+"ffn",
+0
+],
+"holds": [
+40,
+"ffn",
+0
+],
+"loaded_by": [
+142,
+"dsa",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 160,
+"kind": "dsa",
+"lp": 1,
+"token": 0,
+"pos": 1,
+"slot": 0,
+"needs": [
+41,
+"attn",
+0
+],
+"holds": [
+41,
+"attn",
+0
+],
+"loaded_by": [
+157,
+"dsb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 163,
+"kind": "dsa",
+"lp": 1,
+"token": 1,
+"pos": 2,
+"slot": 0,
+"needs": [
+41,
+"attn",
+0
+],
+"holds": [
+41,
+"attn",
+0
+],
+"loaded_by": [
+157,
+"dsb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 166,
+"kind": "dsa",
+"lp": 1,
+"token": 2,
+"pos": 3,
+"slot": 0,
+"needs": [
+41,
+"attn",
+0
+],
+"holds": [
+41,
+"attn",
+0
+],
+"loaded_by": [
+157,
+"dsb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 169,
+"kind": "dsa",
+"lp": 1,
+"token": 3,
+"pos": 4,
+"slot": 0,
+"needs": [
+41,
+"attn",
+0
+],
+"holds": [
+41,
+"attn",
+0
+],
+"loaded_by": [
+157,
+"dsb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 172,
+"kind": "dsa",
+"lp": 1,
+"token": 4,
+"pos": 5,
+"slot": 0,
+"needs": [
+41,
+"attn",
+0
+],
+"holds": [
+41,
+"attn",
+0
+],
+"loaded_by": [
+157,
+"dsb",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 175,
+"kind": "dsb",
+"lp": 1,
+"token": 0,
+"pos": 1,
+"slot": 1,
+"needs": [
+41,
+"ffn",
+0
+],
+"holds": [
+41,
+"ffn",
+0
+],
+"loaded_by": [
+172,
+"dsa",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 178,
+"kind": "dsb",
+"lp": 1,
+"token": 1,
+"pos": 2,
+"slot": 1,
+"needs": [
+41,
+"ffn",
+0
+],
+"holds": [
+41,
+"ffn",
+0
+],
+"loaded_by": [
+172,
+"dsa",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 181,
+"kind": "dsb",
+"lp": 1,
+"token": 2,
+"pos": 3,
+"slot": 1,
+"needs": [
+41,
+"ffn",
+0
+],
+"holds": [
+41,
+"ffn",
+0
+],
+"loaded_by": [
+172,
+"dsa",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 184,
+"kind": "dsb",
+"lp": 1,
+"token": 3,
+"pos": 4,
+"slot": 1,
+"needs": [
+41,
+"ffn",
+0
+],
+"holds": [
+41,
+"ffn",
+0
+],
+"loaded_by": [
+172,
+"dsa",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 187,
+"kind": "dsb",
+"lp": 1,
+"token": 4,
+"pos": 5,
+"slot": 1,
+"needs": [
+41,
+"ffn",
+0
+],
+"holds": [
+41,
+"ffn",
+0
+],
+"loaded_by": [
+172,
+"dsa",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 190,
+"kind": "dsa",
+"lp": 2,
+"token": 0,
+"pos": 1,
+"slot": 0,
+"needs": [
+42,
+"attn",
+0
+],
+"holds": [
+42,
+"attn",
+0
+],
+"loaded_by": [
+187,
+"dsb",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 193,
+"kind": "dsa",
+"lp": 2,
+"token": 1,
+"pos": 2,
+"slot": 0,
+"needs": [
+42,
+"attn",
+0
+],
+"holds": [
+42,
+"attn",
+0
+],
+"loaded_by": [
+187,
+"dsb",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 196,
+"kind": "dsa",
+"lp": 2,
+"token": 2,
+"pos": 3,
+"slot": 0,
+"needs": [
+42,
+"attn",
+0
+],
+"holds": [
+42,
+"attn",
+0
+],
+"loaded_by": [
+187,
+"dsb",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 199,
+"kind": "dsa",
+"lp": 2,
+"token": 3,
+"pos": 4,
+"slot": 0,
+"needs": [
+42,
+"attn",
+0
+],
+"holds": [
+42,
+"attn",
+0
+],
+"loaded_by": [
+187,
+"dsb",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 202,
+"kind": "dsa",
+"lp": 2,
+"token": 4,
+"pos": 5,
+"slot": 0,
+"needs": [
+42,
+"attn",
+0
+],
+"holds": [
+42,
+"attn",
+0
+],
+"loaded_by": [
+187,
+"dsb",
+1
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 205,
+"kind": "dsb",
+"lp": 2,
+"token": 0,
+"pos": 1,
+"slot": 1,
+"needs": [
+42,
+"ffn",
+0
+],
+"holds": [
+42,
+"ffn",
+0
+],
+"loaded_by": [
+202,
+"dsa",
+2
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 208,
+"kind": "dsb",
+"lp": 2,
+"token": 1,
+"pos": 2,
+"slot": 1,
+"needs": [
+42,
+"ffn",
+0
+],
+"holds": [
+42,
+"ffn",
+0
+],
+"loaded_by": [
+202,
+"dsa",
+2
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 211,
+"kind": "dsb",
+"lp": 2,
+"token": 2,
+"pos": 3,
+"slot": 1,
+"needs": [
+42,
+"ffn",
+0
+],
+"holds": [
+42,
+"ffn",
+0
+],
+"loaded_by": [
+202,
+"dsa",
+2
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 214,
+"kind": "dsb",
+"lp": 2,
+"token": 3,
+"pos": 4,
+"slot": 1,
+"needs": [
+42,
+"ffn",
+0
+],
+"holds": [
+42,
+"ffn",
+0
+],
+"loaded_by": [
+202,
+"dsa",
+2
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 217,
+"kind": "dsb",
+"lp": 2,
+"token": 4,
+"pos": 5,
+"slot": 1,
+"needs": [
+42,
+"ffn",
+0
+],
+"holds": [
+42,
+"ffn",
+0
+],
+"loaded_by": [
+202,
+"dsa",
+2
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 236,
+"kind": "layer",
+"lp": 0,
+"token": 1000,
+"pos": 1,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+235,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 236,
+"kind": "layer",
+"lp": 0,
+"token": 1000,
+"pos": 1,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+236,
+"layer",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 240,
+"kind": "layer",
+"lp": 0,
+"token": 1000,
+"pos": 2,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+239,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 240,
+"kind": "layer",
+"lp": 0,
+"token": 1000,
+"pos": 2,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+240,
+"layer",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 244,
+"kind": "layer",
+"lp": 0,
+"token": 1001,
+"pos": 3,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+243,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 244,
+"kind": "layer",
+"lp": 0,
+"token": 1001,
+"pos": 3,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+244,
+"layer",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 248,
+"kind": "layer",
+"lp": 0,
+"token": 1002,
+"pos": 4,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+247,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 248,
+"kind": "layer",
+"lp": 0,
+"token": 1002,
+"pos": 4,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+248,
+"layer",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 252,
+"kind": "layer",
+"lp": 0,
+"token": 1003,
+"pos": 5,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+251,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 252,
+"kind": "layer",
+"lp": 0,
+"token": 1003,
+"pos": 5,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+252,
+"layer",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 256,
+"kind": "layer",
+"lp": 0,
+"token": 1004,
+"pos": 6,
+"slot": 0,
+"needs": [
+0,
+"attn",
+0
+],
+"holds": [
+0,
+"attn",
+0
+],
+"loaded_by": [
+255,
+"embed",
+0
+],
+"ok": true
+},
+{
+"rank": 3,
+"launch": 256,
+"kind": "layer",
+"lp": 0,
+"token": 1004,
+"pos": 6,
+"slot": 1,
+"needs": [
+0,
+"ffn",
+0
+],
+"holds": [
+0,
+"ffn",
+0
+],
+"loaded_by": [
+256,
+"layer",
+0
+],
+"ok": true
+}
+],
+"bad_first": [],
+"dead_first": []
+}
