@@ -28,7 +28,7 @@ module tb_hbm_stack_fault_split;
  if(status[0]!==7'b0000100 || status[1]!==7'b0000100)$fatal(1,"STACK_FAULT_SPLIT missing owner bit%0d",n);cases=cases+1;
  end
  // Concurrent CA/PC and all stream faults retain their existing domains/edges.
- reset();@(negedge hc);#1;rv=32'h3;pf=32'h80000000;svg=8'h40;share=8'h2;del=8'h80;cal=1;
+ reset();@(negedge hc);#1;rv=32'h3;pf=32'h80000000;bits=192'b1<<191;svg=8'h40;share=8'h2;del=8'h80;cal=1;
  repeat(16)@(negedge hc);
  if(status[0]!==7'h7f || status[1]!==7'h7f)$fatal(1,"STACK_FAULT_SPLIT mixed flags");cases=cases+1;
  $display("STACK_FAULT_SPLIT PASS cases=%0d checks=%0d owner_pins=192 added_edges=0",cases,checks);$finish;
