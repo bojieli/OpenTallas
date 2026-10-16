@@ -79,18 +79,20 @@ def load_views(views):
             for b in re.finditer(r'\bRECT\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)', m[2]):
                 x0, y0, x1, y1 = map(float, b.groups()); sh.append(((x0 + x1) / 2, (y0 + y1) / 2))
             pins[master][m[1]] = sh
-    # shcol_b = closed shcol + iv/ph (estimated launch: max registered S-face data launch of the closed view)
-    sc = 'ot_s81_engram_mixq_shcol'; sb = 'ot_s81_engram_mixq_shcol_b'
-    dims[sb] = dims[sc]; pins[sb] = {}
-    for m in re.finditer(r'place_pin -pin_name \{(\S+)\} -layer \S+ -location \{([\d.]+) ([\d.]+)\}', SHCOLB_TCL.read_text()):
-        pins[sb][m[1]] = [(float(m[2]), float(m[3]))]
-    metrics[sb] = {}
-    for corner in ('tt', 'ff'):
-        m = dict(metrics[sc][corner]); outs = [v for k, v in m.items() if re.match(r'(h|kv|w)\[', k) and v['out'] is not None]
-        est = dict(dir='output', out=max(o['out'] for o in outs), lmin=min(o['lmin'] for o in outs), inp=None, hold=None, comb=[],
-                   clk=outs[0]['clk'])
-        m['iv'] = est; m['ph'] = est; metrics[sb][corner] = m
-    prov[sb] = dict(prov[sc], estimated_pins={'iv': 'launch = max closed shcol h/kv/w launch', 'ph': 'same'})
+    if 'ot_s81_engram_mixq_shcol_b' not in views:
+        # shcol_b = closed shcol + iv/ph (estimated launch: max registered S-face data launch of the closed view)
+        sc = 'ot_s81_engram_mixq_shcol'; sb = 'ot_s81_engram_mixq_shcol_b'
+        dims[sb] = dims[sc]; pins[sb] = {}
+        for m in re.finditer(r'place_pin -pin_name \{(\S+)\} -layer \S+ -location \{([\d.]+) ([\d.]+)\}', SHCOLB_TCL.read_text()):
+            pins[sb][m[1]] = [(float(m[2]), float(m[3]))]
+        metrics[sb] = {}
+        for corner in ('tt', 'ff'):
+            m = dict(metrics[sc][corner]); outs = [v for k, v in m.items() if re.match(r'(h|kv|w)\[', k) and v['out'] is not None]
+            est = dict(dir='output', out=max(o['out'] for o in outs), lmin=min(o['lmin'] for o in outs), inp=None, hold=None, comb=[],
+                       clk=outs[0]['clk'])
+            m['iv'] = est; m['ph'] = est; metrics[sb][corner] = m
+        prov[sb] = dict(prov[sc], estimated_pins={'iv': 'launch = max closed shcol h/kv/w launch', 'ph': 'same'})
+
     return pins, dims, metrics, prov
 
 

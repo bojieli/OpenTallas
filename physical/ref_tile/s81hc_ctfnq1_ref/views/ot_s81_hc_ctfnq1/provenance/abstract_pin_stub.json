@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctfnq1.lef",
+    "sha256": "13e1df4d68872f3a95f3c1ba22eb5688d730cea6a4a331bb0c6f74c5a4f74e09"
+  },
+  "output": {
+    "path": "ot_s81_hc_ctfnq1.lef",
+    "sha256": "9fb7373b3e952e25eae48e9f4f0a92cd721b60f343aa43774ef74ca7c34270f1"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py",
+    "basis": "verified_original_frozen_overlay",
+    "git_blob": "f38ae3a60e459326ef899b999ff1a1ef148aded7",
+    "overlay_origin_main": "6b20f598fbdcfeca8fa52c76b8f373ce245d173c",
+    "overlay_content_sha256": "07bb979deb17b27ca048cdf68111d87abc7bb2f6d93187edf07ed47a0933cb33",
+    "overlay_verification": {
+      "status": "verified_original",
+      "origin_main": "6b20f598fbdcfeca8fa52c76b8f373ce245d173c",
+      "content_sha256": "07bb979deb17b27ca048cdf68111d87abc7bb2f6d93187edf07ed47a0933cb33",
+      "files": 46,
+      "verified_at": "2026-10-15T23:52:05-07:00",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c",
+      "mutation": false
+    },
+    "job_source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "note": "the route installed this frozen overlay helper; the job source commit helper does NOT reproduce the published LEF"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/ot_s81_hc_ctfnq1.lef",
+    "ot_s81_hc_ctfnq1.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: clk; pockets: 277 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/s81-hccol-0600/physical/ref_tile/s81hc_ctfnq1_ref/views/ot_s81_hc_ctfnq1/ot_s81_hc_ctfnq1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_hc_ctfnq1 144.288 x 25.92: PG M5 VDD 26 stripes (94% spread, 100% cov) / VSS 26 stripes (94% spread, 100% cov); strap M6; face pins 1609 blocked-above 0 blocked-same 0; clock clk insertion 128 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_hc_ctfnq1",
+      "W": 144.288,
+      "H": 25.92,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.936,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.936,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1609,
+        "blocked_above": 0,
+        "covered_below": 1,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 127.94,
+          "min_ps": 95.12
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 277
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c",
+    "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+    "published_record_commit": "57c01808f891cae2708b5ba79dd98bec322271fc",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c/routes/s81hc_ctfnq1_ref_bank_native2330_COMMIT_85e95731c/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "d60e5a1d78f8e86e77c25f9a2aa6a35675a168925eb5026904fb9da9342a0277",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "ot_s81_hc_ctfnq1.lef": "9fb7373b3e952e25eae48e9f4f0a92cd721b60f343aa43774ef74ca7c34270f1",
+      "ot_s81_hc_ctfnq1_tt.lib": "f9bb623e1d23fe9ae264a061dddddbc4fef7f7d1ae78f9e787e6b0dae4e3d9cd",
+      "ot_s81_hc_ctfnq1_ff.lib": "196e290b284a61e221de3eb2fee3c1de91d76520c97f4bd2338a4b5c46883895",
+      "ot_s81_hc_ctfnq1_ss.lib": "ced5fe6b0e189cf4f00ad8f39a8d304f9c91fe02a5c966a2228d54493f546cb2",
+      "abstract.json": "99d512d92a7fbd3e2bdfde2d34465ff6d540dcb7f10803c8caea9f2f5dddd721",
+      "insertion.json": "b0cfe4a666af8542c8b95a8508629068af2ce8eef3e8a9e1334bcf4268ee8972",
+      "child_lint.json": "755d3dfc754fca39a2e75c94dca82a4905dc94529485e266ffd7cbdb7190f1d4"
+    },
+    "admission": {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-2488830-1792155693",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}

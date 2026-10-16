@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.hsu.sfu_split_equiv.v1",
+ "author": "Claude H-SU", "date": "2026-10-16",
+ "source_commit": "0eba16957766e27ed5f617dcea3012fdf4a26688",
+ "what": "physical split of ot_hgi_sfu_scheduled_engine into ot_hgi_sfu_programme_store (die slot sfus_<q> 1020x1412: io calendar + arithmetic calendar, 22 ot_sram_1r1w_1024x256, every pin registered) and ot_hgi_sfu_core_split (die slot sfucore_<q> 763.56x3001.91: VM bridge, 16 ot_su12_sfu lanes, 80 operand SRAMs; io word + 1742-bit control registered at its pins)",
+ "method": "tools/hbm_static/run_sfu_split_equiv.sh, tb rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv: reference ot_hgi_sfu_scheduled_engine runs the canonical 3072-word Qswiglu closed-loop with real VM taps/banks (gold PASS); the split pair receives the same host cfg/start and the reference VM/gather returns delayed by 3 edges; every core output (local_rq/wq, vi_re/addr, ro_v/x, kv_we/waddr/wdata) must equal the reference delayed by 3 and every status output (programme/io active/done/ordinal) the reference delayed by 2, on every edge after reset",
+ "results": {
+  "positive_LG0": "SFU_SPLIT_EQUIV PASS edges=6489 active_output_edges=6321 + canonical gold PASS 3072 words",
+  "positive_R23_LG24": "SFU_SPLIT_EQUIV PASS edges=6681 active_output_edges=6513 + canonical gold PASS 3072 words (reference = ot_hgi_sfu_split_engine R23 u_core)",
+  "mutant_flip": "one compiler_control bit corrupted on the crossing -> REJECTED (mismatch from edge 6214)",
+  "mutant_skip": "core pin register removed (core one edge early) -> REJECTED (mismatch from edge 5624)"
+ },
+ "latency": "uniform +3 stream edges per SFU invocation (store input reg, store output reg, core input reg); relative io/arithmetic timing unchanged; cost +3 x 36 records = 108 cycles on qwen_ar (~+0.01 %), DS 0 %; no ledger row",
+ "host": "EPYC4, ot-run unit oth-ubuntu-2783067-1792158029 (240 GB cap; a 64 GB first attempt OOM-killed and deleted)",
+ "not_claimed": ["physical kits/routes of either master", "die netlist binding (H-NETLIST adds sfus_<q> programme store)"]
+}

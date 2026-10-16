@@ -215,6 +215,13 @@ class Contracts:
                         elems[n]['parents'].pop(d['design'], None)
                         if not elems[n]['designs']: del elems[n]
                 if pats: retired['re:' + pats] = retired_rule
+            for sc in d.get('scope', []):
+                # S-DIE-NETLIST 2026-10-16: contract elements that are NOT masters of this design's die netlist (role
+                # homes reserved for other die roles / die kinds, leaves of a present parent): role 'scope:<kind>' (not
+                # 'master', so die completeness does not count them absent), with the lead's evidence; they keep rows
+                for n in sc.get('elements') or []:
+                    put(n, d, 'scope:' + sc.get('kind', 'other'), sc.get('parent'), None, None, sc.get('evidence'), sc.get('stream'))
+                    elems[n]['roles'][d['design']] = 'scope:' + sc.get('kind', 'other')
             streams = [(re.compile(p), s) for p, s in d.get('streams', [])]
             info['_streams'] = streams
             designs.append(info)

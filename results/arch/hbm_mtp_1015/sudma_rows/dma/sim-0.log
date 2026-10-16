@@ -1,0 +1,2 @@
+DMA_ROWS PASS n=512 vm_stride=1024 actual VM banks=8 macros=24 landing=8; first command -> last WB beat / mv_src / mv_done(+40 modelled ack): R1=36/33/79 R2=44/41/87 R6=76/73/119 R8=92/89/135
+tb_dma_back_rows.sv:104: $finish called at 26820000 (1ps)

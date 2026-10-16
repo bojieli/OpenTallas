@@ -499,14 +499,72 @@ def bound_view_pin_faults(mst, view, ports):
 # LEF; the per-instance orientation is recorded and the facing audit (pin_align) judges it
 BOUND_TOL = SHAVE + 1e-6
 BOUND_ORIENTS = ('R0', 'MY', 'MX', 'R180')
+# S-DIE 2026-10-16: the second, evidence-backed source of permitted orientations (tools/s81/orientation_qualify.py).
+# Off unless --orientation-qualification / OT_S81_ORIENTATION_QUALIFICATION names a table: then an orientation the
+# literal LEF SYMMETRY does not declare is supported only if the table has an entry for that master with the exact
+# sha256 of the bound LEF text, that orientation's verdict is PASS and every one of ORIENT_QUAL_CHECKS is PASS.
+ORIENT_QUAL = os.environ.get('OT_S81_ORIENTATION_QUALIFICATION') or None
+ORIENT_QUAL_SCHEMA = 's81-orientation-qualification-v1'
+ORIENT_QUAL_CHECKS = ('signal_track_lattice', 'pg_die_grid', 'row_parity', 'timing_clock')
+_ORIENT_QUAL = {}
 
 
-def bound_view_orientation_contract(view, master=None):
+def orientation_qualification(path=None):
+    """{(master, lef_sha256): entry} of an orientation qualification table, plus its provenance; None when no table
+    is configured.  Fail closed: a configured table that is missing, of another schema, or with duplicate entries is
+    a hard error, never an empty table."""
+    path = path or ORIENT_QUAL
+    if not path:
+        return None
+    if path in _ORIENT_QUAL:
+        return _ORIENT_QUAL[path]
+    tp = _view_path(path)
+    if not tp.is_file():
+        raise SystemExit(f'ORIENTATION_QUALIFICATION: table {tp} not found')
+    raw = tp.read_bytes()
+    try:
+        tab = json.loads(raw)
+    except ValueError as e:
+        raise SystemExit(f'ORIENTATION_QUALIFICATION: {tp} is not JSON: {e}')
+    if not isinstance(tab, dict) or tab.get('schema') != ORIENT_QUAL_SCHEMA or not isinstance(tab.get('entries'), list):
+        raise SystemExit(f'ORIENTATION_QUALIFICATION: {tp} schema {tab.get("schema") if isinstance(tab, dict) else None!r}, '
+                         f'expected {ORIENT_QUAL_SCHEMA!r} with an entries list')
+    ent = {}
+    for e in tab['entries']:
+        k = (e.get('master'), e.get('lef_sha256'))
+        if not all(isinstance(x, str) and x for x in k) or k in ent:
+            raise SystemExit(f'ORIENTATION_QUALIFICATION: {tp} has a malformed or duplicate entry {k}')
+        ent[k] = e
+    q = dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), tag=tab.get('tag'), entries=ent)
+    _ORIENT_QUAL[path] = q
+    return q
+
+
+def qualified_orientations(qual, master, lef_text):
+    """orientations of BOUND_ORIENTS that qual's entry for (master, sha256 of lef_text) qualifies: verdict PASS and
+    every ORIENT_QUAL_CHECKS check present with verdict PASS.  [] for no entry (or a different LEF sha256)."""
+    e = qual['entries'].get((master, hashlib.sha256(lef_text.encode()).hexdigest()))
+    if e is None:
+        return []
+    out = []
+    for o, v in (e.get('orientations') or {}).items():
+        chk = v.get('checks') or {}
+        if (o in BOUND_ORIENTS and v.get('verdict') == 'PASS'
+                and all((chk.get(c) or {}).get('verdict') == 'PASS' for c in ORIENT_QUAL_CHECKS)):
+            out.append(o)
+    return out
+
+
+def bound_view_orientation_contract(view, master=None, qualification=None):
     """Declared transforms of this hash-verified LEF, within placer support.
 
     No SYMMETRY declares R0 only. A placer accepting MY/MX is not evidence that
     an individual hard macro permits those transforms. This does not add any
     physical symmetry or qualify mirrored clock/PG/native timing invariants.
+    With an orientation qualification table (qualification, else the configured
+    --orientation-qualification), an orientation is also supported when the table
+    qualifies it for this master and the exact sha256 of this LEF text
+    (qualified_orientations); the literal contract itself is unchanged.
     """
     lines = view['text'].splitlines()
     macros = [(j, z.group(1)) for j, line in enumerate(lines)
@@ -551,9 +609,17 @@ def bound_view_orientation_contract(view, master=None):
         legal.update(('R90', 'R180', 'R270'))
         if 'X' in symmetry or 'Y' in symmetry:
             legal.update(('MX', 'MY', 'MXR90', 'MYR90'))
-    return dict(symmetry=symmetry, declared=sorted(legal) if not errors else [],
-                supported=[o for o in BOUND_ORIENTS if o in legal] if not errors else [],
-                errors=errors)
+    out = dict(symmetry=symmetry, declared=sorted(legal) if not errors else [],
+               supported=[o for o in BOUND_ORIENTS if o in legal] if not errors else [],
+               errors=errors)
+    qual = qualification if qualification is not None else orientation_qualification()
+    if qual is not None:
+        name = master if master is not None else (targets[0][1] if len(targets) == 1 else None)
+        q = qualified_orientations(qual, name, view['text']) if not errors and name else []
+        out['qualified'] = [o for o in BOUND_ORIENTS if o in q and o not in legal]
+        out['supported'] = [o for o in BOUND_ORIENTS if o in out['supported'] or o in out['qualified']]
+        out['qualification'] = dict(table=qual['path'], sha256=qual['sha256'], tag=qual.get('tag'))
+    return out
 
 
 def apply_view_binding(m, pdir):
@@ -4907,7 +4973,9 @@ def build_r8(variant=None):
             # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
             # S-BIND (owner 2026-10-14 18:59, static cycle schedule): --rtl-bind binds the STATIC issuer (calendar-fixed
             # issue/KIT/END, completions fault-check only; same c/d/s die faces); the completion-driven c/c8 leave the die
-            hub['sseq'].master = ('dsfd_stage_seq_static_c8' if DIE_KIND == 'layer1' else 'dsfd_stage_seq_static_c') if RTL_BIND \
+            # S-DIE-NETLIST 2026-10-16: --pq-producer binds the PQ issuer (engine 13, dsfd_stage_seq_static_c9) and
+            # --mix4-bind the Engram MIX4 engine 10 on top of it (dsfd_stage_seq_static_c10 = c9 + engine 10)
+            hub['sseq'].master = (layer1_seq_master() if DIE_KIND == 'layer1' else 'dsfd_stage_seq_static_c') if RTL_BIND \
                 else 'dsfd_stage_seq_c'
         if RTL_BIND and 'collector' in hub and len(m.get('svcs', {}) or STACKS.get(DIE_KIND, ())) == 1:
             # F5 (--rtl-bind): a 1-stack die's collector has the one stack lane (dsfd_bk_collector_c1: DONE join over the
@@ -4925,7 +4993,22 @@ def build_r8(variant=None):
             RSV_RECTS.append((xx, yy, xx + oo['w'], yy + oo['h'], 'canonical_hcp_home'))
     if PIN_OVERRIDES:
         variant['pin_overrides'] = PIN_OVERRIDES['record']
-    if MIX4_SLOT:
+    if MIX4_SLOT and MIX4_BIND:
+        # S-DIE-NETLIST 2026-10-16 (--mix4-bind): the MIX4 parent is a real die instance in its granted slot (S-DIE grant
+        # results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json, slot A: E face on the VM W face), bound
+        # to the VM f_mx_* / t_mx_* rows (MIX4_BUSES) and to sequencer engine 10; the instance itself is the obstacle
+        assert RTL_BIND and 'vm' in hub and 'sseq' in hub, '--mix4-bind needs --rtl-bind with the VM and sequencer slabs'
+        xx, yy, ww, hh = MIX4_SLOT
+        mx_ = Inst('sp_mix4', MIX4_MASTER, up(xx, GX), up(yy, GY), dn(xx + ww, GX) - up(xx, GX) - SHAVE,
+                   dn(yy + hh, GY) - up(yy, GY) - SHAVE, kind='hub', region='spine', domain='stream_1p2')
+        clash_ = [it.name for it in insts if it.x < mx_.x + mx_.w and it.x + it.w > mx_.x and it.y < mx_.y + mx_.h
+                  and it.y + it.h > mx_.y]
+        assert not clash_, ('--mix4-bind: MIX4 slot overlaps', clash_[:8])
+        insts.append(mx_)
+        hub['mix4'] = mx_
+        variant['mix4_slot'] = dict(at_um=[mx_.x, mx_.y], outline=dict(w=mx_.w, h=mx_.h), master=MIX4_MASTER,
+                                    status='BOUND (S-DIE-NETLIST --mix4-bind: real instance, VM f_mx/t_mx + engine 10)')
+    elif MIX4_SLOT:
         xx, yy, ww, hh = MIX4_SLOT
         RSV_RECTS.append((xx, yy, xx + ww, yy + hh, 'mix4_home'))
         variant['mix4_slot'] = dict(at_um=[xx, yy], outline=dict(w=ww, h=hh), master='dsfd_engram_mix4_c',
@@ -5292,6 +5375,18 @@ def buses_r8(m):
             allowed = list(allowed) + [cor['hub_w']]
         elif wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
             allowed = list(allowed) + [wide_return_strip(cor), cor['hub_w']]
+        if HEND_BOUND_FOOTPRINT:
+            # --hend-bound-footprint (S-NET+FILL 2026-10-16): reserve the CLOSED view's real outline of this hub end
+            # (finalize_r8 names it <master>__<name>) before the neighbour search; c26b left all 37 hub end views
+            # unbound as OT_VIEW_MISFIT 'real > slot' (end_spec's estimate is 0.02-1.75 um short of the demand-sized kits)
+            v_ = bound_views().get(f'{master}__{name}')
+            if v_ is not None:
+                if side == 'W':
+                    xx += w - v_['w']        # keep the W-side block's E edge (the face toward the slab)
+                w, h = v_['w'], v_['h']
+                m.setdefault('hend_bound_footprints', {})[name] = dict(
+                    master=f'{master}__{name}', reserved_um=[w, h],
+                    status='GEOMETRY_CANDIDATE_NOT_CLOCK_OR_ROUTE_QUALIFICATION')
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -5473,6 +5568,8 @@ def buses_r8(m):
             ((('collective', 'host', HOST_CF_BITS, 't_host', 'f_collective'),
               ('host', 'collective', HOST_TC_BITS, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
             (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()) + \
+            (PQ_PRODUCER_BUSES if PQ_PRODUCER and 'pq' in hb and 'sseq' in hb and 'host' in hb else ()) + \
+            (MIX4_BUSES if 'mix4' in hb else ()) + \
             ((RTL_HUB_EXTRA_STATIC if STATIC_SEAMS else RTL_HUB_EXTRA) if RTL_HUB_WIDTHS else ()) + \
             ((STATIC_HC_TAG,) if STATIC_SEAMS and SUHC_V2 and rtl_has_port(hb['hc_s'].master if 'hc_s' in hb else '', 'y_tag') else ()) + \
             (tuple(b_ for k in range(HC_T_COLS) for b_ in (('hc_s', 'hc_t', HC_T_FWD, f't_tf{k}', f'f_sf{k}'),
@@ -5604,6 +5701,13 @@ def buses_r8(m):
         elif RTL_BIND and it.master == PQ_RTL_MASTER:
             # s81-die-rtl-bind r3: the PQ cluster's per-child clock entries (stream; the die delivers phi - R at each pin)
             dom['stream'] += [(it.name, p_) for p_ in pq_rtl_clock_ports()]
+            if PQ_PRODUCER:     # dsfd_sp_pq_produced: command endpoint + calendar ROM reader entries (stream)
+                dom['stream'] += [(it.name, 'ck_cmd'), (it.name, 'ck_calendar')]
+            rst['stream'].append((it.name, 'rst'))
+        elif RTL_BIND and it.master == MIX4_MASTER:
+            # S-DIE-NETLIST (--mix4-bind): MIX4 clock ABI ck[148:0] (results/arch/s81_engram_takeover_1015/clock_abi149.json:
+            # ck[0] top / RS relays, ck[1+37q +: 37] cluster q roots), stream domain (its VM rows are on the VM core cks)
+            dom['stream'] += [(it.name, f'ck[{i_}:{i_}]') for i_ in range(MIX4_CK)]
             rst['stream'].append((it.name, 'rst'))
         elif RTL_BIND and it.master == CTRL_SVC_JOIN:          # F8: the svc join endpoint runs on the stream clock
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
@@ -5647,6 +5751,10 @@ def buses_r8(m):
                 d_ = 'serial' if spec['kind'] == 'r2l' else 'stream'
                 dom[d_].append((it.name, 'ck'))
                 rst[d_].append((it.name, 'rs'))
+    if PQ_PRODUCER and 'host' in hub and hub['host'].master == 'dsfd_host_c':
+        # S-DIE-NETLIST (--pq-producer): dsfd_host_c +DSFD_HOST_PQ_BOOT has two independent native ingest roots
+        # ck_ingest[1:0] (host RX / core, the stream frequency) besides ck / ckv
+        dom['stream'] += [(hub['host'].name, 'ck_ingest[0:0]'), (hub['host'].name, 'ck_ingest[1:1]')]
     if RTL_BIND:
         # F10 (--rtl-bind): the link macros are real link layers (rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv): a stream
         # reset, and their PMA lanes leave the die as top pads {pma_tx, pma_tck} out / {pma_rx, pma_rck} in
@@ -5946,11 +6054,55 @@ STATIC_COLL_CLOCKS = (('ck_control', 5), ('ck_lane', 8), ('ck_hc_lane', 16))
 # driven issue, VOID under the static rule) leave the die
 SUHC_STATIC_ISSUE = False
 PQ_RTL_MASTER = 'dsfd_sp_pq_n'  # --rtl-bind PQ slot: rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv (native core cluster + ROM / lane leaves)
+# --pq-producer (S-DIE-NETLIST 2026-10-16; S-ELEM-PQ answer main 59014b2c2, tools/s81_static_control/
+# pq_producer_physical_request.json logical_bindings): the PQ issuer f_iss is produced on the die -- PQ slot master
+# dsfd_sp_pq_produced (command endpoint + calendar ROM + dsfd_sp_pq_n), sequencer engine 13 (dsfd_stage_seq_static_c9 /
+# c10), host PQ boot words (dsfd_host_c +define+DSFD_HOST_PQ_BOOT: t_pq_pw, two ingest clock roots ck_ingest[1:0]).
+PQ_PRODUCER = False
+PQ_PRODUCED_MASTER = 'dsfd_sp_pq_produced'
+ASSIGNED_PIN_ALIAS = {'dsfd_sp_pq_produced': 'dsfd_sp_pq_n'}   # wrapper master -> the wrapped slot's assigned-pin record
+PQ_PRODUCER_BUSES = (('host', 'sseq', 36, 't_pq_pw', 'f_pq_pw'), ('sseq', 'pq', 36, 't_pq_desc_pw', 'f_desc_pw'),
+                     ('sseq', 'pq', 1, 'calendar_prime', 'calendar_prime'), ('sseq', 'pq', 1, 'stage_start', 'stage_start'),
+                     ('sseq', 'pq', 12, 'calendar_base', 'calendar_base'),
+                     ('sseq', 'pq', 13, 'calendar_length', 'calendar_length'),
+                     ('pq', 'sseq', 1, 'image_sealed', 'pq_image_sealed'),
+                     ('pq', 'sseq', 1, 'calendar_primed', 'pq_calendar_primed'),
+                     ('pq', 'sseq', 1, 'calendar_fault', 'pq_calendar_fault'))
+# --mix4-bind (S-DIE-NETLIST 2026-10-16; S-ENGRAM static form main cf84e03b8): the Engram MIX4 parent dsfd_engram_mix4_c
+# (+define+DSFD_ENGRAM_STATIC_ISSUE: no f_inp) in the MIX4 slot, on the VM's MIX rows (dsfd_sp_vm +define+DSFD_SP_VM_MIX4:
+# 20 read lanes, 4 write lanes = 12,732 b) and on sequencer engine 10 (c10 / d10 / s10 of dsfd_stage_seq_static_c10)
+MIX4_BIND = False
+MIX4_MASTER = 'dsfd_engram_mix4_c'
+MIX4_CK = 149
+MIX4_BUSES = (('mix4', 'vm', 20, 'rq_v', 'f_mx_rqv'), ('mix4', 'vm', 280, 'rq_row', 'f_mx_rq'),
+              ('vm', 'mix4', 20, 't_mx_rsv', 'rs_v'), ('vm', 'mix4', 10240, 't_mx_rs', 'rs_d'),
+              ('mix4', 'vm', 4, 'wq_v', 'f_mx_wqv'), ('mix4', 'vm', 56, 'wq_row', 'f_mx_wq'),
+              ('mix4', 'vm', 64, 'wq_mask', 'f_mx_wqm'), ('mix4', 'vm', 2048, 'wq_d', 'f_mx_wqd'))
+
+
+def layer1_seq_master():
+    """layer1 static sequencer: c8 (engines 0..7 + VM 12), c9 (+ PQ 13, --pq-producer), c10 (+ Engram MIX4 10)"""
+    if MIX4_BIND:
+        assert PQ_PRODUCER, '--mix4-bind needs --pq-producer (engine 10 is on dsfd_stage_seq_static_c10 = c9 + engine 10)'
+        return 'dsfd_stage_seq_static_c10'
+    return 'dsfd_stage_seq_static_c9' if PQ_PRODUCER else 'dsfd_stage_seq_static_c8'
+
+
+def manifest_defines(manifest='physical/s81_die_rtl/layer1.f'):
+    """every +define+ in the die RTL manifest, incl. several on one line (+define+A+B+C, as tools/die_port_bind.py
+    reads them). S-DIE 0600 10-16: the first-only regex dropped OT_PQ_*_SPLIT/BC_SLICED (layer1.f line 57) -> gen26n
+    port bind FAIL: dsfd_sp_pq_produced ck_aq_aux/ck_ix_read/ck_qb_aux unconnected, ck_bc[15:4] undriven."""
+    out = set()
+    for line in (ROOT / manifest).read_text().splitlines():
+        line = line.split('//')[0].strip()
+        if line.startswith('+define+'):
+            out.update(d.split('=')[0] for d in line[len('+define+'):].split('+') if d)
+    return out
 
 
 def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
     """clock-entry ports of dsfd_sp_pq_n under the die RTL manifest's OT_PQ_* defines (one source of truth), bit-sliced"""
-    defs = set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+    defs = set(manifest_defines(manifest))
     vec = [('ck_aq', 2), ('ck_ix', 4), ('ck_bc', 16 if 'OT_PQ_BC_SLICED' in defs else 4)]
     if 'OT_PQ_QB_PHYS_SPLIT' in defs:
         vec.append(('ck_qb_aux', 4))
@@ -5958,14 +6110,15 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
         vec.append(('ck_aq_aux', 16))
     if 'OT_PQ_IX_PHYS_SPLIT' in defs:
         vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
-    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+    sc = ['ck_qb_align'] if 'OT_PQ_QB_PIPE' in defs else []    # S-DIE-NETLIST: the QB pipe's align root
+    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + sc + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
 
 
 def pq_rom4(manifest='physical/s81_die_rtl/layer1.f'):
     """S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): +define+DSFD_PQ_ROM4 in the die manifest = the 16,384-row stream ROM
     is FOUR ot_rom_4096x72 macros pqrom2a..d (ra2 12 b shared, rc2[b] -> pqrom2<b>.ce, pqrom2<b>.rd[47:0] ->
     rq2[48b+:48]); one source of truth with tools/die_port_bind.py (the manifest's defines)."""
-    return 'DSFD_PQ_ROM4' in set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+    return 'DSFD_PQ_ROM4' in set(manifest_defines(manifest))
 
 
 def pq_rom_names():
@@ -6073,6 +6226,7 @@ def rtl_has_port(master, port, manifest='physical/s81_die_rtl/layer1.f'):
 
 
 DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8',
+                      'dsfd_stage_seq_static_c9', 'dsfd_stage_seq_static_c10',
                       'dsfd_stage_seq_static_c', 'dsfd_stage_seq_static_c8', 'dsfd_host_c')
 CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
 CTRL_SVC_JOIN = 'dsfd_svc_join'
@@ -6083,7 +6237,7 @@ def ctrl_adapter_buses(hb):
     sseq c<e> 85 -> slab c_cmd, slab c_done 9 -> d<e>, slab c_st 2 -> s<e> for every engine whose bindings-file
     master is a slab of this die; the fld path's capture -> gather drained event and gather -> VM field go."""
     bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
-    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12, pq=13)
     out = []
     for e, k in eng.items():
         if e in ('hop', 'vm') and not RTL_BIND:
@@ -6233,6 +6387,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
@@ -8771,7 +8926,7 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
     for the adjacent stack)."""
     hub = m['hub']
     bind = json.loads((ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json').read_text())
-    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
+    eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12, pq=13)
     sq = hub['sseq']
     starts = m.setdefault('_ctrl_starts', {})
 
@@ -9883,7 +10038,16 @@ def _assigned_record(master):
         # ':'-separated overlay (S-DIE r11): the first directory holding the master's record wins
         path = next((ROOT / d_ / (master + '.json') for d_ in ASSIGNED_PINS_DIR.split(':')
                      if (ROOT / d_ / (master + '.json')).exists()), ROOT / ASSIGNED_PINS_DIR.split(':')[-1] / (master + '.json'))
+        if not path.exists() and master in ASSIGNED_PIN_ALIAS:
+            # S-DIE-NETLIST 2026-10-16: dsfd_sp_pq_produced wraps dsfd_sp_pq_n (.*): the datapath slot's assigned pins
+            # stand; the producer's own ports (command / calendar / clocks) are laid by the generator
+            al_ = ASSIGNED_PIN_ALIAS[master]
+            path = next((ROOT / d_ / (al_ + '.json') for d_ in ASSIGNED_PINS_DIR.split(':')
+                         if (ROOT / d_ / (al_ + '.json')).exists()), path)
         rec = json.loads(path.read_text()) if path.exists() else None
+        if rec and rec['master'] != master and ASSIGNED_PIN_ALIAS.get(master) == rec['master']:
+            # data / ROM / lane pins only: the wrapper's clock entries follow the die manifest's PQ leaf set (laid here)
+            rec = dict(rec, master=master, ports={k_: v_ for k_, v_ in rec['ports'].items() if not k_.startswith('ck_')})
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
             # Reject an impossible shared origin before constructing thousands
@@ -9935,6 +10099,12 @@ def _assigned_physical_pins(Mx, ports):
     rec = _assigned_record(Mx.name)
     if not rec:
         return
+    if HEND_BOUND_FOOTPRINT and '__' in Mx.name:
+        # --hend-bound-footprint: a hub end resized to its bound view's outline keeps the view's measured pins (the
+        # bound view replaces this generated master in write_lefs); the assignment made for the estimated outline is moot
+        v_ = bound_views().get(Mx.name)
+        if v_ is not None and abs(v_['w'] - Mx.w) <= 0.025 and abs(v_['h'] - Mx.h) <= 0.025:
+            return
     assert all(abs(x - y) <= 0.025 for x, y in zip(rec['outline_um'], (Mx.w, Mx.h))), (Mx.name, 'assigned outline differs')
     for port, spec in rec['ports'].items():
         assert port in ports, (Mx.name, port, 'assigned port absent from die buses')
@@ -9998,16 +10168,98 @@ def masters_r8(m, k=1):
         _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
+            _resolve_pin_collisions(Mx)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
             _ck_rule(Mx)
+    if k == 1:
+        m['pin_collisions'] = {k_: v_ for k_, v_ in PIN_COLLISIONS.items() if k_ in M}
     if STN_PIN_ALT and k == 1:
         m['stn_pin_alt'] = _station_pin_layers(M)
     if k > 1:
         for name, ports in real_ports_r8().items():
             M[name] = _spread_ports(_real_master_bundled(REAL_FILES[name], k, ports), k)
     return M
+
+
+PIN_COLLISIONS = {}     # master -> {'moved': [...], 'fixed_conflicts': [...]} (S-DIE 0600 10-16, c26b_r DRT-0073)
+
+
+def _resolve_pin_collisions(Mx):
+    """S-DIE 0600 10-16 (c26b_r pin access DRT-0073): a generated face group laid by the face rule after the exact
+    pins (closed-view pins of populate(), die-assigned 'rects') can sit ON another port's pins: dsfd_bf_front_static
+    f_prog[1] / [3] on x0[175] / [176] (S face, M5), dsfd_sp_vm t_pqx[2] on f_capture[9116].  Two nets on one rectangle
+    have no access point.  Every movable ('face') group that touches a pin of ANOTHER port on the same layer moves, at
+    its own pitch, to the free stretch of its face nearest its old centre (then the other faces); conflicts between two
+    fixed groups ('rects') are recorded, not moved (they are the record owner's defect)."""
+    def rects_of():
+        by = defaultdict(list)
+        for nm, ly, r in pin_rects(Mx, 1, {}):
+            by[nm.rsplit('[', 1)[0]].append((ly, r))
+        return by
+    def hit(a, b):
+        return a[0] < b[2] - 1e-6 and b[0] < a[2] - 1e-6 and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6
+    movable = lambda q_: Mx.ports[q_][0] == 'face' and '+' not in str(Mx.ports[q_][3])
+    by = rects_of()
+    grid = defaultdict(list)          # (layer, 0.5-um cell x, cell y) -> [(port, rect)]
+    pairs = set()
+    for q_, lst in by.items():
+        for ly, r in lst:
+            cells = {(ly, i_, j_) for i_ in range(int(r[0] // 0.5), int(r[2] // 0.5) + 1)
+                     for j_ in range(int(r[1] // 0.5), int(r[3] // 0.5) + 1)}
+            for c_ in cells:
+                for q2, r2 in grid[c_]:
+                    if q2 != q_ and hit(r, r2):
+                        pairs.add(tuple(sorted((q_, q2))))
+            for c_ in cells:
+                grid[c_].append((q_, r))
+    clash = set(); fixed_bad = []
+    for a, b in sorted(pairs):
+        if movable(b):
+            clash.add(b)
+        elif movable(a):
+            clash.add(a)
+        else:
+            fixed_bad.append((a, b))
+    moved = []
+    for port in sorted(clash):
+        _, w, f0, ly, c0, pt = Mx.ports[port]
+        off, p = TRK[ly]
+        span = w * p * pt
+        others = [(l_, r_) for q_, lst in rects_of().items() if q_ != port for l_, r_ in lst if l_ == ly]
+        best = None
+        for f in (f0,) + tuple(x for x in 'NSEW' if x != f0):
+            L = Mx.h if f in 'EW' else Mx.w
+            if span + 4 * p > L:
+                continue
+            band = (lambda r: r[1] <= 0.2) if f == 'S' else (lambda r: r[3] >= Mx.h - 0.2) if f == 'N' else \
+                   (lambda r: r[0] <= 0.2) if f == 'W' else (lambda r: r[2] >= Mx.w - 0.2)
+            busy = sorted(((r[0], r[2]) if f in 'NS' else (r[1], r[3])) for l_, r in others if band(r))
+            gap = 2 * p
+            cands = [2 * p] + [e + gap for _, e in busy]
+            cands += [s - gap - span for s, _ in busy]
+            for st in cands:
+                if st < 2 * p or st + span > L - 2 * p:
+                    continue
+                if any(st - gap < e and s < st + span + gap for s, e in busy):
+                    continue
+                c = st + span / 2
+                d = abs(c - c0) + (0 if f == f0 else 1e6)
+                if best is None or d < best[0]:
+                    best = (d, f, c)
+            if best is not None and best[1] == f0:
+                break
+        if best is None:
+            raise ValueError(f'{Mx.name}.{port}: no free stretch for {w} pins on any face (pin collision)')
+        Mx.ports[port] = ('face', w, best[1], ly, best[2], pt)
+        moved.append(dict(port=port, bits=w, layer=ly, face_from=f0, face_to=best[1], centre_from=round(c0, 3),
+                          centre_to=round(best[2], 3)))
+    if moved or fixed_bad:
+        PIN_COLLISIONS[Mx.name] = dict(moved=moved, fixed_conflicts=[list(x) for x in fixed_bad[:20]],
+                                       fixed_conflict_pairs=len(fixed_bad))
+        print('OT_PIN_COLLISION %s moved %d fixed_conflicts %d %s' % (Mx.name, len(moved), len(fixed_bad),
+              [mv['port'] for mv in moved][:6]), file=sys.stderr, flush=True)
 
 
 def _ck_rule(Mx, min_l=300.0):
@@ -11210,6 +11462,9 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
+                    'SIZE of every hub end / start block (<master>__<inst>) before placement (c26b: 37 hub end views '
+                    'OT_VIEW_MISFIT real > slot by 0.02-1.75 um); geometry only, does not qualify clocks or routes')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
                     'selector / collector buses (+1 cycle; default off)')
     ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
@@ -11337,6 +11592,10 @@ def die_options(ap):
     ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
     ap.add_argument('--view-binding', help='S81 DIE 2026-10-13: by-name real view table (tools/s81/view_binding.py; repo path or '
                     'absolute); default OT_S81_VIEW_BINDING or ' + VIEW_BINDING_DEFAULT + "; 'none' binds nothing")
+    ap.add_argument('--orientation-qualification', help='S-DIE 2026-10-16: orientation qualification table '
+                    '(tools/s81/orientation_qualify.py; repo path or absolute); default OT_S81_ORIENTATION_QUALIFICATION '
+                    'or none.  A bound view orientation the literal LEF SYMMETRY does not declare is then accepted only '
+                    'for a table entry with the exact LEF sha256 and every check PASS')
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
@@ -11385,16 +11644,16 @@ def die_options(ap):
                     'adopt with a regenerated pin set')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
-    ap.add_argument('--rly-face-pins', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
+    ap.add_argument('--rly-face-pins', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-rly-face-pins to disable). S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
                     'relay takes its (in, out) faces from driver / load PIN positions (closed masters of its width only; '
                     'better non-closed variants are recorded as kit requests), not from instance centres')
-    ap.add_argument('--col-reset-tree', type=int, default=0, metavar='G', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
+    ap.add_argument('--col-reset-tree', type=int, default=32, metavar='G', help='DEFAULT 32 since S-DIE 10-16 0600 (0 = one net per column, disabled). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
                     'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
     ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
-    ap.add_argument('--stn-pin-pitch2', action='store_true', help='VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
+    ap.add_argument('--stn-pin-pitch2', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-stn-pin-pitch2 to disable). VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
                     'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
                     'the face; the abutting link-end ports take the same pitch')
-    ap.add_argument('--lef-pin-dir', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
+    ap.add_argument('--lef-pin-dir', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-lef-pin-dir to disable). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
                     'abstracts declare DIRECTION INPUT / OUTPUT from the die netlist (were all INOUT)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
                     'the out face nearest its worst load when the default face centre is > UM from a load pin (straight '
@@ -11423,6 +11682,10 @@ def die_options(ap):
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
+    ap.add_argument('--pq-producer', action='store_true', help='S-DIE-NETLIST 2026-10-16: PQ issuer produced on the die: '
+                    'PQ slot dsfd_sp_pq_produced, sequencer engine 13 (static c9 / c10), host PQ boot words (DSFD_HOST_PQ_BOOT)')
+    ap.add_argument('--mix4-bind', action='store_true', help='S-DIE-NETLIST 2026-10-16: the Engram MIX4 parent dsfd_engram_mix4_c '
+                    'as a real instance in the MIX4 slot on the VM f_mx/t_mx rows + sequencer engine 10 (needs --pq-producer: c10)')
     ap.add_argument('--lkck-wire', action='store_true', help='link forwarded-clock feedthrough as die-top wire (no dsfd_lkck)')
     ap.add_argument('--stn70-split', action='store_true', help='dsfd_stn*_70xK -> K x dsfd_stn*_70x1')
     ap.add_argument('--stn-footprints', help='DIR of FILL-S station specs: granted slot_change_request outlines')
@@ -11448,10 +11711,12 @@ def die_options(ap):
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
-    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING
+    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING, ORIENT_QUAL
     global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS
     if getattr(a, 'view_binding', None):
         VIEW_BINDING = a.view_binding
+    if getattr(a, 'orientation_qualification', None):
+        ORIENT_QUAL = a.orientation_qualification
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
@@ -11470,6 +11735,10 @@ def apply_options(a):
     BF_X2_PAIR = bool(getattr(a, 'bf_x2_pair', False)) and BF_X2_STATIC
     LSW = X0B + X1B + CCB + (X2B if BF_X2_STATIC else 0)
     MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
+    global PQ_PRODUCER, MIX4_BIND, PQ_RTL_MASTER
+    PQ_PRODUCER = bool(getattr(a, 'pq_producer', False))
+    MIX4_BIND = bool(getattr(a, 'mix4_bind', False))
+    PQ_RTL_MASTER = PQ_PRODUCED_MASTER if PQ_PRODUCER else 'dsfd_sp_pq_n'
     global HUB_LAYOUT, RETURN_TREES, LKCK_WIRE, STN70_SPLIT, STN_FOOTPRINTS, STN_PIN_ALT
     LKCK_WIRE = bool(getattr(a, 'lkck_wire', False))
     STN70_SPLIT = bool(getattr(a, 'stn70_split', False))
@@ -11532,6 +11801,8 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
+    global HEND_BOUND_FOOTPRINT
+    HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
@@ -11766,11 +12037,11 @@ def apply_options(a):
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
     global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
-    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', False))
-    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', False))
-    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 0) or 0)
+    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', True))
+    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', True))
+    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 32) or 0)
     COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
-    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', False))
+    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))

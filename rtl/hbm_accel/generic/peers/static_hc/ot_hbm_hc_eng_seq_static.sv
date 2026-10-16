@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 // HC engine event programme (H-NETLIST/hceng 2026-10-16): a programme SRAM (ot_sram_1r1w_1024x256) of EVENT words,
-// each {magic c7a2 [255:240], pc [233:224], payload [W-1:20], time [19:0]}. A launch runs [start_base, start_limit)
+// each {magic c7a1 [255:240] (the F20 row header the folded ot_static_program_target checks), pc [233:224], payload [W-1:20], time [19:0]}. A launch runs [start_base, start_limit)
 // once (start_loops must be 1). The edge counter t starts at 0 on the edge after start_v is captured; the word at the
 // queue head fires (payload on `event`, event_v) on the edge where t == time, so its fields are visible to the engine
 // in the cycle after that edge. Times must strictly increase; a word reaching the head after its time (late), a bad
@@ -47,7 +47,7 @@ module ot_hbm_hc_eng_seq_static #(
         .w_ce_in(cfg_we_q && !busy && !start_v_q), .w_addr_in(cfg_addr_q), .wd_in(cfg_data_q), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     always @(posedge clk) captured <= macro_data;
-    wire word_ok = captured[255:240] == 16'hc7a2 && captured[233:224] == rpc1 && captured[239:234] == 0 &&
+    wire word_ok = captured[255:240] == 16'hc7a1 && captured[233:224] == rpc1 && captured[239:234] == 0 &&
                    captured[223:W] == 0;
     wire [W-1:0] head = q[qh][W-1:0];
     wire head_v = qn != 0;

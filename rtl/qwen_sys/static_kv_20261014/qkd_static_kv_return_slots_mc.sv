@@ -53,7 +53,10 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
   end
  always @(posedge ck or negedge rs)
   if(!rs)idle_core<=0;
-  else idle_core<=(pub_sync2==consumed) && !slot && !expected_put && !actual_valid;
+  // mc_r4 (Q-KVSYS-DIE 10-16): idle_core from registered captures only (slot = this edge's expected_put capture,
+  // actual_valid = last edge's). mc3b's raw expected_put term put a compare between the pin and the first flop: native
+  // capture 259.3 ps > 190 on expected_put. Drain observation one ck edge later, never earlier; no schedule uses it.
+  else idle_core<=(pub_sync2==consumed) && !slot && !actual_valid;
  reg [AW:0] wp,rp;
  wire [AW-1:0] wa=wp[AW-1:0];
 `ifdef OT_KV_RETURN_MUT_READ_ADDR

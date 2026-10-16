@@ -19,7 +19,7 @@ module tb_hbm_svc_vm_kshare;
  wire[1023:0]c_k_wdata;wire[127:0]c_k_wstrb;reg[3:0]c_kr_v;wire[3:0]c_kr_rdy;reg[67:0]c_kr_tag;reg[15:0]c_kr_beat;reg[1023:0]c_kr_data;
  reg vm_v,vm_bank;reg[15:0]vm_epoch;reg[14:0]vm_row;reg[3:0]vm_col;
  wire[3:0]fill_v,fill_bank;wire[23:0]fill_slot;wire[63:0]fill_epoch;wire[1023:0]fill_data;wire fault;
- ot_hbm_svc_vm_kshare #(.SM(SM),.MUT(MUT)) dut(.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
+ ot_hbm_svc_vm_kshare #(.MUT(MUT)) dut(.sm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
   .g_k_v(g_k_v),.g_k_rdy(g_k_rdy),.g_k_addr(g_k_addr),.g_k_len(g_k_len),.g_k_tag(g_k_tag),.g_k_we(4'b0),.g_k_wdata(1024'b0),.g_k_wstrb(128'b0),
   .g_k_wr_done(g_k_wr_done),.g_kr_v(g_kr_v),.g_kr_rdy(g_kr_rdy),.g_kr_tag(g_kr_tag),.g_kr_beat(g_kr_beat),.g_kr_data(g_kr_data),
   .c_k_v(c_k_v),.c_k_rdy(c_k_rdy),.c_k_addr(c_k_addr),.c_k_len(c_k_len),.c_k_tag(c_k_tag),.c_k_we(c_k_we),.c_k_wdata(c_k_wdata),

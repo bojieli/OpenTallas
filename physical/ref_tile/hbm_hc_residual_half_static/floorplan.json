@@ -30,13 +30,13 @@
  },
  "pins": {
   "W": [
+   "rst_n",
    "write_v",
    "write_word",
    "write_data"
   ],
   "N": [
    "clk",
-   "rst_n",
    "read_v",
    "read_word"
   ],

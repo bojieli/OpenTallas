@@ -1,0 +1,289 @@
+{
+ "name": "hv16_vm_cal_f20",
+ "top": "hfd_hgi_vm_calendar_f20",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk_mem",
+   "clk_cap",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v"
+  ],
+  "E": [
+   "client_seq",
+   "response_enable",
+   "response_seq",
+   "bank_enable",
+   "bank_client",
+   "hub_ring_enable",
+   "hub_ring_client",
+   "rslot_v",
+   "wslot_v",
+   "rslot",
+   "wslot",
+   "ring_tx_enable",
+   "ring_tx_source",
+   "replay_enable",
+   "replay_source",
+   "lg_local_read",
+   "lg_local_write"
+  ],
+  "S": [
+   "clk",
+   "calendar_v",
+   "active",
+   "done",
+   "fault",
+   "ordinal",
+   "tgt_configured",
+   "tgt_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_calendar.u_programme.u_program",
+   "clock_entry": {
+    "port": "clk_mem",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST-0600",
+  "branch": "claude/hnetlist-0030",
+  "tag": "f20",
+  "purpose": "H-DIE option A collar fold (10-16): hfd_hgi_vm_calendar_f20 = the CLOSED universal VM calendar (hv15_vm_cal_x-xcap0030-cce3264d2, native PASS L179/C133) + its F20 programme target folded in as pin-registered soft logic on clk_cap (strap tgt, TGT_PIN=1). Serves all 12 die calendars (calendar_<q>, epcal_<q>, vmfc_<q>). reroute_reason rtl_change: target folded (standalone collar ~630 pins pin-bound). Benches: folded-vs-two-tile equivalence every edge + strap mutant; universal calendar exact + 3 mutants; LG programme.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "tools/hbm_vm_static_calendar.py",
+   "results/arch/hbm_vm_static_1014/quadrant_abi.json",
+   "results/arch/hbm_vm_lg_split_1015/programme",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hier_contract_1015/hbm_v15.json",
+   "rtl/hbm_accel/generic/vm/static/fill_universal_0600"
+  ],
+  "record_to": "results/rtl/ref_tile/hv16_vm_cal_f20",
+  "benches": [
+   {
+    "name": "f20_eq",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh {RUN}/bench/f20",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CAL_F20_EQ GATE PASS",
+    "min_count_regex": "MUT0 CAL_F20_EQ PASS checks=(\\d+)"
+   },
+   {
+    "name": "f20_strap_mutant",
+    "cmd": "ONLY=1 bash rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh {RUN}/bench/f20m",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CAL_F20_EQ FAIL"
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_CALENDAR_UNIVERSAL_ALL PASS4",
+    "min_count_regex": "PASS(\\d+) edges exact"
+   },
+   {
+    "name": "mut_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_field",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_core",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every input at the pin (ot_static_program_target cv/dv/lv/target/address/data_q/base/limit/loops/tgt_q on clk_cap) and every output is a flop (calendar word fields, calendar_v, ordinal, active, done, fault, configured, target fault); rst_n drives only local synchronisers; a wrapper stage would add +1/+1 for nothing"
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_cap",
+  "clk_mem"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "client_seq",
+    "response_enable",
+    "response_seq",
+    "bank_enable",
+    "bank_client",
+    "hub_ring_enable",
+    "hub_ring_client",
+    "rslot_v",
+    "wslot_v",
+    "rslot",
+    "wslot",
+    "ring_tx_enable",
+    "ring_tx_source",
+    "replay_enable",
+    "replay_source",
+    "lg_local_read",
+    "lg_local_write",
+    "calendar_v",
+    "active",
+    "done",
+    "fault",
+    "ordinal",
+    "tgt_configured",
+    "tgt_fault"
+   ]
+  },
+  "cap": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cap"
+   ],
+   "inputs": [
+    "tgt",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": []
+  },
+  "mem": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_cts_roots": [
+  "clk",
+  "clk_cap"
+ ],
+ "slot_change_request": "H-NETLIST 0600: the 12 die calendars (calendar_<q>, epcal_<q>, vmfc_<q>) bind this folded master; W face takes the F20 bus + tgt strap instead of the collar programme pins; outline grows 220.32x116.64 -> 259.2x151.2 (target bitmap + data regs); H-DIE homes.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "H-DIE option A collar fold: the F20 programme target (standalone ~630-pin ot_static_program_target, pin-bound below 30% util) is folded into the closed universal calendar hv15_vm_cal_x-xcap0030-cce3264d2 as pin-registered soft logic on clk_cap; equivalence vs the two-tile composition every edge (rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh)",
+  "source": "results/rtl/hbm_fill_universal_0600/f20_run0.log"
+ },
+ "outline": {
+  "w": 220.32,
+  "h": 140.4
+ }
+}

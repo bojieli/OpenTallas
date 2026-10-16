@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ahub_core",
+ "enable": false,
+ "reason": "the RTL already registers every port at its pin (native pin form since hd2: every input a pin flop, every output its own flop, io_flop_at_pins places them FIRM at the face); OT_PIN_REGS would add a second stage on every port (+2 cycles a hub round trip) for no timing gain"
+}
