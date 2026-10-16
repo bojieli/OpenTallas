@@ -77,7 +77,7 @@ def main():
     # actual storage and are mapped to flops before the source partition.
     script = read + 'hierarchy -check -top dsfd_sp_pq_produced;\n'
     script += ''.join('blackbox ' + name + ';\n' for name in blackboxes)
-    script += 'setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; proc; memory_map; flatten; opt_clean;\n'
+    script += 'setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; proc; memory_map; flatten; opt_clean -purge;\n'
     script += 'write_json ' + str((a.out/'flat.json').resolve()) + ';\n'
     run(a.yosys, script, a.out/'flatten')
     flat = json.loads((a.out/'flat.json').read_text())
