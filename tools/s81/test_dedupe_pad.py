@@ -50,7 +50,7 @@ class DedupePad(unittest.TestCase):
         p=self.out/'bad_map.json';p.write_text(json.dumps(mapping))
         result=subprocess.run([sys.executable,str(ROOT/'tools/s81/prove_dedupe_pad.py'),'--prepare','--map',str(p),'--out',str(self.out/'bad')],capture_output=True,text=True)
         self.assertNotEqual(result.returncode,0)
-        self.assertIn('clock/stage family differs',result.stderr)
+        self.assertTrue('clock/stage family differs' in result.stderr or 'non-data ABI mismatch' in result.stderr)
 
     def test_logical_port_omission_rejected(self):
         mapping=json.loads((ROOT/'results/arch/tile_dedupe_1015/s81_pad_map_1016.json').read_text())

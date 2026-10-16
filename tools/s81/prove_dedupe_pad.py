@@ -6,7 +6,6 @@ then binds actual modules and checks every output on both clock edges plus reset
 Run heavy simulation through ot-run; --prepare writes portable input artifacts only.
 """
 import argparse
-import copy
 import json
 import re
 import subprocess
@@ -19,13 +18,13 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import dsrom_s81_fulldie as G
 
 
+ACTUAL_MODULES = ROOT / 'results/arch/native_pin_audit_snetfill_1015/dedupe_pad_1016/actual_modules.sv'
+
 def ports(master):
-    w = int(re.search(r'_(\d+)(?:x1|_[NSEW]{2})?$', master)[1])
-    if master.startswith('dsfd_hstn'):
-        return dict(ck=('input', 1), di=('input', w), dq=('output', w))
-    if master.startswith('dsfd_stn'):
-        return dict(fi0=('input', 1), di0=('input', w), do0=('output', w), fo0=('output', 1), fn0=('output', 1))
-    return dict(ck=('input', 1), rs=('input', 1), i=('input', w), o=('output', w))
+    import die_port_bind as B
+    mods = {m.name: m for m in B.parse_modules(ACTUAL_MODULES.read_text(), str(ACTUAL_MODULES))}
+    mod = mods[master]
+    return {pn: (direction, mod.width(pn, mod.env({}))) for pn, (direction, _) in mod.ports.items()}
 
 
 def prepare(out, mapping):
@@ -45,6 +44,10 @@ def prepare(out, mapping):
         insts.append(G.Inst(name, frm, 0, 0, 10, 10))
         pd[frm] = ports(frm)
         pd[ent['to']] = ports(ent['to'])
+        for pn, pv in pd[frm].items():
+            if pn not in ent['ports']:
+                assert pd[ent['to']].get(pn) == pv, (frm, ent['to'], pn, 'non-data ABI mismatch')
+        assert all(pn in pd[frm] or pv[0] == 'output' for pn, pv in pd[ent['to']].items()), (frm, ent['to'], 'extra canonical input')
         refconns = []
         for pn, (direction, w) in pd[frm].items():
             net = f'p{j}_{pn}'
@@ -64,7 +67,6 @@ def prepare(out, mapping):
                 buses.append((net, 'top_out', w, [(name, pn), ('TOP', net)]))
         refs.append(f'{frm} ref{j} ('+', '.join(refconns)+');')
     model = dict(insts=insts, buses=buses, pdir=pd, glue={})
-    before = copy.deepcopy(model)
     G._dedupe_pad(model)
     assert len(model['pad']) == len(mapping)
     # This is exactly the width promotion performed by finalize_r8, isolated from geometry planning.
@@ -77,7 +79,9 @@ def prepare(out, mapping):
             final_pd[it.master][pn] = (direction,w)
     model['pdir'] = final_pd
     G.write_netlist(model, 1, out/'die.v', top='dedupe_die')
-    (out/'masters.sv').write_text(G.glue_rtl(before))
+    # The DUT and reference instantiate byte-exact actual c26b source modules / canonical hardening RTL.
+    # In particular horizontal forwarded stations have no fn0, unlike the vertical canonical station.
+    (out/'masters.sv').write_text(ACTUAL_MODULES.read_text())
     body = '\n'.join(tb+refs+['dedupe_die dut ('+', '.join(connections)+');'])
     body += '\ninitial begin ck=0;rst_n=0; for(n=0;n<2000;n=n+1) begin\n'
     body += '\n'.join(drives)+'\n#2;ck=1;#1;\n'+'if(n>0) begin\n'+'\n'.join(checks)+'\nend'
