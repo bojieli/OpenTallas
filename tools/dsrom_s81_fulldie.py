@@ -409,6 +409,16 @@ def _init_real():
 VIEW_BINDING_DEFAULT = 'results/arch/s81_native_20261013/view_binding.json'
 VIEW_BINDING = os.environ.get('OT_S81_VIEW_BINDING', VIEW_BINDING_DEFAULT)
 VIEW_BINDING_SCHEMA = 's81-view-binding-v1'
+CAPTURE_SOURCE_PACKET = None  # explicit source-current hardened capture import
+_CAPTURE_PACKET_CACHE = {}
+
+def capture_source_packet():
+    from s81.capture_import import _load
+    key = (str(ROOT), CAPTURE_SOURCE_PACKET)
+    if key not in _CAPTURE_PACKET_CACHE:
+        _CAPTURE_PACKET_CACHE[key] = _load(CAPTURE_SOURCE_PACKET, ROOT)[0]
+    return _CAPTURE_PACKET_CACHE[key]
+
 _BOUND = {}
 
 
@@ -422,7 +432,7 @@ def bound_views(root=None):
     sha256 differs from the table (the view changed after it was qualified), a LEF whose MACRO is not the master, a
     corner liberty without that cell."""
     diagnostic = os.environ.get('OT_S81_DIAGNOSTIC_CLOSED_VIEWS') == '1'
-    key = (VIEW_BINDING, str(root or ROOT), diagnostic)
+    key = (VIEW_BINDING, str(root or ROOT), diagnostic, CAPTURE_SOURCE_PACKET)
     if key in _BOUND:
         return _BOUND[key]
     out = {}
@@ -433,6 +443,16 @@ def bound_views(root=None):
         tab = json.loads(tp.read_text())
         if tab.get('schema') != VIEW_BINDING_SCHEMA:
             raise SystemExit(f'VIEW_BINDING: {tp} schema {tab.get("schema")!r}, expected {VIEW_BINDING_SCHEMA!r}')
+        if CAPTURE_SOURCE_PACKET:
+            if not diagnostic:
+                raise ValueError('--capture-source-packet requires diagnostic views until die qualification')
+            tab = copy.deepcopy(tab)
+            for mst, view in capture_source_packet()['views'].items():
+                folder = Path(view['view'])
+                paths = dict(lef=folder/(mst+'.lef'), tt=folder/(mst+'_tt.lib'),
+                             ff=folder/(mst+'_ff.lib'), ss=folder/(mst+'_ss.lib'))
+                tab.setdefault('bound', {})[mst] = dict(verdict='DIAGNOSTIC_CLOSED', export_dir=str(folder),
+                    files={c:dict(path=str(path),sha256=view['sha256'][str(path)]) for c,path in paths.items()})
         for mst, rec in sorted(tab.get('bound', {}).items()):
             if rec.get('verdict') != 'QUALIFIED' and not (diagnostic and rec.get('verdict') == 'DIAGNOSTIC_CLOSED'):
                 raise SystemExit(f'VIEW_BINDING: {mst} is in the table without a QUALIFIED verdict ({rec.get("verdict")!r})')
@@ -1724,6 +1744,10 @@ def die_master_params(m):
         r_.update(wfc_return256_params())
         r_['_source'] = '; '.join(x_ for x_ in (r_.get('_source'), '--wfc-return256: u_wfc.u_ret = return256 lo/hi + '
                                                 'native valid diag (S-VM 6136ed704), 3 return roots') if x_)
+    if CAPTURE_SOURCE_PACKET:
+        for child in capture_source_packet()['children'].values():
+            if child['parameters']:
+                out[child['master']] = dict(child['parameters'], _source=CAPTURE_SOURCE_PACKET)
     for mst, rel in BOUND_VIEW_RECEIPTS.items():
         if mst in used:
             out[mst] = dict(_receipt_params(rel), _source=rel)
@@ -5152,6 +5176,15 @@ def build_r8(variant=None):
                                        collective_master=hub['collective'].master if 'collective' in hub else None)
     m['buses'] = []
     buses_r8(m)
+    if CAPTURE_SOURCE_PACKET:
+        from s81.capture_import import expand
+        expand(m, hub['capture'].name, CAPTURE_SOURCE_PACKET, root=ROOT, inst_ctor=Inst)
+        capture_placer = Placer(m)
+        if HOP_FIX and HOP_PLAN:
+            _hop_fix(m, capture_placer)
+        if RELAY_PROGRESS:
+            _relay_progress_fix(m, capture_placer)
+
     if STN70_SPLIT:
         _split_multi_lane_stations(m)
     if DEDUPE_PAD:
@@ -5789,9 +5822,9 @@ def buses_r8(m):
             for b_, n_ in enumerate(rn_[2:]):
                 bus(f'pqrc_2{"abcd"[b_]}', 'rom_ce', 1, [(hub['pq'].name, f'rc2[{b_}:{b_}]'), (n_, 'ce')])
                 bus(f'pqrq_2{"abcd"[b_]}', 'rom_q', 48, [(n_, 'rd'), (hub['pq'].name, f'rq2[{48 * b_}:{48 * b_ + 47}]')])
-    if HOP_FIX and HOP_PLAN:
+    if HOP_FIX and HOP_PLAN and not CAPTURE_SOURCE_PACKET:
         _hop_fix(m, P)
-    if RELAY_PROGRESS:
+    if RELAY_PROGRESS and not CAPTURE_SOURCE_PACKET:
         _relay_progress_fix(m, P)
     if COL_RESET_TREE and ALIGN_EXT[0]:
         _col_reset_tree(m, P)            # --col-reset-tree G: registered equal-depth column reset tree
@@ -10272,6 +10305,16 @@ def _assigned_record(master):
             # S-DIE 2026-10-15: a 'released' record in an earlier overlay directory withdraws the later assigned pins of a
             # master whose outline changed (A2 VM reservation, reshaped su_s): the generator lays its face pins (top-down)
             rec = None
+        if CAPTURE_SOURCE_PACKET and master == 'dsfd_sp_capture_c':
+            if rec is None:
+                raise ValueError('source-current capture import requires an assigned parent slot')
+            rec = copy.deepcopy(rec)
+            clocks = defaultdict(list)
+            for entry in capture_source_packet()['clock_entries']:
+                pin = entry['parent_clock_pin']
+                if pin not in clocks[entry['domain']]:
+                    clocks[entry['domain']].append(pin)
+            rec['clock_entries'] = dict(clocks)
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 
@@ -10586,6 +10629,29 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
+    if it.kind == 'capture_leaf':
+        if _LAY_K[0] != 1:
+            raise ValueError('source-current capture leaves require literal unbundled contacts')
+        view = bound_views()[it.master]
+        rects = {}
+        for block in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', view['text'], re.S):
+            if re.search(r'USE\s+(POWER|GROUND)', block[2]):
+                continue
+            match = re.search(r'LAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', block[2])
+            if not match:
+                raise ValueError('capture leaf has no literal rectangle '+it.master+'/'+block[1])
+            rects[block[1]] = (match[1], tuple(map(float, match.groups()[1:])))
+        for port, (_direction, width) in ports.items():
+            values = []
+            for i in range(width):
+                pin = f'{port}[{i}]' if f'{port}[{i}]' in rects else port
+                if pin not in rects:
+                    raise ValueError('capture leaf missing contact '+it.master+'/'+pin)
+                values.append((f'{port}[{i}]', *rects[pin]))
+            Mx.ports[port] = ('rects', values)
+            Mx.order.append(port)
+        return
+
     if it.kind in ('sstn_split_base', 'sstn_split_payload') and _LAY_K[0] == 1:
         from s81.sstn_split import populate
         populate(sys.modules[__name__], Mx, ports)
@@ -11976,6 +12042,8 @@ def die_options(ap):
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--pqcnt-lef-pins', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): bound --pq-cnt count leaves '
                     '(ot_s81_pq_rwbc15 / rwbc2) take their assigned-port pin rectangles from the bound LEF verbatim')
+    ap.add_argument('--capture-source-packet', help='opt-in source-pinned actual 70-leaf capture import packet; '
+                    'requires literal source/view hashes and diagnostic die qualification')
     ap.add_argument('--hub-first-stations', action='store_true', help='candidate allocation order: native hub chains '
                     'before shared-street link stations; unchanged occupancy and reach checks')
     ap.add_argument('--wfc-return256', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): dsfd_sp_vm WFC_RETURN256 1 '
@@ -12028,6 +12096,11 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
+    global CAPTURE_SOURCE_PACKET
+    CAPTURE_SOURCE_PACKET = getattr(a, 'capture_source_packet', None)
+    _ASSIGNED_PIN_CACHE.clear()
+    if CAPTURE_SOURCE_PACKET:
+        capture_source_packet()  # verify the exact RTL and native views before allocation
     global HUB_FIRST_STATIONS
     HUB_FIRST_STATIONS = bool(getattr(a, 'hub_first_stations', False))
     global WFC_RETURN256, PQCNT_LEF_PINS
