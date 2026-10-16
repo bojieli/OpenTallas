@@ -27,9 +27,10 @@ import pinreg_audit as A  # noqa: E402
 LEAFS = ['mul4', 'chunk8', 'add8', 'norm', 'sum', 'signed_sqrt', 'sigmoid', 'mix_control', 'rly', 'mixq_shcol_b', 'mixq_shctl']
 SRC = ['rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv', 'rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv',
        'rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_banded.sv']
-TOP = 'ot_s81_engram_mixq_b'
+TOP = 'ot_s81_engram_mixq_bc'
 PERIOD, UNC, WIRE = 833.333, 60.0, .76
 CLEAR = 21.6
+SHCOLB_PINS_OVERRIDE = None
 SHCOLB_TCL = R / 'physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shcol_b.tcl'
 
 
@@ -79,6 +80,11 @@ def load_views(views):
             for b in re.finditer(r'\bRECT\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)', m[2]):
                 x0, y0, x1, y1 = map(float, b.groups()); sh.append(((x0 + x1) / 2, (y0 + y1) / 2))
             pins[master][m[1]] = sh
+    if SHCOLB_PINS_OVERRIDE and 'ot_s81_engram_mixq_shcol_b' in views:     # planned re-pin over the closed view's ETM
+        sb = 'ot_s81_engram_mixq_shcol_b'; pins[sb] = {}
+        for m in re.finditer(r'place_pin -pin_name \{(\S+)\} -layer \S+ -location \{([\d.]+) ([\d.]+)\}', Path(SHCOLB_PINS_OVERRIDE).read_text()):
+            pins[sb][m[1]] = [(float(m[2]), float(m[3]))]
+        prov[sb] = dict(prov[sb], planned_pins=str(SHCOLB_PINS_OVERRIDE))
     if 'ot_s81_engram_mixq_shcol_b' not in views:
         # shcol_b = closed shcol + iv/ph (estimated launch: max registered S-face data launch of the closed view)
         sc = 'ot_s81_engram_mixq_shcol'; sb = 'ot_s81_engram_mixq_shcol_b'
@@ -211,7 +217,9 @@ def main():
     ap.add_argument('--anneal', type=int, default=0); ap.add_argument('--t0', type=float, default=3000.0); ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--w', type=float, default=1209.6); ap.add_argument('--h', type=float, default=885.6)
     ap.add_argument('--edge-reach', type=float, default=330.0); ap.add_argument('--margin', type=float, default=30.0)
+    ap.add_argument('--shcolb-pins', help='planned shcol_b pin tcl over the closed view ETM')
     a = ap.parse_args(); O = a.out; O.mkdir(parents=True, exist_ok=True)
+    global SHCOLB_PINS_OVERRIDE; SHCOLB_PINS_OVERRIDE = a.shcolb_pins
     top = extract_graph(O); cells = top['cells']
     views = json.loads((Path(__file__).parent / 'leaf_views.json').read_text())
     pins, dims, metrics, prov = load_views(views)

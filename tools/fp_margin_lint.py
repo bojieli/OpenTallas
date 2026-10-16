@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import hashlib
 import json
 import math
 import os
@@ -481,6 +482,60 @@ def pin_track_access(dump):
     return checked, bad
 
 
+def pin_geometry(dump, require_tracks=False):
+    """Bounded actual-IO check shared by route lint and the pre-route gate.
+
+    Keep the existing finite-track/full-minimum-width landing policy. Every
+    signal/clock rectangle must also lie inside the actual die, including shapes
+    orthogonal to the preferred-track axis. The gate requires current track data;
+    the full route checker retains compatibility with older dumps without grids.
+    """
+    die = dump["die"]
+    if (len(die) != 4 or not all(math.isfinite(v) for v in die)
+            or die[2] <= die[0] or die[3] <= die[1]):
+        raise ValueError("invalid actual die rectangle")
+    layers = {l["name"]: l for l in dump["layers"]}
+    outside, missing = [], []
+    count = shapes = 0
+    for name, net, sig, io, boxes in dump["bterms"]:
+        if sig not in ("SIGNAL", "CLOCK"):
+            continue
+        count += 1
+        if not boxes:
+            missing.append(name + ": no pin shapes")
+        for layer, rect in boxes:
+            shapes += 1
+            if (len(rect) != 4 or not all(math.isfinite(v) for v in rect)
+                    or rect[2] <= rect[0] or rect[3] <= rect[1]):
+                raise ValueError(f"invalid actual pin rectangle {name} {layer}: {rect}")
+            # Same numerical epsilon as the existing track containment check.
+            if (rect[0] < die[0] - 1e-7 or rect[1] < die[1] - 1e-7
+                    or rect[2] > die[2] + 1e-7 or rect[3] > die[3] + 1e-7):
+                outside.append((name, layer, rect))
+            info = layers.get(layer, {})
+            if require_tracks and (not info.get("track_patterns") or
+                                   info.get("dir") not in ("VERTICAL", "HORIZONTAL") or
+                                   not math.isfinite(info.get("width", 0)) or info.get("width", 0) <= 0):
+                missing.append(name + ": " + layer + " lacks actual tracks/minimum width")
+    if require_tracks and not count:
+        raise ValueError("no actual signal/clock pin geometry")
+    checked, bad = pin_track_access(dump)
+    fails = []
+    if outside:
+        examples = "; ".join(f"{n} {l} {r}" for n, l, r in outside[:3])
+        fails.append(dict(check="pin_bounds", msg=f"{len(outside)} signal/clock pin rectangles outside actual die {die}: {examples}"))
+    if missing:
+        fails.append(dict(check="pin_geometry_data", msg=f"{len(missing)} missing actual pin/track descriptions: " + "; ".join(missing[:3])))
+    if bad:
+        fails.append(dict(check="pin_track", msg=f"{len(bad)} signal/clock pins have no full min-width landing on any actual "
+                          f"preferred routing track ({'; '.join(n + ': ' + r for n, r in bad[:3])}): "
+                          "correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant"))
+    return dict(schema="opentallas.fp_pin_geometry.v1", verdict="FAIL" if fails else "PASS", fails=fails,
+                metrics=dict(signal_clock_pins=count, pin_rectangles=shapes, pin_track_checked=checked,
+                             pin_track_inaccessible=len(bad), pin_rectangles_outside=len(outside),
+                             missing_geometry=len(missing)))
+
+
 def lint(dump, th=None):
     T = dict(THRESHOLDS, **(th or {}))
     die, core = dump["die"], dump["core"]
@@ -545,13 +600,9 @@ def lint(dump, th=None):
             e, p = edge_of(die, r)
             pins.append((name, net, e, layer, p, r))
     met["n_pins"] = len(pins)
-    checked, bad_tracks = pin_track_access(dump)
-    met["pin_track_checked"] = checked
-    met["pin_track_inaccessible"] = len(bad_tracks)
-    if bad_tracks:
-        fails.append(("pin_track", f"{len(bad_tracks)} signal/clock pins have no full min-width landing on any actual "
-                      f"preferred routing track ({'; '.join(n + ': ' + r for n, r in bad_tracks[:3])}): "
-                      "correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant"))
+    geometry = pin_geometry(dump)
+    met.update(geometry["metrics"])
+    fails.extend((f["check"], f["msg"]) for f in geometry["fails"])
 
     # density
     dens = pin_density([(e, l, p) for _, _, e, l, p, _ in pins], T["pin_density_window_um"], T["pin_density_min_pins"])
@@ -866,13 +917,30 @@ def parse_set(items):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["check", "metrics"])
+    ap.add_argument("mode", choices=["check", "metrics", "pins"])
     ap.add_argument("dumps", nargs="+")
     ap.add_argument("--out")
     ap.add_argument("--set", action="append", default=[], help="threshold override key=value")
     ap.add_argument("--warn-only", action="store_true", help="report, never fail")
     a = ap.parse_args(argv)
     th = parse_set(a.set)
+    if a.mode == "pins":
+        if a.set or a.warn_only or len(a.dumps) != 1:
+            ap.error("pins requires one actual dump, unchanged checks and no warn-only override")
+        try:
+            raw = Path(a.dumps[0]).read_bytes()
+            rep = pin_geometry(json.loads(raw), require_tracks=True)
+            rep.update(dump=a.dumps[0], dump_sha256=hashlib.sha256(raw).hexdigest(),
+                       validator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+            if a.out:
+                Path(a.out).write_text(json.dumps(rep, indent=1) + "\n")
+        except Exception as ex:
+            print(f"fp_margin_lint: ERROR {type(ex).__name__}: {ex}")
+            return 2
+        print("fp_margin_lint: " + rep["verdict"] + " actual pin geometry " + json.dumps(rep["metrics"]))
+        for finding in rep["fails"]:
+            print("FLOORPLAN_MARGIN: " + finding["check"] + ": " + finding["msg"])
+        return 3 if rep["fails"] else 0
     if a.mode == "metrics":
         for p in a.dumps:
             r = lint(json.loads(Path(p).read_text()), th)

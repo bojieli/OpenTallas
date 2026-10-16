@@ -32,6 +32,7 @@
   "N": [
    "clk",
    "clk_eg",
+   "clk_cal",
    "rst_n",
    "tgt",
    "cfg_v",
@@ -87,6 +88,11 @@
  "clock_port": "clk",
  "clock_ports": [
   "clk",
+  "clk_eg",
+  "clk_cal"
+ ],
+ "clock_cts_roots": [
+  "clk",
   "clk_eg"
  ],
  "blocks": [
@@ -94,7 +100,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": null,
+   "inst": "u_tab",
    "idx": 0,
    "x": 30.24,
    "y": 270.0,

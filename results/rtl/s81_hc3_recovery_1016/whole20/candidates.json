@@ -1,0 +1,1183 @@
+{
+  "schema": "opentallas.s81.comb20.geometry_candidates.v1",
+  "sources": [
+    "actual14 mainc2cc67e28 child slots",
+    "CCF seven_leaf_geometry_proposal.json",
+    "HC3 granted leaf sizes6e712a1ab"
+  ],
+  "CCF_external_clearance_um": 20,
+  "public_added_edges": 2,
+  "candidates": [
+    {
+      "name": "A_east_stack",
+      "preliminary_geometry_rank": 1,
+      "note": "Least disruption: former east stack translated +93.44um, north cells +2.16um; no external E road presumed.",
+      "outline_um": [
+        673.752,
+        853.2
+      ],
+      "area_mm2": 0.5748452064,
+      "overlap_pairs": [],
+      "min_external_CCF_clearance_um": 20.0,
+      "min_external_CCF_peer": "g_aq[1].u_caq",
+      "children": [
+        {
+          "name": "u_pd.u_f5r1",
+          "master": "ot_s81_hc_pad_fv4fd5r2",
+          "xy_um": [
+            146.88,
+            552.9600000000002
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            146.88,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_f8",
+          "master": "ot_s81_hc_pad_f8",
+          "xy_um": [
+            293.76,
+            552.9600000000002
+          ],
+          "wh_um": [
+            138.24,
+            49.68
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            293.76,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_seq",
+          "master": "ot_s81_hc_cseq",
+          "xy_um": [
+            364.976,
+            663.12
+          ],
+          "wh_um": [
+            190.08,
+            190.08
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            364.976,
+            660.96
+          ]
+        },
+        {
+          "name": "u_cr.u_core",
+          "master": "ot_s81_hc_ccr",
+          "xy_um": [
+            15.05600000000004,
+            660.9600000000002
+          ],
+          "wh_um": [
+            151.2,
+            190.08
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            15.05600000000004,
+            658.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_r6",
+          "master": "ot_s81_hc_pad_r5",
+          "xy_um": [
+            0.0,
+            552.9600000000002
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            0.0,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_r5",
+          "master": "ot_s81_hc_pad_r5",
+          "xy_um": [
+            512.48,
+            434.15999999999985
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            434.15999999999985
+          ]
+        },
+        {
+          "name": "u_rx",
+          "master": "ot_s81_hc_crx",
+          "xy_um": [
+            512.48,
+            356.39999999999964
+          ],
+          "wh_um": [
+            110.16,
+            69.12
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            356.39999999999964
+          ]
+        },
+        {
+          "name": "u_cr.g_meta.u_m",
+          "master": "ot_s81_hc_pad_meta2",
+          "xy_um": [
+            293.76,
+            637.1999999999999
+          ],
+          "wh_um": [
+            138.24,
+            15.12
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            293.76,
+            635.04
+          ]
+        },
+        {
+          "name": "u_nt",
+          "master": "ot_s81_hc_cntree",
+          "xy_um": [
+            174.89600000000007,
+            660.9600000000002
+          ],
+          "wh_um": [
+            181.44,
+            181.44
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            174.89600000000007,
+            658.8000000000002
+          ]
+        },
+        {
+          "name": "g_aq[0].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            534.0799999999999,
+            542.1599999999999
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            440.64,
+            542.1599999999999
+          ]
+        },
+        {
+          "name": "g_aq[1].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            512.48,
+            237.59999999999945
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            237.59999999999945
+          ]
+        },
+        {
+          "name": "g_aq[2].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            559.2719999999999,
+            0.0
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            465.832,
+            0.0
+          ]
+        },
+        {
+          "name": "g_aq[3].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            512.48,
+            118.80000000000018
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            118.80000000000018
+          ]
+        },
+        {
+          "name": "u_cf/ccf_capture_n",
+          "master": "ot_s81_hc_ccf_bankpipe_capture",
+          "xy_um": [
+            0,
+            488.16
+          ],
+          "wh_um": [
+            492.48,
+            43.2
+          ],
+          "orient": "R0",
+          "clock": "sk_n",
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_control_s",
+          "master": "ot_s81_hc_ccf_bankpipe_control",
+          "xy_um": [
+            0,
+            0
+          ],
+          "wh_um": [
+            492.48,
+            43.2
+          ],
+          "orient": "R0",
+          "clock": "sk_s",
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_0",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            20.24,
+            63.2
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[0]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_1",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            256.24,
+            63.2
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[1]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_2",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            20.24,
+            204.16000000000003
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[2]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_3",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            256.24,
+            204.16000000000003
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[3]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_4",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            20.24,
+            345.12
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[4]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        }
+      ],
+      "ccf_box_um": [
+        0,
+        0,
+        492.48,
+        531.36
+      ],
+      "qualification": "BBOX ONLY; no granted slot, physical pin phase/track alignment, cut/capacity, clock or incident-hop qualification. Seven CCF leaves/public+2 edges remain prototype."
+    },
+    {
+      "name": "B_west_stack",
+      "preliminary_geometry_rank": 3,
+      "note": "Opposite-side topology: preserve each leaf R0 pin faces, mirror only placements. Actual directional pin turns likely costlier; not a physical fit claim.",
+      "outline_um": [
+        673.752,
+        853.2
+      ],
+      "area_mm2": 0.5748452064,
+      "overlap_pairs": [],
+      "min_external_CCF_clearance_um": 20.0,
+      "min_external_CCF_peer": "u_pd.u_r5",
+      "children": [
+        {
+          "name": "u_pd.u_f5r1",
+          "master": "ot_s81_hc_pad_fv4fd5r2",
+          "xy_um": [
+            388.63199999999995,
+            552.9600000000002
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            146.88,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_f8",
+          "master": "ot_s81_hc_pad_f8",
+          "xy_um": [
+            241.75199999999995,
+            552.9600000000002
+          ],
+          "wh_um": [
+            138.24,
+            49.68
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            293.76,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_seq",
+          "master": "ot_s81_hc_cseq",
+          "xy_um": [
+            118.69599999999994,
+            663.12
+          ],
+          "wh_um": [
+            190.08,
+            190.08
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            364.976,
+            660.96
+          ]
+        },
+        {
+          "name": "u_cr.u_core",
+          "master": "ot_s81_hc_ccr",
+          "xy_um": [
+            507.4959999999999,
+            660.9600000000002
+          ],
+          "wh_um": [
+            151.2,
+            190.08
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            15.05600000000004,
+            658.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_r6",
+          "master": "ot_s81_hc_pad_r5",
+          "xy_um": [
+            535.512,
+            552.9600000000002
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            0.0,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_r5",
+          "master": "ot_s81_hc_pad_r5",
+          "xy_um": [
+            23.031999999999925,
+            434.15999999999985
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            434.15999999999985
+          ]
+        },
+        {
+          "name": "u_rx",
+          "master": "ot_s81_hc_crx",
+          "xy_um": [
+            51.11199999999994,
+            356.39999999999964
+          ],
+          "wh_um": [
+            110.16,
+            69.12
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            356.39999999999964
+          ]
+        },
+        {
+          "name": "u_cr.g_meta.u_m",
+          "master": "ot_s81_hc_pad_meta2",
+          "xy_um": [
+            241.75199999999995,
+            637.1999999999999
+          ],
+          "wh_um": [
+            138.24,
+            15.12
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            293.76,
+            635.04
+          ]
+        },
+        {
+          "name": "u_nt",
+          "master": "ot_s81_hc_cntree",
+          "xy_um": [
+            317.4159999999999,
+            660.9600000000002
+          ],
+          "wh_um": [
+            181.44,
+            181.44
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            174.89600000000007,
+            658.8000000000002
+          ]
+        },
+        {
+          "name": "g_aq[0].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            25.19200000000002,
+            542.1599999999999
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            440.64,
+            542.1599999999999
+          ]
+        },
+        {
+          "name": "g_aq[1].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            46.79199999999993,
+            237.59999999999945
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            237.59999999999945
+          ]
+        },
+        {
+          "name": "g_aq[2].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            1.4210854715202004e-14,
+            0.0
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            465.832,
+            0.0
+          ]
+        },
+        {
+          "name": "g_aq[3].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            46.79199999999993,
+            118.80000000000018
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            118.80000000000018
+          ]
+        },
+        {
+          "name": "u_cf/ccf_capture_n",
+          "master": "ot_s81_hc_ccf_bankpipe_capture",
+          "xy_um": [
+            181.27199999999993,
+            488.16
+          ],
+          "wh_um": [
+            492.48,
+            43.2
+          ],
+          "orient": "R0",
+          "clock": "sk_n",
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_control_s",
+          "master": "ot_s81_hc_ccf_bankpipe_control",
+          "xy_um": [
+            181.27199999999993,
+            0
+          ],
+          "wh_um": [
+            492.48,
+            43.2
+          ],
+          "orient": "R0",
+          "clock": "sk_s",
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_0",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            201.51199999999994,
+            63.2
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[0]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_1",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            437.51199999999994,
+            63.2
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[1]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_2",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            201.51199999999994,
+            204.16000000000003
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[2]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_3",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            437.51199999999994,
+            204.16000000000003
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[3]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_4",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            201.51199999999994,
+            345.12
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[4]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        }
+      ],
+      "ccf_box_um": [
+        181.27199999999993,
+        0,
+        492.48,
+        531.36
+      ],
+      "qualification": "BBOX ONLY; no granted slot, physical pin phase/track alignment, cut/capacity, clock or incident-hop qualification. Seven CCF leaves/public+2 edges remain prototype."
+    },
+    {
+      "name": "C_north_cap",
+      "preliminary_geometry_rank": 2,
+      "note": "Move all other children above CCF with20um separation. Smaller width, greater height/area and potentially longer paths; not a timing recommendation.",
+      "outline_um": [
+        612.96,
+        1129.76
+      ],
+      "area_mm2": 0.6924976896,
+      "overlap_pairs": [],
+      "min_external_CCF_clearance_um": 20.0,
+      "min_external_CCF_peer": "u_cr.u_core",
+      "children": [
+        {
+          "name": "u_cr.u_core",
+          "master": "ot_s81_hc_ccr",
+          "xy_um": [
+            0,
+            551.36
+          ],
+          "wh_um": [
+            151.2,
+            190.08
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            15.05600000000004,
+            658.8000000000002
+          ]
+        },
+        {
+          "name": "u_nt",
+          "master": "ot_s81_hc_cntree",
+          "xy_um": [
+            171.2,
+            551.36
+          ],
+          "wh_um": [
+            181.44,
+            181.44
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            174.89600000000007,
+            658.8000000000002
+          ]
+        },
+        {
+          "name": "u_seq",
+          "master": "ot_s81_hc_cseq",
+          "xy_um": [
+            372.64,
+            551.36
+          ],
+          "wh_um": [
+            190.08,
+            190.08
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            364.976,
+            660.96
+          ]
+        },
+        {
+          "name": "u_pd.u_r6",
+          "master": "ot_s81_hc_pad_r5",
+          "xy_um": [
+            0,
+            761.44
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            0.0,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_f5r1",
+          "master": "ot_s81_hc_pad_fv4fd5r2",
+          "xy_um": [
+            158.24,
+            761.44
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            146.88,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_pd.u_f8",
+          "master": "ot_s81_hc_pad_f8",
+          "xy_um": [
+            316.48,
+            761.44
+          ],
+          "wh_um": [
+            138.24,
+            49.68
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            293.76,
+            550.8000000000002
+          ]
+        },
+        {
+          "name": "u_cr.g_meta.u_m",
+          "master": "ot_s81_hc_pad_meta2",
+          "xy_um": [
+            474.72,
+            761.44
+          ],
+          "wh_um": [
+            138.24,
+            15.12
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            293.76,
+            635.04
+          ]
+        },
+        {
+          "name": "u_rx",
+          "master": "ot_s81_hc_crx",
+          "xy_um": [
+            0,
+            880.8
+          ],
+          "wh_um": [
+            110.16,
+            69.12
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            356.39999999999964
+          ]
+        },
+        {
+          "name": "u_pd.u_r5",
+          "master": "ot_s81_hc_pad_r5",
+          "xy_um": [
+            130.16,
+            880.8
+          ],
+          "wh_um": [
+            138.24,
+            99.36
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            434.15999999999985
+          ]
+        },
+        {
+          "name": "g_aq[0].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            288.4,
+            880.8
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            440.64,
+            542.1599999999999
+          ]
+        },
+        {
+          "name": "g_aq[1].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            422.88,
+            880.8
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            237.59999999999945
+          ]
+        },
+        {
+          "name": "g_aq[2].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            0,
+            1015.28
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            465.832,
+            0.0
+          ]
+        },
+        {
+          "name": "g_aq[3].u_caq",
+          "master": "ot_s81_hc_caq",
+          "xy_um": [
+            134.48000000000002,
+            1015.28
+          ],
+          "wh_um": [
+            114.48,
+            114.48
+          ],
+          "orient": "R0",
+          "old_xy_um": [
+            419.0400000000001,
+            118.80000000000018
+          ]
+        },
+        {
+          "name": "u_cf/ccf_capture_n",
+          "master": "ot_s81_hc_ccf_bankpipe_capture",
+          "xy_um": [
+            0,
+            488.16
+          ],
+          "wh_um": [
+            492.48,
+            43.2
+          ],
+          "orient": "R0",
+          "clock": "sk_n",
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_control_s",
+          "master": "ot_s81_hc_ccf_bankpipe_control",
+          "xy_um": [
+            0,
+            0
+          ],
+          "wh_um": [
+            492.48,
+            43.2
+          ],
+          "orient": "R0",
+          "clock": "sk_s",
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_0",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            20.24,
+            63.2
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[0]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_1",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            256.24,
+            63.2
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[1]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_2",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            20.24,
+            204.16000000000003
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[2]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_3",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            256.24,
+            204.16000000000003
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[3]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        },
+        {
+          "name": "u_cf/ccf_bank_4",
+          "master": "ot_s81_hc_ccf_bankpipe_bank",
+          "xy_um": [
+            20.24,
+            345.12
+          ],
+          "wh_um": [
+            216,
+            120.96
+          ],
+          "orient": "R0",
+          "clock": "bank_ck[4]",
+          "macro_local_xy_um": [
+            22.356,
+            21.588
+          ],
+          "macro_wh_um": [
+            171.288,
+            77.784
+          ],
+          "kind": "new_ccf_leaf"
+        }
+      ],
+      "ccf_box_um": [
+        0,
+        0,
+        492.48,
+        531.36
+      ],
+      "qualification": "BBOX ONLY; no granted slot, physical pin phase/track alignment, cut/capacity, clock or incident-hop qualification. Seven CCF leaves/public+2 edges remain prototype."
+    }
+  ],
+  "open": [
+    "Exact source-bound actual interfaces for all20 leaves",
+    "Assigned facing pins and legalized macros/LEFs on43.2um lattice",
+    "All incident bit counts/clock delivery/reach/cut capacity; no blanket500um",
+    "Whole-parent slot grant and compiler cycle calendar",
+    "No assumed E684um road or inherited previous14child parent grant"
+  ]
+}

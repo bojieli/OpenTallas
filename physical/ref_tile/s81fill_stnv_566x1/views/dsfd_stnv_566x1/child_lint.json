@@ -1,31 +1,31 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81fill_stnv_566x1-f9-cb219000e/record/views/dsfd_stnv_566x1/dsfd_stnv_566x1.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81fill_stnv_566x1-f11-15cedae84/record/views/dsfd_stnv_566x1/provenance/dsfd_stnv_566x1.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "dsfd_stnv_566x1 77.76 x 19.44: PG M5 VDD 28 stripes (94% spread, 100% cov) / VSS 28 stripes (94% spread, 100% cov); strap M6; face pins 1135 blocked-above 0 blocked-same 0; clock fi0[0] insertion 91 ps; pockets M5 0 (closed)",
+ "summary": "dsfd_stnv_566x1 60.48 x 25.92: PG M5 VDD 21 stripes (89% spread, 100% cov) / VSS 21 stripes (89% spread, 100% cov); strap M6; face pins 1135 blocked-above 0 blocked-same 0; clock fi0[0] insertion 89 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsfd_stnv_566x1",
-  "W": 77.76,
-  "H": 19.44,
+  "W": 60.48,
+  "H": 25.92,
   "pg": {
    "nets": {
     "VDD": {
      "top_layer": "M5",
-     "stripes": 28,
+     "stripes": 21,
      "dir": "V",
-     "spread": 0.937,
+     "spread": 0.893,
      "coverage": 1.0,
-     "shapes_on_top": 28
+     "shapes_on_top": 21
     },
     "VSS": {
      "top_layer": "M5",
-     "stripes": 28,
+     "stripes": 21,
      "dir": "V",
-     "spread": 0.938,
+     "spread": 0.893,
      "coverage": 1.0,
-     "shapes_on_top": 28
+     "shapes_on_top": 21
     }
    },
    "top_layer": "M5",
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 1135,
    "blocked_above": 0,
-   "covered_below": 11,
+   "covered_below": 47,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,8 +47,8 @@
   },
   "clock_insertion": {
    "fi0[0]": {
-    "max_ps": 90.77,
-    "min_ps": 70.55
+    "max_ps": 89.08,
+    "min_ps": 72.64
    }
   },
   "pockets": {
@@ -57,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 98
+    "added": 96
    },
    "count": 0,
    "area_um2": 0,

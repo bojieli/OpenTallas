@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_pq_rwbc15",
+ "enable": false,
+ "reason": "Source owns all boundary capture flops r_v/r_tag/r_e/g_flt/live and launch flops ga/q2f/live_o. Adding wrapper registers changes proven fixed-cycle equivalence to the RWB reference. Preserve current source stages; actual native clock/pin audit required."
+}

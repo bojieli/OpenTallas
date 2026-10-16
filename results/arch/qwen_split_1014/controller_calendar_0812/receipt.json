@@ -1,0 +1,29 @@
+{
+  "scope": "compressed controller producer component, 36 fixed frame repeats; not full memory/native layer",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv": "f0fb0ae7ee2c1362dc4fdcb74c3456920d14aa12ba730c21705540ccd907dc9b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv": "ecadefb768f554bd3cb34d0d3a35cedbf73713291d13b43f5b8e853cd537a628"
+  },
+  "storage_bits": 2048,
+  "events_per_frame": 518,
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "output": "PASS controller calendar checks=147420 reads=18432 frames=36 sealed_tamper=1\n- /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv:34: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 151us; walltime 0.051 s; speed 2.970 ms/s\n- Verilator: cpu 0.051 s on 1 threads; allocated 7 MB\n"
+    },
+    {
+      "mutant": 1,
+      "exit": 1,
+      "output": "[63000] %Fatal: tb_controller_hbm_calendar.sv:23: Assertion failed in tb_controller_hbm_calendar.unnamedblk2: FAIL controller calendar frame0 edge10 actual000000000000 expected000010000001\n%Error: /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv:23: Verilog $stop\nAborting...\n"
+    },
+    {
+      "mutant": 2,
+      "exit": 1,
+      "output": "[184000] %Fatal: tb_controller_hbm_calendar.sv:23: Assertion failed in tb_controller_hbm_calendar.unnamedblk2: FAIL controller calendar frame0 edge128 actual080000000000 expected000000000000\n%Error: /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv:23: Verilog $stop\nAborting...\n"
+    }
+  ],
+  "invalid_image_controls": 5,
+  "native_full_layer": false
+}
