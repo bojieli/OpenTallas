@@ -1,6 +1,7 @@
 """One effective helper resolver and immutable content plans for gates and routes."""
 from __future__ import annotations
 import hashlib
+import threading
 import json
 import os
 import re
@@ -189,7 +190,9 @@ def store_payloads(store, plan, payloads):
         dest = store / row["sha256"]
         if dest.exists() and hashlib.sha256(dest.read_bytes()).hexdigest() == row["sha256"]:
             continue
-        tmp = store / f".{row['sha256']}.{os.getpid()}.tmp"
+        # per-thread temp name: the daemon steps jobs in parallel threads of ONE process, and two jobs freezing the same
+        # helper blob raced on a pid-only name (FileNotFoundError at os.replace, qfd_xcst_s_m5 17:12 10-15)
+        tmp = store / f".{row['sha256']}.{os.getpid()}.{threading.get_ident()}.tmp"
         tmp.write_bytes(data)
         os.replace(tmp, dest)
 
