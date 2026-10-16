@@ -20,6 +20,10 @@ AC = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(AC)
 SERVICE_RTL = ('u_kvd.u_attention', 'ot_qwen_tp8_attention_native_service_w16')
 Q_BEATS = 32
+# KV-die v1.4.3 head stages (el1014-qwen-split-kvsys.log, Q-KVSYS-DIE G3S2): +3 gather in, +2 score back = +5 edges per
+# attention request on top of the measured w16 service (the HXK=5 ECTL binding; the w16 laws were measured at HXK 8 and are
+# re-measured on the v1.4.3 binary when it exists).
+V143_HEAD_EDGES = 5
 RESULT_BEATS = 32
 
 
@@ -31,7 +35,8 @@ def service(T, pv='w16'):
         c = AC.calendar(T, pv='w16')
     except ValueError as error:
         raise ScheduleError(f'attention calendar refused: {error}') from error
-    return dict(T=T, fields=c, calendar_hex=AC.hexcal(c), service_edges=AC.service_cycles(c))
+    return dict(T=T, fields=c, calendar_hex=AC.hexcal(c), service_edges=AC.service_cycles(c) + V143_HEAD_EDGES,
+                measured_w16_edges=AC.service_cycles(c), head_stage_edges=V143_HEAD_EDGES)
 
 
 def _age(link, name):
