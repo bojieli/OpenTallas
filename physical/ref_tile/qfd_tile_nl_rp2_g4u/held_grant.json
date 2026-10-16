@@ -11609,10 +11609,10 @@
    "name": "ck_rs",
    "face": "E",
    "layer": "M4",
-   "coordinate_um": 597.804,
+   "coordinate_um": 603.708,
    "xy_um": [
     457.824,
-    597.804
+    603.708
    ],
    "clock": true
   },
@@ -11620,10 +11620,10 @@
    "name": "ck_rn",
    "face": "E",
    "layer": "M4",
-   "coordinate_um": 561.612,
+   "coordinate_um": 569.148,
    "xy_um": [
     457.824,
-    561.612
+    569.148
    ],
    "clock": true
   },
@@ -11749,18 +11749,18 @@
   ],
   "ck_rn": [
    [
-    212.328,
-    550.8,
-    255.528,
-    572.4
+    164.16,
+    552.96,
+    293.76,
+    585.36
    ]
   ],
   "ck_rs": [
    [
-    212.328,
-    586.98,
-    255.528,
-    608.58
+    164.16,
+    587.52,
+    293.76,
+    619.92
    ]
   ],
   "ck_rp3": [
@@ -11941,17 +11941,17 @@
   "ck_rp6": "u_g.u_tile.u_tile.g_col[1].g_bank[1].u_rom"
  },
  "critical_region_span_bound_um": {
-  "ck_rp0->ck_rs": 536.58,
-  "ck_rp1->ck_rs": 575.484,
-  "ck_rp2->ck_rs": 390.996,
-  "ck_rp3->ck_rn": 360.456,
-  "ck_rp4->ck_rn": 399.36,
-  "ck_rp5->ck_rs": 526.644,
-  "ck_rp6->ck_rs": 565.548,
-  "ck_rp7->ck_rs": 429.9,
-  "ck_rp8->ck_rn": 350.52,
-  "ck_rp9->ck_rn": 389.424,
-  "ck_rs->ck": 489.108,
-  "ck_rn->ck": 452.928
+  "ck_rp0->ck_rs": 574.272,
+  "ck_rp1->ck_rs": 613.176,
+  "ck_rp2->ck_rs": 428.688,
+  "ck_rp3->ck_rn": 396.528,
+  "ck_rp4->ck_rn": 435.432,
+  "ck_rp5->ck_rs": 574.272,
+  "ck_rp6->ck_rs": 613.176,
+  "ck_rp7->ck_rs": 467.592,
+  "ck_rp8->ck_rn": 396.528,
+  "ck_rp9->ck_rn": 435.432,
+  "ck_rs->ck": 548.616,
+  "ck_rn->ck": 514.056
  }
 }

@@ -40,8 +40,10 @@ def build(nl=False):
         m['at'][1] = round(y + (86.4 if y > 840 else 43.2 if y > 670 else 0.0), 3)
     s['outline']['h'] = H
     regions = {'ck': copy.deepcopy(g['regions']['ck']),
-               'ck_rn': [[212.328, 550.8, 255.528, 572.4]],
-               'ck_rs': [[212.328, 586.98, 255.528, 608.58]]}
+               # Q-TILE45b r2: route 9d426ea6d measured post-repair RQR ownership 1227 (rn) / 1558 (rs) um2 against 931 um2
+               # rows (NL fresh gate rn 1297): each RQR fence is 129.6 x 32.4 um (~4,190 um2 rows, fill <=0.37) in the col-B hole.
+               'ck_rn': [[164.16, 552.96, 293.76, 585.36]],
+               'ck_rs': [[164.16, 587.52, 293.76, 619.92]]}
     # Each macro's read-facing half-gutter. A 2.16 um shared-logic corridor
     # separates the halves; column gutters and outer bands also stay unfenced.
     # g4u: each read gutter is 43.2 um taller; each half fence grows 21.6 um toward the 2.16 um shared corridor.
@@ -79,7 +81,7 @@ def build(nl=False):
         reach[f'ck_rp{i}->{target}'] = round(span(regions[f'ck_rp{i}'][0], regions[target][0]), 3)
     for root in ('ck_rs', 'ck_rn'):
         reach[f'{root}->ck'] = round(span(regions[root][0], regions['ck'][0]), 3)
-    assert max(reach.values()) <= 620, reach  # g4u: taller gutters lengthen registered pair->RQR legs
+    assert max(reach.values()) <= 660, reach  # registered pair->RQR / RQR->core legs (Q-TILE45b r2 RQR resize)
     boxes = []
     for key, rs in regions.items():
         for box in rs:

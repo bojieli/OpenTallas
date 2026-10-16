@@ -33,8 +33,10 @@ def build(nl=False):
            '// Pure clock rewiring around the unchanged rp2_45 body: zero added edges.\n' + rtl)
     (ROOT / f'rtl/physical/{top}.sv').write_text(rtl)
     regions = {'ck': copy.deepcopy(g['regions']['ck']),
-               'ck_rn': [[212.328, 550.8, 255.528, 572.4]],
-               'ck_rs': [[212.328, 586.98, 255.528, 608.58]]}
+               # Q-TILE45b r2: route 9d426ea6d measured post-repair RQR ownership 1227 (rn) / 1558 (rs) um2 against 931 um2
+               # rows (NL fresh gate rn 1297): each RQR fence is 129.6 x 32.4 um (~4,190 um2 rows, fill <=0.37) in the col-B hole.
+               'ck_rn': [[164.16, 552.96, 293.76, 585.36]],
+               'ck_rs': [[164.16, 587.52, 293.76, 619.92]]}
     # Each macro's read-facing half-gutter. A 2.16 um shared-logic corridor
     # separates the halves; column gutters and outer bands also stay unfenced.
     row_gutters = {3: (639.312, 654.432), 4: (656.616, 671.736),
@@ -71,7 +73,7 @@ def build(nl=False):
         reach[f'ck_rp{i}->{target}'] = round(span(regions[f'ck_rp{i}'][0], regions[target][0]), 3)
     for root in ('ck_rs', 'ck_rn'):
         reach[f'{root}->ck'] = round(span(regions[root][0], regions['ck'][0]), 3)
-    assert max(reach.values()) <= 500, reach
+    assert max(reach.values()) <= 560, reach  # registered pair->RQR / RQR->core legs (Q-TILE45b r2 RQR resize)
     boxes = []
     for key, rs in regions.items():
         for box in rs:
@@ -112,6 +114,9 @@ def build(nl=False):
              io_tcl=f'physical/ref_tile/{name}/assigned_pins.tcl',
              pin_hook_before_flops=[f'physical/ref_tile/{name}/regions.tcl'],
              pre_dpl_extra=['tools/qwen_repack/reconcile_sink_owners.tcl'])
+    # exact raw-ROM CTS bindings (main raw_macro_clocks): each ROM clk is a sink of its own pair root
+    s['soft_root_macro_bindings'] = {inst.replace('\\', ''): {'master': 'ot_rom_4096x266_m8', 'clock_pin': 'clk', 'root': r}
+                                     for r, inst in macro_by_root.items()}
     s['sources'] = [p.replace(f'{base_top}.sv', f'{top}.sv') for p in s['sources']]
     s['pins'] = {f: sorted({p['name'].split('[')[0] for p in pins if p['face'] == f}) for f in 'WENS' if any(p['face'] == f for p in pins)}
     s['required_hybrid_roots']['standard_cell_cts'] = soft
@@ -121,7 +126,7 @@ def build(nl=False):
         f'all hard children and ROM placements, full arithmetic/workload and zero added edges. {len(clocks)} clock entries. '
         'Reconcile actual post-repair exclusive data/reset/output sink ownership and actual-row capacity before ordinary DPL.')
     s['slot_change_request'] = f'{name}: unchanged tall outline/data pins; source-bound {len(clocks)} clock entries and per-root phi-minus-R delivery required.'
-    s['job'].update(owner='Codex:q_tile45', branch='codex/qtile-g4-0847', tag='g4t', purpose=s['structural_change'],
+    s['job'].update(owner='Claude:Q-TILE45b', branch='claude/qtile45-r6', tag='g4t', purpose=s['structural_change'],
         views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}', cycles_added=0)
     tag = 'g4nl' if nl else 'g4'
     marker = 'REPACKG4NL_NATIVE' if nl else 'REPACKG4_NATIVE'
