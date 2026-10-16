@@ -123,9 +123,11 @@
  ],
  "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl",
  "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": "S-ELEM-PQ-align-p4-1705",
-  "why": "clock/reset pin face change for native launch (223.65 > 220 ps)"
+  "kind": "pin_register",
+  "cell": "ot_s81_pq_qb_align_native",
+  "source": "results/rtl/s81_pq_native_audit_1015/native_collect_1705/ot_s81_pq_qb_align_native.json",
+  "launch_ps": 223.65,
+  "fix": "Clock/reset pins move from the W face (clk y=18.4 of a 172.8-um tile) to the S-face centre (clk x=86.364) so the far-E output flops no longer carry the longest insertion; same RTL, outline and data pins faces. CTS gate TT insertion 134.5-153.4 ps spread 18.9 (p3 R 162.6 spread 34.4). Pin-face grant requested from S-DIE (slot_change_request S-ELEM-PQ-align-p4-1705)."
  },
  "params": {},
  "children": [],
