@@ -11,7 +11,8 @@ module tb_context_front;
  integer expected[0:255];integer tick=0,origin=-99999,rel,n=0,seen=0,groups=0,blocks=0,frees=0,total=0,peak=0;
  integer f,rc,ti,si,gi,nk,nv,pass,sec;string path;
  // LATE mode (PHY-late landing at the elastic off-die boundary, owner 0az): sector i lands at
- // 7+LATE+i+STRAG*(block tails up to i) -- every block's last sector straggles. The true front HOLDS
+ // 7+LATE+i, plus STRAG from the first block's tail on (i>=7 or the last sector) -- a bounded lateness
+ // LATE and one straggling block tail (lag stays LATE+STRAG, landing rate = release rate). The true front HOLDS
  // (hold/stall_edges are its legal exceptional signal) and re-emits exact words in order; a front that
  // releases an unlanded block (MUT 2 ready one early, MUT 3 ignores ready) emits stale ring words.
  integer LATE=0,STRAG=0,holds=0;integer arr[0:255];
@@ -29,7 +30,7 @@ module tb_context_front;
  rc=$fscanf(f,"%d %d %d %d %d\n",ti,si,gi,nk,nv);if(rc!=5)$fatal(1,"bad header");T=14'(ti);config_word(0,(si<<3)|gi);
  for(pass=0;pass<2;pass++)begin
  n=pass==0?nk:nv;for(integer i=0;i<n;i++)begin rc=$fscanf(f,"%d ",sec);expected[i]=sec;end
- begin integer tails;tails=0;for(integer i=0;i<n;i++)begin if(i%8==7||i==n-1)tails++;arr[i]=7+LATE+i+STRAG*tails;end end
+ for(integer i=0;i<n;i++)arr[i]=7+LATE+i+((i>=7||i==n-1)?STRAG:0);
  seen=0;blocks=0;frees=0;kg=pass==0;vg=pass==1;@(negedge ck);kg=0;vg=0;
  repeat(330+LATE+STRAG*40)@(negedge ck);
  if(seen!=n||blocks!=(n+7)/8||frees!=(n+7)/8||!idle||!calidle)$fatal(1,"FAIL context front count T%0d s%0d g%0d pass%0d seen%0d/%0d blocks%0d frees%0d idle%0b",ti,si,gi,pass,seen,n,blocks,frees,idle);
