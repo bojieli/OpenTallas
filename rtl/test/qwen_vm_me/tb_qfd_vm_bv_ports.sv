@@ -33,6 +33,7 @@ module tb_qfd_vm_bv_ports;
     parameter integer ND = 9;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
+    parameter integer USE_NATIVE_CLOCKS=0,
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, NATIVE_BANKS=0, USE_MACRO=0;
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter integer XPR = 0;                 // bit-plane x transport (qwen-tp8-vm 1013): pass XVM + XPR + 1 - RO
@@ -91,8 +92,11 @@ module tb_qfd_vm_bv_ports;
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
-        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_MACRO(USE_MACRO)) dut (
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS), .USE_MACRO(USE_MACRO)) dut (
         .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e),
+`ifdef OT_QFD_VM_NOX
+        .native_ck({(NRB+3*NRBS)*9{clk}}),
+`endif
 `ifndef OT_QFD_VM_NOX
         .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),

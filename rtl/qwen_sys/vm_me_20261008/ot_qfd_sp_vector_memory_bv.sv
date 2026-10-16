@@ -185,6 +185,7 @@ module ot_qfd_sp_vector_memory_bv #(
     // `end` beats.  PMUT (bench negative control): 1 = lane 1 takes lane 2's data.
     parameter integer PAR_RB = 0,
     parameter integer PMUT = 0,
+    parameter integer USE_NATIVE_CLOCKS = 0,
     parameter integer READ_CONTROL_LEAVES = 0,
     parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
     parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
@@ -194,6 +195,7 @@ module ot_qfd_sp_vector_memory_bv #(
     input wire [NSU*32-1:0] return_ck,
     input wire [NSU-1:0] read_control_ck,
 `ifdef OT_QFD_VM_NOX
+    input wire [(NRB+NSU*NRBS)*9-1:0] native_ck,
     input  wire [(NRB/8)*56-1:0]    leaf_ck,
     input wire [NRB-1:0] observer_ck,
     output wire [511:0]             qr_commit_mask,
@@ -992,8 +994,8 @@ module ot_qfd_sp_vector_memory_bv #(
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
 `ifdef OT_QFD_VM_NOX
             `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
-                .USE_OBSERVER_CLOCKS(USE_OBSERVER_CLOCKS), .BANK_BASE(8*g), .TOTAL_BANKS(NRB), .USE_MACRO(USE_MACRO), .USE_LEAF_CLOCKS(USE_LEAF_CLOCKS), .NRI(TNI), .NRX(TNX), .NRS(TNS), .NATIVE_BANKS(NATIVE_BANKS)) u_t (
-                .clk(clk), .rst_n(rst_n), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
+                .USE_OBSERVER_CLOCKS(USE_OBSERVER_CLOCKS), .BANK_BASE(8*g), .TOTAL_BANKS(NRB), .USE_MACRO(USE_MACRO), .USE_LEAF_CLOCKS(USE_LEAF_CLOCKS), .NRI(TNI), .NRX(TNX), .NRS(TNS), .NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS)) u_t (
+                .clk(clk), .rst_n(rst_n), .native_ck(native_ck[g*(8+NSU*NSB)*9+:(8+NSU*NSB)*9]), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .qr_commit_mask(qr_masks[512*g +: 512]),
