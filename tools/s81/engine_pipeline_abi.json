@@ -14,8 +14,10 @@
   },
   "fld": {
    "field_round_trip_cycles": 118,
-   "change": "adopted S81 floorplan SA_2x2_RP: field round trip 140 -> 118 cycles",
-   "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); field durations measured on the 140-cycle trip are stale"
+   "change": "adopted S81 floorplan SA_2x2_RP: field round trip 140 -> 118 cycles; static return node r2 (S-NET 2026-10-15, ot_s81_retn_static P1 port / P2 norm / P3 issue regs): node exit early + WIN + 10 + RST (was +7) = +3 edges per node level, frame trees 5..6 levels -> +18 edges on the worst field return (token +5,094 cycles = 0.272 %, tools/s81/return_node_cost.py)",
+   "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); field durations measured on the 140-cycle trip are stale; static_return_calendar.PIPE_C 10 (S-NET aad069240)",
+   "return_node_exit_edges": 10,
+   "return_node_levels_max": 6
   },
   "coll": {
    "control_rom_abi": "opentallas.s81.collective-fixed-edge-rom.v3",
