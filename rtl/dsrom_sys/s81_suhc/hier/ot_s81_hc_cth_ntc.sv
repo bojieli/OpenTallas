@@ -299,9 +299,10 @@ module ot_s81_hc_cth_ntc #(
     wire [16*32-1:0] acc;
     wire [FDW-1:0]  fdm;
     wire            rst_c;                     // ctfn's first reset stage -> one relay flop in every tile
-    // CTFN as four local-clock data banks + reset leaf (5 clock entries; same 2 data stages, +1 INIT reset edge)
-    ot_s81_hc_ctfn_banks_candidate u_fn (
-        .ck({5{clk}}), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    // CTFN: the plain ot_s81_hc_ctfn (HC-HOMES 10-16).  ot_s81_hc_ctfn_banks_candidate FAILED the exact HC gate here
+    // (1770/1940: every POST h update wrong; isolation: swapping it back alone -> PASS 0/1940, ctnl_l2io kept).
+    ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
+        .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
     wire [DLW-1:0] dl_m;
     wire [32:0]    ul_m;
     generate if (LOCAL_SPLIT && CNL_PIN) begin : g_fxs
