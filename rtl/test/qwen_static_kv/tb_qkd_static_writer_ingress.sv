@@ -166,7 +166,7 @@ module tb_qkd_static_writer_ingress;
   ctrl_return={4{{1'b0,1'b1,258'd7,1'b1}}};c_v=4'hf;c_w=4'hf;
   for(token_no=0;token_no<token_count;token_no=token_no+1)for(l=0;l<layer_count;l=l+1)begin
    for(cohort=0;cohort<135;cohort=cohort+1)begin
-    if(cohort<128)pos=cohort;else case(cohort)
+    if(cohort<128)pos=(cfg_s<<7)|cohort;else case(cohort)
      128:pos=128;129:pos=511;130:pos=512;131:pos=4095;132:pos=4096;133:pos=8190;134:pos=8191;
     endcase
     transaction(l,pos,(cohort+token_no)%4,(cohort==15)?65535:token_no+9,151935-cohort-token_no);
