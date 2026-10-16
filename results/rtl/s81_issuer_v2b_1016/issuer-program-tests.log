@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   233 GB (avail 484, growth 204, headroom 48, waiters 0/0 GB) load 81/128 running 41 disk 924 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-issuer-v2b-0818
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-issuer-v2b-0818
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4008952-1792165198 after 0 s
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 0.018s
+
+OK
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4008952-1792165198): exit 0

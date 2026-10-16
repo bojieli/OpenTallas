@@ -1,0 +1,63 @@
+{
+  "source_commit": "97b0cda9d",
+  "kit_metadata_commit": "26ab48895",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "cb83b90ecea167590b3325fcbbc69d1119a44fc26fec53bde71b609682fd20ac",
+    "rtl/dsrom_sys/s81_static_control/test/tb_s81_fixed_issue.sv": "773a312a8ccae76e97ea0c332cfe0e678d93dcbea76e4d81f3fd566f568043c6",
+    "tools/s81_static_control/program.py": "cc04f6d1cc2e1a9115a5fb3988d076c36ce28acc8690da4e6692b132440b538d"
+  },
+  "differential": {
+    "modes": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "edges_each": 310,
+    "mutant": "late command differs on1 edge",
+    "result": "PASS"
+  },
+  "component": {
+    "runtime_modes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "mutants": [
+      1,
+      2
+    ],
+    "wrapper_modes": [
+      0,
+      1
+    ],
+    "op_base_modes": [
+      0,
+      1
+    ],
+    "result": "PASS"
+  },
+  "program_tests": {
+    "count": 22,
+    "result": "PASS",
+    "fixture_recovery": "Original finalunittest failed missing59actualprogramfixturefiles. Exactcommittedfixturearchive installed and only unittest repeated; differential/componentnotrerun."
+  },
+  "latency": {
+    "seal_to_armed_edges": 131,
+    "seal_to_arm_stream_cycles_metadata": 132,
+    "normal_command_KIT_END_edges_added": 0
+  },
+  "physical_qualification": "OPEN: fresh26abCTSgate stilllive; no route or nativeclaim"
+}

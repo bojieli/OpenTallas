@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       admits   185 GB (avail 543, growth 310, headroom 48, waiters 5/350 GB) load 65/128 running 33 disk 929 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-issuer-v2b-0818
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-issuer-v2b-0818
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3795167-1792164204 after 0 s
+mode 0: 310 edges identical
+mode 1: 310 edges identical
+mode 2: 310 edges identical
+mode 3: 310 edges identical
+mode 5: 310 edges identical
+mode 6: 310 edges identical
+mode 7: 310 edges identical
+mode 8: 310 edges identical
+mode 9: 310 edges identical
+MUT1 (commands one edge late) differs: 1 edges
+ISSUE_V2_DIFF PASS
+.F....................
+======================================================================
+FAIL: test_actual59_programs_reject_missing_native_owners (test_program.ProgramTest.test_actual59_programs_reject_missing_native_owners)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-issuer-v2b-0818/tools/s81_static_control/test_program.py", line 99, in test_actual59_programs_reject_missing_native_owners
+    self.assertEqual(len(paths),59)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 0 != 59
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.015s
+
+FAILED (failures=1)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3795167-1792164204): exit 1
