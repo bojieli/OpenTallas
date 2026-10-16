@@ -74,6 +74,7 @@ class HybridOpenroad(unittest.TestCase):
                 net=net.replace('input ck,ck2,child','input [1:0] ckb,input child').replace('.CLK(ck2)','.CLK(ckb[1])').replace('.CLK(ck)','.CLK(ckb[0])')
                 spec.update(clock_port='ckb[0]',clock_ports=['ckb[0]','ckb[1]','child'],clock_cts_roots=['ckb[0]','ckb[1]'])
             if raw_memory:
+                if raw_memory=='hard_on_cts': net=net.replace('hard h(.CLK(child)', 'hard h(.CLK(ck)')
                 master='ot_rom_4096x266_m8'
                 memory_view='physical/asap7_memory_macros/'+master
                 net=net.replace('endmodule', master+' u_rom(.clk(ck),.ce_in(d),.addr_in(12\'b0),.rd_out());endmodule')
@@ -164,7 +165,7 @@ puts "HYBRID_RESULT PASS"
         self.assertIn('HYBRID_RESULT PASS',out)
 
     def test_raw_memory_default_closed_and_wrong_source_rejected(self):
-        for mutant in ('no_optin','wrong_root'):
+        for mutant in ('no_optin','wrong_root','hard_on_cts'):
             rc,out=self.run_flow(raw_memory=mutant)
             with self.subTest(mutant=mutant):
                 self.assertNotEqual(rc,0,out[-5000:])
