@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.qwen.parent-slot-cost.v1",
+  "observed_at": "2026-10-16T15:57:55-07:00",
+  "source_commit": "7d4af03b7bc8ec148173038d0ff6552773a94c90",
+  "homes_sha256": "522649d110f4504f8ddff2768581725c62b4216937e592cb4de543657ad8827e",
+  "status": "MODELED_SLOT_ONLY_NOT_PHYSICAL_QUALIFICATION",
+  "count": 768,
+  "rows": 16,
+  "columns": 48,
+  "row_channel_um": 129.6,
+  "current_die_um": [
+    32996.16,
+    17759.52
+  ],
+  "current_die_mm2": 585.9959634432001,
+  "candidates": [
+    {
+      "name": "A1_nominal",
+      "parent_um": [
+        457.92,
+        1036.8
+      ],
+      "die_um": [
+        32996.16,
+        19141.92
+      ],
+      "die_mm2": 631.6098550272,
+      "die_increase_pct": 7.783994162004377,
+      "additional_parent_outlines_mm2": 30.38537318399999,
+      "extra_cycles_modeled": 0,
+      "note": "Bare-face rule extension not approved; slot provisionally accepted only"
+    },
+    {
+      "name": "A0_nominal",
+      "parent_um": [
+        457.92,
+        1166.4
+      ],
+      "die_um": [
+        32996.16,
+        21215.520000000004
+      ],
+      "die_mm2": 700.0306924032002,
+      "die_increase_pct": 19.459985405010954,
+      "additional_parent_outlines_mm2": 75.96343296000003,
+      "extra_cycles_modeled": 0,
+      "note": "Existing-rule fallback slot provisionally accepted; actual leaf grid correction may increase extent"
+    }
+  ],
+  "pending": [
+    "actual ROMleaf grid-correct parent extent (A0 leaf110.16 supersedes nominal108)",
+    "complete incident pin/clock audit and source-current relay allocation",
+    "actual cuts, placement, GRT, TT/FF/SS, native boundaries",
+    "full calibrated B2/compiler composition"
+  ]
+}
