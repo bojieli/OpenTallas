@@ -1,13 +1,13 @@
 {
   "qualification": false,
   "verdict": "FAIL",
-  "scope": "Inherited legacy pre-route parent diagnostic only; no route or native parent adoption.",
+  "scope": "Inherited pre-route parent physical diagnostic only; no route or native parent adoption.",
   "intended_source_commit": "69be5cda7",
   "gate_source_binding_schema": "opentallas.ref_tile.source_snapshot.v1",
   "gate_commit": null,
   "manifest_sha256": "ce9f80a1bae5b6f92e5c502f6aa423eabc4a00e1471249d3b838d10f898c2a01",
   "archive_sha256": "321634e8e8a769cc50744c26a035c9dbbbe2ed12cc7a9261b38326ab303be3c6",
-  "source_binding_limit": "Snapshot v1 has no route_commit and cannot qualify current normal intake. File/archive hashes are retained; do not infer commit binding.",
+  "source_binding_limit": "source_snapshot.v1 is the current valid exact-content schema. commit=null reflects overlays/content identity, not absent source binding. Current normal intake validation fails because gate-executed tools/orfs_hold_mm.py changed after this run.",
   "run": "/srv/opentallas-scratch/claude/ref_gate/hv15_dbk_cl-20261016-001939",
   "host": "ot-epyc1tb",
   "elapsed_seconds": 12661,
@@ -52,5 +52,13 @@
     "grt_final.log": "4905635ef317c4d466328d72a5771c5c49a58a43ec6826f1dabfa07381cae155",
     "congestion_final.rpt": "d1778f4df6c5f562b44494ba696e83f69b688376570c20db7be3a335ca247af6",
     "final_png/congestion.png": "6aec6ee3bf26dba1b386e0600e4132c676e9700c4e7b8bb4b964b9ff60519659"
+  },
+  "source_start_commit": "69be5cda7b6e8d27a4c88eb763533fbd85ba965b",
+  "source_identity": "exact_content_snapshot",
+  "source_archive_verified": true,
+  "source_consumed_file_count": 628,
+  "current_intake_validation": {
+    "pass": false,
+    "reason": "gate-executed daemon overlay changed: tools/orfs_hold_mm.py"
   }
 }
