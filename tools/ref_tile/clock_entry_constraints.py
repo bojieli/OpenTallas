@@ -132,7 +132,7 @@ def domains(spec):
         if not (divided or asynchronous) and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (divided or asynchronous or pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or asynchronous or pll and ratio == [4, 3] and name != 'core') or not asynchronous and len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:

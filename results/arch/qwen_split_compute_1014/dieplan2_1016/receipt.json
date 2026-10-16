@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.qwen.dieplan-receipt.v1",
+ "stream": "Q-COMPUTE-DIE / Q-DIEPLAN2",
+ "date": "2026-10-16",
+ "candidate": "qcd_owner2d_t950 (E4 trial q2o1, homes file vd-homes.json md5 cb99cd8f2c3bfeb271f2c4639337caeb)",
+ "generator": "mk_dieplan2.py dieplan_0700/qcd_owner_a_t950-homes.json OUT --dy1 100 --cbuf-pack (dxw 410.4, kvdx -360, clk 16302.24,3661.84)",
+ "layout": "OWNER 07:50: W array | W port strip | centre (VM + SU/SFU + collective, PHY row on the S edge) | E port strip | E array; tile 457.92 x 950.4 (proxy held grant proxy_t950_held_grant.json = dieplan_0700 copy); interim port option (a)",
+ "source_trial": "EPYC4 /srv/opentallas-scratch/claude/qwen-split-compute/q2o1/src = r2h5 src (main 219e84606 + SOURCE_EXTRA 78936cf77/readout) + physical/ref_tile/qfd_xs_tap/views from main (xs_tap xt11-90b1a75f7 CLOSED)",
+ "relay_skip": {"worst_cut": 0.921, "lines_over_060_excluding_pair_exception": 0, "pin_align": {"OK": 1703, "WARN": 1402, "FAIL": 14}, "reset_over_500": 7, "instances": 1642,
+                "strict_port_bind": "DIE_PORT_BIND PASS masters=39 instances=1642 unbound 0 stub 0 input_unconnected 0 undriven 0 multi_driven 0 (pb_skd)"},
+ "interim_exception": "Q-COMPUTE-DIE call 10-16 (coordinator GO): the three option-(a) port<->_f1 pair lines (4,315 + 2,389 = 6,704 b each, one centroid segment in a free channel of 8,193 tracks/260 um) score 0.82-0.92 by construction of the cut model; NOT a waiver; port remap b2 (0 cross-centre bits) removes them. If GRT overflows in those windows the fix is b2, not a re-floorplan of the pairs.",
+ "fixes_vs_owner_a": [
+  "seq_su into the SU-W / VM-N corner (abutted): seq->SU 5,862 b and seq->VM 3,115 b face to face (owner_a 1.155 / 0.938) -- control-geometry C direction (7ae6d63f3)",
+  "xs_tap and tt_ctlm stacked on the SU W face above seq_su; res_train_issue on the tt_ctlm W face; up4_sel_station beside tt_ctlm",
+  "native59 into the SU-E / VM-N corner (abutted): SU->native59 3,711 b and VM<->native59 2,023 b no longer cross the VM (owner_a 1.10 .. 0.99); 35b64a77a contact idea, abutted",
+  "cbuf_g|crom_g pairs abutted side by side, 4 rows x 2 on the SU E face above native59 (crom->cbuf vertical runs removed from the native59 line window; owner_a 0.741)",
+  "KV stack (d2d_rom, ucie_kv, KV bumps) 360 um west: native59->d2d 1,704 b runs over the SU E edge",
+  "W port strip +410.4 um off the array edge: band words converge on the port corners in a free channel (owner_a 0.848 over the last tile column)",
+  "band-1 stack +100 um (multiple of the 50-um scan pitch so the 43.2-um lanes gap keeps its alignment): the 7 band words into port_1's lower corner split across two 260-um windows (0.657 -> <0.60); a model-window alignment, b2 lets port_1 sit on its feed rows",
+  "clk_rx (no data nets) to the free band under the VM centre"
+ ],
+ "metrics_table": {
+  "columns": ["r2h5 skip (457.92x820.8)", "owner_a dpC (0700)", "q2o1d (this)"],
+  "die_mm2": [520.7, 584.8, 584.8],
+  "readout_bit_mm": [1543822, 1661720, 1625250],
+  "centre_manhattan_bit_mm": [1553941, 1673257, 1636418],
+  "ideal_relay_stages_sum": [6187, 7590, 7186],
+  "ideal_relay_stages_max_chain": [36, 31, 32],
+  "worst_cut": [1.385, 1.155, 0.921],
+  "lines_over_060_non_pair": ["many (1.385 tree_spine 8,192 b, 1.127 seq_su, 1.005 SU->native59, ...)", "1.155 seq_su, 1.10 native59, 0.938, 0.848 bwords, 0.742", "0"],
+  "pin_align_FAIL": [4, 2, 14],
+  "strict_port_bind": ["PASS", "PASS", "PASS"],
+  "centre_empty_pct": [44.2, 50.1, 50.1],
+  "vacant_head_row_mm2": [20.6, 17.4, 17.4]
+ },
+ "notes": [
+  "stage counts: ideal reach model ceil(centre Manhattan / 500 um) - 1 per bus endpoint (same as dieplan_0700 receipt); FULL GEN gives allocator stages",
+  "bit-mm is above r2h5 because the tall tile stretches the field (tree_block/corridor +384 / +672 stages) and option (a) pairs cross the core (~+104k bit-mm); b2 projected ~-134k",
+  "pin_align FAIL 14 = abutted faces whose generated pins are not yet face-ordered (seq_su/SU, cbuf|crom pairs): jogs up to 570 um along a 0.2-um seam. Next homes revision needs the control-geometry C typed seq grant (pins face-ordered) and cbuf/crom orientation by view pins; GRT will show whether these seams congest",
+  "centre empty 50%: the centre column height is set by the 16-row tall-tile field (17.7 mm) while VM+SU+collective+PHY need ~70 mm2; the vacant row y 8.53-9.22 mm (17.4 mm2) is the field head gap (xcol 1,434-um head stations, xcst) -- inherited, not resized here",
+  "closed views: xs_tap xt11 bound by name; qfd_static_command_fork42 / qfd_static_selector_fork26 are NOT die masters of the option-(a) graph (they belong to the b2 command/selector distribution graph, Q-B2) -> bind with the b2 graph; SU sfu exp/rcp/rsq native45 + lane_h crom5_e (timing placeholder, native FAIL) are SU-cluster children, the die binds qfd_sp_su64_sfu as a generated frame (no SU cluster view yet)"
+ ],
+ "explorer": {"id": "qwen_q2o1d_owner2", "candidate_of": "qwen_r2h5", "token_designs": "qwen_rom", "geometry": "/home/ubuntu/artifacts/qdieplan2-1016/geom_q2o1d_skip.json (E4 q2o1/geom_q2o1d_skip.json)"},
+ "full_trial": {"host": "ot-epyc4", "dir": "/srv/opentallas-scratch/claude/qwen-split-compute/q2o1", "script": "gen_then_chain.sh (FULL relay GEN HV=vd -> ot-heavy --mem 300 chain_after_build.sh q2o1)", "ot_run_unit": "otrun-ubuntu-693543-170479629 / ot-heavy oth-ubuntu-398120-1792170479", "remote_pids": [398119, 398120, 398142]}
+}

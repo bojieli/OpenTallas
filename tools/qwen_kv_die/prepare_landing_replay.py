@@ -15,7 +15,7 @@ import sys
 
 P = 'rtl/qwen_sys/static_kv_20261014/'
 CONTROLLER = [P + n + '.sv' for n in (
-    'ot_qkd_static_emb_cdc', 'qkd_static_kv_write_observer', 'qkd_ctrl_pc_host_static',
+    'ot_qkd_static_emb_cdc', 'qkd_static_kv_write_observer', 'qkd_ctrl_pc_host_static', 'qkd_ctrl_pc_host_static_core', 'qkd_ctrl_pc_children',
     'ot_qkd_static_ctrl_pc_emb', 'ot_qkd_static_kv_timing')]
 CONTROLLER += ['rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv',
                'rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv',

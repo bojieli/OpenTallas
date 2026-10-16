@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.qwen_kv_static.boot_cdc_component.v1",
+  "status": "COMPONENT_PASS_WITH_FAILING_MUTANTS",
+  "source_sha256": {
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+    "rtl/test/qwen_static_kv/tb_static_boot_cdc.sv": "baa11125e02a2dad28d1c4406ee2f743b923e6cdbe256f6e2a079d12e032ccd5"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS actual boot FIFO32consecutive words core625/HBM768 exact, seal/application age, postseal rejection MUT0"
+    },
+    {
+      "mutant": 1,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_boot_cdc.sv:11: actual CDC word differs\n       Time: 18049000 Scope: tb_static_boot_cdc"
+    },
+    {
+      "mutant": 2,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_boot_cdc.sv:16: applied before actual child seal acceptance age\n       Time: 18049000 Scope: tb_static_boot_cdc"
+    }
+  ],
+  "actual_component": {
+    "consecutive_words": 32,
+    "fifo_depth": 16,
+    "word_bits": 73,
+    "core_period_u": 625,
+    "hbm_period_u": 768,
+    "guard": "boot replay never stalls; overflow aborts setup; actual last-word/seal and two-edge child acceptance age"
+  },
+  "scope": "Actual shared Gray FIFO with real resets and clock relationship; boot-only local source/sink. No normal token traffic enters this component.",
+  "native_full_layer": false,
+  "physical_qualified": false,
+  "gaps": [
+    "actual authenticated HOST dispatcher/children composition",
+    "actual Gray crossing admission and physical per-leaf clock/pin qualification",
+    "actual sink fault observation/installed configuration native proof"
+  ]
+}

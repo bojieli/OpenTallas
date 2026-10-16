@@ -1191,6 +1191,59 @@
    "bytes": 1814228
   },
   {
+   "id": "hbm_v5_core4_sfu2_b3624",
+   "file": "hbm_v5_core4_sfu2_b3624.links.json.gz",
+   "label": "HBM die v5 830.2 mm2 core4_sfu2_b3624 (adopted plan)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v5 core4_sfu2_b3624 830.2 mm2 (main 03162300c)",
+   "role": "canonical",
+   "candidate": null,
+   "scope": "core4_sfu2_b3624 830.2 mm2 v5 plan (adopted, main 03162300c); adoption_allowed=True; graph complete=False",
+   "coverage": {
+    "links": 733,
+    "placed": 733,
+    "unplaced": 0,
+    "width_known": 733,
+    "directed": 733,
+    "pin_ends": 0,
+    "box_ends": 1466,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 540,
+    "blocks": 217,
+    "bits_total": 389540,
+    "bit_um_total": 1551963324,
+    "metrics": {
+     "sum_width_length_bit_um": 1551963007,
+     "sum_bit_um_hops": 1551963324,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 237280,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 3087620,
+     "worst_cut": 1.5032,
+     "cut_windows_over_limit": 327
+    }
+   },
+   "inputs": [
+    {
+     "path": "results/arch/hbm_die_v15/core4_sfu2_b3624/dataflow_boxes.json",
+     "sha256": "8a0e666987cf7f99bc960477e2be33e56efddffb27c2d398cf832dece174a532"
+    },
+    {
+     "path": "results/arch/hbm_die_v15/core4_sfu2_b3624/dataflow_graph.json",
+     "sha256": "f8c888de1a17e880e4d8b7ce2bf2a18745b7574f9ae96a7e80ea2e6fd7f6e8d1"
+    }
+   ],
+   "generated": "2026-10-16T16:55:09+00:00",
+   "bytes": 179427
+  },
+  {
    "id": "qwen_c17_wide27",
    "file": "qwen_c17_wide27.links.json.gz",
    "label": "Qwen ROM compute die \u00b7 wide27/Band1 (current generated pins)",

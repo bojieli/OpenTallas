@@ -21,7 +21,8 @@ module dsfd_sp_collective_static_c #(
  input wire[84:0]c_cmd,output wire[8:0]c_done,output wire[1:0]c_st,
  input wire[513:0]f_wfc,output wire[513:0]t_wfc,
  input wire[76:0]f_host,output wire[514:0]t_host,
- output wire[8191:0]t_hc_y,output wire[0:0]t_hc_yv,output wire[31:0]t_hc_tag
+ output wire[8191:0]t_hc_y,output wire[0:0]t_hc_yv,output wire[31:0]t_hc_tag,
+ output wire[4:0]t_hc_y5 // additive y_row5 (registered in the HC assembler, same edge as t_hc_yv)
 );
  dsfd_coll_ck clocks(.refclk(refclk),.por(por),.pll_stream(pll_stream),
  .pll_serial(pll_serial),.pll_hbm(pll_hbm),.rst_stream(rst_stream),
@@ -42,7 +43,7 @@ module dsfd_sp_collective_static_c #(
  .t_crq(t_crq),.f_crs(f_crs),.t_vm(t_vm),
  .phy_rx_valid(rx_valid),.phy_rx_data(rx_data),.phy_rx_fault(rx_fault),.phy_rx_live(rx_live),
  .phy_tx_valid(tx_valid),.phy_tx_data(tx_data),.f_wfc(f_wfc),.t_wfc(t_wfc),
- .f_host(f_host),.t_host(t_host),.t_hc_y(t_hc_y),.t_hc_yv(t_hc_yv[0]),.t_hc_tag(t_hc_tag));
+ .f_host(f_host),.t_host(t_host),.t_hc_y(t_hc_y),.t_hc_yv(t_hc_yv[0]),.t_hc_tag(t_hc_tag),.t_hc_y5(t_hc_y5));
  assign {tdE3,tdE2,tdE1,tdE0,tdW3,tdW2,tdW1,tdW0}=tx_data;
  assign {tvE3,tvE2,tvE1,tvE0,tvW3,tvW2,tvW1,tvW0}=tx_valid;
  ot_s81ph_ckbuf cW0(.a(ck_lane[0]),.y(tfW0[0]));

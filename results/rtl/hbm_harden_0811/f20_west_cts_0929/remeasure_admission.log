@@ -1,0 +1,22 @@
+ot-run: ot-agidock128  admits    50 GB (avail 96, growth 43, headroom 24, waiters 0/0 GB) load 19/64 running 10 disk 292 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2409568-1792167614 after 0 s
+{
+  "schema": "opentallas.ref_tile.staged_remeasurement.v1",
+  "tool_image_identity": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "original_archive_stdout": "unavailable",
+  "original_script_sha256": "73558b36ae130aba0cfb6c604c0e69b125dc1ec4245361b8020de815e705efa3",
+  "manifest_sha256": "5a8344d8d898803a4945be642ba5f828aa2698e83d17a262a2c0f5e4b5eee47b",
+  "artifacts_sha256": {
+    "routes/gate/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_f20_asap7_ref_gate/base/1_2_yosys.v": "8915b5b4da7d17cf688b94d5d5dc09501fc54c68e6dfc0eab4ee718fa662665e",
+    "routes/gate/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_f20_asap7_ref_gate/base/3_2_place_iop.odb": "2d8693f07e5adc6936aaad8608e0264e6245039575258982280377de30752c6d",
+    "routes/gate/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_f20_asap7_ref_gate/base/4_1_cts.odb": "cc8bb58991b65b15b47b028ccf4279df6919bd927c546f3b912641fd78f9cc9c",
+    "routes/gate/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_f20_asap7_ref_gate/base/4_cts.sdc": "05c81a344fe68731c0ba6d5ec822df992c51a26541961a687ad2179ec34f13a2",
+    "routes/gate/work/orfs/config.mk": "d6d83644453616a4cd6a3be443459558ab64c7a44d26bb9e1a03c373d1fe157c"
+  },
+  "measurement_script_sha256": "dbab52ebdca203efde4a0c7acbbfe000b2f7b6c99764f2836e4f625afadbd770",
+  "measurement_log_sha256": "24f3b523fe774018610ac0335ae0293d654bbda552f9707516b214ff1ed6a280",
+  "new_measurement_only": true,
+  "physical_thresholds": "unchanged"
+}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2409568-1792167614): exit 0

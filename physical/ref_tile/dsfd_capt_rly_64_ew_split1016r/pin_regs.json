@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_capt_rly_64_EW",
+ "enable": false,
+ "reason": "Source-exact capture cones retain every used data/status/fault sampling edge. Native registered boundary capture/launch checks and recipe2 dedicated outputflops still apply; blanket recipe3 registers would insert unpriced semantic stages into this exact comparison."
+}

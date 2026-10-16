@@ -1,0 +1,169 @@
+{
+ "name": "hv16_vm_cal_f20_ww-ww0900-COMMIT",
+ "block": "hfd_hgi_vm_calendar_f20",
+ "ref_tile": true,
+ "owner": "Codex:H-HARDEN",
+ "purpose": "Structural West channel measurement after66overflow/44hotgcells in df84589aa; explicit44.496um West clearance and558 granted signal rectangles, same RTL/edges. Measurement grantdf7c12a94, no12-homeadoption.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/hbm-f20-west-0900",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "tools/hbm_vm_static_calendar.py",
+   "results/arch/hbm_vm_static_1014/quadrant_abi.json",
+   "results/arch/hbm_vm_lg_split_1015/programme",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hier_contract_1015/hbm_v15.json",
+   "rtl/hbm_accel/generic/vm/static/fill_universal_0600",
+   "results/arch/hbm_die_v16/f20_west_provisional_0900.json",
+   "results/rtl/hbm_harden_0811/f20_0850/pin_window_request.json",
+   "physical/hbm_die_pins/f20_west_0900/hfd_hgi_vm_calendar_f20.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_hgi_vm_calendar_f20 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "f20_eq",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh {RUN}/bench/f20",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CAL_F20_EQ GATE PASS",
+    "min_count_regex": "MUT0 CAL_F20_EQ PASS checks=(\\d+)"
+   },
+   {
+    "name": "f20_strap_mutant",
+    "cmd": "ONLY=1 bash rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh {RUN}/bench/f20m",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CAL_F20_EQ FAIL"
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_CALENDAR_UNIVERSAL_ALL PASS4",
+    "min_count_regex": "PASS(\\d+) edges exact"
+   },
+   {
+    "name": "mut_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_field",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_core",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv16_vm_cal_f20_ww/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv16_vm_cal_f20_ww/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv16_vm_cal_f20_ww --out {RUN}/record/views/hfd_hgi_vm_calendar_f20 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hv16_vm_cal_f20_ww/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hv16_vm_cal_f20_ww/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hv16_vm_cal_f20_ww/hv16_vm_cal_f20_ww-ww0900-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "West macro-facing channel22.896->44.496um and outline+21.600um; macro fixed44.496/23.760, same558 signal rectangles W/S/N with E translated+21.6. No OBS/clock/capacity waiver; all66overflows must disappear, especially20 inside-edge cap0markers.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "APPROVED measurement grant df7c12a94:241.92x116.64, exact558 signal pin rectangles;12-home actualplacement/cuts remain ungranted. Current d4 frozen."
+ }
+}

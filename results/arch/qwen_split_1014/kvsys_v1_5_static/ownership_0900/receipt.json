@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.qwen_kv_static.ownership_component.v1",
+  "status": "COMPONENT_PASS_WITH_FAILING_MUTANTS",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+    "rtl/test/qwen_static_kv/tb_static_ownership.sv": "084bcdad61e69b828adceaf745e0cff72ea3c517faae207700f7aba83bd9d401"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "guard_mutant": 0,
+      "case": -1,
+      "exit": 0,
+      "expected_result": true,
+      "output": "PASS ownership fixed edges, explicit invalid handovers and both-domain guard; MUT=0 CASE=-1"
+    },
+    {
+      "mutant": 1,
+      "guard_mutant": 0,
+      "case": 0,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_ownership.sv:35: fixed mode edge differs cycle=3 mode=1\n       Time: 276000 Scope: tb_static_ownership.normal_case"
+    },
+    {
+      "mutant": 2,
+      "guard_mutant": 0,
+      "case": 2,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_ownership.sv:52: unpaid native debt accepted at compiled leave\n       Time: 386000 Scope: tb_static_ownership.dirty_leave_case"
+    },
+    {
+      "mutant": 3,
+      "guard_mutant": 0,
+      "case": 3,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_ownership.sv:56: native source fault ignored\n       Time: 336000 Scope: tb_static_ownership.source_fault_case"
+    },
+    {
+      "mutant": 0,
+      "guard_mutant": 1,
+      "case": 6,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_ownership.sv:70: single unpaid HBM ring ignored\n       Time: 286000 Scope: tb_static_ownership.guard_case"
+    },
+    {
+      "mutant": 0,
+      "guard_mutant": 2,
+      "case": 6,
+      "exit": 1,
+      "expected_result": true,
+      "output": "FATAL: /home/ubuntu/wt/qkv-static-join-1016/rtl/test/qwen_static_kv/tb_static_ownership.sv:72: late PHY hold lost\n       Time: 386000 Scope: tb_static_ownership.guard_case"
+    }
+  ],
+  "scope": "Actual ownership/calendar/drain-observation RTL under declared ideal source-boundary observations only.",
+  "fixed_ages": {
+    "go_pin_capture_to_internal_accept_core_edges": 1,
+    "native_enter": 4,
+    "native_leave": 14,
+    "deadline": 20
+  },
+  "ownership_fault": "Invalid handover disables ownership_valid and aborts; no wait, defer or reschedule.",
+  "native_full_layer": false,
+  "physical_qualified": false,
+  "gaps": [
+    "actual loader/sequencer/host admission and queue debt producers",
+    "source-pinned implemented local upstream quiet/fault reductions",
+    "actual phi-R clocks, synchronized observation and relay/mux ages",
+    "full native programme proof of exact enter/leave/deadline/drain with real PC paths"
+  ]
+}

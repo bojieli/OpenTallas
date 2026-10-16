@@ -1,0 +1,155 @@
+{
+ "name": "dsfd_capt_status_x43_t_split1016x",
+ "top": "dsfd_capt_status_x43_t",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv"
+ ],
+ "params": {},
+ "clock_port": "ck[0]",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 86.4
+ },
+ "macros": [],
+ "pins": {
+  "E": [
+   "f_sn"
+  ],
+  "W": [
+   "b0",
+   "b2",
+   "b3",
+   "bpar",
+   "t_mark"
+  ],
+  "N": [
+   "ck",
+   "rst"
+  ],
+  "S": []
+ },
+ "io_tcl": "physical/s81_die_pins/capture_split_1016/dsfd_capt_status_x43_t.tcl",
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "clock": "cts",
+ "structural_change": "DECISION B successor of the dsfd_capt_status_dual hard leaf (split1016: FF hold -81 ps on the intra-leaf ot_ratio_cdc_fifo 1-tick 4:3 arcs, hold repair stalled; split1016b co-located entries, same RTL). The ratio FIFO is replaced by a fixed-phase 3-bank x43 transfer split per clock root (ot_s81_vm_x43 pattern, CLOSED VM x43 leaves): dsfd_capt_status_x43_t (ck) samples f_sn at stream index 0/2/3 into banks b0/b2/b3; dsfd_capt_status_x43_s (ckv) reads them at serial edge 2/0/1 into t_st. Marker moved to stream index 2 so no cross-root arc has a 1-tick window (worst setup 2 ticks = 513 ps). dsfd_capt_status_dual is now a logic-free wrapper. Latency: f_sn on t_st 6/7/8 VCO ticks after stream index 2/3/0 (stream index 1 not sampled); epoch-reset startup contract. T leaf: 192 bank flops + epoch counter/parity/marker; outputs all flops; outhold off (VM x43_t precedent: bank read >= 1 tick after launch, rewritten >= 4 ticks after the fixed read). Seam pins spread at 8 M4 tracks (gate oflop face density); f_sn / t_st moved to the centre of their bit's triplet.",
+ "slot_change_request": {
+  "contract": "S81 capture split 1016 (codex/s81-hub-parents-0811)",
+  "version": "x43-status-1016",
+  "why": "New single-clock leaf dsfd_capt_status_x43_t (replaces the two-clock dsfd_capt_status_dual hard leaf); no prior slot or closed view"
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": {
+   "contract": "S81 capture split 1016 (codex/s81-hub-parents-0811)",
+   "version": "x43-status-1016",
+   "why": "New single-clock leaf dsfd_capt_status_x43_t (replaces the two-clock dsfd_capt_status_dual hard leaf); no prior slot or closed view"
+  },
+  "why": "new single-clock leaf master; no closed view exists for this block",
+  "contract": "S81 capture split 1016: dsfd_capt_status_dual DECISION B x43 split"
+ },
+ "job": {
+  "owner": "claude:S-VM-CAPT-STATUS",
+  "branch": "codex/s81-hub-parents-0811",
+  "tag": "x43",
+  "purpose": "DECISION B dsfd_capt_status_x43_t: single-clock leaf of the fixed-phase status transfer; exact capture split bench (x43 sample rule) + unit/epoch-slip benches + mutants, TT/FF/DRC0 + native audit; parent 3:4 arcs open",
+  "extra_paths": [
+   "tools/s81_ph",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/hdc",
+   "physical/s81_die_pins/capture_split_1016"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_capt_status_dual u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv rtl/common/ot_ratio_cdc_fifo.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "status_x43_unit",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -o {RUN}/sim -s tb_dsfd_capt_status_x43 rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43.sv && for m in 0 1 2 3; do vvp -n {RUN}/sim +mode=$m; done",
+    "expect": "pass",
+    "pass_regex": "TB_STX43 PASS mode 0 words",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "status_x43_unit_slip",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -o {RUN}/sim -s tb_dsfd_capt_status_x43 rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43.sv && for m in 1 2 3; do vvp -n {RUN}/sim +mode=$m; done",
+    "expect": "pass",
+    "pass_regex": "TB_STX43 PASS mode 3 fault",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "status_x43_unit_mut_phase",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -DDSFD_CAPT_STX43_MUT_PHASE -o {RUN}/simp -s tb_dsfd_capt_status_x43 rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43.sv && vvp -n {RUN}/simp +mode=0",
+    "expect": "fail",
+    "fail_regex": "TB_STX43 FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "capture_split_exact",
+    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/bench eq 'mix mix11 mix12 mix13 trace err over range rreq'",
+    "expect": "pass",
+    "pass_regex": "^CAPC_BENCH PASS cases=9$",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "capture_split_mutant",
+    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/mut mut 'mix' S81PH_CAPS_MUT_STATUS",
+    "expect": "fail",
+    "fail_regex": "CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every output (b0/b2/b3, bpar, t_mark) is a dedicated flop and every data input f_sn lands directly in the bank flops (one phase hold-mux): the banks ARE the pin registers. A generic recipe-3 input/output register would shift the fixed 3:4 sample indices by one stream cycle (unpriced against the epoch schedule and the S leaf's fixed read edges)."
+ }
+}

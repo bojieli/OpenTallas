@@ -62,6 +62,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import bench_count
 import macro_clk
 import helper_overlay as HO
 import status_report
@@ -309,14 +310,8 @@ def validate(spec: dict) -> list[str]:
     for b in st.get("bench", []) if isinstance(st, dict) else []:
         if b.get("expect") not in ("pass", "fail") or not b.get("cmd") or not b.get("name"):
             e.append(f"bench entry needs name, cmd and expect pass|fail: {b}")
-        mcr = b.get("min_count_regex") if isinstance(b, dict) else None
-        if mcr:
-            try:
-                ng = re.compile(mcr).groups
-            except re.error as x:
-                ng = -1; e.append(f"bench {b.get('name')}: min_count_regex does not compile: {x}")
-            if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
-                e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
+        # bench_work counts the ONE captured group: none or several read every pass as vacuous (suctlw r2 10-11, b2/xcal 10-16)
+        e.extend(bench_count.count_regex_errors([b]))
     benches = st.get("bench", []) if isinstance(st, dict) else []
     if spec.get("benched_by") is not None:
         bspec, berr = expand_benched_by(spec)

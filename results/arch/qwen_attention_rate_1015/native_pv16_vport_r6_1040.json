@@ -1,0 +1,23 @@
+{
+ "cell": "qkd_pv16_vport",
+ "view": "physical/ref_tile/qkd_pv16_vport_r6/views/qkd_pv16_vport",
+ "lib_cell": "qkd_pv16_vport",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 180.8,
+ "spread_ps": 25.0,
+ "outputs": 1086,
+ "inputs": 2128,
+ "launch_ps": 186.5,
+ "launch_pin": "out_v_lo[407]",
+ "capture_ps": 150.5,
+ "capture_pin": "in0_d[953]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}
