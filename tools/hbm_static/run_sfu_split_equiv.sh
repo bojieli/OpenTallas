@@ -45,6 +45,7 @@ set +e
 "$OUT/obj/Vtb_hgi_sfu_split_equiv" > "$OUT/run.log" 2>&1
 rc=$?
 set -e
+grep -h "SFU_SPLIT_EQUIV" "$OUT/run.log" || true   # the verdict/edge-count line (closure-loop min_count_regex reads stdout)
 tail -n 4 "$OUT/run.log"
 if [ -z "${EQ_MUT:-}" ];then
  [ "$rc" = 0 ] && grep -q 'SFU_SPLIT_EQUIV PASS' "$OUT/run.log" && grep -q '^PASS canonical' "$OUT/run.log" && echo "SFU_SPLIT_GATE POSITIVE PASS" && exit 0
