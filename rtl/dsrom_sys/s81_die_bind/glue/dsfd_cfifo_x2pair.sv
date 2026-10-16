@@ -15,6 +15,7 @@
 module dsfd_cfifo (
     output wire [14:0] cc,
     input wire cr,
+    input wire cr_s,
     output wire [69:0] rd,
     input wire [65:0] ri,
     output wire rs,
@@ -28,8 +29,16 @@ module dsfd_cfifo (
     input wire [537:0] xd2,
     input wire xf2
 );
+    // r3 CR SPLIT (S-ELEM-PQ 2026-10-16, closure-first after south96 native FAIL: cr R 222.2 / spread 70.9, launch xb 247.6,
+    // capture ri 339.0): two CTS roots of the SAME PLL clock at phase 0 -- cr (north: ri/st pin capture, xa/xb/cc/x2
+    // output flops, rs) and cr_s (south: column ingress core side, status word rr -> rd).  ri gets a pin register on cr
+    // (+1 edge on ri -> rd, now 2 edges like st; the compiler's status calendar takes the fixed +1).  Each root has its
+    // own reset synchroniser from rst.
     reg [1:0] rsync_q; always @(posedge cr or negedge rst) if (!rst) rsync_q <= 2'b00; else rsync_q <= {rsync_q[0], 1'b1};
     wire rsync = rsync_q[1];
+    reg [1:0] rsyncs_q; always @(posedge cr_s or negedge rst) if (!rst) rsyncs_q <= 2'b00; else rsyncs_q <= {rsyncs_q[0], 1'b1};
+    wire rsync_s = rsyncs_q[1];
+    reg [65:0] ri_q; always @(posedge cr) ri_q <= ri;      // ri pin register (north root)
     // --bf-x2-static (S-BIND 2026-10-15, owner static-cycle rule): column entry = ot_s81_static_column_ingress
     // (pin capture of the forwarded record on xf, fixed epoch shift from the forwarded reset marker, no
     // occupancy / ready / credit).  xd = {x2 536 | cc 15 | x1 266 | x0 283 | v | rst_n}: one packed word.
@@ -37,8 +46,8 @@ module dsfd_cfifo (
     reg [1:0] sti; always @(posedge cr) sti <= st;
     wire [1100:0] xw_; wire xflt;
     wire [564:0] oa_; wire [536:0] ob_; wire fa_, fb_;
-    ot_s81_static_column_ingress #(.W(565)) u_x (.f_ck(xf), .i(xd), .ck(cr), .rst_n(rsync), .o(oa_), .fault(fa_));
-    ot_s81_static_column_ingress #(.W(537)) u_x2 (.f_ck(xf2), .i(xd2), .ck(cr), .rst_n(rsync), .o(ob_), .fault(fb_));
+    ot_s81_static_column_ingress #(.W(565)) u_x (.f_ck(xf), .i(xd), .ck(cr_s), .rst_n(rsync_s), .o(oa_), .fault(fa_));
+    ot_s81_static_column_ingress #(.W(537)) u_x2 (.f_ck(xf2), .i(xd2), .ck(cr_s), .rst_n(rsync_s), .o(ob_), .fault(fb_));
     assign xw_ = {ob_[536:1], oa_}; assign xflt = fa_ | fb_ | (oa_[0] ^ ob_[0]);
     wire xv = xw_[0];
     reg [282:0] xa_r; reg [265:0] xb_r; reg [14:0] cc_r; reg [535:0] x2_r;
@@ -47,7 +56,7 @@ module dsfd_cfifo (
         x2_r <= {xw_[1100:570], xw_[569] & xv, xw_[568:566], xw_[565] & xv}; end
     assign xa = xa_r; assign xb = xb_r; assign cc = cc_r; assign x2 = x2_r;
     reg [67:0] rr; reg flt;
-    always @(posedge cr or negedge rsync) if (!rsync) begin rr <= 68'd0; flt <= 1'b0; end
-        else begin rr <= {sti[1] | flt, sti[0], ri}; flt <= flt | xflt; end
-    assign rd = {rr, rr[0], rsync};   // {status, root word, valid = root o_v, rst_n}
+    always @(posedge cr_s or negedge rsync_s) if (!rsync_s) begin rr <= 68'd0; flt <= 1'b0; end
+        else begin rr <= {sti[1] | flt, sti[0], ri_q}; flt <= flt | xflt; end
+    assign rd = {rr, rr[0], rsync_s};   // {status, root word, valid = root o_v, rst_n}
 endmodule
