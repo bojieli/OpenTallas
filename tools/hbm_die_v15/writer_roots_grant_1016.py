@@ -19,6 +19,7 @@ import hbm_die_views as V
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--source-ref',required=True)
+    ap.add_argument('--body-west-mid',action='store_true',help='additive grant: move only body root to W middle and nearby conflicting data pins')
     ap.add_argument('--source',default='rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv')
     ap.add_argument('--request',default='results/rtl/hbm_writer_v6_0324/typed_root_request.json')
     ap.add_argument('--out',default='results/arch/hbm_die_v15/writer_roots_v6_1016')
@@ -72,6 +73,23 @@ def main():
         bits=len(items)+sum(f==face for f,_ in clocks.values())
         face_capacity[face]=dict(bits=bits,length_um=length,utilization=round(bits*.096/length,6))
         assert bits*.096/length<=.60
+    if a.body_west_mid:
+        baseline=get('07638f0ab','results/arch/hbm_die_v15/writer_roots_v6_1016/assigned_pins.tcl').decode()
+        positions={n:(f,float(v)) for n,l,f,v in re.findall(r'ot_assigned_pin_exact\s+\{([^}]+)\}\s+(M\d)\s+([NSEW])\s+([\d.]+)',baseline)}
+        clocks={n:positions[n] for n in target}
+        body=round(.012+round((194.4-.012)/.048)*.048,6)
+        positions['clk_body']=clocks['clk_body']=('W',body)
+        displaced=[n for n,(f,v) in positions.items() if n!='clk_body' and f=='W' and abs(v-body)<.192-1e-8]
+        for n in displaced:del positions[n]
+        for n in displaced:
+            candidates=[round(.012+k*.048,6) for k in range(math.ceil((4.32-.012)/.048),math.floor((height-4.32-.012)/.048)+1)]
+            candidates=[v for v in candidates if all(f!='W' or abs(v-p)>=(.192 if m in clocks else .096)-1e-8 for m,(f,p) in positions.items())]
+            assert candidates,('no local relocation',n)
+            positions[n]=('W',min(candidates,key=lambda v:abs(v-body)))
+        for face in 'NSEW':
+            bits=sum(f==face for f,v in positions.values());length=width if face in 'NS' else height
+            face_capacity[face]=dict(bits=bits,length_um=length,utilization=round(bits*.096/length,6))
+            assert bits*.096/length<=.60
     expected={n if b==1 else f'{n}[{k}]' for n,(direction,b) in ports.items() for k in range(b)}
     assert set(positions)==expected,(expected-set(positions),set(positions)-expected)
     perbus=collections.defaultdict(list)
@@ -100,6 +118,7 @@ def main():
                            pg_layer='M5',signal_max_layer='M5',layer_cap='M5',strap_layer='M6',
                            instances=[f'coll_{q}_writer0' for q in ['SW','SE','NW','NE']])],
                request_sha256=hashlib.sha256(request_raw).hexdigest(),native_source_proof=request['proof'],
+               structural_successor='clk_body moved from N to W middle; source/cycles and other 15 roots unchanged' if a.body_west_mid else None,
                normal_cycles_added=request['normal_cycles_added'],declared_state_bits_added=request['declared_state_bits_added'],
                open=['physical-flow exact bench/mutant binding','actual ODB assigned-bit/PG readback',
                      'measured per-root insertion/spread and phi-R','TT setup/FF hold/DRC0','current parent/die pin binding'])
