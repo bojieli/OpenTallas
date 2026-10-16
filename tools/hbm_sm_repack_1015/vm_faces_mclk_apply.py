@@ -3,6 +3,8 @@
 usage: mclk_apply.py ROOT q0|q2 rtl            -- source/bench edits (shared by all variants)
        mclk_apply.py ROOT q0|q2 kit A          -- 270x270, original macro stack, abutment gap blocked
        mclk_apply.py ROOT q0|q2 kit B          -- 270x313.2, macro channels 20.136 um
+       mclk_apply.py ROOT q0|q2 kit D          -- 270x313.2, u_b/u_c channel 28.776 um (q2 B/C GRT overflow 131 there), a/b 20.136,
+                                                  margins 24.19 / 24.30, + balanced CTS sink clustering (C recipe)
 """
 import json, math, re, sys, hashlib
 from pathlib import Path
@@ -70,7 +72,7 @@ def kit(variant):
     base = ROOT / f'physical/ref_tile/vm_native_{q}_faces'
     s = json.loads((base / 'spec.json').read_text())
     H = 270.0 if variant == 'A' else 313.2
-    name = f'vm_native_{q}_faces' if variant == 'A' else f'vm_native_{q}_faces_g313'
+    name = {'A': f'vm_native_{q}_faces', 'B': f'vm_native_{q}_faces_g313', 'D': f'vm_native_{q}_faces_g313d'}[variant]
     s['name'] = name
     roots = ['clk', 'clk_n', 'clk_s', 'clk_e', 'clk_w']
     s['clock'] = 'hybrid_entries'
@@ -78,8 +80,10 @@ def kit(variant):
     s['clock_cts_roots'] = roots
     if variant == 'A':
         at = [[47.52, 29.232], [47.52, 99.744], [47.52, 170.256]]
-    else:  # 20.136 um channels (pitch 90.624 = 1888 x .048), margins 30.672 / 30.792
+    elif variant == 'B':  # 20.136 um channels (pitch 90.624 = 1888 x .048), margins 30.672 / 30.792
         at = [[47.52, 30.672], [47.52, 121.296], [47.52, 211.92]]
+    else:  # D: u_a/u_b down 4.32, u_c up 4.32 (90 x .048): channel b/c 28.776 where B/C overflowed, a/b 20.136
+        at = [[47.52, 26.352], [47.52, 116.976], [47.52, 216.24]]
     s['macros'] = [{'view': 'physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2', 'count': 1,
                     'inst': f'*bank.u_{m}', 'at': a, 'at_exact': True,
                     'clock_entry': {'port': c, 'pin': 'clk', 'reference': 'raw_liberty_clock_pin'}}
@@ -93,7 +97,7 @@ def kit(variant):
     for c, a in zip(MC, at):
         y = round(a[1] + 0.78, 3); k = round((y - .012) / .048); assert abs(.012 + .048 * k - y) < 1e-6
         clocks[c] = ('W', y)
-    if variant == 'B':  # face clocks stay at the face centre of the grown W/E faces
+    if variant in 'BD':  # face clocks stay at the face centre of the grown W/E faces
         clocks['clk_e'] = ('E', 156.588); clocks['clk_w'] = ('W', 156.588)
     s['pins']['W'] = [p for p in s['pins']['W'] if p not in MC] + MC
     widths = port_widths(s, ROOT); pins = {}; metrics = []
@@ -118,7 +122,7 @@ def kit(variant):
     for p, v in pins.items():
         b = p.split('[')[0]; lo, hi = rng.get(b, (1e9, -1e9)); rng[b] = (min(lo, v['position_um']), max(hi, v['position_um']))
     s['pin_ranges'] = {b: [round(lo - .048, 3), round(hi + .048, 3)] for b, (lo, hi) in rng.items()}
-    tag = '' if variant == 'A' else '_g313'
+    tag = {'A': '', 'B': '_g313', 'D': '_g313d'}[variant]
     pf = ROOT / f'physical/ref_tile_specs/smh/vm_{q}_faces{tag}_pins.tcl'
     lines = [f'# H-SM faces-mclk 1016 variant {variant}: actual-layer phase .012; 5 CTS roots + 3 direct SRAM clock entries (W face at each SRAM clk pin y).',
              'source /src/physical/common_flow/assigned_pin_exact.tcl', 'set vm_expected {']
@@ -152,10 +156,14 @@ def kit(variant):
         {'name': 'mutant_drop_clk_macro1', 'cmd': f'OT_CASES=positive OT_POS_DROP=6 bash {run} {{RUN}}/bench/{q}_mut_m1',
          'expect': 'fail', 'threads': 1, 'peak_ram_gb': 4, 'fail_regex': f'{Q}_FACE_CLOCKS BENCH FAIL'},
     ]
+    if variant == 'D':  # C recipe: balanced CTS sink clustering
+        s['route']['cts_sink'] = {'size': 16, 'diameter_um': 30, 'extra': '-balance_levels'}
     s['structural_change'] = (s.get('structural_change', '') + f' | faces-mclk {variant}: the 3 SRAM clock pins move off core clk onto '
                               'direct entries clk_macro0..2 (W face at each SRAM clk pin; hybrid_entries; CTS roots clk/clk_n/clk_s/clk_e/clk_w '
                               'reach standard cells only). ' + ('Abutted stack .024 um slivers hard-blocked (macro_channel_block).' if variant == 'A'
-                              else 'Outline 270x313.2 (+16%): 20.136 um macro channels.'))
+                              else 'Outline 270x313.2 (+16%): 20.136 um macro channels.' if variant == 'B' else
+                              'Outline 270x313.2: u_b/u_c channel 28.776 um (B/C GRT-0116 overflow 131, all in that channel, E/W mouths), '
+                              'u_a/u_b 20.136, N/S margins 24.2/24.3; balanced CTS sink clustering 16/30 um/-balance_levels.'))
     k = ROOT / f'physical/ref_tile/{name}'; k.mkdir(exist_ok=True)
     (k / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')
     print(json.dumps({'kit': name, 'H': H, 'clocks': {c: clocks[c] for c in MC + ['clk_w', 'clk_e']}, 'windows': metrics, 'pins': len(pins)}, indent=1))
