@@ -177,8 +177,17 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
     if one:
         g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
               "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
-    if spec["clock_port"] not in ports:
-        g.add("FAIL", "pins", f"clock port {spec['clock_port']} is not a port of {spec['top']}", "fix clock_port")
+    for clock in RT.clock_ports(spec):
+        # Entry-clock specs use literal bits, while the RTL header parser returns
+        # vector base names. Keep pin-face plans grouped by base name, but accept
+        # an in-range bit of a vector as an actual clock entry.
+        bit = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]", clock)
+        exists = clock in ports
+        if bit and bit[1] in ports:
+            width, vector = ports[bit[1]]
+            exists = vector and width > 1 and int(bit[2]) < width
+        if not exists:
+            g.add("FAIL", "pins", f"clock port {clock} is not a port of {spec['top']}", "fix clock_port")
 
 
 # --------------------------------------------------------------------------------------------- pin fit / pin flops
