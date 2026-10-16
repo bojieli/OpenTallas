@@ -23,8 +23,10 @@ module tb_qwen_pv16_vservice;
  wire [7:0] vfault;
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_port
-  qkd_pv16_vport #(.STACK(2*(g>>2)+PAIR),.LANE(g&3),.MUT(VMUT)) u_vp(.ck(clk),.rst_n(rst_n),
-   .slot(p_slot[g]),.sel(p_sel[g]),.in_v(p_v[8*g+:8]),.in_t(p_t[8*14*g+:8*14]),.in_d(p_d[8*256*g+:8*256]),
+  qkd_pv16_vport #(.MUT(VMUT)) u_vp(.ck(clk),.rst_n(rst_n),
+   .slot(p_slot[g]),.sel(p_sel[g]),
+   .in_v0(p_v[8*g+:4]),.in_t0(p_t[8*14*g+:4*14]),.in_d0(p_d[8*256*g+:4*256]),
+   .in_v1(p_v[8*g+4+:4]),.in_t1(p_t[8*14*g+4*14+:4*14]),.in_d1(p_d[8*256*g+4*256+:4*256]),
    .out_valid(in_valid[g]),.out_t(in_t[14*g+:14]),.out_v(in_v[1024*g+:1024]),.fault(vfault[g]));
  end endgenerate
  reg [1023:0] vr[0:8191];reg [63:0] er[0:8191];reg [31:0] gold[0:511];
