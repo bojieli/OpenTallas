@@ -14,7 +14,7 @@
   "tools/s81_vm/wfc_pipeline_bench.sv": "d581ff7ab20bba41b8240d9429908325a485d34f72cbc6615dd1f9ec2f2559ad",
   "tools/s81_vm/wfc_fault_epoch_bench.sv": "fe222a72831c7e969047255801f567408483d41bb12d85ccadfb4a656d06f7c4",
   "tools/s81_vm/wfc_pipeline_ref_r5.sv": "b2b27269a82ff3362a4b2f172daeab4db67c85113b45db21b029b7449b0e105f",
-  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "1da737a110d1001124a190628b73bc2cea196f129191d352e10ff212d54200b0",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "6faf16682d2024a08478ab369b107016af3466e9ef830cf90b4d794c2ffffa0c",
   "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_fault_transports.sv": "a3bc91b3b0737a1e5568e2eed7a0580157ff2d9c480a6fc2a9945adad9900a94",
   "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "db4810e343feccefb7a2cf3a010e99cced012e985e2635d55425c65a596a6e37",
   "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "db36f2611d91193aa7b9fe8031b75c9ad901d0449aa90fbe77db0a12109c1b52"
@@ -38,7 +38,7 @@
   {
    "mode": "OT_VM_WFC_CTL_MUT_CAPTURE",
    "rc": 1,
-   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:50: serial +3 mismatch 41\n       Time: 696000 Scope: tb_wfc_pipeline\n"
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:26: spurious fault under legal fixed schedule 41\n       Time: 697000 Scope: tb_wfc_pipeline\n"
   },
   {
    "mode": "OT_VM_WFC_CTL_MUT_CDC",

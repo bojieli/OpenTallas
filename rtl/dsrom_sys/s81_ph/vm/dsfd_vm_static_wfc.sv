@@ -213,7 +213,11 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13, parameter integer RESPO
 );
     // Wires only: x34, request/return control leaf, fault bridge and x43.
     wire xv; wire [559:0] xd; wire x34f; wire ov; wire [1025:0] od; wire x43f; wire sv; wire [1025:0] sd; wire g_q, e_q; wire native_core_fault;
-    ot_s81_vm_x34 #(.W(560)) u_xi (.s_ck(ck_x34_s), .s_rst_n(rst_x34_s), .s_v(f_wfc[0] | f_wfc[528]), .s_d(f_wfc),
+    // Every epoch bank carries a payload. Its write/read operation-valid bits
+    // remain in xd[0]/xd[528] and gate the decoded requests after capture.
+    // Always-valid transport removes a serial parent OR without changing any
+    // operation, error, clock, or cycle (frozen prior wrapper comparison proves it).
+    ot_s81_vm_x34 #(.W(560)) u_xi (.s_ck(ck_x34_s), .s_rst_n(rst_x34_s), .s_v(1'b1), .s_d(f_wfc),
         .t_ck(ck_x34_t), .t_rst_n(rss_x34_t), .o_v(xv), .o_d(xd), .fault(x34f));
     wire [1:0] return_valid;wire[3:0] return_lane;wire return_fault;
     dsfd_vm_wfc_request #(.RLAT(RLAT)) u_req (
