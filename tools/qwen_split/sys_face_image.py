@@ -4,31 +4,33 @@
 The ROM is one ot_rom_4096x72_m8 (logical address a -> arr[a//8][bit*8 + a%8], the S81 pq_calendar viamap convention):
   rows 0..1031     program image (PW0..1023 then DW0..7), 64-b words, [71:64] = 0
   rows 2048..      boot records {target4, addr8 = {seg1-base flag, entry7}, 28'd0, data32}; END = target 15 (all else 0)
-                   targets: 1 D2D compute TX calendar, 2 D2D compute RX calendar, 3 token calendar T (NE 64),
-                            4 layer calendar L (NE 32), 5 embedding calendar E (NE 16)
+                   targets: 3 token calendar T (NE 64), 4 layer calendar L (NE 32), 5 embedding calendar E (NE 16),
+                            6 first-token offset (events 'first_token', edges after the epoch strobe)
 Face calendar events (the face decodes {port3 = class, kind4|beat5 = arg9}; see the RTL header):
-  T: STAGE (class 0, arg = stage | 64 layer-start | 128 token-run | 256 result-capture), LEVEL/END (class 1, arg bit0 kok,
-     bit1 kwd, bit2 END -- END must be the last T event)
+  T: STAGE (class 0, arg = stage | 64 L start | 128 token-run | 256 result-capture), MARK (class 5, 64 / 128 without an
+     h_start), LEVEL/END (class 1, arg bit0 kok, bit1 kwd, bit2 END -- END must be the last T event).  T's layer / token-run
+     flags must coincide with qfd_d2d_cal_seq's cal_start (the face faults otherwise).
   L: LEVEL (1), QSLOT (2, arg = beat; consecutive beats merge into one burst), KVSLOT (3, arg = index),
      VIS (4, arg 0 visibility / 1 complete)
   E: EMBW (6, arg = word 0..63, or 64 = the row-header/scale slot; consecutive words merge per 32), FILL (7)
 Every event cycle is the cycle its consumer pin sees the signal, relative to the calendar's start strobe edge; the
 calendar + face output registers take CAL_OUT_EDGES edges, which this compiler subtracts (an event earlier than that is
-rejected).  D2D calendar images are tools/qwen_split/d2d_link_calendar.py outputs (cal_C_tx/rx.memh + _seg1.memh).
+rejected).
 
-usage: sys_face_image.py --events EVENTS.json --program PROGRAM.hex|--bench-program [--d2d-dir DIR] --out DIR
+usage: sys_face_image.py --events EVENTS.json --program PROGRAM.hex|--bench-program --out DIR
   -> DIR/sys_face_cfg.viamap.hex (the ROM via map), DIR/sys_face_image.json (rows, digest, expected cfg writes / events)
 """
 import argparse, json, sys
 from pathlib import Path
 
 NE = dict(T=64, L=32, E=16)
-TARGET = dict(D2D_TX=1, D2D_RX=2, T=3, L=4, E=5)
+TARGET = dict(T=3, L=4, E=5, FIRST=6)
 BOOT_BASE, PW, DW = 2048, 1024, 8
 CAL_OUT_EDGES = 1           # start-sampling edge -> calendar ev register (dt edges) -> face output register (+1): pin = start + cycle
-CLASS_OF = dict(T={0, 1}, L={1, 2, 3, 4}, E={6, 7})
+CLASS_OF = dict(T={0, 1, 5}, L={1, 2, 3, 4}, E={6, 7})
 BURST = {2, 6}              # classes whose consecutive-cycle events may merge into one burst entry (beat increments)
 SEED = 0x51484f5354505247
+GO_OFS = 3                  # qfd_sys_face GO_OFS default: the T token-run flag (arg 128) sits at this cycle
 
 
 def rol7(x):
@@ -99,21 +101,19 @@ def bench_program():
     return w
 
 
-def build(events, program, d2d_dir=None):
+def build(events, program):
     if len(program) != PW + DW:
         raise ValueError('program image must be PW1024 + DW8 words')
     rows = {i: w for i, w in enumerate(program)}
     recs, writes = [], []
-    if d2d_dir:
-        for tgt, tag in (('D2D_TX', 'C_tx'), ('D2D_RX', 'C_rx')):
-            img = [int(x, 16) for x in Path(d2d_dir, f'cal_{tag}.memh').read_text().split()]
-            used = len(img)
-            while used and img[used - 1] == 0:
-                used -= 1
-            for i, v in enumerate(img[:used]):
-                recs.append((TARGET[tgt], i, v))
-            base = int(Path(d2d_dir, f'cal_{tag}_seg1.memh').read_text().split()[0], 16)
-            recs.append((TARGET[tgt], 0x80, base))
+    # the D2D link calendars are qfd_d2d_cal_seq constants (d2d_cal_image.svh), not ROM records
+    first = int(events.get('first_token', 0))
+    if not 66 < first < 1 << 32:
+        raise ValueError('first_token (edges from the epoch strobe) must exceed the D2D sequencer init (2 NE + 2)')
+    recs.append((TARGET['FIRST'], 0, first))
+    tr = [c for c, k, a in events.get('T', []) if k in (0, 5) and a & 128]
+    if tr and tr[0] != GO_OFS:
+        raise ValueError(f'T token-run flag at cycle {tr[0]}, the RTL D2D sequencer starts at GO_OFS {GO_OFS}')
     cal = {n: compile_cal(n, events.get(n, [])) for n in ('T', 'L', 'E')}
     for n, img in cal.items():
         for i, v in enumerate(img):
@@ -135,7 +135,6 @@ def main():
     ap.add_argument('--events', required=True)
     ap.add_argument('--program')
     ap.add_argument('--bench-program', action='store_true')
-    ap.add_argument('--d2d-dir')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     ev = json.loads(Path(a.events).read_text())
@@ -143,7 +142,7 @@ def main():
         prog = bench_program()
     else:
         prog = [int(x, 16) for x in Path(a.program).read_text().split()]
-    rows, rec = build(ev, prog, a.d2d_dir)
+    rows, rec = build(ev, prog)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     (out / 'sys_face_cfg.viamap.hex').write_text(viamap(rows))
     (out / 'program.memh').write_text(''.join(f'{w:016x}\n' for w in prog))

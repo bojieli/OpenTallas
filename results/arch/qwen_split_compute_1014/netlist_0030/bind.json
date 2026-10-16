@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen-tp8.bind-real.v1",
- "case": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case",
+ "case": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case",
  "masters": 38,
  "masters_bound": 10,
  "instances": 1641,
@@ -39,15 +39,15 @@
  ],
  "open_inputs": {},
  "lib_list": [
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ff.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ss.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_tt.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ff.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ss.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g/qfd_crom_g_tt.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ff.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ss.lib",
-  "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_tt.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ff.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ss.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_tt.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g/qfd_crom_g_ff.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g/qfd_crom_g_ss.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g/qfd_crom_g_tt.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ff.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ss.lib",
+  "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_tt.lib",
   "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
   "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
   "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
@@ -347,7 +347,7 @@
      "whole_die_qualified": false
     }
    },
-   "view": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8",
+   "view": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8",
    "size_case": [
     64.8,
     205.2
@@ -380,9 +380,9 @@
    ],
    "pin_layer_changes": [],
    "libs": {
-    "tt": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_tt.lib",
-    "ff": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ff.lib",
-    "ss": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ss.lib"
+    "tt": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_tt.lib",
+    "ff": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ff.lib",
+    "ss": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_band_upper_tp8/qfd_band_upper_tp8_ss.lib"
    },
    "insertion": true,
    "pg_layers": [
@@ -426,7 +426,7 @@
     ],
     "insertion": "unchanged from closed source"
    },
-   "view": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g",
+   "view": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g",
    "size_case": [
     194.376,
     550.776
@@ -459,9 +459,9 @@
    ],
    "pin_layer_changes": [],
    "libs": {
-    "tt": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g/qfd_crom_g_tt.lib",
-    "ff": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ff.lib",
-    "ss": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ss.lib"
+    "tt": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g/qfd_crom_g_tt.lib",
+    "ff": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g/qfd_crom_g_ff.lib",
+    "ss": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_crom_g/qfd_crom_g_ss.lib"
    },
    "insertion": true,
    "pg_layers": [
@@ -670,7 +670,7 @@
     ],
     "insertion": "unchanged from closed source"
    },
-   "view": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g",
+   "view": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g",
    "size_case": [
     194.376,
     215.976
@@ -703,9 +703,9 @@
    ],
    "pin_layer_changes": [],
    "libs": {
-    "tt": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_tt.lib",
-    "ff": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ff.lib",
-    "ss": "/srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ss.lib"
+    "tt": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_tt.lib",
+    "ff": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ff.lib",
+    "ss": "/srv/opentallas-scratch/claude/q-netlist-0030/g3/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ss.lib"
    },
    "insertion": true,
    "pg_layers": [
