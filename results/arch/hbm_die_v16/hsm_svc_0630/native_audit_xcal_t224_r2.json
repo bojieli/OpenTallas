@@ -1,0 +1,66 @@
+{
+ "cell": "ot_hbm_svc_sm_xcal_t",
+ "view": "physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t",
+ "lib_cell": "ot_hbm_svc_sm_xcal_t",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 235.0,
+ "spread_ps": 31.8,
+ "outputs": 177,
+ "inputs": 329,
+ "launch_ps": 179.0,
+ "launch_pin": "kv_desc[33]",
+ "capture_ps": 157.6,
+ "capture_pin": "desc_loops[10]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "hsm_xcal_t224_r2-r2-38e71c4dc",
+ "verdict": "CLOSED TT +143.41 / FF +5.48 / DRC 0",
+ "supersedes": {
+  "view": "physical/ref_tile/hsm_xcal_t224_r1/views/ot_hbm_svc_sm_xcal_t",
+  "job": "hsm_xcal_t224_r1-r1-c3e947611",
+  "why": "r1 CLOSED (TT +94.11 / FF +1.25) but native FAIL capture 203.4 ps > 190 on 103 N-face pins, spread 109 ps (results/arch/hbm_die_v16/hsm_svc_0630/native_audit_xcal_t224_r1.json); r2 passes with more hold margin"
+ },
+ "die_binding": "ot_hbm_svc_sm_xcal_t -> physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t (32 instances xc_<q><k>, replaces cpx_<q><k> + xc_<q><k>); all signal pins on the W face",
+ "reaudit": {
+  "at": "2026-10-16T10:05-07:00",
+  "by": "Claude H-SM xcal helper 0945",
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT lib + insertion.json, launch<=220 / capture<=190)",
+  "result": "identical: R 235.0 / spread 31.8 / launch 179.0 kv_desc[33] / capture 157.6 desc_loops[10] / 0 over / 0 comb; view bytes identical to origin/main"
+ },
+ "per_face": {
+  "W": {
+   "pins": 506,
+   "timed_out": 177,
+   "timed_in": 329,
+   "launch_max_ps": 179.0,
+   "capture_max_ps": 157.6,
+   "over": 0
+  },
+  "E": {
+   "pins": 2,
+   "timed": 0,
+   "note": "untimed (no clock-relative arc)"
+  },
+  "N": {
+   "pins": 0
+  },
+  "S": {
+   "pins": 0
+  }
+ },
+ "classification": "PASS on every face: all 506 timed signal pins on the W face beside the W-mid clock entry; r1's 103 N-face capture violators (cfg_data 65, desc_loops 16, desc_limit 12, desc_base 6, ...) no longer exist",
+ "layout_viewed": {
+  "images": [
+   "routes/hsm_xcal_t224_r2_r2_38e71c4dc/layout/floorplan.png (6_final.odb)",
+   "routes/.../layout/density.png"
+  ],
+  "saw": "224.6x216 um, fill 0.364, 2 SRAMs (128x256 upper-centre, 1024x256 lower); pin column on W edge with clock entry mid-W (red); std-cell density concentrated in the W pin-flop strip and two clusters W and E of the 128x256 SRAM (one ~1.0 bin at its E edge); rest of the die empty/blue; no worst-path PNG was produced for this job (TT +143.41 headroom)"
+ }
+}
