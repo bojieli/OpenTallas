@@ -6,7 +6,8 @@ out=${3:?output directory}
 prod=${4:-0}
 rows=282; [[ "$prod" == 0 ]] || rows=7137
 mkdir -p "$out"
-for mut in 0 1 2 4; do
+mutations=${5:-"0 1 2 4"}
+for mut in $mutations; do
   iverilog -g2012 -s tb_programme_local -Ptb_programme_local.MUT="$mut" -Ptb_programme_local.PRODUCTION="$prod" -o "$out/m$mut.vvp" \
     "$src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v" \
     "$src/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv" \

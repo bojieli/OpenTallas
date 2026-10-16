@@ -104,7 +104,7 @@ module tb_programme_local;
     for(g=1;g<IG;g=g+1)write_row(g*IB,0,indexword(g,0,1));cfg_we=1;cfg_bank=0;cfg_row=0;cfg_data=indexword(0,0,1);length=4;start=1;
     @(negedge clk);cfg_we=0;start=0;
     repeat(18)@(negedge clk);
-    if(checking || runs!=3 || total!=282 || bf || lf)$fatal(1,"restart/immediate commit mismatch");
+    if(checking || runs!=3 || total!=E+21 || bf || lf)$fatal(1,"restart/immediate commit mismatch");
     // Bounds fault checks do not reschedule normal execution.
     @(negedge clk);length=0;start=1;
     @(negedge clk);start=0;
