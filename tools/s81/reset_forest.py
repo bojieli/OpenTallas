@@ -44,16 +44,21 @@ def plan(data):
         need(b['period_ps'] > 0 and b['setup_uncertainty_ps'] >= 60, 'invalid setup budget ' + domain)
         need(b['hold_uncertainty_ps'] >= 25 and b['max_edge_um'] <= 500, 'relaxed physical gate ' + domain)
         need(b['wire_ps_per_um'] > 0 and b['skew_ps'] >= 0, 'invalid wire/skew budget')
+        need(b['max_edge_um'] > 0 and b['max_fanout'] > 0 and b['max_delay_cycles'] > 0, 'invalid physical bounds')
     for pid, pin in pins.items():
         need(pin.get('exact_placed_pin') is True, 'not an exact placed pin: ' + pid)
         need(len(pin['xy_um']) == 2, 'invalid coordinates: ' + pid)
         need(pin['direction'] in ('input', 'output'), 'unknown direction: ' + pid)
         need(pin.get('direction_source_sha256') == data['source_sha256'], 'unbound RTL pin direction: ' + pid)
         need(pin['domain'] in budgets and pin['clock'], 'missing clock/domain: ' + pid)
+    need(data['nets'], 'no reset nets')
     bysite = {s['id']: s for s in sites}
+    for site in sites:
+        need(site['role'] in ('branch', 'terminal'), 'unknown reset site role')
     used = set()
     output = []
     all_expected, all_covered = [], []
+    epochs = {}
     for net in data['nets']:
         root, sinks = net['root'], net['sinks']
         need(root in pins and sinks, 'missing root or sinks: ' + net['id'])
@@ -62,6 +67,12 @@ def plan(data):
         need(net.get('root_release') == 'qualified_domain_edge', 'asynchronous root cannot establish fixed calendar')
         d, clock = pins[root]['domain'], pins[root]['clock']
         b = budgets[d]
+        need(isinstance(net.get('root_release_cycle'), int) and net['root_release_cycle'] >= 0,
+             'missing fixed root release cycle')
+        need(bool(net.get('root_epoch')), 'missing compiler reset epoch')
+        domain_clock = (d, clock)
+        need(epochs.setdefault(domain_clock, net['root_epoch']) == net['root_epoch'],
+             'unrelated reset epochs cannot share a release calendar')
         for sink in sinks:
             need(sink in pins and pins[sink]['direction'] == 'input', 'unknown/noninput sink: ' + sink)
             need((pins[sink]['domain'], pins[sink]['clock']) == (d, clock), 'reset domain/clock crossing: ' + sink)
@@ -119,7 +130,7 @@ def plan(data):
             ok, length, slack = edge(a, site['in'])
             need(ok, 'internal unreachable edge')
             edges.append(dict(driver=a, load=site['in'], length_um=length, tt_setup_slack_ps=slack))
-            nodes.append(dict(site=sid, master='ot_s81_reset_leaf', delay_cycles=pad, depth=depth[sid], domain=d, clock=clock, driver_pin=a, input_pin=site['in'], output_pin=site['out']))
+            nodes.append(dict(site=sid, master='ot_s81_reset_leaf', delay_cycles=pad, depth=depth[sid], domain=d, clock=clock, driver_pin=a, input_pin=site['in'], output_pin=site['out'], terminal=site['role']=='terminal'))
             if site['role'] == 'terminal':
                 need(len(site['sinks']) <= b['max_fanout'], 'terminal fanout exceeds bound')
                 for sink in site['sinks']:
@@ -129,10 +140,39 @@ def plan(data):
                     all_covered.append(sink)
         all_expected.extend(sinks)
         used.update(chosen)
-        output.append(dict(net=net['id'], sink_ids=sinks, root_pin=root, nodes=nodes, edges=edges, release_cycles=release_cycles,
-                           release_ps=release_cycles*b['period_ps'], startup_only=True,
+        output.append(dict(net=net['id'], domain=d, clock=clock, sink_ids=sinks, root_pin=root, nodes=nodes, edges=edges, root_epoch=net['root_epoch'], root_release_cycle=net['root_release_cycle'], release_cycles=release_cycles+net['root_release_cycle'],
+                           release_ps=(release_cycles+net['root_release_cycle'])*b['period_ps'], startup_only=True,
                            registers=sum(2+n['delay_cycles'] for n in nodes),
                            area_um2=sum(bysite[s]['area_um2'] for s in chosen)))
+    # All roots in one compensated clock domain release together, including
+    # independent column nets. Padding is explicit hardware at terminal leaves.
+    calendars = {}
+    for net in output:
+        key = (net['domain'], net['clock'])
+        calendars[key] = max(calendars.get(key, 0), net['release_cycles'])
+    for net in output:
+        cycles = calendars[(net['domain'], net['clock'])]
+        extra = cycles - net['release_cycles']
+        for node in net['nodes']:
+            if node['terminal']:
+                node['delay_cycles'] += extra
+            need(node['delay_cycles'] <= budgets[net['domain']]['max_delay_cycles'], 'domain calendar exceeds hardened delay ABI')
+            # Padding changes the physical master. Refuse to borrow a different
+            # parameter's area/view/pins just because the RTL behavior matches.
+            view = bysite[node['site']]['delay_views'].get(str(node['delay_cycles']))
+            need(view is not None, 'missing exact delay-parameter hardleaf view')
+            need(view['source_sha256'] == data['source_sha256'] and len(view['view_sha256']) == 64,
+                 'unbound hardleaf view')
+            need(view['input_pin'] == node['input_pin'] and view['output_pin'] == node['output_pin'],
+                 'delay parameter changes physical pin ABI')
+            node['view_sha256'] = view['view_sha256']
+            node['area_um2'] = view['area_um2']
+            need(0 < node['area_um2'] <= bysite[node['site']]['area_um2'], 'hardleaf exceeds reserved site area')
+        net['release_cycles'] = cycles
+        net['release_ps'] = cycles * budgets[net['domain']]['period_ps']
+        net['cycles_from_root_release'] = cycles - net['root_release_cycle']
+        net['registers'] = sum(2+n['delay_cycles'] for n in net['nodes'])
+        net['area_um2'] = sum(n['area_um2'] for n in net['nodes'])
     need(Counter(all_expected) == Counter(all_covered), 'reset coverage mismatch')
     need(len(all_expected) == len(set(all_expected)), 'sink assigned to multiple reset roots')
     return dict(schema='s81.reset-forest.candidate.v1', binding={k:data[k] for k in ('source_sha256','model_sha256','placement_sha256')},
