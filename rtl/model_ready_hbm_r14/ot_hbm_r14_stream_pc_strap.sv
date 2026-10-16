@@ -374,17 +374,13 @@ module ot_hbm_r14_stream_pc_strap #(
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
     wire [WQ-1:0] wq_act_physical;
-    wire [31:0] wact_bank_ok = ~open & ~blk & aok_z & {8{rrdl_z}} &
-                               ~((REF_MODE && ref_lead_q) ? (32'b1 << bsel) : 32'b0);
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
       wire [4:0] bq = wq_bq[i*5 +: 5];
       assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
                          !(REF_MODE && ref_lead_q && bq == bsel);
-      // one reduction per entry over a shared per-bank vector (H-PCCTRL 2026-10-16): wq_boh[i] is onehot(bank),
-      // wq_bgoh[i] onehot(bank[1:0]) and wq_bank[i] == bsel <=> wq_boh[i][bsel], so bank state, bank-group tRRD_L and the
-      // refresh-lead exclusion fold into wact_bank_ok before the 32:1 one-hot select (measured H4 TT limiter
-      // open -> act -> pwin -> wab_oh).  Same value on every edge (checked against the three-term form in simulation).
-      assign wq_act_physical[i] = W && wq_pv[i] && (|(wq_boh[i] & wact_bank_ok));
+      assign wq_act_physical[i] = W && wq_pv[i] &&
+          (|(wq_boh[i] & ~open & ~blk & aok_z)) && (|(wq_bgoh[i] & rrdl_z)) &&
+          !(REF_MODE && ref_lead_q && wq_bank[i] == bsel);
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
     // against the current bank state with one-hot reductions, keeping the queue indexing and the
