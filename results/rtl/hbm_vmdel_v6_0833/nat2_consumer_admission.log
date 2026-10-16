@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   252 GB (avail 479, growth 174, headroom 48, waiters 0/0 GB) load 72/128 running 36 disk 911 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/vmdel-nat2-consumer0852
+ot-run: ot-agidock128  admits    36 GB (avail 73, growth 31, headroom 24, waiters 0/0 GB) load 25/64 running 8 disk 283 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4091748-1792165913 after 1 s
+Icarus Verilog version 12.0 (stable) ()
+ROW mutant=0 rc=0
+VM_NAT2_INVALID_DQ PASS checks=21632 writes=4096 reads=4096 invalid_samples=17728 banks=64 real_srams=192
+rtl/hbm_accel/loader/service_native/split/tb_vm_delivery_nat2_invalid_payload.sv:77: $finish called at 6820000 (1ps)
+ROW mutant=1 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_vm_delivery_nat2_invalid_payload.sv:47: VM_NAT2_INVALID_DQ mismatch cycle=551 q=0 b=0 status=00000/00000
+       Time: 5516000  Scope: tb_vm_delivery_nat2_invalid_payload.$ivl_for_loop22.$ivl_for_loop23
+ROW mutant=2 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_vm_delivery_nat2_invalid_payload.sv:47: VM_NAT2_INVALID_DQ mismatch cycle=9 q=0 b=0 status=00000/20000
+       Time: 96000  Scope: tb_vm_delivery_nat2_invalid_payload.$ivl_for_loop22.$ivl_for_loop23
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4091748-1792165913): exit 0

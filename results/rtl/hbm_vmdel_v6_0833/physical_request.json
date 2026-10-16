@@ -1,0 +1,224 @@
+{
+  "schema": "opentallas.hbm_vmdel_v6_physical_request.v1",
+  "status": "SOURCE_TYPED_COMPONENT_PROOF_PASS_REQUEST_ISOLATED_MEASUREMENT",
+  "current_contract_commit": "0dc313220",
+  "source_commit": "387d904de",
+  "source_sha256": "05d548534244a9c6e726a0a089f73cda97918e3607a72f0b9f7644b4717ed2fe",
+  "top": "ot_hbm_svc_vmdel_lane_v6",
+  "params": {},
+  "instances": [
+    "vmdel_SW0",
+    "vmdel_SW1",
+    "vmdel_SW2",
+    "vmdel_SW3",
+    "vmdel_SW4",
+    "vmdel_SW5",
+    "vmdel_SW6",
+    "vmdel_SW7",
+    "vmdel_SE0",
+    "vmdel_SE1",
+    "vmdel_SE2",
+    "vmdel_SE3",
+    "vmdel_SE4",
+    "vmdel_SE5",
+    "vmdel_SE6",
+    "vmdel_SE7",
+    "vmdel_NW0",
+    "vmdel_NW1",
+    "vmdel_NW2",
+    "vmdel_NW3",
+    "vmdel_NW4",
+    "vmdel_NW5",
+    "vmdel_NW6",
+    "vmdel_NW7",
+    "vmdel_NE0",
+    "vmdel_NE1",
+    "vmdel_NE2",
+    "vmdel_NE3",
+    "vmdel_NE4",
+    "vmdel_NE5",
+    "vmdel_NE6",
+    "vmdel_NE7"
+  ],
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "bank_id": {
+      "direction": "input",
+      "bits": 3
+    },
+    "begin_v_i": {
+      "direction": "input",
+      "bits": 1
+    },
+    "begin_bank_i": {
+      "direction": "input",
+      "bits": 1
+    },
+    "begin_epoch_i": {
+      "direction": "input",
+      "bits": 16
+    },
+    "start_i": {
+      "direction": "input",
+      "bits": 1
+    },
+    "start_bank_i": {
+      "direction": "input",
+      "bits": 1
+    },
+    "start_epoch_i": {
+      "direction": "input",
+      "bits": 16
+    },
+    "start_base_sector_i": {
+      "direction": "input",
+      "bits": 16
+    },
+    "fill_v_i": {
+      "direction": "input",
+      "bits": 4
+    },
+    "fill_bank_i": {
+      "direction": "input",
+      "bits": 4
+    },
+    "fill_slot_i": {
+      "direction": "input",
+      "bits": 24
+    },
+    "fill_epoch_i": {
+      "direction": "input",
+      "bits": 64
+    },
+    "fill_data_i": {
+      "direction": "input",
+      "bits": 1024
+    },
+    "full0_all": {
+      "direction": "input",
+      "bits": 8
+    },
+    "full1_all": {
+      "direction": "input",
+      "bits": 8
+    },
+    "pcbad_all": {
+      "direction": "input",
+      "bits": 8
+    },
+    "full0": {
+      "direction": "output",
+      "bits": 1
+    },
+    "full1": {
+      "direction": "output",
+      "bits": 1
+    },
+    "pcbad": {
+      "direction": "output",
+      "bits": 1
+    },
+    "block_ready": {
+      "direction": "output",
+      "bits": 2
+    },
+    "busy": {
+      "direction": "output",
+      "bits": 1
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    },
+    "dq": {
+      "direction": "output",
+      "bits": 281
+    },
+    "clk_cap": {
+      "direction": "input",
+      "bits": 1
+    }
+  },
+  "outline_um": [
+    257.04,
+    151.2
+  ],
+  "pins": {
+    "S": [
+      "clk_cap",
+      "fill_v_i",
+      "fill_bank_i",
+      "fill_slot_i",
+      "fill_epoch_i",
+      "fill_data_i"
+    ],
+    "N": [
+      "dq"
+    ],
+    "W": [
+      "clk",
+      "rst_n",
+      "bank_id",
+      "begin_v_i",
+      "begin_bank_i",
+      "begin_epoch_i",
+      "start_i",
+      "start_bank_i",
+      "start_epoch_i",
+      "start_base_sector_i",
+      "full0_all",
+      "full1_all",
+      "pcbad_all"
+    ],
+    "E": [
+      "full0",
+      "full1",
+      "pcbad",
+      "block_ready",
+      "busy",
+      "fault"
+    ]
+  },
+  "requested_new_clock": {
+    "port": "clk_cap",
+    "side": "S",
+    "layer": "M5",
+    "position_range_um": [
+      4.32,
+      4.416
+    ],
+    "relationship": "related_same_frequency",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0,
+    "sinks": "plain input capture flops only"
+  },
+  "body_clock": {
+    "port": "clk",
+    "unchanged": true,
+    "sinks": "body state, four mapped 128x256 SRAMs, registered outputs"
+  },
+  "state_and_cost": {
+    "extra_clock_entries_per_die": 32,
+    "functional_interface_latency_edges": 2,
+    "cross_lane_status_latency_edges": 2,
+    "added_normal_cycles": 0,
+    "sustained_delivery_ii_edges": 1,
+    "new_area_unmeasured": true
+  },
+  "gate_policy": "No physical gate before source proof and exact grant; related-domain paths retain ordinary setup and hold checks. Current d4 remains frozen. No view alias or native claim.",
+  "source_receipt": "results/rtl/hbm_vmdel_v6_0833/receipt.json",
+  "source_graph": {
+    "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split_v6.sv": "05d548534244a9c6e726a0a089f73cda97918e3607a72f0b9f7644b4717ed2fe",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+  }
+}
