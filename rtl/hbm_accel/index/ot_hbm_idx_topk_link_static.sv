@@ -73,7 +73,7 @@ endmodule
 // ---------------------------------------------------------------------------
 // PIN-REGISTERED TILE (OWNER RULE 19:50 PT 10-15, H-NETLIST/idxreg 2026-10-16): the die
 // master ot_hbm_idx_topk_link_static is this shell. Every data input and every output passes ONE kept
-// flop at the pin (clocks and rst_n pass through); the unchanged arithmetic/control is
+// flop at the pin (clocks pass through; rst_n enters a 2-flop release synchroniser); the unchanged arithmetic/control is
 // ot_hbm_idx_topk_link_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
 // calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
 // Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
@@ -84,13 +84,18 @@ module ot_hbm_idx_topk_link_static #(parameter integer MUT=0)(
  output reg[3:0]tx_v,output reg[2179:0]tx,
  output reg fault,output reg[9:0]selected_count
 );
+ // rst_n: async assert, 2-edge release on clk; the core's resets (async and synchronous uses on every
+ // same-PLL phase-0 root) come from this one kept register, so no input port feeds another root's data pins.
+ (* keep *) reg [1:0] rst_sync;
+ always @(posedge clk or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
+ wire rst_core_n=rst_sync[1];
  (* keep *) reg clear_r,ingest_r,flush_r,emit_r;(* keep *) reg[2367:0]line_r;(* keep *) reg[3:0]group_r;(* keep *) reg[7:0]rank_r,gbase_r;
  wire[3:0]c_tx_v;wire[2179:0]c_tx;wire c_fault;wire[9:0]c_count;
  always @(posedge clk)begin
   clear_r<=clear;ingest_r<=ingest_v;line_r<=selected_line;flush_r<=flush;emit_r<=emit_v;group_r<=emit_group;rank_r<=rank;gbase_r<=gbase;
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_core #(.MUT(MUT)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_core #(.MUT(MUT)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule

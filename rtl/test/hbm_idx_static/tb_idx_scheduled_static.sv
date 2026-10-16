@@ -39,6 +39,12 @@ module tb_idx_scheduled_static;
  initial for(integer i=0;i<8;i=i+1)ffirst[i]=-1;
  initial for(integer i=0;i<6;i=i+1)ecls[i]=0;
  always @(negedge clk)for(integer i=1;i<8;i=i+1)if(fsrc[i]===1'b1&&ffirst[i]<0)ffirst[i]=cycle;
+ integer ingests=0,firstingest=-1,lastingest=-1,flushedge=-1;
+ always @(negedge clk)begin
+  if(dut.parent.link.ingest_r)begin ingests++;if(firstingest<0)firstingest=cycle;lastingest=cycle;end
+  if(dut.parent.link.flush_r&&flushedge<0)begin flushedge=cycle;
+   $display("DIAG link-core flush edge%0d total%0d ingests%0d first%0d last%0d selected_observe%h",cycle-tstart,dut.parent.link.c_count,ingests,firstingest-tstart,lastingest-tstart,dut.parent.selector.c_obs);end
+ end
  always @* begin
   key_lines=0;
   if(key_slot)begin key_lines=keys[key_index];if(mutation==2&&key_index==128)key_lines[11]=~key_lines[11];end
