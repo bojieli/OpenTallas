@@ -3,7 +3,7 @@
  "block": "ot_hbm_svc_pc_ctrl_leaf",
  "ref_tile": true,
  "owner": "Claude:H-DIE",
- "purpose": "HBM v15 die: per-PC REAL memory controller leaf (owner 10-14 all on-chip execution real): actual ot_hbm_r14_stream_pc sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM; the stack g_pc body verbatim. 128 instances (32/stack) in the PC band boxes between the PHY-only abstract ot_hbm3e_phy_rc_e8p5 (S face) and the SM service groups (N face, K port). Flow control k_rdy/kr_rdy is the HBM-stack boundary (owner 10-14).",
+ "purpose": "HBM v15 die: per-PC REAL memory controller leaf (owner 10-14 all on-chip execution real): actual ot_hbm_r14_stream_pc sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM; the stack g_pc body verbatim. 128 instances (32/stack) in the PC band boxes between the PHY-only abstract ot_hbm3e_phy_rc_e8p5 (S face) and the SM service groups (N face, K port). Flow control k_rdy/kr_rdy is the HBM-stack boundary (owner 10-14). Clock: the HBM controller clock hbm (CK/2 = 1.024 ns, the r14 timing basis; asynchronous to stream via the group FIFOs), so the kit period is 1024 ps. OREG=1: every PHY-side command output from a flop.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -23,7 +23,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_pc_ctrl_leaf #(.P(0), .PHASE(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_pc_ctrl_leaf #(.P(0), .PHASE(0), .OREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
