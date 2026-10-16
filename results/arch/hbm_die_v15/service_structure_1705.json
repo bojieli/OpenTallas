@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm_v15.service_structure_decision.v1",
+ "owner": "H-DIE",
+ "date": "2026-10-15",
+ "decision": "Primary HBM service structure = the SM-specific four-PC engine (Codex DECISION 14:40) with the H-DIE throughput fixes: per SM 8 landing 256x256 (four 64-row blocks) + 5 canonical-row cache 128x256, per PC a real controller (ot_hbm_r14_stream_pc) + native response 128x256, per SM a 1024x256 programme SRAM. The svc band structure (128 closed ot_hbm_svc_static_pc leaves behind a PHY+controller abstract) is the measured fallback.",
+ "evidence": {
+  "capacity": "64 rows x 8 SMs x 4 stacks PASS, 65 rows refused by the DUT (main 9c98e7e4a)",
+  "all_SM_mapping": "32 SMs each on its own four PCs, per-command XOR PC check (9c98e7e4a); book stack-3 rank 0-7 Engram block remains an allocation item",
+  "static_calendar": "early-calendar mutant rejected on every configuration; copy-into-owned-cache-bank mutant rejected (13f80ffe1)",
+  "throughput": "steady 8 SM x 64 rows x 8 epochs: 69.58 ns/epoch = 104.2 B/cycle/SM = 1.053 x the 99 B/cycle/SM price (13f80ffe1; Codex 14:47 engine 0.53x)",
+  "sram_area_mm2": {
+   "per_stack": 0.8331,
+   "per_die": 3.3324
+  },
+  "std_cell_area": "mapped synth of ot_hbm_svc_sm_stack_native running E1 (/srv/opentallas-scratch/claude/hdie-1705/synth_svcstack, pre-LBANKS source 62108b57c) -- pending"
+ },
+ "plan_fit": {
+  "pc_band_boxes": 32,
+  "pc_band_mm2": 13.26,
+  "sm_tiles": 32,
+  "sm_mm2": 362.1,
+  "homes": "per-PC controller + native response SRAM in the PC band boxes (replacing the 128 svc PCs: 2.02 mm2 today); per-SM landing/cache/feed group at the SM_HBM window of each SM; programme SRAM with the feed"
+ },
+ "blocking_structural_items": [
+  "die PHY abstract ot_hbm3e_phy_v41x_aw30_e8p5 exposes the CONTROLLER K interface (k_v/k_rdy/kr_*, a modelled controller): owner rule 10-14 requires real controllers -> a PHY-only abstract at the row/column/data boundary (tools/mem_compiler/hbm_phy_gen.py new variant, same 8.5 mm shoreline / 10 mm2 basis) with the engine controller as real RTL",
+  "source contract: bind the engine (stack_native minus the external DRAM fixture) as the producer of the 816 PHY-service-band command inputs, or retire the bands if the engine replaces them (views_v5/exposed_inputs_by_owner_1705.json)",
+  "SM tiles (32, 362 mm2) are not instances of the source contract: the die netlist cannot bind SM_HBM/SM_X/SM_OUT until H-SM's static SM master + attention ports are added",
+  "physical: harden the SM group (landing+cache+feed) and the per-PC controller leaves; die clock tree adds their sinks (views_v5/pcrow_c_die_clock method)"
+ ]
+}
