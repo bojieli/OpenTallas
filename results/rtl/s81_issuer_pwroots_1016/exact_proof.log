@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits   187 GB (avail 427, growth 197, headroom 48, waiters 0/0 GB) load 56/128 running 36 disk 870 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-issuer-v2b-0818
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-issuer-v2b-0818
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-121874-1792168428 after 0 s
+{"mode": 0, "edges": 1300, "PASS": true}
+{"mode": 1, "edges": 1300, "PASS": true}
+{"mode": 2, "edges": 1300, "PASS": true}
+{"mode": 3, "edges": 1300, "PASS": true}
+{"mode": 4, "edges": 1300, "PASS": true}
+{"mode": 5, "edges": 1300, "PASS": true}
+{"mode": 6, "edges": 1300, "PASS": true}
+{"mode": 7, "edges": 1300, "PASS": true}
+{"mode": 8, "edges": 1300, "PASS": true}
+{"mode": 9, "edges": 1300, "PASS": true}
+ISSUE_PW_ROOTS PASS actual boot/full128row runtime, all10modes/all1300edges and2root-stop mutants
+PINREG_BOUNDARY mode0 PASS ENDfast278 faultfast-1 faultserial-1 KITserial211 consumeredge213 success1 reject0
+/srv/opentallas-scratch/codex/s81-issuer-v2b-0818/rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv:78: $finish called at 1764100 (1ps)
+PINREG_BOUNDARY mode1 PASS ENDfast278 faultfast279 faultserial212 KITserial211 consumeredge213 success0 reject1
+/srv/opentallas-scratch/codex/s81-issuer-v2b-0818/rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv:78: $finish called at 1764100 (1ps)
+ISSUER_PINREG_BOUNDARY PASS actual128-row c8/c10 wrappers, exact clocks/reset release, +1ck dataIO and fixed fault observation
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-121874-1792168428): exit 0
