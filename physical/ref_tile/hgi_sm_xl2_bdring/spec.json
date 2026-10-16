@@ -54,9 +54,9 @@
  "job": {
   "owner": "Codex H-SM 2330",
   "branch": "codex/hbm-sm-2330",
-  "tag": "cl2e_pinpol",
+  "tag": "cl2f_pinpol_early",
   "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
-  "structural_change": "cl2e: canonical cl2d native launch489.6ps/25pins because output polarity INV wandered308um from an already pin-anchored DFF (four long-wire repeaters). POST_DETAIL_PLACE verifies2048 actual single-fanout INV/DFF launch chains, places the INV on a legal free site within20um of its pin DFF, retains FIRM/dont_touch through CTS/route. No netlist cell removed, no original hold pad changed, no RTL/clock/calendar edge or outline/pin change. Full canonical TT/FF/DRC and native audit remain required.",
+  "structural_change": "cl2e: canonical cl2d native launch489.6ps/25pins because output polarity INV wandered308um from an already pin-anchored DFF (four long-wire repeaters). POST_DETAIL_PLACE verifies2048 actual single-fanout INV/DFF launch chains, places the INV on a legal free site within20um of its pin DFF, retains FIRM/dont_touch through CTS/route. No netlist cell removed, no original hold pad changed, no RTL/clock/calendar edge or outline/pin change. Full canonical TT/FF/DRC and native audit remain required. cl2e actualpostCTS confirmed INVwithin0.27um but four BUFx16repeaters inserted EARLIER duringglobalresize remain ontheoppositeface; cl2f anchors immediately afterglobalplace BEFOREresize, refreshesplacementRC, retainsFIRMthroughresizeandDPL, thenrechecksthelegalstageafterDPL.",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -70,7 +70,8 @@
    "rtl/link/ot_fifo_sram_fwft.sv",
    "tools/hbm_sm_xload_static_timing.py",
    "physical/hbm_xload_2330/anchor_output_polarity.tcl",
-   "results/hbm_sm_attention_1015/takeover_2330/bdring_cl2d/native_audit.json"
+   "results/hbm_sm_attention_1015/takeover_2330/bdring_cl2d/native_audit.json",
+   "physical/hbm_xload_2330/anchor_output_polarity_early.tcl"
   ],
   "benches": [
    {
@@ -129,9 +130,10 @@
   "cell": "ot_hgi_sm_xload_cl2_bdring",
   "launch_ps": 489.6,
   "capture_ps": 145.4,
-  "fix": "cl2e: canonical cl2d native launch489.6ps/25pins because output polarity INV wandered308um from an already pin-anchored DFF (four long-wire repeaters). POST_DETAIL_PLACE verifies2048 actual single-fanout INV/DFF launch chains, places the INV on a legal free site within20um of its pin DFF, retains FIRM/dont_touch through CTS/route. No netlist cell removed, no original hold pad changed, no RTL/clock/calendar edge or outline/pin change. Full canonical TT/FF/DRC and native audit remain required."
+  "fix": "cl2e: canonical cl2d native launch489.6ps/25pins because output polarity INV wandered308um from an already pin-anchored DFF (four long-wire repeaters). POST_DETAIL_PLACE verifies2048 actual single-fanout INV/DFF launch chains, places the INV on a legal free site within20um of its pin DFF, retains FIRM/dont_touch through CTS/route. No netlist cell removed, no original hold pad changed, no RTL/clock/calendar edge or outline/pin change. Full canonical TT/FF/DRC and native audit remain required. cl2e actualpostCTS confirmed INVwithin0.27um but four BUFx16repeaters inserted EARLIER duringglobalresize remain ontheoppositeface; cl2f anchors immediately afterglobalplace BEFOREresize, refreshesplacementRC, retainsFIRMthroughresizeandDPL, thenrechecksthelegalstageafterDPL."
  },
  "orfs_vars": {
-  "POST_DETAIL_PLACE_TCL": "physical/hbm_xload_2330/anchor_output_polarity.tcl"
+  "POST_DETAIL_PLACE_TCL": "physical/hbm_xload_2330/anchor_output_polarity.tcl",
+  "POST_GLOBAL_PLACE_TCL": "physical/hbm_xload_2330/anchor_output_polarity_early.tcl"
  }
 }

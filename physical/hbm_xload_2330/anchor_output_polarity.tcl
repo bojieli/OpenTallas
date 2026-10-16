@@ -103,4 +103,5 @@ foreach t $ap_targets {
  if {!$found} {error "PIN_POLARITY no legal free site within20um [$bt getName]"}
 }
 puts "PIN_POLARITY verified=$ap_ports moved=$ap_moved max_before_um=[expr {double($ap_max_before)/$ap_u}] max_after_um=[expr {double($ap_max_after)/$ap_u}]"
-check_placement -verbose
+if {![info exists ::ap_require_legal] || $::ap_require_legal} {check_placement -verbose}
+if {[info exists ::ap_refresh_rc] && $::ap_refresh_rc} {estimate_parasitics -placement}
