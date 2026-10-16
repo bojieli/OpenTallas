@@ -1,5 +1,5 @@
 {
- "name": "s81net_l2r_vr_1100x1__hx_w-r1-COMMIT",
+ "name": "s81net_l2r_vr_1100x1__hx_w-r1-da527f001",
  "block": "dsfd_l2r_vr_1100x1__hx_W",
  "ref_tile": true,
  "owner": "Claude:s81-net-resid",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/snf-resid-1016",
-  "commit": "COMMIT",
+  "commit": "da527f001",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
    "physical/s81_die_pins/snet_c26b/dsfd_l2r_vr_1100x1__hx_W.tcl",
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81net_l2r_vr_1100x1__hx_w/s81net_l2r_vr_1100x1__hx_w-r1-COMMIT"
+   "to": "results/rtl/ref_tile/s81net_l2r_vr_1100x1__hx_w/s81net_l2r_vr_1100x1__hx_w-r1-da527f001"
   }
  ],
  "cycles_added": 0,
