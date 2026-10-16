@@ -1,0 +1,37 @@
+{
+  "scope": "actual control only; no HC arithmetic or VM numerical qualification",
+  "baseline": "43d5ceb3e",
+  "clock": {
+    "ck_stream_ns": 6,
+    "cck_equals_sk_equals_wrapper_ck": true,
+    "cvk_serial_ns": 8,
+    "fault_origin_ns": 6,
+    "fault_origin_phase_ns": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "instantiated": [
+    "actual ot_s81_hc_cseq PIPE1 DW5",
+    "actual ot_s81_hc_cpin",
+    "actual ot_s81_engine_adapter QD8 and async FIFO",
+    "byte-exact wrapper reset/command/done/status FF shell",
+    "actual dsfd_stage_seq_static_c8 engine2 d2/s2 and static_c/fixed_issue/fixed_mailbox"
+  ],
+  "boundaries": [
+    "registered sticky CCF fault output injection",
+    "fixed writer-complete input"
+  ],
+  "fault_path": "CSEQ yfl N / n_flt N+1 / CPIN flt N+2 / wrapper c_st N+3 afterNBA; then actual c8 engine_fault ck + st1/st2 cvk",
+  "source_edits": "test/projection tooling only, no production source mutation",
+  "observation": "fixed retirement edge for baseline/fault/mutant; no ready/credit wait",
+  "optional_fault_relay": "one fault-origin clock FF, separate from CCF bulk +2 II1",
+  "physical_build": false,
+  "production_calendar": false,
+  "numerical": false,
+  "memory_admission_gb": 8
+}
