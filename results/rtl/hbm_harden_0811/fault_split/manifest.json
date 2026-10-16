@@ -1,0 +1,18 @@
+{
+  "baseline_sha256": "961f061e4846868c71f83c4ed6304d361e9ab853d8d6c7a06312caf212cfeb48",
+  "candidate_sha256": "bd5be073a797d4c14508abd161de8c1e3f6caab5ddb078cba3d0cd0ecfc05af9",
+  "groups": {
+    "0": "illegal ingress",
+    "1": "column command identity/state",
+    "2": "write payload freshness",
+    "3": "pending/response admission",
+    "4": "response drain underflow",
+    "5": "accounting overflow"
+  },
+  "normal_cycles_added": 0,
+  "internal_fault_kill_edges_added": 0,
+  "physical_output_bits_added": 5,
+  "flops_added_per_controller": 5,
+  "instances": 128,
+  "new_physical_gate_or_adoption": false
+}
