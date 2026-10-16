@@ -24,7 +24,10 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 SKIP_RE = re.compile(r'^(q[fk]d_rly|qfd_rst_rep)')
 PG = ('VDD', 'VSS', 'VDDM', 'VSSM')
@@ -33,6 +36,7 @@ PG = ('VDD', 'VSS', 'VDDM', 'VSSM')
 VIEW_ALIASES = {
     'qfd_su_cbuf_g': ('ot_qfd_su_cbuf_g', 'physical/ref_tile/qfd_su_cbuf_g_m5/views/ot_qfd_su_cbuf_g'),
     'qfd_crom_g': ('ot_qfd_crom_gr', 'physical/ref_tile/qfd_crom_g_m5/views/ot_qfd_crom_gr'),
+    'qfd_band_upper_tp8': ('ot_qfd_band_upper', 'physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper'),
 }
 
 
@@ -44,6 +48,10 @@ def alias_view(root, case, master):
     required = [src / f'{source}.lef'] + [src / f'{source}_{c}.lib' for c in ('tt', 'ff', 'ss')] + [src / 'insertion.json']
     if not all(p.exists() for p in required):
         return None
+    specialization = None
+    if master == 'qfd_band_upper_tp8':
+        from qwen_tp8.closed_specialization import verify
+        specialization = verify(root, master)
     out = (case / 'bound_views' / master).resolve()
     out.mkdir(parents=True, exist_ok=True)
     for p in required:
@@ -60,6 +68,8 @@ def alias_view(root, case, master):
                       source_master=source, slot_master=master, source_view=directory,
                       pin_mapping='identity, all pins including clk', liberty_corners=['tt', 'ff', 'ss'],
                       insertion='unchanged from closed source')
+    if specialization is not None:
+        provenance['source_specialization'] = specialization
     (out / 'alias_provenance.json').write_text(json.dumps(provenance, indent=1) + '\n')
     return out
 

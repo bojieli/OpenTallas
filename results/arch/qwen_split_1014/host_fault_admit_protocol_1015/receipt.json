@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.qwen-kvsys-host-fault-admit-protocol.v1",
+ "date": "2026-10-15T18:00-07:00",
+ "owner": "Q-KVSYS-DIE (Claude)",
+ "decision": "ADOPT",
+ "change": "HOST root: physical_fault[7:0] input -> link_physical_fault (qkd_d2d_static sticky fault, placed on bit die_id inside the root); engine_admit_ready input removed -> root-internal native_admit_ready (the live level the control packet already reports as native_ready). Die bus hlpf d2d_kv.lpf(fault) -> host.link_physical_fault. Removes two open functional inputs of qkd_host_rt from the strict bind.",
+ "bench": {
+  "tool": "tools/qwen_kv_die/host_partition_bench.py --protocol --cycles 3000",
+  "simulator": "Icarus Verilog (local)",
+  "protocol": "pll_locked c16, por_n c24, phy_up + all 6 link_up held from c32, no transport/CROM faults; 128 per-PC static controller models (6-cycle fixed latency, scratch-sector storage, er[259] write ack, er[0]/er[256:1] read data, one ordered completion per launch with its write flag); link_physical_fault pulsed 4 cycles at boot+200; native_admit_ready toggled every 7 cycles after boot",
+  "positive": {
+   "result": "PASS",
+   "boot_ok_all_128_at_cycle": 82,
+   "launches": 512,
+   "pf_observed_at_cycle": 284,
+   "outputs_compared": 64,
+   "mismatches": 0
+  },
+  "mutant_pf": {
+   "change": "physical_fault=0 in qkd_host_root_pt",
+   "result": "FAIL (expected)",
+   "first_mismatch_cycle": 283,
+   "example": "fault_src ref=00080008 dut=00080000"
+  },
+  "mutant_ea": {
+   "change": "engine_admit_ready=1 in qkd_host_root_pt",
+   "result": "PASS (not observable)",
+   "reason": "engine_admit_ready only gates TP8 dispatch (dispatch_ready = engine_admit_ready & participant_ready[7:0]); dispatch needs warm_ready from all 8 ranks (service/certificate/program consensus over the peer link), unreachable in a single-root bench (sys_ready stays 0 without 7 peer boots). participant_ready[0] is the transported copy (status bit 31) of the same native_admit_ready, so the mutant differs only in the status-transport window."
+  }
+ },
+ "previous_bench": "random-stimulus bench never booted (link_up fresh random each cycle -> reset sequencer never released hbm_rst_n/boot_go); positive and both mutants idle-equal",
+ "open": [
+  "engine_admit_ready dispatch-window proof needs the 8-rank TP8 protocol bench (owner Q-control-host)",
+  "HOST root physical kit (qkd_host_rt is a frame in the die)"
+ ],
+ "source_sha256": {
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv": "39710fca6f91428ecc7dafd9e61d52a024426c9779ae3f36314a5851f59c1561",
+  "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv": "b7a1a282eb02f00dd0b7e70a7a633f59aec7fdcf3f1c961b0e6eeb560b1291f2",
+  "rtl/test/qwen_split/qkd_host_root_composed.sv": "c991a1a7c41fc4fb9e7f67401d6aa67a376fcae48760951da41302f362aa579a",
+  "tools/qwen_kv_die/host_partition_bench.py": "99cc1b750277ee845605b387714ea89a9ac14ad4f9e5088de5e2f0f87d0387d8",
+  "tools/qwen_kv_die/host_partition.py": "a4d336b3dbdc5d1eacdd43ca4a2aacb6b2a935142037e938716d9f47722bd362",
+  "tools/qwen_kv_die/kv_die.py": "8d0423f6009110e09c5e1efebd8fdb5c3f712128f712b2fffd3da2bf149ea3dc"
+ }
+}

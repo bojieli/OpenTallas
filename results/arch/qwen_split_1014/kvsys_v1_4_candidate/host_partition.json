@@ -3,11 +3,11 @@
  "sources": {
   "root": {
    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv",
-   "sha256": "49d3ce196418969a14e5d8dda239272a287c9fef48e56b23d301122844a55297"
+   "sha256": "39710fca6f91428ecc7dafd9e61d52a024426c9779ae3f36314a5851f59c1561"
   },
   "rank": {
    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv",
-   "sha256": "090c7edf0d132245da343f89565082d25fe6523f17d22aadad460d71eb9c0811"
+   "sha256": "155e1f883fc3443bef192acc2f1947c66a7e459ef723a81b2c9b9a36331ebc88"
   },
   "chain": {
    "path": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain_splitboot.sv",
@@ -32,9 +32,9 @@
  },
  "generated": {
   "root_pt": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
-  "root_pt_sha256": "3cc5d1ea0e6b9cb1d79fe3bcc2dbfdf73639c0103d325765795159d6f0f0b9e4",
+  "root_pt_sha256": "b7a1a282eb02f00dd0b7e70a7a633f59aec7fdcf3f1c961b0e6eeb560b1291f2",
   "composed": "rtl/test/qwen_split/qkd_host_root_composed.sv",
-  "composed_sha256": "436d65024fd8a78a13b372a8cf139eb1f4945bc9dbec527ebe85811ae0e5ba27"
+  "composed_sha256": "c991a1a7c41fc4fb9e7f67401d6aa67a376fcae48760951da41302f362aa579a"
  },
  "moved_per_pc": [
   "qkd_host_ingest_station",

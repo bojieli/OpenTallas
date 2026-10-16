@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.qwen-kvsys-v143-design.v1",
+ "date": "2026-10-15T18:15-07:00",
+ "owner": "Q-KVSYS-DIE (Claude)",
+ "status": "DESIGN_MEASURED_GENERATOR_NOT_YET_IMPLEMENTED",
+ "adopted": false,
+ "problem": "v1.4.2 die TT (kvs8, diagnostic): ECTL_c -> head frontq q_data_in -1762.84 ps, 233,373 of 299,285 real->real violators: one ECTL flop per t-bit drives 8 front leaves (2 heads x 4 fronts) over 625-1024 um of UNBUFFERED die wire (die nets carry no repeaters).  Far heads (h0/h3) sit a whole near head (492 um) away from the ECTL; Codex N4 refused for zero T1/S1 homes and a 54-um SerDes corridor.",
+ "design": {
+  "name": "G3S2 (gather-based staged ingress, no ABC pads)",
+  "ingress": "ECTL t{pr}(1559)+e{h}(16) -> G (qkh_head_gather_stage, closed 324x21.6, TT +354.9 / FF +11.0 / DRC 0) -> T1 (same master) -> T2 (same master) -> head fronts: +3 edges",
+  "score": "score4 {sc_d,sc_f,g_f} -> S1 -> S2 (qkh_head_sstage 21.6x21.6) -> ECTL s{h}: +2 edges; ECTL a/b/c re-hardened with HXK=5 (only the 13-bit score tag delay line grows)",
+  "homes": {
+   "near_heads": "G_near / G_far / T1n / T2n = four 21.6-um rows (28.08 pitch) in a 117.7-um band on each ECTL face, S1n/S2n beside them",
+   "far_heads": "G_far in the ECTL band; T1f + S2f in a feed-through channel INSIDE the near head (lane rows >=1 moved up 16.2 um, head 1079.976 x 508.656, channel zone x 351..712.8 / y 189..216 head-local); T2f + S1f in a 32.4-um band between the near and far head",
+   "masters": {
+    "near": "qkd_rhead_ft = ot_qkh_head_native_r4 + qkh_head_gather_stage + qkh_head_sstage (neighbour feed-through), plan head_ft_plan.json (valid, 86 children, worst hop 495.696 um unchanged)",
+    "far": "qkd_rhead unchanged (r4 plan)"
+   }
+  },
+  "geometry": {
+   "per_group_growth_um": 332.6,
+   "per_stack_growth_um": 1330.4,
+   "anchoring": "N stacks keep their bottom and grow up into the 2.0-mm top slack; S stacks keep their bottom (2002 um, SerDes corridor 417 um kept) and grow up into the 3.7-mm middle; die outline 10,798 x 24,587 unchanged"
+  },
+  "cost": {
+   "edges_per_layer": 5,
+   "vs_N4": -1,
+   "ledger": "to be measured on the full composition (+5 x 36 layers)"
+  }
+ },
+ "measured_matched_bit_worst_um": {
+  "ingress": {
+   "ECTL->G_near (pair word, 2 loads)": 285.9,
+   "ECTL->G_far": 314.0,
+   "G_n->T1n": 34.6,
+   "T1n->T2n": 125.3,
+   "T2n->near fronts": [
+    436.4,
+    "c_in[2]",
+    0
+   ],
+   "G_f->T1f (near-head channel)": 337.0,
+   "T1f->T2f (nf band)": 335.9,
+   "T2f->far fronts": [
+    436.4,
+    "c_in[2]",
+    0
+   ],
+   "geometry": {
+    "top_near": -117.77,
+    "chan_y": -328.37,
+    "bot_near": -626.42,
+    "top_far": -658.82,
+    "half_group_growth": 158.8
+   }
+  },
+  "score": {
+   "near": {
+    "score_to_S1": 156.3,
+    "S1_to_S2": 124.0,
+    "S2_to_ECTL": 87.1
+   },
+   "far": {
+    "score_to_S1": 156.3,
+    "S1_to_S2": 334.6,
+    "S2_to_ECTL": 411.6
+   }
+  },
+  "reference": {
+   "v142_ECTL_to_front_nearest_pin_um": 625.3,
+   "v142_loads_per_t_bit": 8,
+   "kvs8_stk_to_ktree_453um_TT_slack_ps": 50.45
+  },
+  "method": "max Manhattan over every endpoint pair of the matched bit, actual closed LEF pins (ECTL a/b/c, gather, sstage, frontq, score4), stages MX below an R0 ECTL; tools/qwen_kv_die/v143_feasibility.py"
+ },
+ "open": [
+  "kv_die.py --v143 generator (bands, anchored groups, qkd_rhead_ft frame + kv_expand plan, die masters qkd_hgs/qkd_hss with LEF pins, t/e/s buses re-wired, ECTL sliced t ports not needed)",
+  "qkd_rhead_ft wrapper RTL + composition bench (ECTL->G->T1->T2->r4 and S1/S2) with mutants",
+  "ECTL a/b/c HXK=5 kits (Q-ELEM) and compiler head_stages +3/+2 (Q-ATTN / compiler)",
+  "T2 -> 4-front broadcast 436 um (c_in/lt at the gather pin end) is the worst hop: front-aware T2 pin order if die TT fails it"
+ ],
+ "sources": {
+  "tools/qwen_kv_die/v143_feasibility.py": "03e632001b88f1434f36cd221d11c13bace0f1b7c41a764e61f3e53c881754d5",
+  "tools/qwen_kv_die/head_native_plan_r4.py": "ab55b3afd4119b177fbf5725c744c062119ac3cec265bebe24766f1e080b17ae",
+  "results/arch/qwen_split_1014/kvsys_v1_4_3_design/head_ft_plan.json": "720b4532f420b0c20bb1d09f3dedd2410504e971a7da31ae1b70091b928e80fe"
+ }
+}

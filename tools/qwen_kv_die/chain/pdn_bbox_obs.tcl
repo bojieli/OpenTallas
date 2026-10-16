@@ -46,13 +46,18 @@ proc ot_pdn_bbox::begin {dir} {
     set master [$inst getMaster]
     if {[llength [$master getObstructions]]} {dict set masters [$master getName] $master}
   }
-  set exported $dir/pdn_original_[clock clicks].lef
+  set stamp [clock clicks]
+  set exported $dir/pdn_original_$stamp.lef
   write_lef $exported
   set file [open $dir/pdn_bbox_names.txt w]
   foreach name [lsort [dict keys $masters]] {puts $file $name}
   close $file
-  exec python3 $dir/pdn_bbox_obs.py $exported $dir/pdn_bbox_names.txt $dir/pdn_bbox_masters.lef
-  read_lef -library $dir/pdn_bbox_masters.lef
+  # One alias library per begin: restore destroys the alias masters but OpenDB keeps their (now empty) library, and
+  # read_lef -library names the library after the file, so a second begin (KV preflight begin/restore/begin) with a
+  # fixed file name fails 'ODB-0229 library already exists' -> 'missing alias' (kvs8-codex-1338 resume 17:20).
+  set aliaslef $dir/pdn_bbox_masters_$stamp.lef
+  exec python3 $dir/pdn_bbox_obs.py $exported $dir/pdn_bbox_names.txt $aliaslef
+  read_lef -library $aliaslef
   dict for {name master} $masters {
     set alias [[ord::get_db] findMaster OT_PDN_BBOX_$name]
     if {$alias == "NULL" || $alias == ""} {error "PDN bbox: missing alias $name"}

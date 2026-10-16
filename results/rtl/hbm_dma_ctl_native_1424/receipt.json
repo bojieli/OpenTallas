@@ -1,0 +1,10 @@
+{
+ "source": "7a5a28194",
+ "production": "actual32VM/128SRAM MAIN+MIRROR each2561sectors173command-to-fencecycles",
+ "equivalence": "1921checks6790beats31cases vs cursor",
+ "mutants": "allthree semantic mutants fail",
+ "exceptional_cost": "two resetrelease edges, bench3edge boot idle; malformedresponsefault+1edge; normalcommand/data/fence unchanged",
+ "resetfault": "8banks26checks",
+ "physical": "FreshCTSgatePID3427847 ongoing; actualroute/nativeexportrequired; no closureclaim",
+ "parent": "432x360.72nine-root actualfitOPEN"
+}
