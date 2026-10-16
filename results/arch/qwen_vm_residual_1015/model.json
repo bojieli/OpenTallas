@@ -41,7 +41,8 @@
     "legacy_parent_clock_entries": 487,
     "candidate_clock_entries_at_least": 586,
     "write_control_extraction": "Still required; none of the 55,251 remaining BV FFs is claimed as wires-only parent",
-    "remaining_bv_ff_bits_after_return_and_read_control": 53466
+    "production_remaining_bv_ff_bits_after_return_and_read_control": 53544,
+    "census_parameter_scope": "87507 source FF census is actual production RO1/SX7;595FF read-control microcensus was generic RO2/SX8, so production subtraction uses569."
   },
   "read_control": {
     "instances": 3,

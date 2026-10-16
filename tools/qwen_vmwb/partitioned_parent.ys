@@ -1,0 +1,9 @@
+read_verilog -sv -lib rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv
+read_verilog -sv -DOT_QFD_VM_NOX -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv   rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_par.sv
+blackbox ot_qfd_vm_bctl_nx ot_qfd_vm_delay2_t ot_qfd_vm_bank_t ot_qfd_vm_delay1_t ot_qfd_vm_sctl_t ot_qfd_vm_su_t ot_qfd_vm_su1024_t ot_qfd_vm_rr4_t ot_qfd_vm_rr2_nx qfd_vm_qcommit qvm_bank_banked_native qvm_su_bank_native
+read_verilog -sv -DOT_QFD_VM_NOX -DSYNTHESIS rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_par_partitioned.sv
+hierarchy -top qfd_sp_vector_memory_par_partitioned
+proc
+opt_clean
+stat
+write_json ../partitioned-parent.json
