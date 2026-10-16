@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_res_train_half_b2_2",
+ "enable": false,
+ "reason": "Source-exact b2 calendar: rq is captured by the 24 banks at the compiler-fixed F(HB,k,j) edge, rb/fault are flop outputs; a generated pin stage would shift the calibrated tag->capture age (b2 phase protocol) without RTL."
+}
