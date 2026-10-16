@@ -73,3 +73,16 @@ planning margin. This thin estimate is not routed timing closure. Actual
 per-bit obstacle-aware routes, clocks and endpoint views remain mandatory.
 The736 station reset leaves (15FF each) are still unplaced/unqualified.
 This proves only leaf footprint feasibility, not complete station qualification.
+
+A separate balanced successor preserves the diagnostic above: run
+`python3 tools/hbm_die_v15/balance_sfu_split48_1016.py`. Six explicit station
+moves redistribute neighboring spacing without adding stages. Independent
+final collision scan remains zero; worst EW envelope falls to397.27425µm,
+18.38775µm (about13.975ps) below the measured415.662µm reach.
+The before/after actual footprint image sfu_split48_balanced.png was personally
+inspected; sfu_split48_balanced.json records every move and binds its input.
+This improves geometric planning margin only. Actual endpoint views, routed
+wire RC/cuts, source/leaf clock delivery, reset-leaf view/placement and actual
+compiler cost still prevent native adoption. It does not resolve programme476,
+SKV/collective homes, the connected eight-by-two SM roof/OBS/PG obligations or
+new fixed-stage SFU result transport.
