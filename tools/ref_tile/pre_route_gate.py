@@ -211,8 +211,8 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
                   "assign every port to a face")
     one = [p for p, (w, vec) in ports.items() if vec and w == 1]
     if one:
-        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
-              "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
+        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: retain declared indices for literal clock entries; "
+              "check actual mapped pin names for a hand pin list", "use the actual RTL and mapped pin names")
     for clock in RT.clock_ports(spec):
         # Entry-clock specs use literal bits, while the RTL header parser returns
         # vector base names. Keep pin-face plans grouped by base name, but accept
@@ -222,7 +222,7 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
         if bit and bit[1] in ports:
             width, vector = ports[bit[1]]
             bounds = getattr(ports, "ranges", {}).get(bit[1])
-            exists = bool(vector and bounds and bounds[0] != bounds[1] and bounds[0] <= int(bit[2]) <= bounds[1])
+            exists = bool(vector and bounds and bounds[0] <= int(bit[2]) <= bounds[1])
         if not exists:
             g.add("FAIL", "pins", f"clock port {clock} is not a port of {spec['top']}", "fix clock_port")
 
