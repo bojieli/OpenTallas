@@ -12,6 +12,8 @@ RLY=${3:-$(dirname $D)/qkd_kv_relays.sv}; EXP=${4:-$(dirname $(dirname $D))/expa
 A=(); [ -f "$RLY" ] && A+=(--relay-rtl "$(readlink -f $RLY)"); [ -f "$EXP" ] && A+=(--expanded "$(readlink -f $EXP)")
 python3 $R/tools/qwen_kv_die/kv_bound_netlist.py $D "${A[@]}" --out-dir $O > $O/bound_netlist.log 2>&1 || { tail -3 $O/bound_netlist.log; exit 3; }
 F=(); [ -f "$RLY" ] && F+=(--rtl-file "$(readlink -f $RLY)")
+# Q-KVSYS-RLY: relay-standard replicas used below their width tie DECLARED pads (kv_rly_std.py writes DIE_V.pads.json)
+[ -f "$D.pads.json" ] && F+=(--pad-file "$D.pads.json")
 python3 $R/tools/die_port_bind.py $O/die_bound.v "${F[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
   --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \

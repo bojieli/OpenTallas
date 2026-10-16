@@ -1,0 +1,399 @@
+{
+ "schema": "opentallas.hbm_v16_master_owners.v1",
+ "source": "results/arch/hbm_die_v16 @ strict bind PASS 406a2d5f9; die_completeness 06:09",
+ "rule": "HANDOFF 0bm 00:45: die lead owns netlist completeness; every master needs an owner; each owner closes + native-audits or proves an existing closed master replicates (DEDUPE)",
+ "rows": [
+  {
+   "master": "hbfd_rly_624_EW",
+   "instances": 165,
+   "state": "closed, native FAIL",
+   "detail": "launch 229.66092 > 220 (37 pins)",
+   "assigned_owner": "H-DIE",
+   "prev_owner": "Claude:hbmdie-lead"
+  },
+  {
+   "master": "hbfd_rly_624_NS",
+   "instances": 11,
+   "state": "closed, native FAIL",
+   "detail": "launch 288.09088 > 220 (305 pins)",
+   "assigned_owner": "H-DIE",
+   "prev_owner": "Claude:hbmdie-lead"
+  },
+  {
+   "master": "hbfd_rly_624_SN",
+   "instances": 11,
+   "state": "closed, native FAIL",
+   "detail": "launch 288.23171 > 220 (310 pins)",
+   "assigned_owner": "H-DIE",
+   "prev_owner": "Claude:hbmdie-lead"
+  },
+  {
+   "master": "hbfd_rly_624_WE",
+   "instances": 165,
+   "state": "closed, native FAIL",
+   "detail": "launch 226.84503 > 220 (21 pins)",
+   "assigned_owner": "H-DIE",
+   "prev_owner": "Claude:hbmdie-lead"
+  },
+  {
+   "master": "hfd_ckgen",
+   "instances": 1,
+   "state": "parent: leaves closed, not hardened",
+   "detail": "2 of 2 contract leaves closed",
+   "assigned_owner": "H-DIE",
+   "prev_owner": "HBM-V15-HARDEN"
+  },
+  {
+   "master": "hfd_ep_static",
+   "instances": 9,
+   "state": "closed, native FAIL",
+   "detail": "launch 223.22725 > 220 (3 pins); capture 212.70301 > 190 (1 pins)",
+   "assigned_owner": "H-LKEP",
+   "prev_owner": "Claude:H-LKEP"
+  },
+  {
+   "master": "hfd_hgi_vms_static_NE",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "3 of 4 contract leaves closed",
+   "assigned_owner": "H-SM",
+   "prev_owner": "H-ELEM-A"
+  },
+  {
+   "master": "hfd_hgi_vms_static_NW",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "3 of 4 contract leaves closed",
+   "assigned_owner": "H-SM",
+   "prev_owner": "H-ELEM-A"
+  },
+  {
+   "master": "hfd_hgi_vms_static_SE",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "3 of 4 contract leaves closed",
+   "assigned_owner": "H-SM",
+   "prev_owner": "H-ELEM-A"
+  },
+  {
+   "master": "hfd_hgi_vms_static_SW",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "3 of 4 contract leaves closed",
+   "assigned_owner": "H-SM",
+   "prev_owner": "H-ELEM-A"
+  },
+  {
+   "master": "hfd_lk_ep_face",
+   "instances": 1,
+   "state": "closed, native FAIL",
+   "detail": "capture 204.72551 > 190 (21 pins)",
+   "assigned_owner": "H-LKEP",
+   "prev_owner": "H-ELEM-A"
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instances": 32,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (COLL+IDX)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_hc_eng_static",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/hceng",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_hc_q_static",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/hceng",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_host_landing256",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (lead)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_host_packet_static",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (lead)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_idx_client_static_sw",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (COLL+IDX)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_lk_ep",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-LKEP",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_static_cfg_collar",
+   "instances": 6,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (lead)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_status_join",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (lead)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_su_bridge_release",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SU",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_su_programme",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SU",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_su_static_cxport",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SU",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice",
+   "instances": 16,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SU",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_su_static_qcore",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SU",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_su_static_sfustore",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SU",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "instances": 128,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/harden",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_svc_sm_group",
+   "instances": 32,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal",
+   "instances": 32,
+   "state": "closed, native FAIL",
+   "detail": "capture 253.96084 > 190 (1 pins)",
+   "assigned_owner": "H-SM",
+   "prev_owner": "Codex:H-XC-physical-1016"
+  },
+  {
+   "master": "ot_hbm_svc_stack_fault",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/harden",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare",
+   "instances": 32,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "instances": 32,
+   "state": "routed-failed",
+   "detail": "needs redesign (no live job); 7 failed job(s)",
+   "assigned_owner": "H-NETLIST/vmdel",
+   "prev_owner": "Claude:H-NETLIST/kits"
+  },
+  {
+   "master": "ot_hbm_svc_wb_kport",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/harden",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_vm_lg_static_split",
+   "instances": 8,
+   "state": "RTL only (no route yet)",
+   "detail": "no closure-loop job yet",
+   "assigned_owner": "H-SM",
+   "prev_owner": "H-ELEM-A"
+  },
+  {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "instances": 8,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/harden",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "instances": 3,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (COLL+IDX)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hfd_coll_q3_static_host_v4",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (COLL+IDX)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hgi_coll_inj_idx_join",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (COLL+IDX)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST/harden",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hgi_qdq_host_static",
+   "instances": 1,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "instances": 4,
+   "state": "parent: leaves closed, not hardened",
+   "detail": "2 of 2 contract leaves closed",
+   "assigned_owner": "H-SU",
+   "prev_owner": "HBM-V15-HARDEN"
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "instances": 16,
+   "state": "closed, native FAIL",
+   "detail": "capture 416.8191 > 190 (3 pins)",
+   "assigned_owner": "H-SM",
+   "prev_owner": "Claude H-SM"
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "instances": 4,
+   "state": "routed-failed",
+   "detail": "needs redesign (no live job); 4 failed job(s)",
+   "assigned_owner": "H-SM",
+   "prev_owner": "Claude H-SM"
+  },
+  {
+   "master": "ot_static_cmd_target",
+   "instances": 76,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (lead)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_static_program_target",
+   "instances": 18,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-NETLIST (lead)",
+   "prev_owner": null
+  },
+  {
+   "master": "ot_vms_calendar_static",
+   "instances": 4,
+   "state": "RTL only (no route yet)",
+   "detail": "no registry row",
+   "assigned_owner": "H-SM",
+   "prev_owner": null
+  }
+ ]
+}

@@ -114,6 +114,36 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
+class PortMap(dict):
+    """Port widths plus the actual declared index bounds for literal clock bits."""
+    def __init__(self, ports, ranges=None):
+        super().__init__(ports)
+        self.ranges = ranges or {}
+
+
+def module_port_ranges(body):
+    body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)
+    params = TL.module_params(body)
+    hdr = body[:body.find(";")] if ";" in body else body
+    out = {}
+    for blob in (hdr, body):
+        for m in re.finditer(r"\b(input|output|inout)\b([^;]*?)(?=;|\)\s*$|\binput\b|\boutput\b|\binout\b)", blob, re.S):
+            seg = m[2]
+            dims = re.findall(r"\[([^\]:]+):([^\]]+)\]", seg)
+            bounds = None
+            if len(dims) == 1:
+                a, b = (TL._eval_int(x, params) for x in dims[0])
+                if a is not None and b is not None:
+                    bounds = [min(a, b), max(a, b)]
+            names = re.sub(r"\[[^\]]*\]", " ", seg)
+            for name in re.findall(r"\b([A-Za-z_]\w*)\b", names):
+                if name not in TL._KW and name not in out:
+                    out[name] = bounds
+        if out:
+            break
+    return out
+
+
 def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     root = root or ROOT
     texts = []
@@ -148,37 +178,53 @@ def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     mods = TL.rtl_modules(texts)
     if top not in mods:
         return None
-    return TL.module_port_dirs(mods[top]) if dirs else TL.module_ports(mods[top])
+    return TL.module_port_dirs(mods[top]) if dirs else PortMap(TL.module_ports(mods[top]), module_port_ranges(mods[top]))
 
 
 def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
     if ports is None:
         g.add("FAIL", "pins", f"top module {spec['top']} not found in the {where} sources", "fix 'top' / 'sources'")
         return
-    plan = {}
-    for f, names in spec["pins"].items():
-        for n in names:
-            plan.setdefault(n, []).append(f)
-    if spec["pins"].get("ANY"):
-        g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
-              "give every bus a face (and an offset range) from the die contract before the die integrates it")
-    for n, fs in plan.items():
-        if len(fs) > 1:
-            g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
-        if n not in ports:
-            near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
-            g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
-                  + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
-    miss = [p for p in ports if p not in plan]
-    if miss:
-        g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
-              "assign every port to a face")
+    if RT.literal_pin_bits(spec):
+        try:
+            RT.validate_literal_pin_plan(spec, ports if where == "synthesized netlist" else None, ROOT)
+        except RT.SpecError as e:
+            g.add("FAIL", "pins", str(e), "preserve complete actual pin coverage, exact IO source and named M6 contacts")
+    else:
+        plan = {}
+        for f, names in spec["pins"].items():
+            for n in names:
+                plan.setdefault(n, []).append(f)
+        if spec["pins"].get("ANY"):
+            g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
+                  "give every bus a face (and an offset range) from the die contract before the die integrates it")
+        for n, fs in plan.items():
+            if len(fs) > 1:
+                g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
+            if n not in ports:
+                near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
+                g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
+                      + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
+        miss = [p for p in ports if p not in plan]
+        if miss:
+            g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
+                  "assign every port to a face")
     one = [p for p, (w, vec) in ports.items() if vec and w == 1]
     if one:
         g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
               "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
-    if spec["clock_port"] not in ports:
-        g.add("FAIL", "pins", f"clock port {spec['clock_port']} is not a port of {spec['top']}", "fix clock_port")
+    for clock in RT.clock_ports(spec):
+        # Entry-clock specs use literal bits, while the RTL header parser returns
+        # vector base names. Keep pin-face plans grouped by base name, but accept
+        # an in-range bit of a vector as an actual clock entry.
+        bit = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]", clock)
+        exists = clock in ports
+        if bit and bit[1] in ports:
+            width, vector = ports[bit[1]]
+            bounds = getattr(ports, "ranges", {}).get(bit[1])
+            exists = bool(vector and bounds and bounds[0] != bounds[1] and bounds[0] <= int(bit[2]) <= bounds[1])
+        if not exists:
+            g.add("FAIL", "pins", f"clock port {clock} is not a port of {spec['top']}", "fix clock_port")
 
 
 # --------------------------------------------------------------------------------------------- pin fit / pin flops
@@ -736,11 +782,17 @@ python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dum
 python3 - $B/1_2_yosys.v {TOP} <<'EOP'
 import re,sys,json
 t=open(sys.argv[1]).read(); m=re.search(r"module\s+\\?"+re.escape(sys.argv[2])+r"\s*\((.*?)\);(.*?)endmodule",t,re.S)
-ports={{}}
+ports={{}}; ranges={{}}
 if m:
   for d in re.finditer(r"\b(input|output|inout)\b\s*(?:signed\s*)?(\[[^\]]*\])?\s*([^;]+);",m.group(2)):
     for n in d.group(3).split(","): ports[n.strip().lstrip("\\")]=[1 if not d.group(2) else None, bool(d.group(2))]
+    if d.group(2):
+      bounds=re.fullmatch(r"\[\s*(-?\d+)\s*:\s*(-?\d+)\s*\]",d.group(2))
+      if bounds:
+        a,b=map(int,bounds.groups())
+        for n in d.group(3).split(","): ranges[n.strip().lstrip("\\")]=[min(a,b),max(a,b)]
 print("GATE_PORTS "+json.dumps(ports))
+print("GATE_PORT_RANGES "+json.dumps(ranges))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
 # PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
@@ -1200,7 +1252,9 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
               PF.FIX_TEXT if any("PPL-0093" in e for e in errs) else "fix the pin plan / pin layers")
     m = re.search(r"^GATE_PORTS (.*)$", out, re.M)
     if m:
-        ports = {k: tuple(v) for k, v in json.loads(m.group(1)).items()}
+        bounds = re.search(r"^GATE_PORT_RANGES (.*)$", out, re.M)
+        ports = PortMap({k: tuple(v) for k, v in json.loads(m.group(1)).items()},
+                        json.loads(bounds[1]) if bounds else {})
         check_pins(g, spec, ports, where="synthesized netlist")
     am = re.search(r"^GATE_AREA .*?([\d.]+)\s*$", out, re.M)
     if am:

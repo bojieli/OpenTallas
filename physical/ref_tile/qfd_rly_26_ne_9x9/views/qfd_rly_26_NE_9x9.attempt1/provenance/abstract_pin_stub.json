@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "FAIL",
+  "input": {
+    "path": "provenance/raw/qfd_rly_26_NE_9x9.lef",
+    "sha256": "d4aca0045e9f05a94b79eba9c73e64662a3309d56e97c93983dfa07b4925786c"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfd_rly_26_ne_9x9-c1-9caa9bb9f/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_rly_26_ne_9x9-c1-9caa9bb9f/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_rly_26_ne_9x9-c1-9caa9bb9f/record/views/qfd_rly_26_NE_9x9/provenance/raw/qfd_rly_26_NE_9x9.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_rly_26_ne_9x9-c1-9caa9bb9f/record/views/qfd_rly_26_NE_9x9/provenance/qfd_rly_26_NE_9x9.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: ck; pockets: 2 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfd_rly_26_ne_9x9-c1-9caa9bb9f/record/views/qfd_rly_26_NE_9x9/provenance/qfd_rly_26_NE_9x9.candidate.lef",
+    "verdict": "FAIL",
+    "fails": [
+      "(b) pg: VDD: stripes span only 50% of the macro; VSS: stripes span only 50% of the macro"
+    ],
+    "warns": [],
+    "summary": "qfd_rly_26_NE_9x9 10.8 x 10.8: PG M5 VDD 3 stripes (50% spread, 100% cov) / VSS 3 stripes (50% spread, 100% cov); strap M6; face pins 53 blocked-above 0 blocked-same 0; clock ck insertion 51 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qfd_rly_26_NE_9x9",
+      "W": 10.8,
+      "H": 10.8,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 3,
+            "dir": "V",
+            "spread": 0.5,
+            "coverage": 1.0,
+            "shapes_on_top": 3
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 3,
+            "dir": "V",
+            "spread": 0.5,
+            "coverage": 1.0,
+            "shapes_on_top": 3
+          }
+        },
+        "top_layer": "M5",
+        "ok": false,
+        "why": [
+          "VDD: stripes span only 50% of the macro",
+          "VSS: stripes span only 50% of the macro"
+        ]
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 53,
+        "blocked_above": 0,
+        "covered_below": 15,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 50.51,
+          "min_ps": 44.35
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 2
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "error": "child_lint FAIL"
+}

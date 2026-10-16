@@ -1,0 +1,162 @@
+{
+  "schema": "opentallas.s81.a2f-six-master-qualification.v1",
+  "scope": "Six standalone physical masters are qualified/reused by exact source identity; candidate payload33 front proofs complete. Final production16-root parent ABI, mapped-memory proof, production absolute-epoch policy, joined geometry and die signoff remain coordinator-owned and pending.",
+  "source_commit": "371ccbe0adc259a57dc1f658765548e149300179",
+  "masters": [
+    {
+      "master": "s81_a2f_field4",
+      "kind": "reused closed master",
+      "source": "tools/s81_vm/area_a2f_field4.sv",
+      "source_sha256": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d",
+      "params": {},
+      "identity": "complete consumed RTL file remains byte-identical to selected original route",
+      "route_revision": "48321fb79",
+      "strict_M5_receipt": "results/rtl/s81_vm_a2f_leaves_0310/field4_r3c_strict_M5.json",
+      "raw_recovery_receipt": "results/rtl/s81_vm_a2f_leaves_0310/field4_raw_recovery.json"
+    },
+    {
+      "master": "s81_a2f_control4_resetlocal",
+      "kind": "reused closed master",
+      "source": "tools/s81_vm/area_a2f_control_resetlocal.sv",
+      "source_sha256": "59907c651f325341ec872da56ae3fa965ae01eac3a2fb8d40ade35aa73841d62",
+      "params": {},
+      "identity": "complete consumed RTL file remains byte-identical to selected original route",
+      "route_revision": "8452b506f",
+      "strict_M5_receipt": "results/rtl/s81_vm_a2f_leaves_0310/control4_r3_strict_M5.json",
+      "raw_recovery_receipt": null
+    },
+    {
+      "master": "s81_a2f_fault_join4",
+      "kind": "new closed and native-qualified master",
+      "qualification_receipt": "results/rtl/s81_vm_a2f_leaves_0310/fault_qualification.json",
+      "native": {
+        "cell": "s81_a2f_fault_join4",
+        "view": "physical/ref_tile/s81_a2f_fault_join4_native_0310_r1/views/s81_a2f_fault_join4",
+        "lib_cell": "s81_a2f_fault_join4",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 57.3,
+        "spread_ps": 1.5,
+        "outputs": 4,
+        "inputs": 41,
+        "launch_ps": 155.2,
+        "launch_pin": "fault[0]",
+        "capture_ps": 115.9,
+        "capture_pin": "i_fault[2]",
+        "launch_over": 0,
+        "capture_over": 0,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": true,
+        "fail_why": ""
+      },
+      "strict_M5": "PASS",
+      "immutable_RAW": "original manifest SHA matched"
+    },
+    {
+      "master": "s81_a2_w0_header",
+      "kind": "new closed and native-qualified master",
+      "qualification_receipt": "results/rtl/s81_vm_a2f_leaves_0310/header_qualification.json",
+      "native": {
+        "cell": "s81_a2_w0_header",
+        "view": "physical/ref_tile/s81_a2_w0_header_native_0310_r3/views/s81_a2_w0_header",
+        "lib_cell": "s81_a2_w0_header",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 199.6,
+        "spread_ps": 40.9,
+        "outputs": 1222,
+        "inputs": 1220,
+        "launch_ps": 172.6,
+        "launch_pin": "o_tag[258]",
+        "capture_ps": 159.3,
+        "capture_pin": "i_tag[395]",
+        "launch_over": 0,
+        "capture_over": 0,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": true,
+        "fail_why": "",
+        "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/views/s81_a2_w0_header"
+      },
+      "strict_M5": "PASS",
+      "immutable_RAW": "original manifest SHA matched"
+    },
+    {
+      "master": "dsfd_vm_a2f_rsched_p",
+      "kind": "new closed and native-qualified master",
+      "qualification_receipt": "results/rtl/s81_vm_a2f_leaves_0310/rsched_qualification.json",
+      "native": {
+        "cell": "dsfd_vm_a2f_rsched_p",
+        "view": "physical/ref_tile/dsfd_vm_a2f_rsched_p_native_0310_r1/views/dsfd_vm_a2f_rsched_p",
+        "lib_cell": "dsfd_vm_a2f_rsched_p",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 211.3,
+        "spread_ps": 38.3,
+        "outputs": 1054,
+        "inputs": 751,
+        "launch_ps": 151.8,
+        "launch_pin": "obs_row[362]",
+        "capture_ps": 151.4,
+        "capture_pin": "aux_v[11]",
+        "launch_over": 0,
+        "capture_over": 0,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": true,
+        "fail_why": "",
+        "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/views/dsfd_vm_a2f_rsched_p"
+      },
+      "strict_M5": "PASS",
+      "immutable_RAW": "original manifest SHA matched"
+    },
+    {
+      "master": "s81_a2_w0_payload33",
+      "kind": "new closed and native-qualified partitioned payload master",
+      "replaces": "s81_a2_w0_payload",
+      "instances": 16,
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv",
+      "source_sha256": "62cd34802bcb72928c369ecc12c548e6913ebd62bee383d8476a3c02b25b2eb0",
+      "job": "s81_a2_w0_payload33_native_0330_r1-split33-371ccbe0a",
+      "job_source": "371ccbe0a",
+      "proof_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33/component_proof.json",
+      "CTS_diagnostic_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33/cts_final_legalize/native_audit.json",
+      "physical_status": "CLOSED including routed-insertion re-STA; TT+51.41ps/FF+6.89ps/DRC0",
+      "qualification_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33_qualification.json",
+      "native": {
+        "cell": "s81_a2_w0_payload33",
+        "view": "physical/ref_tile/s81_a2_w0_payload33_native_0330_r1/views/s81_a2_w0_payload33",
+        "lib_cell": "s81_a2_w0_payload33",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 240.5,
+        "spread_ps": 37.6,
+        "outputs": 1752,
+        "inputs": 1750,
+        "launch_ps": 162.7,
+        "launch_pin": "o_data[92]",
+        "capture_ps": 155.3,
+        "capture_pin": "i_data[51]",
+        "launch_over": 0,
+        "capture_over": 0,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": true,
+        "fail_why": "",
+        "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/payload33_closed/views/s81_a2_w0_payload33"
+      },
+      "strict_M5": "PASS",
+      "immutable_RAW": "original manifest SHA matched",
+      "legal_face_capacity_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33/legal_face_capacity.json"
+    }
+  ]
+}

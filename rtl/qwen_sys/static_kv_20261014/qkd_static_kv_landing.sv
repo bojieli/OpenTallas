@@ -110,10 +110,16 @@ endmodule
 
 // Pin-registered row-control leaf. PC request/return faces are explicit so the
 // physical parent can insert balanced, compiled relay stages on each quarter.
-module qkd_static_kv_rowctl(
+// VREQ=1 (Q-VMWB 2026-10-16, PV16): a second request face vreq_{valid,t} for the V gets issued by qkd_pv16_vport (the
+// pair's own request, demuxed by t[0]); K gets keep req_*.  Both faces are pin-registered, then merged into the get
+// register (+1 edge on BOTH K and V: VREQ=1 landing latency 6 / physical 8 edges).  The schedule is static: a K and a
+// V get on the same edge is a fault, never arbitrated.  A V get carries the epoch / layer of the last K get (QK
+// precedes PV in every layer; a stale value is caught by the PC's active epoch / layer check).  VREQ=0: unchanged.
+module qkd_static_kv_rowctl #(parameter integer VREQ=0)(
     input wire ck,rst_n,
     input wire req_valid,input wire [13:0] req_t,input wire req_v,
     input wire [15:0] req_epoch,input wire [5:0] req_layer,
+    input wire vreq_valid,input wire [13:0] vreq_t,
     output wire [3:0] pc_get,output wire [55:0] pc_get_t,output wire [3:0] pc_get_v,
     output wire [63:0] pc_get_epoch,output wire [23:0] pc_get_layer,
     input wire [3:0] pc_valid,input wire [1023:0] pc_data,input wire [55:0] pc_t,
@@ -131,8 +137,27 @@ module qkd_static_kv_rowctl(
     (* keep *) reg [5:0] lq;
     always @(posedge ck)begin tq<=req_t;vq<=req_v;eq<=req_epoch;lq<=req_layer;end
     always @(posedge ck or negedge rn)if(!rn)rq<=0;else rq<=req_valid;
-    assign pc_get={4{rq}};assign pc_get_t={4{tq}};assign pc_get_v={4{vq}};
-    assign pc_get_epoch={4{eq}};assign pc_get_layer={4{lq}};
+    wire collide;
+    generate if(VREQ!=0)begin:g_vreq
+      (* keep *) reg vrq;
+      (* keep *) reg [13:0] vtq;
+      always @(posedge ck)vtq<=vreq_t;
+      always @(posedge ck or negedge rn)if(!rn)vrq<=0;else vrq<=vreq_valid;
+      reg [15:0] ke;reg [5:0] kl;                  // epoch / layer of the last K get
+      reg mq;reg [13:0] mt;reg mv;reg [15:0] me;reg [5:0] ml;
+      always @(posedge ck)begin
+        if(rq)begin ke<=eq;kl<=lq;end
+        mt<=vrq?vtq:tq;mv<=vrq|vq;me<=vrq?(rq?eq:ke):eq;ml<=vrq?(rq?lq:kl):lq;
+      end
+      always @(posedge ck or negedge rn)if(!rn)mq<=0;else mq<=rq|vrq;
+      assign collide=rq&vrq;
+      assign pc_get={4{mq}};assign pc_get_t={4{mt}};assign pc_get_v={4{mv}};
+      assign pc_get_epoch={4{me}};assign pc_get_layer={4{ml}};
+    end else begin:g_k
+      assign collide=1'b0;
+      assign pc_get={4{rq}};assign pc_get_t={4{tq}};assign pc_get_v={4{vq}};
+      assign pc_get_epoch={4{eq}};assign pc_get_layer={4{lq}};
+    end endgenerate
     (* keep *) reg [3:0] iv,ivv,ifault;
     (* keep *) reg [1023:0] idata;
     (* keep *) reg [55:0] it;
@@ -146,7 +171,7 @@ module qkd_static_kv_rowctl(
       if(!rn)begin iv<=0;ifault<=0;rsp_valid<=0;fault<=0;end
       else begin
         iv<=pc_valid;ifault<=pc_fault;rsp_valid<=iv[0];
-        if((|ifault)||iv!={4{iv[0]}})fault<=1;
+        if((|ifault)||iv!={4{iv[0]}}||collide)fault<=1;
         if(iv[0]&&((it!={4{it[13:0]}})||(ivv!={4{ivv[0]}})||(ie!={4{ie[15:0]}})||(il!={4{il[5:0]}})))fault<=1;
       end
 endmodule
@@ -155,7 +180,7 @@ endmodule
 // No physical relay latency is claimed here: a routed parent must insert its
 // actual balanced request/return relays and compile their fixed calendar.
 module qkd_static_kv_landing_grp #(
-    parameter integer STACK=0,GROUP=0,MUT=0,VMAP=0
+    parameter integer STACK=0,GROUP=0,MUT=0,VMAP=0,VREQ=0
 )(
     input wire ck,input wire [3:0] ck_pc,input wire rst_n,
     input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
@@ -164,6 +189,7 @@ module qkd_static_kv_landing_grp #(
     input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
     input wire req_valid,input wire [13:0] req_t,input wire req_v,
     input wire [15:0] req_epoch,input wire [5:0] req_layer,
+    input wire vreq_valid,input wire [13:0] vreq_t,
     output wire rsp_valid,output wire [1023:0] rsp_data,output wire [13:0] rsp_t,
     output wire rsp_v,output wire [15:0] rsp_epoch,output wire [5:0] rsp_layer,output wire fault
 );
@@ -172,8 +198,8 @@ module qkd_static_kv_landing_grp #(
     wire [63:0] ge,oe;
     wire [23:0] gl,ol;
     wire [1023:0] od;
-    qkd_static_kv_rowctl u_rowctl(
-      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
+    qkd_static_kv_rowctl #(.VREQ(VREQ)) u_rowctl(
+      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),.vreq_valid(vreq_valid),.vreq_t(vreq_t),
       .pc_get(get),.pc_get_t(gt),.pc_get_v(gv),.pc_get_epoch(ge),.pc_get_layer(gl),
       .pc_valid(ov),.pc_data(od),.pc_t(ot),.pc_v(vv),.pc_epoch(oe),.pc_layer(ol),.pc_fault(pf),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));

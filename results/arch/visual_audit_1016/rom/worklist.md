@@ -88,14 +88,17 @@ Total open items: 54. Closure-blocking status is tracked separately in `status.m
 | 2 | S81H-04 | dsfd_sp_collective_static_c | open | area+congestion: vm_boundary 74% empty, SW knot from mismatched W/E bit order; 151 -> ~60 um width | none | helper: align W/E bit order + shrink; gate |
 | 3 | S81H-12 | dsfd_ctrl (leaf dsfd_ctrl_pc) | open | area (low): ctrl_pc fill 0.14 | none | fold into next touch |
 
-## S-VM (4 items)
+## S-VM (6 items; updated S-VM 06:05 10-16)
 
 | sev | id | item | state | expected gain | dependency | suggested helper |
 |---|---|---|---|---|---|---|
-| 1 | S81H-14 | dsfd_vm_static_wfc_ctl | open | closure: wfc_ctl refused (unsynchronised core->serial CDC: x43f, vm_fault, x34f) | none | helper: RTL CDC fix (static-schedule capture in core domain) + bench + gate |
-| 2 | D-S81-03 | VM (MIX4 slot A + hop-1 + lever 2, adopted) | open | closure risk: VM cut exactly 0.600 (no margin), 98,672 leaf links >500 um | VM parent kit | helper: move 4-6k bits S/N -> E (E 6,987 vs S 19,288) in the parent kit; re-measure cut |
+| 1 | S81H-14 | dsfd_vm_static_wfc_ctl -> r6 WFC split | fix-in-gate | r5 not adopted (native capture 311 ps); 7 of 8 r6 leaves routed + native PASS; return leaf r3 (right-sized) in gate | none | S-VM-RET helper |
+| 1 | S81V-01 | dsfd_vm_xio_return r2 | fix-in-gate | routed CLOSED but native capture 220.0 ps on e_v[0]; also 216x324 fill 0.06 | none | S-VM-XRET helper: pin-capture e_v, right-size outline |
+| 1 | S81V-02 | ot_s81_vm_x34_s W1026 (landing u_xsw) | fix-in-gate | n1/n3 native launch 234.5/233.9 ps (repeated) -> split into 2 x closed W514 (zero cycles, no new master) | parent gate rerun | S-VM-X34 helper |
+| 2 | D-S81-03 | VM (MIX4 slot A + hop-1 + lever 2, adopted) | open | closure risk: VM cut exactly 0.600 (no margin); Codex 536-leaf graph: control4->field4 104,832 bit-pairs max 1,686 um, capture->payload 8,192 b max 5,799 um, max path 6,488 um | VM parent kit | local control replication (+12 roots, +0.30 mm2) + registered distribution from N capture |
 | 2 | S81H-08 | s81_a2f_field4 (dsfd_sp_vm child) | confirmed-partial | timing (residual): field4 W i_sel wall (672 pins one M4 column) | S-DIE pin grant | helper: i_sel W+S split kit if input hold tight |
 | 3 | S81H-09 | s81_a2f_control4 (dsfd_sp_vm child) | open | area: control4 fill 0.19 -> 194 -> ~130 um (~8,000 um2 x4) | S-DIE slot change | re-pack item with the VM parent kit |
+| 3 | S81V-03 | XIO request (194.4x129.6, fill 0.01), WFC request (fill 0.04), W1 fault transports (43.2 sq, fill 0.005) | open | area: band-slot outlines far above pin perimeter; CLOSED + native PASS, so re-size only at the next pin/RTL change | parent geometry | fold into next touch |
 
 ## S-FUNC (2 items)
 

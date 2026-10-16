@@ -1,0 +1,30 @@
+{
+  "status": "RECOVERED_UNQUALIFIED",
+  "full_engine_qualified": false,
+  "timestamp": "2026-10-16T09:57:18.773313+00:00",
+  "baseline": "fe2f8ff769bf2922de410f38c2df7fb30767e12e",
+  "files_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv": "a131d7b14a9876d5022176f349680633764b7bcd8fffca42f9fd07bfdffa2224",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "d37b0faf2857867d793a26f420f3026110bb57ca95747450722c135bf82269b3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_seq_static.sv": "965794e87f7658837f8200ccae212d4ce4a36ef85bc96198e9e239f43b911675",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv": "919a9bd857e811c92c87127f63bc2e94f11887eb593674e42b05837cfa03a88e",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv": "9e71d8ae948e01fc61bbef95a21d77aba17863c885655f2e92c5f3b2976f9390",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv": "31623c863d461c38f417c8c15ecd1bbec22b2d3a947aedd1daa4e5c7f5e6676b",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69",
+    "rtl/test/tb_hbm_hc_eng_static.sv": "e443e61ea8d9c8aa53585688abd7d2e886cd49d115c133c5f6a3bba507e6c535",
+    "tools/rtl_hbm_hc_eng_static_gate.py": "478ab25ae9e3da1795b6e0c37a90ec44ece5fdc2bdfa0e7ec352e39a6a664a4c"
+  },
+  "live_build": {
+    "pid": 1248279,
+    "scratch": "/tmp/claude-1000/hnl0030/hceng",
+    "log": "/tmp/claude-1000/hnl0030/hceng/build0.log",
+    "status": "preserved; compiling C++ at recovery; no exactness/throughput PASS collected"
+  },
+  "next": [
+    "Collect preserved obj0/Vtb_hbm_hc_eng_static. Run run_probe with plus.txt to measure RAW0 and scalar RS.",
+    "Generate full P=1/2/8 schedules and G22 with rtl_hbm_hc_eng_static_gate.py; execute binary in vector directories.",
+    "Run mutants 1 bank slice, 2 dropped sigmoid epsilon, 3 x landing; all must fail.",
+    "Only after exactness/mutants, measure cycles against 1160-cycle immutable price and integrate source-bound v16 spec."
+  ],
+  "scope": "Sequencer gate is component evidence only. Full engine, mapped memory arithmetic join, production throughput and physical closure remain pending."
+}

@@ -15,18 +15,18 @@ if [ "$MUT" != 4 ]; then cmp "$OUT/cal/d2d_cal_image_compiled.svh" "$W/qwen_sys/
 SRC=("$W/lib/ot_rst_pipe.sv" "$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv" "$W/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
  "$W/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv" "$W/qwen_sys/split_20261014/qkd_native_attention_record.sv"
  "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv" "$W/qwen_split/qfd_kvn_static_transport.sv"
- "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv"
+ "$W/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv"
  "$R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv"
  "$R/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
  "$W/test/qwen_split/tb_qwen_d2d_program.sv")
 sha256sum "${SRC[@]}" "$R/tools/qwen_split/d2d_link_calendar.py" > "$OUT/source.sha256"
 if [ "${BACKEND:-iverilog}" = verilator ]; then
   verilator --binary --timing -j "${JOBS:-4}" -Wno-fatal -I"$OUT/cal" -I"$W/qwen_sys/d2d_static_20261015" --top-module tb_qwen_d2d_program \
-    -DOT_MEM_NO_INIT -GMUT="$MUT" -GDRV="${DRV:-0}" -GPR="${PR:-1}" -GTXL="$TXL" -GPHY="$PHY" -GCALDIR=\"$OUT/cal\" \
+    -DOT_MEM_NO_INIT -GMUT="$MUT" -GDRV="${DRV:-0}" -GKV_PIN_SEQ="${KV_PIN_SEQ:-0}" -GPR="${PR:-1}" -GTXL="$TXL" -GPHY="$PHY" -GCALDIR=\"$OUT/cal\" \
     --Mdir "$OUT/obj" "${SRC[@]}" > "$OUT/build.log" 2>&1 || { head -30 "$OUT/build.log"; exit 2; }
   "$OUT/obj/Vtb_qwen_d2d_program" > "$OUT/run.log" 2>&1 || true
 else
-iverilog -g2012 -I"$OUT/cal" -I"$W/qwen_sys/d2d_static_20261015" -DOT_MEM_NO_INIT -s tb_qwen_d2d_program -Ptb_qwen_d2d_program.MUT=$MUT -Ptb_qwen_d2d_program.DRV=${DRV:-0} -Ptb_qwen_d2d_program.PR=${PR:-1} -Ptb_qwen_d2d_program.TXL=$TXL \
+iverilog -g2012 -I"$OUT/cal" -I"$W/qwen_sys/d2d_static_20261015" -DOT_MEM_NO_INIT -s tb_qwen_d2d_program -Ptb_qwen_d2d_program.MUT=$MUT -Ptb_qwen_d2d_program.DRV=${DRV:-0} -Ptb_qwen_d2d_program.KV_PIN_SEQ=${KV_PIN_SEQ:-0} -Ptb_qwen_d2d_program.PR=${PR:-1} -Ptb_qwen_d2d_program.TXL=$TXL \
  -Ptb_qwen_d2d_program.PHY=$PHY -Ptb_qwen_d2d_program.CALDIR=\"$OUT/cal\" -o "$OUT/tb.vvp" "${SRC[@]}" > "$OUT/build.log" 2>&1 || { head -30 "$OUT/build.log"; exit 2; }
 vvp -n "$OUT/tb.vvp" > "$OUT/run.log" 2>&1 || true
 fi
