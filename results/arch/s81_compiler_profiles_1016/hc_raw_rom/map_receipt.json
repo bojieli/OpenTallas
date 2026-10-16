@@ -1,0 +1,221 @@
+{
+  "top": "ot_s81_hc_programme_cpin",
+  "params": {
+    "COMMAND_POST_AGES": 1
+  },
+  "standard_cell_area_um2": 2616.48306,
+  "mapped_ff_per_clock": {
+    "sk": 5396,
+    "stream_ck": 952
+  },
+  "macro_count": 1,
+  "macro_area_um2": 2391.5865599999997,
+  "macro_outline_um": [
+    38.016,
+    62.91
+  ],
+  "library_sha256": {
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "external_ports": {
+    "stream_ck": {
+      "width": 1,
+      "direction": "input"
+    },
+    "stream_rst_n": {
+      "width": 1,
+      "direction": "input"
+    },
+    "sk": {
+      "width": 1,
+      "direction": "input"
+    },
+    "srs": {
+      "width": 1,
+      "direction": "input"
+    },
+    "rom_ck": {
+      "width": 1,
+      "direction": "input"
+    },
+    "c2": {
+      "width": 85,
+      "direction": "input"
+    },
+    "stream_done": {
+      "width": 9,
+      "direction": "output"
+    },
+    "programme_fault": {
+      "width": 1,
+      "direction": "output"
+    },
+    "n_command_post_ages": {
+      "width": 640,
+      "direction": "output"
+    },
+    "y_tag": {
+      "width": 32,
+      "direction": "input"
+    },
+    "y_row": {
+      "width": 5,
+      "direction": "input"
+    },
+    "n_y_tag": {
+      "width": 32,
+      "direction": "output"
+    },
+    "n_command_y_tag": {
+      "width": 32,
+      "direction": "output"
+    },
+    "n_command_done_age": {
+      "width": 32,
+      "direction": "output"
+    },
+    "n_command_ss_age": {
+      "width": 32,
+      "direction": "output"
+    },
+    "n_command_scalar_age": {
+      "width": 32,
+      "direction": "output"
+    },
+    "n_y_row": {
+      "width": 5,
+      "direction": "output"
+    },
+    "inp": {
+      "width": 1,
+      "direction": "input"
+    },
+    "rq_v": {
+      "width": 2,
+      "direction": "output"
+    },
+    "rq_row": {
+      "width": 28,
+      "direction": "output"
+    },
+    "rs_v": {
+      "width": 2,
+      "direction": "input"
+    },
+    "rs_d": {
+      "width": 1024,
+      "direction": "input"
+    },
+    "flt": {
+      "width": 1,
+      "direction": "output"
+    },
+    "online": {
+      "width": 1,
+      "direction": "output"
+    },
+    "fcode": {
+      "width": 4,
+      "direction": "output"
+    },
+    "y_v": {
+      "width": 1,
+      "direction": "input"
+    },
+    "y_rdy": {
+      "width": 1,
+      "direction": "output"
+    },
+    "y_s": {
+      "width": 2560,
+      "direction": "input"
+    },
+    "yacc_w": {
+      "width": 1,
+      "direction": "output"
+    },
+    "yacc_e": {
+      "width": 1,
+      "direction": "output"
+    },
+    "n_cmd_v": {
+      "width": 1,
+      "direction": "output"
+    },
+    "n_cmd_d": {
+      "width": 84,
+      "direction": "output"
+    },
+    "n_done_v": {
+      "width": 1,
+      "direction": "input"
+    },
+    "n_done_tag": {
+      "width": 8,
+      "direction": "input"
+    },
+    "n_inp": {
+      "width": 1,
+      "direction": "output"
+    },
+    "n_rq_v": {
+      "width": 2,
+      "direction": "input"
+    },
+    "n_rq_row": {
+      "width": 28,
+      "direction": "input"
+    },
+    "n_rs_v": {
+      "width": 2,
+      "direction": "output"
+    },
+    "n_rs_d": {
+      "width": 1024,
+      "direction": "output"
+    },
+    "n_flt": {
+      "width": 1,
+      "direction": "input"
+    },
+    "n_online": {
+      "width": 1,
+      "direction": "input"
+    },
+    "n_fcode": {
+      "width": 4,
+      "direction": "input"
+    },
+    "n_yacc": {
+      "width": 1,
+      "direction": "output"
+    },
+    "n_y": {
+      "width": 2560,
+      "direction": "output"
+    },
+    "n_ypop": {
+      "width": 1,
+      "direction": "input"
+    }
+  },
+  "unknown_cells": [],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_hc_programme_source.sv": "8c4f1ccbec50204d713838977b705efff2feb0c1f6de979a62bb2cc65c0dddad",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_hc_programme_endpoint.sv": "7f3b05858b6e34f5621f1961ae99e9d285a8d8c96bb150a00eb80de2b500ecdd",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cpin_calendar.sv": "6471f2a33d520715ee05249b10f15738f7e99b8bac69e145de15b5bda6cc8065",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_programme_cpin.sv": "dd32e5a98ec0a633249e177ada410876a9bf5c30d28dcf586c9a03cb4964b70a",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib": "741933894777f2020a8a0cedfa6607f7850642a397a85aa59fe8c50b005cb0d0",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib": "dc3a5a3e07e8508650a320f4ab27933622a52756c99e4d013278c849314da59d",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib": "bed56e6769daf014adb1204d953c9696ae6aeab2ea3a55891d79e718878faaf6"
+  },
+  "scope": "Mapped body/pin sizing only; no timing/clock/tree/place/route or native completeness proof"
+}

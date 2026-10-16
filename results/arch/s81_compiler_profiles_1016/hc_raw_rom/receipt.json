@@ -1,0 +1,33 @@
+{
+  "source_commit": "abb9665bc",
+  "physical_candidate": "combined actual programme source + CPIN",
+  "component_verdict": "PASS128commands3072fields/mappedROM1 +3mutants rejected",
+  "job": "oth-ubuntu-118256-1792168382",
+  "map_job": "oth-ubuntu-121824-1792168427",
+  "map_no_unknown_cells": true,
+  "body_area_um2": 5008.06962,
+  "roots": {
+    "sk": 5396,
+    "stream_ck": 952
+  },
+  "macro_outline_um": [
+    38.016,
+    62.91
+  ],
+  "direct_raw_ROM_clock_port": "rom_ck",
+  "raw_ROM_clock_connection": "u_programme.u_source.u_rom.clk, RAW_ROM_CLOCK=1",
+  "standard_CTS_clock_ports": [
+    "stream_ck",
+    "sk"
+  ],
+  "all_external_pin_bits": 8288,
+  "native_qualified": false,
+  "physical_qualified": false,
+  "scope": "Declared-boundary metadata formatter and mapped sizing only; actual six-kind HC/collective/VM/native fixed calendar remains open",
+  "logs_sha256": {
+    "results/arch/s81_compiler_profiles_1016/hc_raw_rom/run1.log": "7c2813a7ad4a1610142e19c8ede3d22393f1a3468a92d4b8783a2c812b0e4b08",
+    "results/arch/s81_compiler_profiles_1016/hc_raw_rom/run0.log": "a63e445d4c134f2591171a5dcac583247865374dc7bb057165cb1c7e0855aa8c",
+    "results/arch/s81_compiler_profiles_1016/hc_raw_rom/run2.log": "0ba1b54380b038fc22aa7a328bd824db50bfb203be4b2a2ec61906e1b9aa9e4e",
+    "results/arch/s81_compiler_profiles_1016/hc_raw_rom/rom_mut.log": "0ba1b54380b038fc22aa7a328bd824db50bfb203be4b2a2ec61906e1b9aa9e4e"
+  }
+}
