@@ -1,0 +1,30 @@
+{
+  "status": "RUNNING_UNQUALIFIED",
+  "timestamp": "2026-10-16T10:40:04.951016+00:00",
+  "scope": "Independent tail component at declared mixes/bases/scales ports; no projection/mapped-SRAM ingress/full-engine/die qualification",
+  "full_engine_qualified": false,
+  "canonical_sources_unchanged": true,
+  "baseline": {
+    "host": "ot-agidock128",
+    "dir": "/tmp/ot-hc-tail-0328",
+    "ot_heavy_unit": "oth-ubuntu-1138399-1792146546",
+    "vvp_pid": 1141178,
+    "log": "/tmp/ot-hc-tail-0328/run.log"
+  },
+  "mutant": {
+    "kind": "MUT_PRE=1 removes pre-sigmoid epsilon in actual tail RTL",
+    "host": "ot-agidock128",
+    "dir": "/tmp/ot-hc-tail-0328/mutant_suite",
+    "ot_heavy_unit": "oth-ubuntu-1161005-1792146971",
+    "vvp_pid": 1163583
+  },
+  "preliminary_harness_findings": [
+    "First bench sampled delta497, one edge after observed result pulse; corrected fixed sampling to delta496.",
+    "Declaration-time rst_n=0 did not initialize the derived Sinkhorn domain in Icarus; initial sf/sink_fault were x. Explicit 1-to-0 reset pulse added. These initial bench failures do not establish an RTL arithmetic verdict."
+  ],
+  "full_build": {
+    "pid": 1248279,
+    "scratch": "/tmp/claude-1000/hnl0030/hceng",
+    "status": "Preserved. At 03:39:40 PT age92min, only3 runtime support objects, zero DUT objects and no binary."
+  }
+}
