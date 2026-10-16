@@ -8,9 +8,11 @@ module ot_hbm_su_static_pinned_bank #(
  // RD_ROOT 1 (H-SU 10-15, bank clock7 r7): the read-side output registers (read_data, read_return) take their own
  // related root clk_rd entering at the read face, so no register-clock net crosses the SRAM columns
  parameter integer RD_ROOT=0,
- // WS_RD 1 (H-SU 10-15 22:30, bank r10): the 18 word-select flops (ks) also move to clk_rd, so clk reaches only the
- // W-face pin registers (r9 native: clk tree spanned the macro columns for ks, R 196.6 / spread 74.7 -> capture 224 > 190)
- parameter integer WS_RD=0,
+ // WS_ROOT (H-SU 10-15, bank r10b): clock of the 18 word-select flops (ks), which sit at each SRAM column's pin edge.
+ // 0 = clk (r9: the clk tree then spans every macro column, R 196.6 / spread 74.7 -> native capture 224 > 190);
+ // 1 = clk_rd (r10 gate: clk_rd insertion 308.7 / spread 57.1, the E-face read root then spans the columns);
+ // 2 = clk_ws, their own related root, so clk stays at the W-face pin registers and clk_rd at the E-face ones.
+ parameter integer WS_ROOT=0,
  // PIN_RST 1 (bank r10): rst_n is a synchronous data input registered at the W face like every other input
  // (r_pin/w_pin gate on it directly, so the first command after release is taken on the same edge as before); the
  // internal valid stages use registered copies (rst_w on clk, rst_r on clk_rd). Requires >= 2 clock edges in reset;
@@ -20,6 +22,7 @@ module ot_hbm_su_static_pinned_bank #(
 )(
  input wire clk,rst_n,
  input wire clk_rd, // same serial clock as clk (related root); used only when RD_ROOT=1
+ input wire clk_ws, // same serial clock as clk (related root); used only when WS_ROOT=2
  input wire[READERS-1:0]clk_macro, // six distinct physical roots; phase-compensated to clk
  input wire[READERS-1:0]read_v,input wire[READERS*RB-1:0]read_addr,
  output reg[READERS*32-1:0]read_data,output wire[READERS-1:0]read_return,
@@ -34,7 +37,7 @@ module ot_hbm_su_static_pinned_bank #(
   a_pin<=read_addr;wa_pin<=write_addr;wd_pin<=write_data;
  end
  always @(posedge c_rd)read_data<=raw_data;
- wire c_ws=(WS_RD!=0)?c_rd:clk;
+ wire c_ws=(WS_ROOT==2)?clk_ws:(WS_ROOT==1)?c_rd:clk;
  if(PIN_RST!=0)begin:g_pin_rst
   reg rst_w,rst_r;
   always @(posedge clk)begin
