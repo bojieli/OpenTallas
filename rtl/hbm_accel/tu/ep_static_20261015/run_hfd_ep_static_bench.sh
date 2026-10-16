@@ -4,9 +4,8 @@
 # Prints the TB line; exit 0 iff it says PASS.  Verilator >= 5 (--binary --timing).
 set -u
 SRC=$1; OUT=$2; MUT=${3:-0}; NBLK=${4:-12}; mkdir -p $OUT
-E=$SRC/rtl/hbm_accel/tu/ep_static_20261015; P=$SRC/rtl/hbm_accel/generic/collective/p2p; L=$SRC/rtl/dsrom_sys/s81_link
-F="$E/hfd_ep_static.sv $E/tb_hfd_ep_static.sv $P/ot_hgi_coll_offdie_rx_block.sv $P/ot_hgi_coll_offdie_rx_pingpong.sv
-   $SRC/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv $SRC/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
+E=$SRC/rtl/hbm_accel/tu/ep_static_20261015; L=$SRC/rtl/dsrom_sys/s81_link
+F="$E/hfd_ep_static.sv $E/ot_hep_rx_store.sv $E/tb_hfd_ep_static.sv $SRC/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
    $SRC/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
    $L/ot_s81_kp4_enc.sv $L/ot_s81_kp4_dec.sv $L/ot_pdie_serdes.sv"
 B=$OUT/m$MUT

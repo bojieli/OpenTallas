@@ -22,7 +22,8 @@
 //   beat with p < 4 (4 slots per 5 beats, 816 slots per 1,021 beats at IDLE_K = 204: 0.799 frame/beat vs 0.749 for
 //   the retired NS3 endpoint); a frame on p = 4 or an IDLE beat is a calendar fault (sticky, never rescheduled).
 //   RX: hunt two markers exactly 5 data beats apart -> locked; a marker out of place drops lock (sticky fault).
-// RX boundary: H-COLL ot_hgi_coll_offdie_rx_pingpong (two 64-frame blocks, real SRAM leaves).  A frame arriving while
+// RX boundary: ot_hep_rx_pingpong (ot_hep_rx_store.sv: H-COLL's off-die RX pingpong contract, two 64-frame blocks, real
+// SRAM leaves, every wide select replicated per 64-b slice -- route-1 hold fix).  A frame arriving while
 // the armed block is not ready cannot wait (the SerDes never stalls): sticky fault (the compiler arms in time).
 //
 // Latencies: tx pin -> SerDes tx pin: 2 edges (pin reg, beat reg).  SerDes rx pin -> pingpong phy input: 2 edges
@@ -53,11 +54,12 @@ module ot_hep_tx_gbx #(parameter integer IDLE_K = 204, parameter integer MUT = 0
     wire idle_n = (gc_n == IDLE_K[GB-1:0]);
     (* keep *) reg [NSL*5-1:0] oh;      // per-slice phase one-hot of THIS edge's beat
     (* keep *) reg [NSL-1:0]   tk;      // per-slice: this edge's beat takes a slot (phase < 4, not IDLE)
-    reg idle;                           // master copies for control
+    (* keep *) reg [7:0] idr;           // per-64-b-slice copies of idle (the beat register selects, <= 64 loads each)
     reg [612:0] prv;
     reg [612:0] cur;
     reg [509:0] g;
-    integer s, j;
+    integer s, j, k;
+    wire [511:0] bnext = {g, 1'b0, oh[0]};
     always @(*) begin
         for (s = 0; s < NSL; s = s + 1)
             for (j = s * SL; j < (s + 1) * SL && j < 613; j = j + 1)
@@ -74,14 +76,14 @@ module ot_hep_tx_gbx #(parameter integer IDLE_K = 204, parameter integer MUT = 0
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            ph <= 3'd0; gc <= {GB{1'b0}}; beat <= 512'd2; cal_fault <= 1'b0; idle <= 1'b0;
-            oh <= {NSL{5'b00001}}; tk <= {NSL{1'b1}};
+            ph <= 3'd0; gc <= {GB{1'b0}}; beat <= 512'd2; cal_fault <= 1'b0;
+            oh <= {NSL{5'b00001}}; tk <= {NSL{1'b1}}; idr <= 8'd0;
         end else begin
             ph <= ph_n; gc <= gc_n;
-            idle <= idle_n;
             oh <= {NSL{(idle_n ? 5'b00000 : 5'b00001 << ph_n)}};
             tk <= {NSL{!idle_n && ph_n != 3'd4}};
-            beat <= idle ? 512'd2 : {g, 1'b0, oh[0]};
+            idr <= {8{idle_n}};
+            for (k = 0; k < 512; k = k + 1) beat[k] <= idr[k / 64] ? (k == 1) : bnext[k];
             if (tx_v && !tk[0]) cal_fault <= 1'b1;
         end
     always @(posedge clk) prv <= cur;
@@ -203,7 +205,7 @@ module hfd_ep_static #(parameter integer IDLE_K = 204, parameter integer MUT = 0
     ot_hep_rx_gbx #(.MUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_rx (.clk(clk), .rst_n(rn_rx), .beat(p_rx), .data_r(p_rxd),
         .f_v(f_v), .f_d(f_d), .locked(locked), .lock_lost(lock_lost));
     wire phy_ready, bd_fault; wire [1:0] bready; wire [6:0] bd_cause;
-    ot_hgi_coll_offdie_rx_pingpong #(.MUT(MUT == 4 ? 2 : 0)) u_rxb (.clk(clk), .rst_n(rn_bd),
+    ot_hep_rx_pingpong #(.MUT(MUT == 4 ? 2 : 0)) u_rxb (.clk(clk), .rst_n(rn_bd),
         .arm_v(p_arm_v), .arm_bank(p_arm_b), .block_words(p_words),
         .phy_v(f_v), .phy_flit(f_d), .phy_ready(phy_ready), .block_ready(bready),
         .release_v(p_rel_v), .release_bank(p_rel_b),

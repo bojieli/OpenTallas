@@ -7,16 +7,16 @@
   0,
   0,
   434.72,
-  324.0
+  293.76
  ],
  "core": [
   2.16,
   2.16,
   432.56,
-  321.84
+  291.59999999999997
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 4352,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -63,10 +63,36 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": null,
+   "inst": "u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram",
    "idx": 0,
-   "x": 48.384,
-   "y": 222.48,
+   "x": 22.464,
+   "y": 114.48,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
+   "idx": 0,
+   "x": 22.464,
+   "y": 192.288,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_rxb.g_block[0].u_block.g_mem[1].u_mem.u_sram",
+   "idx": 0,
+   "x": 241.056,
+   "y": 114.48,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
@@ -76,55 +102,20 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": null,
+   "inst": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
    "idx": 0,
-   "x": 240.624,
-   "y": 222.48,
-   "w": 171.288,
-   "h": 77.784,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": null,
-   "idx": 0,
-   "x": 48.384,
-   "y": 123.12,
-   "w": 171.288,
-   "h": 77.784,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": null,
-   "idx": 0,
-   "x": 240.624,
-   "y": 123.12,
+   "x": 241.056,
+   "y": 192.288,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 42% outside 45%-60% (std 4352 + macro 53294 in core 137590 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
-  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_offdie_rx_pingpong.sv",
-  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_offdie_rx_block.sv",
-  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
   "physical/ref_tile/hep_static_ref_1015/kit.env",
   "physical/ref_tile/hep_static_ref_1015/clock.sdc",
