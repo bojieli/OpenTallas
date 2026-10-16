@@ -35,7 +35,9 @@ if true;then
  sources+=($P/ot_hgi_sfu_split_engine.sv $P/ot_hgi_sfu_lg_relay.sv $P/ot_hgi_sfu_lg_pair_leaf.sv)
  defs+=(-DSFU_LG_R=$SFU_LG_R)
 fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+# CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
+if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
