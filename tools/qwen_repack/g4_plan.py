@@ -110,14 +110,16 @@ def build(nl=False):
     (out / 'held_grant.json').write_text(json.dumps(g, indent=1) + '\n')
     s.update(name=name, top=top, clock_ports=clocks, clock_cts_roots=soft,
              io_tcl=f'physical/ref_tile/{name}/assigned_pins.tcl',
-             pin_hook_before_flops=[f'physical/ref_tile/{name}/regions.tcl'])
+             pin_hook_before_flops=[f'physical/ref_tile/{name}/regions.tcl'],
+             pre_dpl_extra=['tools/qwen_repack/reconcile_sink_owners.tcl'])
     s['sources'] = [p.replace(f'{base_top}.sv', f'{top}.sv') for p in s['sources']]
     s['pins'] = {f: sorted({p['name'].split('[')[0] for p in pins if p['face'] == f}) for f in 'WENS' if any(p['face'] == f for p in pins)}
     s['required_hybrid_roots']['standard_cell_cts'] = soft
     s['structural_change'] = ('Localize ten actual ROM capture/expansion/return pipelines to their own read-facing gutter halves '
         '(each measured 950-990 um2 mapped area, 126.144x15.12 um fence, about 50-52% initial fill); each ROM clock shares '
         'its local pair root. Compact independent RQR north/south groups. Preserves tall457.92x950.4, every data pin, '
-        f'all hard children and ROM placements, full arithmetic/workload and zero added edges. {len(clocks)} clock entries.')
+        f'all hard children and ROM placements, full arithmetic/workload and zero added edges. {len(clocks)} clock entries. '
+        'Reconcile actual post-repair exclusive data/reset/output sink ownership and actual-row capacity before ordinary DPL.')
     s['slot_change_request'] = f'{name}: unchanged tall outline/data pins; source-bound {len(clocks)} clock entries and per-root phi-minus-R delivery required.'
     s['job'].update(owner='Codex:q_tile45', branch='codex/qtile-g4-0847', tag='g4t', purpose=s['structural_change'],
         views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}', cycles_added=0)
