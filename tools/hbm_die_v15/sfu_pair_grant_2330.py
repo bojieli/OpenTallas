@@ -55,8 +55,11 @@ def main():
         if s.get('grant') != 'compact_sfu_pair_candidate_2330':
             s['reservation_216_2330'] = dict(origin=dict(s['origin']), outline=dict(s['outline']))
         r = s['reservation_216_2330']
-        s['origin'] = dict(x=round(r['origin']['x'] + (216 - width) / 2, 6),
-                          y=round(r['origin']['y'] + (216 - height) / 2, 6), orient='R0')
+        x = round((r['origin']['x'] + (216 - width) / 2) / 43.2) * 43.2
+        y = round((r['origin']['y'] + (216 - height) / 2) / 43.2) * 43.2
+        assert r['origin']['x'] <= x and x + width <= r['origin']['x'] + 216
+        assert r['origin']['y'] <= y and y + height <= r['origin']['y'] + 216
+        s['origin'] = dict(x=round(x, 6), y=round(y, 6), orient='R0')
         s.update(outline=dict(w=width, h=height), params=dict(PIN_RST=1),
             grant='compact_sfu_pair_candidate_2330', source=src,
             source_prerequisite=REF, source_sha256=a['source_sha256'],

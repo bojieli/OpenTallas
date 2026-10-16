@@ -5,6 +5,7 @@ This allocates real candidate rectangles; it does not adopt a physical view or
 claim complete VM hub packing, host programming, or native die qualification.
 """
 import json
+import math
 import subprocess
 import tempfile
 from pathlib import Path
@@ -89,15 +90,15 @@ def main():
         w, h = 220.32, 116.64
         # Dedicated lower-left home inside the existing VM-hub planning box;
         # other hub children are still unplaced and must fit around this home.
-        x = reserved['x'] + 20
+        x = math.ceil((reserved['x'] + 20) / 43.2) * 43.2
         blockers = [box(s) for s in g['slots'] if s['name'] != name
                     and s.get('parent') == 'die' and s.get('origin') and s.get('outline')]
         blockers += [(b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h'])
                      for pn, b in plan.items() if isinstance(b, dict) and 'x' in b
                      and pn != 'vmh_' + q]
-        y = reserved['y'] + 20
+        y = math.ceil((reserved['y'] + 20) / 43.2) * 43.2
         while any(overlap((x, y, x + w, y + h), b) for b in blockers):
-            y += 21.6
+            y += 43.2
         candidate = dict(name=name, cell='hfd_hgi_vm_calendar', instance=name,
             source=source, source_prerequisite=SOURCE_REF, kind='tile', parent='die',
             version=7, grant='universal_calendar_candidate_2330',
