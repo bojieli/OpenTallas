@@ -6,7 +6,7 @@ import sys
 import tempfile
 import unittest
 
-from v16_fetch import REMOTE_PY, check_sources
+from v16_fetch import REMOTE_PY, check_direct_master, check_sources
 
 
 class FetchAdmission(unittest.TestCase):
@@ -44,6 +44,27 @@ class FetchAdmission(unittest.TestCase):
         path = 'tools/hbm_die_v15/synth_master.sh'
         with self.assertRaisesRegex(ValueError, 'Source differs'):
             check_sources({'source_file_sha256': {path: '0' * 64}}, 'HEAD', '.')
+
+    def test_direct_master_requires_empty_params_exact_recipe_and_ports(self):
+        entry = dict(params={}, master='cell', cell='cell', wrapper='v16w_cell', env='', blackbox='-')
+        resolution = dict(top='cell', files=['rtl/cell.sv'], macros=[], blackboxes=[], unresolved=[], ambiguous={})
+        script = '\n'.join(['read_verilog -sv -DSYNTHESIS v16w/v16w_cell.sv',
+                            'read_verilog -sv -DSYNTHESIS rtl/cell.sv', 'hierarchy -check -top cell',
+                            'tee -o /out/cell.hier.stat stat', 'synth -top cell',
+                            'dfflibmap -liberty /tmp/lib/seq.lib', 'abc -liberty /tmp/lib/all.lib', 'opt_clean',
+                            'tee -o /out/cell.stat stat -liberty /tmp/lib/all.lib',
+                            'write_verilog -noattr /out/cell.netlist.v']) + '\n'
+        meta = dict(actual_top='cell', expected_resolution=resolution, actual_elaboration_script=script)
+        ports = {'clk': ('input', 1), 'o': ('output', 8)}
+        check_direct_master(entry, meta, ports, ports)
+        with self.assertRaisesRegex(ValueError, 'params'):
+            check_direct_master(dict(entry, params={'FEATURE': 1}), meta, ports, ports)
+        with self.assertRaisesRegex(ValueError, 'port'):
+            check_direct_master(entry, meta, ports, dict(ports, o=('output', 7)))
+        with self.assertRaisesRegex(ValueError, 'recipe'):
+            check_direct_master(entry, dict(meta, actual_elaboration_script=script.replace('-DSYNTHESIS', '-DSYNTHESIS -DOTHER')), ports, ports)
+        with self.assertRaisesRegex(ValueError, 'recipe'):
+            check_direct_master(entry, dict(meta, actual_elaboration_script=script.replace('synth -top', 'chparam -set FEATURE 1 cell\nsynth -top')), ports, ports)
 
 
 if __name__ == '__main__':

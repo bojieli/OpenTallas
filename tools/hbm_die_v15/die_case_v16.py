@@ -170,12 +170,18 @@ def main():
             size[c] = lef_size(vd / f'{c}.lef')
         else:
             sd = a.views / 'synth' / c
-            libs = {k: sd / f"{e['wrapper']}_synth_{k}.lib" for k in ('tt', 'ff')}
+            synth_top = e.get('synth_top', e['wrapper'])
+            if synth_top != e['wrapper']:
+                receipt = json.loads((sd / 'meta.json').read_text())
+                assert (e['params'] == {} and synth_top == e['master'] == c
+                        and receipt['actual_top'] == synth_top
+                        and receipt['parameter_binding'] == 'EXACT_DIRECT_MASTER_PARAMS_EMPTY_NO_RENAME'), c
+            libs = {k: sd / f"{synth_top}_synth_{k}.lib" for k in ('tt', 'ff')}
             if not all(p.exists() for p in libs.values()):
                 excluded[c] = 'SYNTH view not built (see VIEWS/drive/<cell>.json)'
                 continue
             for k, p in libs.items():
-                t = p.read_text().replace(e['wrapper'], c)
+                t = p.read_text().replace(synth_top, c)
                 (vd / f'{c}_{k}.lib').write_text(t)
             ecap[c] = [entry_cap(vd / f'{c}_{k}.lib') for k in ('tt', 'ff')]
             kinds[c] = 'SYNTH'
