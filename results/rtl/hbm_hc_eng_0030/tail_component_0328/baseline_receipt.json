@@ -1,5 +1,5 @@
 {
-  "status": "EXACT_BASELINE_PASS_MUTANT_PENDING",
+  "status": "EXACT_BASELINE_PASS_MUTANT_REJECTED",
   "timestamp": "2026-10-16T11:34:29.396332+00:00",
   "scope": "Independent real sigmoid/exp/Sinkhorn tail unit at declared external mix/table inputs",
   "full_engine_qualified": false,
@@ -28,5 +28,18 @@
     "tail_words": 24,
     "tail_distinct_nonzero_finite": 24
   },
-  "mutant": "MUT_PRE=1 actual pre-sigmoid epsilon removal remains running in /tmp/ot-hc-tail-0328/mutant_suite; no complete arithmetic gate until rejected"
+  "mutant": {
+    "kind": "MUT_PRE=1 removes pre-sigmoid epsilon in actual tail RTL",
+    "rc": 1,
+    "mismatch_words": 28,
+    "result_pulses": 7,
+    "delta": 496,
+    "fault": 0,
+    "log": "mutant_pre1/run_mut1.log",
+    "verdict": "REJECTED (FAIL observed as required)",
+    "host": "ot-agidock128",
+    "ot_heavy_unit": "oth-ubuntu-1161005-1792146971"
+  },
+  "timestamp_mutant": "2026-10-16T12:59:38.493789+00:00",
+  "tail_component_verdict": "PASS: 7/7 divider phases, 168/168 exact words, fixed launch->result 496 cycles; observed failing mutant"
 }
