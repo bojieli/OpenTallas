@@ -1,5 +1,5 @@
 # HBM visual-audit status: P0/P1 closure-blocking findings
-Updated 2026-10-16 02:00 PT by VIS-HBM. Sources: closure-loop verdicts, owner logs and replies. Details are in findings.json.
+Updated 2026-10-16 02:05 PT by VIS-HBM. Sources: closure-loop verdicts, owner logs and replies. Details are in findings.json.
 
 States:
 - **fixed-routed**: the fix is routed and the cited metric improved.
@@ -15,7 +15,7 @@ States:
 | D3 | P1 | SM_HBM relays up to 15.3 mm / 31 stages; put SMs next to their PC row | H-DIE | **refuted (as proposed)** | H-DIE measured: (a) svc groups in the band middle 117k vs 50k bit-mm -> reject; (b) v8 columns remove the SM_HBM stages but VM_RING 11 -> 15.5 and COLL_EP 13.8 -> 20.8, and need M8/M9 or 727-817 mm2. v5 kept unless die GRT shows SM<->PC congestion |
 | T1 | P0 | xload ctl: pin-bound 12% fill, 10,786 pins, diagonal worst path (TT -92.5, DRC 4) | H-SM | **not-started (geometry)** | cl2e RTL lookahead for lane_en -> bsel; no cl2e gate or route yet; the 4 DRCs (corner pins) went to ROOT |
 | T2 | P0 | bdring: clk on W face, logic and pins E | H-SM | **not-started (geometry)** | cl2e removes an output inverter; a clock-face move only if cl2e native fails |
-| T3 | P0 | strap q0-q3: centred SRAM stack, ring logic, paths wrap the stack | H-SM | **not-started (geometry); RTL-only fix REFUTED on q0** | strap5 q0 (2c0df5054) NEEDS_RTL TT -114.94 / FF +2.29, worse than strap4hookfix q0 -62.49; q2/q3 strap5 in ECO. q1 strap4hookfix CLOSED +18.72 |
+| T3 | P0 | strap q0-q3: centred SRAM stack, ring logic, paths wrap the stack | H-SM | **owner RTL fix CONFIRMED for q1/q2/q3; geometry hypothesis open for q0 only** | strap5 (2c0df5054) q2 and q3 CLOSED TT +23.91 / FF +9.09 / DRC 0 (were -111.27 at strap4hookfix); q1 CLOSED +18.72 (strap4hookfix). q0 strap5 NEEDS_RTL TT -114.94 / FF +2.29 (strap4hookfix -62.49) on the same 270x270 geometry -> the q0 failure is not explained by the shared geometry alone; my stack-to-one-face proposal applies to q0 only and is unproven |
 | T4 | P1 | VM calendar: centred SRAM splits logic, clock wraps under the macro | H-HARDEN | **fixed-routed** | xcap cce3264d2 CLOSED TT +45.93 / FF +24.17 / DRC 0. Routed native PASS (main results/rtl/hbm_harden_0030/calendar_x_native.json, checked): L 222.0 -> 179.0, C 206.2 -> 133.0, spread 92.8 -> 37.2 ps |
 | T5 | P1 | COLL vmwrite: clk at the N end of a 389-um strip | H-HARDEN | **fix-in-gate** | v5 midclk (mid0030-8e0909ea1) RUNNING |
 | T6 | P0 | SM tile rp3: W/E 3,705 pins each in 203 um (18.2 pins/um) | H-SM | **not-started** | rp3 route RUNNING on the old pin plan; owner noted it for rp4 |
@@ -29,8 +29,8 @@ Totals:
 - fixed-routed: 2 (T4, T9 bank)
 - fix-in-gate: 4 (D1, T5, T8, T12)
 - fix-planned: 1 (D2)
-- not-started: 4 (T1, T2, T3, T6)
+- not-started: 3 (T1, T2, T6), plus T3 q0 only (q1-q3 fixed by the owner's RTL change, which refutes the geometry claim for those three)
 - refuted: 3 (D3 as proposed, T9 reduce, R2-1)
 - withdrawn: 1 (T7)
 
-The P0 blockers left without a geometry fix are all H-SM: T1, T2, T3 and T6. T3's RTL-only route has now failed on q0 (-114.94 ps).
+The P0 blockers left are all H-SM: T1, T2, T6 and strap q0 (-114.94 ps).

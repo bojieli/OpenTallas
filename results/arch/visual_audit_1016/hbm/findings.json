@@ -487,6 +487,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "strap4hookfix (same geometry): q1 CLOSED TT +18.72; q0 -149.91 (strap2) -> -62.49; q2/q3 -111.27 unchanged. Owner path fix = strap5 RTL, not geometry; no strap5 gate yet"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:05",
+     "status": "refuted for q1/q2/q3 (owner RTL fix closed them on the same geometry); open for q0",
+     "evidence": "strap5 2c0df5054: q2, q3 CLOSED TT +23.91 / FF +9.09 (from -111.27); q1 strap4hookfix CLOSED +18.72; q0 strap5 NEEDS_RTL TT -114.94 / FF +2.29"
     }
    ]
   },
@@ -1531,7 +1537,7 @@
    "scored": 15,
    "confirmed": 2,
    "confirmed_provisional": 1,
-   "refuted": 0,
+   "refuted": 1,
    "withdrawn": 1,
    "open": 13,
    "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant; T4 now fully confirmed (routed native PASS: L222/C206.2/sp92.8 -> L179/C133/sp37.2)",
