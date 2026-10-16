@@ -50,7 +50,7 @@
  ],
  "outline": {
   "w": 194.4,
-  "h": 56.16
+  "h": 64.8
  },
  "pg_layer": "M6",
  "macros": [],
@@ -88,11 +88,11 @@
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-repack-1015",
   "tag": "d62",
-  "purpose": "[H-SM d62] smh_tct_ref_p45 re-hardened denser for the v8 SM column (1036.8 um wide): 194.4 x 69.144 -> 194.4 x 56.16 (-18.8 %)",
+  "purpose": "[H-SM d62] smh_tct_ref_p45 re-hardened denser for the v8 SM column (1036.8 um wide): 194.4 x 69.144 -> 194.4 x 64.8 (-6.3 %; 56.16 gated at 79 % synth util)",
   "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL",
   "views_to": "physical/ref_tile/smh_tct_ref_p45/views",
   "record_to": "results/rtl/ref_tile/smh_tct_ref_p45",
-  "structural_change": "[H-SM v8 SM column, OWNER 22:30] density re-harden of smh_tct_ref_p45 (194.4 x 69.144, synth util 0.508) at ~62 % fill: 194.4 x 69.144 -> 194.4 x 56.16 (-18.8 %); pd 0.60. Measures the leaf fill that closes; the 1036.8-um SM column height follows it."
+  "structural_change": "[H-SM v8 SM column, OWNER 22:30] density re-harden of smh_tct_ref_p45 (194.4 x 69.144, synth util 0.508) at ~62 % fill: 194.4 x 69.144 -> 194.4 x 64.8 (-6.3 %; 56.16 gated at 79 % synth util); pd 0.60. Measures the leaf fill that closes; the 1036.8-um SM column height follows it."
  },
  "layer_cap": "M6",
  "layer_cap_grant": "coordinator el1012 io_tcl audit: same-contract re-route of an existing SMH child (closed @a9afd2404/10db43429 with region-grouped pins); the SMH parents (pdn_smh_tile_hier.tcl / front_c) take child PG on M6 under their M7 straps, so the child keeps M6 PG until the parent is re-cut to the M5 contract",

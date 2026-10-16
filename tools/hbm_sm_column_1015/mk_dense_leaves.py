@@ -14,7 +14,7 @@ LEAVES = {
                    "302.4 x 155.544 -> 259.2 x 155.544 (-14.3 %): two macro columns 23.76 um from the W edge, 21.384-um macro channel kept"),
     "smh_tcl_gu_d62": ("smh_tcl_gu_ref", (86.4, 108.0), None, 0.5545, "86.4 x 120.024 -> 86.4 x 108.0 (-10.0 %)"),
     "smh_bdc_d62": ("smh_bdc_ref_p50", (112.32, 116.64), None, 0.506, "112.32 x 142.56 -> 112.32 x 116.64 (-18.2 %)"),
-    "smh_tct_d62": ("smh_tct_ref_p45", (194.4, 56.16), None, 0.508, "194.4 x 69.144 -> 194.4 x 56.16 (-18.8 %)"),
+    "smh_tct_d62": ("smh_tct_ref_p45", (194.4, 64.8), None, 0.508, "194.4 x 69.144 -> 194.4 x 64.8 (-6.3 %; 56.16 gated at 79 % synth util)"),
 }
 
 
