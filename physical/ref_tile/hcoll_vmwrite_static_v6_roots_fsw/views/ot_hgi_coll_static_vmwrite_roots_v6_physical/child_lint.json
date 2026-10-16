@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656/record/views/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/ot_hgi_coll_static_vmwrite_roots_v6_physical.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hgi_coll_static_vmwrite_roots_v6_physical 103.68 x 388.8: PG M5 VDD 19 stripes (94% spread, 100% cov) / VSS 19 stripes (94% spread, 100% cov); strap M6; face pins 5100 blocked-above 0 blocked-same 0; clock clk_bank0 insertion 90 ps; clock clk_bank1 insertion 90 ps; clock clk_bank2 insertion 91 ps; clock clk_bank3 insertion 92 ps; clock clk_bank4 insertion 92 ps; clock clk_bank5 insertion 90 ps; clock clk_bank6 insertion 89 ps; clock clk_bank7 insertion 87 ps; clock clk_body insertion 302 ps; clock clk_meta insertion 58 ps; clock clk_rgx_ctrl insertion 86 ps; clock clk_rgx_data0 insertion 111 ps; clock clk_rgx_data1 insertion 105 ps; clock clk_rgx_data2 insertion 102 ps; clock clk_rgx_data3 insertion 103 ps; clock clk_tkw insertion 103 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+  "W": 103.68,
+  "H": 388.8,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 19,
+     "dir": "V",
+     "spread": 0.938,
+     "coverage": 1.0,
+     "shapes_on_top": 19
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 19,
+     "dir": "V",
+     "spread": 0.938,
+     "coverage": 1.0,
+     "shapes_on_top": 19
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 5100,
+   "blocked_above": 0,
+   "covered_below": 58,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk_bank0": {
+    "max_ps": 90.36,
+    "min_ps": 74.29
+   },
+   "clk_bank1": {
+    "max_ps": 90.47,
+    "min_ps": 73.24
+   },
+   "clk_bank2": {
+    "max_ps": 90.96,
+    "min_ps": 74.85
+   },
+   "clk_bank3": {
+    "max_ps": 92.23,
+    "min_ps": 74.12
+   },
+   "clk_bank4": {
+    "max_ps": 91.51,
+    "min_ps": 74.54
+   },
+   "clk_bank5": {
+    "max_ps": 90.43,
+    "min_ps": 74.85
+   },
+   "clk_bank6": {
+    "max_ps": 89.34,
+    "min_ps": 73.28
+   },
+   "clk_bank7": {
+    "max_ps": 87.34,
+    "min_ps": 72.52
+   },
+   "clk_body": {
+    "max_ps": 302.36,
+    "min_ps": 213.97
+   },
+   "clk_meta": {
+    "max_ps": 58.23,
+    "min_ps": 48.45
+   },
+   "clk_rgx_ctrl": {
+    "max_ps": 86.12,
+    "min_ps": 71.89
+   },
+   "clk_rgx_data0": {
+    "max_ps": 110.58,
+    "min_ps": 79.06
+   },
+   "clk_rgx_data1": {
+    "max_ps": 104.62,
+    "min_ps": 81.43
+   },
+   "clk_rgx_data2": {
+    "max_ps": 102.13,
+    "min_ps": 79.42
+   },
+   "clk_rgx_data3": {
+    "max_ps": 102.57,
+    "min_ps": 78.91
+   },
+   "clk_tkw": {
+    "max_ps": 102.66,
+    "min_ps": 80.81
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 531
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.hbm.provisional_native_child_grant.v1",
+ "status": "APPROVED_ISOLATED_F20_MEASUREMENT_ONLY",
+ "cell": "hfd_hgi_vm_calendar_f20",
+ "candidate_kit": "hv16_vm_cal_f20_ww",
+ "request_commit": "dc1936678",
+ "request_path": "results/rtl/hbm_harden_0811/f20_0850/pin_window_request.json",
+ "request_sha256": "1a17674df18264eed7ba71fea66ae0cdce6ebf0e9a1e0124924206ec13c31c61",
+ "source_commit": "e3a4f24df6e536e6b1f603edd8fcb0f6a1c70315",
+ "functional_sources_sha256": {
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv": "9e4e60326d3e9c7be30ae746ba44fd2a7943f126a4c54e6e37ac56f7a92f72a7",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv": "2d9fc6c6bd4e145ce98ba5cffa785559bdab880e4d39bb6759a2bfd8deb1f960",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "d5e85b370f1d8ae53306c35faf463d328a9b20181f5cf27fa381da779b5b4676"
+ },
+ "outline": {
+  "w": 241.92,
+  "h": 116.64
+ },
+ "macro": [
+  "u_calendar.u_programme.u_program",
+  "ot_sram_1r1w_1024x256_m2_r2c2",
+  44.496,
+  23.76,
+  219.23999999999998,
+  94.248
+ ],
+ "exact_signal_pin_rectangles": 558,
+ "signal_pin_source": "Use exact requested_pin_rectangles from the pinned request, excluding VDD/VSS. W/S/N unchanged; E +21.600um.",
+ "signal_pin_faces": {
+  "S": 40,
+  "E": 187,
+  "W": 331
+ },
+ "whole_face_cut": {
+  "S": 0.0159,
+  "E": 0.1539,
+  "W": 0.2724
+ },
+ "face_cut_limit": 0.6,
+ "signal_grid": "Every signal centre verified on0.012mod0.048; all638 proposed rectangles remain inside outline.",
+ "clock_ports": [
+  "clk",
+  "clk_cap",
+  "clk_mem",
+  "clk_tgt"
+ ],
+ "clock_semantics": "Same four related phase0 ports; clk_mem raw macro entry. Actual phi-minus-R reference and native O-R/S+R unmeasured until new gate/export.",
+ "added_cycles": 0,
+ "added_area_mm2_for_12": 0.030233087999999998,
+ "measured_cause": {
+  "job": "hv16_vm_cal_f20-f20-df84589aa",
+  "status": "EARLY_FAIL_CONGESTION",
+  "grt_error": "GRT-0232",
+  "total_overflow": 66,
+  "by_layer": {
+   "M3": 21,
+   "M4": 41,
+   "M5": 4
+  },
+  "markers": 44,
+  "outside_west_channel": 24,
+  "zero_capacity_inside_west_macro_edge": 20,
+  "max_density_bin": 1.102,
+  "actual_std_area_um2": 2799.3,
+  "actual_macro_area_um2": 12317.4,
+  "actual_die_fill": 0.588,
+  "placement_tt_wns_ps": -28.1429879401
+ },
+ "conditions": [
+  "Regenerate actual PG for widened outline; old PG rectangles are references only, not a completed new grid.",
+  "Actual GRT must remove all66 overflows including20 prior zero-capacity markers; no OBS/capacity waiver.",
+  "Require actual native phi-minus-R/launch/capture/spread/slew, TT setup>=0, FF hold>=0, DRC0 and exact bench/mutants.",
+  "All12 instance homes need source-bound packing/cuts before adoption: only four calendar_q have current explicit slots.",
+  "Frozen d4 and current active hbm_v15 grants remain unchanged."
+ ]
+}
