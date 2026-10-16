@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "af22cc9d1",
+  "commit": "09d9beb60",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -102,6 +102,11 @@
     "author": "Codex typed ABI integration",
     "basis_commit": null
    },
+   "vm_retire_0600": {
+    "file": "tools/hbm_die_v15/v16_specs/vm_retire_0600.json",
+    "author": "Claude H-NETLIST 0600",
+    "basis_commit": null
+   },
    "vmsm": {
     "file": "tools/hbm_die_v15/v16_specs/vmsm.json",
     "author": "H-NETLIST/vmsm (Claude) 2026-10-15",
@@ -119,15 +124,15 @@
   "instances": 1506,
   "masters": 62,
   "edges": 11716,
-  "edge_bits": 1233867,
+  "edge_bits": 1233837,
   "clock_reset_ports": 3518,
   "straps": 94,
   "die_pins": 43,
-  "exposed_input_ports": 4,
-  "exposed_input_bits": 3736,
+  "exposed_input_ports": 0,
+  "exposed_input_bits": 0,
   "exposed_unassigned_ports": 0,
-  "gaps": 31,
-  "open_output_ports": 1129,
+  "gaps": 30,
+  "open_output_ports": 1128,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -233,23 +238,23 @@
     },
     "cq": {
      "direction": "input",
-     "bits": 1014
+     "bits": 676
     },
     "cr": {
      "direction": "output",
-     "bits": 822
+     "bits": 548
     },
     "client_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 6
     },
     "response_enable": {
      "direction": "input",
-     "bits": 4
+     "bits": 3
     },
     "response_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 6
     },
     "bank_enable": {
      "direction": "input",
@@ -557,25 +562,17 @@
      "direction": "input",
      "bits": 1
     },
-    "cq": {
-     "direction": "input",
-     "bits": 1014
-    },
-    "cr": {
-     "direction": "output",
-     "bits": 822
-    },
     "client_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 2
     },
     "response_enable": {
      "direction": "input",
-     "bits": 4
+     "bits": 1
     },
     "response_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 2
     },
     "bank_enable": {
      "direction": "input",
@@ -583,7 +580,7 @@
     },
     "bank_client": {
      "direction": "input",
-     "bits": 16
+     "bits": 8
     },
     "hub_ring_enable": {
      "direction": "input",
@@ -591,7 +588,7 @@
     },
     "hub_ring_client": {
      "direction": "input",
-     "bits": 4
+     "bits": 2
     },
     "rslot_v": {
      "direction": "input",
@@ -770,19 +767,19 @@
     },
     "rq": {
      "direction": "input",
-     "bits": 680
+     "bits": 544
     },
     "rr": {
      "direction": "output",
-     "bits": 10280
+     "bits": 8224
     },
     "wq": {
      "direction": "input",
-     "bits": 6744
+     "bits": 4496
     },
     "wq_done": {
      "direction": "output",
-     "bits": 24
+     "bits": 16
     },
     "dq": {
      "direction": "input",
@@ -97604,48 +97601,6 @@
     "vm_rr",
     0,
     2056
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "v15.1 source contract",
-   "region": "v15"
-  },
-  {
-   "name": "idx_cq",
-   "bits": 338,
-   "source": [
-    "hb_idx",
-    "cq",
-    0,
-    338
-   ],
-   "sink": [
-    "hb_vms_SW",
-    "cq",
-    676,
-    1014
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "v15.1 source contract",
-   "region": "v15"
-  },
-  {
-   "name": "idx_cr",
-   "bits": 274,
-   "source": [
-    "hb_vms_SW",
-    "cr",
-    548,
-    822
-   ],
-   "sink": [
-    "hb_idx",
-    "cr",
-    0,
-    274
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241085,18 +241040,18 @@
   },
   {
    "name": "host_completion_220",
-   "bits": 8,
+   "bits": 6,
    "source": [
     "calendar_SW",
     "client_seq",
     0,
-    8
+    6
    ],
    "sink": [
     "hb_vms_SW",
     "client_seq",
     0,
-    8
+    6
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241106,18 +241061,18 @@
   },
   {
    "name": "host_completion_221",
-   "bits": 4,
+   "bits": 3,
    "source": [
     "calendar_SW",
     "response_enable",
     0,
-    4
+    3
    ],
    "sink": [
     "hb_vms_SW",
     "response_enable",
     0,
-    4
+    3
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241127,18 +241082,18 @@
   },
   {
    "name": "host_completion_222",
-   "bits": 8,
+   "bits": 6,
    "source": [
     "calendar_SW",
     "response_seq",
     0,
-    8
+    6
    ],
    "sink": [
     "hb_vms_SW",
     "response_seq",
     0,
-    8
+    6
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241295,18 +241250,18 @@
   },
   {
    "name": "host_completion_230",
-   "bits": 8,
+   "bits": 2,
    "source": [
     "calendar_NW",
     "client_seq",
     0,
-    8
+    2
    ],
    "sink": [
     "hb_vms_NW",
     "client_seq",
     0,
-    8
+    2
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241316,18 +241271,18 @@
   },
   {
    "name": "host_completion_231",
-   "bits": 4,
+   "bits": 1,
    "source": [
     "calendar_NW",
     "response_enable",
     0,
-    4
+    1
    ],
    "sink": [
     "hb_vms_NW",
     "response_enable",
     0,
-    4
+    1
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241337,18 +241292,18 @@
   },
   {
    "name": "host_completion_232",
-   "bits": 8,
+   "bits": 2,
    "source": [
     "calendar_NW",
     "response_seq",
     0,
-    8
+    2
    ],
    "sink": [
     "hb_vms_NW",
     "response_seq",
     0,
-    8
+    2
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241358,18 +241313,18 @@
   },
   {
    "name": "host_completion_233",
-   "bits": 16,
+   "bits": 8,
    "source": [
     "calendar_NW",
     "bank_client",
     0,
-    16
+    8
    ],
    "sink": [
     "hb_vms_NW",
     "bank_client",
     0,
-    16
+    8
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241379,18 +241334,18 @@
   },
   {
    "name": "host_completion_234",
-   "bits": 4,
+   "bits": 2,
    "source": [
     "calendar_NW",
     "hub_ring_client",
     0,
-    4
+    2
    ],
    "sink": [
     "hb_vms_NW",
     "hub_ring_client",
     0,
-    4
+    2
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -292293,13 +292248,13 @@
    "sink": [
     "hb_vms_NE",
     "rq",
-    544,
-    680
+    408,
+    544
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rq_NE",
+   "basis": "H-NETLIST 0600: NE RG5->4 (legacy HC group3 retired); COLL is read group 3",
    "region": "vm_compact_0253"
   },
   {
@@ -292308,8 +292263,8 @@
    "source": [
     "hb_vms_NE",
     "rr",
-    8224,
-    10280
+    6168,
+    8224
    ],
    "sink": [
     "hb_coll_NE",
@@ -292320,7 +292275,7 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rr_NE",
+   "basis": "H-NETLIST 0600: NE RG5->4 (legacy HC group3 retired); COLL is read group 3",
    "region": "vm_compact_0253"
   },
   {
@@ -292364,6 +292319,48 @@
    "allowed_exception": null,
    "basis": "Exact live endpoint group mapping after deleting unused group3; baseline quant_vm_rr",
    "region": "vm_compact_0253"
+  },
+  {
+   "name": "vm_retire_0600_0",
+   "bits": 338,
+   "source": [
+    "hb_idx",
+    "cq",
+    0,
+    338
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "cq",
+    338,
+    676
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 VM client retirement: SW local client IDX moved from client 2 to client 1 (NC 3->2)",
+   "region": "vm_retire_0600"
+  },
+  {
+   "name": "vm_retire_0600_1",
+   "bits": 274,
+   "source": [
+    "hb_vms_SW",
+    "cr",
+    274,
+    548
+   ],
+   "sink": [
+    "hb_idx",
+    "cr",
+    0,
+    274
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 VM client retirement: SW local client IDX moved from client 2 to client 1 (NC 3->2)",
+   "region": "vm_retire_0600"
   },
   {
    "name": "vmsm_0",
@@ -384426,47 +384423,6 @@
    "undriven_bits": 0
   },
   {
-   "id": "G-SMVM-VMCLIENT",
-   "owner": "see note per range (not SM)",
-   "missing_rtl": "static client source migration for VM ports outside RG2: no static producer on main for these client slots",
-   "affects": [
-    [
-     "hb_vms_SW",
-     "cq",
-     338,
-     676
-    ],
-    [
-     "hb_vms_NW",
-     "cq",
-     0,
-     1352
-    ],
-    [
-     "hb_vms_NW",
-     "rq",
-     408,
-     544
-    ],
-    [
-     "hb_vms_NE",
-     "rq",
-     408,
-     680
-    ],
-    [
-     "hb_vms_NE",
-     "wq",
-     4496,
-     6744
-    ]
-   ],
-   "note": "Listed for accounting (H-SM 1705 list, 8 ports); owners: SW cq client1 = record \"1\" DMA owner (PENDING); NW cq (records cp/fmv/fused/quant) + rq3/wq1 \"CP\" = host/CP owner; NE rq3/wq1 = ATT RETIRE (VM ABI change H-ELEM-A, verdict B); NE rq4/wq2 = HC engine owner. The RG2 range [272,408) of every hb_vms rq IS bound here (x-load). Coordinator: drop duplicates if another region claims them. vmsm 2026-10-15: none of these ranges is an SM/VM-path port: SW cq client1 = DMA owner (G-DMA), NW cq 0..3 + rq3/wq1 = host/CP owner, NE rq4/wq2 = HC engine (G-HC), NE rq3/wq1 = retired ATT slot: H-ELEM-A must either remove it from hfd_hgi_vms_static_NE (VM ABI change) or assign it (candidate: the SM result writer of G-SMVM-SMOUT option B for NE). The HBM->VM path (dq) is closed by vmsm.json and does not use these slots. | smvm 0030: NW wq1 (CP) and NE wq1 (retired ATT) now bound to the static SM writer smw_<q> (smvm_0030.json); NE wq2 (HC) remains; retirement of NW cq / NW rq3 / NE rq3 requested from H-SM.",
-   "region": "sm_vm",
-   "undriven_ports": 4,
-   "undriven_bits": 4074
-  },
-  {
    "id": "G-SMVM-KEYSTAGE",
    "owner": "H-COLL+IDX (with H-SM for attention-on-SM KV)",
    "missing_rtl": "service key staging producer of hb_idx key_lines[35167:0] (consumes key_slot/key_index): no module on main outputs key_lines (only ot_hbm_idx_* inputs); ot_hbm_svc_sm_group has no key-line output.",
@@ -385004,60 +384960,10 @@
   }
  ],
  "exposed_inputs": {
-  "ports": 4,
-  "bits": 3736,
-  "by_owner": {
-   "see note per range (not SM)": {
-    "ports": 4,
-    "bits": 3736
-   }
-  },
-  "list": [
-   {
-    "instance": "hb_vms_SW",
-    "master": "hfd_hgi_vms_static_SW",
-    "port": "cq",
-    "bits": 338,
-    "port_bits": 1014,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   },
-   {
-    "instance": "hb_vms_NW",
-    "master": "hfd_hgi_vms_static_NW",
-    "port": "cq",
-    "bits": 1014,
-    "port_bits": 1014,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   },
-   {
-    "instance": "hb_vms_NE",
-    "master": "hfd_hgi_vms_static_NE",
-    "port": "rq",
-    "bits": 136,
-    "port_bits": 680,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   },
-   {
-    "instance": "hb_vms_NE",
-    "master": "hfd_hgi_vms_static_NE",
-    "port": "wq",
-    "bits": 2248,
-    "port_bits": 6744,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   }
-  ]
+  "ports": 0,
+  "bits": 0,
+  "by_owner": {},
+  "list": []
  },
  "open_outputs": [
   [
@@ -385119,11 +385025,6 @@
    "hb_vms_SE",
    "ring_fault",
    3
-  ],
-  [
-   "hb_vms_NW",
-   "cr",
-   822
   ],
   [
    "hb_vms_NW",
@@ -390801,6 +390702,9 @@
   "su_sfu": "SU: 16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore lifted 1:1 from ot_hbm_su_static_quarter/top (QID SW0 SE1 NW2 NE3 = v15 hb_su QIDs). Params = the only whole-SU proof with the die RF_RELAY: MR1 multirate d9507c056 (receipt results/arch/hbm_su_f2_static_1014/multirate_native_d9507c056: MULTIRATE=1, MLAT=4, ALAT=3, LEAF=1, RF_RELAY=36, RR10/WR7). DOUBT: the RTL default is still MULTIRATE=0/MLAT=3/LEAF=0 (su_multirate_top_contract.json default_parameter 0, candidate 1); MULTIRATE=1 is required by the v7 die clocking (slices serial 900 + pg_clk stream 1200). H-SU branch claude/hsu-k0r2-1705 (PIN_REG lane, programme 7116->7120) is NOT on main and not used. Command source: ot_hbm_su_programme (serial plane, 9688-bit line = 4 x {control1742,vmr240,vmw312,rf54,red74}, MSB->LSB, so quarter q red_cmd=[q*2422+0,+74), rf_rd=[+74,+128), vmw=[+128,+440), vmr=[+440,+680), control=[+680,+2422)); one central instance fans 9688 bits to all four quadrants -- it has NO die slot and its fixed S+4 timing assumes a direct registered boundary, so any die relay on that fan-out must be absorbed by the compiler epoch (H-SU/H-DIE). The stream programme plane (64-bit VM calendar cal_rd/cal_wr) belongs to the VM/calendar region, not here. Quarter glue: red_sel is pure wiring (bound as bit-slice edges); rf_drain_now and the relay head valid were AND gates in the compositions: CLOSED by H-NETLIST/su 10-15 (qcore rf_drain_cmd[1:0] input + red_rf_v output, edges in su.json); bridge_rst_n CLOSED by the leaf ot_hbm_su_bridge_release x4 (su.json). RF relays: 16 routes x 36 = 576 x hbfd_rly_48_<flow> (one register stage each, async active-low clear of ALL 48 bits from rs; the top's st_v reset is a subset, data reset is harmless); ck = clk_relay[w] = serial, rs = rst_n. PAD: stage 0 i[41:48] tied 0 (straps), last-stage o[41:48] open; logical width 41 = {v, addr8, data32} at bits 40, 39:32, 31:0. Flow per stage from su_rf_relays_v7 home deltas (next-home direction). SFU: RTL on main says the core IS ot_hgi_sfu_scheduled_engine with LG_PATH=1+R (ot_hgi_sfu_split_engine is a composition with no own logic; leaves+relays are die instances; H-SU 72130e7c9, Qswiglu exact at R=0/R=9). R=11 per sfu_core_request_v7 (LG_PATH 12; the compiler's SFU_LG_PATH IO calendar must be regenerated for 12 -- only R=9 was benched). SFU relays use the DEDUPE standard hbfd_rly_624 (fwd 596 b = rq34+wq562, bwd 516 b = rr514+done2) x 11 stages x 2 directions x 16 pairs = 352; PAD fwd 28 b, bwd 108 b. SFU core has NO slot (PROPOSED strip; H-SM must shrink SM rows) and the relay stages have no homes -> placement open (H-DIE). SFU rst_lane_n/rst_map_n are given as stream resets (v15 listed them under the loader/CP owner; if a programme-controlled lane reset is intended they move into G-SFU-LOADER). Faults: pgslice/qcore/sfucore fault outputs unconsumed (no die status aggregator in this region). hb_argmax.am_stream gap is recorded here per H-SU ownership (instance is the coordinator's).",
   "vm_compact_0253": [
    "NW/NE readgroups0,1,2,4,5 ->0,1,2,3,4. No ties or missing producers added. Calendar packed offsets remain actualW187 source. Updated wrapper/bank physical views are UNQUALIFIED until source-bound gates."
+  ],
+  "vm_retire_0600": [
+   "H-NETLIST 0600 2026-10-16: retire VM client/group ports that have no static producer on the v16 die.\n\nRTL (rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv):\n  SW  NC 3->2   former client1 (DMA record \"1\") retired; clients 0 ARGMAX, 1 IDX (was 2); replay code 3->2\n  NW  NC 3->0   former CP/FMV/FUSED record clients retired (no cq/cr ports); replay code 3->0\n  NE  RG 5->4, WG 3->2   legacy HC read group3 / write group2 retired (hc_NE uses its LG pair slots);\n                         COLL read group 4->3; bank master = SE shape (hfd_vms_bank_native_q1, sid port)\nSpec edits (idempotent): new region vm_retire_0600.json (re-states the SW IDX client edges), NE COLL group in\nvm_compact_0253.json, calendar field widths in complete_host_targets_2330.py (run it after this script).\nCompiler: tools/hbm_static/vm_abi_remap_0600.py maps native-compact-0253 calendars to this ABI (cycles unchanged).\n"
   ],
   "vmsm": "HBM -> VM WRITE PATH (G-VM-HBM-PATH, static successor of ot_hbm_svc_static_vm_delivery fed by the retired svc bands). Decision: COMPILER-WINDOWED K-PORT SHARE of all 32 PCs per quadrant (option 1 of grants_v7_1925 (3); no dedicated PCs, so SM weight bandwidth is lost only inside compiler-placed VM windows). Per quadrant: (a) vmks_<q><k> = ot_hbm_svc_vm_kshare #(SM=k) between svg_<q><k> and its 4 controllers (engine region, full_die_v16.engine_region): NORM passes the group K traffic; a window command (vm_*) holds new group requests at the K boundary (the allowed HBM flow-control boundary), drains the group beats in flight, issues 16 x len-4 reads per PC (64 slots, address {row,j[2:0],{col,j[3]},P^col^{row[1:0],j[2:0]},00}), steers the 64 returning beats by phase into a Gray SPSC FIFO to stream_clk and emits delivery fills; (b) vmdel_<q><b> = ot_hbm_svc_vmdel_lane x8 (the existing hardened v3 delivery lane, wires-only split parent flattened): landing (begin / fill / block_ready) and the compiler start -> 256 cycles of dq to VM bank b (sector = base + slot*32 + P); (c) vmfc_<q> = ot_vms_calendar_static #(W=89): one programme word per stream edge, fields begin_v[0:1), begin_bank[1:2), begin_epoch[2:18), start[18:19), start_bank[19:20), start_epoch[20:36), start_base_sector[36:52), vm_v[52:53), vm_bank[53:54), vm_epoch[54:70), vm_row[70:85), vm_col[85:89). Compiler rules: begin(bank,epoch) at or before the window command of the same bank/epoch; start no earlier than the bound on window drain + HBM return + CDC (landing start_ok checks block_ready and faults otherwise -- a schedule error is detected, never waited on); calendar_<q> reserves wslot WG+4 (dq) on all 8 banks for the 256 readout edges from start + 3 (lane pin registers). Fixed latencies added by the new leaf: group K request +1 hbm edge, group K response +1 hbm edge (II=1); VM beat -> fill_v: CDC 2 sync + 2 edges. Same window cost on every PC of the quadrant. (d) sfault_<q> = ot_hbm_svc_stack_fault: the channel-pair CA check + sticky fault join of controllers, groups, share leaves, delivery lanes and the calendar (status out to the host status consumer, G-STATUS). Write-back (VM -> HBM, G-DMA) can use the same window: ot_hbm_svc_vm_kshare passes group writes now; a VM write window is the natural extension, not built here."
  }
