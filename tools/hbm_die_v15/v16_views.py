@@ -60,8 +60,9 @@ def sv_val(v):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     a = ap.parse_args()
-    C = json.loads(CONTRACT.read_text())
+    C = json.loads(a.contract.read_text())
     (a.out / 'wrap').mkdir(parents=True, exist_ok=True)
     groups = defaultdict(list)
     for n, i in C['instances'].items():

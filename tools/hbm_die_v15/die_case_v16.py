@@ -132,13 +132,19 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     ap.add_argument('--die-repeaters', action='store_true')
     ap.add_argument('--paths', type=int, default=200000)
+    ap.add_argument('--plan', type=Path, default=PLAN, help='die plan (compact660_v5 default; v6 for d4)')
+    ap.add_argument('--grants', type=Path, default=GRANTS)
+    ap.add_argument('--lanes', type=Path, default=LANES)
+    ap.add_argument('--clock-mode', default='hbm=quad,stream=htree,serial=htree')
+    ap.add_argument('--clock-bin-um', type=float, default=1600.0)
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     a = ap.parse_args()
-    C = json.loads(CONTRACT.read_text()); G = json.loads(GRANTS.read_text()); P = json.loads(PLAN.read_text())
+    C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     V = json.loads((a.views / 'views.json').read_text())
-    lanes = json.loads(LANES.read_text())
+    lanes = json.loads(a.lanes.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
     I = C['instances']
@@ -531,8 +537,8 @@ def main():
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
     manifest = dict(schema='opentallas.hbm_v16.die_case.v1', label='NOT_A_DIE_RESULT (v16 strict port bind FAIL: 51 exposed '
-                    'input ports / 21,737 b; SYNTH views are estimates)', die_um=[W, H], contract=str(CONTRACT.relative_to(ROOT)),
-                    plan=str(PLAN.relative_to(ROOT)), grants=str(GRANTS.relative_to(ROOT)), views=kinds, flags=flags,
+                    'input ports / 21,737 b; SYNTH views are estimates)', die_um=[W, H], contract=str(a.contract),
+                    plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags,
                     excluded_cells=excluded, excluded_instances=out_inst,
                     instances={c: sum(1 for n in inst if cell_of[n] == c) for c in kinds},
                     homes=homes, placeholder_slots_ignored=placeholder, placement_problems=bad, face_bits=face_report,
@@ -548,7 +554,7 @@ def main():
 
     # ---------------- die clock trees ----------------
     ck = slots[CKGEN]
-    obs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for n, v in pl.items() if not I[n]['master'].startswith('hbfd_rly')]
+    obs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for n, v in pl.items()]   # every hard outline (relays too)
     quad = {n: ('N' if centre(n)[1] > H / 2 else 'S') + ('E' if centre(n)[0] > W / 2 else 'W') for n in inst}
     trees = {}
     for di, (dom, insts) in enumerate(sorted(clk.items())):
@@ -559,7 +565,10 @@ def main():
             px, py = vxy[cell_of[n]].get(p0, (v['w'] / 2, v['h'] / 2))
             x, y = rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], px, py)
             sinks.append((n, p0, x, y))
-        t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[n])
+        mode = dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree')
+        t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[n], mode=mode, bin_um=a.clock_bin_um)
+        inside = [b for b in t['buffers'] if any(o[0] < b[2] < o[2] and o[1] < b[3] < o[3] for o in obs)]
+        assert not inside, (dom, len(inside), inside[:3])   # H-DIE 02:20: no die clock buffer inside any hard outline
         pre = {'hbm': 'dkh', 'stream': 'dks', 'serial': 'dkr'}[dom]
         ren = lambda s, pre=pre: s.replace('dck_', pre + '_')
         port = f'clk_{dom}'
@@ -577,6 +586,7 @@ def main():
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
+    render(out, manifest, P, W, H, trees)
     # ---------------- die.v ----------------
     netname = {}
     for i_, (d, ends) in enumerate(sorted(nets.items())):
@@ -748,7 +758,7 @@ echo $? > $D/out/run.exit
                           clock={d: len(t['buffers']) for d, t in trees.items()})))
 
 
-def render(out, man, P, W, H):
+def render(out, man, P, W, H, trees=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -767,6 +777,10 @@ def render(out, man, P, W, H):
         ax.add_patch(Rectangle((v['x'], v['y']), v['w'], v['h'], color=col(v), alpha=0.6, lw=0.2))
         if v['w'] * v['h'] > 1.5e5:
             ax.text(v['x'] + 10, v['y'] + 10, n, fontsize=4)
+    for dom, t in (trees or {}).items():
+        xs = [b[2] for b in t['buffers']]; ys = [b[3] for b in t['buffers']]
+        ax.plot(xs, ys, '.', ms=0.8, color={'hbm': 'magenta', 'stream': 'cyan', 'serial': 'olive'}.get(dom, 'k'),
+                label=f'{dom} clock buffers ({len(xs)})')
     for k, c in [('REAL view', 'tab:blue'), ('SYNTH view (slot/plan)', 'tab:orange'), ('generated home (peer centroid)', 'tab:purple'),
                  ('region overflow (slot misfit)', 'tab:red'), ('relay', 'tab:green'), ('PHY', 'tab:gray')]:
         ax.plot([], [], 's', color=c, label=k)
