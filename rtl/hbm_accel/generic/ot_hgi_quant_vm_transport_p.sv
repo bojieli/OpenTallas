@@ -26,7 +26,7 @@
 //      still samples a complete beat;
 //   6. payload registers (cq, response data, x, rd2) carry no reset: every one is qualified by a reset control valid.
 // Added latency: +1 edge a beat (launch), +1 edge per FIFO landing, +1 edge to the first request of a record.
-// MUTANT (bench): 1..4 as the historical module; 5 = launch not delayed (decoder samples x before R2 lands);
+// MUTANT (bench): 1..4 as the historical module; 5 = launch not delayed (decoder samples x before R2 lands); 7 = code-emitting scale unbiased;
 // 6 = the write precompute trusts the entry count instead of the landed FIFO head (queued != 0, head not yet read out
 // of the macro); both must FAIL the exact gates.  (A stage-validity mutant is not observable: the seat cannot restage
 // on the edge after a stage, so p_ok is always fresh -- kept as a structural guard.)
@@ -77,14 +77,19 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire vo,qfault,decode_fault;wire [511:0] y;
  ot_hgi_quant_decode quant(.clk(clk),.rst_n(rn),.v(launch),
  .generic_enable(1'b1),.legacy_fp4(1'b0),.header(header),.x(x),
- .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
+ .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault),.qe(qe));
+ wire [265:0] qe;
+ // hgi-1010/c: QDQ_FP8 CODE-EMITTING output (O.fmt 7, the ATT row-word, lead decision 10-11 01:41): each beat of 32
+ // elements is stored as {exponent, codes} and written as one 1,024-bit row-word = 32 VM words: element e at bits
+ // [18e +: 18] = {pad 0, fmt 0, code8, scale8 = exponent + 127} (E4M3 x 2^(scale - 127)), bits [1023:576] 0.
+ wire code_out=o[4:2]==3'd7;
  wire [15:0] air=a[5]?16'd0:(a[135:120]==0?16'd1:a[135:120]);
  wire [15:0] oir=o[135:120]==0?16'd1:o[135:120];
  wire same_geometry=a[47:8]==o[47:8] && air==oir && a[119:88]==o[119:88];
  wire fields_ok=ch[127:124]==4 && ch[123:118]>=4 && ch[123:118]<=6 &&
  ch[99:93]==7'b0010001 && !ch[92] &&
  (ch[123:118]!=6 || ch[71:64]==16) && a[1:0]==1 && o[1:0]==1 &&
- a[4:2]==0 && (o[4:2]==0 || o[4:2]==1) && !o[5] &&
+ a[4:2]==0 && (o[4:2]==0 || o[4:2]==1 || (o[4:2]==7 && ch[123:118]==4)) && !o[5] &&
  a[87:68]!=0 && a[87:68]==o[87:68] && a[67:48]!=0 && a[67:48]==o[67:48] &&
  (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0);
  reg fields_q, same_q, nalias_q, shape_q; reg [24:0] aend_q, oend_q;
@@ -95,7 +100,7 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire hv, fovf; wire [511:0] fhead;
  wire push=vo&&!bad&&MUTANT!=1;
  wire pop;
- ot_fifo_sram_fwft #(.W(512),.DEPTH(DEPTH),.MACRO(0)) u_res(.clk(clk),.rst_n(rn),.push(push),.wdata(y),.pop(pop),
+ ot_fifo_sram_fwft #(.W(512),.DEPTH(DEPTH),.MACRO(0)) u_res(.clk(clk),.rst_n(rn),.push(push),.wdata(code_out?{246'd0,qe}:y),.pop(pop),
   .hv(hv),.head(fhead),.ovf(fovf));
  // ---------------------------------------------------------------- in-flight descriptors (in request order)
  localparam integer DW=1+4+3+6+1+1+1+16;
@@ -131,12 +136,17 @@ module ot_hgi_quant_vm_transport_p #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  // did not pop), the barrel reads the register; pw_ok waits for it (+1 edge after a pop).
  reg [511:0] fh_q; reg fh_ok;
  always @(posedge clk) fh_q<=fhead;
+ reg [1023:0] rw;                             // code-emitting row-word of the head beat
+ always @* begin
+  rw=0;
+  for(integer e=0;e<32;e=e+1) rw[18*e+:18]={2'b00,fh_q[8*e+:8],(MUTANT==7)?fh_q[263:256]:8'(fh_q[265:256]+10'sd127)};   // MUTANT 7: unbiased scale
+ end
  reg [255:0] wd;
  always @* begin
   wd=0;
   if(w_burst)for(integer j=0;j<8;j=j+1)
-    wd[j*32+:32]={fh_q[(write_part+j)*16+:16],16'd0};
-  else wd[write_addr[2:0]*32+:32]={fh_q[write_part*16+:16],16'd0};
+    wd[j*32+:32]=code_out?rw[(write_part+j)*32+:32]:{fh_q[(write_part+j)*16+:16],16'd0};
+  else wd[write_addr[2:0]*32+:32]=code_out?rw[write_part*32+:32]:{fh_q[write_part*16+:16],16'd0};
  end
  wire [31:0] wmask=w_burst?32'hffffffff:(32'hf<<(write_addr[2:0]*4));
  reg p_ok,pw_ok,p_rdone;

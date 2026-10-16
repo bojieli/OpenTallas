@@ -6,7 +6,9 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0)(
  input wire clk,rst_n,v,generic_enable,legacy_fp4,
  input wire [127:0] header,input wire [1023:0] x,
  output wire vo,output wire [511:0] y,output wire fault,
- output reg decode_fault);
+ output reg decode_fault,
+ // hgi-1010/c: the FP8 QDQ's codes and block exponent with vo (QDQ_FP8 code-emitting output, O.fmt 7): {exponent 10, codes 32 x 8}
+ output wire [265:0] qe);
  wire [3:0] unit_code=header[127:124];
  wire [5:0] op=header[123:118];
  wire e4=generic_enable && op==6;
@@ -32,6 +34,7 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0)(
   value_pipe[0]<=by;
   for(i=1;i<14;i=i+1)value_pipe[i]<=value_pipe[i-1];
  end
+ assign qe={exponent,q};
  assign vo=av|valid_pipe[13];
  assign y=valid_pipe[13] ? value_pipe[13] : ay;
  assign fault=vo && (valid_pipe[13] ? fault_pipe[13] : af);

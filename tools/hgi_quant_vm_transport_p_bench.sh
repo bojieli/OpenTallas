@@ -1,11 +1,11 @@
 #!/bin/bash
 # hgi-1010/d5: exact gate of ot_hgi_quant_vm_transport_p (pipelined transport, SRAM result FIFO).
-# usage: tools/hgi_quant_vm_transport_p_bench.sh OUT [MUTANTS...]   (default 0 1 2 3 5 6; 0 must PASS, every other FAIL)
+# usage: tools/hgi_quant_vm_transport_p_bench.sh OUT [MUTANTS...]   (default 0 1 2 3 5 6 7; 0 must PASS, every other FAIL)
 #   transport bench: 458 cases (arbitrary CP stall, ACK delay, strided / multirow, tail16/48, illegal UE) + vectors
 #   connected bench (ot_hgi_quant_unit PIPE=1 -> real ECC VM unit, 5,888 words): TMUT 0 PASS, 4 / 5 FAIL
 #   (MUTANT 6 is caught by the transport bench's random CP stalls; the connected VM never exposes the landing gap)
 set -uo pipefail
-out=$1; shift; [ "${1:-}" = "--one" ] && mut="" || mut=${*:-0 1 2 3 5 6}
+out=$1; shift; [ "${1:-}" = "--one" ] && mut="" || mut=${*:-0 1 2 3 5 6 7}
 mkdir -p "$out"
 hdc=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv)
 mem=(rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v)

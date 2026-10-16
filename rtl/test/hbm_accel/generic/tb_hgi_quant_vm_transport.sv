@@ -35,10 +35,17 @@ module tb_hgi_quant_vm_transport;
  reg layout_mode=0;
  integer cycles=0,writes=0,acks=0,cases=0,nwords=0,reads=0;
  reg [19:0] current_n;
- wire ref_vo,ref_fault,ref_dec;wire [511:0] ref_y;
+ wire ref_vo,ref_fault,ref_dec;wire [511:0] ref_y;wire [265:0] ref_qe;
  ot_hgi_quant_decode ref_core(.clk(clk),.rst_n(rst_n),.v(dut.launch),
  .generic_enable(1'b1),.legacy_fp4(1'b0),.header(dut.header),.x(dut.x),
- .vo(ref_vo),.y(ref_y),.fault(ref_fault),.decode_fault(ref_dec));
+ .vo(ref_vo),.y(ref_y),.fault(ref_fault),.decode_fault(ref_dec),.qe(ref_qe));
+ // hgi-1010/c: QDQ_FP8 code-emitting output (O.fmt 7): the expected 1,024-bit ATT row-word of a beat, element e at [18e +: 18]
+ // = {pad 0, fmt 0 (E4M3), code8, scale8 = block exponent + 127}, bits [1023:576] zero (att FORMAT FINAL)
+ reg code_mode=0;
+ function automatic [1023:0] rowword(input [265:0] qe);
+  reg [1023:0] r; reg signed [9:0] ex;
+  begin r=0; ex=qe[265:256]; for(integer e=0;e<32;e=e+1) r[18*e+:18]={1'b0,1'b0,qe[8*e+:8],8'(ex+10'sd127)}; rowword=r; end
+ endfunction
  integer rbeat=0;
  reg use_vector=0;reg [1023:0] vx;reg [511:0] vy;
  reg [1023:0] gi8[0:48],gi4[0:48],gie[0:85];
@@ -75,7 +82,8 @@ module tb_hgi_quant_vm_transport;
  always @(posedge clk)begin
   if(ref_vo&&!use_vector)begin
    for(integer k=0;k<32;k=k+1)
-    if((rbeat%((current_n+31)/32))*32+k<current_n)expected[dest_base+(rbeat/((current_n+31)/32))*layout_wstride+((rbeat%((current_n+31)/32))*32+k)*layout_ostride]={ref_y[k*16+:16],16'd0};
+    if((rbeat%((current_n+31)/32))*32+k<current_n)expected[dest_base+(rbeat/((current_n+31)/32))*layout_wstride+((rbeat%((current_n+31)/32))*32+k)*layout_ostride]=
+      code_mode?rowword(ref_qe)>>(32*k):{ref_y[k*16+:16],16'd0};
    rbeat=rbeat+1;
   end
  end
@@ -92,7 +100,7 @@ module tb_hgi_quant_vm_transport;
    h=0;a=0;o=0;h[127:124]=4;h[123:118]=op;h[99:93]=17;
    if(op==6)h[71:64]=16;
    a[1:0]=1;a[67:48]=size;a[87:68]=1;
-   o=a;o[47:8]=dest_base;
+   o=a;o[47:8]=dest_base;if(code_mode)o[4:2]=7;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;start_cycle=cycles;
    while(!done&&cycles-start_cycle<200000)@(negedge clk);
@@ -114,7 +122,7 @@ module tb_hgi_quant_vm_transport;
     for(integer col=0;col<width;col=col+1)vm[ib+row*rs+col*(bcast?0:ist)]=32'h3f800000+((row*4+col/32)<<23)+(col%8<<19);
    h=0;a=0;o=0;h[127:124]=4;h[123:118]=op;h[99:93]=17;if(op==6)h[71:64]=16;
    a[1:0]=1;a[47:8]=ib;a[67:48]=width;a[87:68]=rows;a[119:88]=rs;a[135:120]=ist;a[5]=bcast;
-   o=a;o[47:8]=ob;o[119:88]=ws;o[135:120]=ost;o[5]=0;
+   o=a;o[47:8]=ob;o[119:88]=ws;o[135:120]=ost;o[5]=0;if(code_mode)o[4:2]=7;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;begin_cycle=cycles;
    while(!done&&cycles-begin_cycle<500000)@(negedge clk);
@@ -160,6 +168,17 @@ module tb_hgi_quant_vm_transport;
    for(integer i=0;i<49;i=i+1)begin vx=gi4[i];vy=go4[i];run(5,32);end
    for(integer i=0;i<86;i=i+1)begin vx=gie[i];vy=goe[i];run(6,32);end
    vx=gie[0];vy=goe[0];run(6,16);use_vector=0;
+  end
+  // hgi-1010/c: QDQ_FP8 code-emitting output (O.fmt 7): row-words instead of dequantised words
+  code_mode=1;run(4,32);run(4,2048);run_layout(4,64,3,2,1,192,96,3,4099,0);code_mode=0;
+  // O.fmt 7 is FP8 QDQ only: an FP4 QDQ with O.fmt 7 must fault before any VM request
+  while(!ready)@(negedge clk);
+  begin reg [127:0]h;reg[255:0]a,o;
+   h=0;a=0;h[127:124]=4;h[123:118]=5;h[99:93]=17;
+   a[1:0]=1;a[67:48]=64;a[87:68]=1;o=a;o[47:8]=dest_base;o[4:2]=7;
+   @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
+   @(negedge clk);cmd=0;while(!done)@(negedge clk);if(!fault||req_v)$fatal(1,"FP4 code-emitting accepted");
+   cases=cases+1;
   end
   run_layout(4,32,3,2,3,128,160,3,4099,0);
   run_layout(5,64,2,1,1,96,128,5,4101,0);
