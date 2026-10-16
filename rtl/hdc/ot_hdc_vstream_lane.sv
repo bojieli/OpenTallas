@@ -27,7 +27,10 @@ module ot_hdc_vstream_lane #(
     //   written every cycle, read pointer = write pointer - (class depth - 2), macro read + one capture flop): the
     //   same word on the same cycle as the flop line (cycle-exact, 0 cycles).
     parameter integer SFH = 0,
-    parameter integer TLS = 0
+    parameter integer TLS = 0,
+    // el1013 Q-ELEM-SUH 2026-10-16 (lane head pin-register variant h): SFXX = extra edges on each SFU traversal added
+    //   OUTSIDE this module (the head's HPR result-input stage); every class depth follows.  0 = unchanged.
+    parameter integer SFXX = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -104,7 +107,7 @@ module ot_hdc_vstream_lane #(
     localparam [2:0] SFU_NONE = 0, SFU_EXP = 1, SFU_RECIP = 2, SFU_RSQRT = 3, SFU_SIGM = 4;
     localparam integer LA = QLA, LM = QLM;        // ot_hdc_qadd / ot_hdc_qmul latency
     // ot_hdc_sfu_q DEPTHs (49 / 28 / 37 at LA = LM = 3)
-    localparam integer SFX = (SFH != 0) ? 4 : 0;  // launch | tile pin flop in | tile pin flop out | capture
+    localparam integer SFX = ((SFH != 0) ? 4 : 0) + SFXX;  // launch | tile pin flop in | tile pin flop out | capture (+ SFXX)
     localparam integer D_EXP = 7 * LM + 8 * LA + 4 + SFX, D_RECIP = 1 + 3 * (2 * LM + LA) + SFX,
                        D_RSQRT = 1 + 3 * (3 * LM + LA) + SFX;
     localparam integer D_SIGM = D_EXP + LA + D_RECIP;   // exp, +1, reciprocal

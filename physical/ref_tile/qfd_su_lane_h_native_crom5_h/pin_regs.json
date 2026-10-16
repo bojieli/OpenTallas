@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_su_lane_h_native_crom5r",
+ "enable": false,
+ "reason": "Q-ELEM-SUH 10-16: the pin registers are in RTL (ot_hdc_vstream_lane_h HPR=1, benched); flow pin_regs would add a further unbenched edge"
+}

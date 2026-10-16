@@ -20,6 +20,7 @@ module tb_qfd_su_vm_bv;
     parameter integer LT = 0;
     parameter integer RD = 2;
     parameter integer LIREG = 0;   // r7 10-14: lane cluster input register stage (ot_hdc_vstream LIREG)
+    parameter integer LHPR = 0;    // Q-ELEM-SUH 10-16: lane head pin-register stage (ot_hdc_vstream LHPR)
     parameter integer LOREG = 0;   // r6 10-14: lane cluster output register stage (ot_hdc_vstream LOREG)
     // el1013-qwen-stalls: the memory under the master must answer at 1 + VL.  The flat banks answer at 1 + 7; the
     // tiled banks (VMT = 1, RV / RO relays, in-tile relays) at 1 + 7 + SX (SX = 8 at RV = 1, RO = 2: production VL = 15).
@@ -89,7 +90,7 @@ module tb_qfd_su_vm_bv;
     wire [7:0] d_inf;
     wire [AW-1:0] d_red_addr, d_eaa; wire [31:0] d_red_data; wire [15:0] d_pr, d_rows;
     reg  d_eacr, d_eqv; reg [511:0] d_eqd;
-    ot_qfd_sp_su64_sfu_bv #(.SW(SW), .IS(IS), .OS(OS), .CRX(CRX), .VL(VL), .MUT(MUT), .RSRAM(RSRAM), .LOFF(LOFF), .RTREE(RTREE), .LT(LT), .RD(RD), .LOREG(LOREG), .LIREG(LIREG)) dut (
+    ot_qfd_sp_su64_sfu_bv #(.SW(SW), .IS(IS), .OS(OS), .CRX(CRX), .VL(VL), .MUT(MUT), .RSRAM(RSRAM), .LOFF(LOFF), .RTREE(RTREE), .LT(LT), .RD(RD), .LOREG(LOREG), .LIREG(LIREG), .LHPR(LHPR)) dut (
         .clk(clk), .rst_n(rst_n), .go(go_d), .ready(d_ready), .idle(d_idle), .obs_active(d_act), .obs_inflight(d_inf),
         .i_nout(nout), .i_nin(nin), .i_asrc(1'b0), .i_abase(abase), .i_aso(aso), .i_asi(asi), .i_bsrc(bsrc),
         .i_bbase(bbase), .i_bso(bso), .i_bsi(bsi), .i_csrc(csrc), .i_cbase(cbase), .i_cso(cso), .i_csi(csi), .i_ma(ma),

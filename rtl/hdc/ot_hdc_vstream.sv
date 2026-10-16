@@ -48,6 +48,9 @@ module ot_hdc_vstream #(
                                       // every input reaches the head 1 edge later (results +1 edge); the five read
                                       // requests leave over RD - 1 relay stages instead of RD, so the read round trip --
                                       // and the closed head's ML alignment -- is unchanged.  Requires LOREG = 1.
+    parameter integer LHPR = 0,       // LT (Q-ELEM-SUH 2026-10-16): the lane head's pin-register stage (lane_t HPR = 1):
+                                      // every lane input / output 1 edge later (results +2 edges per op, SFU +1 per
+                                      // traversal); the head's ML absorbs the read round trip, so nothing else moves.
     parameter integer RED_ENTRIES = 0 // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
 ) (
     input  wire              clk,
@@ -288,7 +291,7 @@ module ot_hdc_vstream #(
             localparam integer AQ = LIREG;
 `endif
             ot_hdc_vstream_lane_t #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .OREG(LOREG),
-                                    .IREG(LIREG)) u_tile (
+                                    .IREG(LIREG), .HPR(LHPR)) u_tile (
                 .clk(clk), .rst_n(rst_l), .emit0(bv_q[2]), .live(lv_q), .i(t_i), .fin_th(t_fin), .i_last_r(bv_q[0]),
                 .cura0(p_q[PDW-1 -: AW]), .curb0(p_q[PDW-1-AW -: AW]), .curc0(p_q[PDW-1-2*AW -: AW]),
                 .curd0(p_q[PDW-1-3*AW -: AW]), .rrow(t_rrow),

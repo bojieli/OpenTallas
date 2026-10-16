@@ -46,7 +46,11 @@ module ot_hdc_vstream_lane_t #(
     // only).  The cluster is then pin-registered on both faces.  Cost: the issue fields arrive 1 edge later (results
     // +1 edge per op); the memory answers also arrive 1 edge later, and the stream unit (ot_hdc_vstream LIREG = 1)
     // sends the five read requests over ONE FEWER relay stage, so the head's read-to-data alignment is unchanged.
-    parameter integer IREG = 0
+    parameter integer IREG = 0,
+    // Q-ELEM-SUH 2026-10-16 (variant h, native fallback for qfd_su_lane_h_native_crom5): HPR = the head's pin-register
+    // stage (ot_hdc_vstream_lane_h HPR).  Every head input and output is 1 edge later (results +2 edges per op, the SFU
+    // classes +1 more per traversal); the head absorbs the read round trip in its own ML, so no other knob moves.
+    parameter integer HPR = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -173,9 +177,12 @@ module ot_hdc_vstream_lane_t #(
     generate if (WR != 16 || AW != 24 || NW != 18 || KV_FP8 != 1 || ML != 15 || RD != 2 || QLA != 4 || QLM != 5) begin : g_cfg_err
         OT_SU_LANE_HARD_VIEW_IS_WR16_AW24_NW18_KVFP8_ML15_RD2_QLA4_QLM5 u_cfg_err ();   // undefined: elaboration stops
     end endgenerate
+    generate if (HPR != 0) begin : g_hpr_err
+        OT_SU_LANE_HARD_VIEW_HAS_NO_HPR_USE_qfd_su_lane_h_native_crom5r u_hpr_err ();   // undefined: elaboration stops
+    end endgenerate
     ot_hdc_vstream_lane_h u_head (
 `else
-    ot_hdc_vstream_lane_h #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .QLA(QLA), .QLM(QLM)) u_head (
+    ot_hdc_vstream_lane_h #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .QLA(QLA), .QLM(QLM), .HPR(HPR)) u_head (
 `endif
         .clk(clk), .rst_n(rst_c), .emit0(c_emit0), .live(c_live), .i(c_i), .fin_th(c_fin_th), .i_last_r(c_ilast),
         .cura0(c_cura), .curb0(c_curb), .curc0(c_curc), .curd0(c_curd), .rrow(c_rrow), .asi(c_asi), .bsi(c_bsi),
@@ -224,7 +231,15 @@ module ot_hdc_vstream_lane_h #(
     // configuration (a parent instantiates the hard tile with no overrides): mul 5 (CSA tree | prefix add | round),
     // add 4 (prefix adds split from the alignment).  The tile's results are tagged; only the lane latency grows.
     parameter integer QLA  = 4,
-    parameter integer QLM  = 5
+    parameter integer QLM  = 5,
+    // Q-ELEM-SUH 2026-10-16 (variant h, owner/coordinator-approved native fallback, +2 edges ledger): HPR = 1 puts one
+    // more register stage behind every pin flop: every parent-facing input (pin flop -> p_* -> lane), every
+    // parent-facing output (lane -> m_* -> out flop -> pin) and every SFU result input (sy_* pin -> HPR flop -> the
+    // lane's capture flop).  So each pin flop drives / is driven by one flop only and can sit at its pin.  The read
+    // round trip grows by 2 (lane ML + 2*HPR); each SFU traversal by 1 (lane SFXX = HPR).  The SFU launch side keeps
+    // its single port flop: SFXX = 2 would make the sigmoid depth 130 > 129, the 128-word TLS ring's limit.
+    // 0 = the original head, unchanged.
+    parameter integer HPR  = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -311,6 +326,58 @@ module ot_hdc_vstream_lane_h #(
         q_va <= va_q; q_vb <= vb_q; q_vc <= vc_q; q_wrom <= wrom_q; q_crom <= crom_q;
     end
 
+    // ---- HPR: the stage behind the pin flops (valid bits reset by rt, data none); wires at HPR = 0 ----
+    localparam integer HVB = 4;
+    localparam integer HDB = NW + (NW + 1) + 9*AW + 6 + 8 + 3 + 64 + 3 + 3 + 3*32 + WR*16 + 64;
+    wire [HVB-1:0] hqv = {q_emit0, q_live, q_ilast, q_accept};
+    wire [HDB-1:0] hqd = {q_i, q_fin_th, q_cura, q_curb, q_curc, q_curd, q_rrow, q_asi, q_bsi, q_csi, q_dsi, q_asrc,
+                          q_bsrc, q_csrc, q_mc, q_md, q_redsq, q_ma, q_mb, q_dst, q_red, q_ad, q_imm1, q_imm2, q_cls,
+                          q_isfu, q_va, q_vb, q_vc, q_wrom, q_crom};
+    localparam integer SYV = 5;                                    // sy_exp_vo and the three faults (reset)
+    localparam integer SYD = 3*32;
+    wire [SYV-1:0] syv_i = {sy_exp_vo, sy_exp_f, sy_rcp_f, sy_rsq_f, 1'b0};
+    wire [SYD-1:0] syd_i = {sy_exp_y, sy_rcp_y, sy_rsq_y};
+    wire [HVB-1:0] hpv;
+    wire [HDB-1:0] hpd;
+    wire [SYV-1:0] syv;
+    wire [SYD-1:0] syd;
+    generate if (HPR != 0) begin : g_hpr_in
+        (* keep *) reg [HVB-1:0] hpvr;
+        (* keep *) reg [HDB-1:0] hpdr;
+        (* keep *) reg [SYV-1:0] syvr;
+        (* keep *) reg [SYD-1:0] sydr;
+        always @(posedge clk or negedge rt) if (!rt) begin hpvr <= {HVB{1'b0}}; syvr <= {SYV{1'b0}}; end
+                                            else begin hpvr <= hqv; syvr <= syv_i; end
+        always @(posedge clk) begin hpdr <= hqd; sydr <= syd_i; end
+        assign hpv = hpvr; assign hpd = hpdr; assign syv = syvr; assign syd = sydr;
+    end else begin : g_hpr_in_wire
+        assign hpv = hqv; assign hpd = hqd; assign syv = syv_i; assign syd = syd_i;
+    end endgenerate
+    wire          p_emit0, p_live, p_ilast, p_accept;
+    wire [NW-1:0] p_i; wire [NW:0] p_fin_th;
+    wire [AW-1:0] p_cura, p_curb, p_curc, p_curd, p_rrow, p_asi, p_bsi, p_csi, p_dsi;
+    wire p_asrc, p_bsrc, p_csrc, p_mc, p_md, p_redsq;
+    wire [1:0] p_ma, p_mb, p_dst, p_red; wire [2:0] p_ad, p_cls, p_isfu; wire [31:0] p_imm1, p_imm2;
+    wire [31:0] p_va, p_vb, p_vc; wire [WR*16-1:0] p_wrom; wire [63:0] p_crom;
+    assign {p_emit0, p_live, p_ilast, p_accept} = hpv;
+    assign {p_i, p_fin_th, p_cura, p_curb, p_curc, p_curd, p_rrow, p_asi, p_bsi, p_csi, p_dsi, p_asrc, p_bsrc, p_csrc,
+            p_mc, p_md, p_redsq, p_ma, p_mb, p_dst, p_red, p_ad, p_imm1, p_imm2, p_cls, p_isfu, p_va, p_vb, p_vc,
+            p_wrom, p_crom} = hpd;
+    wire        p_sy_exp_vo, p_sy_exp_f, p_sy_rcp_f, p_sy_rsq_f, p_sy_unused;
+    wire [31:0] p_sy_exp_y, p_sy_rcp_y, p_sy_rsq_y;
+    assign {p_sy_exp_vo, p_sy_exp_f, p_sy_rcp_f, p_sy_rsq_f, p_sy_unused} = syv;
+    assign {p_sy_exp_y, p_sy_rcp_y, p_sy_rsq_y} = syd;
+`ifdef OT_HPR_MUT
+    localparam integer HML = 0;    // bench mutant: the lane's read alignment ignores the HPR stages (must FAIL)
+`else
+    localparam integer HML = 2 * HPR;
+`endif
+`ifdef OT_SFXX_MUT
+    localparam integer HSF = 0;    // bench mutant: the SFU class depths ignore the HPR result stage (must FAIL)
+`else
+    localparam integer HSF = HPR;
+`endif
+
     // ---- the lane (LANE 0: the address offsets are formed by the parent, LOFF = 1) ----
     wire          n_va_re, n_vb_re, n_vc_re, n_wrom_re, n_crom_re, n_vm_we, n_kv_we;
     wire [AW-1:0] n_va_addr, n_vb_addr, n_vc_addr, n_wrom_addr, n_crom_addr, n_vm_waddr, n_kv_waddr;
@@ -319,26 +386,53 @@ module ot_hdc_vstream_lane_h #(
     wire [31:0]   n_out;
     wire [1:0]    n_red;
     wire [AW-1:0] n_raddr;
-    ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
-                          .SFH(1), .TLS(1)) u_lane (
-        .clk(clk), .rst_n(rt), .emit0(q_emit0), .live(q_live), .i(q_i), .fin_th(q_fin_th), .i_last_r(q_ilast),
-        .cura0(q_cura), .curb0(q_curb), .curc0(q_curc), .curd0(q_curd), .rrow(q_rrow),
-        .asi(q_asi), .bsi(q_bsi), .csi(q_csi), .dsi(q_dsi),
-        .asrc(q_asrc), .bsrc(q_bsrc), .csrc(q_csrc), .mc(q_mc), .md(q_md), .redsq(q_redsq),
-        .ma(q_ma), .mb(q_mb), .dst(q_dst), .red(q_red), .ad(q_ad), .imm1(q_imm1), .imm2(q_imm2),
-        .cls(q_cls), .accept(q_accept), .i_sfu(q_isfu),
-        .va_re(n_va_re), .va_addr(n_va_addr), .va_q(q_va),
-        .vb_re(n_vb_re), .vb_addr(n_vb_addr), .vb_q(q_vb),
-        .vc_re(n_vc_re), .vc_addr(n_vc_addr), .vc_q(q_vc),
-        .wrom_re(n_wrom_re), .wrom_addr(n_wrom_addr), .wrom_q(q_wrom),
-        .crom_re(n_crom_re), .crom_addr(n_crom_addr), .crom_q(q_crom),
+    ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD + HML), .QLA(QLA),
+                          .QLM(QLM), .SFH(1), .TLS(1), .SFXX(HSF)) u_lane (
+        .clk(clk), .rst_n(rt), .emit0(p_emit0), .live(p_live), .i(p_i), .fin_th(p_fin_th), .i_last_r(p_ilast),
+        .cura0(p_cura), .curb0(p_curb), .curc0(p_curc), .curd0(p_curd), .rrow(p_rrow),
+        .asi(p_asi), .bsi(p_bsi), .csi(p_csi), .dsi(p_dsi),
+        .asrc(p_asrc), .bsrc(p_bsrc), .csrc(p_csrc), .mc(p_mc), .md(p_md), .redsq(p_redsq),
+        .ma(p_ma), .mb(p_mb), .dst(p_dst), .red(p_red), .ad(p_ad), .imm1(p_imm1), .imm2(p_imm2),
+        .cls(p_cls), .accept(p_accept), .i_sfu(p_isfu),
+        .va_re(n_va_re), .va_addr(n_va_addr), .va_q(p_va),
+        .vb_re(n_vb_re), .vb_addr(n_vb_addr), .vb_q(p_vb),
+        .vc_re(n_vc_re), .vc_addr(n_vc_addr), .vc_q(p_vc),
+        .wrom_re(n_wrom_re), .wrom_addr(n_wrom_addr), .wrom_q(p_wrom),
+        .crom_re(n_crom_re), .crom_addr(n_crom_addr), .crom_q(p_crom),
         .vm_we(n_vm_we), .vm_waddr(n_vm_waddr), .vm_wdata(n_vm_wdata),
         .kv_we(n_kv_we), .kv_waddr(n_kv_waddr), .kv_wdata(n_kv_wdata),
         .l_ov(n_ov), .l_out(n_out), .l_red(n_red), .l_redsq(n_redsq),
         .l_raddr(n_raddr), .l_last(n_last), .retire(n_retire), .l_fault(n_fault),
-        .sx_exp_v(sx_exp_v), .sx_exp_x(sx_exp_x), .sy_exp_y(sy_exp_y), .sy_exp_vo(sy_exp_vo), .sy_exp_f(sy_exp_f),
-        .sx_rcp_v(sx_rcp_v), .sx_rcp_x(sx_rcp_x), .sy_rcp_y(sy_rcp_y), .sy_rcp_f(sy_rcp_f),
-        .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
+        .sx_exp_v(sx_exp_v), .sx_exp_x(sx_exp_x), .sy_exp_y(p_sy_exp_y), .sy_exp_vo(p_sy_exp_vo), .sy_exp_f(p_sy_exp_f),
+        .sx_rcp_v(sx_rcp_v), .sx_rcp_x(sx_rcp_x), .sy_rcp_y(p_sy_rcp_y), .sy_rcp_f(p_sy_rcp_f),
+        .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(p_sy_rsq_y), .sy_rsq_f(p_sy_rsq_f));
+
+    // ---- HPR: the stage in front of the out flops (valid bits reset by rt, data none); wires at HPR = 0 ----
+    localparam integer MVB = 11;
+    localparam integer MDB = 8*AW + 3*32 + 2 + 1;
+    wire [MVB-1:0] mvi = {n_va_re, n_vb_re, n_vc_re, n_wrom_re, n_crom_re, n_vm_we, n_kv_we, n_ov, n_last, n_retire,
+                          n_fault};
+    wire [MDB-1:0] mdi = {n_va_addr, n_vb_addr, n_vc_addr, n_wrom_addr, n_crom_addr, n_vm_waddr, n_kv_waddr, n_raddr,
+                          n_vm_wdata, n_kv_wdata, n_out, n_red, n_redsq};
+    wire [MVB-1:0] mv;
+    wire [MDB-1:0] md_;
+    generate if (HPR != 0) begin : g_hpr_out
+        (* keep *) reg [MVB-1:0] mvr;
+        (* keep *) reg [MDB-1:0] mdr;
+        always @(posedge clk or negedge rt) if (!rt) mvr <= {MVB{1'b0}}; else mvr <= mvi;
+        always @(posedge clk) mdr <= mdi;
+        assign mv = mvr; assign md_ = mdr;
+    end else begin : g_hpr_out_wire
+        assign mv = mvi; assign md_ = mdi;
+    end endgenerate
+    wire          m_va_re, m_vb_re, m_vc_re, m_wrom_re, m_crom_re, m_vm_we, m_kv_we, m_ov, m_last, m_retire, m_fault;
+    wire [AW-1:0] m_va_addr, m_vb_addr, m_vc_addr, m_wrom_addr, m_crom_addr, m_vm_waddr, m_kv_waddr, m_raddr;
+    wire [31:0]   m_vm_wdata, m_kv_wdata, m_out;
+    wire [1:0]    m_red;
+    wire          m_redsq;
+    assign {m_va_re, m_vb_re, m_vc_re, m_wrom_re, m_crom_re, m_vm_we, m_kv_we, m_ov, m_last, m_retire, m_fault} = mv;
+    assign {m_va_addr, m_vb_addr, m_vc_addr, m_wrom_addr, m_crom_addr, m_vm_waddr, m_kv_waddr, m_raddr, m_vm_wdata,
+            m_kv_wdata, m_out, m_red, m_redsq} = md_;
 
     // ---- out flops ----
     always @(posedge clk or negedge rt)
@@ -346,13 +440,13 @@ module ot_hdc_vstream_lane_h #(
             va_re <= 1'b0; vb_re <= 1'b0; vc_re <= 1'b0; wrom_re <= 1'b0; crom_re <= 1'b0; vm_we <= 1'b0; kv_we <= 1'b0;
             l_ov <= 1'b0; l_last <= 1'b0; retire <= 1'b0; l_fault <= 1'b0;
         end else begin
-            va_re <= n_va_re; vb_re <= n_vb_re; vc_re <= n_vc_re; wrom_re <= n_wrom_re; crom_re <= n_crom_re;
-            vm_we <= n_vm_we; kv_we <= n_kv_we; l_ov <= n_ov; l_last <= n_last; retire <= n_retire; l_fault <= n_fault;
+            va_re <= m_va_re; vb_re <= m_vb_re; vc_re <= m_vc_re; wrom_re <= m_wrom_re; crom_re <= m_crom_re;
+            vm_we <= m_vm_we; kv_we <= m_kv_we; l_ov <= m_ov; l_last <= m_last; retire <= m_retire; l_fault <= m_fault;
         end
     always @(posedge clk) begin
-        va_addr <= n_va_addr; vb_addr <= n_vb_addr; vc_addr <= n_vc_addr; wrom_addr <= n_wrom_addr;
-        crom_addr <= n_crom_addr; vm_waddr <= n_vm_waddr; vm_wdata <= n_vm_wdata; kv_waddr <= n_kv_waddr;
-        kv_wdata <= n_kv_wdata; l_out <= n_out; l_red <= n_red; l_redsq <= n_redsq; l_raddr <= n_raddr;
+        va_addr <= m_va_addr; vb_addr <= m_vb_addr; vc_addr <= m_vc_addr; wrom_addr <= m_wrom_addr;
+        crom_addr <= m_crom_addr; vm_waddr <= m_vm_waddr; vm_wdata <= m_vm_wdata; kv_waddr <= m_kv_waddr;
+        kv_wdata <= m_kv_wdata; l_out <= m_out; l_red <= m_red; l_redsq <= m_redsq; l_raddr <= m_raddr;
     end
 endmodule
 `endif  // OT_SU_LANE_HARD

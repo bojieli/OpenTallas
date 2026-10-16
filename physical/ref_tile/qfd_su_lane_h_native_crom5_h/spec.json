@@ -1,0 +1,304 @@
+{
+ "name": "qfd_su_lane_h_native_crom5_h",
+ "top": "qfd_su_lane_h_native_crom5r",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_su_lane_h_native_crom5r.sv",
+  "rtl/hdc/ot_hdc_vstream_lane.sv",
+  "rtl/hdc/ot_hdc_vstream_lane_t.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "emit0",
+   "live",
+   "i",
+   "fin_th",
+   "i_last_r",
+   "cura0",
+   "curb0",
+   "curc0",
+   "curd0",
+   "rrow",
+   "asi",
+   "bsi",
+   "csi",
+   "dsi",
+   "asrc",
+   "bsrc",
+   "csrc",
+   "mc",
+   "md",
+   "redsq",
+   "ma",
+   "mb",
+   "dst",
+   "red",
+   "ad",
+   "imm1",
+   "imm2",
+   "cls",
+   "accept",
+   "i_sfu"
+  ],
+  "S": [
+   "va_re",
+   "va_addr",
+   "vb_re",
+   "vb_addr",
+   "vc_re",
+   "vc_addr",
+   "wrom_re",
+   "wrom_addr",
+   "crom_re",
+   "crom_addr",
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "wrom_q",
+   "crom_q"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "kv_we",
+   "kv_waddr",
+   "kv_wdata",
+   "l_ov",
+   "l_out",
+   "l_red",
+   "l_redsq",
+   "l_raddr",
+   "l_last",
+   "retire",
+   "l_fault",
+   "sx_exp_v",
+   "sx_exp_x",
+   "sy_exp_y",
+   "sy_exp_vo",
+   "sy_exp_f",
+   "sx_rcp_v",
+   "sx_rcp_x",
+   "sy_rcp_y",
+   "sy_rcp_f",
+   "sx_rsq_v",
+   "sx_rsq_x",
+   "sy_rsq_y",
+   "sy_rsq_f"
+  ]
+ },
+ "outline": {
+  "w": 172.8,
+  "h": 129.6
+ },
+ "recipe": 2,
+ "route": {
+  "pd": 0.52,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:Q-ELEM-SUH",
+  "branch": "claude/qelem-suh-1016",
+  "tag": "native45h",
+  "purpose": "Variant h (pin-register fallback, coordinator-approved +2 edges, ledger row): crom5_e head with HPR=1 -- one register stage behind every pin flop (parent inputs/outputs, SFU result inputs). New cell qfd_su_lane_h_native_crom5r; same ports/pins/outline as e.",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -DSYNTHESIS --top-module qfd_su_lane_h_native_crom5r rtl/physical/ot_qfd_su_lane_h_native_crom5r.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_vm_exact_rsram_loff_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 -GSEED=11 --Mdir {RUN}/bench/su_vm_exact_rsram_loff_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_exact_rsram_loff_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_s2_rsram_loff_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 -GIS=2 -GOS=2 -GCRX=3 -GSEED=12 --Mdir {RUN}/bench/su_vm_s2_rsram_loff_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_s2_rsram_loff_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_production64_ml15_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 -GSEED=11 -GSW=64 --Mdir {RUN}/bench/su_vm_production64_ml15_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_production64_ml15_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_loff_mut_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 +define+OT_LOFF_MUT -GSEED=11 --Mdir {RUN}/bench/su_vm_loff_mut_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_loff_mut_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_mut_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GMUT=1 --Mdir {RUN}/bench/su_vm_mut_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_mut_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_vmut_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GVMUT=1 --Mdir {RUN}/bench/su_vm_vmut_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_vmut_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_rsram_mut_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=2 -GSEED=11 --Mdir {RUN}/bench/su_vm_rsram_mut_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_rsram_mut_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_tls_mut_hpr",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 -GSEED=11 +define+OT_TLS_MUT --Mdir {RUN}/bench/su_vm_tls_mut_hpr rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_tls_mut_hpr/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_hpr_ml_mut",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 -GSEED=11 +define+OT_HPR_MUT --Mdir {RUN}/bench/su_vm_hpr_ml_mut rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_hpr_ml_mut/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   },
+   {
+    "name": "su_vm_hpr_sfxx_mut",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_su_vm_bv -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GLHPR=1 -GRSRAM=1 -GLOFF=1 -GSEED=11 +define+OT_SFXX_MUT --Mdir {RUN}/bench/su_vm_hpr_sfxx_mut rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && {RUN}/bench/su_vm_hpr_sfxx_mut/Vtb_qfd_su_vm_bv",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su_vm_bv"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_vm_me",
+   "rtl/qwen_sys",
+   "rtl/proto",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "bench_note": "tb_qfd_su_vm_bv with LHPR=1 (ot_hdc_vstream LHPR -> lane_t HPR -> lane_h HPR, the exact head body this wrapper instantiates with HPR=1); mutants OT_HPR_MUT (lane ML ignores the 2 HPR stages) and OT_SFXX_MUT (SFU depths ignore the result stage) must FAIL. SU_LAT HPR1 vs HPR0 recorded for the ledger.",
+  "cycles_added": 2
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    55.728,
+    43.2
+   ]
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "spine",
+ "structural_change": "New explicit master/source wrapper for current native45 source dependency. Wire-only wrapper adds no state or latency. Separate current gate/actualpin-cost qualification required before parent binds. | r2 (Q-ELEM-SU 10-16): clock spine balanced with symmetric insertion-aware topology, subtree-common padding and bounded measured balancing (OT_SPINE_SYM/TREE_PAD/SAFE_BALANCE, as CLOSED qfd_su_cbuf_g_tp8r on the same SRAM): the unbounded fine pass learned a 3 ps/pad estimate from the coarse pads and inserted ~17,600 pad cells (6,180 -> 23,785 spine cells, +2,870 um2 fixed, util 53% -> 67%), leaf arrival 460 -> 655 ps, and detailed placement failed DPL-0033 after hold repair | B (Q-ELEM-SU 10-16 06:55): SRAM macro moved from the centre (x 38.9) to the pin-free E side (x 55.7, 20 um E channel): the A gate density map showed the 765-input W pin-flop band red (>1.0) in a 37 um strip W of the macro and an empty 37 um region E of it; the W band gets 54 um | h (Q-ELEM-SUH 10-16, coordinator-approved native fallback, +2 edges): RTL pin-register stage HPR=1 in the head (ot_hdc_vstream_lane_h): every parent-facing input pin flop and every SFU result input now drives exactly one flop, every parent-facing out flop is fed by a flop; lane ML +2, SFU SFXX=1 (SFXX=2 would exceed the 128-word TLS ring: D_SIGM 130>129). e routed native FAIL launch 243.6/capture 197.3. New cell name qfd_su_lane_h_native_crom5r (die binding must use lane_t HPR=1 timing).",
+ "slot_change_request": "Historicaloutline retained as gate-only candidate screen, not assigned. Actual64copies source currentnative4/5; no diefit/PG/phase assertion.",
+ "reroute_reason": {
+  "kind": "native_launch",
+  "source": "results/arch/qelem_native_1016/native_audit_lane_h_e.json",
+  "cell": "qfd_su_lane_h_native_crom5",
+  "launch_ps": 243.6,
+  "fix": "pin-register fallback h: RTL HPR=1 register stage behind every pin flop (+2 edges per SU op, +1 per SFU traversal; ledger row), new top qfd_su_lane_h_native_crom5r"
+ },
+ "pin_ranges": {
+  "clk": [
+   84.24,
+   88.56
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Q-ELEM-SUH 10-16: the pin registers are in RTL (ot_hdc_vstream_lane_h HPR=1, benched); flow pin_regs would add a further unbenched edge"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
+ }
+}
