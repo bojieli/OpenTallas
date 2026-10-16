@@ -22,6 +22,8 @@ S = 'rtl/qwen_sys/static_kv_20261014/'
 # Name, actual source/module, exact required full-die population. The pc parent
 # elaborates into four real masters; it is not an inherited physical frame.
 ROLES = {
+    'layer_programme': (S+'qkd_static_kv_layer_programme.sv', 'qkd_static_kv_layer_programme', 1),
+    'attention_programme': ('rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv', 'qkd_native_attention_programme', 1),
     'ownership': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_ownership_calendar', 1),
     'drain_guard': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_drain_guard4', 32),
     'pc_path': (S+'qkd_static_kv_pc_path.sv', 'qkd_static_kv_pc_path', 128),
@@ -108,6 +110,9 @@ def requirements(root=ROOT):
             result[role]=dict(source=path,module=module,count=count,status='MISSING_SOURCE')
             continue
         result[role]=dict(spec,count=count,status='SOURCE_ONLY_UNJOINED')
+        if role=='writer_programme':
+            result[role]['required_parameters']=dict(MUT=0,VMAP=1)
+            if 'VMAP' not in spec['parameters']:result[role]['status']='SOURCE_PARAMETER_SUCCESSOR_REQUIRED'
     return dict(schema='opentallas.qwen_kv_static.requirements.v1',roles=result,
                 native_qualified=False,physical_qualified=False,
                 required=['actual on-chip sequencer/boot/config/epoch producers',
@@ -129,6 +134,8 @@ def validate_native_edges(ins):
         return src
     byrole={role:[i for i in ins.values() if i['role']==role] for role in ROLES}
     # Synthetic unit fixtures have no writer; production population enforces it.
+    for i in byrole.get('writer_programme',[]):
+        if i.get('parameters',{}).get('VMAP')!=1:raise ValueError('v1.5 independent writer programme requires actual VMAP1 source/parameter')
     for i in byrole.get('writer',[]):
         if i['parameters']['VMAP']!=1:raise ValueError('v1.5 writer requires VMAP1')
         for p,sp in WRITER_LINK_MAP.items():edge(i,p,'link',sp)
@@ -205,7 +212,7 @@ def compile_graph(graph, root=ROOT):
             raise ValueError(f'{n}: all exact input ports must be connected')
         if role=='k_issuer' and (i['parameters']['RESPONSE_LAT']<1 or i['parameters']['MUT']!=0):
             raise ValueError(f'{n}: actual positive response latency and production MUT0 required')
-        if role in ('landing','front_calendar','landing_calendar','writer','writer_programme','ownership','drain_guard') and i['parameters'].get('MUT')!=0:
+        if role in ('landing','front_calendar','landing_calendar','writer','writer_programme','ownership','drain_guard','layer_programme','attention_programme') and i['parameters'].get('MUT')!=0:
             raise ValueError(f'{n}: production MUT0 required')
     if counts!=Counter({k:v[2] for k,v in ROLES.items()}):raise ValueError(f'full die actual source census mismatch: {dict(counts)}')
     validate_native_edges(ins)
@@ -309,13 +316,14 @@ def template(root=ROOT):
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
     params={
+        'layer_programme':dict(MUT=0),'attention_programme':dict(MUT=0),
         'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
         'pc_path':{},'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
-        'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0),
+        'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
         'link':dict(MUT=0,NL=2,PR=1),
     }
     instances=[];lookup={};specs={}
@@ -332,7 +340,14 @@ def template(root=ROOT):
     def ep(n,p,lo=0,w=None):return dict(instance=n,port=p,lo=lo,width=width(n,p) if w is None else w)
     def join(dst,p,src,sp,lo=0,w=None):lookup[dst]['inputs'][p]=[ep(src,sp,lo,w)]
     def strap(dst,p,v,w):lookup[dst]['inputs'][p]=[dict(strap=v,width=w)]
+    add('layer_programme','layer_programme');add('attention_programme','attention_programme')
     add('ownership','ownership');add('wrn','writer');add('wprg','writer_programme');add('d2d','link')
+    for p,sp in [('start','writer_start'),('stage','stage'),('epoch','epoch'),('token','token'),('generation','generation')]:join('wprg',p,'layer_programme',sp)
+    join('wprg','position','layer_programme','position',0,13)
+    for p,sp in [('issue','attention_issue'),('run','attention_run'),('authority_valid','active'),('authority_epoch','epoch'),
+                 ('authority_token','token'),('authority_position','position'),('authority_stage','stage')]:join('attention_programme',p,'layer_programme',sp)
+    for p,sp in [('rx_event','att_rx_v'),('rx_payload','rx_payload'),('tx_slot','att_tx_slot'),('tx_slot_kind','att_tx_kind'),('tx_slot_beat','att_tx_beat')]:join('attention_programme',p,'d2d',sp)
+    join('d2d','att_tx_v','attention_programme','tx_valid');join('d2d','att_tx_payload','attention_programme','tx_payload')
     for p,sp in WRITER_LINK_MAP.items():join('wrn',p,'d2d',sp)
     for p,sp in WRITER_PROGRAMME_MAP.items():join('wrn',p,'wprg',sp)
     join('d2d','kvn_compiled_identity','wprg','compiled_identity')
@@ -343,6 +358,8 @@ def template(root=ROOT):
         for g in range(8):
             land=f'slg_{st}_{g}';lc=f'lcal_{st}_{g}';fc=f'fcal_{st}_{g}';ki=f'ki_{st}_{g}';a=f'ectl_a_{st}_{g}';guard=f'drain_{st}_{g}'
             for name,role in [(land,'landing'),(lc,'landing_calendar'),(fc,'front_calendar'),(ki,'k_issuer'),(a,'ectla'),(guard,'drain_guard')]:add(name,role)
+            for p,sp in [('kgo','kgo'),('vgo','vgo'),('ctx_t','ctx_t'),('epoch','epoch'),('layer','layer')]:join(lc,p,'layer_programme',sp)
+            for p,sp in [('kgo','kgo'),('epoch','epoch'),('layer','layer')]:join(ki,p,'layer_programme',sp)
             strap(land,'cfg_stack',stack,2);strap(land,'cfg_group',g,3);strap(a,'cfg',(g<<2)|stack,5)
             join(ki,'rq',a,'rq');join(a,'rs',ki,'rs')
             for p in ('req_valid','req_t','req_v','req_epoch','req_layer'):join(land,p,ki,p)
@@ -379,6 +396,7 @@ def template(root=ROOT):
         external_inputs=[],external_outputs=[],instances=instances)
     gaps=dict(schema='opentallas.qwen_kv_static.open_joins.v1',
         instance_count=len(instances),unbound_inputs={i['name']:[p for p,v in i['inputs'].items() if v is None] for i in instances if any(v is None for v in i['inputs'].values())},
+        source_parameter_gaps={i['name']:dict(required=sorted(i['parameters']),supported=specs[i['name']]['parameters']) for i in instances if set(i['parameters'])!=set(specs[i['name']]['parameters'])},
         unpriced_parameters={i['name']:[p for p,v in i['parameters'].items() if v is None] for i in instances if any(v is None for v in i['parameters'].values())},
         missing=['actual sequencer/boot/config/metadata producers and reset/clock source graph',
                  'actual writer delivery/expectation/context routing and HOST/embedding interfaces',

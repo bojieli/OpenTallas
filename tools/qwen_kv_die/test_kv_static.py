@@ -114,7 +114,7 @@ class CriticalNativeEdges(unittest.TestCase):
     def test_writer_expectations_are_not_link_echoes(self):
         w=dict(name='wrn',role='writer',parameters=dict(VMAP=1),inputs={})
         link=dict(name='link',role='link',inputs={})
-        prog=dict(name='prg',role='writer_programme',inputs={})
+        prog=dict(name='prg',role='writer_programme',parameters=dict(MUT=0,VMAP=1),inputs={})
         for p,sp in K.WRITER_LINK_MAP.items():w['inputs'][p]=self.endpoint('link',sp)
         for p,sp in K.WRITER_PROGRAMME_MAP.items():w['inputs'][p]=self.endpoint('prg',sp)
         for p,sp in [('kvn_compiled_identity','compiled_identity'),('kvn_compiled_generation','compiled_generation')]:link['inputs'][p]=self.endpoint('prg',sp)
@@ -135,7 +135,7 @@ class CriticalNativeEdges(unittest.TestCase):
 class ActualTopology(unittest.TestCase):
     def test_full_shape_known_joins_and_unknowns_are_explicit(self):
         graph,gaps=K.template()
-        self.assertEqual(len(graph['instances']),340)
+        self.assertEqual(len(graph['instances']),342)
         by={i['name']:i for i in graph['instances']}
         for stack in ('WS','WN','ES','EN'):
             for g in range(8):
