@@ -1,17 +1,17 @@
 {
  "summary": {
-  "instances": 1503,
-  "masters": 61,
-  "edges": 11639,
-  "edge_bits": 1196582,
-  "clock_reset_ports": 3512,
+  "instances": 1506,
+  "masters": 62,
+  "edges": 11716,
+  "edge_bits": 1233867,
+  "clock_reset_ports": 3518,
   "straps": 94,
   "die_pins": 43,
-  "exposed_input_ports": 16,
-  "exposed_input_bits": 6824,
+  "exposed_input_ports": 4,
+  "exposed_input_bits": 3736,
   "exposed_unassigned_ports": 0,
   "gaps": 31,
-  "open_output_ports": 1152,
+  "open_output_ports": 1129,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -25,10 +25,6 @@
   "see note per range (not SM)": {
    "ports": 4,
    "bits": 3736
-  },
-  "HC owner (engine) / H-DIE": {
-   "ports": 12,
-   "bits": 3088
   }
  },
  "problems": [],
@@ -109,8 +105,8 @@
    "id": "G-HC-ENG",
    "owner": "HC owner (engine) / H-DIE",
    "missing_rtl": "the single static HC engine hc_eng (projection W32/K20480 + Sinkhorn tail, 64 weight + 16 residual SRAM, programme SRAM; codex/hc-static-engine-1014 a35449ada ot_hgi_hc_programmed_sys1_split_mtp_static + weight prefetch on codex/hc-weight-prefetch-1015) is not on main; it is the producer of the per-quadrant tail result (result_v, result_position[3], result[768] = 24 FP32) that hc_<q> stores to VM. Its residual input is hc_<q>.x_wave (8192 b every 4 edges) and gathered mixes, both open outputs here.",
-   "undriven_ports": 12,
-   "undriven_bits": 3088,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "hc"
   },
   {
