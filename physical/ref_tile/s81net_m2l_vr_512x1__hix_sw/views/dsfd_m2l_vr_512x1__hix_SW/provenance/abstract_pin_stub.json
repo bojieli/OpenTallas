@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_m2l_vr_512x1__hix_SW.lef",
+    "sha256": "b34fddafd27d5216c7cdda9ba41fc0fe3597c6264004d98cc6f2f96f6a847f54"
+  },
+  "output": {
+    "path": "dsfd_m2l_vr_512x1__hix_SW.lef",
+    "sha256": "d51cdf3cd0804b5185199180ebbd0d3b8d68f2a850efb2a15236906d59a087cd"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+    "source_commit": "4d669381d661f41e86b2cc85a605cc5caf9baa24",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_m2l_vr_512x1__hix_SW.lef",
+    "dsfd_m2l_vr_512x1__hix_SW.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 2 OBS rects moved into 2 pins: ck[0], rs[0]; pockets: 448 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_m2l_vr_512x1__hix_sw-n3-4d669381d/record/views/dsfd_m2l_vr_512x1__hix_SW/dsfd_m2l_vr_512x1__hix_SW.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [
+      "(f) face-pin access: 1030 of 1032 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. di0[0] M4 (0.156,4.416), di0[100] M4 (0.156,4.416), di0[101] M4 (0.156,4.416))"
+    ],
+    "summary": "dsfd_m2l_vr_512x1__hix_SW 129.6 x 174.96: PG M5 VDD 47 stripes (96% spread, 100% cov) / VSS 47 stripes (96% spread, 100% cov); strap M6; face pins 1032 blocked-above 0 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion 179 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_m2l_vr_512x1__hix_SW",
+      "W": 129.6,
+      "H": 174.96,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 47,
+            "dir": "V",
+            "spread": 0.958,
+            "coverage": 1.0,
+            "shapes_on_top": 47
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 47,
+            "dir": "V",
+            "spread": 0.958,
+            "coverage": 1.0,
+            "shapes_on_top": 47
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1032,
+        "blocked_above": 0,
+        "covered_below": 112,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 1030,
+        "band_examples": [
+          "di0[0] M4 (0.156,4.416)",
+          "di0[100] M4 (0.156,4.416)",
+          "di0[101] M4 (0.156,4.416)",
+          "di0[102] M4 (0.156,4.416)",
+          "di0[103] M4 (0.156,4.416)",
+          "di0[104] M4 (0.156,4.416)"
+        ]
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 190.86,
+          "min_ps": 133.6
+        },
+        "fi0[0]": {
+          "max_ps": 178.95,
+          "min_ps": 127.13
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 448
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81net_m2l_vr_512x1__hix_sw-n3-4d669381d",
+    "source_commit": "4d669381d661f41e86b2cc85a605cc5caf9baa24",
+    "published_record_commit": "0d95e838562cc25643eee2aa327313e717995d52",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81net_m2l_vr_512x1__hix_sw-n3-4d669381d/routes/s81net_m2l_vr_512x1__hix_sw_n3_4d669381d/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "c9c07279a0b4599dae91046cae005f72bb0a76bdb8f47d0259ccd9b2271fe1f2",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_m2l_vr_512x1__hix_SW.lef": "d51cdf3cd0804b5185199180ebbd0d3b8d68f2a850efb2a15236906d59a087cd",
+      "dsfd_m2l_vr_512x1__hix_SW_tt.lib": "b1dbdc177929c3ead4ed0fbb16a3fc3e7b056f2be945513491e9504978abeef8",
+      "dsfd_m2l_vr_512x1__hix_SW_ff.lib": "2afcc7698ab96bd799da58e400b49f440058d3f177a6903e0c1cdc1666375736",
+      "dsfd_m2l_vr_512x1__hix_SW_ss.lib": "bc6dfbb5e5f5e1960cc874d43b4beb82409e92ede8e6e4daec2418efe91b193a",
+      "abstract.json": "1d0e72180259631f90943b716989ea0260e59616ec135435a50a7e15fb5bbcd2",
+      "insertion.json": "d25e0a75461724fa0f6506e270cc1dd35f3b0d21f407d3a5ceb5621ba22cd502",
+      "child_lint.json": "54a3615f82185006c38ccbdb87fbc54135ebaf9f17ad18d3ec54502303524fcf"
+    }
+  }
+}
