@@ -87,7 +87,11 @@ module ot_s81_hc_rb_cols2flat #(
 endmodule
 
 module ot_s81_hc_retrow #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 1
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 1,
+    // CTRN_SPLIT (10-16 a5, HC-CTRN-A4): 1 = each column's return slice is two stacked leaves, ctrn_own_{e,w} (rv / flag
+    // merge / hdr / own a,b: 628 b) N of ctrn_par_{e,w} (partner a,b: 512 b), so each leaf face carries ~5 pins/um, not
+    // 10.5 (ctrn_col a3 GRT-0116 in the N output band); 0 = one ctrn_col_{e,w} leaf (a3 / a4).  Same registers, 0 cycles.
+    parameter integer CTRN_SPLIT = 1
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -201,7 +205,23 @@ module ot_s81_hc_retrow #(
             .flag_fault(flag_fault), .flag_hnz(flag_hnz));
         end
 
-        if (c < 2) begin : g_se
+        if (CTRN_SPLIT != 0 && c < 2) begin : g_se2
+        ot_s81_hc_ctrn_own_e #(.S_RT(S_RT)) u_no (
+            .clk(clk), .rst_in(rst_in), .rv_c(rvm), .flg_fault(flg_fault), .flg_hnz(flg_hnz), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
+            .rv_out(rb_out[B +: RVW]), .hdr_out(rb_out[B + RVW +: 108]),
+            .a_own_out(rb_out[B + RVW + 108 +: 256]), .b_own_out(rb_out[B + RVW + 364 +: 256]));
+        ot_s81_hc_ctrn_par_e u_np (.clk(clk),
+            .a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),
+            .a_par_out(rb_out[B + RVW + 620 +: 256]), .b_par_out(rb_out[B + RVW + 876 +: 256]));
+        end else if (CTRN_SPLIT != 0) begin : g_sw2
+        ot_s81_hc_ctrn_own_w #(.S_RT(S_RT)) u_no (
+            .clk(clk), .rst_in(rst_in), .rv_c(rvm), .flg_fault(flg_fault), .flg_hnz(flg_hnz), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
+            .rv_out(rb_out[B +: RVW]), .hdr_out(rb_out[B + RVW +: 108]),
+            .a_own_out(rb_out[B + RVW + 108 +: 256]), .b_own_out(rb_out[B + RVW + 364 +: 256]));
+        ot_s81_hc_ctrn_par_w u_np (.clk(clk),
+            .a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),
+            .a_par_out(rb_out[B + RVW + 620 +: 256]), .b_par_out(rb_out[B + RVW + 876 +: 256]));
+        end else if (c < 2) begin : g_se
         ot_s81_hc_ctrn_col_e #(.S_RT(S_RT)) u_n (
             .clk(clk), .rst_in(rst_in), .rv_c(rvm), .flg_fault(flg_fault), .flg_hnz(flg_hnz), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
             .a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),
@@ -681,4 +701,55 @@ module ot_s81_hc_ctrn_col_w #(
     output wire [255:0]       a_own_out, b_own_out, a_par_out, b_par_out
 );
     ot_s81_hc_ctrn_col #(.S_RT(S_RT)) u (.*);      // same logic; pin plan: partner inputs on the W side
+endmodule
+
+// a5 split leaves (CTRN_SPLIT 1): the ctrn_col registers in two masters per side -- identical register / reset / flag
+// merge logic to ot_s81_hc_ctrn_col (own leaf) and its plain partner payload registers (partner leaf, no reset, as there)
+module ot_s81_hc_ctrn_own #(
+    parameter integer S_RT = 4
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RT+3:0]    rv_c,
+    input  wire [3:0]         flg_fault, flg_hnz,
+    input  wire [107:0]       hdr_c,
+    input  wire [255:0]       a_own, b_own,
+    output reg  [S_RT+3:0]    rv_out,
+    output reg  [107:0]       hdr_out,
+    output reg  [255:0]       a_own_out, b_own_out
+);
+    reg rr;
+    always @(posedge clk) rr <= rst_in;
+    always @(posedge clk or negedge rr) if (!rr) rv_out <= 0;
+        else rv_out <= {rv_c[S_RT+3] | (|flg_hnz), rv_c[S_RT+2] | (|flg_fault), rv_c[S_RT+1:0]};
+    always @(posedge clk) begin
+        hdr_out <= hdr_c; a_own_out <= a_own; b_own_out <= b_own;
+    end
+endmodule
+module ot_s81_hc_ctrn_par (
+    input  wire               clk,
+    input  wire [255:0]       a_par, b_par,
+    output reg  [255:0]       a_par_out, b_par_out
+);
+    always @(posedge clk) begin
+        a_par_out <= a_par; b_par_out <= b_par;
+    end
+endmodule
+module ot_s81_hc_ctrn_own_e #(parameter integer S_RT = 4) (
+    input wire clk, input wire rst_in, input wire [S_RT+3:0] rv_c, input wire [3:0] flg_fault, flg_hnz, input wire [107:0] hdr_c,
+    input wire [255:0] a_own, b_own, output wire [S_RT+3:0] rv_out, output wire [107:0] hdr_out, output wire [255:0] a_own_out, b_own_out
+);
+    ot_s81_hc_ctrn_own #(.S_RT(S_RT)) u (.*);      // columns 0/1 own bundle x (pin plan)
+endmodule
+module ot_s81_hc_ctrn_own_w #(parameter integer S_RT = 4) (
+    input wire clk, input wire rst_in, input wire [S_RT+3:0] rv_c, input wire [3:0] flg_fault, flg_hnz, input wire [107:0] hdr_c,
+    input wire [255:0] a_own, b_own, output wire [S_RT+3:0] rv_out, output wire [107:0] hdr_out, output wire [255:0] a_own_out, b_own_out
+);
+    ot_s81_hc_ctrn_own #(.S_RT(S_RT)) u (.*);      // columns 2/3 own bundle x (pin plan)
+endmodule
+module ot_s81_hc_ctrn_par_e (input wire clk, input wire [255:0] a_par, b_par, output wire [255:0] a_par_out, b_par_out);
+    ot_s81_hc_ctrn_par u (.*);
+endmodule
+module ot_s81_hc_ctrn_par_w (input wire clk, input wire [255:0] a_par, b_par, output wire [255:0] a_par_out, b_par_out);
+    ot_s81_hc_ctrn_par u (.*);
 endmodule

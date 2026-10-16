@@ -26,9 +26,13 @@ import v19_pins_1014 as V  # noqa: E402
 # 10-16 a4 (ctrncol e/w a3 GRT-0116: overflow only in the N-face output band, 1-4 M3/M5 tracks over in one gcell row,
 # total usage 23-25%; output flop + 2-3 hold cells per bit crammed into the top ~4 um): slice 25.92 -> 34.56 (SL_GROW),
 # every row below the slice moves down by SL_GROW; RET_GROW likewise moves the rows below the ret row.
-SL_H = 34.56
+# 10-16 a5 (--split, retrow CTRN_SPLIT 1): each column's slice is two stacked 25.92 leaves, ctrn_own (N, at the
+# tile top) over ctrn_par (S, toward the ret row): ~5 pins/um per face instead of 10.5; the slice row is 51.84 tall.
+SPLIT = '--split' in sys.argv
+SL_H = 25.92 if SPLIT else 34.56
+SL_ROW = 2 * SL_H if SPLIT else SL_H
 RET_H = 72.90
-SL_GROW, RET_GROW = round(SL_H - 25.92, 3), round(RET_H - 72.90, 3)
+SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
 H, W = round(874.26 + SL_GROW + RET_GROW, 3), 576.72
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
 RET_T = round(343.44 + SL_GROW, 3)
@@ -135,6 +139,23 @@ class Leaf:
                 x, y = {'N': (c, self.h - 0.042), 'S': (c, 0.042), 'W': (0.042, c), 'E': (self.w - 0.042, c)}[f]
                 out.append(f'place_pin -pin_name {{{name}}} -layer {ly} -location {{{x:.3f} {y:.3f}}} -force_to_die_boundary')
         return '\n'.join(out) + '\n'
+
+
+class SplitSlice:
+    """ctrn_own (top) over ctrn_par (bottom) of one column, addressed like one slice at the slice-row origin"""
+    OWN = {'rv_c', 'rv_out', 'hdr_c', 'hdr_out', 'a_own', 'a_own_out', 'b_own', 'b_own_out', 'flg_fault', 'flg_hnz', 'clk', 'rst_in'}
+
+    def __init__(self, own, par):
+        self.own, self.par = own, par
+        self.p = dict(par.p); self.p.update(own.p)
+
+    def xy(self, port, bit, x0, y0):
+        if port in self.OWN:
+            return self.own.xy(port, bit, x0, y0 + self.par.h)
+        return self.par.xy(port, bit, x0, y0)
+
+    def leaves(self):
+        return [self.own, self.par]
 
 
 # a3 bundle positions (one x per bundle bit, shared by the ret column and both slices, identical in every column):
@@ -271,6 +292,24 @@ def build():
     # S input and N output share one x (no bit crosses the 144-um slice horizontally inside the 26-um strip, which
     # is what saturated M2/M4), each flop sits between its own two pins; the horizontal offset moves to the parent legs.
     slices = {}
+    if SPLIT:
+        for kind, part_e in (('e', True), ('w', False)):
+            O = Leaf(f'ot_s81_hc_ctrn_own_{kind}', CW, SL_H)
+            for port, x in own_bundle('slice', part_e):
+                O.add(port[0], 'S', x); O.add(port[1], 'N', x)
+            for p in ('flg_fault', 'flg_hnz'):
+                for b in range(4):
+                    O.add(p, 'S', own_x(part_e)[('rv', 0)])
+            O.add('clk', 'W', SL_H / 2)
+            O.add('rst_in', 'W', SL_H / 2 - 1)
+            O.pack()
+            P = Leaf(f'ot_s81_hc_ctrn_par_{kind}', CW, SL_H)
+            for port, x in par_bundle('slice', part_e):
+                P.add(port[0], 'S', x); P.add(port[1], 'N', x)
+            P.add('clk', 'W', SL_H / 2)
+            P.pack()
+            slices[kind] = SplitSlice(O, P)
+        return lanes, ctpl, ctfl, rets, slices
     for kind, part_e in (('e', True), ('w', False)):
         S = Leaf(f'ot_s81_hc_ctrn_col_{kind}', CW, SL_H)
         own = [('rv_c', 'rv_out', 8), ('hdr_c', 'hdr_out', 108), ('a_own', 'a_own_out', 256), ('b_own', 'b_own_out', 256)]
@@ -290,7 +329,7 @@ def build():
 def audit(lanes, ctpl, ctfl, rets, slices):
     joins = []
     rpos = lambda c: (CW * c, ybot(RET_T, RET_H))
-    spos = lambda c: (CW * c, ybot(0, SL_H))
+    spos = lambda c: (CW * c, ybot(0, SL_ROW))
     skind = lambda c: 'e' if c < 2 else 'w'
     def j(kind, a, b):
         joins.append(dict(kind=kind, um=round(abs(a[0] - b[0]) + abs(a[1] - b[1]), 3)))
@@ -360,14 +399,16 @@ def audit(lanes, ctpl, ctfl, rets, slices):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument('--out', required=True, type=Path); ap.add_argument('--split', action='store_true')
+    a = ap.parse_args()
     lanes, ctpl, ctfl, rets, slices = build()
     summ, joins = audit(lanes, ctpl, ctfl, rets, slices)
     a.out.mkdir(parents=True, exist_ok=True)
-    for L in rets + list(slices.values()):
+    for L in rets + [x for S in slices.values() for x in (S.leaves() if SPLIT else [S])]:
         (a.out / f'{L.name}.tcl').write_text(L.tcl())
     tot = dict(joins=len(joins), over500=sum(1 for x in joins if x['um'] > 500), max_um=max(x['um'] for x in joins))
-    rep = dict(schema='opentallas.s81.cthntc_plan.v1', parent=dict(w=W, h=H), total=tot, by_kind=summ,
+    rep = dict(schema='opentallas.s81.cthntc_plan.v1', parent=dict(w=W, h=H), split=SPLIT, slice_leaf_h=SL_H, slice_row_h=SL_ROW,
+               total=tot, by_kind=summ,
                scope='GEOMETRY ONLY (pin-to-pin Manhattan); timing by the leaf gates/routes and the parent trial')
     (a.out / 'audit.json').write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps(rep, indent=1))
