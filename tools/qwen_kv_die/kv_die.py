@@ -2679,7 +2679,17 @@ def _strip_face_pins(mst, mm):
             y = STRIP_KF_Y
         else:
             continue
+        if HOP and mt and mst in _HOP_STRIP_DY:
+            # OT_KV_HOP: the controller strip's es / er words sit where its closed pc leaf's pins are (2 tracks, the
+            # leaf's bit order), as the HOST slices' controller faces (_slice_pins) -- same measured kvs11 offsets
+            mm.ports[p] = ('face', sp[1], 'W', 'M4', round(y + _HOP_STRIP_DY[mst][mt.group(1)], 3), 2)
+            if mst == 'qkd_ctrl':
+                F.PIN_REVERSE.add((mst, p))
+            continue
         mm.ports[p] = ('face', sp[1], 'E' if mst.startswith('qkd_land') else 'W', 'M4', y, 1)
+
+
+_HOP_STRIP_DY = dict(qkd_ctrl=dict(er=-50.9, es=159.4), qkd_ctrl_n=dict(er=-28.9, es=120.5))
 
 
 def _slice_pins(m, mm, down=False):
@@ -2697,7 +2707,8 @@ def _slice_pins(m, mm, down=False):
     # strips' pc leaves are MX (bit order descending): realized dy grew to 101 (er) / 215 um (es) on a 423.5-um dx hop.
     # Under the flag they take the leaf's 2-track pitch and order, centred on the leaf's words (measured kvs11 offsets of
     # the middle bit, identical for all 32 PCs of a stack): every bit's dy <= ~14 um
-    hop_ = dict(qkd_hslice=dict(ctrl_er=-50.9, ctrl_es=159.4), qkd_hslice_dn=dict(ctrl_er=-28.9, ctrl_es=120.5)) if HOP else {}
+    hop_ = dict(qkd_hslice={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl'].items()},
+                qkd_hslice_dn={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl_n'].items()}) if HOP else {}
     for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
                             ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
         if p in w:
