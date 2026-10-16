@@ -77,8 +77,11 @@ module qkd_seq_core_static #(
     output wire [9:0]    kst
 );
     // reset: one pin flop, then a relay (as qkd_seq_core)
-    wire rr;
-    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+    // two reset regions (gate: one relay copy fanned to 529 flops): rr = timeline / pins / descriptor issuer, rq = fan
+    // pipeline / host words; data registers carry no reset (validity is their own valid bit)
+    wire [1:0] rrv;
+    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rrv));
+    wire rr = rrv[0], rq = rrv[1];
     // ---- pin capture ----
     reg          rv, kvv, lpr, ov, og, hfq;
     reg  [3:0]   rk, crq, afq, mfq;
@@ -143,9 +146,9 @@ module qkd_seq_core_static #(
     integer i;
     always @(posedge ck or negedge rr) begin
         if (!rr) begin
-            act <= 0; a <= 0; layer <= 0; a_T <= 0; lp_seen <= 0; lp_age <= 0; lp_hold_l <= 0; lp_hold_t <= 0;
-            x_v <= 0; x_cls <= 0; xk <= 0; xk2 <= 0; kn_arr <= 0; s_qpop <= 0; s_kpop <= 0; s_kidx <= 0; s_kwgo <= 0; s_kwn <= 0;
-            a_start <= 0; a_q_valid <= 0; a_q_beat <= 0; kvw_v <= 0; r_n <= 0; q_seen <= 0;
+            act <= 0; a <= 0; lp_seen <= 0; lp_age <= 0;
+            x_v <= 0; xk <= 0; xk2 <= 0; kn_arr <= 0; s_qpop <= 0; s_kpop <= 0; s_kwgo <= 0;
+            a_start <= 0; a_q_valid <= 0; kvw_v <= 0; r_n <= 0; q_seen <= 0;
             kwc <= 8'(KWC); kwq <= 0; for (i = 0; i < 4; i = i + 1) jc[i] <= 0;
             {f_arr, f_tag, f_q, f_lp, f_pos, f_res, f_cr, f_join, f_pend, f_row, f_ovl} <= 0;
         end else begin
@@ -216,8 +219,8 @@ module qkd_seq_core_static #(
         f_kwm_w[21:0] <= kw1[21:0]; f_kwm_e[21:0] <= kw1[21:0];
         f_kc_w[31:0] <= kd_d; f_kc_e[31:0] <= kd_d;
     end
-    always @(posedge ck or negedge rr)
-        if (!rr) begin
+    always @(posedge ck or negedge rq)
+        if (!rq) begin
             aq1[27] <= 0; aq1[6] <= 0; f_aqm_w[27] <= 0; f_aqm_w[6] <= 0; f_aqm_e[27] <= 0; f_aqm_e[6] <= 0;
             kw1[22] <= 0; f_kwm_w[22] <= 0; f_kwm_e[22] <= 0; f_kc_w[32] <= 0; f_kc_e[32] <= 0; hsd <= 0; hs <= 0;
         end else begin
@@ -233,12 +236,11 @@ module qkd_seq_core_static #(
     reg [17:0] d_tok;
     reg [31:0] d_val, d_cyc;
     reg [8:0]  cause;
-    always @(posedge ck or negedge rr)
-        if (!rr) begin d_done <= 0; d_gen <= 0; d_tok <= 0; d_val <= 0; d_cyc <= 0; drn <= 0; fault <= 0; cause <= 0; end
+    always @(posedge ck) if (sv[2]) begin d_gen <= sv[5:4]; d_tok <= sv[23:6]; d_val <= sv[55:24]; d_cyc <= sv[87:56]; end
+    always @(posedge ck or negedge rq)
+        if (!rq) begin d_done <= 0; drn <= 0; fault <= 0; cause <= 0; end
         else begin
-            if (sv[2]) begin                                        // engine_result_v (kind-15 record of the compute die)
-                d_done <= sv[3]; d_gen <= sv[5:4]; d_tok <= sv[23:6]; d_val <= sv[55:24]; d_cyc <= sv[87:56];
-            end
+            if (sv[2]) d_done <= sv[3];                             // engine_result_v (kind-15 record of the compute die)
             drn <= !act && kwc == 8'(KWC) && !kwq && (jc[0] == 0) && (jc[1] == 0) && (jc[2] == 0) && (jc[3] == 0);
             cause <= {f_arr | f_tag, f_lp, f_pos, f_join | f_cr, kd_fault, f_pend | f_row, f_q | f_ovl, f_res, 1'b0};
             fault <= |{f_arr, f_tag, f_q, f_lp, f_pos, f_res, f_cr, f_join, f_pend, f_row, f_ovl, kd_fault};

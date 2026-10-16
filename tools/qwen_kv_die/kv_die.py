@@ -711,6 +711,36 @@ BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, paramete
 BINDINGS['qkd_dcal']['ports']['lay'] = ['layer']
 BINDINGS['qkd_d2ds']['ports']['kvi'] = ['kvn_compiled_identity', 'kvn_compiled_generation']
 RTL.update(qkd_kvnc=KVNC_FILE)
+
+# Q-KVSYS PVJOIN 2026-10-16 (OT_KV_SEQ_STATIC=1, needs OT_KV_DCAL=1 + OT_KV_KVNC=1, default off; lead-approved retirement
+# of the credit/event sequencer): MASTER SWAP of the die slot `seq` to qkd_seq_static (rtl/qwen_sys/static_kv_20261014/
+# qkd_seq_static.sv: static control leaf qkd_seq_core_static + the closed qkd_seq_xs_tp8 / qkd_seq_fan leaves).  Its
+# output faces aq_<q> / kvn_<q> / kc_<q> / hs / tk / kst are bit-identical to qkd_seq's; its inputs are the static D2D
+# end's attention RX + KVN receiver (one bus srx, so the Q push and its data keep one latency), the layer programme
+# (lprg: qkd_static_kv_layer_programme_img, compile-time image, start = DCAL tok_start, authority = HOST root) and the
+# end's svc word (tap at its source).  Gone: lx/lr (r_x3_d, r_sd, r_kvd, t_ar_cr, ...) and the host hc load.
+SEQST = __import__('os').environ.get('OT_KV_SEQ_STATIC', '0') == '1'
+SEQST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv'
+LPRG_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv'
+LPRG_WH = (27.0, 37.8)
+SEQST_RX = ['att_rx_v', 'att_rx_kind', 'att_rx_beat', 'kvn_word_valid', 'kvn_word_tag', 'kvn_word_data']
+BINDINGS.update(qkd_seq_st=dict(module='qkd_seq_static', file=SEQST_FILE, parameters=dict(MUT=0),
+    ports=dict(srx=list(SEQST_RX), lp=['lp_run', 'lp_layer', 'lp_ctx_t'], svc=['svc'],
+               **{f'aq_{q}': [f'aq_{q}'] for q in STACKS}, **{f'kvn_{q}': [f'kvn_{q}_d', f'kvn_{q}_cr'] for q in STACKS},
+               **{f'kc_{q}': [f'kc_{q}'] for q in STACKS}, **{f'af_{q}': [f'af_{q}'] for q in STACKS},
+               **{f'mf_{q}': [f'mf_{q}'] for q in STACKS}, ar=['ar'], hf=['hf'], hs=['hs'], tk=['tk'], kst=['kst'],
+               ck=['ck'], rst_n=['rst_n']), sliced={}, classed={}),
+                qkd_lprg=dict(module='qkd_static_kv_layer_programme_img', file=LPRG_FILE, parameters=dict(MUT=0),
+    ports=dict(ck=['ck'], rst_n=['rst_n'], st=['start'], auth=['token_epoch_valid', 'program_ready', 'program_epoch',
+               'program_digest'], cht=['cohort_tag'], chg=['cohort_gen'], lp=['attention_run', 'layer', 'ctx_t']),
+    sliced={}, classed={}))
+BINDINGS['qkd_dcal']['ports']['tks'] = ['tok_start']
+_hb = BINDINGS['qkd_host_rt']['ports']
+for _p in ('token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest'):
+    _hb.pop(_p, None)
+_hb['auth_lp'] = ['token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest']
+BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
+RTL.update(qkd_seq_st=SEQST_FILE, qkd_lprg=LPRG_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
@@ -1792,7 +1822,8 @@ def _host_v14_buses(m):
     link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
     add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l)) +
          ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else []) +
-         ([('kvnc', 'rst_n')] if KVNC and any(i.name == 'kvnc' for i in m['insts']) else [])))
+         ([('kvnc', 'rst_n')] if KVNC and any(i.name == 'kvnc' for i in m['insts']) else []) +
+         ([('lprg', 'rst_n')] if SEQST and any(i.name == 'lprg' for i in m['insts']) else [])))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
     # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
@@ -1915,6 +1946,29 @@ def _d2ds_swap(m):
                 if bid == 'clk_core_c':
                     B[i_] = (bid, cl, bits, list(eps) + [('kvnc', 'ck')])
             m['extra_conns']['kvnc'] = [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
+            if SEQST:
+                # OT_KV_SEQ_STATIC: master swap of slot `seq`; the layer programme sits one channel W of the HOST root,
+                # level with its centre (HOST authority on abutting buses; tok_start rides kv_oneway relays from DCAL)
+                sq_ = by['seq']
+                sq_.master = 'qkd_seq_st'
+                ho_ = by['host']
+                lw_, lh_ = up(LPRG_WH[0] + SHAVE, GX), up(LPRG_WH[1] + SHAVE, GY)
+                lp_ = F.Inst('lprg', 'qkd_lprg', up(ho_.x - 21.6 - lw_, GX), up(ho_.y + ho_.h / 2 - lh_ / 2, GY), lw_ - SHAVE,
+                             lh_ - SHAVE, 'R0', kind='ctl', region='io')
+                m['insts'].append(lp_)
+                for i_, (bid, cl, bits, eps) in enumerate(B):
+                    if bid == 'hc':
+                        B[i_] = (bid, cl, bits, [e for e in eps if e != ('seq', 'hc')])
+                    if bid in ('kvnc_cht', 'kvnc_chg'):
+                        B[i_] = (bid, cl, bits, list(eps) + [('lprg', 'cht' if bid == 'kvnc_cht' else 'chg')])
+                    if bid == 'clk_core_c':
+                        B[i_] = (bid, cl, bits, list(B[i_][3]) + [('lprg', 'ck')])
+                B[:] = [b_ for b_ in B if not (b_[0] == 'hc' and len(b_[3]) < 2)]     # host hc has no load left
+                add(('lprg_st', 'kv_oneway', 1, [('dcal', 'tks'), ('lprg', 'st')]))
+                add(('lprg_auth', 'spine_local', 1 + 1 + 16 + 64, [('host', 'auth_lp'), ('lprg', 'auth')]))
+                add(('seqst_lp', 'kv_oneway', 1 + 6 + 14, [('lprg', 'lp'), ('seq', 'lp')]))
+                add(('seqst_rx', 'kv_oneway', 1 + 4 + 5 + 1 + 11 + 512, [('d2d_kv', 'srx'), ('seq', 'srx')]))
+                m['extra_conns']['seq'] = ['.svc(n_hsvc)']
 
 
 def _centre(it, port=None):
@@ -2728,6 +2782,8 @@ def masters(m, k=1, port_bits=None):
         M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
     if 'qkd_kvnc' in M and 'cs' not in M['qkd_kvnc'].ports:
         M['qkd_kvnc'].face('cs', 1, 'N', 'M5', round(M['qkd_kvnc'].w / 2, 3), 1)      # OT_KV_KVNC extra_conns tap (sequencer above)
+    if 'qkd_seq_st' in M and 'svc' not in M['qkd_seq_st'].ports:
+        M['qkd_seq_st'].face('svc', 174, 'N', 'M4', round(M['qkd_seq_st'].w / 2, 3), 1)  # OT_KV_SEQ_STATIC extra_conns tap (HOST above)
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)

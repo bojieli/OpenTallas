@@ -27,6 +27,10 @@ if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
 if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
   [ -f $KVV/qkd_kvn_ctx_cal.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC: no closed view at $KVV (frame ASSUMED)"; fi
+# OT_KV_SEQ_STATIC=1 (Q-KVSYS PVJOIN 10-16, needs DCAL + KVNC): qkd_seq_static in slot seq (cluster frame, as qkd_seq) and
+# the compile-time-image layer programme lprg on its closed view when available (OT_KV_LPRG_KIT, default qkd_layer_prog_img_r2)
+if [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_KIT:-qkd_layer_prog_img_r2}/views/qkd_static_kv_layer_programme_img
+  [ -f $LPV/qkd_static_kv_layer_programme_img.lef ] && BV="$BV --view qkd_lprg=$LPV" || echo "OT_KV_SEQ_STATIC: no closed view at $LPV (frame ASSUMED)"; fi
 # v1.4.4 (OT_KV_V144=1, read by kv_die.py; needs OT_KV_V143C=1): PV16 wide pairs in the centre spine (closed r5 leaves placed
 # by kv_expand) + the 16 V ports qkd_pv16_vport bound to their closed view (r5, the V issuer)
 if [ "${OT_KV_V144:-0}" = 1 ]; then
