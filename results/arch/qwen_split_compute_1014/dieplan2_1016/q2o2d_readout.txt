@@ -1,0 +1,23 @@
+# q2o2d: owner 5-column on b2 graph, SU kit pins, tt_ctlm above SU (relay-skip): top 20 flows (bits x Manhattan mm), total 1,542,375 bit-mm
+ 1 ng_vm_sq_2048                      spine_local    4096 b x   3.50 mm =     14351  sp_vector_memory -> 1 sink(s)
+ 2 head_24                            head_chain     1567 b x   6.53 mm =     10225  xs_tap -> 1 sink(s)
+ 3 ng_su_va_0                         spine_local    2367 b x   3.50 mm =      8293  sp_su64_sfu -> 1 sink(s)
+ 4 bword_1                            tree_spine      514 b x  16.12 mm =      8288  t_3_6 -> 1 sink(s)
+ 5 bword_45                           tree_spine      514 b x  15.78 mm =      8111  t_44_6 -> 1 sink(s)
+ 6 ng_vm_sq_0                         spine_local    2048 b x   3.71 mm =      7598  sp_vector_memory -> 2 sink(s)
+ 7 ng_su_kv_wdata_0                   spine_local    2048 b x   3.59 mm =      7343  sp_su64_sfu -> 1 sink(s)
+ 8 bword_2                            tree_spine      514 b x  13.96 mm =      7174  t_3_11 -> 1 sink(s)
+ 9 ng_seq_su_va_q_0                   spine_local    2048 b x   3.46 mm =      7078  seq_su -> 1 sink(s)
+10 bword_46                           tree_spine      514 b x  13.61 mm =      6997  t_44_11 -> 1 sink(s)
+11 bword_5                            tree_spine      514 b x  12.95 mm =      6659  t_7_7 -> 1 sink(s)
+12 bword_41                           tree_spine      514 b x  12.61 mm =      6481  t_40_7 -> 1 sink(s)
+13 bword_0                            tree_spine      514 b x  12.54 mm =      6445  t_3_2 -> 1 sink(s)
+14 bword_44                           tree_spine      514 b x  12.19 mm =      6268  t_44_2 -> 1 sink(s)
+15 xs_sw                              spine_local    2137 b x   2.92 mm =      6231  sp_su64_sfu -> 1 sink(s)
+16 bword_9                            tree_spine      514 b x  11.94 mm =      6139  t_11_6 -> 1 sink(s)
+17 b2_rb_4                            tree_spine      551 b x  11.13 mm =      6134  sp_halfres_4 -> 1 sink(s)
+18 bword_6                            tree_spine      514 b x  11.87 mm =      6100  t_7_11 -> 1 sink(s)
+19 bword_3                            tree_spine      514 b x  11.80 mm =      6064  t_3_13 -> 1 sink(s)
+20 bword_37                           tree_spine      514 b x  11.60 mm =      5961  t_36_6 -> 1 sink(s)
+
+# hot spots (GRT usage >= 85.0%): NO heat map given
