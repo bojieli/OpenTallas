@@ -44,7 +44,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   input wire [512:0] host_N__pma_rx;
   input wire [0:0] host_N__pma_rck;
   input wire [23:0] host_phy__session_pad;
-  wire [821:0] hb_vms_SW__cr;
+  wire [547:0] hb_vms_SW__cr;
   wire [10279:0] hb_vms_SW__rr;
   wire [15:0] hb_vms_SW__wq_done;
   wire [7:0] hb_vms_SW__dq_done;
@@ -67,7 +67,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hb_vms_SE__mirror_busy;
   wire [18:0] hb_vms_SE__vmstat;
   wire [2:0] hb_vms_SE__ring_fault;
-  wire [821:0] hb_vms_NW__cr;
   wire [10279:0] hb_vms_NW__rr;
   wire [23:0] hb_vms_NW__wq_done;
   wire [7:0] hb_vms_NW__dq_done;
@@ -79,8 +78,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hb_vms_NW__mirror_busy;
   wire [18:0] hb_vms_NW__vmstat;
   wire [2:0] hb_vms_NW__ring_fault;
-  wire [10279:0] hb_vms_NE__rr;
-  wire [23:0] hb_vms_NE__wq_done;
+  wire [8223:0] hb_vms_NE__rr;
+  wire [15:0] hb_vms_NE__wq_done;
   wire [7:0] hb_vms_NE__dq_done;
   wire [7:0] hb_vms_NE__kq_done;
   wire [2223:0] hb_vms_NE__cw_out;
@@ -7879,20 +7878,17 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] vmdel_NE7__busy;
   wire [0:0] vmdel_NE7__fault;
   wire [280:0] vmdel_NE7__dq;
-  wire [679:0] nc__hb_vms_NE__rq;   // undriven bits = listed gap bits (never tied)
-  wire [6743:0] nc__hb_vms_NE__wq;   // undriven bits = listed gap bits (never tied)
-  wire [1013:0] nc__hb_vms_SW__cq;   // undriven bits = listed gap bits (never tied)
   hfd_hgi_vms_static_SW hb_vms_SW (
     .clk_bank({8{hb_ckgen__pll_stream[0]}}),
     .clk_hub(hb_ckgen__pll_stream[0]),
     .clk_ring({2{hb_ckgen__pll_stream[0]}}),
     .clk_replay(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
-    .cq({hb_idx__cq[337:0], nc__hb_vms_SW__cq[675:338], hb_argmax__cq[337:0]}),
+    .cq({hb_idx__cq[337:0], hb_argmax__cq[337:0]}),
     .cr(hb_vms_SW__cr),
-    .client_seq(calendar_SW__client_seq[7:0]),
-    .response_enable(calendar_SW__response_enable[3:0]),
-    .response_seq(calendar_SW__response_seq[7:0]),
+    .client_seq(calendar_SW__client_seq[5:0]),
+    .response_enable(calendar_SW__response_enable[2:0]),
+    .response_seq(calendar_SW__response_seq[5:0]),
     .bank_enable(calendar_SW__bank_enable[7:0]),
     .bank_client(calendar_SW__bank_client[15:0]),
     .hub_ring_enable(calendar_SW__hub_ring_enable[1:0]),
@@ -7968,14 +7964,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .clk_ring({2{hb_ckgen__pll_stream[0]}}),
     .clk_replay(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
-    .cr(hb_vms_NW__cr),
-    .client_seq(calendar_NW__client_seq[7:0]),
-    .response_enable(calendar_NW__response_enable[3:0]),
-    .response_seq(calendar_NW__response_seq[7:0]),
+    .client_seq(calendar_NW__client_seq[1:0]),
+    .response_enable(calendar_NW__response_enable[0]),
+    .response_seq(calendar_NW__response_seq[1:0]),
     .bank_enable(calendar_NW__bank_enable[7:0]),
-    .bank_client(calendar_NW__bank_client[15:0]),
+    .bank_client(calendar_NW__bank_client[7:0]),
     .hub_ring_enable(calendar_NW__hub_ring_enable[1:0]),
-    .hub_ring_client(calendar_NW__hub_ring_client[3:0]),
+    .hub_ring_client(calendar_NW__hub_ring_client[1:0]),
     .rslot_v(calendar_NW__rslot_v[7:0]),
     .wslot_v(calendar_NW__wslot_v[7:0]),
     .rslot(calendar_NW__rslot[23:0]),
@@ -8019,9 +8014,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_NE__wslot_v[7:0]),
     .rslot(calendar_NE__rslot[23:0]),
     .wslot(calendar_NE__wslot[23:0]),
-    .rq({hb_coll_NE__vm_rq[135:0], nc__hb_vms_NE__rq[543:408], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
+    .rq({hb_coll_NE__vm_rq[135:0], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
     .rr(hb_vms_NE__rr),
-    .wq({nc__hb_vms_NE__wq[6743:4496], smw_NE__wq[2247:0], lg_NE_0__near_wq[2247:0]}),
+    .wq({smw_NE__wq[2247:0], lg_NE_0__near_wq[2247:0]}),
     .wq_done(hb_vms_NE__wq_done),
     .dq({vmdel_NE7__dq[280:0], vmdel_NE6__dq[280:0], vmdel_NE5__dq[280:0], vmdel_NE4__dq[280:0], vmdel_NE3__dq[280:0], vmdel_NE2__dq[280:0], vmdel_NE1__dq[280:0], vmdel_NE0__dq[280:0]}),
     .kq(hb_coll_NE__vm_kq[2247:0]),
@@ -8627,7 +8622,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pr_cw_o(hb_coll_NE__pr_cw_o),
     .pr_ccw_o(hb_coll_NE__pr_ccw_o),
     .vm_rq(hb_coll_NE__vm_rq),
-    .vm_rr(hb_vms_NE__rr[10279:8224]),
+    .vm_rr(hb_vms_NE__rr[8223:6168]),
     .vm_kq(hb_coll_NE__vm_kq),
     .fault(hb_coll_NE__fault),
     .done(hb_coll_NE__done),
@@ -8817,7 +8812,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .topk_r_str(col_idx__rec[155:138]),
     .cq(hb_idx__cq),
     .cq_seq(hb_idx__cq_seq),
-    .cr(hb_vms_SW__cr[821:548]),
+    .cr(hb_vms_SW__cr[547:274]),
     .topk_busy(hb_idx__topk_busy),
     .topk_done(hb_idx__topk_done),
     .topk_fault(hb_idx__topk_fault),
