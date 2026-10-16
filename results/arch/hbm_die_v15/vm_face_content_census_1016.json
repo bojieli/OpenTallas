@@ -11,8 +11,10 @@
  "candidate_clock_entries": 480,
  "candidate_soft_clock_entries": 384,
  "candidate_raw_macro_clock_entries": 96,
- "prior_nine_root_clock_entries": 288,
+ "prior_unadopted_nine_root_clock_entries": 288,
  "extra_entries_vs_nine_root": 192,
+ "actual_S_bank_roots": 32,
+ "extra_entries_vs_actual_S": 448,
  "current_bank_clock_sources": [
   {
    "instance": "hb_vms_NE",
@@ -60,9 +62,10 @@
   }
  ],
  "current_sram_macro_count": 96,
- "prior_content_area_mm2": 2.3328,
- "new_content_area_mm2": 2.706048,
- "content_delta_mm2": 0.373248,
+ "prior_unadopted_nine_root_content_area_mm2": 2.3328,
+ "qualified_current_S_bank_area_mm2": null,
+ "new_unadopted_face_content_area_mm2": 2.706048,
+ "content_delta_vs_unadopted_nine_root_mm2": 0.373248,
  "banks": [
   {
    "quadrant": "SW",
