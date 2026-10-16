@@ -74,6 +74,16 @@
     "images_inspected": true,
     "image_findings": "Both SRAMs shifted to x56.16; wide west corridor populated with distributed cells. Adequate macro halos and row channel; no squeezed macro edge. Boundary stripes reflect pin flops. Small blue pockets retained as routing space.",
     "remote_gate": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg-20261016-030612",
-    "host": "ot-epyc4"
+    "host": "ot-epyc4",
+    "full_die_geometry_scope": {
+      "contract": "results/arch/hbm_die_v16/contract.json",
+      "contract_sha256": "ce326ad9b46fee4d798808a6c852ed32adb7f300ff550a23c2b634fca7a5f0cf",
+      "controller_count": 128,
+      "master": "ot_hbm_svc_pc_ctrl_leaf",
+      "area_increment_per_pc_um2": 3545.856,
+      "area_increment_32_pc_mm2": 0.113467392,
+      "area_increment_128_pc_mm2": 0.453869568,
+      "qualification": "Footprint accounting only; no whole-die area/closure qualification. Current contract still names legacy P-param controller. Actual cfg RTL+pc_id/refresh_reload binding and new physical view must be integrated by die lead."
+    }
   }
 }
