@@ -12,7 +12,7 @@ module tb_qkd_static_k_issuer;
     reg [5:0] layer_cur=0;
     reg rsp_valid=0;reg [1023:0] rsp_data=0;reg [13:0] rsp_t=0;
     reg rsp_v=0;reg [15:0] rsp_epoch=0;reg [5:0] rsp_layer=0;
-    qkd_static_k_issuer #(.RESPONSE_LAT(2),.MUT(MUT==4?2:0)) bridge(
+    qkd_static_k_issuer #(.RESPONSE_LAT(2),.MUT(MUT==4?2:(MUT==5?1:0))) bridge(
       .ck(ck),.rst_n(rst_n),.kgo(si[0]),.epoch(16'h1234),.layer(layer_cur),.rq(rq),
       .req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),
@@ -62,6 +62,9 @@ module tb_qkd_static_k_issuer;
                 nreq=nreq+1;
             end
             if(req_valid)begin
+                idx=3+8*nbridge;pidx=((idx>>11)&1)*2048+((idx>>6)&15)*128+((idx>>10)&1)*64+(idx&63);
+                tp=((pidx>>7)<<9)+(1<<7)+(pidx&127);
+                if(req_t!=tp||cyc!=firstreq+1+nbridge)$fatal(1,"bridge request row/edge");
                 if(req_epoch!=16'h1234||req_layer!=layer_cur||req_v) $fatal(1,"request identity");
                 rv[cyc+2]=1;response[cyc+2]=rowf(nbridge);tags[cyc+2]=req_t;nbridge=nbridge+1;
             end
