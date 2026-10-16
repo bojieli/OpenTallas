@@ -57,6 +57,14 @@
   "VM XIO/WFC/payload/header hardening and any consequent outline change",
   "All TT setup/FF hold/DRC0 and exact static-calendar/full native workload qualification"
  ],
+ "service_face_scope": {
+  "correction": "Legacy vm_side(SW)=W is NOT an actual competing VM-W pin allocation.",
+  "source_path": "wide-hub sp_vm _hub_at override places service adapters in vm_s; native RTL declares qSW/aSW S-face intent.",
+  "qSW_alias": "u_xio.u_xq qo_d[511:0] and qo_v, actual x43 serial W512",
+  "aSW_alias": "u_xsw.s_v / s_d[1025:0], actual x34 serial W1026 then scan landing0/1",
+  "qSWs": "serial diagnostic only, no production issue gating",
+  "actual_final_S_pins": "PENDING final GEN and actual native physical view; no inference from legacy routing-side choice"
+ },
  "warnings": [
   "Face pin fraction is geometry only, NOT a measured route cut.",
   "Four groups are physical VM lanes, NEVER four independent compute copies.",
