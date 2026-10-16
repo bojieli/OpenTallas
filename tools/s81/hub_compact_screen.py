@@ -225,7 +225,8 @@ def _p2p_rows(R, p2p, bx):
             p = best or p
         L = plen(p)
         rows.append(dict(a=a, b=b, bits=bits, faces=[fa, fb], len_um=round(L, 1), bit_mm=round(bits * L / 1000, 1),
-                         stages=stages(L), path=[[round(x, 1), round(y, 1)] for x, y in p]))
+                         stages=stages(L), obstacle_free=not HR.path_hits(p, bx, skip=(a, b)),
+                         path=[[round(x, 1), round(y, 1)] for x, y in p]))
     return rows
 
 
@@ -350,6 +351,8 @@ def astar(s, t, gr, blk, use, bits):
                 dist[n] = nd
                 prev[n] = (c, e)
                 heapq.heappush(pq, (nd + h(n), nd, n))
+    if t not in dist:
+        return None
     path = []
     c = t
     while c != s and c in prev:
@@ -386,7 +389,7 @@ def congestion(R, p2p_r, tree_r, hub_x, channels):
         for k in range(nb):
             ca = free_near(cell(*sa[k], gr), blk, gr, D[r['faces'][0]])
             cb = free_near(cell(*sb[k], gr), blk, gr, D[r['faces'][1]])
-            nets.append((r['bits'] / nb, ca, cb))
+            nets.append((r['bits'] / nb, ca, cb, f"{r['a']}->{r['b']}"))
     for ti, t in enumerate(tree_r):
         road = channels.get('S14W' if t['side'] == 'W' else 'S14E')
         nb = max(1, math.ceil(t['width'] / BUNDLE))
@@ -398,19 +401,34 @@ def congestion(R, p2p_r, tree_r, hub_x, channels):
             x = (road[0] + 100.0 + (road[2] - road[0] - 200.0) * fr) if road else \
                 (hub_x[0] + 200.0 if t['side'] == 'W' else hub_x[1] - 200.0)
             # the trunk climbs in its S14 road (field side) and enters the hub at the root's height (canonical roads)
-            nets.append((t['width'] / nb, cell(x, sb[k][1], gr), free_near(cell(*sb[k], gr), blk, gr, D[f])))
-            nets.append((t['width'] / nb, cell(x, t['entry_y'], gr), cell(x, sb[k][1], gr)))
+            nets.append((t['width'] / nb, cell(x, sb[k][1], gr), free_near(cell(*sb[k], gr), blk, gr, D[f]), f"tree:{t['root']}:{t['side']}:{ti}:entry"))
+            nets.append((t['width'] / nb, cell(x, t['entry_y'], gr), cell(x, sb[k][1], gr), f"tree:{t['root']}:{t['side']}:{ti}:trunk"))
     nets.sort(key=lambda n: -abs(n[1][0] - n[2][0]) - abs(n[1][1] - n[2][1]))
     use = {}
-    for it in range(2):
-        if it:
-            use = {}
-        for bits, s, t in nets:
-            for e in astar(s, t, gr, blk, use, bits):
-                use[e] = use.get(e, 0.0) + bits
+    contributors = collections.defaultdict(collections.Counter)
+    unrouted = []
+    # The former second pass cleared all usage and repeated the identical order,
+    # giving the same route. Keep one deterministic planning pass.
+    for bits, start, target, name in nets:
+        path = astar(start, target, gr, blk, use, bits)
+        if path is None:
+            unrouted.append(dict(flow=name, bits=bits, start=list(start), target=list(target)))
+            continue
+        for edge in path:
+            use[edge] = use.get(edge, 0.0) + bits
+            contributors[edge][name] += bits
     util = {e: v / (CAP_H if e[2] == 'h' else CAP_V) for e, v in use.items()}
-    out = dict(max_util=round(max(util.values()), 3), edges_over_060=sum(u > 0.60 for u in util.values()),
+    out = dict(max_util=round(max(util.values(), default=0.0), 3), edges_over_060=sum(u > 0.60 for u in util.values()),
                edges_over_100=sum(u > 1.0 for u in util.values()))
+    out['unrouted_bundles'] = len(unrouted)
+    out['unrouted_bits'] = round(sum(r['bits'] for r in unrouted), 3)
+    out['unrouted'] = unrouted
+    out['routing_complete'] = not unrouted
+    out['hot_edges'] = [dict(
+        grid=list(e), center_um=[round(gr[0] + (e[0] + .5) * G, 3), round((e[1] + .5) * G, 3)],
+        utilisation=round(u, 6), bits=round(use[e], 3),
+        contributors=[dict(flow=name, bits=round(bits, 3)) for name, bits in contributors[e].most_common()])
+        for e, u in sorted(util.items(), key=lambda item: -item[1])[:30]]
     x0 = gr[0]
     per = {}
     for name, (cx0, cy0, cx1, cy1) in channels.items():
@@ -495,7 +513,8 @@ def main():
         R, pr, tr, cong, util, gr = evaluate(mrects, p2p, trees, ports, L, hub_x)
         big = [r for r in pr if r['bits'] >= 500]
         res[name] = dict(layout=path, p2p=pr, trees=tr, congestion=cong,
-                         totals=dict(p2p_bit_mm=round(sum(r['bit_mm'] for r in pr)),
+                         totals=dict(p2p_obstacle_failures=sum(not r['obstacle_free'] for r in pr),
+                                     p2p_bit_mm=round(sum(r['bit_mm'] for r in pr)),
                                      tree_bit_mm=round(sum(r['bit_mm'] for r in tr)),
                                      big_pair_stages=sum(r['stages'] for r in big),
                                      big_pair_bit_stages=sum(r['stages'] * r['bits'] for r in big),
@@ -504,7 +523,7 @@ def main():
             a.png_dir.mkdir(parents=True, exist_ok=True)
             render(R, util, gr, a.png_dir / f'screen_{name}.png',
                    f"{name}: max gcell util {cong['max_util']}, >0.60 {cong['edges_over_060']}", pr)
-        print(name, json.dumps(res[name]['totals']), json.dumps(cong))
+        print(name, json.dumps(res[name]['totals']), json.dumps({k: v for k, v in cong.items() if k not in ('hot_edges', 'unrouted')}))
     names = list(res)
     keys = sorted({(r['a'], r['b']) for n in names for r in res[n]['p2p']}, key=lambda k: -max(
         r['bits'] for n in names for r in res[n]['p2p'] if (r['a'], r['b']) == k))
