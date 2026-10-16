@@ -592,6 +592,12 @@
      "date": "2026-10-16T01:15",
      "status": "confirmed-provisional",
      "evidence": "owner adopted (H-HARDEN cce3264d2: clk S-centre beside S outputs, clk_cap W, clk_mem W). Before: routed native L222/C206.2/spread 92.8 ps (24eeb93bb). After: gate CTS TT insertion 170.9 ps, spread 37.4 ps, 649 sinks (hv15_vm_cal_x gate PASS 01:05). Route not yet run: jobs REFUSED CLOSED_STANDS (slot-change request pending)"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:45",
+     "status": "confirmed",
+     "evidence": "hv15_vm_cal_x-xcap0030-cce3264d2 CLOSED TT +45.93 / FF +24.17 / DRC 0 (record b2e290032); routed native PASS (main results/rtl/hbm_harden_0030/calendar_x_native.json, verified): launch 222.0 -> 179.0 ps, capture 206.2 -> 133.0 ps, spread 92.8 -> 37.2 ps (clk S-centre, R 147.5); clk_cap W rung R 85.6 / spread 8.1. SRAM stays centred (20-um N/S channels); clock no longer wraps under the macro."
     }
    ]
   },
@@ -1517,12 +1523,12 @@
   "2": {
    "date": "2026-10-16T01:15",
    "scored": 15,
-   "confirmed": 0,
+   "confirmed": 1,
    "confirmed_provisional": 1,
    "refuted": 0,
    "withdrawn": 1,
    "open": 13,
-   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant",
+   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant; T4 now fully confirmed (routed native PASS: L222/C206.2/sp92.8 -> L179/C133/sp37.2)",
    "new_findings": 1
   }
  }
