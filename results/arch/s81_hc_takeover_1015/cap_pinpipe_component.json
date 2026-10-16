@@ -1,0 +1,49 @@
+{
+  "status": "COMPONENT_ONLY",
+  "extra_fixed_cycles": 1,
+  "added_data_valid_flops": 1135,
+  "outline_um": [
+    576.72,
+    51.84
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctfx_cap_pinpipe.sv": "e849db1d36e93ead5818bc560001697c03a329fcf78eedfa9973243f576010ca",
+    "tools/s81_suhc/cap_pinpipe/tb.sv": "169d703bb32545fd821a77d257d927b5af1ba373b40265fff3801afa0b46687b",
+    "tools/s81_suhc/cap_pinpipe/run.sh": "11917e44ee1963f8c14feb7c7eaab04923a42ea98e343bffd73d22696293c879"
+  },
+  "proof": {
+    "positive": "CAP_PINPIPE_PASS checked=8187 bits=1128 extra_cycles=1 reset_epochs=17",
+    "mutants": {
+      "capture_bypass": 8187,
+      "valid_bypass": 8055,
+      "local_bit_corrupt": 8187
+    },
+    "host": "ot-epyc4",
+    "source_archive_sha256": "ace54c1af814fdc113acc617f592f0ae975be27de91117f3f75b54ce8395d6eb",
+    "directory": "/srv/opentallas-scratch/codex/s81-hc-pinpipe-2116"
+  },
+  "cause": {
+    "job": "s81hc_ctfxcap_margin_ref-s26-COMMIT-d78dc7988",
+    "input": "fd_in[1007]",
+    "input_pin_um": [
+      509.436,
+      51.798
+    ],
+    "capturing_flop": "ot_prs_00008_ff",
+    "capturing_flop_um": [
+      92.34,
+      4.86
+    ],
+    "tt_setup_ps": -12.8,
+    "ff_hold_ps": 2.05,
+    "drc": 0,
+    "max_semantic_input_output_pin_L1_um": 469.836,
+    "input_output_pairs_over190um": 64
+  },
+  "open": [
+    "Routed native launch/capture/spread and TT/FF/DRC0",
+    "Actual full HC schedule plus1 per replaced serial capture strip",
+    "End-to-end token/layer throughput and static compiler calendar",
+    "Full incident pin grant and coherent die adoption"
+  ]
+}
