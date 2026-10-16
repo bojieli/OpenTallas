@@ -295,11 +295,15 @@ def main(argv=None):
     occ = hb[hb > 0]
     a.hot = a.hot if a.hot is not None else float(np.percentile(occ, 98)) if occ.size else 1.0
     vmax = float(np.percentile(occ, 99.5)) if occ.size else 1.0
-    lab, n = ndimage.label(hb >= a.hot)
+    # one hot spot = hot bins within 3 bins (144 um) of each other (a relay column is one spot, not 20)
+    lab, n = ndimage.label(ndimage.binary_dilation(hb >= a.hot, iterations=3))
+    lab = np.where(hb >= a.hot, lab, 0)
     spots = []
     for k in range(1, n + 1):
         ys, xs = np.nonzero(lab == k)
-        y0, y1, x0, x1 = ys.min() * BIN * GC, (ys.max() + 1) * BIN * GC, xs.min() * BIN * GC, (xs.max() + 1) * BIN * GC
+        if not len(ys):
+            continue
+        y0, y1, x0, x1 = float(ys.min()) * BIN * GC, float(ys.max() + 1) * BIN * GC, float(xs.min()) * BIN * GC, float(xs.max() + 1) * BIN * GC
         sub = worst[int(y0 / GC):int(y1 / GC), int(x0 / GC):int(x1 / GC)]
         iy, ix = np.unravel_index(int(sub.argmax()), sub.shape)
         lay = LAYERS[int(worst_l[int(y0 / GC) + iy, int(x0 / GC) + ix])]
@@ -341,7 +345,7 @@ def main(argv=None):
                hotspots=spots[:40], hotspots_total=len(spots), top_flows=top, png=str(png))
     (a.out / 'readout_hotspots.json').write_text(json.dumps(rec, indent=1) + '\n')
     md = [f'# KV die readout {a.run.name}', '', f'PNG: {png}', '',
-          f'worst bin demand/tracks {rec["worst_bin_util"]}; hot spots >= {a.hot}: {len(spots)}', '',
+          f'worst bin demand/tracks {rec["worst_bin_util"]}; hot spots >= {a.hot:.2f} (98th pct of occupied 48-um bins): {len(spots)}', '',
           '| # | bbox um | peak | layer | class | measured | fix |', '|---|---|---|---|---|---|---|']
     for j, s in enumerate(spots[:20]):
         m_ = s.get('measured', {})
