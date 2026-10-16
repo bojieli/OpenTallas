@@ -43,6 +43,16 @@ CDC adapter and the testbench are the two explicit exclusions; their startup,
 phase and physical proofs remain separate. Absent profiles retain the historical contract
 checks; these mechanisms do not adopt a pipeline for the die.
 
+The opt-in profile `s81_vm_a2f_hop1_r4_c2_w1` binds the independent
+A2-F parent measurement in `results/rtl/s81_vm_a2f_parent_0200/record.json`.
+It requires that receipt's immutable digest and all 59 staged source hashes,
+including the actual SRAM model. Its core-source write pin P reaches raw SRAM
+at P+11+n and returns commit at P+12+n; a read pin Q reaches raw SRAM at Q+6
+and returns at Q+14. New-value visibility requires Q >= P+6+n. Reusing the
+legacy raw write/read ages is rejected even though the commit age is unchanged.
+These ages exclude physical die wire relays. The profile does not update engine
+durations, adopt a die calendar, or establish native full-token completeness.
+
 The generated schedule is checked using
 `tools/s81_suhc/static_vm_reservations.py`. Any missing binding, stale evidence,
 unsupported native operation, latency mismatch, timing conflict, or unproduced
