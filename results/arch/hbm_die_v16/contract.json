@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "3a346f5db",
+  "commit": "430fab31f",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -131,18 +131,18 @@
   "off-die pins (SerDes/UCIe PMA, refclk, por_n) are die top-level ports"
  ],
  "summary": {
-  "instances": 1494,
+  "instances": 1490,
   "masters": 61,
-  "edges": 11908,
-  "edge_bits": 1230165,
-  "clock_reset_ports": 3502,
+  "edges": 11872,
+  "edge_bits": 1228793,
+  "clock_reset_ports": 3494,
   "straps": 188,
   "die_pins": 43,
   "exposed_input_ports": 0,
   "exposed_input_bits": 0,
   "exposed_unassigned_ports": 0,
   "gaps": 30,
-  "open_output_ports": 1156,
+  "open_output_ports": 1128,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -202,7 +202,7 @@
   "ot_hfd_coll_q2_static_host_v4": 3,
   "ot_hfd_coll_q3_static_host_v4": 1,
   "ot_hgi_coll_inj_idx_join": 1,
-  "ot_hgi_dma_back_static_vp4_banks": 4,
+  "ot_hgi_dma_back_static_vp4_banks_cp": 4,
   "ot_hgi_qdq_host_static": 1,
   "ot_hgi_sfu_lg_pair_leaf": 32,
   "ot_hgi_sfu_scheduled_engine": 4,
@@ -211,7 +211,7 @@
   "ot_hgi_sm_xload_cl2_ctl": 4,
   "ot_pdie_serdes": 9,
   "ot_pdie_ucie": 1,
-  "ot_static_cmd_target": 76,
+  "ot_static_cmd_target": 72,
   "ot_static_program_target": 6,
   "ot_vms_status4_static": 1
  },
@@ -3464,14 +3464,22 @@
    }
   },
   "hb_dbk_SW": {
-   "master": "ot_hgi_dma_back_static_vp4_banks",
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
    "params": {},
    "slot": "hb_dbk_SW",
    "owner": "H-HARDEN",
    "region": "host_misc",
-   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries.",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries. | H-NETLIST 0600: F20 target 104 folded in (was cp_dma_SW)",
    "replaces_v15": "ot_hgi_dma_back_static",
+   "folded_target": {
+    "instance": "cp_dma_SW",
+    "target": "8'd104"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -3485,37 +3493,61 @@
      "direction": "input",
      "bits": 2
     },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
     "clk_bank": {
      "direction": "input",
      "bits": 8
     },
-    "cycle": {
-     "direction": "input",
-     "bits": 32
-    },
-    "mv_v": {
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 227
+     "bits": 8
     },
-    "issue_at": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 32
+     "bits": 12
     },
-    "drain_at": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 32
+     "bits": 256
     },
-    "mv_wb_bank": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv_wb_epoch": {
+    "desc_base": {
+     "direction": "input",
+     "bits": 12
+    },
+    "desc_limit": {
+     "direction": "input",
+     "bits": 13
+    },
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cp_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_active": {
+     "direction": "output",
+     "bits": 1
     },
     "mv_src": {
      "direction": "output",
@@ -3592,14 +3624,22 @@
    }
   },
   "hb_dbk_SE": {
-   "master": "ot_hgi_dma_back_static_vp4_banks",
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
    "params": {},
    "slot": "hb_dbk_SE",
    "owner": "H-HARDEN",
    "region": "host_misc",
-   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries.",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries. | H-NETLIST 0600: F20 target 105 folded in (was cp_dma_SE)",
    "replaces_v15": "ot_hgi_dma_back_static",
+   "folded_target": {
+    "instance": "cp_dma_SE",
+    "target": "8'd105"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -3613,37 +3653,61 @@
      "direction": "input",
      "bits": 2
     },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
     "clk_bank": {
      "direction": "input",
      "bits": 8
     },
-    "cycle": {
-     "direction": "input",
-     "bits": 32
-    },
-    "mv_v": {
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 227
+     "bits": 8
     },
-    "issue_at": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 32
+     "bits": 12
     },
-    "drain_at": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 32
+     "bits": 256
     },
-    "mv_wb_bank": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv_wb_epoch": {
+    "desc_base": {
+     "direction": "input",
+     "bits": 12
+    },
+    "desc_limit": {
+     "direction": "input",
+     "bits": 13
+    },
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cp_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_active": {
+     "direction": "output",
+     "bits": 1
     },
     "mv_src": {
      "direction": "output",
@@ -3720,14 +3784,22 @@
    }
   },
   "hb_dbk_NW": {
-   "master": "ot_hgi_dma_back_static_vp4_banks",
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
    "params": {},
    "slot": "hb_dbk_NW",
    "owner": "H-HARDEN",
    "region": "host_misc",
-   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries.",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries. | H-NETLIST 0600: F20 target 106 folded in (was cp_dma_NW)",
    "replaces_v15": "ot_hgi_dma_back_static",
+   "folded_target": {
+    "instance": "cp_dma_NW",
+    "target": "8'd106"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -3741,37 +3813,61 @@
      "direction": "input",
      "bits": 2
     },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
     "clk_bank": {
      "direction": "input",
      "bits": 8
     },
-    "cycle": {
-     "direction": "input",
-     "bits": 32
-    },
-    "mv_v": {
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 227
+     "bits": 8
     },
-    "issue_at": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 32
+     "bits": 12
     },
-    "drain_at": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 32
+     "bits": 256
     },
-    "mv_wb_bank": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv_wb_epoch": {
+    "desc_base": {
+     "direction": "input",
+     "bits": 12
+    },
+    "desc_limit": {
+     "direction": "input",
+     "bits": 13
+    },
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cp_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_active": {
+     "direction": "output",
+     "bits": 1
     },
     "mv_src": {
      "direction": "output",
@@ -3848,14 +3944,22 @@
    }
   },
   "hb_dbk_NE": {
-   "master": "ot_hgi_dma_back_static_vp4_banks",
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
    "params": {},
    "slot": "hb_dbk_NE",
    "owner": "H-HARDEN",
    "region": "host_misc",
-   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries.",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries. | H-NETLIST 0600: F20 target 107 folded in (was cp_dma_NE)",
    "replaces_v15": "ot_hgi_dma_back_static",
+   "folded_target": {
+    "instance": "cp_dma_NE",
+    "target": "8'd107"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -3869,37 +3973,61 @@
      "direction": "input",
      "bits": 2
     },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
     "clk_bank": {
      "direction": "input",
      "bits": 8
     },
-    "cycle": {
-     "direction": "input",
-     "bits": 32
-    },
-    "mv_v": {
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 227
+     "bits": 8
     },
-    "issue_at": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 32
+     "bits": 12
     },
-    "drain_at": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 32
+     "bits": 256
     },
-    "mv_wb_bank": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "mv_wb_epoch": {
+    "desc_base": {
+     "direction": "input",
+     "bits": 12
+    },
+    "desc_limit": {
+     "direction": "input",
+     "bits": 13
+    },
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cp_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "cp_active": {
+     "direction": "output",
+     "bits": 1
     },
     "mv_src": {
      "direction": "output",
@@ -45727,141 +45855,6 @@
     }
    }
   },
-  "cp_dma_SW": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 308,
-    "RELF": 2,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "dbk_SW",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 104: command calendar (128 x {dn308, at 32}, two 128x256 SRAMs) = the static dispatcher of dma_back_static_abi.json \"producer\" (dn309 = mv227,issue32,drain32,bank1,epoch16,v1); issue_at/drain_at are launch-relative in the table and leave rebased on the collar cycle counter, which also drives the DMA absolute cycle input (+1 per edge from reset).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 308
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "cp_svg_SE0": {
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
@@ -47074,141 +47067,6 @@
     "cmd": {
      "direction": "output",
      "bits": 108
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_dma_SE": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 308,
-    "RELF": 2,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "dbk_SE",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 105: command calendar (128 x {dn308, at 32}, two 128x256 SRAMs) = the static dispatcher of dma_back_static_abi.json \"producer\" (dn309 = mv227,issue32,drain32,bank1,epoch16,v1); issue_at/drain_at are launch-relative in the table and leave rebased on the collar cycle counter, which also drives the DMA absolute cycle input (+1 per edge from reset).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 308
     },
     "cycle": {
      "direction": "output",
@@ -48459,141 +48317,6 @@
     }
    }
   },
-  "cp_dma_NW": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 308,
-    "RELF": 2,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "dbk_NW",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 106: command calendar (128 x {dn308, at 32}, two 128x256 SRAMs) = the static dispatcher of dma_back_static_abi.json \"producer\" (dn309 = mv227,issue32,drain32,bank1,epoch16,v1); issue_at/drain_at are launch-relative in the table and leave rebased on the collar cycle counter, which also drives the DMA absolute cycle input (+1 per edge from reset).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 308
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "cp_svg_NE0": {
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
@@ -49806,141 +49529,6 @@
     "cmd": {
      "direction": "output",
      "bits": 108
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_dma_NE": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 308,
-    "RELF": 2,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "dbk_NE",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 107: command calendar (128 x {dn308, at 32}, two 128x256 SRAMs) = the static dispatcher of dma_back_static_abi.json \"producer\" (dn309 = mv227,issue32,drain32,bank1,epoch16,v1); issue_at/drain_at are launch-relative in the table and leave rebased on the collar cycle counter, which also drives the DMA absolute cycle input (+1 per edge from reset).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 308
     },
     "cycle": {
      "direction": "output",
@@ -198254,7 +197842,7 @@
     1
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "cfg_v",
     0,
     1
@@ -198275,7 +197863,7 @@
     8
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "cfg_target",
     0,
     8
@@ -198296,7 +197884,7 @@
     12
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "cfg_addr",
     0,
     12
@@ -198317,7 +197905,7 @@
     256
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "cfg_data",
     0,
     256
@@ -198338,7 +197926,7 @@
     1
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "desc_v",
     0,
     1
@@ -198359,7 +197947,7 @@
     12
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "desc_base",
     0,
     12
@@ -198380,7 +197968,7 @@
     13
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "desc_limit",
     0,
     13
@@ -198401,7 +197989,7 @@
     16
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "desc_loops",
     0,
     16
@@ -198422,7 +198010,7 @@
     1
    ],
    "sink": [
-    "cp_dma_SW",
+    "hb_dbk_SW",
     "launch_v",
     0,
     1
@@ -198431,195 +198019,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_213",
-   "bits": 32,
-   "source": [
-    "cp_dma_SW",
-    "cycle",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "cycle",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_214",
-   "bits": 1,
-   "source": [
-    "cp_dma_SW",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "mv_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_215",
-   "bits": 32,
-   "source": [
-    "cp_dma_SW",
-    "cmd",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "issue_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_216",
-   "bits": 32,
-   "source": [
-    "cp_dma_SW",
-    "cmd",
-    32,
-    64
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "drain_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_217",
-   "bits": 227,
-   "source": [
-    "cp_dma_SW",
-    "cmd",
-    64,
-    291
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "mv",
-    0,
-    227
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_218",
-   "bits": 1,
-   "source": [
-    "cp_dma_SW",
-    "cmd",
-    291,
-    292
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "mv_wb_bank",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_219",
-   "bits": 16,
-   "source": [
-    "cp_dma_SW",
-    "cmd",
-    292,
-    308
-   ],
-   "sink": [
-    "hb_dbk_SW",
-    "mv_wb_epoch",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_220",
-   "bits": 1,
-   "source": [
-    "hb_dbk_SW",
-    "busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_SW",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA busy -> collar active",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_221",
-   "bits": 1,
-   "source": [
-    "hb_dbk_SW",
-    "mv_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_SW",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -202748,7 +202147,7 @@
     1
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "cfg_v",
     0,
     1
@@ -202769,7 +202168,7 @@
     8
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "cfg_target",
     0,
     8
@@ -202790,7 +202189,7 @@
     12
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "cfg_addr",
     0,
     12
@@ -202811,7 +202210,7 @@
     256
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "cfg_data",
     0,
     256
@@ -202832,7 +202231,7 @@
     1
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "desc_v",
     0,
     1
@@ -202853,7 +202252,7 @@
     12
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "desc_base",
     0,
     12
@@ -202874,7 +202273,7 @@
     13
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "desc_limit",
     0,
     13
@@ -202895,7 +202294,7 @@
     16
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "desc_loops",
     0,
     16
@@ -202916,7 +202315,7 @@
     1
    ],
    "sink": [
-    "cp_dma_SE",
+    "hb_dbk_SE",
     "launch_v",
     0,
     1
@@ -202925,195 +202324,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_435",
-   "bits": 32,
-   "source": [
-    "cp_dma_SE",
-    "cycle",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "cycle",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_436",
-   "bits": 1,
-   "source": [
-    "cp_dma_SE",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "mv_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_437",
-   "bits": 32,
-   "source": [
-    "cp_dma_SE",
-    "cmd",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "issue_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_438",
-   "bits": 32,
-   "source": [
-    "cp_dma_SE",
-    "cmd",
-    32,
-    64
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "drain_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_439",
-   "bits": 227,
-   "source": [
-    "cp_dma_SE",
-    "cmd",
-    64,
-    291
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "mv",
-    0,
-    227
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_440",
-   "bits": 1,
-   "source": [
-    "cp_dma_SE",
-    "cmd",
-    291,
-    292
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "mv_wb_bank",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_441",
-   "bits": 16,
-   "source": [
-    "cp_dma_SE",
-    "cmd",
-    292,
-    308
-   ],
-   "sink": [
-    "hb_dbk_SE",
-    "mv_wb_epoch",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_442",
-   "bits": 1,
-   "source": [
-    "hb_dbk_SE",
-    "busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_SE",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA busy -> collar active",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_443",
-   "bits": 1,
-   "source": [
-    "hb_dbk_SE",
-    "mv_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_SE",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -207242,7 +206452,7 @@
     1
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "cfg_v",
     0,
     1
@@ -207263,7 +206473,7 @@
     8
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "cfg_target",
     0,
     8
@@ -207284,7 +206494,7 @@
     12
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "cfg_addr",
     0,
     12
@@ -207305,7 +206515,7 @@
     256
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "cfg_data",
     0,
     256
@@ -207326,7 +206536,7 @@
     1
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "desc_v",
     0,
     1
@@ -207347,7 +206557,7 @@
     12
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "desc_base",
     0,
     12
@@ -207368,7 +206578,7 @@
     13
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "desc_limit",
     0,
     13
@@ -207389,7 +206599,7 @@
     16
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "desc_loops",
     0,
     16
@@ -207410,7 +206620,7 @@
     1
    ],
    "sink": [
-    "cp_dma_NW",
+    "hb_dbk_NW",
     "launch_v",
     0,
     1
@@ -207419,195 +206629,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_657",
-   "bits": 32,
-   "source": [
-    "cp_dma_NW",
-    "cycle",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "cycle",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_658",
-   "bits": 1,
-   "source": [
-    "cp_dma_NW",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "mv_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_659",
-   "bits": 32,
-   "source": [
-    "cp_dma_NW",
-    "cmd",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "issue_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_660",
-   "bits": 32,
-   "source": [
-    "cp_dma_NW",
-    "cmd",
-    32,
-    64
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "drain_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_661",
-   "bits": 227,
-   "source": [
-    "cp_dma_NW",
-    "cmd",
-    64,
-    291
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "mv",
-    0,
-    227
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_662",
-   "bits": 1,
-   "source": [
-    "cp_dma_NW",
-    "cmd",
-    291,
-    292
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "mv_wb_bank",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_663",
-   "bits": 16,
-   "source": [
-    "cp_dma_NW",
-    "cmd",
-    292,
-    308
-   ],
-   "sink": [
-    "hb_dbk_NW",
-    "mv_wb_epoch",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_664",
-   "bits": 1,
-   "source": [
-    "hb_dbk_NW",
-    "busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_NW",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA busy -> collar active",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_665",
-   "bits": 1,
-   "source": [
-    "hb_dbk_NW",
-    "mv_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_NW",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -211736,7 +210757,7 @@
     1
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "cfg_v",
     0,
     1
@@ -211757,7 +210778,7 @@
     8
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "cfg_target",
     0,
     8
@@ -211778,7 +210799,7 @@
     12
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "cfg_addr",
     0,
     12
@@ -211799,7 +210820,7 @@
     256
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "cfg_data",
     0,
     256
@@ -211820,7 +210841,7 @@
     1
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "desc_v",
     0,
     1
@@ -211841,7 +210862,7 @@
     12
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "desc_base",
     0,
     12
@@ -211862,7 +210883,7 @@
     13
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "desc_limit",
     0,
     13
@@ -211883,7 +210904,7 @@
     16
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "desc_loops",
     0,
     16
@@ -211904,7 +210925,7 @@
     1
    ],
    "sink": [
-    "cp_dma_NE",
+    "hb_dbk_NE",
     "launch_v",
     0,
     1
@@ -211913,195 +210934,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_879",
-   "bits": 32,
-   "source": [
-    "cp_dma_NE",
-    "cycle",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "cycle",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_880",
-   "bits": 1,
-   "source": [
-    "cp_dma_NE",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "mv_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_881",
-   "bits": 32,
-   "source": [
-    "cp_dma_NE",
-    "cmd",
-    0,
-    32
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "issue_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_882",
-   "bits": 32,
-   "source": [
-    "cp_dma_NE",
-    "cmd",
-    32,
-    64
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "drain_at",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_883",
-   "bits": 227,
-   "source": [
-    "cp_dma_NE",
-    "cmd",
-    64,
-    291
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "mv",
-    0,
-    227
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_884",
-   "bits": 1,
-   "source": [
-    "cp_dma_NE",
-    "cmd",
-    291,
-    292
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "mv_wb_bank",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_885",
-   "bits": 16,
-   "source": [
-    "cp_dma_NE",
-    "cmd",
-    292,
-    308
-   ],
-   "sink": [
-    "hb_dbk_NE",
-    "mv_wb_epoch",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_dma_back_static_vp4_banks.sv:15-21 (dma_back_static_abi.json command)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_886",
-   "bits": 1,
-   "source": [
-    "hb_dbk_NE",
-    "busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_NE",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA busy -> collar active",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_887",
-   "bits": 1,
-   "source": [
-    "hb_dbk_NE",
-    "mv_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_dma_NE",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "DMA sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -219857,8 +218689,8 @@
    "name": "cp2_369",
    "bits": 1,
    "source": [
-    "cp_dma_SW",
-    "configured",
+    "hb_dbk_SW",
+    "cp_configured",
     0,
     1
    ],
@@ -219878,8 +218710,8 @@
    "name": "cp2_370",
    "bits": 1,
    "source": [
-    "cp_dma_SW",
-    "active",
+    "hb_dbk_SW",
+    "cp_active",
     0,
     1
    ],
@@ -219899,8 +218731,8 @@
    "name": "cp2_371",
    "bits": 1,
    "source": [
-    "cp_dma_SW",
-    "fault",
+    "hb_dbk_SW",
+    "cp_fault",
     0,
     1
    ],
@@ -219920,8 +218752,8 @@
    "name": "cp2_372",
    "bits": 1,
    "source": [
-    "cp_dma_SE",
-    "configured",
+    "hb_dbk_SE",
+    "cp_configured",
     0,
     1
    ],
@@ -219941,8 +218773,8 @@
    "name": "cp2_373",
    "bits": 1,
    "source": [
-    "cp_dma_SE",
-    "active",
+    "hb_dbk_SE",
+    "cp_active",
     0,
     1
    ],
@@ -219962,8 +218794,8 @@
    "name": "cp2_374",
    "bits": 1,
    "source": [
-    "cp_dma_SE",
-    "fault",
+    "hb_dbk_SE",
+    "cp_fault",
     0,
     1
    ],
@@ -219983,8 +218815,8 @@
    "name": "cp2_375",
    "bits": 1,
    "source": [
-    "cp_dma_NW",
-    "configured",
+    "hb_dbk_NW",
+    "cp_configured",
     0,
     1
    ],
@@ -220004,8 +218836,8 @@
    "name": "cp2_376",
    "bits": 1,
    "source": [
-    "cp_dma_NW",
-    "active",
+    "hb_dbk_NW",
+    "cp_active",
     0,
     1
    ],
@@ -220025,8 +218857,8 @@
    "name": "cp2_377",
    "bits": 1,
    "source": [
-    "cp_dma_NW",
-    "fault",
+    "hb_dbk_NW",
+    "cp_fault",
     0,
     1
    ],
@@ -220046,8 +218878,8 @@
    "name": "cp2_378",
    "bits": 1,
    "source": [
-    "cp_dma_NE",
-    "configured",
+    "hb_dbk_NE",
+    "cp_configured",
     0,
     1
    ],
@@ -220067,8 +218899,8 @@
    "name": "cp2_379",
    "bits": 1,
    "source": [
-    "cp_dma_NE",
-    "active",
+    "hb_dbk_NE",
+    "cp_active",
     0,
     1
    ],
@@ -220088,8 +218920,8 @@
    "name": "cp2_380",
    "bits": 1,
    "source": [
-    "cp_dma_NE",
-    "fault",
+    "hb_dbk_NE",
+    "cp_fault",
     0,
     1
    ],
@@ -345034,50 +343866,6 @@
    ]
   },
   {
-   "instance": "cp_dma_NE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_dma_NW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_dma_SE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_dma_SW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
    "instance": "cp_smw_NE",
    "port": "clk",
    "bits": 1,
@@ -382668,18 +381456,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_dma_SW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_svg_SE0",
    "port": "rst_n",
    "bits": 1,
@@ -382777,18 +381553,6 @@
   },
   {
    "instance": "cp_xl_SE",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_dma_SE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -382908,18 +381672,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_dma_NW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_svg_NE0",
    "port": "rst_n",
    "bits": 1,
@@ -383017,18 +381769,6 @@
   },
   {
    "instance": "cp_xl_NE",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_dma_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -383330,7 +382070,7 @@
    "hi": 2,
    "value": 0,
    "reason": "Registered physical stack identity; no runtime selection.",
-   "master": "ot_hgi_dma_back_static_vp4_banks"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "hb_dbk_SE",
@@ -383339,7 +382079,7 @@
    "hi": 2,
    "value": 1,
    "reason": "Registered physical stack identity; no runtime selection.",
-   "master": "ot_hgi_dma_back_static_vp4_banks"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "hb_dbk_NW",
@@ -383348,7 +382088,7 @@
    "hi": 2,
    "value": 2,
    "reason": "Registered physical stack identity; no runtime selection.",
-   "master": "ot_hgi_dma_back_static_vp4_banks"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "hb_dbk_NE",
@@ -383357,7 +382097,7 @@
    "hi": 2,
    "value": 3,
    "reason": "Registered physical stack identity; no runtime selection.",
-   "master": "ot_hgi_dma_back_static_vp4_banks"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "rfr_SW_SW_00",
@@ -384458,13 +383198,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_dma_SW",
+   "inst": "hb_dbk_SW",
    "port": "tgt",
    "value": 104,
    "reason": "identity: F20 target id 104 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "cp_svg_SE0",
@@ -384557,13 +383297,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_dma_SE",
+   "inst": "hb_dbk_SE",
    "port": "tgt",
    "value": 105,
    "reason": "identity: F20 target id 105 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "cp_svg_NW0",
@@ -384656,13 +383396,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_dma_NW",
+   "inst": "hb_dbk_NW",
    "port": "tgt",
    "value": 106,
    "reason": "identity: F20 target id 106 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "cp_svg_NE0",
@@ -384755,13 +383495,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_dma_NE",
+   "inst": "hb_dbk_NE",
    "port": "tgt",
    "value": 107,
    "reason": "identity: F20 target id 107 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
   },
   {
    "inst": "hc_tgt_SW",
@@ -388143,48 +386883,6 @@
    "affects": [
     [
      "hb_dbk_SW",
-     "cycle",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_SW",
-     "mv_v",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_SW",
-     "mv",
-     0,
-     227
-    ],
-    [
-     "hb_dbk_SW",
-     "issue_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_SW",
-     "drain_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_SW",
-     "mv_wb_bank",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_SW",
-     "mv_wb_epoch",
-     0,
-     16
-    ],
-    [
-     "hb_dbk_SW",
      "wb_ready",
      0,
      1
@@ -388194,48 +386892,6 @@
      "wa",
      0,
      12
-    ],
-    [
-     "hb_dbk_SE",
-     "cycle",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_SE",
-     "mv_v",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_SE",
-     "mv",
-     0,
-     227
-    ],
-    [
-     "hb_dbk_SE",
-     "issue_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_SE",
-     "drain_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_SE",
-     "mv_wb_bank",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_SE",
-     "mv_wb_epoch",
-     0,
-     16
     ],
     [
      "hb_dbk_SE",
@@ -388251,48 +386907,6 @@
     ],
     [
      "hb_dbk_NW",
-     "cycle",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_NW",
-     "mv_v",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_NW",
-     "mv",
-     0,
-     227
-    ],
-    [
-     "hb_dbk_NW",
-     "issue_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_NW",
-     "drain_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_NW",
-     "mv_wb_bank",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_NW",
-     "mv_wb_epoch",
-     0,
-     16
-    ],
-    [
-     "hb_dbk_NW",
      "wb_ready",
      0,
      1
@@ -388302,48 +386916,6 @@
      "wa",
      0,
      12
-    ],
-    [
-     "hb_dbk_NE",
-     "cycle",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_NE",
-     "mv_v",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_NE",
-     "mv",
-     0,
-     227
-    ],
-    [
-     "hb_dbk_NE",
-     "issue_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_NE",
-     "drain_at",
-     0,
-     32
-    ],
-    [
-     "hb_dbk_NE",
-     "mv_wb_bank",
-     0,
-     1
-    ],
-    [
-     "hb_dbk_NE",
-     "mv_wb_epoch",
-     0,
-     16
     ],
     [
      "hb_dbk_NE",
@@ -389571,7 +388143,17 @@
   ],
   [
    "hb_dbk_SW",
+   "mv_fault",
+   1
+  ],
+  [
+   "hb_dbk_SW",
    "quiet",
+   1
+  ],
+  [
+   "hb_dbk_SW",
+   "busy",
    1
   ],
   [
@@ -389586,7 +388168,17 @@
   ],
   [
    "hb_dbk_SE",
+   "mv_fault",
+   1
+  ],
+  [
+   "hb_dbk_SE",
    "quiet",
+   1
+  ],
+  [
+   "hb_dbk_SE",
+   "busy",
    1
   ],
   [
@@ -389601,7 +388193,17 @@
   ],
   [
    "hb_dbk_NW",
+   "mv_fault",
+   1
+  ],
+  [
+   "hb_dbk_NW",
    "quiet",
+   1
+  ],
+  [
+   "hb_dbk_NW",
+   "busy",
    1
   ],
   [
@@ -389616,7 +388218,17 @@
   ],
   [
    "hb_dbk_NE",
+   "mv_fault",
+   1
+  ],
+  [
+   "hb_dbk_NE",
    "quiet",
+   1
+  ],
+  [
+   "hb_dbk_NE",
+   "busy",
    1
   ],
   [
@@ -392730,51 +391342,6 @@
    32
   ],
   [
-   "cp_dma_SW",
-   "a_we",
-   1
-  ],
-  [
-   "cp_dma_SW",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_dma_SW",
-   "a_data",
-   256
-  ],
-  [
-   "cp_dma_SW",
-   "b_we",
-   1
-  ],
-  [
-   "cp_dma_SW",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_dma_SW",
-   "b_data",
-   256
-  ],
-  [
-   "cp_dma_SW",
-   "run_v",
-   1
-  ],
-  [
-   "cp_dma_SW",
-   "run_base",
-   1
-  ],
-  [
-   "cp_dma_SW",
-   "run_count",
-   1
-  ],
-  [
    "cp_svg_SE0",
    "cmd_v",
    1
@@ -392943,51 +391510,6 @@
    "cp_xl_SE",
    "cycle",
    32
-  ],
-  [
-   "cp_dma_SE",
-   "a_we",
-   1
-  ],
-  [
-   "cp_dma_SE",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_dma_SE",
-   "a_data",
-   256
-  ],
-  [
-   "cp_dma_SE",
-   "b_we",
-   1
-  ],
-  [
-   "cp_dma_SE",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_dma_SE",
-   "b_data",
-   256
-  ],
-  [
-   "cp_dma_SE",
-   "run_v",
-   1
-  ],
-  [
-   "cp_dma_SE",
-   "run_base",
-   1
-  ],
-  [
-   "cp_dma_SE",
-   "run_count",
-   1
   ],
   [
    "cp_svg_NW0",
@@ -393160,51 +391682,6 @@
    32
   ],
   [
-   "cp_dma_NW",
-   "a_we",
-   1
-  ],
-  [
-   "cp_dma_NW",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_dma_NW",
-   "a_data",
-   256
-  ],
-  [
-   "cp_dma_NW",
-   "b_we",
-   1
-  ],
-  [
-   "cp_dma_NW",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_dma_NW",
-   "b_data",
-   256
-  ],
-  [
-   "cp_dma_NW",
-   "run_v",
-   1
-  ],
-  [
-   "cp_dma_NW",
-   "run_base",
-   1
-  ],
-  [
-   "cp_dma_NW",
-   "run_count",
-   1
-  ],
-  [
    "cp_svg_NE0",
    "cmd_v",
    1
@@ -393373,51 +391850,6 @@
    "cp_xl_NE",
    "cycle",
    32
-  ],
-  [
-   "cp_dma_NE",
-   "a_we",
-   1
-  ],
-  [
-   "cp_dma_NE",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_dma_NE",
-   "a_data",
-   256
-  ],
-  [
-   "cp_dma_NE",
-   "b_we",
-   1
-  ],
-  [
-   "cp_dma_NE",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_dma_NE",
-   "b_data",
-   256
-  ],
-  [
-   "cp_dma_NE",
-   "run_v",
-   1
-  ],
-  [
-   "cp_dma_NE",
-   "run_base",
-   1
-  ],
-  [
-   "cp_dma_NE",
-   "run_count",
-   1
   ],
   [
    "col_su",

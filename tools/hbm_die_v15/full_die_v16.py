@@ -200,6 +200,21 @@ def rng(ref, ports):
 STRAP_TARGET_MASTERS = ('ot_static_cmd_target', 'ot_static_program_target')
 UNIV_CAL_DIR = 'rtl/hbm_accel/generic/vm/static/'
 UNIV_CAL_SRC = UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv'
+_DBK = 'rtl/hbm_accel/generic/peers/static/'
+# H-NETLIST 0600 (H-DIE option A): F20 collars folded into their only consumer master (wrapper = consumer + collar as
+# pin-registered soft logic; F20 bus + identity strap tgt on the consumer face; collar status on renamed face ports).
+FOLD_RULES = [
+    dict(target='ot_static_program_target', detect='program_cfg_we',
+         consumers=('hfd_hgi_vm_calendar', 'ot_vms_calendar_static'),
+         wrapper='hfd_hgi_vm_calendar_f20', source=UNIV_CAL_DIR + 'hfd_hgi_vm_calendar_f20.sv',
+         deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv', UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv',
+               UNIV_CAL_DIR + 'ot_static_program_target.sv'],
+         status={'configured': 'tgt_configured', 'fault': 'tgt_fault'}),
+    dict(target='ot_static_cmd_target', detect='cmd', consumers=('ot_hgi_dma_back_static_vp4_banks',),
+         wrapper='ot_hgi_dma_back_static_vp4_banks_cp', source=_DBK + 'ot_hgi_dma_back_static_vp4_banks_cp.sv',
+         deps=[_DBK + 'ot_hgi_dma_back_static_vp4_banks.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
+         status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'}),
+]
 
 
 def universal_calendar_fields():
@@ -253,14 +268,18 @@ def build(specs_dir, out):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
     # H-NETLIST 0600 (H-DIE option A): a programme target whose only consumer is a universal VM calendar is FOLDED into
     # it (hfd_hgi_vm_calendar_f20 = target + calendar; a standalone ~630-pin collar is pin-bound as its own tile).
-    folded = {}
+    folded = {}       # target instance -> consumer instance
+    fold_rule = {}    # target instance -> rule
     for s_ in specs:
         for e in s_.get('edges', []):
             a, b = e['src'][0], e['dst'][0]
-            if (e['src'][1] == 'program_cfg_we' and a in insts and b in insts
-                    and insts[a]['master'] == 'ot_static_program_target'
-                    and insts[b]['master'] in ('hfd_hgi_vm_calendar', 'ot_vms_calendar_static')):
-                folded[a] = b
+            if a not in insts or b not in insts:
+                continue
+            for r in FOLD_RULES:
+                if (e['src'][1] == r['detect'] and insts[a]['master'] == r['target']
+                        and insts[b]['master'] in r['consumers']):
+                    folded[a] = b
+                    fold_rule[a] = r
     for t, c in folded.items():
         insts[c]['folded_target'] = dict(instance=t, target=insts[t]['params'].get('TARGET'))
     # H-NETLIST 0600 (owner 19:50 FEWER DISTINCT TILES): programme/command targets take their F20 target id from the
@@ -288,9 +307,8 @@ def build(specs_dir, out):
                      note=i.get('note', '') + f' | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W{univ_cal[n]})')
     for t, c in folded.items():
         tid = insts[t]['params'].get('TGT_PIN') and next(x['value'] for x in tgt_straps if x['inst'] == t)
-        insts[c].update(master='hfd_hgi_vm_calendar_f20', source=UNIV_CAL_DIR + 'hfd_hgi_vm_calendar_f20.sv', params={},
-                        rtl_deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv', UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv',
-                                  UNIV_CAL_DIR + 'ot_static_program_target.sv'])
+        r = fold_rule[t]
+        insts[c].update(master=r['wrapper'], source=r['source'], params=dict(r.get('params', {})), rtl_deps=list(r['deps']))
         insts[c]['note'] = insts[c].get('note', '') + f' | H-NETLIST 0600: F20 target {tid} folded in (was {t})'
         for x in tgt_straps:
             if x['inst'] == t:
@@ -340,7 +358,7 @@ def build(specs_dir, out):
             if b in inv:
                 e['dst'] = [inv[b]] + list(e['dst'][1:])   # F20 broadcast now lands on the calendar face
             if a in inv:
-                port = {'configured': 'tgt_configured', 'fault': 'tgt_fault'}[e['src'][1]]
+                port = fold_rule[a]['status'][e['src'][1]]
                 e['src'] = [inv[a], port] + list(e['src'][2:])
             fe.append(e)
         edges = fe
