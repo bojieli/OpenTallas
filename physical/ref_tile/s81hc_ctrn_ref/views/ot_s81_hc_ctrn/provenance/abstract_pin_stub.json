@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_hc_ctrn.lef",
+    "sha256": "396cec7ab7ecc0ad8e85db33e105da7120c092361ef880b92236b88971bb820c"
+  },
+  "output": {
+    "path": "ot_s81_hc_ctrn.lef",
+    "sha256": "e09175fd30bea217bdf51400f8a9a937b0cd3bf2334a680897aaf7bc64be7a7a"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "0d9e9dc8bc48d42688e2e3cc33271ad7dcafdd7a2989fa848dcbc59ba8af8acf",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py",
+    "basis": "job_source_commit",
+    "source_commit": "65b47951478b6bd61e87261d58e92beef2795425"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/ot_s81_hc_ctrn.lef",
+    "ot_s81_hc_ctrn.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 2 OBS rects moved into 2 pins: clk, rst_in\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/s81-hccol-0600/physical/ref_tile/s81hc_ctrn_ref/views/ot_s81_hc_ctrn/ot_s81_hc_ctrn.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [
+      "(f) face-pin access: 4328 of 4330 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. rd_out[0] M5 (2.304,12.133), rd_out[1000] M5 (2.304,12.133), rd_out[1002] M5 (2.304,12.133))",
+      "(h) pockets: 866 open own-layer pocket rects on M5 (554.541 um2; gaps < 1.536 um between the child's own obstacles; largest (492.792,4.501)-(493.8,11.413), (281.976,3.205)-(283.2,7.957), (540.888,4.261)-(542.4,7.765)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)"
+    ],
+    "summary": "ot_s81_hc_ctrn 576.72 x 12.96: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 4330 blocked-above 0 blocked-same 0; clock clk insertion 399 ps; pockets M5 866 (legacy view)",
+    "info": {
+      "cell": "ot_s81_hc_ctrn",
+      "W": 576.72,
+      "H": 12.96,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 106,
+            "dir": "V",
+            "spread": 0.983,
+            "coverage": 1.0,
+            "shapes_on_top": 106
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 106,
+            "dir": "V",
+            "spread": 0.983,
+            "coverage": 1.0,
+            "shapes_on_top": 106
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 4330,
+        "blocked_above": 0,
+        "covered_below": 73,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 4328,
+        "band_examples": [
+          "rd_out[0] M5 (2.304,12.133)",
+          "rd_out[1000] M5 (2.304,12.133)",
+          "rd_out[1002] M5 (2.304,12.133)",
+          "rd_out[1004] M5 (2.304,12.133)",
+          "rd_out[1006] M5 (2.304,12.133)",
+          "rd_out[1008] M5 (2.304,12.133)"
+        ]
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 399.1,
+          "min_ps": 315.5
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": null,
+        "count": 866,
+        "area_um2": 554.541,
+        "examples": [
+          "(492.792,4.501)-(493.8,11.413)",
+          "(281.976,3.205)-(283.2,7.957)",
+          "(540.888,4.261)-(542.4,7.765)"
+        ]
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81hc_ctrn_ref-v4-aligned-pins-65b479514",
+    "source_commit": "65b47951478b6bd61e87261d58e92beef2795425",
+    "published_record_commit": "f2993c3374846109b946326d6b87ef7768fc55a5",
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctrn_ref-v4-aligned-pins-65b479514/routes/s81hc_ctrn_ref_v4_aligned_pins_65b479514/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "fab531369d53ffad83c67e64e22cd6ff06d0f2ec83737a2f4db6134fc22d7ff9",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "ot_s81_hc_ctrn.lef": "e09175fd30bea217bdf51400f8a9a937b0cd3bf2334a680897aaf7bc64be7a7a",
+      "ot_s81_hc_ctrn_tt.lib": "10bfd305e4139e9da0f7fd00713c0a7e0b0944799244359d11e12672edfaea66",
+      "ot_s81_hc_ctrn_ff.lib": "64ef9bd69a43d641cbbccdcee2d96787fb075ac41095f0e168b95f3fa6f12609",
+      "ot_s81_hc_ctrn_ss.lib": "195d1f927b55d8e7e837bbacae7e5339ce5466106d0027d55af1771fdbfc4cc7",
+      "abstract.json": "224f8eba4969c05a3fb7cd59be0a7cf5ca50544507cb984096ed010e37dd1b7b",
+      "insertion.json": "3e76f1b7d0974a9b985c67b43b89849622651016327f6b1f8ed5e659c56be71d",
+      "child_lint.json": "2bea82ca2693340e2c363e5d96111ec385ca870a4d347099e4f6052b03415d46"
+    },
+    "admission": {
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-1703614-1792157090",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}

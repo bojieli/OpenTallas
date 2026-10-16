@@ -585,8 +585,34 @@ def _host_rt_v14(b):
     return b
 
 
+# Q-KVSYS-DIE 2026-10-16 (OT_KV_DCAL=1, default off): the KV link calendar sequencer qkd_d2d_cal_seq_pin (CLOSED view
+# physical/ref_tile/qkd_d2d_cal_seq_pin_ep3, Q-LINK/Codex 3365a45b8 + fbc4a2e0d) drives the static D2D end's cfg loader /
+# cal_start / cal_seg (6 of the 23 strict-bind open inputs); epoch_go <- the end's own fwd_epoch, halt <- epoch_abort,
+# reload <- the HOST root's program_begin_v (a new program image begins: the calendar image restarts).  KV AUTO: no tok_go.
+DCAL = __import__('os').environ.get('OT_KV_DCAL', '0') == '1'
+DCAL_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv'
+DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_seg']
+DCAL_WH = (18.792, 28.08)
+
+
+def dcal_binding():
+    return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),
+                ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CFG), ego=['epoch_go'], hlt=['halt'], rld=['reload']),
+                sliced={}, classed={})
+
+
+def _d2ds_binding_dcal():
+    b = d2ds_binding()
+    if DCAL:
+        b['ports'].update(cal=list(DCAL_CFG), eab=['epoch_abort'])
+    return b
+
+
 BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding(),
-                qkd_d2ds=d2ds_binding())
+                qkd_d2ds=_d2ds_binding_dcal())
+if DCAL:
+    BINDINGS.update(qkd_dcal=dcal_binding())
+    RTL.update(qkd_dcal=DCAL_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
@@ -953,6 +979,50 @@ def _band(T, side, Wk):
 
 
 _PIN_HINT = {}
+# Q-KVSYS-HOP 2026-10-16 (OT_KV_HOP=1; default off): hop rules calibrated on the kvs11-v143c GRT/TT run (realized named
+# pins, routed wirelength; results/arch/qwen_kv_hop_1016).  (1) A frame port that kv_expand binds to a CLOSED leaf is
+# reached at that leaf's realized LEF pin, not the frame face: kvs11 ctrl kc kf -> rly_lkf planned 450 um at the frame
+# face, realized 558 um at the kc leaf (TT -196.7 ps).  (2) Late-launch closed views take their first relay nearer:
+# ectl_a rq (R 414 ps, insertion spread 63 ps) -> rly_krq passes <= ~380 um, fails at 437-444 um (-63 ps).  (3) Relay
+# chains keep every hop <= HOP_REACH (the closed standards' native self-reach: rlys_296 446 um, rlys_528 460 um).
+HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
+HOP_REACH = 445.0
+HOP_FIRST = dict(krq=340.0, krs=340.0)
+_LEAF_PIN_CACHE = {}
+
+
+def _leaf_pin(it, port):
+    """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    if not HOP or it.master not in ('qkd_ctrl', 'qkd_ctrl_n'):
+        return None
+    if 'kc' not in _LEAF_PIN_CACHE:
+        lef = Path(__file__).resolve().parents[2] / 'physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc/qkd_ctrl_kc.lef'
+        pins, cur, size = {}, None, None
+        for ln in lef.read_text().split('\n'):
+            t = ln.split()
+            if not t:
+                continue
+            if t[0] == 'SIZE':
+                size = (float(t[1]), float(t[3]))
+            elif t[0] == 'PIN':
+                cur = t[1].split('[')[0]
+            elif t[0] == 'RECT' and cur and cur not in pins:
+                x0, y0, x1, y1 = map(float, t[1:5])
+                pins[cur] = ((x0 + x1) / 2, (y0 + y1) / 2)
+        _LEAF_PIN_CACHE['kc'] = (pins, size)
+    pins, (lw, lh) = _LEAF_PIN_CACHE['kc']
+    p = pins.get(port.lstrip('*').split('[')[0])
+    if p is None:
+        return None
+    rev = it.master == 'qkd_ctrl'                       # kv_expand._ctrl_plan: u_kc at the strip's outer end
+    cx, cy = it.w / 2 - 23.76, (0.0 if rev else it.h - 43.2)
+    lx, ly = (p[0], lh - p[1]) if rev else p           # leaf MX in the reversed strip
+    fx, fy = cx + lx, cy + ly                           # frame-canonical
+    if it.orient in ('MY', 'R180'):
+        fx = it.w - fx
+    if it.orient in ('MX', 'R180'):
+        fy = it.h - fy
+    return it.x + fx, it.y + fy
 
 
 def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
@@ -1557,7 +1627,8 @@ def _host_v14_buses(m):
     add(('rst_die', 'reset', 1, [('host', 'die_rst_n')] + list(dict.fromkeys(die_l))))
     add(('rst_hbm', 'reset', 1, [('host', 'hbm_rst_n')] + list(dict.fromkeys(hbm_l)) + [(s, 'hbm_rst_n') for s in slices]))
     link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
-    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l))))
+    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l)) +
+         ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else [])))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
     # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
@@ -1648,6 +1719,22 @@ def _d2ds_swap(m):
         m['insts'].append(it)
         add((f'h{p_}', 'kv_oneway', 1, [('d2d_kv', p_), (n_, 'a')]))
     m.setdefault('extra_conns', {})['d2d_kv'] = ['.serdes_up(n_host_fdi[0])']     # SerDes tx_up (fdi bit 0) also feeds link_up[1]
+    if DCAL:
+        # OT_KV_DCAL: the calendar sequencer sits one channel E of the D2D frame, level with the frame centre (the relays
+        # are planned after, around it); its cfg / cal word is a 42-bit abutting-distance spine_local bus
+        d_ = by['d2d_kv']
+        w_, h_ = up(DCAL_WH[0] + SHAVE, GX), up(DCAL_WH[1] + SHAVE, GY)       # frame on the grid, >= the real view
+        it = F.Inst('dcal', 'qkd_dcal', up(d_.x + d_.w + 21.6, GX), up(d_.y + d_.h / 2 - h_ / 2, GY), w_ - SHAVE, h_ - SHAVE,
+                    'R0', kind='ctl', region='io')
+        m['insts'].append(it)
+        add(('dcal_cfg', 'spine_local', 1 + 1 + 6 + 32 + 1 + 1, [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
+        add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
+        for i_, (bid, cl, bits, eps) in enumerate(B):
+            if bid == 'clk_core_c':
+                B[i_] = (bid, cl, bits, list(eps) + [('dcal', 'ck')])
+        # epoch_go taps the end's fwd_epoch die net at its source (the bump chain keeps its relays and its one driver)
+        m.setdefault('extra_conns', {})['dcal'] = ['.ego(n_hfwd_epoch)']
 
 
 def _centre(it, port=None):
@@ -1763,7 +1850,9 @@ def _relays(m):
                 # v1.2: never along the die-edge cell ring (no relay fits there: kc_ES ran 24 mm up and down the E edge
                 # past the PHY to the controller strip's N-end PHY gap once the landing strip closed its old channel)
                 if q not in prev and 1 <= q[0] < nx - 1 and 1 <= q[1] < ny - 1 and not owner.get(q) and \
-                        not (SP['on'] and q in rocc):
+                        not (SP['on'] and q in rocc) and \
+                        not (SP.get('dil') and any((q[0] + i_, q[1] + j_) in rocc for i_ in range(-SP['dil'], SP['dil'] + 1)
+                                                   for j_ in range(-SP['dil'], SP['dil'] + 1))):
                     prev[q] = c
                     dq.append(q)
         if hit is None:
@@ -1943,6 +2032,9 @@ def _relays(m):
         def fixed_pin(inst, port):
             if bid in tree_meta and inst in by and max(by[inst].w, by[inst].h) > 2 * PIN_REACH:
                 return None       # v1.4.2 tree: a big frame's area reset pin is reached at the frame (over-macro last hop)
+            lp_ = _leaf_pin(by[inst], port) if inst in by else None
+            if lp_ is not None:
+                return lp_
             if (inst, port.lstrip('*')) in _PIN_HINT:
                 return _PIN_HINT[(inst, port.lstrip('*'))]
             it_ = by[inst]
@@ -1995,6 +2087,9 @@ def _relays(m):
         def reach_():
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
             # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
+            if HOP:
+                fr_ = FIRST_REACH.get(bid.rsplit('_', 2)[0], HOP_FIRST.get(bid.split('_')[0], HOP_REACH))
+                return min(fr_, HOP_REACH) if st_['prev_pt'] is None else HOP_REACH
             if st_['prev_pt'] is None:
                 return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
             return PIN_REACH
@@ -2014,6 +2109,8 @@ def _relays(m):
                     px, py = path_[idx]
                     best_ = None
                     for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
+                        if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
+                            continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
                         qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
@@ -2060,7 +2157,11 @@ def _relays(m):
                 rocc[cell].remove(r_)
             cells_added.clear()
             st_.update(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0)
-        for attempt in (0, 1):
+        # Q-KVSYS-HOP 2026-10-16 (OT_KV_RLY_STD=1 case: rst_die_t0_6 stage 19 found no spot): the std relay rows
+        # (up to 118.8 x 106 um) fill the channels, and the wide (24-cell) spot search strands a chain off its path, so a
+        # chain that fails BOTH attempts gets up to three more (below).  Reached only where the planner raised before:
+        # every case that built is unchanged.
+        for attempt in (0, 1, 2, 3):
             try:
                 chain_()
                 break
@@ -2069,6 +2170,27 @@ def _relays(m):
                     print('DBG_RETRY', bid, str(e0_)[:300], file=__import__('sys').stderr)
                 if attempt or not m['geo'].get('split'):
                     raise
+                if attempt:
+                    # retries 2-4: route 1 / 2 / 0 cells clear of placed relays, and every spot within PIN_REACH / 2 of
+                    # its path point (an off-path hop up to 24 cells away stranded rst_die_t0_6 500 um from its path)
+                    rollback_()
+                    st_['wide'] = True
+                    st_['offmax'] = PIN_REACH / 2
+                    SP['on'] = True
+                    SP['dil'] = (1, 2, 0)[attempt - 1]
+                    try:
+                        st_['path'] = route(a, b, pa, pb)
+                    except ValueError:
+                        SP['dil'] = 0
+                        try:
+                            st_['path'] = route(a, b, pa, pb)
+                        except ValueError:
+                            SP['on'] = False       # as the v1.4.2 tree retry: the relay-avoiding route can be closed
+                            st_['path'] = route(a, b, pa, pb)
+                    finally:
+                        SP['on'] = False
+                        SP['dil'] = 0
+                    continue
                 # v1.1 (split): the chain ran out of relay spots in a corridor other chains fill: re-route it around
                 # every cell those chains' relays hold and place it again
                 rollback_()
@@ -2403,6 +2525,8 @@ def masters(m, k=1, port_bits=None):
         _split_pins(M, m)
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
+    if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
+        M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
@@ -2865,8 +2989,8 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
             continue
         n += 1
         try:
-            xa, ya = pin_xy(ia, M[ia.master], pa.lstrip('*'))
-            xb, yb = pin_xy(ib, M[ib.master], pb.lstrip('*'))
+            xa, ya = _leaf_pin(ia, pa) or pin_xy(ia, M[ia.master], pa.lstrip('*'))
+            xb, yb = _leaf_pin(ib, pb) or pin_xy(ib, M[ib.master], pb.lstrip('*'))
         except (TypeError, KeyError):
             continue
         d = abs(xa - xb) + abs(ya - yb)

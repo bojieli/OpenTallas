@@ -95,7 +95,9 @@ module dsfd_sp_vm_a2f
         .t_ck(ck_landing_x34_t[0]), .t_rst_n(rss_landing_x34_t[0]), .o_v(xs_v), .o_d(xs_d), .fault(x_al[0]));
     ot_s81_vm_x34 #(.W(514)) u_xcol (.s_ck(ck_landing_x34_s[1]), .s_rst_n(rst_landing_x34_s[1]), .s_v(col[0]), .s_d(col[514:1]),
         .t_ck(ck_landing_x34_t[1]), .t_rst_n(rss_landing_x34_t[1]), .o_v(xc_v), .o_d(xc_d), .fault(x_al[1]));
-    ot_s81_vm_x34 #(.W(1026)) u_xsw (.s_ck(ck_landing_x34_s[2]), .s_rst_n(rst_landing_x34_s[2]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
+    // u_xsw (S-VM-X34 2026-10-16): two ot_s81_vm_x34 W514 halves (ot_s81_vm_x34_sw2.sv) on the same roots, bit-identical
+    // to the former W1026 instance (whose serial master failed the native launch audit); fault = OR of the halves.
+    ot_s81_vm_x34_sw2 u_xsw (.s_ck(ck_landing_x34_s[2]), .s_rst_n(rst_landing_x34_s[2]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
         .t_ck(ck_landing_x34_t[2]), .t_rst_n(rss_landing_x34_t[2]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
     // landing header checks and the edge-fault levels are registered in the engine-12 tile (dsfd_vm_seq_tile, ck_seq_t)
     // ---------------------------------------------------------------- edge services

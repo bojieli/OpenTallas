@@ -36,6 +36,7 @@ PAIR = "ot_rom_4096x274_m8"
 V1_CATALOG = "physical/asap7_memory_macros"
 IMAGE = "openroad/orfs:latest"
 DEFECTIVE_V1 = {"ot_hbm3e_phy_v41x", "ot_hbm3e_phy_v41x_aw30"}
+WRONGWAY_SET = "physical/common/test_fixtures/mts_wrongway"
 
 
 def lefs(d: str) -> list[str]:
@@ -211,6 +212,20 @@ class SnapLibraryInOpenROAD(unittest.TestCase):
         for (name, kind), v in n.items():
             if kind == "naive_mx_origin0" and name.startswith(("ot_rom_", "ot_sram_")):
                 self.assertEqual(v, 0, name)
+
+    def test_wrong_way_pin_stub_does_not_block_origin(self):
+        """S-DIE 10-16 (c26b PLACE 'n0_0 y has no legal origin'): a routed view's pin may carry a wrong-way jog
+        next to its on-track access shape; the access shape decides the origin, the stub does not.  A pin
+        whose ONLY shape is wrong-way still constrains (fail closed), and a 6-nm shift still trips."""
+        out = harness((WRONGWAY_SET,))
+        cs = cases(out)
+        self.assertEqual(cs[("ot_mts_ww_only", "R0")], ["NO_LEGAL_ORIGIN"])
+        for r in cs[("ot_mts_ww_stub", "R0")]:
+            m = re.match(r"placed (\d+) (\d+) offtrack (\d+)", r)
+            self.assertIsNotNone(m, r)
+            self.assertEqual(int(m.group(3)), 0, r)
+        self.assertEqual(negs(out)[("ot_mts_ww_stub", "shift6nm")], 1)
+        self.assertIn("wrongway_stubs_exempt=2", out)
 
 
 if __name__ == "__main__":

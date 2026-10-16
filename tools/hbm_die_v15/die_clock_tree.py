@@ -231,6 +231,8 @@ def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pad
                 out[inst] = dl + v + n * PAD_PS
         return out
 
+    if mode == 'lane':
+        return _lane(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad)
     if mode == 'htree':
         return _htree(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad, subtree, bin_um)
     # quadrant roots, then the global root that best equalises the four model branch delays
@@ -370,4 +372,74 @@ def _htree(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad, subtree, bin
                  local_pad_buffers=local_pads, global_root_um=[round(x, 1) for x in g.xy(gc)],
                  model_insertion_ps=[round(min(v), 1), round(max(v), 1)], grid_um=GRID, span_um=SPAN,
                  max_run_over_blocks_um=MAX_RUN, pad_ps_model=PAD_PS, free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
+    return dict(buffers=bufs, nets=merged, model=model)
+
+
+LANE_RE = __import__('re').compile(r'^(?:rly_|svg_|sm_)(SW|SE|NW|NE)(\d+)(?:_(\d+))?$')
+
+
+def _lane(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad):
+    """H-DIE 0600 (10-16): clock follows data.  The stream sinks of one SM_HBM lane (svg_<q><k> -> rly_<q><k>_NN ->
+    sm_<q><k>) are driven by ONE buffered spine laid along the lane in data order, so two communicating neighbours share
+    the whole clock path except the one spine hop between them (non-common = one hop, ~200 ps model, instead of up to
+    the full H-tree depth).  The lane heads are fed from the die root by direct routed chains and padded to the slowest
+    head (lanes do not exchange stream data with each other in this case; pads only at the 32 heads).  The capture
+    clock of hop n is one spine hop later than its launch: +setup, -hold on the forward data path (STA measures it)."""
+    import re as _re
+    groups = defaultdict(list)
+    for s in sinks:
+        m = LANE_RE.match(s[0])
+        if m:
+            order = -1 if s[0].startswith('svg_') else (10 ** 6 if s[0].startswith('sm_') else int(m.group(3)))
+            groups[(m.group(1), m.group(2))].append((order, s))
+        else:
+            groups[('X', s[0])].append((0, s))
+    rc = g.nearest_free(*root_xy)
+    gc = g.nearest_free(W / 2, H / 2)
+    d0, dl0 = chain(('port', 'clk_hbm'), rc, gc, 'g')
+    G = newbuf('gR', gc)
+    nets.append(('n_' + G, d0, [('buf', G)]))
+    heads, lane_ins, hops = {}, {}, []
+    for key in sorted(groups):
+        lst = [s for _, s in sorted(groups[key], key=lambda t: t[0])]
+        hc = g.nearest_free(lst[0][2], lst[0][3])
+        d, dl = chain(('buf', G), gc, hc, 'z')
+        hb = newbuf('zH', hc)
+        nets.append((f'n_{hb}', d, [('buf', hb)]))
+        heads[key] = (hb, hc, dl)
+        drv, dc, t = ('buf', hb), hc, 0.0
+        ins = {}
+        for i, (inst, pin, x, y) in enumerate(lst):
+            c = g.nearest_free(x, y)
+            if i:
+                dd, dlh = chain(drv, dc, c, 'zS')
+                sb = newbuf('zT', c)
+                nets.append((f'n_{sb}', dd, [('buf', sb)]))
+                hops.append(dlh + stage_ps(10.0))
+                t += dlh + stage_ps(10.0)
+                drv, dc = ('buf', sb), c
+            leaf = newbuf('zL', c)
+            nets.append((f'n_{leaf}', drv, [('buf', leaf)]))
+            nets.append((f'n_{leaf}_o', ('buf', leaf), [('pin', inst, pin)]))
+            ins[inst] = t + stage_ps(10.0)
+        lane_ins[key] = ins
+    top = max(heads[k][2] for k in heads)
+    out, npad = {}, 0
+    for key, (hb, hc, dl) in heads.items():
+        n = int(round((top - dl) / PAD_PS))
+        pad(hb, hc, n, 'zP')
+        npad += n
+        for inst, v in lane_ins[key].items():
+            out[inst] = dl0 + dl + n * PAD_PS + v
+    by = defaultdict(list)
+    for n_, d_, loads in nets:
+        by[d_].append((n_, loads))
+    merged = [(lst[0][0], d_, [l for _, ls in lst for l in ls]) for d_, lst in by.items()]
+    v = list(out.values())
+    hops.sort()
+    model = dict(mode='lane', lanes=len(heads), buffers=len(bufs), head_pad_buffers=npad,
+                 global_root_um=[round(x, 1) for x in g.xy(gc)], model_insertion_ps=[round(min(v), 1), round(max(v), 1)],
+                 neighbour_hop_ps=dict(median=round(hops[len(hops) // 2], 1), max=round(hops[-1], 1)) if hops else None,
+                 grid_um=GRID, span_um=SPAN, max_run_over_blocks_um=MAX_RUN, pad_ps_model=PAD_PS,
+                 free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
     return dict(buffers=bufs, nets=merged, model=model)

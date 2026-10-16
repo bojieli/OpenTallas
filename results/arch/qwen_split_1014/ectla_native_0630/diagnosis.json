@@ -1,0 +1,225 @@
+{
+ "schema": "opentallas.qelem.ectla_native_diag.v1",
+ "stamp": "2026-10-16 Q-ELEM-ECTLA",
+ "job": "qkd_ectl_a_tp8_epoch_direct_pg16-pg16-e833e9771",
+ "view": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_pg16/views/qkd_ectl_a_tp8_epoch_direct",
+ "routed_db": "ot-epyc1tb cl/eco/pass1 6_final.odb sha256 ad3068eed696856124158fdf8e13c65bdda99e6c6a71c3154e620658e052d3dd (TT STA, routed SPEF, signoff.sdc + io_ref_routed.sdc)",
+ "native_audit": {
+  "cell": "qkd_ectl_a_tp8_epoch_direct",
+  "view": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_pg16/views/qkd_ectl_a_tp8_epoch_direct",
+  "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 389.3,
+  "spread_ps": 68.4,
+  "outputs": 1554,
+  "inputs": 1046,
+  "launch_ps": 228.3,
+  "launch_pin": "rs_o[143]",
+  "capture_ps": 151.4,
+  "capture_pin": "x_i[10]",
+  "launch_over": 16,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 228.31066 > 220 (16 pins)"
+ },
+ "output_paths_tt": {
+  "rs_o": {
+   "n": 513,
+   "launch_max": 226.3,
+   "launch_mean": 199.0,
+   "inflow_hold_bufx2_ps_mean": 19.2,
+   "route_eco_hb2_ps_mean": 53.4,
+   "launch_without_hold_cells_max": 141.2,
+   "flop_q_arrival_tt_mean": 418.6
+  },
+  "t0_row": {
+   "n": 512,
+   "launch_max": 216.5,
+   "launch_mean": 200.6,
+   "inflow_hold_bufx2_ps_mean": 27.7,
+   "route_eco_hb2_ps_mean": 41.1,
+   "launch_without_hold_cells_max": 158.0,
+   "flop_q_arrival_tt_mean": 426.4
+  },
+  "t1_row": {
+   "n": 512,
+   "launch_max": 212.9,
+   "launch_mean": 190.5,
+   "inflow_hold_bufx2_ps_mean": 23.4,
+   "route_eco_hb2_ps_mean": 30.0,
+   "launch_without_hold_cells_max": 158.5,
+   "flop_q_arrival_tt_mean": 429.6
+  },
+  "rq": {
+   "n": 17,
+   "launch_max": 212.9,
+   "launch_mean": 188.5,
+   "inflow_hold_bufx2_ps_mean": 14.1,
+   "route_eco_hb2_ps_mean": 4.7,
+   "launch_without_hold_cells_max": 184.4,
+   "flop_q_arrival_tt_mean": 461.5
+  }
+ },
+ "clock_leaves_tt_by_sink_kind": {
+  "rd2": {
+   "n": 63,
+   "x_um": [
+    5.8,
+    132.6
+   ],
+   "sink_arrival_tt": [
+    375.0,
+    411.4
+   ],
+   "sink_arrival_tt_mean": 386.6,
+   "pad_stages": {
+    "4": 9,
+    "2": 3,
+    "3": 51
+   }
+  },
+  "rsp_data_p": {
+   "n": 133,
+   "x_um": [
+    3.9,
+    12.5
+   ],
+   "sink_arrival_tt": [
+    393.7,
+    418.6
+   ],
+   "sink_arrival_tt_mean": 407.4,
+   "pad_stages": {
+    "4": 84,
+    "3": 37,
+    "2": 11,
+    "1": 1
+   }
+  },
+  "rd3": {
+   "n": 61,
+   "x_um": [
+    9.2,
+    132.5
+   ],
+   "sink_arrival_tt": [
+    376.9,
+    407.8
+   ],
+   "sink_arrival_tt_mean": 386.4,
+   "pad_stages": {
+    "4": 4,
+    "3": 52,
+    "1": 2,
+    "2": 3
+   }
+  },
+  "other": {
+   "n": 15,
+   "x_um": [
+    14.1,
+    249.1
+   ],
+   "sink_arrival_tt": [
+    368.9,
+    399.0
+   ],
+   "sink_arrival_tt_mean": 390.3,
+   "pad_stages": {
+    "3": 10,
+    "1": 4,
+    "0": 1
+   }
+  },
+  "row1": {
+   "n": 69,
+   "x_um": [
+    15.9,
+    148.4
+   ],
+   "sink_arrival_tt": [
+    352.4,
+    403.5
+   ],
+   "sink_arrival_tt_mean": 389.7,
+   "pad_stages": {
+    "2": 14,
+    "3": 40,
+    "1": 5,
+    "4": 6,
+    "0": 4
+   }
+  },
+  "g_s1b": {
+   "n": 133,
+   "x_um": [
+    15.9,
+    231.1
+   ],
+   "sink_arrival_tt": [
+    350.2,
+    400.4
+   ],
+   "sink_arrival_tt_mean": 380.4,
+   "pad_stages": {
+    "3": 49,
+    "1": 53,
+    "2": 9,
+    "0": 22
+   }
+  },
+  "u_s": {
+   "n": 2,
+   "x_um": [
+    16.5,
+    131.8
+   ],
+   "sink_arrival_tt": [
+    385.9,
+    401.3
+   ],
+   "sink_arrival_tt_mean": 393.6,
+   "pad_stages": {
+    "3": 2
+   }
+  },
+  "rsd_o": {
+   "n": 64,
+   "x_um": [
+    244.8,
+    249.2
+   ],
+   "sink_arrival_tt": [
+    351.4,
+    377.1
+   ],
+   "sink_arrival_tt_mean": 370.3,
+   "pad_stages": {
+    "1": 52,
+    "0": 12
+   }
+  }
+ },
+ "io_reference": {
+  "pinflop": "rsp_data_p (W pin-flop band, 1,025 flops)",
+  "tt_median": 409.65,
+  "tt_min": 397.3,
+  "ff_min": 315.09,
+  "ff_output_min_delay": -365.09,
+  "note": "output hold needs data >= L_ref_min + hold_skew 50 + unc 25 at FF"
+ },
+ "route_ff_before_eco": {
+  "t0_row": -8.5,
+  "t1_row": -0.7,
+  "rs_o": -4.3,
+  "internal_min": 11.9,
+  "eco": "hold ECO hm 30: 1,543 endpoints below 30 ps padded (2,137 cells)"
+ },
+ "cause": "Clock-spine topology skew after routing, not late rs_o leaves. The count-bisection spine (node = count-weighted centroid) pulls its trunk toward the dense W band (rsp_data_p 133 leaves + rd2/rd3 126 leaves); the E rs_o launch leaves (rsd_o, x 245-249) hang on a long wire-dominated branch and were balanced at placement by pad chains on the W leaves (W 3-4 pads, E 0-1). After routing the wire-dominated E branch is faster than estimated: E rsd_o sinks arrive 351-377 ps (mean 370) TT, the W pin-flop band (the IO reference) 394-419 (mean 407), N/S g_s1b 380. The output hold requirement is keyed to the W reference band, so every output paid ~37 ps TT of extra data delay: in-flow hold repair BUFx2 (19-28 ps TT) then the routed hold ECO (hm 30) 2x HB2 (30-54 ps TT mean); rs_o carries 2-4 hold cells, mean 72.6 ps TT (max 107.6). Without those cells the worst output launch is 158.5 ps.",
+ "fix": "Symmetric insertion-aware spine (OT_SPINE_SYM=1: nodes at the bounding-box centre of their leaves, so the E and W branches see the same span; OT_SPINE_TREE_PAD=1: residual pads in the tree, not at the leaves; OT_SPINE_SAFE_BALANCE=1), same root port ck at N centre, same pins, RTL, outline, pads and cycles. Expect boundary leaves (W reference band vs E/N/S output flops) within the spread budget after routing, so the kit HB2 output stage meets FF without in-flow/route hold chains."
+}
