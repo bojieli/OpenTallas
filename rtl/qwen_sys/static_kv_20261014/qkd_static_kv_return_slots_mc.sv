@@ -41,19 +41,33 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  // Core publication synchronizers can lag a new HBM write; idle_core alone
  // therefore cannot establish whole-ring or whole-KV drained.
  // mc_r3b (Q-ELEM 10-16): idle_hbm no longer looks at the raw controller_co[0] / compiled_hbm_put pins (the r3
- // route failed CTS hold/setup on that pin -> compare -> idle_hbm cone: setup -527 ps / hold -90 ps). It uses only
- // registered pin captures: observed/write_slot (this edge's pins) and obs_d/ws_d (last edge's), so idle_hbm is the
- // original observation one pll_hbm edge later and never earlier (drain observation only; no schedule uses it).
- (* keep *)reg obs_d,ws_d;
+ // route failed CTS hold/setup on that pin -> compare -> idle_hbm cone: setup -527 ps / hold -90 ps); registered pin
+ // captures only (drain observation only; no schedule uses it).
+ // mc_r3c (Q-ELEM-RING 10-16): the r3b form (P && !observed && !write_slot && !obs_d && !ws_d) used the CURRENT
+ // occupancy term with the pin terms of the two previous edges, so it missed the put arriving at the pin on the edge
+ // itself (one-cycle early assertion vs the reference; tb_static_return_idle_mc caught it). Now exactly the original
+ // observation one pll_hbm edge later: idle_hbm_pre holds edge e's registered terms, edge e+1 ANDs in observed /
+ // write_slot, which then hold the pin values of edge e.
+ (* keep *)reg idle_hbm_pre;
  always @(posedge pll_hbm or negedge hr)
-  if(!hr)begin idle_hbm<=0;obs_d<=0;ws_d<=0;end
+  if(!hr)begin idle_hbm<=0;idle_hbm_pre<=0;end
   else begin
-   obs_d<=observed;ws_d<=write_slot;
-   idle_hbm<=(published==done_sync2) && !observed && !write_slot && !obs_d && !ws_d;
+   idle_hbm_pre<=(published==done_sync2) && !observed && !write_slot;
+   idle_hbm<=idle_hbm_pre && !observed && !write_slot;
   end
+ // mc_r3c (Q-ELEM-RING 10-16): idle_core no longer looks at the raw expected_put pin. mc3b-d4c0e5fee native audit:
+ // capture 259.3 ps on expected_put (budget 190), measured cone expected_put -> INV -> AND5 -> AND4 -> idle_core flop
+ // ~330 um away at the N face (250 ps of logic+wire), while the slot capture flop sits at the pin. Now expected_put
+ // drives the slot flop only. idle_core = the original observation one ck edge later, never earlier: idle_core_pre
+ // holds the registered terms of edge e (pub_sync2==consumed, slot, actual_valid) and edge e+1 ANDs in slot, which
+ // then holds the expected_put pin value of edge e. Drain observation only; no schedule uses it (+1 ck edge).
+ (* keep *)reg idle_core_pre;
  always @(posedge ck or negedge rs)
-  if(!rs)idle_core<=0;
-  else idle_core<=(pub_sync2==consumed) && !slot && !expected_put && !actual_valid;
+  if(!rs)begin idle_core<=0;idle_core_pre<=0;end
+  else begin
+   idle_core_pre<=(pub_sync2==consumed) && !slot && !actual_valid;
+   idle_core<=idle_core_pre && !slot;
+  end
  reg [AW:0] wp,rp;
  wire [AW-1:0] wa=wp[AW-1:0];
 `ifdef OT_KV_RETURN_MUT_READ_ADDR
