@@ -199,5 +199,12 @@
     ]
    }
   ]
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "dsfd_cfifo",
+  "source": "VIS-ROM finding S81F-02 (/tmp/visrom/s81/findings_s81_fabric.json; results/arch/visual_audit_1016): the die (c21h, --bf-x2-static --bf-x2-pair) binds xd2[537:0]/xf2 on all 128 cf<r>; the closed s81-dsfd-cfifo-colck-a6ca75fbe-tt-srcfix view is the legacy meso-FIFO cfifo (ready/overrun state, void under the owner static-cycle rule) without those ports -> 68,864 unconnected die bits",
+  "fix": "new RTL = the die's static x2-pair glue (two ot_s81_static_column_ingress, no FIFO occupancy/ready), clock feed-throughs removed; new pin plan (x2 under the station x2i column, jog 25.68 -> 0) and outline 280.8x51.84 (slot change, el1011-s81die.log REBIND REQUEST 2026-10-16)",
+  "slot_change_request": "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log 2026-10-16 [S-ELEM-PQ/COLL -> S-DIE] REBIND REQUEST dsfd_cfifo + ADDENDUM"
  }
 }
