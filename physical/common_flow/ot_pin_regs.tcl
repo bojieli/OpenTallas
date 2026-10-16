@@ -81,7 +81,9 @@ set conn {}; set tsv "port\tdir\twidth\tcycles\twhy\n"; set nreg 0
 foreach p $ports {
   lassign $p d a b n
   set w [expr {abs($a - $b) + 1}]
-  append v "  $d \[$a:$b\] $n;\n"
+  # A width-1 port at bit 0 is declared scalar: yosys portlist prints scalars as [0:0], and a [0:0] wrapper port
+  # renames the BTerm to n[0] (vm_native_q* nat2 gate: "ASSIGNED_PIN_EXACT missing BTerm clk").
+  if {$a == 0 && $b == 0} { append v "  $d $n;\n" } else { append v "  $d \[$a:$b\] $n;\n" }
   set why ""
   if {[lsearch -exact $ot_pr_clock_ports $n] >= 0} { set why clock
   } elseif {$d eq "inout"} { set why inout
