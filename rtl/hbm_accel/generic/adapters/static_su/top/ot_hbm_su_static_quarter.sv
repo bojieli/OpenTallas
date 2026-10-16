@@ -32,7 +32,7 @@ module ot_hbm_su_static_quarter #(
  input wire [6*9-1:0] rf_rd_cmd,
  input wire [73:0] red_cmd,
  input wire [3:0] rf_wv, input wire [4*8-1:0] rf_wa, input wire [4*32-1:0] rf_wd,
- output wire red_sv, output wire [31:0] red_tag, output wire [31:0] red_x,
+ output wire red_sv, output wire [31:0] red_tag, output wire [31:0] red_x, output wire red_rf_v,
  output wire [8*17-1:0] lg_rq, output wire [8*281-1:0] lg_wq,
  input wire [8*257-1:0] lg_rr, input wire [7:0] lg_w_done,
  output wire [4:0] fault                      // {core, slice 3..0}
@@ -56,8 +56,8 @@ module ot_hbm_su_static_quarter #(
    .lg_w_done(lg_w_done[2*g+:2]),.fault(fault[g]));
  end
  ot_hbm_su_static_qcore #(.MUT(MUT)) u_core(.clk_rf(clk_rf),.clk_ctl(clk_core),.clk_red(clk_red),.rst_n(rst_n),
-  .rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),.rf_drain_now(vmw_cmd[38]&&vmw_cmd[37]),.slice_x(slice_x),
+  .rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),.rf_drain_cmd(vmw_cmd[38:37]),.slice_x(slice_x),
   .rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),
-  .red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.fault(fault[4]));
+  .red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.red_rf_v(red_rf_v),.fault(fault[4]));
 endmodule
 `default_nettype wire
