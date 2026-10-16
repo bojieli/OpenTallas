@@ -56,7 +56,7 @@
  "job": {
   "owner": "Claude:Q-ATTN-RATE (el1015-qwen-attn.log)",
   "branch": "claude/q-attn-rate-1015",
-  "tag": "c1",
+  "tag": "r2",
   "purpose": "P.V pair control of ot_qwen_tp8_attention_native_service_w16 (KV/system die).",
   "benches": [
    {

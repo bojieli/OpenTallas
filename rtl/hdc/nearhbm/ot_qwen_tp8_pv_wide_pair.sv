@@ -75,7 +75,8 @@ module ot_qwen_tp8_pv_col #(parameter integer MUT=0)(
   ot_qwen_tp8_pv_slice_t u_bank(.clk(clk),.rst_n(rst_n),.pv2({pv[128*PB+:128],pv[128*PA+:128]}),
    .pe2({pe[16*PB+:16],pe[16*PA+:16]}),.bc(bc),.ts(ts[512*l+:512]),.fault(sf[l]));
  end endgenerate
- ot_qwen_tp8_pv_join_t #(.MUT(MUT)) u_join(.clk(clk),.rst_n(rst_n),.ts(ts),.join_go(cmd[31]),.sf(sf),
+ ot_qwen_tp8_pv_join_t #(.MUT(MUT)) u_join(.clk(clk),.rst_n(rst_n),.ts0(ts[1023:0]),.ts1(ts[2047:1024]),.ts2(ts[3071:2048]),
+  .ts3(ts[4095:3072]),.join_go(cmd[31]),.sf(sf),
   .y(y),.y_valid(y_valid),.fault(fault));
 endmodule
 
@@ -110,9 +111,11 @@ endmodule
 // P.V column join tile (64 per KV/system die): ((b0+b1)+(b2+b3))+((b4+b5)+(b6+b7)) over the 8 bank tree sums of one
 // column, 16 FP32 lanes, one adder set + two node registers on static slots from join_go. Every port registered.
 module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7)(
- input wire clk,rst_n,input wire[4095:0] ts,input wire join_go,input wire[7:0] sf,
+ input wire clk,rst_n,input wire[1023:0] ts0,ts1,ts2,ts3,   // bank tree sums {b1,b0}, {b3,b2}, {b5,b4}, {b7,b6} (one face each)
+ input wire join_go,input wire[7:0] sf,
  output reg[511:0] y,output reg y_valid,output reg fault
 );
+ wire[4095:0] ts={ts3,ts2,ts1,ts0};
  localparam integer J_OUT=3*J_LAT+3;
  reg[4095:0] t_r;reg go_r;reg[7:0] sf_r;
  always @(posedge clk)t_r<=ts;
