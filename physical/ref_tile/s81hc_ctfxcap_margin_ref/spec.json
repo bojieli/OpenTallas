@@ -42,13 +42,11 @@
  "why_floorplan": "Actual full FF hold repair causes117-122%local density at original25.92um height; doubled51.84um outline/core47.52 restores measured55.45%local density margin without numeric/cycle/pin-x/SDC changes.",
  "macros": [],
  "pins": {
-  "W": [
-   "clk"
-  ],
   "N": [
    "fd_in",
    "fv_in",
-   "rst_in"
+   "rst_in",
+   "clk"
   ],
   "S": [
    "fdx",
@@ -68,12 +66,12 @@
  "job": {
   "owner": "Claude:s81-headchain-1705",
   "branch": "claude/s81-headchain-1705",
-  "tag": "k4",
+  "tag": "s26",
   "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_margin_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref",
-  "structural_change": "k4 (S-NORM 1705): classified 4 CAP fails = v1/margin1 GRT-0116 overflow 26,013 (M3 V 15,042 at 14% avg, bottom bins) = the boundary hold-pad explosion (4,157+ BUFx2 behind one 576-um single-root strip, same signature as ctfx_nt v5), v3 EARLY_FAIL_HOLD rst_in->RESETN removal (fixed in RTL f47fec8e2: rr only load), v4 route crash. Structural: the CTS root is partitioned into 4 x-regions (clock_split_x, OT_CKS_K 4: the ctfs_nt v5-spread recipe that closed native PASS at 5.6 b/um faces) so boundary skew no longer demands per-bit hold pads; HB1 input pads only, no output pads; every port a pin register (owner 19:50). Outline = granted 576.72x51.84 margin slot; RTL/pins unchanged, 0 cycles.",
+  "structural_change": "s26 (S-NORM 1705): k4 failed GRT-0116 again (M3 V 24,647; RSZ inserted 9,863+3,896 hold buffers on fdx/fdx_local outputs, WNS -25 ps x ~5,500 endpoints). Root cause = pin geometry: all 3,406 data pins in a ~140-um middle span and the clock entering at the W edge. Fix: full-width even pin spread in bit order + centre N clock entry (v26 candidate), clock split K4 kept, HB1 input pads, every port a pin register; RTL, outline and cycles unchanged.",
   "benches": [
    {
     "name": "owned_serial_exact",
@@ -120,12 +118,12 @@
   "cols": 4,
   "allow_none": true
  },
- "io_tcl": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.tcl",
+ "io_tcl": "physical/s81_die_pins/v26_hc_capture_spread_candidate/ot_s81_hc_ctfx_cap.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.json",
   "source": "proposed structural height margin, actual die parent integration pending"
  },
- "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant.",
+ "slot_change_request": "S-ENGRAM+NORM 1705 v26 CAP spread candidate: same 576.72x51.84 outline; the v21 pins crammed 1,136 inputs into x 225-342 (9.7 b/um) and 2,270 outputs into x 200-350 (~16 b/um over two layers) with clk at the W edge, which drove 13,759 boundary hold buffers into that span (k4 GRT-0116 M3 V 24,647). v26 spreads both faces over the full width in the original bit order (N 0.50 um, S 0.25 um pitch; the ctfn_nt/ctfs_nt chain above is already full-width 5.6 b/um) and puts clk/rst at the N-face centre like ctfn_nt/ctfs_nt. Request posted to S-DIE el1011-s81die.log.",
  "orfs_vars": {
   "OT_CKS_K": "4"
  },
