@@ -100,6 +100,25 @@ if '--case' in sys.argv:
                 rev = nb == 1 and sub.endswith(('_cr', '_r'))
                 dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
     (out / 'case' / 'port_dirs.json').write_text(json.dumps(dirs, indent=0, sort_keys=True) + '\n')
+    # VIS-ROM D-QC-02 (Q-COMPUTE-DIE 10-16): generated frame abstracts wrote every signal pin DIRECTION INOUT (xcol rst_n,
+    # every unclosed parent); give each frame pin its die-bus direction (driver first, as die_sta_libs) so GRT/STA and the
+    # reset-tree audit see real inputs/outputs. Pins without a die bus stay INOUT (unconnected frame pins).
+    _elef = out / 'case' / 'elements.lef'
+    if _elef.exists():
+        import re as _re
+        _mac, _pin, _lines, _fixed = None, None, [], 0
+        for _ln in _elef.read_text().split('\n'):
+            _m = _re.match(r'MACRO (\S+)', _ln)
+            if _m:
+                _mac = _m.group(1)
+            _m = _re.match(r'\s+PIN (\S+)', _ln)
+            if _m:
+                _pin = _m.group(1).split('[')[0]
+            if _ln.strip() == 'DIRECTION INOUT ;' and _mac in dirs and _pin in dirs[_mac]:
+                _ln = _ln.replace('INOUT', dirs[_mac][_pin].upper()); _fixed += 1
+            _lines.append(_ln)
+        _elef.write_text('\n'.join(_lines))
+        rec['frame_pin_directions_fixed'] = _fixed
     if m.get('native_static_io_bind'):
         from qwen_split.clock_contract import build as source_clock_contract
         (out / 'case' / 'clock_contract.json').write_text(
