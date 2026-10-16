@@ -77,11 +77,11 @@ module qkd_seq_core_static #(
     output wire [9:0]    kst
 );
     // reset: one pin flop, then a relay (as qkd_seq_core)
-    // two reset regions (gate: one relay copy fanned to 529 flops): rr = timeline / pins / descriptor issuer, rq = fan
-    // pipeline / host words; data registers carry no reset (validity is their own valid bit)
-    wire [1:0] rrv;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rrv));
-    wire rr = rrv[0], rq = rrv[1];
+    // three reset regions (gate: one relay copy fanned to 529 flops): rr = timeline / pins, rd = the descriptor issuer,
+    // rq = fan pipeline / host words; data registers carry no reset (validity is their own valid bit)
+    wire [2:0] rrv;
+    ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rrv));
+    wire rr = rrv[0], rq = rrv[1], rd = rrv[2];
     // ---- pin capture ----
     reg          rv, kvv, lpr, ov, og, hfq;
     reg  [3:0]   rk, crq, afq, mfq;
@@ -140,7 +140,7 @@ module qkd_seq_core_static #(
     reg          f_arr, f_tag, f_q, f_lp, f_pos, f_res, f_cr, f_join, f_pend, f_row, f_ovl;
     wire         kd_fault, kd_v;
     wire [31:0]  kd_d;
-    ot_qkvd_kv_desc #(.NL(36)) u_kd (.clk(ck), .rst_n(rr), .p_mid_init(20'd0), .p_tok_init(20'd0),
+    ot_qkvd_kv_desc #(.NL(36)) u_kd (.clk(ck), .rst_n(rd), .p_mid_init(20'd0), .p_tok_init(20'd0),
         .attn_v(cmd && !act), .attn_layer(lp_hold_l), .attn_T(lp_hold_t),
         .done_v(ov && r_n == 7'd31), .k_v(kd_v), .k_d(kd_d), .k_ready(1'b1), .fault(kd_fault));
     integer i;
