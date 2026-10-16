@@ -1,0 +1,10 @@
+SEED=3
+case 0: 1 records in 466 cycles (HC engine 453, mover 0)
+case 1: 1 records in 212 cycles (HC engine 199, mover 0)
+case 2: 6 records in 2788 cycles (HC engine 2720, mover 0)
+summary: 3 FUSED data cases through the D1 unit, 56320 VM words exact
+HGI_FUSED_UNIT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv:257: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 147.266 s; speed 59.796 ns/s
+- Verilator: cpu 147.258 s on 1 threads; allocated 344 MB
