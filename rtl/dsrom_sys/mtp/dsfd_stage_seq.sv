@@ -51,7 +51,7 @@ module dsfd_stage_seq #(
         .clk(clk), .rst_n(rn), .pw_v(pw_q[OPW+PEW]), .pw_a(pw_q[PEW +: OPW]), .pw_d(pw_q[PEW-1:0]), .prog_len(plen_q),
         .job_v(start), .job_rdy(job_rdy), .job_user(ju), .job_pos(jp), .job_tok(jt), .job_done(job_done),
         .cmd_v(t_cmdv), .cmd_d(t_cmdd), .dn_v(dnv_q), .dn_tag(dnt_q), .busy(busy), .fault(fault), .fault_code(fcode),
-        .st_jobs(), .st_cmds(), .st_credit_stall());
+        .st_jobs(), .st_cmds());
     // the oldest job's token rides with its done (stage dies forward the token)
     reg [NW-1:0] tq [0:1]; reg tw, tr; reg kerr;
 `ifdef OT_SSEQ_MUT_EARLY_DONE

@@ -4,7 +4,9 @@
 // consumer, not a bench preload. Eight distinct banks/ports per beat, 80 beats.
 // Fixed RL includes the actual native VM return pipeline and physical hops.
 // Late/missing returns fault; stage data and command stay on compiled cycles.
-module ot_s81_hcx_prefetch #(parameter integer RL=4)(
+// XLAT: extra fixed stage edges between the VM return and the leaves (HLAYOUT=1 transpose: 4); the leaf command
+// follows the last staged word by the same 3 settle edges.
+module ot_s81_hcx_prefetch #(parameter integer RL=4,XLAT=0)(
  input wire clk,rst_n,start,
  input wire [13:0] h_base_row,
  output wire [7:0] rq_v,
@@ -18,7 +20,7 @@ module ot_s81_hcx_prefetch #(parameter integer RL=4)(
 );
  reg active;reg[6:0]word;reg[13:0]base;
  reg[RL-1:0]dv;reg[6:0]dw[0:RL-1];
- reg[2:0]settle;
+ reg[3:0]settle;
  assign rq_v={8{active}};
  generate for(genvar p=0;p<8;p=p+1)begin:g_row
   assign rq_row[14*p+:14]=base+14'(8*word+p);
@@ -38,7 +40,7 @@ module ot_s81_hcx_prefetch #(parameter integer RL=4)(
    dv[0]<=active;dw[0]<=word;
    for(integer i=1;i<RL;i=i+1)begin dv[i]<=dv[i-1];dw[i]<=dw[i-1];end
    if(rs_v!={8{dv[RL-1]}})fault<=1;
-   if(dv[RL-1] && dw[RL-1]==79)settle<=3;
+   if(dv[RL-1] && dw[RL-1]==79)settle<=4'(3+XLAT);
    else if(settle!=0)begin settle<=settle-1'b1;if(settle==1)cmd_v<=1;end
   end
  end
