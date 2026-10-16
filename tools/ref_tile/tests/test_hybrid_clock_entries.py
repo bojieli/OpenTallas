@@ -53,7 +53,7 @@ class HybridSpec(unittest.TestCase):
 
 @unittest.skipUnless(available(), 'real OpenROAD ORFS image required')
 class HybridOpenroad(unittest.TestCase):
-    def run_flow(self, mutant='', entries_only=False, second_root=False, mixed_internal=False, internal_root=False, bus_roots=False):
+    def run_flow(self, mutant='', entries_only=False, second_root=False, mixed_internal=False, internal_root=False, bus_roots=False, repair_long_entries=False):
         with tempfile.TemporaryDirectory() as d:
             w=Path(d);view(w)
             # 16 actual flop clock sinks suffice to exercise TritonCTS, not a hardened child build.
@@ -121,11 +121,39 @@ if {[llength $net] != 1 || [[[lindex $net 0] getInst] getName] ne "h"} {error "h
 puts "HYBRID_RESULT PASS"
 '''.replace('ROOTS',roots)
             if mutant=='missing_glue_clock':flow=flow.replace('source /w/entries.tcl','remove_clock [get_clocks ot_entry_0]\nsource /w/entries.tcl')
+            if repair_long_entries:
+                # Both paths exceed the explicit repair threshold. The hard entry
+                # must stay one wire while the CTS root is actually repaired.
+                flow=flow.replace('clock_tree_synthesis -sink_clustering_enable',
+                    'estimate_parasitics -placement\nclock_tree_synthesis -repair_clock_nets -sink_clustering_enable')
+                flow=flow.replace('source /src/physical/common_flow/clock_entries.tcl',
+                    'rename rsz::check_max_wire_length rsz::ot_test_max_wire\n'
+                    'proc rsz::check_max_wire_length {length clock} {return 0.000005}\n'
+                    'source /src/physical/common_flow/clock_entries.tcl')
+                flow=flow.replace('puts "HYBRID_RESULT PASS"',
+                    'set buffers 0\nforeach i [[ord::get_db_block] getInsts] {'
+                    'if {[string match wire* [$i getName]]} {incr buffers}}\n'
+                    'if {$buffers == 0} {error "selected soft root not repaired"}\n'
+                    'puts "HYBRID_RESULT PASS"')
             (w/'run.tcl').write_text(flow)
             proc=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro',
                 IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
             self.assertEqual(hashlib.sha256((w/'hard/hard_tt.lib').read_bytes()).hexdigest(),old_hash)
             return proc.returncode,proc.stdout+proc.stderr
+
+    def test_long_hard_entry_excluded_from_actual_soft_root_repair(self):
+        rc,out=self.run_flow(repair_long_entries=True)
+        self.assertEqual(rc,0,out[-6500:])
+        self.assertIn('post-CTS scoped net repair on selected roots',out)
+        self.assertIn('HYBRID_RESULT PASS',out)
+        self.assertNotIn('RSZ-3006',out)
+
+    def test_long_hard_entry_with_bus_bit_repair_roots(self):
+        rc,out=self.run_flow(repair_long_entries=True,second_root=True,bus_roots=True)
+        self.assertEqual(rc,0,out[-6500:])
+        self.assertIn('post-CTS scoped net repair on selected roots',out)
+        self.assertIn('CTS roots ckb[0] ckb[1];',out)
+        self.assertIn('HYBRID_RESULT PASS',out)
 
     def test_real_hybrid_roots_and_compensation(self):
         rc,out=self.run_flow();self.assertEqual(rc,0,out[-6500:])

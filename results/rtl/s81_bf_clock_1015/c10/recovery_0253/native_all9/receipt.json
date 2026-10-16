@@ -1,0 +1,18 @@
+{
+  "scope": "Full-shape actual nine compute children plus real parent/control/two mapped ROMs; component functional proof only",
+  "source_commit": "5153f5043df167407746d7d7324cba9f894601b8",
+  "source_manifest": "frozen_root_source.json",
+  "all_manifest_hashes_match_commit_and_remote_source": true,
+  "positive": "456 rows / 912 value assertions / 448 configuration assertions, TXN MATCH, 124422 cycles",
+  "negative": "BF_ROOT_MUTANT_STOP detected DIFF at transaction 16",
+  "cycles_added": 0,
+  "physical_qualification": false,
+  "native_front_status": "Separate front source5fce4c7b5 ECO pass1 remains OPEN: capture329.5ps >190,117 failing pins; TT-0.48/FF+11.02/DRC0",
+  "r1_cts_status": "Lane4 component only,5896 sinks,TT179.3..201.2ps,spread21.9,setup120.2,hold49.15; not routed/native closure",
+  "personally_viewed_images": [
+    "physical/ref_tile/s81_bf_lane4_roots_ref/gate_layout/density.png",
+    "physical/ref_tile/s81_bf_lane4_roots_ref/gate_layout/floorplan.png",
+    "physical/ref_tile_specs/s81_bf_native_1015/lane4/connected_pin_plan.png"
+  ],
+  "successor_status": "Boundary-stage relocation remains uncommitted and is excluded from this proof"
+}
