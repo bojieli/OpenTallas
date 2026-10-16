@@ -66,7 +66,9 @@ wire[31:0]koff=(((32'd1+{28'd0,q[5:2]})<<7)|({30'd0,q[1:0]}<<5)|((row&32'd15)<<1
 wire[31:0]raddr=host_addr_add32_prefix(rbase,lp);
 wire[31:0]kcode=host_addr_add3(rbase,sbm,koff);
 wire[31:0]kscal=host_addr_add3(rbase,sbm,({26'd0,q}<<1));
-assign ok=(rbase==l_rbase)&&(raddr==l_raddr)&&(kcode==l_kcode)&&(kscal==l_kscal);
+wire[31:0]kcode1=host_addr_add3(rbase,sbm,koff|32'd1);
+wire[31:0]kscal1=host_addr_add3(rbase,sbm,({26'd0,q}<<1)|32'd1);
+assign ok=(rbase==l_rbase)&&(raddr==l_raddr)&&(kcode==l_kcode)&&(kscal==l_kscal)&&(kcode1==l_kcode+32'd1)&&(kscal1==l_kscal+32'd1);
 endmodule
 """
     # the proved expressions must be the ones in the source
@@ -75,7 +77,9 @@ endmodule
                  "wire [31:0] a2_kcode=host_addr_add3(ap1_rbase,ap1_sbm,a2_koff);",
                  "wire [31:0] a2_kscal=host_addr_add3(ap1_rbase,ap1_sbm,({26'd0,a2_q}<<1));",
                  "wire [31:0] a2_koff=(((32'd1+{28'd0,a2_q[5:2]})<<7)|({30'd0,a2_q[1:0]}<<5)|((ap1_row&32'd15)<<1));",
-                 "ap1_rbase <= host_addr_add32_prefix(ap0_base,ap0_ringz?ap0_stk*ap0_stride:32'd0);"]:
+                 "ap1_rbase <= host_addr_add32_prefix(ap0_base,ap0_ringz?ap0_stk*ap0_stride:32'd0);",
+                 "wire [31:0] a2_kcode1=host_addr_add3(ap1_rbase,ap1_sbm,a2_koff|32'd1);",
+                 "wire [31:0] a2_kscal1=host_addr_add3(ap1_rbase,ap1_sbm,({26'd0,a2_q}<<1)|32'd1);"]:
         assert kv.count(frag) == 1, frag
     for name, sbm, mutant in [('sat_exact', '7', False), ('sat_sbm_shift', '6', True)]:
         f = out / (name + '.sv'); f.write_text(tmpl.replace('FN', body).replace('SBM', sbm))

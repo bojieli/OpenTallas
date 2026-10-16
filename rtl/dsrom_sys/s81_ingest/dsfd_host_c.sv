@@ -161,7 +161,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     localparam integer ING_APIPE=3;
 `elsif OT_S81_HOST_ONECLK
     wire [514:0] host_seam={hcl,hd,to_ing};
-    wire tcr_seam=tcr,ing_rst=rst;        // the ingest conditions its own resets (u_rsh / u_rsi / u_rsc, all on ck)
+    wire tcr_seam=tcr,ing_rst=rn;         // ck-conditioned reset (o1 gate: raw rst into the fence's async pins = in->reg -231 ps)
     localparam integer ING_APIPE=3;
 `else
     wire [514:0] host_seam={hcl,hd,to_ing};

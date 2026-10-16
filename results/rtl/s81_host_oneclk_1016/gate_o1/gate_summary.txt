@@ -1,0 +1,12 @@
+GATE INFO textbook: WARN dsfd_host_c cells 132,687 flops 24,250 depth 756.8 ps util 0.5186 reach 0.0 um (3.2 s)
+GATE WARN textbook.clock_domain: clock root port ck: 23,501 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. boot_bad_sync[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.high_fanout: reset u_h.host.u_hi.u_rsc.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,578 loads (999 flops, e.g. boot_bad_sync[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage u_h.host.u_hi.u_eng.st_ph[1]$_DFF_PN0_ -> u_h.host.u_hi.u_ox.mem[10][287]$_DFFE_PP_/D: ~757 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 334.5..378.6 ps (spread 44.1), boundary mean 354.2; tt insertion all 249.7..288.4 ps (spread 38.7), boundary mean 267.4; ff insertion all 200.0..236.2 ps (spread 36.2), boundary mean 216.5; macro_clk flag False
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsfd_host_c_oneclk_1016/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg       165 paths, worst slack -231.3 ps (e.g. pw_wrs.reset_pipe[1]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: reg->reg      849 paths, worst slack -161.9 ps (e.g. u_h.host.u_hi.u_ox.mem[2][279]$_DFFE_PP_/D)
+GATE INFO path_classes: reg->out      380 paths, worst slack 359.0 ps (e.g. t_collective[58])
+GATE INFO path_classes: setup WNS -2.3127727510896534e-10 hold WNS 4.97953345224289e-11
+GATE INFO clock_rule: root port:ck: 23,501 sinks on one clock root > 15,000, allowed by evidence: measured TT insertion 288.4 ps, leaf spread 38.7 ps (<= 300 ps / <= 80 ps)
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)

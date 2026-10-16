@@ -379,8 +379,14 @@ module ot_hdc_kv_ingest #(
         end
     endfunction
     wire [AW-1:0] host_rows_addr=(AW<=32)?host_addr_add32_prefix(u_raddr,{27'd0,st_sec}):(u_raddr+st_sec);
-    wire [AW-1:0] host_key_addr=(AW<=32)?host_addr_add32_prefix(u_kcode,{29'd0,st_ph}):(u_kcode+st_ph);
-    wire [AW-1:0] host_scale_addr=(AW<=32)?host_addr_add32_prefix(u_kscal,st_ph==3'd4 ? 32'd1 : 32'd0):(u_kscal+(st_ph==3'd4 ? 1:0));
+    // ONECLK (S-ELEM-PQ/HOST 2026-10-16, o1 gate TT -161.9 ps st_ph -> u_ox.mem 20 levels): with APIPE >= 2 the key /
+    // scale addresses are needed only as base+0 / base+1 (key: st_ph 0/1; scale: st_ph 3/4), so stage B also registers
+    // base+1 (ap_kcode1 / ap_kscal1) and st_ph only selects. Bit-identical (all-input SAT), zero cycles.
+    reg  [31:0] ap_kcode1, ap_kscal1;
+    wire [AW-1:0] host_key_addr=(AW<=32&&APIPE>=2)?(st_ph[0] ? ap_kcode1 : ap_kcode):
+                                (AW<=32)?host_addr_add32_prefix(u_kcode,{29'd0,st_ph}):(u_kcode+st_ph);
+    wire [AW-1:0] host_scale_addr=(AW<=32&&APIPE>=2)?((st_ph == 3'd4) ? ap_kscal1 : ap_kscal):
+                                (AW<=32)?host_addr_add32_prefix(u_kscal,st_ph==3'd4 ? 32'd1 : 32'd0):(u_kscal+(st_ph==3'd4 ? 1:0));
 `else
     wire [AW-1:0] host_rows_addr=u_raddr+st_sec;
     wire [AW-1:0] host_key_addr=u_kcode+st_ph;
@@ -686,6 +692,9 @@ module ot_hdc_kv_ingest #(
     wire [31:0] a2_raddr=host_addr_add32_prefix(ap1_rbase,ap1_lp);
     wire [31:0] a2_kcode=host_addr_add3(ap1_rbase,ap1_sbm,a2_koff);
     wire [31:0] a2_kscal=host_addr_add3(ap1_rbase,ap1_sbm,({26'd0,a2_q}<<1));
+    // +1 forms: koff and q<<1 have bit 0 clear, so +1 is |1 inside the same carry-save add
+    wire [31:0] a2_kcode1=host_addr_add3(ap1_rbase,ap1_sbm,a2_koff|32'd1);
+    wire [31:0] a2_kscal1=host_addr_add3(ap1_rbase,ap1_sbm,({26'd0,a2_q}<<1)|32'd1);
 `else
     wire [31:0] a2_blk   = ap1_rbase + (a2_sb << 11) + (a2_sb << 7);
     wire [31:0] a2_raddr = ap1_rbase + ap1_local * ap1_pitch;
@@ -734,7 +743,11 @@ module ot_hdc_kv_ingest #(
         end
     end
     always @(posedge clk) if (!ap_ok) begin
-        if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end
+        if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine;
+`ifdef OT_S81_HOST_ADDR_PREFIX
+            ap_kcode1 <= a2_kcode1; ap_kscal1 <= a2_kscal1;
+`endif
+        end
         else begin ap_raddr <= s_raddr; ap_kcode <= k_code; ap_kscal <= k_scal; ap_mine <= s_mine; end
     end
     // =============================================================================
