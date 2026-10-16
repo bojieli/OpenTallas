@@ -48,7 +48,8 @@ spec = dict(
     pg_layer='M7', signal_max_layer='M6', child_lattice_um=2.16,
     children=children, recipe=3, hard_define='OT_DBK_HARD', defines=['OT_DBK_HARD'], contract=dict(file=a.contract, slot='hb_dbk_NE'),
     pin_regs=dict(enable=False, reason='Parent is wires only; actual hard children own the registered endpoints and nine independently compensated clock entries. Parent wires remain part of the die hop budget.'),
-    route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=8, hold_margin_ns=0.03, macro_halo_um=5.4),
+    route=dict(pd=0.5, period_ps=833.333, threads=8, peak_ram_gb=8, hold_margin_ns=0.03,
+               macro_halo_um=5.4, pin_balance=dict(h='M4', v='M5', group_max=1)),
     params={}, macros=[], inter=[],
     job=dict(owner='Claude:H-HARDEN', branch='claude/hnl-harden-2210', tag=a.tag, record_to=f'results/rtl/ref_tile/{a.name}',
              purpose=('hb_dbk wires-only cluster ot_hgi_dma_back_static_vp4_banks, ONE master for the four stacks (stk[1:0] '
