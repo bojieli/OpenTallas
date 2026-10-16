@@ -258,13 +258,13 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
    if((!ph2 || (cx_fault && u_cx.sfault_s)) && (!collide || (sl_fault[1] && saw_collision)))
     $display("SU_COLLPORT PASS negative control faulted PHASE2=%0d COLLIDE=%0d seen_overlap=%0d (cx %0d core %0d slices %b)",ph2,collide,saw_collision,cx_fault,core_fault,sl_fault);
    else begin $display("SU_COLLPORT FAIL negative control did not fault"); $fatal(1,"SU_COLLPORT gate rejected"); end
-   $finish;
-  end
+  end else begin
   if(errors==0 && !any_fault && checks>NINJ/2 && rc_seen==6)
    $display("SU_COLLPORT PASS QID=%0d INJ_RET=%0d SD=%0d checks=%0d deliveries=%0d injects=%0d rc=%0d",QID,INJ_RET,SD,checks,dcount,icount,rc_seen);
   else begin
    $display("SU_COLLPORT FAIL errors=%0d fault(cx %0d core %0d slices %b) checks=%0d rc=%0d",errors,cx_fault,core_fault,sl_fault,checks,rc_seen);
    $fatal(1,"SU_COLLPORT gate rejected");
+  end
   end
   $finish;
  end
