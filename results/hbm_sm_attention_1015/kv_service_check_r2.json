@@ -1,0 +1,208 @@
+{
+ "scope": "MODEL of the off-chip PHY/DRAM boundary; per-SM dedicated PC group + stack-local KV; on-die consumption measured separately",
+ "physical_B_per_cycle_per_SM": 99.0,
+ "line_bytes": 136,
+ "line_rate": 0.7272727272727273,
+ "records": [
+  {
+   "record": "DS T640 QK (balanced 20 rows/SM)",
+   "busiest_sm": 0,
+   "busiest_lines": 50,
+   "busiest_stream_cycles": 69,
+   "busiest_staging_blocks": 1,
+   "staging_fits_double_buffer": true,
+   "stacks": {
+    "0": {
+     "bytes": 53760,
+     "window": 69,
+     "demand_B_per_cycle": 779.1,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "1": {
+     "bytes": 53760,
+     "window": 69,
+     "demand_B_per_cycle": 779.1,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "2": {
+     "bytes": 53760,
+     "window": 69,
+     "demand_B_per_cycle": 779.1,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "3": {
+     "bytes": 53760,
+     "window": 69,
+     "demand_B_per_cycle": 779.1,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    }
+   },
+   "all_stacks_fit": true
+  },
+  {
+   "record": "DS T640 PV (aligned 4-chunk runs, quadrant of their block)",
+   "busiest_sm": 0,
+   "busiest_lines": 125,
+   "busiest_stream_cycles": 172,
+   "busiest_staging_blocks": 2,
+   "staging_fits_double_buffer": true,
+   "stacks": {
+    "0": {
+     "bytes": 104448,
+     "window": 172,
+     "demand_B_per_cycle": 607.3,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "1": {
+     "bytes": 36864,
+     "window": 94,
+     "demand_B_per_cycle": 392.2,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "2": {
+     "bytes": 36864,
+     "window": 94,
+     "demand_B_per_cycle": 392.2,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "3": {
+     "bytes": 36864,
+     "window": 94,
+     "demand_B_per_cycle": 392.2,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    }
+   },
+   "all_stacks_fit": true
+  },
+  {
+   "record": "DS T640 QK (SU slice rule)",
+   "busiest_sm": 0,
+   "busiest_lines": 96,
+   "busiest_stream_cycles": 132,
+   "busiest_staging_blocks": 2,
+   "staging_fits_double_buffer": true,
+   "stacks": {
+    "0": {
+     "bytes": 104448,
+     "window": 132,
+     "demand_B_per_cycle": 791.3,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "1": {
+     "bytes": 36864,
+     "window": 47,
+     "demand_B_per_cycle": 784.3,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "2": {
+     "bytes": 36864,
+     "window": 47,
+     "demand_B_per_cycle": 784.3,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "3": {
+     "bytes": 36864,
+     "window": 47,
+     "demand_B_per_cycle": 784.3,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    }
+   },
+   "all_stacks_fit": true
+  },
+  {
+   "record": "Qwen T8192 QK per KV head (2 blocks/SM, standard 128-B rows)",
+   "busiest_sm": 0,
+   "busiest_lines": 241,
+   "busiest_stream_cycles": 332,
+   "busiest_staging_blocks": 4,
+   "staging_fits_double_buffer": false,
+   "stacks": {
+    "0": {
+     "bytes": 262144,
+     "window": 332,
+     "demand_B_per_cycle": 789.6,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "1": {
+     "bytes": 262144,
+     "window": 332,
+     "demand_B_per_cycle": 789.6,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "2": {
+     "bytes": 262144,
+     "window": 332,
+     "demand_B_per_cycle": 789.6,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "3": {
+     "bytes": 262144,
+     "window": 332,
+     "demand_B_per_cycle": 789.6,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    }
+   },
+   "all_stacks_fit": true
+  },
+  {
+   "record": "Qwen T8192 PV op (one block)",
+   "busiest_sm": 0,
+   "busiest_lines": 121,
+   "busiest_stream_cycles": 167,
+   "busiest_staging_blocks": 2,
+   "staging_fits_double_buffer": true,
+   "stacks": {
+    "0": {
+     "bytes": 131072,
+     "window": 167,
+     "demand_B_per_cycle": 784.9,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "1": {
+     "bytes": 131072,
+     "window": 167,
+     "demand_B_per_cycle": 784.9,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "2": {
+     "bytes": 131072,
+     "window": 167,
+     "demand_B_per_cycle": 784.9,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    },
+    "3": {
+     "bytes": 131072,
+     "window": 167,
+     "demand_B_per_cycle": 784.9,
+     "physical_B_per_cycle": 792.0,
+     "fits": true
+    }
+   },
+   "all_stacks_fit": true
+  }
+ ],
+ "shared_resources": [
+  "per-stack PHY: 8 SMs x 99 B/cycle",
+  "VM hub KV_DESC: 1 x 64-b word per SM per op (no per-line traffic)"
+ ],
+ "note": "DS QK under the unmodified SU slice rule puts window+top-k block 0 and 4 on quadrant 0 (32 rows/SM vs 16): busiest SM 96 lines vs 50 balanced; balanced needs the SU balanced-tail lowering (H-ELEM-B 09:21) -- SU decision."
+}

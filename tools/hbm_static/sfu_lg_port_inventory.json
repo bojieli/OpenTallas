@@ -1,0 +1,215 @@
+{
+  "top": "ot_hgi_sfu_scheduled_engine",
+  "parameters": {
+    "PAGE_AW": 1,
+    "AW": 11,
+    "LWB": 15
+  },
+  "lanes": 16,
+  "lane_clocks": 16,
+  "mapper_clocks": 16,
+  "lg_clocks": 4,
+  "total_clock_pins": 37,
+  "arithmetic_broadcast_tree": 0,
+  "broadcast_tree_note": "static_engine does not override static_quarter BTREE=0; the separate BTREE=1 proof is not this master.",
+  "common_clock": "clk (programme, operand/output store, scalar publication and fault aggregation)",
+  "clock_relationship": "Same-frequency related roots; no asynchronous CDC contract. Die STA must cover group-to-store and programme-to-group crossings.",
+  "groups": [
+    {
+      "group": 0,
+      "banks": [
+        0,
+        1
+      ],
+      "state": "u_vm.g_lg[0]",
+      "clock": "clk_lg[0]",
+      "reset": "rst_lg_n[0]",
+      "ports": {
+        "local_rq": [
+          0,
+          34
+        ],
+        "local_wq": [
+          0,
+          562
+        ],
+        "local_rr": [
+          0,
+          514
+        ],
+        "local_w_done": [
+          0,
+          2
+        ]
+      },
+      "granted_outline": null,
+      "granted_pin_rectangles": null
+    },
+    {
+      "group": 1,
+      "banks": [
+        2,
+        3
+      ],
+      "state": "u_vm.g_lg[1]",
+      "clock": "clk_lg[1]",
+      "reset": "rst_lg_n[1]",
+      "ports": {
+        "local_rq": [
+          34,
+          34
+        ],
+        "local_wq": [
+          562,
+          562
+        ],
+        "local_rr": [
+          514,
+          514
+        ],
+        "local_w_done": [
+          2,
+          2
+        ]
+      },
+      "granted_outline": null,
+      "granted_pin_rectangles": null
+    },
+    {
+      "group": 2,
+      "banks": [
+        4,
+        5
+      ],
+      "state": "u_vm.g_lg[2]",
+      "clock": "clk_lg[2]",
+      "reset": "rst_lg_n[2]",
+      "ports": {
+        "local_rq": [
+          68,
+          34
+        ],
+        "local_wq": [
+          1124,
+          562
+        ],
+        "local_rr": [
+          1028,
+          514
+        ],
+        "local_w_done": [
+          4,
+          2
+        ]
+      },
+      "granted_outline": null,
+      "granted_pin_rectangles": null
+    },
+    {
+      "group": 3,
+      "banks": [
+        6,
+        7
+      ],
+      "state": "u_vm.g_lg[3]",
+      "clock": "clk_lg[3]",
+      "reset": "rst_lg_n[3]",
+      "ports": {
+        "local_rq": [
+          102,
+          34
+        ],
+        "local_wq": [
+          1686,
+          562
+        ],
+        "local_rr": [
+          1542,
+          514
+        ],
+        "local_w_done": [
+          6,
+          2
+        ]
+      },
+      "granted_outline": null,
+      "granted_pin_rectangles": null
+    }
+  ],
+  "logical_widths": {
+    "local_rq": 136,
+    "local_wq": 2248,
+    "local_rr": 2056,
+    "local_w_done": 8
+  },
+  "read_response_update": 14,
+  "read_store_sample": 15,
+  "write_completion_update": 11,
+  "added_service_edges": 0,
+  "macros": [
+    {
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "count": 80,
+      "width_um": 172.8,
+      "height_um": 41.04,
+      "area_um2": 567336.96,
+      "owner": "five local groups x16 banks, RB=LWB-log2(16)=11",
+      "lef_sha256": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf"
+    },
+    {
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 22,
+      "width_um": 174.744,
+      "height_um": 70.47,
+      "area_um2": 270912.61296,
+      "owner": "arithmetic eight stripes x2 pages + IO three stripes x2 pages",
+      "lef_sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4"
+    }
+  ],
+  "macro_count": 102,
+  "macro_only_area_um2": 838249.57296,
+  "old_engine_outline_um": [
+    552.96,
+    723.6
+  ],
+  "old_outline_area_um2": 400121.856,
+  "macro_to_old_outline": 2.0949857159514926,
+  "mapped_logic_area_um2": null,
+  "placed_area_um2": null,
+  "physical_qualified": false,
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv": "863b63106f0963a85365e4a26a31ca2c1bbcf22a6c6fe9088a5d067d139e1ce8",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_static.sv": "f9ec7be2c678094a5923fff6b341ba59a2ddf0892b9085502a70cf5bfee5acfd",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv": "6319394d89bbc82beb8610ff95f842d496f303f922017f4a21fc18be39cfa898",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "33a0546fc89d8141568eabf87f2cf857aa8763a632db7038b819cf286722982e",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "04c4f92245f4a8384e10e11826b93eb0952fb27fda56d42f043f0f97b4832cdf",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv": "3f995082745666a40a4585bbf8e916059d4b6b0a986fa96c1a830570e1fff633",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "195776339665673c005bf23751556ab0dec6009a74bb5deae25a7018e73ec6dc",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "efec24a041bfbf13c5e2c3827730c7f8a0c312aea7e088db0f68064317822436",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "3ac18f43a440a0b8ea6ff89a59d4668ff045f40cadfe75e9e111e046beff9cab",
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85"
+  },
+  "preserved_synthesis": [
+    {
+      "host": "ot-epyc1tb",
+      "pid": 3876234,
+      "path": "/srv/opentallas-scratch/claude/hdie-v15c/out/sfu",
+      "scope": "pre-LG-split exact fullshape; progressing Yosys flat SHARE SAT"
+    },
+    {
+      "host": "ot-epyc4",
+      "pid": 639281,
+      "path": "/srv/opentallas-scratch/claude/hdie-v15c/out/sfu_c",
+      "scope": "pre-LG-split coarse synthesis"
+    }
+  ],
+  "blockers": [
+    "Macro-only footprint already exceeds old engine grant before 16 arithmetic lanes, mappers, logic, halos or utilization.",
+    "All four port-group outlines and full RTL pin rectangles remain ungranted.",
+    "local_rq remains direct programme-to-pin wiring; pin registration/reach must be resolved with the actual slot and calendar, not waived.",
+    "Operand store and programme are central: related-root group/store crossings have no measured physical reach proof.",
+    "No fresh mapped area/CTS/route for the four-root successor; preserved synthesis measures predecessor.",
+    "Existing canonical 3072-word Qwen GLU diagnostic is 432 IO edges /120 priced=3.6; whole-layer production qualification remains open."
+  ]
+}

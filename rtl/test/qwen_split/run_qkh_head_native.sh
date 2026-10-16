@@ -6,7 +6,8 @@ mkdir -p "$out"
 v=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 extra=()
 if [ "${HEAD_R3:-0}" = 1 ]; then extra=(+define+QKH_NATIVE_R3 rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv); fi
-if [ "${HEAD_STAGED:-0}" = 1 ]; then extra=(+define+QKH_STAGED rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv rtl/qwen_sys/split_20261014/qkh_head_stages.sv);
+if [ "${HEAD_G3S2:-0}" = 1 ]; then extra=(+define+QKH_G3S2 rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_ft.sv rtl/qwen_sys/split_20261014/qkh_head_stages.sv rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv rtl/test/qwen_split/qkh_head_pair_g3s2.sv);
+elif [ "${HEAD_STAGED:-0}" = 1 ]; then extra=(+define+QKH_STAGED rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv rtl/qwen_sys/split_20261014/qkh_head_stages.sv);
 elif [ "${HEAD_R4:-0}" = 1 ]; then extra=(+define+QKH_NATIVE_R4 rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv); fi
 "$v" --binary --timing -j "${JOBS:-8}" -O1 --x-assign 0 --x-initial 0 \
   --output-split 20000 --output-split-cfuncs 5000 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \

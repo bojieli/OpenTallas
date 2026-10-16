@@ -14,6 +14,11 @@ assert sum(w for _,w in F)==471
 out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 overlap=environ.get("SFU_IO_OVERLAP", "0")=="1"
 length,scalar_edge,arith_edge,drain_edge=(432,0,20,210) if overlap else (800,192,210,587)
+# Split SFU (core + bank-pair LG leaves, H-SU 10-15): every VM read returns 2*LG_PATH edges later at the core
+# (LG_PATH = 1 leaf edge + R die relays), so arithmetic start, drain and the programme length move by that constant.
+lg_path=int(environ.get("SFU_LG_PATH","0"))
+shift=2*lg_path
+length,arith_edge,drain_edge=length+shift,arith_edge+shift,drain_edge+shift
 rows=[]
 for t in range(length):
  d=dict(scalar_addr=12672<<24,scalar_enable=2)
@@ -44,4 +49,4 @@ for t in range(length):
 (out/'io.hex').write_text(''.join(f'{word:0118x}\n' for word in rows))
 (out/'io_manifest.json').write_text(json.dumps(dict(width=471,rows=length,prefetch_edges=192,scalar_prefetch_edge=scalar_edge,
  arith_start_edge=arith_edge,drain_edges=[drain_edge,drain_edge+192],overlap=overlap,real_programme_SRAMs=6,VM_map='diagnostic SID0 G0/U1026/route2052/O4096',
- full_4x7168_IO_schedule=False,native_die_qualified=False),indent=2)+'\n')
+ full_4x7168_IO_schedule=False,lg_path=lg_path,latency_shift_edges=shift,native_die_qualified=False),indent=2)+'\n')

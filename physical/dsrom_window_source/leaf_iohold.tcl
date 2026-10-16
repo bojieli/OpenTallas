@@ -10,6 +10,13 @@
 #            repair_design never sees a dont_touch load (RSZ-3006); only the HB4 and its short input net are dont_touch).
 # FIRM cells are appended to RESULTS_DIR/ot_inhold_firm.txt; leaf_inhold_release.tcl (PRE_DETAIL_PLACE) returns them to
 # PLACED for DPL.  No procs: ORFS sources step hooks inside a proc.
+# OT_OUTHOLD_FREE=1 (opt-in, Q-DVM 2026-10-15, qfd_xcst_*_m5): the three output-stage cells are SEEDED at the pin but left
+# PLACED (not FIRM, not in the release list), so timing-driven GPL spreads them between the launch flop and the pin.
+# Why: on a 52.68 um face with 516 M5-only output pins, FIRM BUF+HB+BUF stacks at every pin packed the y<6 um band
+# (m5a/m5b GRT-0116, 2,344 of 4,442 hot-region refs were ot_outhold nets); dropping the pads instead (m5c) let hold
+# repair build up to 6 x BUFx2 chains on the launch path (native launch 224.7..235.5 > 220).  The hold cell stays
+# dont_touch, so the hold delay is still one deterministic pad; only its location is free.
+set ot_oh_free [expr {[info exists ::env(OT_OUTHOLD_FREE)] && $::env(OT_OUTHOLD_FREE) eq "1"}]
 if {[info exists ::env(OT_IOHOLD_IN)] && $::env(OT_IOHOLD_IN)} {
   source /src/physical/dsrom_window_source/leaf_inhold.tcl
 }
@@ -70,8 +77,8 @@ foreach bt [$ot_oh_blk getBTerms] {
     if {$hold} { lappend ot_oh_dt [[$i findITerm A] getNet] }
     $i setOrient R0
     if {[[$i getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
-    $i setLocation $x $y; $i setPlacementStatus FIRM
-    lappend ot_oh_firm $nm
+    $i setLocation $x $y
+    if {$ot_oh_free} { $i setPlacementStatus PLACED } else { $i setPlacementStatus FIRM; lappend ot_oh_firm $nm }
     incr k
   }
   incr ot_oh_n
@@ -83,4 +90,4 @@ if {$ot_oh_n > 0} {
 if {[info exists ::env(RESULTS_DIR)]} {
   set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt a]; if {[llength $ot_oh_firm]} { puts $fh [join $ot_oh_firm "\n"] }; close $fh
 }
-puts "OUTHOLD: $ot_oh_n output hold stages (BUF + [$ot_oh_hb getName] + BUF FIRM at the pin, $ot_oh_ns with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), $ot_oh_skip outputs skipped (not flop-driven)"
+puts "OUTHOLD: $ot_oh_n output hold stages (BUF + [$ot_oh_hb getName] + BUF [expr {$ot_oh_free ? {PLACED (free) seeded} : {FIRM}}] at the pin, $ot_oh_ns with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), $ot_oh_skip outputs skipped (not flop-driven)"

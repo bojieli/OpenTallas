@@ -1,0 +1,428 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 1 input pin flops, median arrival 171.320190 (range 171.320190 .. 171.320190)
+QDM reference pin cap_carry1_data[6]$_DFF_P_/CLK clock arrival max 171.320190 min 157.915161 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CORNER ss
+OT_WS -7.884992658802048e-11
+OT_TNS -1.0764996893897205e-8
+Startpoint: cap_add_src[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: ot_prs_00049_ff (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  29.83   29.83 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  43.24   73.07 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.70  111.77 ^ clkbuf_3_4__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  59.61  171.38 ^ clkbuf_leaf_19_clk/Y (BUFx24_ASAP7_75t_R)
+   2.29  173.67 ^ cap_add_src[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ 168.00  341.67 ^ cap_add_src[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+ 123.78  465.45 ^ place1353/Y (BUFx3_ASAP7_75t_R)
+ 127.74  593.19 ^ place1352/Y (BUFx3_ASAP7_75t_R)
+ 123.98  717.17 ^ place1351/Y (BUFx3_ASAP7_75t_R)
+  32.40  749.57 v _12838_/Y (NAND2x1_ASAP7_75t_R)
+  70.12  819.69 v _12841_/Y (AO33x2_ASAP7_75t_R)
+  56.06  875.76 v _12848_/Y (OR4x1_ASAP7_75t_R)
+  67.48  943.23 v _12874_/Y (AND5x1_ASAP7_75t_R)
+  62.52 1005.76 v _12875_/Y (AO21x2_ASAP7_75t_R)
+   0.07 1005.83 v ot_prs_00049_ff/D (DFFHQNx1_ASAP7_75t_R)
+        1005.83   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  28.42  861.76 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+  40.26  902.02 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.65  939.67 ^ clkbuf_3_3__f_clk/Y (BUFx16f_ASAP7_75t_R)
+  48.06  987.73 ^ clkbuf_leaf_69_clk/Y (BUFx24_ASAP7_75t_R)
+   0.91  988.64 ^ ot_prs_00049_ff/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  928.64   clock uncertainty
+   1.40  930.04   clock reconvergence pessimism
+  -3.06  926.98   library setup time
+         926.98   data required time
+---------------------------------------------------------
+         926.98   data required time
+        -1005.83   data arrival time
+---------------------------------------------------------
+         -78.85   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 398
+OT_WS_REG_D -78.849930
+OT_WS_OUT 249.059189
+OT_WS_R2R -78.849930
+OT_WS_I2R 331.469910
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00049_ff/D -78.849930
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[25]$_DFFE_PP_/D -78.837547
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[28]$_DFFE_PP_/D -70.646492
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00052_ff/D -70.414505
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[30]$_DFFE_PP_/D -69.847687
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00055_ff/D -69.264481
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00050_ff/D -67.573448
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00048_ff/D -66.531891
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[26]$_DFFE_PP_/D -66.243675
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][23]$_DFFE_PP_/D -66.027130
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][31]$_DFFE_PP_/D -65.593361
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][23]$_DFFE_PP_/D -65.085213
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][20]$_DFFE_PP_/D -64.540154
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][31]$_DFFE_PP_/D -63.849594
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][31]$_DFFE_PP_/D -63.771709
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][27]$_DFFE_PP_/D -63.675064
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][27]$_DFFE_PP_/D -63.659687
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00044_ff/D -62.845341
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[24]$_DFFE_PP_/D -61.264381
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][25]$_DFFE_PP_/D -61.070095
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][24]$_DFFE_PP_/D -60.974503
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][25]$_DFFE_PP_/D -60.357887
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][27]$_DFFE_PP_/D -60.295769
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][31]$_DFFE_PP_/D -60.126125
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][30]$_DFFE_PP_/D -59.846016
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][30]$_DFFE_PP_/D -59.463379
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[20]$_DFFE_PP_/D -59.288296
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][28]$_DFFE_PP_/D -59.024231
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][25]$_DFFE_PP_/D -58.914486
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][24]$_DFFE_PP_/D -58.667625
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00053_ff/D -58.406391
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][24]$_DFFE_PP_/D -58.144821
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][24]$_DFFE_PP_/D -58.071712
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[29]$_DFFE_PP_/D -57.876480
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][27]$_DFFE_PP_/D -57.739426
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][30]$_DFFE_PP_/D -56.987526
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][21]$_DFFE_PP_/D -56.977589
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][22]$_DFFE_PP_/D -56.948833
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][30]$_DFFE_PP_/D -56.837147
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[1]$_DFFE_PP_/D -56.480877
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00043_ff/D -56.464554
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][25]$_DFFE_PP_/D -56.395168
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][22]$_DFFE_PP_/D -56.356918
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][23]$_DFFE_PP_/D -56.208817
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][22]$_DFFE_PP_/D -55.893845
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][12]$_DFFE_PP_/D -55.430992
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][14]$_DFFE_PP_/D -55.196014
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][12]$_DFFE_PP_/D -55.090820
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][12]$_DFFE_PP_/D -55.068172
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][19]$_DFFE_PP_/D -55.032368
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00034_ff/D -54.847794
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[8][30]$_DFFE_PP_/D -54.827145
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][12]$_DFFE_PP_/D -54.732830
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[11][30]$_DFFE_PP_/D -54.664772
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[11][28]$_DFFE_PP_/D -54.500626
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][19]$_DFFE_PP_/D -54.377003
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00059_ff/D -54.374950
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[5]$_DFFE_PP_/D -54.372005
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][14]$_DFFE_PP_/D -54.298401
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][19]$_DFFE_PP_/D -54.267647
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][19]$_DFFE_PP_/D -54.136864
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[10][25]$_DFFE_PP_/D -53.911766
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][30]$_DFFE_PP_/D -53.864857
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][23]$_DFFE_PP_/D -53.847870
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[9][30]$_DFFE_PP_/D -53.847427
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[10][28]$_DFFE_PP_/D -53.588413
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[11][25]$_DFFE_PP_/D -53.572868
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[9][28]$_DFFE_PP_/D -53.364037
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[8][25]$_DFFE_PP_/D -53.325455
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[9][25]$_DFFE_PP_/D -53.256844
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][21]$_DFFE_PP_/D -53.256176
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[8][28]$_DFFE_PP_/D -53.174465
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][30]$_DFFE_PP_/D -53.130054
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][26]$_DFFE_PP_/D -52.946926
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[10][26]$_DFFE_PP_/D -52.899742
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][25]$_DFFE_PP_/D -52.872540
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[9][26]$_DFFE_PP_/D -52.810310
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][31]$_DFFE_PP_/D -52.684467
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][26]$_DFFE_PP_/D -52.609196
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[9][24]$_DFFE_PP_/D -52.598759
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][21]$_DFFE_PP_/D -52.520767
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[11][20]$_DFFE_PP_/D -52.482296
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[8][26]$_DFFE_PP_/D -52.473026
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][26]$_DFFE_PP_/D -52.429783
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][24]$_DFFE_PP_/D -52.313766
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[11][26]$_DFFE_PP_/D -52.270245
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[10][30]$_DFFE_PP_/D -52.146786
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][22]$_DFFE_PP_/D -52.113758
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][28]$_DFFE_PP_/D -51.921356
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[11][24]$_DFFE_PP_/D -51.832928
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00033_ff/D -51.829762
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][25]$_DFFE_PP_/D -51.800896
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][25]$_DFFE_PP_/D -51.751991
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][30]$_DFFE_PP_/D -51.391560
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][21]$_DFFE_PP_/D -51.336323
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00062_ff/D -50.865810
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[8]$_DFFE_PP_/D -50.797478
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00056_ff/D -50.616291
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][31]$_DFFE_PP_/D -50.592976
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][28]$_DFFE_PP_/D -50.335625
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[8][24]$_DFFE_PP_/D -50.162209
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[31]$_DFFE_PP_/D -50.043747
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][29]$_DFFE_PP_/D -49.688198
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][24]$_DFFE_PP_/D -49.677761
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[11]$_DFFE_PP_/D -49.493244
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[10][24]$_DFFE_PP_/D -48.821392
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][31]$_DFFE_PP_/D -48.739624
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][24]$_DFFE_PP_/D -48.737015
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][28]$_DFFE_PP_/D -48.176796
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[10]$_DFFE_PP_/D -47.324146
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][29]$_DFFE_PP_/D -46.177727
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][29]$_DFFE_PP_/D -45.736416
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][27]$_DFFE_PP_/D -44.203808
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00058_ff/D -43.831882
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[4]$_DFFE_PP_/D -43.822723
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][20]$_DFFE_PP_/D -43.458294
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[7]$_DFFE_PP_/D -42.335358
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00061_ff/D -41.952831
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][20]$_DFFE_PP_/D -41.915138
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][20]$_DFFE_PP_/D -41.027683
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][27]$_DFFE_PP_/D -40.403294
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][28]$_DFFE_PP_/D -40.071613
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][27]$_DFFE_PP_/D -39.958202
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][26]$_DFFE_PP_/D -39.248604
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[2]$_DFFE_PP_/D -38.790081
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00054_ff/D -38.550663
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][17]$_DFFE_PP_/D -38.333282
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][17]$_DFFE_PP_/D -38.011482
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[3]$_DFFE_PP_/D -37.993553
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00057_ff/D -37.950310
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][29]$_DFFE_PP_/D -37.882141
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][16]$_DFFE_PP_/D -36.719849
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][17]$_DFFE_PP_/D -36.618652
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][2]$_DFFE_PP_/D -36.027458
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00060_ff/D -35.762115
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[6]$_DFFE_PP_/D -35.679405
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][20]$_DFFE_PP_/D -35.550175
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][17]$_DFFE_PP_/D -33.850922
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][7]$_DFFE_PP_/D -33.795246
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][28]$_DFFE_PP_/D -33.395508
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][0]$_DFFE_PP_/D -32.988335
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00037_ff/D -32.934875
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][6]$_DFFE_PP_/D -32.906509
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][26]$_DFFE_PP_/D -32.764404
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][3]$_DFFE_PP_/D -32.419067
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][29]$_DFFE_PP_/D -32.416737
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][4]$_DFFE_PP_/D -32.210567
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][0]$_DFFE_PP_/D -32.074619
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][29]$_DFFE_PP_/D -32.032265
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][7]$_DFFE_PP_/D -31.639135
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][18]$_DFFE_PP_/D -31.606218
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00051_ff/D -31.365244
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][16]$_DFFE_PP_/D -31.325165
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][26]$_DFFE_PP_/D -31.184721
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][5]$_DFFE_PP_/D -30.787039
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][2]$_DFFE_PP_/D -30.764835
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][29]$_DFFE_PP_/D -30.549786
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][3]$_DFFE_PP_/D -30.458969
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][2]$_DFFE_PP_/D -30.454472
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][0]$_DFFE_PP_/D -30.408453
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][17]$_DFFE_PP_/D -30.369652
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][16]$_DFFE_PP_/D -30.298763
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][3]$_DFFE_PP_/D -30.150049
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][3]$_DFFE_PP_/D -30.134672
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][2]$_DFFE_PP_/D -30.077719
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][21]$_DFFE_PP_/D -30.040970
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][10]$_DFFE_PP_/D -30.036251
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][17]$_DFFE_PP_/D -29.854008
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][11]$_DFFE_PP_/D -29.806103
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][4]$_DFFE_PP_/D -29.774294
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][9]$_DFFE_PP_/D -29.693415
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][28]$_DFFE_PP_/D -29.678816
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][26]$_DFFE_PP_/D -29.673208
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][6]$_DFFE_PP_/D -29.585335
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][7]$_DFFE_PP_/D -29.463598
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][20]$_DFFE_PP_/D -29.419245
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][0]$_DFFE_PP_/D -29.404036
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][7]$_DFFE_PP_/D -29.384495
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][14]$_DFFE_PP_/D -29.331537
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][14]$_DFFE_PP_/D -29.309555
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][10]$_DFFE_PP_/D -29.186432
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][13]$_DFFE_PP_/D -29.177605
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][6]$_DFFE_PP_/D -29.090786
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][4]$_DFFE_PP_/D -29.054647
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][6]$_DFFE_PP_/D -28.945623
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00032_ff/D -28.814840
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][15]$_DFFE_PP_/D -28.811342
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00038_ff/D -28.647806
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[15]$_DFFE_PP_/D -28.602787
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][20]$_DFFE_PP_/D -28.460123
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][8]$_DFFE_PP_/D -28.398617
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[0]$_DFFE_PP_/D -28.356928
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][5]$_DFFE_PP_/D -28.165915
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][18]$_DFFE_PP_/D -28.154757
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][11]$_DFFE_PP_/D -28.113901
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][1]$_DFFE_PP_/D -27.796209
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][15]$_DFFE_PP_/D -27.788549
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][13]$_DFFE_PP_/D -27.610247
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][23]$_DFFE_PP_/D -27.378654
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][22]$_DFFE_PP_/D -27.303993
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][1]$_DFFE_PP_/D -27.275959
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[14]$_DFFE_PP_/D -27.116976
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][16]$_DFFE_PP_/D -26.885771
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[26]$_DFFE_PP_/D -26.854296
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][18]$_DFFE_PP_/D -26.636137
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][10]$_DFFE_PP_/D -26.564806
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[27]$_DFFE_PP_/D -26.544655
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][18]$_DFFE_PP_/D -26.258774
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][5]$_DFFE_PP_/D -26.092850
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[5][11]$_DFFE_PP_/D -26.047831
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][1]$_DFFE_PP_/D -26.022850
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][11]$_DFFE_PP_/D -25.974722
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00039_ff/D -25.848434
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][4]$_DFFE_PP_/D -25.815960
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00114_ff/D -25.750292
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][10]$_DFFE_PP_/D -25.656755
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][8]$_DFFE_PP_/D -25.355774
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00046_ff/D -25.025871
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][9]$_DFFE_PP_/D -24.613811
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][1]$_DFFE_PP_/D -24.125147
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00035_ff/D -23.586576
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][13]$_DFFE_PP_/D -23.532898
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[12]$_DFFE_PP_/D -23.488100
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][9]$_DFFE_PP_/D -23.459124
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[4][8]$_DFFE_PP_/D -23.403946
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[22]$_DFFE_PP_/D -23.051561
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[7][15]$_DFFE_PP_/D -22.860325
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][15]$_DFFE_PP_/D -22.578217
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][5]$_DFFE_PP_/D -22.327862
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[16]$_DFFE_PP_/D -21.178392
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][9]$_DFFE_PP_/D -21.113388
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][8]$_DFFE_PP_/D -21.038504
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[30]$_DFFE_PP_/D -21.014690
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[6][13]$_DFFE_PP_/D -20.414227
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][16]$_DFFE_PP_/D -18.703318
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][22]$_DFFE_PP_/D -18.215096
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][12]$_DFFE_PP_/D -18.121559
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][23]$_DFFE_PP_/D -18.028467
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][21]$_DFFE_PP_/D -17.772339
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][13]$_DFFE_PP_/D -16.117718
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00047_ff/D -16.087576
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][16]$_DFFE_PP_/D -15.569046
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][14]$_DFFE_PP_/D -15.143109
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[3]$_DFFE_PP_/D -14.857282
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00041_ff/D -14.005852
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00121_ff/D -13.762381
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[23]$_DFFE_PP_/D -13.513635
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][18]$_DFFE_PP_/D -12.862323
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00119_ff/D -12.839285
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][11]$_DFFE_PP_/D -11.945889
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][19]$_DFFE_PP_/D -11.910251
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][9]$_DFFE_PP_/D -11.062096
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[0][26]$_DFFE_PP_/D -10.757839
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00042_ff/D -10.394186
+OT_PATH cap_add_tag[1]$_DFF_P_/QN ot_prs_00093_ff/D -10.288215
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][15]$_DFFE_PP_/D -9.979795
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][8]$_DFFE_PP_/D -8.920142
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[0][24]$_DFFE_PP_/D -8.911871
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[18]$_DFFE_PP_/D -8.716194
+OT_PATH cap_add_tag[0]$_DFF_P_/QN ot_prs_00092_ff/D -8.660961
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[1][31]$_DFFE_PP_/D -8.638757
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[1][26]$_DFFE_PP_/D -8.419487
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][25]$_DFFE_PP_/D -8.097800
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[0][29]$_DFFE_PP_/D -8.050727
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[1][29]$_DFFE_PP_/D -7.900625
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[1][24]$_DFFE_PP_/D -7.800538
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[0][31]$_DFFE_PP_/D -7.749135
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][30]$_DFFE_PP_/D -7.716272
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][3]$_DFFE_PP_/D -7.595480
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][10]$_DFFE_PP_/D -7.560286
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][14]$_DFFE_PP_/D -7.427392
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[2]$_DFFE_PP_/D -7.342682
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][31]$_DFFE_PP_/D -7.288392
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][5]$_DFFE_PP_/D -7.263190
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][26]$_DFFE_PP_/D -7.243428
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][0]$_DFFE_PP_/D -7.044365
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][12]$_DFFE_PP_/D -7.005785
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00118_ff/D -6.962708
+OT_PATH cap_add_tag[1]$_DFF_P_/QN u_state.rhs_add[7]$_DFFE_PP_/D -6.798617
+OT_PATH cap_add_tag[0]$_DFF_P_/QN u_state.rhs_add[6]$_DFFE_PP_/D -6.680767
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][31]$_DFFE_PP_/D -6.652678
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][6]$_DFFE_PP_/D -6.529610
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][2]$_DFFE_PP_/D -6.488976
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[1][30]$_DFFE_PP_/D -6.483869
+OT_PATH cap_add_src[0]$_DFF_P_/QN u_state.carry_add[19]$_DFFE_PP_/D -6.397660
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][13]$_DFFE_PP_/D -6.137868
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[8]$_DFFE_PP_/D -6.069479
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[17]$_DFFE_PP_/D -6.033895
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][29]$_DFFE_PP_/D -5.986489
+OT_PATH cap_add_tag[1]$_DFF_P_/QN ot_prs_00067_ff/D -5.969336
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][7]$_DFFE_PP_/D -5.932310
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][24]$_DFFE_PP_/D -5.872913
+OT_PATH cap_add_tag[1]$_DFF_P_/QN ot_prs_00065_ff/D -5.832113
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][26]$_DFFE_PP_/D -5.746792
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00126_ff/D -5.661249
+OT_PATH cap_add_tag[0]$_DFF_P_/QN ot_prs_00073_ff/D -5.599743
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][26]$_DFFE_PP_/D -5.512424
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][29]$_DFFE_PP_/D -5.486500
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][28]$_DFFE_PP_/D -5.363876
+OT_PATH cap_add_tag[1]$_DFF_P_/QN u_state.rhs_add[12]$_DFFE_PP_/D -5.321965
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][29]$_DFFE_PP_/D -4.858003
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][1]$_DFFE_PP_/D -4.739653
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][20]$_DFFE_PP_/D -4.698741
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][6]$_DFFE_PP_/D -4.424294
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][23]$_DFFE_PP_/D -4.338641
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[21][7]$_DFFE_PP_/D -4.316658
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][24]$_DFFE_PP_/D -4.312661
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][3]$_DFFE_PP_/D -4.284351
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][24]$_DFFE_PP_/D -4.257594
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][27]$_DFFE_PP_/D -4.156065
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[21][4]$_DFFE_PP_/D -4.142020
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][31]$_DFFE_PP_/D -4.012901
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[20][7]$_DFFE_PP_/D -4.007572
+OT_PATH cap_add_src[0]$_DFF_P_/QN ot_prs_00036_ff/D -4.002743
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[3][26]$_DFFE_PP_/D -3.854361
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][2]$_DFFE_PP_/D -3.801903
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][27]$_DFFE_PP_/D -3.685108
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[21]$_DFFE_PP_/D -3.646861
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][17]$_DFFE_PP_/D -3.635536
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[3][30]$_DFFE_PP_/D -3.613165
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[3][25]$_DFFE_PP_/D -3.473388
+OT_PATH cap_add_tag[0]$_DFF_P_/QN u_state.rhs_add[18]$_DFFE_PP_/D -3.416101
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][0]$_DFFE_PP_/D -3.363643
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][18]$_DFFE_PP_/D -3.355371
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[22][7]$_DFFE_PP_/D -2.991329
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[17][17]$_DFFE_PP_/D -2.772005
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][27]$_DFFE_PP_/D -2.596256
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][20]$_DFFE_PP_/D -2.564948
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][17]$_DFFE_PP_/D -2.510436
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][1]$_DFFE_PP_/D -2.453204
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[3][28]$_DFFE_PP_/D -2.281952
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[25][22]$_DFFE_PP_/D -2.109479
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][15]$_DFFE_PP_/D -2.013834
+OT_PATH cap_add_tag[0]$_DFF_P_/QN ot_prs_00074_ff/D -1.993239
+OT_PATH cap_add_tag[1]$_DFF_P_/QN u_state.rhs_add[26]$_DFFE_PP_/D -1.648681
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00104_ff/D -1.474876
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[27][17]$_DFFE_PP_/D -1.318445
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[16][20]$_DFFE_PP_/D -1.227796
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[15][17]$_DFFE_PP_/D -1.220357
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN ot_prs_00109_ff/D -1.090517
+OT_PATH cap_add_tag[1]$_DFF_P_/QN ot_prs_00086_ff/D -1.052103
+OT_PATH cap_add_tag[1]$_DFF_P_/QN u_state.rhs_add[10]$_DFFE_PP_/D -1.001532
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[24][4]$_DFFE_PP_/D -0.986600
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[3][31]$_DFFE_PP_/D -0.929756
+OT_PATH cap_add_tag[0]$_DFF_P_/QN u_state.rhs_add[19]$_DFFE_PP_/D -0.898781
+OT_PATH cap_carry1_tag[0]$_DFF_P_/QN u_state.carry[1][20]$_DFFE_PP_/D -0.586753
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][10]$_DFFE_PP_/D -0.485612
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[28]$_DFFE_PP_/D -0.251965
+OT_PATH cap_tx_tag[0]$_DFF_P_/QN u_state.tx_data[6]$_DFFE_PP_/D -0.149658
+OT_PATH cap_carry1_tag[1]$_DFF_P_/QN u_state.carry[26][4]$_DFFE_PP_/D -0.145717
+OT_PATH cap_add_tag[1]$_DFF_P_/QN ot_prs_00066_ff/D -0.016320

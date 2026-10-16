@@ -187,6 +187,21 @@ HEAD_CLK_R2 = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'c
 # reference PASS 3,515, mutants FAIL).  Die port -> RTL: ck_f<q> -> ck_front[q], ck_k -> ck_kt, ck_s -> ck_score,
 # ck_i<l> -> ck_stin[l], ck_t<l> -> ck_stk[l], ck_a<l> -> ck_nb1[l], ck_b<l> -> ck_nb2[l], ck_l<l> -> ck_lane[l]
 HEAD_R4_PLAN = 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json'
+# v1.4.3 G3S2 (KV die lead 2026-10-15, results/arch/qwen_split_1014/kvsys_v1_4_3_design/design.json): every head's ingress
+# ECTL t/e -> G -> T1 -> T2 -> fronts on the CLOSED qkh_head_gather_stage (die master qkd_hgs, 324 x 21.6, S->N), score
+# head -> S1 -> S2 -> ECTL on the CLOSED qkh_head_sstage (qkd_hss, 21.6 x 21.6, W->E): +3 / +2 edges (ECTL HXK 5).  The
+# near head of each pair (h1 / h2) is qkd_rhead_ft = r4 + the FAR head's T1 / S2 in a feed-through channel (plan
+# HEAD_FT_PLAN, lane rows >= 1 moved up 16.2 um); near-pair stages sit in a band on each ECTL face, the far head's T2 / S1
+# in a band between the near and the far head.  Groups keep their v1.4.2 bottom and grow up (N stacks into the top slack,
+# S stacks into the middle): die outline unchanged.
+V143 = dict(on=False)
+HEAD_FT_PLAN = 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/head_ft_plan.json'
+SPLIT_HEAD_FT = (1080.0, 508.68)
+V143_BAND_LO, V143_BAND_HI = 119.88, 118.8     # ECTL face bands (4 stage rows at 28.08 pitch + clearance); GY-grid totals
+V143_NF_LO, V143_NF_HI = 32.4, 33.48           # near | far bands (one 21.6 row + 5.4 each side)
+V143_X = dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4)   # ECTL-local x (R0 ECTL)
+V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
+HGS, HSS = (324.0, 21.6), (21.6, 21.6)
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
             [f'ck_{t}{i}' for t in 'itabl' for i in range(16)])
 HEAD_CLK_CHILD = dict(**{f'ck_f{q}': f'front{q}' for q in range(4)}, ck_k='ktree', ck_s='score',
@@ -222,6 +237,18 @@ def _set_geometry(split, reserve_static_memory=False, reserve_native_astk=False)
     RENG = (HEAD[0], ENG_H)
     TILE_Y = dict(h0=0.0, h1=HEAD[1] + GY, c=2 * (HEAD[1] + GY), h2=2 * (HEAD[1] + GY) + ECTL[1] + GY,
                   h3=3 * (HEAD[1] + GY) + ECTL[1] + GY)
+    V143['eng_h_v142'] = ENG_H
+    if split and V143['on']:
+        # v1.4.3: far head | NF band | near head (ft) | ECTL band | ECTL | ECTL band | near head (ft) | NF band | far head
+        hf = SPLIT_HEAD_FT[1]
+        TILE_Y = dict(h0=0.0, h1=HEAD[1] + V143_NF_LO)
+        TILE_Y['c'] = TILE_Y['h1'] + hf + V143_BAND_LO
+        TILE_Y['h2'] = TILE_Y['c'] + ECTL[1] + V143_BAND_HI
+        TILE_Y['h3'] = TILE_Y['h2'] + hf + V143_NF_HI
+        ENG_H = TILE_Y['h3'] + HEAD[1]
+        RENG = (HEAD[0], ENG_H)
+        for k_, v_ in TILE_Y.items():
+            assert abs(v_ / GY - round(v_ / GY)) < 1e-6, f'v1.4.3 tile {k_} off the {GY}-um grid: {v_}'
     FRAMES = dict(_BASE['FRAMES'], **(SPLIT_FRAMES if split else {}))
     for k_ in _BASE_BINDINGS_LATE:
         _BASE_BINDINGS.setdefault(k_, BINDINGS[k_])
@@ -290,6 +317,15 @@ SPLIT_BINDINGS = dict(
 # v1.2: the strip frames bind the wires-only compositions of their CLOSED leaves (tools/qwen_kv_die/kv_strips.py ->
 # rtl/qwen_sys/split_20261014/qkd_strips_s.sv), each leaf its own clock entry
 SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw', 'qkd_ctrl', 'qkd_ctrl_n')
+# v1.4.3 G3S2 masters (bound only when the die instantiates them)
+SPLIT_BINDINGS['qkd_rhead_ft'] = dict(SPLIT_BINDINGS['qkd_rhead'], module='ot_qkh_head_native_r4_ft',
+    file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_ft.sv',
+    ports=dict(SPLIT_BINDINGS['qkd_rhead']['ports'], ft_ti_a=['ft_ti_a'], ft_e_a=['ft_e_a'], ft_ti_b=['ft_ti_b'],
+               ft_e_b=['ft_e_b'], ft_s_a=['ft_s_a'], ft_s_b=['ft_s_b'], ck_ft_t=['ck_ft_t'], ck_ft_s=['ck_ft_s']))
+SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
+    ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
+SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
+    ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
 SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(rev=True), qkd_ctrl_n=KS.ctrl_binding())   # v1.3: S stacks = reversed chains (kc at the S = outer end)
 SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), qkd_astk=KS.astk_binding(),
@@ -401,7 +437,7 @@ def d2ds_binding():
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
                            fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up'],
                            status_epoch16=['status_epoch16'], host_drained_local=['host_drained_local'],
-                           host_boot_begin=['host_boot_begin']),
+                           host_boot_begin=['host_boot_begin'], lpf=['fault']),
                 sliced={},
                 classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
 
@@ -858,6 +894,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # split: the engine group (4 engine columns of 4 heads + ectl) is taller than the 12.1-mm band: stack pitch sp, the band
     # centred on it (band_shift per half)
     gh_ = 4 * RENG[1] + 3 * GY
+    if split and V143['on']:
+        gh_ = 4 * V143['eng_h_v142'] + 3 * GY      # v1.4.3: groups keep the v1.4.2 bottom (no die lift); they grow up
     # 2 x CHAN of relay channel above and below each group: the S | N groups leave a 518-um channel between them (the
     # col-1 engines' KV rows krq / krs and the centre words cross the W / E stack walls there)
     # every shift is a multiple of 43.2 um (= 900 / 675 / 540 tracks of M4-5 / M6-7 / M8-9 and 160 rows): a shifted band
@@ -914,6 +952,13 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
         gh = 4 * RENG[1] + 3 * GY
         gy = up(y0 + (stack_h - gh) / 2, GY)
+        if split and V143['on']:
+            # v1.4.3: both halves grow INTO the middle S | N channel (3.7 mm in v1.4.2; >= 1 mm left): S groups keep their
+            # v1.4.2 bottom (the SerDes corridor), N groups keep their v1.4.2 top (the HOST / D2D relay apron)
+            gh_old = 4 * V143['eng_h_v142'] + 3 * GY
+            gy = up(y0 + (stack_h - gh_old) / 2, GY)
+            if st[1] == 'N':
+                gy = gy + gh_old - gh - float(__import__('os').environ.get('OT_KV_V143_NDROP', '0'))
         grp_y = locals().setdefault('grp_y', {})
         grp_y[st] = (gy, gy + gh)
         # qwen-1010/b 2026-10-10 (KV11 die STA: land -> ectl rs hops of ~3 mm between pins): every stack group is the
@@ -937,10 +982,13 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             hd_dn, hd_up = (o_dn, o_up)
             exo = up((HEAD[0] - ECTL[0]) / 2, GX) if split else 0.0     # control tile centred in the wider column
             for h in range(4):
-                add(f'head_{st}_{e}_{h}', 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE, HEAD[1] - SHAVE,
-                    hd_dn if h < 2 else hd_up, 'row_engine', 'attn')
+                ft_ = split and V143['on'] and h in (1, 2)
+                add(f'head_{st}_{e}_{h}', 'qkd_rhead_ft' if ft_ else 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE,
+                    (SPLIT_HEAD_FT[1] if ft_ else HEAD[1]) - SHAVE, hd_dn if h < 2 else hd_up, 'row_engine', 'attn')
             add(f'ectl_{st}_{e}', 'qkd_ectl', ex + exo, ey + TILE_Y['c'], ECTL[0] - SHAVE, ECTL[1] - SHAVE,
                 o_up, 'row_engine', 'attn')
+            if split and V143['on']:
+                _v143_stages(add, f'{st}_{e}', ex + exo, ey, col)
     # centre column: N edge stack, hub, S edge host
     uy = Hk - MARGIN - UCIE[2]
     add('ucie_rom', UCIE[0], xc - UCIE[1] / 2, uy, UCIE[1] - SHAVE, UCIE[2] - SHAVE, 'MX', 'phy_d2d', 'io')
@@ -1002,6 +1050,60 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     return m
 
 
+def _v143_stages(add, se, cx, ey, col):
+    """v1.4.3 G3S2 die-level stage instances of one row engine (ECTL at x cx, y ey + TILE_Y['c']; col 1 = MY column).
+    ECTL-local x of V143_X; lower side (pair 0, heads 0 / 1 below) rows k = 1..4 at 28.08 pitch under the ECTL, upper
+    side (pair 1) mirrored above it; the far head's T2 / S1 in the band at the far head's front face."""
+    cy = ey + TILE_Y['c']
+    def put(name, mst, xl, y, lower):
+        w, h = HGS if mst == 'qkd_hgs' else HSS
+        x = cx + (ECTL[0] - xl - w if col == 1 else xl)
+        o = ('R180' if col == 1 else 'MX') if lower else ('MY' if col == 1 else 'R0')
+        add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
+    for lower, near, far in ((True, 1, 0), (False, 2, 3)):
+        row = (lambda k: cy - 28.08 * k) if lower else (lambda k: cy + ECTL[1] + 6.48 + 28.08 * (k - 1))
+        put(f'{near}_g', 'qkd_hgs', V143_X['g'], row(1), lower)
+        put(f'{far}_g', 'qkd_hgs', V143_X['g'], row(2), lower)
+        put(f'{near}_t1', 'qkd_hgs', V143_X['t1n'], row(3), lower)
+        put(f'{near}_s2', 'qkd_hss', V143_X['s2n'], row(3), lower)
+        put(f'{near}_t2', 'qkd_hgs', V143_X['t2n'], row(4), lower)
+        put(f'{near}_s1', 'qkd_hss', V143_X['s1n'], row(4), lower)
+        if lower:
+            yf = ey + HEAD[1] + 5.4                                   # far head 0 top + 5.4
+        else:
+            yf = ey + TILE_Y['h2'] + SPLIT_HEAD_FT[1] + 5.4           # near head 2 top + 5.4
+        put(f'{far}_t2', 'qkd_hgs', V143_X['t2f'], yf, lower)
+        put(f'{far}_s1', 'qkd_hss', V143_X['s1f'], yf, lower)
+
+
+def _v143_buses(add, st, e, c_):
+    """v1.4.3 G3S2 head data path of one row engine (replaces tp / te / ts): ECTL t{pr} -> G (both heads of the pair) ->
+    T1 -> T2 -> head ti / e; head s -> S1 -> S2 -> ECTL s{h}; the far head's T1 / S2 are its near head's ft leaves."""
+    se = f'{st}_{e}'
+    hs = lambda h, x: f'hst_{se}_{h}_{x}'
+    hd = lambda h: f'head_{st}_{e}_{h}'
+    for pr, near, far in ((0, 1, 0), (1, 2, 3)):
+        add((f'tp_{se}_{pr}', 'stack_local', T_PAIR, [(c_, f't{pr}'), (hs(near, 'g'), 'ti_a'), (hs(far, 'g'), 'ti_a')]))
+        for h in (near, far):
+            nf_ = h == far
+            t1_in = (hd(near), 'ft_ti_a') if nf_ else (hs(h, 't1'), 'ti_a')
+            t1e_in = (hd(near), 'ft_e_a') if nf_ else (hs(h, 't1'), 'e_a')
+            t1_out = (hd(near), 'ft_ti_b') if nf_ else (hs(h, 't1'), 'ti_b')
+            t1e_out = (hd(near), 'ft_e_b') if nf_ else (hs(h, 't1'), 'e_b')
+            add((f'te_{se}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hs(h, 'g'), 'e_a')]))
+            add((f'tg_{se}_{h}', 'stack_local', T_PAIR, [(hs(h, 'g'), 'ti_b'), t1_in]))
+            add((f'tge_{se}_{h}', 'stack_local', T_E, [(hs(h, 'g'), 'e_b'), t1e_in]))
+            add((f'tt_{se}_{h}', 'stack_local', T_PAIR, [t1_out, (hs(h, 't2'), 'ti_a')]))
+            add((f'tte_{se}_{h}', 'stack_local', T_E, [t1e_out, (hs(h, 't2'), 'e_a')]))
+            add((f'th_{se}_{h}', 'stack_local', T_PAIR, [(hs(h, 't2'), 'ti_b'), (hd(h), 'ti')]))
+            add((f'the_{se}_{h}', 'stack_local', T_E, [(hs(h, 't2'), 'e_b'), (hd(h), 'e')]))
+            add((f'ts_{se}_{h}', 'stack_local', T_RET, [(hd(h), 's'), (hs(h, 's1'), 's_a')]))
+            s2_in = (hd(near), 'ft_s_a') if nf_ else (hs(h, 's2'), 's_a')
+            s2_out = (hd(near), 'ft_s_b') if nf_ else (hs(h, 's2'), 's_b')
+            add((f'tss_{se}_{h}', 'stack_local', T_RET, [(hs(h, 's1'), 's_b'), s2_in]))
+            add((f'tsr_{se}_{h}', 'stack_local', T_RET, [s2_out, (c_, f's{h}')]))
+
+
 def _buses(m, T, r):
     B = m['buses']
     names = {i.name for i in m['insts']}
@@ -1021,11 +1123,13 @@ def _buses(m, T, r):
                [(f'land_{st}', 'ck'), (f'astk_{st}', 'ck')]) + \
               [(f'ectl_{st}_{e}', c_) for e in range(r) for c_ in (ECTL_CLK if sp_ else ['ck'])] + \
               [(f'head_{st}_{e}_{h}', c_) for e in range(r) for h in range(4) for c_ in (HEAD_CLK if sp_ else ['ck'])] + \
+              ([(f'head_{st}_{e}_{h}', c_) for e in range(r) for h in (1, 2) for c_ in ('ck_ft_t', 'ck_ft_s')] +
+               [(i.name, 'ck') for i in m['insts'] if i.name.startswith(f'hst_{st}_')] if sp_ and V143['on'] else []) + \
               [(c, 'clk') for c in cdcs[st]]
         add((f'clk_core_{st}', 'clock_trunk', 1, [('pll', f'pll_{st}')] + grp +
              [(f'ctrl_{st}', 'ck')]))   # qwen-1010/b: the kc stream-command FIFO's write side (reset: rsi, below)
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
-             [(n, 'rst_n') for n in dict.fromkeys(n for n, _ in grp) if not n.startswith('cdc_')]))   # the CDC core resets come from land.crst (r21c rst_kv)
+             [(n, 'rst_n') for n in dict.fromkeys(n for n, _ in grp) if not n.startswith(('cdc_', 'hst_'))]))   # v1.4.3 stages: no reset   # the CDC core resets come from land.crst (r21c rst_kv)
     cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host'] + (['lnk'] if m['geo'].get('split') else [])
     add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] +
          [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else ['ck'])] +
@@ -1055,13 +1159,17 @@ def _buses(m, T, r):
             c_ = f'ectl_{st}_{e}'
             add((f'eq_{st}_{e}', 'stack_local', ENG_IN, [(f'astk_{st}', f'e{e}o'), (c_, 'si')]))
             add((f'el_{st}_{e}', 'stack_local', ENG_OUT, [(c_, 'so'), (f'astk_{st}', f'e{e}i')]))
-            for pr in range(2):           # S1b copy -> the pair's two heads (one net, two loads)
-                add((f'tp_{st}_{e}_{pr}', 'stack_local', T_PAIR, [(c_, f't{pr}')] +
-                     [(f'head_{st}_{e}_{h}', 'ti') for h in (2 * pr, 2 * pr + 1)]))
+            if m['geo'].get('split') and V143['on']:
+                _v143_buses(add, st, e, c_)
+            else:
+                for pr in range(2):           # S1b copy -> the pair's two heads (one net, two loads)
+                    add((f'tp_{st}_{e}_{pr}', 'stack_local', T_PAIR, [(c_, f't{pr}')] +
+                         [(f'head_{st}_{e}_{h}', 'ti') for h in (2 * pr, 2 * pr + 1)]))
             for h in range(4):
                 hd_ = f'head_{st}_{e}_{h}'
-                add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
-                add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
+                if not (m['geo'].get('split') and V143['on']):
+                    add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
+                    add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
                 add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{e}{h}')]))
             add((f'krq_{st}_{e}', 'spine_local', KS.W_RQ if split else 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
@@ -1278,6 +1386,9 @@ def _d2ds_swap(m):
     # host_drained_local (exported host interface idle); host_boot_begin rides the root boot_go tree (hboot, below)
     add(('hsep', 'spine_local', 16, [('host', 'token_epoch'), ('d2d_kv', 'status_epoch16')]))
     add(('hhdl', 'spine_local', 1, [('host', 'host_drained_local'), ('d2d_kv', 'host_drained_local')]))
+    # v1.4.2 (HOST owner = KV die lead): the root's typed die-local physical fault is the static D2D end's sticky fault
+    # (root places it on bit die_id); the root's engine admission is the link's native_admit_ready inside the root RTL
+    add(('hlpf', 'spine_local', 1, [('d2d_kv', 'lpf'), ('host', 'link_physical_fault')]))
     by = {i.name: i for i in m['insts']}
     ck_ = by['ckb_kv']
     for j, (n_, p_) in enumerate((('fwb_ep', 'fwd_epoch'), ('fwb_rs', 'fwd_link_rst_n'))):
@@ -1920,8 +2031,14 @@ def masters(m, k=1, port_bits=None):
                 # the tile column: si / so to the aggregator (E), the pair-0 copy / returns S, pair-1 N, KV rows W
                 face = {'si': 'E', 'so': 'E', 't0': 'S', 'e0': 'S', 'e1': 'S', 's0': 'S', 's1': 'S',
                         't1': 'N', 'e2': 'N', 'e3': 'N', 's2': 'N', 's3': 'N'}.get(p, 'W')
-            if mst == 'qkd_rhead':
+            if mst in ('qkd_rhead', 'qkd_rhead_ft'):
                 face = 'E' if p == 'nb' else 'S'  # the S face faces the control tile (heads 0 / 1 are MX)
+                if p in ('ft_ti_b', 'ft_e_b', 'ft_s_a'):
+                    face = 'N'                    # v1.4.3 feed-through: toward the far head's band
+            if mst == 'qkd_hgs':
+                face = 'S' if p in ('ti_a', 'e_a') else 'N' if p in ('ti_b', 'e_b') else 'W'
+            if mst == 'qkd_hss':
+                face = 'W' if p == 's_a' else 'E' if p == 's_b' else 'S'
             if mst in ('qkd_land', 'qkd_land_n') and face in 'NS':
                 # the landing is a 172.8 um x 12 mm column: its short faces cannot hold its words (die_kv7: 3,186
                 # overlapping pin shapes, PA DRT-0073); every word leaves on the long face toward its peer
@@ -2035,6 +2152,56 @@ def _split_pins(M, m=None):
                 hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
                 hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
+        if 'qkd_rhead_ft' in M:
+            # v1.4.3 near head: the r4 head pins (children from HEAD_FT_PLAN: lane rows >= 1 sit 16.2 um higher) + the
+            # far neighbour's feed-through: ft_ti_a / ft_e_a on the S (control) face and ft_ti_b / ft_e_b on the N face
+            # straight over the T1 leaf's pins (V143_FT ftg, pins 13.5 + 0.192 i), ft_s_a N / ft_s_b S over the S2 leaf
+            hm = M['qkd_rhead_ft']
+            for p_, x_, pt_ in (('ti', exo + ECTL_T_CX, 6), ('e', exo + sum(ECTL_E_X) / 2, 2), ('s', exo + sum(ECTL_S_X) / 2, 2)):
+                if p_ in hm.ports:
+                    hm.ports[p_] = ('face', hm.ports[p_][1], 'S', 'M5', x_, pt_)
+            if 'nb' in hm.ports:
+                hm.ports['nb'] = ('face', hm.ports['nb'][1], 'E', 'M4', SPLIT_HEAD_FT[1] / 2, 2)
+            gx_, sx_ = V143_FT['ftg'][0], V143_FT['fts'][0]
+            for p_, f_, x_, pt_ in (('ft_ti_a', 'S', gx_ + 13.5 + 0.096 * 1558, 4), ('ft_ti_b', 'N', gx_ + 13.5 + 0.096 * 1558, 4),
+                                    ('ft_e_a', 'S', gx_ + 314.27, 4), ('ft_e_b', 'N', gx_ + 314.27, 4),
+                                    ('ft_s_a', 'N', sx_ + 10.8, 2), ('ft_s_b', 'S', sx_ + 10.8, 2)):
+                if p_ in hm.ports:
+                    hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M5', round(x_, 3), pt_)
+            ch = json.loads((ROOT / HEAD_FT_PLAN).read_text())['children']
+            ch = dict(ch, ftg=[*V143_FT['ftg'], *HGS], fts=[*V143_FT['fts'], *HSS])
+            cmap = dict(HEAD_CLK_CHILD, ck_ft_t='ftg', ck_ft_s='fts')
+            want = sorted((ch[cmap[p_]][1] + ch[cmap[p_]][3] / 2, p_) for p_ in HEAD_CLK + ['ck_ft_t', 'ck_ft_s'] if p_ in hm.ports)
+            ys_, last = {}, 2.0 - 1.2
+            for y_, p_ in want:
+                last = max(y_, last + 1.2)
+                ys_[p_] = last
+            top = SPLIT_HEAD_FT[1] - 12.0
+            if ys_ and max(ys_.values()) > top:
+                for p_ in sorted(ys_, key=ys_.get, reverse=True):
+                    ys_[p_] = min(ys_[p_], top)
+                    top = ys_[p_] - 1.2
+            for p_, y_ in ys_.items():
+                hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
+            if 'rst_n' in hm.ports:
+                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 456.0, 1)
+    # v1.4.3 closed stage views: the die abstract takes the real LEF pin centres (gather: ti 13.5 + 0.192 i S -> N on
+    # M5, e at 312.8..315.7, clock W M4 y 10.8; sstage: s_a W / s_b E on M4, clock S M5 x 9)
+    if 'qkd_hgs' in M:
+        hm = M['qkd_hgs']
+        for p_, f_, x_, pt_ in (('ti_a', 'S', 13.5 + 0.096 * 1558, 4), ('ti_b', 'N', 13.5 + 0.096 * 1558, 4),
+                                ('e_a', 'S', 314.27, 4), ('e_b', 'N', 314.27, 4)):
+            if p_ in hm.ports:
+                hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M5', round(x_, 3), pt_)
+        if 'ck' in hm.ports:
+            hm.ports['ck'] = ('face', 1, 'W', 'M4', 10.81, 1)
+    if 'qkd_hss' in M:
+        hm = M['qkd_hss']
+        for p_, f_, y_ in (('s_a', 'W', 10.0), ('s_b', 'E', 11.535)):
+            if p_ in hm.ports:
+                hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M4', y_, 2)
+        if 'ck' in hm.ports:
+            hm.ports['ck'] = ('face', 1, 'S', 'M5', 8.99, 1)
     # v1.2: the strip compositions' leaf clock entries = area pins at each leaf (land: PC leaf k beside its CDC on the E
     # half, group i at the middle of its four PCs on the W half, the embedding engine at the N end; astk: astk_plan)
     for mn in ('qkd_land', 'qkd_land_n'):
@@ -2750,6 +2917,8 @@ def main(argv=None):
     ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4: real HOST root core + 128 die-placed PC slices + PLL model')
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core directly below the static D2D end')
     ap.add_argument('--host-trees', action='store_true', help='kvsys v1.4.2: HOST reset / boot fan-outs as registered relay trees')
+    ap.add_argument('--v143', action='store_true', help='kvsys v1.4.3 G3S2: staged head ingress / score on closed gather / '
+                    'sstage views, near-head feed-through frames, anchored group growth (needs --split --host-trees)')
     a = ap.parse_args(argv)
     if a.host_v14:
         if not a.split:
@@ -2763,6 +2932,10 @@ def main(argv=None):
         if not a.host_north:
             ap.error('--host-trees needs --host-north')
         HOST_V14['trees'] = True
+    if a.v143:
+        if not a.host_trees:
+            ap.error('--v143 needs --host-trees')
+        V143['on'] = True
     a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
