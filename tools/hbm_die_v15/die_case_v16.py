@@ -671,11 +671,7 @@ def main():
         for n_ in ii:
             dom_of[n_].add(d_)
     pairs = communicating_pairs(nets, dom_of, a.pair_max_tiles)
-    trees, checks, entry_maps = {}, {}, {}
-    (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
-        pairs=[[x, y, dom] for dom, edges in sorted(pairs.items()) for x, y in edges],
-        scope='Every source-to-sink branch; tile-level shared checker may select a common entry. '
-              'Per-pin conservative combinations are in manifest clock_entry_map/model; actual STA remains required.'), indent=1))
+    trees, checks, entry_maps, literal_pairs = {}, {}, {}, []
     for di, (dom, insts) in enumerate(sorted(clk.items())):
         # the domain tree starts at the placed REAL hfd_ckgen's pll_<dom> output pin (routed LEF), cross-checked with the grant
         vk = pl[CKGEN]; cp = vxy[cell_of[CKGEN]][f'pll_{dom}']
@@ -684,6 +680,7 @@ def main():
         assert abs(rx - gx) + abs(ry - gy) < 5.0, (dom, (rx, ry), (gx, gy))
         sinks, entry_map, entry_pairs = clock_entries(insts, pl, cell_of, vxy, pairs.get(dom, []))
         entry_maps[dom] = entry_map
+        literal_pairs.extend(['/'.join(entry_map[x]), '/'.join(entry_map[y]), dom] for x, y in entry_pairs)
         mode = dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree')
         if mode == 'auto':
             mode = 'graph' if pairs.get(dom) else 'htree'
@@ -715,6 +712,12 @@ def main():
 
     manifest['clock_entry_map'] = entry_maps
     manifest['clock_entry_scope'] = 'Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.'
+    (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
+        pairs=[[x, y, dom] for dom, edges in sorted(pairs.items()) for x, y in edges],
+        entry_pairs=literal_pairs,
+        scope='Every source-to-sink branch plus conservative same-domain literal entry combinations and intra-tile entries. '
+              'Tile-pair summaries select their worst combination; literal entry pairs preserve actual domain geometry. '
+              'Actual STA and native phase/port ownership qualification remain required.'), indent=1))
     clock_sites.allocate(trees, W, H, obs)
     render(out, manifest, P, W, H, trees)
     # ---------------- die.v ----------------

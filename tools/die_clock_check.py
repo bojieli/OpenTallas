@@ -23,6 +23,8 @@ Usage:
   die_clock_check.py report DUMP.tsv [--out JSON] [--pairs PAIRS.json] [--top N]
   die_clock_check.py tcl            # print the path of the Tcl dumper
 PAIRS.json: [[instA, instB], ...] or {"pairs": [[instA, instB, note?], ...]} (tile instance names as in the die db).
+The optional "entry_pairs" list names literal inst/clock_pin nodes, so related
+clock entries within one tile and specific same-domain branches can be measured.
 """
 import argparse, json, os, statistics, sys
 
@@ -123,6 +125,9 @@ def report(dump, pairs_file=None, top=20):
         pj = json.load(open(pairs_file))
         for e in (pj.get("pairs", []) if isinstance(pj, dict) else pj):
             allpairs.append((e[0], e[1], e[2] if len(e) > 2 else "", "bus_list"))
+        if isinstance(pj, dict):
+            for e in pj.get("entry_pairs", []):
+                allpairs.append((e[0], e[1], e[2] if len(e) > 2 else "", "literal_entry_list"))
     seen, prs, missing, cross = set(), [], [], 0
     anc_cache = {}
     def anc_of(p):
@@ -134,12 +139,17 @@ def report(dump, pairs_file=None, top=20):
         if key in seen:
             continue
         seen.add(key)
-        if a not in entries or b not in entries:
+        def entry_nodes(name):
+            if name in nodes and nodes[name]['kind'] == 'tile':
+                return [name]
+            return entries.get(name, [])
+        left, right = entry_nodes(a), entry_nodes(b)
+        if not left or not right:
             missing.append([a, b, how])
             continue
         best = None
-        for pa in entries[a]:
-            for pb in entries[b]:
+        for pa in left:
+            for pb in right:
                 aa, ab = anc_of(pa), set(anc_of(pb))
                 lca = next((k for k in aa if k in ab), None)
                 if lca is None:
