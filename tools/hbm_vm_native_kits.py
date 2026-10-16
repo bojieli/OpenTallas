@@ -11,7 +11,7 @@ Pin grant (derived, proposal for H-DIE; 270 x 270 slot unchanged):
     It carries rq1/rr1, wq1/wq_done1 (the new SM-writer group for q0/q1; write group 1 for q2), xq2/xq2_done and eg,
     identical for all three native masters.
 Kit settings = the strap6 kits of the same quadrant (strap5 write-tree RTL, OT_IOF_FOLLOW_AND=1, abutted 3-SRAM stack,
-spine clock, pin flops in RTL); q0 adds EG_WIDE=1 (strap6 q0 egress fix).
+spine clock, pin flops in RTL) + EG_WIDE=1 on all three (strap6 q0 egress fix).
 """
 import json
 import re
@@ -113,7 +113,9 @@ def make():
               "04fad9220 binds hfd_vms_bank_native_q*, strap masters retired). Same body as strap6: strap5 write tree "
               "(payload zeroed at its own pin capture, lv_rep removed), SECDED flip on the D edge, OT_IOF_FOLLOW_AND=1 "
               "(pin -> AND2 -> DFF captures anchored; strap5 q2/q3 view capture 493.3 ps / 818 pins without it)"
-              + (", EG_WIDE=1 (strap5 q0 TT -114.94: 21/22 violators packet/COLL leaf -> egress pin clones)" if q == 0 else "")
+              + ", EG_WIDE=1 (strap5 q0 TT -114.94: 21/22 violators packet/COLL leaf -> egress pin clones; native q2 gate "
+                "nat1 placement reg->reg -115.9 at eg_d[10], same egress pattern; equivalence 0 mismatches at RG5/WG2, "
+                "RG4/WG2, RG5/WG3)"
               + ". Pins: v4 strap grant N/S/W + E face = strap q2 E (0.144 um) minus rq5/rr5 "
               f"({GRANT}).")
         s["job"].update(tag="nat1", purpose=sc, structural_change=sc,
