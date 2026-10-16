@@ -41,8 +41,18 @@
 // first serial edge strictly after its write (b0: tick 4, b2: 8, b3: 12) precedes its fixed read edge (8 / 12 / 16),
 // and the next write (12 / 18 / 21) follows it.  The cross-root arcs stay pin -> flop (setup >= 2 ticks).
 // Reset: stq holds 0 until the first written bank is read (serial edge 2 of the first epoch).
+// S LEAF RESET STAGE (S-VM-CAPT-X43RST, 2026-10-16; native audit 1316: capture rsv[0] 218.0 ps > 190 when rsv was
+// the raw async reset of ~70 flops): rsv drives only the 2-flop local stage rv (async assert, synchronous release,
+// as dsfd_capt_x8x_s's rv_s); rv1 resets the leaf state.  rv1 rises after serial edge 1, so the state's first
+// active edge is epoch edge 2 -- the reset values are those the rsv-direct leaf held AFTER edge 1 (sp = 1, se = 1,
+// warm = 1, flt = 0, stq = 0; warm is then constant 1 and removed) and mk (the t_mark pin register) has no reset, so
+// at edge 2 it holds the edge-1 sample exactly as before.  t_st is therefore identical to the rsv-direct leaf at
+// every time for every rsv timing (tb_dsfd_capt_status_x43_eq compares the two under random releases / re-resets):
+// ZERO added serial edges, startup contract unchanged.
 // Mutants: S81PH_CAPS_MUT_STATUS (t_st[3] inverted, the externally consumed fault bit, as the old leaf);
-//          DSFD_CAPT_STX43_MUT_PHASE (the n = 3 bank is read at serial edge 0, with the n = 2 bank's slot).
+//          DSFD_CAPT_STX43_MUT_PHASE (the n = 3 bank is read at serial edge 0, with the n = 2 bank's slot);
+//          DSFD_CAPT_STX43_MUT_RVPH (the rsv-direct reset values sp = 2 / se = 0 under the 2-flop stage: phase
+//          off by the stage delay).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_capt_status_x43_t (
     input  wire [0:0]  ck,
@@ -84,24 +94,33 @@ module dsfd_capt_status_x43_s (
     input  wire        t_mark,
     output wire [63:0] t_st
 );
-    // sp = index of the last serial edge (2 at reset: the next edge is epoch edge 0)
-    reg [1:0] sp; reg se; reg warm; reg mk; reg flt;
+    // local reset stage: rsv (the die's epoch reset) drives only these 2 flops; rv1 resets the leaf state, whose
+    // first active edge is therefore epoch edge 2 (rsv released before epoch edge 0, rv0 rises at edge 0, rv1 at 1)
+    (* keep *) reg rv0, rv1;
+    always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) begin rv0 <= 1'b0; rv1 <= 1'b0; end else begin rv0 <= 1'b1; rv1 <= rv0; end
+    // sp = index of the last serial edge (1 under reset: the state's first edge is epoch edge 2).  Reset values = the
+    // state the rsv-direct leaf held after epoch edge 1 (sp 1, se toggled at edge 0, warm set at edge 1, no check yet)
+    reg [1:0] sp; reg se; reg mk; reg flt;
     reg [63:0] stq;
     reg [63:0] sh0, sh2, sh3; reg [2:0] bq;               // input pin registers, loaded at every serial edge
-    always @(posedge ckv[0]) begin sh0 <= b0; sh2 <= b2; sh3 <= b3; bq <= bpar; end
+    // mk = t_mark pin register (no reset: at the state's first edge it holds the edge-1 sample, as before)
+    always @(posedge ckv[0]) begin sh0 <= b0; sh2 <= b2; sh3 <= b3; bq <= bpar; mk <= t_mark; end
     wire [1:0] sn = (sp == 2'd2) ? 2'd0 : sp + 2'd1;   // serial edge index of THIS edge
-    always @(posedge ckv[0] or negedge rsv[0])
-        if (!rsv[0]) begin sp <= 2'd2; se <= 1'b0; warm <= 1'b0; mk <= 1'b0; flt <= 1'b0; end
+    always @(posedge ckv[0] or negedge rv1)
+`ifdef DSFD_CAPT_STX43_MUT_RVPH
+        if (!rv1) begin sp <= 2'd2; se <= 1'b0; flt <= 1'b0; end
+`else
+        if (!rv1) begin sp <= 2'd1; se <= 1'b1; flt <= 1'b0; end
+`endif
         else begin
             sp <= sn;
-            mk <= t_mark;
             // PHASE ASSERTION: t_mark sampled at serial edge 2 (tick 8) is high, at edges 0 / 1 low.  mk holds the
             // previous edge's sample: at serial edge 0 it must be 1, else 0.
-            if (warm && mk != (sn == 2'd0)) flt <= 1'b1;
+            if (mk != (sn == 2'd0)) flt <= 1'b1;
             case (sn)
-                2'd0: begin se <= ~se; if (warm && bq[1] != se) flt <= 1'b1; end
-                2'd1: begin warm <= 1'b1; if (warm && bq[2] != ~se) flt <= 1'b1; end
-                default: if (warm && bq[0] != se) flt <= 1'b1;
+                2'd0: begin se <= ~se; if (bq[1] != se) flt <= 1'b1; end
+                2'd1: if (bq[2] != ~se) flt <= 1'b1;
+                default: if (bq[0] != se) flt <= 1'b1;
             endcase
         end
     // the bank read at this edge (fixed by sn); bit 3 also carries the sticky alignment fault
@@ -117,9 +136,9 @@ module dsfd_capt_status_x43_s (
 `endif
             default: rd = sh0;
         endcase
-    always @(posedge ckv[0] or negedge rsv[0])
-        if (!rsv[0]) stq <= 64'd0;
-        else if (warm) stq <= {rd[63:4], rd[3] | flt, rd[2:0]};
+    always @(posedge ckv[0] or negedge rv1)
+        if (!rv1) stq <= 64'd0;
+        else stq <= {rd[63:4], rd[3] | flt, rd[2:0]};
 `ifdef S81PH_CAPS_MUT_STATUS
     assign t_st = stq ^ 64'd8; // deliberately corrupt the externally consumed fault bit
 `else
