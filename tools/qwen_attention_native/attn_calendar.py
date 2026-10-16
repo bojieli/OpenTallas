@@ -18,9 +18,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 
 FIELDS = ("R", "P1", "P0", "PV_START", "HUB_PUB", "HUB_RECIP", "HUB_Z", "HUB_LMAX", "Z", "LMAX", "EXP")
 Z_STRIDE, ZIN_D, LIN_D = 16, 2, 2
+ROW_LAT, QK_CONSUME, LMAX_AFTER_CONSUME = 21, 34, 117
+PAIR_OUT, EMPTY_PAIR_OUT = 590, 560      # pair output age after start_pv: 590 + rows (measured), an empty pair 560
 # T=8192 generous calendar verified EXACT by Q-ATTN r3 (fix_r3/receipt.json)
 R3_8192 = dict(R=4686, P1=4686, P0=4686, PV_START=1450, HUB_PUB=1980, HUB_RECIP=1900, HUB_Z=1711, HUB_LMAX=807,
                Z=1450, LMAX=800, EXP=850)
@@ -52,10 +55,19 @@ def ep_term(T):
     return 8 * ((T + 255) // 256)
 
 
+def qk_last_consume(T):
+    """last QK consume age over the 32 engines (tools/qwen_kv_die/static_qk_calendar.py at RL21 / consume age 34)"""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "qwen_kv_die"))
+    import static_qk_calendar as q
+    c = q.compile_calendar(T, ROW_LAT, QK_CONSUME)
+    return max(s["consume"] for e in c["engines"] for s in e["slots"])
+
+
 def lmax_min(T):
-    """QK pass end: measured minimal LMAX 152 (T=1), 183 (1000), 182 (1024), 214 (2048), 247 (3000), 278 (4096),
-    364 (5000), 379 (6144), 392 (7000), 406 (8192); 150 + P2(T)/32 is the upper envelope (equal at powers of two)"""
-    return 150 + p2(T) // 32
+    """QK pass end: LMAX >= last QK consume + LMAX_AFTER_CONSUME.  Measured on the production binary: minimal exact LMAX
+    152 (T=1), 182 (1024), 214 (2048), 278 (4096), 406 (8192) and fault at last+116 for T = 100/1000/3000/5000/6144/7000
+    (the lane pass is NOT T/32: ns > 1024 rows a stack scan the 2048-slot permuted ECTL order)"""
+    return qk_last_consume(T) + LMAX_AFTER_CONSUME
 
 
 def hub(z, lmax):
@@ -67,7 +79,7 @@ def hub(z, lmax):
     return hub_lmax, hub_z, recip, pub
 
 
-def calendar(T, lmax=None, exp_gap=50, z_gap=131, pv_gap=0):
+def calendar(T, lmax=None, exp_gap=50, z_gap=131, pv_gap=0, pv_off=None):
     """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_gap: Z - (EXP + 213 + ep_term); pv_gap: PV - Z"""
     if not 1 <= T <= 8192:
         raise ValueError("context 1..8192")
@@ -75,10 +87,11 @@ def calendar(T, lmax=None, exp_gap=50, z_gap=131, pv_gap=0):
         lmax = lmax_min(T)
     exp = lmax + exp_gap
     z = exp + 213 + ep_term(T) + z_gap
-    pv = z + pv_gap
+    pv = z + pv_gap if pv_off is None else exp + 213 + ep_term(T) + pv_off
     hub_lmax, hub_z, recip, pub = hub(z, lmax)
     l0, l1 = pair_rows(T)
-    c = dict(R=590 + max(l0, l1), P1=590 + l1, P0=590 + l0, PV_START=pv, HUB_PUB=pub, HUB_RECIP=recip, HUB_Z=hub_z, HUB_LMAX=hub_lmax, Z=z,
+    po = [PAIR_OUT + n if n else EMPTY_PAIR_OUT for n in (l0, l1)]
+    c = dict(R=max(po), P1=po[1], P0=po[0], PV_START=pv, HUB_PUB=pub, HUB_RECIP=recip, HUB_Z=hub_z, HUB_LMAX=hub_lmax, Z=z,
              LMAX=lmax, EXP=exp)
     check(c)
     return c
@@ -106,11 +119,12 @@ def main(argv=None):
     ap.add_argument("--exp-gap", type=int, default=50)
     ap.add_argument("--z-gap", type=int, default=131)
     ap.add_argument("--pv-gap", type=int, default=0)
+    ap.add_argument("--pv-off", type=int, default=None)
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
     out = {}
     for T in a.ctx:
-        c = calendar(T, a.lmax, a.exp_gap, a.z_gap, a.pv_gap)
+        c = calendar(T, a.lmax, a.exp_gap, a.z_gap, a.pv_gap, a.pv_off)
         out[T] = dict(cal=hexcal(c), fields=c)
     print(json.dumps(out, indent=1) if a.json else "\n".join(f"{T} {v['cal']}" for T, v in out.items()))
 
