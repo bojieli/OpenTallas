@@ -151,9 +151,14 @@ def validate_view_coverage(instances, views):
     for name, instance in instances.items():
         entry = views[owners[name]]
         representative = instances.get(entry.get('representative'))
-        if representative is not None and (instance['master'] != entry['master'] or
-                                            instance['ports'] != representative['ports']):
+        if representative is None:
+            raise ValueError(f'view representative absent from contract: {owners[name]}')
+        if instance['master'] != entry['master'] or instance['ports'] != representative['ports']:
             raise ValueError(f'view ABI mismatch: {name} -> {owners[name]}')
+        # Equal ports do not imply equal implementations: QID, pipeline ages,
+        # memory depth and static features can alter the mapped body and timing.
+        if instance.get('params', {}) != entry.get('params', {}):
+            raise ValueError(f'view parameter mismatch: {name} -> {owners[name]}')
 
 
 def communicating_pairs(nets, dom_of, clique_limit=8):
