@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_land_seg",
+ "enable": false,
+ "reason": "Parent is wires only (qkd_land_seg): every segment pin is a CLOSED leaf pin whose leaf registers it (qkd_land_pc / qkd_land_grp_epoch native pin form); the five child clock entries are delivered phi - R by the die. Parent wires are part of the die hop budget."
+}

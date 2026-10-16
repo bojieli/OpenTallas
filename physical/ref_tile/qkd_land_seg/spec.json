@@ -1,0 +1,352 @@
+{
+ "name": "qkd_land_seg",
+ "top": "qkd_land_seg",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_land_seg.sv"
+ ],
+ "params": {},
+ "clock": "entries",
+ "clock_port": "ck_p0",
+ "clock_ports": [
+  "ck_p0",
+  "ck_p1",
+  "ck_p2",
+  "ck_p3",
+  "ck_g"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "E": [
+   "es0",
+   "er0",
+   "li0",
+   "lp0",
+   "cf0",
+   "es1",
+   "er1",
+   "li1",
+   "lp1",
+   "cf1",
+   "es2",
+   "er2",
+   "li2",
+   "lp2",
+   "cf2",
+   "es3",
+   "er3",
+   "li3",
+   "lp3",
+   "cf3"
+  ],
+  "W": [
+   "ck_p0",
+   "ck_p1",
+   "ck_p2",
+   "ck_p3",
+   "rst_n",
+   "g",
+   "st",
+   "lt",
+   "rq",
+   "rs",
+   "kn",
+   "ck_g"
+  ],
+  "N": [
+   "dn_i",
+   "up_o",
+   "cr_o",
+   "pf_o",
+   "gf_o"
+  ],
+  "S": [
+   "dn_o",
+   "up_i",
+   "cr_i",
+   "pf_i",
+   "gf_i"
+  ]
+ },
+ "pin_ranges": {
+  "es0": [
+   117.2,
+   147.2
+  ],
+  "er0": [
+   151.2,
+   177.2
+  ],
+  "li0": [
+   181.2,
+   227.2
+  ],
+  "lp0": [
+   229.2,
+   230.2
+  ],
+  "cf0": [
+   231.2,
+   232.2
+  ],
+  "ck_p0": [
+   264.0,
+   265.0
+  ],
+  "es1": [
+   495.2,
+   525.2
+  ],
+  "er1": [
+   529.2,
+   555.2
+  ],
+  "li1": [
+   559.2,
+   605.2
+  ],
+  "lp1": [
+   607.2,
+   608.2
+  ],
+  "cf1": [
+   609.2,
+   610.2
+  ],
+  "ck_p1": [
+   642.0,
+   643.0
+  ],
+  "es2": [
+   873.2,
+   903.2
+  ],
+  "er2": [
+   907.2,
+   933.2
+  ],
+  "li2": [
+   937.2,
+   983.2
+  ],
+  "lp2": [
+   985.2,
+   986.2
+  ],
+  "cf2": [
+   987.2,
+   988.2
+  ],
+  "ck_p2": [
+   1020.0,
+   1021.0
+  ],
+  "es3": [
+   1251.2,
+   1281.2
+  ],
+  "er3": [
+   1285.2,
+   1311.2
+  ],
+  "li3": [
+   1315.2,
+   1361.2
+  ],
+  "lp3": [
+   1363.2,
+   1364.2
+  ],
+  "cf3": [
+   1365.2,
+   1366.2
+  ],
+  "ck_p3": [
+   1398.0,
+   1399.0
+  ],
+  "rst_n": [
+   608.8,
+   609.8
+  ],
+  "g": [
+   611.8,
+   614.8
+  ],
+  "st": [
+   615.8,
+   617.8
+  ],
+  "lt": [
+   620.8,
+   624.8
+  ],
+  "rq": [
+   628.8,
+   632.8
+  ],
+  "rs": [
+   638.8,
+   738.8
+  ],
+  "kn": [
+   744.8,
+   846.8
+  ],
+  "ck_g": [
+   901.2,
+   902.2
+  ],
+  "dn_i": [
+   135.76,
+   165.76
+  ],
+  "dn_o": [
+   135.76,
+   165.76
+  ],
+  "up_o": [
+   169.76,
+   195.76
+  ],
+  "up_i": [
+   169.76,
+   195.76
+  ],
+  "cr_o": [
+   197.76,
+   201.76
+  ],
+  "cr_i": [
+   197.76,
+   201.76
+  ],
+  "pf_o": [
+   203.26,
+   204.26
+  ],
+  "pf_i": [
+   203.26,
+   204.26
+  ],
+  "gf_o": [
+   63.76,
+   64.76
+  ],
+  "gf_i": [
+   63.76,
+   64.76
+  ]
+ },
+ "outline": {
+  "w": 241.92,
+  "h": 1512.0,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "count": 1,
+   "inst": "u_pc0",
+   "at": [
+    131.76,
+    97.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "count": 1,
+   "inst": "u_pc1",
+   "at": [
+    131.76,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "count": 1,
+   "inst": "u_pc2",
+   "at": [
+    131.76,
+    853.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "count": 1,
+   "inst": "u_pc3",
+   "at": [
+    131.76,
+    1231.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch",
+   "count": 1,
+   "inst": "u_g",
+   "at": [
+    23.76,
+    604.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Parent is wires only (qkd_land_seg): every segment pin is a CLOSED leaf pin whose leaf registers it (qkd_land_pc / qkd_land_grp_epoch native pin form); the five child clock entries are delivered phi - R by the die. Parent wires are part of the die hop budget."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "macros": [],
+ "inter": [],
+ "slot_change_request": "Q-KVSYS-STRIP 2026-10-16 (VIS-ROM D-QK-02): the landing strip qkd_land / qkd_land_n (172.8 x 12,141 um, 70:1) becomes 8 x this segment a stack (241.92 x 1,512 each = 4 HBM PC pitches; strip width 172.8 -> 241.92 (the static-memory landing reservation 237.6 + 4.32)) + the unchanged emb leaf at the N end and the unchanged kn / lt die relay spine. Request: results/arch/qwen_split_1014/kvsys_v1_4_4_design/strip_segments_request.json",
+ "job": {
+  "owner": "Claude:Q-KVSYS-STRIP",
+  "branch": "claude/qkvsys-strip-land",
+  "tag": "sg1",
+  "purpose": "KV/system die landing strip SEGMENT qkd_land_seg (VIS-ROM D-QK-02): one row-engine group = 4 CLOSED qkd_land_pc (E column, 378-um HBM PC pitch) + the CLOSED qkd_land_grp_epoch (W column), wires only, 5 child clock entries; ONE master replicated 32x on the die (g / st straps). Cycle-identical to qkd_land_strip_s (yosys equivalence).",
+  "benches": [
+   {
+    "name": "land_seg_equiv",
+    "cmd": "python3 tools/qwen_kv_die/land_segments.py --equiv",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [],
+    "pass_regex": "^EQUIV PASS"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "tools/qwen_kv_die",
+   "physical/ref_tile/qkd_land_pc",
+   "physical/ref_tile/qkd_land_grp_epoch"
+  ]
+ },
+ "structural_change": "new master (D-QK-02): replaces the never-hardened 172.8 x 12,141 landing strip frame by 8 identical 1,512-um segments of closed leaves",
+ "io_flop_at_pins": false,
+ "inhold": false,
+ "outhold": false
+}
