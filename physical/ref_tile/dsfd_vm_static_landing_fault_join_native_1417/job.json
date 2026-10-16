@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_landing_fault_join_native_1417-join1-COMMIT",
+ "name": "dsfd_vm_static_landing_fault_join_native_1417-join1-7dea3579b",
  "block": "dsfd_vm_static_landing_fault_join",
  "ref_tile": true,
  "owner": "codex:S81 VM landing1417",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 4,
  "source": {
   "branch": "codex/s81-vm-landing-1417",
-  "commit": "COMMIT",
+  "commit": "7dea3579b4617509daba18b78ca942dede5b524f",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_landing_fault_join_native_1417/dsfd_vm_static_landing_fault_join_native_1417-join1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_landing_fault_join_native_1417/dsfd_vm_static_landing_fault_join_native_1417-join1-7dea3579b"
   }
  ],
  "cycles_added": 0,

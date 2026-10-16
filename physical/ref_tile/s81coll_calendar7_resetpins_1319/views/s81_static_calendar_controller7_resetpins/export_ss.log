@@ -1,0 +1,116 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_rom_4096x266_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs2 can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs2 can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_rom[0] -> ROM_BANK[0].u_rom/clk wire=10.815405905779361 library=ot_rom_4096x266_m8_ss/ot_rom_4096x266_m8 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_rom[1] -> ROM_BANK[1].u_rom/clk wire=11.28058241606215 library=ot_rom_4096x266_m8_ss/ot_rom_4096x266_m8 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss clk_rom[2] -> ROM_BANK[2].u_rom/clk wire=10.589109492710476 library=ot_rom_4096x266_m8_ss/ot_rom_4096x266_m8 (internal arcs retained)
+OT_HYBRID CTS_MEASURE ss clk sinks=227 reference_scope=boundary boundary_sinks=101 min=174.2023754436013 mean=192.5416863349171 max=215.8208204114504 all_mean=186.03607159173993
+OT_HYBRID CTS_MEASURE ss clk_outputs[0] sinks=369 reference_scope=boundary boundary_sinks=186 min=222.58563137212724 mean=252.8581048652376 max=262.65331681298335 all_mean=239.68009308911695
+OT_HYBRID CTS_MEASURE ss clk_outputs[1] sinks=289 reference_scope=boundary boundary_sinks=146 min=202.34235201616067 mean=206.54799576197541 max=210.62400519029265 all_mean=212.82056752748267
+OT_HYBRID CTS_MEASURE ss clk_outputs[2] sinks=287 reference_scope=boundary boundary_sinks=145 min=207.73990943876058 mean=212.4246161987851 max=215.29897395442794 all_mean=200.0462584265232
+OT_ENTRIES LEVEL clk_rom[0] deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_rom[0] -> ROM_BANK[0].u_rom/clk wire=10.815405905779361 R=0 latency=242.04269895945825 phi=252.8581048652376
+OT_ENTRIES LEVEL clk_rom[1] deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_rom[1] -> ROM_BANK[1].u_rom/clk wire=11.28058241606215 R=0 latency=241.57752244917546 phi=252.8581048652376
+OT_ENTRIES LEVEL clk_rom[2] deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_rom[2] -> ROM_BANK[2].u_rom/clk wire=10.589109492710476 R=0 latency=242.26899537252714 phi=252.8581048652376
+OT_ENTRIES LEVEL clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk -> busy$_DFFE_PN0P_/CLK wire=0 R=192.5416863349171 latency=60.316418530320504 phi=252.8581048652376
+OT_ENTRIES LEVEL clk_outputs[0] deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_outputs[0] -> commit_last$_DFF_PN0_/CLK wire=0 R=252.8581048652376 latency=0.0 phi=252.8581048652376
+OT_ENTRIES LEVEL clk_outputs[1] deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_outputs[1] -> channel_rx_kind[0]$_DFF_PN0_/CLK wire=0 R=206.54799576197541 latency=46.31010910326219 phi=252.8581048652376
+OT_ENTRIES LEVEL clk_outputs[2] deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ss clk_outputs[2] -> channel_rx_beat_slot[0]$_DFF_PN0_/CLK wire=0 R=212.4246161987851 latency=40.43348866645252 phi=252.8581048652376
+OT_ENTRIES DOMAIN core 833.333008ps IO87/12 boundary=234.51879397392182..276.1372389417709
+OT_ENTRIES DOMAIN rom0 833.333008ps IO0/0 boundary=252.8581048652376..252.8581048652376
+OT_ENTRIES DOMAIN rom1 833.333008ps IO0/0 boundary=252.8581048652376..252.8581048652376
+OT_ENTRIES DOMAIN rom2 833.333008ps IO0/0 boundary=252.8581048652376..252.8581048652376
+OT_ENTRIES DOMAIN outputs0 833.333008ps IO1/183 boundary=222.58563137212727..262.65331681298335
+OT_ENTRIES DOMAIN outputs1 833.333008ps IO1/143 boundary=248.65246111942287..256.93411429355484
+OT_ENTRIES DOMAIN outputs2 833.333008ps IO1/142 boundary=248.1733981052131..255.73246262088048
+OT_MULTI_ROOT RELATED_PATH core -> rom0 max slack=-182.810379 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> rom0 min slack=222.535828 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> rom1 max slack=-196.775101 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> rom1 min slack=210.092773 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> rom2 max slack=-182.468704 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> rom2 min slack=204.159058 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> outputs2 max slack=-256.772217 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> outputs2 min slack=336.787231 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> outputs1 max slack=-267.809174 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> outputs1 min slack=300.398071 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> outputs0 max slack=-279.068115 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> outputs0 min slack=351.991425 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom0 -> outputs0 max slack=-230.910568 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom0 -> outputs0 min slack=651.879028 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom0 -> outputs1 max slack=-165.621078 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom0 -> outputs1 min slack=629.131592 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom1 -> outputs1 max slack=-214.303802 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom1 -> outputs1 min slack=672.737915 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom1 -> outputs2 max slack=-223.727142 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom1 -> outputs2 min slack=680.026001 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom1 -> core max slack=-201.955505 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom1 -> core min slack=662.804382 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom2 -> core max slack=-206.263229 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rom2 -> core min slack=680.830811 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=1175 inputs=90 outputs=480 async_control_pins=1214
+OT_ENTRIES COMP DONE ss 7 entries phi=252.8581048652376 boundary=222.58563137212727..276.1372389417709
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rom2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_outputs2 can not be propagated.
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_rom[0] (ot_entry_1): data input delays dropped
+OT_IOREF clock-port clk_rom[1] (ot_entry_2): data input delays dropped
+OT_IOREF clock-port clk_rom[2] (ot_entry_3): data input delays dropped
+OT_IOREF clock-port clk_outputs[0] (ot_entry_4): data input delays dropped
+OT_IOREF clock-port clk_outputs[1] (ot_entry_5): data input delays dropped
+OT_IOREF clock-port clk_outputs[2] (ot_entry_6): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 101 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 186 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_5 boundary 146 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_6 boundary 145 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_rom0 (not an insertion-reference clock)
+OT_IOREF keep ot_io_rom1 (not an insertion-reference clock)
+OT_IOREF keep ot_io_rom2 (not an insertion-reference clock)
+OT_IOREF keep ot_io_outputs0 (not an insertion-reference clock)
+OT_IOREF keep ot_io_outputs1 (not an insertion-reference clock)
+OT_IOREF keep ot_io_outputs2 (not an insertion-reference clock)
+OT_WS max -2.790681019604335e-10 min 7.365472121101391e-11
+OT_EXPORT_DONE

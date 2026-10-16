@@ -285,6 +285,14 @@ def main():
                     'their chain members are aliased to the job, the SU ops with no job kind move to the behavioural port '
                     f'{SUX_PORT} (su.x) at program duration')
     ap.add_argument('--mix-snap', type=Path, help='real MIX4 operands; collapse eng.* onto one actual master command')
+    ap.add_argument('--hcx-real', action='store_true', help='port 9: the HC coefficient chain on real RTL (4-rank '
+                    'dsfd_sp_hcx_projection + gatherpack + post, ot_s81_hcx_chain_seq) under the fixed issuer: the '
+                    'block\'s hc.fn/sumsq/rsqrt/pre_post/sinkhorn leave the dynamic program (one compiled engine-9 command '
+                    'per block in fixed_program.mem); NO golden coefficient rows are written (the HC COEF job reads the '
+                    'rows the real post writes)')
+    ap.add_argument('--hcx-issue', default='', help='compiled issuer ages of the attn,ffn chain commands (phase-2 edges): A,F or per layer L1=A,F/L14=A,F')
+    ap.add_argument('--hcx-p2p', type=int, default=0, help='measured chain command-pin -> done-pin latency (tb_s81_hcx_chain)')
+    ap.add_argument('--hcx-set', type=int, default=-1, help='resident HC ROM set index (default: the layer number)')
     ap.add_argument('--program-layer', default=None, help='take the stage program of this backbone layer (e.g. L0) '
                     'for --layer (its op ids renamed): a DSpark stage row (M<st>R<i>, tools/s81_ftok/mtp_golden.py) runs '
                     'on the sliding layer\'s program (window attention + MoE, the same op graph), its own chain and SU '
@@ -342,6 +350,8 @@ def main():
             vm_boot[G_BASE + b * HG.GROWS + r] = HG.pack(wv[16 * r:16 * r + 16], 32)
     coef = {}
     for b, blk in enumerate(('attn', 'ffn')):
+        if a.hcx_real:                                  # the real post writes these rows; never injected
+            break
         g = gold[blk]
         coef[C_BASE + COEF_STRIDE * b] = HG.pack(HG.u32(np.asarray(g['comb'], np.float32).reshape(-1)), 32)
         coef[C_BASE + COEF_STRIDE * b + 1] = HG.pack(list(HG.u32(g['pre'])) + list(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32)
@@ -369,6 +379,7 @@ def main():
         for q, row in enumerate(eng_rows):
             coef[(EH_BASE if a.h_stream else H_BASE) + q] = row
     mix_meta = None
+    fixed_rows = []          # fixed-issuer calendar rows (engine 10 MIX4 row first: its tag OP_BASE+0 = eng.add's index)
     if a.mix_snap:
         assert eng_ops and not a.h_stream, 'MIX4 currently requires in-place H layout'
         es = pickle.loads(a.mix_snap.read_bytes())
@@ -395,6 +406,7 @@ def main():
         # fault code 8 at stream cycle 2681 (tb_s81_engram_mix4_fixed reproduces it).
         MIX_ISSUE, MIX_PIN_TO_PIN = 656, 772
         mix_done = issuer_done_row(MIX_ISSUE, MIX_PIN_TO_PIN)
+        fixed_rows.append(dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN))
         mc = encode_program([dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN),
                              dict(engine=15,arg=0,issue=mix_done+4,done=0)],stage=0,phase=3)
         mc['hardware_nops']=2
@@ -436,6 +448,8 @@ def main():
     alias = {f'{L}.{blk}.{s}': f'{L}.{blk}.hc_pre' for blk in SU_IN_NORM for s in SU_IN_NORM[blk]}
     names = {o['id'] for o in src}
     msgs = []
+    hcx_members = {}
+    assert not (a.hcx_real and a.coef_split), '--hcx-real lowers the full coefficient chain (no COEF split)'
     for i, o in enumerate(src):
         nm = o['id']
         blk = nm.split('.')[1]
@@ -487,6 +501,8 @@ def main():
             elif tail == 'hc_post':
                 add(nm, HC_PORT, o['dur'], preds + ([f'{L}.{blk}.hc.coef'] if a.coef_split else []), hc_arg(3, 0),
                     eng='hc', order=i)
+            elif a.hcx_real:   # coefficient producers: the real chain, one fixed-issuer command per block
+                hcx_members.setdefault(blk, []).append(nm)
             else:      # coefficient producers: behavioural on hcx
                 wrow = {'hc.pre_post': C_BASE + COEF_STRIDE * b + 1, 'hc.sinkhorn': C_BASE + COEF_STRIDE * b}.get(tail, -1)
                 add(nm, HX_PORT, o['dur'], preds, wrow=wrow, eng='hcx', order=i)
@@ -503,6 +519,38 @@ def main():
         else:
             add(nm, o['port'], o['dur'], preds, eng=o['eng'], order=i)
     add(f'{L}.hc.h_store', HC_PORT, 0, [f'{L}.ffn.hc_post'], hc_arg(1, S_BASE), eng='hc', order=1e9)
+    hcx_meta = None
+    if a.hcx_real:
+        gone = {m for v in hcx_members.values() for m in v}
+        for n in nodes.values():                        # consumers read the coefficient rows (VM presence), not a port-9 done
+            n['preds'] = [p for p in n['preds'] if p not in gone]
+        assert set(hcx_members) == {'attn', 'ffn'}, hcx_members
+        assert a.vm_coeff_align, '--hcx-real needs --vm-coeff-align (the post VM transport faults on a coefficient base not 16-row aligned)'
+        hi = a.hcx_issue
+        if '=' in hi:                                   # per-layer calendar: 'L1=A,F/L14=A,F' (one bench build, many layers)
+            hi = dict(e.split('=', 1) for e in hi.split('/')).get(L, '')
+        iss = [int(x) for x in hi.split(',')] if hi else []
+        assert len(iss) == 2 and a.hcx_p2p > 0, '--hcx-issue A,F and --hcx-p2p required'
+        hset = a.hcx_set if a.hcx_set >= 0 else int(L[1:]) if L[0] == 'L' else -1
+        assert 0 <= hset < 43, hset
+        sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
+        from program import issuer_done_row
+        fixed_rows.extend(dict(engine=11, arg=(hset << 15) | (hl_base << 1) | b, issue=iss[b],
+                               done=issuer_done_row(iss[b], a.hcx_p2p), pin_to_pin=a.hcx_p2p) for b in range(2))
+        hcx_meta = dict(members=hcx_members, rom_set=hset, issue=iss, pin_to_pin=a.hcx_p2p, h_base=hl_base,
+                        coef_rows=[C_BASE, C_BASE + 1, C_BASE + COEF_STRIDE, C_BASE + COEF_STRIDE + 1],
+                        golden_coefficient_injection=False, native_qualified=False,
+                        declared_boundaries=['ideal bench VM', 'TP4 raw gather bench transport (collective glue)',
+                                             'peer ranks read die-0 H rows (replicated residual)'])
+    if fixed_rows:
+        sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
+        from program import encode_program
+        rows = fixed_rows + [dict(engine=15, arg=0, issue=max(r['done'] for r in fixed_rows) + 4, done=0)]
+        fc = encode_program(rows, stage=0, phase=3)
+        (a.out/'fixed_program.mem').write_text(''.join(f"{w['word']:09x}\n" for w in fc['writes']))
+        (a.out/'fixed_meta.mem').write_text(f"{len(rows):08x}\n{len(fc['writes']):08x}\n")
+        (a.out/'fixed_calendar.json').write_text(json.dumps(dict(rows=rows, op_base=2, reset_stream_cycle=1000,
+            job_stream_cycle=1250, semantics='done = issue + 1 + pin_to_pin', full_native_qualified=False), indent=2) + '\n')
     topo_order(nodes)                                  # dangling predecessor / cycle: named, before the SU search
     sched = su_schedule(nodes, a, f'{L}.hc.h_store') if a.su_sched else None
     prog = topo_order(nodes)
@@ -593,7 +641,7 @@ def main():
                               argument_provenance='native endpoint descriptor' if o['eng'] in ('su', 'hc') else 'fixture program argument; native binding unproven',
                               preds=o['preds']) for k, o in enumerate(prog)],
                 cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched,
-                dur_override=dur_ov or None, su_real=su_meta, mix4=mix_meta)
+                dur_override=dur_ov or None, su_real=su_meta, mix4=mix_meta, hcx=hcx_meta)
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,
