@@ -438,24 +438,6 @@
    "build the child on the common lattice"
   ],
   [
-   "FAIL",
-   "channel",
-   "ot_qwen_tile_lsl_fp1#0 / ot_qwen_tile_lsl_fp1#0 channel -0.0 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_qwen_tile_lsl_fp1#0 / ot_qwen_tile_lsl_fp1#0 channel -0.0 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_qwen_tile_lsl_fp1#0 / ot_qwen_tile_lsl_fp1#0 channel -0.0 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
-  ],
-  [
    "WARN",
    "fill",
    "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
