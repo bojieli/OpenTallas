@@ -57,8 +57,18 @@ module dsfd_stage_seq_static_c #(
  wire any_engine_fault=|sfault;
  always @(posedge ck[0] or negedge rn)if(!rn)engine_fault<=0;else if(any_engine_fault)engine_fault<=1;
  reg[5:0]st1,st2;
+`ifdef OT_S81_SSEQ_STATUS_CKREG
+ // status word registered on ck before the ck->ckv crossing (n5 gate: fault/code/busy cone -> st1 across the
+ // 3:4 window was -177 ps at SS); +1 ck edge on the diagnostic status only, issue/command timing unchanged
+ reg[5:0]st0;
+ always @(posedge ck[0] or negedge rn)if(!rn)st0<=0;
+  else st0<={fault|engine_fault,(code==0&&engine_fault?4'd11:code),busy};
+ always @(posedge ckv[0] or negedge vn)if(!vn)begin st1<=0;st2<=0;end
+  else begin st1<=st0;st2<=st1;end
+`else
  always @(posedge ckv[0] or negedge vn)if(!vn)begin st1<=0;st2<=0;end
   else begin st1<={fault|engine_fault,(code==0&&engine_fault?4'd11:code),busy};st2<=st1;end
+`endif
  assign t_st=st2;
 endmodule
 `default_nettype wire

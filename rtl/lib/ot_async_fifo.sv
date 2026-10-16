@@ -68,9 +68,9 @@ module ot_async_fifo #(
 `ifdef OT_S81_HOST_PHASESAFE
     reg [PTR_W-1:0] wr_gray_seam, rd_gray_seam;
     reg wr_online_seam, rd_online_seam;
-    // latch enable is the pure source clock (CTS sees one clock arrival); reset enters as data
-    always @* if (!wr_clk) begin wr_gray_seam=wr_domain_rst_n?wr_gray:'0;wr_online_seam=wr_domain_rst_n&&wr_online;end
-    always @* if (!rd_clk) begin rd_gray_seam=rd_domain_rst_n?rd_gray:'0;rd_online_seam=rd_domain_rst_n&&rd_online;end
+    // plain lockup latches (enable = pure source clock, no reset term; sources are 0 while their domain is reset)
+    always @* if (!wr_clk) begin wr_gray_seam=wr_gray;wr_online_seam=wr_online;end
+    always @* if (!rd_clk) begin rd_gray_seam=rd_gray;rd_online_seam=rd_online;end
 `else
     wire [PTR_W-1:0] wr_gray_seam=wr_gray,rd_gray_seam=rd_gray;
     wire wr_online_seam=wr_online,rd_online_seam=rd_online;

@@ -60,9 +60,11 @@ module ot_link_afifo #(
     // Low-source lockups defer every pointer transition until the source's
     // falling edge. Related 1:1 and 3:4 positive edges cannot race this seam.
     reg [AW:0] wgray_seam, rgray_seam;
-    // latch enable is the pure source clock (CTS sees one clock arrival); reset enters as data
-    always @* if (!wclk) wgray_seam = wrst_n ? wgray : '0;
-    always @* if (!rclk) rgray_seam = rrst_n ? rgray : '0;
+    // plain lockup latches: enable = the pure source clock (CTS sees one clock arrival), no reset term (a reset
+    // value folded into D is re-inferred as a reset latch); wgray/rgray are 0 while their domain is in reset, so
+    // the latch passes 0 on the first low phase, and the destination synchronisers are reset on their own
+    always @* if (!wclk) wgray_seam = wgray;
+    always @* if (!rclk) rgray_seam = rgray;
 `else
     wire [AW:0] wgray_seam=wgray, rgray_seam=rgray;
 `endif

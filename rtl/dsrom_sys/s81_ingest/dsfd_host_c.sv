@@ -115,7 +115,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     wire [63:0] td_core=ret_seam[63:0];
     `ifndef OT_S81_HOST_BOOT300
     reg pop_seam;
-    always @* if (!rvn) pop_seam=0;else if (!ckv) pop_seam=pop_t;
+    always @* if (!ckv) pop_seam=pop_t;  // plain lockup latch: enable = pure clock (no reset term; pop_t is 0 in reset)
     reg [7:0] plen_seam;
     always @* if (!ck) plen_seam=plen;
     `endif
@@ -184,7 +184,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     always @(posedge ck_boot or negedge boot_rn)if(!boot_rn)boot_bad<=0;
        else if(bridge_v&&!bridge_ready)boot_bad<=1;
     reg boot_bad_seam;reg[1:0]boot_bad_sync;
-    always @*if(!boot_rn)boot_bad_seam=0;else if(!ck_boot)boot_bad_seam=boot_bad;
+    always @*if(!ck_boot)boot_bad_seam=boot_bad;  // plain lockup latch (boot_bad is 0 while boot_rn is low)
     always @(posedge ck or negedge rn)if(!rn)boot_bad_sync<=0;else boot_bad_sync<={boot_bad_sync[0],boot_bad_seam};
     assign pw_ovf=up_ov|boot_bad_sync[1];
 `else
