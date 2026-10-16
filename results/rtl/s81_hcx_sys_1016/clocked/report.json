@@ -1,0 +1,177 @@
+{
+  "schema": "opentallas.s81-hcx-sys-clocked-component.v1",
+  "source_commit": "0741df278281c0f683b8106ef1756f1ce66040d0",
+  "scope": "One projection-row L00 numerical component and source clock/state/pin census; no native/physical adoption",
+  "nominal": {
+    "exit_code": 0,
+    "released_nonuniform_vectors": 2,
+    "diverse_seed_once_vectors": 2,
+    "elements_per_vector": 20480,
+    "exact_outputs": [
+      "c2c77f32",
+      "c218cb21",
+      "bb82eb45",
+      "40a6389e"
+    ],
+    "flat_cycles": 264,
+    "clocked_cycles": 318,
+    "previous_SYS_source_cycles": 318,
+    "clock_partition_added_logical_edges": 0,
+    "delta_serial_vs_flat": 54,
+    "delta_fast_vs_flat": 72,
+    "faults": 0,
+    "pass": true
+  },
+  "mutant": {
+    "rejected": true,
+    "exit_code": 134,
+    "assertion": "HCX_SYS_EQUIV FAIL errors6",
+    "wrong_outputs": 4,
+    "mechanism": "Actual BANK7 HALF0 ROM payload zeroed; no golden/expected replacement",
+    "measured_outputs": [
+      "c2bb37f1",
+      "c219b92d",
+      "be1b60d6",
+      "408f1060"
+    ]
+  },
+  "census": {
+    "actual_used_source_clock_ports": 51,
+    "total_FF_bits": 524046,
+    "original_total_FF_bits": 524046,
+    "added_FF_bits": 0,
+    "roles": {
+      "controller_core": {
+        "instances": 1,
+        "FF_bits_total": 11318,
+        "FF_bits_min": 11318,
+        "FF_bits_max": 11318
+      },
+      "half_bank": {
+        "instances": 16,
+        "FF_bits_total": 23280,
+        "FF_bits_min": 1455,
+        "FF_bits_max": 1455
+      },
+      "lane8": {
+        "instances": 32,
+        "FF_bits_total": 478592,
+        "FF_bits_min": 14956,
+        "FF_bits_max": 14956
+      },
+      "scalar": {
+        "instances": 1,
+        "FF_bits_total": 3414,
+        "FF_bits_min": 3414,
+        "FF_bits_max": 3414
+      },
+      "tree": {
+        "instances": 1,
+        "FF_bits_total": 7442,
+        "FF_bits_min": 7442,
+        "FF_bits_max": 7442
+      }
+    },
+    "macro_counts": {
+      "ot_rom_4096x266_m8": 64,
+      "ot_sram_1r1w_128x256_m1_r2c2": 16
+    },
+    "all_source_roots_le_15000": true,
+    "largest_source_root_FF_bits": 14956,
+    "lane_FF_margin": 44,
+    "process": "Yosys hierarchy/proc/opt/memory_map/opt; blackboxed physical macros; no technology mapping",
+    "measured_yosys_peak_MB": 104.63,
+    "source_netlist_sha256": "a0e7fc5525eb033467ca8fdd673453431e4045ddb22492598cec74a26a4e53f4"
+  },
+  "pin_flop_summary": {
+    "controller_core": {
+      "example_instance": "top/ctl",
+      "nonclock_input_bits": 1089,
+      "direct_FF_D_bits": 1089,
+      "output_bits": 112,
+      "direct_FF_Q_bits": 112,
+      "generic_comb_cells": 13248
+    },
+    "tree": {
+      "example_instance": "top/ctl/hcp/tree",
+      "nonclock_input_bits": 1025,
+      "direct_FF_D_bits": 1025,
+      "output_bits": 35,
+      "direct_FF_Q_bits": 35,
+      "generic_comb_cells": 50498
+    },
+    "scalar": {
+      "example_instance": "top/ctl/hcp/scalar",
+      "nonclock_input_bits": 100,
+      "direct_FF_D_bits": 65,
+      "output_bits": 68,
+      "direct_FF_Q_bits": 66,
+      "generic_comb_cells": 3406
+    },
+    "half_bank": {
+      "example_instance": "top/g_stage[0].g_half[0].bank",
+      "nonclock_input_bits": 305,
+      "direct_FF_D_bits": 305,
+      "output_bits": 842,
+      "direct_FF_Q_bits": 842,
+      "generic_comb_cells": 41
+    },
+    "lane8": {
+      "example_instance": "top/g_stage[0].g_half[0].g_lane[0].lanes",
+      "nonclock_input_bits": 658,
+      "direct_FF_D_bits": 658,
+      "output_bits": 257,
+      "direct_FF_Q_bits": 257,
+      "generic_comb_cells": 24889
+    }
+  },
+  "pin_scope": "D/Q counts follow wire-only hierarchical connectivity to EXISTING FFs, not placement/reach. Controller hierarchy interfaces include its tree/scalar children; they are not an extracted core-only physical facade.",
+  "phase_scope": "All51 clock entries tied to the same ideal 10ns-period clock in the functional bench. Target serial0.9GHz, physical phi-R/insertion/skew/reach not measured.",
+  "original_measured_DUT_0da_unchanged": true,
+  "clocked_DUT_current_bytes_match_launched_sha": true,
+  "original_component_receipt": "../report.json",
+  "coarse_provider_home_binding": "../census/role_home_binding.json",
+  "binary_sha256": {
+    "nominal": "8c97be68c4cdb2ab3023a33264b7fd1b6180b12c7414ecebc0eeaf3dfaeca540",
+    "mutant": "5c6800d0cfc58cdc289ccc5d45981039de451cf12dc467a1fd992d1b3d6f1101"
+  },
+  "collector": {
+    "note": "Postprocessing enriches the SAME raw Yosys netlist with per-port FF D/Q and generic comb counts; no DUT or run changed. remote_census_raw.json retains the original helper output including its stale generic one-clk warning.",
+    "source": "tools/s81_ftok/hcx_sys_census.py",
+    "sha256": "05a7a6351625f05003172356f5ee3cfd8876e28ae57a5424cc0557434e173f57"
+  },
+  "terminal": {
+    "local_unit": "s81-hcx-sys-clocked-20261016.service",
+    "remote_unit": "oth-ubuntu-1996181-1792147631",
+    "host": "ot-epyc4",
+    "ot_run_exit": 0,
+    "live_jobs": false
+  },
+  "native_qualified": false,
+  "physical_qualified": false,
+  "throughput_qualified": false,
+  "adoption": false,
+  "physical_submit_allowed": false,
+  "open_gates": [
+    "S-DIE actual child homes/faces/pins/cut<=0.60, slot grant and clock delivery",
+    "Explicit core-only hardening facade and actual inter-root bundle placement; current source contains nested tree/scalar children",
+    "Scalar35 inputbits do not connect directly to FF D; rs_take/rs_fault outputs are combinational; native static/registered-status design required",
+    "Lane44FF margin excludes all future capture/clock wrapper flops; all658 input and257 output FFs already exist but reach unmeasured",
+    "CTS, TT setup/FF hold/DRC0 and actual physical pin-to-flop age",
+    "Inherited HCP credit/occupancy/output gating must be replaced or qualified against exact production static calendar",
+    "All resident-set/page coverage and native whole endpoint FAST_CYC/RETURN_CYC/VM/compiler clocks; no endpoint duration inferred from318 serial leafcycles"
+  ],
+  "artifact_sha256": {
+    "nominal_build.log.gz": "58bba6ca620ce8d1eab828eaacd96995f32e622c0dd0fea56d8ee7a22f7564ed",
+    "census.ys": "8efed26ac01c85c342f20953303d11ae82bec03c104a90515ea8006bdea08b6f",
+    "nominal.log": "6fab4578f76bfa82f3f11744c3591a6bf2f3dafc1b194c24b81ff5c3677ce050",
+    "remote_census_raw.json": "1f7847e65d80f6c0a404d94d65945861b3ad9d48adbc7c25a5ccf52b2e310e92",
+    "hierarchy.json.gz": "0d87e6469f8af6011d1359105c71f214cb8d35b353d4997bd8e5f279ab4bfaa1",
+    "mut_bank_build.log.gz": "937c0fc3f1cb37bb9ad085f26f9e6b84946aeff81fc90afbfa7d208f54ad1ef8",
+    "yosys.log.gz": "957b3da7d3fea4f258403d13991504f3e1b2bad09b70ed0dd02efd7be7d505ae",
+    "driver.log": "0a2083df9dcd0a42092c9f972be10be58b8dcb1bd04b371d32db940364fde933",
+    "launch_sources.json": "c4335af050db1021725736c05514d31808435c1ba2a6f681ef84bc51607d6b3f",
+    "mut_bank.log": "64d51277587a202cf838c592e71fd1ff8f58102fc63be35d96fec7fe6c04d0a5",
+    "census.json": "74b9a32007d474b03b7b67390df17eadb64d6c56727b1479faa2308572616c91"
+  }
+}

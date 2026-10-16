@@ -1,0 +1,70 @@
+ot-run: ot-epyc4       admits   543 GB (avail 769, growth 120, headroom 48, waiters 0/0 GB) load 47/128 running 25 disk 830 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1996181-1792147631 after 0 s
+HCX SYS block0 src0 flatc2c77f32@264 partc2c77f32@318 golden_ok1
+HCX SYS block1 src1 flatc218cb21@264 partc218cb21@318 golden_ok1
+HCX SYS block2 src2 flatbb82eb45@264 partbb82eb45@318 golden_ok4294967295
+HCX SYS block3 src2 flat40a6389e@264 part40a6389e@318 golden_ok4294967295
+HCX_SYS_EQUIV PASS blocks4 flat_cycles264 part_cycles318 delta54
+- rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_sys_clocked.sv:71: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 16us; walltime 20.215 s; speed 810.994 ns/s
+- Verilator: cpu 20.216 s on 1 threads; alloced 1085 MB
+HCX SYS ERR block0 flatc2c77f32 partc2bb37f1
+HCX SYS ERR block0 goldenc2c77f32 partc2bb37f1
+HCX SYS block0 src0 flatc2c77f32@264 partc2bb37f1@318 golden_ok0
+HCX SYS ERR block1 flatc218cb21 partc219b92d
+HCX SYS ERR block1 goldenc218cb21 partc219b92d
+HCX SYS block1 src1 flatc218cb21@264 partc219b92d@318 golden_ok0
+HCX SYS ERR block2 flatbb82eb45 partbe1b60d6
+HCX SYS block2 src2 flatbb82eb45@264 partbe1b60d6@318 golden_ok4294967295
+HCX SYS ERR block3 flat40a6389e part408f1060
+HCX SYS block3 src2 flat40a6389e@264 part408f1060@318 golden_ok4294967295
+[16390000] %Fatal: tb_s81_hcx_projection_sys_clocked.sv:70: Assertion failed in tb_s81_hcx_projection_sys_clocked: HCX_SYS_EQUIV FAIL errors6
+%Error: rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_sys_clocked.sv:70: Verilog $stop
+Aborting...
+tools/s81_ftok/hcx_sys_clocked_gate.sh: line 22: 2215452 Aborted                    (core dumped) "$out/obj/Vtb_s81_hcx_projection_sys_clocked" +DIR="$vec" +OT_ROM_DIR="$rom" +LAYER="$layer" +NRAND="$nrand"
+     2215453 Done                       | tee "$out/run.log"
+{
+  "total_FF_bits": 524046,
+  "source_clock_roots": 51,
+  "role_summary": {
+    "controller_core": {
+      "instances": 1,
+      "FF_bits_total": 11318,
+      "FF_bits_min": 11318,
+      "FF_bits_max": 11318
+    },
+    "half_bank": {
+      "instances": 16,
+      "FF_bits_total": 23280,
+      "FF_bits_min": 1455,
+      "FF_bits_max": 1455
+    },
+    "lane8": {
+      "instances": 32,
+      "FF_bits_total": 478592,
+      "FF_bits_min": 14956,
+      "FF_bits_max": 14956
+    },
+    "scalar": {
+      "instances": 1,
+      "FF_bits_total": 3414,
+      "FF_bits_min": 3414,
+      "FF_bits_max": 3414
+    },
+    "tree": {
+      "instances": 1,
+      "FF_bits_total": 7442,
+      "FF_bits_min": 7442,
+      "FF_bits_max": 7442
+    }
+  },
+  "actual_macros": {
+    "ot_rom_4096x266_m8": 64,
+    "ot_sram_1r1w_128x256_m1_r2c2": 16
+  },
+  "boundaries_over_15000": {}
+}
+HCX_SYS_CLOCKED_COMPONENT nominal PASS, bank mutant rejected, actual census collected
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1996181-1792147631): exit 0

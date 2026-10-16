@@ -16885,7 +16885,7 @@ def s81_hcx_sys_clocked_model():
     """Opt-in source repair; existing state migrates to explicit clock entries.
 
     Analytical counts below are derived from the original actual Yosys census.
-    New source census and same-phase component proof must confirm them. No
+    Actual51-port census and same-phase component proof confirm them. No
     physical pin/register/calendar qualification is implied by a clock port.
     """
     return dict(schema='opentallas.s81-hcx-sys-clocked-candidate.v1',
@@ -16904,7 +16904,10 @@ def s81_hcx_sys_clocked_model():
                            open='rs_take/rs_fault inherited combinational surfaces and occupancy scheduling need native static/pin repair; no physical submission'),
         lane_root_margin_FF_bits=44,
         wrapper_warning='Additional lane pin/clock wrapper flops can exceed15k; no new flops may be assumed free',
-        equal_phase_expected_serial_cycles=318, equal_phase_cycles_measured=False,
+        equal_phase_expected_serial_cycles=318, equal_phase_cycles_measured=True,
+        measured_serial_cycles=318, actual_used_source_clock_ports=51,
+        actual_total_FF_bits=524046, measured_added_FF_bits=0,
+        evidence='results/rtl/s81_hcx_sys_1016/clocked/report.json',
         previous_measured_SYS_serial_cycles=318, flat_serial_cycles=264,
         previous_measured_delta_fast_cycles=72,
         clock_rule='Same logical edge proof only; actual phi-R/insertion/reach requires die binding',

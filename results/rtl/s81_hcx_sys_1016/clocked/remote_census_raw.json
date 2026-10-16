@@ -1,0 +1,3532 @@
+{
+  "schema": "opentallas.s81-hcx-sys-source-census.v1",
+  "scope": "Hierarchical Yosys proc/opt/memory_map source-state census; no technology mapping or physical qualification",
+  "netlist_sha256": "a0e7fc5525eb033467ca8fdd673453431e4045ddb22492598cec74a26a4e53f4",
+  "actual_source_clock_FF_bits": {
+    "clk_ctl": 11318,
+    "clk_scalar": 3414,
+    "clk_tree": 7442,
+    "clk_bank[0]": 1455,
+    "clk_lane[0]": 14956,
+    "clk_lane[1]": 14956,
+    "clk_bank[1]": 1455,
+    "clk_lane[2]": 14956,
+    "clk_lane[3]": 14956,
+    "clk_bank[2]": 1455,
+    "clk_lane[4]": 14956,
+    "clk_lane[5]": 14956,
+    "clk_bank[3]": 1455,
+    "clk_lane[6]": 14956,
+    "clk_lane[7]": 14956,
+    "clk_bank[4]": 1455,
+    "clk_lane[8]": 14956,
+    "clk_lane[9]": 14956,
+    "clk_bank[5]": 1455,
+    "clk_lane[10]": 14956,
+    "clk_lane[11]": 14956,
+    "clk_bank[6]": 1455,
+    "clk_lane[12]": 14956,
+    "clk_lane[13]": 14956,
+    "clk_bank[7]": 1455,
+    "clk_lane[14]": 14956,
+    "clk_lane[15]": 14956,
+    "clk_bank[8]": 1455,
+    "clk_lane[16]": 14956,
+    "clk_lane[17]": 14956,
+    "clk_bank[9]": 1455,
+    "clk_lane[18]": 14956,
+    "clk_lane[19]": 14956,
+    "clk_bank[10]": 1455,
+    "clk_lane[20]": 14956,
+    "clk_lane[21]": 14956,
+    "clk_bank[11]": 1455,
+    "clk_lane[22]": 14956,
+    "clk_lane[23]": 14956,
+    "clk_bank[12]": 1455,
+    "clk_lane[24]": 14956,
+    "clk_lane[25]": 14956,
+    "clk_bank[13]": 1455,
+    "clk_lane[26]": 14956,
+    "clk_lane[27]": 14956,
+    "clk_bank[14]": 1455,
+    "clk_lane[28]": 14956,
+    "clk_lane[29]": 14956,
+    "clk_bank[15]": 1455,
+    "clk_lane[30]": 14956,
+    "clk_lane[31]": 14956
+  },
+  "actual_source_clock_macro_pins": {
+    "clk_bank[0]": 5,
+    "clk_bank[1]": 5,
+    "clk_bank[2]": 5,
+    "clk_bank[3]": 5,
+    "clk_bank[4]": 5,
+    "clk_bank[5]": 5,
+    "clk_bank[6]": 5,
+    "clk_bank[7]": 5,
+    "clk_bank[8]": 5,
+    "clk_bank[9]": 5,
+    "clk_bank[10]": 5,
+    "clk_bank[11]": 5,
+    "clk_bank[12]": 5,
+    "clk_bank[13]": 5,
+    "clk_bank[14]": 5,
+    "clk_bank[15]": 5
+  },
+  "source_clock_roots": 51,
+  "total_FF_bits": 524046,
+  "actual_source_largest_clock_FF_bits": 14956,
+  "actual_source_root_le_15000": true,
+  "proposed_hard_boundary_count": 51,
+  "role_summary": {
+    "controller_core": {
+      "instances": 1,
+      "FF_bits_total": 11318,
+      "FF_bits_min": 11318,
+      "FF_bits_max": 11318
+    },
+    "half_bank": {
+      "instances": 16,
+      "FF_bits_total": 23280,
+      "FF_bits_min": 1455,
+      "FF_bits_max": 1455
+    },
+    "lane8": {
+      "instances": 32,
+      "FF_bits_total": 478592,
+      "FF_bits_min": 14956,
+      "FF_bits_max": 14956
+    },
+    "scalar": {
+      "instances": 1,
+      "FF_bits_total": 3414,
+      "FF_bits_min": 3414,
+      "FF_bits_max": 3414
+    },
+    "tree": {
+      "instances": 1,
+      "FF_bits_total": 7442,
+      "FF_bits_min": 7442,
+      "FF_bits_max": 7442
+    }
+  },
+  "boundary_FF_bits": {
+    "top/ctl": 11318,
+    "top/ctl/hcp/scalar": 3414,
+    "top/ctl/hcp/tree": 7442,
+    "top/g_stage[0].g_half[0].bank": 1455,
+    "top/g_stage[0].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[0].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[0].g_half[1].bank": 1455,
+    "top/g_stage[0].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[0].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[1].g_half[0].bank": 1455,
+    "top/g_stage[1].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[1].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[1].g_half[1].bank": 1455,
+    "top/g_stage[1].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[1].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[2].g_half[0].bank": 1455,
+    "top/g_stage[2].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[2].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[2].g_half[1].bank": 1455,
+    "top/g_stage[2].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[2].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[3].g_half[0].bank": 1455,
+    "top/g_stage[3].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[3].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[3].g_half[1].bank": 1455,
+    "top/g_stage[3].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[3].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[4].g_half[0].bank": 1455,
+    "top/g_stage[4].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[4].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[4].g_half[1].bank": 1455,
+    "top/g_stage[4].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[4].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[5].g_half[0].bank": 1455,
+    "top/g_stage[5].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[5].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[5].g_half[1].bank": 1455,
+    "top/g_stage[5].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[5].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[6].g_half[0].bank": 1455,
+    "top/g_stage[6].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[6].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[6].g_half[1].bank": 1455,
+    "top/g_stage[6].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[6].g_half[1].g_lane[1].lanes": 14956,
+    "top/g_stage[7].g_half[0].bank": 1455,
+    "top/g_stage[7].g_half[0].g_lane[0].lanes": 14956,
+    "top/g_stage[7].g_half[0].g_lane[1].lanes": 14956,
+    "top/g_stage[7].g_half[1].bank": 1455,
+    "top/g_stage[7].g_half[1].g_lane[0].lanes": 14956,
+    "top/g_stage[7].g_half[1].g_lane[1].lanes": 14956
+  },
+  "boundary_roles": {
+    "top/ctl": "controller_core",
+    "top/ctl/hcp/scalar": "scalar",
+    "top/ctl/hcp/tree": "tree",
+    "top/g_stage[0].g_half[0].bank": "half_bank",
+    "top/g_stage[0].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[0].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[0].g_half[1].bank": "half_bank",
+    "top/g_stage[0].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[0].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[1].g_half[0].bank": "half_bank",
+    "top/g_stage[1].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[1].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[1].g_half[1].bank": "half_bank",
+    "top/g_stage[1].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[1].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[2].g_half[0].bank": "half_bank",
+    "top/g_stage[2].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[2].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[2].g_half[1].bank": "half_bank",
+    "top/g_stage[2].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[2].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[3].g_half[0].bank": "half_bank",
+    "top/g_stage[3].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[3].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[3].g_half[1].bank": "half_bank",
+    "top/g_stage[3].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[3].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[4].g_half[0].bank": "half_bank",
+    "top/g_stage[4].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[4].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[4].g_half[1].bank": "half_bank",
+    "top/g_stage[4].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[4].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[5].g_half[0].bank": "half_bank",
+    "top/g_stage[5].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[5].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[5].g_half[1].bank": "half_bank",
+    "top/g_stage[5].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[5].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[6].g_half[0].bank": "half_bank",
+    "top/g_stage[6].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[6].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[6].g_half[1].bank": "half_bank",
+    "top/g_stage[6].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[6].g_half[1].g_lane[1].lanes": "lane8",
+    "top/g_stage[7].g_half[0].bank": "half_bank",
+    "top/g_stage[7].g_half[0].g_lane[0].lanes": "lane8",
+    "top/g_stage[7].g_half[0].g_lane[1].lanes": "lane8",
+    "top/g_stage[7].g_half[1].bank": "half_bank",
+    "top/g_stage[7].g_half[1].g_lane[0].lanes": "lane8",
+    "top/g_stage[7].g_half[1].g_lane[1].lanes": "lane8"
+  },
+  "boundary_exact_port_shapes": {
+    "top/ctl": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_tree": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_scalar": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "stage_begin": {
+        "direction": "input",
+        "bits": 1
+      },
+      "stage_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "stage_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "cmd_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cmd_ffn": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cmd_layer": {
+        "direction": "input",
+        "bits": 6
+      },
+      "norm_eps": {
+        "direction": "input",
+        "bits": 32
+      },
+      "d_v": {
+        "direction": "output",
+        "bits": 2
+      },
+      "d_ss": {
+        "direction": "output",
+        "bits": 2
+      },
+      "d_nv": {
+        "direction": "output",
+        "bits": 10
+      },
+      "d_wa": {
+        "direction": "output",
+        "bits": 32
+      },
+      "d_xa": {
+        "direction": "output",
+        "bits": 32
+      },
+      "sys_sum": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "bf": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_d": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/ctl/hcp/scalar": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cmd_start": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rq_ne": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h_pos": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h_val": {
+        "direction": "input",
+        "bits": 32
+      },
+      "nf_r": {
+        "direction": "input",
+        "bits": 32
+      },
+      "eps_r": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rs_take": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rs_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "r_ok_o": {
+        "direction": "output",
+        "bits": 2
+      },
+      "rv_o": {
+        "direction": "output",
+        "bits": 64
+      }
+    },
+    "top/ctl/hcp/tree": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "capture_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "sys_sum": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "leaf_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "root": {
+        "direction": "output",
+        "bits": 32
+      },
+      "tree_vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "tree_fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[0].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[0].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[0].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[0].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[0].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[0].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[1].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[1].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[1].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[1].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[1].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[1].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[2].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[2].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[2].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[2].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[2].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[2].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[3].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[3].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[3].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[3].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[3].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[3].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[4].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[4].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[4].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[4].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[4].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[4].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[5].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[5].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[5].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[5].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[5].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[5].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[6].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[6].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[6].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[6].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[6].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[6].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[7].g_half[0].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[7].g_half[0].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[7].g_half[0].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[7].g_half[1].bank": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_ss": {
+        "direction": "input",
+        "bits": 1
+      },
+      "d_nv": {
+        "direction": "input",
+        "bits": 5
+      },
+      "d_wa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "d_xa": {
+        "direction": "input",
+        "bits": 16
+      },
+      "o_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_ss": {
+        "direction": "output",
+        "bits": 1
+      },
+      "o_nv": {
+        "direction": "output",
+        "bits": 5
+      },
+      "o_wa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "o_xa": {
+        "direction": "output",
+        "bits": 16
+      },
+      "st_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "st_word": {
+        "direction": "input",
+        "bits": 7
+      },
+      "st_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gov": {
+        "direction": "output",
+        "bits": 2
+      },
+      "lv": {
+        "direction": "output",
+        "bits": 16
+      },
+      "ss": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wd": {
+        "direction": "output",
+        "bits": 512
+      },
+      "xd": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "f_o": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[7].g_half[1].g_lane[0].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "top/g_stage[7].g_half[1].g_lane[1].lanes": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "fst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gov_i": {
+        "direction": "input",
+        "bits": 1
+      },
+      "lv_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ss_i": {
+        "direction": "input",
+        "bits": 8
+      },
+      "w_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "x_i": {
+        "direction": "input",
+        "bits": 128
+      },
+      "s_i": {
+        "direction": "input",
+        "bits": 256
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "lf": {
+        "direction": "output",
+        "bits": 1
+      }
+    }
+  },
+  "controller_state_by_module_instance": {
+    "top/ctl": 202,
+    "top/ctl/hcp": 9033,
+    "top/ctl/hcp/g_tail[0].u_a": 206,
+    "top/ctl/hcp/g_tail[1].u_a": 206,
+    "top/ctl/hcp/g_tail[2].u_a": 206,
+    "top/ctl/hcp/g_tail[3].u_a": 206,
+    "top/ctl/hcp/g_tail[4].u_a": 206,
+    "top/ctl/hcp/g_tail[5].u_a": 206,
+    "top/ctl/hcp/g_tail[6].u_a": 206,
+    "top/ctl/hcp/scalar": 333,
+    "top/ctl/hcp/scalar/u_div": 2227,
+    "top/ctl/hcp/scalar/u_div/u_v": 31,
+    "top/ctl/hcp/scalar/u_sa": 206,
+    "top/ctl/hcp/scalar/u_sm": 617,
+    "top/ctl/hcp/tree": 1025,
+    "top/ctl/hcp/tree/u_tree": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_l/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r": 1,
+    "top/ctl/hcp/tree/u_tree/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_rec.u_r/genblk1.g_two.u_a": 206,
+    "top/ctl/hcp/u_om": 617,
+    "top/ctl/hcp/u_otag": 9,
+    "top/ctl/hcp/u_tvv": 15
+  },
+  "boundary_macros": {
+    "top/g_stage[0].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[0].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[1].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[1].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[2].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[2].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[3].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[3].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[4].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[4].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[5].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[5].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[6].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[6].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[7].g_half[0].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "top/g_stage[7].g_half[1].bank": {
+      "ot_rom_4096x266_m8": 4,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    }
+  },
+  "actual_macros": {
+    "ot_rom_4096x266_m8": 64,
+    "ot_sram_1r1w_128x256_m1_r2c2": 16
+  },
+  "exact_macro_port_shapes": {
+    "ot_rom_4096x266_m8": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "ce_in": {
+        "direction": "input",
+        "bits": 1
+      },
+      "addr_in": {
+        "direction": "input",
+        "bits": 12
+      },
+      "rd_out": {
+        "direction": "output",
+        "bits": 266
+      }
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "r_ce_in": {
+        "direction": "input",
+        "bits": 1
+      },
+      "w_ce_in": {
+        "direction": "input",
+        "bits": 1
+      },
+      "r_addr_in": {
+        "direction": "input",
+        "bits": 7
+      },
+      "w_addr_in": {
+        "direction": "input",
+        "bits": 7
+      },
+      "wd_in": {
+        "direction": "input",
+        "bits": 256
+      },
+      "w_mask_in": {
+        "direction": "input",
+        "bits": 256
+      },
+      "rd_out": {
+        "direction": "output",
+        "bits": 256
+      },
+      "rr_en": {
+        "direction": "input",
+        "bits": 2
+      },
+      "cr_en": {
+        "direction": "input",
+        "bits": 2
+      },
+      "rr_addr": {
+        "direction": "input",
+        "bits": 14
+      },
+      "cr_sel": {
+        "direction": "input",
+        "bits": 16
+      }
+    }
+  },
+  "boundaries_over_15000": {},
+  "clock_warning": "The current top has one clk. Child boundaries are not independent source clock ports or a measured clock tree.",
+  "physical_submit_allowed": false
+}
