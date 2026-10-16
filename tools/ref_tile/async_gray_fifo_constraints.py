@@ -95,6 +95,12 @@ def elaborate(root, top, sources, params):
         content=p.read_bytes()
         if hashlib.sha256(content).hexdigest()!=digest:
             raise ValueError('async_gray_fifo source changed during elaboration')
+        if path not in SOURCES:
+            for attribute in re.findall(rb'\(\*(.*?)\*\)',content,re.S):
+                if re.search(rb'\b(?:src|hdlname)\s*=',attribute):
+                    raise ValueError('async_gray_fifo reserved source metadata attributes are unsupported')
+            if b'$paramod' in content:
+                raise ValueError('async_gray_fifo reserved Yosys module identities are unsupported')
         if re.search(rb'`include\b',content):
             raise ValueError('async_gray_fifo includes require explicit source closure; unsupported in this profile')
         paths.append(str(p))
@@ -115,7 +121,10 @@ def elaborate(root, top, sources, params):
         document=json.loads(out.read_text())
     fifo_src=str((root/next(iter(SOURCES))).resolve())+':6.1-51.10'
     for name,module in document['modules'].items():
-        if module.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo' or name=='ot_hbm_svc_async_fifo':
+        claimed=module.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo'
+        if claimed and not async_fifo_hierarchy_audit.fifo_module_type(name):
+            raise ValueError('async_gray_fifo untrusted FIFO source identity alias')
+        if async_fifo_hierarchy_audit.fifo_module_type(name):
             if module.get('attributes',{}).get('src')!=fifo_src:
                 raise ValueError('async_gray_fifo module identity does not bind reviewed source')
             values=module.get('parameter_default_values',{})

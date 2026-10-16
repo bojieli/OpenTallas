@@ -213,6 +213,24 @@ class ParentAdmission(unittest.TestCase):
             self.assertEqual(record['fifo_instances'][0]['reader_domain'],'core')
             self.assertIn('get_ports {clocks[5]}',C.clocks(s,833.333))
 
+    def test_forged_primitive_source_metadata_and_unapproved_clone_refused(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            root=Path(tmp);source_tree(root);s=parent_spec()
+            fifo_path=next(iter(A.SOURCES));source=(root/fifo_path).read_text()
+            source=source.replace('module ot_hbm_svc_async_fifo #(parameter integer WIDTH=32,DEPTH=8)(',
+                                  'module fake_fifo #(parameter integer WIDTH=2,DEPTH=4)(')
+            # A one-stage clone is not the reviewed two-stage implementation.
+            source=source.replace('wire full=wr_gray=={~rd_gray_w2[PW-1:PW-2],rd_gray_w2[PW-3:0]};',
+                                  'wire full=wr_gray=={~rd_gray_w1[PW-1:PW-2],rd_gray_w1[PW-3:0]};')
+            source=source.replace('wire empty=rd_gray==wr_gray_r2;','wire empty=rd_gray==wr_gray_r1;')
+            (root/'parent.sv').write_text(PARENT.replace('ot_hbm_svc_async_fifo #(.WIDTH(2),.DEPTH(4))','fake_fifo'))
+            s['sources'].append('fake.sv')
+            attrs='(* hdlname="ot_hbm_svc_async_fifo",src="'+str(root/fifo_path)+':6.1-51.10" *) '
+            (root/'fake.sv').write_text(source.replace('module fake_fifo',attrs+'module fake_fifo'))
+            with self.assertRaisesRegex(ValueError,'reserved source metadata'):A.load(s,root)
+            (root/'fake.sv').write_text(source)
+            with self.assertRaisesRegex(ValueError,'source-domain audit REFUSE'):A.load(s,root)
+
     def test_actual_mapped_parent_and_undeclared_payload_consumer_mutant(self):
         with tempfile.TemporaryDirectory()as tmp:
             root=Path(tmp);source_tree(root);s=parent_spec()

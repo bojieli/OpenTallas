@@ -9,6 +9,12 @@ from collections import defaultdict
 import re
 
 
+def fifo_module_type(name):
+    return (name=='ot_hbm_svc_async_fifo' or
+            re.fullmatch(r'\$paramod\$[0-9a-f]{40}\\ot_hbm_svc_async_fifo',name)is not None or
+            name.startswith('$paramod\\ot_hbm_svc_async_fifo\\'))
+
+
 def hdl_index(info, position):
     """Yosys JSON vector position -> declared HDL subscript, including `upto`."""
     width=len(info['bits'])
@@ -66,7 +72,9 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
             typ=cell['type']
             if typ in modules:
                 child=modules[typ]
-                if child.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo' or typ=='ot_hbm_svc_async_fifo':
+                claimed=child.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo'
+                if claimed and not fifo_module_type(typ):raise ValueError(f'{full}: untrusted FIFO source identity alias {typ}')
+                if fifo_module_type(typ):
                     fifos.append(dict(path=full,module=typ,connections=con,parameters=child.get('parameter_default_values',{})))
                     continue
                 for p,info in child['ports'].items():
