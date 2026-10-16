@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sm_xload_cl2_bfq",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in per-macro pin flops (wp_d/wp_a/wp_ce/mask_hi/mask_lo/rp_ce/rp_a); output rwq is a register; a recipe-3 register would add a second stage on every port."
+}
