@@ -1,5 +1,5 @@
 # HBM visual-audit status: P0/P1 closure-blocking findings
-Updated 2026-10-16 02:20 PT by VIS-HBM. Sources: closure-loop verdicts, owner logs and replies. Details are in findings.json.
+Updated 2026-10-16 02:35 PT by VIS-HBM. Sources: closure-loop verdicts, owner logs and replies. Details are in findings.json.
 
 States:
 - **fixed-routed**: the fix is routed and the cited metric improved.
@@ -10,8 +10,8 @@ States:
 
 | id | sev | finding | owner | state | evidence |
 |---|---|---|---|---|---|
-| D1 | P0 | d2 die clock buffers placed inside SM outlines (15,671 of 53,087); 31.6 ns model insertion from one root | H-DIE | **fix-in-gate** | Root cause confirmed by H-DIE (die_case carved the SM reserved channels out of the clock obstacles while the SYNTH SM views block the whole outline). d2 KILLED. Fix: full-outline obstacles, grid 20 -> 10 um, span 420 -> 200 um; case being regenerated in /tmp/claude-1000/hdie0030/d3clk before d3 uses it |
-| D2 | P0 | 124.8 mm2 empty: ~33 mm2 corner voids beside the LK/EP column, 4 x 240-um band slivers | H-DIE | **fix-planned (partial)** | sfucore_<q> slots of 763.56 x 1936.44 granted in the band gap (main 818f005b6); SU bank slot 390.96 -> 369.36 (-1.67 mm2). The corner voids beside the EP column are still unused |
+| D1 | P0 | d2 die clock buffers placed inside SM outlines (15,671 of 53,087); 31.6 ns model insertion from one root | H-DIE | **fixed in case; d3a GRT+STA running** | a37c69eb8. VIS-HBM's own scan of d3a run.tcl: 0 of 24,156 placed die cells inside any hard outline (d2: 15,671). hbm: quad tree, 1,635 bufs, model 7.9 ns, pads NE 1 / NW 2 / SE 0 / SW 4. stream: H-tree, 22.0k bufs, model 13.8 ns (d2: 53k bufs, 31.6 ns). It becomes fixed-routed when the d3a GRT has 0 overlap/overflow from this source |
+| D2 | P0 | Die empty area: corner voids beside the LK/EP column | H-DIE | **open, re-scoped to v6b (OWNER 02:15 growth to 770 mm2)** | v5: band gap used for sfucore slots (25eb7d12c) and outer-corner PHY voids for the SU overflow homes, 0.595 mm2 per quadrant (38fe8862a). v6b (SU band 77 mm2, SM slot 7,050 x 1,780): H-DIE's own images show ~30 mm2 of corner voids still empty plus ~23 mm2 above the HC/SFU pairs (SU heavy-lane reserve). Next plan step: re-home HC/host into the corner voids |
 | D3 | P1 | SM_HBM relays up to 15.3 mm / 31 stages; put SMs next to their PC row | H-DIE | **refuted (as proposed)** | H-DIE measured: (a) svc groups in the band middle 117k vs 50k bit-mm -> reject; (b) v8 columns remove the SM_HBM stages but VM_RING 11 -> 15.5 and COLL_EP 13.8 -> 20.8, and need M8/M9 or 727-817 mm2. v5 kept unless die GRT shows SM<->PC congestion |
 | T1 | P0 | xload ctl: pin-bound 12% fill, 10,786 pins, diagonal worst path (TT -92.5, DRC 4) | H-SM | **not-started (geometry)** | cl2e RTL lookahead for lane_en -> bsel; no cl2e gate or route yet; the 4 DRCs (corner pins) went to ROOT |
 | T2 | P0 | bdring: clk on W face, logic and pins E | H-SM | **not-started (geometry)** | cl2e removes an output inverter; a clock-face move only if cl2e native fails |

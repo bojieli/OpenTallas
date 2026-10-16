@@ -74,7 +74,7 @@ Total open items: 54. Closure-blocking status is tracked separately in `status.m
 
 | sev | id | item | state | expected gain | dependency | suggested helper |
 |---|---|---|---|---|---|---|
-| 2 | S81F-10 | dsfd_stnh_70x1 (2505) / dsfd_stnv_70x1 (1350) | open | congestion: 3,855 stations at 20.8 pins/um (every M4 track) | S-DIE plan with --stn-pin-pitch2 (c26b) | helper: route stnh/stnv_86x1 2-track views |
+| 2 | ~~S81F-10~~ DONE 03:45 (stn86 f10 closed, native PASS, 20.8 -> 10.4 pins/um) | dsfd_stnh_70x1 (2505) / dsfd_stnv_70x1 (1350) | open | congestion: 3,855 stations at 20.8 pins/um (every M4 track) | S-DIE plan with --stn-pin-pitch2 (c26b) | helper: route stnh/stnv_86x1 2-track views |
 | 2 | S81F-11 | dsfd_sstn_e0c0si / e0e1c0c1si (and _x2 RTL-only, 476+74 | open | area: sstn fill 0.107 -> halve width (~90 um) | gen26a/c26b pin windows | helper: sstn re-cut after c26b |
 
 ## S-ELEM-PQ (6 items)
