@@ -79,7 +79,10 @@ module tb_xload_static_lock;
                 @(posedge clk); #0.01; if (ha) begin ad = 1; awv = 0; end if (hw) begin dd = 1; wv = 0; end end
                 @(negedge clk);
             end
-            while (!bv) @(posedge clk);
+            begin : BW integer w; w = 0;
+                while (!bv) begin @(posedge clk); w = w + 1;
+                    if (w > 2000) begin $display("XLOAD_STATIC_LOCK FAIL: AXI write %h no bvalid", a); $fflush; $finish; end end
+            end
             if (bresp != 0) begin $display("ERR bresp %0d at %h data %h", bresp, a, d); errors = errors + 1; end
             @(posedge clk);
         end
@@ -91,6 +94,7 @@ module tb_xload_static_lock;
             axw(12'hf20, {12'd0, 12'h800, 8'd100});
             for (integer p = 0; p < 8; p = p + 1) axw(12'hf24, row[p*32 +: 32]);
             axw(12'hf20, {12'd0, 12'd0, 8'd100}); axw(12'hf28, {7'd0, 13'd1, 12'd0}); axw(12'hf2c, 32'd1);
+            repeat (10) @(posedge clk);    // ingress install guard (5 edges after a descriptor) before the launch
             if (!cfgd_b || f_b || ing_fault) begin $display("ERR F20 install: configured %b fault %b ingress fault %b", cfgd_b, f_b, ing_fault); errors = errors + 1; end
             fire_d = 2 + LEAD + at; t0_f = -1;
             axw(12'hf30, 32'd1);
@@ -217,8 +221,13 @@ module tb_xload_static_lock;
                 x_stride = 8 * (((x_n + 7) / 8) + ($unsigned($random(seed)) % 3)); if (c == 12) x_stride = 8 * 2310; end
 `ifdef XLOAD_F20
             f20_cmd({x_xb, x_fmt, 2'd1, x_stride, x_p, x_n, x_base}, 32'(3 * (c % 7)));
-            while (t0_f < 0) @(negedge clk);
+            begin : FW integer w; w = 0;
+                while (t0_f < 0) begin @(negedge clk); w = w + 1;
+                    if (w > 5000) begin $display("XLOAD_STATIC_LOCK FAIL: cmd %0d never fired (configured %b fault %b active %b ingress fault %b)",
+                                                  c, cfgd_b, f_b, act_b, ing_fault); $fflush; $finish; end end
+            end
             t0 = t0_f;
+            if (c < 2) begin $display("cmd %0d F20 fired, x_v at the ctl pins at edge %0d", c, t0); $fflush; end
 `else
             @(negedge clk); xa_v = 1; xs_v = 1; t0 = cyc; @(negedge clk); xa_v = 0; xs_v = 0;
 `endif
@@ -253,6 +262,7 @@ module tb_xload_static_lock;
                 if (errors < 5) $display("ERR cmd %0d P %0d K %0d write %0d differs (%b %b)", c, x_p, x_n, k, wa[k], wb[k]);
                 errors = errors + 1; end
             $display("cmd %0d fmt %0d P %0d K %0d xb %0d done %0d/%0d beats %0d span %0d", c, x_fmt, x_p, x_n, x_xb, nda, ndb, nbeats_b, last_bc - first_b + 1);
+            $fflush;
         end
 `ifdef XLOAD_CL2
         $display("cl2 vs cl (+%0d edges): %0d cycles compared, %0d differ; fault %b/%b", XW_ADD, cl2_cmp, cl2_diff, f_b, f_r);
