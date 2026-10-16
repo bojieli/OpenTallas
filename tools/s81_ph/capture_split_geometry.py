@@ -16,7 +16,7 @@ from gather_flatten_plan import lef_pins
 WIDTH, HEIGHT = 1727.976, 561.576
 
 
-def build(wide=False):
+def build(wide=False, assigned=None):
     graph = census()
     children = {}
     endpoint = {}
@@ -105,11 +105,16 @@ def build(wide=False):
                                 y=1.44+pitch*i
                         elif master.endswith("SN"):layer,x,y="M4",0,(3 if port=="ck" else 6)
                         else:x,y=(3 if port=="ck" else 6),size[1]
+                if assigned is not None and measured is None:
+                    proposal=assigned["masters"][master]
+                    if list(size)!=proposal["outline_um"] or proposal["orient"]!="R0":raise ValueError("assignment outline/orientation mismatch")
+                    assigned_pin=proposal["pins"][pin]
+                    layer=assigned_pin["layer"];x,y=assigned_pin["assigned_place_pin_location_um"]
                 if not (-.001 <= x <= size[0]+.001 and -.001 <= y <= size[1]+.001):
                     raise ValueError(f"pin outside {name}/{pin}: {x},{y}")
                 pins[pin] = dict(layer=layer, local_xy_um=[round(x,3),round(y,3)],
                                  xy_um=[round(at[0]+x,3),round(at[1]+y,3)],
-                                 status="actual closed LEF" if measured else "proposed, not physical-qualified")
+                                 status="actual closed LEF" if measured else "assigned request, not exported contact" if assigned is not None else "proposed, not physical-qualified")
                 endpoint[(name, pin)] = (bit,c["port_directions"][port],pins[pin]["xy_um"])
         children[name] = dict(master=master,at_um=at,outline_um=size,orient="R0",pins=pins,
                               reused_actual_pins=measured is not None)
@@ -119,6 +124,15 @@ def build(wide=False):
         if c["master"] in canonical and canonical[c["master"]] != table:
             raise ValueError("same master has inconsistent transformed pins: "+name)
         canonical[c["master"]]=table
+    entries=[]
+    for parent_port,pv in graph["ports"].items():
+        if not parent_port.startswith("ck"):continue
+        for i,bit in enumerate(pv["bits"]):
+            parent_pin=f"{parent_port}[{i}]" if len(pv["bits"])>1 else parent_port
+            targets=[(n,p) for (n,p),(b,d,xy) in endpoint.items() if b==bit and d=="input"]
+            if len(targets)!=1:raise ValueError("clock entry is not one actual leaf root")
+            n,p=targets[0];entries.append(dict(parent_clock_pin=parent_pin,child=n,child_clock_pin=p,domain="serial" if parent_port.startswith("ckv") else "core",child_pin_request_xy_um=children[n]["pins"][p]["xy_um"],measured_R_ps=None,phi_minus_R_delivery="OPEN actual native view and routed tree required"))
+    if len(entries)!=70:raise ValueError("capture clock count changed")
     drivers, sinks = {}, {}
     for (name,pin),(bit,direction,xy) in endpoint.items():
         (drivers if direction=="output" else sinks).setdefault(bit,[]).append(dict(pin=name+"/"+pin,xy_um=xy))
@@ -139,7 +153,8 @@ def build(wide=False):
             gap=max(bx-ax-aw,ax-bx-bw,by-ay-ah,ay-by-bh)
             if gap<20-1e-6:gap_fail.append(dict(a=n,b=m,gap_um=round(gap,3)))
     return dict(schema="opentallas.s81.capture_split_geometry_candidate.v1",adopted=False,physical_qualified=False,
-                outline_um=[WIDTH,HEIGHT],wide_roads=wide,children=children,
+                outline_um=[WIDTH,HEIGHT],wide_roads=wide,children=children,clock_entries=entries,
+                assigned_pin_scope=assigned.get("scope") if assigned else None,
                 summary=dict(children=len(children),hard_child_gaps_below20=len(gap_fail),
                              internal_bit_paths=len(paths),max_internal_manhattan_um=paths[0]["manhattan_um"],
                              internal_paths_over500=sum(p["manhattan_um"]>500 for p in paths)),
@@ -150,5 +165,6 @@ def build(wide=False):
 if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--out",type=Path,required=True)
     parser.add_argument("--wide",action="store_true")
-    args=parser.parse_args();out=build(args.wide);args.out.parent.mkdir(parents=True,exist_ok=True)
+    parser.add_argument("--assigned-pins",type=Path)
+    args=parser.parse_args();out=build(args.wide,json.loads(args.assigned_pins.read_text()) if args.assigned_pins else None);args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out["summary"]))
