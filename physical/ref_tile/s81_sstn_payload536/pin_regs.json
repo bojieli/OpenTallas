@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_sstn_payload536",
+ "enable": false,
+ "reason": "Actual RTL is one capture per payload/control bit; a second flow register adds an unpriced edge. The canonical two-leaf split has separately delivered clocks and no parent sequential logic."
+}
