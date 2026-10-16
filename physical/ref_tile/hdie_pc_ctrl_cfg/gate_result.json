@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hdie_pc_ctrl_cfg",
  "verdict": "WARN",
- "generated": "2026-10-16T03:04:00-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-16T03:30:19-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "145159c02e4e3bb1ad7fe70146979dae325da429",
+  "start_commit": "c2612c9ec2eca52c95913028b57934365fb49801",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "01ea4e3202dbc7eef3fd47325b8ec94846edca2e242e8818eb26b347ebebece4",
-  "manifest_sha256": "55276c5288c4c11d9106f986a28535e36c1f7ecbde302227e67c9260b92ca95d",
+  "archive_sha256": "df463e1e42d8f849b6c0816c6bb4f587e16a32b930c1e579638e77e0cec66cb0",
+  "manifest_sha256": "275c1819b0d314d9686eccda30ccfb0dcd50d092a4d232aeb368e49359d85f1e",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17979,24 +17979,24 @@
    {
     "path": "physical/ref_tile/hdie_pc_ctrl_cfg/floorplan.json",
     "kind": "file",
-    "sha256": "ec3b18348498eaf7228f7e6bb1de77b6553ebb3beecdb746f8070b06dabc6d5d",
-    "git_blob": "0a2d9e9eccb1fb2cbc6d130f1e65f040cce24384",
+    "sha256": "179b167a881f012b0b2502c8f96ca5d409173f382777fce4ef83236ac5a3c326",
+    "git_blob": "6916a6e88b8138bd53fc8286218eaf75388ea3e6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hdie_pc_ctrl_cfg/job.json",
     "kind": "file",
-    "sha256": "ce7c732325d6fdf85d706ab2d7a34257fe04322f6cccc7ace7e8e4e2255d9077",
-    "git_blob": "5ba3e00f30e2475d5a1619a16769302a09845d9f",
+    "sha256": "3384109fbf33d70fd5af45c7c71a80cebf513068cb99a424140204fe6a2f32e3",
+    "git_blob": "41457d013a1cfd9d09db85b7f1b4cb5efec22daa",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hdie_pc_ctrl_cfg/kit.env",
     "kind": "file",
-    "sha256": "c04fda3ef06fd99b502dece80c3fe98dfb0813f4f14ffc18844dee95d5aaf9a8",
-    "git_blob": "bfa0ff15689d58a0d95c7d70eb00e67f870b11b1",
+    "sha256": "004f3c64d597dbf629d2b27204494844bc52e4d2a9b6bac062367c11dc63bc9f",
+    "git_blob": "70a5b49301c9dcc14e9796174e18457ac2980bdf",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18019,8 +18019,8 @@
    {
     "path": "physical/ref_tile/hdie_pc_ctrl_cfg/place.tcl",
     "kind": "file",
-    "sha256": "478ac2b29c35236795c5a21c57de875be4fb946b78a971cf5a31385a52c0e068",
-    "git_blob": "1b0818f2ac0eb713ca9f8f6234fd33b98cc7efa5",
+    "sha256": "557b72863211eeb6437f1213a03af952e116badc5161cd60e041ff288a6242a1",
+    "git_blob": "4a87edf25fc9b47faa561aeb6b2b65e5f9ac48c3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18115,8 +18115,8 @@
    {
     "path": "physical/ref_tile/hdie_pc_ctrl_cfg/spec.json",
     "kind": "file",
-    "sha256": "e1127a999d18750114524451f46ab9a6758be1d79c27ea54e2da7f3c4fa12c1d",
-    "git_blob": "ca65746fc912b85ac33076aee454a139cf59cb1c",
+    "sha256": "096af4a2b3026833cb3c626fbe273ea4ffabc9894220d5a74665572828537ee4",
+    "git_blob": "fc9aa024761caee6b7b85a8b6346fc41428a52d1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18131,8 +18131,8 @@
    {
     "path": "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl",
     "kind": "file",
-    "sha256": "87c7e5b3fbab13c28d303859486baeaa74ba1b78fa23157ef1e4af34b9179825",
-    "git_blob": "76f4c6337477b24e31b1f2ae7168f8c28ad6a177",
+    "sha256": "69c947c580296e3c1a012216409d0f74cc2aefead4a3ba2283a752cb228c83ef",
+    "git_blob": "d66787228b2f1cdcafcbc96e8366a7086978851b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -51147,8 +51147,8 @@
    {
     "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
     "kind": "file",
-    "sha256": "4e4b344c6a5a215af723b440a7ea30f938c12331911b03a5106238204ee806bb",
-    "git_blob": "c3df3e24ab2dd4794efdee08f2ecc3e43552fd11",
+    "sha256": "b74adba1dfa8ac9d89bd98c17441d17c3fd080bf1b57e2b95023de1ff9ebd433",
+    "git_blob": "39ec77f26cd859039ec56e916ca090fb4fbcba27",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -150283,15 +150283,15 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 141544470,
+   "archive_bytes": 141545257,
    "unpacked_bytes": 883281920,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "551bff3a2e6d14a9046301c216840bd56672c187",
-   "content_sha256": "0918b61809bbdb2fac88c3e1aa4f0fbff72af4b16806d94b2e532c40d8fbf235",
+   "origin_main": "c1a0bcbfac99192f86d7abe179a8c4fae71fa1df",
+   "content_sha256": "9355d67a807c49c7ed60c70f716512ff830c633f9d079a491d0a86b8fc722ebd",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -150591,11 +150591,11 @@
     },
     {
      "path": "tools/hier_contract/child_lint.py",
-     "sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
-     "git_blob": "eaa6a76b2941db65e7a882624c31a5b0f8fd52cb",
-     "mode": 436,
+     "sha256": "b682d871603dc7b4c2fafb794eea4c939ccbef6fe1535b9ca01734113a657050",
+     "git_blob": "99670d66a7eaf27d2f33c600c17c2ad567c68910",
+     "mode": 420,
      "resolution": "same",
-     "literal_git_blob": "eaa6a76b2941db65e7a882624c31a5b0f8fd52cb"
+     "literal_git_blob": "99670d66a7eaf27d2f33c600c17c2ad567c68910"
     },
     {
      "path": "tools/hier_contract/m6_pin_grant.py",
@@ -151078,11 +151078,11 @@
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
     "physical/ref_tile/hdie_pc_ctrl_cfg/clock.sdc": "a0cc045403462e08847b267f31aba320aea8fb74d664b4f3796d9999e822f4f5",
-    "physical/ref_tile/hdie_pc_ctrl_cfg/floorplan.json": "ec3b18348498eaf7228f7e6bb1de77b6553ebb3beecdb746f8070b06dabc6d5d",
-    "physical/ref_tile/hdie_pc_ctrl_cfg/kit.env": "c04fda3ef06fd99b502dece80c3fe98dfb0813f4f14ffc18844dee95d5aaf9a8",
+    "physical/ref_tile/hdie_pc_ctrl_cfg/floorplan.json": "179b167a881f012b0b2502c8f96ca5d409173f382777fce4ef83236ac5a3c326",
+    "physical/ref_tile/hdie_pc_ctrl_cfg/kit.env": "004f3c64d597dbf629d2b27204494844bc52e4d2a9b6bac062367c11dc63bc9f",
     "physical/ref_tile/hdie_pc_ctrl_cfg/pdn.tcl": "ebe037fdf5e30bb620d44ebcbefd5dfc09f99031c7086c8cfa927c9ecd927b97",
     "physical/ref_tile/hdie_pc_ctrl_cfg/pin_regs.json": "c9b19927fd88309659915446e7ecd017c8d5058ef866e674e512bc72490a0a29",
-    "physical/ref_tile/hdie_pc_ctrl_cfg/place.tcl": "478ac2b29c35236795c5a21c57de875be4fb946b78a971cf5a31385a52c0e068",
+    "physical/ref_tile/hdie_pc_ctrl_cfg/place.tcl": "557b72863211eeb6437f1213a03af952e116badc5161cd60e041ff288a6242a1",
     "physical/ref_tile/hdie_pc_ctrl_cfg/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
     "physical/ref_tile/hdie_pc_ctrl_cfg/post_drt.tcl": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
     "physical/ref_tile/hdie_pc_ctrl_cfg/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
@@ -151094,9 +151094,9 @@
     "physical/ref_tile/hdie_pc_ctrl_cfg/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/hdie_pc_ctrl_cfg/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/hdie_pc_ctrl_cfg/signoff.sdc": "4490561055ef7a2c85d99e4a53e1a9af81e4156d821cee6b72d01b8509601914",
-    "physical/ref_tile/hdie_pc_ctrl_cfg/spec.json": "e1127a999d18750114524451f46ab9a6758be1d79c27ea54e2da7f3c4fa12c1d",
+    "physical/ref_tile/hdie_pc_ctrl_cfg/spec.json": "096af4a2b3026833cb3c626fbe273ea4ffabc9894220d5a74665572828537ee4",
     "physical/ref_tile/hdie_pc_ctrl_cfg/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed",
-    "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl": "87c7e5b3fbab13c28d303859486baeaa74ba1b78fa23157ef1e4af34b9179825",
+    "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl": "69c947c580296e3c1a012216409d0f74cc2aefead4a3ba2283a752cb228c83ef",
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv": "1ea5a8364761ad00cb5b696e9eace361a60d1479e5423334798dd834a50bc8a4",
     "rtl/hbm_accel/loader/service_native/run_sm_groups_issued.sh": "4a68e7e3e710348749f021b87b845338f7502e4336b4cdf8043396589190c07d",
@@ -151114,7 +151114,7 @@
     "rtl/model_ready_hbm_r14/ot_hbm_r14_result_producer.sv": "fb4b7271e3c4b04f95b5ce82b6308b262f087325c7126363ff852867d383a7c0",
     "rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
-    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv": "4e4b344c6a5a215af723b440a7ea30f938c12331911b03a5106238204ee806bb",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv": "b74adba1dfa8ac9d89bd98c17441d17c3fd080bf1b57e2b95023de1ff9ebd433",
     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "b0337709431b84de740542a274e41bbf96bede37fa980f2e962d8c4f34b3ba19",
     "rtl/model_ready_hbm_r14/ot_hbm_r14_system_decode.sv": "77d4ba230ad9511e115b5869d356e0e54fe3e541cbea823aa163e7cf7b1357fa",
     "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
@@ -151425,16 +151425,16 @@
    },
    "digest": "8c9b78f06f7fead21be5ff877c275c9d2d56b85d930b4b02893bcd61188b373e"
   },
-  "captured": "2026-10-16T02:33:45-0700",
+  "captured": "2026-10-16T03:07:28-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hdie_pc_ctrl_cfg/signoff.sdc"
   },
-  "remote_script_sha256": "4628ac0fbca706b35a0074276ab51f3cf8caf9d7e6ca1629fc4095e8724e90b7",
+  "remote_script_sha256": "c59075e1b98eacb32e7c226ade465ddfb3f5d139bebdcf6a71e464d8bbf727fa",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg-20261016-023212",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg-20261016-030612",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -151442,11 +151442,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 9354,
+  "max_root_sinks": 9482,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 397.2,
-  "tt_spread_ps": 30.7,
+  "tt_insertion_ps": 398.8,
+  "tt_spread_ps": 30.1,
   "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
@@ -151460,38 +151460,38 @@
     "tt": {
      "boundary": {
       "n": 2117,
-      "mean": 387.6,
-      "min": 368.4,
-      "max": 396.9
+      "mean": 385.7,
+      "min": 368.7,
+      "max": 398.8
      },
      "all": {
-      "n": 9635,
-      "mean": 386.2,
-      "min": 366.5,
-      "max": 397.2
+      "n": 9763,
+      "mean": 386.3,
+      "min": 368.7,
+      "max": 398.8
      },
      "errors": [],
      "macros": {
       "n": 2,
       "nets": 2,
       "max_per_net": 1,
-      "reg_mean": 386.2,
-      "max_slew": 17.8,
-      "max_late": 4.7,
+      "reg_mean": 386.3,
+      "max_slew": 17.6,
+      "max_late": 10.2,
       "pins": [
        {
         "pin": "g_wpay.u_write_payload/clk",
-        "arr": 384.5,
-        "slew": 17.8,
-        "late": -1.7,
-        "net": "clkbuf_sp_L1039_net"
+        "arr": 396.5,
+        "slew": 14.0,
+        "late": 10.2,
+        "net": "clkbuf_sp_L1028_net"
        },
        {
         "pin": "u_response_payload/clk",
-        "arr": 390.9,
-        "slew": 16.5,
-        "late": 4.7,
-        "net": "clkbuf_sp_L911_net"
+        "arr": 393.5,
+        "slew": 17.6,
+        "late": 7.2,
+        "net": "clkbuf_sp_L769_net"
        }
       ]
      },
@@ -151501,19 +151501,19 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "9,354 sinks on the largest root <= 15,000; measured TT insertion 397.2 ps, leaf spread 30.7 ps"
+  "text": "9,482 sinks on the largest root <= 15,000; measured TT insertion 398.8 ps, leaf spread 30.1 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "textbook.high_fanout",
-   "message": "reset u_rst.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,790 loads (1,751 flops, e.g. active_row[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "message": "reset u_rst.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,832 loads (1,751 flops, e.g. active_row[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
    "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
   },
   {
    "severity": "WARN",
    "check": "textbook.boundary",
-   "message": "894 input->register endpoint(s) > 3 levels (worst kr_rdy->g_krreg.u_skid.tail_data[9]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[99]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[98]$_DFFE_PP_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "message": "1234 input->register endpoint(s) > 3 levels (worst kr_rdy->g_krreg.u_skid.tail_data[9]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[99]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[98]$_DFFE_PP_/D 4 lv): register the boundary (pin flops / registered outputs)",
    "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   }
  ]
