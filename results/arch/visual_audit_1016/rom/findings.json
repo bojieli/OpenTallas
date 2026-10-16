@@ -1906,20 +1906,22 @@
     "2": {
      "id": "S81H-11",
      "outcome": "confirmed",
-     "evidence": "Gate-level only. Compact s81engm_dispatch_c35 (15071e425 / job 633539f1d): 34.56x34.56 um, down from 129.6x86.4 (1,194 vs 11,197 um2, -89%). Gate fill 0.306 (util 38%, std 352 um2), clock at S-face centre, CTS TT insertion 98.3 ps / spread 4.1 ps (724 sinks), verdict WARN. Gate WARN: reset sync fanout 321 loads. A route is still needed to confirm timing.",
+     "evidence": "Gate-level only. Compact s81engm_dispatch_c35 (15071e425 / job 633539f1d): 34.56x34.56 um, down from 129.6x86.4 (1,194 vs 11,197 um2, -89%). Gate fill 0.306 (util 38%, std 352 um2), clock at S-face centre, CTS TT insertion 98.3 ps / spread 4.1 ps (724 sinks), verdict WARN. Gate WARN: reset sync fanout 321 loads. A route is still needed to confirm timing. | 02:20 final c35 30.24x30.24 um (cut from 34.56 after util 40%): area 11,197 -> 914 um2 (-92%), fill 0.048 -> 0.40; gate images LOOKED (pins centred all faces, uniform density, clock S centre). Route verdict pending.",
      "before": {
       "fill": 0.048,
       "area_um2": 11197
      },
      "after": {
-      "fill": 0.306,
-      "area_um2": 1194,
-      "cts_ins_ps": 98.3,
-      "spread_ps": 4.1,
-      "images": [
-       "/tmp/visrom/r2/img/s81_S81H-11_engm_c35_gate_density.png",
-       "/tmp/visrom/r2/img/s81_S81H-11_engm_c35_gate_floorplan.png"
-      ]
+      "outline_um": [
+       30.24,
+       30.24
+      ],
+      "area_um2": 914.5,
+      "fill": 0.4,
+      "pin_pitch_um": 0.192,
+      "clock": "S-face centre",
+      "job": "s81engm_dispatch_c35-c1-d7833e5f1 (submitted)",
+      "image": "img_r2/S81H-11__c35_30um_gate_density.png"
      }
     }
    }
