@@ -146,6 +146,17 @@
       "uf_faults": 8,
       "am_swap_mutant": "rejected",
       "full_controller_operation_timing": "native_rom_port gate covers actual operation phases; not literal ABI test alone"
+    },
+    "native_rom_prefetch_mutant": {
+      "status": "ACTUAL_RTL_MUTANT_REJECTED",
+      "source_revision": "f57ae9bbe",
+      "guard": "OT_QFD_B2_PREFETCH_MUT forces actualnewcontroller SCALE_ADVANCE0 versus6",
+      "failure": "PC1 half0 firstscale expected36aa0000 observed0; exactrealROM\u2192hardmul comparison rejected",
+      "unit": "oth-ubuntu-111045-1792168262",
+      "ot_run_exit": 0,
+      "compile_unit": "oth-ubuntu-70321-1792167908",
+      "compile_wrapper_exit": 127,
+      "wrapper_limitation": "Actualmutant rejected asintended, then remote rg unavailable caused wrapper127; replacedfallbackgrep and reran SAMEsourcepinned binary in clean1GB unit, expectedrejection wrapperexit0."
     }
   },
   "prior_failure_receipts": [
