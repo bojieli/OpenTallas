@@ -1,0 +1,349 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank_tt.lib
+read_liberty /src/physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller/ot_hgi_dma_back_static_vp4_controller_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank_ff.lib
+read_liberty /src/physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller/ot_hgi_dma_back_static_vp4_controller_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/4_cts.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/4_cts.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_grt_ot_grt183.tcl
+QDM reference pin L[0].u_bank/clk clock arrival max 705.886963 min 700.964661 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_PIN_KEEPOUT created 3: {M6 128616 360678 359568 360720} {M5 0 75144 42 285648} {M5 511878 163272 511920 197904}
+OT_GRT_TOP_SHADOW: 9 macros; GRT layers M2-M7 with M7 at zero capacity (detailed route stays <= M6)
+OT_ENTRIES LEVEL clk_bank[0] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[0] -> L[0].u_bank/clk wire=489.7193781189786 R=125.9 latency=211.24529987514322 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[1] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[1] -> L[1].u_bank/clk wire=248.72806691522362 R=125.9 latency=452.23661107889825 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[2] -> L[2].u_bank/clk wire=87.76889666815997 R=125.9 latency=613.1957813259619 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[3] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[3] -> L[3].u_bank/clk wire=495.257559165997 R=125.9 latency=205.70711882812483 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[4] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[4] -> L[4].u_bank/clk wire=252.4532815113605 R=125.9 latency=448.51139648276137 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[5] -> L[5].u_bank/clk wire=89.87097907359694 R=125.9 latency=611.093698920525 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[6] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[6] -> L[6].u_bank/clk wire=700.9646779941219 R=125.9 latency=-2.8421709430404007e-14 phi=826.8646779941218
+OT_ENTRIES LEVEL clk_bank[7] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[7] -> L[7].u_bank/clk wire=404.8531526214057 R=125.9 latency=296.1115253727162 phi=826.8646779941218
+OT_ENTRIES LEVEL clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk -> u_control/clk wire=111.14356007759419 R=132.2 latency=583.5211179165276 phi=826.8646779941218
+OT_ENTRIES DOMAIN core 833.333008ps IO2413/2533 boundary=818.7646779941219..836.8646779941218
+OT_ENTRIES COMP DONE tt 9 entries phi=826.8646779941218 boundary=818.7646779941219..836.8646779941218
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     214
+Number of vias:       20
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_hgi_dma_back_static_vp4_banks
+Die area:                 ( 0 0 ) ( 511920 360720 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     25666
+Number of terminals:      4957
+Number of snets:          2
+Number of nets:           18545
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 39.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 192639.
+[INFO DRT-0033] V1 shape region query size = 7188918.
+[INFO DRT-0033] M2 shape region query size = 57522.
+[INFO DRT-0033] V2 shape region query size = 141468.
+[INFO DRT-0033] M3 shape region query size = 151466.
+[INFO DRT-0033] V3 shape region query size = 94312.
+[INFO DRT-0033] M4 shape region query size = 114075.
+[INFO DRT-0033] V4 shape region query size = 94312.
+[INFO DRT-0033] M5 shape region query size = 66116.
+[INFO DRT-0033] V5 shape region query size = 23044.
+[INFO DRT-0033] M6 shape region query size = 17859.
+[INFO DRT-0033] V6 shape region query size = 24816.
+[INFO DRT-0033] M7 shape region query size = 6392.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0078]   Complete 2207 pins.
+[INFO DRT-0081]   Complete 36 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0084]   Complete 12205 groups.
+#scanned instances     = 25666
+#unique  instances     = 39
+#stdCellGenAp          = 1092
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 1076
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 26608
+#instTermValidViaApCnt = 0
+#macroGenAp            = 7023
+#macroValidPlanarAp    = 7023
+#macroValidViaAp       = 4956
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:00:15, elapsed time = 00:00:04, memory = 757.75 (MB), peak = 1007.34 (MB)
+Took 6 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 9
+[INFO GRT-0004] Blockages: 29989
+[INFO GRT-0019] Found 9 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 5
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3763285       2677080          28.86%
+M3         Vertical      5131871       3815401          25.65%
+M4         Horizontal    4653222       3466973          25.49%
+M5         Vertical      5282625       3868125          26.78%
+M6         Horizontal    4289640       2918737          31.96%
+M7         Vertical      4737499             0          100.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 65879
+[INFO GRT-0198] Via related Steiner nodes: 59
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 262413
+[INFO GRT-0112] Final usage 3D: 3955844
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2677080        785880           29.36%             0 /  0 /  0
+M3             3815401        850852           22.30%             0 /  0 /  0
+M4             3466973        666017           19.21%             1 /  0 / 10
+M5             3868125        529092           13.68%             0 /  1 /  2
+M6             2918737        336764           11.54%             7 /  0 / 228
+M7                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         16746316       3168605           18.92%             8 /  1 / 240
+
+[INFO GRT-0018] Total wirelength: 1920076 um
+[INFO GRT-0014] Routed nets: 18545
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 00:24:41
+Took 1481 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     18545
+     1000 |     +0.0% |       0 |     103 |           184 |     17545
+     2000 |     +0.1% |       0 |     177 |           280 |     16545
+     3000 |     +0.1% |       0 |     268 |           424 |     15545
+     4000 |     +0.1% |       1 |     393 |           536 |     14545
+     5000 |     +0.2% |       1 |     541 |           804 |     13545
+     6000 |     +0.2% |       1 |     638 |           957 |     12545
+     7000 |     +0.3% |       1 |     826 |          1087 |     11545
+     8000 |     +0.4% |       2 |    1104 |          1318 |     10545
+     9000 |     +0.4% |       2 |    1191 |          1392 |      9545
+    10000 |     +0.4% |       2 |    1308 |          1489 |      8545
+    11000 |     +0.5% |       2 |    1508 |          1611 |      7545
+    12000 |     +0.6% |       2 |    1845 |          1877 |      6545
+    13000 |     +0.6% |       2 |    1865 |          1893 |      5545
+    14000 |     +0.6% |       2 |    1939 |          1924 |      4545
+    15000 |     +0.6% |       2 |    1992 |          1956 |      3545
+    16000 |     +0.6% |       2 |    2011 |          1973 |      2545
+    17000 |     +0.6% |       2 |    2039 |          2227 |      1545
+    18000 |     +0.6% |       2 |    2039 |          2303 |       545
+    final |     +0.6% |       2 |    2043 |          2543 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 2543 slew violations.
+[INFO RSZ-0039] Resized 2 instances.
+[INFO RSZ-0038] Inserted 2043 buffers in 2543 nets.
+[INFO RSZ-0504] Runtime: 372.61s
+Took 372 seconds: repair_design -verbose -slew_margin 30
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 180908.64 um^2
+[INFO DPL-0007] Movable instances area: 3022.38 um^2
+[INFO DPL-0008] Fixed instances area within core: 103395.32 um^2
+[INFO DPL-0009] Utilization: 58.8%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 27700 cells
+[INFO DPL-0393]   height 256 row(s): 1 cells
+[INFO DPL-0393]   height 324 row(s): 8 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         51 |         7 |        44
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.54s
+Placement Analysis
+---------------------------------
+total displacement       2925.8 u
+average displacement        0.1 u
+max displacement            4.9 u
+original HPWL         1629145.2 u
+legalized HPWL        1630603.4 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/congestion_post_repair_design.rpt
+[INFO DPL-0006] Core area: 180908.64 um^2
+[INFO DPL-0007] Movable instances area: 3022.38 um^2
+[INFO DPL-0008] Fixed instances area within core: 103395.32 um^2
+[INFO DPL-0009] Utilization: 58.8%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 27700 cells
+[INFO DPL-0393]   height 256 row(s): 1 cells
+[INFO DPL-0393]   height 324 row(s): 8 cells
+[INFO DPL-0500] Runtime: 0.32s
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2677080        630660           23.56%             1 /  0 /  1
+M3             3815401        668646           17.52%             0 /  0 /  0
+M4             3466973        624140           18.00%             1 /  0 /  7
+M5             3868125        719983           18.61%             0 /  1 /  7
+M6             2918737        525241           18.00%             7 /  0 / 303
+M7                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         16746316       3168670           18.92%             9 /  1 / 318
+
+[ERROR GRT-0232] Routing congestion too high. Check the congestion heatmap in the GUI.
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/5_1_grt.sdc
+write_db /work/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_asap7_ref_gate/base/5_1_grt.odb
+Elapsed time: 3:26:20.85[h:]min:sec. CPU time: user 12402.38 sys 2.33 (100%). Peak memory: 2538460KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb        12380           2478 a8ab8d1eded628d43747
+5_1_grt                   .sdc                             5aa61a615a4ce9dfc1b5

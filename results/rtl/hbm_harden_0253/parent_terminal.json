@@ -1,0 +1,56 @@
+{
+  "qualification": false,
+  "verdict": "FAIL",
+  "scope": "Inherited legacy pre-route parent diagnostic only; no route or native parent adoption.",
+  "intended_source_commit": "69be5cda7",
+  "gate_source_binding_schema": "opentallas.ref_tile.source_snapshot.v1",
+  "gate_commit": null,
+  "manifest_sha256": "ce9f80a1bae5b6f92e5c502f6aa423eabc4a00e1471249d3b838d10f898c2a01",
+  "archive_sha256": "321634e8e8a769cc50744c26a035c9dbbbe2ed12cc7a9261b38326ab303be3c6",
+  "source_binding_limit": "Snapshot v1 has no route_commit and cannot qualify current normal intake. File/archive hashes are retained; do not infer commit binding.",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/hv15_dbk_cl-20261016-001939",
+  "host": "ot-epyc1tb",
+  "elapsed_seconds": 12661,
+  "clock_worst_observed": {
+    "bank6_raw_wire_arrival_ps": 701.0,
+    "bank6_clock_slew_ps": 2222.0,
+    "interpretation": "Count-only clock rule PASS does not qualify parent clock delivery."
+  },
+  "reach": {
+    "violations": 136,
+    "worst_um": 552.1,
+    "example": "u_control/rq[1] to parent rq[1]"
+  },
+  "trial_overflow": {
+    "initial": 240,
+    "final": 318,
+    "final_layers": {
+      "M2": 1,
+      "M4": 7,
+      "M5": 7,
+      "M6": 303
+    }
+  },
+  "placement_diagnostic_slack_ps": {
+    "in_to_macro": -189.8,
+    "macro_to_output": -49.7,
+    "macro_to_macro": -16.0,
+    "hold": 103.7
+  },
+  "images_inspected": [
+    "physical/ref_tile/hv15_dbk_cl/gate_layout/floorplan.png",
+    "physical/ref_tile/hv15_dbk_cl/gate_layout/density.png",
+    "/home/ubuntu/artifacts/hbm-harden-0253/parent/final_png/congestion.png"
+  ],
+  "visual_classification": "Final99 marker map concentrates at E escape edges of the left-column upper/middle banks and W edge of upper-middle bank. Sparse overall standard-cell density; this is a local escape/channel problem. The automatically generated gate congestion image used the INITIAL report; final report is retained separately.",
+  "next": [
+    "Move/relay controller-to-parent request paths using actual source/pin distances and compiler-accounted normal latency if a relay is required.",
+    "Repair independently delivered parent clock wire/driver/entry geometry; raw wire arrival and slew are not a usable clock tree.",
+    "Classify final M6 escape congestion at named nets before any new placement. No unchanged reroute or gate waiver."
+  ],
+  "artifacts_sha256": {
+    "grt_final.log": "4905635ef317c4d466328d72a5771c5c49a58a43ec6826f1dabfa07381cae155",
+    "congestion_final.rpt": "d1778f4df6c5f562b44494ba696e83f69b688376570c20db7be3a335ca247af6",
+    "final_png/congestion.png": "6aec6ee3bf26dba1b386e0600e4132c676e9700c4e7b8bb4b964b9ff60519659"
+  }
+}
