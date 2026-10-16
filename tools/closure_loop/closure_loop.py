@@ -3833,11 +3833,16 @@ def port_latency_record(j):
         return None
     kit = m.group(1)
     env = git("show", f"{j['commit_full']}:{kit}/kit.env", check=False).stdout
-    if "--orfs-var OT_PIN_REGS=1" not in env:
+    if str(HERE.parent / "ref_tile") not in sys.path:
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+    from kit_orfs_vars import parse
+    if parse(env).get("OT_PIN_REGS") != "1":
         return None
     top = None
+    tile_spec = {}
     try:
-        top = json.loads(git("show", f"{j['commit_full']}:{kit}/spec.json", check=False).stdout or "{}").get("top")
+        tile_spec = json.loads(git("show", f"{j['commit_full']}:{kit}/spec.json", check=False).stdout or "{}")
+        top = tile_spec.get("top")
     except ValueError:
         pass
     base = f"{j['run']}/routes/{label(j['name'])}/work/orfs/results/asap7/*/base"
@@ -3857,6 +3862,10 @@ def port_latency_record(j):
             sys.path.insert(0, str(HERE.parent / "ref_tile"))
         import port_latency
         rep = port_latency.export(got["ot_pin_regs.tsv"], got["ot_pin_regs_wrapper.v"], top, j["commit_full"])
+        def role_source(path):
+            result = git("show", f"{j['commit_full']}:{path}", check=False)
+            return result.stdout if result.returncode == 0 else None
+        rep["control_roles"] = port_latency.validate_roles(rep, got["ot_pin_regs_wrapper.v"], tile_spec, role_source)
     rep["job"] = j["name"]
     return kit, rep
 

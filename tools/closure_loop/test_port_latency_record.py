@@ -18,6 +18,7 @@ TCL = HERE.parents[1] / "physical/common_flow/ot_pin_regs.tcl"
 STUB = '''
 set ::env(DESIGN_NAME) example
 set ::env(OT_PIN_REGS_CLOCK) ck
+set ::env(OT_PIN_REGS_RESET_PORTS) rst_n
 set ::env(OT_PIN_REGS_EXCLUDE) {^cfg$}
 set ::env(RESULTS_DIR) [lindex $argv 0]
 proc yosys {args} {
@@ -47,7 +48,7 @@ class PortLatencyRecord(unittest.TestCase):
         kit = self.repo / "physical/ref_tile/ex"
         kit.mkdir(parents=True)
         (kit / "spec.json").write_text(json.dumps({"top": "example"}))
-        (kit / "kit.env").write_text("EXTRA=(--orfs-var OT_PIN_REGS=1 --orfs-var OT_PIN_REGS_CLOCK=ck)\n")
+        (kit / "kit.env").write_text("EXTRA=('--orfs-var' 'OT_PIN_REGS=1' '--orfs-var' 'OT_PIN_REGS_CLOCK=ck')\n")
         g = ["git", "-C", str(self.repo)]
         subprocess.run(g + ["init", "-q"], check=True)
         subprocess.run(g + ["add", "."], check=True)
