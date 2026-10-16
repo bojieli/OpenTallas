@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.s81.capture_epoch_proposal.v1",
+  "adopted": false,
+  "physical_qualified": false,
+  "base_commit": "6c4e6bca0610c19ea51e1f564213d453ade0a3a7",
+  "binding_source_commit": "ff82c4e5f",
+  "binding_packet_sha256": "ad770f316cc1b8cf9be5dcdee9b1ed97b7765b7ebc3f0ed37b1b82d48051e368",
+  "verdict": "EXISTING_SOURCE_CONTRACT_INSUFFICIENT; conditional additive release candidate only",
+  "existing_source": {
+    "pll": "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv",
+    "clock_tile": "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv",
+    "resets": "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv",
+    "available_outputs": [
+      "pll_stream",
+      "pll_serial",
+      "pll_hbm",
+      "rst_stream",
+      "rst_serial",
+      "rst_hbm"
+    ],
+    "absent_outputs": [
+      "vco",
+      "divider_epoch",
+      "paired_precommit"
+    ],
+    "documented": "VCO3.6GHz /3 stream /4 serial; related edges on one VCO grid. No specified divider phase relative to reset/refclk; pd model clears lock only. Behavioral oscillators free-run and do not implement divider reset.",
+    "reset_bench": "Stream66 serial74 HBM82 refclk edges after lock (two synchronization edges plus sequencer hold); GAP8 is deliberate existing behavior."
+  },
+  "proof": {
+    "frequency_alone": "Stream rising=3n and serial rising=p+4m have common ticks dependent on p. All p=0..3 satisfy related/grid contract; no unique phase0 is bound.",
+    "even_best_phase": "Exact rational bench generously sets both rising phases0. Stream and serial raw release separated by8refclk=80ns at10nsrefclk. Actual x43 reset chain adds4stream periods versus3serial periods, equal3.333ns. It cannot remove80ns reset skew; 12 cold/warm phase residues all fail.",
+    "warm": "POR or lock loss restarts independent refclk release sequence. Waiting longer, common reset OR, or independent local2FF alone gives no common epoch guarantee. Repeated startup must re-arm both halves and choose a future jointly agreed epoch.",
+    "not_claimed": "No claim that all possible clock-observation/calibration circuits are impossible; such a circuit needs phase-margin/metastability qualification absent here."
+  },
+  "candidate_interface": {
+    "rtl": "rtl/dsrom_sys/s81_ph/epoch_candidate/ot_s81_capture_epoch_release.sv",
+    "enable_default": 0,
+    "inputs": [
+      "existing stream/serial clocks",
+      "existing stream/serial active-low resets",
+      "source precommit_stream",
+      "source precommit_serial"
+    ],
+    "outputs": [
+      "armed_stream",
+      "armed_serial",
+      "capture_stream_n",
+      "capture_serial_n"
+    ],
+    "sequence": [
+      "Existing reset controller runs unchanged; either raw reset low asynchronously holds both capture halves low.",
+      "Each domain synchronizes both-reset-high into a two-FF armed acknowledgment.",
+      "Source synchronizes BOTH acknowledgments into its qualified epoch domain, waits declared margin, then emits the paired precommit for ONE future common rising edge. No data issue/ready/credits depend on acknowledgments.",
+      "Precommit signals satisfy setup/hold at the last local falling edges preceding that same common rise. Local release flops deassert resets on those falling edges. Existing leaf reset chains remain intact.",
+      "Raw first active clocks share epoch0; x43 first index0 is fifth stream/fourth serial edge, both epoch0+3.333ns.",
+      "Any raw reset/lock loss cancels source grant and arms; repeat this protocol before static production scheduling starts."
+    ],
+    "source_implementation_required": "PLL IP paired precommit outputs OR measured deterministic divider-reset/refclk phase contract plus implemented source sequencer. Existing source has neither committed implementation nor physical pins. Do not use ideal behavioral epoch as hardware."
+  },
+  "cost": {
+    "candidate_flops": 6,
+    "stream_posedge_sinks": 2,
+    "stream_negedge_sinks": 1,
+    "serial_posedge_sinks": 2,
+    "serial_negedge_sinks": 1,
+    "new_clock_roots": 0,
+    "new_vco_sinks_in_candidate": 0,
+    "boundary_signals": {
+      "source_precommit_inputs": 2,
+      "startup_ack_outputs": 2,
+      "capture_reset_outputs": 2
+    },
+    "steady_state_data_cycles_added": 0,
+    "steady_state_data_bits_per_cycle_added": 0,
+    "startup_local_arming_bound_ns": 2.2222222222222223,
+    "startup_commit_wait_ns": "Source acknowledgment synchronization + up to3.333ns to chosen epoch plus required timing guard; unknown until source implementation.",
+    "area_um2": null,
+    "source_epoch_logic_area_and_clock_load": "UNMEASURED; IP internal VCO access not assumed.",
+    "timing": "New falling-edge reset outputs require recovery/removal, min-pulse, CDC and literal die-wire/phi-R checks at TT/FF (SS sensitivity). No closure claim."
+  },
+  "missing_measurements": [
+    "Source divider reset phase for cold POR and every lock-loss/relock phase; exact rising/falling edge relationship to refclk and all output phase classes.",
+    "Source precommit generation mapped to actual IP pins and source synchronizer MTBF/guard specification, or qualified deterministic profile-bound sequencer.",
+    "Paired precommit routed setup/hold at coordinator negedge inputs; reset arrival/recovery/removal at all literal x43 rst/rsv pins, including independent ckvb entry.",
+    "Actual die native phase-R clock arrival and stream/serial pair checks for the capture bank seams; warm reset chain index0 alignment.",
+    "Mapped area, source clock-entry load, literal signal wire lengths and route/STA with an approved additive slot."
+  ],
+  "physical_policy": {
+    "closed_clock_tile_unchanged": true,
+    "existing_views_unchanged": true,
+    "no_reroute_submitted": true,
+    "integration": "Full-die keeps legacy binding by default and emits unresolved startup requirement. Enabling this candidate requires actual source pins/implementation and S-DIE-approved additive placement/routing; do not alter or pretend existing closed clock tile pins."
+  },
+  "validation": {
+    "fleet_host": "ot-epyc4",
+    "ot_heavy_unit": "oth-ubuntu-3047832-1792192088",
+    "ot_run_exit": 0,
+    "memory_request_GB": 4,
+    "threads": 1,
+    "conditional_positive_cases": 24,
+    "mutant": "Early serial release ignores common precommit; actual mismatch stream48ns serial40ns; vvp exit1 expected.",
+    "legacy_reset_bench": "PASS exact66/74/82refclk sequence across cold POR, PORglitch, lockloss, chatter.",
+    "limits": "Conditional source input boundary; not an actual PLL or full die phase proof."
+  }
+}

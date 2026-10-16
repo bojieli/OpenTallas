@@ -1,0 +1,84 @@
+{
+  "status": "EXISTING_RESET_BINDING_FAIL",
+  "aligned_pll_counterexamples": [
+    {
+      "ref_release_phase": "1/10",
+      "stream_first": "2319",
+      "serial_first": "2608"
+    },
+    {
+      "ref_release_phase": "11/10",
+      "stream_first": "2319",
+      "serial_first": "2608"
+    },
+    {
+      "ref_release_phase": "21/10",
+      "stream_first": "2319",
+      "serial_first": "2608"
+    },
+    {
+      "ref_release_phase": "31/10",
+      "stream_first": "2322",
+      "serial_first": "2608"
+    },
+    {
+      "ref_release_phase": "41/10",
+      "stream_first": "2322",
+      "serial_first": "2612"
+    },
+    {
+      "ref_release_phase": "51/10",
+      "stream_first": "2322",
+      "serial_first": "2612"
+    },
+    {
+      "ref_release_phase": "61/10",
+      "stream_first": "2325",
+      "serial_first": "2612"
+    },
+    {
+      "ref_release_phase": "71/10",
+      "stream_first": "2325",
+      "serial_first": "2612"
+    },
+    {
+      "ref_release_phase": "81/10",
+      "stream_first": "2325",
+      "serial_first": "2616"
+    },
+    {
+      "ref_release_phase": "91/10",
+      "stream_first": "2328",
+      "serial_first": "2616"
+    },
+    {
+      "ref_release_phase": "101/10",
+      "stream_first": "2328",
+      "serial_first": "2616"
+    },
+    {
+      "ref_release_phase": "111/10",
+      "stream_first": "2328",
+      "serial_first": "2616"
+    }
+  ],
+  "legal_grid_phase_profiles": [
+    {
+      "serial_divider_phase": 0,
+      "common_tick_mod12": 0
+    },
+    {
+      "serial_divider_phase": 1,
+      "common_tick_mod12": 9
+    },
+    {
+      "serial_divider_phase": 2,
+      "common_tick_mod12": 6
+    },
+    {
+      "serial_divider_phase": 3,
+      "common_tick_mod12": 3
+    }
+  ],
+  "source_phase_unbound": true
+}

@@ -1,0 +1,5 @@
+OK power-on: stream 66 serial 74 hbm 82 refclk cycles after lock
+OK after por glitch: stream 66 serial 74 hbm 82 refclk cycles after lock
+OK after relock: stream 66 serial 74 hbm 82 refclk cycles after lock
+TB_S81PH_COLL_RSTC PASS
+tb_s81ph_coll_rstc.sv:52: $finish called at 5125000 (1ps)
