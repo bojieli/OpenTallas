@@ -3,7 +3,10 @@
 // production host_v4 parent, plus the aggregate fault / visibility / containment ABI.
 // Both parents run the SAME actual HOST F20 programme (the host_v4 native reduction programme: 2 SU injects, FP32
 // reduce, publication at host-launch cycle 36, halt 40) from the same stimulus. Every cycle, every non-fault output
-// of the two must be identical (normal path exact AND containment: an injected fault never changes a reservation,
+// of the two must be identical -- the hard parent's issue-path outputs 2 edges later (V5 issue timing: the uop
+// stream is delayed 2 edges for the pipelined iteration products, HOST frames captured +1 at the fj pins; the hard
+// parent's SU boundary and injected stimuli follow its own requests / 3 edges later; programme target +1;
+// every child fault additionally +1 at the fj pin registers) -- (normal path exact AND containment: an injected fault never changes a reservation,
 // valid or payload). Fault ABI per scenario (+SCEN=n): first host-visible fault edge of the hard parent minus that
 // of host_v4 must equal the documented delta, and fault_cause must name the faulting child at its first edge:
 //   0 none (fault never; foreign-target frames ignored by both)  delta -, cause 0
@@ -46,6 +49,16 @@ module tb_hgi_coll_q_hard_v5;
   for(integer l=0;l<16;l=l+1)source_word[l*32+:32]=(index==0?32'h3f800000:32'h40000000)+32'(l<<23);
  endfunction
  wire [1023:0] inj_data={512'd0,source_rd[SUL-1]?source_word(source_index[SUL-1]):512'd0};
+ // hard parent: its own SU boundary (driven by its own requests) and the same stimuli 2 edges later
+ localparam integer SH=3,SHP=1;  // issue path +3 (frame capture +1, uop delay +2); programme target +1
+ reg [15:0] n_source_index[0:SUL-1];reg n_source_rd[0:SUL-1];
+ always @(posedge clk)begin
+  n_source_index[0]<=n_iidx[15:0];n_source_rd[0]<=n_ird[0];
+  for(integer p=1;p<SUL;p=p+1)begin n_source_index[p]<=n_source_index[p-1];n_source_rd[p]<=n_source_rd[p-1];end
+ end
+ wire [1023:0] n_inj_data={512'd0,n_source_rd[SUL-1]?source_word(n_source_index[SUL-1]):512'd0};
+ reg [NPT-1:0] rxv_d1=0,rxv_d2=0,rxv_d3=0;reg rcv_d1=0,rcv_d2=0,rcv_d3=0;
+ always @(posedge clk)begin rxv_d1<=rxv;rxv_d2<=rxv_d1;rxv_d3<=rxv_d2;rcv_d1<=rcv;rcv_d2<=rcv_d1;rcv_d3<=rcv_d2;end
 `ifdef Q3
  ot_hfd_coll_q3_static_host_v4 #(.QID(2'(QID))) ref_q(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),
   .clk_issue({4{clk}}),.clk_qslots({2{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
@@ -66,32 +79,36 @@ module tb_hgi_coll_q_hard_v5;
   .vm_rq(r_rq),.vm_rr(2056'd0),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
  ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),
-  .clk_issue({4{clk}}),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
+  .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
 `else
  ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),
-  .clk_issue({4{clk}}),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
+  .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
   .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
 `endif
   .cfg_v(cv),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .desc_v(dv_cfg),.desc_base(12'd0),.desc_limit(13'(NR)),.desc_loops(16'd1),.launch_v(launch),
   .program_configured(n_conf),.program_init_busy(n_init),.program_fault(n_pf),.hgi_busy(n_busy),.hgi_done(n_done),
-  .hgi_fault(n_hf),.inj_rd(n_ird),.inj_idx(n_iidx),.hgi_inj_addr(n_iad),.inj_d(inj_data),
-  .del_valid(n_dv),.del_flit(n_dd),.hgi_del_obase(n_ob),.rc_v(rcv),.rc_tag(3'd0),.rc_d(256'd0),
+  .hgi_fault(n_hf),.inj_rd(n_ird),.inj_idx(n_iidx),.hgi_inj_addr(n_iad),.inj_d(n_inj_data),
+  .del_valid(n_dv),.del_flit(n_dd),.hgi_del_obase(n_ob),.rc_v(rcv_d3),.rc_tag(3'd0),.rc_d(256'd0),
   .rr_v(n_rv),.rr_tag(n_rt),.rr_d(n_rd),.phy_up({NPT{1'b1}}),.tx_pin_v(n_txv),.tx_pin_flit(n_txd),
-  .rx_pin_v(rxv),.rx_pin_flit({NPT*612{1'b0}}),.retry_requested(n_rty),
+  .rx_pin_v(rxv_d3),.rx_pin_flit({NPT*612{1'b0}}),.retry_requested(n_rty),
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(n_cw),.pr_ccw_o(n_ccw),
   .vm_rq(n_rq),.vm_rr(2056'd0),.vm_kq(n_kq),.fault(n_fault),.fault_cause(n_cause),.done(n_done2),.stat_cycles(n_cyc));
  // ---- lockstep monitor
  integer cyc=0,checks=0,rf=-1,nf=-1,mism=0,outputs=0,halts=0;
  reg [15:0] first_cause=0;
- wire [8191:0] r_vec={r_conf,r_init,r_pf,r_busy,r_done,r_ird,r_iidx,r_iad,r_dv,r_dd,r_ob,r_rv,r_rt,r_rd,
+ wire [2:0] r_prog={r_conf,r_init,r_pf},n_prog={n_conf,n_init,n_pf};
+ wire [8191:0] r_vec={r_busy,r_done,r_ird,r_iidx,r_iad,r_dv,r_dd,r_ob,r_rv,r_rt,r_rd,
   r_txv,r_txd,r_rty,r_cw,r_ccw,r_rq,r_kq,r_done2,r_cyc};
- wire [8191:0] n_vec={n_conf,n_init,n_pf,n_busy,n_done,n_ird,n_iidx,n_iad,n_dv,n_dd,n_ob,n_rv,n_rt,n_rd,
+ wire [8191:0] n_vec={n_busy,n_done,n_ird,n_iidx,n_iad,n_dv,n_dd,n_ob,n_rv,n_rt,n_rd,
   n_txv,n_txd,n_rty,n_cw,n_ccw,n_rq,n_kq,n_done2,n_cyc};
+ reg [8191:0] r_hist[0:SH];reg [2:0] p_hist[0:SHP];
  always @(negedge clk)if(rst_n)begin
   cyc<=cyc+1;checks<=checks+1;
-  if(r_vec!==n_vec)begin
+  for(integer h=SH;h>0;h=h-1)r_hist[h]=r_hist[h-1];r_hist[0]=r_vec;
+  for(integer h=SHP;h>0;h=h-1)p_hist[h]=p_hist[h-1];p_hist[0]=r_prog;
+  if((cyc>=SHP && p_hist[SHP]!==n_prog) || (cyc>=SH && r_hist[SH]!==n_vec))begin
    mism=mism+1;
    if(mism<6)$display("MISMATCH cyc%0d conf%b/%b init%b/%b pf%b/%b busy%b/%b done%b/%b ird%h/%h dv%h/%h ob%h/%h txv%h/%h rq_eq%0d kq_eq%0d dd_eq%0d cyc%0d/%0d",
     cyc,r_conf,n_conf,r_init,n_init,r_pf,n_pf,r_busy,n_busy,r_done,n_done,r_ird,n_ird,r_dv,n_dv,r_ob[39:0],n_ob[39:0],
@@ -183,7 +200,7 @@ module tb_hgi_coll_q_hard_v5;
    if(n_cause!=0)$fatal(1,"fault_cause nonzero without fault");
   end else begin
    if(rf<0 || nf<0)$fatal(1,"scenario%0d fault missing: ref%0d hard%0d cause%h",scen,rf,nf,n_cause);
-   if(nf-rf!=exp_delta)$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d",scen,rf,nf,nf-rf,exp_delta);
+   if(nf-rf!=exp_delta+(scen==6?SHP:SH+1))$fatal(1,"scenario%0d fault edge: ref%0d hard%0d delta%0d expected%0d(+%0d issue shift)",scen,rf,nf,nf-rf,exp_delta,scen==6?SHP:SH+1);
    if(!first_cause[exp_bit])$fatal(1,"scenario%0d visibility: first cause %h lacks bit%0d",scen,first_cause,exp_bit);
   end
   $display("HCOLL_Q_HARD_V5 PASS %s scen%0d checks%0d ref_fault%0d hard_fault%0d first_cause%h final_cause%h",

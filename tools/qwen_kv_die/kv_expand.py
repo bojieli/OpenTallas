@@ -78,7 +78,7 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')})
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
 SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
-                             ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col'))
+                             ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
 SUBLEVELS['qkd_pvw_die_e'] = SUBLEVELS['qkd_pvw_die']     # kvs13d (OT_KV_V144_R6): the epoch-carrying face, same pair
 
 # v1.4.4: parent inputs with NO producer RTL on the die yet: left UNCONNECTED (never tied; strict port bind MISMATCH),
@@ -211,7 +211,7 @@ def elaborate(mod, file, leaf, parameters=None):
         (td / 'stubs.v').write_text('\n'.join(stub_text(m_, leaf[m_]['ports'], params[m_]) for m_ in leaf))
         (td / 'parent.sv').write_text(txt)
         (td / 'run.ys').write_text(f'read_verilog -sv {td}/stubs.v\nread_verilog -sv {td}/parent.sv\n{chp}'
-                                   f'hierarchy -top {mod}\nproc\n' + ('flatten\nopt_expr\n' if subs else '') +
+                                   f'hierarchy -top {mod}\nproc\n' + ('flatten\ndelete t:$scopeinfo\nopt_expr\n' if subs else '') +
                                    f'opt_clean\nwrite_json {td}/out.json\n')
         r = subprocess.run(['yosys', '-q', '-s', str(td / 'run.ys')], capture_output=True, text=True)
         if r.returncode:

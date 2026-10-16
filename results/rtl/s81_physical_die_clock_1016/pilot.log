@@ -1,0 +1,31 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+CLOCK_BUILD serial: 180 actual pins, 177 graph edges
+CLOCK_INSTANTIATED serial: 950 actual buffers
+PHYSICAL_CLOCK_PILOT_COMPLETE 950 cells; 70543 unwalked clocklike pins
+	Command being timed: "openroad -python -threads 4 -no_init -exit /work/tools/s81/physical_die_clock.py --input-odb /case/floorplan.odb --dump /clock_dump.tsv --out /work/serial_pilot --domains serial"
+	User time (seconds): 34.21
+	System time (seconds): 4.81
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:39.04
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4954648
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1252386
+	Voluntary context switches: 40
+	Involuntary context switches: 126
+	Swaps: 0
+	File system inputs: 5769416
+	File system outputs: 5162640
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

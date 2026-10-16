@@ -30,14 +30,13 @@
  },
  "pins": {
   "S": [
-   "i_sw"
-  ],
-  "N": [
-   "o_lanes"
-  ],
-  "W": [
+   "i_sw",
    "ck",
    "rst"
+  ],
+  "N": [
+   "o_sw",
+   "o_x"
   ]
  },
  "clock_port": "ck",
