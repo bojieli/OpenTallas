@@ -30,7 +30,7 @@
     "external_row_latency": 4,
     "ECTL_ROW_RETURN_LAT": 9,
     "QK_ISSUE_AGE": 34,
-    "shape": "actual ECTL A/B/C, real 128x256 SRAM models, T8192, stack1 engine3; external rows declared test stimuli"
+    "shape": "36 layers of actual ECTL A/B/C + real SRAM, 256 exact rows per engine per layer; external rows declared test stimuli"
   },
   "storage_bits_upper_bound": "~2200 + 37 * RESPONSE_LAT; <=15000 clock sinks for RESPONSE_LAT <=300",
   "floorplan_request": {
@@ -45,7 +45,9 @@
     "tracks_required_landing_face": 1100,
     "capacity_at_7pins_per_um": 1965.6000000000001,
     "cut_ratio": 0.5596255596255596,
-    "status": "sizing request only; no place/route claim"
+    "status": "sizing request only; no place/route claim",
+    "grant": "Die lead dimension-only grant 2026-10-16T08:20 PT; long W face landing / E face ECTL, mirrored east stacks. Exact x/y/pins/clocks await v1.5 allincident geometry."
   },
-  "qualification": "component proof only; full die physical calendar, actual landing and native qualification open"
+  "qualification": "component proof only; full die physical calendar, actual landing and native qualification open",
+  "performance_claim": "Only two added local stages measured. No end-to-end token cost acceptance or full physical KV latency claimed."
 }
