@@ -1,0 +1,5 @@
+DMA_VP_EQUIV PASS DESC_LAT=4 cases=20 bad_cases=11 fault_cycles=88 checks=1921 beats=6790
+rtl/hbm_accel/generic/peers/static/tb_dma_back_vp4_banks_equiv.sv:89: $finish called at 19350000 (1ps)
+STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
+FATAL: out/sweep/dma4/production_tb.sv:51: dispatcher/engine fault at104
+       Time: 1076000  Scope: tb_dma_back_static.tick
