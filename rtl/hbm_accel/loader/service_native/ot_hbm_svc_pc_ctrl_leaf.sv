@@ -9,11 +9,14 @@
 // return path is unchanged.  OREG=0 is the stack body exactly.
 // KREG=1 (die default): the K request enters a 2-entry pin-registered skid; k_rdy = skid not full (a register), so no
 // K input reaches k_rdy or the queue combinationally; one extra hbm cycle on the request, full rate.  KREG=0: as the stack.
+// KRREG=1 (die default): the K response leaves through a 2-entry skid whose registers drive kr_v/kr_tag/kr_beat/kr_data;
+// kr_rdy only pops the skid.  One extra hbm cycle on the response, full rate.  KRREG=0: as the stack.
 module ot_hbm_svc_pc_ctrl_leaf #(
     parameter integer PHASE=0,
     parameter integer P=0,
     parameter integer OREG=1,
-    parameter integer KREG=1
+    parameter integer KREG=1,
+    parameter integer KRREG=1
 )(
     input wire clk,rst_n,
     input wire k_v,output wire k_rdy,input wire k_we,
@@ -29,6 +32,9 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     output wire pc_fault,owner_fault
 );
     localparam[1:0]IDLE=0,DESC=1,DRAIN=2,RUN=3;
+    // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
+    wire lrst_n;
+    ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(lrst_n));
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
     reg[1:0]state;reg sticky;reg[18:0]active_row;reg[31:0]observed_open;
@@ -53,7 +59,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
     wire posted_read=posted&&push_read;
     wire column_read=cv&&!cwe;
-    wire response_take=kr_v&&kr_rdy;
+    wire j_v,j_rdy;
+    wire response_take=j_v&&j_rdy;
     wire row_idle=count==0&&read_reserved==0;
     assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=32&&
         (state==IDLE || (state==RUN && (same_row || row_idle)));
@@ -64,8 +71,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         assign i_v=sn!=0;
         assign {i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}=sk[sr];
         always @(posedge clk)if(push_k)sk[sw]<={k_we,k_addr,k_len,k_tag,k_wstrb,k_wdata};
-        always @(posedge clk or negedge rst_n)
-            if(!rst_n)begin sn<=0;sw<=0;sr<=0;end
+        always @(posedge clk or negedge lrst_n)
+            if(!lrst_n)begin sn<=0;sw<=0;sr<=0;end
             else begin
                 if(push_k)sw<=~sw;
                 if(pop_k)sr<=~sr;
@@ -76,13 +83,30 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
     end endgenerate
 
-    assign kr_v=head_valid&&!sticky&&!pc_fault;
-    assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
+    assign j_v=head_valid&&!sticky&&!pc_fault;
+    generate if(KRREG!=0)begin:g_krreg
+        reg[276:0]rk[0:1];reg[1:0]rn;reg rw,rr;
+        wire pop_r=kr_v&&kr_rdy;
+        assign j_rdy=rn!=2'd2;
+        assign kr_v=rn!=0;
+        assign {kr_tag,kr_beat,kr_data}=rk[rr];
+        always @(posedge clk)if(response_take)rk[rw]<={head_identity[20:4],head_identity[3:0],response_data};
+        always @(posedge clk or negedge lrst_n)
+            if(!lrst_n)begin rn<=0;rw<=0;rr<=0;end
+            else begin
+                if(response_take)rw<=~rw;
+                if(pop_r)rr<=~rr;
+                rn<=rn+(response_take?2'd1:2'd0)-(pop_r?2'd1:2'd0);
+            end
+    end else begin:g_krdirect
+        assign kr_v=j_v;assign j_rdy=kr_rdy;
+        assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
+    end endgenerate
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
     generate if(OREG!=0)begin:g_oreg
         reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
-        always @(posedge clk or negedge rst_n)
-            if(!rst_n)begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
+        always @(posedge clk or negedge lrst_n)
+            if(!lrst_n)begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
         always @(posedge clk)begin q_rop<=r_op;q_rbank<=r_bank;q_rrow<=r_row;q_cb<=cb;q_cc<=cc;q_cd<=head[255:0];q_cs<=head[287:256];end
         assign row_v=q_rv;assign row_op=q_rop;assign row_bank=q_rbank;assign row_row=q_rrow;
         assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;assign col_data=q_cd;assign col_strb=q_cs;
@@ -101,7 +125,7 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(P),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),
         .REF_PHASE((PHASE+P*118/32)%118)) controller(
-        .clk(clk),.rst_n(rst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
+        .clk(clk),.lrst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
         .row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         // desc_n=0 uses the actual access queue only. AQ reads never
@@ -109,8 +133,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         .col_v(cv),.col_bank(cb),.col_col(cc),.cred_ret(3'b0),.busy(),.ref_fault(pc_fault),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_r(wr),
         .col_we(cwe),.wr_rd(push_read),.col_aq(caq));
-    always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)begin
+    always @(posedge clk or negedge lrst_n)begin
+        if(!lrst_n)begin
             state<=IDLE;sticky<=0;active_row<=0;observed_open<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
             read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
             head_identity<=0;head_valid<=0;k_wr_done<=0;
