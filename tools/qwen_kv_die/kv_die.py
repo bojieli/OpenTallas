@@ -861,6 +861,19 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         try:
             m = _build(**kw)
         except ValueError as e_:
+            if split and V143['on'] and not kw.get('_narrow'):
+                # v1.4.3: the full pin-hinted re-plan corners a reset-tree / slice chain in the grown groups; retry with
+                # hints ONLY on the endpoints of the violating hops of the best pass (minimal perturbation)
+                bad = pin_reach(best[1], masters(best[1], 1))
+                ends = {e_[k_].split('.')[0] for e_ in bad.get('worst', []) for k_ in ('a', 'b')}
+                keep = {k_: v_ for k_, v_ in _PIN_HINT.items() if k_[0] in ends}
+                _PIN_HINT.clear(); _PIN_HINT.update(keep)
+                print(f'kv die: v1.4.3 narrow re-plan ({len(keep)} hinted pins on {len(ends)} instances) after: {e_}', file=sys.stderr)
+                try:
+                    m = _build(**kw)
+                    continue
+                except ValueError as e2_:
+                    e_ = e2_
             # v1.1: a pin-hinted re-plan pass can corner a relay chain (af_WN at the astk top, head 492.48): keep the best
             # earlier pass (its drawn pins and relay chains are consistent) and record why the re-plan stopped
             best[1].setdefault('geo', {})['replan_stopped'] = str(e_)
