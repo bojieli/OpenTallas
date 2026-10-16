@@ -185,7 +185,9 @@
     "BV_FF_bits": 10365,
     "BV_lg_row_memory_bits": 80,
     "outside_BV_FF_bits": 1833,
-    "selector_logic": "SU/skid/PAR_RB AND-OR remains unhardened parent"
+    "selector_logic": "SU/skid/PAR_RB AND-OR remains unhardened parent",
+    "total_original_ck_FF_bits_after_extraction": 12198,
+    "clock_count_rule": "12198 <=15000 source FF sinks; CTS/native/physical phase and geometry remain OPEN"
   },
   "immutable_latency": {
     "added_edges": 0,
@@ -194,5 +196,13 @@
     "visibility": 8,
     "fence": 9
   },
-  "native_token_qualification": "OPEN; no rate or ledger credit"
+  "native_token_qualification": "OPEN; no rate or ledger credit",
+  "rejected_whole_bank_selector_master": {
+    "raw_input_bits": 8151,
+    "output_bits_BW": 540,
+    "output_bits_WS": 539,
+    "assumptions": "PAR_RB1 pruning merged payload, four actualstatic skidrows, six lanes, f_v/f_r0/f_m/f_d fully owned",
+    "input_face_min_height_um_at_two_contacts_per_pitch_25pct_derate": 532.592,
+    "why": "raw source broadcast pin demand cannot be hidden in compact E3 storage leaf; current selector logic stays explicitly parent"
+  }
 }

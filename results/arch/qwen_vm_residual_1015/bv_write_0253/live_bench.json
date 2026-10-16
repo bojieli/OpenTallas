@@ -1,0 +1,14 @@
+{
+  "status": "RUNNING; no functional PASS claim",
+  "pid": 1795943,
+  "exec_session": 3611,
+  "command": "python3 tools/qwen_bv_write/exact_e3_bench.py /tmp/qvm-bv-write-e3",
+  "source_commit": "8dca81d98",
+  "binary_sha256": "336108a8baa73a995b1873b2ccf1905e47816479febe1ea4a09e681daaafe0bd",
+  "generated_bench_sha256": "4977277e5fb68f01adc5b3a03b715ab05c351ce4839e185ec1b7294e814ac902",
+  "observed_simulation_time_ns": 2345,
+  "planned_edges": 3000,
+  "simulation_time_per_edge_ns": 5,
+  "measured_rss_MB": 15.048,
+  "note": "Read-only debugger getter confirmed simulation advances; process detached/resumed. Preserve this progressing run; actual mutant runs after positive. No duplicate/restart."
+}
