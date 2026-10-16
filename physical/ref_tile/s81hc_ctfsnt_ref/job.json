@@ -1,14 +1,14 @@
 {
- "name": "s81hc_ctfsnt_ref-v6-ysh-COMMIT",
+ "name": "s81hc_ctfsnt_ref-v6-ysh-pd35-4df26355c",
  "block": "ot_s81_hc_ctfs_nt",
  "ref_tile": true,
- "owner": "Claude:el1014-s81-norm-tree",
+ "owner": "Claude:s81-norm-1705",
  "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfs_nt: the forward relay/out strip + the partial lane relay",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-norm-tree-1014",
-  "commit": "COMMIT"
+  "branch": "claude/s81-norm-1705",
+  "commit": "4df26355c"
  },
  "stages": {
   "bench": [
@@ -119,5 +119,6 @@
   "kind": "rtl_change",
   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
   "fix": "v25 STRUCTURAL (S-NORM 2026-10-15, closure directive after ctfn np6 K4/K8 GRT-0116: M2 1,460 / M4 4,866 overflow at x 250-350, the y-beat shift's 736-bit vertical cut in a 25.92-um strip): the y-shift moves to ctfs_nt's second stage (YSHIFT 1), ctfn becomes the straight 2-register relay ot_s81_hc_ctfn_nt; ctfs_nt grows 25.92 -> 51.84 um (2x horizontal tracks, sized by the measured cut). Same registers per path, 0 cycles; cost +14,949 um2 and +25.92 um per cth_nt row (ledger)."
- }
+ },
+ "hold_merge": "v25 NORM-tree candidate (default-off variant): no adoption until all v25 tiles close and pass native audit and S-DIE places v25 rows."
 }
