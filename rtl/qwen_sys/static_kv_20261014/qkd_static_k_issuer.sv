@@ -3,7 +3,7 @@
 // One edge rq -> req and one edge rsp -> rs. RESPONSE_LAT is the implemented
 // req-pin to rsp-pin latency (edge distance), supplied by the physical calendar.
 // Metadata/valid comparison only sets fault. It never gates or moves an event.
-module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=6, parameter integer MUT=0)(
+module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer MUT=0)(
  input wire ck,rst_n,
  input wire kgo,input wire [15:0] epoch,input wire [5:0] layer,
  input wire [16:0] rq,
