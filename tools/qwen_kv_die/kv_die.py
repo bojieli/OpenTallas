@@ -330,6 +330,15 @@ def pv_tree(m):
                             trunks='W and E side channel, 60-b cmd + start / context / epoch + reset, one tap per block row',
                             collection='col_valid / col_fault 2 b per column back on the same trunks (depth = balanced_depth)')
     return out
+def _pv_ctl_view_age():
+    """kvs13d: the bound PV ctl leaf view's FIRST_INPUT_AGE (its kit spec) vs the die's pair parameter"""
+    kit = __import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_r5')
+    sp = Path(__file__).resolve().parents[2] / 'physical/ref_tile' / kit / 'spec.json'
+    age = json.loads(sp.read_text())['params'].get('FIRST_INPUT_AGE') if sp.exists() else None
+    return dict(kit=kit, view_age=age, die_age=PV_AGE, match=age == PV_AGE,
+                status='OK' if age == PV_AGE else 'VIEW_PARAM_MISMATCH: diagnostic only until a closed ctl view at the die age')
+
+
 def pv_vport_timing(m):
     """measured relay edges of every V port's die words (Q-VMWB r5 contract: WP = pair req pin -> vport pr, RT = vport vq
     register -> rsp at its in pins = landing 8 + request + return relays, O = vport out pins -> pair vin pins; the pair sees its
@@ -356,7 +365,7 @@ def pv_vport_timing(m):
                 **(dict(r6=dict(W_target=PV_W, W=sorted({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}),
                                 W_equal=len({(r_['WP'] or 0) + (r_['O'] or 0) for r_ in rows.values()}) == 1,
                                 RL=4 + PV_W + 0 + 8, age_needed=4 + PV_W + 0 + 8 + 1, age_bound=PV_AGE,
-                                age_ok=PV_AGE == 4 + PV_W + 0 + 8 + 1)) if V144_R6 else {}))
+                                age_ok=PV_AGE == 4 + PV_W + 0 + 8 + 1, ctl_view=_pv_ctl_view_age())) if V144_R6 else {}))
 
 
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
@@ -1917,6 +1926,10 @@ def _relays(m):
     def near_pin(cells, inst, port):
         # qwen-1010/b: with a drawn pin (second pass), the chain leaves / enters at the ring cells nearest that pin
         pt = _PIN_HINT.get((inst, port.lstrip('*')))
+        if pt is None and inst in by:
+            # KVDIE 2026-10-16 (kvs13d prep: kc_ES path ended mid-strip, 12.4 mm from the kc leaf pin): under OT_KV_HOP the
+            # route aims at the closed leaf's realized pin it is timed to, as the relay reach already does
+            pt = _leaf_pin(by[inst], port)
         if pt is None or not cells:
             return cells
         dist = lambda c: abs((c[0] + 0.5) * G - pt[0]) + abs((c[1] + 0.5) * G - pt[1])  # noqa: E731
@@ -2211,10 +2224,6 @@ def _relays(m):
         def reach_():
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
             # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
-            if st_.get('min_k'):
-                if 'pad_reach' not in st_:
-                    st_['pad_reach'] = max(4 * G, min(PIN_REACH, remaining_() / (st_['min_k'] + 1)))
-                return st_['pad_reach']
             if HOP:
                 fr_ = FIRST_REACH.get(bid.rsplit('_', 2)[0], HOP_FIRST.get(bid.split('_')[0], HOP_REACH))
                 return min(fr_, HOP_REACH) if st_['prev_pt'] is None else HOP_REACH
@@ -2230,8 +2239,11 @@ def _relays(m):
                 rch = reach_()
                 # the farthest path point (from the previous chain point) with a free spot within reach
                 idxs = list(range(min(len(path_) - 1, idx0_ + int(rch // G) + 2), idx0_, -1))
-                if not idxs and st_.get('min_k'):
-                    idxs = [len(path_) - 1]          # kvs13d request padding: further stages beside the V port
+                pad_ = st_['k'] < st_.get('min_k', 0) and remaining_() <= reach_()
+                if pad_:
+                    # kvs13d request padding: the word already reaches the V port; further registered stages go on free
+                    # spots along the last reach of its path, each within reach of the previous stage AND of the V port
+                    idxs = list(range(len(path_) - 1, max(-1, len(path_) - 2 - int(rch // G)), -1))
                 at_end = bid in tree_meta and not idxs
                 if at_end:
                     idxs = [len(path_) - 1]          # at the path end: spots around the leader itself
@@ -2245,6 +2257,8 @@ def _relays(m):
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
                         if dd <= rch and free(qx, qy, fw, fh, *TG):
+                            if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
+                                continue
                             if not at_end:
                                 got = (qx, qy, idx)
                                 break

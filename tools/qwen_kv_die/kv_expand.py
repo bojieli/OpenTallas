@@ -62,7 +62,8 @@ VIEWS = dict(
     # v1.4.4 PV16 wide pair leaves (CLOSED, all reset-pin r5: RESET_PIN 1 = the pair's LEAF_RESET_PIN / CTL_RESET_PIN 1)
     ot_qwen_tp8_pv_slice_t=f'{RT}/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t',
     ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t',
-    ot_qwen_tp8_pv_wide_ctl=f'{RT}/qkd_pv_ctl_rstpin_r5/views/ot_qwen_tp8_pv_wide_ctl',
+    # kvs13d: OT_KV_PV_CTL_KIT names the closed ctl kit whose FIRST_INPUT_AGE equals the die's (r5 = 20)
+    ot_qwen_tp8_pv_wide_ctl=f"{RT}/{__import__('os').environ.get('OT_KV_PV_CTL_KIT', 'qkd_pv_ctl_rstpin_r5')}/views/ot_qwen_tp8_pv_wide_ctl",
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
