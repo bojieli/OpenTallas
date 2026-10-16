@@ -5,6 +5,7 @@
 #   synth_master.sh <src root> <out dir> <name> <top> <params k=v,...|-> <blackbox mods comma|-> [--prefer FILE]
 # File list: tools/hbm_die_v15/master_filelist.py (mapped memory macros read -lib from their _bb.v).
 # Yosys in the ORFS asap7lock image, RVT TT liberty; synth -flatten, dfflibmap, abc; writes
+#   HIER=1: no -flatten (per-module area, replicated leaves mapped once).
 #   <name>.stat (stat -liberty), <name>.netlist.v (write_verilog -noattr, top keeps its RTL port list), <name>.files.json
 set -u
 mkdir -p $2; SRC=$(readlink -f $1); OUT=$(readlink -f $2); NAME=$3; TOP=$4; PRM=$5; BB=$6; shift 6
@@ -12,7 +13,7 @@ PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
 HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
-python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1])); ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 L=[]
@@ -26,6 +27,10 @@ if prm!='-':
 if sys.argv[7] == '1':   # COARSE=1: real flattened word-level netlist (no techmap/abc) for composed elaboration only
     L += [f"hierarchy -check -top {top}", f"synth -top {top} -flatten -run begin:fine", "opt_clean",
           f"tee -o /out/{name}.stat stat", f"write_verilog -noattr /out/{name}.netlist.v"]
+elif sys.argv[8] == '1':   # HIER=1: hierarchical mapped synth (per-module area; replicated leaves synthesised once)
+    L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
+      f"synth -top {top}", "dfflibmap -liberty /tmp/lib/seq.lib", "abc -liberty /tmp/lib/all.lib", "opt_clean",
+      f"tee -o /out/{name}.stat stat -liberty /tmp/lib/all.lib", f"write_verilog -noattr /out/{name}.netlist.v"]
 else:
     L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
       f"synth -top {top} -flatten", "dfflibmap -liberty /tmp/lib/seq.lib", "abc -liberty /tmp/lib/all.lib", "opt_clean",
