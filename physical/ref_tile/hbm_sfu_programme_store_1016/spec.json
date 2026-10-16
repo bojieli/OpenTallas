@@ -424,12 +424,14 @@
    "rtl/test/hbm_accel/generic",
    "rtl/hbm_accel/generic/vm/static",
    "physical/asap7_memory_macros",
-   "rtl/hbm_accel/generic/peers"
+   "rtl/hbm_accel/generic/peers",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static"
   ],
   "benches": [
    {
     "name": "split_equiv_exact",
-    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 bash tools/hbm_static/run_sfu_split_equiv.sh",
     "expect": "pass",
     "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
     "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
@@ -441,9 +443,20 @@
    },
    {
     "name": "split_mutant_flip",
-    "cmd": "OUT={RUN}/bench/flip EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
     "expect": "fail",
-    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
     "peak_ram_gb": 96,
     "needs": [
