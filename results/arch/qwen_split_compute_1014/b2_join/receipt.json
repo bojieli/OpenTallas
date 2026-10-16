@@ -157,6 +157,36 @@
       "compile_unit": "oth-ubuntu-70321-1792167908",
       "compile_wrapper_exit": 127,
       "wrapper_limitation": "Actualmutant rejected asintended, then remote rg unavailable caused wrapper127; replacedfallbackgrep and reran SAMEsourcepinned binary in clean1GB unit, expectedrejection wrapperexit0."
+    },
+    "native_rom_e3": {
+      "status": "ACTUAL_COMPOSED_COMPONENT_PASS",
+      "source_revision": "709b5d5b7",
+      "unit": "oth-ubuntu-80864-1792168027",
+      "ot_run_exit": 0,
+      "actual_chain": [
+        "qfd_tt_ctlm_tree_b2 BAND2/TCUT7/SCALE_LAT10 with actualspctl scaleadvance6",
+        "6restored qfd_port_half_b2,384native releasedROM macros+hardFP32multiplierlanes",
+        "real50FF qfd_b2_train_source command/tagcopies",
+        "qfd_res_train_issue_b2 TRAIN_EDGES13 component",
+        "6parameterfree qfd_res_train_half_b2_0..5 actual24capturebanks each",
+        "qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3 actualnativeSRAM with2572declaredclockbits"
+      ],
+      "exact_every_rb_cycle_payload_and_end": true,
+      "write_packets": 816,
+      "zero_mask_write_packets": 64,
+      "native_readbacks": 752,
+      "landed_end_markers": 128,
+      "headonly_markers": 64,
+      "checked_port_rows": 1200,
+      "checked_active_fp32_lanes": 18176,
+      "actual_vm_land_counter_feeds_controller": true,
+      "all_six_raw_tag_to_rq_edges": 14,
+      "no_wire_issuer_train_edges": 13,
+      "partial_am_after_rq_edges": 5,
+      "native_controller_head_scalar": "exactvalue+index+any",
+      "declared_boundary": "Already-reducedFP32treewords ones; BW0; expected releasedbytes observer-only; upstreamME/tree arithmetic notincluded. All2572independentVM clockports tiedidealcommonclock; no physicalinsertion/phi-R qualification.",
+      "initial_staging_failure": "unit78008 exited1 beforecompile because sparseWT omittedmacrofiles; successor copiedexactexistingstaged macrofiles, no live duplicate",
+      "physical_graph_phase": "OPEN; source/DUT endpointcapturesspecified; directallocatorS1 adds0externalFF; TE_die=13+(S_TC-1)+(S_RQ-1)-(S_tag-1)-(sum4commandlegS-1). Sourcebound currentgraphphaseprotocol remainsOPEN."
     }
   },
   "prior_failure_receipts": [

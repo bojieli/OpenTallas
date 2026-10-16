@@ -4,7 +4,7 @@ Reduced tree words remain the declared component boundary. Gold is observer-only
 """
 from pathlib import Path
 R=Path(__file__).resolve().parents[2]
-s=(R/'tools/qwen_b2_join/tb_b2_rom_port.sv').read_text().replace('module tb_b2_rom_port;', 'module tb_b2_rom_e3;').replace('.land_cnt(16\'d0)', '.land_cnt(ld)')
+s=(R/'tools/qwen_b2_join/tb_b2_rom_port.sv').read_text().replace('module tb_b2_rom_port;', 'module tb_b2_rom_e3;\nparameter integer ISSUE_MUT=0;' ).replace('.land_cnt(16\'d0)', '.land_cnt(ld)')
 e=(R/'tools/qwen_b2_join/tb_b2_train_e3.sv').read_text();a=e.index('qfd_res_train_half_b2_0');b=e.index('function automatic',a)
 join=e[a:b].replace('.rst_n(rst_n)', '.rst_n(rs)')
 join=join.replace(' dut(', ' vm(')
@@ -14,7 +14,7 @@ wire ig,io,itv,itl;wire[17:0]itiles;wire[23:0]its;wire[3:0]isplit;
 qfd_b2_train_source src(.ck_head(clk),.ck_tree(clk),.rst_n(rs),.ib(cmd),.tc2(tc[2]),.me_go(ig),.me_tiles(itiles),.me_ts(its),.me_split(isplit),.me_oen(io),.tag_v(itv),.tag_last(itl));
 // Literal component phase: raw controller tag->RQ14; independent sourcecopy adds1.
 // Issuer TE13 starts on the same observed edge as RQ, consumed by banks next edge.
-qfd_res_train_issue_b2 #(.TRAIN_EDGES(13))issuer(.ck(clk),.rst_n(rs),.me_go(ig),.me_tiles(itiles),.me_ts(its),.me_split(isplit),.me_oen(io),.tag_v(itv),.tag_last(itl),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.fault(issuer_fault));
+qfd_res_train_issue_b2 #(.TRAIN_EDGES(13),.MUT(ISSUE_MUT))issuer(.ck(clk),.rst_n(rs),.me_go(ig),.me_tiles(itiles),.me_ts(its),.me_split(isplit),.me_oen(io),.tag_v(itv),.tag_last(itl),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.fault(issuer_fault));
 '''
 s=s.replace('reg[255:0]expected_scale',decl+join+'\nreg[255:0]expected_scale')
 s=s.replace('integer amchecks=0;', '''integer amchecks=0;

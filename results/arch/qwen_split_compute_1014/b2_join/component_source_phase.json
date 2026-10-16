@@ -31,5 +31,8 @@
     "rtl/qwen_split/qfd_port_half_b2.sv": "f99637b915adec4ae716c22e3d7b3482b82d6d9162df2acf8e44dc7c806c3e2f",
     "rtl/qwen_split/qfd_b2_train_source.sv": "bdc6548ab2ba729ecf2d4ee15e43f13e9fd9a9472ffd9ee26d76553c3b8e5804",
     "rtl/qwen_split/qfd_res_train_issue_b2.sv": "d658c2363cc0c51f3ae836adcdf217e587f0786c0a69001f2af63bcaea3f52e2"
-  }
+  },
+  "actual_composed_e3_gate": "native_rom_e3/run.log",
+  "no_wire_issuer_train_edges_verified": true,
+  "allocator_stage_convention": "Directwire S1 adds0externalFF beyondsource/DUTbenchmark; each ordinaryrelaypathdelta=S-1. 3fork commandtree fourpathlegs extra=sum(levelS)-1. TE_die=13+deltaTC+deltaRQ-deltaTag-extraCommand."
 }

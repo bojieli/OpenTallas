@@ -3,6 +3,7 @@
 // Actual DUT owns controller/frame, 384 released ROM macros, all multiplier/argmax RTL.
 // Expected arrays are observers only and never feed a DUT compute or memory port.
 module tb_b2_rom_e3;
+parameter integer ISSUE_MUT=0;
 reg clk=0,rs=0;always #1 clk=~clk;
 reg[379:0]cmd=0;wire scale_re,pv;wire[23:0]gre;wire[575:0]scale_addr;wire[112:0]pf;
 wire[12:0]sel,tv;wire[305:0]pam;wire[5:0]p_fault;
@@ -30,7 +31,7 @@ wire ig,io,itv,itl;wire[17:0]itiles;wire[23:0]its;wire[3:0]isplit;
 qfd_b2_train_source src(.ck_head(clk),.ck_tree(clk),.rst_n(rs),.ib(cmd),.tc2(tc[2]),.me_go(ig),.me_tiles(itiles),.me_ts(its),.me_split(isplit),.me_oen(io),.tag_v(itv),.tag_last(itl));
 // Literal component phase: raw controller tag->RQ14; independent sourcecopy adds1.
 // Issuer TE13 starts on the same observed edge as RQ, consumed by banks next edge.
-qfd_res_train_issue_b2 #(.TRAIN_EDGES(13))issuer(.ck(clk),.rst_n(rs),.me_go(ig),.me_tiles(itiles),.me_ts(its),.me_split(isplit),.me_oen(io),.tag_v(itv),.tag_last(itl),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.fault(issuer_fault));
+qfd_res_train_issue_b2 #(.TRAIN_EDGES(13),.MUT(ISSUE_MUT))issuer(.ck(clk),.rst_n(rs),.me_go(ig),.me_tiles(itiles),.me_ts(its),.me_split(isplit),.me_oen(io),.tag_v(itv),.tag_last(itl),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.fault(issuer_fault));
 qfd_res_train_half_b2_0 u_ser0(.ck(clk),.ck_bank({24{clk}}),.rst_n(rs),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[0]),.rb(rb[0]),.fault(sf[0]));
 qfd_res_train_half_b2_1 u_ser1(.ck(clk),.ck_bank({24{clk}}),.rst_n(rs),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[1]),.rb(rb[1]),.fault(sf[1]));
 qfd_res_train_half_b2_2 u_ser2(.ck(clk),.ck_bank({24{clk}}),.rst_n(rs),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[2]),.rb(rb[2]),.fault(sf[2]));
