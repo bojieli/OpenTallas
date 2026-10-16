@@ -6679,6 +6679,16 @@ def _hop_fix(m, P):
                 if HOPDBG and bid.startswith(HOPDBG):     # OT_S81_HOPDBG=<bus prefix>: per-station trace (stderr)
                     print('HOPDBG', bid, e, k, n, [tuple(round(v, 1) for v in q) for q in path], round(pos[k], 1),
                           (round(cx, 1), round(cy, 1)), pl, dict(rec['pad_fallback']), file=sys.stderr)
+                if not pl and os.environ.get('OT_S81_STATION_FALLBACK') == '1':
+                    # S-DIE 0030 pathfinding only (see Chains.run): nearest free spot, recorded; STA judges the hop
+                    for span_, rows_ in ((600.0, 60), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_, h_, [(0.0, 0.0, DIE[0], DIE[1])], prev=None, horiz=horiz, span=span_, rows=rows_)
+                        if pl:
+                            m.setdefault('station_fallback', []).append(dict(
+                                chain=bid, hop_fix=True, planned=[round(cx, 1), round(cy, 1)], at=[round(pl[0], 1), round(pl[1], 1)],
+                                displaced_um=round(abs(pl[0] - cx) + abs(pl[1] - cy), 1)))
+                            print('OT_STATION_FALLBACK', json.dumps(m['station_fallback'][-1]), file=sys.stderr, flush=True)
+                            break
                 assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
