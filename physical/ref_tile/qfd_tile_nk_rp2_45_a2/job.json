@@ -1,0 +1,143 @@
+{
+ "name": "qfd_tile_nk_rp2_45_a2-lc45-COMMIT",
+ "block": "qfd_tile_nk_rp2_45",
+ "ref_tile": true,
+ "owner": "Claude:q_tile45",
+ "purpose": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qtile45-2210",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/qwen_repack",
+   "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
+   "rtl/physical/qfd_tile_nk_rp1.sv",
+   "rtl/test/tb_qwen_repack45_native.sv",
+   "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+   "rtl/physical/ot_qwen_tile_node.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tile_nk_rp2_45 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_node_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/physical/qfd_tile_nk_rp2_45.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native45_0",
+    "cmd": "bash tools/qwen_repack/native45_bench.sh {RUN}/bench/native45_0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^REPACK45_NATIVE_PASS checks6399 valids2560 nonzero2560"
+   },
+   {
+    "name": "native45_1",
+    "cmd": "bash tools/qwen_repack/native45_bench.sh {RUN}/bench/native45_1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REPACK45_NATIVE_FAIL|^FAIL rph"
+   },
+   {
+    "name": "native45_2",
+    "cmd": "bash tools/qwen_repack/native45_bench.sh {RUN}/bench/native45_2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REPACK45_NATIVE_FAIL|^FAIL rph"
+   },
+   {
+    "name": "native45_3",
+    "cmd": "bash tools/qwen_repack/native45_bench.sh {RUN}/bench/native45_3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REPACK45_NATIVE_FAIL|^FAIL rph"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tile_nk_rp2_45_a2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tile_nk_rp2_45_a2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tile_nk_rp2_45_a2 --out {RUN}/record/views/qfd_tile_nk_rp2_45 --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node --macro-view physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tile_nk_rp2_45_a2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tile_nk_rp2_45_a2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tile_nk_rp2_45_a2/qfd_tile_nk_rp2_45_a2-lc45-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks."
+}
