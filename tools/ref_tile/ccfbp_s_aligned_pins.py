@@ -10,7 +10,7 @@ N-face input straight above the output bit it feeds:  fd_pin[j] above ch_fd[j] (
 ch_fd[O_D + k] (M5), fv_pin[i] above ch_fv[i], srs_pin above ch_rst, n_yacc_pin beside fv, sk at the face centre.
 Same RTL, outline, faces and pin count; only N-face x positions change.
 
-Usage: ccfbp_s_aligned_pins.py IO_TCL_IN IO_TCL_OUT [--od 104]
+Usage: ccfbp_s_aligned_pins.py IO_TCL_IN IO_TCL_OUT [--weighted] [--od 104]   (IN = the spread_face_pins plan)
 """
 import argparse, re
 from pathlib import Path
@@ -29,6 +29,7 @@ def snap(x, layer):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("src"); ap.add_argument("out")
+    ap.add_argument("--weighted", action="store_true", help="v4: ch_fd columns sized by cell load")
     ap.add_argument("--od", type=int, default=None, help="O_D (header width); default FSW - 1024")
     a = ap.parse_args()
     lines = Path(a.src).read_text().splitlines()
@@ -45,6 +46,31 @@ def main():
             n_y = y
     fsw = len(pins["fd_pin"]); nh = len(pins["bank_heads_pin"])
     od = a.od if a.od is not None else fsw - 1024
+    # v4: weighted S-face spread of ch_fd -- the gate density of the even spread (v3) put the whole fd pipeline
+    # (pin flop, mid, p, mux, output: ~6 cells a bit) of bits j < FSW into the first 39% of the face at density ~1.0
+    # while the heads-only bits (~3 cells) and the constant tail (j >= O_D + heads) were sparse.  Each ch_fd column
+    # gets width in proportion to its cell load, so the placement is even along the face.
+    nfd = len(pins["ch_fd"])
+    if a.weighted:
+        wt = [4 if j < od else 6 if j < fsw else 3 if j < od + nh else 2 for j in range(nfd)]
+        x0, x1 = pins["ch_fd"][0][0], pins["ch_fd"][nfd - 1][0]
+        unit = (x1 - x0) / (sum(wt) - wt[0] / 2 - wt[-1] / 2)
+        acc, newx = 0.0, []
+        for j in range(nfd):
+            newx.append(x0 + (acc + wt[j] / 2 - wt[0] / 2) * unit)
+            acc += wt[j]
+        s_lines = [l for l in s_lines if not l.split("-pin_name {")[1].startswith("ch_fd[")]
+        s_used = set()
+        for j in range(nfd):
+            layer = "M3" if j % 2 == 0 else "M5"
+            xs = snap(newx[j], layer)
+            while (layer, xs) in s_used:
+                xs = round(xs + PITCH[layer], 3)
+            s_used.add((layer, xs))
+            pins["ch_fd"][j] = (xs, 0.0, layer, None)
+            sx, sy = SIZE[layer]
+            s_lines.append(f"place_pin -pin_name {{ch_fd[{j}]}} -layer {layer} -location {{{xs:.3f} 0.000}} "
+                           f"-pin_size {{{sx} {sy}}} -force_to_die_boundary")
     ox = lambda name, i: pins[name][i][0]
     want = []                                   # (pin text, preferred layer, target x)
     want.append(("srs_pin", "M3", ox("ch_rst", 0)))
