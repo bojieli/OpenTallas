@@ -10099,6 +10099,12 @@ def _assigned_physical_pins(Mx, ports):
     rec = _assigned_record(Mx.name)
     if not rec:
         return
+    if HEND_BOUND_FOOTPRINT and '__' in Mx.name:
+        # --hend-bound-footprint: a hub end resized to its bound view's outline keeps the view's measured pins (the
+        # bound view replaces this generated master in write_lefs); the assignment made for the estimated outline is moot
+        v_ = bound_views().get(Mx.name)
+        if v_ is not None and abs(v_['w'] - Mx.w) <= 0.025 and abs(v_['h'] - Mx.h) <= 0.025:
+            return
     assert all(abs(x - y) <= 0.025 for x, y in zip(rec['outline_um'], (Mx.w, Mx.h))), (Mx.name, 'assigned outline differs')
     for port, spec in rec['ports'].items():
         assert port in ports, (Mx.name, port, 'assigned port absent from die buses')

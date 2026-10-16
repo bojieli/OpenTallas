@@ -12,9 +12,13 @@
 module ot_hbm_vm_lg_static_bank #(
     parameter integer READ_RETURN=10,
     parameter integer WRITE_RETURN=7,
-    parameter integer MUT=0 //1: write payload mux selects far despite local calendar
+    parameter integer MUT=0, //1: write payload mux selects far despite local calendar
+    // RET_PIN=1 (H-NETLIST 0600, fewer distinct tiles): the return edges come from identity strap pins rret/wret (die
+    // constants, pin-flopped, 2..READ_RETURN / 2..WRITE_RETURN); READ_RETURN/WRITE_RETURN are then the calendar depths.
+    parameter integer RET_PIN=0
 )(
     input wire clk,rst_n,
+    input wire [4:0] rret,wret,   // identity straps, used only when RET_PIN=1
     input wire [16:0] local_rq,far_rq,
     input wire [280:0] local_wq,far_wq,
     input wire [0:0] local_read,local_write,
@@ -37,6 +41,9 @@ module ot_hbm_vm_lg_static_bank #(
     reg [0:0] rr_v,done_d,local_rr_v,far_rr_v;
     reg [0:0] read_calendar[0:READ_RETURN-1];
     reg [0:0] write_calendar[0:WRITE_RETURN-1];
+    reg [4:0] rret_q,wret_q; always @(posedge clk) begin rret_q<=rret; wret_q<=wret; end
+    wire [0:0] read_due =(RET_PIN!=0)?read_calendar[rret_q-5'd1]:read_calendar[READ_RETURN-1];
+    wire [0:0] write_due=(RET_PIN!=0)?write_calendar[wret_q-5'd1]:write_calendar[WRITE_RETURN-1];
     always @(posedge clk)begin
         lrq_d<=local_rq;frq_d<=far_rq;lwq_d<=local_wq;fwq_d<=far_wq;
         rr_d<=near_rr;return_d<=rr_d;
@@ -65,14 +72,14 @@ module ot_hbm_vm_lg_static_bank #(
                 write_calendar[0][b]<=local_write[b]&&local_wq[b*281+280];
                 rq_v[b]<=read_d[b]?lrq_v[b]:frq_v[b];
                 wq_v[b]<=write_d[b]?lwq_v[b]:fwq_v[b];
-                local_rr_v[b]<=read_calendar[READ_RETURN-1][b];
-                far_rr_v[b]<=rr_v[b]&&!read_calendar[READ_RETURN-1][b];
-                local_w_done[b]<=write_calendar[WRITE_RETURN-1][b];
-                far_w_done[b]<=done_d[b]&&!write_calendar[WRITE_RETURN-1][b];
+                local_rr_v[b]<=read_due[b];
+                far_rr_v[b]<=rr_v[b]&&!read_due[b];
+                local_w_done[b]<=write_due[b];
+                far_w_done[b]<=done_d[b]&&!write_due[b];
                 if((lrq_v[b]&&!read_d[b])||(lwq_v[b]&&!write_d[b])||
                    (read_d[b]&&frq_v[b])||(write_d[b]&&fwq_v[b])||
-                   (read_calendar[READ_RETURN-1][b]&&!rr_v[b])||
-                   (write_calendar[WRITE_RETURN-1][b]&&!done_d[b]))fault<=1;
+                   (read_due[b]&&!rr_v[b])||
+                   (write_due[b]&&!done_d[b]))fault<=1;
             end
         end
     end

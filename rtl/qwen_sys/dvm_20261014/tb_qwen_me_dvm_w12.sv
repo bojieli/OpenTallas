@@ -19,7 +19,8 @@ module tb_qwen_me_dvm_w12;
     parameter integer NCOL = 2, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 4, SMAX = 7, TCUT = 3;
-    parameter integer HB = 3, DX = 10, FILL_LEAD = 2, TIDM = 1, XOFF = 3, XVMR = 12;
+    parameter integer LEAF_READ_PIN_PIPE = 0;
+    parameter integer HB = 3, DX = 10 + LEAF_READ_PIN_PIPE, FILL_LEAD = 2, TIDM = 1, XOFF = 3, XVMR = 12;
     parameter integer NOPS = 40, SEED = 1, GAP = 4, DROP = 0;
     // REUSE: 1 in REUSE ops starts INSIDE the previous op's x range (address reuse, as production: qkv / gate_up share
     // xbase 4096, o / down re-read the attention / act outputs): the previous epoch is still being read while this
@@ -130,7 +131,7 @@ module tb_qwen_me_dvm_w12;
     wire [AW-1:0] d_mx_addr; wire [W-1:0] d_mx_mask; wire [W*32-1:0] d_mx_data; wire [15:0] d_progress;
     wire [NT*TG*32-1:0] d_tile_xl;
     ot_qwen_me_array_dvm_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .XCW(XCW), .NCOL(NCOL), .NH(NH), .TG(TG), .GT(GT),
-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .HB(HB), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .CODE_BANKS(CB),
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .HB(HB), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .CODE_BANKS(CB),
         .TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT), .HEAD_MUT(HEAD_MUT)) u_dvm (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(d_ready), .idle(d_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),

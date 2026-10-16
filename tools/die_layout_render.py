@@ -71,6 +71,40 @@ def from_hbm(d, reach):
     return plan
 
 
+def add_hbm_grants(plan, grants):
+    """overlay a v15 grants contract/proposal on an HBM plan: die-level slots that are NOT plan blocks (homes such as
+    host_N, calendars, ckgen, svc s8 bands) and the SU RF relay footprints (family 'rfr')"""
+    C = json.loads(Path(grants).read_text())
+    have = {b[0] for b in plan["blocks"]}
+    swap = {"R90", "R270", "MXR90", "MYR90"}
+    for s in C["slots"][1:]:
+        if s.get("parent") != "die" or s.get("plan_block") in have or s["name"] in have or s["origin"].get("x") is None:
+            continue
+        fp = s.get("placed_footprint") or s["outline"]
+        w, h = (fp["h"], fp["w"]) if (s["origin"].get("orient") in swap and not s.get("placed_footprint")) else (fp["w"], fp["h"])
+        x, y = s["origin"]["x"], s["origin"]["y"]
+        plan["blocks"].append([s["name"], x, y, x + w, y + h])
+    for r in C.get("su_rf_relays_v7", {}).get("routes", []):
+        for f in r.get("footprints", []):
+            plan["blocks"].append(["rfr/" + f["name"], f["x"], f["y"], f["x"] + f["w"], f["y"] + f["h"]])
+    return plan
+
+
+def clip_window(plan, win):
+    """zoom: keep the blocks intersecting window x0,y0,x1,y1, clipped to it"""
+    x0, y0, x1, y1 = win
+    blocks = []
+    for b in plan["blocks"]:
+        if b[1] < x1 and b[3] > x0 and b[2] < y1 and b[4] > y0:
+            blocks.append([b[0], max(b[1], x0), max(b[2], y0), min(b[3], x1), min(b[4], y1)])
+    plan["blocks"] = [[b[0], b[1] - x0, b[2] - y0, b[3] - x0, b[4] - y0] for b in blocks]
+    names = {b[0] for b in blocks}
+    plan["buses"] = [bb for bb in plan["buses"] if bb[0] in names and bb[1] in names]
+    plan["die"] = [0, 0, x1 - x0, y1 - y0]
+    plan["note"] = f"window {win} (coordinates shifted to the window origin)"
+    return plan
+
+
 def from_qwen(homes, graph, reach):
     H = json.loads(Path(homes).read_text())
     hm = H["homes"]
@@ -151,9 +185,15 @@ def main(argv=None):
     ap.add_argument("--reach", type=float, default=500.0)
     ap.add_argument("--out", required=True)
     ap.add_argument("--title", default="")
+    ap.add_argument("--grants", help="with --hbm: overlay a v15 grants contract/proposal (non-plan die slots + RF relay footprints)")
+    ap.add_argument("--window", help="zoom window x0,y0,x1,y1 um")
     a = ap.parse_args(argv)
     plan = (from_hbm(a.hbm, a.reach) if a.hbm else from_qwen(a.qwen, a.graph, a.reach) if a.qwen
             else from_s81(a.s81, a.reach, a.s81_hub) if a.s81 else from_dump(a.dump, a.reach))
+    if a.grants:
+        plan = add_hbm_grants(plan, a.grants)
+    if a.window:
+        plan = clip_window(plan, [float(v) for v in a.window.split(",")])
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     imgs = LP.render_die(plan, out, a.title)
