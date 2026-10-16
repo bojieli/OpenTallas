@@ -1,6 +1,6 @@
-# HBM die v16 full netlist: gaps (bd5fa393c)
+# HBM die v16 full netlist: gaps (c7df43318)
 
-1538 instances / 61 masters / 12200 edges (1,211,109 bits). Exposed inputs 1,070 ports / 177,247 bits (v15.1, 83 instances) -> 0 ports / 0 bits (v16 full die).
+1536 instances / 61 masters / 12157 edges (1,193,273 bits). Exposed inputs 1,070 ports / 177,247 bits (v15.1, 83 instances) -> 0 ports / 0 bits (v16 full die).
 
 | gap | owner | missing RTL | undriven ports | undriven bits |
 |---|---|---|---:|---:|

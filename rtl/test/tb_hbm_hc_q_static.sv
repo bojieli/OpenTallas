@@ -6,10 +6,16 @@
 // The tap selects (local_read/local_write) are driven like calendar_<q>: exactly on the edges the HC
 // programme issues. The HC programme is loaded and launched through ot_static_program_target (TARGET 108).
 // Golden: residual waves == VM sectors, gathered mixes == VM words, stored results land at their sectors.
-// MUT (plusarg +MUT=n): 1/2/3 = ot_hbm_hc_q_static mutants, 4 = tap advances its return reservation.
+// MUT (parameter): 1/2/3 = ot_hbm_hc_q_static mutants, 4 = tap advances its return reservation,
+// 5 = x_wave beats 1/2 swapped, 6 = x_wave beat 3 one edge late (link mutants, XWB=4).
+// XWB = x_wave link beats (1 = the original 8,192-b form, 4 = the 2,048-b x 4 link); the waves are checked at the
+// engine's pin level, i.e. after ot_hbm_hc_xw_rx_static #(XWB) (the hc_eng receiver), and every wave prints
+// "XWAVE t=<edge> word=<w>" so the XWB=4 run is compared edge-for-edge against the XWB=1 run.
+// The programme target is folded into the DUT (TGT_PIN, strap tgt=108); the F20 broadcast drives the DUT directly.
 module tb_hbm_hc_q_static;
     parameter integer MUT=0;
-    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:0;
+    parameter integer XWB=4;
+    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:0;
     localparam integer VM_RD=15, VM_WR=12;
     reg clk=0,rst_n=0;
     always #1 clk=~clk;
@@ -20,39 +26,39 @@ module tb_hbm_hc_q_static;
     reg [255:0] cfg_data=0;
     reg [12:0] desc_limit=0;
     reg [15:0] desc_loops=0;
-    wire p_we,p_start,t_conf,t_fault;
-    wire [9:0] p_addr,p_base;
-    wire [255:0] p_data;
-    wire [10:0] p_limit;
-    wire [15:0] p_loops;
+    wire t_conf;
     wire prog_active,prog_done,dut_fault;
-    ot_static_program_target #(.TARGET(8'd108),.PCW(10)) tgt(
-        .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
-        .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
-        .program_active(prog_active),.program_cfg_we(p_we),.program_cfg_addr(p_addr),.program_cfg_data(p_data),
-        .program_start_v(p_start),.program_start_base(p_base),.program_start_limit(p_limit),
-        .program_start_loops(p_loops),.configured(t_conf),.fault(t_fault));
     wire [135:0] c_rq,t_rq,n_rq;
     wire [2247:0] c_wq,t_wq,n_wq;
     wire [2055:0] c_rr,t_rr;
     wire [7:0] c_wd,t_wd,bank_fault;
     wire xv,rdone,gv,gdone;
     wire [9:0] xword;
+    wire [8192/XWB-1:0] xwave_l;
+    wire [1:0] xbeat;
     wire [8191:0] xwave;
+    wire xv_l,rx_fault;
+    wire [9:0] xword_l;
     wire [4:0] grow;
     wire [2:0] gpos;
     wire [31:0] gdata;
     reg result_v=0;
     reg [2:0] result_position=0;
     reg [767:0] result=0;
-    ot_hbm_hc_q_static #(.MUT(DUT_MUT)) dut(
-        .clk(clk),.rst_n(rst_n),.cfg_we(p_we),.cfg_addr(p_addr),.cfg_data(p_data),.start_v(p_start),
-        .start_base(p_base),.start_limit(p_limit),.start_loops(p_loops),
+    ot_hbm_hc_q_static #(.MUT(DUT_MUT),.XW_BEATS(XWB)) dut(
+        .clk(clk),.rst_n(rst_n),.tgt(8'd108),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
+        .configured(t_conf),
         .lg_rq(c_rq),.lg_wq(c_wq),.lg_rr(c_rr),.lg_w_done(c_wd),
-        .x_wave_v(xv),.x_wave_word(xword),.x_wave(xwave),.residual_done(rdone),
+        .x_wave_v(xv_l),.x_wave_word(xword_l),.x_wave(xwave_l),.x_wave_beat(xbeat),.residual_done(rdone),
         .gathered_mix_v(gv),.gathered_mix_row(grow),.gathered_mix_pos(gpos),.gathered_mix_data(gdata),.gather_done(gdone),
         .result_v(result_v),.result_position(result_position),.result(result),
         .program_active(prog_active),.program_done(prog_done),.fault(dut_fault));
+    // hc_eng side of the link (the engine's quadrant receiver, pin flops included)
+    ot_hbm_hc_xw_rx_static #(.BEATS(XWB)) rx(.clk(clk),.rst_n(rst_n),.x_v(xv_l),.x_beat(xbeat),.x_word(xword_l),
+        .x_data(xwave_l),.wave_v(xv),.wave_word(xword),.wave(xwave),.fault(rx_fault));
+    integer tcyc=0;
+    always @(posedge clk)tcyc<=tcyc+1;
     for(genvar k=0;k<4;k=k+1)begin:pair
         ot_hgi_sfu_lg_pair_leaf leaf(.clk(clk),.rst_n(rst_n),
             .c_rq(c_rq[k*34+:34]),.c_wq(c_wq[k*562+:562]),.c_rr(c_rr[k*514+:514]),.c_w_done(c_wd[k*2+:2]),
@@ -121,7 +127,7 @@ module tb_hbm_hc_q_static;
         @(negedge clk);desc_v=1;cfg_target=8'd108;desc_base=0;desc_limit=13'(n_words);desc_loops=1;@(negedge clk);desc_v=0;
         // Host initialization: the actual installed-row validator must finish before launch.
         for(integer warm=0;warm<n_words+8 && !t_conf;warm++)@(negedge clk);
-        if(!t_conf || t_fault)$fatal(1,"HC programme installation not ready");
+        if(!t_conf || dut_fault)$fatal(1,"HC programme installation not ready");
         launch_v=1;@(negedge clk);launch_v=0;
         wait(prog_done);repeat(60)@(negedge clk);
         // stores
@@ -130,14 +136,15 @@ module tb_hbm_hc_q_static;
         for(integer s=0;s<32768;s=s+1)if((s<SBASE||s>=SBASE+12)&&vm[s]!==snap[s])begin errors=errors+1;if(errors<5)$display("stray write sector %0d",s);end
         if(waves!=RNPOS*80)begin errors=errors+1;$display("waves %0d expected %0d",waves,RNPOS*80);end
         if(mixes!=GNPOS*24)begin errors=errors+1;$display("mixes %0d expected %0d",mixes,GNPOS*24);end
-        if(dut_fault||t_fault||(|bank_fault))begin errors=errors+1;$display("fault dut=%0d target=%0d bank=%b",dut_fault,t_fault,bank_fault);end
-        if(errors==0)$display("TB_HBM_HC_Q_STATIC PASS MUT=%0d waves=%0d mixes=%0d stores=12",MUT,waves,mixes);
-        else $display("TB_HBM_HC_Q_STATIC FAIL MUT=%0d errors=%0d",MUT,errors);
+        if(dut_fault||rx_fault||(|bank_fault))begin errors=errors+1;$display("fault dut=%0d rx=%0d bank=%b",dut_fault,rx_fault,bank_fault);end
+        if(errors==0)$display("TB_HBM_HC_Q_STATIC PASS MUT=%0d XWB=%0d waves=%0d mixes=%0d stores=12",MUT,XWB,waves,mixes);
+        else $display("TB_HBM_HC_Q_STATIC FAIL MUT=%0d XWB=%0d errors=%0d",MUT,XWB,errors);
         $finish;
     end
     always @(posedge clk)begin
         if(xv)begin
             waves<=waves+1;
+            $display("XWAVE t=%0d word=%0d",tcyc,xword);
             for(integer j=0;j<32;j=j+1)if(xwave[j*256+:256]!==snap[RBASE+xword*32+j])begin
                 errors=errors+1;if(errors<5)$display("wave %0d sector %0d mismatch",xword,j);end
         end

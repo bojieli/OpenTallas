@@ -7,12 +7,17 @@
 // separate collar.  Wiring is exactly the die composition it replaces (die.v cp_dma_<q> -> hb_dbk_<q>): cmd slices,
 // collar `cycle` = the DMA's absolute compiler clock, tgt_active = busy, tgt_fault = mv_fault; same clock (clk root)
 // and reset.  No added cycle, no ready/credit: the collar fires its compiled calendar exactly as before.
+// Physical clocking (H-HARDEN 2026-10-16, measured hv15_dbk_cp gate: a parent clock entry may drive exactly one hard
+// child pin, and a parent CTS root may reach only standard cells): the collar's flops take their own related root
+// clk_cp and each command-table SRAM its own entry clk_tab[w], all driven by the same die clock as clk/clk_bank.
 module ot_hgi_dma_back_static_vp4_banks_cp #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
     parameter integer MUT=0,     // DMA bench mutants pass through (simulation only)
     parameter integer CP_MUT=0   // 1: wrong command slice (bench negative control)
 )(
     input wire clk,rst_n,
+    input wire clk_cp,              // collar standard-cell root (related, same die clock as clk)
+    input wire [1:0] clk_tab,       // command-table SRAM entries (related, same die clock as clk)
     input wire [1:0] stk,
     input wire [7:0] tgt,
     input wire [7:0] clk_bank,
@@ -41,13 +46,20 @@ module ot_hgi_dma_back_static_vp4_banks_cp #(
     input wire [11:0] wa
 );
     wire cmd_v; wire [307:0] cmd; wire [31:0] cycle;
-    ot_static_cmd_target #(.MODE(1),.CW(308),.RELF(2),.NA(1),.NF(1),.TGT_PIN(1)) u_cp(
-        .clk(clk),.rst_n(rst_n),.tgt(tgt),
+    wire t_rce; wire [6:0] t_raddr,t_waddr; wire [1:0] t_wce; wire [255:0] t_wdata; wire [511:0] t_rd;
+    ot_static_cmd_target_core #(.MODE(1),.CW(308),.RELF(2),.NA(1),.NF(1),.TGT_PIN(1)) u_cp(
+        .clk(clk_cp),.rst_n(rst_n),.tgt(tgt),
         .cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .tgt_active(busy),.tgt_fault(mv_fault),
         .a_we(),.a_addr(),.a_data(),.b_we(),.b_addr(),.b_data(),.run_v(),.run_base(),.run_count(),   // MODE 1: no windows/run
-        .cmd_v(cmd_v),.cmd(cmd),.cycle(cycle),.configured(cp_configured),.fault(cp_fault),.active(cp_active));
+        .cmd_v(cmd_v),.cmd(cmd),.cycle(cycle),.configured(cp_configured),.fault(cp_fault),.active(cp_active),
+        .tab_r_ce(t_rce),.tab_r_addr(t_raddr),.tab_rd_word(t_rd),.tab_w_ce(t_wce),.tab_w_addr(t_waddr),.tab_w_data(t_wdata));
+    for (genvar w = 0; w < 2; w = w + 1) begin : g_tab
+        ot_sram_1r1w_128x256_m1_r2c2 u_tab(.clk(clk_tab[w]),.r_ce_in(t_rce),.r_addr_in(t_raddr),.rd_out(t_rd[w*256+:256]),
+            .w_ce_in(t_wce[w]),.w_addr_in(t_waddr),.wd_in(t_wdata),.w_mask_in({256{1'b1}}),
+            .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(16'b0));
+    end
 `ifdef OT_DBK_HARD
     ot_hgi_dma_back_static_vp4_banks u_dbk(
 `else

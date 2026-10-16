@@ -15,7 +15,7 @@ vvp "$out/pos.vvp" > "$out/pos.log" 2>&1; grep 'CP_FOLD PASS' "$out/pos.log"
 iverilog -g2012 -DCP_MUT=1 -s tb_dma_vp4_banks_cp -o "$out/slice.vvp" "${S[@]}" $P/tb_dma_vp4_banks_cp.sv > "$out/slice.build.log" 2>&1
 if vvp "$out/slice.vvp" > "$out/slice.log" 2>&1 && grep -q 'CP_FOLD PASS' "$out/slice.log"; then echo 'slice mutant survived'; exit 1; fi
 grep -m1 -E 'FATAL|FAIL' "$out/slice.log" | sed 's/^/slice mutant REJECTED: /'
-sed "s/ot_hgi_dma_back_static_vp4_banks_cp #(.CP_MUT(\`CP_MUT)) dut(.clk(clk),.rst_n(rst_n),.stk(2'd0),.tgt(8'd104)/ot_hgi_dma_back_static_vp4_banks_cp #(.CP_MUT(\`CP_MUT)) dut(.clk(clk),.rst_n(rst_n),.stk(2'd0),.tgt(8'd105)/" $P/tb_dma_vp4_banks_cp.sv > "$out/tb_strap.sv"
+sed "s/\.tgt(8'd104),\.clk_bank/.tgt(8'd105),.clk_bank/" $P/tb_dma_vp4_banks_cp.sv > "$out/tb_strap.sv"
 cmp -s "$out/tb_strap.sv" $P/tb_dma_vp4_banks_cp.sv && { echo 'strap mutant not applied'; exit 3; }
 iverilog -g2012 -s tb_dma_vp4_banks_cp -o "$out/strap.vvp" "${S[@]}" "$out/tb_strap.sv" > "$out/strap.build.log" 2>&1
 if vvp "$out/strap.vvp" > "$out/strap.log" 2>&1 && grep -q 'CP_FOLD PASS' "$out/strap.log"; then echo 'strap mutant survived'; exit 1; fi

@@ -180,10 +180,6 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "outline": {
-  "w": 259.2,
-  "h": 151.2
- },
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every input at the pin (ot_static_program_target cv/dv/lv/target/address/data_q/base/limit/loops/tgt_q on clk_cap) and every output is a flop (calendar word fields, calendar_v, ordinal, active, done, fault, configured, target fault); rst_n drives only local synchronisers; a wrapper stage would add +1/+1 for nothing"
@@ -228,7 +224,9 @@
     "active",
     "done",
     "fault",
-    "ordinal"
+    "ordinal",
+    "tgt_configured",
+    "tgt_fault"
    ]
   },
   "cap": {
@@ -251,10 +249,7 @@
     "desc_loops",
     "launch_v"
    ],
-   "outputs": [
-    "tgt_configured",
-    "tgt_fault"
-   ]
+   "outputs": []
   },
   "mem": {
    "ratio": [
@@ -286,5 +281,9 @@
   "kind": "rtl_change",
   "why": "H-DIE option A collar fold: the F20 programme target (standalone ~630-pin ot_static_program_target, pin-bound below 30% util) is folded into the closed universal calendar hv15_vm_cal_x-xcap0030-cce3264d2 as pin-registered soft logic on clk_cap; equivalence vs the two-tile composition every edge (rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh)",
   "source": "results/rtl/hbm_fill_universal_0600/f20_run0.log"
+ },
+ "outline": {
+  "w": 220.32,
+  "h": 140.4
  }
 }
