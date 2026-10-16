@@ -2299,7 +2299,7 @@ def masters(m, k=1, port_bits=None):
                 face = 'S' if p in ('ti_a', 'e_a') else 'N' if p in ('ti_b', 'e_b') else 'W'
             if mst == 'qkd_hss':
                 face = 'W' if p == 's_a' else 'E' if p == 's_b' else 'S'
-            if HOP and mst in ('qkd_d2d', 'qkd_d2ds') and face in _covered_faces(m, inst0):
+            if HOP and mst in ('qkd_d2d', 'qkd_d2ds') and face in _covered_faces(m, inst0, peer=pe):
                 # OT_KV_HOP: a face covered by an abutting block (the UCIe PHY on the D2D frame's N face) has no die
                 # routing: the fwd_epoch / fwd_link_rst_n words were drawn there, 1,208 um from their first relay
                 face = ('E' if dxp > 0 else 'W') if face in 'NS' else ('N' if dyp > 0 else 'S')
@@ -2679,7 +2679,17 @@ def _strip_face_pins(mst, mm):
             y = STRIP_KF_Y
         else:
             continue
+        if HOP and mt and mst in _HOP_STRIP_DY:
+            # OT_KV_HOP: the controller strip's es / er words sit where its closed pc leaf's pins are (2 tracks, the
+            # leaf's bit order), as the HOST slices' controller faces (_slice_pins) -- same measured kvs11 offsets
+            mm.ports[p] = ('face', sp[1], 'W', 'M4', round(y + _HOP_STRIP_DY[mst][mt.group(1)], 3), 2)
+            if mst == 'qkd_ctrl':
+                F.PIN_REVERSE.add((mst, p))
+            continue
         mm.ports[p] = ('face', sp[1], 'E' if mst.startswith('qkd_land') else 'W', 'M4', y, 1)
+
+
+_HOP_STRIP_DY = dict(qkd_ctrl=dict(er=-50.9, es=159.4), qkd_ctrl_n=dict(er=-28.9, es=120.5))
 
 
 def _slice_pins(m, mm, down=False):
@@ -2692,9 +2702,21 @@ def _slice_pins(m, mm, down=False):
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
+    # OT_KV_HOP (kvs11 TT: ctrl_pc er -> slice ctrl_er -97.0 ps, 869 violators; slice ctrl_es -> ctrl_pc es -38.1): the
+    # slice's controller-face words were at 6 M4 tracks a bit while the closed pc leaf's er / es are at 2, and the S
+    # strips' pc leaves are MX (bit order descending): realized dy grew to 101 (er) / 215 um (es) on a 423.5-um dx hop.
+    # Under the flag they take the leaf's 2-track pitch and order, centred on the leaf's words (measured kvs11 offsets of
+    # the middle bit, identical for all 32 PCs of a stack): every bit's dy <= ~14 um
+    hop_ = dict(qkd_hslice={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl'].items()},
+                qkd_hslice_dn={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl_n'].items()}) if HOP else {}
     for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
                             ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
         if p in w:
+            if p in hop_.get(mm.name, {}):
+                mm.face(p, w[p], face, 'M4', round(centre + hop_[mm.name][p], 3), 2)
+                if not down:
+                    F.PIN_REVERSE.add((mm.name, p))
+                continue
             mm.face(p, w[p], face, 'M4', round(centre, 3), 6)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
@@ -2723,11 +2745,11 @@ def _slice_pins(m, mm, down=False):
         mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
 
 
-def _covered_faces(m, it, gap=4.32):
+def _covered_faces(m, it, gap=4.32, peer=None):
     """OT_KV_HOP: faces of instance it (in its own frame) that another block abuts over more than half their length."""
     out = set()
     for o in m['insts']:
-        if o is it or o.kind == 'relay':
+        if o is it or o is peer or o.kind == 'relay':
             continue
         ox = min(it.x + it.w, o.x + o.w) - max(it.x, o.x)
         oy = min(it.y + it.h, o.y + o.h) - max(it.y, o.y)

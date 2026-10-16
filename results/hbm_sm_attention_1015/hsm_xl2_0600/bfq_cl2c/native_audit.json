@@ -1,0 +1,39 @@
+{
+ "cell": "ot_hgi_sm_xload_cl2_bfq",
+ "view": "physical/ref_tile/hgi_sm_xl2_bfq/views/ot_hgi_sm_xload_cl2_bfq",
+ "lib_cell": "ot_hgi_sm_xload_cl2_bfq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 338.8,
+ "spread_ps": 120.8,
+ "outputs": 256,
+ "inputs": 1050,
+ "launch_ps": 201.4,
+ "launch_pin": "rwq[88]",
+ "capture_ps": 260.5,
+ "capture_pin": "c_d[528]",
+ "launch_over": 0,
+ "capture_over": 537,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 260.49452 > 190 (537 pins)",
+ "job": "hgi_sm_xl2_bfq-cl2c-1736d5774",
+ "verdict": "CLOSED TT +77.02 / FF +13.11 / DRC 0 (main ede662a9f)",
+ "limits": {
+  "launch_ps": 220.0,
+  "capture_ps": 190.0,
+  "spread_ps": 80
+ },
+ "tt_boundary_clock": {
+  "n": 1413,
+  "mean": 338.8,
+  "min": 280.0,
+  "max": 400.8
+ },
+ "spread_fail": true,
+ "classification": "STRUCTURAL (pin capture): each c_d bit lands in TWO flops (wp_d lo/hi copies of the per-macro write register, 2 x 1,024 flops), so the pin net has 2 loads and io_flop_at_pins (pin + one flop D only; OT_IOF_FOLLOW_AND covers pin->AND2->D, not this) leaves them unanchored: GPL puts them at their macro write pins up to ~230 um from the N-face pins -> capture 260.5 ps on 537 c_d pins. The same scattered boundary flops (1,413, TT arrival 280..400.8 ps) give the 120.8-ps spread. Fix cl2d: ONE pin register per c_d bit (single load, anchored at the pin), driving both macro data halves directly (same edge, it replaces wp_d).",
+ "layout_inspection": "route floorplan+density viewed: 8 SRAMs 2x4, fill 0.322, ~40 um empty W/E margins, std cells only in the macro channels and at the N pin groups; clock W mid"
+}

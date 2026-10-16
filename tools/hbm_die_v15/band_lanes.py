@@ -15,6 +15,16 @@ LEGS=len(sys.argv)>5 and 'legs' in sys.argv[5].split(',')
 REACH=480.0
 BLK=[(k,r['x'],r['y'],r['x']+r['w'],r['y']+r['h']) for k,r in P.items()]
 FEEDV=('su_',)   # v5 grant: SU slices reserve a 40 um vertical feedthrough relay column
+FEEDH=()
+HOMES_CLS=set()   # H-DIE-V790: homescls=A+B applies the 'homes' rule to those link classes only
+for _t in (sys.argv[5].split(',') if len(sys.argv)>5 else []):
+  if _t.startswith('homescls='):
+    HOMES=True; HOMES_CLS=set(x for x in _t[9:].split('+') if x)
+# H-DIE-V790 10-16: mode token feed=PFX[+PFX] replaces the relay-legal feedthrough prefixes (both directions), e.g.
+# feed=sm_ = the granted 40-um SM feedthrough column/row (H-SM carve) and NO SU feedthrough
+for _t in (sys.argv[5].split(',') if len(sys.argv)>5 else []):
+  if _t.startswith('feed='):
+    FEEDV=tuple(x for x in _t[5:].split('+') if x); FEEDH=FEEDV
 def xcost(segs,skip):
   c=0.0
   for t,cc,s0,s1 in segs:
@@ -24,7 +34,7 @@ def xcost(segs,skip):
       if t=='h' and b<cc<dy: L=min(s1,cx)-max(s0,a)
       elif t=='v' and a<cc<cx: L=min(s1,dy)-max(s0,b)
       else: continue
-      if L>REACH and not (t=='v' and k.startswith(FEEDV)): c+=L
+      if L>REACH and not (t=='v' and k.startswith(FEEDV)) and not (t=='h' and FEEDH and k.startswith(FEEDH)): c+=L
   return c
 MIN=600.0; step=100.0
 W,H=pins['die_outline_um']; nx,ny=int(W//step)+1,int(H//step)+1
@@ -64,7 +74,7 @@ for lk,p1,p2,t in cand:
     js=[j for j in range(int(lo//step),int(hi//step)+1) if j<ny and not hphy(x0,x1,j*step+50)]
     if not js: js=[int(((p1['y']+p2['y'])/2)//step)]
     sk=(lk.split('>')[0],lk.split('>')[1].split(':')[0])
-    hc=lambda j:(xcost([('v',p1['x'],p1['y'],j*step+50),('h',j*step+50,p1['x'],p2['x']),('v',p2['x'],j*step+50,p2['y'])],sk) if HOMES else 0)
+    hc=lambda j:(xcost([('v',p1['x'],p1['y'],j*step+50),('h',j*step+50,p1['x'],p2['x']),('v',p2['x'],j*step+50,p2['y'])],sk) if HOMES and (not HOMES_CLS or p1['cls'] in HOMES_CLS) else 0)
     def legs_h(j):
       if not LEGS: return 0
       y=j*step+step/2; w=0.0
@@ -82,7 +92,7 @@ for lk,p1,p2,t in cand:
     iss=[i for i in range(int(lo//step),int(hi//step)+1) if i<nx and not vphy(i*step+50,y0,y1)]
     if not iss: iss=[int(((p1['x']+p2['x'])/2)//step)]
     sk=(lk.split('>')[0],lk.split('>')[1].split(':')[0])
-    vc=lambda i:(xcost([('h',p1['y'],p1['x'],i*step+50),('v',i*step+50,p1['y'],p2['y']),('h',p2['y'],i*step+50,p2['x'])],sk) if HOMES else 0)
+    vc=lambda i:(xcost([('h',p1['y'],p1['x'],i*step+50),('v',i*step+50,p1['y'],p2['y']),('h',p2['y'],i*step+50,p2['x'])],sk) if HOMES and (not HOMES_CLS or p1['cls'] in HOMES_CLS) else 0)
     def legs_v(i):
       if not LEGS: return 0
       x=i*step+step/2; w=0.0

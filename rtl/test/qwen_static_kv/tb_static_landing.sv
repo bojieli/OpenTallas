@@ -13,7 +13,7 @@ module tb_static_landing;
  parameter integer VREQ_MUT=0;      // 1: the DUT is built VREQ=0 while V gets use the vreq face (must FAIL)
  localparam integer LAT=5+VREQ;
  parameter integer CTX=8192;        // K rows t < CTX (V phase stays the T=8192 walk)
- parameter integer DUT_MUT=0;       // 3: the DUT's old K row addressing (ordinal low bits; must FAIL at CTX < ~7.7k)
+ parameter integer DUT_MUT=0;       // 3: the DUT's old K row ordinal sec[7:0] (aliases t6 = 0 / 1 rows 8 positions apart: must FAIL)
  integer klen[0:31],kord[0:31][0:255],ktot=0;
  reg ck=0;always #0.416667 ck=~ck;
  reg rst=0,arm=0;
@@ -42,7 +42,7 @@ module tb_static_landing;
  generate for(g=0;g<32;g=g+1)begin:groups
   wire [15:0] oe;wire [5:0] ol;wire rv;
   qkd_static_kv_landing_grp #(.STACK(g/8),.GROUP(g%8),.MUT(DUT_MUT),.VMAP(DUT_VMAP),.VREQ(VREQ_MUT?0:VREQ))dut(
-   .ck(ck),.ck_pc({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),.ctx_t(14'(CTX)),
+   .ck(ck),.ck_pc({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),
    .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
    .actual_epoch({4{16'd7}}),.actual_layer({4{6'd3}}),.actual_data(wd[g]),
    .req_valid(VREQ?((rq[g]&~vv[g])|kx[g]):rq[g]),.req_t(tt[g]),.req_v(VREQ?1'b0:vv[g]),.req_epoch(16'd7),.req_layer(6'd3),
@@ -93,8 +93,10 @@ module tb_static_landing;
   void'($value$plusargs("faultmode=%d",faultmode));
   for(integer n=0;n<32;n=n+1)begin sec[n]=0;tt[n]=0;wd[n]=0;ap[n]=0;as[n]=0;end
   repeat(8)@(negedge ck);rst=1;repeat(8)@(negedge ck);arm=1;@(negedge ck);arm=0;repeat(4)@(negedge ck);
-  // K stream of each group: its ordinals i (= sectors) with row kt(i) < CTX, ascending (the controller's order)
-  for(integer g=0;g<32;g=g+1)begin klen[g]=0;for(integer i=0;i<256;i=i+1)if(kt(i,g/8,g%8)<CTX)begin kord[g][klen[g]]=i;klen[g]=klen[g]+1;end ktot=ktot+klen[g];end
+  // K stream of each group in the controller's order: rows t < CTX ascending, i.e. stream position p = {t[12:9], t6,
+  // t[5:3]} ascending; the row's sector index i (kt / js) = {t6, t[12:9], t[5:3]}
+  for(integer g=0;g<32;g=g+1)begin klen[g]=0;for(integer p=0;p<256;p=p+1)begin automatic integer i=((p>>3)&1)*128+(p>>4)*8+(p&7);
+   if(kt(i,g/8,g%8)<CTX)begin kord[g][klen[g]]=i;klen[g]=klen[g]+1;end end ktot=ktot+klen[g];end
   for(integer i=0;i<64;i=i+1)begin idle();for(integer g=0;g<32;g=g+1)if(i<klen[g])loadrow(g,kord[g][i],0);@(negedge ck);end
   for(integer i=0;i<256;i=i+1)begin
    idle();for(integer g=0;g<32;g=g+1)if(i<klen[g])begin rq[g]=1;tt[g]=kt(kord[g][i],g/8,g%8);if(i+64<klen[g])loadrow(g,kord[g][i+64],0);end
