@@ -1,0 +1,2209 @@
+{
+  "schema": "opentallas.hbm.native-open-joins.v1",
+  "native_complete": false,
+  "contract_sha256": "8d306bb264a7fbddf176787e5ac5bffa95ceb1190cd1de2f6d2aa454e7b1b86f",
+  "source_commit": "005075acd",
+  "exposed_inputs": {
+    "ports": 51,
+    "bits": 21737,
+    "by_owner": {
+      "see note per range (not SM)": {
+        "ports": 6,
+        "bits": 8842
+      },
+      "H-SU (SU quarter inject read) / H-COLL": {
+        "ports": 4,
+        "bits": 4096
+      },
+      "H-SU / H-COLL": {
+        "ports": 12,
+        "bits": 1040
+      },
+      "owner / H-DIE (HBM K-port ownership)": {
+        "ports": 8,
+        "bits": 52
+      },
+      "H-SU / H-ELEM-B (s_mtp)": {
+        "ports": 1,
+        "bits": 523
+      },
+      "HC owner (engine) / H-DIE": {
+        "ports": 12,
+        "bits": 3088
+      },
+      "H-SU": {
+        "ports": 8,
+        "bits": 4096
+      }
+    },
+    "list": [
+      {
+        "instance": "hb_vms_SW",
+        "master": "hfd_hgi_vms_static_SW",
+        "port": "cq",
+        "bits": 338,
+        "port_bits": 1014,
+        "gaps": [
+          "G-SMVM-VMCLIENT"
+        ],
+        "owner": null
+      },
+      {
+        "instance": "hb_vms_NW",
+        "master": "hfd_hgi_vms_static_NW",
+        "port": "cq",
+        "bits": 1352,
+        "port_bits": 1352,
+        "gaps": [
+          "G-SMVM-VMCLIENT"
+        ],
+        "owner": null
+      },
+      {
+        "instance": "hb_vms_NW",
+        "master": "hfd_hgi_vms_static_NW",
+        "port": "rq",
+        "bits": 136,
+        "port_bits": 816,
+        "gaps": [
+          "G-SMVM-VMCLIENT"
+        ],
+        "owner": null
+      },
+      {
+        "instance": "hb_vms_NW",
+        "master": "hfd_hgi_vms_static_NW",
+        "port": "wq",
+        "bits": 2248,
+        "port_bits": 6744,
+        "gaps": [
+          "G-SMVM-VMCLIENT"
+        ],
+        "owner": null
+      },
+      {
+        "instance": "hb_vms_NE",
+        "master": "hfd_hgi_vms_static_NE",
+        "port": "rq",
+        "bits": 272,
+        "port_bits": 816,
+        "gaps": [
+          "G-SMVM-VMCLIENT"
+        ],
+        "owner": null
+      },
+      {
+        "instance": "hb_vms_NE",
+        "master": "hfd_hgi_vms_static_NE",
+        "port": "wq",
+        "bits": 4496,
+        "port_bits": 6744,
+        "gaps": [
+          "G-SMVM-VMCLIENT"
+        ],
+        "owner": null
+      },
+      {
+        "instance": "hb_coll_SW",
+        "master": "ot_hfd_coll_q3_static_host_v4",
+        "port": "inj_d",
+        "bits": 1024,
+        "port_bits": 1024,
+        "gaps": [
+          "G-CIL-INJ"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SW",
+        "master": "ot_hfd_coll_q3_static_host_v4",
+        "port": "rc_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SW",
+        "master": "ot_hfd_coll_q3_static_host_v4",
+        "port": "rc_tag",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SW",
+        "master": "ot_hfd_coll_q3_static_host_v4",
+        "port": "rc_d",
+        "bits": 256,
+        "port_bits": 256,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "inj_d",
+        "bits": 1024,
+        "port_bits": 1024,
+        "gaps": [
+          "G-CIL-INJ"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_tag",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_SE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_d",
+        "bits": 256,
+        "port_bits": 256,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NW",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "inj_d",
+        "bits": 1024,
+        "port_bits": 1024,
+        "gaps": [
+          "G-CIL-INJ"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NW",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NW",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_tag",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NW",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_d",
+        "bits": 256,
+        "port_bits": 256,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "inj_d",
+        "bits": 1024,
+        "port_bits": 1024,
+        "gaps": [
+          "G-CIL-INJ"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_tag",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_coll_NE",
+        "master": "ot_hfd_coll_q2_static_host_v4",
+        "port": "rc_d",
+        "bits": 256,
+        "port_bits": 256,
+        "gaps": [
+          "G-CIL-RC"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hb_dbk_SW",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wb_ready",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_SW",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wa",
+        "bits": 12,
+        "port_bits": 12,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_SE",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wb_ready",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_SE",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wa",
+        "bits": 12,
+        "port_bits": 12,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_NW",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wb_ready",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_NW",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wa",
+        "bits": 12,
+        "port_bits": 12,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_NE",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wb_ready",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_dbk_NE",
+        "master": "ot_hgi_dma_back_static_vp4_banks",
+        "port": "wa",
+        "bits": 12,
+        "port_bits": 12,
+        "gaps": [
+          "G-DMA-WB"
+        ],
+        "owner": "H-HARDEN"
+      },
+      {
+        "instance": "hb_argmax",
+        "master": "ot_hbm_argmax_static_sw",
+        "port": "am_stream",
+        "bits": 523,
+        "port_bits": 523,
+        "gaps": [
+          "G-CIL-AMSTREAM"
+        ],
+        "owner": "H-COLL+IDX"
+      },
+      {
+        "instance": "hc_SW",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_SW",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_position",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_SW",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result",
+        "bits": 768,
+        "port_bits": 768,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_SE",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_SE",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_position",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_SE",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result",
+        "bits": 768,
+        "port_bits": 768,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_NW",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_NW",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_position",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_NW",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result",
+        "bits": 768,
+        "port_bits": 768,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_NE",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_v",
+        "bits": 1,
+        "port_bits": 1,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_NE",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result_position",
+        "bits": 3,
+        "port_bits": 3,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "hc_NE",
+        "master": "ot_hbm_hc_q_static",
+        "port": "result",
+        "bits": 768,
+        "port_bits": 768,
+        "gaps": [
+          "G-HC-ENG"
+        ],
+        "owner": "HC owner (H-NETLIST hc)"
+      },
+      {
+        "instance": "sfucore_SW",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "vi_q",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-SW"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_SW",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "side_y",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-SW"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_SE",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "vi_q",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-SE"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_SE",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "side_y",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-SE"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_NW",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "vi_q",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-NW"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_NW",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "side_y",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-NW"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_NE",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "vi_q",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-NE"
+        ],
+        "owner": "H-SU"
+      },
+      {
+        "instance": "sfucore_NE",
+        "master": "ot_hgi_sfu_scheduled_engine",
+        "port": "side_y",
+        "bits": 512,
+        "port_bits": 512,
+        "gaps": [
+          "G-SFU-OPERAND-JOIN-NE"
+        ],
+        "owner": "H-SU"
+      }
+    ]
+  },
+  "required_output_joins": {
+    "SM_RESULT_TO_VM": {
+      "unconsumed_ports": 160,
+      "unconsumed_bits": 8672,
+      "ports": [
+        {
+          "instance": "sm_SW0",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW0",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW0",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW0",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW0",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW1",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW1",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW1",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW1",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW1",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW2",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW2",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW2",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW2",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW2",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW3",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW3",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW3",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW3",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW3",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW4",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW4",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW4",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW4",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW4",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW5",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW5",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW5",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW5",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW5",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW6",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW6",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW6",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW6",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW6",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW7",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW7",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SW7",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SW7",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SW7",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE0",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE0",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE0",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE0",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE0",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE1",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE1",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE1",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE1",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE1",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE2",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE2",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE2",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE2",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE2",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE3",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE3",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE3",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE3",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE3",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE4",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE4",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE4",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE4",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE4",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE5",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE5",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE5",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE5",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE5",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE6",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE6",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE6",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE6",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE6",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE7",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE7",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_SE7",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_SE7",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_SE7",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW0",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW0",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW0",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW0",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW0",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW1",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW1",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW1",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW1",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW1",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW2",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW2",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW2",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW2",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW2",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW3",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW3",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW3",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW3",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW3",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW4",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW4",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW4",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW4",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW4",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW5",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW5",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW5",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW5",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW5",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW6",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW6",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW6",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW6",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW6",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW7",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW7",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NW7",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NW7",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NW7",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE0",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE0",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE0",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE0",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE0",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE1",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE1",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE1",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE1",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE1",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE2",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE2",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE2",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE2",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE2",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE3",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE3",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE3",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE3",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE3",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE4",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE4",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE4",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE4",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE4",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE5",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE5",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE5",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE5",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE5",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE6",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE6",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE6",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE6",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE6",
+          "port": "schedule_fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE7",
+          "port": "rv",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE7",
+          "port": "rrow",
+          "bits": 12
+        },
+        {
+          "instance": "sm_NE7",
+          "port": "rdata",
+          "bits": 256
+        },
+        {
+          "instance": "sm_NE7",
+          "port": "fault",
+          "bits": 1
+        },
+        {
+          "instance": "sm_NE7",
+          "port": "schedule_fault",
+          "bits": 1
+        }
+      ]
+    },
+    "COLL_DELIVERY_TO_VM_SU": {
+      "unconsumed_ports": 12,
+      "unconsumed_bits": 9376,
+      "ports": [
+        {
+          "instance": "hb_coll_SW",
+          "port": "del_valid",
+          "bits": 4
+        },
+        {
+          "instance": "hb_coll_SW",
+          "port": "del_flit",
+          "bits": 2180
+        },
+        {
+          "instance": "hb_coll_SW",
+          "port": "hgi_del_obase",
+          "bits": 160
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "del_valid",
+          "bits": 4
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "del_flit",
+          "bits": 2180
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "hgi_del_obase",
+          "bits": 160
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "del_valid",
+          "bits": 4
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "del_flit",
+          "bits": 2180
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "hgi_del_obase",
+          "bits": 160
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "del_valid",
+          "bits": 4
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "del_flit",
+          "bits": 2180
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "hgi_del_obase",
+          "bits": 160
+        }
+      ]
+    },
+    "COLL_INJECTION_READ_SERVICE": {
+      "unconsumed_ports": 12,
+      "unconsumed_bits": 776,
+      "ports": [
+        {
+          "instance": "hb_coll_SW",
+          "port": "inj_rd",
+          "bits": 2
+        },
+        {
+          "instance": "hb_coll_SW",
+          "port": "inj_idx",
+          "bits": 32
+        },
+        {
+          "instance": "hb_coll_SW",
+          "port": "hgi_inj_addr",
+          "bits": 160
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "inj_rd",
+          "bits": 2
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "inj_idx",
+          "bits": 32
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "hgi_inj_addr",
+          "bits": 160
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "inj_rd",
+          "bits": 2
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "inj_idx",
+          "bits": 32
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "hgi_inj_addr",
+          "bits": 160
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "inj_rd",
+          "bits": 2
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "inj_idx",
+          "bits": 32
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "hgi_inj_addr",
+          "bits": 160
+        }
+      ]
+    },
+    "COLL_REDUCTION_RETURN": {
+      "unconsumed_ports": 12,
+      "unconsumed_bits": 1040,
+      "ports": [
+        {
+          "instance": "hb_coll_SW",
+          "port": "rr_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_coll_SW",
+          "port": "rr_tag",
+          "bits": 3
+        },
+        {
+          "instance": "hb_coll_SW",
+          "port": "rr_d",
+          "bits": 256
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "rr_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "rr_tag",
+          "bits": 3
+        },
+        {
+          "instance": "hb_coll_SE",
+          "port": "rr_d",
+          "bits": 256
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "rr_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "rr_tag",
+          "bits": 3
+        },
+        {
+          "instance": "hb_coll_NW",
+          "port": "rr_d",
+          "bits": 256
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "rr_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "rr_tag",
+          "bits": 3
+        },
+        {
+          "instance": "hb_coll_NE",
+          "port": "rr_d",
+          "bits": 256
+        }
+      ]
+    },
+    "IDX_TOPK_TX_INJECTION": {
+      "unconsumed_ports": 2,
+      "unconsumed_bits": 2184,
+      "ports": [
+        {
+          "instance": "hb_idx",
+          "port": "tx_v",
+          "bits": 4
+        },
+        {
+          "instance": "hb_idx",
+          "port": "tx",
+          "bits": 2180
+        }
+      ]
+    },
+    "SFU_RESULT_AND_OPERAND_SERVICE": {
+      "unconsumed_ports": 36,
+      "unconsumed_bits": 9472,
+      "ports": [
+        {
+          "instance": "sfucore_SW",
+          "port": "vi_re",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "vi_addr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "ro_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "side_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "kv_we",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "ro_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "side_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "kv_wdata",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_SW",
+          "port": "kv_waddr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "vi_re",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "vi_addr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "ro_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "side_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "kv_we",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "ro_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "side_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "kv_wdata",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_SE",
+          "port": "kv_waddr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "vi_re",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "vi_addr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "ro_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "side_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "kv_we",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "ro_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "side_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "kv_wdata",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_NW",
+          "port": "kv_waddr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "vi_re",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "vi_addr",
+          "bits": 384
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "ro_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "side_v",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "kv_we",
+          "bits": 16
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "ro_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "side_x",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "kv_wdata",
+          "bits": 512
+        },
+        {
+          "instance": "sfucore_NE",
+          "port": "kv_waddr",
+          "bits": 384
+        }
+      ]
+    },
+    "HC_ENGINE_INPUTS": {
+      "unconsumed_ports": 28,
+      "unconsumed_bits": 32976,
+      "ports": [
+        {
+          "instance": "hc_SW",
+          "port": "x_wave_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_SW",
+          "port": "x_wave_word",
+          "bits": 10
+        },
+        {
+          "instance": "hc_SW",
+          "port": "x_wave",
+          "bits": 8192
+        },
+        {
+          "instance": "hc_SW",
+          "port": "gathered_mix_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_SW",
+          "port": "gathered_mix_row",
+          "bits": 5
+        },
+        {
+          "instance": "hc_SW",
+          "port": "gathered_mix_pos",
+          "bits": 3
+        },
+        {
+          "instance": "hc_SW",
+          "port": "gathered_mix_data",
+          "bits": 32
+        },
+        {
+          "instance": "hc_SE",
+          "port": "x_wave_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_SE",
+          "port": "x_wave_word",
+          "bits": 10
+        },
+        {
+          "instance": "hc_SE",
+          "port": "x_wave",
+          "bits": 8192
+        },
+        {
+          "instance": "hc_SE",
+          "port": "gathered_mix_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_SE",
+          "port": "gathered_mix_row",
+          "bits": 5
+        },
+        {
+          "instance": "hc_SE",
+          "port": "gathered_mix_pos",
+          "bits": 3
+        },
+        {
+          "instance": "hc_SE",
+          "port": "gathered_mix_data",
+          "bits": 32
+        },
+        {
+          "instance": "hc_NW",
+          "port": "x_wave_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_NW",
+          "port": "x_wave_word",
+          "bits": 10
+        },
+        {
+          "instance": "hc_NW",
+          "port": "x_wave",
+          "bits": 8192
+        },
+        {
+          "instance": "hc_NW",
+          "port": "gathered_mix_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_NW",
+          "port": "gathered_mix_row",
+          "bits": 5
+        },
+        {
+          "instance": "hc_NW",
+          "port": "gathered_mix_pos",
+          "bits": 3
+        },
+        {
+          "instance": "hc_NW",
+          "port": "gathered_mix_data",
+          "bits": 32
+        },
+        {
+          "instance": "hc_NE",
+          "port": "x_wave_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_NE",
+          "port": "x_wave_word",
+          "bits": 10
+        },
+        {
+          "instance": "hc_NE",
+          "port": "x_wave",
+          "bits": 8192
+        },
+        {
+          "instance": "hc_NE",
+          "port": "gathered_mix_v",
+          "bits": 1
+        },
+        {
+          "instance": "hc_NE",
+          "port": "gathered_mix_row",
+          "bits": 5
+        },
+        {
+          "instance": "hc_NE",
+          "port": "gathered_mix_pos",
+          "bits": 3
+        },
+        {
+          "instance": "hc_NE",
+          "port": "gathered_mix_data",
+          "bits": 32
+        }
+      ]
+    },
+    "DMA_WRITEBACK_TO_HBM": {
+      "unconsumed_ports": 36,
+      "unconsumed_bits": 9568,
+      "ports": [
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_reserve_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_reserve_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_fill_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_reserve_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_fill_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_reserve_sectors",
+          "bits": 12
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_reserve_base",
+          "bits": 32
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wb_fill_start",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SW",
+          "port": "wd",
+          "bits": 2312
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_reserve_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_reserve_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_fill_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_reserve_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_fill_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_reserve_sectors",
+          "bits": 12
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_reserve_base",
+          "bits": 32
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wb_fill_start",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_SE",
+          "port": "wd",
+          "bits": 2312
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_reserve_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_reserve_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_fill_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_reserve_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_fill_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_reserve_sectors",
+          "bits": 12
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_reserve_base",
+          "bits": 32
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wb_fill_start",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NW",
+          "port": "wd",
+          "bits": 2312
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_reserve_v",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_reserve_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_fill_bank",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_reserve_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_fill_epoch",
+          "bits": 16
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_reserve_sectors",
+          "bits": 12
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_reserve_base",
+          "bits": 32
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wb_fill_start",
+          "bits": 1
+        },
+        {
+          "instance": "hb_dbk_NE",
+          "port": "wd",
+          "bits": 2312
+        }
+      ]
+    }
+  },
+  "semantic_gaps": [
+    {
+      "id": "NATIVE_ATTENTION_COMMAND",
+      "why": "Instantiated32 legacy static SMs take83b commands; actual attention top requires192b command+64b kv_desc and is not integrated. Element proofs do not replace native composition."
+    },
+    {
+      "id": "NATIVE_HC_ENGINE",
+      "why": "HC quadrant clients exist and expose x_wave/gathered mixes, but actual projection/Sinkhorn engine and its prefetch/bases/scales producer are not instantiated."
+    },
+    {
+      "id": "NATIVE_OPERATION_CENSUS",
+      "why": "No complete emitted production operation-to-instantiated RTL/operand/result/resource/calendar coverage proof yet. Port binding alone cannot establish this."
+    },
+    {
+      "id": "NATIVE_FAULT_PATH",
+      "why": "Many actual SM and SU fault outputs remain unconsumed; current67target/100fault hoststatus covers collars and selected targets only."
+    },
+    {
+      "id": "NATIVE_PROGRAM_INSTALL_READY",
+      "why": "Basic programme target configured proves valid descriptor and one-launch arm only; actual loaded-row completeness is not integrated for VM/HC/EP programme collars. Host status aggregation proof is not programme-install readiness qualification."
+    }
+  ],
+  "scope": "Source completeness diagnostic. Required unconsumed output joins remain nativeFAIL independently of input port count; no physical or fullnative qualification.",
+  "input_gap_totals": [
+    {
+      "group": "VM client producers",
+      "ports": 6,
+      "bits": 8842
+    },
+    {
+      "group": "COLL injection and reduction",
+      "ports": 16,
+      "bits": 5136
+    },
+    {
+      "group": "DMA writeback completion",
+      "ports": 8,
+      "bits": 52
+    },
+    {
+      "group": "ARGMAX input stream",
+      "ports": 1,
+      "bits": 523
+    },
+    {
+      "group": "HC engine result",
+      "ports": 12,
+      "bits": 3088
+    },
+    {
+      "group": "SFU operand service",
+      "ports": 8,
+      "bits": 4096
+    }
+  ],
+  "strict_port_bind": {
+    "verdict": "FAIL",
+    "shell_exit": 1,
+    "whole_input_ports_unconnected": 17,
+    "partial_undriven_bits": 7490,
+    "unbound_masters": 0,
+    "stub_masters": 0,
+    "width_mismatch": 0,
+    "multidriven_bits": 0,
+    "input_tied": 0
+  }
+}
