@@ -155,23 +155,46 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08}} {
   puts "OT_TIE_ROWS cells=[llength $cells] moved=$moved max_move_um=[expr {$maxd/double($dbu)}] rows_before=$nold rows_after=$n sites=$sites"
 }
 
-# after pdngen: count rail -> M9 stacks actually created per die-top cell rail is what check_power_grid proves; this
-# verifies the M8 phase assumption against the written core stripes (fail closed if pdngen placed them elsewhere)
+# after pdngen (fail closed): no M7-M8 / M8-M9 via of a die-top-cell rail stack may overlap an opposite-net M8 wire
+# (core stripe OR macro-grid stripe).  Connectivity is check_power_grid's job; this is the short check of the stacks.
 proc ot_tie_rows_verify {p8 w8} {
   set block [ord::get_db_block]; set dbu [$block getDbUnitsPerMicron]
-  set cy0 [[$block getCoreArea] yMin]; set P8 [expr {round($p8*$dbu)}]; set w8d [expr {round($w8*$dbu)}]
-  set bad 0; set seen 0
+  set bands {}
+  foreach row [$block getRows] { set bb [$row getBBox]; lappend bands [list [expr {[$bb yMin]-300}] [expr {[$bb yMax]+300}] [$bb xMin] [$bb xMax]] }
+  set bands [lsort -integer -index 0 $bands]; set bys [lmap b $bands {lindex $b 0}]
+  foreach name {VDD VSS} { set m8($name) {}; set st($name) {} }
   foreach name {VDD VSS} {
     foreach sw [[$block findNet $name] getSWires] {
       foreach s [$sw getWires] {
-        if {[$s isVia] || [[$s getTechLayer] getName] ne "M8" || [$s getDX] < 50*$dbu || [$s getDY] != $w8d} continue
-        incr seen
-        set net [::ot_tie_rows::m8net [expr {([$s yMin]+[$s yMax])/2.0}] $cy0 $P8 $w8d 0]
-        if {$net ne $name} { incr bad }
+        if {[$s isVia]} {
+          set v [$s getBlockVia]
+          if {$v eq "NULL" || ![regexp {^via(7_8|8_9)} [$v getName]]} continue
+          set x0 [$s xMin]; set y0 [$s yMin]; set x1 [$s xMax]; set y1 [$s yMax]
+          set i [lsearch -bisect -integer $bys $y1]
+          for {set k $i} {$k >= 0 && $k > $i-4} {incr k -1} {
+            lassign [lindex $bands $k] b0 b1 bx0 bx1
+            if {$b1 >= $y0 && $b0 <= $y1 && $bx0 <= $x1 && $bx1 >= $x0} { lappend st($name) [list $x0 $y0 $x1 $y1]; break }
+          }
+        } elseif {[[$s getTechLayer] getName] eq "M8"} {
+          lappend m8($name) [list [$s yMin] [$s yMax] [$s xMin] [$s xMax]]
+        }
       }
-      if {$seen > 2000} break
     }
   }
-  if {!$seen || $bad} { error "OT_TIE_ROWS_VERIFY: M8 phase model wrong ($bad of $seen core stripes)" }
-  puts "OT_TIE_ROWS_VERIFY m8_stripes_checked=$seen phase_ok"
+  set short 0; set checked 0
+  foreach {n o} {VDD VSS VSS VDD} {
+    set w [lsort -integer -index 0 $m8($o)]; set wy [lmap e $w {lindex $e 0}]
+    foreach v $st($n) {
+      lassign $v x0 y0 x1 y1; incr checked
+      set i [lsearch -bisect -integer $wy $y1]
+      for {set k $i} {$k >= 0} {incr k -1} {
+        lassign [lindex $w $k] a b c d
+        if {$a < $y0 - 2*$dbu} break
+        if {$b > $y0 && $a < $y1 && $d > $x0 && $c < $x1} { incr short; break }
+      }
+    }
+  }
+  if {!$checked} { error "OT_TIE_ROWS_VERIFY: no rail stack vias found near the die-top rows" }
+  if {$short} { error "OT_TIE_ROWS_VERIFY: $short of $checked rail-stack M8 vias overlap an opposite-net M8 wire" }
+  puts "OT_TIE_ROWS_VERIFY rail_stack_m8_vias=$checked opposite_net_overlaps=0"
 }
