@@ -44,7 +44,7 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 12,
+    "peak_ram_gb": 16,
     "pass_regex": "^XLOAD_STATIC_LOCK PASS$",
     "pass_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/pos2.log",
     "min_count_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, ([0-9]+) pair beats, 0 differ$",
@@ -55,7 +55,7 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 12,
+    "peak_ram_gb": 16,
     "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
     "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m1.log"
    },
@@ -64,7 +64,7 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 12,
+    "peak_ram_gb": 16,
     "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
     "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m2.log"
    },
@@ -73,7 +73,7 @@
     "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 12,
+    "peak_ram_gb": 16,
     "fail_regex": "^XQL vs cl2f \\(\\+2 edges, 4 pairs\\): [0-9]+ cycles compared, [0-9]+ pair beats, [1-9][0-9]* differ$",
     "fail_witness": "results/hbm_sm_attention_1015/hsm_1552/xql/m3.log"
    }
