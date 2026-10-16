@@ -69,5 +69,35 @@
   "arcless_outputs": "27 TIELO-driven constant outputs (t_sel_e/t_tv_e[7:0], mx_addr[23:20], scale_tag[49:45], ret[93], me_prog_o[15])",
   "export_provenance": "re-exported from the closed route with cd5154580 tools: raw LEF b29f2666 -> abstract_pin_stub c3cae85e -> final LEF 0b4ad092 (identical to the recorded final LEF); libs identical; insertion.json kept from verdict (boundary means identical)",
   "layout": "routed density/congestion inspected: west SRAM pair, moderate congestion on SRAM W edge, no hot sliver"
+ },
+ "scale_tc3_native": {
+  "cell": "qfd_tt_scale_leaf",
+  "view": "physical/ref_tile/qfd_tt_scale_leaf/views/qfd_tt_scale_leaf",
+  "lib_cell": "qfd_tt_scale_leaf",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 375.2,
+  "spread_ps": 54.3,
+  "outputs": 601,
+  "inputs": 93,
+  "launch_ps": 196.0,
+  "launch_pin": "scale_addr[259]",
+  "capture_ps": 184.3,
+  "capture_pin": "tag_payload[33]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qfd_tt_scale_leaf-tc3-dd236ff24",
+  "closed": "TT +122.75 / FF +1.07 ps DRC 0 (SS -182.33 sensitivity)",
+  "record": "a13cb3f3d",
+  "rst_n_capture_ps": 150.7,
+  "rst_n_capture_tc1_ps": 356.99,
+  "export_provenance": "record view carries export_provenance (raw manifest c08a42ef, pin-stub receipt b26d36a1), ok=true",
+  "layout": "routed density/congestion inspected: tc1 placement, W pin-face islands moderately hot, no blocked channel, DRC 0"
  }
 }
