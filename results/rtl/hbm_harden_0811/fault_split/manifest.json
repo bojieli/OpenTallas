@@ -1,6 +1,6 @@
 {
   "baseline_sha256": "961f061e4846868c71f83c4ed6304d361e9ab853d8d6c7a06312caf212cfeb48",
-  "candidate_sha256": "bd5be073a797d4c14508abd161de8c1e3f6caab5ddb078cba3d0cd0ecfc05af9",
+  "candidate_sha256": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
   "groups": {
     "0": "illegal ingress",
     "1": "column command identity/state",
@@ -21,5 +21,10 @@
   "parent_fault_observation_edges_added": 0,
   "total_declared_flops_added": 1280,
   "legacy_parent_source_unchanged": true,
-  "parent_candidate_sha256": "1ef80b574f382be3f6fd3b4ea4c2269de42fdb5ad7552023ae377bc657a57595"
+  "parent_candidate_sha256": "1ef80b574f382be3f6fd3b4ea4c2269de42fdb5ad7552023ae377bc657a57595",
+  "original_h7_controller_source_sha256": "325dede7e8eeafe28c999be484270ab217657b360d0775c2103aa64aed7c9af0",
+  "additive_controller_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv",
+  "additive_controller_sha256": "bcdda846683fa0104f37594f8cabbc2df56ab898d715218c82e0fb1008258779",
+  "controller_transformation": "module declaration name only; header documents exact original SHA256",
+  "reference_sha256": "29368d64aa6181fba6d755e8ef1705a1f1dab84358c75ffc99869041421299c9"
 }

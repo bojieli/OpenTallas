@@ -3,7 +3,7 @@ set -euo pipefail
 out=${1:?out}; mut=${2:-none}; mkdir -p "$out"
 d=rtl/hbm_accel/loader/service_native
 p=results/rtl/hbm_harden_0811/fault_split
-base=(rtl/lib/ot_rst_relay.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v "$d/ot_hbm_svc_pc_ctrl_leaf.sv")
+base=(rtl/lib/ot_rst_relay.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v "$d/ot_hbm_svc_pc_ctrl_leaf.sv")
 cp "$d/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv" "$out/candidate.sv"
 if [ "$mut" != none ];then
  sed -i "s/owner_fault_split\[$mut\]<=1;/owner_fault_split[$mut]<=0;/g" "$out/candidate.sv"
