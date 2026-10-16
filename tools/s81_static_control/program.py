@@ -33,6 +33,16 @@ def encode_program(rows,stage,phase):
                 target.add(key)
         elif r['arg'] or r['done'] or r['engine']==14 and r['issue']>=end[0]['issue']:
             raise ValueError('invalid KIT/END metadata')
+    # Fixed issuer v2 (ot_s81_fixed_issue, one registered-hit tree per context): at most one row of a context
+    # issues on any edge (KIT/END included) and one command is in flight per engine (next issue >= previous
+    # done). The hardware faults (code 9 / 6) on a calendar that breaks either rule; the compiler refuses it.
+    edges=[r['issue'] for r in rows]
+    if len(set(edges))!=len(edges):
+        raise ValueError('one calendar row per context issue edge (fixed issuer v2)')
+    for engine in {r['engine'] for r in commands}:
+        own=sorted((r['issue'],r['done']) for r in commands if r['engine']==engine)
+        if any(b[0]<a[1] for a,b in zip(own,own[1:])):
+            raise ValueError('one command in flight per engine per context (fixed issuer v2)')
     header=(len(rows)<<9)|(phase<<7)|stage
     writes=[(0,(3<<26)|header)]
     for index,r in enumerate(rows):
@@ -42,7 +52,7 @@ def encode_program(rows,stage,phase):
     return dict(length=len(rows),stage=stage,start_phase=phase,rows=rows,
                 writes=[dict(address=a,data=d,word=(a<<28)|d) for a,d in writes],
                 command_abi='opentallas.s81.cmd84.v1',pw_abi='opentallas.s81.fixed-pw36.v1',
-                pin_origin='one stream clock after sampled job_v',seal_to_arm_stream_cycles=129,qualified=False)
+                pin_origin='one stream clock after sampled job_v',seal_to_arm_stream_cycles=131,qualified=False)
 
 
 def validate_launches(rows,launches):

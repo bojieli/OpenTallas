@@ -41,8 +41,8 @@ module tb_s81_fixed_issue;
   else begin
    tick=tick+1;#1;
    if(pw_v&&pw_d[27:26]==3&&pw_d[25])seal_tick=tick;
-   if(seal_tick>=0&&tick==seal_tick+127&&dut.sealed)$fatal(1,"boot scan armed early");
-   if(seal_tick>=0&&tick==seal_tick+128&&dut.sealed!==(mode!=4))$fatal(1,"boot scan fixed arm edge lost");
+   if(seal_tick>=0&&tick==seal_tick+129&&dut.sealed)$fatal(1,"boot scan armed early");
+   if(seal_tick>=0&&tick==seal_tick+130&&dut.sealed!==(mode!=4))$fatal(1,"boot scan fixed arm edge lost");
    for(e=0;e<13;e=e+1)if(cv[e])begin
     cmd=cd[84*e+:84];s=cmd[83];op=cmd[6:0];arg=arg_for(op);expected=1001+4*s+op;
     if(op>=126||e!=op%13||tick!=expected||cmd[30:7]!=arg||cmd[82:73]!=(s?38:37)||cmd[72:52]!=1048575||cmd[51:31]!=(s?128999:21946))begin

@@ -27,13 +27,26 @@ class ProgramTest(unittest.TestCase):
         rows=[dict(engine=i%13,arg=(0x654321+i)&0xffffff,issue=i,done=i+3)for i in range(126)]
         rows += [dict(engine=14,arg=0,issue=129,done=0),dict(engine=15,arg=0,issue=130,done=0)]
         r=encode_program(rows,127,3)
-        self.assertEqual(len(r['writes']),386);self.assertFalse(r['qualified']);self.assertEqual(r['seal_to_arm_stream_cycles'],129)
+        self.assertEqual(len(r['writes']),386);self.assertFalse(r['qualified']);self.assertEqual(r['seal_to_arm_stream_cycles'],131)
         for i,row in enumerate(rows):
             triplet=r['writes'][1+3*i:4+3*i]
             packed=sum((w['data']&0x3ffffff)<<(26*j)for j,w in enumerate(triplet))
             self.assertEqual(packed,row['arg']|(row['engine']<<24)|(row['issue']<<28)|(row['done']<<52))
             self.assertEqual([w['address']for w in triplet],[i]*3)
             self.assertTrue(all(w['word']<1<<35 for w in triplet))
+    def test_issuer_v2_one_row_per_issue_edge(self):
+        base=[dict(engine=0,arg=1,issue=0,done=3),dict(engine=1,arg=2,issue=1,done=4),
+              dict(engine=14,arg=0,issue=6,done=0),dict(engine=15,arg=0,issue=7,done=0)]
+        encode_program(base,0,0)
+        with self.assertRaisesRegex(ValueError,'one calendar row per context issue edge'):
+            encode_program([base[0],dict(base[1],issue=0),base[2],base[3]],0,0)
+        with self.assertRaisesRegex(ValueError,'one calendar row per context issue edge'):
+            encode_program([base[0],base[1],dict(base[2],issue=1),base[3]],0,0)
+    def test_issuer_v2_one_command_in_flight_per_engine(self):
+        tail=[dict(engine=15,arg=0,issue=20,done=0)]
+        encode_program([dict(engine=3,arg=1,issue=0,done=5),dict(engine=3,arg=2,issue=5,done=9)]+tail,0,0)
+        with self.assertRaisesRegex(ValueError,'one command in flight per engine'):
+            encode_program([dict(engine=3,arg=1,issue=0,done=5),dict(engine=3,arg=2,issue=4,done=9)]+tail,0,0)
     def test_source_pinned_fixture_encodes_but_not_qualifies(self):
         r=self.emit();self.assertTrue(r['dispatch_eligible'],r);self.assertFalse(r['qualified'])
         self.assertEqual(r['rows'][-1]['issue'],25)

@@ -408,7 +408,7 @@ def schedule_jobs(program, binding, root=ROOT):
     bindings = binding.get('jobs', {})
     if not ops or set(bindings) != {op['id'] for op in ops}:
         raise ValueError('offline scheduling requires every native job binding exactly once')
-    ends, ports = {}, {}
+    ends, ports, issue_edges = {}, {}, set()
     for index, op in enumerate(ops):
         owner = bindings[op['id']]
         check_pipeline_abi(owner)
@@ -420,13 +420,17 @@ def schedule_jobs(program, binding, root=ROOT):
         earliest = max([integer(op.get('ext', 0), 'external arrival'), ports.get(op['port'], 0)]
                        + [ends[p] for p in predecessors])
         start = earliest + (phase - earliest) % phase_period
+        # Fixed issuer v2: one calendar row per context issue edge (program.encode_program refuses collisions).
+        while start in issue_edges:
+            start += phase_period
+        issue_edges.add(start)
         # end is the issuer done row; the engine port is occupied until it.
         op.update(start=start, end=issuer_done_row(start, duration), dur=duration)
         ends[index] = op['end']
         ports[op['port']] = op['end']
     previous = program.get('makespan', max(o['end'] for o in program['ops']))
     result['makespan'] = max(ends.values())
-    result['offline_schedule'] = dict(policy='done = issue + 1 + native pin-to-pin duration, single inflight per port, explicit clock phase',
+    result['offline_schedule'] = dict(policy='done = issue + 1 + native pin-to-pin duration, single inflight per port, one issue per context edge, explicit clock phase',
                                      original_makespan=previous, native_makespan=result['makespan'],
                                      added_cycles=result['makespan']-previous,
                                      performance_accepted=False)
