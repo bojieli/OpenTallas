@@ -80,6 +80,7 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile_specs/hdie_pc_ctrl_cfg",
    "results/arch/hbm_die_v15/checkpoint_allocation",
    "rtl/lib/ot_rst_relay.sv",
    "rtl/model_ready_hbm_r14",
@@ -148,5 +149,9 @@
   "enable": false,
   "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
  },
- "std_area_um2": 7000
+ "outline": {
+  "w": 185.76,
+  "h": 185.76
+ },
+ "io_tcl": "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl"
 }

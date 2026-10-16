@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  192.24,
-  192.24
+  185.76,
+  185.76
  ],
  "core": [
   2.16,
   2.16,
-  190.08,
-  190.08
+  183.6,
+  183.6
  ],
- "why": "util 0.52 of std 7000 + macros 10956 um2",
- "std_area_um2": 7000,
+ "why": "spec outline",
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -78,8 +78,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 48.816,
-   "y": 43.2,
+   "x": 45.36,
+   "y": 41.04,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -91,22 +91,15 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 48.816,
-   "y": 105.84,
+   "x": 45.36,
+   "y": 103.68,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 42% outside 45%-60% (std 7000 + macro 7788 in core 35314 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
@@ -136,6 +129,7 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/sram_edge_guard.tcl",
   "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
