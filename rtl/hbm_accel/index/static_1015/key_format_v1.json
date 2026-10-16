@@ -48,7 +48,7 @@
     "maximum_global_context": 1048576
   },
   "service": {
-    "pair_tag10": "((beat_index*8)+port)%1024",
+    "pair_tag10": "(128*port + beat_index) % 1024",
     "beat_index": [
       0,
       170
@@ -58,7 +58,11 @@
     "keys_per_stack_beat": 16,
     "raw_pair_bytes_per_stack_beat": 1088,
     "fullframe_staging_bytes_per_stack": 186048,
-    "prefetch": "wholeblockready only atHBMstackboundary; actualcapacity/multiblock staging allocation OPEN"
+    "prefetch": "wholeblockready only atHBMstackboundary; actualcapacity/multiblock staging allocation OPEN",
+    "pair_tag10_superseded": "((beat_index*8)+port)%1024 (v1 draft): no sequential-tag service block can emit it; changed 2026-10-15 by H-NETLIST idxcoll with ot_hbm_idx_score_static",
+    "producer": "the stack's eight HBM service groups svg_<stack><port> (ot_hbm_svc_sm_group, FIXED_GO=1): sm_packet {valid,tag10,pair1088} -> key_lines line port (die wiring tools/hbm_die_v15/v16_specs/idxcoll.json); packed136 tag = tag_base+row, tag_base = 128*port + first beat of the 64-row block",
+    "read_layout": "pair (stack, beat, port) = the 136-B record at row beat of a per-SM key region in svg_<stack><port>'s own four PCs (record byte 0 = bits 7:0, key 16*beat+2*port = bytes 0..67); the linear placement byteaddr below is the v1 store view and must be re-versioned to this per-SM region by the keystore writer (OPEN, H-IDX)",
+    "bench": "rtl/test/hbm_idx_static/run_idx_key_service.sh (8 actual svg + 32 controller leaves + DRAM fixture -> die wiring -> actual scorer)"
   },
   "write": {
     "sector_bytes": 32,
