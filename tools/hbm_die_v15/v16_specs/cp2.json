@@ -126,7 +126,7 @@
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
    "params": {
     "NT": 103,
-    "NF": 136,
+    "NF": 148,
     "NH": 6,
     "TGTS": "824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
    },
@@ -8699,6 +8699,186 @@
    "bits": 1,
    "clock": "stream",
    "basis": "TARGET223 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    136,
+    137
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    137,
+    138
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    138,
+    139
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    139,
+    140
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    140,
+    141
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    141,
+    142
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    142,
+    143
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    143,
+    144
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_SW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    144,
+    145
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_SE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    145,
+    146
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_NW",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    146,
+    147
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
+  },
+  {
+   "src": [
+    "sfus_NE",
+    "fault"
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    147,
+    148
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Actual static component sticky fault observation; never reschedules execution"
   }
  ],
  "clocks": [

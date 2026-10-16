@@ -11,7 +11,7 @@ WR_SRC = 'rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv'
 CT_SRC = 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'
 TGT0 = 160
 # quadrants whose VM master has a free static write group for the SM writer (group index = calendar wslot code)
-SM_WG = {'NW': 1, 'NE': 1}
+SM_WG = {'SW': 1, 'SE': 1, 'NW': 1, 'NE': 1}
 s = dict(region='smvm_0030', author='Claude H-NETLIST/smvm (round 0030)', instances=[], edges=[], clocks=[], straps=[],
          gaps=[], notes=[])
 def E(src, dst, bits, basis): s['edges'].append(dict(src=src, dst=dst, bits=bits, clock='stream', basis=basis))
@@ -45,12 +45,7 @@ for qi, q in enumerate(Q):
     if q in SM_WG:
         g = SM_WG[q]
         E([wr, 'wq', 0, 2248], [f'hb_vms_{q}', 'wq', g * 2248, (g + 1) * 2248], 2248,
-          f'SM writer = VM wide write group {g} (calendar wslot code {g}); slot was CP (NW) / retired ATT (NE)')
-s['gaps'].append(dict(id='G-SMVM-SMOUT-SWSE', owner='H-SM (hfd_hgi_vms_static_SW/SE ABI)',
-    missing_rtl='hfd_hgi_vms_static_SW/SE have WG=1 (wq0 = LG): no free VM write group for smw_SW/smw_SE.wq. Requested from H-SM '
-                '(2026-10-16): ot_vms_slice_static WG 1 -> 2 (wq [4495:0], group 1 = SM writer; wslot stays 3 b/bank, owner codes '
-                'COLL..DMA shift +1 in the calendar programme). Then add edges smw_<q>.wq -> hb_vms_<q>.wq[2248:4496].',
-    affects=[], note='OUTPUTS smw_SW.wq / smw_SE.wq unconsumed until the VM ABI change lands; SM outputs of SW/SE are consumed by the writer.'))
+          f'SM writer = VM wide write group {g} (calendar wslot code {g}); SW/SE new group1; NW former CP and NE retired ATT group1')
 s['notes'] = [
  'SM_RESULT_TO_VM: all 32 SMs rv/rrow/rdata -> smw_<q> (4 x one master); fault/schedule_fault -> smw_<q> pin flops -> sticky writer fault -> cp_smw_<q>.tgt_fault -> host_status row of TARGET 160+QID (participation-filtered; no child join: an empty child would veto launches that do not use the writer).',
  'Static timing: SM rv cycle t -> smw pin t+1 -> FIFO t+2 -> wq valid in cycle t+3 (slot 0), slot p at t+3+p; bank samples wq and '
@@ -63,8 +58,7 @@ s['notes'] = [
  'For position == global row (the LM head read by hb_argmax via mirror=1 / a_mirror), quadrant q takes contiguous 64-row blocks '
  '(base_row_q = q*Bq) and SM k computes the rows g with ((g>>3)&7)==k at local row r = 8*((g>>6)-base_blk)+(g&7). The default contiguous '
  'per-SM shard s*Q+r gives wrong ids and tie order. DS head n=1347 = 22 blocks (6/6/5/5), SM imbalance at most 8 rows; logits unchanged.',
- 'VM write group: NW wq1 (was CP), NE wq1 (was retired ATT). NE wq2 (HC engine) and NE rq3/rq4, NW rq3, NW cq, SW cq client1 stay '
- 'G-SMVM-VMCLIENT (no static producer; retirement requested from H-SM).']
+ 'VM native compact ABI: every SM writer uses wq1. SW/SE WG2 adds the real port; NW/NE retain WG3. NE wq2 and new rq3 (HC), NW cq clients0..2, and SW cq client1 remain G-SMVM-VMCLIENT until genuine producers exist. Retired old NW/NE readgroup3 and NW client3 have no pins.']
 (SP / 'smvm_0030.json').write_text(json.dumps(s, indent=1) + '\n')
 # host_status rows / ingress mask for cp_smw_<q> (TARGET 160+QID) now live in tools/hbm_die_v15/complete_host_targets_2330.py
 # (H-NETLIST integration 0030: one generator owns host_status so sibling regions cannot collide on NT/NF/TGTS).
