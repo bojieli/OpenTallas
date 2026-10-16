@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_static_vmwrite",
+ "enable": false,
+ "reason": "RTL captures all producer/control ports in boundary registers; rst_n reaches only rst_q; outputs kq/launch_done/fault are registers. Keep recipe2 pin flop anchoring and avoid adding redundant stages to the exact compiler calendar."
+}
