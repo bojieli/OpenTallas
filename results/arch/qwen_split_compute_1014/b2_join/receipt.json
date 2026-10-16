@@ -1,0 +1,125 @@
+{
+  "status": "COMPONENT_PASS_NATIVE_FULL_LAYER_OPEN",
+  "native_full_layer_qualified": false,
+  "physical_qualified": false,
+  "source_revision": "06911148d; dependency9d3eee749, halftrain wrapperbench1474a1f58",
+  "checks": {
+    "native_sram": {
+      "status": "PASS",
+      "unit": "oth-ubuntu-4083331-1792165809",
+      "host": "ot-epyc4",
+      "ot_run_exit": 0,
+      "source_shapes": [
+        "PC1 split9 tiles1",
+        "PC12 split8 tiles3",
+        "PC16 split7 tiles1",
+        "PC20 split8 tiles3",
+        "split10 threegroups",
+        "split11 onegroup",
+        "64 headonlybursts"
+      ],
+      "actual_emitted_rows": 848,
+      "actual_sram_final_rows": 560,
+      "end_markers": 144,
+      "exact_every_rb_cycle_and_payload": true,
+      "actual_sources": "six parameterfree qfd_res_train_half_b2_0..5 -> qfd_sp_vector_memory_b2 NB6PAR_RB1 -> real native SRAM macros",
+      "mutants": [
+        "payload corruption rejected at exactRB beat",
+        "missing scheduled capture rejected by actualserializerfault"
+      ]
+    },
+    "controller": {
+      "status": "ABI_AND_FRAME_PASS",
+      "unit": "oth-ubuntu-4086043-1792165842",
+      "host": "ot-epyc4",
+      "ot_run_exit": 0,
+      "actual_source": "qfd_tt_ctlm_b2 -> ot_qfd_tt_ctlm_b2_parent -> qfd_tt_ctlm_tree_b2 -> actualspctl BANDF2/TCUT7",
+      "vectors": 128,
+      "frame_cases": 144,
+      "mutant": "AMhalf0/1 swap rejected",
+      "scope": "literalpins and actualhierarchicalframe law; no native end-to-end arithmetic/temporal qualification"
+    },
+    "issuer": {
+      "status": "PASS",
+      "source": "qfd_res_train_issue_b2",
+      "shape": "split7..11 descriptors,8/24/64tags",
+      "mutants": [
+        "start+1 edge rejected",
+        "NHhalf rejected"
+      ]
+    },
+    "train_source": {
+      "status": "PASS",
+      "source": "qfd_b2_train_source",
+      "implemented_ff": 50,
+      "added_cycles": 1,
+      "head_edges": 384,
+      "tree_edges": 256,
+      "independent_ideal_clock_phases": true,
+      "mutant": "me_go taps wrongIBbit rejected"
+    },
+    "generic_synthesis": {
+      "status": "PASS_GENERIC_NOT_MAPPED",
+      "unit": "oth-ubuntu-4024911-1792165342",
+      "halftrain_cells": 144003,
+      "halftrain_ff": 66507,
+      "per_bank_ff": 2745,
+      "banks": 24,
+      "parent_ff": 627,
+      "physical_area_measured": false
+    }
+  },
+  "prior_failure_receipts": [
+    {
+      "source": "9cf4d8898/9745eb177",
+      "result": "firstend got40 expected39",
+      "cause": "testbenchnegedgecycle race",
+      "fix": "220941ec1 deterministic postnegedge drive; noRTLlatencychange"
+    },
+    {
+      "source": "220941ec1",
+      "result": "SRAM row12288 returnedzero",
+      "cause": "testfixture outside actual177808element/11113row VM capacity",
+      "fix": "f36dc3385 useslegalrow9216"
+    },
+    {
+      "source": "8ae11906a/4b56a12fb",
+      "result": "actualcontrollerframe split7p2 invalid",
+      "cause": "controllerTCUT6 madeTB8; upperTCUT6 convention differs",
+      "fix": "06911148d controllerTCUT7/BANDF2; actualframe144PASS"
+    }
+  ],
+  "source_stage_ledger": {
+    "port_owner_choice": "restoretc/tyinputandcw/rqoutputstations to match old master logicalcycles; sourcependingportowner",
+    "issuer_command_source": "actual50FFcopies adds1edge, compilerTRAIN_EDGES must account",
+    "halftrain_payload": "registeredbankoutput + registeredparentoutput; exactfixture observesF+2 againstpre-capture-cycle origin",
+    "halftrain_headonly": "parentmarker only; exactfixture observesF+1",
+    "native_vm_return": "RO6+inputpin1 inherited sourcepipeline, no physicalqualification"
+  },
+  "model_scope": "Component calendar only: oldPAR3 endcycle deltasPC1-7/PC12-46/PC16-28/PC20-14; no physicalrelaycycle or tokenratecredit.",
+  "open": [
+    "Full realcontroller-to-realport tc/ty/word->AM/RQ calibration and composed operation bench",
+    "ActualnativeSU/seq/attention writer reservations in compilerlayercalendar",
+    "All source-bound actualrelayages and six-path padding, phi-R phases and insertion",
+    "Newphysicalcontroller/train/VMparent/views: TTsetup FFhold DRC0 native220/190/80",
+    "VM sourceABI exposes2572clockbits, actualconnectedpinXY/insertionrequiresE3 ownerwitness",
+    "Die integration, realviews and exactfull-layer/tokenqualification"
+  ],
+  "files": {
+    "calendar.json": "18351d66d43c0960cf247a3ed1275b15eba37e329df82b570bf4f76cba39e8f4",
+    "interfaces.json": "cd788856c7b1ae234a5a4ba1b92fcd366b53f7e6b4a605efa15291eacd3793ff",
+    "issuer/run1.log": "7202d133f8bcd2bd4b38d79457ae476e66aa4485b88486778fbcf7ffdec9dbbe",
+    "issuer/run3.log": "1792ed2f42187c4a687a383834ec49fa4c039e4e8202688e3e7b00c92ca867f3",
+    "issuer/run0.log": "977f3a9b041a2d492c01944f714caf77cec83159a1858c6fa15bbd5aa2fd405f",
+    "native_sram/mutant2.log": "5a91195e1bba7c469c0b75b15144c24448c10909f67f34c21966a1f4b33a3694",
+    "native_sram/source.sha256": "4b0d6d190e515c436449a6156824e1a05ffc6631fb11927d03cf1a60965ed57c",
+    "native_sram/positive.log": "0fbf70d8132fe58be67fcf380ac214f42650e9b98cea2b008c984774a2b311bc",
+    "native_sram/mutant1.log": "82fb3e7c447ad16be95144a982099b616fb83f545f1f0036d93e1740486c85a9",
+    "synthesis/halftrain-generic-stat.json": "a280e16dad5f6e8935e07a06c4e599e18d09ea3004a0ec700a0fa5eaf0946404",
+    "train_source/run1.log": "ba98cc1dd3dcc3888194eecd357dafaea19fd7141e37c9c1abe9991595c6f377",
+    "train_source/run0.log": "b0a920b6a0c0d46782a2543614fb9709e547666e499f27b89d10f4ae3d84c17d",
+    "controller/run1.log": "7ac4e1c2469992ed2d28764af33f1c7c49d1725399de8da27dbe447e65ff0458",
+    "controller/source.sha256": "1f2722aa2730fa3d78662bed07315ad444c9b419ccc055c8973b7fb7b3f2a2a6",
+    "controller/run0.log": "6c819bfa0363cc84632912cf66f6fdb027a59c4c4756bfbc45fd809019f5a1e2"
+  }
+}

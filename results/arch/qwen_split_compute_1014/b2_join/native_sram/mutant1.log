@@ -1,10 +1,3 @@
-OP id1 split9 tiles1 ns1 last_end_delta16
-OP id12 split8 tiles3 ns2 last_end_delta61
-OP id16 split7 tiles1 ns4 last_end_delta55
-OP id20 split8 tiles3 ns2 last_end_delta125
-OP id110 split10 tiles1 ns3 last_end_delta42
-OP id111 split11 tiles1 ns1 last_end_delta16
-OP id64 split7 tiles8 ns4 last_end_delta278
-[13314000] %Fatal: tb_b2_train.sv:551: Assertion failed in tb_b2_train: native SRAM readback row64 got3f94040f3f94040e3f94040d3f94040c3f94040b3f94040a3f9404093f9404083f9404073f9404063f9404053f9404043f9404033f9404023f9404013f940401 want3f94040f3f94040e3f94040d3f94040c3f94040b3f94040a3f9404093f9404083f9404073f9404063f9404053f9404043f9404033f9404023f9404013f940400
-%Error: tools/qwen_b2_join/tb_b2_train.sv:551: Verilog $stop
+[86000] %Fatal: tb_b2_train.sv:556: Assertion failed in tb_b2_train.unnamedblk2: exact RB calendar/data mismatch op1 h4 cycle39 got400320ffff3f81320f3f81320e3f81320d3f81320c3f81320b3f81320a3f8132093f8132083f8132073f8132063f8132053f8132043f8132033f8132023f8132013f813201 want400320ffff3f81320f3f81320e3f81320d3f81320c3f81320b3f81320a3f8132093f8132083f8132073f8132063f8132053f8132043f8132033f8132023f8132013f813200
+%Error: tools/qwen_b2_join/tb_b2_train.sv:556: Verilog $stop
 Aborting...
