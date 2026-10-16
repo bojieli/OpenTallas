@@ -23,7 +23,16 @@ def source_function(path, name, scope):
     return scope[name]
 
 
-def compile_stage(base, out, stage, rank):
+# Die-bound sequencer contract (S-ELEM-PQ 2026-10-16; S-DIE gen26d binds ot_s81_cfg7_seq_bfp, closed
+# s81coll_cfg7_seq_bfp_pr-pr1-ef2866774; PQ side ot_s81_cfg7_seq pr3): LAYOUT 1 / PINREG 1 needs the il7 image;
+# fixed shifts vs PINREG 0 (no handshake): lc -> a/ce +2, lc -> cfg/go_e +4, st +5 edges; f_prog keeps its go_e
+# relation; the 82-bit programme descriptor stays in rd_out[71:48] of words 0..3 of each phase. Exact gate:
+# tools/s81/cfg7_bfp_bench.sh pr. Ledger row FIELD.CFG7_SEQ_PINREG.
+CFG7_SEQ_CONTRACT = dict(layout='il7', LAYOUT=1, PINREG=1, lc_to_a_ce=2, lc_to_go_e=4, st=5,
+                         descriptor_bits=82, descriptor_columns='rd_out[71:48] words 0..3 per phase')
+
+
+def compile_stage(base, out, stage, rank, layout='il7'):
     base, out = Path(base), Path(out)
     for name, pin in PINS.items():
         if file_sha(base / name) != pin:
@@ -73,14 +82,15 @@ def compile_stage(base, out, stage, rank):
                        canonical_sources=PINS, native_CFG_function_sha256=file_sha(cfg_source),
                        native_unit_range_source_sha256=file_sha(unit_source))
         record = emit(source, out / f'e{pair}.cfg7', phase_count=phase,
-                      PHW=stage_map['PHW_required_by_stage'][stage], source_binding=binding)
+                      PHW=stage_map['PHW_required_by_stage'][stage], source_binding=binding, layout=layout)
         images.append(dict(pair=pair, source_cfg_sha256=binding['cfg_sha256'], images=record['images']))
         if pair % 128 == 0:
             print(json.dumps(dict(stage=stage, rank=rank, pairs_emitted=pair + 1)), flush=True)
     result = dict(stage=stage, rank=rank, phase_count=phase, pairs=2417, macros=16919,
                   all_pair_images=True, all_source_words_read_back=True,
                   source_pins=PINS, active_pair_phases=active_pairs, phase_sources=phase_sources,
-                  images=images, arithmetic_qualified=False, calendar_qualified=False,
+                  images=images, layout=layout, sequencer_contract=CFG7_SEQ_CONTRACT if layout == 'il7' else None,
+                  arithmetic_qualified=False, calendar_qualified=False,
                   physical_qualified=False, native_execution_qualified=False)
     (out / 'stage_receipt.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(dict(stage=stage, pairs=2417, macros=16919, phase_count=phase)), flush=True)
@@ -93,5 +103,7 @@ if __name__ == '__main__':
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--stage', type=int, required=True)
     p.add_argument('--rank', type=int, required=True)
+    p.add_argument('--layout', choices=('il7', 'linear'), default='il7',
+                   help='il7 = the die-bound LAYOUT 1 sequencer (default); linear = historical LAYOUT 0 views only')
     a = p.parse_args()
-    compile_stage(a.base, a.out, a.stage, a.rank)
+    compile_stage(a.base, a.out, a.stage, a.rank, a.layout)

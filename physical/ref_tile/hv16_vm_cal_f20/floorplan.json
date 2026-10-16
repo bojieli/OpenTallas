@@ -65,6 +65,7 @@
   ],
   "S": [
    "clk",
+   "clk_tgt",
    "calendar_v",
    "active",
    "done",
@@ -78,11 +79,13 @@
  "clock_ports": [
   "clk",
   "clk_cap",
-  "clk_mem"
+  "clk_mem",
+  "clk_tgt"
  ],
  "clock_cts_roots": [
   "clk",
-  "clk_cap"
+  "clk_cap",
+  "clk_tgt"
  ],
  "blocks": [
   {

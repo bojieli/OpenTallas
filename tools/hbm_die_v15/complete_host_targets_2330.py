@@ -122,7 +122,7 @@ for t,ready,active,faults in rows:
         nf+=1
     nt+=1
 # New static component safety faults are observations only, never production stalls.
-for spec_name, prefix in [('dmawb_0030', 'wbk_'), ('su_collport_0253', 'sucx_'), ('su_collport_0253', 'sfus_')]:
+for spec_name, prefix in [('dmawb_0030', 'wbk_'), ('su_collport_0253', 'sucx_'), ('su_collport_0253', 'sfus_'), ('su_sfu', 'sfup_')]:
     if not (SP / (spec_name + '.json')).exists(): continue
     for q in Q:
         c['edges'].append(dict(src=[prefix+q,'fault'],dst=['host_status','t_fault',nf,nf+1],bits=1,

@@ -626,6 +626,161 @@
     "dsfd_vm_xio_fault_join_ss.lib": "d47e1d48061b1c768fa8bce0403c73c748c6d295a66e7ebe6bc719d4a9c5dfae"
    },
    "image_review": "native PASS"
+  },
+  {
+   "cell": "dsfd_vm_xio_return",
+   "view": "dsfd_vm_xio_return",
+   "lib_cell": "dsfd_vm_xio_return",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 228.0,
+   "spread_ps": 38.5,
+   "outputs": 1539,
+   "inputs": 2073,
+   "launch_ps": 184.3,
+   "launch_pin": "t_crs[1]",
+   "capture_ps": 154.2,
+   "capture_pin": "e_d[1970]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_xio_return_native_1016_r3-return3-5ad384115",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_return_native_1016_r3-return3-5ad384115",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/xret/views-final/dsfd_vm_xio_return",
+   "raw_native": {
+    "launch_ps": 184.30765000000002,
+    "capture_ps": 154.18871000000001,
+    "spread_ps": {
+     "ck": 38.5
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/xret/views-final/dsfd_vm_xio_return/dsfd_vm_xio_return.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_xio_return 54.0 x 324.0: PG M5 VDD 10 stripes (90% spread, 100% cov) / VSS 10 stripes (90% spread, 100% cov); strap M6; face pins 3613 blocked-above 0 blocked-same 0; clock ck insertion 265 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_xio_return",
+     "W": 54.0,
+     "H": 324.0,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 10,
+        "dir": "V",
+        "spread": 0.9,
+        "coverage": 1.0,
+        "shapes_on_top": 10
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 10,
+        "dir": "V",
+        "spread": 0.9,
+        "coverage": 1.0,
+        "shapes_on_top": 10
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 3613,
+      "blocked_above": 0,
+      "covered_below": 27,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 265.32,
+       "min_ps": 196.85
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 403
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "296a7b73d7ca65f2b7801cd5dab35c6ec582f2e9f2f994373f7fad50f1c323d6",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 196.13,
+    "FF": 20.91,
+    "DRC": 0,
+    "odb_sha256": "8b75e3f7f8472620e5ff4d5f218a46987a9c4a5f10d7b63a6dc4c27855bdcfdb"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 196.12600432594718,
+     "route_slack_ps": 196.13
+    },
+    "ff": {
+     "export_slack_ps": 20.91044004615128,
+     "route_slack_ps": 20.91
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_return_native_1016_r3-return3-5ad384115/routes/dsfd_vm_xio_return_native_1016_r3_return3_5ad384115/work/orfs/results/asap7/opentallas_dsfd_vm_xio_return_asap7_ref_dsfd_vm_xio_return_native_1016_r3_return3_5ad384115/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "8b75e3f7f8472620e5ff4d5f218a46987a9c4a5f10d7b63a6dc4c27855bdcfdb"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/xret/layout-final/dsfd_vm_xio_return/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/xret/layout-final/dsfd_vm_xio_return/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "2bd07ad7781a9b388ec0ccc88ff793b5aead8538886af95c09887eb9a0a139d3",
+    "density.png": "56588cbe6c7cbab475e21ae67139b9f0b75751e304013edc248c0d31e04c5fcb"
+   },
+   "images_actually_viewed": false,
+   "export_sha256": {
+    "dsfd_vm_xio_return_ss.lib": "68e72220c9eb86c246ddd7b1b873f5e00f6060ebf4a2941df39671785461bdcc",
+    "dsfd_vm_xio_return.lef": "5768186505a4c81383af8ae0371820cf23a4e2a6798923140e50b0a94e44d6e1",
+    "dsfd_vm_xio_return_ff.lib": "d0ee33357491fc5bf71d1ac24bab661a929dd318af09ef43dd1256091228d261",
+    "dsfd_vm_xio_return_tt.lib": "2f84ef28234ea1e0fe89df807d66a6f52245b1ebb0b2b5b6f75312b816e39e6a"
+   }
   }
  ]
 }

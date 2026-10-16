@@ -8,7 +8,10 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent)); import pin_cut as pincut
 pins=json.load(open(sys.argv[1])); P=json.load(open(sys.argv[2])); out=sys.argv[3]
 SLACK=float(sys.argv[4]) if len(sys.argv)>4 else 600.0
-HOMES=len(sys.argv)>5 and sys.argv[5]=='homes'   # H-DIE r3: reject lanes whose route crosses a block > REACH (no relay home)
+HOMES=len(sys.argv)>5 and 'homes' in sys.argv[5].split(',')   # H-DIE r3: reject lanes whose route crosses a block > REACH (no relay home)
+# H-DIE-V790 10-16: 'legs' also charges the lane's two perpendicular legs (pin -> lane) against the 1-mm sliding windows
+# of the cut lines they cross, so a lane is not chosen whose legs overload a hub corner (default off: v5/v6 reproduce)
+LEGS=len(sys.argv)>5 and 'legs' in sys.argv[5].split(',')
 REACH=480.0
 BLK=[(k,r['x'],r['y'],r['x']+r['w'],r['y']+r['h']) for k,r in P.items()]
 FEEDV=('su_',)   # v5 grant: SU slices reserve a 40 um vertical feedthrough relay column
@@ -62,7 +65,15 @@ for lk,p1,p2,t in cand:
     if not js: js=[int(((p1['y']+p2['y'])/2)//step)]
     sk=(lk.split('>')[0],lk.split('>')[1].split(':')[0])
     hc=lambda j:(xcost([('v',p1['x'],p1['y'],j*step+50),('h',j*step+50,p1['x'],p2['x']),('v',p2['x'],j*step+50,p2['y'])],sk) if HOMES else 0)
-    best=min(js,key=lambda j:(hc(j),(V[i0:i1+1,j].max() if i1>=i0 else 0),V[i0:i1+1,max(0,j-5):j+5].sum(1).max() if i1>=i0 else 0,abs(j*step-(p1['y']+p2['y'])/2)))
+    def legs_h(j):
+      if not LEGS: return 0
+      y=j*step+step/2; w=0.0
+      if i1>=i0: w=V[i0:i1+1,max(0,j-5):j+5].sum(1).max()+b
+      for x,py in ((p1['x'],p1['y']),(p2['x'],p2['y'])):
+        i=min(nx-1,int(x//step)); r0,r1=sorted((int(math.ceil(min(py,y)/step)),int(math.floor(max(py,y)/step))))
+        if r1>=r0: w=max(w,Hh[r0:r1+1,max(0,i-5):i+5].sum(1).max()+b)
+      return round(w/(14.0625*1000),2)
+    best=min(js,key=lambda j:(hc(j),legs_h(j),(V[i0:i1+1,j].max() if i1>=i0 else 0),V[i0:i1+1,max(0,j-5):j+5].sum(1).max() if i1>=i0 else 0,abs(j*step-(p1['y']+p2['y'])/2)))
     y=best*step+step/2; lanes[lk]={'h':y}
     addH(x0,x1,y,b); addV(p1['x'],p1['y'],y,b/2); addV(p2['x'],p2['y'],y,b/2); addV(p2['x'],y,p2['y'],b/2); addV(p1['x'],y,p1['y'],b/2)
   else:
@@ -72,7 +83,15 @@ for lk,p1,p2,t in cand:
     if not iss: iss=[int(((p1['x']+p2['x'])/2)//step)]
     sk=(lk.split('>')[0],lk.split('>')[1].split(':')[0])
     vc=lambda i:(xcost([('h',p1['y'],p1['x'],i*step+50),('v',i*step+50,p1['y'],p2['y']),('h',p2['y'],i*step+50,p2['x'])],sk) if HOMES else 0)
-    best=min(iss,key=lambda i:(vc(i),(Hh[j0:j1+1,i].max() if j1>=j0 else 0),Hh[j0:j1+1,max(0,i-5):i+5].sum(1).max() if j1>=j0 else 0,abs(i*step-(p1['x']+p2['x'])/2)))
+    def legs_v(i):
+      if not LEGS: return 0
+      x=i*step+step/2; w=0.0
+      if j1>=j0: w=Hh[j0:j1+1,max(0,i-5):i+5].sum(1).max()+b
+      for px,y in ((p1['x'],p1['y']),(p2['x'],p2['y'])):
+        j=min(ny-1,int(y//step)); c0,c1=sorted((int(math.ceil(min(px,x)/step)),int(math.floor(max(px,x)/step))))
+        if c1>=c0: w=max(w,V[c0:c1+1,max(0,j-5):j+5].sum(1).max()+b)
+      return round(w/(14.0625*1000),2)
+    best=min(iss,key=lambda i:(vc(i),legs_v(i),(Hh[j0:j1+1,i].max() if j1>=j0 else 0),Hh[j0:j1+1,max(0,i-5):i+5].sum(1).max() if j1>=j0 else 0,abs(i*step-(p1['x']+p2['x'])/2)))
     x=best*step+step/2; lanes[lk]={'v':x}
     addV(x,y0,y1,b); addH(p1['x'],x,p1['y'],b/2); addH(x,p2['x'],p2['y'],b/2); addH(p2['x'],x,p2['y'],b/2); addH(x,p1['x'],p1['y'],b/2)
 json.dump(lanes,open(out,'w'))
