@@ -1,7 +1,7 @@
 `default_nettype none
 // Source-native digital HBM controller and eight actual SM service groups.
 // ONLY row/column DRAM signals cross the modeled off-chip boundary.
-module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0) (
+module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0,parameter integer DECOUPLE=1,OVERLAP=1) (
  input wire [7:0] stream_clk,
  input wire [7:0] stream_rst_n,
  input wire [7:0] hbm_clk,
@@ -74,7 +74,7 @@ module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0) (
  wire [31:0] k_wr_done;
  wire [543:0] kr_tag;
  wire [31:0] k_v;
- ot_hbm_svc_sm_stack_programmed #(.STACK(STACK)) sm_groups (
+ ot_hbm_svc_sm_stack_programmed #(.STACK(STACK),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP)) sm_groups (
   .stream_clk(stream_clk),
   .stream_rst_n(stream_rst_n),
   .hbm_clk(hbm_clk),

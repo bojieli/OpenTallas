@@ -8,7 +8,7 @@
 // [83]read_v,[84]bank,[100:85]epoch,[106:101]row,[116:107]tag;
 // [117]retire_v,[118]bank,[134:119]epoch. Read precedes expected packet by1word.
 module ot_hbm_svc_sm_feed_programmed #(
- parameter [1:0] STACK=0,parameter integer SM=0,OWNER_AW=5,RESPONSE_DEPTH=8
+ parameter [1:0] STACK=0,parameter integer SM=0,OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1
 )(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc_clk,
@@ -30,7 +30,10 @@ module ot_hbm_svc_sm_feed_programmed #(
  wire cdc_ready,cdc_fault,cache_fault,programme_fault,feed_fault;
  reg descriptor_fault;wire[12:0]expected_sectors=(((reserve_rows*136)+127)>>7)<<2;
  wire legal=reserve_rows!=0&&reserve_rows<=64&&reserve_total==expected_sectors;
- assign reserve_ready=cdc_ready&&!cache_owned[reserve_bank]&&legal;
+ // H-DIE 2026-10-15: the landing bank is free once its block has been copied (cdc allocated[] clears at drain end);
+ // the canonical-row cache bank of the same index is checked at OPEN (start), not at reserve, so epoch e+2's prefetch
+ // overlaps epoch e's programme.  DECOUPLE=0 = the Codex 14:47 coupling (ablation).
+ assign reserve_ready=cdc_ready&&(DECOUPLE!=0||!cache_owned[reserve_bank])&&legal;
  wire reserve_fire=reserve_v&&reserve_ready;
  reg[6:0]rows_q[0:1];reg[9:0]tag_q[0:1];reg open_q,open_bank_q;reg[15:0]open_epoch_q;
  always @(posedge stream_clk or negedge stream_rst_n)begin
@@ -42,7 +45,7 @@ module ot_hbm_svc_sm_feed_programmed #(
   end
  end
  wire out_v,out_bank,out_last;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
- ot_hbm_svc_sm4pc_cdc #(.STACK(STACK),.SM(SM),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH)) producer(
+ ot_hbm_svc_sm4pc_cdc #(.STACK(STACK),.SM(SM),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP)) producer(
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_fire),.reserve_ready(cdc_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),.reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),
   .block_ready(block_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),

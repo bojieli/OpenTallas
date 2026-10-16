@@ -1,6 +1,6 @@
 `default_nettype none
 // Wires-only actual eight-SM natural four-PC grouping. All child clocks remain explicit.
-module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer OWNER_AW=5,RESPONSE_DEPTH=8) (
+module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1) (
  input wire [7:0] stream_clk,
  input wire [7:0] stream_rst_n,
  input wire [7:0] hbm_clk,
@@ -58,7 +58,7 @@ module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer 
  input wire [8191:0] kr_data
 );
  for(genvar sm=0;sm<8;sm=sm+1)begin:sm_group
-  ot_hbm_svc_sm_feed_programmed #(.STACK(STACK),.SM(sm),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH)) u_sm (
+  ot_hbm_svc_sm_feed_programmed #(.STACK(STACK),.SM(sm),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP)) u_sm (
    .stream_clk(stream_clk[sm*1+:1]),
    .stream_rst_n(stream_rst_n[sm*1+:1]),
    .hbm_clk(hbm_clk[sm*1+:1]),
