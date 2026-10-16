@@ -100,9 +100,9 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-attention-1015",
-  "tag": "cl2c",
+  "tag": "cl2d",
   "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
-  "structural_change": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
+  "structural_change": "cl2d: ring write controls r_wsel/zlo/zhi leave ONE edge early (lookahead on the fixed tag line qt[QL-2]) so the bdring leaf pin-registers them on the same edge as its quantiser words (bdring cl2c native capture 511.7 ps on 18 pins); no edge change (lock bench vs cl shifted 2; MUT5 = no lookahead must FAIL). Kit otherwise as cl2c (two related roots clk / clk_eg).",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",

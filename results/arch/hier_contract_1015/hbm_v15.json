@@ -132826,7 +132826,7 @@
  "vm_bank_resize_v7_proposal": {
   "date": "2026-10-15",
   "owner": "H-DIE",
-  "status": "PROPOSED to H-SM (strap masters routing at 356.4 x 365.04)",
+  "status": "ADOPTED 2210 (H-SM accepted with N/S two layers) -> vm_strap_child_grants_2210",
   "finding": "vm bank slot is PIN-PERIMETER bound, not area bound: W/E faces carry rq/rr/wq/... at 0.288 um PG-clear bit pitch up to 362.9 of 365.04 um, N/S to 354.3 of 356.4; content = 3 x ot_sram_1r1w_1024x256 (174.744 x 70.488, 36,950 um2) + std -> ~31 % fill",
   "proposal": {
    "outline_um": [
@@ -132873,5 +132873,24 @@
   "production_binding_adopted": false,
   "parent_and_die_qualified": false,
   "note": "Accepts original exact strap pin proposal; live source-frozen strap routes unchanged. No270x270/M6 resize adopted while current routes run."
+ },
+ "vm_strap_child_grants_2210": {
+  "file": "results/arch/hbm_die_v15/vm_strap_grants_2210.json",
+  "sha256": "4ece6b2c57f0787189f7d5f549360a84f7fec6a2917ae646d9e11e34bf3be074",
+  "outline_um": [
+   270.0,
+   270.0
+  ],
+  "supersedes": "vm_strap_child_grants_2116 (356.4 x 365.04) for NEW strap kits; running 356x365 routes = diagnostics",
+  "pin_layers": {
+   "W": "M4",
+   "E": "M4",
+   "N": "M5",
+   "S": "M5"
+  },
+  "layer_cap": "M6 (PG M6, parent strap M7)",
+  "bit_pitch_um": 0.192,
+  "accepted_by": "H-SM 2026-10-15 ~23:0x (cap-M6 single-layer variant; 2-layer v3 withdrawn: ref_tile has no pins-above-cap leaf contract)",
+  "production_binding_adopted": false
  }
 }
