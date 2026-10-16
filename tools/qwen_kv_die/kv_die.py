@@ -2790,6 +2790,35 @@ def pdn_pin_access_after_pdn(text):
     return head + PDN_PA_BLOCK + anchor + tail
 
 
+# 2026-10-15 (Q-KVSYS-DIE, kvs8-codex-1338 PDN FAIL "OT_CONST: missing literal M1 rail contact ctrl_EN__u_pc1_1/VDD"):
+# the KV core grid had NO M1 / M2 rails, so none of the die-top ASAP7 tie cells (strap constants) had a supply.  Same
+# structure as the compute die r8 (tools/qwen_split/die_tie_rows.tcl): rows only around the die-top cells, literal M1 / M2
+# followpins on them, stacked M2 -> M9 onto the core M9 stripes (KV core grid: M8 / M9 0.48 @ 10.88, offset 2.0); cells
+# under an opposite-net M8 stripe move to the nearest connectable spot.  check_power_grid + die_constant_pg_check decide.
+KV_CORE_PG = dict(p8=10.88, w8=0.48, p9=10.88, w9=0.48, off=2.0)
+KV_TIE_PG = """
+# KV die-top tie cells (die_tie_rows.tcl rebuilt the rows around them): literal rails stacked onto the core M9 stripes
+add_pdn_stripe -grid {core} -layer {M1} -width {0.018} -followpins
+add_pdn_stripe -grid {core} -layer {M2} -width {0.018} -followpins
+add_pdn_connect -grid {core} -layers {M1 M2}
+add_pdn_connect -grid {core} -layers {M2 M9}
+"""
+
+
+def kv_tie_rows_hooks(text):
+    """run_pdn.tcl: ot_tie_rows right after read_db (before any bbox swap / pdngen), ot_tie_rows_verify after pdngen."""
+    if 'ot_tie_rows' in text:
+        return text
+    a = 'mem read\n'
+    b = 'source /work/die_constant_pg_check.tcl'
+    if text.count(a) != 1 or text.count(b) != 1:
+        raise ValueError('KV PDN vehicle changed: tie-row hooks unresolved')
+    g = KV_CORE_PG
+    text = text.replace(a, a + f"source /work/die_tie_rows.tcl\not_tie_rows {g['p8']} {g['w8']} {g['p9']} {g['w9']} 12.0 0.6 1.08 "
+                        f"{g['off']} {g['off']}\nmem tie_rows\n", 1)
+    return text.replace(b, f"ot_tie_rows_verify {g['p8']} {g['w8']}\n" + b, 1)
+
+
 def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
@@ -2834,9 +2863,13 @@ source /work/die_constant_pg_check.tcl"""
     original = 'source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl'
     if pdn_run.count(original) != 1:
         raise ValueError('KV PDN vehicle changed: guarded PDN hook unresolved')
-    (work / 'run_pdn.tcl').write_text(pdn_pin_access_after_pdn(pdn_run.replace(original, guarded)))
+    pdn_text = pdn_pin_access_after_pdn(pdn_run.replace(original, guarded))
+    pdn_text = kv_tie_rows_hooks(pdn_text)
+    (work / 'run_pdn.tcl').write_text(pdn_text)
     for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
         (work / helper).write_text((ROOT / 'tools/qwen_kv_die/chain' / helper).read_text())
+    (work / 'die_tie_rows.tcl').write_text((ROOT / 'tools/qwen_split/die_tie_rows.tcl').read_text())
+    (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + KV_TIE_PG)
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
     # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um).
     # qwen-1010/b 2026-10-10: M4 and M8 are both horizontal, so an M4 -> M8 connect only forms where a strap happens to

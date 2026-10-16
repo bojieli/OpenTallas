@@ -952,6 +952,122 @@
   },
   {
    "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE ALL_REDUCE_SUM",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 0.76,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1269120.1,
+     "cycles": 1278840.1,
+     "added_cycles": 9720.0,
+     "program_records": 2,
+     "e2e_loss_pct": 0.76
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE ARGMAX_MERGE",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 0.014,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 557152.4,
+     "cycles": 557227.8,
+     "added_cycles": 75.4,
+     "program_records": 1,
+     "e2e_loss_pct": 0.014
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1269120.1,
+     "cycles": 1269178.7,
+     "added_cycles": 58.6,
+     "program_records": 1,
+     "e2e_loss_pct": 0.005
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE GROUP_REDUCE_MCAST",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 1.035,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 557291.4,
+     "cycles": 563121.3,
+     "added_cycles": 5829.9,
+     "program_records": 40,
+     "e2e_loss_pct": 1.035
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE TOPK_MERGE",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 0.262,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 557291.4,
+     "cycles": 558753.3,
+     "added_cycles": 1462.0,
+     "program_records": 9,
+     "e2e_loss_pct": 0.262
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
    "measured": 65.8,
@@ -1357,8 +1473,10 @@
    "evidence": "results/arch/hbm_su_f2_static_1014/spread/spread_qwen_lat4_mr1_r4.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "proposed",
-   "note": "H-SU 10-15 17:40 rebased on CURRENT source (su_f2_spread.py --mlat 4 --profile mr1_r4): 3:4 multirate SU/VM bridge (VM read visible +12 / write ack +10 serial edges, multirate_contract.md), routed reducer r4 RAW 10 (3f1686f20), cross-quarter reduction through root-core RF (export +12 + RF_RELAY 36, 2 dependent levels) and RF relay back to non-root home quarters. Qwen 1858 -> 2026 edges (softmax.max 391 -> 524); DS 2521/3272 = 0.770 (under price). Same S2 method as the 1858 row (added 6,080.8 -> 11,457.5 cycles on base 1,269,120). Measured terms: VM bridge latencies, reducer RAW, SFU/divider depths (full512 SFU-lane bench), full512 LAT4 arithmetic; the relay count is the H-DIE route plan and the reduction tree shape is a model. 32 SFU lanes/quarter kept (coordinator 10-15)."
+   "status": "accepted",
+   "note": "H-SU 10-15 17:40 rebased on CURRENT source (su_f2_spread.py --mlat 4 --profile mr1_r4): 3:4 multirate SU/VM bridge (VM read visible +12 / write ack +10 serial edges, multirate_contract.md), routed reducer r4 RAW 10 (3f1686f20), cross-quarter reduction through root-core RF (export +12 + RF_RELAY 36, 2 dependent levels) and RF relay back to non-root home quarters. Qwen 1858 -> 2026 edges (softmax.max 391 -> 524); DS 2521/3272 = 0.770 (under price). Same S2 method as the 1858 row (added 6,080.8 -> 11,457.5 cycles on base 1,269,120). Measured terms: VM bridge latencies, reducer RAW, SFU/divider depths (full512 SFU-lane bench), full512 LAT4 arithmetic; the relay count is the H-DIE route plan and the reduction tree shape is a model. 32 SFU lanes/quarter kept (coordinator 10-15).",
+   "accepted_date": "2026-10-15",
+   "acceptance_note": "Coordinator (Claude 45d437e0) 2026-10-15 ~20:00 PT: ACCEPTED, 1.215x / 0.895 % e2e qwen_ar, under the 5 % per-unit limit; measured on current source (3:4 multirate bridge, reducer r4 RAW10, RF_RELAY 36; proof 65e85ba7c), evidence 63cbbdef8"
   },
   {
    "design": "r25gq",
@@ -1422,13 +1540,13 @@
    "over_limit_by_owner_exception": true
   },
   "r25gq": {
-   "accepted_pct": 0,
-   "proposed_pct": 112.546,
-   "accepted_plus_proposed_pct": 112.546,
+   "accepted_pct": 0.895,
+   "proposed_pct": 113.581,
+   "accepted_plus_proposed_pct": 114.476,
    "limit_pct": 15.0,
-   "accepted_rows": 0,
-   "proposed_rows": 17,
-   "headroom_pct": 15.0,
+   "accepted_rows": 1,
+   "proposed_rows": 20,
+   "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
   }
