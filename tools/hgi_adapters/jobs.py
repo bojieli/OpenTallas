@@ -42,8 +42,10 @@ UNITS = {
               'run_small.sh mover (HGI_MOVER: DMA adapter + mover (F6 sector engine + serial engine) on the real HGI VM + '
               'kport HBM model: CF-IDXD / CF-KV x 3 exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL; '
               'MUT 2 (sector engine drops a partial row-end sector) FAIL)'),
-    'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv'], (520, 520), (640, 420),
-              'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load -> 2 real smh -> publication -> real VM; MUT_T FAIL)'),
+    'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv', 'rtl/hdc/v41/ot_hdc_actquant.sv',
+                                  'rtl/hdc/ot_hdc_fpu.sv', 'rtl/hdc/ot_hdc_delay.sv'], (520, 520), (640, 420),
+              'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load (FP32 / BF16 / FP8 / FP4 block-dot) -> 2 real smh '
+              '-> publication -> real VM; MUT_T / MUT_BD FAIL)'),
     'pub': ('ot_hgi_sm_pub', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv'], (700, 700), (860, 560),
             'run_small.sh sm_e2e (HGI_SM_E2E; MUT_ROW FAIL)'),
     'hc': ('ot_hgi_hc_record', [f'{A}/ot_hgi_hc_record.sv'], (200, 200), (260, 180),
@@ -53,7 +55,7 @@ UNITS = {
     'hc_unit': ('ot_hgi_hc_unit', V41 + ['rtl/hdc/v41x/ot_hdc_v41x_hcp.sv', 'rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv',
                 'rtl/hdc/v41/ot_hdc_sk_arith.sv', 'rtl/hdc/v41/ot_hdc_sk_recip_rom.sv', 'rtl/hdc/v41/ot_hdc_sinkhorn.sv',
                 'rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv', f'{A}/ot_hgi_hc_record.sv',
-                'rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv'], (900, 900), (1100, 800),
+                'rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv', 'rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv'], (900, 900), (1100, 800),
                 'run_hc_unit.sh (HGI_HC_UNIT: Model.hc_mixes exact incl. Sinkhorn, K 256 / 800 / 28,672 on the real VM + a '
                 'reordering HBM model; MUT_POST FAIL); routed at W 8, RMAX 8'),
     'su_unit': ('ot_hgi_su_ctl', [f'{A}/ot_hgi_su_record.sv', 'rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv'],

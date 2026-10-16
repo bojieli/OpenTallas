@@ -85,7 +85,14 @@ module ot_hgi_hc_die #(
     parameter integer WMACRO = 1,
     parameter integer XMACRO = 1,
     parameter integer PMAX = 8,
-    parameter integer MUT_MP = 0
+    parameter integer MUT_MP = 0,
+    parameter integer WVM = 1,             // x staging over the W-group wide VM read lanes (client 2)
+    parameter integer WLQ = 24,
+    parameter integer WD = 8,
+    parameter integer MUT_WV = 0,
+    parameter integer SPL = 4,             // striped weight fetch: sub-windows a bank (HL = 8 SPL HBM read lanes, window i
+                                           //   on lane i), each lane its own client -> its own svc / loader lane
+    parameter integer HL = 8 * SPL
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -99,19 +106,28 @@ module ot_hgi_hc_die #(
     output wire          halted,
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
-    output wire [37:0]   xq,
-    input  wire [256:0]  xr
+    output wire [HL*38-1:0]  xq,
+    input  wire [HL*257-1:0] xr,
+    // the W-group wide VM read lanes (ot_hgi_vm_lanearb client): burst ownership + 32 lanes
+    output wire              rg_req,
+    input  wire              rg_gnt,
+    output wire [32*16-1:0]  wrq,
+    input  wire [31:0]       wrq_cr,
+    input  wire [32*257-1:0] wrr
 );
-    localparam integer TG = 4 + $clog2(RMAX);
-    wire hq_v, hq_rdy, hr_v; wire [34:0] hq_addr; wire [2:0] hq_len; wire [TG-1:0] hq_tag, hr_tag; wire [1:0] hr_beat;
-    wire [255:0] hr_data;
-    ot_hgi_hc_unit #(.W(W), .RMAX(RMAX), .WMACRO(WMACRO), .XMACRO(XMACRO), .PMAX(PMAX), .MUT_MP(MUT_MP)) u_hc (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(HC_EPS), .rec_v(rec_v),
+    localparam integer TG = 4 + $clog2(RMAX) + ((W > 32) ? $clog2(W / 32) : 0);   // = the unit's tag width
+    wire [HL-1:0] hq_v, hq_rdy, hr_v; wire [HL*35-1:0] hq_addr; wire [HL*3-1:0] hq_len; wire [HL*TG-1:0] hq_tag, hr_tag;
+    wire [HL*2-1:0] hr_beat; wire [HL*256-1:0] hr_data;
+    ot_hgi_hc_unit #(.W(W), .RMAX(RMAX), .WMACRO(WMACRO), .XMACRO(XMACRO), .PMAX(PMAX), .MUT_MP(MUT_MP), .WVM(WVM), .WLQ(WLQ), .WD(WD), .MUT_WV(MUT_WV), .HL(HL), .SPL(SPL)) u_hc (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(HC_EPS), .rec_v(rec_v),
         .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_a(rec_a), .rec_b(rec_b), .rec_o(rec_o), .rec_n_a(rec_n_a),
         .rec_n_o(rec_n_o), .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag),
-        .hr_beat(hr_beat), .hr_data(hr_data));
-    ot_hgi_hbm_rd_client #(.HAW(35), .TG(TG)) u_cl (.clk(clk), .rst_n(rst_n), .hq_v(hq_v), .hq_rdy(hq_rdy),
-        .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_beat(hr_beat),
-        .hr_data(hr_data), .xq(xq), .xr(xr));
+        .hr_beat(hr_beat), .hr_data(hr_data), .rg_req(rg_req), .rg_gnt(rg_gnt), .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr));
+    for (genvar l = 0; l < HL; l = l + 1) begin : g_cl
+        ot_hgi_hbm_rd_client #(.HAW(35), .TG(TG)) u_cl (.clk(clk), .rst_n(rst_n), .hq_v(hq_v[l]), .hq_rdy(hq_rdy[l]),
+            .hq_addr(hq_addr[l*35 +: 35]), .hq_len(hq_len[l*3 +: 3]), .hq_tag(hq_tag[l*TG +: TG]), .hr_v(hr_v[l]),
+            .hr_tag(hr_tag[l*TG +: TG]), .hr_beat(hr_beat[l*2 +: 2]), .hr_data(hr_data[l*256 +: 256]),
+            .xq(xq[l*38 +: 38]), .xr(xr[l*257 +: 257]));
+    end
 endmodule
 `default_nettype wire

@@ -5,7 +5,7 @@ ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd)
 OUT=$(realpath -m "${1:-/tmp/hgi_hcu_run}"); MUT=${2:-}
 VL=${VERILATOR:-$( [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" ] && echo "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" || echo verilator)}
 mkdir -p "$OUT"; cd "$ROOT"
-python3 tools/hgi_adapters/hc_unit_bench.py --out "$OUT/vec" > "$OUT/gen.log"
+python3 tools/hgi_adapters/hc_unit_bench.py ${GEN_ARGS:-} --out "$OUT/vec" > "$OUT/gen.log"
 SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
   rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
   rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv
@@ -13,7 +13,7 @@ SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
   rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
   rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv
   rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv rtl/hbm_accel/generic/peers/ot_hgi_hbm_lane.sv
-  rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
+  rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_lanearb.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 D="${XDEF:-} -DOT_WW_MACRO"; [ -n "$MUT" ] && D="$D -D$MUT"

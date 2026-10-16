@@ -72,6 +72,7 @@ module ot_hgi_sm_record #(
     output reg  [19:0]        pub_m,
     output reg  [12:0]        pub_q,
     output reg  [3:0]         pub_p,
+    output reg                pub_bf16,      // hgi-1010/d: O.fmt = BF16 (the publication rounds each word to BF16)
     input  wire               pub_done,
     input  wire               pub_fault,
     // legacy per-SM buses (DS control path): {release_in, d_lines 24, d_base 32, d_valid, op_xb 7, op_fmt 2, op_gs,
@@ -192,7 +193,7 @@ module ot_hgi_sm_record #(
             dig <= 0; hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; nb_q <= 0; dec_ok <= 1'b0;
             rows_s <= 0; dbase_s <= 0; dl_s <= 0; g_r <= 0; fmt_r <= 0;
             x_base <= 0; x_n <= 0; x_p <= 0; x_stride <= 0; x_space <= 0; x_fmt <= 0;
-            pub_base <= 0; pub_stride <= 0; pub_space <= 0; pub_m <= 0; pub_q <= 0; pub_p <= 0;
+            pub_base <= 0; pub_stride <= 0; pub_space <= 0; pub_m <= 0; pub_q <= 0; pub_p <= 0; pub_bf16 <= 1'b0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
             hdr_q <= rec_hdr; a_q <= rec_a; b_q <= rec_b; o_q <= rec_o; na_q <= rec_n_a; nb_q <= rec_n_b;   // pin flops
@@ -215,7 +216,7 @@ module ot_hgi_sm_record #(
                     qs <= 45'd0; lq <= 24'd0; ml <= 31'd0; dig <= 3'd5; prod_v <= 1'b0; pd_seen <= 1'b0;
                     x_v <= 1'b1; x_base <= a1[47:8]; x_n <= na1; x_p <= pp1; x_stride <= a1[119:88];
                     x_space <= a1[1:0]; x_fmt <= pf1;
-                    pub_v <= 1'b1; pub_base <= o1[47:8]; pub_stride <= o1[119:88]; pub_space <= o1[1:0]; pub_m <= b1[87:68];
+                    pub_v <= 1'b1; pub_base <= o1[47:8]; pub_stride <= o1[119:88]; pub_space <= o1[1:0]; pub_bf16 <= (o1[4:2] == 3'd1); pub_m <= b1[87:68];
                     pub_q <= q1[12:0]; pub_p <= pp1;
                     arr_seen <= 0; arr_want <= 0; st_pend <= 0; d_pend <= 0;
                 end
