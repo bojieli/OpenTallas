@@ -20,5 +20,17 @@
       "dsfd_rly_1_WN": "1f685dc7606f7834708541b64a91440235c61cd79a3744b3c95ed443855f9ef7"
     },
     "note": "Byte-exact actual c26b scalar modules; EW used as reference since the three face wrappers have identical one-stage data/reset bodies. Physical faces alter no RTL operation."
+  },
+  "gate": {
+    "source_commit": "0895bbb18",
+    "verdict": "WARN: 0 FAIL, 2 util warnings",
+    "actual_images_inspected": true,
+    "visual": "Sparse scalar cell clusters, real four-face contacts and PG stripes; fill0.003, no macros or slivers. Fixed17.28-square granted grid outline preserves explicit low-util warning.",
+    "tt_max_insertion_ps": 47.0,
+    "tt_spread_ps": 0.7,
+    "logical_root_sinks": 1,
+    "diagnostic_setup_ps": 345.1,
+    "diagnostic_hold_ps": 58.9,
+    "submission": "Not submitted: root prioritized genuine fn0/xf2 forwarded clock ABI gaps."
   }
 }
