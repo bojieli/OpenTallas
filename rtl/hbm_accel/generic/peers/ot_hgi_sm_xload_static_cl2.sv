@@ -497,21 +497,28 @@ module ot_hgi_sm_xload_cl2_bfq (
     input  wire [6:0]         r_a,
     output reg  [255:0]       rwq
 );
+    // cl2c (native audit of CLOSED cl2b TT +79.64/FF +12.38: capture rst_n 416.8 ps, mlo 200.2, mhi 194.3):
+    // (1) rst_n enters a local reset relay at its pin (async assert, 3-edge synchronous release; resets only the
+    //     enable/select flops, which are idle until the ctl issues after its own release);
+    // (2) the write-mask pair is ONE pin register each (was 8 per-macro copies 250 um from the W pins), driving the
+    //     macros' mask pins through its buffer tree: same edge as wp_d/wp_ce, so every macro sees the same write.
+    wire [0:0] rn_l;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_l));
+    (* keep = 1 *) reg mask_hi, mask_lo;
+    always @(posedge clk) begin mask_hi <= mhi; mask_lo <= mlo; end
     wire [255:0] cap [0:7];
     genvar gt;
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         (* keep = 1 *) reg rp_ce; (* keep = 1 *) reg [6:0] rp_a; reg rp_sel;
         (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d;
-        (* keep = 1 *) reg mask_hi, mask_lo;
         wire [255:0] wp_m = {{128{mask_hi}}, {128{mask_lo}}};
         reg [255:0] cq;
         wire [255:0] rd;
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
+        always @(posedge clk or negedge rn_l[0]) begin
+            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
             else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; wp_ce <= wce; end
         end
         always @(posedge clk) begin
-            mask_hi <= mhi; mask_lo <= mlo;
             rp_a <= r_a; wp_a <= wa;
             for (integer l = 0; l < 8; l = l + 1) begin
                 wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
