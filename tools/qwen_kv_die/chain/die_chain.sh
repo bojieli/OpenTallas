@@ -38,6 +38,12 @@ if [ "$DIE" = kv ]; then
       exit 1
     fi
   }
+  # Q-KVSYS-NETLIST 2026-10-16: the STRICT bit-level bind (tools/die_port_bind.py v2 on the BINDINGS-bound netlist:
+  # unconnected / tied inputs, undriven + multi-driven net bits) is recorded at every launch beside the v1 audit
+  # (RUN/port_bind_v2/port_bind_v2.json, read by tools/die_completeness.py); same diagnostic convention as above.
+  bash "$SRC/tools/qwen_kv_die/kv_port_bind_v2.sh" "$C/die.v" "$R/port_bind_v2" "$C/qkd_kv_relays.sv" "$R/expand.json" \
+    > "$R/port_bind_v2.log" 2>&1
+  say "STRICT PORT BIND v2: $(tail -1 $R/port_bind_v2.log | cut -c1-400)"
 fi
 # Q-COMPUTE-DIE 2026-10-15: OT_PG_OPEN_DIAG=1 lets a DIAGNOSTIC chain reach GRT/STA when pdngen PASSED and only
 # check_power_grid failed (islands listed by master class); run_pdn.tcl must have written floorplan_pdn_prepg.odb.
