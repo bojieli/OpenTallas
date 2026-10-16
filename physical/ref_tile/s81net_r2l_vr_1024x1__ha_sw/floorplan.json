@@ -7,13 +7,13 @@
   0,
   0,
   112.32,
-  112.32
+  174.96
  ],
  "core": [
   2.16,
   2.16,
   110.16,
-  110.16
+  172.8
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -74,8 +74,6 @@
   "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_1024x1__ha_SW.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/pre_gpl.tcl",

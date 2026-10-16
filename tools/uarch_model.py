@@ -35,6 +35,41 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def qwen_native_kv_programme_candidate_model(replicas=1):
+    """Writer-only fixed roots; no measured route or token-rate credit."""
+    if type(replicas) is not int or replicas < 1:
+        raise ValueError('actual positive writer replica count required')
+    state = dict(reset_pin_capture=1, pin_input_capture=129, registered_slot_outputs=4, stage_table=5760, selected_cycle_roots=160, stage_and_loader=23, transaction_roots=61,
+                 run_flags=4, elapsed_cycle=32, expectation_pipeline=2,
+                 expected_descriptor=116)
+    return dict(schema='opentallas.qwen-native-kv-programme-candidate.v1',
+        opt_in_default=False, scope='one native writer per supplied replica',
+        replicas=replicas, macs_per_cycle=0, memory_macros=0,
+        memory_read_bytes_per_cycle=0, memory_write_bytes_per_cycle=0,
+        stage_table_rows=36, cycle_roots_per_row=5, stage_table_bits=5760,
+        boot_writes=181, boot_bytes_per_write=8, boot_total_bytes=1448,
+        logical_state_bits=state, logical_state_bits_total=sum(state.values()),
+        total_logical_state_bits=replicas*sum(state.values()),
+        writer_expectation_bits_per_cycle=64, kvn_slot_bits_per_cycle=1,
+        independent_descriptor_bits_per_cycle=116,
+        root_input_bits_per_start=55,
+        maximum_word_slots_per_cycle=1, word_slots_per_cohort=4,
+        high_half_sectors_per_slot=4, sectors_per_cohort=8,
+        reset_pin_release_edges=1, minimum_reset_fill_edges=5,
+        start_pin_capture_edges=1, boot_pin_capture_edges=1,
+        slot_output_predecode_edges=1, slot_interval_shift_edges=0,
+        external_start_to_internal_origin_edges=1,
+        added_writer_capture_edges=0, independent_descriptor_edges=2,
+        mux_demux_cost='five 36to1 cycle32 selectors captured at start; four cycle32 equality terms; index4to1; group3to3 lookup; address wiring and layer6 increment',
+        functional_input_bits=129, functional_output_bits=217,
+        total_functional_boundary_bits=346, clock_reset_pins=2,
+        routing_tracks_required=346, routing_channel_capacity=None,
+        area_um2=None, floorplan_slot_um=None,
+        proposed_slot_um=[86.4,194.4], proposed_period_ps=833.334,
+        token_latency_credit_cycles=0, rate_credit=0,
+        qualification='component candidate only; actual replica inventory, area/slot/channel, routed SS/FF clock and source-profiled whole-stage timing remain open')
+
+
 def qwen_central_vm_native_bank_model():
     """Preserve four bank edges, isolate actual input/capture/output clock roots."""
     return dict(schema='opentallas.qwen-central-vm-native-bank.v1', opt_in_default=False,
@@ -714,6 +749,12 @@ def hgi_collective_row_formatter_model(**kwargs):
 def hgi_collective_endpoint_model():
     from uarch_model_hgi_collective_decode import endpoint_model
     return endpoint_model()
+
+
+def hgi_collective_offdie_rx_model(pingpong=False, **kwargs):
+    """0az complete elastic block admission then fixed native RX slots."""
+    from uarch_model_hcoll_offdie_rx import model, pingpong_model
+    return (pingpong_model if pingpong else model)(**kwargs)
 
 
 def hgi_collective_capture_endpoint_model():
@@ -17266,3 +17307,21 @@ def dsrom_wfc_static_link_price():
                       'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
                       'static buffers; any would-be wait at the boundary is a sticky fault)',
                       'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
+
+
+def hbm_host_static_ingress_model():
+    """Sizing-first successor of dynamic HGI CP: configuration only."""
+    return dict(schema='opentallas.hbm.host-static-ingress.v1', replicas=1,
+      macs_per_cycle=0, storage_macros=0,
+      storage='one224bit assembly, independent AW12 and W36 holding slots, registered256bit config output and descriptor registers',
+      target_capacity='existing F20 target8/address12 (4096 rows x256bits =128KiB/target); NOT SU bank16+row7',
+      configuration_bytes_per_cycle=1, output_burst_bytes=32,
+      output_cadence='minimum32edges per256bit frame (eight AXI writes, registeredready plus held response); external host stalls unbounded',
+      boundary_bits=dict(axi_inputs=65,axi_outputs=39,target_config=277,target_descriptor=42,launch=1,status_inputs=3),
+      routing='single registered target broadcast; die-assigned pins/corridor and replicated destination collars OPEN',
+      launch='explicit F30 write only after actual aggregate block_ready, no active/fault, complete256bit assembly; fixed4edge guard after every config/descriptor output;7edge launch guard and host-only active lock',
+      latency='host launch accepted at L -> launch flop after L; target collar samples L+1, emits start after L+2; native programme captures L+3 and starts L+4',
+      local_readiness=dict(bitmap_bits_per_target=1024,scan_edges_per_1024row_descriptor=1024,write_commit_guard_edges=2,storage_macros=0,location='local programme target, outside ingress'),
+      area_slot_um=[432,432], slot_area_um2=186624,
+      sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
+      scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')

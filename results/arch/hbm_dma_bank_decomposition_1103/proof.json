@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.hbm.dma-bank-decomposition-proof.v1",
+  "qualification": "FUNCTIONAL_COMPONENT_ONLY_NATIVE_TIMING_AND_PARENT_OPEN",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "cbc36f9e38a45a4b920a5f98fd7bd3742a9100bbb6a3121201b4ec156d2f4573",
+    "rtl/hbm_accel/generic/peers/static/tb_dma_back_vp_banks_equiv.sv": "ef89275d2991cdd11cbc3d07bc09f0d19df7ebc879dba309e74fc6ee19496e2a",
+    "rtl/hbm_accel/generic/peers/static/tb_dma_banks_clock.sv": "15eaa92b4acf2c6ab3f1d2878950cc64d45b60c6a9cb0a5c2c805ea59131d27f",
+    "tools/hbm_v15_harden/bench_dma_vp_banks.sh": "e3b64db528e7ef06b8c350c3b3fafe3b8f8c9b6d8b637516885ca050160f9614"
+  },
+  "archive_sha256": "4f5df0bc221fb68586c8587df3667543a2b19485744c0042f6a8330e81765b84",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-992600-1792088783",
+  "proof_pid": 992600,
+  "calendar": "same externally observable edges as _vp, DESC_LAT2; related coincident clocks only; no producer adoption",
+  "bench": {
+    "clock_checks": 64,
+    "clock_mutants": "collapsed and swapped each failed clock ownership checks",
+    "valid_descriptors": 20,
+    "invalid_descriptors": 11,
+    "checks": 1885,
+    "beats": 6790,
+    "production_shapes": [
+      "MAIN",
+      "MIRROR"
+    ],
+    "sectors_each": 2561,
+    "first_command_to_fence_cycles": 173,
+    "real_vm_banks": 32,
+    "real_sram_macros": 128,
+    "datapath_mutants": "write beat mismatch cycle687 bank0; control mismatch cycle1889"
+  },
+  "known_blockers": [
+    "controller 25-level descriptor and acknowledge input paths not repaired",
+    "native bank/controller clock trees and ETMs unmeasured",
+    "bank_read_en controller combinational output not native qualified",
+    "exact child footprints/pins/phase and parent grants pending",
+    "source producer and compiler adoption pending"
+  ],
+  "logs": {
+    "proof_banks/clock0.log": "DMA_BANK_CLOCK_OWNERSHIP PASS checks=64 banks=8\nrtl/hbm_accel/generic/peers/static/tb_dma_banks_clock.sv:82: $finish called at 27000 (1ps)\n",
+    "proof_banks/clock1.log": "FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_banks_clock.sv:21: clock ownership pulse1 bank1\n       Time: 9000  Scope: tb_dma_banks_clock\n",
+    "proof_banks/clock2.log": "FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_banks_clock.sv:11: clock ownership pulse0 bank0\n       Time: 6000  Scope: tb_dma_banks_clock\n",
+    "proof_banks/exact/eq.log": "DMA_VP_EQUIV PASS DESC_LAT=2 cases=20 bad_cases=11 fault_cycles=110 checks=1885 beats=6790\nrtl/hbm_accel/generic/peers/static/tb_dma_back_vp_banks_equiv.sv:87: $finish called at 18991000 (1ps)\n",
+    "proof_banks/exact/production.log": "PASS production   MAIN STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles\nPASS production MIRROR STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles\nPASS DMA static actual production both main/mirror, no runtime VM credits/ready/group lease or dynamic onchip issue\nrtl/hbm_accel/generic/peers/static/tb_dma_back_static.sv:114: $finish called at 5370000 (1ps)\n",
+    "proof_banks/mut1/eq.log": "FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_back_vp_banks_equiv.sv:44: write beat mismatch cycle687 bank0\n       Time: 6870000  Scope: tb_dma_back_vp_banks_equiv.$ivl_for_loop18\n",
+    "proof_banks/mut1.log": "FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_back_vp_banks_equiv.sv:44: write beat mismatch cycle687 bank0\n       Time: 6870000  Scope: tb_dma_back_vp_banks_equiv.$ivl_for_loop18\n",
+    "proof_banks/mut2/eq.log": "FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_back_vp_banks_equiv.sv:37: control mismatch cycle1889\n       Time: 18890000  Scope: tb_dma_back_vp_banks_equiv\n",
+    "proof_banks/mut2.log": "FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_back_vp_banks_equiv.sv:37: control mismatch cycle1889\n       Time: 18890000  Scope: tb_dma_back_vp_banks_equiv\n"
+  }
+}

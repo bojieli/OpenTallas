@@ -1,0 +1,342 @@
+{
+  "timestamp": "2026-10-14T20:58:42.605445-07:00",
+  "source_commit": "4693b0f7f2223e060cc74cedfaf368e752986e9a",
+  "status": "PASS_COMPONENT_ONLY",
+  "scope": "actual RTL arithmetic and static control at T8192/HEADS1, normalized clocks; compiler fixture boundary stimuli only. Native producer composition, new core physical pin/reset/phi-R closure and full-token qualification remain pending.",
+  "admission": {
+    "tool": "ot-run --mem 12 --threads 4 --dir /tmp/...",
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3510092-1792036603",
+    "exit": 0,
+    "heavy_jobs_active": false
+  },
+  "calendar": {
+    "schema": "qwen-tp8-static-ahub-v1",
+    "scope": "actual six-root component, T8192 HEADS1; native producer and phi-R integration pending",
+    "roots": {
+      "core": 1,
+      "ZH": 4,
+      "reciprocal": 1
+    },
+    "removed_legacy_roots": {
+      "PBST": 4,
+      "PVLG": 4
+    },
+    "source_sha256": {
+      "rtl/hdc/nearhbm/ot_qkd_ahub_static.sv": "7addde0cfaf04679d32b9e69b35d2240054516f0a496822185ad42bfdfaeaa4c",
+      "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv": "5efa9f982418e6985da4039aebdd2db90d34baa887fb2339c6ade215743fd8ac",
+      "rtl/hdc/nearhbm/ot_nhb_tiles.sv": "c4a400dfcada2f15c6ed1b32c93474bb71c20d7c98c9bc0f94c6092f19a44fa4",
+      "rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv": "6653404863ded7cb9a859973113bcff00ddec1ef933396b26cd9513b9026f061",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df",
+      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3"
+    },
+    "parameters": {
+      "LMAX_IN_AGE": [
+        100,
+        100,
+        100,
+        100
+      ],
+      "Z_IN_AGE": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "Z_IN_STRIDE": 16,
+      "LMAX_ISSUE_AGE": 110,
+      "Z_START_AGE": 470,
+      "Z_LEVEL_GAP": 10,
+      "RECIP_ISSUE_AGE": 555,
+      "RECIP_RETURN_AGE": 624,
+      "RZ_PUBLISH_AGE": 630,
+      "ZW_RLY": 0,
+      "ZR_RLY": 0,
+      "RX_RLY": 1,
+      "RY_RLY": 1
+    },
+    "inputs": [
+      {
+        "stack": 0,
+        "word_count": 69
+      },
+      {
+        "stack": 1,
+        "word_count": 69
+      },
+      {
+        "stack": 2,
+        "word_count": 69
+      },
+      {
+        "stack": 3,
+        "word_count": 69
+      }
+    ],
+    "lmax_outputs": [
+      113,
+      114,
+      115,
+      116
+    ],
+    "tree_levels": [
+      {
+        "level": 1,
+        "pairs": 32,
+        "issues": [
+          {
+            "edge": 470,
+            "pair_base": 0,
+            "lane_mask": 15
+          },
+          {
+            "edge": 471,
+            "pair_base": 4,
+            "lane_mask": 15
+          },
+          {
+            "edge": 472,
+            "pair_base": 8,
+            "lane_mask": 15
+          },
+          {
+            "edge": 473,
+            "pair_base": 12,
+            "lane_mask": 15
+          },
+          {
+            "edge": 474,
+            "pair_base": 16,
+            "lane_mask": 15
+          },
+          {
+            "edge": 475,
+            "pair_base": 20,
+            "lane_mask": 15
+          },
+          {
+            "edge": 476,
+            "pair_base": 24,
+            "lane_mask": 15
+          },
+          {
+            "edge": 477,
+            "pair_base": 28,
+            "lane_mask": 15
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "pairs": 16,
+        "issues": [
+          {
+            "edge": 488,
+            "pair_base": 0,
+            "lane_mask": 15
+          },
+          {
+            "edge": 489,
+            "pair_base": 4,
+            "lane_mask": 15
+          },
+          {
+            "edge": 490,
+            "pair_base": 8,
+            "lane_mask": 15
+          },
+          {
+            "edge": 491,
+            "pair_base": 12,
+            "lane_mask": 15
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "pairs": 8,
+        "issues": [
+          {
+            "edge": 502,
+            "pair_base": 0,
+            "lane_mask": 15
+          },
+          {
+            "edge": 503,
+            "pair_base": 4,
+            "lane_mask": 15
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "pairs": 4,
+        "issues": [
+          {
+            "edge": 514,
+            "pair_base": 0,
+            "lane_mask": 15
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "pairs": 2,
+        "issues": [
+          {
+            "edge": 525,
+            "pair_base": 0,
+            "lane_mask": 3
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "pairs": 1,
+        "issues": [
+          {
+            "edge": 536,
+            "pair_base": 0,
+            "lane_mask": 1
+          }
+        ]
+      }
+    ],
+    "reciprocal_outputs": [
+      624,
+      625,
+      626,
+      627
+    ],
+    "publication": 630,
+    "arithmetic": {
+      "ZH_fp32_adders": 16,
+      "ZH_add_latency": 7,
+      "ZH_reduction_terms_per_head": 64,
+      "reciprocal_core_depth": 64,
+      "reciprocal_leaf_pin_stages": 2,
+      "reciprocal_NR_iterations": 3,
+      "rounding": "actual source FP32 at every multiply/add"
+    }
+  },
+  "observed": {
+    "AM_edges": [
+      113,
+      114,
+      115,
+      116
+    ],
+    "last_Z_issue": 536,
+    "root_postedge": 549,
+    "first_leaf_return_postedge": 623,
+    "reciprocal_capture_edges": [
+      624,
+      625,
+      626,
+      627
+    ],
+    "publish_edge": 630
+  },
+  "arithmetic": {
+    "onchip_replacements": "NONE: actual ot_nhb_zh + ot_qkh_recip_leaf + source FP add/mul; no DPI",
+    "golden_external_expected_only": [
+      {
+        "head": 0,
+        "Z": 2080,
+        "Z_bits": "45020000",
+        "golden_recip_bits": "39fc0fc0"
+      },
+      {
+        "head": 1,
+        "Z": 4160,
+        "Z_bits": "45820000",
+        "golden_recip_bits": "397c0fc0"
+      },
+      {
+        "head": 2,
+        "Z": 6240,
+        "Z_bits": "45c30000",
+        "golden_recip_bits": "39280a81"
+      },
+      {
+        "head": 3,
+        "Z": 8320,
+        "Z_bits": "46020000",
+        "golden_recip_bits": "38fc0fc0"
+      }
+    ],
+    "Z_address_stimulus": "value=(1+16*stack+block)*(head+1), all 4 stacks x16 blocks x4 heads"
+  },
+  "mutants": [
+    {
+      "id": 0,
+      "kind": "positive",
+      "fault": 0,
+      "AM_words": 4,
+      "reciprocal_words": 4,
+      "publish_pulses": 1,
+      "publish_edge": 630
+    },
+    {
+      "id": 1,
+      "kind": "missing Z input",
+      "fault": 1,
+      "AM_words": 4,
+      "reciprocal_words": 4,
+      "publish_pulses": 1,
+      "publish_edge": 630
+    },
+    {
+      "id": 2,
+      "kind": "late Z input",
+      "fault": 1,
+      "AM_words": 4,
+      "reciprocal_words": 4,
+      "publish_pulses": 1,
+      "publish_edge": 630
+    },
+    {
+      "id": 3,
+      "kind": "wrong epoch",
+      "fault": 1,
+      "AM_words": 4,
+      "reciprocal_words": 4,
+      "publish_pulses": 1,
+      "publish_edge": 630
+    },
+    {
+      "id": 4,
+      "kind": "wrong reciprocal return latency",
+      "fault": 1,
+      "AM_words": 4,
+      "reciprocal_words": 4,
+      "publish_pulses": 1,
+      "publish_edge": 630
+    }
+  ],
+  "rejected_calendars": [
+    "lmax read precedes final input commit",
+    "Z issue precedes declared done/final write",
+    "reciprocal read precedes real Z root visibility"
+  ],
+  "preserved_initial_failure": "Expected test answer 3c800000 for 1/64 was wrong: actual three-iteration rounded Newton reciprocal is 3c7fffff. External expected answer corrected; arithmetic RTL unchanged.",
+  "AM_ABI": "36-bit word {valid35,g34,hh33:32,data31:0}; ASTK input requires wire repack to {data32,hh2,g1,valid1}",
+  "native_clock_obligation": {
+    "roots": 6,
+    "root_distribution": [
+      "core",
+      "ZH0",
+      "ZH1",
+      "ZH2",
+      "ZH3",
+      "reciprocal"
+    ],
+    "per_root_phase": "physical phi-R required",
+    "pin_capture_ps": 190,
+    "pin_launch_ps": 220,
+    "spread_ps": 80,
+    "signoff": "TT setup / FF hold / DRC0; not established by this component bench"
+  }
+}

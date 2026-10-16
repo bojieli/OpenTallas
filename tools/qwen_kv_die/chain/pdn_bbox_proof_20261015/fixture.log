@@ -1,0 +1,30 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: tech.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: master.lef, created 1 library cells
+[INFO ODB-0227] LEF file: tap.lef, created 1 library cells
+[WARNING ORD-2011] LEF master qfd_tt_ctlm_static_s has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_xs_tap has no liberty cell.
+[WARNING IFP-0028] Core area lower left (10.000, 10.000) snapped to (10.044, 10.260).
+[INFO IFP-0001] Added 14739 rows of 73702 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 4000.000 4000.000 ) um
+[INFO IFP-0101] Core BBox: ( 10.044 10.260 ) ( 3989.952 3989.790 ) um
+[INFO IFP-0102] Core area:                     15838163.283 um^2
+[INFO IFP-0103] Total instances area:           1457533.440 um^2
+[INFO IFP-0104] Effective utilization:                0.092
+[INFO IFP-0105] Number of instances:                      2
+[INFO ORD-0034] More than one lib exists, multiple files will be written.
+[INFO ODB-0227] LEF file: /work/pdn_bbox_masters.lef, created 2 library cells
+OT_PDN_BBOX BEGIN masters=2 instances=2
+TAP_OBS_REDUCTION 14305 -> 7
+[INFO PDN-0001] Inserting grid: core
+[INFO PDN-0001] Inserting grid: macro - ctl
+[INFO PDN-0001] Inserting grid: tapgrid - tap
+[INFO PDN-0500] Runtime: 0.03s
+OT_PDN_BBOX RESTORED original masters (detailed OBS never changed)
+[INFO PSM-0040] All shapes on net VDD are connected.
+[INFO PSM-0040] All shapes on net VSS are connected.
+FIXTURE_PASS

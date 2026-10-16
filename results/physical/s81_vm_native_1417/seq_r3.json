@@ -1,0 +1,123 @@
+{
+  "verdict": "PASS",
+  "scope": "One source-identical hardened VM sequencer leaf; no die/native programme/throughput closure claim",
+  "route_job": "dsfd_vm_seq_tile_native_1015_r3-flt3-017fbf8fe",
+  "route_source": "017fbf8feb2a1874963d52712b5fffbf3bdaa296",
+  "record_commit": "c711053ed",
+  "signoff": {
+    "TT_setup_ps": 25.7,
+    "FF_hold_ps": 4.52,
+    "DRC": 0,
+    "SS_sensitivity_only_ps": -317.22
+  },
+  "native_audit": {
+    "cell": "dsfd_vm_seq_tile",
+    "view": "physical/ref_tile/dsfd_vm_seq_tile_native_1015_r3/views/dsfd_vm_seq_tile",
+    "lib_cell": "dsfd_vm_seq_tile",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 269.9,
+    "spread_ps": 45.6,
+    "outputs": 118,
+    "inputs": 2434,
+    "launch_ps": 154.3,
+    "launch_pin": "larm_v",
+    "capture_ps": 167.7,
+    "capture_pin": "o_rv[24]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "record_commit": "c711053ed",
+    "view_sha256": {
+      "export_tt.tcl": "cba7274b6972ce36dbc21d45650102e3705de7c6bfff0746347c15ceb7c4e60e",
+      "abstract.json": "50aee1f865ddb5741fbd5bc8fe4828d33d2cea2d2bb8d9bf2a980cae10c9717c",
+      "dsfd_vm_seq_tile_tt.lib": "365401cccce5499a23312b8d3f9da37e99994b94f2efe5e7cb6c9992a998e802",
+      "export_ff.tcl": "651dede295e465c62f96cf88305d942b20ffd7ee5fdfc6b7827813ea0c79155c",
+      "insertion.json": "aabd8f4c4eea60c0f29d809a624e43d60303639c6dc4b3232637a4ea154bee54",
+      "export_tt.log": "8242c04bffe4405f989f88bdd5b44940aa21752fb2f0b4bde6020952497e7c03",
+      "dsfd_vm_seq_tile.lef": "846d6d556d332a33c7e05569048bdd32761067bd901e9514f8ce58ca7aca534f",
+      "export_ss.log": "7b2675bc76ce584e829673a59e64140cc7734f4f5e761b96c7737d610833f5fa",
+      "dsfd_vm_seq_tile_ss.lib": "6306ee7f0da344531759e37f20008d85ada71d63eb1b2c977c50815e9d80979d",
+      "dsfd_vm_seq_tile_ff.lib": "d9f541aeb457a0ae2329909351e06f434b65a2fadd9f0154f65d98fc8e3b547a",
+      "export_ff.log": "d1e27a72ac76e6ab1f30698b907db71e4093e02507abc2c92f943d57d39f8bb9",
+      "export_ss.tcl": "44ac364d9c6ed2cc48012d5249a617f1a1edd28fdbcfa3edf14aced26a2c4335",
+      "child_lint.json": "b2b9a1e7e4b2d03905802669fc874b82222ee33f255722bc93a769ab458c0499"
+    }
+  },
+  "source_join": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv",
+      "routed_source_sha256": "46c4d2196f0131122b2f7d411b8634b239668453077d26be49d31757475e3c25",
+      "current_source_sha256": "46c4d2196f0131122b2f7d411b8634b239668453077d26be49d31757475e3c25",
+      "bytes_equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv",
+      "routed_source_sha256": "6400e6f46333fca4743d5d3339143861d47b8f97e5438393bfe1929bee218cab",
+      "current_source_sha256": "6400e6f46333fca4743d5d3339143861d47b8f97e5438393bfe1929bee218cab",
+      "bytes_equal": true
+    }
+  ],
+  "bench_records": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.093 MB sources in 4 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.122 s (elab=0.003, cvt=0.114, bld=0.000); cpu 0.122 s on 1 threads; allocated 47.387 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_seq_positive": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "TB_VMCORE RESULT mode 0 cycles 3210 commits 69696 K 11 reads 19745 pq 514 mix_reads 4010 mix_writes 1000 rows_checked 25811 dones 4 cmds 4 bad 0\nCORE_LEAF PASS seq_tile_l16\n",
+      "track": "parallel"
+    },
+    "bench_seq_positive_seq": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "ycles 7603 commands 3290 dones 3290 commits 418109 inp_cycles 6474 errors 0\nTB_VMSS RESULT mode 6 cycles 7603 commands 3290 dones 3291 commits 418109 inp_cycles 6474 errors 0\nTB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 4658\nTB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 10839\nTB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 8705\nTB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 13784\nVMSS_GATE PASS\n",
+      "track": "parallel"
+    },
+    "bench_seq_mutant_dlat": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "TB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 4658\nVMSS_MUTANT FAIL DLAT\n",
+      "track": "parallel"
+    }
+  },
+  "clock_delivery": {
+    "category": "ck_seq_t",
+    "child_pin": "ck",
+    "rule": "phi - routed wire - TT boundary mean insertion, individually for this root",
+    "measurement": {
+      "boundary": {
+        "n": 2560,
+        "mean": 269.9,
+        "min": 254.1,
+        "max": 299.7
+      },
+      "all": {
+        "n": 12586,
+        "mean": 263.8,
+        "min": 243.1,
+        "max": 299.7
+      },
+      "errors": [],
+      "macros": null,
+      "macro_libs": 0
+    }
+  },
+  "limits": [
+    "Measured routed clock insertion must drive actual die phi-R delivery; die wire/obstacles remain unproved",
+    "Only diagnostic fault reporting increased by one edge in r3; fixed command/done calendar unchanged",
+    "No reroute performed; closed tile stands"
+  ]
+}

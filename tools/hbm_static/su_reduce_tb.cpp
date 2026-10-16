@@ -18,11 +18,12 @@ int main(int argc,char**argv){
  if(mut=="poison_max"){
   // RealSRAM persists through reset: poisonLOADfault, then test nativeMAX finiteguard.
   t.cmd_valid=1;t.cmd_op=0;t.cmd_dst=0;t.operand_fp32=0x7f800000;
-  for(int j=0;j<9;j++){if(j)t.cmd_valid=0;t.clk=0;t.eval();t.clk=1;t.eval();}
+  for(int j=0;j<11;j++){if(j)t.cmd_valid=0;t.clk=0;t.eval();t.clk=1;t.eval();}
   if(!t.fault){std::cerr<<"FAIL missing nonfiniteLOADfault\n";return 2;}
   t.rst_n=0;t.cmd_valid=0;t.clk=0;t.eval();t.clk=1;t.eval();t.rst_n=1;
   t.cmd_valid=1;t.cmd_op=3;t.cmd_a=0;t.cmd_dst=0;t.operand_fp32=0x3f800000;
-  t.clk=0;t.eval();t.clk=1;t.eval();t.cmd_valid=0;t.clk=0;t.eval();t.clk=1;t.eval();
+  t.clk=0;t.eval();t.clk=1;t.eval();t.cmd_valid=0;t.clk=0;t.eval();t.clk=1;t.eval();t.clk=0;t.eval();t.clk=1;t.eval();
+  t.clk=0;t.eval();t.clk=1;t.eval();
   if(!t.fault){std::cerr<<"FAIL missing poisonedSRAMMAXfault\n";return 2;}
   std::cout<<"PASS nonfiniteLOADandpersistentSRAMMAXfault\n";return 0;
  }

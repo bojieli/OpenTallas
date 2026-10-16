@@ -18,6 +18,7 @@ SOURCES = {
     "program_loader": ("rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv", "qkd_host_program_loader"),
     "host_root": ("rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv", "qkd_host_root_pt"),
     "link": ("rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv", "qkd_d2d_static"),
+    "writer_programme": (STATIC + "qkd_kv_native_programme.sv", "qkd_kv_native_programme"),
 }
 
 # These are source requirements, not implemented die nets. Keep every field
@@ -41,7 +42,7 @@ WRITER_LINK_MAP = {
 OPEN_JOINS = [
     "Bind cfg_stack to the actual two-bit package stack strap; retain the physical PC strap and logical landing PC mapping.",
     "Compile actual per-PC RD/WR/refresh reservations and independent identity from the production programme; do not schedule from valid/ready.",
-    "Export controller tag/class/command/write ingress occupancy idle. Current controller has completion outputs but no drain output; front idle alone cannot prove KV drained.",
+    "Bind and synchronize actual controller idle_core + idle_hbm and drain_fault_core + drain_fault_hbm. These count descriptor WDONE, actual static read data, credit crossing and KV corrected landing debt; both domains and upstream quiet are required. Front idle alone cannot prove KV drained.",
     "Synchronize actual registered ring idle_hbm and idle_core together with upstream quiet; local exports alone cannot prove KV drained.",
     "Join front hold to an actual exceptional sequencer block pause; current qkd_seq has no hold input. Preserve block credit blk_freed at HBM reservation issuer.",
     "Distribute writer four 288-bit es lanes and identity/context by dest_stack/dest_pc; preserve the actual asynchronous write ingress and expected-address checks.",
@@ -87,7 +88,17 @@ def inventory(root, model, bindings):
     deficits = {name: dict(required=n, selected=counts[name]) for name, n in required.items() if counts[name] < n}
     return dict(schema="opentallas.qwen-kv-elastic-boundary.integration.v1",
         status="OPEN_UNADOPTED", adoption_allowed=False, holds="KEPT",
-        sources=sources, selected_modules=dict(sorted(counts.items())), required_module_deficits=deficits,
+        sources=sources, writer_programme_scope=dict(
+            status="SOURCE_AVAILABLE_WRITER_ONLY_NOT_FULL_BOUNDARY_PROGRAMME",
+            produced=["compiled_word_slot", "compiled_word_index", "compiled_identity", "compiled_generation", "kvn_word_slot", "expected_valid", "expected_pc", "expected_stack", "expected_identity", "expected_generation", "expected_address"],
+            not_produced=["static_cmd_owner", "static_cmd", "reserved_rd", "reserved_static_col", "reserved_write_col", "static_epoch", "expected_raw_valid", "blk_go", "expected_put", "expected_sector", "expected_epoch", "expected_layer", "cfg_tx_we", "cfg_rx_we", "cfg_addr", "cfg_data", "cal_start", "cal_seg"],
+            start_origin="external start/context one edge before actual segment0 accepted core-start; kvn_word_slot is receiver slot, never upstream transport launch",
+            expected_identity_binding="controller es_expected_identity = {expected_identity[58:0], expected_generation[1:0]}; compare actual programme's independently compiled descriptor, not writer echo",
+            physical_status="Programme source/ABI only; actual placement, pin mapping, boot-image producer, die integration and timing OPEN"),
+        controller_drain_scope=dict(outputs=["idle_core", "idle_hbm", "drain_fault_core", "drain_fault_hbm"],
+            execution_gate=False, adoption_allowed=False,
+            parent_requires="Actual upstream quiet barrier, controller BOTH domain observations, front idle and ring BOTH domain observations, domain-safe synchronizers, typed sticky faults and real producer binding"),
+        selected_modules=dict(sorted(counts.items())), required_module_deficits=deficits,
         missing_production_producers=MISSING_PRODUCERS,
         available_writer_link_map=WRITER_LINK_MAP,
         program_loader_limit="Existing loader exports pr143, program_ready, fault, digest64, program_epoch16, authorized_footer_valid/footer64; no KV reservation or D2D calendar-image output. Native pr is a distinct program interface.",

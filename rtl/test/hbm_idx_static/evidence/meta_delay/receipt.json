@@ -50,7 +50,9 @@
     "estimated_utilization": 0.48,
     "pin_density_per_um": 0.625,
     "routing_cut_bits": 25,
-    "qualification": "analytical sizing before CTS; actual mapped area and clock insertion pending"
+    "qualification": "analytical sizing before CTS; actual mapped area and clock insertion pending",
+    "mapped_std_area_um2": 1033,
+    "post_cts_area_um2": 1132
   },
   "bench": {
     "cycles": 800,
@@ -67,7 +69,26 @@
       3008.88
     ],
     "existing_local_meta_area_um2": 2910.35754,
-    "note": "isolated metadata delay does not qualify local scorer address arithmetic/fault logic or parent/other glue"
+    "note": "isolated metadata delay does not qualify local scorer address arithmetic/fault logic or parent/other glue",
+    "diagnostic_cts_43um": {
+      "gate_result": "physical/ref_tile/hidx_meta_static_1015/gate_result.json",
+      "verdict": "WARN",
+      "synth_std_area_um2": 1033,
+      "core_area_um2": 1512,
+      "synth_core_utilization": 0.6834,
+      "cts_area_um2": 1132,
+      "tt_boundary_mean_ps": 124.8,
+      "tt_max_ps": 126.1,
+      "tt_spread_ps": 5.8,
+      "diagnostic_tt_setup_slack_ps": 351.9,
+      "diagnostic_tt_hold_slack_ps": 11.55,
+      "qualification": false,
+      "note": "Actual routed TT/FF/DRC pending; measured utilization motivates enlarged leaf before route"
+    },
+    "recommended_outline_um": [
+      51.84,
+      51.84
+    ]
   },
   "underlying_master": "ot_hdc_delay"
 }

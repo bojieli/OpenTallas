@@ -48,6 +48,14 @@ from su_program_inventory import decode  # noqa: E402
 # (data_store/pinned); ARITH = issue -> result in the local store, 23 (arithmetic baseline, model.json);
 # RED_DEP = dependent reduction interval 8 (reduction component) -- the tree depth applied to it is a MODEL.
 VM_RD, VM_WR, LS_WR, LS_RD, ARITH, RED_DEP = 10, 7, 1, 2, 23, 8
+# CURRENT-SOURCE PROFILE (--profile mr1_r4, H-SU 10-15 17:30): the multirate 3:4 SU/VM bridge (codex/hbm-su-multirate-1417
+# multirate_contract.md) makes a VM read visible to the serial SU at +12 (fill +2) and a write acknowledged at +10 (+3) in
+# SERIAL edges; reducer r4 (routed, 3f1686f20) has dependent distance RAW 10; the cross-quarter level is no longer a free
+# tree level: each quarter's sum is exported to the root core's RF (readable export + 12 + RF_RELAY, su_top_compile),
+# summed there (2 dependent levels over 4 values), and the root result reaches a non-root home quarter over the RF relay
+# again (+12 + RF_RELAY); RF_RELAY = 36 stages at the 480 um reach on the actual core->core routes (H-DIE r2 12:44).
+# None = legacy single-level quarter term (reproduces the 06:45 receipt).
+RF_EXPORT, RF_RELAY = 12, None
 SLICE_WORDS = 1 << 16
 # SFU / divider / scalar-side schedule (static lane ot_hbm_su_static_lane.sv, KIND by local lane: global lane 0 FULL,
 # local lanes 0..31 of every quarter SFU, 32..127 LIGHT -> 32 SFU lanes per quarter, ONE scalar-side lane).
@@ -432,16 +440,17 @@ def compile_design(vectors, trace):
                 red_rows_done[o] = fire + r['lat']
         if r['red_words']:
             # MODEL: csum8 frontier, ceil(log2(ceil(n/8))) dependent levels + 1 F2 quarter level after the last issue
-            levels = max(1, math.ceil(math.log2(max(1, math.ceil(r['ni'] / 8))))) + 1
+            levels = max(1, math.ceil(math.log2(max(1, math.ceil(r['ni'] / 8))))) + (1 if RF_RELAY is None else 0)
+            qlevel = 0 if RF_RELAY is None else RF_EXPORT + RF_RELAY + 2 * RED_DEP
             whole = len(r['red_words']) == 1
             for row, w in enumerate(r['red_words']):
                 # per row: its last issue + the tree (a whole/tree reduction waits for every row)
-                done = (max(red_rows_done.values()) if whole else red_rows_done[row]) + levels * RED_DEP + LS_RD
+                done = (max(red_rows_done.values()) if whole else red_rows_done[row]) + levels * RED_DEP + qlevel + LS_RD
                 for q in home[w]:                     # root result broadcast to every demanding slice
                     p = phys[w][q]
                     s_ = p >> 3
                     b = q * 8 + (s_ & 7)
-                    e = max(wfree[b], done)
+                    e = max(wfree[b], done + (RF_EXPORT + RF_RELAY if RF_RELAY is not None and q != 0 else 0))
                     wfree[b] = e + 1
                     nwrite += 1
                     events.append((e, 'W', q, s_ & 7, s_, 1 << (p & 7), k))
@@ -635,8 +644,13 @@ def main():
     ap.add_argument('--map', type=Path, help='write the per-quarter address map hand-off (h_vm allocator + producers)')
     ap.add_argument('--ds-layer', type=int, default=0, help='DeepSeek program layer (0 T128 window; 3 T640 sparse)')
     ap.add_argument('--balanced-tail', action='store_true', help='issue a partial last 512-block on TAIL/4 lanes of every quarter')
+    ap.add_argument('--profile', choices=['legacy', 'mr1_r4'], default='legacy',
+                    help='mr1_r4: current source constants (3:4 bridge VM 12/10 serial, reducer RAW 10, RF relay quarter level)')
+    ap.add_argument('--rf-relay', type=int, default=36, help='RF relay stages on the core->core routes (mr1_r4 only)')
     a = ap.parse_args()
-    global BALANCED_TAIL, DS_LAYER
+    global BALANCED_TAIL, DS_LAYER, VM_RD, VM_WR, RED_DEP, RF_RELAY
+    if a.profile == 'mr1_r4':
+        VM_RD, VM_WR, RED_DEP, RF_RELAY = 12, 10, 10, a.rf_relay
     BALANCED_TAIL, DS_LAYER = a.balanced_tail, a.ds_layer
     DEPTHS.update(depths(a.mlat))
     trace = canonical_trace(a.design, a.ds_program)
@@ -644,7 +658,7 @@ def main():
     report = dict(schema='opentallas.hbm.su_f2_spread.v1', tool='tools/hbm_static/su_f2_spread.py',
                   design=a.design, qualification=False, ds_layer=a.ds_layer, balanced_tail=a.balanced_tail,
                   kind='compiler placement + static transport calendar; transport re-executed on RTL by the vehicle',
-                  constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=DEPTHS['arith'], RED_DEP=RED_DEP,
+                  constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=DEPTHS['arith'], RED_DEP=RED_DEP, RF_EXPORT=RF_EXPORT, RF_RELAY=RF_RELAY, PROFILE=a.profile,
                                  MLAT=a.mlat, ALAT=3, DIV_EXTRA=DEPTHS['div_extra'], S_DEPTH=DEPTHS['s'],
                                  SFU_LANES_PER_QUARTER=SFU_LANES_PER_Q, SCALAR_SIDE_LANES=1),
                   inputs={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(a.vectors.iterdir())

@@ -261,6 +261,14 @@ def compile_program(program, binding, contract, root=ROOT):
                 event['mask'] = integer(access.get('mask', 65535), 'mask', 1)
                 if event['mask'] > 65535:
                     raise ValueError('mask exceeds physical row width')
+                # raw_cycle is a stream-domain edge, relative to the job's
+                # fixed start just like response/commit. The capture lane is
+                # an ordinal, never a time offset. Preserve both so the exact
+                # native service profile can check the emitted calendar.
+                if 'raw_cycle' in access:
+                    event['raw_cycle'] = start + integer(access['raw_cycle'], 'raw_cycle')
+                if 'lane' in access:
+                    event['lane'] = integer(access['lane'], 'lane')
                 if 'read_visibility' in access:
                     event['read_visibility'] = access['read_visibility']
                 if 'ingress_resource' in access:

@@ -1,0 +1,35 @@
+{
+  "scope": "COMPONENT_ONLY actual controller, pcport/ECC, front and ring; die bind/adoption remains OPEN",
+  "cases": [
+    {
+      "name": "production_j0",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false
+    },
+    {
+      "name": "production_j8",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false
+    },
+    {
+      "name": "production_j16",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false
+    },
+    {
+      "name": "missing_host_read_debt_j16",
+      "returncode": -6,
+      "pass_observed": false,
+      "mutant_rejected": true
+    },
+    {
+      "name": "missing_kv_debt_j16",
+      "returncode": 0,
+      "pass_observed": true,
+      "mutant_rejected": false
+    }
+  ]
+}

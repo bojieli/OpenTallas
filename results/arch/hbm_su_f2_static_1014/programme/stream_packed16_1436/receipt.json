@@ -1,0 +1,37 @@
+{
+  "source_commit": "99938d028",
+  "hardware_commit": "3e76f9f27",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1613203-1792100122",
+  "run": "/home/ubuntu/hbm-su-stream-packed-typed-1436",
+  "status": "component_bit_exact_pass",
+  "edges_per_restart": 9489,
+  "restarts": 2,
+  "mutants_expected_fail": [
+    "DATA",
+    "ADDR",
+    "PHASE"
+  ],
+  "macros": 6,
+  "original_macros": 76,
+  "macros_removed": 70,
+  "macro_only_area_removed_mm2": 0.2724103872,
+  "latency_edges": 3,
+  "command_interval_edges": 1,
+  "config_transactions": 598,
+  "original_config_transactions": 9493,
+  "whole_su_source_candidate_only": true,
+  "physical_qualified": false,
+  "limits": [
+    "No die clock/pin/root or placement qualification",
+    "FullSU related3:4 RF36 numerical proof is separately pending",
+    "Model reconstruction covers all9489 rows for packing1,2,4,8,16; default config byte identical to frozen e74compiler"
+  ],
+  "source_sha256": {
+    "tools/hbm_static/su_top_compile.py": "629601cd70562c06948f9a35c58e2d02136063ac024e9786e5925eed68767590",
+    "tools/hbm_static/su_arith_compile.py": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+    "tools/hbm_static/su_programme_compile.py": "39773fd242f8d9f12af872cee5638523bff99df8daf8d33245cf52c42f9feb1b",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  }
+}

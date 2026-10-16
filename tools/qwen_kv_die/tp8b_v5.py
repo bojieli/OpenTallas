@@ -1061,7 +1061,7 @@ def _wrap(v, m, G, peers):
         # Legacy frame clock planning cannot mirror M8 pins; these two frames are
         # replaced by closed M5 pins below, so construct their disposable frame R0.
         frame_model = dict(model)
-        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl')
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl', 'qfd_sp_vector_memory_par')
                                 or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')) else i
                                 for i in model['insts']]
         for i in frame_model['insts']:
@@ -1071,7 +1071,23 @@ def _wrap(v, m, G, peers):
                 i.orient = 'R0'
             elif i.master == 'qfd_tile_nl':
                 i.master = 'qfd_tile_nk'  # base frame shape; actual node-less ports below
-        M = base_m(frame_model, k, port_bits)
+        # Legacy frame constructors use the historical VM spelling. Generate only
+        # its disposable geometric frame, then expose the NEW parallel source master.
+        parallel_vm = any(i.master == 'qfd_sp_vector_memory_par' for i in model['insts'])
+        if parallel_vm:
+            for i in frame_model['insts']:
+                if i.master == 'qfd_sp_vector_memory_par':
+                    i.master = 'qfd_sp_vector_memory'
+        frame_bits = dict(port_bits or {})
+        if parallel_vm:
+            frame_bits.update({('qfd_sp_vector_memory', p): n
+                for (mst, p), n in (port_bits or {}).items() if mst == 'qfd_sp_vector_memory_par'})
+        M = base_m(frame_model, k, frame_bits)
+        if parallel_vm:
+            vm_frame = M.pop('qfd_sp_vector_memory')
+            vm_frame.name = 'qfd_sp_vector_memory_par'
+            vm_frame.note += ' | NEW PAR_RB=1 source specialization; geometric frame only, no inherited physical view'
+            M[vm_frame.name] = vm_frame
         byi = {i.name: i for i in model['insts']}
         Master = type(next(iter(M.values())))
         # Every real leaf master uses the same outline as its placed instance.
@@ -1405,7 +1421,7 @@ def _wrap(v, m, G, peers):
                 if sp[0] == 'face' and sp[2] in 'NS' and p not in ('va', 'vq'):
                     q.ports[p] = sp[:2] + ('S' if sp[2] == 'N' else 'N',) + sp[3:]
         # ---- T10 / T14 / T17: VM region, SU, seq_su, control tile: pins toward their peers on the final placement
-        vmm = M.get('qfd_sp_vector_memory')
+        vmm = M.get(byi['sp_vector_memory'].master)
         if vmm is not None:
             vi, si = byi['sp_vector_memory'], byi['sp_su64_sfu']
             sx, sy = VM_ENV['w'] / vmm.w, VM_ENV['h'] / vmm.h
@@ -1501,7 +1517,7 @@ def _wrap(v, m, G, peers):
             sq_ = M.get('qfd_seq_su')
             if sq_ is not None and 'kvd' in sq_.ports:
                 sq_.ports['kvd'] = (sq_.ports['kvd'][0], 44) + tuple(sq_.ports['kvd'][2:])
-            vmm_ = M.get('qfd_sp_vector_memory')
+            vmm_ = M.get(byi['sp_vector_memory'].master)
             if vmm_ is not None and 'ar' in vmm_.ports:
                 vmm_.ports['ar'] = (vmm_.ports['ar'][0], 520) + tuple(vmm_.ports['ar'][2:])
         # v1.2 (compute lead r4, 21:4x): contract straps are REAL pins of the receiving master.  C14's abstracts had no
@@ -1737,13 +1753,29 @@ def _wrap(v, m, G, peers):
                 from qwen_split.static_link_bind import install_masters as install_static_link
                 from qwen_split.direct_up4 import partition_master as _pm
                 install_static_link(M, model, Master, _pm)
+            if model.get('res_train_bind'):
+                from qwen_split.res_train_bind import install_masters as install_res_train
+                from qwen_split.direct_up4 import partition_master as _pm2
+                install_res_train(M, model, Master, _pm2)
+            # An added source tap can fragment already-connected non-native
+            # consumers (slab tc and X tap gi). Preserve their exact real pin
+            # rectangles while exposing the same numeric aliases on every peer.
+            from qwen_split.direct_up4 import partition_master as _fragment_master
+            for name_, aliases_ in model.get('port_join', {}).items():
+                q_ = M.get(name_)
+                if q_ is None:
+                    continue
+                pending_ = {a_: rb_ for a_, rb_ in aliases_.items() if rb_[0] in q_.ports}
+                if pending_:
+                    rects_ = v.pin_rects(q_, 1, {p_: sp_[1] for p_, sp_ in q_.ports.items()})
+                    _fragment_master(q_, pending_, rects_)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 
     v.V5_FINAL_MASTERS = final
     # split compute C17: band_lanes may be placed MX (band 0 stack mirrored); its clock pins are the closed native view's
     # real pins set in final(), so the generic mirror clock-pin relocation must not run for it
-    v.MIRROR_CK_FINAL = ('qfd_sp_band_lanes',) if SPLIT_COMPUTE else ()
+    v.MIRROR_CK_FINAL = (('qfd_sp_band_lanes',) + tuple(f'qfd_sp_res_train{suffix}_{b}' for suffix in ('', '_par') for b in range(3))) if SPLIT_COMPUTE else ()
 
     def port_widths(model, k=1):
         w = base_pw(model, k)
