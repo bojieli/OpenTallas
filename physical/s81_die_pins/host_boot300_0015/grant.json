@@ -1,0 +1,52 @@
+{
+ "scope": "CONDITIONAL_INITIALIZATION_CLOCK_GRANT_NOT_PHYSICAL_QUALIFICATION",
+ "master": "dsfd_host_c",
+ "outline_um": [
+  453.6,
+  77.76
+ ],
+ "old_pins_preserved": 993,
+ "new_total_pins": 994,
+ "clock": {
+  "port": "ck_boot",
+  "face": "S",
+  "layer": "M5",
+  "at_um": [
+   227.484,
+   0
+  ],
+  "period_ps": 3333.3333333333335,
+  "ratio_to_stream": [
+   4,
+   1
+  ],
+  "ratio_to_serial": [
+   3,
+   1
+  ],
+  "phase": "fixed common epoch, die delivers phi-R after measured insertion",
+  "minimum_same_layer_old_pin_edge_gap_um": 0.168,
+  "wrapper": "Declare actual clock and exclude from generic data pin registers"
+ },
+ "cold_init": {
+  "prefix_fast_edges": 64,
+  "previous_prefix_fast_edges": 16,
+  "added_fast_edges": 48,
+  "added_time_ns": 40,
+  "normal_token_edges_added": 0
+ },
+ "source": {
+  "old_record": "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_host_c.json",
+  "old_record_sha256": "099dbd083abde00d53f93da3d600f98be6348df330e327b00e0728445234035b",
+  "old_tcl_sha256": "9e2a358370a756f6549321068ab55a333e66ac95364e44a80f56e784e0c010f1",
+  "rtl_commit": "ca6f417eb",
+  "compiler_prefix_commit": "59a46607b"
+ },
+ "required": [
+  "actualmapped-memory HOST/c9/PQ composition proof plus mutants",
+  "clock sink census and measured tree",
+  "native launch220/capture190/spread80",
+  "TT setup>=0, FF hold>=0, DRC0",
+  "all old pin rectangles byte-identical; no physical qualification inheritance"
+ ]
+}
