@@ -58,7 +58,7 @@ module qkd_ctrl_pc_host_static_core #(
     // domains plus actual upstream quiet, front idle and return-ring idle.
     output reg idle_core,idle_hbm,output reg drain_fault_core,drain_fault_hbm,
     // ---- hardened-child seams (wires-parent qkd_ctrl_pc_host_static); every seam output is flop-driven ----
-    output reg          p_col_v, p_col_we, p_col_sr,     // column one edge before the port's pin capture
+    output wire         p_col_v, p_col_we, p_col_sr,     // dv[LW-2] flops: one edge before the port's pin capture
     output reg          p_w_v,                         // static write data, registered (+1 hclk, hidden by >= 4-edge column)
     output reg  [255:0] p_w_d,
     input  wire [287:0] p_wd,
@@ -234,11 +234,8 @@ module qkd_ctrl_pc_host_static_core #(
     wire [287:0] wd = p_wd;
     wire         kv_v = p_kv_v, em_v = p_em_v, port_fault = p_fault;
     wire [257:0] em_d = p_em_d;
-    generate if (LW >= 2) begin : g_pcol
-        always @(posedge hclk or negedge h_rn)
-            if (!h_rn) begin p_col_v <= 1'b0; p_col_we <= 1'b0; p_col_sr <= 1'b0; p_w_v <= 1'b0; end
-            else begin p_col_v <= dv[LW-2]; p_col_we <= dwe[LW-2]; p_col_sr <= dsr[LW-2]; p_w_v <= c_v && c_d[286]; end
-    end endgenerate
+    assign p_col_v = dv[LW-2], p_col_we = dwe[LW-2], p_col_sr = dsr[LW-2];   // CVL >= 1
+    always @(posedge hclk or negedge h_rn) if (!h_rn) p_w_v <= 1'b0; else p_w_v <= c_v && c_d[286];
     always @(posedge hclk) p_w_d <= c_d[255:0];
 
     // ---- read tags: {open row, j} per KV RD, in order ----------------------------------------------------------------
