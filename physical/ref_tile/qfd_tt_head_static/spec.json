@@ -158,7 +158,7 @@
    "count": 1,
    "at": [
     43.2,
-    43.2
+    27.0
    ],
    "orient": "R0",
    "inst": "*u_head*g_m?0?*u_pm",
@@ -173,7 +173,7 @@
    "count": 1,
    "at": [
     43.2,
-    151.2
+    129.6
    ],
    "orient": "R0",
    "inst": "*u_head*g_m?1?*u_pm",
@@ -265,7 +265,7 @@
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-tt-static",
-  "tag": "h4",
+  "tag": "h5",
   "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
   "extra_paths": [
    "physical/qwen_tt_static_cluster_1015",
@@ -306,7 +306,7 @@
     "fail_regex": "REGROUP_FAIL"
    }
   ],
-  "structural_change": "h4 (Q-COMPUTE-ELEM r2, coordinator 12:50 10-15): h3 gate placement reg->out -633.9 ps (u_sd_me_i_wcs -> native route + resident relocation, 16 levels -> rom_cmd) and reg->reg -632.6 ps (u_ctrl_me st[1] -> hq_fill -> 2,048 hq/hq1 enables = ~1 ns buffer tree). Fixes: (1) rom_cmd leaves from a register (CMDREG=1, +1 edge on the ROM-tree command, ACCEPTED; measured 0 added cycles on the 8-run head_program_rank7 programme phase: all 8 m_fin on the same edges with and without the register); (2) FIFO-head fill as 32 kept slices (HFC=32: per-slice copies of run/fq_n!=0/hc/h_wr/fq_rd with the same next state, each writing 32 bits of hq/hq1; exact, 0 cycles, sim assertion vs the shared state). Regroup bench m0 PASS (ref parent carries the same command register; HFC checked against the ref's unsliced controller), m1/m2 FAIL.",
+  "structural_change": "h5 (Q-ELEM 1705): same RTL/outline/ports/edges as h4; floorplan only. h4 census (gate 133358 4_1_cts): the two 171.3x77.8 SRAMs at y43.2/151.2 split the std area into a 30 um mid channel + rims; obstruction-aware H-tree branch points collapse into that channel (L1..L6 at y~148) and the NE-corner pin-flop clusters hang 300 um off clkbuf_6_63__f (+266 ps): insertion 535.9 / spread 245.8. h5 stacks both SRAMs on the pin-free S face (y27.0 / y129.6, 24.8 um channel, >=20 um S rim) leaving one contiguous U-shaped std region (N band 52 um + E/W rims) for the tree; ck_pm0/1 W pins follow the SRAM clk heights. Also carries main 9571099a8 (hybrid post-CTS repair_clock_nets with entries protected).",
   "cycles_added": 1
  },
  "children": [],
@@ -322,12 +322,12 @@
  ],
  "pin_ranges": {
   "ck_pm0": [
-   42.0,
-   46.0
+   25.8,
+   29.8
   ],
   "ck_pm1": [
-   150.0,
-   154.0
+   128.4,
+   132.4
   ]
  }
 }
