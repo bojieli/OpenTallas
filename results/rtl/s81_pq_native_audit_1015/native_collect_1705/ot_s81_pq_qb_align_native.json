@@ -1,17 +1,17 @@
 {
   "schema": "opentallas.source-pinned-component-native-boundary-audit.v1",
-  "job": "s81pq_qb_align_native-p3-040b3fe3c",
-  "source_commit": "040b3fe3cfd39fbff38c85c2d943a55c47034c64",
-  "record_commit": "2cae9d85b5f3ba0b994a43cc715d0900ccd7e3fa",
-  "audit_base_commit": "b12e714a28de928c855ef7b4b1c62570e1111ca3",
+  "job": "s81pq_qb_align_native-p4-sclk-1705-ea4e8c39d",
+  "source_commit": "ea4e8c39d4345d6fde19533818bd18e0133ba05f",
+  "record_commit": "ffc2ad3ebcdf73c813a42e4671961f0c1d8d8351",
+  "audit_base_commit": "5dca13a5dfe1dbf6242210de46df99b3e0955220",
   "scope": "Component exported boundary only; not full layer, token, production adoption or die qualification.",
   "route": {
     "host": "ot-epyc4",
-    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81pq_qb_align_native-p3-040b3fe3c",
-    "tt_setup_ps": 265.34,
-    "ff_hold_ps": 8.5,
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81pq_qb_align_native-p4-sclk-1705-ea4e8c39d",
+    "tt_setup_ps": 283.71,
+    "ff_hold_ps": 12.94,
     "drc": 0,
-    "ss_sensitivity_ps": 131.1
+    "ss_sensitivity_ps": 168.57
   },
   "source": {
     "path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
@@ -20,43 +20,37 @@
     "matches_current_main": true
   },
   "view_sha256": {
-    "ot_s81_pq_qb_align_native_ff.lib": "33223946aeb4919aa3038d7b2c2a218f60eed7b5c75dfc7101fc6040a5cc9921",
-    "insertion.json": "9053d67c02db07f2683f51220a91d02bb132d4a983c56ae99005986eb79fa613",
-    "ot_s81_pq_qb_align_native_tt.lib": "61224781d02143a99512c3a416c8de83b1464593780839dba80c01d65f0dd358"
+    "ot_s81_pq_qb_align_native_ff.lib": "4351ed1c3d1b53517385e93d9acc0a3e9209282b46e80c872454922660d8d01a",
+    "insertion.json": "7d69104853648a025b1286e4c9c113a2f28baef998eb7ac7f3d067fc24885bc9",
+    "ot_s81_pq_qb_align_native_tt.lib": "1af64b40209f72b5bd7ecb2b94dc32418548c6006fc5674e7b3e163d3033d13a"
   },
   "clock_references": {
     "clk": {
-      "rise": 162.6,
-      "fall": 173.495115,
-      "min": 139.50601,
-      "max": 182.5032,
+      "rise": 145.0,
+      "fall": 155.07049999999998,
+      "min": 122.33271,
+      "max": 157.95097,
       "src": "insertion.json boundary mean",
-      "bmin": 148.1,
-      "bmax": 182.5,
+      "bmin": 130.0,
+      "bmax": 158.0,
       "n": 3275
     }
   },
   "raw_metrics": {
     "launch": {
-      "pin": "bc_hr_q[295]",
+      "pin": "bt_d_q[32]",
       "clock": "clk",
-      "ps": 223.65026999999998
+      "ps": 216.85266000000001
     },
     "capture": {
-      "pin": "bt_d[176]",
+      "pin": "bc_hr[91]",
       "clock": "clk",
-      "ps": 138.45367
+      "ps": 138.05087
     },
-    "spread_ps": 34.400000000000006,
-    "ff_min_launch_minus_max_hold_ps": 156.86148
+    "spread_ps": 28.0,
+    "ff_min_launch_minus_max_hold_ps": 166.29715
   },
-  "violating_launch_arcs": [
-    {
-      "pin": "bc_hr_q[295]",
-      "clock": "clk",
-      "ps": 223.65026999999998
-    }
-  ],
+  "violating_launch_arcs": [],
   "violating_capture_arcs": [],
   "combinational_pins": [],
   "unconstrained_or_unused_inputs": [],
@@ -71,5 +65,5 @@
     "capture_ps": 190,
     "spread_ps": 80
   },
-  "boundary_status": "FAIL"
+  "boundary_status": "PASS"
 }
