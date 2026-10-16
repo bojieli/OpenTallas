@@ -79,6 +79,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
 LIGHT_STAGE_RAM_GB = 8      # drive-0849: bench / collect / export stages
+SYNC_DISK_GB = 16           # SYNC-ROOM: disk one source sync may write (src/ + bench_src*/ beyond the view store)
 LIGHT_DISK_FLOOR_GB = 30    # their run-root / disk-root floor (full floor for route / calibrate / ECO)
 ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
@@ -1521,6 +1522,7 @@ class Fleet:
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
+        self.syncing = {}        # host -> jobs placed there and still syncing their source (SYNC-ROOM)
         self.last_good = {}      # host -> (t, last successful probe): used for PROBE_LAST_GOOD_S when a probe fails
         self.tool_good = {}      # host -> (t, last successful toolchain probe)
 
@@ -1698,6 +1700,20 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                                            for p in self.inflight_launches.get(host, [])]
             self.probe_cache.pop(host, None)
 
+    def sync_room(self, h):
+        """SYNC-ROOM (ROOT 2026-10-15): placing a job writes its source snapshot (src/ + bench_src*/, up to ~28 GB before
+        the view-store fix) before any stage runs, but the disk floor was judged on the first stage's RAM only: a light
+        first stage kept just LIGHT_DISK_FLOOR_GB, and AGIdock took 14 syncs at 60 GB free and hit 0 (17:40 10-15).
+        A placement now also needs room for every sync already in flight on the host plus its own."""
+        info = self.probe(h)
+        if info is None or info.get("disk_gb") is None:
+            return True, "ok"
+        n = self.syncing.get(h, 0) + 1
+        if info["disk_gb"] - SYNC_DISK_GB * n < LIGHT_DISK_FLOOR_GB:
+            return False, (f"{host_cfg(h)['label']} run root {info['disk_gb']} GB free - {n} source sync(s) x {SYNC_DISK_GB} GB "
+                           f"< {LIGHT_DISK_FLOOR_GB}")
+        return True, "ok"
+
     def choose(self, spec, exclude=()):
         with FLEET_LOCK:
             return self._choose(spec, exclude)
@@ -1789,6 +1805,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         for h in order:
             ok, msg = self.fits(h, threads, ram)
             if ok:
+                ok, msg = self.sync_room(h)
+            if ok:
+                self.syncing[h] = self.syncing.get(h, 0) + 1
                 return h, None
             why.append(msg)
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
@@ -8050,6 +8069,12 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
+    sync = {}
+    for x in all_jobs():
+        if x["status"] == "SYNC" and x.get("host") and not x.get("source_synced"):
+            sync[x["host"]] = sync.get(x["host"], 0) + 1
+    with FLEET_LOCK:
+        fleet.syncing = sync
     schedule_housekeeping()     # release_bulk / release_deep / stale24_sweep: background, never ahead of dispatch
     t_mg = time.time()
     try:

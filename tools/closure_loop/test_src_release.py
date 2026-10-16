@@ -55,3 +55,14 @@ def test_keep_marker_and_candidates(tmp_path):
             patch.object(cl, "collect_crash_after_closed_verdict", lambda j: False), \
             patch.object(cl, "viz_elem_running", lambda j: False), patch.object(cl, "STATE", tmp_path):
         assert [x["name"] for x in cl.src_release_candidates(jobs)] == ["a"]
+
+
+def test_sync_room_counts_inflight_syncs():
+    f = cl.Fleet.__new__(cl.Fleet)
+    f.syncing = {"h": 2}
+    f.probe = lambda h: {"disk_gb": 70}
+    with patch.object(cl, "host_cfg", lambda h: {"label": "H"}):
+        ok, msg = f.sync_room("h")          # 70 - 3 x 16 = 22 < 30
+        assert not ok and "3 source sync" in msg
+        f.syncing = {"h": 1}
+        assert f.sync_room("h")[0]          # 70 - 2 x 16 = 38
