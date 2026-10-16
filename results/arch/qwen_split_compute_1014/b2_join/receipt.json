@@ -2,7 +2,7 @@
   "status": "COMPONENT_PASS_NATIVE_FULL_LAYER_OPEN",
   "native_full_layer_qualified": false,
   "physical_qualified": false,
-  "source_revision": "06911148d; dependency9d3eee749, halftrain wrapperbench1474a1f58",
+  "source_revision": "3801d12c4 halftrain inclrealRTLmutant guard; c136c9c01 uf8controller; dependency1c8974782 restoredports pendingactualwholeport bench",
   "checks": {
     "native_sram": {
       "status": "PASS",
@@ -60,13 +60,48 @@
     },
     "generic_synthesis": {
       "status": "PASS_GENERIC_NOT_MAPPED",
-      "unit": "oth-ubuntu-4024911-1792165342",
-      "halftrain_cells": 144003,
-      "halftrain_ff": 66507,
-      "per_bank_ff": 2745,
+      "scope": "BAND0 actualbody; no measuredASAP7 area",
+      "halftrain_cells": 144031,
+      "halftrain_ff": 66532,
+      "per_bank_ff": 2746,
       "banks": 24,
-      "parent_ff": 627,
-      "physical_area_measured": false
+      "parent_ff": 628,
+      "independent_clock_entries": 25,
+      "other_hb_end_marker_ff_count": "HB5mayretainadditionalendbits, rawdeclaredstate givesconservativebound; not measuredall6"
+    },
+    "native_e3": {
+      "status": "PASS",
+      "unit": "oth-ubuntu-4154495-1792166517",
+      "host": "ot-epyc4",
+      "ot_run_exit": 0,
+      "declared_clock_bits": 2572,
+      "clock_phase_scope": "all independent ports tied to one idealbench clock; physicalphi-R/insertion not qualified",
+      "actual_implementation": "qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3 -> native mappedSRAM/write/control/relay/return leaves",
+      "emitted_rows": 848,
+      "exact_every_rb_cycle_and_payload": true,
+      "readback_rows": 560,
+      "end_markers": 144,
+      "headonly_markers": 64,
+      "actual_hardware_mutant": "OT_QFD_B2_LATE_CAPTURE changesactualbank capture by+1; rejected by exactRB payload/calendar check",
+      "fault_stimulus_negative_controls": [
+        "inputpayloadcorruption",
+        "missingproducerbeat"
+      ],
+      "cold_reset_stations": {
+        "added_ff": 25,
+        "cold_release_added_edges": 1,
+        "normal_added_edges": 0
+      }
+    },
+    "controller_uf8": {
+      "status": "ABI_AND_FRAME_PASS",
+      "unit": "oth-ubuntu-4126474-1792166179",
+      "ot_run_exit": 0,
+      "native_frame_checks": 144,
+      "abi_vectors": 128,
+      "all8actualupperfaults_checked": true,
+      "actual_hardware_mutant": "swappedAM0/1 wires rejected",
+      "operation_calibration": "OPEN, nextwholeportactualROMbench"
     }
   },
   "prior_failure_receipts": [
@@ -96,30 +131,49 @@
     "halftrain_headonly": "parentmarker only; exactfixture observesF+1",
     "native_vm_return": "RO6+inputpin1 inherited sourcepipeline, no physicalqualification"
   },
-  "model_scope": "Component calendar only: oldPAR3 endcycle deltasPC1-7/PC12-46/PC16-28/PC20-14; no physicalrelaycycle or tokenratecredit.",
+  "model_scope": "Component calendar only: oldPAR3 endcycle deltasPC1-7/PC12-46/PC16-28/PC20-14; no physicalrelaycycle or tokenratecredit.50newsourceFF +1issuer-observeredge,25coldresetFF/half no normaledges; selectorbalancedfork3edges+actualwirehops mustentercomposedcalendar.",
   "open": [
     "Full realcontroller-to-realport tc/ty/word->AM/RQ calibration and composed operation bench",
     "ActualnativeSU/seq/attention writer reservations in compilerlayercalendar",
     "All source-bound actualrelayages and six-path padding, phi-R phases and insertion",
     "Newphysicalcontroller/train/VMparent/views: TTsetup FFhold DRC0 native220/190/80",
-    "VM sourceABI exposes2572clockbits, actualconnectedpinXY/insertionrequiresE3 ownerwitness",
-    "Die integration, realviews and exactfull-layer/tokenqualification"
+    "Die integration, realviews and exactfull-layer/tokenqualification",
+    "E3declared2572clockbits testidealphase only; realconnectedpinXY/insertionrequiresE3ownerwitness",
+    "ProposedNEWhalftrainoutline777.6x518.4um perhalf isconservativegrantproposal, notmeasuredcellarea/physicalPASS"
   ],
   "files": {
-    "calendar.json": "18351d66d43c0960cf247a3ed1275b15eba37e329df82b570bf4f76cba39e8f4",
-    "interfaces.json": "cd788856c7b1ae234a5a4ba1b92fcd366b53f7e6b4a605efa15291eacd3793ff",
+    "calendar.json": "96ce2bb056aab6e689a6d006281410afa9740bd408bc04bdf0470c0c7807eaeb",
+    "interfaces.json": "1fb955833ac01c7e3732edfbdbe109a1934c0a0fd2684ed7b9e603341bb49468",
     "issuer/run1.log": "7202d133f8bcd2bd4b38d79457ae476e66aa4485b88486778fbcf7ffdec9dbbe",
     "issuer/run3.log": "1792ed2f42187c4a687a383834ec49fa4c039e4e8202688e3e7b00c92ca867f3",
     "issuer/run0.log": "977f3a9b041a2d492c01944f714caf77cec83159a1858c6fa15bbd5aa2fd405f",
+    "native_e3_actual/mutant2.log": "d60367027a4b4c354723320d203a6e9c88d9f63c9eeafdb470dba63886eeabb8",
+    "native_e3_actual/source.sha256": "0ca53adaa02eff2e4a5863f860bb58f5bd5e17a45e05a499b2685ca49086ebde",
+    "native_e3_actual/positive.log": "8e3ed991344353561220364d04ad444a595aa810619afd0582fc429c807dd85b",
+    "native_e3_actual/mutant1.log": "19c1ef79c47c3fbddab0487775965bae9b8864c290c40191f37f128dd161fe91",
     "native_sram/mutant2.log": "5a91195e1bba7c469c0b75b15144c24448c10909f67f34c21966a1f4b33a3694",
     "native_sram/source.sha256": "4b0d6d190e515c436449a6156824e1a05ffc6631fb11927d03cf1a60965ed57c",
     "native_sram/positive.log": "0fbf70d8132fe58be67fcf380ac214f42650e9b98cea2b008c984774a2b311bc",
     "native_sram/mutant1.log": "82fb3e7c447ad16be95144a982099b616fb83f545f1f0036d93e1740486c85a9",
+    "controller_uf8/run1.log": "bed57fcbea0e52e456f7cacc22fb6ef49b051f1da17c06ed804802b43954bb4c",
+    "controller_uf8/source.sha256": "10a07d8b557a7ee4fe507d5f9491816d226491891ff665146081bc7d81cffaa3",
+    "controller_uf8/run0.log": "02daa11ea8ef2148d2a1bfddcd83b19c75f863909b73f1a6fed4350a46ac149c",
+    "native_e3_bank_mutant/source.sha256": "0ca53adaa02eff2e4a5863f860bb58f5bd5e17a45e05a499b2685ca49086ebde",
+    "native_e3_bank_mutant/mutant.log": "e31c175668c6328c15eafd5f8783671eacc632cfc4cccf9caabdede885ebe1dd",
     "synthesis/halftrain-generic-stat.json": "a280e16dad5f6e8935e07a06c4e599e18d09ea3004a0ec700a0fa5eaf0946404",
+    "synthesis/halftrain-reset-generic-stat.json": "dc7630e5be1ffc25405564b4b402f66fe98acb7ac4ee311e3b4f373852431ce4",
+    "native_e3/mutant2.log": "d60367027a4b4c354723320d203a6e9c88d9f63c9eeafdb470dba63886eeabb8",
+    "native_e3/source.sha256": "7eb4693f0ac5529c45f5f902765bdb1876750300011e64845d0258d6b312da4e",
+    "native_e3/positive.log": "64383917bd15b42d63482372729bcdddf4e8347482fbbf706edebabe0c3ef1e0",
+    "native_e3/mutant1.log": "19c1ef79c47c3fbddab0487775965bae9b8864c290c40191f37f128dd161fe91",
     "train_source/run1.log": "ba98cc1dd3dcc3888194eecd357dafaea19fd7141e37c9c1abe9991595c6f377",
     "train_source/run0.log": "b0a920b6a0c0d46782a2543614fb9709e547666e499f27b89d10f4ae3d84c17d",
     "controller/run1.log": "7ac4e1c2469992ed2d28764af33f1c7c49d1725399de8da27dbe447e65ff0458",
     "controller/source.sha256": "1f2722aa2730fa3d78662bed07315ad444c9b419ccc055c8973b7fb7b3f2a2a6",
-    "controller/run0.log": "6c819bfa0363cc84632912cf66f6fdb027a59c4c4756bfbc45fd809019f5a1e2"
+    "controller/run0.log": "6c819bfa0363cc84632912cf66f6fdb027a59c4c4756bfbc45fd809019f5a1e2",
+    "native_sram_reset/mutant2.log": "5a91195e1bba7c469c0b75b15144c24448c10909f67f34c21966a1f4b33a3694",
+    "native_sram_reset/source.sha256": "b0e13ac05478e9ffa41433ffbfa01e744a970ddef562bc7cdd86d1826e3edd11",
+    "native_sram_reset/positive.log": "1b080ae0e58b4fc813db33a2b16d9f0ccbf3553f61a6f12f5dbd08c01a1ab575",
+    "native_sram_reset/mutant1.log": "82fb3e7c447ad16be95144a982099b616fb83f545f1f0036d93e1740486c85a9"
   }
 }
