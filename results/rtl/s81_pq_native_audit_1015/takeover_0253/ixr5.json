@@ -1,0 +1,50 @@
+{
+  "schema": "s81.takeover.native_receipt.v1",
+  "job": "s81pq_ix_rb_native-r5cts-2e256386c",
+  "source_commit": "2e256386c",
+  "materialized_from": "closure_loop/s81pq_ix_rb_native-r5cts-2e256386c/record/views/ot_s81_pq_ix_rb_native",
+  "files_sha256": {
+    "export_tt.tcl": "830d08cbc9d5d263aa7a24b356650731dd8e8a4dfa78d421c42ba5321e0c6410",
+    "abstract.json": "628d97bc90ee9025dc1453c43da891fd837bb7fb998cdd56178e06301f65738d",
+    "export_ff.tcl": "7d02ac8d5213f5ff38b84c44c633e321818b37745b919faf4d8be8e96f5c407d",
+    "insertion.json": "7990cdf160a8d30debec574796b5c5c0e8cdb7c14d8c4bd1bc6eb7dd635d376d",
+    "export_tt.log": "251d8b5f005d407178876f4d633f6491312f1c74463eb8ba00560ababe0c46a3",
+    "ot_s81_pq_ix_rb_native_tt.lib": "ffec0d571263dc227c70aacf9474328caa502d35fe273730e7f02dda25913022",
+    "export_ss.log": "3177ec56b9bf1d53684eb3fee7f899be42b1ce77dac2dd0147b269543f4d42e3",
+    "export_ff.log": "9004efa27ade8fbf21893c19babd19a3b2a0dd9683ace135b1679f7c869b2d09",
+    "ot_s81_pq_ix_rb_native_ss.lib": "e85de5d05f301594df838052a883e32ee8047a3db6b7e9700cef61a2af66a7c2",
+    "ot_s81_pq_ix_rb_native.lef": "6cdd2580d2a0eabeaa81d71db3f8cfd347768f05a4a5a16d7f77369e55315ba9",
+    "export_ss.tcl": "17636321fe49411e3439d9e0aa5b0ff37d88d9884b4e347a3559071195a89fd3",
+    "ot_s81_pq_ix_rb_native_ff.lib": "35d1311b0106ef88d7003185fede272f4a6759daafe53f2dea1e9e9cbf82de19",
+    "child_lint.json": "8599e934bced6beb67cd7e1af784d92a75f38f5a5fae6c09f09d04847d436444"
+  },
+  "physical": {
+    "tt_ps": 18.67,
+    "ff_ps": 0.21,
+    "drc": 0
+  },
+  "native": {
+    "cell": "ot_s81_pq_ix_rb_native",
+    "view": "physical/ixr5",
+    "lib_cell": "ot_s81_pq_ix_rb_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 154.1,
+    "spread_ps": 61.5,
+    "outputs": 33,
+    "inputs": 295,
+    "launch_ps": 127.9,
+    "launch_pin": "bt_d[15]",
+    "capture_ps": 167.1,
+    "capture_pin": "ba_hi[135]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "scope": "Component physical/native boundary only; no full-layer/full-token qualification."
+}
