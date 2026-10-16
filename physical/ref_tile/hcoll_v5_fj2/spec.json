@@ -125,7 +125,17 @@
    }
   ],
   "views_to": "physical/ref_tile/hcoll_v5_fj2/views",
-  "record_to": "results/rtl/ref_tile/hcoll_v5_fj2"
+  "record_to": "results/rtl/ref_tile/hcoll_v5_fj2",
+  "reroute_reason": {
+   "kind": "pin_register",
+   "source": "physical/ref_tile/hcoll_v5_fj2/native_audit.json@c938aa284",
+   "why": "native capture 512.9 ps > 190 ps on 71 unregistered inputs of hcoll_v5_fj2-c1045-54f035ca0 (unavailable_fault 18, select_fault 18, capture_fault 9, issuer_uop_pc 6, tkm_dest_v 4, tkm_del_slot 3, link_abort 2, issuer_busy, program_active, rst_n, issuer_fault, protocol_fault, ring_fault, reduce_fault, issuer_uop_v, cfg_target, tkm_start, arg_capture_slot). The 5bb671b57 successor captures every input at its pin (sync rst_n D-pin flop); exceptional faults +1, HOST frames +1 (lockstep receipt results/arch/hbm_coll_hard_v5_1045/bench_q2_5bb671b57)."
+  }
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "physical/ref_tile/hcoll_v5_fj2/native_audit.json@c938aa284",
+  "why": "native capture 512.9 ps > 190 ps on 71 unregistered inputs of hcoll_v5_fj2-c1045-54f035ca0 (unavailable_fault 18, select_fault 18, capture_fault 9, issuer_uop_pc 6, tkm_dest_v 4, tkm_del_slot 3, link_abort 2, issuer_busy, program_active, rst_n, issuer_fault, protocol_fault, ring_fault, reduce_fault, issuer_uop_v, cfg_target, tkm_start, arg_capture_slot). The 5bb671b57 successor captures every input at its pin (sync rst_n D-pin flop); exceptional faults +1, HOST frames +1 (lockstep receipt results/arch/hbm_coll_hard_v5_1045/bench_q2_5bb671b57)."
  },
  "params": {},
  "inter": [],
