@@ -420,5 +420,6 @@
  "clock_cts_roots": [
   "clk",
   "clk_cap"
- ]
+ ],
+ "slot_change_request": "H-HARDEN 0030 el1015-hbm-v15-harden.log 2026-10-16: calendar_* (x4) typed clock pins on the W face: clk_mem [24.48,24.576] (raw SRAM entry, 22.9 um from macro clk pin), clk [43.536,43.632], clk_cap [43.632,43.728]; the rest of the W run recentred 0.048 um down; outline/E/S unchanged. Structural fix of native FAIL hv15_vm_cal_u-compact2330-24eeb93bb (W capture root vs E/S body root)."
 }
