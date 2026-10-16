@@ -1,8 +1,164 @@
 {
  "schema": "opentallas.s81.wfc-final-routed-native.v1",
  "source_commit": "22c8eb651",
- "scope": "First actual routed leaf PASS; remaining WFC leaves and full-parent qualification open. Daemon final bookkeeping pending.",
+ "scope": "Seven actual routed WFC leaves native PASS (x34_s/x34_t/x43_s/x43_t epoch transports, fault core/serial, request hop1); return hop1 r2 gate WARN (route not yet submitted) and full-parent qualification remain open.",
  "rows": [
+  {
+   "cell": "ot_s81_vm_fault_x34_s_w1",
+   "view": "ot_s81_vm_fault_x34_s_w1",
+   "lib_cell": "ot_s81_vm_fault_x34_s_w1",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 46.2,
+   "spread_ps": 0.8,
+   "outputs": 10,
+   "inputs": 3,
+   "launch_ps": 173.4,
+   "launch_pin": "bpar[1]",
+   "capture_ps": 121.7,
+   "capture_pin": "s_d",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_fault_x34_s_w1_native_1016_r1-epoch1-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x34_s_w1_native_1016_r1-epoch1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x34_s_w1",
+   "raw_native": {
+    "launch_ps": 173.36735,
+    "capture_ps": 121.70282,
+    "spread_ps": {
+     "s_ck": 0.8000000000000043
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x34_s_w1/ot_s81_vm_fault_x34_s_w1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_vm_fault_x34_s_w1 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 14 blocked-above 0 blocked-same 0; clock s_ck insertion 51 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "ot_s81_vm_fault_x34_s_w1",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 14,
+      "blocked_above": 0,
+      "covered_below": 3,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "s_ck": {
+       "max_ps": 51.31,
+       "min_ps": 44.27
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 0
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "930bd0d865873426d1ed62d01c4b263950fdd337e5890b195ff03728a9cab410",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 345.52,
+    "FF": 31.01,
+    "DRC": 0,
+    "odb_sha256": "67649a66603620150b9ad1b54990fa66ae439964c6d4be93cd12f14d71e0ef34"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 345.5224995008166,
+     "route_slack_ps": 345.52
+    },
+    "ff": {
+     "export_slack_ps": 31.01266465854735,
+     "route_slack_ps": 31.01
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x34_s_w1_native_1016_r1-epoch1-22c8eb651/routes/ot_s81_vm_fault_x34_s_w1_native_1016_r1_epoch1_22c8eb651/work/orfs/results/asap7/opentallas_ot_s81_vm_fault_x34_s_w1_asap7_ref_ot_s81_vm_fault_x34_s_w1_native_1016_r1_epoch1_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "67649a66603620150b9ad1b54990fa66ae439964c6d4be93cd12f14d71e0ef34"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x34_s_w1/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x34_s_w1/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "a9fed8ae60572704ef74030cb1a771951ee00f1d0e57bb46622d195b815a4c24",
+    "density.png": "b45419d2a2ba463df9b2bde987e3d8316539f3d5032f5f7ad02679b443f32112"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "ot_s81_vm_fault_x34_s_w1_ff.lib": "4c1de4bc658c09168bc5f0f2c36692b47ace11c6f4073ed19fd3183c90085216",
+    "ot_s81_vm_fault_x34_s_w1_tt.lib": "10da4fabcf5e0482d7659d9762f1a6379a3dd809b732a500fbdfce5e33b7c7f6",
+    "ot_s81_vm_fault_x34_s_w1.lef": "841c80f899d239a1efd468c0d4b984c60b20cae0dadbcd37ca0410e0b8e05532",
+    "ot_s81_vm_fault_x34_s_w1_ss.lib": "3744a1f454e6686c86ceb90eb5cfa9f92e0138c0ce21a9e209372a831d4b5e68"
+   },
+   "image_findings": "Viewed actual6_final floorplan and density. Sparse face-local register clusters, isolated high-density bins with clear surrounding area, no macros or broad hotspot. Corrected x43 receiver has input bank cluster at west and small output cluster at east. Vertical M5 power pins."
+  },
   {
    "cell": "dsfd_vm_wfc_fault_core",
    "view": "dsfd_vm_wfc_fault_core",
@@ -25,6 +181,10 @@
    "comb_first": [],
    "pass": true,
    "fail_why": "",
+   "job": "dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_core",
    "raw_native": {
     "launch_ps": 171.68307,
     "capture_ps": 153.86066,
@@ -32,6 +192,7 @@
      "ck": 1.5
     }
    },
+   "native_pass": true,
    "child_lint_m5": {
     "schema": "opentallas.hier_contract.child_lint.v1",
     "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_core/dsfd_vm_wfc_fault_core.lef",
@@ -99,6 +260,23 @@
      }
     }
    },
+   "actual_routed_def": {
+    "sha256": "73342c790c7a1b3fc06614141a7a2c880700b96b507b4d357600120d7565ac6f",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
    "route": {
     "TT": 347.77,
     "FF": 28.17,
@@ -115,26 +293,808 @@
      "route_slack_ps": 28.17
     }
    },
-   "viewed_images_sha256": {
-    "floorplan.png": "4a2c750bd816b4e0a5c22e346986e8cf7026e5c13078c1f0accf95af1d72fa8b",
-    "density.png": "00f3ece4be4a2e615d3cac9bb529dddb7c72d9b617e0df9052d8be549e65fd76"
-   },
    "image_source": {
     "odb": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651/routes/dsfd_vm_wfc_fault_core_native_1016_r1_epoch1_22c8eb651/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_core_asap7_ref_dsfd_vm_wfc_fault_core_native_1016_r1_epoch1_22c8eb651/base/6_final.odb",
     "stage": "6_final",
     "sha256": "d41e295d6c49649ce11a6e9fd02ab11e3466e3e7beefccc3d956e336b40b6c7d"
    },
-   "image_findings": "Actual6_final ODB. Sparse mid-row face clusters, isolated red density cells, no macros or broad hotspot, vertical M5 power pins.",
-   "job": "dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
-   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_core",
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/dsfd_vm_wfc_fault_core/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/dsfd_vm_wfc_fault_core/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "4a2c750bd816b4e0a5c22e346986e8cf7026e5c13078c1f0accf95af1d72fa8b",
+    "density.png": "00f3ece4be4a2e615d3cac9bb529dddb7c72d9b617e0df9052d8be549e65fd76"
+   },
+   "images_actually_viewed": true,
    "export_sha256": {
     "dsfd_vm_wfc_fault_core.lef": "77f0112d2e2ce9404897082a2b8cfae9e2fde71698812fb386f409bcdfc0e919",
     "dsfd_vm_wfc_fault_core_tt.lib": "0ccd10b9c1b494f43ef0357a2b1463455999ebbf94252d6d8d9f623116be67a0",
     "dsfd_vm_wfc_fault_core_ss.lib": "07384559a258d51eb906202fb21ce994717e4e70821cc0bd5453c22185a65bbf",
     "dsfd_vm_wfc_fault_core_ff.lib": "a2bd3b586403f81e708eb09217947431da98ae528f2bcf7f8e6b83e982d0f729"
-   }
+   },
+   "image_findings": "Viewed actual6_final floorplan and density. Sparse face-local register clusters, isolated high-density bins with clear surrounding area, no macros or broad hotspot. Corrected x43 receiver has input bank cluster at west and small output cluster at east. Vertical M5 power pins."
+  },
+  {
+   "cell": "dsfd_vm_wfc_fault_serial",
+   "view": "dsfd_vm_wfc_fault_serial",
+   "lib_cell": "dsfd_vm_wfc_fault_serial",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 46.8,
+   "spread_ps": 2.1,
+   "outputs": 3,
+   "inputs": 4,
+   "launch_ps": 170.9,
+   "launch_pin": "e_q",
+   "capture_ps": 110.3,
+   "capture_pin": "rn",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_wfc_fault_serial_native_1016_r1-epoch1-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_serial_native_1016_r1-epoch1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_serial",
+   "raw_native": {
+    "launch_ps": 170.92723,
+    "capture_ps": 110.30721,
+    "spread_ps": {
+     "ck": 2.1000000000000014
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_serial/dsfd_vm_wfc_fault_serial.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_wfc_fault_serial 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 8 blocked-above 0 blocked-same 0; clock ck insertion 52 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_wfc_fault_serial",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 8,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 52.5,
+       "min_ps": 44.54
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 0
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "f115418af4b4b85fcd6d2ac900afd10d58c85c4c180f94681e12efe85c36e8b8",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 348.35,
+    "FF": 27.57,
+    "DRC": 0,
+    "odb_sha256": "ad4f04f2f9cb49b9c8f6907a0771bef486e64da661183b5e29f892e9cb1260ce"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 348.349071810361,
+     "route_slack_ps": 348.35
+    },
+    "ff": {
+     "export_slack_ps": 27.574595384827205,
+     "route_slack_ps": 27.57
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_serial_native_1016_r1-epoch1-22c8eb651/routes/dsfd_vm_wfc_fault_serial_native_1016_r1_epoch1_22c8eb651/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_serial_asap7_ref_dsfd_vm_wfc_fault_serial_native_1016_r1_epoch1_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "ad4f04f2f9cb49b9c8f6907a0771bef486e64da661183b5e29f892e9cb1260ce"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/dsfd_vm_wfc_fault_serial/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/dsfd_vm_wfc_fault_serial/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "8c35b61428edefbfc4b308b2b80981bed4e105a71bf08da9f5465f7587f8b7d8",
+    "density.png": "c1739ead5a9ca2414081172bc93d088dc9faef5f188f19969bac4ec0cd99ce12"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "dsfd_vm_wfc_fault_serial_tt.lib": "0323caf221355d6eda1355c8da731aa942fdddbf3d54d7fddd37a85477343c51",
+    "dsfd_vm_wfc_fault_serial_ss.lib": "d0429c56f4e98465b5d12d2036a65e85123181d0f876d3daee2bb5b0e6666664",
+    "dsfd_vm_wfc_fault_serial_ff.lib": "c96b024f7e75bb758fb7f82b12b806fb5bff6e943cb26c77a49afad635233545",
+    "dsfd_vm_wfc_fault_serial.lef": "e4e2ac35978a2724cfbb72601f7a45b6926bfac7ab11b7ffd2dc726ae52890ed"
+   },
+   "image_findings": "Viewed actual6_final floorplan and density. Sparse face-local register clusters, isolated high-density bins with clear surrounding area, no macros or broad hotspot. Corrected x43 receiver has input bank cluster at west and small output cluster at east. Vertical M5 power pins."
+  },
+  {
+   "cell": "ot_s81_vm_fault_x43_t_w1",
+   "view": "ot_s81_vm_fault_x43_t_w1",
+   "lib_cell": "ot_s81_vm_fault_x43_t_w1",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 46.6,
+   "spread_ps": 0.7,
+   "outputs": 11,
+   "inputs": 3,
+   "launch_ps": 172.2,
+   "launch_pin": "ph1_bad",
+   "capture_ps": 132.0,
+   "capture_pin": "s_v",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_fault_x43_t_w1_native_1016_r1-epoch1-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x43_t_w1_native_1016_r1-epoch1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x43_t_w1",
+   "raw_native": {
+    "launch_ps": 172.17496,
+    "capture_ps": 132.04391,
+    "spread_ps": {
+     "t_ck": 0.7000000000000028
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x43_t_w1/ot_s81_vm_fault_x43_t_w1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_vm_fault_x43_t_w1 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 15 blocked-above 0 blocked-same 0; clock t_ck insertion 52 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "ot_s81_vm_fault_x43_t_w1",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 15,
+      "blocked_above": 0,
+      "covered_below": 6,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "t_ck": {
+       "max_ps": 51.57,
+       "min_ps": 44.55
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 1
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "16b3717257b6e89624e1a3c461016c987c63254d22a8bce5bcde259d8363ba29",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 346.46,
+    "FF": 29.03,
+    "DRC": 0,
+    "odb_sha256": "1d6273cda26561071df4cc1d98ec73722c8e542363be3605dac8f4154bbcebc5"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 346.4582509771219,
+     "route_slack_ps": 346.46
+    },
+    "ff": {
+     "export_slack_ps": 29.033310477988294,
+     "route_slack_ps": 29.03
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x43_t_w1_native_1016_r1-epoch1-22c8eb651/routes/ot_s81_vm_fault_x43_t_w1_native_1016_r1_epoch1_22c8eb651/work/orfs/results/asap7/opentallas_ot_s81_vm_fault_x43_t_w1_asap7_ref_ot_s81_vm_fault_x43_t_w1_native_1016_r1_epoch1_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "1d6273cda26561071df4cc1d98ec73722c8e542363be3605dac8f4154bbcebc5"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x43_t_w1/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x43_t_w1/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "155e47462497728cc91973b242e13dfb03271b15fbadfbc982d17f8feec29964",
+    "density.png": "86b65b724930697befd8c8d1e34b9300e0f8c54ae3057c6de726a4a271675e18"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "ot_s81_vm_fault_x43_t_w1.lef": "29d55785410ca01ba4b79474d2a6ab772fbae26c95ee14277d37fe1047f13712",
+    "ot_s81_vm_fault_x43_t_w1_tt.lib": "6759d01c90a0f522564af00a72804845395f0f2bdd586d08a733aea1f2c8373c",
+    "ot_s81_vm_fault_x43_t_w1_ff.lib": "f951cfbac65f95dfb119457b7abde54c2c3f1be240ba67d8ea5856c7f1fd1908",
+    "ot_s81_vm_fault_x43_t_w1_ss.lib": "6d3e197ec25a0f57d2d12888c9dbfdda5b7db481b57519577a76ecbce020863e"
+   },
+   "image_findings": "Viewed actual6_final floorplan and density. Sparse face-local register clusters, isolated high-density bins with clear surrounding area, no macros or broad hotspot. Corrected x43 receiver has input bank cluster at west and small output cluster at east. Vertical M5 power pins."
+  },
+  {
+   "cell": "ot_s81_vm_fault_x43_s_w1",
+   "view": "ot_s81_vm_fault_x43_s_w1",
+   "lib_cell": "ot_s81_vm_fault_x43_s_w1",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 107.1,
+   "spread_ps": 3.0,
+   "outputs": 3,
+   "inputs": 12,
+   "launch_ps": 171.4,
+   "launch_pin": "o_v",
+   "capture_ps": 104.8,
+   "capture_pin": "bpar[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_fault_x43_s_w1_native_1016_r2-epoch2-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x43_s_w1_native_1016_r2-epoch2-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x43_s_w1",
+   "raw_native": {
+    "launch_ps": 171.37897,
+    "capture_ps": 104.8416,
+    "spread_ps": {
+     "s_ck": 3.0
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x43_s_w1/ot_s81_vm_fault_x43_s_w1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_vm_fault_x43_s_w1 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 16 blocked-above 0 blocked-same 0; clock s_ck insertion 120 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "ot_s81_vm_fault_x43_s_w1",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 16,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "s_ck": {
+       "max_ps": 120.04,
+       "min_ps": 102.27
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 3
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "3a992da795550018292e5bcdefdaad521252b98907737887c6dc628fcb0b272c",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 347.1,
+    "FF": 22.26,
+    "DRC": 0,
+    "odb_sha256": "b591bd8f58d1da93f012b5454dff96d2f0bab121e8fda2a80230052f0d118ab1"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 347.09962681844786,
+     "route_slack_ps": 347.1
+    },
+    "ff": {
+     "export_slack_ps": 22.257445886353366,
+     "route_slack_ps": 22.26
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x43_s_w1_native_1016_r2-epoch2-22c8eb651/routes/ot_s81_vm_fault_x43_s_w1_native_1016_r2_epoch2_22c8eb651/work/orfs/results/asap7/opentallas_ot_s81_vm_fault_x43_s_w1_asap7_ref_ot_s81_vm_fault_x43_s_w1_native_1016_r2_epoch2_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "b591bd8f58d1da93f012b5454dff96d2f0bab121e8fda2a80230052f0d118ab1"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x43_s_w1/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x43_s_w1/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "0b39e897f9d46ea969833f96bc5a0e4e2c6df727c57717edef869eea03a304cb",
+    "density.png": "be1f90904327b4afb0f90c69b1f15a2a4e5dfb3e32e4446746d70a4d064ff8d6"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "ot_s81_vm_fault_x43_s_w1_tt.lib": "e297816d57c41c0aa587fda44efa3de668d3e6e0888bcff562508ded6952e7c7",
+    "ot_s81_vm_fault_x43_s_w1.lef": "eed65d48815817a058a8efdd24e923d8f6831cb4e41c2b5a2f886283b6edc686",
+    "ot_s81_vm_fault_x43_s_w1_ss.lib": "e0a0908a833982211d01ab0c9fe91bdf49d524f4b9f4817d93ab64fb3a6f22ed",
+    "ot_s81_vm_fault_x43_s_w1_ff.lib": "a059672bc44e5ab8a7e6bda9dc7c8640efacb8b52f4a1e8a4052ecba0aeb4020"
+   },
+   "image_findings": "Viewed actual6_final floorplan and density. Sparse face-local register clusters, isolated high-density bins with clear surrounding area, no macros or broad hotspot. Corrected x43 receiver has input bank cluster at west and small output cluster at east. Vertical M5 power pins."
+  },
+  {
+   "cell": "ot_s81_vm_fault_x34_t_w1",
+   "view": "ot_s81_vm_fault_x34_t_w1",
+   "lib_cell": "ot_s81_vm_fault_x34_t_w1",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 45.5,
+   "spread_ps": 1.7,
+   "outputs": 3,
+   "inputs": 11,
+   "launch_ps": 172.1,
+   "launch_pin": "o_v",
+   "capture_ps": 174.6,
+   "capture_pin": "bpar[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_fault_x34_t_w1_native_1016_r1-epoch1-22c8eb651",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x34_t_w1_native_1016_r1-epoch1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x34_t_w1",
+   "raw_native": {
+    "launch_ps": 172.08965,
+    "capture_ps": 174.56889,
+    "spread_ps": {
+     "t_ck": 1.7000000000000028
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/ot_s81_vm_fault_x34_t_w1/ot_s81_vm_fault_x34_t_w1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_vm_fault_x34_t_w1 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 15 blocked-above 0 blocked-same 0; clock t_ck insertion 51 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "ot_s81_vm_fault_x34_t_w1",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 15,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "t_ck": {
+       "max_ps": 51.04,
+       "min_ps": 43.63
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 3
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "cc4c68799077637fc1d10ab180dab31c6a9c42355a7a8e1bf26357d94022e46d",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 342.63,
+    "FF": 26.78,
+    "DRC": 0,
+    "odb_sha256": "a3d91a87742e899ab5d31c80d2520783f5ac45e78fa2a8a68856cd0eeb31f7dd"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 342.63386572419563,
+     "route_slack_ps": 342.63
+    },
+    "ff": {
+     "export_slack_ps": 26.784852114047908,
+     "route_slack_ps": 26.78
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/ot_s81_vm_fault_x34_t_w1_native_1016_r1-epoch1-22c8eb651/routes/ot_s81_vm_fault_x34_t_w1_native_1016_r1_epoch1_22c8eb651/work/orfs/results/asap7/opentallas_ot_s81_vm_fault_x34_t_w1_asap7_ref_ot_s81_vm_fault_x34_t_w1_native_1016_r1_epoch1_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "a3d91a87742e899ab5d31c80d2520783f5ac45e78fa2a8a68856cd0eeb31f7dd"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x34_t_w1/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/ot_s81_vm_fault_x34_t_w1/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "de7bd6a9bf2ff6a050eecb962e41df492526f640367b65c93dd9f9664d9d41cb",
+    "density.png": "3b1ab674efd82c4afeab324797589b25fe8d9c7bb8dd4c4b9d395f6f545825a2"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "ot_s81_vm_fault_x34_t_w1_ff.lib": "72d4b8f47608205aa9a1c7fb866361cc181855d68f8a46e92ba87f0bf0127b7c",
+    "ot_s81_vm_fault_x34_t_w1.lef": "cbc607a336eee91e26bfbfb482b674b666b70e0db237bac089017485cfcedfd5",
+    "ot_s81_vm_fault_x34_t_w1_ss.lib": "c628d899e671d2e7e08e02bc8edaedcb4be6639c9d5fb181c201b82185ec464b",
+    "ot_s81_vm_fault_x34_t_w1_tt.lib": "1dc2d5d60a50c6980d2684b07d0d27fd32957ced2122b9c3af57ab48f106bb37"
+   },
+   "image_review": "S-VM 06:10 10-16 viewed: 43.2 square, 31 pins, fill 0.005, clock N centre; oversized for its logic (dedupe/area candidate: share a standard tiny CDC footprint)"
+  },
+  {
+   "cell": "dsfd_vm_wfc_request",
+   "view": "dsfd_vm_wfc_request",
+   "lib_cell": "dsfd_vm_wfc_request",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 189.7,
+   "spread_ps": 44.7,
+   "outputs": 594,
+   "inputs": 564,
+   "launch_ps": 186.0,
+   "launch_pin": "w_row[8]",
+   "capture_ps": 189.3,
+   "capture_pin": "vm_fault",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_wfc_request_hop1_native_1016_r1-hop1-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_request_hop1_native_1016_r1-hop1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_request",
+   "raw_native": {
+    "launch_ps": 186.03230000000002,
+    "capture_ps": 189.34965,
+    "spread_ps": {
+     "ck": 44.69999999999999
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_request/dsfd_vm_wfc_request.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_wfc_request 194.4 x 129.6: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 1159 blocked-above 0 blocked-same 0; clock ck insertion 221 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_wfc_request",
+     "W": 194.4,
+     "H": 129.6,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 36,
+        "dir": "V",
+        "spread": 0.972,
+        "coverage": 1.0,
+        "shapes_on_top": 36
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 36,
+        "dir": "V",
+        "spread": 0.972,
+        "coverage": 1.0,
+        "shapes_on_top": 36
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 1159,
+      "blocked_above": 0,
+      "covered_below": 47,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 220.56,
+       "min_ps": 151.16
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 146
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "8da065523b67e858ab2cc04d9f6e63f28963806f37197a504e60aed526604417",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 312.74,
+    "FF": 24.8,
+    "DRC": 0,
+    "odb_sha256": "48524c627186f14f866216720924f86cb7ec9399abba11a8fe836ed6648ca7da"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 312.74494105559825,
+     "route_slack_ps": 312.74
+    },
+    "ff": {
+     "export_slack_ps": 24.798399445025154,
+     "route_slack_ps": 24.8
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_request_hop1_native_1016_r1-hop1-22c8eb651/routes/dsfd_vm_wfc_request_hop1_native_1016_r1_hop1_22c8eb651/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_request_asap7_ref_dsfd_vm_wfc_request_hop1_native_1016_r1_hop1_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "48524c627186f14f866216720924f86cb7ec9399abba11a8fe836ed6648ca7da"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/dsfd_vm_wfc_request/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-wfc-native-0300/layout-final/dsfd_vm_wfc_request/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "0e8a451403a8f02eac077fba35226ee495a14e0b64a12d1f4628fee495084617",
+    "density.png": "57a2fc619f629a27ab8adfb543226789281a64a700891ffe6b699a881e9e023b"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "dsfd_vm_wfc_request_ff.lib": "47cc42f4196defa132277797c86f7a7a79a30c9a5368dbf8c3bc11d1f910e427",
+    "dsfd_vm_wfc_request_tt.lib": "62baee1024203484a0659340f56f33bca50052992001d12b6736481a3bd7886e",
+    "dsfd_vm_wfc_request_ss.lib": "cd10b53909e9d5d9d846e97ea3aacfb6fe8ec8029adcb145a0b8bddd1272b142",
+    "dsfd_vm_wfc_request.lef": "29acc9972d358c1a6bb31e837e9febaa62b36cb7d029324b97bb4719ca57ca54"
+   },
+   "image_review": "S-VM 06:10 10-16 viewed final floorplan+density: request 194.4x129.6 fill 0.04, logic only at W/E pin faces (hop-1 transport across the band; empty middle is the crossing wire, area target not a closure blocker)"
   }
- ]
+ ],
+ "status": "5_ROUTED_NATIVE_M5_PASS_3_PENDING_NOT_PARENT"
 }
