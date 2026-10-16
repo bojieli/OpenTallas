@@ -21,8 +21,9 @@ import die_port_bind as DPB  # noqa: E402
 KW = set('module endmodule input output inout wire reg logic always assign if else for generate endgenerate begin end '
          'case endcase function endfunction task endtask initial localparam parameter genvar integer return posedge '
          'negedge or and not while repeat default typedef struct enum packed signed unsigned int bit'.split())
-# master [#(...) | `PARAM_MACRO] instance [range] (   -- a parameter macro left unexpanded (multi-line `define) still matches
-INST = re.compile(r'(?m)^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^;]*?)\)|`\w+)?\s*\b([A-Za-z_]\w*)\s*(?:\[[^\]]*\]\s*)?\(')
+# master [#(...) | `PARAM_MACRO] instance [range] (   -- a parameter macro left unexpanded, or a multi-line `define the
+# preprocessor cut at its first backslash, still matches
+INST = re.compile(r'(?m)^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^;]*?)\)|#\s*\([^;]*?\\|`\w+)?\s*\b([A-Za-z_]\w*)\s*(?:\[[^\]]*\]\s*)?\(')
 
 
 def children(mod):
