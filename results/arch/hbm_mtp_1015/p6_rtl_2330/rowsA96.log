@@ -1,0 +1,1332 @@
+SEED=3
+T 94 rec_accept
+T 105 ne_job
+T 105 gain_move_issued
+T 107 top st 1
+T 109 top st 2
+T 110 top st 3
+T 143 top st 4
+T 144 top st 5
+T 157 lane0 GO
+T 158 lane0 read_issue ph_b=0
+T 159 lane0 read_issue ph_b=0
+T 160 lane0 read_issue ph_b=0
+T 161 lane0 read_issue ph_b=0
+T 162 lane0 read_issue ph_b=0
+T 163 lane0 read_issue ph_b=0
+T 164 lane0 read_issue ph_b=0
+T 165 lane0 read_issue ph_b=0
+T 166 lane0 read_issue ph_b=0
+T 167 lane0 read_issue ph_b=0
+T 168 lane0 read_issue ph_b=0
+T 169 lane0 read_issue ph_b=0
+T 170 lane0 read_issue ph_b=0
+T 171 lane0 read_issue ph_b=0
+T 172 lane0 read_issue ph_b=0
+T 173 lane0 read_issue ph_b=0
+T 174 lane0 read_issue ph_b=0
+T 175 lane0 read_issue ph_b=0
+T 176 lane0 read_issue ph_b=0
+T 177 lane0 read_issue ph_b=0
+T 178 lane0 read_issue ph_b=0
+T 179 lane0 read_issue ph_b=0
+T 180 lane0 read_issue ph_b=0
+T 181 lane0 read_issue ph_b=0
+T 182 lane0 read_issue ph_b=0
+T 183 lane0 read_issue ph_b=0
+T 184 lane0 read_issue ph_b=0
+T 185 lane0 read_issue ph_b=0
+T 186 lane0 read_issue ph_b=0
+T 187 lane0 read_issue ph_b=0
+T 188 lane0 read_issue ph_b=0
+T 189 lane0 read_issue ph_b=0
+T 190 lane0 read_issue ph_b=0
+T 191 lane0 read_issue ph_b=0
+T 192 lane0 read_issue ph_b=0
+T 193 lane0 read_issue ph_b=0
+T 194 lane0 read_issue ph_b=0
+T 195 lane0 read_issue ph_b=0
+T 196 lane0 read_issue ph_b=0
+T 197 lane0 read_issue ph_b=0
+T 198 lane0 read_issue ph_b=0
+T 199 lane0 read_issue ph_b=0
+T 200 lane0 read_issue ph_b=0
+T 201 lane0 read_issue ph_b=0
+T 202 lane0 read_issue ph_b=0
+T 203 lane0 read_issue ph_b=0
+T 204 lane0 read_issue ph_b=0
+T 205 lane0 read_issue ph_b=0
+T 206 lane0 read_issue ph_b=0
+T 207 lane0 read_issue ph_b=0
+T 208 lane0 read_issue ph_b=0
+T 209 lane0 read_issue ph_b=0
+T 210 lane0 read_issue ph_b=0
+T 211 lane0 read_issue ph_b=0
+T 212 lane0 read_issue ph_b=0
+T 213 lane0 read_issue ph_b=0
+T 214 lane0 read_issue ph_b=0
+T 215 lane0 read_issue ph_b=0
+T 216 lane0 read_issue ph_b=0
+T 217 lane0 read_issue ph_b=0
+T 218 lane0 read_issue ph_b=0
+T 219 lane0 read_issue ph_b=0
+T 220 lane0 read_issue ph_b=0
+T 221 lane0 read_issue ph_b=0
+T 222 lane0 read_issue ph_b=0
+T 223 lane0 read_issue ph_b=0
+T 224 lane0 read_issue ph_b=0
+T 225 lane0 read_issue ph_b=0
+T 226 lane0 read_issue ph_b=0
+T 227 lane0 read_issue ph_b=0
+T 228 lane0 read_issue ph_b=0
+T 229 lane0 read_issue ph_b=0
+T 230 lane0 read_issue ph_b=0
+T 231 lane0 read_issue ph_b=0
+T 232 lane0 read_issue ph_b=0
+T 233 lane0 read_issue ph_b=0
+T 234 lane0 read_issue ph_b=0
+T 235 lane0 read_issue ph_b=0
+T 236 lane0 read_issue ph_b=0
+T 237 lane0 read_issue ph_b=0
+T 244 lane0 chunk_up
+T 248 lane0 chunk_up
+T 252 lane0 chunk_up
+T 256 lane0 chunk_up
+T 260 lane0 chunk_up
+T 264 lane0 chunk_up
+T 268 lane0 chunk_up
+T 272 lane0 chunk_up
+T 276 lane0 chunk_up
+T 280 lane0 chunk_up
+T 284 lane0 chunk_up
+T 288 lane0 chunk_up
+T 292 lane0 chunk_up
+T 296 lane0 chunk_up
+T 300 lane0 chunk_up
+T 304 lane0 chunk_up
+T 308 lane0 chunk_up
+T 312 lane0 chunk_up
+T 316 lane0 chunk_up
+T 320 lane0 chunk_up
+T 381 top ss
+T 459 gain_move_done
+T 461 top rsqrt
+T 476 lane0 GRDY
+T 477 lane0 RSTD
+T 477 lane0 read_issue ph_b=1
+T 478 lane0 read_issue ph_b=1
+T 479 lane0 read_issue ph_b=1
+T 480 lane0 read_issue ph_b=1
+T 481 lane0 read_issue ph_b=1
+T 482 lane0 read_issue ph_b=1
+T 483 lane0 read_issue ph_b=1
+T 484 lane0 read_issue ph_b=1
+T 485 lane0 read_issue ph_b=1
+T 486 lane0 read_issue ph_b=1
+T 513 lane0 y
+T 514 lane0 y
+T 515 lane0 y
+T 516 lane0 y
+T 517 lane0 y
+T 518 lane0 y
+T 519 lane0 y
+T 520 lane0 y
+T 521 lane0 y
+T 522 lane0 y
+T 523 lane0 y
+T 524 lane0 y
+T 525 lane0 y
+T 526 lane0 y
+T 527 lane0 y
+T 528 lane0 y
+T 529 lane0 y
+T 530 lane0 y
+T 531 lane0 y
+T 532 lane0 y
+T 540 lane0 fin
+T 541 lane0 fin
+T 542 lane0 fin
+T 543 lane0 fin
+T 544 lane0 fin
+T 545 lane0 fin
+T 546 lane0 fin
+T 547 lane0 fin
+T 548 lane0 fin
+T 549 lane0 fin
+T 550 lane0 fin
+T 551 lane0 fin
+T 552 lane0 fin
+T 553 lane0 fin
+T 554 lane0 fin
+T 555 lane0 fin
+T 555 top st 6
+T 556 lane0 fin
+T 556 top st 0
+T 557 lane0 fin
+T 558 lane0 fin
+T 558 rec_done
+case 0: 1 records in 466 cycles (HC engine 453, mover 0)
+T 559 lane0 fin
+T 560 lane0 fin
+T 561 lane0 fin
+T 562 lane0 fin
+T 563 lane0 fin
+T 564 lane0 fin
+T 565 lane0 fin
+T 566 lane0 fin
+T 567 lane0 fin
+T 568 lane0 fin
+T 569 lane0 fin
+T 570 lane0 fin
+T 571 lane0 fin
+T 572 lane0 fin
+T 573 lane0 fin
+T 574 lane0 fin
+T 575 lane0 fin
+T 576 lane0 fin
+T 577 lane0 fin
+T 578 lane0 fin
+T 579 lane0 fin
+T 580 lane0 fin
+T 581 lane0 fin
+T 582 lane0 fin
+T 583 lane0 fin
+T 584 lane0 fin
+T 585 lane0 fin
+T 586 lane0 fin
+T 698 rec_accept
+T 709 ne_job
+T 711 top st 1
+T 713 top st 2
+T 716 top st 3
+T 725 lane0 read_issue ph_b=0
+T 726 lane0 read_issue ph_b=0
+T 727 lane0 read_issue ph_b=0
+T 728 lane0 read_issue ph_b=0
+T 729 lane0 read_issue ph_b=0
+T 730 lane0 read_issue ph_b=0
+T 731 lane0 read_issue ph_b=0
+T 732 lane0 read_issue ph_b=0
+T 733 lane0 read_issue ph_b=0
+T 734 lane0 read_issue ph_b=0
+T 735 lane0 read_issue ph_b=0
+T 736 lane0 read_issue ph_b=0
+T 737 lane0 read_issue ph_b=0
+T 738 lane0 read_issue ph_b=0
+T 739 lane0 read_issue ph_b=0
+T 740 lane0 read_issue ph_b=0
+T 741 lane0 read_issue ph_b=0
+T 742 lane0 read_issue ph_b=0
+T 743 lane0 read_issue ph_b=0
+T 744 lane0 read_issue ph_b=0
+T 745 lane0 read_issue ph_b=0
+T 746 lane0 read_issue ph_b=0
+T 747 lane0 read_issue ph_b=0
+T 748 lane0 read_issue ph_b=0
+T 749 lane0 read_issue ph_b=0
+T 749 top st 4
+T 750 lane0 read_issue ph_b=0
+T 751 lane0 read_issue ph_b=0
+T 752 lane0 read_issue ph_b=0
+T 753 lane0 read_issue ph_b=0
+T 754 lane0 read_issue ph_b=0
+T 754 top st 5
+T 755 lane0 read_issue ph_b=0
+T 756 lane0 read_issue ph_b=0
+T 757 lane0 read_issue ph_b=0
+T 758 lane0 read_issue ph_b=0
+T 759 lane0 read_issue ph_b=0
+T 760 lane0 read_issue ph_b=0
+T 761 lane0 read_issue ph_b=0
+T 762 lane0 read_issue ph_b=0
+T 763 lane0 read_issue ph_b=0
+T 764 lane0 read_issue ph_b=0
+T 767 lane0 GO
+T 769 lane0 read_issue ph_b=0
+T 770 lane0 read_issue ph_b=0
+T 771 lane0 read_issue ph_b=0
+T 772 lane0 read_issue ph_b=0
+T 773 lane0 read_issue ph_b=0
+T 774 lane0 read_issue ph_b=0
+T 775 lane0 read_issue ph_b=0
+T 776 lane0 read_issue ph_b=0
+T 777 lane0 read_issue ph_b=0
+T 778 lane0 read_issue ph_b=0
+T 779 lane0 read_issue ph_b=0
+T 780 lane0 read_issue ph_b=0
+T 781 lane0 read_issue ph_b=0
+T 782 lane0 read_issue ph_b=0
+T 783 lane0 read_issue ph_b=0
+T 784 lane0 read_issue ph_b=0
+T 785 lane0 read_issue ph_b=0
+T 786 lane0 read_issue ph_b=0
+T 787 lane0 read_issue ph_b=0
+T 788 lane0 read_issue ph_b=0
+T 789 lane0 read_issue ph_b=0
+T 790 lane0 read_issue ph_b=0
+T 791 lane0 read_issue ph_b=0
+T 792 lane0 read_issue ph_b=0
+T 793 lane0 read_issue ph_b=0
+T 794 lane0 read_issue ph_b=0
+T 795 lane0 read_issue ph_b=0
+T 796 lane0 read_issue ph_b=0
+T 797 lane0 read_issue ph_b=0
+T 798 lane0 read_issue ph_b=0
+T 799 lane0 read_issue ph_b=0
+T 800 lane0 read_issue ph_b=0
+T 801 lane0 read_issue ph_b=0
+T 802 lane0 read_issue ph_b=0
+T 803 lane0 read_issue ph_b=0
+T 807 lane0 read_issue ph_b=0
+T 808 lane0 read_issue ph_b=0
+T 809 lane0 read_issue ph_b=0
+T 810 lane0 read_issue ph_b=0
+T 811 lane0 read_issue ph_b=0
+T 812 lane0 read_issue ph_b=0
+T 813 lane0 read_issue ph_b=0
+T 814 lane0 read_issue ph_b=0
+T 815 lane0 read_issue ph_b=0
+T 816 lane0 read_issue ph_b=0
+T 817 lane0 read_issue ph_b=0
+T 818 lane0 read_issue ph_b=0
+T 819 lane0 read_issue ph_b=0
+T 820 lane0 read_issue ph_b=0
+T 821 lane0 read_issue ph_b=0
+T 822 lane0 read_issue ph_b=0
+T 823 lane0 read_issue ph_b=0
+T 824 lane0 read_issue ph_b=0
+T 825 lane0 read_issue ph_b=0
+T 826 lane0 read_issue ph_b=0
+T 827 lane0 read_issue ph_b=0
+T 828 lane0 read_issue ph_b=0
+T 829 lane0 read_issue ph_b=0
+T 830 lane0 read_issue ph_b=0
+T 831 lane0 read_issue ph_b=0
+T 890 lane0 fin
+T 891 lane0 fin
+T 892 lane0 fin
+T 893 lane0 fin
+T 894 lane0 fin
+T 895 lane0 fin
+T 896 lane0 fin
+T 897 lane0 fin
+T 898 lane0 fin
+T 899 lane0 fin
+T 900 lane0 fin
+T 901 lane0 fin
+T 902 lane0 fin
+T 903 lane0 fin
+T 904 lane0 fin
+T 905 lane0 fin
+T 905 top st 6
+T 906 lane0 fin
+T 906 top st 0
+T 907 lane0 fin
+T 908 lane0 fin
+T 908 rec_done
+case 1: 1 records in 212 cycles (HC engine 199, mover 0)
+T 909 lane0 fin
+T 910 lane0 fin
+T 911 lane0 fin
+T 912 lane0 fin
+T 913 lane0 fin
+T 914 lane0 fin
+T 915 lane0 fin
+T 916 lane0 fin
+T 917 lane0 fin
+T 918 lane0 fin
+T 919 lane0 fin
+T 920 lane0 fin
+T 921 lane0 fin
+T 922 lane0 fin
+T 923 lane0 fin
+T 924 lane0 fin
+T 925 lane0 fin
+T 926 lane0 fin
+T 927 lane0 fin
+T 928 lane0 fin
+T 929 lane0 fin
+T 930 lane0 fin
+T 931 lane0 fin
+T 932 lane0 fin
+T 933 lane0 fin
+T 934 lane0 fin
+T 935 lane0 fin
+T 936 lane0 fin
+T 937 lane0 fin
+T 938 lane0 fin
+T 939 lane0 fin
+T 940 lane0 fin
+T 941 lane0 fin
+T 942 lane0 fin
+T 943 lane0 fin
+T 944 lane0 fin
+T 945 lane0 fin
+T 946 lane0 fin
+T 947 lane0 fin
+T 948 lane0 fin
+T 949 lane0 fin
+T 950 lane0 fin
+T 951 lane0 fin
+T 952 lane0 fin
+T 953 lane0 fin
+T 954 lane0 fin
+T 955 lane0 fin
+T 956 lane0 fin
+T 957 lane0 fin
+T 958 lane0 fin
+T 959 lane0 fin
+T 960 lane0 fin
+T 961 lane0 fin
+T 962 lane0 fin
+T 963 lane0 fin
+T 964 lane0 fin
+T 965 lane0 fin
+T 966 lane0 fin
+T 967 lane0 fin
+T 968 lane0 fin
+T 969 lane0 fin
+T 970 lane0 fin
+T 971 lane0 fin
+T 972 lane0 fin
+T 973 lane0 fin
+T 974 lane0 fin
+T 975 lane0 fin
+T 976 lane0 fin
+T 977 lane0 fin
+T 978 lane0 fin
+T 979 lane0 fin
+T 980 lane0 fin
+T 981 lane0 fin
+T 982 lane0 fin
+T 983 lane0 fin
+T 984 lane0 fin
+T 985 lane0 fin
+T 986 lane0 fin
+T 987 lane0 fin
+T 988 lane0 fin
+T 989 lane0 fin
+T 990 lane0 fin
+T 991 lane0 fin
+T 992 lane0 fin
+T 993 lane0 fin
+T 994 lane0 fin
+T 995 lane0 fin
+T 996 lane0 fin
+T 1488 rec_accept
+T 1499 ne_job
+T 1499 gain_move_issued
+T 1501 top st 1
+T 1503 top st 2
+T 1509 top st 3
+T 1515 lane0 read_issue ph_b=0
+T 1542 top st 4
+T 1548 top st 5
+T 1561 lane0 GO
+T 1562 lane0 read_issue ph_b=0
+T 1563 lane0 read_issue ph_b=0
+T 1564 lane0 read_issue ph_b=0
+T 1565 lane0 read_issue ph_b=0
+T 1566 lane0 read_issue ph_b=0
+T 1567 lane0 read_issue ph_b=0
+T 1568 lane0 read_issue ph_b=0
+T 1569 lane0 read_issue ph_b=0
+T 1570 lane0 read_issue ph_b=0
+T 1571 lane0 read_issue ph_b=0
+T 1572 lane0 read_issue ph_b=0
+T 1573 lane0 read_issue ph_b=0
+T 1574 lane0 read_issue ph_b=0
+T 1575 lane0 read_issue ph_b=0
+T 1576 lane0 read_issue ph_b=0
+T 1577 lane0 read_issue ph_b=0
+T 1578 lane0 read_issue ph_b=0
+T 1579 lane0 read_issue ph_b=0
+T 1580 lane0 read_issue ph_b=0
+T 1581 lane0 read_issue ph_b=0
+T 1582 lane0 read_issue ph_b=0
+T 1583 lane0 read_issue ph_b=0
+T 1584 lane0 read_issue ph_b=0
+T 1585 lane0 read_issue ph_b=0
+T 1586 lane0 read_issue ph_b=0
+T 1587 lane0 read_issue ph_b=0
+T 1588 lane0 read_issue ph_b=0
+T 1589 lane0 read_issue ph_b=0
+T 1590 lane0 read_issue ph_b=0
+T 1591 lane0 read_issue ph_b=0
+T 1592 lane0 read_issue ph_b=0
+T 1593 lane0 read_issue ph_b=0
+T 1594 lane0 read_issue ph_b=0
+T 1595 lane0 read_issue ph_b=0
+T 1596 lane0 read_issue ph_b=0
+T 1597 lane0 read_issue ph_b=0
+T 1598 lane0 read_issue ph_b=0
+T 1599 lane0 read_issue ph_b=0
+T 1600 lane0 read_issue ph_b=0
+T 1601 lane0 read_issue ph_b=0
+T 1602 lane0 read_issue ph_b=0
+T 1603 lane0 read_issue ph_b=0
+T 1604 lane0 read_issue ph_b=0
+T 1605 lane0 read_issue ph_b=0
+T 1606 lane0 read_issue ph_b=0
+T 1607 lane0 read_issue ph_b=0
+T 1608 lane0 read_issue ph_b=0
+T 1609 lane0 read_issue ph_b=0
+T 1610 lane0 read_issue ph_b=0
+T 1611 lane0 read_issue ph_b=0
+T 1612 lane0 read_issue ph_b=0
+T 1613 lane0 read_issue ph_b=0
+T 1614 lane0 read_issue ph_b=0
+T 1615 lane0 read_issue ph_b=0
+T 1616 lane0 read_issue ph_b=0
+T 1617 lane0 read_issue ph_b=0
+T 1618 lane0 read_issue ph_b=0
+T 1619 lane0 read_issue ph_b=0
+T 1620 lane0 read_issue ph_b=0
+T 1621 lane0 read_issue ph_b=0
+T 1622 lane0 read_issue ph_b=0
+T 1623 lane0 read_issue ph_b=0
+T 1624 lane0 read_issue ph_b=0
+T 1625 lane0 read_issue ph_b=0
+T 1626 lane0 read_issue ph_b=0
+T 1627 lane0 read_issue ph_b=0
+T 1628 lane0 read_issue ph_b=0
+T 1629 lane0 read_issue ph_b=0
+T 1630 lane0 read_issue ph_b=0
+T 1631 lane0 read_issue ph_b=0
+T 1632 lane0 read_issue ph_b=0
+T 1633 lane0 read_issue ph_b=0
+T 1634 lane0 read_issue ph_b=0
+T 1635 lane0 read_issue ph_b=0
+T 1636 lane0 read_issue ph_b=0
+T 1637 lane0 read_issue ph_b=0
+T 1638 lane0 read_issue ph_b=0
+T 1639 lane0 read_issue ph_b=0
+T 1640 lane0 read_issue ph_b=0
+T 1641 lane0 read_issue ph_b=0
+T 1648 lane0 chunk_up
+T 1652 lane0 chunk_up
+T 1656 lane0 chunk_up
+T 1660 lane0 chunk_up
+T 1664 lane0 chunk_up
+T 1668 lane0 chunk_up
+T 1672 lane0 chunk_up
+T 1676 lane0 chunk_up
+T 1680 lane0 chunk_up
+T 1684 lane0 chunk_up
+T 1688 lane0 chunk_up
+T 1692 lane0 chunk_up
+T 1696 lane0 chunk_up
+T 1700 lane0 chunk_up
+T 1704 lane0 chunk_up
+T 1708 lane0 chunk_up
+T 1712 lane0 chunk_up
+T 1716 lane0 chunk_up
+T 1720 lane0 chunk_up
+T 1724 lane0 chunk_up
+T 1785 top ss
+T 1854 gain_move_done
+T 1865 top rsqrt
+T 1871 lane0 GRDY
+T 1872 lane0 read_issue ph_b=1
+T 1873 lane0 read_issue ph_b=1
+T 1874 lane0 read_issue ph_b=1
+T 1875 lane0 read_issue ph_b=1
+T 1876 lane0 read_issue ph_b=1
+T 1877 lane0 read_issue ph_b=1
+T 1878 lane0 RSTD
+T 1878 lane0 read_issue ph_b=1
+T 1879 lane0 read_issue ph_b=1
+T 1880 lane0 read_issue ph_b=1
+T 1881 lane0 read_issue ph_b=1
+T 1882 lane0 read_issue ph_b=0
+T 1883 lane0 read_issue ph_b=0
+T 1884 lane0 read_issue ph_b=0
+T 1885 lane0 read_issue ph_b=0
+T 1886 lane0 read_issue ph_b=0
+T 1887 lane0 read_issue ph_b=0
+T 1888 lane0 read_issue ph_b=0
+T 1889 lane0 read_issue ph_b=0
+T 1890 lane0 read_issue ph_b=0
+T 1891 lane0 read_issue ph_b=0
+T 1892 lane0 read_issue ph_b=0
+T 1893 lane0 read_issue ph_b=0
+T 1894 lane0 read_issue ph_b=0
+T 1895 lane0 read_issue ph_b=0
+T 1896 lane0 read_issue ph_b=0
+T 1897 lane0 read_issue ph_b=0
+T 1898 lane0 read_issue ph_b=0
+T 1899 lane0 read_issue ph_b=0
+T 1900 lane0 read_issue ph_b=0
+T 1901 lane0 read_issue ph_b=0
+T 1902 lane0 read_issue ph_b=0
+T 1903 lane0 read_issue ph_b=0
+T 1904 lane0 read_issue ph_b=0
+T 1905 lane0 read_issue ph_b=0
+T 1906 lane0 read_issue ph_b=0
+T 1907 lane0 read_issue ph_b=0
+T 1908 lane0 y
+T 1908 lane0 read_issue ph_b=0
+T 1909 lane0 y
+T 1909 lane0 read_issue ph_b=0
+T 1910 lane0 y
+T 1910 lane0 read_issue ph_b=0
+T 1911 lane0 y
+T 1911 lane0 read_issue ph_b=0
+T 1912 lane0 y
+T 1912 lane0 read_issue ph_b=0
+T 1913 lane0 y
+T 1913 lane0 read_issue ph_b=0
+T 1914 lane0 y
+T 1914 lane0 read_issue ph_b=0
+T 1915 lane0 y
+T 1915 lane0 read_issue ph_b=0
+T 1916 lane0 y
+T 1916 lane0 read_issue ph_b=0
+T 1917 lane0 y
+T 1917 lane0 read_issue ph_b=0
+T 1918 lane0 y
+T 1918 lane0 read_issue ph_b=0
+T 1919 lane0 y
+T 1919 lane0 read_issue ph_b=0
+T 1920 lane0 y
+T 1920 lane0 read_issue ph_b=0
+T 1921 lane0 y
+T 1921 lane0 read_issue ph_b=0
+T 1922 lane0 y
+T 1922 lane0 read_issue ph_b=0
+T 1923 lane0 y
+T 1923 lane0 read_issue ph_b=0
+T 1924 lane0 y
+T 1924 lane0 read_issue ph_b=0
+T 1925 lane0 y
+T 1925 lane0 read_issue ph_b=0
+T 1926 lane0 y
+T 1926 lane0 read_issue ph_b=0
+T 1927 lane0 y
+T 1927 lane0 read_issue ph_b=0
+T 1928 lane0 read_issue ph_b=0
+T 1929 lane0 read_issue ph_b=0
+T 1930 lane0 read_issue ph_b=0
+T 1931 lane0 read_issue ph_b=0
+T 1932 lane0 read_issue ph_b=0
+T 1933 lane0 read_issue ph_b=0
+T 1934 lane0 read_issue ph_b=0
+T 1935 lane0 read_issue ph_b=0
+T 1936 lane0 read_issue ph_b=0
+T 1937 lane0 read_issue ph_b=0
+T 1938 lane0 read_issue ph_b=0
+T 1939 lane0 read_issue ph_b=0
+T 1940 lane0 read_issue ph_b=0
+T 1941 lane0 read_issue ph_b=0
+T 1942 lane0 read_issue ph_b=0
+T 1943 lane0 read_issue ph_b=0
+T 1944 lane0 read_issue ph_b=0
+T 1945 lane0 read_issue ph_b=0
+T 1946 lane0 read_issue ph_b=0
+T 1947 lane0 read_issue ph_b=0
+T 1948 lane0 read_issue ph_b=0
+T 1949 lane0 read_issue ph_b=0
+T 1950 lane0 read_issue ph_b=0
+T 1951 lane0 read_issue ph_b=0
+T 1952 lane0 read_issue ph_b=0
+T 1953 lane0 read_issue ph_b=0
+T 1954 lane0 read_issue ph_b=0
+T 1955 lane0 read_issue ph_b=0
+T 1956 lane0 read_issue ph_b=0
+T 1957 lane0 read_issue ph_b=0
+T 1958 lane0 read_issue ph_b=0
+T 1959 lane0 read_issue ph_b=0
+T 1960 lane0 read_issue ph_b=0
+T 1961 lane0 read_issue ph_b=0
+T 1962 lane0 read_issue ph_b=0
+T 1963 lane0 read_issue ph_b=0
+T 1964 lane0 read_issue ph_b=0
+T 1965 lane0 read_issue ph_b=0
+T 1966 lane0 read_issue ph_b=0
+T 1967 lane0 read_issue ph_b=0
+T 1968 lane0 chunk_up
+T 1968 lane0 read_issue ph_b=0
+T 1969 lane0 read_issue ph_b=0
+T 1970 lane0 read_issue ph_b=0
+T 1971 lane0 read_issue ph_b=0
+T 1972 lane0 chunk_up
+T 1972 lane0 read_issue ph_b=0
+T 1973 lane0 read_issue ph_b=0
+T 1974 lane0 read_issue ph_b=0
+T 1975 lane0 read_issue ph_b=0
+T 1976 lane0 chunk_up
+T 1976 lane0 read_issue ph_b=0
+T 1977 lane0 read_issue ph_b=0
+T 1978 lane0 read_issue ph_b=0
+T 1979 lane0 read_issue ph_b=0
+T 1980 lane0 chunk_up
+T 1980 lane0 read_issue ph_b=0
+T 1981 lane0 read_issue ph_b=0
+T 1982 lane0 read_issue ph_b=0
+T 1983 lane0 read_issue ph_b=0
+T 1984 lane0 chunk_up
+T 1984 lane0 read_issue ph_b=0
+T 1985 lane0 read_issue ph_b=0
+T 1986 lane0 read_issue ph_b=0
+T 1987 lane0 read_issue ph_b=0
+T 1988 lane0 chunk_up
+T 1988 lane0 read_issue ph_b=0
+T 1989 lane0 read_issue ph_b=0
+T 1990 lane0 read_issue ph_b=0
+T 1991 lane0 read_issue ph_b=0
+T 1992 lane0 chunk_up
+T 1992 lane0 read_issue ph_b=0
+T 1993 lane0 read_issue ph_b=0
+T 1994 lane0 read_issue ph_b=0
+T 1995 lane0 read_issue ph_b=0
+T 1996 lane0 chunk_up
+T 1996 lane0 read_issue ph_b=0
+T 1997 lane0 read_issue ph_b=0
+T 1998 lane0 read_issue ph_b=0
+T 1999 lane0 read_issue ph_b=0
+T 2000 lane0 chunk_up
+T 2000 lane0 read_issue ph_b=0
+T 2001 lane0 read_issue ph_b=0
+T 2002 lane0 read_issue ph_b=0
+T 2003 lane0 read_issue ph_b=0
+T 2004 lane0 chunk_up
+T 2004 lane0 read_issue ph_b=0
+T 2005 lane0 read_issue ph_b=0
+T 2006 lane0 read_issue ph_b=0
+T 2007 lane0 read_issue ph_b=0
+T 2008 lane0 chunk_up
+T 2008 lane0 read_issue ph_b=0
+T 2009 lane0 read_issue ph_b=0
+T 2010 lane0 read_issue ph_b=0
+T 2011 lane0 read_issue ph_b=0
+T 2012 lane0 chunk_up
+T 2012 lane0 read_issue ph_b=0
+T 2013 lane0 read_issue ph_b=0
+T 2014 lane0 read_issue ph_b=0
+T 2015 lane0 read_issue ph_b=0
+T 2016 lane0 chunk_up
+T 2016 lane0 read_issue ph_b=0
+T 2017 lane0 read_issue ph_b=0
+T 2018 lane0 read_issue ph_b=0
+T 2019 lane0 read_issue ph_b=0
+T 2020 lane0 chunk_up
+T 2020 lane0 read_issue ph_b=0
+T 2021 lane0 read_issue ph_b=0
+T 2022 lane0 read_issue ph_b=0
+T 2023 lane0 read_issue ph_b=0
+T 2024 lane0 chunk_up
+T 2024 lane0 read_issue ph_b=0
+T 2025 lane0 read_issue ph_b=0
+T 2026 lane0 read_issue ph_b=0
+T 2027 lane0 read_issue ph_b=0
+T 2028 lane0 chunk_up
+T 2028 lane0 read_issue ph_b=0
+T 2029 lane0 read_issue ph_b=0
+T 2030 lane0 read_issue ph_b=0
+T 2031 lane0 read_issue ph_b=0
+T 2032 lane0 chunk_up
+T 2032 lane0 read_issue ph_b=0
+T 2033 lane0 read_issue ph_b=0
+T 2034 lane0 read_issue ph_b=0
+T 2035 lane0 read_issue ph_b=0
+T 2036 lane0 chunk_up
+T 2036 lane0 read_issue ph_b=0
+T 2037 lane0 read_issue ph_b=0
+T 2038 lane0 read_issue ph_b=0
+T 2039 lane0 read_issue ph_b=0
+T 2040 lane0 chunk_up
+T 2040 lane0 read_issue ph_b=0
+T 2041 lane0 read_issue ph_b=0
+T 2044 lane0 chunk_up
+T 2048 lane0 chunk_up
+T 2052 lane0 chunk_up
+T 2056 lane0 chunk_up
+T 2060 lane0 chunk_up
+T 2064 lane0 chunk_up
+T 2068 lane0 chunk_up
+T 2072 lane0 chunk_up
+T 2076 lane0 chunk_up
+T 2080 lane0 chunk_up
+T 2084 lane0 chunk_up
+T 2088 lane0 chunk_up
+T 2092 lane0 chunk_up
+T 2096 lane0 chunk_up
+T 2100 lane0 chunk_up
+T 2104 lane0 chunk_up
+T 2105 top ss
+T 2108 lane0 chunk_up
+T 2112 lane0 chunk_up
+T 2116 lane0 chunk_up
+T 2120 lane0 chunk_up
+T 2124 lane0 chunk_up
+T 2185 top ss
+T 2185 top rsqrt
+T 2198 lane0 RSTD
+T 2216 lane0 y
+T 2217 lane0 y
+T 2218 lane0 y
+T 2219 lane0 y
+T 2220 lane0 y
+T 2220 lane0 read_issue ph_b=0
+T 2221 lane0 y
+T 2221 lane0 read_issue ph_b=0
+T 2222 lane0 y
+T 2222 lane0 read_issue ph_b=0
+T 2223 lane0 y
+T 2223 lane0 read_issue ph_b=0
+T 2224 lane0 y
+T 2224 lane0 read_issue ph_b=0
+T 2225 lane0 y
+T 2225 lane0 read_issue ph_b=0
+T 2226 lane0 y
+T 2226 lane0 read_issue ph_b=0
+T 2227 lane0 y
+T 2227 lane0 read_issue ph_b=0
+T 2228 lane0 y
+T 2228 lane0 read_issue ph_b=0
+T 2229 lane0 y
+T 2229 lane0 read_issue ph_b=0
+T 2230 lane0 y
+T 2230 lane0 read_issue ph_b=0
+T 2231 lane0 y
+T 2231 lane0 read_issue ph_b=0
+T 2232 lane0 y
+T 2232 lane0 read_issue ph_b=0
+T 2233 lane0 y
+T 2233 lane0 read_issue ph_b=0
+T 2234 lane0 y
+T 2234 lane0 read_issue ph_b=0
+T 2235 lane0 y
+T 2235 lane0 read_issue ph_b=0
+T 2236 lane0 read_issue ph_b=0
+T 2237 lane0 read_issue ph_b=0
+T 2238 lane0 read_issue ph_b=0
+T 2239 lane0 read_issue ph_b=0
+T 2240 lane0 read_issue ph_b=0
+T 2241 lane0 read_issue ph_b=0
+T 2242 lane0 read_issue ph_b=0
+T 2243 lane0 read_issue ph_b=0
+T 2244 lane0 read_issue ph_b=0
+T 2245 lane0 read_issue ph_b=0
+T 2246 lane0 read_issue ph_b=0
+T 2247 lane0 read_issue ph_b=0
+T 2248 lane0 read_issue ph_b=0
+T 2249 lane0 read_issue ph_b=0
+T 2250 lane0 read_issue ph_b=0
+T 2251 lane0 read_issue ph_b=0
+T 2252 lane0 read_issue ph_b=0
+T 2253 lane0 read_issue ph_b=0
+T 2254 lane0 read_issue ph_b=0
+T 2255 lane0 read_issue ph_b=0
+T 2256 lane0 read_issue ph_b=0
+T 2257 lane0 read_issue ph_b=0
+T 2258 lane0 read_issue ph_b=0
+T 2259 lane0 read_issue ph_b=0
+T 2260 lane0 read_issue ph_b=0
+T 2261 lane0 read_issue ph_b=0
+T 2262 lane0 read_issue ph_b=0
+T 2263 lane0 read_issue ph_b=0
+T 2264 lane0 read_issue ph_b=0
+T 2265 lane0 read_issue ph_b=0
+T 2265 top rsqrt
+T 2266 lane0 read_issue ph_b=0
+T 2267 lane0 read_issue ph_b=0
+T 2268 lane0 read_issue ph_b=0
+T 2269 lane0 read_issue ph_b=0
+T 2270 lane0 read_issue ph_b=0
+T 2271 lane0 read_issue ph_b=0
+T 2272 lane0 read_issue ph_b=0
+T 2273 lane0 read_issue ph_b=0
+T 2274 lane0 read_issue ph_b=0
+T 2275 lane0 read_issue ph_b=0
+T 2276 lane0 read_issue ph_b=0
+T 2277 lane0 read_issue ph_b=0
+T 2278 lane0 RSTD
+T 2278 lane0 read_issue ph_b=0
+T 2279 lane0 read_issue ph_b=0
+T 2280 lane0 read_issue ph_b=0
+T 2281 lane0 read_issue ph_b=0
+T 2282 lane0 read_issue ph_b=0
+T 2283 lane0 read_issue ph_b=0
+T 2284 lane0 read_issue ph_b=0
+T 2285 lane0 read_issue ph_b=0
+T 2286 lane0 read_issue ph_b=0
+T 2287 lane0 read_issue ph_b=0
+T 2288 lane0 read_issue ph_b=0
+T 2289 lane0 read_issue ph_b=0
+T 2290 lane0 read_issue ph_b=0
+T 2291 lane0 read_issue ph_b=0
+T 2292 lane0 read_issue ph_b=0
+T 2293 lane0 read_issue ph_b=0
+T 2294 lane0 read_issue ph_b=0
+T 2295 lane0 read_issue ph_b=0
+T 2296 lane0 y
+T 2296 lane0 read_issue ph_b=0
+T 2297 lane0 y
+T 2297 lane0 read_issue ph_b=0
+T 2298 lane0 y
+T 2298 lane0 read_issue ph_b=0
+T 2299 lane0 y
+T 2299 lane0 read_issue ph_b=0
+T 2300 lane0 y
+T 2300 lane0 read_issue ph_b=0
+T 2301 lane0 y
+T 2301 lane0 read_issue ph_b=0
+T 2302 lane0 y
+T 2302 lane0 read_issue ph_b=0
+T 2303 lane0 y
+T 2303 lane0 read_issue ph_b=0
+T 2304 lane0 y
+T 2304 lane0 read_issue ph_b=0
+T 2305 lane0 y
+T 2305 lane0 read_issue ph_b=0
+T 2306 lane0 chunk_up
+T 2306 lane0 y
+T 2306 lane0 read_issue ph_b=0
+T 2307 lane0 y
+T 2307 lane0 read_issue ph_b=0
+T 2308 lane0 y
+T 2308 lane0 read_issue ph_b=0
+T 2309 lane0 y
+T 2309 lane0 read_issue ph_b=0
+T 2310 lane0 chunk_up
+T 2310 lane0 y
+T 2310 lane0 read_issue ph_b=0
+T 2311 lane0 y
+T 2311 lane0 read_issue ph_b=0
+T 2312 lane0 y
+T 2312 lane0 read_issue ph_b=0
+T 2313 lane0 y
+T 2313 lane0 read_issue ph_b=0
+T 2314 lane0 chunk_up
+T 2314 lane0 y
+T 2314 lane0 read_issue ph_b=0
+T 2315 lane0 y
+T 2315 lane0 read_issue ph_b=0
+T 2316 lane0 read_issue ph_b=0
+T 2317 lane0 read_issue ph_b=0
+T 2318 lane0 chunk_up
+T 2318 lane0 read_issue ph_b=0
+T 2319 lane0 read_issue ph_b=0
+T 2320 lane0 read_issue ph_b=0
+T 2321 lane0 read_issue ph_b=0
+T 2322 lane0 chunk_up
+T 2322 lane0 read_issue ph_b=0
+T 2323 lane0 read_issue ph_b=0
+T 2324 lane0 read_issue ph_b=0
+T 2325 lane0 read_issue ph_b=0
+T 2326 lane0 chunk_up
+T 2326 lane0 read_issue ph_b=0
+T 2327 lane0 read_issue ph_b=0
+T 2328 lane0 read_issue ph_b=0
+T 2329 lane0 read_issue ph_b=0
+T 2330 lane0 chunk_up
+T 2330 lane0 read_issue ph_b=0
+T 2331 lane0 read_issue ph_b=0
+T 2332 lane0 read_issue ph_b=0
+T 2333 lane0 read_issue ph_b=0
+T 2334 lane0 chunk_up
+T 2334 lane0 read_issue ph_b=0
+T 2335 lane0 read_issue ph_b=0
+T 2336 lane0 read_issue ph_b=0
+T 2337 lane0 read_issue ph_b=0
+T 2338 lane0 chunk_up
+T 2338 lane0 read_issue ph_b=0
+T 2339 lane0 read_issue ph_b=0
+T 2340 lane0 read_issue ph_b=0
+T 2341 lane0 read_issue ph_b=0
+T 2342 lane0 chunk_up
+T 2342 lane0 read_issue ph_b=0
+T 2343 lane0 read_issue ph_b=0
+T 2344 lane0 read_issue ph_b=0
+T 2345 lane0 read_issue ph_b=0
+T 2346 lane0 chunk_up
+T 2346 lane0 read_issue ph_b=0
+T 2347 lane0 read_issue ph_b=0
+T 2348 lane0 read_issue ph_b=0
+T 2349 lane0 read_issue ph_b=0
+T 2350 lane0 chunk_up
+T 2350 lane0 read_issue ph_b=0
+T 2351 lane0 read_issue ph_b=0
+T 2352 lane0 read_issue ph_b=0
+T 2353 lane0 read_issue ph_b=0
+T 2354 lane0 chunk_up
+T 2354 lane0 read_issue ph_b=0
+T 2355 lane0 read_issue ph_b=0
+T 2356 lane0 read_issue ph_b=0
+T 2357 lane0 read_issue ph_b=0
+T 2358 lane0 chunk_up
+T 2358 lane0 read_issue ph_b=0
+T 2359 lane0 read_issue ph_b=0
+T 2360 lane0 read_issue ph_b=0
+T 2361 lane0 read_issue ph_b=0
+T 2362 lane0 chunk_up
+T 2362 lane0 read_issue ph_b=0
+T 2363 lane0 read_issue ph_b=0
+T 2364 lane0 read_issue ph_b=0
+T 2365 lane0 read_issue ph_b=0
+T 2366 lane0 chunk_up
+T 2366 lane0 read_issue ph_b=0
+T 2367 lane0 read_issue ph_b=0
+T 2368 lane0 read_issue ph_b=0
+T 2369 lane0 read_issue ph_b=0
+T 2370 lane0 chunk_up
+T 2370 lane0 read_issue ph_b=0
+T 2371 lane0 read_issue ph_b=0
+T 2372 lane0 read_issue ph_b=0
+T 2373 lane0 read_issue ph_b=0
+T 2374 lane0 chunk_up
+T 2374 lane0 read_issue ph_b=0
+T 2375 lane0 read_issue ph_b=0
+T 2376 lane0 read_issue ph_b=0
+T 2377 lane0 read_issue ph_b=0
+T 2378 lane0 chunk_up
+T 2378 lane0 read_issue ph_b=0
+T 2379 lane0 read_issue ph_b=0
+T 2382 lane0 chunk_up
+T 2386 lane0 chunk_up
+T 2390 lane0 chunk_up
+T 2394 lane0 chunk_up
+T 2398 lane0 chunk_up
+T 2402 lane0 chunk_up
+T 2406 lane0 chunk_up
+T 2410 lane0 chunk_up
+T 2414 lane0 chunk_up
+T 2418 lane0 chunk_up
+T 2422 lane0 chunk_up
+T 2426 lane0 chunk_up
+T 2430 lane0 chunk_up
+T 2434 lane0 chunk_up
+T 2438 lane0 chunk_up
+T 2442 lane0 chunk_up
+T 2443 top ss
+T 2446 lane0 chunk_up
+T 2450 lane0 chunk_up
+T 2454 lane0 chunk_up
+T 2458 lane0 chunk_up
+T 2462 lane0 chunk_up
+T 2523 top ss
+T 2523 top rsqrt
+T 2536 lane0 RSTD
+T 2554 lane0 y
+T 2555 lane0 y
+T 2556 lane0 y
+T 2557 lane0 y
+T 2558 lane0 y
+T 2558 lane0 read_issue ph_b=0
+T 2559 lane0 y
+T 2559 lane0 read_issue ph_b=0
+T 2560 lane0 y
+T 2560 lane0 read_issue ph_b=0
+T 2561 lane0 y
+T 2561 lane0 read_issue ph_b=0
+T 2562 lane0 y
+T 2562 lane0 read_issue ph_b=0
+T 2563 lane0 y
+T 2563 lane0 read_issue ph_b=0
+T 2564 lane0 y
+T 2564 lane0 read_issue ph_b=0
+T 2565 lane0 y
+T 2565 lane0 read_issue ph_b=0
+T 2566 lane0 y
+T 2566 lane0 read_issue ph_b=0
+T 2567 lane0 y
+T 2567 lane0 read_issue ph_b=0
+T 2568 lane0 y
+T 2568 lane0 read_issue ph_b=0
+T 2569 lane0 y
+T 2569 lane0 read_issue ph_b=0
+T 2570 lane0 y
+T 2570 lane0 read_issue ph_b=0
+T 2571 lane0 y
+T 2571 lane0 read_issue ph_b=0
+T 2572 lane0 y
+T 2572 lane0 read_issue ph_b=0
+T 2573 lane0 y
+T 2573 lane0 read_issue ph_b=0
+T 2574 lane0 read_issue ph_b=0
+T 2575 lane0 read_issue ph_b=0
+T 2576 lane0 read_issue ph_b=0
+T 2577 lane0 read_issue ph_b=0
+T 2578 lane0 read_issue ph_b=0
+T 2579 lane0 read_issue ph_b=0
+T 2580 lane0 read_issue ph_b=0
+T 2581 lane0 read_issue ph_b=0
+T 2582 lane0 read_issue ph_b=0
+T 2583 lane0 read_issue ph_b=0
+T 2584 lane0 read_issue ph_b=0
+T 2585 lane0 read_issue ph_b=0
+T 2586 lane0 read_issue ph_b=0
+T 2587 lane0 read_issue ph_b=0
+T 2588 lane0 read_issue ph_b=0
+T 2589 lane0 read_issue ph_b=0
+T 2590 lane0 read_issue ph_b=0
+T 2591 lane0 read_issue ph_b=0
+T 2592 lane0 read_issue ph_b=0
+T 2593 lane0 read_issue ph_b=0
+T 2594 lane0 read_issue ph_b=0
+T 2595 lane0 read_issue ph_b=0
+T 2596 lane0 read_issue ph_b=0
+T 2597 lane0 read_issue ph_b=0
+T 2598 lane0 read_issue ph_b=0
+T 2599 lane0 read_issue ph_b=0
+T 2600 lane0 read_issue ph_b=0
+T 2601 lane0 read_issue ph_b=0
+T 2602 lane0 read_issue ph_b=0
+T 2603 lane0 read_issue ph_b=0
+T 2603 top rsqrt
+T 2604 lane0 read_issue ph_b=0
+T 2605 lane0 read_issue ph_b=0
+T 2606 lane0 read_issue ph_b=0
+T 2607 lane0 read_issue ph_b=0
+T 2608 lane0 read_issue ph_b=0
+T 2609 lane0 read_issue ph_b=0
+T 2610 lane0 read_issue ph_b=0
+T 2611 lane0 read_issue ph_b=0
+T 2612 lane0 read_issue ph_b=0
+T 2613 lane0 read_issue ph_b=0
+T 2614 lane0 read_issue ph_b=0
+T 2615 lane0 read_issue ph_b=0
+T 2616 lane0 RSTD
+T 2616 lane0 read_issue ph_b=0
+T 2617 lane0 read_issue ph_b=0
+T 2618 lane0 read_issue ph_b=0
+T 2619 lane0 read_issue ph_b=0
+T 2620 lane0 read_issue ph_b=0
+T 2621 lane0 read_issue ph_b=0
+T 2622 lane0 read_issue ph_b=0
+T 2623 lane0 read_issue ph_b=0
+T 2624 lane0 read_issue ph_b=0
+T 2625 lane0 read_issue ph_b=0
+T 2626 lane0 read_issue ph_b=0
+T 2627 lane0 read_issue ph_b=0
+T 2628 lane0 read_issue ph_b=0
+T 2629 lane0 read_issue ph_b=0
+T 2630 lane0 read_issue ph_b=0
+T 2631 lane0 read_issue ph_b=0
+T 2632 lane0 read_issue ph_b=0
+T 2633 lane0 read_issue ph_b=0
+T 2634 lane0 y
+T 2634 lane0 read_issue ph_b=0
+T 2635 lane0 y
+T 2635 lane0 read_issue ph_b=0
+T 2636 lane0 y
+T 2636 lane0 read_issue ph_b=0
+T 2637 lane0 y
+T 2637 lane0 read_issue ph_b=0
+T 2638 lane0 y
+T 2639 lane0 y
+T 2640 lane0 y
+T 2641 lane0 y
+T 2642 lane0 y
+T 2643 lane0 y
+T 2644 lane0 chunk_up
+T 2644 lane0 y
+T 2645 lane0 y
+T 2646 lane0 y
+T 2647 lane0 y
+T 2648 lane0 chunk_up
+T 2648 lane0 y
+T 2649 lane0 y
+T 2650 lane0 y
+T 2651 lane0 y
+T 2652 lane0 chunk_up
+T 2652 lane0 y
+T 2653 lane0 y
+T 2656 lane0 chunk_up
+T 2660 lane0 chunk_up
+T 2664 lane0 chunk_up
+T 2668 lane0 chunk_up
+T 2672 lane0 chunk_up
+T 2676 lane0 chunk_up
+T 2680 lane0 chunk_up
+T 2684 lane0 chunk_up
+T 2688 lane0 chunk_up
+T 2692 lane0 chunk_up
+T 2696 lane0 chunk_up
+T 2700 lane0 chunk_up
+T 2704 lane0 chunk_up
+T 2708 lane0 chunk_up
+T 2712 lane0 chunk_up
+T 2716 lane0 chunk_up
+T 2720 lane0 chunk_up
+T 2781 top ss
+T 2861 top rsqrt
+T 2874 lane0 RSTD
+T 2892 lane0 y
+T 2893 lane0 y
+T 2894 lane0 y
+T 2895 lane0 y
+T 2896 lane0 y
+T 2897 lane0 y
+T 2898 lane0 y
+T 2899 lane0 y
+T 2900 lane0 y
+T 2901 lane0 y
+T 2902 lane0 y
+T 2903 lane0 y
+T 2904 lane0 y
+T 2905 lane0 y
+T 2906 lane0 y
+T 2907 lane0 y
+T 2908 lane0 y
+T 2909 lane0 y
+T 2910 lane0 y
+T 2911 lane0 y
+T 2919 lane0 fin
+T 2920 lane0 fin
+T 2921 lane0 fin
+T 2922 lane0 fin
+T 2923 lane0 fin
+T 2924 lane0 fin
+T 2925 lane0 fin
+T 2926 lane0 fin
+T 2927 lane0 fin
+T 2928 lane0 fin
+T 2929 lane0 fin
+T 2930 lane0 fin
+T 2931 lane0 fin
+T 2932 lane0 fin
+T 2933 lane0 fin
+T 2934 lane0 fin
+T 2934 top st 6
+T 2935 lane0 fin
+T 2935 top st 0
+T 2936 lane0 fin
+T 2937 lane0 fin
+T 2937 rec_done
+case 2: 1 records in 1451 cycles (HC engine 1438, mover 0)
+T 2938 lane0 fin
+T 2939 lane0 fin
+T 2940 lane0 fin
+T 2941 lane0 fin
+T 2942 lane0 fin
+T 2943 lane0 fin
+T 2944 lane0 fin
+T 2945 lane0 fin
+T 2946 lane0 fin
+T 2947 lane0 fin
+T 2948 lane0 fin
+T 2949 lane0 fin
+T 2950 lane0 fin
+T 2951 lane0 fin
+T 2952 lane0 fin
+T 2953 lane0 fin
+T 2954 lane0 fin
+T 2955 lane0 fin
+T 2956 lane0 fin
+T 2957 lane0 fin
+T 2958 lane0 fin
+T 2959 lane0 fin
+T 2960 lane0 fin
+T 2961 lane0 fin
+T 2962 lane0 fin
+T 2963 lane0 fin
+T 2964 lane0 fin
+T 2965 lane0 fin
+T 2966 lane0 fin
+T 2967 lane0 fin
+T 2968 lane0 fin
+T 2969 lane0 fin
+T 2970 lane0 fin
+T 2971 lane0 fin
+T 2972 lane0 fin
+T 2973 lane0 fin
+T 2974 lane0 fin
+T 2975 lane0 fin
+T 2976 lane0 fin
+T 2977 lane0 fin
+T 2978 lane0 fin
+T 2979 lane0 fin
+T 2980 lane0 fin
+T 2981 lane0 fin
+T 2982 lane0 fin
+T 2983 lane0 fin
+T 2984 lane0 fin
+T 2985 lane0 fin
+T 2986 lane0 fin
+T 2987 lane0 fin
+T 2988 lane0 fin
+T 2989 lane0 fin
+T 2990 lane0 fin
+T 2991 lane0 fin
+T 2992 lane0 fin
+T 2993 lane0 fin
+T 2994 lane0 fin
+T 2995 lane0 fin
+T 2996 lane0 fin
+T 2997 lane0 fin
+T 2998 lane0 fin
+T 2999 lane0 fin
+T 3000 lane0 fin
+T 3001 lane0 fin
+T 3002 lane0 fin
+T 3003 lane0 fin
+T 3004 lane0 fin
+T 3005 lane0 fin
+T 3006 lane0 fin
+T 3007 lane0 fin
+T 3008 lane0 fin
+T 3009 lane0 fin
+T 3010 lane0 fin
+T 3011 lane0 fin
+T 3012 lane0 fin
+T 3013 lane0 fin
+T 3014 lane0 fin
+T 3015 lane0 fin
+T 3016 lane0 fin
+T 3017 lane0 fin
+T 3018 lane0 fin
+T 3019 lane0 fin
+T 3020 lane0 fin
+T 3021 lane0 fin
+T 3022 lane0 fin
+T 3023 lane0 fin
+T 3024 lane0 fin
+T 3025 lane0 fin
+T 3026 lane0 fin
+T 3027 lane0 fin
+T 3028 lane0 fin
+T 3029 lane0 fin
+T 3030 lane0 fin
+T 3031 lane0 fin
+T 3032 lane0 fin
+T 3033 lane0 fin
+T 3034 lane0 fin
+T 3035 lane0 fin
+T 3036 lane0 fin
+T 3037 lane0 fin
+T 3038 lane0 fin
+T 3039 lane0 fin
+T 3040 lane0 fin
+T 3041 lane0 fin
+T 3042 lane0 fin
+T 3043 lane0 fin
+T 3044 lane0 fin
+T 3045 lane0 fin
+T 3046 lane0 fin
+T 3047 lane0 fin
+T 3048 lane0 fin
+T 3049 lane0 fin
+T 3050 lane0 fin
+T 3051 lane0 fin
+T 3052 lane0 fin
+T 3053 lane0 fin
+T 3054 lane0 fin
+T 3055 lane0 fin
+T 3056 lane0 fin
+T 3057 lane0 fin
+T 3058 lane0 fin
+T 3059 lane0 fin
+T 3060 lane0 fin
+T 3061 lane0 fin
+T 3062 lane0 fin
+T 3063 lane0 fin
+T 3064 lane0 fin
+T 3065 lane0 fin
+summary: 3 FUSED data cases through the D1 unit, 56320 VM words exact
+HGI_FUSED_UNIT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv:257: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 103.553 s; speed 59.216 ns/s
+- Verilator: cpu 103.550 s on 1 threads; allocated 344 MB

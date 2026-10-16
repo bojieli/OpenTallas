@@ -1637,8 +1637,7 @@
    "die": "s81",
    "level": "die-interface",
    "images_committed": [],
-   "images_local": [],
-   "status_1016_0140": "S-DIE owns the windows; folded into the same sstn window request."
+   "images_local": []
   },
   {
    "id": "S81F-07",
@@ -1769,8 +1768,7 @@
    ],
    "images_local": [
     "/tmp/visrom/s81/dsfd_stnh_70x1__floorplan.png"
-   ],
-   "status_1016_0140": "S-NET+FILL agrees: proposed to S-DIE a 2-track 8.35 um identical window on both faces for the 86x1 standard (70x1 rebinds to it); S-DIE plan first, then stnh/stnv_86x1 re-route."
+   ]
   },
   {
    "id": "S81F-11",
@@ -1809,8 +1807,7 @@
    "images_local": [
     "/tmp/visrom/s81/dsfd_sstn_e0c0si__floorplan.png",
     "/tmp/visrom/s81/dsfd_sstn_e0c0si__density.png"
-   ],
-   "status_1016_0140": "S-DIE deferred until gen26a shows cfifo/neighbour pin windows; re-cut to ~90-130 um follows."
+   ]
   },
   {
    "id": "S81F-12",
@@ -1840,9 +1837,7 @@
    "images_committed": [],
    "images_local": [
     "/tmp/visrom/s81/dsfd_hstnv_129s__congestion.rpt"
-   ],
-   "status_1016_0140": "RETIRED: hstnv_129s pilot withdrawn 10-15 18:28; wide stations use the closed f6/f8 face-cut masters (hstnv_513 f8); 129s is not in the die. Not a live finding.",
-   "retired": true
+   ]
   },
   {
    "id": "S81F-13",
@@ -1951,8 +1946,7 @@
    "images_local": [
     "/tmp/visrom/s81/dsfd_rly_2_NE__floorplan.png",
     "/tmp/visrom/s81/dsfd_hstnh_2__floorplan.png"
-   ],
-   "status_1016_0140": "phase-3 DEDUPE item (die netlist bundle merges) -> needs S-DIE; noted, not started."
+   ]
   },
   {
    "id": "D-QC-01",
