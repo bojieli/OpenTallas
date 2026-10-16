@@ -8,7 +8,7 @@
  ],
  "outline": {
   "w": 142.56,
-  "h": 103.68
+  "h": 120.96
  },
  "pins": {
   "N": [
@@ -70,19 +70,19 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "p6 (10-15 S-ELEM-B): P5 route FLOORPLAN_MARGIN util 62.1% (7,783 um2 in 12,541) -> height 95.04 -> 103.68 (core 13,736 um2, ~57%), same width/faces; per-bank read-index copies were folded by synthesis into one 5,900-load flop -> (* keep *) + 4 copies per bank, one per 4-bit row slice (~370 loads/bit, +168 FF, 0 cycles); pins re-spread for the new height with clk at the W-face centre (spread_face_pins ee058260f). | P4 route CLOSED but nativeFAIL capture308.7ps on1045pins, raw1024bank data into4:1mux; P5 inserts1024actual data captureFF plus38matching valid/select/metadataFF (+1062FF), exact +1readedge (legacydelta2\u21923), same4physical SRAM banks. Actual345800bit parent comparison +57344independent changing head pin bitchecks +3source mutants PASS. Same142.56x95.04 and exactP4io_tcl; native8i0launch errors remain toassess/repair, so this is bounded CTS characterization only, no route/adoption/throughput qualification.",
+ "structural_change": "P9 (10-15 S-ELEM-PQ): P8 route CLOSED TT +104.16/FF +18.09/DRC0 but native capture FAIL 21 pins <=244.6 ps (h_b0/h_b1 all bits, consume, hw_sv; results/rtl/s81_pq_native_audit_1015/native_collect_1705): each h_b* bit loaded i0 + 16 r0c copies, h_b*[3]/[0], consume and hw_sv also fed 8 rq AND4 decode flops at the E face. P9 = one capture flop per head input pin: r0c copies load from i0/i1 one edge later and the bank select lands in m*[2] (the m*[1] pure-delay stage is absorbed), rq0/rq1 are decoded at the output from the consume_1/gates/i0/i1 capture flops (same edge). 0 added cycles, read delta 3 unchanged; P9 equals frozen P8 on every output pin each edge under the loader contract (meta row not read within 3 edges of its write, which P8 itself needs for meta/data consistency). Same granted 142.56x120.96 outline and P8 pins. | p7 (10-15 S-ELEM-B): P6 route NEEDS_RTL TT -90.64/FF +19.99 (congestion fixed), worst i1[3] -> m1[0][0]: r0c/r1c -> per-bank 96:1 metadata read -> 4:1 bank select -> m*[0] in one edge. Retimed: per-bank read results registered (mb*_q, +128 FF), bank select moved into the next stage, which replaces the pure-delay first stage of the m0/m1 alignment line; metadata reaches m*[3] on the same edge, 0 added cycles, no compiler change. pq_qb_pinread_bench PASS (+3 mutants FAIL), capture-bypass mutant FAIL. | p6 (10-15 S-ELEM-B): P5 route FLOORPLAN_MARGIN util 62.1% (7,783 um2 in 12,541) -> height 95.04 -> 103.68 (core 13,736 um2, ~57%), same width/faces; per-bank read-index copies were folded by synthesis into one 5,900-load flop -> (* keep *) + 4 copies per bank, one per 4-bit row slice (~370 loads/bit, +168 FF, 0 cycles); pins re-spread for the new height with clk at the W-face centre (spread_face_pins ee058260f). | P4 route CLOSED but nativeFAIL capture308.7ps on1045pins, raw1024bank data into4:1mux; P5 inserts1024actual data captureFF plus38matching valid/select/metadataFF (+1062FF), exact +1readedge (legacydelta2\u21923), same4physical SRAM banks. Actual345800bit parent comparison +57344independent changing head pin bitchecks +3source mutants PASS. Same142.56x95.04 and exactP4io_tcl; native8i0launch errors remain toassess/repair, so this is bounded CTS characterization only, no route/adoption/throughput qualification. | P8: expand headpc height103.68->120.96 from actual P7 mapped8583um2/util62.5%; width/faces/RTL and production read delta3 unchanged; exact legal per-face re-spread pins, target53% utilization.",
  "slot_change_request": {
-  "name": "S-DIE0757-headpc-p5-same-actual-slot",
+  "name": "S-DIE1417-headpc-p8",
   "outline": [
    142.56,
-   103.68
+   120.96
   ],
-  "why": "Same actual P4outline/pins/faces; one bounded nativeCTS granted with mappedutil/sinks check, explicit1062FF/+1readedge; no route until nativeallpins pass."
+  "why": "P7 actual mapped std8583/core13736=62.5% fails60%; height expansion gives core approx16199 and53% utilization, no RTL/normal schedule changes; typed exact pins pending S-DIE."
  },
  "job": {
-  "owner": "Claude:s81-elemB-1015",
-  "branch": "codex/s81-field-native-1015",
-  "tag": "p6",
+  "owner": "Claude:S-ELEM-PQ",
+  "branch": "claude/s81-elempq-1705",
+  "tag": "p9-pinload-1705",
   "purpose": "S81 PQ QB pipelined head (metadata in head), canonical +2 QB pipeline",
   "benches": [
    {
@@ -106,6 +106,28 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "p9_equiv_vs_p8",
+    "cmd": "mkdir -p {RUN}/p9eq && iverilog -g2012 -s tb_s81_pq_headpc_p9_equiv -o {RUN}/p9eq/e.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p9eq/e.vvp",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PQ_HEADPC_P9_EQUIV PASS",
+    "min_count_regex": "checked_bits=([0-9]+)"
+   },
+   {
+    "name": "mutant_r0c_early",
+    "cmd": "mkdir -p {RUN}/p9mut && iverilog -g2012 -s tb_s81_pq_headpc_p9_equiv -DOT_S81_PQ_HEADPC_MUT_R0C -o {RUN}/p9mut/m.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p9mut/m.vvp",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
    }
   ],
   "views_to": "physical/ref_tile/s81pq_qb_headpc_native/views",
@@ -121,8 +143,14 @@
    "tools/s81_static_control",
    "rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv",
    "rtl/test/dsrom_sys/tb_s81_pq_headpc_pin_capture.sv",
-   "tools/s81/pq_qb_pinread_bench.sh"
-  ]
+   "tools/s81/pq_qb_pinread_bench.sh",
+   "rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv",
+   "rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv"
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "P8 native capture FAIL 21 head input pins <=244.6 ps; P9 single capture flop per input pin (r0c from i0, rq decoded at output), 0 cycles"
+  }
  },
  "defines": [
   "OT_PQ_ROM_PORTS"

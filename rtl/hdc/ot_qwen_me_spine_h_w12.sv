@@ -268,8 +268,11 @@ module ot_qwen_me_spctl_w12 #(
                                          //   result-side argmax / mx timing (tree valid line tv, tag line u_ttag, accumulator clear RXA) one
                                          //   edge later to match: am_* / mx_* / idle settle one edge later, the result sequence is unchanged;
                                          //   2 = negative control (the register without the +1 compensation: MUST FAIL)
-    parameter integer PK = 0             // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
+    parameter integer PK = 0,            // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
                                          //   land_cnt pin flop) and the u_ttag line read from a register (ring D-1 + output flop: t_* straight from flops); 2 = negative control (KS carry-in dropped: progress one low)
+    // Extra fixed edges in the real port argmax tree (e.g. popcount(APIPE)).
+    // Bind this only with the matching producer; default preserves archived timing.
+    parameter integer PORT_AM_EXTRA_EDGES = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1026,7 +1029,8 @@ end endgenerate
     localparam integer CW = 1 + 32 + NW;
     wire [CW*AN-1:0] alv [LPT:LV];
     //: AMI: AMC = the +1 compensation (AMI 1 only; AMI 2 registers p_am without it); LVT = the tree-top valid tap
-    localparam integer AMC = (AMI == 1) ? 1 : 0;
+    initial if (PORT_AM_EXTRA_EDGES < 0) $fatal(1, "negative PORT_AM_EXTRA_EDGES");
+    localparam integer AMC = ((AMI == 1) ? 1 : 0) + PORT_AM_EXTRA_EDGES;
     localparam integer LVT = LV + AMC;
     reg  [LVT:0] tv;
     always @(posedge clk or negedge rst_n) begin
@@ -1425,7 +1429,11 @@ module ot_qwen_me_spport_w12 #(
     // base and (g * ots) take g instead of p.  Default 0 = base.
     parameter integer BANDF = 0,
     parameter integer TCUT = 7,
-    parameter integer HARD_MUL = 0
+    parameter integer HARD_MUL = 0,
+    // q15 port-tiles: QOTS_SMALL 1 = pt_id < 32 is guaranteed by the instantiating leaf (die strap 8*BAND+4*HALF+q);
+    // (q0+g)*ots is then formed as ((bb*ots) << (TB-split)) + kk*ots (bb = qp[4:3], kk = qp[2:0]), the exact same
+    // value mod 2^AW as the 16-row qrows sum, with 5 partial products instead of 16.  Default 0 = original.
+    parameter integer QOTS_SMALL = 0
 ) (
     input wire [15:0] ck_mul,
     input  wire              clk,
@@ -1508,8 +1516,15 @@ module ot_qwen_me_spport_w12 #(
         for (b = 0; b < QB; b = b + 1) begin : g_qr
             assign qrows[b*AW +: AW] = qg[b] ? (e_ots << b) : {AW{1'b0}};
         end
-        ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
-        ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
+        if (QOTS_SMALL != 0 && BANDF != 0) begin : g_qsmall
+            wire [AW-1:0] p_b = e_ots * qp[4:3];
+            wire [AW-1:0] p_k = e_ots * qp[2:0];
+            wire [AW-1:0] p_bs = (e_split <= TB) ? (p_b << (TB - e_split)) : {AW{1'b0}};
+            assign e_qots[g*AW +: AW] = p_bs + p_k;
+        end else begin : g_qfull
+            ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
+            ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
+        end
     end endgenerate
     // -- stage A (the monolithic a_tag cycle) --------------------------------------------------------------------
     reg              raw_v, raw_last, raw_oen, raw_wsrc;

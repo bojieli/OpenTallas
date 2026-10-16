@@ -17,3 +17,9 @@ rc=$?
 set -e
 if [ "$rc" = 0 ] || ! grep -q BRIDGE_FAULT "$OUT/mutant.log";then cat "$OUT/mutant.log";exit 1;fi
 printf 'PASS actual tap response suppression mutant rc=%s\n' "$rc"
+set +e
+"$OUT/obj/Vtb_hgi_sfu_vm_static_bridge" +MUT_LG_CLOCK > "$OUT/mutant_clock.log" 2>&1
+rc=$?
+set -e
+if [ "$rc" = 0 ] || ! grep -Eq 'BRIDGE_(FAULT|WORD)' "$OUT/mutant_clock.log";then cat "$OUT/mutant_clock.log";exit 1;fi
+printf 'PASS actual missing bank-pair LG root mutant rc=%s\n' "$rc"

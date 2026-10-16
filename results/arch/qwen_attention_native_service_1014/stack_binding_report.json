@@ -1,0 +1,38 @@
+{
+  "status": "SOURCE_BINDING_PASS",
+  "scope": "ACTUAL_NATIVE_QK_STACK_COMPOSITION_ELABORATION_ONLY",
+  "runtime_qualified": false,
+  "physical_phase_qualified": false,
+  "native_attention_qualified": false,
+  "whole_token_qualified": false,
+  "actual_session": 63025,
+  "actual_scope": "oth-ubuntu-48212-1792037165",
+  "admitted_memory_GiB": 128,
+  "prior_64GiB_cgroup_failures": [
+    "oth-ubuntu-5280-1792036459",
+    "oth-ubuntu-22273-1792036636",
+    "oth-ubuntu-41722-1792036895"
+  ],
+  "selected_actual_components": {
+    "ECTL3": 8,
+    "nativehead_r4": 32,
+    "mapped_ASTK": 1
+  },
+  "clock_ports": {
+    "ECTL": 24,
+    "head": 2752,
+    "ASTK": 46,
+    "total": 2822
+  },
+  "bench_clocks": "explicit equal-phase source wrapper; native DUT retains independent physical root ports",
+  "layer_parity": "held actual command layer parity replaces request parity field only; ECTL arithmetic state unchanged",
+  "scope_limits": [
+    "No C++ simulator was compiled or executed in this source-binding step.",
+    "Actual native clock insertion/phase and physical views remain unqualified.",
+    "Preserves86root nativehead baseline; unused32NB roots/head are retirement candidate, not silently aliased to54root physical identity.",
+    "Includes source-only functional stack/head files to resolve their actual one-register relay primitives; those functional stacks and ideal score/e arrays are not instantiated by this selectedDUT.",
+    "ASTK profile ages365/350/900/stride16 are fixture parameters, not accepted actual QK\u2192EXP/Z production calendar."
+  ],
+  "source_and_generated_artifacts": "stack_binding_capture.json",
+  "model": "stack_model.json"
+}

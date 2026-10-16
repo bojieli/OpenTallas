@@ -1,8 +1,30 @@
 """Compiler ABI for S81 engine12: dense v1 and stride4 sparse SU compact v2.
-All cycles are sampled engine pin edges; every command retires at pin+6.
+All cycles are sampled engine pin edges; every command retires at pin+7.
 Only declared commit observations establish operand completion; no runtime issue gating.
 """
-DLAT = 6
+DLAT = 7   # r2 seq tile: +1 pin stage on commit/read observations (native seq_tile TT -69.45)
+
+
+def local_observation_cost():
+    """Per-instance source and measured pre-repair mapping costs; no token estimate."""
+    return {
+        'command_done_old_stream_edges': 6,
+        'command_done_stream_edges': DLAT,
+        'command_ii_stream_edges': 1,
+        'extra_command_retirement_ps': 1000.0 / 1.2,
+        'commit_groups': 8, 'commit_ports_per_group': 16,
+        'read_groups': 8, 'read_ports_per_group': 4,
+        'slots': 8,
+        'source_local_state_copy_bits': 16 * 8 * (1 + 1 + 14 + 15),
+        'source_observation_stage_bits': 128 + 1152 + 512 + 32 + 448,
+        'measured_unprotected_mapped_ff_bits': 8920,
+        'measured_unprotected_unique_group_state_bits': 232,
+        'required_distinct_mapped_group_state_bits': 16 * 232,
+        'projected_mapped_ff_bits_with_local_enables': 8920 + 15 * 232,
+        'external_clock_and_port_changes': 0,
+        'whole_token_cost': None,
+        'scope': 'Per-instance structural candidate; actual mapping, native timing and issuer calendar remain gates. No accepted-cost ledger row.',
+    }
 NSLOT = 8
 ROWS = 16384
 CHECK_FIELD = 0x3FF

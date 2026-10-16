@@ -1,0 +1,1731 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 1000 ;
+END UNITS
+
+MACRO dsfd_hstnv_85
+  FOREIGN dsfd_hstnv_85 0 0 ;
+  CLASS BLOCK ;
+  SIZE 17.256 BY 17.256 ;
+  PIN ck[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 8.592 0.084 8.616 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 8.592 0.227 8.616 ;
+    END
+  END ck[0]
+  PIN di[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.576 0 6.6 0.084 ;
+    END
+  END di[0]
+  PIN di[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.056 0 7.08 0.084 ;
+    END
+  END di[10]
+  PIN di[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.104 0 7.128 0.084 ;
+    END
+  END di[11]
+  PIN di[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.152 0 7.176 0.084 ;
+    END
+  END di[12]
+  PIN di[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.2 0 7.224 0.084 ;
+    END
+  END di[13]
+  PIN di[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.248 0 7.272 0.084 ;
+    END
+  END di[14]
+  PIN di[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.296 0 7.32 0.084 ;
+    END
+  END di[15]
+  PIN di[16]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.344 0 7.368 0.084 ;
+    END
+  END di[16]
+  PIN di[17]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.392 0 7.416 0.084 ;
+    END
+  END di[17]
+  PIN di[18]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.44 0 7.464 0.084 ;
+    END
+  END di[18]
+  PIN di[19]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.488 0 7.512 0.084 ;
+    END
+  END di[19]
+  PIN di[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.624 0 6.648 0.084 ;
+    END
+  END di[1]
+  PIN di[20]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.536 0 7.56 0.084 ;
+    END
+  END di[20]
+  PIN di[21]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.584 0 7.608 0.084 ;
+    END
+  END di[21]
+  PIN di[22]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.632 0 7.656 0.084 ;
+    END
+  END di[22]
+  PIN di[23]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.68 0 7.704 0.084 ;
+    END
+  END di[23]
+  PIN di[24]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.728 0 7.752 0.084 ;
+    END
+  END di[24]
+  PIN di[25]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.776 0 7.8 0.084 ;
+    END
+  END di[25]
+  PIN di[26]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.824 0 7.848 0.084 ;
+    END
+  END di[26]
+  PIN di[27]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.872 0 7.896 0.084 ;
+    END
+  END di[27]
+  PIN di[28]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.92 0 7.944 0.084 ;
+    END
+  END di[28]
+  PIN di[29]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.968 0 7.992 0.084 ;
+    END
+  END di[29]
+  PIN di[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.672 0 6.696 0.084 ;
+    END
+  END di[2]
+  PIN di[30]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.016 0 8.04 0.084 ;
+    END
+  END di[30]
+  PIN di[31]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.064 0 8.088 0.084 ;
+    END
+  END di[31]
+  PIN di[32]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.112 0 8.136 0.084 ;
+    END
+  END di[32]
+  PIN di[33]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.16 0 8.184 0.084 ;
+    END
+  END di[33]
+  PIN di[34]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.208 0 8.232 0.084 ;
+    END
+  END di[34]
+  PIN di[35]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.256 0 8.28 0.084 ;
+    END
+  END di[35]
+  PIN di[36]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.304 0 8.328 0.084 ;
+    END
+  END di[36]
+  PIN di[37]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.352 0 8.376 0.084 ;
+    END
+  END di[37]
+  PIN di[38]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.4 0 8.424 0.084 ;
+    END
+  END di[38]
+  PIN di[39]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.448 0 8.472 0.084 ;
+    END
+  END di[39]
+  PIN di[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.72 0 6.744 0.084 ;
+    END
+  END di[3]
+  PIN di[40]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.496 0 8.52 0.084 ;
+    END
+  END di[40]
+  PIN di[41]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.544 0 8.568 0.084 ;
+    END
+  END di[41]
+  PIN di[42]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.592 0 8.616 0.084 ;
+    END
+  END di[42]
+  PIN di[43]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.64 0 8.664 0.084 ;
+    END
+  END di[43]
+  PIN di[44]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.688 0 8.712 0.084 ;
+    END
+  END di[44]
+  PIN di[45]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.736 0 8.76 0.084 ;
+    END
+  END di[45]
+  PIN di[46]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.784 0 8.808 0.084 ;
+    END
+  END di[46]
+  PIN di[47]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.832 0 8.856 0.084 ;
+    END
+  END di[47]
+  PIN di[48]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.88 0 8.904 0.084 ;
+    END
+  END di[48]
+  PIN di[49]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.928 0 8.952 0.084 ;
+    END
+  END di[49]
+  PIN di[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.768 0 6.792 0.084 ;
+    END
+  END di[4]
+  PIN di[50]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.976 0 9 0.084 ;
+    END
+  END di[50]
+  PIN di[51]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.024 0 9.048 0.084 ;
+    END
+  END di[51]
+  PIN di[52]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.072 0 9.096 0.084 ;
+    END
+  END di[52]
+  PIN di[53]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.12 0 9.144 0.084 ;
+    END
+  END di[53]
+  PIN di[54]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.168 0 9.192 0.084 ;
+    END
+  END di[54]
+  PIN di[55]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.216 0 9.24 0.084 ;
+    END
+  END di[55]
+  PIN di[56]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.264 0 9.288 0.084 ;
+    END
+  END di[56]
+  PIN di[57]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.312 0 9.336 0.084 ;
+    END
+  END di[57]
+  PIN di[58]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.36 0 9.384 0.084 ;
+    END
+  END di[58]
+  PIN di[59]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.408 0 9.432 0.084 ;
+    END
+  END di[59]
+  PIN di[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.816 0 6.84 0.084 ;
+    END
+  END di[5]
+  PIN di[60]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.456 0 9.48 0.084 ;
+    END
+  END di[60]
+  PIN di[61]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.504 0 9.528 0.084 ;
+    END
+  END di[61]
+  PIN di[62]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.552 0 9.576 0.084 ;
+    END
+  END di[62]
+  PIN di[63]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.6 0 9.624 0.084 ;
+    END
+  END di[63]
+  PIN di[64]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.648 0 9.672 0.084 ;
+    END
+  END di[64]
+  PIN di[65]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.696 0 9.72 0.084 ;
+    END
+  END di[65]
+  PIN di[66]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.744 0 9.768 0.084 ;
+    END
+  END di[66]
+  PIN di[67]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.792 0 9.816 0.084 ;
+    END
+  END di[67]
+  PIN di[68]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.84 0 9.864 0.084 ;
+    END
+  END di[68]
+  PIN di[69]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.888 0 9.912 0.084 ;
+    END
+  END di[69]
+  PIN di[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.864 0 6.888 0.084 ;
+    END
+  END di[6]
+  PIN di[70]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.936 0 9.96 0.084 ;
+    END
+  END di[70]
+  PIN di[71]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.984 0 10.008 0.084 ;
+    END
+  END di[71]
+  PIN di[72]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.032 0 10.056 0.084 ;
+    END
+  END di[72]
+  PIN di[73]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.08 0 10.104 0.084 ;
+    END
+  END di[73]
+  PIN di[74]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.128 0 10.152 0.084 ;
+    END
+  END di[74]
+  PIN di[75]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.176 0 10.2 0.084 ;
+    END
+  END di[75]
+  PIN di[76]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.224 0 10.248 0.084 ;
+    END
+  END di[76]
+  PIN di[77]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.272 0 10.296 0.084 ;
+    END
+  END di[77]
+  PIN di[78]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.32 0 10.344 0.084 ;
+    END
+  END di[78]
+  PIN di[79]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.368 0 10.392 0.084 ;
+    END
+  END di[79]
+  PIN di[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.912 0 6.936 0.084 ;
+    END
+  END di[7]
+  PIN di[80]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.416 0 10.44 0.084 ;
+    END
+  END di[80]
+  PIN di[81]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.464 0 10.488 0.084 ;
+    END
+  END di[81]
+  PIN di[82]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.512 0 10.536 0.084 ;
+    END
+  END di[82]
+  PIN di[83]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.56 0 10.584 0.084 ;
+    END
+  END di[83]
+  PIN di[84]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.608 0 10.632 0.084 ;
+    END
+  END di[84]
+  PIN di[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.96 0 6.984 0.084 ;
+    END
+  END di[8]
+  PIN di[9]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.008 0 7.032 0.084 ;
+    END
+  END di[9]
+  PIN dq[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.576 17.172 6.6 17.256 ;
+    END
+  END dq[0]
+  PIN dq[10]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.056 17.172 7.08 17.256 ;
+    END
+  END dq[10]
+  PIN dq[11]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.104 17.172 7.128 17.256 ;
+    END
+  END dq[11]
+  PIN dq[12]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.152 17.172 7.176 17.256 ;
+    END
+  END dq[12]
+  PIN dq[13]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.2 17.172 7.224 17.256 ;
+    END
+  END dq[13]
+  PIN dq[14]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.248 17.172 7.272 17.256 ;
+    END
+  END dq[14]
+  PIN dq[15]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.296 17.172 7.32 17.256 ;
+    END
+  END dq[15]
+  PIN dq[16]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.344 17.172 7.368 17.256 ;
+    END
+  END dq[16]
+  PIN dq[17]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.392 17.172 7.416 17.256 ;
+    END
+  END dq[17]
+  PIN dq[18]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.44 17.172 7.464 17.256 ;
+    END
+  END dq[18]
+  PIN dq[19]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.488 17.172 7.512 17.256 ;
+    END
+  END dq[19]
+  PIN dq[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.624 17.172 6.648 17.256 ;
+    END
+  END dq[1]
+  PIN dq[20]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.536 17.172 7.56 17.256 ;
+    END
+  END dq[20]
+  PIN dq[21]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.584 17.172 7.608 17.256 ;
+    END
+  END dq[21]
+  PIN dq[22]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.632 17.172 7.656 17.256 ;
+    END
+  END dq[22]
+  PIN dq[23]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.68 17.172 7.704 17.256 ;
+    END
+  END dq[23]
+  PIN dq[24]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.728 17.172 7.752 17.256 ;
+    END
+  END dq[24]
+  PIN dq[25]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.776 17.172 7.8 17.256 ;
+    END
+  END dq[25]
+  PIN dq[26]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.824 17.172 7.848 17.256 ;
+    END
+  END dq[26]
+  PIN dq[27]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.872 17.172 7.896 17.256 ;
+    END
+  END dq[27]
+  PIN dq[28]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.92 17.172 7.944 17.256 ;
+    END
+  END dq[28]
+  PIN dq[29]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.968 17.172 7.992 17.256 ;
+    END
+  END dq[29]
+  PIN dq[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.672 17.172 6.696 17.256 ;
+    END
+  END dq[2]
+  PIN dq[30]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.016 17.172 8.04 17.256 ;
+    END
+  END dq[30]
+  PIN dq[31]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.064 17.172 8.088 17.256 ;
+    END
+  END dq[31]
+  PIN dq[32]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.112 17.172 8.136 17.256 ;
+    END
+  END dq[32]
+  PIN dq[33]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.16 17.172 8.184 17.256 ;
+    END
+  END dq[33]
+  PIN dq[34]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.208 17.172 8.232 17.256 ;
+    END
+  END dq[34]
+  PIN dq[35]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.256 17.172 8.28 17.256 ;
+    END
+  END dq[35]
+  PIN dq[36]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.304 17.172 8.328 17.256 ;
+    END
+  END dq[36]
+  PIN dq[37]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.352 17.172 8.376 17.256 ;
+    END
+  END dq[37]
+  PIN dq[38]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.4 17.172 8.424 17.256 ;
+    END
+  END dq[38]
+  PIN dq[39]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.448 17.172 8.472 17.256 ;
+    END
+  END dq[39]
+  PIN dq[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.72 17.172 6.744 17.256 ;
+    END
+  END dq[3]
+  PIN dq[40]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.496 17.172 8.52 17.256 ;
+    END
+  END dq[40]
+  PIN dq[41]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.544 17.172 8.568 17.256 ;
+    END
+  END dq[41]
+  PIN dq[42]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.592 17.172 8.616 17.256 ;
+    END
+  END dq[42]
+  PIN dq[43]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.64 17.172 8.664 17.256 ;
+    END
+  END dq[43]
+  PIN dq[44]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.688 17.172 8.712 17.256 ;
+    END
+  END dq[44]
+  PIN dq[45]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.736 17.172 8.76 17.256 ;
+    END
+  END dq[45]
+  PIN dq[46]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.784 17.172 8.808 17.256 ;
+    END
+  END dq[46]
+  PIN dq[47]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.832 17.172 8.856 17.256 ;
+    END
+  END dq[47]
+  PIN dq[48]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.88 17.172 8.904 17.256 ;
+    END
+  END dq[48]
+  PIN dq[49]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.928 17.172 8.952 17.256 ;
+    END
+  END dq[49]
+  PIN dq[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.768 17.172 6.792 17.256 ;
+    END
+  END dq[4]
+  PIN dq[50]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  8.976 17.172 9 17.256 ;
+    END
+  END dq[50]
+  PIN dq[51]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.024 17.172 9.048 17.256 ;
+    END
+  END dq[51]
+  PIN dq[52]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.072 17.172 9.096 17.256 ;
+    END
+  END dq[52]
+  PIN dq[53]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.12 17.172 9.144 17.256 ;
+    END
+  END dq[53]
+  PIN dq[54]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.168 17.172 9.192 17.256 ;
+    END
+  END dq[54]
+  PIN dq[55]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.216 17.172 9.24 17.256 ;
+    END
+  END dq[55]
+  PIN dq[56]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.264 17.172 9.288 17.256 ;
+    END
+  END dq[56]
+  PIN dq[57]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.312 17.172 9.336 17.256 ;
+    END
+  END dq[57]
+  PIN dq[58]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.36 17.172 9.384 17.256 ;
+    END
+  END dq[58]
+  PIN dq[59]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.408 17.172 9.432 17.256 ;
+    END
+  END dq[59]
+  PIN dq[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.816 17.172 6.84 17.256 ;
+    END
+  END dq[5]
+  PIN dq[60]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.456 17.172 9.48 17.256 ;
+    END
+  END dq[60]
+  PIN dq[61]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.504 17.172 9.528 17.256 ;
+    END
+  END dq[61]
+  PIN dq[62]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.552 17.172 9.576 17.256 ;
+    END
+  END dq[62]
+  PIN dq[63]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.6 17.172 9.624 17.256 ;
+    END
+  END dq[63]
+  PIN dq[64]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.648 17.172 9.672 17.256 ;
+    END
+  END dq[64]
+  PIN dq[65]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.696 17.172 9.72 17.256 ;
+    END
+  END dq[65]
+  PIN dq[66]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.744 17.172 9.768 17.256 ;
+    END
+  END dq[66]
+  PIN dq[67]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.792 17.172 9.816 17.256 ;
+    END
+  END dq[67]
+  PIN dq[68]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.84 17.172 9.864 17.256 ;
+    END
+  END dq[68]
+  PIN dq[69]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.888 17.172 9.912 17.256 ;
+    END
+  END dq[69]
+  PIN dq[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.864 17.172 6.888 17.256 ;
+    END
+  END dq[6]
+  PIN dq[70]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.936 17.172 9.96 17.256 ;
+    END
+  END dq[70]
+  PIN dq[71]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  9.984 17.172 10.008 17.256 ;
+    END
+  END dq[71]
+  PIN dq[72]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.032 17.172 10.056 17.256 ;
+    END
+  END dq[72]
+  PIN dq[73]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.08 17.172 10.104 17.256 ;
+    END
+  END dq[73]
+  PIN dq[74]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.128 17.172 10.152 17.256 ;
+    END
+  END dq[74]
+  PIN dq[75]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.176 17.172 10.2 17.256 ;
+    END
+  END dq[75]
+  PIN dq[76]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.224 17.172 10.248 17.256 ;
+    END
+  END dq[76]
+  PIN dq[77]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.272 17.172 10.296 17.256 ;
+    END
+  END dq[77]
+  PIN dq[78]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.32 17.172 10.344 17.256 ;
+    END
+  END dq[78]
+  PIN dq[79]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.368 17.172 10.392 17.256 ;
+    END
+  END dq[79]
+  PIN dq[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.912 17.172 6.936 17.256 ;
+    END
+  END dq[7]
+  PIN dq[80]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.416 17.172 10.44 17.256 ;
+    END
+  END dq[80]
+  PIN dq[81]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.464 17.172 10.488 17.256 ;
+    END
+  END dq[81]
+  PIN dq[82]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.512 17.172 10.536 17.256 ;
+    END
+  END dq[82]
+  PIN dq[83]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.56 17.172 10.584 17.256 ;
+    END
+  END dq[83]
+  PIN dq[84]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  10.608 17.172 10.632 17.256 ;
+    END
+  END dq[84]
+  PIN dq[8]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  6.96 17.172 6.984 17.256 ;
+    END
+  END dq[8]
+  PIN dq[9]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  7.008 17.172 7.032 17.256 ;
+    END
+  END dq[9]
+  PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
+    PORT
+      LAYER M5 ;
+        RECT  13.392 2.151 13.512 14.873 ;
+        RECT  10.692 2.151 10.812 14.873 ;
+        RECT  7.992 2.151 8.112 14.873 ;
+        RECT  5.292 2.151 5.412 14.873 ;
+        RECT  2.592 2.151 2.712 14.873 ;
+    END
+  END VDD
+  PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
+    PORT
+      LAYER M5 ;
+        RECT  13.2 2.137 13.32 14.859 ;
+        RECT  10.5 2.137 10.62 14.859 ;
+        RECT  7.8 2.137 7.92 14.859 ;
+        RECT  5.1 2.137 5.22 14.859 ;
+        RECT  2.4 2.137 2.52 14.859 ;
+    END
+  END VSS
+  # OT_OBS_CLOSED layer=M5 d_um=1.536 added=14
+  OBS
+    LAYER RVTN ;
+     RECT  2.16 2.16 15.066 2.295 ;
+     RECT  2.16 2.565 15.066 2.835 ;
+     RECT  2.16 3.105 15.066 3.375 ;
+     RECT  2.16 3.645 15.066 3.915 ;
+     RECT  2.16 4.185 15.066 4.455 ;
+     RECT  2.16 4.725 15.066 4.995 ;
+     RECT  2.16 5.265 15.066 5.535 ;
+     RECT  2.16 5.805 15.066 6.075 ;
+     RECT  2.16 6.345 15.066 6.615 ;
+     RECT  2.16 6.885 15.066 7.155 ;
+     RECT  2.16 7.425 15.066 7.695 ;
+     RECT  2.16 7.965 15.066 8.235 ;
+     RECT  2.16 8.505 15.066 8.775 ;
+     RECT  2.16 9.045 15.066 9.315 ;
+     RECT  2.16 9.585 15.066 9.855 ;
+     RECT  2.16 10.125 15.066 10.395 ;
+     RECT  2.16 10.665 15.066 10.935 ;
+     RECT  2.16 11.205 15.066 11.475 ;
+     RECT  2.16 11.745 15.066 12.015 ;
+     RECT  2.16 12.285 15.066 12.555 ;
+     RECT  2.16 12.825 15.066 13.095 ;
+     RECT  2.16 13.365 15.066 13.635 ;
+     RECT  2.16 13.905 15.066 14.175 ;
+     RECT  2.16 14.445 15.066 14.715 ;
+    LAYER RVTP ;
+     RECT  2.16 2.295 15.066 2.565 ;
+     RECT  2.16 2.835 15.066 3.105 ;
+     RECT  2.16 3.375 15.066 3.645 ;
+     RECT  2.16 3.915 15.066 4.185 ;
+     RECT  2.16 4.455 15.066 4.725 ;
+     RECT  2.16 4.995 15.066 5.265 ;
+     RECT  2.16 5.535 15.066 5.805 ;
+     RECT  2.16 6.075 15.066 6.345 ;
+     RECT  2.16 6.615 15.066 6.885 ;
+     RECT  2.16 7.155 15.066 7.425 ;
+     RECT  2.16 7.695 15.066 7.965 ;
+     RECT  2.16 8.235 15.066 8.505 ;
+     RECT  2.16 8.775 15.066 9.045 ;
+     RECT  2.16 9.315 15.066 9.585 ;
+     RECT  2.16 9.855 15.066 10.125 ;
+     RECT  2.16 10.395 15.066 10.665 ;
+     RECT  2.16 10.935 15.066 11.205 ;
+     RECT  2.16 11.475 15.066 11.745 ;
+     RECT  2.16 12.015 15.066 12.285 ;
+     RECT  2.16 12.555 15.066 12.825 ;
+     RECT  2.16 13.095 15.066 13.365 ;
+     RECT  2.16 13.635 15.066 13.905 ;
+     RECT  2.16 14.175 15.066 14.445 ;
+     RECT  2.16 14.715 15.066 14.85 ;
+    LAYER M1 ;
+     RECT  2.16 2.151 15.066 14.859 ;
+    LAYER M2 ;
+     RECT  2.16 2.151 6.439 14.859 ;
+     RECT  6.439 2.106 6.907 14.859 ;
+     RECT  6.907 2.07 7.223 14.859 ;
+     RECT  7.051 1.224 7.259 1.242 ;
+     RECT  7.267 1.152 7.367 1.17 ;
+     RECT  7.223 2.106 8.591 14.859 ;
+     RECT  9.679 0.18 9.779 0.198 ;
+     RECT  10.219 16.236 10.255 16.254 ;
+     RECT  10.291 0.576 10.499 0.594 ;
+     RECT  8.591 2.151 10.795 14.859 ;
+     RECT  10.255 15.651 11.371 16.254 ;
+     RECT  10.795 2.106 12.119 14.859 ;
+     RECT  11.371 15.651 13.775 16.524 ;
+     RECT  13.775 15.651 13.811 16.254 ;
+     RECT  13.811 15.696 13.883 16.254 ;
+     RECT  13.883 16.236 14.315 16.254 ;
+     RECT  12.119 2.151 15.066 14.859 ;
+    LAYER M3 ;
+     RECT  9.972 0.043 9.99 0.091 ;
+     RECT  8.352 0.091 8.586 0.139 ;
+     RECT  9.972 0.091 10.422 0.139 ;
+     RECT  11.952 0.139 11.97 0.187 ;
+     RECT  12.816 0.043 12.834 0.187 ;
+     RECT  6.948 0.139 6.966 0.235 ;
+     RECT  8.352 0.139 8.658 0.317 ;
+     RECT  6.228 0.235 6.966 0.331 ;
+     RECT  8.352 0.317 8.37 0.331 ;
+     RECT  6.228 0.331 7.002 0.379 ;
+     RECT  9.684 0.139 10.422 0.379 ;
+     RECT  11.952 0.187 12.834 0.379 ;
+     RECT  9.684 0.379 10.494 0.427 ;
+     RECT  8.316 0.331 8.37 0.461 ;
+     RECT  6.228 0.379 7.254 0.475 ;
+     RECT  9.144 0.427 10.494 0.605 ;
+     RECT  6.228 0.475 7.29 1.147 ;
+     RECT  6.228 1.147 7.47 1.723 ;
+     RECT  10.116 0.605 10.494 1.723 ;
+     RECT  11.268 0.379 12.834 1.723 ;
+     RECT  6.228 1.723 7.506 1.963 ;
+     RECT  8.352 0.461 8.37 1.963 ;
+     RECT  6.228 1.963 8.37 2.101 ;
+     RECT  9.144 0.605 9.162 2.101 ;
+     RECT  10.044 1.723 12.834 2.143 ;
+     RECT  13.896 0.811 13.914 2.143 ;
+     RECT  5.115 2.143 5.205 2.191 ;
+     RECT  6.228 2.101 9.162 2.191 ;
+     RECT  10.044 2.143 13.914 2.191 ;
+     RECT  5.115 2.191 13.914 2.371 ;
+     RECT  2.415 2.143 2.505 2.413 ;
+     RECT  5.115 2.371 14.562 2.533 ;
+     RECT  4.932 2.533 14.562 2.875 ;
+     RECT  4.788 2.875 14.562 3.181 ;
+     RECT  4.788 3.181 14.778 3.371 ;
+     RECT  5.115 3.371 14.778 3.991 ;
+     RECT  5.115 3.991 14.922 4.531 ;
+     RECT  5.115 4.531 14.958 5.161 ;
+     RECT  4.788 5.161 14.958 5.701 ;
+     RECT  4.068 5.701 14.958 7.997 ;
+     RECT  4.068 7.997 7.074 9.931 ;
+     RECT  7.815 7.997 14.958 9.931 ;
+     RECT  4.068 9.931 14.958 11.237 ;
+     RECT  4.068 11.237 14.814 14.099 ;
+     RECT  4.284 14.099 14.814 14.171 ;
+     RECT  2.415 2.413 2.697 14.597 ;
+     RECT  4.284 14.171 14.562 14.597 ;
+     RECT  5.256 14.597 14.562 14.639 ;
+     RECT  5.256 14.639 8.982 14.711 ;
+     RECT  9.72 14.639 10.854 14.711 ;
+     RECT  12.348 14.639 14.562 14.747 ;
+     RECT  5.256 14.711 8.658 14.819 ;
+     RECT  11.592 14.639 11.61 14.819 ;
+     RECT  2.607 14.597 2.697 14.867 ;
+     RECT  10.044 14.711 10.854 15.005 ;
+     RECT  5.256 14.819 8.442 16.013 ;
+     RECT  6.804 16.013 8.442 16.061 ;
+     RECT  12.348 14.747 14.31 16.253 ;
+     RECT  13.752 16.253 14.31 16.259 ;
+     RECT  12.348 16.253 12.546 16.493 ;
+     RECT  10.044 15.005 10.818 16.501 ;
+     RECT  13.752 16.259 13.77 16.529 ;
+     RECT  4.284 14.597 4.482 16.589 ;
+     RECT  10.044 16.501 11.394 16.589 ;
+     RECT  4.284 16.589 4.302 16.637 ;
+     RECT  11.376 16.589 11.394 16.637 ;
+     RECT  5.256 16.013 6.03 16.685 ;
+     RECT  6.876 16.061 8.442 16.685 ;
+     RECT  5.256 16.685 5.85 16.733 ;
+     RECT  12.456 16.493 12.546 16.781 ;
+     RECT  5.436 16.733 5.85 16.829 ;
+     RECT  7.272 16.685 8.442 16.843 ;
+     RECT  10.044 16.589 10.278 16.843 ;
+     RECT  5.436 16.829 5.814 16.925 ;
+     RECT  5.436 16.925 5.454 16.973 ;
+     RECT  7.272 16.843 10.278 17.021 ;
+     RECT  7.272 17.021 9.414 17.069 ;
+     RECT  10.224 17.021 10.278 17.069 ;
+     RECT  7.272 17.069 7.47 17.117 ;
+     RECT  8.28 17.069 8.298 17.117 ;
+     RECT  7.272 17.117 7.29 17.165 ;
+     RECT  9.036 17.069 9.414 17.165 ;
+     RECT  10.26 17.069 10.278 17.165 ;
+     RECT  9.036 17.165 9.054 17.213 ;
+     RECT  12.528 16.781 12.546 17.213 ;
+    LAYER M4 ;
+     RECT  0.181 4.704 2.408 4.728 ;
+     RECT  2.408 2.148 2.512 14.592 ;
+     RECT  2.512 2.418 2.6 14.592 ;
+     RECT  2.6 2.418 2.704 14.862 ;
+     RECT  4.273 16.608 4.453 16.632 ;
+     RECT  5.065 3.312 5.108 3.336 ;
+     RECT  2.704 4.704 5.108 4.728 ;
+     RECT  5.108 2.148 5.212 14.592 ;
+     RECT  4.453 16.56 5.245 16.632 ;
+     RECT  5.212 2.418 5.3 14.592 ;
+     RECT  5.3 2.418 5.404 14.862 ;
+     RECT  5.245 16.56 5.425 16.728 ;
+     RECT  5.404 2.736 5.699 5.688 ;
+     RECT  5.404 13.152 6.037 14.862 ;
+     RECT  5.425 16.56 6.229 16.968 ;
+     RECT  6.217 0.24 6.253 0.264 ;
+     RECT  6.037 13.152 6.289 15.576 ;
+     RECT  6.229 16.56 6.289 17.016 ;
+     RECT  6.325 1.728 6.397 1.752 ;
+     RECT  5.699 2.736 6.397 3.336 ;
+     RECT  6.289 13.152 6.397 17.016 ;
+     RECT  5.404 7.2 6.469 7.992 ;
+     RECT  6.397 12.336 6.505 17.016 ;
+     RECT  6.253 0.24 6.541 0.6 ;
+     RECT  6.397 1.728 6.541 3.336 ;
+     RECT  5.699 4.608 6.709 5.688 ;
+     RECT  6.469 6.816 6.709 7.992 ;
+     RECT  6.541 0.24 6.821 3.336 ;
+     RECT  6.821 0.24 6.893 3.432 ;
+     RECT  6.893 0.144 7.153 3.432 ;
+     RECT  7.153 0.144 7.217 3.528 ;
+     RECT  5.404 10.8 7.237 10.824 ;
+     RECT  6.505 11.952 7.261 17.016 ;
+     RECT  6.709 4.608 7.381 7.992 ;
+     RECT  7.217 0.144 7.525 3.624 ;
+     RECT  7.381 4.608 7.525 8.472 ;
+     RECT  7.237 10.8 7.541 10.92 ;
+     RECT  7.261 11.952 7.541 17.16 ;
+     RECT  7.541 10.8 7.763 17.16 ;
+     RECT  7.525 0.144 7.808 8.472 ;
+     RECT  7.763 10.8 7.808 15.432 ;
+     RECT  7.808 0.144 8.104 15.432 ;
+     RECT  8.104 14.4 8.147 15.432 ;
+     RECT  8.104 0.144 8.165 7.224 ;
+     RECT  8.165 0.144 8.245 6.264 ;
+     RECT  8.147 14.4 8.483 14.76 ;
+     RECT  8.245 0.096 8.579 6.264 ;
+     RECT  8.579 3.744 8.669 6.264 ;
+     RECT  7.763 16.464 8.917 17.16 ;
+     RECT  8.917 16.128 9.025 17.16 ;
+     RECT  9.025 16.128 9.059 17.208 ;
+     RECT  8.104 8.448 9.109 8.472 ;
+     RECT  8.104 9.648 9.109 13.176 ;
+     RECT  9.109 8.448 9.173 13.176 ;
+     RECT  8.669 6.24 9.317 6.264 ;
+     RECT  9.173 8.496 9.349 13.176 ;
+     RECT  8.483 14.4 9.349 14.472 ;
+     RECT  9.349 8.496 9.493 14.472 ;
+     RECT  8.669 3.744 9.557 5.208 ;
+     RECT  8.579 0.096 9.961 2.328 ;
+     RECT  9.059 16.224 10.213 17.208 ;
+     RECT  9.961 0.048 10.261 2.328 ;
+     RECT  9.557 3.408 10.261 5.208 ;
+     RECT  10.261 0.048 10.357 2.424 ;
+     RECT  10.261 3.408 10.357 6.024 ;
+     RECT  10.213 15.936 10.405 17.208 ;
+     RECT  9.493 8.496 10.421 14.76 ;
+     RECT  10.405 15.888 10.421 17.208 ;
+     RECT  10.357 0.048 10.508 6.024 ;
+     RECT  10.421 8.496 10.508 17.208 ;
+     RECT  10.508 0.048 10.804 17.208 ;
+     RECT  10.804 0.048 10.865 5.832 ;
+     RECT  10.804 9.696 10.865 17.208 ;
+     RECT  10.865 9.696 11.075 14.76 ;
+     RECT  11.075 10.224 11.225 14.76 ;
+     RECT  10.804 8.448 11.233 8.616 ;
+     RECT  11.233 8.448 11.555 8.472 ;
+     RECT  10.865 2.304 11.797 5.832 ;
+     RECT  10.804 6.864 11.797 7.464 ;
+     RECT  11.797 2.304 11.945 7.464 ;
+     RECT  10.865 15.888 11.987 17.208 ;
+     RECT  11.225 10.32 12.035 14.76 ;
+     RECT  11.945 2.976 12.053 7.464 ;
+     RECT  12.035 10.8 12.125 14.76 ;
+     RECT  12.053 5.568 12.197 7.464 ;
+     RECT  11.987 15.936 12.449 17.208 ;
+     RECT  12.197 7.392 12.517 7.464 ;
+     RECT  12.409 8.496 12.517 8.52 ;
+     RECT  12.449 16.224 12.557 17.208 ;
+     RECT  10.865 0.048 12.845 0.84 ;
+     RECT  12.557 16.224 13.061 16.248 ;
+     RECT  12.053 2.976 13.208 4.536 ;
+     RECT  12.197 5.568 13.208 6.264 ;
+     RECT  12.517 7.392 13.208 8.52 ;
+     RECT  12.125 10.848 13.208 14.76 ;
+     RECT  13.208 2.148 13.312 14.76 ;
+     RECT  13.312 2.418 13.4 14.76 ;
+     RECT  13.4 2.418 13.504 14.862 ;
+     RECT  13.504 3.312 13.529 3.336 ;
+     RECT  13.504 4.512 13.745 5.16 ;
+     RECT  12.845 0.816 13.925 0.84 ;
+     RECT  13.745 4.512 13.925 4.536 ;
+     RECT  13.504 12.384 13.961 12.408 ;
+    LAYER M5 ;
+     RECT  6.576 0.016 10.632 0.565 ;
+     RECT  6.576 0.565 10.968 0.613 ;
+     RECT  6.576 0.613 11.256 1.187 ;
+     RECT  2.4 2.137 2.52 2.151 ;
+     RECT  5.1 2.137 5.22 2.151 ;
+     RECT  13.2 2.137 13.32 2.151 ;
+     RECT  6.624 1.187 11.256 2.339 ;
+     RECT  6.72 2.339 11.256 3.875 ;
+     RECT  5.1 2.151 5.412 3.925 ;
+     RECT  13.2 2.151 13.512 4.501 ;
+     RECT  6.72 3.875 6.744 4.933 ;
+     RECT  7.8 3.875 11.256 4.933 ;
+     RECT  5.1 3.925 5.688 5.029 ;
+     RECT  6.72 4.933 11.832 5.029 ;
+     RECT  5.1 5.029 11.832 5.171 ;
+     RECT  13.2 4.501 13.704 5.171 ;
+     RECT  9.648 5.171 11.832 5.219 ;
+     RECT  5.1 5.171 8.424 5.747 ;
+     RECT  10.272 5.219 11.832 6.035 ;
+     RECT  10.5 6.035 11.832 6.661 ;
+     RECT  10.5 6.661 11.928 7.381 ;
+     RECT  13.2 5.171 13.512 7.381 ;
+     RECT  10.5 7.381 13.512 7.475 ;
+     RECT  10.5 7.475 11.208 8.437 ;
+     RECT  10.5 8.437 11.544 8.485 ;
+     RECT  12.672 7.475 13.512 8.485 ;
+     RECT  10.5 8.485 13.512 8.581 ;
+     RECT  0.192 4.693 0.216 8.627 ;
+     RECT  9.648 8.581 13.512 9.061 ;
+     RECT  5.1 5.747 8.112 10.261 ;
+     RECT  9.12 9.061 13.512 10.261 ;
+     RECT  5.1 10.261 13.512 14.291 ;
+     RECT  2.4 2.151 2.712 14.859 ;
+     RECT  5.1 14.291 11.976 14.859 ;
+     RECT  13.2 14.291 13.512 14.859 ;
+     RECT  2.592 14.859 2.712 14.873 ;
+     RECT  5.292 14.859 11.976 14.873 ;
+     RECT  13.392 14.859 13.512 14.873 ;
+     RECT  6.24 14.873 11.976 15.923 ;
+     RECT  6.24 15.923 11.736 16.451 ;
+     RECT  6.24 16.451 11.496 16.979 ;
+     RECT  6.24 16.979 11.448 17.027 ;
+     RECT  6.576 17.027 11.448 17.123 ;
+     RECT  6.576 17.123 10.632 17.232 ;
+     RECT  6.576 1.187 6.624 2.137 ;
+     RECT  5.22 2.137 6.624 2.151 ;
+     RECT  5.412 2.151 6.624 2.339 ;
+     RECT  5.412 2.339 6.72 3.925 ;
+     RECT  6.744 3.875 7.8 4.933 ;
+     RECT  5.688 3.925 6.72 5.029 ;
+     RECT  11.832 4.933 13.2 6.661 ;
+     RECT  8.424 5.171 9.648 5.219 ;
+     RECT  11.928 6.661 13.2 7.381 ;
+     RECT  11.208 7.475 12.672 8.437 ;
+     RECT  11.544 8.437 12.672 8.485 ;
+     RECT  8.112 9.061 9.12 10.261 ;
+     RECT  11.976 14.291 13.2 14.859 ;
+     RECT  11.976 14.859 13.392 14.873 ;
+  END
+END dsfd_hstnv_85
+END LIBRARY

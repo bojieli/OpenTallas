@@ -9,8 +9,10 @@ module ot_s81_pq_qb_headpc_native (
  // the former w0/w1/wv: no bank compares a bank-index constant, so ONE bank master serves all four.
  output reg[6:0] wr0,wr1,output reg[3:0] wq0,wq1,
  output reg[15:0] i0,i1,
- // Per-bank read enables share the registered index edge.
- output reg[3:0] rq0,rq1,
+ // Per-bank read enables share the registered index edge. P9: decoded from the pin-capture flops
+ // (consume_1, gates, i0/i1 bank bits) at the output instead of from the pins, same edge, so every
+ // head input pin loads one capture flop (P8 native audit: h_b*/consume/hw_sv captures up to 244.6 ps).
+ output wire[3:0] rq0,rq1,
  output reg[255:0] hq0,hq1,output reg[9:0] he0,he1,output wire fault
 );
     reg [1:0] gates; reg consume_1;
@@ -44,12 +46,10 @@ module ot_s81_pq_qb_headpc_native (
         end
     end
     always @(posedge clk or negedge rst_l[0])
-        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; consume_1 <= 0;
-            rq0 <= 0; rq1 <= 0; end
-        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; consume_1 <= consume;
-            rq0 <= {4{consume & hw_sv[0]}} & (4'b1 << {h_b0[3], h_b0[0]});
-            rq1 <= {4{consume & hw_sv[1]}} & (4'b1 << {h_b1[3], h_b1[0]});
-        end
+        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; consume_1 <= 0; end
+        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; consume_1 <= consume; end
+    assign rq0 = {4{consume_1 & gates[0]}} & (4'b1 << {i0[3], i0[0]});
+    assign rq1 = {4{consume_1 & gates[1]}} & (4'b1 << {i1[3], i1[0]});
     wire [1:0] bank0 = {i0[3], i0[0]}, bank1 = {i1[3], i1[0]};
     wire [6:0] row0 = {i0[8:4], i0[2:1]}, row1 = {i1[8:4], i1[2:1]};
     // Mutable metadata belongs beside the head read-index registers. Each bank
@@ -93,19 +93,33 @@ module ot_s81_pq_qb_headpc_native (
         // P6 (10-15): the four per-bank copies were identical registers; synthesis folded them into ONE flop per
         // bit (gate P5: g_meta[1].r0c[0] 5,900 loads). Now (* keep *) (ot_keep_regs.tcl keeps the flop cells) and
         // four copies per bank, each selecting one 4-bit slice of the 16-bit row (~370 loads per bit), same edge.
+        // P9 (10-15): the copies load from the i0/i1 capture flops one edge later (were 16 direct loads per
+        // h_b* pin); the edge is absorbed by the m*[1] pure-delay stage below, 0 added cycles.
         (* keep *) reg [6:0] r0c [0:3];
         (* keep *) reg [6:0] r1c [0:3];
+`ifdef OT_S81_PQ_HEADPC_MUT_R0C
+        // Mutant: copies load from the pins as in P8 while the metadata line is shortened (one edge early).
+        wire [6:0] r0n = {h_b0[8:4], h_b0[2:1]}, r1n = {h_b1[8:4], h_b1[2:1]};
+`else
+        wire [6:0] r0n = row0, r1n = row1;
+`endif
         always @(posedge clk) begin
-            r0c[0] <= {h_b0[8:4], h_b0[2:1]}; r0c[1] <= {h_b0[8:4], h_b0[2:1]};
-            r0c[2] <= {h_b0[8:4], h_b0[2:1]}; r0c[3] <= {h_b0[8:4], h_b0[2:1]};
-            r1c[0] <= {h_b1[8:4], h_b1[2:1]}; r1c[1] <= {h_b1[8:4], h_b1[2:1]};
-            r1c[2] <= {h_b1[8:4], h_b1[2:1]}; r1c[3] <= {h_b1[8:4], h_b1[2:1]};
+            r0c[0] <= r0n; r0c[1] <= r0n; r0c[2] <= r0n; r0c[3] <= r0n;
+            r1c[0] <= r1n; r1c[1] <= r1n; r1c[2] <= r1n; r1c[3] <= r1n;
         end
         assign rd0_b[gb] = {written[gb][r0c[3]], meta[gb][r0c[3]][14:12], meta[gb][r0c[2]][11:8],
                             meta[gb][r0c[1]][7:4], meta[gb][r0c[0]][3:0]};
         assign rd1_b[gb] = {written[gb][r1c[3]], meta[gb][r1c[3]][14:12], meta[gb][r1c[2]][11:8],
                             meta[gb][r1c[1]][7:4], meta[gb][r1c[0]][3:0]};
     end endgenerate
+    // P7 (10-15, P6 route TT -90.64: r0c/r1c -> per-bank 96:1 metadata read -> 4:1 bank select (i0/i1 bank bits) ->
+    // m0/m1[0] enable flop in one edge). The per-bank read results are registered first (mb*_q, 2 x 4 x 16 FF) and the
+    // 4:1 bank select moves into the next stage, which REPLACES the first stage of the m0/m1 alignment delay line
+    // (m*[0] -> m*[1] was a pure delay): the metadata reaches m*[3] on the same edge as before, 0 added cycles.
+    // m*[0]'s hold-when-idle enable is dropped: m* are consumed only under valid[3].
+    reg [15:0] mb0_q [0:3], mb1_q [0:3];
+    integer gq;
+    always @(posedge clk) for (gq = 0; gq < 4; gq = gq + 1) begin mb0_q[gq] <= rd0_b[gq]; mb1_q[gq] <= rd1_b[gq]; end
     always @(posedge clk or negedge rst_l[0]) begin
       if(!rst_l[0]) begin
         sticky<=0;check0<=0;check1<=0;
@@ -113,11 +127,13 @@ module ot_s81_pq_qb_headpc_native (
       end else begin
         selected0[0]<=bank0; selected1[0]<=bank1;
         valid[0]<=gates & {2{consume_1}};
-        if(consume_1&&gates[0]) m0[0]<=rd0_b[bank0];
-        if(consume_1&&gates[1]) m1[0]<=rd1_b[bank1];
+        // P9: the per-bank read is one edge later (r0c from i0), so the bank select lands in m*[2] with
+        // selected*[1]; m*[1] is no longer a stage. m*[3] holds the same row on the same edge as P8.
+        m0[2]<=mb0_q[selected0[1]]; m1[2]<=mb1_q[selected1[1]];
         for(j=1;j<4;j=j+1) begin
           selected0[j]<=selected0[j-1];selected1[j]<=selected1[j-1];
-          valid[j]<=valid[j-1];m0[j]<=m0[j-1];m1[j]<=m1[j-1];
+          valid[j]<=valid[j-1];
+          if(j>2) begin m0[j]<=m0[j-1];m1[j]<=m1[j-1]; end
         end
         check0<=valid[3][0];check1<=valid[3][1];
         expected0<=m0[3][14:10];expected1<=m1[3][14:10];

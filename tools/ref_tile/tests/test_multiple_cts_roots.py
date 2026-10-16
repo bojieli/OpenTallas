@@ -81,6 +81,26 @@ class Schema(unittest.TestCase):
         m=copy.deepcopy(s);m['clock']='cts'
         with self.assertRaises(ValueError):CE.signoff_period(m)
 
+    def test_hybrid_raw_macro_leaf_preserves_serial_signoff_and_budget(self):
+        s=spec();s.update(clock='hybrid_entries',clock_cts_roots=['ck_req'],macros=[dict(
+            view='physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',count=1,inst='u_m',
+            clock_entry=dict(port='ck_rsp',pin='clk',reference='raw_liberty_clock_pin'))])
+        self.assertEqual(CE.signoff_period(s),833.333)  # existing profiles unchanged
+        s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
+        self.assertIn('io_budget_ps 222.222',CE.generate(s,ROOT))
+        for text in (RT.gen_sdc(s,1111.111),RT.gen_signoff(s,'*','none_*')):
+            periods=re.findall(r'create_clock -name \S+ -period ([\d.]+)',text)
+            self.assertEqual(len(periods),4)
+            self.assertTrue(all(abs(float(p)-1111.111)<1e-6 for p in periods))
+            self.assertIn('set_clock_uncertainty -setup 60',text)
+            self.assertIn('set_clock_uncertainty -hold 25',text)
+            self.assertNotIn('set_false_path',text)
+            self.assertNotIn('set_clock_groups',text)
+        for mutate in [lambda x:x.update(kind='cluster'),lambda x:x.update(clock='entries'),
+                       lambda x:x['route'].update(period_ps=1200),lambda x:x['route'].update(signoff_period_ps=True)]:
+            m=copy.deepcopy(s);mutate(m)
+            with self.assertRaises(ValueError):CE.signoff_period(m)
+
     def test_load_spec_and_generated_stage_coverage(self):
         s=spec()
         with tempfile.NamedTemporaryFile(mode='w',suffix='.json') as f:
@@ -135,6 +155,15 @@ class Physical(unittest.TestCase):
             if mutant in ('related_pll','related_pll_cut'):
                 s['clock_entry_domains']['response']['ratio']=[4,3]
                 s.update(clock_data_paths='related_pll_ratio',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0))
+            if mutant in ('related_epoch_capture','related_epoch_release','related_epoch_cut'):
+                capture = mutant != 'related_epoch_release'
+                core_divider, response_divider = (3, 12) if capture else (12, 4)
+                s['clock_entry_domains']['response']['ratio'] = [4, 1] if capture else [1, 3]
+                s['route'] = dict(period_ps=770 * core_divider / 3,
+                                  signoff_period_ps=833.333 * core_divider / 3)
+                s.update(clock_data_paths='related_pll_dividers', clock_relationship=dict(
+                    kind='same_pll_fixed_phase', phase_ps=0,
+                    vco_dividers=dict(core=core_divider, response=response_divider)))
             if mutant=='related_wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
             if mutant in ('async_reset','async_reset_data'):
@@ -226,7 +255,7 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
 '''+f'source /src/{kd}/pre_cts.tcl',1)
             if mutant=='extra_alias':
                 flow=flow.replace('source /w/entry.tcl','create_clock -name unexpected_alias -period 833.333\nsource /w/entry.tcl',1)
-            if mutant in ('related_cut','related_pll_cut'):
+            if mutant in ('related_cut','related_pll_cut','related_epoch_cut'):
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
             if mutant=='constant_case_analysis':
                 flow=flow.replace('source /w/entry.tcl','set_case_analysis 0 [get_ports req]\nsource /w/entry.tcl',1)
@@ -319,6 +348,14 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
             self.assertIn('RELATED_PATH '+pair+' max slack=',out)
             self.assertIn('RELATED_PATH '+pair+' min slack=',out)
         rc,out=self.run_flow('related_pll_cut');self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
+
+    def test_epoch_capture_and_release_keep_ordinary_sta_and_reject_cut(self):
+        for case in ('related_epoch_capture', 'related_epoch_release'):
+            rc,out=self.run_flow(case,generated=True);self.assertEqual(rc,0,out[-8000:])
+            for pair in ('core -> response', 'response -> core'):
+                for mode in ('max', 'min'):
+                    self.assertIn('RELATED_PATH '+pair+' '+mode+' slack=',out)
+        rc,out=self.run_flow('related_epoch_cut');self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
 
     def test_reset_declaration_does_not_waive_or_reclassify_data(self):
         rc,out=self.run_flow('declared_reset');self.assertEqual(rc,0,out[-7000:])

@@ -24,7 +24,8 @@
 module ot_hgi_sm_xload_static #(
     parameter integer PMAX   = 8,
     parameter integer RD_LAT = 6,       // VM read group: rq output edge -> rr valid edge (bank n+6 + slice/station edges)
-    parameter integer MUT    = 0        // 1: lane rotation off by one; 2: emission overlaps the landing window; 3: block-dot lane j ^ 1 (all must fail)
+    parameter integer LOCAL_MASK_REGS = 0, // 1: two kept mask drivers at each real SRAM, unchanged write edge
+    parameter integer MUT    = 0        // 1: lane rotation off by one; 2: emission early (BF16: overlaps the landing window; block-dot: beat decided one lane early); 3: block-dot lane j ^ 1 (all must fail)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -202,7 +203,22 @@ module ot_hgi_sm_xload_static #(
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
             (* keep = 1 *) reg rp_ce; (* keep = 1 *) reg [6:0] rp_a; reg rp_sel;
-            (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d; reg [255:0] wp_m;
+            (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d; wire [255:0] wp_m;
+            if(LOCAL_MASK_REGS)begin:g_local_mask
+                // ot_keep_regs.tcl promotes these scalar keep wires to kept FFs.
+                // Exactly 64 mask FFs for 32 SRAMs, max128 physical loads/driver.
+                // This is the existing W-stage edge, beside wp_ce/wp_a/wp_d.
+                (* keep = 1 *) reg mask_hi,mask_lo;
+                always @(posedge clk)begin
+                    mask_hi <= c_wq[0] ^ (MUT==4);
+                    mask_lo <= ~c_wq[0] ^ (MUT==4);
+                end
+                assign wp_m={{128{mask_hi}},{128{mask_lo}}};
+            end else begin:g_shared_mask
+                reg [255:0] mask_q;
+                always @(posedge clk)mask_q <= c_wq[0] ? {{128{1'b1}}, 128'd0} : {128'd0, {128{1'b1}}};
+                assign wp_m=mask_q;
+            end
             reg [255:0] cq;
             wire [255:0] rd;
             always @(posedge clk or negedge rn) begin
@@ -220,7 +236,6 @@ module ot_hgi_sm_xload_static #(
                     wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
                     wp_d[128 + 16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
                 end
-                wp_m <= c_wq[0] ? {{128{1'b1}}, 128'd0} : {128'd0, {128{1'b1}}};
                 cq <= rd & {256{rp_sel}};
             end
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
@@ -263,20 +278,26 @@ module ot_hgi_sm_xload_static #(
     // Static schedule: tpair k = (g, tp) (t = 2 tp, 2 tp + 1) owns a window of WB = max(P LA, 2 nb) + 4 edges from
     // start + 1 + k WB; its P LA waves (p, j) issue on the window's first edges: one wave = the 8 sectors of blocks
     // B0 = (g LA + j) 8 + 2 tp and B0 + 1 (one sector a bank).  Two quantisers (one block an edge each, fixed latency
-    // QL) write the tpair's lane words into buffer k mod 2; the tpair's 2 nb beats leave from start + 1 + EMB + k WB,
-    // EMB = P LA + RD_LAT + QL + 6 (after its last lane write); buffer k mod 2 is rewritten by tpair k + 2 only after.
+    // QL) write the tpair's lane words, one lane (p, j) an edge in bit order (wave bw = p LA + j).
+    // STREAMING EMISSION (H-ELEM-A r2 2026-10-15; replaces the 4 x 64 x 266 = 68,096-flop double-buffered lane store):
+    // beat b of a tpair needs exactly the lanes that start below bit 2048 (b + 1): n(b) = min(NALL[LA][b], P LA)
+    // lanes (a static table).  Beat pair b ((b, t even) then (b, t odd), one beat an edge) is decided on the first edge
+    // E(k, b) >= W(k) + n(b) and >= E(previous pair) + 2, where W(k) + i is the edge lane i of tpair k is written.  Both
+    // terms are fixed by the command alone (lane writes sit at fixed edges), so every beat leaves on a fixed cycle:
+    // E(k, b) = max(W(k) + n(b), E(k, b - 1) + 2), the recurrence the compiler model evaluates
+    // (tools/hbm_sm_xload_static_timing.py).  No ready / credit: the comparison is between two internal counters
+    // whose values are functions of the command.  Lane words live in a 16-slot ring per t-parity, slot {p[0], j}
+    // (2 x 16 x 266 = 8,512 flops); the model proves every slot is read (beat pins) >= 3 edges before lane (p + 2, j)
+    // or the next tpair overwrites it, for every P 1..8 and LA 4 / 8.  Lanes p >= P or j >= LA read as zero.
     // =================================================================================================================
     localparam integer QL = 13;
-    reg [3:0] la; reg [1:0] lsh; reg [15:0] nbk; reg [7:0] gnb; reg [9:0] gtp; reg [10:0] wb, emb;
+    reg [3:0] la; reg [1:0] lsh; reg [15:0] nbk; reg [7:0] gnb; reg [9:0] gtp; reg [10:0] wb; reg [7:0] pla;
     reg bi_on; reg [9:0] bk; reg [10:0] bw;
-    reg be_wait; reg [10:0] btc; reg be_on; reg [9:0] ek; reg [10:0] ew2; reg ea; reg [6:0] ebb;
     always @(posedge clk or negedge rn) begin
-        if (!rn) begin bi_on <= 1'b0; be_wait <= 1'b0; be_on <= 1'b0; end
+        if (!rn) bi_on <= 1'b0;
         else begin
-            if (start_bd) begin bi_on <= 1'b1; be_wait <= 1'b1; end
+            if (start_bd) bi_on <= 1'b1;
             if (bi_on && bw == wb - 11'd1 && bk == gtp - 10'd1) bi_on <= 1'b0;
-            if (be_wait && btc == emb) begin be_wait <= 1'b0; be_on <= 1'b1; end
-            if (be_on && ew2 == wb - 11'd1 && ek == gtp - 10'd1) be_on <= 1'b0;
         end
     end
     wire [6:0] nb_c = 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
@@ -288,18 +309,10 @@ module ot_hgi_sm_xload_static #(
             gnb <= (c_fmt == 2'd2) ? 8'(((c_n - 21'd1) >> 11) + 21'd1) : 8'(((c_n - 21'd1) >> 10) + 21'd1);
             gtp <= 10'(((c_fmt == 2'd2) ? (((c_n - 21'd1) >> 11) + 21'd1) : (((c_n - 21'd1) >> 10) + 21'd1)) * 4);
             wb <= 11'((({3'd0, pla_c} > {1'b0, nb_c, 1'b0}) ? {3'd0, pla_c} : {3'd0, nb_c, 1'b0}) + 4);
-            emb <= (MUT == 2) ? 11'(RD_LAT) : 11'({3'd0, pla_c} + RD_LAT + QL + 6);
-            bk <= 10'd0; bw <= 11'd0; btc <= 11'd0; ek <= 10'd0; ew2 <= 11'd0; ea <= 1'b0; ebb <= 7'd0;
+            pla <= pla_c;
+            bk <= 10'd0; bw <= 11'd0;
         end else begin
             if (bi_on) begin if (bw == wb - 11'd1) begin bw <= 11'd0; bk <= bk + 10'd1; end else bw <= bw + 11'd1; end
-            if (be_wait) btc <= btc + 11'd1;
-            if (be_on) begin
-                if (ew2 == wb - 11'd1) begin ew2 <= 11'd0; ek <= ek + 10'd1; ea <= 1'b0; ebb <= 7'd0; end
-                else begin
-                    ew2 <= ew2 + 11'd1;
-                    if (ebb == nb - 7'd1) begin ebb <= 7'd0; ea <= ~ea; end else ebb <= ebb + 7'd1;
-                end
-            end
         end
     end
     // issue: wave bw (< P LA) of tpair bk = (g, tp): p = bw >> lsh, j = bw & (LA - 1)
@@ -335,39 +348,108 @@ module ot_hgi_sm_xload_static #(
         wb_buf <= qtl[8]; wb_lane <= {qtl[7:5], qtl[4:2] ^ ((MUT == 3) ? 3'd1 : 3'd0)};
         wd_lo <= qtl[1] ? {qe_lo, qq_lo} : 266'd0; wd_hi <= qtl[0] ? {qe_hi, qq_hi} : 266'd0;
     end
-    // lane store: lw[buffer][parity][p][j]; cleared once a command (start), written by every tpair for all (p < P, j < LA)
-    reg [265:0] lw [0:1][0:1][0:PMAX*8-1];
+    // ---- write-side lane counters: wc lanes written in tpair wk (wk = tpairs fully written)
+    reg [6:0] wc; reg [9:0] wk;
     always @(posedge clk) begin
-        if (start_bd) begin
-            for (integer bb = 0; bb < 2; bb = bb + 1) for (integer aa = 0; aa < 2; aa = aa + 1)
-                for (integer ll = 0; ll < PMAX*8; ll = ll + 1) lw[bb][aa][ll] <= 266'd0;
-        end else if (wv_b) begin
-            lw[wb_buf][0][wb_lane] <= wd_lo; lw[wb_buf][1][wb_lane] <= wd_hi;
+        if (start_bd) begin wc <= 7'd0; wk <= 10'd0; end
+        else if (wv_b) begin
+            if ({1'b0, wc} == pla - 8'd1) begin wc <= 7'd0; wk <= wk + 10'd1; end else wc <= wc + 7'd1;
         end
     end
-    // emission: beat ebb of address parity ea of tpair ek (edges ew2 < 2 nb of its window)
+    // ---- NALL[LA][b]: lanes (p < PMAX, j < LA) starting below bit 2048 (b + 1)
     localparam integer NBQ = (PMAX * XC + 2047) / 2048;
-    wire bd_em = be_on && ew2 < {3'd0, nb, 1'b0};
-    reg bs_v, bs_last, bs_buf, bs_a; reg [6:0] bs_b, bs_addr;
+    function automatic integer nall(input integer lav, input integer bb);
+        integer p2, j2; nall = 0;
+        for (p2 = 0; p2 < PMAX; p2 = p2 + 1) for (j2 = 0; j2 < lav; j2 = j2 + 1)
+            if (p2 * XC + 266 * j2 < 2048 * (bb + 1)) nall = nall + 1;
+    endfunction
+    // ---- emission sequencer: tpair ek, beat eb2, parity ea
+    reg be_on; reg [9:0] ek; reg [6:0] eb2; reg ea;
+    reg [7:0] need;
+    always @* begin
+        need = 8'd0;
+        for (integer x = 0; x < NBQ; x = x + 1)
+            if (eb2 == 7'(x)) need = (la == 4'd8) ? 8'(nall(8, x)) : 8'(nall(4, x));
+        if (need > pla) need = pla;
+        if (MUT == 2 && need != 8'd0) need = need - 8'd1;      // mutant: beat decided one lane early
+    end
+    wire pair_rdy = (ek < wk) || ({1'b0, wc} >= need);
+    wire bd_em = be_on && (ea || pair_rdy);
+    wire bd_tail = bd_em && ea && eb2 == nb - 7'd1;          // last beat of tpair ek
     always @(posedge clk or negedge rn) begin
-        if (!rn) begin bs_v <= 1'b0; bs_last <= 1'b0; end
-        else begin bs_v <= bd_em; bs_last <= bd_em && ek == gtp - 10'd1 && ea && ebb == nb - 7'd1; end
+        if (!rn) be_on <= 1'b0;
+        else begin
+            if (start_bd) be_on <= 1'b1;
+            if (bd_tail && ek == gtp - 10'd1) be_on <= 1'b0;
+        end
     end
     always @(posedge clk) begin
-        bs_buf <= ek[0]; bs_a <= ea; bs_b <= ebb; bs_addr <= 7'({ek[5:0], ea}) + xb;   // {g mod 16, t} + x slot base
+        if (start_bd) begin ek <= 10'd0; eb2 <= 7'd0; ea <= 1'b0; end
+        else if (bd_em) begin
+            ea <= ~ea;
+            if (ea) begin
+                if (eb2 == nb - 7'd1) begin eb2 <= 7'd0; ek <= ek + 10'd1; end else eb2 <= eb2 + 7'd1;
+            end
+        end
     end
-    // fragment of the selected (buffer, parity): static lane positions, zero elsewhere
-    reg [NBQ*2048-1:0] frag;
-    always @* begin
-        frag = '0;
-        for (integer pq = 0; pq < PMAX; pq = pq + 1) for (integer jq = 0; jq < 8; jq = jq + 1)
-            frag[pq*XC + 266*jq +: 266] = lw[bs_buf][bs_a][pq*8 + jq];
+    // ---- lane ring: per parity 16 slots {p[0], j}
+    wire [265:0] ring [0:1][0:15];
+    genvar gpa, gsl;
+    generate for (gpa = 0; gpa < 2; gpa = gpa + 1) begin : g_rp
+        for (gsl = 0; gsl < 16; gsl = gsl + 1) begin : g_rs
+            reg [265:0] w;
+            always @(posedge clk)
+                if (wv_b && {wb_lane[3], wb_lane[2:0]} == 4'(gsl)) w <= (gpa == 0) ? wd_lo : wd_hi;
+            assign ring[gpa][gsl] = w;
+        end
+    end endgenerate
+    // ---- beat assembly: beat b of parity a = static wiring of the lanes (p, j) overlapping bits [2048 b, 2048 b + 2048)
+    reg bs_v, bs_last, bs_a; reg [6:0] bs_b, bs_addr;
+    reg [PMAX*8-1:0] lane_en;              // p < P and j < LA (command constant)
+    always @(posedge clk) if (start_bd) for (integer l = 0; l < PMAX*8; l = l + 1)
+        lane_en[l] <= (l / 8 < c_p) && (l % 8 < ((c_fmt == 2'd2) ? 8 : 4));
+    wire [2047:0] beat_w [0:1][0:NBQ-1];
+    genvar gbb2, gpp, gjj;
+    generate for (gpa = 0; gpa < 2; gpa = gpa + 1) begin : g_ap
+        for (gbb2 = 0; gbb2 < NBQ; gbb2 = gbb2 + 1) begin : g_ab
+            wire [2047:0] parts [0:PMAX*8];
+            assign parts[0] = 2048'd0;
+            for (gpp = 0; gpp < PMAX; gpp = gpp + 1) begin : g_lp
+                for (gjj = 0; gjj < 8; gjj = gjj + 1) begin : g_lj
+                    localparam integer LI = gpp * 8 + gjj;
+                    localparam integer ST = gpp * XC + 266 * gjj - 2048 * gbb2;   // lane start relative to the beat
+                    wire [265:0] lw = ring[gpa][(gpp % 2) * 8 + gjj] & {266{lane_en[LI]}};
+                    if (ST >= 2048 || ST + 266 <= 0) begin : g_out
+                        assign parts[LI + 1] = parts[LI];
+                    end else if (ST >= 0) begin : g_in
+                        wire [2048+266-1:0] sh = {2048'd0, lw} << ST;
+                        assign parts[LI + 1] = parts[LI] | sh[2047:0];
+                    end else begin : g_lo
+                        wire [265:0] sh = lw >> (-ST);
+                        assign parts[LI + 1] = parts[LI] | {1782'd0, sh};
+                    end
+                end
+            end
+            assign beat_w[gpa][gbb2] = parts[PMAX*8];
+        end
+    end endgenerate
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin bs_v <= 1'b0; bs_last <= 1'b0; end
+        else begin bs_v <= bd_em; bs_last <= bd_tail && ek == gtp - 10'd1; end
+    end
+    always @(posedge clk) begin
+        bs_a <= ea; bs_b <= eb2; bs_addr <= 7'({ek[5:0], ea}) + xb;   // {g mod 16, t} + x slot base
     end
     reg bq_v, bq_last; reg [6:0] bq_addr, bq_b; reg [2047:0] bq_d;
+    reg [2047:0] bsel;
+    always @* begin
+        bsel = 2048'd0;
+        for (integer x = 0; x < NBQ; x = x + 1) if (bs_b == 7'(x)) bsel = bs_a ? beat_w[1][x] : beat_w[0][x];
+    end
     always @(posedge clk or negedge rn) begin
         if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; end else begin bq_v <= bs_v; bq_last <= bs_last; end
     end
-    always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; bq_d <= frag[bs_b*2048 +: 2048]; end
+    always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; bq_d <= bsel; end
     // ---- xw pins: BF16 (e6 / xbeat) or block-dot (bq_*); one command at a time
     always @(posedge clk or negedge rn) begin
         if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end

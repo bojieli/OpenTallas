@@ -1,0 +1,104 @@
+{
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+  "rtl/qwen_sys/split_20261014/qkh_head_stages.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "outhold": false,
+ "recipe": 1,
+ "layer_cap": "M5",
+ "children": [],
+ "inter": [],
+ "name": "qkh_head_gather_stage",
+ "top": "qkh_head_gather_stage",
+ "outline": {
+  "w": 324,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "ti_a",
+   "e_a"
+  ],
+  "N": [
+   "ti_b",
+   "e_b"
+  ],
+  "W": [
+   "ck"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkh_head_gather_stage/io_pins.tcl",
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03
+ },
+ "why_floorplan": "N4 horizontal gather:1575bits*twoM5tracks0.096/324=0.4667gross; exact0.192pitch gives0.500local beforePG/OBS. 324x21.6 (259.2x21.6 rejectedlocalcut0.667). Existingactualqkh_head_tstage behavior1575FF,noreset; physical stdarea estimate~525um2 plusclock/holdbuffers, pin-density outline. Source/die owner requestd5530866e+291d96144:band86.4 not59.4; twohomesproposedlocalx86.4and415.8 in1080corridor; allincidentfitnotgrantedbytileclosure.",
+ "structural_change": "NEWqkh_head_gather_stage aliases actualqkh_head_tstage exactly inMUT0, onecompilededge. N4 +1gatheredge relativeN3; full8192/nativeallhead/calendarproof remainsintegrationowner. No normalcredits/backpressure. Common535standaloneclosedviewunchanged.",
+ "job": {
+  "owner": "Codex:el1014-qwen-kvsys-elements",
+  "branch": "codex/qwen-kv-elements-1417",
+  "tag": "n4r1",
+  "purpose": "Hardenactual1575FFhorizontalS-to-Ngather atN4die-requestpins; nativeonly untilallincidentphase/reach/staticfullcompositionqualified.",
+  "benches": [
+   {
+    "name": "gather_actual1575_exact",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_gather.sh {RUN}/bench/g0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "GATHER_PASS bits=1575 latency=1 checks=1798 mutant=0"
+   },
+   {
+    "name": "gather_actual1575_mutant41",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_gather.sh {RUN}/bench/g41 41",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "GATHER_FAIL"
+   },
+   {
+    "name": "gather_actual1575_mutant42",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_gather.sh {RUN}/bench/g42 42",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "GATHER_FAIL"
+   },
+   {
+    "name": "gather_actual1575_mutant43",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_gather.sh {RUN}/bench/g43 43",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "GATHER_FAIL"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_split/run_qkh_head_gather.sh",
+   "rtl/test/qwen_split/tb_qkh_head_gather.sv"
+  ]
+ }
+}

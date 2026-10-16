@@ -35,6 +35,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
+# git object store for commit lookups (M6 pin-grant source commit).  ROOT can be a materialised, non-git source tree
+# (pre_route_gate.submit_check); the caller then points GIT_ROOT at the repository the tree was archived from.
+GIT_ROOT = None
 sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
@@ -410,11 +413,14 @@ def cluster_signal_cap(s: dict, slot: dict | None = None) -> tuple[str, dict | N
 The grant carries the no-through-traffic and phase-aligned PG obligations. A
 probe may measure routing before the phase audit exists, but cannot auto-merge.
 """
-    cap = s.get("signal_max_layer", "M7")
-    if cap == "M7":
+    cap = s.get("signal_max_layer") or (slot or {}).get("signal_max_layer") or "M7"
+    slot_cap = (slot or {}).get("signal_max_layer")
+    if slot_cap is not None and (metal(slot_cap) is None or metal(cap) is None or metal(cap) > metal(slot_cap)):
+        raise SpecError(f"cluster signal cap {cap} exceeds contract slot signal_max_layer {slot_cap}")
+    if cap in ("M6", "M7"):
         return cap, None
     if cap not in ("M8", "M9"):
-        raise SpecError(f"cluster signal cap must be M7, or die-granted M8/M9, not {cap}")
+        raise SpecError(f"cluster signal cap must be M6/M7, or die-granted M8/M9, not {cap}")
     g = s.get("cluster_layer_grant") or (slot or {}).get("cluster_layer_grant")
     if not isinstance(g, dict) or not g.get("source") or not g.get("sha256"):
         raise SpecError("cluster M8/M9 needs cluster_layer_grant {source, sha256}")
@@ -491,6 +497,10 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
         raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
     cap, grant = cluster_signal_cap(s, slot)
     out.update(pg_layer="M7", rlayers=("M2", cap), strap_layer="M8")
+    if cap == "M6":
+        # Signal restriction is independent of the cluster's PG mesh. Export
+        # must prove the actual routed signal/clock wires stop below M7 PG.
+        out["signal_max_layer"] = cap
     if grant:
         out["cluster_layer_grant"] = grant
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
@@ -642,6 +652,41 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
         w = max(w, b["w"] + 2 * CHANNEL_UM + 2 * CORE_MARGIN)
         h = max(h, b["h"] + 2 * CHANNEL_UM + 2 * CORE_MARGIN)
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
+
+
+PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+
+
+def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
+    """(layer, per-net full stripes, spread) the generated pdn.tcl gives a leaf tile, or None (cluster / M7 tiles).
+    Mirrors gen_pdn: M5 stripes (vertical, across W) start CORE_MARGIN + 0.300 (+0.192 for the second net) at the
+    route.m5_pg_pitch; M6 stripes (horizontal, across H) start CORE_MARGIN + 2.0 (+0.384) at route.pg_pitch; a stripe is
+    made while it fits inside the core.  hbm_ckgen_rel-r1 (W 15.12, M5 at 5.4): 2 stripes, 36% -> export child_lint (b)
+    FAIL after a clean route, so gen sizes / refuses such outlines BEFORE the route (ROOT 2026-10-15)."""
+    if s["kind"] != "tile":
+        return None
+    pg = lc.get("pg_layer")
+    r = s.get("route", {})
+    if pg == "M5":
+        pitch, off, width, step, span = float(r.get("m5_pg_pitch", 5.4)), 0.300, 0.12, 0.192, W
+    elif pg == "M6":
+        pitch, off, width, step, span = float(r.get("pg_pitch", 10.8)), 2.0, 0.288, 0.384, H
+    else:
+        return None
+    n_min, spread_min = None, None
+    for d in (0.0, step):
+        xs, x = [], CORE_MARGIN + off + d
+        while x < span - CORE_MARGIN - 1e-6:          # OpenROAD makes a stripe whose start lies inside the core
+            xs.append(x)
+            x += pitch
+        sp = (xs[-1] - xs[0]) / span if len(xs) > 1 else 0.0
+        n_min = len(xs) if n_min is None else min(n_min, len(xs))
+        spread_min = sp if spread_min is None else min(spread_min, sp)
+    return pg, n_min, spread_min
+
+
+def pg_spread_ok(rec) -> bool:
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
 
 
 def blocks_of(s: dict) -> list:
@@ -1124,7 +1169,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
         # add before GRT, remove after DRT (the wrapper picks the mode from its caller); the hold ECO re-applies it
         pre_grt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
         post_drt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
-    if s["kind"] == "tile" and s.get("signal_max_layer"):
+    if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
+            (s["kind"] == "cluster" and cluster_signal_cap(s, contract_slot(s))[0] == "M6")):
         lc = layer_contract(s, contract_slot(s))
         post_drt += ["source /src/tools/ref_tile/signal_layer_audit.tcl",
                      f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
@@ -1266,6 +1312,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", x) for x in mp):
                 raise SpecError("spec: io_flop_at_pins.macro_pins must be plain pin names")
             extra.append(f"--orfs-var OT_MPFLOP_PINS={','.join(mp)}")
+        # "macro_out_pins": ["rd_out", ...] -> OT_MPCAP_PINS: the flop capturing each such hard-child output bit is anchored
+        # beside the pin (S-ELEM-B 2026-10-15, calendar7: ROM clk->q leaves ~80 ps for wire + capture)
+        mo = s["io_flop_at_pins"].get("macro_out_pins") or []
+        if mo:
+            if not isinstance(mo, list) or not all(isinstance(x, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", x) for x in mo):
+                raise SpecError("spec: io_flop_at_pins.macro_out_pins must be plain bus base names")
+            extra.append(f"--orfs-var OT_MPCAP_PINS={','.join(mo)}")
     if s.get("outhold"):
         # spec 'outhold' (hc-cpin 2026-10-12): flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin (R2O hold-only
         # miss at the routed IO ref); with 'inhold' the same hook first runs leaf_inhold.tcl (one PRE_GLOBAL_PLACE hook)
@@ -1388,7 +1441,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
-    if s["kind"] == "tile" and s.get("signal_max_layer"):
+    if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
+            (s["kind"] == "cluster" and cluster_signal_cap(s, contract_slot(s))[0] == "M6")):
         out.append("tools/ref_tile/signal_layer_audit.tcl")
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
@@ -1561,7 +1615,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
         import subprocess
         source_commit = lc["m6_pin_grant"]["source_commit"]
-        exists = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", source_commit + "^{commit}"],
+        git_root = str(GIT_ROOT or ROOT)
+        exists = subprocess.run(["git", "-C", git_root, "cat-file", "-e", source_commit + "^{commit}"],
                                 capture_output=True)
         if exists.returncode:
             raise SpecError("M6 pin-only grant source commit does not exist")
@@ -1572,16 +1627,32 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         for path in source_paths:
             path = path.removeprefix("/src/")
             file = ROOT / path
-            original = subprocess.run(["git", "-C", str(ROOT), "show", f"{source_commit}:{path}"],
+            original = subprocess.run(["git", "-C", git_root, "show", f"{source_commit}:{path}"],
                                       capture_output=True)
             if original.returncode or not file.is_file() or original.stdout != file.read_bytes():
                 raise SpecError(f"M6 pin-only grant source differs from approved commit: {path}")
         s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
+    if not slot and not s.get("outline"):
+        # an auto-sized outline grows (on its grid) until the PDN gives the export's PG stripe spread
+        W0, H0 = W, H
+        while not pg_spread_ok(pg_stripe_spread(s, lc, W, H)) and max(W, H) < 4 * max(W0, H0, 21.6):
+            if lc.get("pg_layer") == "M6":
+                H = snap_up(H + GRID_Y, GRID_Y)
+            else:
+                W = snap_up(W + GRID_Y, GRID_Y)
+        if (W, H) != (W0, H0):
+            why += f"; grown {W0:g}x{H0:g} -> {W:g}x{H:g} for >= {PG_MIN_STRIPES} PG stripes per net spanning >= {PG_MIN_SPREAD:.0%}"
     place_blocks(s, W, H, blocks)
     std = area_um2 or s.get("std_area_um2")
     findings = floorplan_checks(s, W, H, blocks, std)
+    pgs = pg_stripe_spread(s, lc, W, H)
+    if not pg_spread_ok(pgs):
+        findings.append(("FAIL", "pg_spread",
+                         f"{pgs[0]} PG: {pgs[1]} stripes per net spanning {pgs[2]:.0%} of the outline (export child_lint (b) "
+                         f"needs >= {PG_MIN_STRIPES} spanning >= {PG_MIN_SPREAD:.0%}); the route would close and the export fail",
+                         "widen the outline across the stripes, or set route.m5_pg_pitch 2.7 (M5) / route.pg_pitch 5.4 (M6)"))
     kd = kit_dir(s)
     fp = {"schema": "opentallas.ref_tile.floorplan.v1", "name": s["name"], "top": s["top"], "kind": s["kind"],
           "die": [0, 0, W, H], "core": [CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN], "why": why,

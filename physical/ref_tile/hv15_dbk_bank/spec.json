@@ -1,0 +1,137 @@
+{
+ "name": "hv15_dbk_bank",
+ "top": "ot_hgi_dma_back_landing_bank",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "rr_data"
+  ],
+  "E": [
+   "wd"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "read_en",
+   "read_slot",
+   "write_en",
+   "write_slot",
+   "read_addr",
+   "output_en"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "outline": {
+  "w": 140.4,
+  "h": 88.56,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    23.76
+   ]
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hbm-harden-1705",
+  "tag": "pf1",
+  "purpose": "DMA STORE back landing bank leaf ot_hgi_dma_back_landing_bank, native-capture structural fix (H-HARDEN r4): routed nl1 bank (TT +311.82/FF +20.58/DRC 0, launch 181.5 ps PASS) failed native capture on 4 SRAM-macro pins (read_slot/write_en/write_slot 190.5..191.5 ps > 190). Every input now pin-flopped: write_en = raw response valid + write_slot = controller expect_tag[7] (same write edge as before), read_en/read_slot sampled one edge later and the macro word goes straight to the wd_payload launch flop (capture stage removed): 0 cycles, -240 flops/bank. One real 128x256 SRAM, own related clock entry; 8 per hb_dbk parent x4 stacks.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dbk_bank",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_dma_back_landing_bank u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_address_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "write beat mismatch"
+   }
+  ],
+  "merge_target": "main"
+ },
+ "structural_change": "All bank inputs registered at the pins (no input reaches the SRAM macro); write enable from the raw response valid and slot from the controller one edge ahead keep the write edge; read sampled one edge later with the separate capture stage removed keeps the wd edge. 0 cycles.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "why_route": "nl1 routed ETM native capture 191.47 ps > 190 on 4 SRAM-macro input pins; pin flops on every input; fresh source-bound CTS gate + actual native audit required."
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

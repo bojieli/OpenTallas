@@ -10,40 +10,62 @@ module tb_hbm_sm_attn;
     parameter integer KVMUT = 0;
     parameter integer PVMUT = 0;
     parameter integer LV = 4;
+    parameter integer NCOL = 1;
+    parameter integer NATIVE = 0;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg [1087:0] lines [0:8191];
-    reg [1023:0] xs [0:127];
-    integer nl, nx, rows, qk, kv4, rn, rd;
+    reg [NCOL*1024-1:0] xs [0:127];
+    integer nl, nx, rows, qk, kv4, h128, n8, rn, rd;
     string lf, xf;
     // converter
     reg cfg_v = 0; reg s_valid = 0; reg [1087:0] s_data = 0;
-    wire s_ready, m_valid, m_ready, m_last, busy, kfault;
-    wire [1023:0] m_data; wire [2:0] m_slot, m_step; wire [3:0] m_wrows;
-    ot_hbm_sm_kv_line #(.MUT(KVMUT)) u_kv (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_qk(qk[0]), .cfg_kv4(kv4[0]),
+    wire s_ready, m_valid, m_ready, m_last, m_wend, busy, kfault;
+    wire [1023:0] m_data; wire [2:0] m_slot, m_step;
+    ot_hbm_sm_kv_line #(.MUT(KVMUT)) u_kv (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_qk(qk[0]), .cfg_kv4(kv4[0]), .cfg_n8(n8[12:0]), .cfg_h128(h128[0]),
         .cfg_rows(rows[12:0]), .s_valid(s_valid), .s_ready(s_ready), .s_data(s_data), .m_valid(m_valid), .m_ready(m_ready),
-        .m_data(m_data), .m_slot(m_slot), .m_step(m_step), .m_wrows(m_wrows), .m_last(m_last), .busy(busy), .fault(kfault));
+        .m_data(m_data), .m_slot(m_slot), .m_step(m_step), .m_wend(m_wend), .m_last(m_last), .busy(busy), .fault(kfault));
     // issue
-    reg xw_en = 0; reg [6:0] xw_addr = 0; reg [1023:0] xw_data = 0;
-    wire c_v, c_first, c_last, op_issued; wire [15:0] c_tag; wire [1023:0] c_w, c_x; wire [2:0] c_ph;
-    ot_hbm_sm_attn_issue u_is (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_qk(qk[0]), .cfg_rows(rows[12:0]),
+    reg xw_en = 0; reg [6:0] xw_addr = 0; reg [NCOL*1024-1:0] xw_data = 0;
+    wire c_v, c_first, c_last, op_issued; wire [15:0] c_tag; wire [1023:0] c_w; wire [NCOL*1024-1:0] c_x; wire [2:0] c_ph;
+    ot_hbm_sm_attn_issue #(.NCOL(NCOL)) u_is (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_qk(qk[0]), .cfg_h128(h128[0]), .cfg_rows(rows[12:0]),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_data(xw_data), .b_valid(m_valid), .b_ready(m_ready), .b_data(m_data),
-        .b_slot(m_slot), .b_step(m_step), .b_wrows(m_wrows), .b_last(m_last), .c_v(c_v), .c_first(c_first),
+        .b_slot(m_slot), .b_step(m_step), .b_wend(m_wend), .b_last(m_last), .c_v(c_v), .c_first(c_first),
         .c_last(c_last), .c_tag(c_tag), .c_w(c_w), .c_x(c_x), .c_ph(c_ph), .op_issued(op_issued));
-    // 4 sub-row columns
-    wire [3:0] ov, pvv, cf; wire [127:0] y; wire [63:0] otag, pvt; wire [2047:0] pvy;
-    genvar q;
-    generate for (q = 0; q < 4; q = q + 1) begin : g_c
-        ot_hbm_sm_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT)) u_c (.clk(clk), .rst_n(rst_n),
-            .v(c_v), .first(c_first), .last(c_last), .tag(c_tag), .w(c_w[256*q +: 256]), .x(c_x[256*q +: 256]),
-            .ov(ov[q]), .y(y[32*q +: 32]), .otag(otag[16*q +: 16]), .pv_v(pvv[q]), .pv_y(pvy[512*q +: 512]),
-            .pv_tag(pvt[16*q +: 16]), .fault(cf[q]));
+    // NCOL x columns x 4 sub-rows
+    wire [4*NCOL-1:0] ov, pvv, cf; wire [128*NCOL-1:0] y; wire [64*NCOL-1:0] otag, pvt; wire [2048*NCOL-1:0] pvy;
+    wire [NCOL-1:0] t_ov, t_f; wire [32*NCOL-1:0] t_y; wire [16*NCOL-1:0] t_tag;
+    // r2 (head dim 128, +FOLD=1): compiler-fixed in-SM stream folds and node publication, common to every leaf
+    reg pub_start = 0, fold_start = 0; reg [2:0] pub_slot = 0, fold_a = 0, fold_b = 0;
+    wire [4*NCOL-1:0] pbv; wire [128*NCOL-1:0] pbd; wire [16*NCOL-1:0] pbw; wire [12*NCOL-1:0] pbs;
+    genvar q, cc;
+    generate for (cc = 0; cc < NCOL; cc = cc + 1) begin : g_col
+        for (q = 0; q < 4; q = q + 1) begin : g_c
+            localparam integer I = 4 * cc + q;
+            if (NATIVE != 0) begin : g_native
+                ot_hbm_sm_attn_native_col #(.TAGW(16), .LV(LV), .MUT(PVMUT), .PUBLISH(1)) u_c (
+                    .clk(clk), .rst_n(rst_n), .i_v(c_v), .i_first(c_first),
+                    .i_qk_last(c_last && !c_tag[15]), .i_pv_last(c_last && c_tag[15]),
+                    .i_run_first(c_tag[14]), .i_run_last(c_tag[13]), .i_tag(c_tag),
+                    .i_w(c_w[256*q +: 256]), .i_x(c_x[1024*cc + 256*q +: 256]),
+                    .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]),
+                    .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]), .pv_tag(pvt[16*I +: 16]), .fault(cf[I]),
+                    .pub_start(pub_start), .pub_slot(pub_slot), .pub_v(pbv[I]), .pub_data(pbd[32*I +: 32]), .pub_word(pbw[4*I +: 4]),
+                    .pub_out_slot(pbs[3*I +: 3]), .pub_tag(), .fold_start(fold_start), .fold_a(fold_a), .fold_b(fold_b));
+            end else begin : g_flat
+            ot_hbm_sm_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT)) u_c (.clk(clk), .rst_n(rst_n),
+                .v(c_v), .first(c_first), .last(c_last), .tag(c_tag), .w(c_w[256*q +: 256]), .x(c_x[1024*cc + 256*q +: 256]),
+                .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]), .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]),
+                .pv_tag(pvt[16*I +: 16]), .fault(cf[I]));
+            end
+        end
+        // the SM back end's 4-leaf combine (QK at head dim 512; bypassed at head dim 128)
+        ot_gpu_tree #(.N(4), .TAGW(16), .ALAT(7)) u_be (.clk(clk), .rst_n(rst_n), .v(ov[4*cc]), .d(y[128*cc +: 128]),
+            .tag(otag[64*cc +: 16]), .ov(t_ov[cc]), .y(t_y[32*cc +: 32]), .otag(t_tag[16*cc +: 16]), .fault(t_f[cc]));
     end endgenerate
-    wire t_ov, t_f; wire [31:0] t_y; wire [15:0] t_tag;
-    ot_gpu_tree #(.N(4), .TAGW(16), .ALAT(7)) u_be (.clk(clk), .rst_n(rst_n), .v(ov[0]), .d(y), .tag(otag[15:0]),
-        .ov(t_ov), .y(t_y), .otag(t_tag), .fault(t_f));
     // stimulus + monitor
-    integer cyc = 0, li = 0, acc = 0, first_in = -1, last_in = -1, last_out = -1, nres = 0, want = 0, k, b, fb = -1, lb = -1, nb = 0;
+    integer fold = 0, npb = 0, last_pb = -1, fold_t0 = -1, ii, fi;   // fi: the fold calendar counter (ii belongs to the monitor)
+    integer cyc = 0, li = 0, acc = 0, first_in = -1, last_in = -1, last_out = -1, nres = 0, want = 0, k, b, fb = -1, lb = -1, nb = 0, kk, bb;
     always @(posedge clk) cyc <= cyc + 1;
     // line rate: a line may be offered on cycles where the rate accumulator wraps (RN / RD lines per cycle)
     integer offered = 0; reg started = 0;
@@ -62,25 +84,35 @@ module tb_hbm_sm_attn;
         end
     end
     always @(posedge clk) begin
-        if (c_v && (qk != 0 ? c_ph != c_tag[2:0] : c_ph != c_tag[2:0])) begin
-            $display("FAULT ring residue: beat for slot %0d at residue %0d", c_tag[2:0], c_ph); $fatal(1, "residue");
+        if (c_v && c_ph != ((qk != 0 && h128 != 0) ? c_tag[4:2] : c_tag[2:0])) begin
+            $display("FAULT ring residue: beat tag %0h at residue %0d", c_tag, c_ph); $fatal(1, "residue");
         end
         if (c_v) begin if (fb < 0) fb = cyc; lb = cyc; nb = nb + 1; end
-        if (t_ov) begin $display("SC %0d %08h", t_tag[12:0], t_y); nres = nres + 1; last_out = cyc; end
-        if (pvv[0]) begin
-            for (k = 0; k < 4; k = k + 1) $display("PV %0d %0d %0128h", pvt[2:0], k, pvy[512*k +: 512]);
-            if (pvv != 4'hf) begin $display("FAULT pv lanes misaligned %b", pvv); $fatal(1, "pv"); end
-            nres = nres + 1; last_out = cyc;
+        for (kk = 0; kk < NCOL; kk = kk + 1) begin
+            if (!h128 && t_ov[kk]) begin $display("SC %0d %0d %08h", kk, t_tag[16*kk +: 13], t_y[32*kk +: 32]); nres = nres + 1; last_out = cyc; end
+            if (h128 && ov[4*kk]) for (bb = 0; bb < 4; bb = bb + 1)
+                if (otag[64*kk + 16*bb +: 13] + bb < rows) begin
+                    $display("SC %0d %0d %08h", kk, otag[64*kk + 16*bb +: 13] + bb, y[128*kk + 32*bb +: 32]); nres = nres + 1; last_out = cyc;
+                end
+            if (pvv[4*kk]) begin
+                for (bb = 0; bb < 4; bb = bb + 1) $display("PV %0d %0d %0d %0128h", kk, pvt[64*kk +: 3], bb, pvy[2048*kk + 512*bb +: 512]);
+                if (pvv[4*kk +: 4] != 4'hf) begin $display("FAULT pv lanes misaligned"); $fatal(1, "pv"); end
+                nres = nres + 1; last_out = cyc;
+            end
         end
-        if (kfault || (|cf) || t_f) begin $display("FAULT kv=%0d col=%b tree=%0d", kfault, cf, t_f); $fatal(1, "fault"); end
+        for (ii = 0; ii < 4 * NCOL; ii = ii + 1)
+            if (pbv[ii]) begin $display("PB %0d %0d %0d %0d %08h", ii / 4, ii % 4, pbs[3*ii +: 3], pbw[4*ii +: 4], pbd[32*ii +: 32]); npb = npb + 1; last_pb = cyc; end
+        if (kfault || (|cf) || (|t_f)) begin $display("FAULT kv=%0d col=%b tree=%b", kfault, cf, t_f); $fatal(1, "fault"); end
     end
     initial begin
         if (!$value$plusargs("LINES=%s", lf) || !$value$plusargs("X=%s", xf)) $fatal(1, "plusargs");
         void'($value$plusargs("NL=%d", nl)); void'($value$plusargs("NX=%d", nx)); void'($value$plusargs("ROWS=%d", rows));
-        void'($value$plusargs("QK=%d", qk)); void'($value$plusargs("KV4=%d", kv4));
+        h128 = 0; void'($value$plusargs("QK=%d", qk)); void'($value$plusargs("KV4=%d", kv4)); void'($value$plusargs("H128=%d", h128));
+        n8 = kv4 ? 0 : rows; void'($value$plusargs("N8=%d", n8));
         rn = 8; rd = 11; void'($value$plusargs("RN=%d", rn)); void'($value$plusargs("RD=%d", rd));
         $readmemh(lf, lines, 0, nl - 1); $readmemh(xf, xs, 0, nx - 1);
-        want = qk ? rows : 8;
+        void'($value$plusargs("WANT=%d", want));
+        void'($value$plusargs("FOLD=%d", fold));
         repeat (4) @(posedge clk); rst_n <= 1;
         repeat (4) @(posedge clk);
         for (b = 0; b < nx; b = b + 1) begin
@@ -90,11 +122,29 @@ module tb_hbm_sm_attn;
         @(posedge clk); cfg_v <= 1;
         @(posedge clk); cfg_v <= 0; started <= 1;
         fork
-            begin wait (nres == want); repeat (4) @(posedge clk); end
+            begin
+                wait (nres == want); repeat (4) @(posedge clk);
+                if (fold != 0) begin
+                    // fixed fold calendar (cycle offsets from F0): level 1 (0,2)@0 (4,6)@2 (1,3)@4 (5,7)@6, level 2 (0,4)@12
+                    // (1,5)@16, publication of entry 0 @22 and entry 1 @38 (word 14 of the first node)
+                    fold_t0 = cyc;
+                    for (fi = 0; fi <= 38; fi = fi + 1) begin
+                        fold_start <= (fi == 0 || fi == 2 || fi == 4 || fi == 6 || fi == 12 || fi == 16);
+                        fold_a <= (fi == 0) ? 3'd0 : (fi == 2) ? 3'd4 : (fi == 4) ? 3'd1 : (fi == 6) ? 3'd5 : (fi == 12) ? 3'd0 : 3'd1;
+                        fold_b <= (fi == 0) ? 3'd2 : (fi == 2) ? 3'd6 : (fi == 4) ? 3'd3 : (fi == 6) ? 3'd7 : (fi == 12) ? 3'd4 : 3'd5;
+                        pub_start <= (fi == 22 || fi == 38);
+                        pub_slot <= (fi == 38) ? 3'd1 : 3'd0;
+                        @(posedge clk);
+                    end
+                    fold_start <= 0; pub_start <= 0;
+                    wait (npb == 4 * NCOL * 32); repeat (4) @(posedge clk);
+                end
+            end
             begin repeat (200000) @(posedge clk); $display("FAULT timeout nres=%0d want=%0d li=%0d", nres, want, li); $fatal(1, "timeout"); end
         join_any
         $display("CYCLES rows=%0d qk=%0d kv4=%0d lines=%0d first_in=%0d last_in=%0d last_out=%0d span=%0d beats=%0d first_beat=%0d last_beat=%0d", rows, qk, kv4,
                  li, first_in, last_in, last_out, last_out - first_in, nb, fb, lb);
+        if (fold != 0) $display("FOLD first_in=%0d fold_t0=%0d last_pb=%0d span=%0d pb=%0d", first_in, fold_t0, last_pb, last_pb - first_in, npb);
         $display("DONE results=%0d", nres);
         $finish;
     end

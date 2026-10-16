@@ -1,0 +1,14 @@
+PREFETCH_BURST_CDC_CASE epoch=1 base=4099 total=640 bursts=161 responses=640 reserve_to_ready_HBM_cycles=84.635484 reset_release_to_reserve_HBM_cycles=20.762720 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.737280 last_response_to_ready_HBM_cycles=1.898204 stream_delivery_cycles=80
+PREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=1 response_stalls=217 FIFO_credit_stalls=0 arbitration_conflict_stalls=217 peak_accepted_per_HBM_edge=32 accepted_edges_ge10=25 accepted_edges_ge20=22 accepted_edges_ge28=4
+PREFETCH_BURST_CDC_PERFORMANCE PASS epoch=1 baseline_HBM_cycles=77.000000 limit_HBM_cycles=84.700000 measured_HBM_cycles=84.635484 overhead_HBM_cycles=7.635484 ratio=1.099162 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready
+PREFETCH_BURST_CDC_CASE epoch=2 base=12295 total=2048 bursts=513 responses=2048 reserve_to_ready_HBM_cycles=131.836043 reset_release_to_reserve_HBM_cycles=21.309743 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.190257 last_response_to_ready_HBM_cycles=1.645786 stream_delivery_cycles=256
+PREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=2 response_stalls=253 FIFO_credit_stalls=0 arbitration_conflict_stalls=253 peak_accepted_per_HBM_edge=32 accepted_edges_ge10=71 accepted_edges_ge20=67 accepted_edges_ge28=49
+PREFETCH_BURST_CDC_PERFORMANCE PASS epoch=2 baseline_HBM_cycles=122.000000 limit_HBM_cycles=134.200000 measured_HBM_cycles=131.836043 overhead_HBM_cycles=9.836043 ratio=1.080623 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready
+PREFETCH_BURST_CDC_CASE epoch=3 base=3001 total=5 bursts=2 responses=5 reserve_to_ready_HBM_cycles=61.035205 reset_release_to_reserve_HBM_cycles=21.286606 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.213394 last_response_to_ready_HBM_cycles=1.821812 stream_delivery_cycles=1
+PREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=3 response_stalls=0 FIFO_credit_stalls=0 arbitration_conflict_stalls=0 peak_accepted_per_HBM_edge=2 accepted_edges_ge10=0 accepted_edges_ge20=0 accepted_edges_ge28=0
+PASS PREFETCH_BURST_CDC actualPHY real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=773.000000 exact_vectors=2693 requested_sectors=2693 fixed_cycles=337 request_stalls=37 response_stalls=470 performance_failures=0
+PREFETCH_BURST_CDC_RESPONSE_PROFILE_TOTAL response_stalls=470 FIFO_credit_stalls=0 arbitration_conflict_stalls=470 peak_accepted_per_HBM_edge=32 accepted_edges_ge10=96 accepted_edges_ge20=89 accepted_edges_ge28=53
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_burst_cdc.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 676ns; walltime 0.027 s; speed 22.503 us/s
+- Verilator: cpu 0.030 s on 1 threads; alloced 507 MB

@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 import qwen_rom_fulldie as F     # noqa: E402  (Inst, Master, lattice, phy_pins, pin_rects, write_netlist)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import kv_elastic_boundary       # noqa: E402
 import kv_strips as KS           # noqa: E402  (v1.2 strip compositions: land / astk RTL bindings + clock entries)
 
 GX, GY, SHAVE = F.GX, F.GY, F.SHAVE
@@ -68,6 +69,8 @@ SERDES = ('ot_qfd_serdes_112g_x12_phy', 2320.056, 1563.57)  # actual native host
 FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
+TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this from its cluster leader
+RELAY_FLUSH = 128               # kv_relays.RELAY_FLUSH: reset release >= this many core cycles after the clock runs
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
 FIRST_REACH = dict(wencoded=300.0)   # v1.3: first relay of the write-queue controller's group words (ctl_bin f<g>, late launch)
@@ -184,6 +187,21 @@ HEAD_CLK_R2 = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'c
 # reference PASS 3,515, mutants FAIL).  Die port -> RTL: ck_f<q> -> ck_front[q], ck_k -> ck_kt, ck_s -> ck_score,
 # ck_i<l> -> ck_stin[l], ck_t<l> -> ck_stk[l], ck_a<l> -> ck_nb1[l], ck_b<l> -> ck_nb2[l], ck_l<l> -> ck_lane[l]
 HEAD_R4_PLAN = 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json'
+# v1.4.3 G3S2 (KV die lead 2026-10-15, results/arch/qwen_split_1014/kvsys_v1_4_3_design/design.json): every head's ingress
+# ECTL t/e -> G -> T1 -> T2 -> fronts on the CLOSED qkh_head_gather_stage (die master qkd_hgs, 324 x 21.6, S->N), score
+# head -> S1 -> S2 -> ECTL on the CLOSED qkh_head_sstage (qkd_hss, 21.6 x 21.6, W->E): +3 / +2 edges (ECTL HXK 5).  The
+# near head of each pair (h1 / h2) is qkd_rhead_ft = r4 + the FAR head's T1 / S2 in a feed-through channel (plan
+# HEAD_FT_PLAN, lane rows >= 1 moved up 16.2 um); near-pair stages sit in a band on each ECTL face, the far head's T2 / S1
+# in a band between the near and the far head.  Groups keep their v1.4.2 bottom and grow up (N stacks into the top slack,
+# S stacks into the middle): die outline unchanged.
+V143 = dict(on=False)
+HEAD_FT_PLAN = 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/head_ft_plan.json'
+SPLIT_HEAD_FT = (1080.0, 508.68)
+V143_BAND_LO, V143_BAND_HI = 119.88, 118.8     # ECTL face bands (4 stage rows at 28.08 pitch + clearance); GY-grid totals
+V143_NF_LO, V143_NF_HI = 32.4, 33.48           # near | far bands (one 21.6 row + 5.4 each side)
+V143_X = dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4)   # ECTL-local x (R0 ECTL)
+V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
+HGS, HSS = (324.0, 21.6), (21.6, 21.6)
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
             [f'ck_{t}{i}' for t in 'itabl' for i in range(16)])
 HEAD_CLK_CHILD = dict(**{f'ck_f{q}': f'front{q}' for q in range(4)}, ck_k='ktree', ck_s='score',
@@ -219,6 +237,18 @@ def _set_geometry(split, reserve_static_memory=False, reserve_native_astk=False)
     RENG = (HEAD[0], ENG_H)
     TILE_Y = dict(h0=0.0, h1=HEAD[1] + GY, c=2 * (HEAD[1] + GY), h2=2 * (HEAD[1] + GY) + ECTL[1] + GY,
                   h3=3 * (HEAD[1] + GY) + ECTL[1] + GY)
+    V143['eng_h_v142'] = ENG_H
+    if split and V143['on']:
+        # v1.4.3: far head | NF band | near head (ft) | ECTL band | ECTL | ECTL band | near head (ft) | NF band | far head
+        hf = SPLIT_HEAD_FT[1]
+        TILE_Y = dict(h0=0.0, h1=HEAD[1] + V143_NF_LO)
+        TILE_Y['c'] = TILE_Y['h1'] + hf + V143_BAND_LO
+        TILE_Y['h2'] = TILE_Y['c'] + ECTL[1] + V143_BAND_HI
+        TILE_Y['h3'] = TILE_Y['h2'] + hf + V143_NF_HI
+        ENG_H = TILE_Y['h3'] + HEAD[1]
+        RENG = (HEAD[0], ENG_H)
+        for k_, v_ in TILE_Y.items():
+            assert abs(v_ / GY - round(v_ / GY)) < 1e-6, f'v1.4.3 tile {k_} off the {GY}-um grid: {v_}'
     FRAMES = dict(_BASE['FRAMES'], **(SPLIT_FRAMES if split else {}))
     for k_ in _BASE_BINDINGS_LATE:
         _BASE_BINDINGS.setdefault(k_, BINDINGS[k_])
@@ -287,6 +317,15 @@ SPLIT_BINDINGS = dict(
 # v1.2: the strip frames bind the wires-only compositions of their CLOSED leaves (tools/qwen_kv_die/kv_strips.py ->
 # rtl/qwen_sys/split_20261014/qkd_strips_s.sv), each leaf its own clock entry
 SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw', 'qkd_ctrl', 'qkd_ctrl_n')
+# v1.4.3 G3S2 masters (bound only when the die instantiates them)
+SPLIT_BINDINGS['qkd_rhead_ft'] = dict(SPLIT_BINDINGS['qkd_rhead'], module='ot_qkh_head_native_r4_ft',
+    file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_ft.sv',
+    ports=dict(SPLIT_BINDINGS['qkd_rhead']['ports'], ft_ti_a=['ft_ti_a'], ft_e_a=['ft_e_a'], ft_ti_b=['ft_ti_b'],
+               ft_e_b=['ft_e_b'], ft_s_a=['ft_s_a'], ft_s_b=['ft_s_b'], ck_ft_t=['ck_ft_t'], ck_ft_s=['ck_ft_s']))
+SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
+    ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
+SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
+    ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
 SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(rev=True), qkd_ctrl_n=KS.ctrl_binding())   # v1.3: S stacks = reversed chains (kc at the S = outer end)
 SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), qkd_astk=KS.astk_binding(),
@@ -396,7 +435,9 @@ def d2ds_binding():
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
-                           fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up']),
+                           fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up'],
+                           status_epoch16=['status_epoch16'], host_drained_local=['host_drained_local'],
+                           host_boot_begin=['host_boot_begin'], lpf=['fault']),
                 sliced={},
                 classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
 
@@ -784,7 +825,7 @@ def _band(T, side, Wk):
 _PIN_HINT = {}
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None):
     """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
     shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
@@ -793,6 +834,8 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         HOST_V14['on'] = bool(host_v14)          # v1.4 (die_top_lint --variant ...,host_v14); None keeps the CLI setting
     if host_north is not None:
         HOST_V14['north'] = bool(host_north)    # v1.4.1 (die_top_lint --variant ...,host_north)
+    if host_trees is not None:
+        HOST_V14['trees'] = bool(host_trees)    # v1.4.2 (die_top_lint --variant ...,host_trees): reset / boot relay trees
     _set_geometry(split, reserve_static_memory=reserve_static_memory, reserve_native_astk=reserve_native_astk)
     _PIN_HINT.clear()
     m = _build(**kw)
@@ -800,6 +843,7 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     for _ in range(3):                      # re-plan from the drawn pins; keep the pass with the fewest pin-hop violations
         M = masters(m, 1)
         nv = pin_reach(m, M)['violations']
+        print(f'kv die: plan pass pin-hop violations {nv}', file=sys.stderr)
         if best is None or nv < best[0]:
             best = (nv, m)
         if nv == 0:
@@ -817,9 +861,23 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         try:
             m = _build(**kw)
         except ValueError as e_:
+            if split and V143['on'] and not kw.get('_narrow'):
+                # v1.4.3: the full pin-hinted re-plan corners a reset-tree / slice chain in the grown groups; retry with
+                # hints ONLY on the endpoints of the violating hops of the best pass (minimal perturbation)
+                bad = pin_reach(best[1], masters(best[1], 1))
+                ends = {e_[k_].split('.')[0] for e_ in bad.get('worst', []) for k_ in ('a', 'b')}
+                keep = {k_: v_ for k_, v_ in _PIN_HINT.items() if k_[0] in ends}
+                _PIN_HINT.clear(); _PIN_HINT.update(keep)
+                print(f'kv die: v1.4.3 narrow re-plan ({len(keep)} hinted pins on {len(ends)} instances) after: {e_}', file=sys.stderr)
+                try:
+                    m = _build(**kw)
+                    continue
+                except ValueError as e2_:
+                    e_ = e2_
             # v1.1: a pin-hinted re-plan pass can corner a relay chain (af_WN at the astk top, head 492.48): keep the best
             # earlier pass (its drawn pins and relay chains are consistent) and record why the re-plan stopped
             best[1].setdefault('geo', {})['replan_stopped'] = str(e_)
+            print(f'kv die: re-plan pass stopped: {e_}', file=sys.stderr)
             break
     else:
         M = masters(m, 1)
@@ -849,6 +907,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # split: the engine group (4 engine columns of 4 heads + ectl) is taller than the 12.1-mm band: stack pitch sp, the band
     # centred on it (band_shift per half)
     gh_ = 4 * RENG[1] + 3 * GY
+    if split and V143['on']:
+        gh_ = 4 * V143['eng_h_v142'] + 3 * GY      # v1.4.3: groups keep the v1.4.2 bottom (no die lift); they grow up
     # 2 x CHAN of relay channel above and below each group: the S | N groups leave a 518-um channel between them (the
     # col-1 engines' KV rows krq / krs and the centre words cross the W / E stack walls there)
     # every shift is a multiple of 43.2 um (= 900 / 675 / 540 tracks of M4-5 / M6-7 / M8-9 and 160 rows): a shifted band
@@ -905,6 +965,13 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
         gh = 4 * RENG[1] + 3 * GY
         gy = up(y0 + (stack_h - gh) / 2, GY)
+        if split and V143['on']:
+            # v1.4.3: both halves grow INTO the middle S | N channel (3.7 mm in v1.4.2; >= 1 mm left): S groups keep their
+            # v1.4.2 bottom (the SerDes corridor), N groups keep their v1.4.2 top (the HOST / D2D relay apron)
+            gh_old = 4 * V143['eng_h_v142'] + 3 * GY
+            gy = up(y0 + (stack_h - gh_old) / 2, GY)
+            if st[1] == 'N':
+                gy = gy + gh_old - gh - float(__import__('os').environ.get('OT_KV_V143_NDROP', '0'))
         grp_y = locals().setdefault('grp_y', {})
         grp_y[st] = (gy, gy + gh)
         # qwen-1010/b 2026-10-10 (KV11 die STA: land -> ectl rs hops of ~3 mm between pins): every stack group is the
@@ -928,10 +995,13 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             hd_dn, hd_up = (o_dn, o_up)
             exo = up((HEAD[0] - ECTL[0]) / 2, GX) if split else 0.0     # control tile centred in the wider column
             for h in range(4):
-                add(f'head_{st}_{e}_{h}', 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE, HEAD[1] - SHAVE,
-                    hd_dn if h < 2 else hd_up, 'row_engine', 'attn')
+                ft_ = split and V143['on'] and h in (1, 2)
+                add(f'head_{st}_{e}_{h}', 'qkd_rhead_ft' if ft_ else 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE,
+                    (SPLIT_HEAD_FT[1] if ft_ else HEAD[1]) - SHAVE, hd_dn if h < 2 else hd_up, 'row_engine', 'attn')
             add(f'ectl_{st}_{e}', 'qkd_ectl', ex + exo, ey + TILE_Y['c'], ECTL[0] - SHAVE, ECTL[1] - SHAVE,
                 o_up, 'row_engine', 'attn')
+            if split and V143['on']:
+                _v143_stages(add, f'{st}_{e}', ex + exo, ey, col)
     # centre column: N edge stack, hub, S edge host
     uy = Hk - MARGIN - UCIE[2]
     add('ucie_rom', UCIE[0], xc - UCIE[1] / 2, uy, UCIE[1] - SHAVE, UCIE[2] - SHAVE, 'MX', 'phy_d2d', 'io')
@@ -993,6 +1063,60 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     return m
 
 
+def _v143_stages(add, se, cx, ey, col):
+    """v1.4.3 G3S2 die-level stage instances of one row engine (ECTL at x cx, y ey + TILE_Y['c']; col 1 = MY column).
+    ECTL-local x of V143_X; lower side (pair 0, heads 0 / 1 below) rows k = 1..4 at 28.08 pitch under the ECTL, upper
+    side (pair 1) mirrored above it; the far head's T2 / S1 in the band at the far head's front face."""
+    cy = ey + TILE_Y['c']
+    def put(name, mst, xl, y, lower):
+        w, h = HGS if mst == 'qkd_hgs' else HSS
+        x = cx + (ECTL[0] - xl - w if col == 1 else xl)
+        o = ('R180' if col == 1 else 'MX') if lower else ('MY' if col == 1 else 'R0')
+        add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
+    for lower, near, far in ((True, 1, 0), (False, 2, 3)):
+        row = (lambda k: cy - 28.08 * k) if lower else (lambda k: cy + ECTL[1] + 6.48 + 28.08 * (k - 1))
+        put(f'{near}_g', 'qkd_hgs', V143_X['g'], row(1), lower)
+        put(f'{far}_g', 'qkd_hgs', V143_X['g'], row(2), lower)
+        put(f'{near}_t1', 'qkd_hgs', V143_X['t1n'], row(3), lower)
+        put(f'{near}_s2', 'qkd_hss', V143_X['s2n'], row(3), lower)
+        put(f'{near}_t2', 'qkd_hgs', V143_X['t2n'], row(4), lower)
+        put(f'{near}_s1', 'qkd_hss', V143_X['s1n'], row(4), lower)
+        if lower:
+            yf = ey + HEAD[1] + 5.4                                   # far head 0 top + 5.4
+        else:
+            yf = ey + TILE_Y['h2'] + SPLIT_HEAD_FT[1] + 5.4           # near head 2 top + 5.4
+        put(f'{far}_t2', 'qkd_hgs', V143_X['t2f'], yf, lower)
+        put(f'{far}_s1', 'qkd_hss', V143_X['s1f'], yf, lower)
+
+
+def _v143_buses(add, st, e, c_):
+    """v1.4.3 G3S2 head data path of one row engine (replaces tp / te / ts): ECTL t{pr} -> G (both heads of the pair) ->
+    T1 -> T2 -> head ti / e; head s -> S1 -> S2 -> ECTL s{h}; the far head's T1 / S2 are its near head's ft leaves."""
+    se = f'{st}_{e}'
+    hs = lambda h, x: f'hst_{se}_{h}_{x}'
+    hd = lambda h: f'head_{st}_{e}_{h}'
+    for pr, near, far in ((0, 1, 0), (1, 2, 3)):
+        add((f'tp_{se}_{pr}', 'stack_local', T_PAIR, [(c_, f't{pr}'), (hs(near, 'g'), 'ti_a'), (hs(far, 'g'), 'ti_a')]))
+        for h in (near, far):
+            nf_ = h == far
+            t1_in = (hd(near), 'ft_ti_a') if nf_ else (hs(h, 't1'), 'ti_a')
+            t1e_in = (hd(near), 'ft_e_a') if nf_ else (hs(h, 't1'), 'e_a')
+            t1_out = (hd(near), 'ft_ti_b') if nf_ else (hs(h, 't1'), 'ti_b')
+            t1e_out = (hd(near), 'ft_e_b') if nf_ else (hs(h, 't1'), 'e_b')
+            add((f'te_{se}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hs(h, 'g'), 'e_a')]))
+            add((f'tg_{se}_{h}', 'stack_local', T_PAIR, [(hs(h, 'g'), 'ti_b'), t1_in]))
+            add((f'tge_{se}_{h}', 'stack_local', T_E, [(hs(h, 'g'), 'e_b'), t1e_in]))
+            add((f'tt_{se}_{h}', 'stack_local', T_PAIR, [t1_out, (hs(h, 't2'), 'ti_a')]))
+            add((f'tte_{se}_{h}', 'stack_local', T_E, [t1e_out, (hs(h, 't2'), 'e_a')]))
+            add((f'th_{se}_{h}', 'stack_local', T_PAIR, [(hs(h, 't2'), 'ti_b'), (hd(h), 'ti')]))
+            add((f'the_{se}_{h}', 'stack_local', T_E, [(hs(h, 't2'), 'e_b'), (hd(h), 'e')]))
+            add((f'ts_{se}_{h}', 'stack_local', T_RET, [(hd(h), 's'), (hs(h, 's1'), 's_a')]))
+            s2_in = (hd(near), 'ft_s_a') if nf_ else (hs(h, 's2'), 's_a')
+            s2_out = (hd(near), 'ft_s_b') if nf_ else (hs(h, 's2'), 's_b')
+            add((f'tss_{se}_{h}', 'stack_local', T_RET, [(hs(h, 's1'), 's_b'), s2_in]))
+            add((f'tsr_{se}_{h}', 'stack_local', T_RET, [s2_out, (c_, f's{h}')]))
+
+
 def _buses(m, T, r):
     B = m['buses']
     names = {i.name for i in m['insts']}
@@ -1012,11 +1136,13 @@ def _buses(m, T, r):
                [(f'land_{st}', 'ck'), (f'astk_{st}', 'ck')]) + \
               [(f'ectl_{st}_{e}', c_) for e in range(r) for c_ in (ECTL_CLK if sp_ else ['ck'])] + \
               [(f'head_{st}_{e}_{h}', c_) for e in range(r) for h in range(4) for c_ in (HEAD_CLK if sp_ else ['ck'])] + \
+              ([(f'head_{st}_{e}_{h}', c_) for e in range(r) for h in (1, 2) for c_ in ('ck_ft_t', 'ck_ft_s')] +
+               [(i.name, 'ck') for i in m['insts'] if i.name.startswith(f'hst_{st}_')] if sp_ and V143['on'] else []) + \
               [(c, 'clk') for c in cdcs[st]]
         add((f'clk_core_{st}', 'clock_trunk', 1, [('pll', f'pll_{st}')] + grp +
              [(f'ctrl_{st}', 'ck')]))   # qwen-1010/b: the kc stream-command FIFO's write side (reset: rsi, below)
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
-             [(n, 'rst_n') for n in dict.fromkeys(n for n, _ in grp) if not n.startswith('cdc_')]))   # the CDC core resets come from land.crst (r21c rst_kv)
+             [(n, 'rst_n') for n in dict.fromkeys(n for n, _ in grp) if not n.startswith(('cdc_', 'hst_'))]))   # v1.4.3 stages: no reset   # the CDC core resets come from land.crst (r21c rst_kv)
     cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host'] + (['lnk'] if m['geo'].get('split') else [])
     add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] +
          [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else ['ck'])] +
@@ -1046,13 +1172,17 @@ def _buses(m, T, r):
             c_ = f'ectl_{st}_{e}'
             add((f'eq_{st}_{e}', 'stack_local', ENG_IN, [(f'astk_{st}', f'e{e}o'), (c_, 'si')]))
             add((f'el_{st}_{e}', 'stack_local', ENG_OUT, [(c_, 'so'), (f'astk_{st}', f'e{e}i')]))
-            for pr in range(2):           # S1b copy -> the pair's two heads (one net, two loads)
-                add((f'tp_{st}_{e}_{pr}', 'stack_local', T_PAIR, [(c_, f't{pr}')] +
-                     [(f'head_{st}_{e}_{h}', 'ti') for h in (2 * pr, 2 * pr + 1)]))
+            if m['geo'].get('split') and V143['on']:
+                _v143_buses(add, st, e, c_)
+            else:
+                for pr in range(2):           # S1b copy -> the pair's two heads (one net, two loads)
+                    add((f'tp_{st}_{e}_{pr}', 'stack_local', T_PAIR, [(c_, f't{pr}')] +
+                         [(f'head_{st}_{e}_{h}', 'ti') for h in (2 * pr, 2 * pr + 1)]))
             for h in range(4):
                 hd_ = f'head_{st}_{e}_{h}'
-                add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
-                add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
+                if not (m['geo'].get('split') and V143['on']):
+                    add((f'te_{st}_{e}_{h}', 'stack_local', T_E, [(c_, f'e{h}'), (hd_, 'e')]))
+                    add((f'ts_{st}_{e}_{h}', 'stack_local', T_RET, [(hd_, 's'), (c_, f's{h}')]))
                 add((f'nb_{st}_{e}_{h}', 'stack_local', HEAD_NB, [(hd_, 'nb'), (f'astk_{st}', f'f{e}{h}')]))
             add((f'krq_{st}_{e}', 'spine_local', KS.W_RQ if split else 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
@@ -1198,7 +1328,8 @@ def _host_v14_buses(m):
     # latency is chain position p (+1) cycles, p = 31 - k on the N stacks, recorded in the contract's compiler stages.
     orders = {st: (list(range(31, -1, -1)) if (HOST_V14.get('north') and st[1] == 'N') else list(range(32))) for st in STACKS}
     m['geo']['slice_chain_order'] = {st: o[0] for st, o in orders.items()}
-    add(('hboot', 'reset', 1, [('host', 'boot_go')] + [(sl(st, orders[st][0]), 'bgi') for st in STACKS]))
+    add(('hboot', 'reset', 1, [('host', 'boot_go')] + [(sl(st, orders[st][0]), 'bgi') for st in STACKS] +
+         [('d2d_kv', 'host_boot_begin')]))
     add(('pll_lock', 'spine_local', 1, [('pll', 'locked'), ('host', 'pll_locked')]))
     fam = dict(HOST_CLK_FAMILY, **HOST_CLK_INFERRED)
     for i_, (bid, cl, bits, eps) in enumerate(B):
@@ -1264,6 +1395,13 @@ def _d2ds_swap(m):
     add(('hrec_tx', 'spine_local', 1 + 548, [('host', 'rec_tx'), ('d2d_kv', 'rec_tx')]))
     add(('hrec_rx', 'spine_local', 2 + 1 + 1 + 548, [('d2d_kv', 'rec_rx'), ('host', 'rec_rx')]))
     add(('hlrc', 'spine_local', 2, [('host', 'lrc'), ('d2d_kv', 'lrc')]))
+    # v1.4.1 (Q-LINK r3 answers 09:17): status_epoch16 <- root token_epoch (TAG59 epoch16), host_drained_local <- root
+    # host_drained_local (exported host interface idle); host_boot_begin rides the root boot_go tree (hboot, below)
+    add(('hsep', 'spine_local', 16, [('host', 'token_epoch'), ('d2d_kv', 'status_epoch16')]))
+    add(('hhdl', 'spine_local', 1, [('host', 'host_drained_local'), ('d2d_kv', 'host_drained_local')]))
+    # v1.4.2 (HOST owner = KV die lead): the root's typed die-local physical fault is the static D2D end's sticky fault
+    # (root places it on bit die_id); the root's engine admission is the link's native_admit_ready inside the root RTL
+    add(('hlpf', 'spine_local', 1, [('d2d_kv', 'lpf'), ('host', 'link_physical_fault')]))
     by = {i.name: i for i in m['insts']}
     ck_ = by['ckb_kv']
     for j, (n_, p_) in enumerate((('fwb_ep', 'fwd_epoch'), ('fwb_rs', 'fwd_link_rst_n'))):
@@ -1394,6 +1532,73 @@ def _relays(m):
     nb, stages, lengths = [], {}, {}
     rly_ends = {}                                  # relay inst -> (driver inst, load inst) of the bus it stages
     order_ = list(m['buses'])
+    # v1.4.2 (kvs7c TT: host boot_go -550 ns on one 25.8-mm net, die_rst_n -4.8 ns / hbm_rst_n -1.9 ns: the die top has
+    # no buffering, so a die-wide fan-out net cannot be one wire): every HOST reset / boot fan-out net becomes a
+    # REGISTERED DISTRIBUTION TREE of die relays (one flop a hop, <= PIN_REACH, all on the HOST's core trunk).  Loads are
+    # clustered in three levels (TREE_BOX um boxes); each cluster's chain ends <= TREE_LAST um from its leader load and its
+    # last relay drives the cluster's <= TREE_FAN loads (leaf) or the next level's chains.  Depth per load is a fixed,
+    # recorded compiler/boot constant (m['tree_depth']); reset release waits >= RELAY_FLUSH core cycles (kv_relays).
+    tree_meta = {}                                 # segment bid -> dict(root, children=[...], members=[...])
+    if HOST_V14.get('trees') and 'serdes_host' in by:
+        # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
+        # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
+        # x 0), not the frame edge the chain used to aim at -- the chain now ends at the pins
+        s_ = by['serdes_host']
+        if s_.orient != 'R0':
+            raise ValueError('serdes_host FDI pin hint assumes R0')
+        _PIN_HINT[('serdes_host', 'fdi')] = (s_.x, s_.y + 650.26)
+    if HOST_V14.get('trees'):
+        m['tree_depth'] = {}
+        TREE_BOX, TREE_FAN = (4800.0, 1600.0, 240.0), 12
+        keep_ = []
+
+        def ctr(e):
+            pt = _PIN_HINT.get((e[0], e[1].lstrip('*')))
+            if pt is not None:
+                return pt
+            it_ = by[e[0]]
+            return (it_.x + it_.w / 2, it_.y + it_.h / 2)
+
+        def clusters(loads, box, fan):
+            cel = {}
+            for e in loads:
+                x_, y_ = ctr(e)
+                cel.setdefault((int(x_ // box), int(y_ // box)), []).append(e)
+            out_ = []
+            for k_ in sorted(cel):
+                grp = sorted(cel[k_], key=lambda e: (ctr(e)[1], ctr(e)[0], e))
+                for i_ in range(0, len(grp), fan or len(grp)):
+                    g_ = grp[i_:i_ + (fan or len(grp))]
+                    cx_ = sum(ctr(e)[0] for e in g_) / len(g_)
+                    cy_ = sum(ctr(e)[1] for e in g_) / len(g_)
+                    lead = min(g_, key=lambda e: (abs(ctr(e)[0] - cx_) + abs(ctr(e)[1] - cy_), e))
+                    out_.append((lead, g_))
+            return out_
+
+        def tree(root, name, loads, lvl):
+            # one segment bus per cluster at this level: (source filled in when the parent chain is placed) -> leader
+            segs = []
+            for j_, (lead, g_) in enumerate(clusters(loads, TREE_BOX[lvl], TREE_FAN if lvl == len(TREE_BOX) - 1 else 0)):
+                sid = f'{name}{j_}'
+                meta = dict(root=root, rdrv='host', lead=lead, children=[], members=[])
+                if lvl == len(TREE_BOX) - 1:
+                    meta['members'] = [e for e in g_ if e != lead]
+                else:
+                    meta['children'] = tree(root, sid + '_', g_, lvl + 1)
+                tree_meta[sid] = meta
+                segs.append(sid)
+            return segs
+        for bid, cl, bits, eps in order_:
+            if cl == 'reset' and bits == 1 and len(eps) >= 2 and eps[0][0] == 'host':
+                tops = tree(bid, f'{bid}_t', list(dict.fromkeys(eps[1:])), 0)
+                for sid in tops:
+                    tree_meta[sid]['src'] = eps[0]
+                    keep_.append((sid, 'kv_oneway', 1, [eps[0], tree_meta[sid]['lead']]))
+            else:
+                keep_.append((bid, cl, bits, eps))
+        # 1-bit tree hops take the spots the data chains leave (placed last, wide relay-spot search from the start)
+        order_ = [b_ for b_ in keep_ if b_[0] not in tree_meta] + [b_ for b_ in keep_ if b_[0] in tree_meta]
+        m['tree_roots'] = sorted({v['root'] for v in tree_meta.values()})
     if m['geo'].get('split'):
         # the link bridge <-> sequencer words (lx / lr = the measured link cost's K_ST) take their relay spots first, so
         # other chains' relays never push them from one stage to two
@@ -1412,6 +1617,34 @@ def _relays(m):
             except ValueError:
                 path = None
 
+        if path is None and bid == 'host_fdi' and HOST_V14.get('north'):
+            # v1.4.1 HOST-north (kvs7 window: coarse H 1.11 -> 1.27 / V 0.94 -> 1.15 where the 2,089-b FDI left the root
+            # westward into the kvn_WN / krs_WN corridor): the FDI goes down the EAST centre channel
+            try:
+                hb_ = by['host']
+                path = route_via(a, b, pa, pb, hb_.y - 2 * CHAN, lane_x=hb_.x + hb_.w + CHAN)
+                if HOST_V14.get('trees'):
+                    # v1.4.2: the target is now the SerDes W-face FDI pins; keep the E centre channel all the way down
+                    # (a shortest path from the lane cell turned west into the kvn_WN / krs_WN corridor: window H 1.47):
+                    # host -> E lane cell below the host -> E lane cell above the SerDes -> W-face pins
+                    sb_ = by['serdes_host']
+                    lx_ = hb_.x + hb_.w + CHAN
+
+                    def lane_cell(x_, y_):
+                        wy_ = int(y_ // G)
+                        for dx_ in range(0, 400):
+                            for sgn in (1, -1):
+                                wx_ = int(x_ // G) + sgn * dx_
+                                if 0 <= wx_ < nx and 0 <= wy_ < ny and not owner.get((wx_, wy_)) and (wx_, wy_) not in rocc:
+                                    return (wx_, wy_)
+                        raise ValueError('no lane cell')
+                    w1, w2 = lane_cell(lx_, hb_.y - 2 * CHAN), lane_cell(lx_, sb_.y + sb_.h + 2 * CHAN)
+                    q1 = route_(a, 'fdi_w1', near_pin(ring(by[a]), a, pa), {w1})
+                    q2 = route_('fdi_w1', 'fdi_w2', [w1], {w2})
+                    q3 = route_('fdi_w2', b, [w2], set(near_pin(ring(by[b]), b, pb)))
+                    path = q1 + q2[1:] + q3[1:]
+            except ValueError:
+                path = None
         if path is None:
             path = route(a, b, pa, pb)
         L = (len(path) + 1) * G            # + the cell from each frame edge to the ring
@@ -1419,6 +1652,11 @@ def _relays(m):
         span = bits * 0.048 + 4.0
         fw, fh = (52.68, 30.24) if bits <= 512 else (52.68, up(span, GY))
         mst = f'qkd_rly_{bits}'
+        TG = (2.16, 10.8) if bid in tree_meta else (4.32, 21.6)
+        if bid in tree_meta:
+            # v1.4.2: a reset / boot tree hop is ONE flop: its own 10.8-um relay master qkd_rly_t1 (same RTL rule: one flop a
+            # bit, no reset), so it fits the 43.2-um channels between the stack-column blocks the 52.68-um frame cannot
+            fw, fh, mst = 10.8, 10.8, 'qkd_rly_t1'
 
         def near_d(r0, r1):
             # nearest-point Manhattan distance between two rectangles (x0, y0, x1, y1)
@@ -1430,6 +1668,8 @@ def _relays(m):
         # an engine control tile's rq / rs on its fixed face; any other end = its frame, whose word is drawn level with
         # this peer by _land_level_pins) -- the frame-to-frame measure let 600-700 um pin hops through
         def fixed_pin(inst, port):
+            if bid in tree_meta and inst in by and max(by[inst].w, by[inst].h) > 2 * PIN_REACH:
+                return None       # v1.4.2 tree: a big frame's area reset pin is reached at the frame (over-macro last hop)
             if (inst, port.lstrip('*')) in _PIN_HINT:
                 return _PIN_HINT[(inst, port.lstrip('*'))]
             it_ = by[inst]
@@ -1457,9 +1697,15 @@ def _relays(m):
                     return d_ep(fb, a, pa)
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(prev_pt, b, pb)
-        st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path)
+        st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path, wide=bid in tree_meta)
         offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 11) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
                                 if max(abs(i), abs(j)) == r_]
+        if bid in tree_meta:      # v1.4.2: a 1-bit tree hop may sit up to 24 grid cells off its path
+            offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 25) for i in range(-r_, r_ + 1)
+                                    for j in range(-r_, r_ + 1) if max(abs(i), abs(j)) == r_]
+        def ctr_dbg(i_, p_):
+            q_ = by[i_]
+            return (round(q_.x), round(q_.y), round(q_.w), round(q_.h), _PIN_HINT.get((i_, p_.lstrip('*'))))
         mark = (len(nb), len(m['insts']))
         cells_added = []
 
@@ -1482,28 +1728,48 @@ def _relays(m):
 
         def chain_():
             path_ = st_['path']
-            while remaining_() > reach_():
+            while remaining_() > (TREE_LAST if bid in tree_meta else reach_()):
                 got = None
                 prev_pt_, idx0_ = st_['prev_pt'], st_['idx0']
                 rch = reach_()
                 # the farthest path point (from the previous chain point) with a free spot within reach
-                for idx in range(min(len(path_) - 1, idx0_ + int(rch // G) + 2), idx0_, -1):
+                idxs = list(range(min(len(path_) - 1, idx0_ + int(rch // G) + 2), idx0_, -1))
+                at_end = bid in tree_meta and not idxs
+                if at_end:
+                    idxs = [len(path_) - 1]          # at the path end: spots around the leader itself
+                for idx in idxs:
                     px, py = path_[idx]
+                    best_ = None
                     for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
                         qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
-                        if dd <= rch and free(qx, qy, fw, fh):
-                            got = (qx, qy, idx)
-                            break
+                        if dd <= rch and free(qx, qy, fw, fh, *TG):
+                            if not at_end:
+                                got = (qx, qy, idx)
+                                break
+                            # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
+                            r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
+                            if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
+                                continue
+                            if best_ is None or r_ < best_[0]:
+                                best_ = (r_, qx, qy, idx)
+                    if best_ is not None:
+                        got = best_[1:]
                     if got:
                         break
+                if got is None and bid in tree_meta and remaining_() <= reach_():
+                    m.setdefault('tree_short', []).append((bid, round(remaining_(), 1)))   # no spot nearer the leader
+                    break
                 if got is None:
-                    raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}')
+                    raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}'
+                                     f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'
+                                     f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})')
                 nm = f'rly_{bid}_{st_["k"]}'
                 it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
                 m['insts'].append(it)
-                rly_ends[nm] = (a, b)
+                by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
+                rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
                 for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
                     for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
                         r_ = (it.x, it.y, it.x + fw, it.y + fh)
@@ -1535,10 +1801,29 @@ def _relays(m):
                 SP['on'] = True
                 try:
                     st_['path'] = route(a, b, pa, pb)
+                except ValueError:
+                    if bid not in tree_meta:
+                        raise
+                    SP['on'] = False           # v1.4.2 tree hop: the relay-avoiding route can be closed; keep the plain one
+                    st_['path'] = route(a, b, pa, pb)
                 finally:
                     SP['on'] = False
         n = st_['k']
         stages[bid] = n
+        if bid in tree_meta:
+            tm = tree_meta[bid]
+            src_ = st_['prev_ep'] if n else (a, pa)
+            tm['depth'] = tm.get('pdepth', 0) + n
+            for e in tm['members']:
+                nb.append((f'{bid}__m', 'reset', 1, [src_, e]))
+                m['tree_depth'][(tm['root'], e)] = tm['depth']
+            for c_ in tm['children']:
+                tree_meta[c_]['src'] = src_
+                tree_meta[c_]['pdepth'] = tm['depth']
+                order_.append((c_, 'kv_oneway', 1, [src_, tree_meta[c_]['lead']]))
+            if tm['children']:
+                continue          # an inner node's leader is only an aim point: it takes its reset in its own leaf cluster
+            m['tree_depth'][(tm['root'], tm['lead'])] = tm['depth']
         if n == 0:
             nb.append((bid, cl, bits, eps))
             continue
@@ -1547,6 +1832,39 @@ def _relays(m):
     # stage on the core clock, but its ck was on no bus, so the auto-pin pass never drew it -> qkd_rly_* LEF/odb masters
     # had only a/b, the element lib (pins from the LEF) carried no arcs, and the die STA could not time a single relay hop.
     # Each relay now joins the core clock trunk of the instance that drives its bus (else its load's, else the centre).
+    if tree_meta:
+        # one net a driver: a relay / root pin feeding several next-level chains, its own leader and members
+        def is_tree(b_):
+            return re.sub(r'__(r\d+|m)$', '', b_) in tree_meta
+        merged, order_d = {}, []
+        rest = []
+        for bid_, cl_, bits_, eps_ in nb:
+            if not is_tree(bid_):
+                rest.append((bid_, cl_, bits_, eps_))
+                continue
+            d_ = eps_[0]
+            if d_ not in merged:
+                merged[d_] = [bid_, list(eps_[1:])]
+                order_d.append(d_)
+            else:
+                merged[d_][1] += [e for e in eps_[1:] if e not in merged[d_][1]]
+        for d_ in order_d:
+            bid_, loads_ = merged[d_]
+            # a relay -> relay hop keeps the chain class (pin reach / CDC checks); a fan-out is a reset net
+            # (the HBM PHY model's rst_n is an AREA pin at the strip centre: its last hop is an over-the-macro M8/M9 wire
+            # no relay can shorten -> a reset net, timed by the die STA, not a pin-reach hop)
+            # same for any frame larger than two hops (astk / ctrl / landing strips: area rst_n inside the frame, whose
+            # expanded leaves take it from the frame edge)
+            hard = any(by[i_].master == SPLIT_PHY or max(by[i_].w, by[i_].h) > 2 * PIN_REACH for i_, _ in loads_)
+            rest.append((bid_, 'kv_oneway' if len(loads_) == 1 and not hard else 'reset', 1, [d_] + loads_))
+        nb = rest
+        dep = {}
+        for (root_, e), d_ in m['tree_depth'].items():
+            dep[root_] = max(dep.get(root_, 0), d_)
+        m['tree_depth_max'] = dep
+        if max(dep.values()) >= RELAY_FLUSH:
+            raise ValueError(f'kv die reset trees: depth {dep} >= RELAY_FLUSH {RELAY_FLUSH}')
+        m['tree_depth'] = {f'{r_}:{e[0]}.{e[1]}': d_ for (r_, e), d_ in sorted(m['tree_depth'].items())}
     trunk = {}
     for i, (bid_, cl_, _b, eps_) in enumerate(nb):
         if cl_ == 'clock_trunk' and bid_.startswith('clk_core_'):
@@ -1662,6 +1980,10 @@ def masters(m, k=1, port_bits=None):
         if mst in (UCIE[0], SERDES[0]):
             mm = F.Master(mst, w, h, 5, 'licensed PHY abstract (real LEF)')
             for p_, bits_ in sorted(used.get(mst, {}).items()):
+                if mst == SERDES[0] and p_ == 'fdi' and HOST_V14.get('trees'):
+                    # v1.4.2: the real LEF's FDI (tx_flit / rx_flit) is on the W face, y 600.19..700.34
+                    mm.face(p_, bits_, 'W', 'M4', 650.26, 1)
+                    continue
                 mm.face(p_, bits_, 'N', 'M5', w / 2 if p_ == 'fdi' else 6.0 + 2.0 * len(mm.order), 1)
             M[mst] = mm
             continue
@@ -1722,8 +2044,14 @@ def masters(m, k=1, port_bits=None):
                 # the tile column: si / so to the aggregator (E), the pair-0 copy / returns S, pair-1 N, KV rows W
                 face = {'si': 'E', 'so': 'E', 't0': 'S', 'e0': 'S', 'e1': 'S', 's0': 'S', 's1': 'S',
                         't1': 'N', 'e2': 'N', 'e3': 'N', 's2': 'N', 's3': 'N'}.get(p, 'W')
-            if mst == 'qkd_rhead':
+            if mst in ('qkd_rhead', 'qkd_rhead_ft'):
                 face = 'E' if p == 'nb' else 'S'  # the S face faces the control tile (heads 0 / 1 are MX)
+                if p in ('ft_ti_b', 'ft_e_b', 'ft_s_a'):
+                    face = 'N'                    # v1.4.3 feed-through: toward the far head's band
+            if mst == 'qkd_hgs':
+                face = 'S' if p in ('ti_a', 'e_a') else 'N' if p in ('ti_b', 'e_b') else 'W'
+            if mst == 'qkd_hss':
+                face = 'W' if p == 's_a' else 'E' if p == 's_b' else 'S'
             if mst in ('qkd_land', 'qkd_land_n') and face in 'NS':
                 # the landing is a 172.8 um x 12 mm column: its short faces cannot hold its words (die_kv7: 3,186
                 # overlapping pin shapes, PA DRT-0073); every word leaves on the long face toward its peer
@@ -1837,6 +2165,56 @@ def _split_pins(M, m=None):
                 hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
                 hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
+        if 'qkd_rhead_ft' in M:
+            # v1.4.3 near head: the r4 head pins (children from HEAD_FT_PLAN: lane rows >= 1 sit 16.2 um higher) + the
+            # far neighbour's feed-through: ft_ti_a / ft_e_a on the S (control) face and ft_ti_b / ft_e_b on the N face
+            # straight over the T1 leaf's pins (V143_FT ftg, pins 13.5 + 0.192 i), ft_s_a N / ft_s_b S over the S2 leaf
+            hm = M['qkd_rhead_ft']
+            for p_, x_, pt_ in (('ti', exo + ECTL_T_CX, 6), ('e', exo + sum(ECTL_E_X) / 2, 2), ('s', exo + sum(ECTL_S_X) / 2, 2)):
+                if p_ in hm.ports:
+                    hm.ports[p_] = ('face', hm.ports[p_][1], 'S', 'M5', x_, pt_)
+            if 'nb' in hm.ports:
+                hm.ports['nb'] = ('face', hm.ports['nb'][1], 'E', 'M4', SPLIT_HEAD_FT[1] / 2, 2)
+            gx_, sx_ = V143_FT['ftg'][0], V143_FT['fts'][0]
+            for p_, f_, x_, pt_ in (('ft_ti_a', 'S', gx_ + 13.5 + 0.096 * 1558, 4), ('ft_ti_b', 'N', gx_ + 13.5 + 0.096 * 1558, 4),
+                                    ('ft_e_a', 'S', gx_ + 314.27, 4), ('ft_e_b', 'N', gx_ + 314.27, 4),
+                                    ('ft_s_a', 'N', sx_ + 10.8, 2), ('ft_s_b', 'S', sx_ + 10.8, 2)):
+                if p_ in hm.ports:
+                    hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M5', round(x_, 3), pt_)
+            ch = json.loads((ROOT / HEAD_FT_PLAN).read_text())['children']
+            ch = dict(ch, ftg=[*V143_FT['ftg'], *HGS], fts=[*V143_FT['fts'], *HSS])
+            cmap = dict(HEAD_CLK_CHILD, ck_ft_t='ftg', ck_ft_s='fts')
+            want = sorted((ch[cmap[p_]][1] + ch[cmap[p_]][3] / 2, p_) for p_ in HEAD_CLK + ['ck_ft_t', 'ck_ft_s'] if p_ in hm.ports)
+            ys_, last = {}, 2.0 - 1.2
+            for y_, p_ in want:
+                last = max(y_, last + 1.2)
+                ys_[p_] = last
+            top = SPLIT_HEAD_FT[1] - 12.0
+            if ys_ and max(ys_.values()) > top:
+                for p_ in sorted(ys_, key=ys_.get, reverse=True):
+                    ys_[p_] = min(ys_[p_], top)
+                    top = ys_[p_] - 1.2
+            for p_, y_ in ys_.items():
+                hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
+            if 'rst_n' in hm.ports:
+                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 456.0, 1)
+    # v1.4.3 closed stage views: the die abstract takes the real LEF pin centres (gather: ti 13.5 + 0.192 i S -> N on
+    # M5, e at 312.8..315.7, clock W M4 y 10.8; sstage: s_a W / s_b E on M4, clock S M5 x 9)
+    if 'qkd_hgs' in M:
+        hm = M['qkd_hgs']
+        for p_, f_, x_, pt_ in (('ti_a', 'S', 13.5 + 0.096 * 1558, 4), ('ti_b', 'N', 13.5 + 0.096 * 1558, 4),
+                                ('e_a', 'S', 314.27, 4), ('e_b', 'N', 314.27, 4)):
+            if p_ in hm.ports:
+                hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M5', round(x_, 3), pt_)
+        if 'ck' in hm.ports:
+            hm.ports['ck'] = ('face', 1, 'W', 'M4', 10.81, 1)
+    if 'qkd_hss' in M:
+        hm = M['qkd_hss']
+        for p_, f_, y_ in (('s_a', 'W', 10.0), ('s_b', 'E', 11.535)):
+            if p_ in hm.ports:
+                hm.ports[p_] = ('face', hm.ports[p_][1], f_, 'M4', y_, 2)
+        if 'ck' in hm.ports:
+            hm.ports['ck'] = ('face', 1, 'S', 'M5', 8.99, 1)
     # v1.2: the strip compositions' leaf clock entries = area pins at each leaf (land: PC leaf k beside its CDC on the E
     # half, group i at the middle of its four PCs on the W half, the embedding engine at the N end; astk: astk_plan)
     for mn in ('qkd_land', 'qkd_land_n'):
@@ -2052,34 +2430,44 @@ def _strip_face_pins(mst, mm):
 
 
 def _slice_pins(m, mm, down=False):
-    """v1.4: HOST slice pins.  es / er words level with the strips' es<k> / er<k> (local 378 k + 60 / + 240): controller
-    side on the W face (R0 W stacks; MY puts it on the E side toward the E controller strip), landing side on the E face;
-    the stack chains run N-S through the 32.4-um slot gaps (S face: toward slot k-1 = the root end); clocks / resets /
-    straps are area pins."""
-    by = {i.name: i for i in m['insts']}
-    off = by['hsl_WS_0'].y - by['land_WS'].y
+    """HOST slice v1.4.2: preserve every port, spread buses below 0.60 face cut.
+
+    Clock roots stay separate physical entries, all on the actual per-stack
+    core833.334 trunk.  No area pins above the M5 leaf cap.  The N view reverses
+    only the two chain faces; control/landing faces keep the same coordinates.
+    """
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
-    lvl = dict(ctrl_es=('W', STRIP_ES_Y), land_es=('E', STRIP_ES_Y), ctrl_er=('W', STRIP_ER_Y), land_er=('E', STRIP_ER_Y))
+    for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
+                            ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
+        if p in w:
+            mm.face(p, w[p], face, 'M4', round(centre, 3), 6)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
-    for p, (face, y) in lvl.items():
-        if p in w:
-            mm.face(p, w[p], face, 'M4', round(y - off, 3), 2)
-    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):    # down: root end = N
+    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):
         lst = [p for p in lst if p in w]
-        span = [w[p] * 0.048 * 2 for p in lst]
+        # Four M5 tracks per bit = 0.50 local two-track demand, old two-track
+        # packed bands were 1.00.  Keep a two-micron channel between buses.
+        span = [w[p] * F.TRK['M5'][1] * 4 for p in lst]
         pos = (mm.w - sum(span) - 2.0 * (len(lst) - 1)) / 2
-        for p, s_ in zip(lst, span):
-            mm.face(p, w[p], face, 'M5', round(pos + s_ / 2, 3), 2)
-            pos += s_ + 2.0
-    rest = [p for p in w if p not in mm.ports]
-    for j, p in enumerate(sorted(rest)):
-        if w[p] == 1:
-            mm.area(p, 1, round(mm.w / 2 + ((j % 8) - 4) * 3.2, 3), round(mm.h / 2 + (j // 8 - 1) * 3.2, 3), 1)
-        else:
-            mm.face(p, w[p], 'W', 'M4', round(mm.h / 2, 3), 2)          # lpc strap (5 b), mid W face between es / er
+        if pos < 4.0:
+            raise ValueError(f'{mm.name}: slice chain face needs a larger slot')
+        for p, size in zip(lst, span):
+            mm.face(p, w[p], face, 'M5', round(pos + size / 2, 3), 4)
+            pos += size + 2.0
+    centres = dict(ck_station=('W', -5), ck_static=('W', 5),
+                   host_rst_n=('W', -15), hbm_rst_n=('W', 15),
+                   ck_boot=('E', -5), ck_boot_test=('E', 5),
+                   ctrl_completion_v=('E', -15), ctrl_completion_we=('E', 15),
+                   lpc=('W', 0))
+    rest = sorted(p for p in w if p not in mm.ports)
+    unknown = set(rest) - centres.keys()
+    if unknown:
+        raise ValueError(f'{mm.name}: no face grant for slice ports {sorted(unknown)}')
+    for p in rest:
+        face, offset = centres[p]
+        mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
 
 
 def _land_level_pins(m, mm, inst0, face_load, by):
@@ -2177,31 +2565,55 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
     return dict(hops=n, reach_um=reach, violations=len(bad), worst=bad[:40])
 
 
-def stack_local_reach(m, M, reach=500.0):
-    """v1.1: the abutted / stack-local buses the relay planner never relays (ectl <-> heads tp / te / ts, heads -> astk nb,
-    astk <-> ectl eq / el): driver pin centre -> every load pin centre (spans are bit-aligned, so the centre distance is the
-    bit distance).  v1 had 192 far-head hops 505-963 um here."""
+def assigned_pin_reach(m, M, reach=500.0, classes=('stack_local',)):
+    """Measure every assigned bit, including unequal face pitches and mirroring.
+
+    Pin centres describe a bus only when both ends have identical pitch/order.
+    HOST slice face spreading deliberately changes those spans, so using one
+    centre for a wide word would conceal its worst physical bit.
+    """
     by = {i.name: i for i in m['insts']}
-    bad, n, worst = [], 0, 0.0
+    pin_cache = {}
+    def bit_positions(inst, port):
+        it = by[inst]
+        if it.master not in pin_cache:
+            groups = {}
+            for name, layer, rect in F.pin_rects(M[it.master], 1, {}):
+                base = name.split('[')[0]
+                groups.setdefault(base, []).append(((rect[0]+rect[2])/2, (rect[1]+rect[3])/2))
+            pin_cache[it.master] = groups
+        positions = pin_cache[it.master][port.lstrip('*')]
+        return [(it.x + (it.w-x if it.orient in ('MY','R180') else x),
+                 it.y + (it.h-y if it.orient in ('MX','R180') else y)) for x,y in positions]
+    bad, missing, n, checked, worst = [], [], 0, 0, 0.0
     for bid, cl, bits, eps in m['buses']:
-        if cl != 'stack_local' or len(eps) < 2:
+        if (classes is not None and cl not in classes) or cl in ('clock_trunk', 'reset', 'constant') or len(eps) < 2:
             continue
-        try:
-            a = pin_xy(by[eps[0][0]], M[by[eps[0][0]].master], eps[0][1].lstrip('*'))
-        except (KeyError, TypeError):
-            continue
-        for inst, port in eps[1:]:
+        for target in eps[1:]:
             try:
-                b = pin_xy(by[inst], M[by[inst].master], port.lstrip('*'))
-            except (KeyError, TypeError):
+                left, right = bit_positions(*eps[0]), bit_positions(*target)
+            except (KeyError, TypeError, ValueError) as error:
+                missing.append(dict(bus=bid,error=str(error)))
+                continue
+            if len(left) != bits or len(right) != bits:
+                missing.append(dict(bus=bid,bits=bits,launch_bits=len(left),capture_bits=len(right)))
                 continue
             n += 1
-            d = abs(a[0] - b[0]) + abs(a[1] - b[1])
-            worst = max(worst, d)
-            if d > reach:
-                bad.append(dict(bus=bid, bits=bits, um=round(d, 1), a=f'{eps[0][0]}.{eps[0][1]}', b=f'{inst}.{port}'))
-    bad.sort(key=lambda r: -r['um'])
-    return dict(hops=n, reach_um=reach, violations=len(bad), max_um=round(worst, 1), worst=bad[:20])
+            distances = [abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(left,right)]
+            checked += len(distances)
+            distance = max(distances)
+            worst = max(worst,distance)
+            if distance > reach:
+                bit = distances.index(distance)
+                bad.append(dict(bus=bid,cls=cl,bits=bits,bit=bit,um=round(distance,3),
+                    a=f'{eps[0][0]}.{eps[0][1]}[{bit}]', b=f'{target[0]}.{target[1]}[{bit}]'))
+    bad.sort(key=lambda row:-row['um'])
+    return dict(hops=n,bits_checked=checked,reach_um=reach,violations=len(bad),max_um=round(worst,3),
+                worst=bad[:40],unmeasured=len(missing),missing=missing[:20],method='exact generated face rectangles per bit after orientation')
+
+
+def stack_local_reach(m, M, reach=500.0):
+    return assigned_pin_reach(m, M, reach, classes=('stack_local',))
 
 
 _BASE_PORT_WIDTHS = F.port_widths
@@ -2287,6 +2699,7 @@ def record(m):
                 template=dict(path=str(TPL_PATH.relative_to(ROOT)), sha256=hashlib.sha256(TPL_PATH.read_bytes()).hexdigest()),
                 die_um=[die['w'], die['h']], die_mm2=die['mm2'], instances=len(m['insts']), buses=len(m['buses']),
                 instance_mm2=round(inst_mm2, 3), fill=round(inst_mm2 / die['mm2'], 4),
+                elastic_boundary=kv_elastic_boundary.inventory(ROOT, m, BINDINGS),
                 static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
                     land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
                 native_astk_reservation=dict(enabled=ASTK_W>324, parent_width_um=ASTK_W,
@@ -2351,6 +2764,61 @@ def _case_ties(m, path):
     p_.write_text(tx)
 
 
+
+PDN_PA_BLOCK = """set t0 [clock seconds]
+if {[catch {pin_access -verbose 1} err]} { puts "OT_PA FAIL $err"; error $err } else { puts "OT_PA DONE" }
+puts "OT_TIME pa_s=[expr {[clock seconds]-$t0}]"
+mem pa
+"""
+
+
+def pdn_pin_access_after_pdn(text):
+    """Q-KVSYS-DIE 2026-10-15 (kvs8-codex-1338 PDN FAIL 'map::at'): OpenDB dbInst::swapMaster throws std::map::at
+    once pin_access has built access points (E4 reproducer on the exact floorplan.odb: 27,810 swaps PASS without pin
+    access, the chain's PA-then-swap order fails), so the temporary PDN bbox swap must precede pin access.  The real
+    case (run.tcl) already proves pin access before PDN; here pin access runs after pdngen + restore + the VDD/VSS
+    PG checks, on the real restored masters with the die straps present, and its OT_PA marker is kept."""
+    if text.count(PDN_PA_BLOCK) != 1:
+        raise ValueError('KV PDN vehicle changed: pin-access block unresolved')
+    text = text.replace(PDN_PA_BLOCK, '')
+    anchor = 'write_db /work/floorplan_pdn.odb'
+    if text.count(anchor) != 1:
+        raise ValueError('KV PDN vehicle changed: write_db anchor unresolved')
+    head, tail = text.split(anchor)
+    if 'OT_PGCHECK' not in head or 'pdngen' not in head:
+        raise ValueError('KV PDN vehicle changed: PG check must precede pin access')
+    return head + PDN_PA_BLOCK + anchor + tail
+
+
+# 2026-10-15 (Q-KVSYS-DIE, kvs8-codex-1338 PDN FAIL "OT_CONST: missing literal M1 rail contact ctrl_EN__u_pc1_1/VDD"):
+# the KV core grid had NO M1 / M2 rails, so none of the die-top ASAP7 tie cells (strap constants) had a supply.  Same
+# structure as the compute die r8 (tools/qwen_split/die_tie_rows.tcl): rows only around the die-top cells, literal M1 / M2
+# followpins on them, stacked M2 -> M9 onto the core M9 stripes (KV core grid: M8 / M9 0.48 @ 10.88, offset 2.0); cells
+# under an opposite-net M8 stripe move to the nearest connectable spot.  check_power_grid + die_constant_pg_check decide.
+KV_CORE_PG = dict(p8=10.88, w8=0.48, p9=10.88, w9=0.48, off=2.0)
+KV_TIE_PG = """
+# KV die-top tie cells (die_tie_rows.tcl rebuilt the rows around them): literal rails stacked onto the core M9 stripes
+add_pdn_stripe -grid {core} -layer {M1} -width {0.018} -followpins
+add_pdn_stripe -grid {core} -layer {M2} -width {0.018} -followpins
+add_pdn_connect -grid {core} -layers {M1 M2}
+add_pdn_connect -grid {core} -layers {M2 M9}
+"""
+
+
+def kv_tie_rows_hooks(text):
+    """run_pdn.tcl: ot_tie_rows right after read_db (before any bbox swap / pdngen), ot_tie_rows_verify after pdngen."""
+    if 'ot_tie_rows' in text:
+        return text
+    a = 'mem read\n'
+    b = 'source /work/die_constant_pg_check.tcl'
+    if text.count(a) != 1 or text.count(b) != 1:
+        raise ValueError('KV PDN vehicle changed: tie-row hooks unresolved')
+    g = KV_CORE_PG
+    text = text.replace(a, a + f"source /work/die_tie_rows.tcl\not_tie_rows {g['p8']} {g['w8']} {g['p9']} {g['w9']} 12.0 0.6 1.08 "
+                        f"{g['off']} {g['off']}\nmem tie_rows\n", 1)
+    return text.replace(b, f"ot_tie_rows_verify {g['p8']} {g['w8']}\n" + b, 1)
+
+
 def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
@@ -2361,6 +2829,11 @@ def case(m, work):
     # in superseded_elements.json); the other leaf candidates stay plan-only
     if m['geo'].get('kv_wq_leaves') and not m['geo'].get('kv_wq_mirror'):
         raise ValueError('per-PC leaf candidate is plan-only until encoder/pin/context gates pass')
+    if m['geo'].get('split'):
+        assigned = stack_local_reach(m, masters(m, 1))
+        if assigned['violations'] or assigned['unmeasured']:
+            raise ValueError(f"stack-local exact pin-bit reach failed: {assigned['violations']} overreach, "
+                             f"{assigned['unmeasured']} unmeasured: {assigned['worst'][:3]}")
     saved = F.masters, F.port_widths
     F.masters, F.port_widths = masters, port_widths
     try:
@@ -2369,7 +2842,34 @@ def case(m, work):
         F.masters, F.port_widths = saved
     _case_ties(m, work / 'die.v')
     run = (work / 'run.tcl').read_text()
-    (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
+    # KV uses the base generator's run_pa vehicle, independently of the
+    # compute-die run_pdn generator. Preserve its real PG/pin checks and enable
+    # the same temporary conservative OBS mechanism around pdngen only.
+    pdn_run = (work / 'run_pa.tcl').read_text()
+    guarded = """set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  # Preflight the entire actual KV master set before any PDN geometry work.
+  ot_pdn_bbox::begin /work
+  ot_pdn_bbox::restore
+  puts "OT_PDN_BBOX PREFLIGHT PASS actual KV pins, outline, PG, containment and detailed OBS restoration"
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+try {source /work/pdn.tcl; pdngen} finally {
+  if {$ot_bbox} {ot_pdn_bbox::restore}
+}
+source /work/die_constant_pg_check.tcl"""
+    original = 'source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl'
+    if pdn_run.count(original) != 1:
+        raise ValueError('KV PDN vehicle changed: guarded PDN hook unresolved')
+    pdn_text = pdn_pin_access_after_pdn(pdn_run.replace(original, guarded))
+    pdn_text = kv_tie_rows_hooks(pdn_text)
+    (work / 'run_pdn.tcl').write_text(pdn_text)
+    for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
+        (work / helper).write_text((ROOT / 'tools/qwen_kv_die/chain' / helper).read_text())
+    (work / 'die_tie_rows.tcl').write_text((ROOT / 'tools/qwen_split/die_tie_rows.tcl').read_text())
+    (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + KV_TIE_PG)
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
     # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um).
     # qwen-1010/b 2026-10-10: M4 and M8 are both horizontal, so an M4 -> M8 connect only forms where a strap happens to
@@ -2379,7 +2879,7 @@ def case(m, work):
     # VSS still failed (die_kv12 PSM-0069); without it VSS passes (pgb test on the die_kv11 floorplan).
     (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + '''
 set phy_cells {}
-foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]] || [string match OT_PDN_BBOX_ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
 if {[llength $phy_cells]} {
   define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
   add_pdn_stripe -grid {phy} -layer {M5} -width {0.12} -pitch {10.88} -offset {1.0}
@@ -2428,7 +2928,7 @@ if {[llength $hv7_cells]} {
 set hv5_cells {}
 foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
   if {![$c isBlock] || [lsearch -exact $hv6_cells [$c getName]] >= 0 || [lsearch -exact $hv7_cells [$c getName]] >= 0} { continue }
-  if {[string match ot_hbm3e_phy* [$c getName]]} { continue }
+  if {[string match ot_hbm3e_phy* [$c getName]] || [string match OT_PDN_BBOX_ot_hbm3e_phy* [$c getName]]} { continue }
   set t [$c findMTerm VDD]
   if {$t eq "NULL"} { continue }
   foreach mp [$t getMPins] { foreach b [$mp getGeometry] {
@@ -2462,6 +2962,9 @@ def main(argv=None):
     ap.add_argument('--split', action='store_true', help='qwen-split 2026-10-14: the KV/SYSTEM die of the two-die split (CONTRACT_KVSYS.md)')
     ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4: real HOST root core + 128 die-placed PC slices + PLL model')
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core directly below the static D2D end')
+    ap.add_argument('--host-trees', action='store_true', help='kvsys v1.4.2: HOST reset / boot fan-outs as registered relay trees')
+    ap.add_argument('--v143', action='store_true', help='kvsys v1.4.3 G3S2: staged head ingress / score on closed gather / '
+                    'sstage views, near-head feed-through frames, anchored group growth (needs --split --host-trees)')
     a = ap.parse_args(argv)
     if a.host_v14:
         if not a.split:
@@ -2471,6 +2974,14 @@ def main(argv=None):
         if not a.host_v14:
             ap.error('--host-north needs --host-v14')
         HOST_V14['north'] = True
+    if a.host_trees:
+        if not a.host_north:
+            ap.error('--host-trees needs --host-north')
+        HOST_V14['trees'] = True
+    if a.v143:
+        if not a.host_trees:
+            ap.error('--v143 needs --host-trees')
+        V143['on'] = True
     a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s

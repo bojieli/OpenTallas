@@ -1,0 +1,132 @@
+{
+ "name": "hv15_dbk_bank-pf1-4e0d5b48c",
+ "block": "ot_hgi_dma_back_landing_bank",
+ "ref_tile": true,
+ "owner": "Claude:H-HARDEN",
+ "purpose": "DMA STORE back landing bank leaf ot_hgi_dma_back_landing_bank, native-capture structural fix (H-HARDEN r4): routed nl1 bank (TT +311.82/FF +20.58/DRC 0, launch 181.5 ps PASS) failed native capture on 4 SRAM-macro pins (read_slot/write_en/write_slot 190.5..191.5 ps > 190). Every input now pin-flopped: write_en = raw response valid + write_slot = controller expect_tag[7] (same write edge as before), read_en/read_slot sampled one edge later and the macro word goes straight to the wd_payload launch flop (capture stage removed): 0 cycles, -240 flops/bank. One real 128x256 SRAM, own related clock entry; 8 per hb_dbk parent x4 stacks.",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/hbm-harden-1705",
+  "commit": "4e0d5b48c8145acb5f62872b9d75337e985546cc",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_dma_back_landing_bank u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_address_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "write beat mismatch"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv15_dbk_bank/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv15_dbk_bank/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv15_dbk_bank --out {RUN}/record/views/ot_hgi_dma_back_landing_bank --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hv15_dbk_bank/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hv15_dbk_bank/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hv15_dbk_bank/hv15_dbk_bank-pf1-4e0d5b48c"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": "main",
+ "structural_change": "All bank inputs registered at the pins (no input reaches the SRAM macro); write enable from the raw response valid and slot from the controller one edge ahead keep the write edge; read sampled one edge later with the separate capture stage removed keeps the wd edge. 0 cycles.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "why_route": "nl1 routed ETM native capture 191.47 ps > 190 on 4 SRAM-macro input pins; pin flops on every input; fresh source-bound CTS gate + actual native audit required."
+ }
+}

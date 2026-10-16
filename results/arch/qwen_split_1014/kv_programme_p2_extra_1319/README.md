@@ -1,0 +1,3 @@
+This supplements the exact p2 package at commit 03c7c9158. Export that frozen package into a fresh scratch directory, copy the three proof drivers there, and execute run_extra.sh, run_boot_extra.sh, then run_boundary_extra.py through ot-run. The manifest checks the actual producer and native writer. Preserve a fresh out/ directory. The boundary tests change only external boot values.
+
+All three full positive profiles passed 1,152 cases, 4,608 slots and 9,216 sectors each. Five additional RTL mutants were observed and eight invalid boot cases were refused. The production package already supplies MUT1. These results establish component exactness; physical closure and complete KV boundary integration remain open.

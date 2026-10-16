@@ -1,0 +1,832 @@
+{
+  "stages": [
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 1
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 2
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 3
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 4
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 5
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 6
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 7
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 8
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 9
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 10
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 11
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 12
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 13
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 14
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 15
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 16
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 17
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 18
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 19
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 20
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 21
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 22
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 23
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 24
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 25
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 26
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 27
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 28
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 29
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 30
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 31
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 32
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 33
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 7500006,
+      "word_stride_fs": 833334,
+      "stop_cycle": 17,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 34
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 8333340,
+      "word_stride_fs": 833334,
+      "stop_cycle": 18,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 35
+    },
+    {
+      "period_fs": 833334,
+      "phase_fs": 137000,
+      "start_origin": "SEGMENT0_CORE_START",
+      "word_producer_age_fs": 6666672,
+      "word_stride_fs": 833334,
+      "stop_cycle": 16,
+      "source_sha256": {
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+        "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+        "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "component_path_ages_fs": {
+        "formatter_to_writer": 0,
+        "expectation_to_writer": 100000,
+        "reset_release": 3333336
+      },
+      "stage": 36
+    }
+  ]
+}

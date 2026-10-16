@@ -1,0 +1,138 @@
+{
+ "name": "hbm_host_static_ingress_pin2_ref-pin2-COMMIT",
+ "block": "ot_hbm_host_static_ingress",
+ "ref_tile": true,
+ "owner": "Codex:/root/hbm_host_join_1417",
+ "purpose": "Native pin structural successor: unconditional AXI input DFFs, valid-only reset payload stage and localreset; actual1024row2048beat component scope only",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/hbm-host-join-1417",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hbm_die_v15/host_ingress_pins_1319.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_host_static_ingress #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "full1024_calendar_exact",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/full1024_calendar_exact physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 0 0 1024",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HBM_HOST_STATIC_PASS.*exact_calendar_beats=2048"
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/payload_bit_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 1 0 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC data/ordinal mismatch"
+   },
+   {
+    "name": "premature_launch_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/premature_launch_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 2 0 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC wrong AXI response 0 a=f30"
+   },
+   {
+    "name": "unloaded_row_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/unloaded_row_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 0 1 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC unloaded range falsely ready"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_host_static_ingress_pin2_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_host_static_ingress_pin2_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_host_static_ingress_pin2_ref --out {RUN}/record/views/ot_hbm_host_static_ingress  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_host_static_ingress_pin2_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_host_static_ingress_pin2_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_host_static_ingress_pin2_ref/hbm_host_static_ingress_pin2_ref-pin2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Remove deep ARdecode from raw pins with unconditional landing FF; unreset payload pinFF+resetvalid; isolate2FF reset boundary; added1input+1config edge, no runningprogramme cycle change",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ }
+}

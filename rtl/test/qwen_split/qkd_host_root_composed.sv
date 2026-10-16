@@ -77,7 +77,11 @@ module qkd_host_root_composed #(
  output wire[1042:0] phy_tx_flit,
  input wire[NL-1:0] link_up,
  input wire[7:0] transport_fault,
- input wire[7:0] physical_fault,
+ // kvsys v1.4.2 HOST owner = KV die lead 2026-10-15: the typed die-local PHYSICAL fault source is the static D2D link
+ // end sticky fault qkd_d2d_static.fault = link end + KVN + service faults, placed on this die bit die_id.  HBM
+ // controller faults reach the root through the landing fault chain to the embedding gateway est, host SerDes PHY and
+ // adapter faults are root-internal phy_faults + adapter_fault, and peer die bits arrive through the peer service guard.
+ input wire link_physical_fault,
  input wire crom_fault,
  input wire[92:0] local_tk,
  input wire[9:0] local_kst,
@@ -136,14 +140,17 @@ module qkd_host_root_composed #(
  input wire native_retrained,
  output wire peer_protocol_fault,
  input wire ck_root_mux,ck_coordinator_codec,ck_coordinator_lifecycle,ck_coordinator_post,
- input wire engine_admit_ready,output wire dispatch_valid,dispatched,output wire[58:0]cohort_tag,output wire[1:0]cohort_gen,
+ output wire dispatch_valid,dispatched,output wire[58:0]cohort_tag,output wire[1:0]cohort_gen,
  output wire[7:0]accepted_ranks,output wire[255:0]participant_trace,output wire[143:0]participant_token,participant_pos,
  input wire engine_result_v,input wire[58:0]engine_result_tag,input wire[1:0]engine_result_gen,input wire engine_result_done,engine_result_fault,
  input wire[3:0]engine_result_cause,input wire[17:0]engine_result_token,input wire[31:0]engine_result_value,engine_result_cycles,output wire engine_result_cr,
  output wire program_consensus,output wire coordinator_fault,output wire recovery_complete,
  // kvsys v1.4 (2026-10-15, HOST owner = KV die lead; Q-LINK request): the peer protocol's exceptional link-recovery
  // controls leave the root for the static D2D end qkd_d2d_static (host_link_reset_req / host_recovery_clear)
- output wire host_link_reset_req,output wire host_recovery_clear
+ output wire host_link_reset_req,output wire host_recovery_clear,
+ // kvsys v1.4.1 (HOST owner = KV die lead, Q-LINK request): the local HOST interface drained level for the D2D end's
+ // native_host_drained (= the observed host interface idle: no inflight request, both FSMs idle, no events, AXI quiet)
+ output wire host_drained_local
 );
 
  wire[1163:0]chain_f;wire[127:0]chain_c,chain_a,slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault;wire[3:0]chain_fault_i;
@@ -215,7 +222,7 @@ module qkd_host_root_composed #(
   .phy_tx_flit(phy_tx_flit),
   .link_up(link_up),
   .transport_fault(transport_fault),
-  .physical_fault(physical_fault),
+  .link_physical_fault(link_physical_fault),
   .crom_fault(crom_fault),
   .local_tk(local_tk),
   .local_kst(local_kst),
@@ -271,7 +278,6 @@ module qkd_host_root_composed #(
   .ck_coordinator_codec(ck_coordinator_codec),
   .ck_coordinator_lifecycle(ck_coordinator_lifecycle),
   .ck_coordinator_post(ck_coordinator_post),
-  .engine_admit_ready(engine_admit_ready),
   .dispatch_valid(dispatch_valid),
   .dispatched(dispatched),
   .cohort_tag(cohort_tag),
@@ -295,6 +301,7 @@ module qkd_host_root_composed #(
   .recovery_complete(recovery_complete),
   .host_link_reset_req(host_link_reset_req),
   .host_recovery_clear(host_recovery_clear),
+  .host_drained_local(host_drained_local),
   .chain_f(chain_f),
   .chain_c(chain_c),
   .chain_a(chain_a),

@@ -469,3 +469,19 @@ class Sources(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PgSpread(unittest.TestCase):
+    """ROOT 2026-10-15 (hbm_ckgen_rel-r1, 15.12 um): the export's child_lint (b) PG spread is predicted at gen time"""
+    def test_model_matches_measured_failures(self):
+        t = {"kind": "tile", "route": {}}
+        r = RT.pg_stripe_spread(t, {"pg_layer": "M5"}, 15.12, 30)
+        self.assertEqual(r[1], 2)
+        self.assertAlmostEqual(r[2], 5.4 / 15.12)                                                    # measured 36 %
+        self.assertFalse(RT.pg_spread_ok(RT.pg_stripe_spread(t, {"pg_layer": "M5"}, 15.12, 30)))
+        self.assertTrue(RT.pg_spread_ok(RT.pg_stripe_spread(t, {"pg_layer": "M5"}, 17.28, 30)))
+        m6 = {"kind": "tile", "route": {"pg_pitch": 10.8}}
+        self.assertAlmostEqual(RT.pg_stripe_spread(m6, {"pg_layer": "M6"}, 30, 25.92)[2], 10.8 / 25.92)  # measured 42 %
+        self.assertTrue(RT.pg_spread_ok(RT.pg_stripe_spread({"kind": "tile", "route": {"m5_pg_pitch": 2.7}},
+                                                            {"pg_layer": "M5"}, 15.12, 30)))
+        self.assertIsNone(RT.pg_stripe_spread({"kind": "cluster", "route": {}}, {"pg_layer": "M7"}, 15, 15))

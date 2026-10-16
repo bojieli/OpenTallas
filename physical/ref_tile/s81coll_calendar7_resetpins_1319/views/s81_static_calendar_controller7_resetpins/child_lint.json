@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/record/views/s81_static_calendar_controller7_resetpins/s81_static_calendar_controller7_resetpins.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 574 of 577 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. busy M4 (0.060,121.968), c_cmd[0] M4 (0.060,121.968), c_cmd[10] M4 (0.060,121.968))"
+ ],
+ "summary": "s81_static_calendar_controller7_resetpins 237.6 x 291.6: PG M5 VDD 44 stripes (98% spread, 100% cov) / VSS 44 stripes (98% spread, 100% cov); strap M6; face pins 577 blocked-above 0 blocked-same 0; clock clk insertion 188 ps; clock clk_outputs[2] insertion 194 ps; clock clk_outputs[1] insertion 209 ps; clock clk_outputs[0] insertion 240 ps; clock clk_rom[2] insertion 11 ps; clock clk_rom[1] insertion 12 ps; clock clk_rom[0] insertion 11 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "s81_static_calendar_controller7_resetpins",
+  "W": 237.6,
+  "H": 291.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 44,
+     "dir": "V",
+     "spread": 0.977,
+     "coverage": 1.0,
+     "shapes_on_top": 44
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 44,
+     "dir": "V",
+     "spread": 0.977,
+     "coverage": 1.0,
+     "shapes_on_top": 44
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 577,
+   "blocked_above": 0,
+   "covered_below": 144,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 574,
+   "band_examples": [
+    "busy M4 (0.060,121.968)",
+    "c_cmd[0] M4 (0.060,121.968)",
+    "c_cmd[10] M4 (0.060,121.968)",
+    "c_cmd[11] M4 (0.060,121.968)",
+    "c_cmd[12] M4 (0.060,121.968)",
+    "c_cmd[13] M4 (0.060,121.968)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 187.85,
+    "min_ps": 125.63
+   },
+   "clk_outputs[2]": {
+    "max_ps": 193.89,
+    "min_ps": 134.99
+   },
+   "clk_outputs[1]": {
+    "max_ps": 208.91,
+    "min_ps": 144.38
+   },
+   "clk_outputs[0]": {
+    "max_ps": 239.98,
+    "min_ps": 167.72
+   },
+   "clk_rom[2]": {
+    "max_ps": 11.23,
+    "min_ps": 11.23
+   },
+   "clk_rom[1]": {
+    "max_ps": 11.92,
+    "min_ps": 11.92
+   },
+   "clk_rom[0]": {
+    "max_ps": 11.45,
+    "min_ps": 11.45
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 247
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

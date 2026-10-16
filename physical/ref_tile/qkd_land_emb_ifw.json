@@ -1,158 +1,114 @@
 {
-  "name": "qkd_land_emb_ifw",
-  "top": "qkd_land_emb_ifw",
-  "kind": "tile",
-  "sources": [
-    "rtl/qwen_sys/split_20261014/qkd_land_emb_ifw.sv",
-    "rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv",
-    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_emb_strip_c.sv",
-    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv",
-    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
-    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sl.sv",
-    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv"
+ "name": "qkd_land_emb_ifw",
+ "top": "qkd_land_emb_ifw",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_land_emb_ifw.sv",
+  "rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_emb_strip_c.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sl.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 172.8,
+  "h": 64.8
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "N": [
+   "emf",
+   "emf_cr",
+   "emr",
+   "emr_cr",
+   "mf",
+   "ck"
   ],
-  "params": {},
-  "clock_port": "ck",
-  "reset_ports": [],
-  "outline": {
-    "w": 172.8,
-    "h": 64.8
-  },
-  "layer_cap": "M5",
-  "macros": [],
-  "pins": {
-    "N": [
-      "emf",
-      "emf_cr",
-      "emr",
-      "emr_cr",
-      "mf",
-      "ck"
-    ],
-    "S": [
-      "gfi",
-      "dno",
-      "upi",
-      "cri",
-      "fi"
-    ],
-    "W": [
-      "st",
-      "rst_n"
-    ]
-  },
-  "pin_ranges": {
-    "emf": [
-      4,
-      58
-    ],
-    "emr": [
-      62,
-      114
-    ],
-    "mf": [
-      118,
-      119
-    ],
-    "ck": [
-      122,
-      124
-    ],
-    "gfi": [
-      40,
-      41
-    ],
-    "dno": [
-      90.4,
-      120.4
-    ],
-    "upi": [
-      124.4,
-      150.4
-    ],
-    "cri": [
-      152.4,
-      156.4
-    ],
-    "fi": [
-      157.9,
-      158.9
-    ],
-    "st": [
-      24,
-      26
-    ],
-    "rst_n": [
-      30,
-      31
-    ],
-    "emf_cr": [
-      59,
-      60
-    ],
-    "emr_cr": [
-      115,
-      116
-    ]
-  },
-  "route": {
-    "pd": 0.6,
-    "threads": 8,
-    "peak_ram_gb": 32,
-    "hold_margin_ns": 0.03,
-    "macro_halo_um": 5.4
-  },
-  "recipe": 2,
-  "job": {
-    "owner": "Claude:el1014-qwen-kvsys-elements",
-    "branch": "claude/qwen-kvsys-el-r5-1015",
-    "tag": "if1",
-    "purpose": "Qwen KV/system die v1.4 landing embedding endpoint qkd_land_emb_ifw (closed view needed for the landing expansion ep3): compact gateway-word wrapper of the closed qkd_land_emb engine.",
-    "extra_paths": [
-      "physical/qkd_land_strip",
-      "rtl/test/qwen_kv_die/tb_qkd_land_emb_ifw.sv",
-      "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_strip.sv",
-      "tools/qwen_kv_die"
-    ],
-    "benches": [
-      {
-        "name": "qkd_land_emb_ifw_exact",
-        "cmd": "JOBS=4 bash tools/qwen_kv_die/bench_land_emb_ifw.sh emb {RUN}/bench/ifw 0",
-        "expect": "pass",
-        "threads": 4,
-        "peak_ram_gb": 12,
-        "needs": [
-          "verilator"
-        ],
-        "note": "ifw + 32 x qkd_land_pc vs monolithic ot_qfd_emb_strip: 989 words, 28 scale, 24 boot writes, 1948 reads (receipt land_emb_ifw_1014)",
-        "pass_regex": "^PASS qkd_land_emb"
-      },
-      {
-        "name": "qkd_land_emb_ifw_mutant_seq",
-        "cmd": "JOBS=4 bash tools/qwen_kv_die/bench_land_emb_ifw.sh emb {RUN}/bench/ifwm1 1",
-        "expect": "fail",
-        "threads": 4,
-        "peak_ram_gb": 12,
-        "needs": [
-          "verilator"
-        ],
-        "note": "PACK_MUT 1: sequence field xor 1 in the compact packing",
-        "fail_regex": "^FAIL qkd_land_emb mutant 1/0 detected"
-      }
-    ]
-  },
-  "structural_change": "NEW master (v1.4 queue rank 8, die lead r7 07:44): die endpoint of the closed landing embedding engine with compact gateway words (emf 288 / emr 520 + the boot-exception credits emf_cr/emr_cr, 0az: the embedding init path is the selected exception flow, normal execution uses the static embedding successors); wires-only packing around qkd_land_emb (np1 recipe-2 pin registers, same 172.8 x 64.8 slot, same faces); 0 cycles, 0 state added.",
-  "children": [],
-  "inter": [],
-  "io_flop_at_pins": {
-    "cols": 4,
-    "allow_none": true
-  },
-  "inhold": true,
-  "outhold": true,
-  "keep_pin_regs": true,
-  "pin_reg_split": true,
-  "hold_pad": {
-    "cell": "HB2xp67_ASAP7_75t_R"
+  "S": [
+   "gfi",
+   "dno",
+   "upi",
+   "cri",
+   "fi"
+  ],
+  "W": [
+   "st",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.6,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
   }
+ },
+ "recipe": 2,
+ "job": {
+  "owner": "Codex:qwen_elements_1319",
+  "branch": "codex/qwen-elements-1319",
+  "tag": "if4",
+  "purpose": "Qwen KV/system die v1.4 landing embedding endpoint qkd_land_emb_ifw (closed view needed for the landing expansion ep3): compact gateway-word wrapper of the closed qkd_land_emb engine.",
+  "extra_paths": [
+   "physical/qkd_land_strip",
+   "rtl/test/qwen_kv_die/tb_qkd_land_emb_ifw.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_strip.sv",
+   "tools/qwen_kv_die"
+  ],
+  "benches": [
+   {
+    "name": "qkd_land_emb_ifw_exact",
+    "cmd": "JOBS=4 bash tools/qwen_kv_die/bench_land_emb_ifw.sh emb {RUN}/bench/ifw 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "note": "ifw + 32 x qkd_land_pc vs monolithic ot_qfd_emb_strip: 989 words, 28 scale, 24 boot writes, 1948 reads (receipt land_emb_ifw_1014)",
+    "pass_regex": "^PASS qkd_land_emb"
+   },
+   {
+    "name": "qkd_land_emb_ifw_mutant_seq",
+    "cmd": "JOBS=4 bash tools/qwen_kv_die/bench_land_emb_ifw.sh emb {RUN}/bench/ifwm1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "note": "PACK_MUT 1: sequence field xor 1 in the compact packing",
+    "fail_regex": "^FAIL qkd_land_emb mutant 1/0 detected"
+   }
+  ]
+ },
+ "structural_change": "NEW master (v1.4 queue rank 8, die lead r7 07:44): die endpoint of the closed landing embedding engine with compact gateway words (emf 288 / emr 520 + the boot-exception credits emf_cr/emr_cr, 0az: the embedding init path is the selected exception flow, normal execution uses the static embedding successors); wires-only packing around qkd_land_emb (np1 recipe-2 pin registers, same 172.8 x 64.8 slot, same faces); 0 cycles, 0 state added. if2 (after if1 CLOSED TT +67.86 / FF +17.95 / DRC 0 but native launch FAIL 276.8 > 220 ps on 28 pins, all emr/dno, R 178.9): emr 520 b were packed in 52 um of the N face (62-114, face cut 0.96) next to their pin flops + 3-cell output hold pads; S-ELEM-B shared fix (ee058260f): every face spread evenly over the whole face by tools/ref_tile/spread_face_pins.py (bus order kept, N/S alternate M3/M5, W/E M4), ck at the N-face centre, NO output hold pads (outhold off; input pads kept, capture 148.6 PASS). Same outline 172.8 x 64.8; pin positions change (new master, die tools adopt the new pin file). KV die lead r9 adopted this exact if2 pin plan on 2026-10-15 at 12:35 PT as slot_change; if4 regenerates the kit against current shared flow and preserves the original closed-route evidence.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/ref_tile/qkd_land_emb_ifw/io_pins.tcl",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "contract": "Qwen KV v1.4.2",
+  "version": "2026-10-15",
+  "slot_change_request": "KV die lead r9 explicit grant 2026-10-15 12:35:27 PT in el1014-qwen-kvsys-elements.log: adopt if2 full-face-spread pins; same 172.8 x 64.8 outline"
+ }
 }

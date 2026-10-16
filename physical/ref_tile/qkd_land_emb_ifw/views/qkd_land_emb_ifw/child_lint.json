@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_land_emb_ifw-if1-4f6dbb1d4/record/views/qkd_land_emb_ifw/qkd_land_emb_ifw.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/qkd_land_emb_ifw-if4-0389349bb/record/views/qkd_land_emb_ifw/qkd_land_emb_ifw.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 1402 of 1409 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cri[0] M5 (152.400,0.016), cri[10] M5 (152.400,0.016), cri[11] M5 (152.400,0.016))"
+  "(f) face-pin access: 1406 of 1409 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M5 (4.608,63.829), emf[101] M5 (4.608,63.829), emf[103] M5 (4.608,63.829))"
  ],
- "summary": "qkd_land_emb_ifw 172.8 x 64.8: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 1409 blocked-above 0 blocked-same 0; clock ck insertion 207 ps; pockets M5 0 (closed)",
+ "summary": "qkd_land_emb_ifw 172.8 x 64.8: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 1409 blocked-above 0 blocked-same 0; clock ck insertion 190 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_land_emb_ifw",
   "W": 172.8,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 1409,
    "blocked_above": 0,
-   "covered_below": 590,
+   "covered_below": 19,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 1402,
+   "band_same": 1406,
    "band_examples": [
-    "cri[0] M5 (152.400,0.016)",
-    "cri[10] M5 (152.400,0.016)",
-    "cri[11] M5 (152.400,0.016)",
-    "cri[12] M5 (152.400,0.016)",
-    "cri[13] M5 (152.400,0.016)",
-    "cri[14] M5 (152.400,0.016)"
+    "ck M5 (4.608,63.829)",
+    "emf[101] M5 (4.608,63.829)",
+    "emf[103] M5 (4.608,63.829)",
+    "emf[105] M5 (4.608,63.829)",
+    "emf[107] M5 (4.608,63.829)",
+    "emf[109] M5 (4.608,63.829)"
    ]
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 206.98,
-    "min_ps": 159.11
+    "max_ps": 189.86,
+    "min_ps": 144.48
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1457
+    "added": 1436
    },
    "count": 0,
    "area_um2": 0,

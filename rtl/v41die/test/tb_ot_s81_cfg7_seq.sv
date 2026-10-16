@@ -9,8 +9,15 @@
 // sh_free} driven: 256 held loads (ef low 1..40 cycles after the broadcast) and random ef in the random section; go_tag
 // checked at every broadcast go against the PQ spine's tag (ot_v41_spine_pq_w17w10 bt_tag = ist: +1 per go broadcast
 // from 0 at reset).  Extra negative controls at PQ 1: OT_S81_CFG7_MUT_TAG, OT_S81_CFG7_MUT_NOFAULT, OT_S81_CFG7_MUT_NOHOLD.
+// +define+TB_CFG7_IL7 (FILL-S2 2026-10-15): the DUT at LAYOUT 1 with the seven macro models loaded in that layout (word k
+// of phase p in macro k % 7, row 4p + k / 7); the reference and every check are unchanged.
 module tb_ot_s81_cfg7_seq;
     parameter integer PQ = 0;
+`ifdef TB_CFG7_IL7
+    localparam integer LAYOUT = 1;
+`else
+    localparam integer LAYOUT = 0;
+`endif
     localparam integer PHW = 10, CW = 25, NW = CW << PHW;
     reg clk = 0;
     always #0.416667 clk = ~clk;
@@ -48,12 +55,12 @@ module tb_ot_s81_cfg7_seq;
     // run at PQ 0 only
     initial if (PQ != 0) $fatal(1, "TB_CFG7_BF is the PQ 0 master");
     assign gtag = 2'd0;
-    ot_s81_cfg7_seq_bf dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq_bf #(.LAYOUT(LAYOUT)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
         .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
         .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st));
 `else
-    ot_s81_cfg7_seq #(.PQ(PQ)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq #(.PQ(PQ), .LAYOUT(LAYOUT)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
         .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
         .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st), .ef(ef), .go_tag(gtag));
@@ -103,6 +110,17 @@ module tb_ot_s81_cfg7_seq;
         #0.001;
         for (g = 0; g < NW; g++)
             for (b = 0; b < 48; b++)
+                if (LAYOUT == 1)
+                    case ((g % CW) % 7)
+                        0: g_rom[0].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                        1: g_rom[1].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                        2: g_rom[2].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                        3: g_rom[3].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                        4: g_rom[4].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                        5: g_rom[5].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                        default: g_rom[6].u_rom.arr[(4 * (g / CW) + (g % CW) / 7) / 8][b * 8 + (4 * (g / CW) + (g % CW) / 7) % 8] = (payload[g] >> b) & 1;
+                    endcase
+                else
                 case (g / 4096)
                     0: g_rom[0].u_rom.arr[(g % 4096) / 8][b * 8 + g % 8] = (payload[g] >> b) & 1;
                     1: g_rom[1].u_rom.arr[(g % 4096) / 8][b * 8 + g % 8] = (payload[g] >> b) & 1;

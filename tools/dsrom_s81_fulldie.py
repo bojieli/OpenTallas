@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import copy
 import hashlib
 import json
 import math
@@ -1291,7 +1292,15 @@ def pin_rects(mst, k, wmap):
                                   'S': (x0, x1, y0 + d_, y1 + d_), 'N': (x0, x1, y0 - d_, y1 - d_)}[spec[2]]
             ins.append((nm, ly, (x0, y0, x1, y1)))
         rects = ins
-    return out + rects
+    out = out + rects
+    if PIN_LATTICE and k == 1:
+        # --pin-lattice (S-DIE 2026-10-15): one legal site-grid origin per axis for every generated master (die PLACE
+        # snap.tcl ot_mts::rule); off-lattice assigned/generated pins move the least distance onto it, reported
+        from s81.pin_lattice_legalize import legalize as _pl_legalize
+        out, rep_ = _pl_legalize(mst.name, mst.w, mst.h, out)
+        if rep_['moved']:
+            PIN_LATTICE_REPORT[mst.name] = rep_
+    return out
 
 
 def lef_text(mst, k, wmap):
@@ -1348,6 +1357,11 @@ def write_lefs(m, k, path):
         txt.append(t)
         npins += n
     Path(path).write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(txt) + 'END LIBRARY\n')
+    if PIN_LATTICE and k == 1:
+        Path(str(path) + '.lattice.json').write_text(json.dumps(PIN_LATTICE_REPORT, indent=1, sort_keys=True))
+        print('OT_PIN_LATTICE masters_moved', len(PIN_LATTICE_REPORT), 'pins_moved',
+              sum(r['moved'] for r in PIN_LATTICE_REPORT.values()), 'max_move_nm',
+              max([r['max_move_nm'] for r in PIN_LATTICE_REPORT.values()] + [0]), flush=True)
     return npins
 
 
@@ -1481,6 +1495,11 @@ def _receipt_params(rel):
 def die_master_params(m):
     used = {it.master for it in m['insts']}
     out = {}
+    if VM_NATIVE_CANDIDATE:
+        if 'dsfd_sp_vm' not in used:
+            raise ValueError('--vm-native-candidate needs an actual dsfd_sp_vm instance')
+        out['dsfd_sp_vm'] = dict(vm_native_candidate_params(),
+                                _source='explicit --vm-native-candidate; source construction only, not physical qualification')
     for mst, rel in BOUND_VIEW_RECEIPTS.items():
         if mst in used:
             out[mst] = dict(_receipt_params(rel), _source=rel)
@@ -1500,6 +1519,18 @@ def die_master_params(m):
         # TA-10: the PQ q element's loader handshake (ef / go_tag) is the PQ 1 loader (tb_ot_s81_cfg7_seq.sv PQ 1)
         out['ot_s81_cfg7_seq'] = dict(PQ=1, _source='q element %s carries go_tag / sh_free / bank_free' % real_lef(Q_LEF)['name'])
     return out
+
+
+def vm_native_candidate_params():
+    """Fail closed unless the actual wrapper exposes the proven candidate ABI."""
+    import die_port_bind as DPB
+    source = ROOT / 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
+    modules = DPB.parse_modules(DPB.preprocess(source.read_text(), {}), str(source))
+    wrappers = [md for md in modules if md.name == 'dsfd_sp_vm']
+    requested = dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1)
+    if len(wrappers) != 1 or not set(requested).issubset(wrappers[0].params):
+        raise ValueError('--vm-native-candidate requires actual READ_PIPE/CAP_PIPE/WSCATTER_PIPE wrapper parameters')
+    return requested
 
 
 # ------------------------------------------------------------------------------------------------ power model
@@ -3032,6 +3063,11 @@ SUHC_V2_BUSES = tuple(
 SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
 COLL_SLAB_H = None             # --coll-slab-h H (s81die-1011 hier contract v1): collective slab height at full hub column width
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
+HUB_ABUT = False               # --hub-abut (S-DIE 2026-10-15, A2 fit): every W-column centre-stack gap = RTL_ABUT_GAP (21.6) instead of
+                                # the 172.8-um SPINE_GAP channel (inter-block lanes leave through the VCH / roads, not the gaps)
+VM_SPAN_VCH = False            # --vm-span-vch W,H (S-DIE 2026-10-15, coordinator 18:40): A2 VM reservation spans W column + VCH
+SU_GROW_EAST = False           # --su-outline W,H[,XOFF] (S-DIE 2026-10-15): su_s outline override, W edge XOFF um west of the
+SU_WEST_OVERHANG = 0.0          # column (default 0); the rest of a wider SU grows EAST into the VCH
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
 ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
@@ -3167,7 +3203,7 @@ def capacity_report():
     """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
     sh, sl = slot_geometry()
     if CANONICAL_LAYOUT is not None:
-        return dict(scope='Canonical immutable full2417 typed frame inventory; actual native binding and transport gates are separate', pairs=2417, bf_double=519, ordinary=1898, bf_pair_ids=sorted(BF_EXPLICIT_IDS), source_sha256=CANONICAL_LAYOUT['sha256'], frames=128, typed_frame_inventory_complete=True)
+        return dict(scope=f'Canonical immutable full{PAIRS} typed frame inventory; actual native binding and transport gates are separate', pairs=PAIRS, bf_double=BF_PAIRS, ordinary=PAIRS-BF_PAIRS, bf_pair_ids=sorted(BF_EXPLICIT_IDS), source_sha256=CANONICAL_LAYOUT['sha256'], frames=128, typed_frame_inventory_complete=True)
     if BF_EXPLICIT_IDS is not None:
         # The typed head inventory is fixed; layer capacity sweeps would
         # change pair identity and omit its dedicated Markov engines.
@@ -3367,7 +3403,7 @@ class Placer:
         step = cross_step or (h if horiz else w) + 2.16
         cands = _near_cands(span, rows, step)
         if span >= 600.0:
-            cands = _near_reachable_prefix(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz)
+            cands = _near_reachable_candidates(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz)
         for a, c in cands:
             dx, dy = (a, c) if horiz else (c, a)
             x = dn(cx + dx - w / 2, GX)
@@ -3442,6 +3478,44 @@ def _near_reachable_prefix(cands, span, rows, step, cx, cy, w, h, allowed, prev,
     return cands[:bisect.bisect_right(_NEAR_COSTS[key], maximum_cost + eps)]
 
 
+def _near_reachable_candidates(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz):
+    """Enumerate only axis-feasible offsets, preserving the original first-hit order.
+
+    Each axis check is necessary for rectangle containment and Manhattan reach.
+    Filtering the original along/across lists before their Cartesian product
+    preserves the stable tie order of _near_cands. The final placement checks
+    still enforce the joint rectangle, both full reaches and all occupancy.
+    """
+    # Try the closest offsets lazily: open placements avoid filter construction.
+    initial = cands[:32]
+    yield from initial
+    seen = set(initial)
+    eps = 2e-6
+    def feasible(offset, axis):
+        center, size, grid = (cx, w, GX) if axis == 0 else (cy, h, GY)
+        lo = dn(center + offset - size / 2, grid)
+        mid = lo + size / 2
+        if not any(lo >= r[axis] - eps and lo + size <= r[axis + 2] + eps for r in allowed):
+            return False
+        if prev is not None and abs(mid - prev[axis]) > reach + eps:
+            return False
+        if nxt is not None and abs(mid - nxt[axis]) > nreach + eps:
+            return False
+        return True
+    along = [0.0]
+    for i in range(1, int(span / 4.32) + 1):
+        along.extend((-4.32 * i, 4.32 * i))
+    across = [0.0]
+    for i in range(1, rows + 1):
+        across.extend((step * i, -step * i))
+    aa = [v for v in along if feasible(v, 0 if horiz else 1)]
+    cc = [v for v in across if feasible(v, 1 if horiz else 0)]
+    if not aa or not cc:
+        return
+    yield from sorted(((a, c) for a in aa for c in cc if (a, c) not in seen),
+                      key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
+
+
 def _poly_len(P):
     return sum(_mh(P[i], P[i + 1]) for i in range(len(P) - 1))
 
@@ -3469,12 +3543,20 @@ def face_need(bits):
 
 def stn_dims(lanes, horiz):
     """station size: pins of every lane (fclk + data) on the input and the output face; ~0.7 um2 a stage bit"""
+    if STN70_SPLIT and len(lanes) in (2, 3, 4) and all(w == 70 for w in lanes):
+        # Independent forwarded roots require independent hardened leaves.  Reserve
+        # their final across-flow envelope BEFORE trunk placement; the late split
+        # must not grow a compact multi-lane placeholder into occupied streets.
+        # Keep the split's exact lattice offsets and allow the granted17.28 outline.
+        # S-DIE r12 (GEN20: crW0_W1_edge15 no spot): the K leaves go ALONG the flow, not across it -- a 4-lane
+        # across-flow stack is ~72 um wide and cannot enter a 47.52-um field return lane; along the flow the group
+        # keeps the single-lane cross-section (each lane is its own independent register stage).
+        w1, h1 = stn_dims([70], horiz)
+        if horiz:
+            return (len(lanes) - 1) * up(w1 + 0.864 + SHAVE, GX) + w1 + SHAVE, h1 + SHAVE
+        return w1 + SHAVE, (len(lanes) - 1) * up(h1 + 0.864 + SHAVE, GY) + h1 + SHAVE
     pins = sum(w + 1 for w in lanes)
     bits = sum(lanes)
-    if STN_FOOTPRINTS and len(lanes) == 1 and ('h' if horiz else 'v', bits) in STN_FOOTPRINTS:
-        # --stn-footprints (S-DIE r12 grant 10-15): FILL-S measured recipe-2 content > util 0.55 of the generator slot;
-        # depth-only growth (flow direction), every data-pin coordinate unchanged
-        return STN_FOOTPRINTS[('h' if horiz else 'v', bits)]
     face = face_need([b for w in lanes for b in (1, w)])
     if STN_WIDE_SQUARE and bits >= 1000:
         # S-BIND r6 --stn-wide-square: a >= 1,000-b station (the packed 1,102-b static x lane) as a square of the same
@@ -3500,7 +3582,32 @@ def relay_dims(bits, horiz):
     """
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
-    return stn_dims([bits], horiz)
+    # Faces are selected from the actual neighbours AFTER the site is reserved.
+    # A path's initial direction does not constrain that choice: BF x2's 536-bit
+    # relay can enter a horizontal search and finish as SN or a corner master.
+    # Reserve the enclosing outlines for both pin orientations now, including
+    # the full-width and bundled-view pin capacity in stn_dims/face_need.
+    if RLY_WIDE_ORIENTED and bits >= 1000:
+        # S-DIE r3 --relay-wide-oriented (FILL-S 14:06 answer to GEN20 GEN_FAIL hb_hc_s_wq_d_vm_d9): a >= 1,000-b relay
+        # cannot finish as a corner master, so reserve only its hop-direction outline (face across the flow, depth
+        # along it) grown to the deepest granted station footprint (36.72 um), not the 201 x 203-um enclosing square
+        # of both orientations that finds no spot in a 101-um hub hop beside the VM.
+        w_, h_ = stn_dims([bits], horiz)
+        if horiz:
+            return max(w_, up(RLY_WIDE_DEPTH, GX) - SHAVE), h_
+        return w_, max(h_, up(RLY_WIDE_DEPTH, GY) - SHAVE)
+    horizontal = stn_dims([bits], True)
+    vertical = stn_dims([bits], False)
+    return tuple(max(a, b) for a, b in zip(horizontal, vertical))
+
+
+def stn70_across(lanes, horiz):
+    """S-DIE r3 --stn70-across-fallback: the pre-70363dae1 envelope of a split 70xK group, K leaves stacked ACROSS the
+    flow (used only where the along-flow envelope finds no spot, e.g. c21f crE2_W0_hub at the hub-W return entry)."""
+    w1, h1 = stn_dims([70], horiz)
+    if horiz:
+        return w1 + SHAVE, (len(lanes) - 1) * up(h1 + 0.864 + SHAVE, GY) + h1 + SHAVE
+    return (len(lanes) - 1) * up(w1 + 0.864 + SHAVE, GX) + w1 + SHAVE, h1 + SHAVE
 
 
 def _split_multi_lane_stations(m):
@@ -3524,11 +3631,18 @@ def _split_multi_lane_stations(m):
         horiz = hv == 'h'
         w1, h1 = stn_dims([70], horiz)
         subs = []
+        # --stn70-across-fallback: a group reserved ACROSS the flow (its box is taller/wider than one leaf) splits across
+        across = (it.h > h1 + SHAVE + 0.5) if horiz else (it.w > w1 + SHAVE + 0.5)
         for k in range(K):
-            if horiz:      # flow W->E: stack in y
-                x0, y0 = it.x, up(it.y + k * (h1 + 0.864 + SHAVE), GY)
+            if across:
+                if horiz:
+                    x0, y0 = it.x, up(it.y, GY) + k * up(h1 + 0.864 + SHAVE, GY)
+                else:
+                    x0, y0 = up(it.x, GX) + k * up(w1 + 0.864 + SHAVE, GX), it.y
+            elif horiz:      # flow W->E: the lanes follow each other along x (same cross-section as one lane)
+                x0, y0 = up(it.x, GX) + k * up(w1 + 0.864 + SHAVE, GX), it.y
             else:
-                x0, y0 = up(it.x + k * (w1 + 0.864 + SHAVE), GX), it.y
+                x0, y0 = it.x, up(it.y, GY) + k * up(h1 + 0.864 + SHAVE, GY)
             box = (x0, y0, x0 + w1, y0 + h1)
             if not (P.occ.free(box, 0.432) and box[2] <= W and box[3] <= H):
                 pl = P.near(x0 + w1 / 2, y0 + h1 / 2, w1, h1, [(0.0, 0.0, W, H)], horiz=not horiz, span=120.0, rows=12)
@@ -3561,6 +3675,44 @@ def _split_multi_lane_stations(m):
     m['stn70_split'] = rec
     m.setdefault('notes', []).append('--stn70-split: %d multi-lane 70-b stations -> %d x dsfd_stn*_70x1'
                                      % (len(victims), sum(r_['lanes'] for r_ in rec)))
+
+
+def _apply_station_footprints(m):
+    """--stn-footprints (S-DIE r12 grant 10-15): instances of the FILL-S-measured station masters (exact final master
+    name, after the common-clock hstn conversion) take the granted outline: depth-only growth in the flow direction,
+    the data-pin face length unchanged.  Grow toward the output face; if that box is taken, toward the input face; else
+    the nearest legal box (<= 120 um).  Counted in m.stn_footprints."""
+    W, H = DIE
+    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS]
+    if not hits:
+        return
+    names = {it.name for it in hits}
+    P = Placer(dict(m, insts=[it for it in m['insts'] if it.name not in names]))
+    rec = dict(in_place=0, flipped=0, moved=[], masters={})
+    for it in hits:
+        w2, h2 = STN_FOOTPRINTS[it.master]
+        horiz = 'stnh' in it.master
+        cands = [(it.x, it.y)]
+        if horiz:
+            cands.append((dn(it.x + it.w - w2, GX), it.y))
+        else:
+            cands.append((it.x, dn(it.y + it.h - h2, GY)))
+        done = None
+        for j, (x0, y0) in enumerate(cands):
+            box = (x0, y0, x0 + w2, y0 + h2)
+            if box[0] >= 0 and box[1] >= 0 and box[2] <= W and box[3] <= H and P.occ.free(box, 0.432):
+                done = (x0, y0)
+                rec['in_place' if j == 0 else 'flipped'] += 1
+                break
+        if done is None:
+            pl = P.near(it.x + it.w / 2, it.y + it.h / 2, w2, h2, [(0.0, 0.0, W, H)], horiz=horiz, span=120.0, rows=12)
+            assert pl, ('--stn-footprints: no box for granted outline', it.name, it.master, (w2, h2))
+            rec['moved'].append([it.name, round(pl[0] - it.x, 3), round(pl[1] - it.y, 3)])
+            done = pl
+        it.x, it.y, it.w, it.h = done[0], done[1], w2, h2
+        P.occ.add(it.box())
+        rec['masters'][it.master] = rec['masters'].get(it.master, 0) + 1
+    m['stn_footprints'] = rec
 
 
 def _station_pin_layers(M):
@@ -3684,6 +3836,12 @@ class Chains:
                 horiz = force_horiz or d in 'EW'
                 w, h = stn_dims(lanes, horiz)
                 placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
+                if placed is None and STN70_ACROSS_FB and STN70_SPLIT and len(lanes) in (2, 3, 4) \
+                        and all(w0 == 70 for w0 in lanes):
+                    w, h = stn70_across(lanes, horiz)
+                    placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
+                    if placed is not None:
+                        self.m.setdefault('stn70_across', []).append(dict(chain=name, at=list(placed), lanes=len(lanes)))
             if placed is None:
                 raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
             x, y = placed
@@ -4145,7 +4303,9 @@ def build_r8(variant=None):
         # 972.4 x 423.4 + ce parent + ct) at full column width; the W column has ~5.8 mm free height above the host
         centre_area['collective'] = max(centre_area['collective'], up(COLL_SLAB_H, GY) * cw / 1e6)
     if VM_SLAB:   # --vm-slab W,H (s81-vm-1011): the VM master outline (NP24 bgq tiles), centred in the hub column
-        assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
+        # --vm-span-vch (S-DIE 2026-10-15, A2 fit closure a): the VM is W column + VCH wide (W edge on the column's W edge);
+        # the VCH is blocked over the VM height, its lanes there use S14W / S14E or the HC corridor
+        assert VM_SLAB[0] <= (cw + VCH8 if VM_SPAN_VCH else cw) + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
         centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
     if CONTRACT_SLABS:
@@ -4224,9 +4384,17 @@ def build_r8(variant=None):
             romc = up(rc_['w'] + 2 * 8.64, GX)
             wc_ = dn(cw - romc, GX)
             slab('pq', PQ_CORE_H * wc_ / 1e6, x_sp, yy, wc_, master=PQ_RTL_MASTER if RTL_BIND else None)
-            for j in range(PQ_ROMS):
-                insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
+            rn_ = pq_rom_names()
+            # ROM4 (6 macros): the largest pitch <= h + 17.28 that keeps the column inside the core slot height
+            pit_ = min(up(rc_['h'] + 17.28, GY), dn((PQ_CORE_H - 2 * 8.64 - rc_['h']) / max(1, len(rn_) - 1), GY))
+            assert pit_ >= rc_['h'] + 2.16, ('PQ ROM column does not fit the core slot', len(rn_), pit_)
+            for j, rn1_ in enumerate(rn_):
+                insts.append(Inst(rn1_, rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * pit_,
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
+        elif n == 'vm' and VM_SPAN_VCH:
+            slab(n, centre_area[n], x0_, yy, slab_w[n], dom='serial_0p9')
+            notes.append('--vm-span-vch: sp_vm %.1f x %.1f um spans the W column + VCH (x %.1f..%.1f)' % (
+                slab_w[n], centre_area[n] * 1e6 / slab_w[n], x0_, x0_ + slab_w[n]))
         else:
             slab(n, centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
                  master='dsfd_host' if n == 'host' else None)
@@ -4236,7 +4404,7 @@ def build_r8(variant=None):
     # --contract (s81-die-iter, contract v4): a v2 SU wider than the hub column grows WEST (E edge on the column's E edge,
     # clear of the xE trunk / sseq stations by the VCH); the free strip W of the column holds it (10.5 um to the xW stations)
     su_w_ = up(SU_V2_UM[0], GX) if (SUHC_V2 and SU_V2_UM[0] > cw + 1e-6) else cw
-    su_x_ = x_sp - (su_w_ - cw)
+    su_x_ = x_sp - SU_WEST_OVERHANG if SU_GROW_EAST else x_sp - (su_w_ - cw)
     if SU_E:
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
@@ -4256,7 +4424,7 @@ def build_r8(variant=None):
         nx_ = centre[i_ + 1] if i_ + 1 < len(centre) else None
         # --rtl-hub-widths: the face-to-face wide pairs (VM <- capture 13,376 b, capture <- gather 6,947 b) sit RTL_ABUT_GAP
         # apart so their buses are direct register-to-register wires (SPINE_GAP 172.8 > the 155 um direct-hop limit)
-        gap_ = RTL_ABUT_GAP if RTL_HUB_WIDTHS and {n, nx_} in ({'vm', 'capture'}, {'capture', 'gather'}) else SPINE_GAP
+        gap_ = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and {n, nx_} in ({'vm', 'capture'}, {'capture', 'gather'})) or HUB_ABUT else SPINE_GAP
         if PQ_CNT and {n, nx_} == {'capture', 'gather'}:
             gap_ = PQ_CNT_SEAM       # --pq-cnt: the count leaves tile the gather | capture seam
         yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + gap_
@@ -4549,7 +4717,7 @@ def build_r8(variant=None):
                 hub['selector'].master = 'dsfd_bk_selector_c1'
     if CANONICAL_LAYOUT is not None:
         m['canonical_layout'] = CANONICAL_LAYOUT
-        variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=2417, bf_pairs=519, root_count=128, phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
+        variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=PAIRS, bf_pairs=BF_PAIRS, root_count=128, wide_hub=CANONICAL_LAYOUT.get('wide_hub'), phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
         # Preserve exact supplemental HCP geometry against all station searches.
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
@@ -4569,6 +4737,8 @@ def build_r8(variant=None):
     buses_r8(m)
     if STN70_SPLIT:
         _split_multi_lane_stations(m)
+    if STN_FOOTPRINTS:
+        _apply_station_footprints(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
         _split_fields(m, hub['wfc'].name, (WFC_FIELD_SPLIT_PRICED if WFC_PRICED else WFC_FIELD_SPLIT)[hub['wfc'].master])
     return m
@@ -5149,10 +5319,16 @@ def buses_r8(m):
             bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (tgt, 'hw')])
             bus(f'hc_{st}', 'host_wr', 18, [(tgt, 'hc'), (hub['host'].name, f'fc{st}')])
     if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
-        for j in range(PQ_ROMS):
+        rn_ = pq_rom_names()
+        for j in range(2 if len(rn_) > PQ_ROMS else PQ_ROMS):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
             bus(f'pqrc_{j}', 'rom_ce', 1, [(hub['pq'].name, f'rc{j}'), (f'pqrom{j}', 'ce')])
             bus(f'pqrq_{j}', 'rom_q', (64 if j < 2 else 48) if RTL_BIND else 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
+        if len(rn_) > PQ_ROMS:     # DSFD_PQ_ROM4: one shared address bus to the four stream macros, per-macro ce / rd
+            bus('pqra_2', 'rom_a', 12, [(hub['pq'].name, 'ra2')] + [(n_, 'a') for n_ in rn_[2:]])
+            for b_, n_ in enumerate(rn_[2:]):
+                bus(f'pqrc_2{"abcd"[b_]}', 'rom_ce', 1, [(hub['pq'].name, f'rc2[{b_}:{b_}]'), (n_, 'ce')])
+                bus(f'pqrq_2{"abcd"[b_]}', 'rom_q', 48, [(n_, 'rd'), (hub['pq'].name, f'rq2[{48 * b_}:{48 * b_ + 47}]')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     if RELAY_PROGRESS:
@@ -5239,12 +5415,7 @@ def buses_r8(m):
         elif it.kind == 'hend':
             spec = G[it.master]
             if spec['kind'] == 'l2r':
-                # --rtl-bind + --pq-place: the x-lane start blocks hx_W / hx_E are written by the PQ core (stream), not the VM
-                wd_ = 'stream' if (RTL_BIND and PQ_PLACE and it.name in ('hx_W', 'hx_E')) else 'serial'
-                # S-BIND r6: a forwarded ctrl lane's start is written by its stream-domain source (sequencer c<e> / d /
-                # s, slab c_done / c_st, svc join, host hw, svc hc): it was clocked serial, sampling 1.2 GHz pulses
-                # with the 0.9 GHz clock (no synchroniser; pulses lost)
-                wd_ = m.get('_l2r_wdom', {}).get(it.name, wd_)
+                wd_ = l2r_write_dom(m, it)
                 dom[wd_].append((it.name, 'ck'))
                 rst[wd_].append((it.name, 'rs'))
                 dom['stream'].append((it.name, 'cks'))
@@ -5298,6 +5469,13 @@ PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column
                                 # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
                                 # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
 HSTN_POSEDGE = False            # --hstn-posedge (FILL-S 2026-10-15): common-clock stations as plain posedge flops on ck
+SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations / return stages register the reset-qualified
+                                # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
+NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
+NODE_WIN = 2                    # --node-win: sibling window of the static return node (edges)
+HEND_STATIC = False             # --hend-static (S-NET 2026-10-15, owner static rule): hub end/start blocks and xstg cross on
+                                # fixed calendars (ot_s81_static_lane_end / ot_s81_static_ratio_cross), no meso/ratio FIFO,
+                                # no credit / ready / trained placement
 SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --lane-equal pad on a cc net driven by a slot
                                 # station is N extra cc registers INSIDE that station (master dsfd_sstn_<pins>_cp<N>), not a
                                 # floating relay on the ~40 um station -> sequencer hop (no site exists between them)
@@ -5469,6 +5647,7 @@ STATIC_HC_TAG = ('collective', 'hc_s', 32, 't_hc_tag', 'y_tag')
 STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
+VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default remains actual RTL0/0/0
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -5554,6 +5733,18 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
     if 'OT_PQ_IX_PHYS_SPLIT' in defs:
         vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
     return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+
+
+def pq_rom4(manifest='physical/s81_die_rtl/layer1.f'):
+    """S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): +define+DSFD_PQ_ROM4 in the die manifest = the 16,384-row stream ROM
+    is FOUR ot_rom_4096x72 macros pqrom2a..d (ra2 12 b shared, rc2[b] -> pqrom2<b>.ce, pqrom2<b>.rd[47:0] ->
+    rq2[48b+:48]); one source of truth with tools/die_port_bind.py (the manifest's defines)."""
+    return 'DSFD_PQ_ROM4' in set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+
+
+def pq_rom_names():
+    """die instance names of the PQ ROM column, bottom-up: 2 phase (pqrom0/1) + the stream ROM(s)"""
+    return ['pqrom0', 'pqrom1'] + (['pqrom2a', 'pqrom2b', 'pqrom2c', 'pqrom2d'] if RTL_BIND and pq_rom4() else ['pqrom2'])
 
 
 _RTL_CLOCK_CACHE = {}
@@ -5856,14 +6047,14 @@ BANK_PORTS = {}
 RLY_FACES = {}
 
 
-def _q_port_face(rq, port):
+def _q_port_face(rq, port, port_map=None):
     """'S' or 'N': face of a q element port group (from the LEF pin y)"""
-    nm = real_ports_r8()[rq['name']][port][0]
+    nm = (real_ports_r8()[rq['name']] if port_map is None else port_map)[port][0]
     return 'S' if rq['pins'][nm][1][1] < rq['h'] / 2 else 'N'
 
 
-def _q_port_xc(rq, port):
-    nms = real_ports_r8()[rq['name']][port]
+def _q_port_xc(rq, port, port_map=None):
+    nms = (real_ports_r8()[rq['name']] if port_map is None else port_map)[port]
     xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms if n in rq['pins']]
     return sum(xs) / len(xs)
 
@@ -5898,27 +6089,29 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
     """one bank per element face (S below, N above), at the centre of its ports' pins.  --q-x1b (option B, s81-gen
     2026-10-10): x1 is its own S-face bank 'bx' at the x1 pins' centre (element x 400.08-505.44: over the slot station,
     not the packed cfg ROM row), and a mirrored (MY, right-lane) element mirrors the bank x."""
+    # One current, authoritative map per element; no cache survives a view change.
+    port_map = real_ports_r8()[rq['name']]
     out = []
     groups = []
     if Q_X1B:
         # A default/legacy q LEF must never silently stand in for the selected
         # split x1 face plan.  A stub is allowed for integration, not closure.
-        assert _q_port_face(rq, 'x1') == 'S', '--q-x1b requires x1 on the S face'
-        x1c = _q_port_xc(rq, 'x1')
+        assert _q_port_face(rq, 'x1', port_map) == 'S', '--q-x1b requires x1 on the S face'
+        x1c = _q_port_xc(rq, 'x1', port_map)
         assert 400.08 <= x1c <= 505.44, ('--q-x1b requires the east-end x1 view', x1c)
     for face in 'SN':
-        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_) == face]
+        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_, port_map) == face]
         if Q_X1B and face == 'S' and 'x1' in ports:
             ports.remove('x1')
             groups.append(('S', 'bx', ['x1']))
         if ports:
             groups.append((face, f'b{face.lower()}', ports))
     for face, tag, ports in groups:
-        xc = sum(_q_port_xc(rq, q_) for q_ in ports) / len(ports)
+        xc = sum(_q_port_xc(rq, q_, port_map) for q_ in ports) / len(ports)
         if PIN_ALIGN:
             # --pin-align: the bank stands under the EXTENT of its element pins (S bank: x0 / x1 / cfg / go pins span
             # 226.1-284.6, the unweighted port-centroid mean put the 60.5-um bank at 213.8-274.3, 10 um short of x0)
-            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in real_ports_r8()[rq['name']][q_]
+            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in port_map[q_]
                    if n in rq['pins']]
             assert max(xs_) - min(xs_) <= 60.48 - SHAVE - 0.4, ('qbank narrower than its element pins', face, min(xs_), max(xs_))
             xc = (min(xs_) + max(xs_)) / 2
@@ -8182,7 +8375,21 @@ def align_station_jogs(m, rounds=2):
             for nm in {eps[0][0], load[0]}:
                 incident.setdefault(nm, []).append(hop)
 
+    # A spread register is placed against these exact load pins. Generated
+    # hub pins otherwise follow the changed peer centroid when LEFs are
+    # emitted again, invalidating the channel just assessed. Retain the full
+    # load map, including neighboring ports and their access rectangles.
+    hard_maps = masters_r8(m) if ALIGN_EXT[0] else {}
     ppins = PA.read_pins(die_lef_texts(m))
+
+    def keep_load_map(load):
+        if load.master in REAL_FILES or load.master in m.get('bound_views', {}):
+            return
+        source = hard_maps.get(load.master)
+        if source is not None:
+            m.setdefault('spread_load_pin_maps', {}).setdefault(load.master, dict(
+                outline=[source.w, source.h], ports=copy.deepcopy(source.ports), order=list(source.order),
+                port_signature=dict(m['pdir'][load.master])))
 
     def pts(it, port, bits):
         w, h, pp = ppins.get(it.master, (0.0, 0.0, {}))
@@ -8463,22 +8670,27 @@ def align_station_jogs(m, rounds=2):
                 # occupied by other chains. Split only across actual gaps in
                 # the hard port's pins; all slices keep the SAME capture edge.
                 # Every bit still uses the real hstn register primitive.
-                if horiz and it.orient == 'R0' and fa == 'E':
+                # S-DIE r2 2026-10-15: and the mirror (MY station east of a hard E input, GEN19b hr_E2_o_d4)
+                side_ = 'W' if (it.orient == 'R0' and fa == 'E') else 'E' if (it.orient == 'MY' and fa == 'W') else ''
+                if horiz and side_:
                     from s81 import banded_terminal as BT
                     ins_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][1] == (it.name, 'di')]
                     outs_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][0] == (it.name, 'dq')]
                     if len(ins_) == len(outs_) == 1:
                         obs_ = [(o.name,o.x,o.y,o.w,o.h) for o in m['insts']]
                         split_ = BT.propose(A,B,pts(it,'dq',bits),obs_,it.name,it.w,PA,
-                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM)
+                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM,side=side_,
+                                            hard_short=ALIGN_HARD_SHORT_UM if side_ == 'E' else 0.0)
                         if split_:
                             ch_ = BT.apply(sys.modules[__name__],m,it,split_,ins_[0],outs_[0])
+                            keep_load_map(ld)
                             moved[it.name] = ('band_split',[c_.name for c_ in ch_],r['bus'])
                             refused.pop(r['bus'],None)
                             continue
                 refused[r['bus']] = refused.get(r['bus'], []) + ['spread:no_position']
                 continue
             bx, loc, vin = done_
+            keep_load_map(ld)
             old = it.master
             it.master = '%s_sp%d' % (old, len(spread))
             m['pdir'][it.master] = dict(m['pdir'][old])
@@ -8510,6 +8722,11 @@ def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
 
 _LAY_K = [1]
 PIN_ALIGN = False               # --pin-align (s81-die v17): field-frame pins bit-aligned with their abutting peers
+PIN_LATTICE = False             # --pin-lattice (S-DIE 2026-10-15): legalize generated pins onto one track/site origin
+PIN_LATTICE_REPORT = {}
+RLY_WIDE_ORIENTED = False       # --relay-wide-oriented (S-DIE r3): >= 1,000-b relays reserve the hop-direction outline only
+RLY_WIDE_DEPTH = 36.72          # deepest granted station footprint (FILL-S 14:06)
+STN70_ACROSS_FB = False         # --stn70-across-fallback (S-DIE r3)
 STN_WIDE_SQUARE = False         # --stn-wide-square (S-BIND r6): >= 1,000-b forwarded stations square, same area
 HEND_VR_NOBP = False            # --hend-vr-nobp (s81 grpA 10-14): wide (>= 512 b) m2l VR lane ends take NOBP + WCHK
 FWD_NEGCAP = False              # --fwd-negcap (s81-die v17): forwarded-lane ENDS capture on the falling forwarded edge
@@ -8715,6 +8932,21 @@ def _assigned_record(master):
         rec = json.loads(path.read_text()) if path.exists() else None
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
+            # Reject an impossible shared origin before constructing thousands
+            # of stations. This never moves assigned pins. The complete
+            # actual-platform track/site gate still owns physical qualification.
+            from s81.assigned_pin_lattice import local_residue_conflicts
+            # Qualified bound views use their measured LEF pins; assigned
+            # records may still supply clock/reset metadata for those views.
+            # --pin-lattice legalizes these pins at LEF emission (reported), so the record stands as assigned
+            conflicts = [] if master in bound_views() or PIN_LATTICE else local_residue_conflicts(rec)
+            if conflicts:
+                raise ValueError('assigned pins have no common track origin: '
+                                 + str(path) + ': ' + json.dumps(conflicts, sort_keys=True))
+        if rec and rec.get('released'):
+            # S-DIE 2026-10-15: a 'released' record in an earlier overlay directory withdraws the later assigned pins of a
+            # master whose outline changed (A2 VM reservation, reshaped su_s): the generator lays its face pins (top-down)
+            rec = None
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 
@@ -8801,7 +9033,14 @@ def masters_r8(m, k=1):
         ports = pdir.get(mst, {})
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst in CFG7_MASTERS else 7, f'r8 {it.kind}')
         M[mst] = Mx
-        _faces_r8(m, Mx, it, ports)
+        saved = m.get('spread_load_pin_maps', {}).get(mst) if k == 1 else None
+        if saved is None:
+            _faces_r8(m, Mx, it, ports)
+        else:
+            assert all(abs(a - b) < 1e-6 for a, b in zip(saved['outline'], (Mx.w, Mx.h))), (mst, 'spread load outline changed')
+            assert saved['port_signature'] == ports, (mst, 'spread load port signature changed')
+            Mx.ports = copy.deepcopy(saved['ports'])
+            Mx.order = list(saved['order'])
         _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
@@ -9330,6 +9569,103 @@ def _sync(name, clk, rst_in):
             f'else {name}_q <= {{{name}_q[0], 1\'b1}};\n    wire {name} = {name}_q[1];')
 
 
+def l2r_write_dom(m, it):
+    """Clock domain of an l2r start block's write side (its 'ck'); the lane side 'cks' is always the stream clock."""
+    # --rtl-bind + --pq-place: the x-lane start blocks hx_W / hx_E are written by the PQ core (stream), not the VM
+    wd_ = 'stream' if (RTL_BIND and PQ_PLACE and it.name in ('hx_W', 'hx_E')) else 'serial'
+    # S-BIND r6: a forwarded ctrl lane's start is written by its stream-domain source (sequencer c<e> / d /
+    # s, slab c_done / c_st, svc join, host hw, svc hc): it was clocked serial, sampling 1.2 GHz pulses
+    # with the 0.9 GHz clock (no synchroniser; pulses lost)
+    return m.get('_l2r_wdom', {}).get(it.name, wd_)
+
+
+def _hend_static_glue(m, mst, kind, lanes, fmt, ports):
+    """S-NET --hend-static (owner static rule 2026-10-14 18:59): hub end / start blocks on fixed calendars.
+    m2l (lane stream -> local stream, mesochronous): ot_s81_static_lane_end per lane (pin register + marker epoch +
+    fixed-offset crossing); r2l (lane stream -> serial VM, 4:3) / l2r (serial VM -> lane stream, 3:4):
+    ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phases); l2r written in the stream domain (ctrl
+    lanes): a same-clock pin pipeline.  No meso / ratio FIFO, credit, ready, DOWN/WAIT/RUN or trained placement; every
+    check is an assertion folded into the lane's {fault, live} pins.  Output formats are unchanged."""
+    insts = [it for it in m['insts'] if it.master == mst or ('__' in mst and it.name == mst.split('__', 1)[1])]
+    st_fmt = fmt in CTRL_ST_FMTS
+    F = int(fmt[2]) if st_fmt else None
+    nx = ports['xf'][1] // 2 if 'xf' in ports else 0
+    b = []
+    if kind == 'l2r':
+        wd = {l2r_write_dom(m, it) for it in insts} or {'serial'}
+        assert len(wd) == 1, (mst, wd)
+        same = wd == {'stream'}
+        pw = 1 if st_fmt else lanes[0]
+        b += [_sync('rsl', 'ck[0]', 'rs[0]'), _sync('rss_', 'cks[0]', 'rss[0]')]
+        if st_fmt:
+            b.append('    reg [1:0] i_q; always @(posedge ck[0]) i_q <= i;   // input pin flop')
+            if nx:
+                b.append(f'    reg [{2 * nx - 1}:0] x_q; always @(posedge ck[0]) x_q <= xf;   // input pin flop')
+            fx = ''.join(f' | x_q[{2 * j + 1}]' for j in range(nx))
+            lx = ''.join(f' & x_q[{2 * j}]' for j in range(nx))
+            b += [f'    wire sf = i_q[{F}]{fx};', f'    wire so = i_q[{1 - F}]{lx};',
+                  '    wire [1:0] w_ = {sf, sf | so};   // {payload, valid}: written on its compiled slot, never queued']
+        else:
+            b.append(f'    reg [{pw}:0] i_q; always @(posedge ck[0]) i_q <= i;   // input pin flop')
+            b.append(f'    wire [{pw}:0] w_ = i_q;')
+        b.append('    assign fo = cks;')
+        if same:
+            # write side on the lane's own stream clock: a fixed same-clock pin pipeline, no crossing at all
+            b += [f'    reg [{pw + 1}:0] od_q; always @(posedge cks[0]) od_q <= {{w_[{pw}:1], w_[0] & rsl, rss_}};   // output pin flop']
+            if 'st' in ports:
+                b.append("    reg [2:0] st_q; always @(posedge ck[0]) st_q <= {1'b0, rss_, rsl};   // output pin flop (observation)")
+        else:
+            # serial VM (0.9 GHz) -> lane stream (1.2 GHz): 3:4 fixed calendar, one stream phase in four is a bubble
+            b += [f'    wire [{pw}:0] rq_; wire lv_, fl_;',
+                  f'    ot_s81_static_ratio_cross #(.W({pw + 1}), .NS(3), .ND(4), .VBIT(0)) u_c (.w_ck(ck[0]), .w_rst_n(rsl), '
+                  '.i(w_), .r_ck(cks[0]), .r_rst_n(rss_), .o(rq_), .o_live(lv_), .fault(fl_));',
+                  f'    reg [{pw + 1}:0] od_q; always @(posedge cks[0]) od_q <= {{rq_[{pw}:1], rq_[0] & lv_, lv_}};   // output pin flop']
+            if 'st' in ports:
+                b += ["    (* async_reg = \"true\" *) reg [3:0] sy_; always @(posedge ck[0]) sy_ <= {sy_[1:0], fl_, lv_};",
+                      '    reg [2:0] st_q; always @(posedge ck[0]) st_q <= {sy_[3], sy_[2], sy_[2]};   // {fault, live, live}']
+        b.append('    assign od = od_q;')
+        if 'st' in ports:
+            b.append('    assign st = st_q;')
+        return b
+    b.append(_sync('rsl', 'ck[0]', 'rs[0]'))
+    base, lv, fl = 0, [], []
+    for j, pw in enumerate([1] if st_fmt else lanes):
+        vr = st_fmt or fmt in ('vr', 'vc')
+        dw = pw + 2 if vr else pw
+        b.append(f'    reg [{dw - 1}:0] dq{j}; always @(negedge fi{j}[0]) dq{j} <= di{j};   // pin register, falling forwarded edge')
+        if vr:
+            rec = f'dq{j}'                                     # {data, v, rst_n}: the lane's own marker
+        else:
+            b.append(_sync(f'wrs{j}', f'fi{j}[0]', 'rs[0]'))
+            rec = f"{{dq{j}, 1'b1, wrs{j}}}"                   # raw lane: every edge valid, marker = reset release
+        b.append(f'    wire [{pw + 1}:0] rc{j} = {rec};')
+        rec = f'rc{j}'
+        b.append(f'    wire [{pw}:0] rq{j}; wire lv{j}, fl{j};')
+        if kind == 'r2l':
+            b.append(f'    ot_s81_static_ratio_cross #(.W({pw + 1}), .NS(4), .ND(3), .VBIT(0), .WRN(1)) u_{j} (.w_ck(fi{j}[0]), '
+                     f'.w_rst_n({rec}[0]), .i({rec}[{pw + 1}:1]), .r_ck(ck[0]), .r_rst_n(rsl), .o(rq{j}), .o_live(lv{j}), '
+                     f'.fault(fl{j}));')
+        else:
+            b.append(f'    ot_s81_static_lane_end #(.W({pw + 1})) u_{j} (.f_ck(fi{j}[0]), .i({rec}), .ck(ck[0]), .rst_n(rsl), '
+                     f'.o(rq{j}), .live(lv{j}), .fault(fl{j}));')
+        if not st_fmt:
+            b.append(f'    assign o_d[{base + pw}:{base}] = {{rq{j}[{pw}:1], rq{j}[0] & lv{j}}};')
+        base += pw + 1
+        lv.append(f'lv{j}'); fl.append(f'fl{j}')
+    if st_fmt:
+        fx = ''.join(f' | xf[{2 * j + 1}]' for j in range(nx))
+        lx = ''.join(f' & xf[{2 * j}]' for j in range(nx))
+        b += [f'    wire [1:0] o_d;', f'    assign o_d[{F}] = (rq0[0] & rq0[1]) | fl0{fx};',
+              f'    assign o_d[{1 - F}] = rq0[0] & ~rq0[1] & lv0{lx};',
+              '    reg [1:0] o_q; always @(posedge ck[0]) o_q <= o_d;   // output pin flop', '    assign o = o_q;']
+        return b
+    b.insert(1, f'    wire [{base + 1}:0] o_d;')
+    b.append(f'    assign o_d[{base + 1}:{base}] = {{{" | ".join(fl)}, {" & ".join(lv)}}};   // {{fault, live}}')
+    b.append(f'    reg [{base + 1}:0] o_q; always @(posedge ck[0]) o_q <= o_d;   // output pin flop')
+    b.append('    assign o = o_q;')
+    return b
+
+
 def _status_lane_glue(kind, fmt, ports):
     """S-BIND r6: a 2-bit status lane (fmt vs<F>, F = index of the fault bit: {avail, fault} vs0, {fault, done} vs1).
     Start (l2r): f = i[F] | folded faults | own sticky drop, o = i[1-F] & folded lives; the CDC word is written when
@@ -9419,6 +9755,15 @@ def glue_rtl(m):
             w = ports['i'][1]
             body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
             body.append('    assign o = r;')
+        elif mst.startswith('dsfd_xstg') and HEND_STATIC:
+            w = ports['i'][1]
+            body += ['    // S-NET --hend-static: end block (cw) -> band block (ck), same frequency, on the fixed calendar of',
+                     '    // ot_s81_static_lane_end: pin register on cw (the old ir), epoch from the lane marker i[0], fixed',
+                     '    // offset crossing; no meso FIFO / credits / trained placement.  o = {data, valid & live, live}.',
+                     f'    wire [{w - 2}:0] xq; wire xl, xf_;',
+                     f"    ot_s81_static_lane_end #(.W({w - 1})) u_x (.f_ck(cw[0]), .i(i), .ck(ck[0]), .rst_n(1'b1), .o(xq), .live(xl), .fault(xf_));",
+                     f'    reg [{w - 1}:0] orr; always @(posedge ck[0]) orr <= {{xq[{w - 2}:1], xq[0] & xl, xl}};',
+                     '    assign o = orr;']
         elif mst.startswith('dsfd_xstg'):
             w = ports['i'][1]
             body += ['    // SEL_XSTG crossing stage (S81-RERUN v8): the end block (its own clock region, cw) -> band block (ck)',
@@ -9458,9 +9803,17 @@ def glue_rtl(m):
             body.append('    always @(posedge ck[0]) begin ra <= xai; rb <= xbi; end')
             if 'x2i' in ports:   # --bf-x2-static: the BF x2 fragment in the SAME station register as x0 / x1 / cc
                 body.append(f'    reg [{X2B - 1}:0] r2; always @(posedge ck[0]) r2 <= x2i;')
-                body.append('    assign x2 = {r2[%d:5], r2[4] & rs[0], r2[3:1], r2[0] & rs[0]};   // xb_v / go_bf by the column reset' % (X2B - 1))
+                if SSTN_REG:     # S-NET: xb_v / go_bf in reset flops at the pin (no gate behind the output register)
+                    body.append("    reg [1:0] r2v; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r2v <= 2'b00; else r2v <= {x2i[4], x2i[0]};")
+                    body.append('    assign x2 = {r2[%d:5], r2v[1], r2[3:1], r2v[0]};   // xb_v / go_bf: column-reset flops' % (X2B - 1))
+                else:
+                    body.append('    assign x2 = {r2[%d:5], r2[4] & rs[0], r2[3:1], r2[0] & rs[0]};   // xb_v / go_bf by the column reset' % (X2B - 1))
             body.append('    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rc <= 15\'d0; else rc <= cci;')
-            body.append('    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset')
+            if SSTN_REG:         # S-NET --sstn-reg: xs_v in a column-reset flop, the output pin is driven by a register
+                body.append("    reg xv; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) xv <= 1'b0; else xv <= xai[282];")
+                body.append('    assign xa = {xv, ra[281:0]};                 // xs_v: column-reset flop (no gate at the pin)')
+            else:
+                body.append('    assign xa = {ra[282] & rs[0], ra[281:0]};   // xs_v qualified by the column reset')
             cp_ = re.search(r'_cp(\d+)(?:t\d)*$', mst)
             if cp_:      # --sstn-ccpad: the lane-equal pad registers on cc, after the station's own cc register
                 np_ = int(cp_.group(1))
@@ -9473,7 +9826,8 @@ def glue_rtl(m):
                     if f'cct{j_}' in ports:
                         body.append(f'    assign cct{j_} = ' + ('rc;' if j_ == 0 else f'rcp[{j_ - 1}];'))
             else:
-                body.append('    assign xb = rb;\n    assign cc = rc;')
+                # S-NET: a station without a cc output (dsfd_sstn_e0c0) must not drive an undeclared net
+                body.append('    assign xb = rb;' + ('\n    assign cc = rc;' if 'cc' in ports or not SSTN_REG else ''))
             if 'qt' in ports:
                 body.append('    assign qt = xbi;                             // previous slot q1/e1: same-cycle re-buffer')
             terms = [p_ for p_ in ('e0', 'e1', 'c0', 'c1', 'si') if p_ in ports]
@@ -9491,13 +9845,23 @@ def glue_rtl(m):
                     body.append(f'    wire {s_}_v = {s_}[0]; wire [31:0] {s_}_t = {s_}[32:1]; wire [31:0] {s_}_d = {s_}[64:33]; '
                                 f'wire {s_}_e = {s_}[65];')
             body.append('    wire ov, oe, flt; wire [31:0] ot_, od;')
-            body.append('    ot_v41_retn_w17w10 #(.RD(64), .RST(1), .BYPASS(1)) u_n (.clk(clk[0]), .rst_n(rst_n[0]), '
+            if NODE_STATIC:      # S-NET --node-static: fixed-slot node (compiler model tools/s81/static_return_calendar.py)
+                body.append(f'    ot_s81_retn_static #(.WIN({NODE_WIN}), .RST(1)) u_n (.clk(clk[0]), .rst_n(rst_n[0]), '
+                            '.a_v(a_v), .a_t(a_t), .a_d(a_d), .a_e(a_e), .b_v(b_v), .b_t(b_t), .b_d(b_d), .b_e(b_e), '
+                            '.o_v(ov), .o_t(ot_), .o_d(od), .o_e(oe), .fault(flt));')
+            else:
+                body.append('    ot_v41_retn_w17w10 #(.RD(64), .RST(1), .BYPASS(1)) u_n (.clk(clk[0]), .rst_n(rst_n[0]), '
                         '.a_v(a_v), .a_t(a_t), .a_d(a_d), .a_e(a_e), .b_v(b_v), .b_t(b_t), .b_d(b_d), .b_e(b_e), '
                         '.o_v(ov), .o_t(ot_), .o_d(od), .o_e(oe), .fault(flt), .quiet());')
             body.append('    assign o = {oe, od, ot_, ov};')
             fi = ' | fi[0]' if fch else ''
             body.append(f'    reg fr; always @(posedge clk[0] or negedge rst_n[0]) if (!rst_n[0]) fr <= 1\'b0; else fr <= flt{fi};')
             body.append('    assign fo = fr;')
+        elif mst.startswith('dsfd_rstg') and SSTN_REG:   # S-NET --sstn-reg: valid in a column-reset flop at the pin
+            w_ = ports['i'][1]
+            body.append(f'    reg [{w_ - 1}:1] r; always @(posedge ck[0]) r <= i[{w_ - 1}:1];')
+            body.append("    reg v; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) v <= 1'b0; else v <= i[0];")
+            body.append('    assign o = {r, v};                            // return valid: column-reset flop (no gate at the pin)')
         elif mst.startswith('dsfd_rstg_pq'):     # S81-DIE PQ root-row return station (registered, column clock)
             w_ = ports['i'][1]
             body.append(f'    reg [{w_ - 1}:0] r; always @(posedge ck[0]) r <= i;')
@@ -9591,7 +9955,9 @@ def glue_rtl(m):
                     # fewer bits declared the port narrower and silently discarded the tail (he_c4/c5/c6 o[86:85])
                     raise ValueError(f'{mst}: end block o is {ports.get("o")} but its body drives {need_} bits: every '
                                      'lane end must deliver its {fault, live} pins to a real input')
-            if fmt in CTRL_ST_FMTS:
+            if HEND_STATIC and not (kind == 'l2r' and BF_X2_STATIC and lanes[0] == LSW):
+                body += _hend_static_glue(m, mst, kind, lanes, fmt, ports)
+            elif fmt in CTRL_ST_FMTS:
                 body += _status_lane_glue(kind, fmt, ports)
             elif kind == 'l2r' and BF_X2_STATIC and lanes[0] == LSW:
                 pw = lanes[0]
@@ -9835,6 +10201,14 @@ def die_options(ap):
     ap.add_argument('--hstn-posedge', action='store_true', help='common-clock stations dsfd_hstn{h,v}_<W> as plain posedge '
                     'flops on ck (same function, 0 cycles) instead of INV + negedge ot_fwd_link_stage: the inverted sinks '
                     'defeat the tile IO reference (FILL-S 2026-10-15, physical/ref_tile/s81fill_hstn*)')
+    ap.add_argument('--sstn-reg', action='store_true', help='S-NET: slot stations / dsfd_rstg register the reset-qualified '
+                    'valid bit (async-reset flop at the pin) instead of flop AND rs behind the output pin')
+    ap.add_argument('--node-static', action='store_true', help='S-NET (owner static rule 10-14): return nodes wrap '
+                    'ot_s81_retn_static (fixed-slot sibling window, no queues / WAIT timeout / arbitration)')
+    ap.add_argument('--node-win', type=int, default=2, help='S-NET: sibling window of the static return node (edges)')
+    ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
+                    'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
+                    'FIFO, credits, ready or trained placement')
     ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
                     'driving slot station (no floating pad relay)')
     ap.add_argument('--rt-strip', type=float, default=0.0, help='return-tree relays may use a UM-high strip above their '
@@ -10031,6 +10405,12 @@ def die_options(ap):
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
+    ap.add_argument('--hub-abut', action='store_true', help='S-DIE 2026-10-15: W-column centre-stack gaps 21.6 um (RTL_ABUT_GAP) instead of 172.8')
+    ap.add_argument('--vm-span-vch', help='S-DIE 2026-10-15 (coordinator 18:40, A2 VM): VM reservation W,H um spanning the W column + VCH (overrides the contract VM outline)')
+    ap.add_argument('--su-outline', help='S-DIE 2026-10-15: su_s outline W,H um (overrides the contract); wider than the column grows EAST into the VCH')
+    ap.add_argument('--pin-lattice', action='store_true', help='S-DIE 2026-10-15: move off-lattice generated/assigned pins the least distance onto one legal site-grid origin per axis (die PLACE snap rule); report in <lef>.lattice.json')
+    ap.add_argument('--relay-wide-oriented', action='store_true', help='S-DIE r3: >= 1,000-b relays reserve only the hop-direction outline (depth >= 36.72 um), not the two-orientation square')
+    ap.add_argument('--stn70-across-fallback', action='store_true', help='S-DIE r3: with --stn70-split, a 70xK group with no along-flow spot retries stacked across the flow')
     ap.add_argument('--stn-wide-square', action='store_true', help='S-BIND r6: >= 1,000-b forwarded stations (the packed static x lane) square at the same area')
     ap.add_argument('--bf-x2-static', action='store_true', help='S-BIND 2026-10-15: packed 1,101-b static x lane '
                     '(legacy 564 + BF x2 536 + valid): static hx pipelines, static column ingress, x2 slot stations, BF xb bound')
@@ -10039,6 +10419,7 @@ def die_options(ap):
                     'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--lkck-wire', action='store_true', help='link forwarded-clock feedthrough as die-top wire (no dsfd_lkck)')
     ap.add_argument('--stn70-split', action='store_true', help='dsfd_stn*_70xK -> K x dsfd_stn*_70x1')
@@ -10076,6 +10457,10 @@ def apply_options(a):
     global STATIC_SEAMS, STATIC_COLLECTIVE, MIX4_SLOT
     STATIC_SEAMS = bool(getattr(a, 'static_seams', False) or getattr(a, 'static_coll', False))
     STATIC_COLLECTIVE = bool(getattr(a, 'static_collective', False) or getattr(a, 'static_coll', False))
+    global VM_NATIVE_CANDIDATE
+    VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
+    if VM_NATIVE_CANDIDATE:
+        vm_native_candidate_params()
     global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
@@ -10094,12 +10479,8 @@ def apply_options(a):
             sp_ = json.loads(f_.read_text())
             if not sp_.get('slot_change_request'):
                 continue
-            mm_ = re.fullmatch(r'dsfd_h?stn([hv])_(\d+)(?:x1)?', sp_['top'])
-            if not mm_:
-                continue
-            key_ = (mm_.group(1), int(mm_.group(2)))
-            o_ = tuple(sp_['slot_change_request']['outline'])
-            STN_FOOTPRINTS[key_] = tuple(max(a_, b_) for a_, b_ in zip(o_, STN_FOOTPRINTS.get(key_, o_)))
+            if re.fullmatch(r'dsfd_h?stn[hv]_\d+(x1)?', sp_['top']):
+                STN_FOOTPRINTS[sp_['top']] = tuple(sp_['slot_change_request']['outline'])
     HUB_LAYOUT = RETURN_TREES = None
     for opt_, nm_ in (('hub_layout', 'HUB_LAYOUT'), ('return_trees', 'RETURN_TREES')):
         if getattr(a, opt_, None):
@@ -10155,7 +10536,11 @@ def apply_options(a):
     global RELAY_PROGRESS, RT_STRIP
     RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
     RT_STRIP = float(getattr(a, 'rt_strip', 0.0) or 0.0)
-    global SSTN_CCPAD, HSTN_POSEDGE
+    global SSTN_CCPAD, HSTN_POSEDGE, SSTN_REG, NODE_STATIC, NODE_WIN, HEND_STATIC
+    SSTN_REG = bool(getattr(a, 'sstn_reg', False))
+    NODE_STATIC = bool(getattr(a, 'node_static', False))
+    NODE_WIN = int(getattr(a, 'node_win', 2) or 2)
+    HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
     global PIN_NEED
@@ -10174,7 +10559,7 @@ def apply_options(a):
     global WFC_PRICED, PEER_PIN_POS, HOP_R_HUB
     HOP_R_HUB = float(getattr(a, 'hop_r_hub', 0.0) or 0.0)
     PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
-    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP, STN_WIDE_SQUARE
+    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP, STN_WIDE_SQUARE, RLY_WIDE_ORIENTED, STN70_ACROSS_FB, PIN_LATTICE
     PIN_ALIGN = bool(getattr(a, 'pin_align', False))
     global XB_RGAP_FIRST, X_SITE_PAIR
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
@@ -10199,6 +10584,9 @@ def apply_options(a):
     CFIFO_FALL = bool(getattr(a, 'cfifo_fall_launch', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     STN_WIDE_SQUARE = bool(getattr(a, 'stn_wide_square', False))
+    RLY_WIDE_ORIENTED = bool(getattr(a, 'relay_wide_oriented', False))
+    PIN_LATTICE = bool(getattr(a, 'pin_lattice', False))
+    STN70_ACROSS_FB = bool(getattr(a, 'stn70_across_fallback', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     global RTL_BIND, HOST_CF_BITS, HOST_TC_BITS   # HC_T_FWD / HC_T_RET / HC_RTL_WIDTHS declared global above (r6: was a SyntaxError)
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))
@@ -10333,6 +10721,17 @@ def apply_options(a):
     HROW_TX = bool(getattr(a, 'hrow_tx', False))
     assert not HROW_TX or (SUHC_1011 and SU_E), '--hrow-tx needs --suhc-1011 --su-e (h resident in HC, E-column slot)'
     VM_SLAB = tuple(float(x) for x in a.vm_slab.split(',')) if getattr(a, 'vm_slab', None) else None
+    global VM_SPAN_VCH, SU_GROW_EAST, HUB_ABUT
+    HUB_ABUT = bool(getattr(a, 'hub_abut', False))
+    if getattr(a, 'vm_span_vch', None):
+        VM_SLAB = tuple(float(x) for x in a.vm_span_vch.split(','))
+        VM_SPAN_VCH = True
+    if getattr(a, 'su_outline', None):
+        global SU_WEST_OVERHANG
+        v_ = [float(x) for x in a.su_outline.split(',')]
+        SU_V2_UM = tuple(v_[:2])
+        SU_WEST_OVERHANG = v_[2] if len(v_) > 2 else 0.0
+        SU_GROW_EAST = True
     global ECOL_SLABS, ECOL_W
     ECOL_SLABS = tuple(x for x in (getattr(a, 'ecol_slabs', None) or '').split(',') if x)
     assert set(ECOL_SLABS) <= {'wfc', 'host', 'capture', 'seedl', 'p2'}, ('--ecol-slabs: wfc / host / capture / seedl / p2', ECOL_SLABS)
@@ -10432,7 +10831,8 @@ def apply_options(a):
         from s81.canonical_layout import load as canonical_load
         CANONICAL_LAYOUT = canonical_load(a.canonical_layout, ROOT)
         assert ROOTS == 128 and CFG_PER_PAIR == 7
-        PAIRS, BF_PAIRS, NV_PAIRS = 2417, 519, 0
+        # wide-hub canonical records carry their allocator point (S-DIE 10-15); the 22-column record is 2417/519
+        PAIRS, BF_PAIRS, NV_PAIRS = CANONICAL_LAYOUT['pair_count'], CANONICAL_LAYOUT['bf_pairs'], 0
         BF_PER_REGION = None
         BF_EXPLICIT_IDS = frozenset(CANONICAL_LAYOUT['bf_ids'])
         slot_geometry()

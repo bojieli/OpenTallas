@@ -1,0 +1,44 @@
+{
+ "summary": {
+  "shape": "qwen8192",
+  "native_column": true,
+  "seed": 1015,
+  "mut": "pv2",
+  "T_window": 0,
+  "T_compressed": 0,
+  "pv_run_chunks": 4,
+  "ops": 1,
+  "passed": 0,
+  "wall_s": 420.5,
+  "pv_span_max": 346,
+  "pv_lines_max": 128,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "pv_h0_sm0_o0",
+   "kind": "pv",
+   "kv4": 0,
+   "rows": 128,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 128,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 128,
+    "first_in": 141,
+    "last_in": 384,
+    "last_out": 487,
+    "span": 346,
+    "beats": 256,
+    "first_beat": 156,
+    "last_beat": 411
+   },
+   "results": 2048,
+   "expected": 2048,
+   "mismatches": 2048,
+   "pass": false
+  }
+ ]
+}

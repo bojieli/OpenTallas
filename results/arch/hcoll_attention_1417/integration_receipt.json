@@ -1,0 +1,60 @@
+{
+  "schema": "hcoll-attention-association-integration-1417",
+  "verdict": "COMPONENT_PASS_INTEGRATION_OPEN",
+  "compiler_sha256": "51eb3c3a80c89ee2e6a40437c4437b05333a2f23c7b2eb4d6f351d28fcc8097e",
+  "native_receipt": "results/rtl/hgi_attn_pv_native_20261015/receipt.json",
+  "literal_programme_hashes_equal_native_pass": true,
+  "placement": {
+    "block_rows": 128,
+    "quadrant": "k%4",
+    "sm_in_quadrant": "(k//4)//2",
+    "block_slot": "(k//4)%2"
+  },
+  "association_order": [
+    "quadrantbit0",
+    "quadrantbit1",
+    "blockslot",
+    "SMbit0",
+    "SMbit1",
+    "SMbit2"
+  ],
+  "implementation": {
+    "quad_phase": "actual four ring stops; 01 and 23 pair, then pair-pair; root broadcasts and only destination lands",
+    "local_phase": "actual reducer with registered RTL scratch feedback",
+    "external_boundary": "canonical128-row golden subtree nodes; no internally injected DUT compute"
+  },
+  "continuous_fixed_edges": {
+    "qwen8192_1024words": 113280,
+    "ds640_512words": 6464,
+    "ds128_512words": 576,
+    "initial_reset_edges": 4,
+    "runtime_ready_stalls": 0
+  },
+  "capacity_note": {
+    "optimized_required_qwen_words_per_link_direction": 12288,
+    "actual_ring_fp32_words_per_edge": 8,
+    "link_only_lower_bound_edges": 1536,
+    "scope": "necessary serialization floor for the specified recursive-halving volume; not measured end-to-end performance and not the conservative component cost"
+  },
+  "required_production_joins": [
+    "actual SM folded publication producer and canonical block address metadata",
+    "DS32-row SM partials to128-row block-local golden subtree hardware",
+    "source-bound quadrant ISA lowering in actual parent",
+    "physical assigned slot/pin/clock views and TT setup/FF hold/DRC0",
+    "measured throughput vs immutable price; previous512-lane modeled merge is not inherited",
+    "V4 offdie elastic block admission and link calendar integration"
+  ],
+  "qualification": {
+    "native_full_sm": false,
+    "native_full_die": false,
+    "mapped_memory_service": false,
+    "physical_closed": false,
+    "throughput_qualified": false
+  },
+  "preserved_jobs": {
+    "q3_synthesis": "EPYC4 unit340251/local531382",
+    "V4_SW_slice_mutants": "EPYC1unit1339654/local1749769",
+    "SM_element_probe": "PVEunit1628736",
+    "SM_component_smoke": "PVEunit1628737"
+  }
+}

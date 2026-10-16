@@ -993,6 +993,78 @@ def _tear_overlapped(v, m, over=()):
     return torn
 
 
+DEOVERLAP_PARENTS = ('qfd_sp_vector_memory_par',)
+
+
+def _deoverlap_faces(mst, pin_rects, gap=0.5):
+    """Move only the movable 'face' groups that actually overlap another pin (rect level) to the nearest free span of
+    their own face edge / layer; every other pin stays where it is.  Fails closed."""
+    eps = 1e-6
+
+    def edge(r):
+        x0, y0, x1, y1 = r
+        return ('E' if x1 >= mst.w - eps else 'W' if x0 <= eps else 'N' if y1 >= mst.h - eps else
+                'S' if y0 <= eps else None)
+
+    def rects(only=None, skip=None):
+        wm = {p: (sp[1] if (only is None or p == only) and p != skip else 0) for p, sp in mst.ports.items()}
+        return pin_rects(mst, 1, wm)
+
+    def overlapping_ports():
+        by = {}
+        for nm, layer, r in rects():
+            by.setdefault(layer, []).append((r, nm.rsplit('[', 1)[0]))
+        bad = set()
+        for layer, rs in by.items():
+            rs.sort()
+            for i, ((x0, y0, x1, y1), p) in enumerate(rs):
+                for (u0, v0, u1, v1), q in rs[i + 1:]:
+                    if u0 >= x1:
+                        break
+                    if p != q and v0 < y1 and y0 < v1:
+                        bad.add((p, q))
+        return bad
+
+    moved = []
+    for _ in range(64):
+        # pairs of two non-face (fragment / explicit) pins are not this pass's: the case's PIN_OVERLAP gate counts the
+        # emitted widths and stays the verdict
+        bad = {pq for pq in overlapping_ports() if any(mst.ports.get(x, ('x',))[0] == 'face' for x in pq)}
+        if not bad:
+            return moved
+        cand = sorted({p for pq in bad for p in pq if mst.ports.get(p, ('x',))[0] == 'face' and p not in moved},
+                      key=lambda p: mst.ports[p][1])
+        if not cand:
+            raise ValueError(f'{mst.name}: overlapping pins {sorted(bad)[:4]} have no movable face group')
+        p = cand[0]
+        sp = mst.ports[p]
+        mine = rects(only=p)
+        f, layer = sp[2], mine[0][1]
+        ax = (1, 3) if f in 'EW' else (0, 2)
+        a = min(r[ax[0]] for _, _, r in mine); b = max(r[ax[1]] for _, _, r in mine)
+        along = mst.h if f in 'EW' else mst.w
+        occ = sorted((r[ax[0]] - gap, r[ax[1]] + gap) for nm, l, r in rects(skip=p) if l == layer and edge(r) == f)
+        free, cur = [], 1.0
+        for lo, hi in occ:
+            if lo > cur:
+                free.append((cur, lo))
+            cur = max(cur, hi)
+        free.append((cur, along - 1.0))
+        span = b - a
+        best = None
+        for lo, hi in free:
+            if hi - lo < span:
+                continue
+            x = min(max(a, lo), hi - span)
+            if best is None or abs(x - a) < abs(best - a):
+                best = x
+        if best is None:
+            raise ValueError(f'{mst.name}: no free {span:.2f}-um span on {f} {layer} for {p}')
+        mst.ports[p] = sp[:4] + (sp[4] + (best - a),) + sp[5:]
+        moved.append(p)
+    raise ValueError(f'{mst.name}: pin re-pack did not converge')
+
+
 def _wrap(v, m, G, peers):
     import contract_v4_tp8 as V4
     base_m, base_pw, base_pr, base_case = v.masters, v.port_widths, v.pin_rects, v.case_real
@@ -1061,7 +1133,7 @@ def _wrap(v, m, G, peers):
         # Legacy frame clock planning cannot mirror M8 pins; these two frames are
         # replaced by closed M5 pins below, so construct their disposable frame R0.
         frame_model = dict(model)
-        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl')
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl', 'qfd_sp_vector_memory_par')
                                 or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')) else i
                                 for i in model['insts']]
         for i in frame_model['insts']:
@@ -1071,7 +1143,23 @@ def _wrap(v, m, G, peers):
                 i.orient = 'R0'
             elif i.master == 'qfd_tile_nl':
                 i.master = 'qfd_tile_nk'  # base frame shape; actual node-less ports below
-        M = base_m(frame_model, k, port_bits)
+        # Legacy frame constructors use the historical VM spelling. Generate only
+        # its disposable geometric frame, then expose the NEW parallel source master.
+        parallel_vm = any(i.master == 'qfd_sp_vector_memory_par' for i in model['insts'])
+        if parallel_vm:
+            for i in frame_model['insts']:
+                if i.master == 'qfd_sp_vector_memory_par':
+                    i.master = 'qfd_sp_vector_memory'
+        frame_bits = dict(port_bits or {})
+        if parallel_vm:
+            frame_bits.update({('qfd_sp_vector_memory', p): n
+                for (mst, p), n in (port_bits or {}).items() if mst == 'qfd_sp_vector_memory_par'})
+        M = base_m(frame_model, k, frame_bits)
+        if parallel_vm:
+            vm_frame = M.pop('qfd_sp_vector_memory')
+            vm_frame.name = 'qfd_sp_vector_memory_par'
+            vm_frame.note += ' | NEW PAR_RB=1 source specialization; geometric frame only, no inherited physical view'
+            M[vm_frame.name] = vm_frame
         byi = {i.name: i for i in model['insts']}
         Master = type(next(iter(M.values())))
         # Every real leaf master uses the same outline as its placed instance.
@@ -1405,7 +1493,7 @@ def _wrap(v, m, G, peers):
                 if sp[0] == 'face' and sp[2] in 'NS' and p not in ('va', 'vq'):
                     q.ports[p] = sp[:2] + ('S' if sp[2] == 'N' else 'N',) + sp[3:]
         # ---- T10 / T14 / T17: VM region, SU, seq_su, control tile: pins toward their peers on the final placement
-        vmm = M.get('qfd_sp_vector_memory')
+        vmm = M.get(byi['sp_vector_memory'].master)
         if vmm is not None:
             vi, si = byi['sp_vector_memory'], byi['sp_su64_sfu']
             sx, sy = VM_ENV['w'] / vmm.w, VM_ENV['h'] / vmm.h
@@ -1501,7 +1589,7 @@ def _wrap(v, m, G, peers):
             sq_ = M.get('qfd_seq_su')
             if sq_ is not None and 'kvd' in sq_.ports:
                 sq_.ports['kvd'] = (sq_.ports['kvd'][0], 44) + tuple(sq_.ports['kvd'][2:])
-            vmm_ = M.get('qfd_sp_vector_memory')
+            vmm_ = M.get(byi['sp_vector_memory'].master)
             if vmm_ is not None and 'ar' in vmm_.ports:
                 vmm_.ports['ar'] = (vmm_.ports['ar'][0], 520) + tuple(vmm_.ports['ar'][2:])
         # v1.2 (compute lead r4, 21:4x): contract straps are REAL pins of the receiving master.  C14's abstracts had no
@@ -1733,13 +1821,40 @@ def _wrap(v, m, G, peers):
             if model.get('native_graph_bind'):
                 from qwen_split.native_graph_bind import install_masters as install_native_graph
                 install_native_graph(M, model, Master, v.pin_rects)
+            if model.get('static_link_bind'):
+                from qwen_split.static_link_bind import install_masters as install_static_link
+                from qwen_split.direct_up4 import partition_master as _pm
+                install_static_link(M, model, Master, _pm)
+            if model.get('res_train_bind'):
+                from qwen_split.res_train_bind import install_masters as install_res_train
+                from qwen_split.direct_up4 import partition_master as _pm2
+                install_res_train(M, model, Master, _pm2)
+            # An added source tap can fragment already-connected non-native
+            # consumers (slab tc and X tap gi). Preserve their exact real pin
+            # rectangles while exposing the same numeric aliases on every peer.
+            from qwen_split.direct_up4 import partition_master as _fragment_master
+            for name_, aliases_ in model.get('port_join', {}).items():
+                q_ = M.get(name_)
+                if q_ is None:
+                    continue
+                pending_ = {a_: rb_ for a_, rb_ in aliases_.items() if rb_[0] in q_.ports}
+                if pending_:
+                    rects_ = v.pin_rects(q_, 1, {p_: sp_[1] for p_, sp_ in q_.ports.items()})
+                    _fragment_master(q_, pending_, rects_)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
+            # Q-COMPUTE-DIE r8 (C22s): NEW unclosed parents whose face groups were laid out by several passes (default
+            # faces, replan, link-word widening, native ports) can end with groups on top of each other (C22s:
+            # qfd_sp_vector_memory_par write_commit_mask over ar[377..], 145 pairs). Top-down pin assignment owns
+            # these pins: re-pack movable face groups along each face (fixed 'pins' fragments stay), fail closed.
+            for name_ in DEOVERLAP_PARENTS:
+                if name_ in M:
+                    _deoverlap_faces(M[name_], v.pin_rects)
 
     v.V5_FINAL_MASTERS = final
     # split compute C17: band_lanes may be placed MX (band 0 stack mirrored); its clock pins are the closed native view's
     # real pins set in final(), so the generic mirror clock-pin relocation must not run for it
-    v.MIRROR_CK_FINAL = ('qfd_sp_band_lanes',) if SPLIT_COMPUTE else ()
+    v.MIRROR_CK_FINAL = (('qfd_sp_band_lanes',) + tuple(f'qfd_sp_res_train{suffix}_{b}' for suffix in ('', '_par') for b in range(3))) if SPLIT_COMPUTE else ()
 
     def port_widths(model, k=1):
         w = base_pw(model, k)
@@ -1771,6 +1886,12 @@ def _wrap(v, m, G, peers):
             for p in dict.fromkeys(q for q in mst.order if q in mine):
                 if mine[p][0] == 'xy':
                     _, n0, layer, poss, _ = mine[p]
+                    exact = getattr(mst, 'assigned_fragment_rects', {}).get(p)
+                    if exact is not None:
+                        if len(exact) != n0:
+                            raise ValueError(f'{mst.name}.{p}: incomplete assigned fragment rectangles')
+                        out.extend((f'{p}[{i}]', L, r) for i, (L, r) in enumerate(exact[:wmap.get(p, n0)]))
+                        continue
                     for i, (x, y) in enumerate(poss[:wmap.get(p, n0)]):
                         # >= the layer's min area (M5 2000 nm2): a 24 x 24 nm interior square had no DRT access
                         # point (C19s DRT-0073 on every interior clock entry); 24 x 96 nm along the preferred direction

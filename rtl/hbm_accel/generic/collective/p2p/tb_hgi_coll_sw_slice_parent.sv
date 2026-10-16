@@ -23,7 +23,7 @@ module tb_hgi_coll_sw_slice_parent;
  wire [279:0] cwo,ccwo;wire rrv;wire [2:0] rrt;wire [255:0] rrd;wire [31:0] cycles;
  wire [135:0] vm_rq;wire [2055:0] vm_rr;wire [2247:0] vm_kq;
  // slice
- wire [1917:0] cr;wire [10279:0] rr;wire [7:0] wq_done,dq_done,kq_done;
+ wire [821:0] cr;wire [10279:0] rr;wire [7:0] wq_done,dq_done,kq_done;
  wire [2223:0] cw_out,ccw_out;wire [143:0] bank_status;wire [2:0] hub_status,ring_fault;wire [1:0] mirror_busy;
  wire [18:0] vmstat;
  reg [7:0] rslot_v=0,wslot_v=0;reg [23:0] rslot=0,wslot=0;
@@ -49,8 +49,8 @@ module tb_hgi_coll_sw_slice_parent;
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(cwo),.pr_ccw_o(ccwo),
   .vm_rq(vm_rq),.vm_rr(vm_rr),.vm_kq(vm_kq),.fault(qfault_o),.done(done),.stat_cycles(cycles));
  hfd_hgi_vms_static_SW slice(.clk_bank({8{clk}}),.clk_hub(clk),.clk_ring({2{clk}}),.clk_replay(clk),.rst_n(rst_n),
-  .cq(2366'd0),.cr(cr),.client_seq(16'd0),.response_enable(8'd0),.response_seq(16'd0),
-  .bank_enable(8'd0),.bank_client(24'd0),.hub_ring_enable(2'd0),.hub_ring_client(6'd0),
+  .cq('0),.cr(cr),.client_seq('0),.response_enable('0),.response_seq('0),
+  .bank_enable(8'd0),.bank_client('0),.hub_ring_enable(2'd0),.hub_ring_client('0),
   .rslot_v(rslot_v),.wslot_v(wslot_v),.rslot(rslot),.wslot(wslot),.rq(rq),.rr(rr),
   .wq(2248'd0),.wq_done(wq_done),.dq(dq),.kq(vm_kq),.dq_done(dq_done),.kq_done(kq_done),
   .cw_in(2224'd0),.ccw_in(2224'd0),.cw_out(cw_out),.ccw_out(ccw_out),.ring_tx_enable(2'd0),
@@ -159,7 +159,8 @@ module tb_hgi_coll_sw_slice_parent;
     rslot_v=0;rslot=0;wslot_v=0;wslot=0;
     for(integer b=0;b<8;b=b+1)begin
      if((c-OFF>=6&&c-OFF<=29)||(c-OFF==61&&b<2))begin rslot_v[b]=1;rslot[b*3+:3]=3'd3;end
-     if((c-OFF==54&&b==0)||(c-OFF==55&&b==1))begin wslot_v[b]=1;wslot[b*3+:3]=3'd1;end
+     if((c-OFF==55&&b==0)||(c-OFF==56&&b==1))begin wslot_v[b]=1; // writer v4 relay edge (+1)
+     wslot[b*3+:3]=3'd1;end
     end
     @(posedge clk);#1;
     if(hfault||qfault_o||program_fault)$fatal(1,"slice-parent fault round%0d cycle%0d",round,c-OFF);
@@ -176,7 +177,7 @@ module tb_hgi_coll_sw_slice_parent;
     if(av!==(c-OFF==48))$fatal(1,"ARG publication cycle%0d",c-OFF);
     if(av)pubs=pubs+1;
     if(pdv[7]!==(c-OFF==51))$fatal(1,"writer sink phase cycle%0d",c-OFF);
-    if(kq_done!==(c-OFF==57?8'h01:c-OFF==58?8'h02:8'h00))$fatal(1,"slice kq commit cycle%0d got%h",c-OFF,kq_done);
+    if(kq_done!==(c-OFF==58?8'h01:c-OFF==59?8'h02:8'h00))$fatal(1,"slice kq commit cycle%0d got%h",c-OFF,kq_done);
     if(|kq_done)commits=commits+1;
     if(c-OFF==67)begin
      if(vm_rr[255:0]!=={224'd0,expected(round)}||vm_rr[257+:256]!==256'd0)
@@ -188,7 +189,7 @@ module tb_hgi_coll_sw_slice_parent;
    end
   end
   if(reads!=960||commits!=10||pubs!=5||halted!=5||readbacks!=5)$fatal(1,"coverage counts");
-  $display("HCOLL_SW_SLICE_PARENT PASS whole_q3_host_v4+whole_SW_slice rounds5 operand_sectors960 publish48 commit57_58 readback67 halt66 (+%0d host launch) contract rq/rr group3 kq",OFF);
+  $display("HCOLL_SW_SLICE_PARENT PASS whole_q3_host_v4+whole_SW_slice rounds5 operand_sectors960 publish48 commit58_59 readback67 halt66 (+%0d host launch) contract rq/rr group3 kq",OFF);
   $finish;
  end
 endmodule

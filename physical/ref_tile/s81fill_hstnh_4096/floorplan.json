@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  36.072,
-  203.016
+  36.72,
+  665.28
  ],
  "core": [
   2.16,
   2.16,
-  33.912000000000006,
-  200.856
+  34.56,
+  663.12
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -41,7 +41,14 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "36.72 x 665.28 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
  "referenced": [
   "rtl/common/ot_fwd_link_stage.sv",
   "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_4096.sv",

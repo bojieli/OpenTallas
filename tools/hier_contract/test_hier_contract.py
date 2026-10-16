@@ -99,6 +99,18 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["verdict"], "PASS", r["fails"])
         self.assertTrue(any("several pins" in w for w in r["warns"]))
 
+    def test_band_carve_removes_band_obs_over_face_pins(self):
+        # ROOT 2026-10-15 (hbm_ckgen_rel-r1): abstract_pin_stub carves the band rect around the pins it covers; the rest
+        # of the band stays OBS and no face pin keeps a same-layer OBS over it
+        import abstract_pin_stub as APS
+        text = lef(sig=(("a", "M5", 5.0, 0.0), ("b", "M5", 7.0, 0.0)), obs=[("M5", 4.0, 0.1, 9.0, 0.4)])
+        out, _ = APS.process(text.replace("  END\nEND tile", "  END\nEND tile"))
+        r = self.run_lint(out)
+        self.assertEqual(r["info"]["face"]["band_same"], 0)
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        left = APS.obs_rects(APS.split_lef(out)[1])["M5"]
+        self.assertAlmostEqual(sum((c - a) * (d - b) for a, b, c, d in left), 5.0 * 0.3 - 2 * 0.024 * 0.092, places=6)
+
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})
         self.assertIn("d", self.checks(r))
@@ -147,6 +159,50 @@ class ChildLint(unittest.TestCase):
         c2 = {"die": "d", "version": 3, "slots": [dict(slot, view_cap=None)]}
         r = self.run_lint(lef(pg="M7"), contract=c2, slot="u_t")         # no recorded view cap: M7 view fails the M5 slot
         self.assertTrue({"c", "e"} <= self.checks(r), r["fails"])
+
+
+class ThinTileRowSpan(unittest.TestCase):
+    """(b) on a tile whose outline is off the 2.16-um row/PG lattice (S81 fill dsfd_hstnh_112, 18.576 x 17.256, collect
+    crashed 10-15): rows and M5 stripes 2.151..14.859/14.873 stop 0.237 um short of the 2.16-um top inset.  A stripe
+    crossing every cell row is a full PG connection; a stripe missing a row, or a shrunken core, still FAILs."""
+    W, H = 18.576, 17.256
+
+    def text(self, y0=2.151, y1=14.873, rows=(2.16, 2.151, 16.416, 14.859)):
+        out = [f"VERSION 5.8 ;\nMACRO tile\n  CLASS BLOCK ;\n  SIZE {self.W} BY {self.H} ;"]
+        for i, n in enumerate(("VDD", "VSS")):
+            rects = "\n".join(f"        RECT {2.592 + 2.7 * k + 1.35 * i:.3f} {y0} {2.712 + 2.7 * k + 1.35 * i:.3f} {y1} ;"
+                              for k in range(5))
+            out.append(f"  PIN {n}\n    USE {'POWER' if n == 'VDD' else 'GROUND'} ;\n    PORT\n      LAYER M5 ;\n{rects}\n"
+                       f"    END\n  END {n}")
+        out.append("  PIN a\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M4 ;\n        RECT 0 5.952 0.084 5.976 ;"
+                   "\n    END\n  END a")
+        out.append("  OBS\n    LAYER M1 ;\n      RECT %g %g %g %g ;\n  END" % rows)
+        out.append("END tile\nEND LIBRARY\n")
+        return "\n".join(out)
+
+    def lint(self, text):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "tile.lef"
+            p.write_text(text)
+            return child_lint.lint(str(p), skip={"g"})
+
+    def test_off_lattice_rows_fully_crossed_pass(self):
+        r = self.lint(self.text())
+        self.assertNotIn("b", {f[1] for f in r["fails"]}, r["fails"])
+        self.assertEqual(r["info"]["pg"]["nets"]["VDD"]["stripes"], 5)
+
+    def test_stripe_missing_top_row_fails(self):
+        r = self.lint(self.text(y1=14.5))
+        self.assertIn("b", {f[1] for f in r["fails"]})
+
+    def test_shrunken_core_fails(self):
+        # rows end 3 um below the top inset: stripes cover them, but the core is not the tile -> not full-length
+        r = self.lint(self.text(y1=12.1, rows=(2.16, 2.151, 16.416, 12.0)))
+        self.assertIn("b", {f[1] for f in r["fails"]})
+
+    def test_no_m1_rows_keeps_old_rule(self):
+        r = self.lint(self.text().replace("    LAYER M1 ;\n      RECT 2.16 2.151 16.416 14.859 ;\n", ""))
+        self.assertIn("b", {f[1] for f in r["fails"]})
 
 
 class Pockets(unittest.TestCase):

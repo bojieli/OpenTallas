@@ -1,0 +1,33 @@
+{
+ "cell": "qfd_xs_tap",
+ "view": "tap8views",
+ "lib_cell": "qfd_xs_tap",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 296.8,
+ "spread_ps": 51.2,
+ "outputs": 3135,
+ "inputs": 3145,
+ "launch_ps": 230.9,
+ "launch_pin": "he_d[473]",
+ "capture_ps": 198.6,
+ "capture_pin": "gi[334]",
+ "launch_over": 1,
+ "capture_over": 6,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 230.9 > 220 (1 pins); capture 198.6 > 190 (6 pins)",
+ "source_commit": "3129b63a8",
+ "job": "qfd_xs_tap-xt8-3129b63a8",
+ "job_status": "NEEDS_HUMAN collect child_lint failed:61pins blocked above",
+ "qualification_complete": false,
+ "view_sha256": {
+  "qfd_xs_tap_tt.lib": "296f8c9252ba27150b4407fffbd2876fb0fd90ff4e97d1f4884a823e355ddcb0",
+  "insertion.json": "cf5cfbb3729f0e692b9f779511f3c71face9beffdf0ef355a10081c79f57d4a8",
+  "child_lint.json": "14d6179417a4f974cc311e1f2b811edfd1ad60dd5ce171e7472f78c12dcef8a8",
+  "qfd_xs_tap.lef": "f678209ee409bbc956cadb81eda2ccc31674e047b98060cb1c5b718b7502917f"
+ }
+}

@@ -79,6 +79,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
 LIGHT_STAGE_RAM_GB = 8      # drive-0849: bench / collect / export stages
+SYNC_DISK_GB = 16           # SYNC-ROOM: disk one source sync may write (src/ + bench_src*/ beyond the view store)
 LIGHT_DISK_FLOOR_GB = 30    # their run-root / disk-root floor (full floor for route / calibrate / ECO)
 ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
@@ -413,7 +414,8 @@ def claim_ram(spec):
     return sized_ram(spec, spec.get("peak_ram_gb", 32))
 
 
-def sized_ram(spec, ram):
+def measured_peak_gb(spec):
+    """Largest recorded actual process peak for this block class, or zero if unknown."""
     p = Path(__file__).resolve().parent / "measured_peaks.json"
     try:
         mt = p.stat().st_mtime
@@ -422,7 +424,12 @@ def sized_ram(spec, ram):
         m = _MEASURED_PEAKS[1].get(measured_block(spec.get("name", "")))
         peak = float(m["peak_gb"]) if m else 0
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        return ram
+        return 0
+    return peak if math.isfinite(peak) and peak > 0 else 0
+
+
+def sized_ram(spec, ram):
+    peak = measured_peak_gb(spec)
     if spec.get("measured_ram", True) is False or peak <= 0 or not isinstance(ram, (int, float)) or ram < 2 * peak:
         return ram
     return math.ceil(max(1.25 * peak, peak + 4))
@@ -1515,6 +1522,7 @@ class Fleet:
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
+        self.syncing = {}        # host -> jobs placed there and still syncing their source (SYNC-ROOM)
         self.last_good = {}      # host -> (t, last successful probe): used for PROBE_LAST_GOOD_S when a probe fails
         self.tool_good = {}      # host -> (t, last successful toolchain probe)
 
@@ -1692,6 +1700,20 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                                            for p in self.inflight_launches.get(host, [])]
             self.probe_cache.pop(host, None)
 
+    def sync_room(self, h):
+        """SYNC-ROOM (ROOT 2026-10-15): placing a job writes its source snapshot (src/ + bench_src*/, up to ~28 GB before
+        the view-store fix) before any stage runs, but the disk floor was judged on the first stage's RAM only: a light
+        first stage kept just LIGHT_DISK_FLOOR_GB, and AGIdock took 14 syncs at 60 GB free and hit 0 (17:40 10-15).
+        A placement now also needs room for every sync already in flight on the host plus its own."""
+        info = self.probe(h)
+        if info is None or info.get("disk_gb") is None:
+            return True, "ok"
+        n = self.syncing.get(h, 0) + 1
+        if info["disk_gb"] - SYNC_DISK_GB * n < LIGHT_DISK_FLOOR_GB:
+            return False, (f"{host_cfg(h)['label']} run root {info['disk_gb']} GB free - {n} source sync(s) x {SYNC_DISK_GB} GB "
+                           f"< {LIGHT_DISK_FLOOR_GB}")
+        return True, "ok"
+
     def choose(self, spec, exclude=()):
         with FLEET_LOCK:
             return self._choose(spec, exclude)
@@ -1783,6 +1805,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         for h in order:
             ok, msg = self.fits(h, threads, ram)
             if ok:
+                ok, msg = self.sync_room(h)
+            if ok:
+                self.syncing[h] = self.syncing.get(h, 0) + 1
                 return h, None
             why.append(msg)
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
@@ -2542,6 +2567,10 @@ def overlay_drift_check(force=False):
             if st != "same":
                 rows.append(f"{rel}: {st}")
         hd = (_OVL["head"] or "?")[:9]
+        try:
+            inprocess_stale_sync(_OVL["head"])
+        except Exception:  # noqa: BLE001
+            log("inprocess_stale_sync error:\n" + traceback.format_exc())
         if rows:
             log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: {len(rows)} file(s) differ (stale = main's copy is shipped; "
                 f"daemon_only = commit to main; in-process imports need a restart): " + "; ".join(rows))
@@ -2549,6 +2578,69 @@ def overlay_drift_check(force=False):
             log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: all overlay files equal main")
     except Exception:  # noqa: BLE001
         log("overlay_drift_check error:\n" + traceback.format_exc())
+
+
+# INPROCESS-SYNC (ROOT 2026-10-15): the daemon imports tools/ref_tile (pre_route_gate -> ref_tile ->
+# clock_entry_constraints, source_binding) and tools/hier_contract IN PROCESS at submit.  Those files are not overlays, so
+# a main fix never reached the pinned daemon tree: twice on 10-15 (13:04, 17:15) the daemon judged kits generated by
+# main's clock_entry_constraints with its OLDER generator and refused them (native_cts_sdc diff).  Hourly (with the drift
+# check) every file of these trees whose daemon copy is an OLDER main version, or missing, is replaced by main's blob;
+# daemon-only edits are kept and reported.  When a replaced file is already imported, the daemon exits at the next tick
+# start with no housekeeping/recovery work in flight and systemd (Restart=always, KillMode=process) restarts it.
+INPROCESS_SYNC_DIRS = ("tools/ref_tile", "tools/hier_contract")
+_RESTART = {"why": None}
+
+
+def inprocess_stale_sync(head=None):
+    head = head or _ovl_head()
+    root = HERE.parents[1]
+    if not head:
+        return []
+    r = sh(["git", "-C", str(REPO), "ls-tree", "-r", head, "--", *INPROCESS_SYNC_DIRS], timeout=120)
+    if r.returncode:
+        return []
+    synced = []
+    for ln in r.stdout.splitlines():
+        meta, rel = ln.split("\t", 1)
+        mode, typ, blob = meta.split()
+        if typ != "blob" or "__pycache__" in rel:
+            continue
+        f = root / rel
+        if f.is_file():
+            if HO.blob_id(f.read_bytes()) == blob:
+                continue
+            data, state = HO.resolve_bytes(root, REPO, rel, head, _OVL["hist"])
+            if state != "stale":
+                continue
+        else:
+            p = subprocess.run(["git", "-C", str(REPO), "cat-file", "blob", blob], capture_output=True, timeout=60)
+            if p.returncode:
+                continue
+            data = p.stdout
+        f.parent.mkdir(parents=True, exist_ok=True)
+        tmp = f.with_name(f".{f.name}.inprocess-sync")
+        tmp.write_bytes(data)
+        os.chmod(tmp, 0o755 if mode == "100755" else 0o644)
+        os.replace(tmp, f)
+        synced.append(rel)
+    if synced:
+        loaded = sorted(rel for rel in synced for m in list(sys.modules.values())
+                        if getattr(m, "__file__", None) and Path(m.__file__).resolve() == (root / rel).resolve())
+        log(f"INPROCESS-SYNC vs origin/main {head[:9]}: {len(synced)} stale/missing file(s) replaced by main's copy: "
+            + ", ".join(synced[:20]) + (f" (+{len(synced) - 20} more)" if len(synced) > 20 else "")
+            + (f"; already imported {loaded}: daemon restarts at the next idle tick start" if loaded else ""))
+        if loaded:
+            _RESTART["why"] = f"in-process modules synced to main {head[:9]}: {', '.join(loaded)}"
+    return synced
+
+
+def restart_if_requested():
+    """exit (systemd restarts the daemon; KillMode=process keeps every job) only between ticks with no background
+    housekeeping / recovery running"""
+    if not _RESTART["why"] or any(f is not None and not f.done() for f in (_HOUSE_FUTURE, _RECOVERY_FUTURE)):
+        return False
+    log(f"INPROCESS-SYNC restart: {_RESTART['why']}")
+    sys.exit(0)
 
 
 # LOOP-PIN-STUB: stdin script patching a stale ref_tile.py export (pre-ba4d5d136) to run abstract_pin_stub.py before the lint
@@ -3190,6 +3282,11 @@ def launch_stage(j, st, cmd):
         # calibrate runs in parallel: the IO SDC the calibrate stage would have generated is made here from the
         # assumed (or, on a re-route, measured) insertion in calib.env
         cmd = f"( {j['ctrack']['sdc_cmd']} ) || exit 5\n" + cmd
+    if j.get("export_lint_recovery") and st["key"] == "collect":
+        from export_lint_recovery import stage_script
+        before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
+        env += before
+        cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
     cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
@@ -3700,6 +3797,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -5818,13 +5917,29 @@ def eco_post_sdcs(j, m, what="ECO"):
     return post_sdcs
 
 
+def hold_eco_resources(j):
+    """Size from the completed route and recorded block class, with an 8 GB ECO floor.
+
+    Small retained routes need not claim the old universal 32 GB (and 200 GB
+    disk floor). Larger or unknown routes keep at least that legacy request;
+    no ECO may underclaim its effective route request or a known class peak.
+    """
+    route = next((st for st in stage_list(j["spec"]) if st["kind"] == "route"), None)
+    route_ram = route["ram"] if route else claim_ram(j["spec"])
+    peak = measured_peak_gb(j["spec"])
+    measured = math.ceil(max(1.25 * peak, peak + 4)) if peak else 0
+    ram = math.ceil(max(8, route_ram, measured))
+    return 8, max(32, ram) if ram > LIGHT_STAGE_RAM_GB else ram
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
         return False
-    ok, why = fleet.fits(j["host"], 8, 32)
+    threads, ram = hold_eco_resources(j)
+    ok, why = fleet.fits(j["host"], threads, ram)
     if not ok:
-        event(j, f"hold ECO waiting for capacity: {why}")
+        event(j, f"hold ECO waiting for capacity ({threads} threads / {ram} GB): {why}")
         return True            # stays at the verdict stage; the next tick retries
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
@@ -5834,7 +5949,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS={threads}"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -5866,9 +5981,9 @@ def start_hold_eco(j, fleet, m):
     ship_helpers(j["host"], j["run"], j)
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso(),
-                    keepwires=keepwires)
-    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
-    launch_token = fleet.reserve_launch(j["host"], 8, 32)
+                    keepwires=keepwires, resources=dict(threads=threads, ram=ram))
+    st = dict(key="hold_eco", kind="hold_eco", threads=threads, ram=ram)
+    launch_token = fleet.reserve_launch(j["host"], threads, ram)
     try:
         launch_stage(j, st, cmd)
     finally:
@@ -6737,9 +6852,58 @@ try:
     src_ok = bool(a.get("src_commit")) and open(os.path.join(R, "src", "SOURCE_COMMIT")).read().strip() == a["src_commit"]
 except OSError:
     pass
+def snap_commit(tp):
+    try:
+        return open(os.path.join(tp, "SOURCE_COMMIT")).read().strip()
+    except OSError:
+        return ""
+def trim_snapshot(tp):
+    # disk-1015: a git snapshot (src/, bench_src_a*/) at the job's commit is re-created by git archive; a receipt that
+    # names a file or sub-directory inside it keeps THAT path, not the whole 4-5 GB tree (the old whole-tree keep left
+    # ~590 GB of snapshots on AGIdock); a receipt naming the snapshot root itself is satisfied by SOURCE_COMMIT
+    keep = [r for r in hard if r.startswith(tp + "/")]
+    kdirs = [r for r in keep if os.path.isdir(r) and not os.path.islink(r)]
+    kfiles = set(keep) | {os.path.join(tp, "SOURCE_COMMIT")}
+    b = 0
+    for dp, dn, fn in os.walk(tp):
+        if any(dp == k or dp.startswith(k + "/") for k in kdirs):
+            dn[:] = []
+            continue
+        for f in fn:
+            p = os.path.join(dp, f)
+            if p not in kfiles:
+                b += rm_file(p)
+    if APPLY:
+        for dp, dn, fn in os.walk(tp, topdown=False):
+            if dp != tp:
+                try:
+                    os.rmdir(dp)
+                except OSError:
+                    pass
+        with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
+            f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
+    return b
+if mode == "src":
+    # SRC-RELEASE (ROOT 2026-10-15): only the git snapshots (src/, bench_src*/) at the job's own commit, trimmed to the
+    # receipt-named paths; nothing else in the run dir is touched
+    for top in sorted(os.listdir(R)):
+        tp = os.path.join(R, top)
+        if (top == "src" or top.startswith("bench_src")) and os.path.isdir(tp) and not os.path.islink(tp) \
+                and a.get("src_commit") and snap_commit(tp) == a["src_commit"] \
+                and not os.path.exists(os.path.join(tp, ".keep")) \
+                and not os.path.exists(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT")):
+            freed += trim_snapshot(tp)
+    print("DEEP_FREED %d" % (freed // 2 ** 20))
+    sys.exit(0)
 for top in sorted(os.listdir(R)):
     tp = os.path.join(R, top)
-    if not os.path.isdir(tp) or os.path.islink(tp) or prot(tp) or anc(tp):
+    if not os.path.isdir(tp) or os.path.islink(tp):
+        continue
+    snap = top == "src" or top.startswith("bench_src")
+    if prot(tp) or anc(tp):
+        if snap and mode in ("closed", "fail") and a.get("src_commit") and snap_commit(tp) == a["src_commit"] \
+                and not os.path.exists(os.path.join(tp, ".keep")):
+            freed += trim_snapshot(tp)
         continue
     if top == "src" and mode in ("closed", "fail") and src_ok:
         freed += rm_tree(tp)
@@ -6838,6 +7002,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6853,6 +7028,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
@@ -7061,6 +7238,145 @@ def release_deep(jobs, now=None):
             event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
             save_job(j)
     return n
+
+
+# SRC-RELEASE (ROOT 2026-10-15, coordinator): AGIdock's root went 356 -> 0 GB free in 4.5 h because every loop run dir
+# keeps src/ (6-14 GB) and bench_src_a*/ (13-14 GB) until DEEP release, which waits DEEP_RELEASE_AGE_H and, for a CLOSED
+# job, the closure on main; 61 routes closed on AGIdock in that window.  A route never reads either snapshot after its
+# verdict: the record branch is already pushed, the receipts on main name the few files they cite, and a later human
+# retry / bench re-judgment re-syncs (source_synced=False).  So a terminal job loses both snapshots (trimmed to the
+# receipt-named paths, SOURCE_COMMIT kept) SRC_RELEASE_AGE_H after its last event, on every host.  Kept: near-miss
+# retained jobs (hold-ECO successors), collect-crash retention, BF exemption, helper provenance, source-mismatch
+# retention, .keep, reaper holds, a live process in the run dir, and a run dir shared with a non-terminal job.
+SRC_RELEASE_AGE_H = 0.1
+SRC_RELEASE_PER_TICK = 40
+
+
+def src_release_candidates(jobs, now=None):
+    closed = closed_blocks(jobs)
+    holds = STATE / "reaper_holds"
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    out = []
+    for x in jobs:
+        if x["status"] not in TERMINAL or x.get("src_released") or x.get("snapshot_trimmed") or not x.get("run") \
+                or x.get("host") not in hosts or _terminal_age_h(x, now) < SRC_RELEASE_AGE_H:
+            continue
+        if x["status"] in EARLY_FAIL or x.get("near_miss_retained") or near_miss(x, closed) or bf_exempt(x, now) \
+                or helper_provenance_retained(x) or collect_crash_after_closed_verdict(x) or viz_elem_running(x) \
+                or (holds / x["name"]).exists():
+            continue
+        if any(y["status"] not in TERMINAL for y in shared.get((x["host"], x["run"].rstrip("/")), [])):
+            continue
+        out.append(x)
+    return sorted(out, key=lambda x: x.get("updated") or "", reverse=True)    # the newest (largest, still on disk) first
+
+
+def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
+    cand = src_release_candidates(jobs, now)
+    if not cand:
+        return 0
+    ev = _main_evidence()
+    if not ev:
+        return 0
+    sources = release_source_index(jobs)
+    n = freed = 0
+    for x in cand:
+        if n >= limit:
+            break
+        if source_mismatch_retained(x, sources):
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j["status"] not in TERMINAL or j.get("src_released") or j.get("snapshot_trimmed"):
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if not commit or subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                            capture_output=True, timeout=60).returncode != 0:
+                continue
+            full = git("rev-parse", commit + "^{commit}").stdout.strip()
+            run = j["run"].rstrip("/")
+            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode == 3 or r.returncode != 0 or not m:
+                continue
+            j["src_released"] = dict(at=now_iso(), freed_mb=int(m.group(1)))
+            j["source_synced"] = False          # any later resume / human retry re-syncs the snapshot
+            event(j, f"src release ({m.group(1)} MB): src/ + bench_src*/ snapshots cut to receipt-named paths "
+                     f"(git archive {full[:12]} re-creates them)")
+            save_job(j)
+            freed += int(m.group(1))
+    if n:
+        log(f"SRC-RELEASE: {n} run dirs, {freed / 1024:.1f} GB freed")
+    return n
+
+
+def snapshot_trim(jobs, limit=200, now=None):
+    """SNAPSHOT-TRIM (disk-1015): AGIdock fell to 18 GB free with ~590 GB of src/ + bench_src_a*/ git snapshots left in
+    deep-released run dirs -- DEEP_RELEASE_PY kept a whole 4-5 GB snapshot whenever one main receipt named a single
+    file inside it (signoff.sdc, a bench gate script) or the snapshot root.  Deep release now keeps only the named paths;
+    this pass re-applies the same DEEP_RELEASE_PY, at the recorded mode, to jobs deep-released before that fix.  Run by
+    the hourly cron guard (`closure_loop.py snapshot-trim`) and safe to repeat: every deep-release guard is re-checked
+    (live process, sibling jobs sharing the run dir, receipt refs, .keep, collect-crash retention, source mismatch)."""
+    closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    ev = _main_evidence()
+    if not ev:
+        return 0, 0
+    n = freed = 0
+    for x in jobs:
+        dr = x.get("deep_released") or {}
+        if n >= limit or not dr or x.get("snapshot_trimmed") or dr.get("mode") not in ("closed", "fail") \
+                or x.get("host") not in hosts or x["status"] not in TERMINAL:
+            continue
+        probe = dict(x, deep_released=None)
+        if deep_release_mode(probe, closed, ev, now) != dr["mode"] or source_mismatch_retained(x, sources) \
+                or helper_provenance_retained(x):
+            continue
+        run = x["run"].rstrip("/")
+        if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
+               for y in shared.get((x["host"], run), [])):
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j.get("snapshot_trimmed") or j["status"] not in TERMINAL:
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                         capture_output=True, timeout=60).returncode != 0:
+                commit = ""
+            if not commit:
+                continue
+            mode = dr["mode"]
+            arg = dict(run=run, mode=mode, src_commit=commit, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       final_dirs=[(j.get("metrics") or {}).get("orfs_dir")] if mode == "closed" and (j.get("metrics") or {}).get("orfs_dir") else [])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode != 0 or not m:
+                continue
+            j["snapshot_trimmed"] = dict(at=now_iso(), freed_mb=int(m.group(1)))
+            event(j, f"snapshot trim ({mode}, {m.group(1)} MB): src/bench_src snapshots cut to receipt-referenced paths")
+            save_job(j)
+            freed += int(m.group(1))
+    return n, freed
+
+
+def cmd_snapshot_trim(a):
+    n, freed = snapshot_trim(all_jobs(), limit=a.limit)
+    msg = f"SNAPSHOT-TRIM: {n} run dirs visited, {freed / 1024:.1f} GB freed"
+    log(msg)
+    print(msg)
 
 
 # ------------------------------------------------------------------------------------------------ AUTO-REACT / READY_NEXT
@@ -7733,6 +8049,7 @@ def host_down_requeue(j, kind, now=None):
 
 
 def tick(fleet):
+    restart_if_requested()
     t_ph = time.time()
     overlay_drift_check()
     _slow_phase("overlay_drift_check", t_ph)
@@ -7752,6 +8069,12 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
+    sync = {}
+    for x in all_jobs():
+        if x["status"] == "SYNC" and x.get("host") and not x.get("source_synced"):
+            sync[x["host"]] = sync.get(x["host"], 0) + 1
+    with FLEET_LOCK:
+        fleet.syncing = sync
     schedule_housekeeping()     # release_bulk / release_deep / stale24_sweep: background, never ahead of dispatch
     t_mg = time.time()
     try:
@@ -7832,7 +8155,8 @@ def _slow_phase(name, t0):
 
 def housekeeping():
     """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
-    for name, fn in (("release_bulk", release_bulk), ("release_deep", release_deep), ("stale24 sweep", stale24_sweep)):
+    for name, fn in (("release_src", release_src), ("release_bulk", release_bulk), ("release_deep", release_deep),
+                     ("stale24 sweep", stale24_sweep)):
         try:
             fn(all_jobs())
         except Exception:  # noqa: BLE001
@@ -8490,6 +8814,28 @@ def cmd_recover_eco_overlays(a):
 
 
 @locked_job_command
+def cmd_recover_export_lint(a):
+    """Attach an explicit main-pinned lint-only recovery, leaving retry to the operator."""
+    import base64
+    from export_lint_recovery import eligible
+    j = load_job(a.name)
+    eligible(j)
+    head = _ovl_head()
+    rel = "tools/hier_contract/child_lint.py"
+    data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
+                          capture_output=True, check=True).stdout
+    request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
+                   helper_sha256=hashlib.sha256(data).hexdigest(),
+                   guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
+    j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
+    event(j, f"explicit collect-only lint recovery pinned to main {head}; frozen helpers and route retained")
+    save_job(j)
+    print(json.dumps(j["export_lint_recovery"]))
+
+
+@locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
     j = load_job(a.name)
@@ -8546,7 +8892,10 @@ def main():
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
+    el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
+    st = sub.add_parser("snapshot-trim", help="hourly guard: cut src/bench_src snapshots of deep-released jobs to receipt paths")
+    st.add_argument("--limit", type=int, default=200)
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -8579,8 +8928,12 @@ def main():
         cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
+    elif a.cmd == "recover-export-lint":
+        cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
+    elif a.cmd == "snapshot-trim":
+        cmd_snapshot_trim(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
         (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
         (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))

@@ -1,0 +1,130 @@
+{
+  "verdict": "PASS",
+  "scope": "Source-exact W542 NAT1 BAL1 cap CDC stream-reader leaf only; no full parent 3:4/clock/die/token qualification",
+  "route_job": "ot_s81_vm_x34_t_w542_1015_r10-minstage10-69bca9c3e",
+  "route_source": "69bca9c3e",
+  "record_commit": "96c15097d",
+  "parameters": {
+    "W": 542,
+    "NAT": 1,
+    "BAL": 1
+  },
+  "signoff": {
+    "TT_setup_ps": 34.63,
+    "FF_hold_ps": 6.46,
+    "DRC": 0,
+    "SS_sensitivity_only_ps": -67.85
+  },
+  "native_audit": {
+    "cell": "ot_s81_vm_x34_t",
+    "view": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r10/views/ot_s81_vm_x34_t",
+    "lib_cell": "ot_s81_vm_x34_t",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 311.5,
+    "spread_ps": 62.2,
+    "outputs": 544,
+    "inputs": 1634,
+    "launch_ps": 174.0,
+    "launch_pin": "o_d[541]",
+    "capture_ps": 183.3,
+    "capture_pin": "b2[281]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "record_commit": "96c15097d",
+    "view_sha256": {
+      "ot_s81_vm_x34_t_tt.lib": "f6818f65d1b3072fcd3041eab5a74a50d40c5246c2b3cafc48825241a240ae89",
+      "export_tt.tcl": "0b550f6020d31f0dba632f4c486d2c36dbcf945f7527bd9a64d910eb919093f8",
+      "ot_s81_vm_x34_t_ss.lib": "479c95e7e9c1fcff8d4ad6d79eac828a67f26a0b6efe6be3ac8aaacd0bab2a5e",
+      "ot_s81_vm_x34_t.lef": "5d891a89a2f2e1ab09c3bffbe4681d2d56700b8bed1c2f5fa3c4120f53cf0aab",
+      "abstract.json": "de6bed1a9f7ab59187bbc75ad0e9ba7dd11b04f999813fbda9bbb944c09b03b9",
+      "export_ff.tcl": "6b95c31ab65c6b94f641d9eac3b2d0bcaddcd88c6bbb90897d89341d2bd1cc21",
+      "insertion.json": "1e2b80dfe28ba7922965abc8f30d123931b24c7d26ca5de12716c95b5bc2cb45",
+      "export_tt.log": "f88957d4d5b4d58ef5bc124fbdc8e1e4fd3c72d7eb7fc7565f11ff602c7bb9bb",
+      "export_ss.log": "b1e1c71bcf51b72a6d554a832be974fcc57b0072ed7021901fbfe400fc42bc14",
+      "export_ff.log": "d1dbb2385a6be1ea4d8e841deca060abb77cbdc974c16bbd1fcaaa53d2c4630f",
+      "ot_s81_vm_x34_t_ff.lib": "576b6bd8f93401c01e727ab209c48c32df27fb9512dfd2e3dd6416bced821341",
+      "export_ss.tcl": "2b302f5b2f0ba4a86a01a23f4a7cf2e453493b1fab03adc01ff02511aefdabf7",
+      "child_lint.json": "cd02f33696f3746b616d6e991e828a266756c715bfc63f1993d41215846ce55e"
+    }
+  },
+  "source_join": {
+    "path": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv",
+    "sha256": "a29f9d143a15dc86a6ba300c2688a8675e591b59682d46e2daaa8b6955a11d29",
+    "bytes_equal_route_source": true
+  },
+  "bench_records": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.059 MB sources in 7 modules, into 0.008 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.005 s (elab=0.001, cvt=0.002, bld=0.000); cpu 0.005 s on 1 threads; allocated 33.379 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_cap_prod": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "TB_VMCAP RESULT mode 0 phases 14 rows full 1735 partial 8 missing 0 bad 0\nTB_VMCAP PASS mode 0\n/srv/opentallas/claude/closure-loop/ot_s81_vm_x34_t_w542_1015_r10-minstage10-69bca9c3e/cap_prod/src/tb_dsfd_vm_static_cap.sv:136: $finish called at 847910 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_x34_nat": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "TB_X34 RESULT mode 0 words 1380 got 1378 bad 0\nTB_X34 PASS mode 0\nTB_X34 PASS mode 1 (alignment fault 1)\nTB_X34 PASS mode 2 (alignment fault 1)\nTB_X34 RESULT mode 0 words 1380 got 1378 bad 955\nTB_X34 FAIL mode 0\nTB_X34 RESULT mode 0 words 1380 got 918 bad 897\nTB_X34 FAIL mode 0\nX34_NAT_GATE PASS\n",
+      "track": "parallel"
+    },
+    "bench_neg_tphase": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "TIME MISMATCH row 23 tk 31 exp 28\nTIME MISMATCH row 25 tk 31 exp 28\nTIME MISMATCH row 10 tk 31 exp 28\nTIME MISMATCH row 14 tk 31 exp 28\nTIME MISMATCH row 34 tk 35 exp 32\nTIME MISMATCH row 21 tk 35 exp 32\nTIME MISMATCH row 39 tk 35 exp 32\nUNEXPECTED FAULT lanes 00000000000000000000\nTB_VMCAP RESULT mode 0 phases 14 rows full 1735 partial 8 missing 0 bad 612\nTB_VMCAP FAIL mode 0\n/srv/opentallas/claude/closure-loop/ot_s81_vm_x34_t_w542_1015_r10-minstage10-69bca9c3e/neg/src/tb_dsfd_vm_static_cap.sv:136: $finish called at 847910 (1ps)\n",
+      "track": "parallel"
+    }
+  },
+  "clock_delivery": {
+    "category": "ck_cap_x34_t",
+    "child_pin": "t_ck",
+    "rule": "phi - routed wire - actual TT boundary mean insertion for each root",
+    "measurement": {
+      "boundary": {
+        "n": 2178,
+        "mean": 311.5,
+        "min": 273.0,
+        "max": 335.2
+      },
+      "all": {
+        "n": 2728,
+        "mean": 311.0,
+        "min": 273.0,
+        "max": 335.2
+      },
+      "errors": [],
+      "macros": null,
+      "macro_libs": 0
+    }
+  },
+  "changes": {
+    "fixed_input_hold_cell": "HB1xp67_ASAP7_75t_R",
+    "fixed_output_hold_cell": "HB4xp67_ASAP7_75t_R",
+    "added_data_cycles": 0,
+    "added_ports": 0,
+    "added_roots": 0,
+    "outline_um": [
+      86.4,
+      345.6
+    ]
+  },
+  "limits": [
+    "Closed tile stands; no further reroute",
+    "Native pass applies only W542 NAT1 BAL1, never aliases other widths/NAT modes",
+    "Parent source/parameter adoption, physical 3:4 clock delivery and whole-program cost remain separate"
+  ]
+}

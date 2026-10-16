@@ -1,0 +1,111 @@
+{
+  "scope": "Gate fixed port-to-controller argmax ages at the full TP8 shape.\n\nThe real shared controller is extracted by module name, with retained exact\ncomponent dependencies. External p_am stimulus is delayed four edges; no port\narithmetic or whole-head qualification is implied.\n",
+  "source_pins": {
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "b76cb9a539d88175abf8267a52c96dc81f0cc396f1c36b0dd725e58da897cdbe",
+    "tools/qwen_producer_train/component_sources.sv": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+    "tools/qwen_vmwb/tb_spctl_port_age.sv": "ffd6d0ee77137ba0a47426c444ae72294d2bf63186c8173ec4738973b9982d80",
+    "tools/qwen_vmwb/run_spctl_port_age.py": "7f68f54bee94ab44d4a28750f87c11226bad25e2df7a80c6edc1c12047a83f7e",
+    "executed_component.sv": "ca9d64cc96508c24ec8dac7c7ea897c2557c2175e2e09b9b2f71034e214894a8"
+  },
+  "runs": [
+    {
+      "name": "e3_ami0_rmax0",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=3 ami=0 rmax=0 updates=64 writes=0 errors=1446",
+      "binary_sha256": "c637ad7abc70145522d347fcff293be52ddb4bbcad0faf3ba687518879869123",
+      "ok": true
+    },
+    {
+      "name": "e3_ami0_rmax1",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=3 ami=0 rmax=1 updates=0 writes=1 errors=3",
+      "binary_sha256": "b0700d2067a3fd1d814401a74cbe2c9d9f3e6d346dde317f91256cdaa9b14eca",
+      "ok": true
+    },
+    {
+      "name": "e3_ami1_rmax0",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=3 ami=1 rmax=0 updates=64 writes=0 errors=1445",
+      "binary_sha256": "0b8c479eca11c67a17b13199978aebe4376eb09ad0ddbef7dddcde17718ecb6e",
+      "ok": true
+    },
+    {
+      "name": "e3_ami1_rmax1",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=3 ami=1 rmax=1 updates=0 writes=1 errors=3",
+      "binary_sha256": "21d3a8490be25a8c8f32735a8abca1da00e585a9482639b534842dbf3fcec915",
+      "ok": true
+    },
+    {
+      "name": "e4_ami0_rmax0",
+      "build_rc": 0,
+      "run_rc": 0,
+      "observed": "SPCTL_PORT_AGE extra=4 ami=0 rmax=0 updates=64 writes=0 errors=0",
+      "binary_sha256": "b077d73b3ec335a9919896693b6c02d50670e36a22af96f9d4980917dd094e9c",
+      "ok": true
+    },
+    {
+      "name": "e4_ami0_rmax1",
+      "build_rc": 0,
+      "run_rc": 0,
+      "observed": "SPCTL_PORT_AGE extra=4 ami=0 rmax=1 updates=0 writes=1 errors=0",
+      "binary_sha256": "3d7248880d716ee60b9173901005b5adc03ac1fe9f64ee37b15127636356a00d",
+      "ok": true
+    },
+    {
+      "name": "e4_ami1_rmax1",
+      "build_rc": 0,
+      "run_rc": 0,
+      "observed": "SPCTL_PORT_AGE extra=4 ami=1 rmax=1 updates=0 writes=1 errors=0",
+      "binary_sha256": "d55bd9048620fb07337f3f83026076cd89dcc5883728e4b66cd14e140d2307a2",
+      "ok": true
+    },
+    {
+      "name": "e5_ami0_rmax0",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=5 ami=0 rmax=0 updates=64 writes=0 errors=1445",
+      "binary_sha256": "ec3864d999117ba2a10ca94c7652553a897a375b5b92dabb7bc8201fd32ccacc",
+      "ok": true
+    },
+    {
+      "name": "e5_ami0_rmax1",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=5 ami=0 rmax=1 updates=0 writes=1 errors=3",
+      "binary_sha256": "2d20c09d8d1414a84e6c38d7ca139926afa2cdaf56384d86fa60fe6e2a81d11a",
+      "ok": true
+    },
+    {
+      "name": "e5_ami1_rmax0",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=5 ami=1 rmax=0 updates=64 writes=0 errors=1444",
+      "binary_sha256": "8a62306f5f228cbed586882765d81a760f75a187181dee802f4c6326ebf83cc5",
+      "ok": true
+    },
+    {
+      "name": "e5_ami1_rmax1",
+      "build_rc": 0,
+      "run_rc": 1,
+      "observed": "SPCTL_PORT_AGE extra=5 ami=1 rmax=1 updates=0 writes=1 errors=3",
+      "binary_sha256": "dd28d1cb6498c0d099fd815cf509f18746c88b1ee9e1d60ee826a86edddf9a89",
+      "ok": true
+    }
+  ],
+  "ok": true,
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-2630590-1792099911",
+  "qualified_native_head": false,
+  "producer_binding": "PORT_AM_EXTRA_EDGES defaults0;4mustonlybindwithrealAPIPE15producer",
+  "initial_icarus_diagnostic": {
+    "status": "STOPPED_NO_NUMERICAL_VERDICT",
+    "last_observed_time_ticks": 2725000,
+    "simulator": "iverilog/vvp",
+    "note": "SIGINT reported progress at2725000ticks; subsequently stopped own diagnostic withTERM. Returned0 after interruption is not a PASS. No Claude jobs stopped."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.s81.pq.physical_recovery.v1",
+  "source_commit": "bb15fdbd3883eb224160731b2e0617f9bc77de55",
+  "isolated_recovery_commit": "7852525f0",
+  "source_sha256": "00617bb204af2a536f41657398222dde2f884094aeb477ef9d9382a719209e5a",
+  "source_snapshot_manifest_sha256": "176e3f30a61a8c6bfb6d762d66eb6417f6ef52da374a30eea76f3166986db33d",
+  "source_snapshot_archive_sha256": "33659a9af95deff67c7acc0ddef903b8b9eecc6790d8589a916d291779fb1368",
+  "source_snapshot_path": "/tmp/ref_gate_s81pq_qb_headpc_native_20261015-105156.source_snapshot.json",
+  "bench": "recovered existing full four-SRAM bench and independent changing-pin bench; no new replay",
+  "checks": 345800,
+  "independent_head_bits": 57344,
+  "source_mutants": [
+    "row FAIL",
+    "head FAIL",
+    "capture bypass FAIL"
+  ],
+  "added_read_cycles": 3,
+  "p7_cycles_added_over_p6": 0,
+  "scope": "component-only; canonical calendar engine slot, ROM4 producer ports, full native adoption and production throughput remain OPEN",
+  "physical_gate": {
+    "status": "waiting in admitted tool wrapper; not complete",
+    "local_driver_pid": 1051607,
+    "ot_run_pid": 1053588,
+    "remote_host": "ot-epyc4",
+    "requested_dir": "/srv/opentallas-scratch/claude/ref_gate/s81pq_qb_headpc_native-20261015-105156",
+    "outline_um": [
+      142.56,
+      103.68
+    ],
+    "clock_phase": "no inherited R; fresh routed reference required"
+  },
+  "grant": "S-DIE1103 permits same-pin candidate leaf closure; parent child origins/fit not proven"
+}

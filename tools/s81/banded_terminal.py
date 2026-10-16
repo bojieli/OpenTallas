@@ -7,15 +7,23 @@ bit. Native views, clock insertion and route qualification are separate gates.
 import math
 
 def propose(A, B, oldQ, obstacles, old_name, thickness, pa, gx=.432, gy=2.16,
-            inset=.048, reach=450.0, band_gap=20.0):
-    """Horizontal R0 stage, inputW/outputE, facing a hard W input.
+            inset=.048, reach=450.0, band_gap=20.0, side='W', hard_short=0.0):
+    """Horizontal R0 stage, inputW/outputE, facing a hard W input (side 'W'),
+    or its mirror (side 'E', S-DIE r2 2026-10-15): MY stage, input E/output W,
+    east of a hard E input (GEN19b hr_E2_o_d4 -> sp_gather.rE2, 759 b in three
+    bands over 388 um, the only pin_align FAIL).
+    hard_short > 0: a hard-ended output bit may grow while every bit of that
+    band stays <= hard_short um (generator ALIGN_HARD_SHORT_UM = 100, below the
+    smallest die pair reach 215 um; same rule as the align-jogs normal retreat).
 
     Return disjoint contiguous bit slices. Every outgoing hard-ended bit is no
     longer, and each incoming station hop is rejudged against cut and reach.
     """
     if not A or len(A) != len(B) or len(B) != len(oldQ):
         return None
-    if any(q is None for q in A+B+oldQ) or any(q[2] != 'W' for q in B):
+    if side not in ('W','E'):
+        return None
+    if any(q is None for q in A+B+oldQ) or any(q[2] != side for q in B):
         return None
     groups = []
     for i in sorted(range(len(B)), key=lambda j:B[j][1]):
@@ -38,23 +46,32 @@ def propose(A, B, oldQ, obstacles, old_name, thickness, pa, gx=.432, gy=2.16,
         found=None
         # Start beside the hard face, retreat only as needed to clear the
         # stations in the empty spaces between the load's data bands.
-        edge=min(B[i][0] for i in g)-.096
-        xbase=math.floor((edge-thickness-.048)/gx)*gx
+        if side=='W':
+            edge=min(B[i][0] for i in g)-.096
+            xbase=math.floor((edge-thickness-.048)/gx)*gx
+        else:
+            edge=max(B[i][0] for i in g)+.096
+            xbase=ceilgrid(edge+.048,gx)
         for k in range(200):
-            x=xbase-k*gx; box=(x,y0,thickness,height)
+            x=xbase-k*gx if side=='W' else xbase+k*gx; box=(x,y0,thickness,height)
             if any(o[0]!=old_name and x<o[1]+o[3]-1e-6 and x+thickness>o[1]+1e-6
                    and y0<o[2]+o[4]-1e-6 and y0+height>o[2]+1e-6 for o in obstacles):
                 continue
             if any(x<t['x']+t['w']-1e-6 and x+thickness>t['x']+1e-6
                    and y0<t['y']+t['h']-1e-6 and y0+height>t['y']+1e-6 for t in ans):
                 continue
-            Di=[(x+inset+.096,B[i][1],'W','M4') for i in g]
-            Dq=[(x+thickness-inset-.096,B[i][1],'E','M4') for i in g]
+            if side=='W':
+                Di=[(x+inset+.096,B[i][1],'W','M4') for i in g]
+                Dq=[(x+thickness-inset-.096,B[i][1],'E','M4') for i in g]
+            else:   # MY: master W input face lands on the E side, master E output face on the W side
+                Di=[(x+thickness-inset-.096,B[i][1],'E','M4') for i in g]
+                Dq=[(x+inset+.096,B[i][1],'W','M4') for i in g]
             Ai=[A[i] for i in g];Bi=[B[i] for i in g]
             Lin=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(Ai,Di)]
             Lout=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(Dq,Bi)]
             old=[abs(oldQ[i][0]-B[i][0])+abs(oldQ[i][1]-B[i][1]) for i in g]
-            if max(Lin)>reach+1e-6 or any(n>o+1e-6 for n,o in zip(Lout,old)):
+            grows=any(n>o+1e-6 for n,o in zip(Lout,old))
+            if max(Lin)>reach+1e-6 or (grows and not (hard_short>0 and max(Lout)<=hard_short+1e-6)):
                 continue
             pi,po=pa.bundle(Ai,Di),pa.bundle(Dq,Bi)
             if pi['verdict']=='FAIL' or po['verdict']=='FAIL':
@@ -63,7 +80,7 @@ def propose(A, B, oldQ, obstacles, old_name, thickness, pa, gx=.432, gy=2.16,
                        along=[round(B[i][1]-y0,6) for i in g],
                        input_max_um=max(Lin),output_max_um=max(Lout),
                        input_cut=pi['jog_cut'],output_cut=po['jog_cut'],
-                       hard_bit_lengths_never_grow=True)
+                       hard_bit_lengths_never_grow=not grows,orient='R0' if side=='W' else 'MY')
             break
         if found is None:return None
         ans.append(found)
@@ -86,10 +103,11 @@ def apply(G, m, it, proposal, incoming, outgoing):
         n=p['hi']-p['lo']+1
         master=f'dsfd_hstnh_{n}_sp{len(spread)}'
         child=G.Inst(f'{it.name}_b{j}',master,p['x'],p['y'],p['w'],p['h'],
-                     orient='R0',kind='hstn',region=it.region,domain=it.domain,
+                     orient=p.get('orient','R0'),kind='hstn',region=it.region,domain=it.domain,
                      power_w=it.power_w*n/bits)
         children.append(child)
-        spread[master]=dict(along=p['along'],horiz=True,out_face='E',orient='R0')
+        spread[master]=dict(along=p['along'],horiz=True,out_face='E' if p.get('orient','R0')=='R0' else 'W',
+                            orient=p.get('orient','R0'))
         m['pdir'][master]=dict(ck=('input',1),di=('input',n),dq=('output',n))
     buses=[]
     for bus in m['buses']:

@@ -1,0 +1,141 @@
+{
+ "name": "s81fill2_host_c",
+ "top": "dsfd_host_c",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"
+ ],
+ "params": {
+  "NS": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "ckv",
+  "rsv"
+ ],
+ "outline": {
+  "w": 453.6,
+  "h": 71.28,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "f_collective",
+   "f_sseq_st",
+   "f_wfc_ft",
+   "t_collective",
+   "t_sseq_plen",
+   "t_sseq_pw"
+  ],
+  "S": [
+   "ck",
+   "ckv",
+   "f_lf",
+   "hc",
+   "hw",
+   "rst",
+   "rsv"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_host_c.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "sdc_extra": [
+  "physical/s81_fill2/host_ser_ref.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_fill2/host_ser_ref.tcl"
+ ],
+ "defines": [
+  "DSFD_HOST_C_STATIC"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7
+ },
+ "slot_change_request": {
+  "reason": "outline from pin density (<= 10.0 b/um/layer, face cut <= 0.6) and content (~15000 um2 std + recipe-2 cells at util ~0.5) instead of the generator slot 1727.976 x 129.576",
+  "outline": [
+   453.6,
+   71.28
+  ],
+  "generator_slot": [
+   1727.976,
+   129.576
+  ]
+ },
+ "structural_change": "First hardening of the S81 die master dsfd_host_c (1 die instances, static layer-die host (+DSFD_HOST_C_STATIC, S-BIND r6: no credit bits, collective host face 515/77, lane-fault fold; host ingest + per-stack writes; program words cross ck->ckv). The generator reservation 1727.976 x 129.576 puts hw/hc/f_lf at its W end and the collective/sequencer faces at its E end with the clocks spread 848..1624 um: one compact block (no > 600-um clock root) and the die relays the 292-b host-write lane (slot change request)); real RTL rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv (exact lockstep gate rtl/v41die/test/tb_ot_s81_cfg7_seq.sv); 0 cycles; pins = GEN19b construction_pass2 (EPYC4 s81-die-r10/gen19b, pins.lef) order with the shared fixes: even per-face spread (generator packed W-face M4 pins at 0.048 um = 20.8 b/um/layer > 12), clock at face centre, no output hold pads; outline 1727.976x129.576 -> 453.6x71.28 (2.16 lattice). Face report {\"S\": {\"pins\": 309, \"pitch_um\": 1.473, \"b_per_um\": 0.69, \"cut\": 0.033}, \"E\": {\"pins\": 646, \"pitch_um\": 0.1037, \"b_per_um\": 9.65, \"cut\": 0.463}}.",
+ "job": {
+  "owner": "Claude:fill-s81-2",
+  "branch": "claude/el1015-fill-s2-1015",
+  "tag": "g1",
+  "purpose": "S81 FILL-S2: die master dsfd_host_c (1 replicas, hardened once): exact lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread",
+  "views_to": "physical/ref_tile/s81fill2_host_c/views",
+  "record_to": "results/rtl/ref_tile/s81fill2_host_c",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/lib",
+   "rtl/hdc/ingest",
+   "rtl/link",
+   "rtl/dsrom_sys/s81_ctrl",
+   "physical/rom_host_ingest/rtl",
+   "tools/die_port_bind.py",
+   "tools/s81/fill2_host_bench.sh",
+   "physical/s81_fill2",
+   "physical/s81_die_pins/fill2_gen19b/dsfd_host_c.tcl"
+  ],
+  "benches": [
+   {
+    "name": "host_static_base",
+    "cmd": "bash tools/s81/fill2_host_bench.sh base {RUN}/bench_base",
+    "expect": "pass",
+    "pass_regex": "HOST BENCH PASS base",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "program_drop_mutant",
+    "cmd": "bash tools/s81/fill2_host_bench.sh mut1 {RUN}/bench_mut1",
+    "expect": "fail",
+    "fail_regex": "HOST BENCH FAIL mut1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_fault_fold_mutant",
+    "cmd": "bash tools/s81/fill2_host_bench.sh mut4 {RUN}/bench_mut4",
+    "expect": "fail",
+    "fail_regex": "HOST BENCH FAIL mut4",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}

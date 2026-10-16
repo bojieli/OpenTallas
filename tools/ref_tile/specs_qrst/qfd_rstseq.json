@@ -1,0 +1,77 @@
+{
+ "name": "qfd_rstseq",
+ "top": "qfd_rstseq",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_link_slots.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rsi"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "ck",
+   "rsi"
+  ],
+  "E": [
+   "rso_io",
+   "rso_f",
+   "rso_s",
+   "rso_ctlm",
+   "rso_seq"
+  ],
+  "N": [],
+  "S": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8
+ },
+ "slot_change_request": "FILL-Q 2026-10-15: compute die master qfd_rstseq has no slot/pin file in c17_source_pins; proposed 21.6 x 21.6 M5 leaf (pin cut <0.05), clock + reset W, outputs E. Die lead re-pins top-down at the next contract.",
+ "job": {
+  "owner": "Claude:el1015-fill-qwen",
+  "branch": "claude/el1015-fillq-1015",
+  "tag": "r1",
+  "purpose": "Qwen compute die reset sequencer (FLUSH 512 / STEP 256 production params): releases io -> field -> spine -> tree top -> ROM sequencer, every output a flop. Real RTL rtl/qwen_split/qfd_link_slots.sv, die master qfd_rstseq (c13 port-bind PASS).",
+  "extra_paths": [
+   "rtl/test/qwen_split"
+  ],
+  "benches": [
+   {
+    "name": "rst_tiles_exact",
+    "cmd": "bash rtl/test/qwen_split/run_qfd_rst_tiles.sh {RUN}/bench/e",
+    "expect": "pass",
+    "pass_regex": "RST_TILES .* PASS",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "production FLUSH 512 / STEP 256, rstsync->rstseq chained as on the die, cycle-exact reference + order property, 7 reset scenarios"
+   },
+   {
+    "name": "rst_tiles_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_qfd_rst_tiles.sh {RUN}/bench/m mut_rstseq",
+    "expect": "fail",
+    "fail_regex": "RST_TILES .* FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_rstseq/views",
+  "record_to": "results/rtl/ref_tile/qfd_rstseq"
+ }
+}

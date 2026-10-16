@@ -1,0 +1,48 @@
+{
+  "source": "exact030737 snapshot, root hook overlay binds actual source bank output q FFs; no RTL change",
+  "placement_screen_pass": true,
+  "actual_cell_area_um2": 5250.2142600023335,
+  "actual_flop_count": 7114,
+  "clock_pin_boxes": [
+    {
+      "pin": "clk",
+      "layer": "M4",
+      "box_um": [
+        0.0,
+        80.976,
+        0.084,
+        81.0
+      ]
+    }
+  ],
+  "max_whole_strip_cut": {
+    "y_um": 31.32,
+    "placed_net_crossing_lower_bound": 1687,
+    "available_vertical_tracks": 3054,
+    "blocked_tracks": {
+      "M3": 36,
+      "M5": 60
+    },
+    "lower_bound_util": 0.5523903077930583,
+    "derated_available_vertical_tracks": 2290.5,
+    "lower_bound_util_derated": 0.7365204103907443,
+    "largest_names": [
+      "_0001_",
+      "_0002_",
+      "_0003_",
+      "_0004_",
+      "_0192_",
+      "_0193_",
+      "_0194_",
+      "_0200_",
+      "_0202_",
+      "_0209_",
+      "_0213_",
+      "_0216_"
+    ]
+  },
+  "local_bbox_cut_is_not_routing_fence_capacity_proof": true,
+  "all8_full_cones_legal": true,
+  "CTS_qualified": false,
+  "route_admitted": false
+}

@@ -1209,8 +1209,11 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                          'route the bus with relay stations and matching RTL latency instead')
     if su.domain != vm.domain:
         raise ValueError(f'su_vm_abut: SU64 ({su.domain}) and VM ({vm.domain}) in different clock domains')
-    m['buses'] += [('su_vm_a', 'spine_local', SU_VM_A_BITS, [('sp_su64_sfu', 'va'), ('sp_vector_memory', 'sa')]),
-                   ('su_vm_q', 'spine_local', SU_VM_Q_BITS, [('sp_vector_memory', 'sq'), ('sp_su64_sfu', 'vq')])]
+    if not m.get('native_graph_bind'):
+        m['buses'] += [('su_vm_a', 'spine_local', SU_VM_A_BITS, [('sp_su64_sfu', 'va'), ('sp_vector_memory', 'sa')]),
+                       ('su_vm_q', 'spine_local', SU_VM_Q_BITS, [('sp_vector_memory', 'sq'), ('sp_su64_sfu', 'vq')])]
+    # Native source edges already cover these exact numeric ports via fragments.
+    # Appending the historical raw buses would double-drive/count each interface.
     w = su.w
     p = 0.048                                       # M5 track (qwen_rom_fulldie TRK)
     a_span, q_span = SU_VM_A_BITS * p, SU_VM_Q_BITS * p
@@ -1223,7 +1226,7 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
-        s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        s, q = out['qfd_sp_su64_sfu'], (out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory'])
         if model.get('native_control_contract'):
             # Native controller retired the legacy VM request/ready service.
             # These are unbound abstract pins, not a reusable physical view.
@@ -1247,6 +1250,16 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
         s.face('vq', SU_VM_Q_BITS, 'S' if north else 'N', 'M5', q_c, 1)
         q.face('sa', SU_VM_A_BITS, 'N' if north else 'S', 'M5', a_c + off, 1)
         q.face('sq', SU_VM_Q_BITS, 'N' if north else 'S', 'M5', q_c + off, 1)
+        if model.get('native_graph_bind'):
+            # This wrapper runs AFTER native pin assignment. Rebuild fragments
+            # from the final canonical seam pins, then remove raw canonical pins.
+            from qwen_split.direct_up4 import partition_master
+            for master_ in (s, q):
+                aliases_ = {a_: rb_ for a_, rb_ in model.get('port_join', {}).get(master_.name, {}).items()
+                            if rb_[0] in master_.ports}
+                if aliases_:
+                    rects_ = v.pin_rects(master_, 1, {p_: sp_[1] for p_, sp_ in master_.ports.items()})
+                    partition_master(master_, aliases_, rects_)
         return out
     v.masters = masters
     m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
@@ -1320,7 +1333,7 @@ def _rtl_finish(v, m):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        tt, vm, sq, su, em = (o['qfd_sp_tree_top'], o['qfd_sp_vector_memory'], o['qfd_sp_constants_sequencer'],
+        tt, vm, sq, su, em = (o['qfd_sp_tree_top'], (o.get('qfd_sp_vector_memory_par') or o['qfd_sp_vector_memory']), o['qfd_sp_constants_sequencer'],
                               o['qfd_sp_su64_sfu'], o.get('qfd_io_embedding_rom'))   # r21c: no embedding ROM
         for M_, gone in ((tt, ('md',)), (vm, ('em',)), (sq, ('ea', 'md'))):
             for pn in gone:
@@ -1537,7 +1550,7 @@ def _vm_me(v, m):
             # fault, ty: the split-11/12 return to band 0) face the band-lane blocks in W
             moves.append(('qfd_sp_tree_top', 'E', (), 'W', re.compile(r'^(bw|lc|lf)\d+$|^ty$')))
         for mn, f, keep, to, only in moves:
-            M_ = o[mn]
+            M_ = o.get('qfd_sp_vector_memory_par') if mn == 'qfd_sp_vector_memory' and 'qfd_sp_vector_memory_par' in o else o[mn]
             mv = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f and pn not in keep
                   and (only is None or only.match(pn))]
             for pn in mv:
@@ -1559,7 +1572,7 @@ def _vm_me(v, m):
         for mn, ports in (('qfd_sp_band_lanes', ('c', 'f', 'pw', 'tt')), ('qfd_sp_res_ser', ('o', 'ok', 'cr'))):
             if mn not in o:
                 continue
-            M_ = o[mn]
+            M_ = o.get('qfd_sp_vector_memory_par') if mn == 'qfd_sp_vector_memory' and 'qfd_sp_vector_memory_par' in o else o[mn]
             xq = 40.0
             for pn in ports:
                 if pn in M_.ports:
@@ -3579,6 +3592,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for fk, f in enumerate(pl['frames']):
             rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
             if not free(rr):
+                if _os.environ.get('OT_RELAY_COLLISION_JSON'):
+                    try:
+                        from qwen_split.relay_collision_receipt import receipt, write
+                        write(_os.environ['OT_RELAY_COLLISION_JSON'], receipt(m, plans, idx, fk, v.SHAVE))
+                    except Exception as diagnostic_error:
+                        print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
     pad_done = {}
@@ -4486,7 +4505,7 @@ def _r18_masters(v, m):
             hb.ports['ln'] = hb.ports['ln'][:4] + (hb.h * 0.81,) + hb.ports['ln'][5:]
         if 'lsw' in hb.ports:          # the split south leg runs in the channel east of the hub
             hb.ports['lsw'] = ('face', v.LINK_TRACKS, 'E', 'M4', hb.h * 0.08, 1)
-        vm = out['qfd_sp_vector_memory']
+        vm = (out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory'])
         if 'em' in vm.ports:           # the embedding ROM is in the IO band to the north (left of the hub)
             vm.ports['em'] = ('face', v.IO_BITS, 'N', 'M5', vm.w * 0.2, 2)
         xf = None
@@ -6352,6 +6371,11 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     pg_f = PG.F
     if rev == 'r5':
         PG.F = v
+    # split compute C20s: the powered rewrite must emit the SAME pin names as die.v (split bundles and port_join
+    # aliases renamed to the real RTL bits, as case_real does); without it every alias / split master had LEF pins
+    # the netlist never names
+    emit0 = getattr(v, 'EMIT_SPLIT', False)
+    v.EMIT_SPLIT = True
     try:
         for name, mst in M.items():
             wm_ = {q: pw.get((name, q), 0) for q in mst.order}
@@ -6364,17 +6388,33 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
             parts.append(text)
     finally:
         PG.F = pg_f
+        v.EMIT_SPLIT = emit0
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
     _gate_track_lattice(work / 'elements.lef', m)
     meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
+    # Opt-in structural PDN fallback: temporary conservative master OBS only while
+    # generating power metal. Detailed route masters/pins stay untouched.
+    for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
+        (work / helper).write_text((Path(__file__).parent / 'qwen_kv_die' / 'chain' / helper).read_text())
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
 read_db /work/floorplan.odb
 mem read
 set t0 [clock seconds]
-if {[catch {source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl} err]} { puts "OT_PDN FAIL $err"; error $err } else {
+set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+if {[catch {
+  try {source /work/pdn.tcl; pdngen} finally {
+    if {$ot_bbox} {ot_pdn_bbox::restore}
+  }
+  source /work/die_constant_pg_check.tcl
+} err]} { puts "OT_PDN FAIL $err"; error $err } else {
   set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }
   puts "OT_PDN PASS special_shapes=$nsw" }
 puts "OT_TIME pdn_s=[expr {[clock seconds]-$t0}]"

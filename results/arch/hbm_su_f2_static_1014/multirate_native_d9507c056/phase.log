@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.hbm.su_multirate.calendar.v1",
+  "qualified": false,
+  "source_sha256": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+  "serial_edges": 7116,
+  "stream_edges": 9489,
+  "quantum_ps": "2500/9",
+  "serial_period_ticks": 4,
+  "stream_period_ticks": 3,
+  "epoch_ticks": 12,
+  "phase_contract": "coincident phase zero; reset released before common epoch; physical phase proof OPEN",
+  "serial_read_return": 12,
+  "serial_write_done": 10,
+  "lg_read_return_stream": 10,
+  "lg_write_done_stream": 7,
+  "pgslice_serial_drain_capture": 4,
+  "pgslice_fill_commit_serial": 15,
+  "stream_slots_register_mod4": [
+    0,
+    2,
+    3
+  ],
+  "stream_slots_lg_issue_mod4": [
+    0,
+    1,
+    3
+  ],
+  "read_slots": 32768,
+  "write_slots": 135184,
+  "proof": {
+    "events_proved": 65536,
+    "request_setup_min_ticks": 4,
+    "read_return_setup_min_ticks": 6,
+    "write_done_setup_min_ticks": 7,
+    "slot_overwrite_guard_min_ticks": 7,
+    "slots_per_direction": 4
+  },
+  "payload_register_bits_per_port": 2780,
+  "source_pins": {
+    "tools/hbm_static/su_multirate_compile.py": "90a305fab556d0199393c0ec58cafd4762d18ceb5fe1e614111b1b43d9e84fae",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "d52d7a3e052a4300b2c77ad7e6b0344e1914299198397543f7a0b29044e3d120",
+    "tools/hbm_static/su_top_compile.py": "629601cd70562c06948f9a35c58e2d02136063ac024e9786e5925eed68767590"
+  },
+  "expected_writes_source_sha256": "6f577d192a1add60fb1a126e4764feace5ad0652e081ec701e99ff7309e2f602",
+  "generated_planes": {
+    "serial_prog.mem": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+    "stream_expw.mem": "ecbc819d2d5a45136e28bf13ebffaab43e55b7637bdbc1b0ee84b4c17e34346c",
+    "stream_cal.mem": "fcba67807bbf4d3be28ae2f3fcd063b547f09248ef095d22c06fd3bac098363d"
+  },
+  "limitations": [
+    "candidate boundary bridge only; top/compiler not integrated",
+    "serial plane requires separate SRAM programme sequencer from stream calendar plane",
+    "pgslice serial destination FD must be12 while stream leaf READ_RETURN stays10",
+    "expected VM write checks must use stream event edges; arithmetic/scalars stay serial",
+    "all programme SRAM and clock distribution timing/physical closure OPEN"
+  ]
+}

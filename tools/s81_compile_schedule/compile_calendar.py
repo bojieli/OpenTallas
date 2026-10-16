@@ -50,6 +50,47 @@ def check_pipeline_abi(job):
                          f"{sorted(want)} (tools/s81/engine_pipeline_abi.json)")
 
 
+KIT_PORT_LATENCY_SCHEMA = 'opentallas.ref_tile.port_latency.v1'
+
+
+def kit_boundary_edges(job, root=ROOT):
+    """Owner rule 2026-10-15 19:50: every new tile registers its pins (+1-2 edges per boundary).  The schedule takes those
+    edges from the KIT's reported per-port latency, never from a typed constant.  A job binding names the kit report
+    (ref_tile gen: {"schema": KIT_PORT_LATENCY_SCHEMA, "ports": {name: {"dir": "input"|"output", "register_edges": n}}}),
+    its sha256, the ports on the job's command -> done path, and whether duration_cycles was measured at the RTL core
+    ('rtl_core': kit edges are added) or at the registered kit pins ('kit_pins': already included).  No report -> 0."""
+    kb = job.get('kit_boundary')
+    if 'boundary_edges' in job or 'pin_register_edges' in job:
+        raise ValueError('typed tile-boundary latency constant refused: name the kit port_latency report (kit_boundary)')
+    if kb is None:
+        return 0
+    if kb.get('duration_measured_at') not in ('rtl_core', 'kit_pins'):
+        raise ValueError("kit_boundary.duration_measured_at must be 'rtl_core' or 'kit_pins'")
+    path = (root / kb.get('report', '')).resolve()
+    if not path.is_relative_to(root.resolve()) or not path.is_file():
+        raise ValueError(f"kit port latency report missing: {kb.get('report')}")
+    if digest(path) != kb.get('sha256'):
+        raise ValueError(f"stale kit port latency report {kb['report']} (kit regenerated: re-bind)")
+    rep = json.loads(path.read_text())
+    if rep.get('schema') != KIT_PORT_LATENCY_SCHEMA:
+        raise ValueError('kit port latency report schema')
+    ports = kb.get('ports')
+    if not ports or not isinstance(ports, list):
+        raise ValueError('kit_boundary.ports: the command-in and done-out ports of the job path are required')
+    total = 0
+    for name in ports:
+        rec = rep.get('ports', {}).get(name)
+        if rec is None:
+            raise ValueError(f'kit report has no port {name}')
+        total += integer(rec.get('register_edges'), f'{name} register_edges')
+    return total if kb['duration_measured_at'] == 'rtl_core' else 0
+
+
+def job_pin_to_pin(job, root=ROOT):
+    """issuer pin-to-pin latency of a bound job = measured duration + the kit's reported pin-register edges."""
+    return integer(job['duration_cycles'], 'duration', 1) + kit_boundary_edges(job, root)
+
+
 def issuer_done_row(issue, pin_to_pin):
     """Compiled done row of an issuer command with measured pin-to-pin latency."""
     if type(issue) is not int or issue < 0 or type(pin_to_pin) is not int or pin_to_pin < 1:
@@ -224,7 +265,7 @@ def compile_program(program, binding, contract, root=ROOT):
                 raise ValueError('native engine/endpoint mismatch')
             check_pipeline_abi(job)
             start = integer(op['start'], 'start')
-            duration = integer(job['duration_cycles'], 'duration', 1)
+            duration = job_pin_to_pin(job, root)
             if op['end'] != issuer_done_row(start, duration):
                 raise ValueError('done row must be issue + 1 + native command-pin -> done-pin latency; recompile graph')
             period = integer(job['phase_period_stream'], 'phase period', 1)
@@ -261,6 +302,14 @@ def compile_program(program, binding, contract, root=ROOT):
                 event['mask'] = integer(access.get('mask', 65535), 'mask', 1)
                 if event['mask'] > 65535:
                     raise ValueError('mask exceeds physical row width')
+                # raw_cycle is a stream-domain edge, relative to the job's
+                # fixed start just like response/commit. The capture lane is
+                # an ordinal, never a time offset. Preserve both so the exact
+                # native service profile can check the emitted calendar.
+                if 'raw_cycle' in access:
+                    event['raw_cycle'] = start + integer(access['raw_cycle'], 'raw_cycle')
+                if 'lane' in access:
+                    event['lane'] = integer(access['lane'], 'lane')
                 if 'read_visibility' in access:
                     event['read_visibility'] = access['read_visibility']
                 if 'ingress_resource' in access:
@@ -305,7 +354,7 @@ def compile_program(program, binding, contract, root=ROOT):
                 note='Compiler lowering only; actual native RTL replay and die timing remain mandatory.')
 
 
-def schedule_jobs(program, binding):
+def schedule_jobs(program, binding, root=ROOT):
     """Compile engine issue times offline from owned durations and clock phases.
 
     Memory/transfer reservations are subsequently lowered and checked; a
@@ -322,7 +371,7 @@ def schedule_jobs(program, binding):
     for index, op in enumerate(ops):
         owner = bindings[op['id']]
         check_pipeline_abi(owner)
-        duration = integer(owner['duration_cycles'], 'native duration', 1)
+        duration = job_pin_to_pin(owner, root)
         phase_period = integer(owner['phase_period_stream'], 'phase period', 1)
         phase = integer(owner['start_phase_stream'], 'start phase')
         if phase >= phase_period:

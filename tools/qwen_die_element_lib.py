@@ -121,7 +121,7 @@ def table(vals_fn, idx1, idx2=None):
                                                               ', '.join(f'{x:g}' for x in idx2), rows))
 
 
-def write_lib(corner, lef, stubs, path):
+def write_lib(corner, lef, stubs, path, clock_ports=None):
     c = CORNERS[corner]
     L = [f'library (qfd_elements_{corner}) {{',
          '  delay_model : table_lookup; time_unit : "1ps"; capacitive_load_unit (1, ff); voltage_unit : "1V";',
@@ -145,11 +145,11 @@ def write_lib(corner, lef, stubs, path):
     for master, ports in sorted(lef.items()):
         if master == 'ot_hbm3e_phy':
             continue                                    # real PHY: its own characterised .lib
-        clocks = [p for p in ports if p in CLOCKS]
+        clocks = [p for p in ports if p in CLOCKS or p in (clock_ports or {}).get(master, ())]
         L.append(f'  cell ({master}) {{ area : 0; dont_touch : true; dont_use : true;')
         for p, n in sorted(ports.items()):
             dirs, rel = bit_dirs(master, p, n, stubs)
-            if p in CLOCKS:
+            if p in clocks:
                 if (master, p) in IDX:
                     L.append(f'    bus ({p}) {{ bus_type : b{n}; direction : input; clock : true; capacitance : 2.0; }}')
                 else:

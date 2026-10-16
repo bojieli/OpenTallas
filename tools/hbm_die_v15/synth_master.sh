@@ -5,6 +5,8 @@
 #   synth_master.sh <src root> <out dir> <name> <top> <params k=v,...|-> <blackbox mods comma|-> [--prefer FILE]
 # File list: tools/hbm_die_v15/master_filelist.py (mapped memory macros read -lib from their _bb.v).
 # Yosys in the ORFS asap7lock image, RVT TT liberty; synth -flatten, dfflibmap, abc; writes
+#   DEFINES=A,B: extra -D for every source; EXTRA=f1,f2: extra source files (outside the indexed roots).
+#   HIER=1: no -flatten (per-module area, replicated leaves mapped once).
 #   <name>.stat (stat -liberty), <name>.netlist.v (write_verilog -noattr, top keeps its RTL port list), <name>.files.json
 set -u
 mkdir -p $2; SRC=$(readlink -f $1); OUT=$(readlink -f $2); NAME=$3; TOP=$4; PRM=$5; BB=$6; shift 6
@@ -12,18 +14,31 @@ PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
 HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
-python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" "${LIBCELLS:-0}" <<'PY'
 import json,sys
-d=json.load(open(sys.argv[1])); ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
+d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
+for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
+    d['files'].insert(0, f)
+ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 L=[]
+if sys.argv[11] == '1':   # LIBCELLS=1: RTL instantiates ASAP7 cells directly (ICG of OT_SMH_CG): read them as cell boxes
+    L.append("read_liberty -lib /tmp/lib/seq.lib")
 for m in d['macros']: L.append(f"read_verilog -lib {m['file']}")
-for f in d['files']: L.append(f"read_verilog -sv -DSYNTHESIS {f}")
+for f in d['files']: L.append(f"read_verilog -sv -DSYNTHESIS{dfs} {f}")
 for b in ([] if bb=='-' else bb.split(',')):
     if b: L.append(f"blackbox {b}")
 if prm!='-':
     for kv in prm.split(','):
         k,v=kv.split('='); L.append(f"chparam -set {k} {v} {top}")
-L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
+if sys.argv[7] == '1':   # COARSE=1: real flattened word-level netlist (no techmap/abc) for composed elaboration only
+    L += [f"hierarchy -check -top {top}", f"synth -top {top} -flatten -run begin:fine", "opt_clean",
+          f"tee -o /out/{name}.stat stat", f"write_verilog -noattr /out/{name}.netlist.v"]
+elif sys.argv[8] == '1':   # HIER=1: hierarchical mapped synth (per-module area; replicated leaves synthesised once)
+    L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
+      f"synth -top {top}", "dfflibmap -liberty /tmp/lib/seq.lib", "abc -liberty /tmp/lib/all.lib", "opt_clean",
+      f"tee -o /out/{name}.stat stat -liberty /tmp/lib/all.lib", f"write_verilog -noattr /out/{name}.netlist.v"]
+else:
+    L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
       f"synth -top {top} -flatten", "dfflibmap -liberty /tmp/lib/seq.lib", "abc -liberty /tmp/lib/all.lib", "opt_clean",
       f"tee -o /out/{name}.stat stat -liberty /tmp/lib/all.lib", f"write_verilog -noattr /out/{name}.netlist.v"]
 open(ys,'w').write("\n".join(L)+"\n")
