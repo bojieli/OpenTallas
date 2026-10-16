@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_bctl_nx-nx1-COMMIT",
+ "name": "qfd_vm_bctl_nx-nx1-b05d68131",
  "block": "ot_qfd_vm_bctl_nx",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-vm VM7",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-vm6-1014",
-  "commit": "COMMIT",
+  "commit": "b05d68131",
   "extra_paths": [
    "rtl/hdc",
    "rtl/physical",
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_bctl_nx/qfd_vm_bctl_nx-nx1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_bctl_nx/qfd_vm_bctl_nx-nx1-b05d68131"
   }
  ],
  "cycles_added": 0,
