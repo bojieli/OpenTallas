@@ -47,19 +47,19 @@
    "dst": [
     "hb_vms_NE",
     "rq",
-    544,
-    680
+    408,
+    544
    ],
    "bits": 136,
    "clock": "stream",
-   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rq_NE"
+   "basis": "H-NETLIST 0600: NE RG5->4 (legacy HC group3 retired); COLL is read group 3"
   },
   {
    "src": [
     "hb_vms_NE",
     "rr",
-    8224,
-    10280
+    6168,
+    8224
    ],
    "dst": [
     "hb_coll_NE",
@@ -69,7 +69,7 @@
    ],
    "bits": 2056,
    "clock": "stream",
-   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rr_NE"
+   "basis": "H-NETLIST 0600: NE RG5->4 (legacy HC group3 retired); COLL is read group 3"
   },
   {
    "src": [

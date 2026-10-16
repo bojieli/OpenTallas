@@ -3336,15 +3336,15 @@
     "calendar_SW",
     "client_seq",
     0,
-    8
+    6
    ],
    "dst": [
     "hb_vms_SW",
     "client_seq",
     0,
-    8
+    6
    ],
-   "bits": 8,
+   "bits": 6,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },
@@ -3353,15 +3353,15 @@
     "calendar_SW",
     "response_enable",
     0,
-    4
+    3
    ],
    "dst": [
     "hb_vms_SW",
     "response_enable",
     0,
-    4
+    3
    ],
-   "bits": 4,
+   "bits": 3,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },
@@ -3370,15 +3370,15 @@
     "calendar_SW",
     "response_seq",
     0,
-    8
+    6
    ],
    "dst": [
     "hb_vms_SW",
     "response_seq",
     0,
-    8
+    6
    ],
-   "bits": 8,
+   "bits": 6,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },
@@ -3506,12 +3506,63 @@
     "calendar_NW",
     "client_seq",
     0,
-    8
+    2
    ],
    "dst": [
     "hb_vms_NW",
     "client_seq",
     0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "response_enable",
+    0,
+    1
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "response_enable",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "response_seq",
+    0,
+    2
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "response_seq",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "bank_client",
+    0,
+    8
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "bank_client",
+    0,
     8
    ],
    "bits": 8,
@@ -3521,68 +3572,17 @@
   {
    "src": [
     "calendar_NW",
-    "response_enable",
-    0,
-    4
-   ],
-   "dst": [
-    "hb_vms_NW",
-    "response_enable",
-    0,
-    4
-   ],
-   "bits": 4,
-   "clock": "stream",
-   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
-  },
-  {
-   "src": [
-    "calendar_NW",
-    "response_seq",
-    0,
-    8
-   ],
-   "dst": [
-    "hb_vms_NW",
-    "response_seq",
-    0,
-    8
-   ],
-   "bits": 8,
-   "clock": "stream",
-   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
-  },
-  {
-   "src": [
-    "calendar_NW",
-    "bank_client",
-    0,
-    16
-   ],
-   "dst": [
-    "hb_vms_NW",
-    "bank_client",
-    0,
-    16
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
-  },
-  {
-   "src": [
-    "calendar_NW",
     "hub_ring_client",
     0,
-    4
+    2
    ],
    "dst": [
     "hb_vms_NW",
     "hub_ring_client",
     0,
-    4
+    2
    ],
-   "bits": 4,
+   "bits": 2,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },

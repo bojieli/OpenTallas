@@ -44,7 +44,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   input wire [512:0] host_N__pma_rx;
   input wire [0:0] host_N__pma_rck;
   input wire [23:0] host_phy__session_pad;
-  wire [821:0] hb_vms_SW__cr;
+  wire [547:0] hb_vms_SW__cr;
   wire [10279:0] hb_vms_SW__rr;
   wire [15:0] hb_vms_SW__wq_done;
   wire [7:0] hb_vms_SW__dq_done;
@@ -67,7 +67,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hb_vms_SE__mirror_busy;
   wire [18:0] hb_vms_SE__vmstat;
   wire [2:0] hb_vms_SE__ring_fault;
-  wire [821:0] hb_vms_NW__cr;
   wire [10279:0] hb_vms_NW__rr;
   wire [23:0] hb_vms_NW__wq_done;
   wire [7:0] hb_vms_NW__dq_done;
@@ -79,8 +78,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hb_vms_NW__mirror_busy;
   wire [18:0] hb_vms_NW__vmstat;
   wire [2:0] hb_vms_NW__ring_fault;
-  wire [10279:0] hb_vms_NE__rr;
-  wire [23:0] hb_vms_NE__wq_done;
+  wire [8223:0] hb_vms_NE__rr;
+  wire [15:0] hb_vms_NE__wq_done;
   wire [7:0] hb_vms_NE__dq_done;
   wire [7:0] hb_vms_NE__kq_done;
   wire [2223:0] hb_vms_NE__cw_out;
@@ -5861,6 +5860,30 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hc_NE3__c_w_done;
   wire [33:0] hc_NE3__lg_rq;
   wire [561:0] hc_NE3__lg_wq;
+  wire [3:0] hc_eng__result_v;
+  wire [11:0] hc_eng__result_position;
+  wire [3071:0] hc_eng__result;
+  wire [0:0] hc_eng__program_active;
+  wire [0:0] hc_eng__program_done;
+  wire [0:0] hc_eng__fault;
+  wire [0:0] hc_eng_tgt__program_cfg_we;
+  wire [9:0] hc_eng_tgt__program_cfg_addr;
+  wire [255:0] hc_eng_tgt__program_cfg_data;
+  wire [0:0] hc_eng_tgt__program_start_v;
+  wire [9:0] hc_eng_tgt__program_start_base;
+  wire [10:0] hc_eng_tgt__program_start_limit;
+  wire [15:0] hc_eng_tgt__program_start_loops;
+  wire [0:0] hc_eng_tgt__configured;
+  wire [0:0] hc_eng_tgt__fault;
+  wire [0:0] hc_tbl_tgt__program_cfg_we;
+  wire [9:0] hc_tbl_tgt__program_cfg_addr;
+  wire [255:0] hc_tbl_tgt__program_cfg_data;
+  wire [0:0] hc_tbl_tgt__program_start_v;
+  wire [9:0] hc_tbl_tgt__program_start_base;
+  wire [10:0] hc_tbl_tgt__program_start_limit;
+  wire [15:0] hc_tbl_tgt__program_start_loops;
+  wire [0:0] hc_tbl_tgt__configured;
+  wire [0:0] hc_tbl_tgt__fault;
   wire [0:0] cp_fill_SW__program_cfg_we;
   wire [9:0] cp_fill_SW__program_cfg_addr;
   wire [255:0] cp_fill_SW__program_cfg_data;
@@ -7855,20 +7878,17 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] vmdel_NE7__busy;
   wire [0:0] vmdel_NE7__fault;
   wire [280:0] vmdel_NE7__dq;
-  wire [679:0] nc__hb_vms_NE__rq;   // undriven bits = listed gap bits (never tied)
-  wire [6743:0] nc__hb_vms_NE__wq;   // undriven bits = listed gap bits (never tied)
-  wire [1013:0] nc__hb_vms_SW__cq;   // undriven bits = listed gap bits (never tied)
   hfd_hgi_vms_static_SW hb_vms_SW (
     .clk_bank({8{hb_ckgen__pll_stream[0]}}),
     .clk_hub(hb_ckgen__pll_stream[0]),
     .clk_ring({2{hb_ckgen__pll_stream[0]}}),
     .clk_replay(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
-    .cq({hb_idx__cq[337:0], nc__hb_vms_SW__cq[675:338], hb_argmax__cq[337:0]}),
+    .cq({hb_idx__cq[337:0], hb_argmax__cq[337:0]}),
     .cr(hb_vms_SW__cr),
-    .client_seq(calendar_SW__client_seq[7:0]),
-    .response_enable(calendar_SW__response_enable[3:0]),
-    .response_seq(calendar_SW__response_seq[7:0]),
+    .client_seq(calendar_SW__client_seq[5:0]),
+    .response_enable(calendar_SW__response_enable[2:0]),
+    .response_seq(calendar_SW__response_seq[5:0]),
     .bank_enable(calendar_SW__bank_enable[7:0]),
     .bank_client(calendar_SW__bank_client[15:0]),
     .hub_ring_enable(calendar_SW__hub_ring_enable[1:0]),
@@ -7944,14 +7964,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .clk_ring({2{hb_ckgen__pll_stream[0]}}),
     .clk_replay(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
-    .cr(hb_vms_NW__cr),
-    .client_seq(calendar_NW__client_seq[7:0]),
-    .response_enable(calendar_NW__response_enable[3:0]),
-    .response_seq(calendar_NW__response_seq[7:0]),
+    .client_seq(calendar_NW__client_seq[1:0]),
+    .response_enable(calendar_NW__response_enable[0]),
+    .response_seq(calendar_NW__response_seq[1:0]),
     .bank_enable(calendar_NW__bank_enable[7:0]),
-    .bank_client(calendar_NW__bank_client[15:0]),
+    .bank_client(calendar_NW__bank_client[7:0]),
     .hub_ring_enable(calendar_NW__hub_ring_enable[1:0]),
-    .hub_ring_client(calendar_NW__hub_ring_client[3:0]),
+    .hub_ring_client(calendar_NW__hub_ring_client[1:0]),
     .rslot_v(calendar_NW__rslot_v[7:0]),
     .wslot_v(calendar_NW__wslot_v[7:0]),
     .rslot(calendar_NW__rslot[23:0]),
@@ -7995,9 +8014,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_NE__wslot_v[7:0]),
     .rslot(calendar_NE__rslot[23:0]),
     .wslot(calendar_NE__wslot[23:0]),
-    .rq({hb_coll_NE__vm_rq[135:0], nc__hb_vms_NE__rq[543:408], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
+    .rq({hb_coll_NE__vm_rq[135:0], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
     .rr(hb_vms_NE__rr),
-    .wq({nc__hb_vms_NE__wq[6743:4496], smw_NE__wq[2247:0], lg_NE_0__near_wq[2247:0]}),
+    .wq({smw_NE__wq[2247:0], lg_NE_0__near_wq[2247:0]}),
     .wq_done(hb_vms_NE__wq_done),
     .dq({vmdel_NE7__dq[280:0], vmdel_NE6__dq[280:0], vmdel_NE5__dq[280:0], vmdel_NE4__dq[280:0], vmdel_NE3__dq[280:0], vmdel_NE2__dq[280:0], vmdel_NE1__dq[280:0], vmdel_NE0__dq[280:0]}),
     .kq(hb_coll_NE__vm_kq[2247:0]),
@@ -8603,7 +8622,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pr_cw_o(hb_coll_NE__pr_cw_o),
     .pr_ccw_o(hb_coll_NE__pr_ccw_o),
     .vm_rq(hb_coll_NE__vm_rq),
-    .vm_rr(hb_vms_NE__rr[10279:8224]),
+    .vm_rr(hb_vms_NE__rr[8223:6168]),
     .vm_kq(hb_coll_NE__vm_kq),
     .fault(hb_coll_NE__fault),
     .done(hb_coll_NE__done),
@@ -8793,7 +8812,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .topk_r_str(col_idx__rec[155:138]),
     .cq(hb_idx__cq),
     .cq_seq(hb_idx__cq_seq),
-    .cr(hb_vms_SW__cr[821:548]),
+    .cr(hb_vms_SW__cr[547:274]),
     .topk_busy(hb_idx__topk_busy),
     .topk_done(hb_idx__topk_done),
     .topk_fault(hb_idx__topk_fault),
@@ -19770,16 +19789,16 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pad_fault(host_phy__pad_fault),
     .phy_fault(host_phy__phy_fault)
   );
-  ot_hbm_status_join #(.NT(103), .NF(148), .NH(6), .TGTS(824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430)) host_status (
+  ot_hbm_status_join #(.NT(105), .NF(151), .NH(6), .TGTS(840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430)) host_status (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .desc_v(host_cp_ingress__desc_v[0]),
     .launch_v(host_cp_ingress__launch_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
-    .t_ready({cpx_NE7__configured[0], cpx_NE6__configured[0], cpx_NE5__configured[0], cpx_NE4__configured[0], cpx_NE3__configured[0], cpx_NE2__configured[0], cpx_NE1__configured[0], cpx_NE0__configured[0], cpx_NW7__configured[0], cpx_NW6__configured[0], cpx_NW5__configured[0], cpx_NW4__configured[0], cpx_NW3__configured[0], cpx_NW2__configured[0], cpx_NW1__configured[0], cpx_NW0__configured[0], cpx_SE7__configured[0], cpx_SE6__configured[0], cpx_SE5__configured[0], cpx_SE4__configured[0], cpx_SE3__configured[0], cpx_SE2__configured[0], cpx_SE1__configured[0], cpx_SE0__configured[0], cpx_SW7__configured[0], cpx_SW6__configured[0], cpx_SW5__configured[0], cpx_SW4__configured[0], cpx_SW3__configured[0], cpx_SW2__configured[0], cpx_SW1__configured[0], cpx_SW0__configured[0], cp_smw_NE__configured[0], cp_smw_NW__configured[0], cp_smw_SE__configured[0], cp_smw_SW__configured[0], cp_ep_NE__configured[0], cp_ep_NW__configured[0], cp_ep_SE__configured[0], cp_ep_SW__configured[0], hc_tgt_NE__configured[0], hc_tgt_NW__configured[0], hc_tgt_SE__configured[0], hc_tgt_SW__configured[0], cp_dma_NE__configured[0], cp_dma_NW__configured[0], cp_dma_SE__configured[0], cp_dma_SW__configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], cp_cal_NE__configured[0], cp_cal_NW__configured[0], cp_cal_SE__configured[0], cp_cal_SW__configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], cp_fill_NE__configured[0], cp_fill_NW__configured[0], cp_fill_SE__configured[0], cp_fill_SW__configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
-    .t_active({cpx_NE7__active[0], cpx_NE6__active[0], cpx_NE5__active[0], cpx_NE4__active[0], cpx_NE3__active[0], cpx_NE2__active[0], cpx_NE1__active[0], cpx_NE0__active[0], cpx_NW7__active[0], cpx_NW6__active[0], cpx_NW5__active[0], cpx_NW4__active[0], cpx_NW3__active[0], cpx_NW2__active[0], cpx_NW1__active[0], cpx_NW0__active[0], cpx_SE7__active[0], cpx_SE6__active[0], cpx_SE5__active[0], cpx_SE4__active[0], cpx_SE3__active[0], cpx_SE2__active[0], cpx_SE1__active[0], cpx_SE0__active[0], cpx_SW7__active[0], cpx_SW6__active[0], cpx_SW5__active[0], cpx_SW4__active[0], cpx_SW3__active[0], cpx_SW2__active[0], cpx_SW1__active[0], cpx_SW0__active[0], cp_smw_NE__active[0], cp_smw_NW__active[0], cp_smw_SE__active[0], cp_smw_SW__active[0], epcal_NE__active[0], epcal_NW__active[0], epcal_SE__active[0], epcal_SW__active[0], hc_NE__program_active[0], hc_NW__program_active[0], hc_SE__program_active[0], hc_SW__program_active[0], cp_dma_NE__active[0], cp_dma_NW__active[0], cp_dma_SE__active[0], cp_dma_SW__active[0], cp_xl_NE__active[0], cp_xl_NW__active[0], cp_xl_SE__active[0], cp_xl_SW__active[0], calendar_NE__active[0], calendar_NW__active[0], calendar_SE__active[0], calendar_SW__active[0], cp_svg_NE7__active[0], cp_svg_NE6__active[0], cp_svg_NE5__active[0], cp_svg_NE4__active[0], cp_svg_NE3__active[0], cp_svg_NE2__active[0], cp_svg_NE1__active[0], cp_svg_NE0__active[0], cp_svg_NW7__active[0], cp_svg_NW6__active[0], cp_svg_NW5__active[0], cp_svg_NW4__active[0], cp_svg_NW3__active[0], cp_svg_NW2__active[0], cp_svg_NW1__active[0], cp_svg_NW0__active[0], cp_svg_SE7__active[0], cp_svg_SE6__active[0], cp_svg_SE5__active[0], cp_svg_SE4__active[0], cp_svg_SE3__active[0], cp_svg_SE2__active[0], cp_svg_SE1__active[0], cp_svg_SE0__active[0], cp_svg_SW7__active[0], cp_svg_SW6__active[0], cp_svg_SW5__active[0], cp_svg_SW4__active[0], cp_svg_SW3__active[0], cp_svg_SW2__active[0], cp_svg_SW1__active[0], cp_svg_SW0__active[0], vmfc_NE__active[0], vmfc_NW__active[0], vmfc_SE__active[0], vmfc_SW__active[0], col_idx__active[0], col_sfu_NE__active[0], col_sfu_NW__active[0], col_sfu_SE__active[0], col_sfu_SW__active[0], col_su__active[0], hb_coll_NE__hgi_busy[0], hb_coll_NW__hgi_busy[0], hb_coll_SE__hgi_busy[0], hb_coll_SW__hgi_busy[0], hb_quant_NW__program_active[0]}),
-    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], cpx_NE7__fault[0], cpx_NE6__fault[0], cpx_NE5__fault[0], cpx_NE4__fault[0], cpx_NE3__fault[0], cpx_NE2__fault[0], cpx_NE1__fault[0], cpx_NE0__fault[0], cpx_NW7__fault[0], cpx_NW6__fault[0], cpx_NW5__fault[0], cpx_NW4__fault[0], cpx_NW3__fault[0], cpx_NW2__fault[0], cpx_NW1__fault[0], cpx_NW0__fault[0], cpx_SE7__fault[0], cpx_SE6__fault[0], cpx_SE5__fault[0], cpx_SE4__fault[0], cpx_SE3__fault[0], cpx_SE2__fault[0], cpx_SE1__fault[0], cpx_SE0__fault[0], cpx_SW7__fault[0], cpx_SW6__fault[0], cpx_SW5__fault[0], cpx_SW4__fault[0], cpx_SW3__fault[0], cpx_SW2__fault[0], cpx_SW1__fault[0], cpx_SW0__fault[0], cp_smw_NE__fault[0], cp_smw_NW__fault[0], cp_smw_SE__fault[0], cp_smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], cp_ep_NE__fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], cp_ep_NW__fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], cp_ep_SE__fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], cp_ep_SW__fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], cp_dma_NE__fault[0], cp_dma_NW__fault[0], cp_dma_SE__fault[0], cp_dma_SW__fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], cp_cal_NE__fault[0], calendar_NW__fault[0], cp_cal_NW__fault[0], calendar_SE__fault[0], cp_cal_SE__fault[0], calendar_SW__fault[0], cp_cal_SW__fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], cp_fill_NE__fault[0], vmfc_NW__fault[0], cp_fill_NW__fault[0], vmfc_SE__fault[0], cp_fill_SE__fault[0], vmfc_SW__fault[0], cp_fill_SW__fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
+    .t_ready({cpx_NE7__configured[0], cpx_NE6__configured[0], cpx_NE5__configured[0], cpx_NE4__configured[0], cpx_NE3__configured[0], cpx_NE2__configured[0], cpx_NE1__configured[0], cpx_NE0__configured[0], cpx_NW7__configured[0], cpx_NW6__configured[0], cpx_NW5__configured[0], cpx_NW4__configured[0], cpx_NW3__configured[0], cpx_NW2__configured[0], cpx_NW1__configured[0], cpx_NW0__configured[0], cpx_SE7__configured[0], cpx_SE6__configured[0], cpx_SE5__configured[0], cpx_SE4__configured[0], cpx_SE3__configured[0], cpx_SE2__configured[0], cpx_SE1__configured[0], cpx_SE0__configured[0], cpx_SW7__configured[0], cpx_SW6__configured[0], cpx_SW5__configured[0], cpx_SW4__configured[0], cpx_SW3__configured[0], cpx_SW2__configured[0], cpx_SW1__configured[0], cpx_SW0__configured[0], hc_tbl_tgt__configured[0], hc_eng_tgt__configured[0], cp_smw_NE__configured[0], cp_smw_NW__configured[0], cp_smw_SE__configured[0], cp_smw_SW__configured[0], cp_ep_NE__configured[0], cp_ep_NW__configured[0], cp_ep_SE__configured[0], cp_ep_SW__configured[0], hc_tgt_NE__configured[0], hc_tgt_NW__configured[0], hc_tgt_SE__configured[0], hc_tgt_SW__configured[0], cp_dma_NE__configured[0], cp_dma_NW__configured[0], cp_dma_SE__configured[0], cp_dma_SW__configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], cp_cal_NE__configured[0], cp_cal_NW__configured[0], cp_cal_SE__configured[0], cp_cal_SW__configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], cp_fill_NE__configured[0], cp_fill_NW__configured[0], cp_fill_SE__configured[0], cp_fill_SW__configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
+    .t_active({cpx_NE7__active[0], cpx_NE6__active[0], cpx_NE5__active[0], cpx_NE4__active[0], cpx_NE3__active[0], cpx_NE2__active[0], cpx_NE1__active[0], cpx_NE0__active[0], cpx_NW7__active[0], cpx_NW6__active[0], cpx_NW5__active[0], cpx_NW4__active[0], cpx_NW3__active[0], cpx_NW2__active[0], cpx_NW1__active[0], cpx_NW0__active[0], cpx_SE7__active[0], cpx_SE6__active[0], cpx_SE5__active[0], cpx_SE4__active[0], cpx_SE3__active[0], cpx_SE2__active[0], cpx_SE1__active[0], cpx_SE0__active[0], cpx_SW7__active[0], cpx_SW6__active[0], cpx_SW5__active[0], cpx_SW4__active[0], cpx_SW3__active[0], cpx_SW2__active[0], cpx_SW1__active[0], cpx_SW0__active[0], hc_eng__program_active[0], hc_eng__program_active[0], cp_smw_NE__active[0], cp_smw_NW__active[0], cp_smw_SE__active[0], cp_smw_SW__active[0], epcal_NE__active[0], epcal_NW__active[0], epcal_SE__active[0], epcal_SW__active[0], hc_NE__program_active[0], hc_NW__program_active[0], hc_SE__program_active[0], hc_SW__program_active[0], cp_dma_NE__active[0], cp_dma_NW__active[0], cp_dma_SE__active[0], cp_dma_SW__active[0], cp_xl_NE__active[0], cp_xl_NW__active[0], cp_xl_SE__active[0], cp_xl_SW__active[0], calendar_NE__active[0], calendar_NW__active[0], calendar_SE__active[0], calendar_SW__active[0], cp_svg_NE7__active[0], cp_svg_NE6__active[0], cp_svg_NE5__active[0], cp_svg_NE4__active[0], cp_svg_NE3__active[0], cp_svg_NE2__active[0], cp_svg_NE1__active[0], cp_svg_NE0__active[0], cp_svg_NW7__active[0], cp_svg_NW6__active[0], cp_svg_NW5__active[0], cp_svg_NW4__active[0], cp_svg_NW3__active[0], cp_svg_NW2__active[0], cp_svg_NW1__active[0], cp_svg_NW0__active[0], cp_svg_SE7__active[0], cp_svg_SE6__active[0], cp_svg_SE5__active[0], cp_svg_SE4__active[0], cp_svg_SE3__active[0], cp_svg_SE2__active[0], cp_svg_SE1__active[0], cp_svg_SE0__active[0], cp_svg_SW7__active[0], cp_svg_SW6__active[0], cp_svg_SW5__active[0], cp_svg_SW4__active[0], cp_svg_SW3__active[0], cp_svg_SW2__active[0], cp_svg_SW1__active[0], cp_svg_SW0__active[0], vmfc_NE__active[0], vmfc_NW__active[0], vmfc_SE__active[0], vmfc_SW__active[0], col_idx__active[0], col_sfu_NE__active[0], col_sfu_NW__active[0], col_sfu_SE__active[0], col_sfu_SW__active[0], col_su__active[0], hb_coll_NE__hgi_busy[0], hb_coll_NW__hgi_busy[0], hb_coll_SE__hgi_busy[0], hb_coll_SW__hgi_busy[0], hb_quant_NW__program_active[0]}),
+    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], cpx_NE7__fault[0], cpx_NE6__fault[0], cpx_NE5__fault[0], cpx_NE4__fault[0], cpx_NE3__fault[0], cpx_NE2__fault[0], cpx_NE1__fault[0], cpx_NE0__fault[0], cpx_NW7__fault[0], cpx_NW6__fault[0], cpx_NW5__fault[0], cpx_NW4__fault[0], cpx_NW3__fault[0], cpx_NW2__fault[0], cpx_NW1__fault[0], cpx_NW0__fault[0], cpx_SE7__fault[0], cpx_SE6__fault[0], cpx_SE5__fault[0], cpx_SE4__fault[0], cpx_SE3__fault[0], cpx_SE2__fault[0], cpx_SE1__fault[0], cpx_SE0__fault[0], cpx_SW7__fault[0], cpx_SW6__fault[0], cpx_SW5__fault[0], cpx_SW4__fault[0], cpx_SW3__fault[0], cpx_SW2__fault[0], cpx_SW1__fault[0], cpx_SW0__fault[0], hc_tbl_tgt__fault[0], hc_eng__fault[0], hc_eng_tgt__fault[0], cp_smw_NE__fault[0], cp_smw_NW__fault[0], cp_smw_SE__fault[0], cp_smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], cp_ep_NE__fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], cp_ep_NW__fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], cp_ep_SE__fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], cp_ep_SW__fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], cp_dma_NE__fault[0], cp_dma_NW__fault[0], cp_dma_SE__fault[0], cp_dma_SW__fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], cp_cal_NE__fault[0], calendar_NW__fault[0], cp_cal_NW__fault[0], calendar_SE__fault[0], cp_cal_SE__fault[0], calendar_SW__fault[0], cp_cal_SW__fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], cp_fill_NE__fault[0], vmfc_NW__fault[0], cp_fill_NW__fault[0], vmfc_SE__fault[0], cp_fill_SE__fault[0], vmfc_SW__fault[0], cp_fill_SW__fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
     .h_fault({host_phy__phy_fault[0], host_phy__pad_fault[0], host_cp_ep_face__f_lk_tx[547], host_cp_landing__fault[0], host_cp_packet__protocol_fault[0], host_cp_ingress__fault[0]}),
     .block_ready(host_status__block_ready),
     .program_active(host_status__program_active),
@@ -19945,6 +19964,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .gathered_mix_pos(hc_SW__gathered_mix_pos),
     .gathered_mix_data(hc_SW__gathered_mix_data),
     .gather_done(hc_SW__gather_done),
+    .result_v(hc_eng__result_v[0]),
+    .result_position(hc_eng__result_position[2:0]),
+    .result(hc_eng__result[767:0]),
     .program_active(hc_SW__program_active),
     .program_done(hc_SW__program_done),
     .fault(hc_SW__fault)
@@ -20043,6 +20065,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .gathered_mix_pos(hc_SE__gathered_mix_pos),
     .gathered_mix_data(hc_SE__gathered_mix_data),
     .gather_done(hc_SE__gather_done),
+    .result_v(hc_eng__result_v[1]),
+    .result_position(hc_eng__result_position[5:3]),
+    .result(hc_eng__result[1535:768]),
     .program_active(hc_SE__program_active),
     .program_done(hc_SE__program_done),
     .fault(hc_SE__fault)
@@ -20141,6 +20166,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .gathered_mix_pos(hc_NW__gathered_mix_pos),
     .gathered_mix_data(hc_NW__gathered_mix_data),
     .gather_done(hc_NW__gather_done),
+    .result_v(hc_eng__result_v[2]),
+    .result_position(hc_eng__result_position[8:6]),
+    .result(hc_eng__result[2303:1536]),
     .program_active(hc_NW__program_active),
     .program_done(hc_NW__program_done),
     .fault(hc_NW__fault)
@@ -20239,6 +20267,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .gathered_mix_pos(hc_NE__gathered_mix_pos),
     .gathered_mix_data(hc_NE__gathered_mix_data),
     .gather_done(hc_NE__gather_done),
+    .result_v(hc_eng__result_v[3]),
+    .result_position(hc_eng__result_position[11:9]),
+    .result(hc_eng__result[3071:2304]),
     .program_active(hc_NE__program_active),
     .program_done(hc_NE__program_done),
     .fault(hc_NE__fault)
@@ -20290,6 +20321,79 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(hc_NE3__lg_wq),
     .lg_rr(lg_NE_2__local_rr[2055:1542]),
     .lg_w_done(lg_NE_2__local_w_done[7:6])
+  );
+  ot_hbm_hc_eng_static hc_eng (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .cfg_we(hc_eng_tgt__program_cfg_we[0]),
+    .cfg_addr(hc_eng_tgt__program_cfg_addr[9:0]),
+    .cfg_data(hc_eng_tgt__program_cfg_data[255:0]),
+    .start_v(hc_eng_tgt__program_start_v[0]),
+    .start_base(hc_eng_tgt__program_start_base[9:0]),
+    .start_limit(hc_eng_tgt__program_start_limit[10:0]),
+    .start_loops(hc_eng_tgt__program_start_loops[15:0]),
+    .tbl_we(hc_tbl_tgt__program_cfg_we[0]),
+    .tbl_addr(hc_tbl_tgt__program_cfg_addr[9:0]),
+    .tbl_data(hc_tbl_tgt__program_cfg_data[255:0]),
+    .x_wave_v({hc_NE__x_wave_v[0], hc_NW__x_wave_v[0], hc_SE__x_wave_v[0], hc_SW__x_wave_v[0]}),
+    .x_wave_word({hc_NE__x_wave_word[9:0], hc_NW__x_wave_word[9:0], hc_SE__x_wave_word[9:0], hc_SW__x_wave_word[9:0]}),
+    .x_wave({hc_NE__x_wave[8191:0], hc_NW__x_wave[8191:0], hc_SE__x_wave[8191:0], hc_SW__x_wave[8191:0]}),
+    .gathered_mix_v({hc_NE__gathered_mix_v[0], hc_NW__gathered_mix_v[0], hc_SE__gathered_mix_v[0], hc_SW__gathered_mix_v[0]}),
+    .gathered_mix_row({hc_NE__gathered_mix_row[4:0], hc_NW__gathered_mix_row[4:0], hc_SE__gathered_mix_row[4:0], hc_SW__gathered_mix_row[4:0]}),
+    .gathered_mix_pos({hc_NE__gathered_mix_pos[2:0], hc_NW__gathered_mix_pos[2:0], hc_SE__gathered_mix_pos[2:0], hc_SW__gathered_mix_pos[2:0]}),
+    .gathered_mix_data({hc_NE__gathered_mix_data[31:0], hc_NW__gathered_mix_data[31:0], hc_SE__gathered_mix_data[31:0], hc_SW__gathered_mix_data[31:0]}),
+    .result_v(hc_eng__result_v),
+    .result_position(hc_eng__result_position),
+    .result(hc_eng__result),
+    .program_active(hc_eng__program_active),
+    .program_done(hc_eng__program_done),
+    .fault(hc_eng__fault)
+  );
+  ot_static_program_target #(.TARGET(8'd164), .PCW(10)) hc_eng_tgt (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .cfg_v(host_cp_ingress__cfg_v[0]),
+    .cfg_target(host_cp_ingress__cfg_target[7:0]),
+    .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
+    .cfg_data(host_cp_ingress__cfg_data[255:0]),
+    .desc_v(host_cp_ingress__desc_v[0]),
+    .desc_base(host_cp_ingress__desc_base[11:0]),
+    .desc_limit(host_cp_ingress__desc_limit[12:0]),
+    .desc_loops(host_cp_ingress__desc_loops[15:0]),
+    .launch_v(host_cp_ingress__launch_v[0]),
+    .program_active(hc_eng__program_active[0]),
+    .program_cfg_we(hc_eng_tgt__program_cfg_we),
+    .program_cfg_addr(hc_eng_tgt__program_cfg_addr),
+    .program_cfg_data(hc_eng_tgt__program_cfg_data),
+    .program_start_v(hc_eng_tgt__program_start_v),
+    .program_start_base(hc_eng_tgt__program_start_base),
+    .program_start_limit(hc_eng_tgt__program_start_limit),
+    .program_start_loops(hc_eng_tgt__program_start_loops),
+    .configured(hc_eng_tgt__configured),
+    .fault(hc_eng_tgt__fault)
+  );
+  ot_static_program_target #(.TARGET(8'd165), .PCW(10)) hc_tbl_tgt (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .cfg_v(host_cp_ingress__cfg_v[0]),
+    .cfg_target(host_cp_ingress__cfg_target[7:0]),
+    .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
+    .cfg_data(host_cp_ingress__cfg_data[255:0]),
+    .desc_v(host_cp_ingress__desc_v[0]),
+    .desc_base(host_cp_ingress__desc_base[11:0]),
+    .desc_limit(host_cp_ingress__desc_limit[12:0]),
+    .desc_loops(host_cp_ingress__desc_loops[15:0]),
+    .launch_v(host_cp_ingress__launch_v[0]),
+    .program_active(hc_eng__program_active[0]),
+    .program_cfg_we(hc_tbl_tgt__program_cfg_we),
+    .program_cfg_addr(hc_tbl_tgt__program_cfg_addr),
+    .program_cfg_data(hc_tbl_tgt__program_cfg_data),
+    .program_start_v(hc_tbl_tgt__program_start_v),
+    .program_start_base(hc_tbl_tgt__program_start_base),
+    .program_start_limit(hc_tbl_tgt__program_start_limit),
+    .program_start_loops(hc_tbl_tgt__program_start_loops),
+    .configured(hc_tbl_tgt__configured),
+    .fault(hc_tbl_tgt__fault)
   );
   ot_static_program_target #(.TARGET(8'd56), .PCW(10)) cp_fill_SW (
     .clk(hb_ckgen__pll_stream[0]),
@@ -20689,7 +20793,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(host_status__die_fault[0]),
     .protocol_fault(host_cp_packet__protocol_fault)
   );
-  ot_hbm_host_static_ingress #(.MUT(0), .TARGET_MASK(256'hffffffff0000000f000000f001f1ffffffffffff0ff1000000000000)) host_cp_ingress (
+  ot_hbm_host_static_ingress #(.MUT(0), .TARGET_MASK(256'hffffffff0000003f000000f001f1ffffffffffff0ff1000000000000)) host_cp_ingress (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .s_awvalid(host_cp_packet__s_awvalid[0]),
