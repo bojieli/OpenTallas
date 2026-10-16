@@ -70,6 +70,7 @@ def expand(m, parent_name='sp_capture', packet=DEFAULT_PACKET, *, root=ROOT, ins
  if len(set(names.values()))!=len(names): raise ValueError('capture leaf name collision')
  children=[];assigned={};bound={};clocks=[];real_ports={};pin_tables={}
  for n,c in data['children'].items():
+  if c.get('orient') != 'R0': raise ValueError('capture packet local orientation must be R0: '+n)
   x,y=c['at_um'];w,h=c['outline_um'];orient=parent.orient
   x=parent.x+(pw-x-w if orient=='MY' else x);y=parent.y+y
   domains={e['domain'] for e in data['clock_entries'] if e['child']==n}
@@ -189,9 +190,47 @@ def expand(m, parent_name='sp_capture', packet=DEFAULT_PACKET, *, root=ROOT, ins
   if len(ds)!=1 or not ss:raise ValueError('invalid capture internal net '+str(bit))
   buses.append((f'{parent_name}__internal_{bit}','capture_internal',1,ds+ss))
  receipt={'schema':'opentallas.s81.capture_model_import.v1','packet_sha256':digest,'parent':parent_name,'orientation':parent.orient,'children':names,'bound_views':bound,'real_ports':real_ports,'master_pin_tables':pin_tables,'assigned_pins':assigned,'clock_entries':clocks,'counts':{'children':len(children),'masters':len(bound),'literal_clock_contacts':len(clocks),'external_bits':len(covered),'internal_nets':len(internal)},'parent_geometry':parent.d()}
+ receipt['native_leaf_signature']={names[n]:{'master':c['master'],'outline_um':c['outline_um'],'orient':parent.orient} for n,c in data['children'].items()}
+ receipt['native_internal_edges']=[[(names[p['driver'].rsplit('/',1)[0]],p['driver'].rsplit('/',1)[1]),(names[p['sink'].rsplit('/',1)[0]],p['sink'].rsplit('/',1)[1])] for p in data['internal_paths']]
+ receipt['fixed_internal_nets']=[list(b[3]) for b in buses if b[1]=='capture_internal']
  # No mutation occurs before all source, connectivity and geometry checks pass.
  m['insts']=[it for it in m['insts'] if it.name!=parent_name]+children
  m['buses']=buses
  m['capture_import']=receipt
  for cache in ('pdir','_by','_nets_of','_nets_of_o'):m.pop(cache,None)
  return receipt
+
+
+def validate_native_connectivity(m):
+ """Reject calendar-changing stages, altered masters or extra internal consumers.
+
+ Timing checks remain responsible for every join. Generic transport repair may
+ not change a hardened, source-proven composition's internal register ages.
+ """
+ r=m.get('capture_import')
+ if not r:return
+ def canon(ep):
+  name,pin=ep
+  match=re.fullmatch(r'(.*)\[(\d+):(\d+)\]',pin)
+  if match and match[2]==match[3]:pin=f'{match[1]}[{match[2]}]'
+  return name,pin
+ by={it.name:it for it in m['insts']}
+ for name,expected in r['native_leaf_signature'].items():
+  it=by.get(name)
+  if it is None or it.master!=expected['master'] or it.orient!=expected['orient'] or any(abs(a-b)>1e-6 for a,b in zip((it.w,it.h),expected['outline_um'])):
+   raise ValueError('capture native leaf changed outside its source contract: '+name)
+ nets=[];of=defaultdict(set)
+ for bid,cls,width,eps,*tail in m['buses']:
+  native=[ep for ep in eps if ep[0] in r['native_leaf_signature']]
+  if not native:continue
+  if width!=1:raise ValueError('capture native bit was combined into a different-width net: '+bid)
+  key=len(nets);points={canon(ep) for ep in eps};nets.append(points)
+  for ep in native:of[canon(ep)].add(key)
+ for source,sink in r['native_internal_edges']:
+  if not (of[canon(source)] & of[canon(sink)]):
+   raise ValueError('capture internal fixed-cycle edge retimed or disconnected: '+str((source,sink)))
+ for expected in r['fixed_internal_nets']:
+  points={canon(ep) for ep in expected};first=next(iter(points))
+  if len(of[first])!=1 or nets[next(iter(of[first]))]!=points:
+   raise ValueError('capture internal stage or extra consumer inserted: '+str(first))
+ r['fixed_cycle_connectivity']='PASS exact native internal graph; no added stages'

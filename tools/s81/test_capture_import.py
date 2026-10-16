@@ -99,3 +99,17 @@ class CaptureImport(unittest.TestCase):
   self.assertEqual(actual,[(f'external_t_cd__captbit{i}',('tap',f'q[{i+6}:{i+6}]')) for i in (2,3,4)])
 
 if __name__=='__main__':unittest.main()
+
+def test_nonzero_local_orientation_and_inserted_stage_refused():
+ import pytest
+ from capture_import import validate_native_connectivity
+ CaptureImport.setUpClass();fixture=CaptureImport()
+ bad=copy.deepcopy(fixture.packet);next(iter(bad['children'].values()))['orient']='MY'
+ m=fixture.model();before=copy.deepcopy(m)
+ with pytest.raises(ValueError,match='local orientation'):expand(m,packet=bad)
+ assert m==before
+ m=fixture.model();expand(m,packet=fixture.packet);validate_native_connectivity(m)
+ bus=next(b for b in m['buses'] if b[1]=='capture_internal')
+ original=list(bus[3]);bus[3][1]=('unpriced_stage','d')
+ m['buses'].append(('unpriced_stage_out','capture_internal',1,[('unpriced_stage','q'),original[1]]))
+ with pytest.raises(ValueError,match='fixed-cycle edge retimed'):validate_native_connectivity(m)

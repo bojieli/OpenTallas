@@ -3994,6 +3994,8 @@ def _dedupe_pad(m):
     bv = bound_views()
     rec = m.setdefault('pad', {})
     for it in m['insts']:
+        if it.kind == 'capture_leaf':
+            continue  # source-pinned hardened composition; no generic master substitution
         e = mp.get(it.master)
         if not e:
             continue
@@ -4019,7 +4021,7 @@ def _apply_station_footprints(m):
     the data-pin face length unchanged.  Grow toward the output face; if that box is taken, toward the input face; else
     the nearest legal box (<= 120 um).  Counted in m.stn_footprints."""
     W, H = DIE
-    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS]
+    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS and it.kind != 'capture_leaf']
     if not hits:
         return
     names = {it.name for it in hits}
@@ -6865,6 +6867,13 @@ def _hop_fix(m, P):
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
         RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        if cls == 'capture_internal':
+            # These joins are part of the exact fixed-bank source calendar.
+            # Keep them in pair/STA analyses; repair timing by a source-proven
+            # rehome or explicit benched calendar change, never generic stages.
+            m.setdefault('capture_internal_retime_protection', []).append(
+                dict(bus=bid, planned_loads=sum((eps[0][0],eps[0][1],ep[0],ep[1]) in plan for ep in eps[1:])))
+            continue
         if cls in HOP_SKIP or len(eps) < 2:
             continue
         keep = [eps[0]]
@@ -9678,6 +9687,9 @@ def finalize_r8(m):
             if old and (old[0] != d or old[1] != b):
                 raise ValueError(f'{it.master}.{p_}: {old} vs {(d, b)} on {it.name}')
             pdir[it.master][p_] = (d, b)
+    if m.get('capture_import'):
+        from s81.capture_import import validate_native_connectivity
+        validate_native_connectivity(m)
     m['pdir'] = pdir
     for it in m['insts']:
         if it.kind == 'hend':

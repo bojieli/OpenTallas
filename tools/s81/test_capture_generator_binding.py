@@ -39,3 +39,15 @@ def test_generator_binds_all_actual_capture_leaf_ports(tmp_path, monkeypatch):
         assert set(master.ports) == set(ports[leaf.master])
     assert G.die_master_params(model)['dsfd_capt_cd']['PINREG'] == 1
     assert len(receipt['clock_entries']) == 86
+
+
+def test_generic_hop_repair_does_not_retime_fixed_capture_join(monkeypatch):
+    a=G.Inst('a','native_a',0,0,10,10,kind='capture_leaf')
+    b=G.Inst('b','native_b',1000,0,10,10,kind='capture_leaf')
+    m=dict(insts=[a,b],buses=[('fixed','capture_internal',1,[('a','q'),('b','d')])])
+    monkeypatch.setattr(G,'HOP_PLAN',{('a','q','b','d'):(1000,(5,5),(1005,5),None)})
+    monkeypatch.setattr(G,'_corridors',lambda _: {})
+    G._hop_fix(m,G.Placer(m))
+    assert len(m['insts'])==2
+    assert m['buses']==[('fixed','capture_internal',1,[('a','q'),('b','d')])]
+    assert m['capture_internal_retime_protection']==[dict(bus='fixed',planned_loads=1)]
