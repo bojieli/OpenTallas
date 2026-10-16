@@ -1,5 +1,5 @@
 {
- "name": "s81issuer_c10_v2-v2-COMMIT",
+ "name": "s81issuer_c10_v2-v2b-COMMIT",
  "block": "dsfd_stage_seq_static_c10",
  "ref_tile": true,
  "owner": "Claude:S-ELEM-PQ/SSEQ",
@@ -7,7 +7,7 @@
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/s81-sseq-c10-0600",
+  "branch": "codex/s81-issuer-v2b-0818",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_control",
@@ -166,7 +166,7 @@
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
- "notes": "cycles_added=2 describes ck data command/done roundtrip only (+1 output pin and +1 input pin); compiler done rows add2. Runtime diagnostics add1ck separately; c8/c10 serial status observation profile and all downstream registers/relays must be bound from tools/s81_static_control/status_observation_contract.json. Total layer/token performance remains UNMEASURED and native consumer remains BLOCKED until actual physical/compiler binding; never infer total cost from this scalar. v2: boot seal->armed 130 edges (initialization only, seal_to_arm_stream_cycles 131); normal issue/KIT/END/fault edges unchanged.",
+ "notes": "cycles_added=2 describes ck data command/done roundtrip only (+1 output pin and +1 input pin); compiler done rows add2. Runtime diagnostics add1ck separately; c8/c10 serial status observation profile and all downstream registers/relays must be bound from tools/s81_static_control/status_observation_contract.json. Total layer/token performance remains UNMEASURED and native consumer remains BLOCKED until actual physical/compiler binding; never infer total cost from this scalar. v2: boot seal->armed 131 edges (initialization only, seal_to_arm_stream_cycles 132); normal issue/KIT/END/fault edges unchanged.",
  "merge_target": null,
- "structural_change": "Issuer v2 (rtl_change, S-ELEM-PQ/SSEQ 2026-10-16): measured localtree3 CTS views (c8 same core) TT reg->reg -751 ps scan->fault_code, -668 ps length/age -> 26 per-engine x per-slot 128-row OR trees -> cmd_d, -508 ps busy -> 9,728 PW write enables; c9 n5 route EARLY_FAIL_CONGESTION with GRT overflow uniform over the tile. v2: one registered-hit 128-row {op,done,engine,arg} tree per context (contract <=1 row per context per edge, one command in flight per engine, compiler enforced; runtime fault 9), per-engine completion expectation (replaces 256 per-row comparators), PW row write registered after its unchanged accept/fault decision, boot scan row-registered (+2 init edges, seal->armed 130). All command/KIT/END/fault edges unchanged (cycle-exact differential vs frozen v1, 9 modes). Same ports, same S-DIE 540x86.4 E-anchored grant (sdie_codex_c10_540_candidate_1016) and pin plan; recipe 3 pin registers as localtree3."
+ "structural_change": "Issuer v2 (rtl_change, S-ELEM-PQ/SSEQ 2026-10-16): measured localtree3 CTS views (c8 same core) TT reg->reg -751 ps scan->fault_code, -668 ps length/age -> 26 per-engine x per-slot 128-row OR trees -> cmd_d, -508 ps busy -> 9,728 PW write enables; c9 n5 route EARLY_FAIL_CONGESTION with GRT overflow uniform over the tile. v2: one registered-hit 128-row {op,done,engine,arg} tree per context (contract <=1 row per context per edge, one command in flight per engine, compiler enforced; runtime fault 9), per-engine completion expectation (replaces 256 per-row comparators), PW row write registered after its unchanged accept/fault decision, boot scan row-registered (+2 init edges, seal->armed 130). All command/KIT/END/fault edges unchanged (cycle-exact differential vs frozen v1, 9 modes). Same ports, same S-DIE 540x86.4 E-anchored grant (sdie_codex_c10_540_candidate_1016) and pin plan; recipe 3 pin registers as localtree3. v2b: the measured v2 placement -235.5ps reg->reg endpoint in g_exp is split with a registered shared selection-tree result and two-edge lookahead; grouped 16:1 then 8:1 boot row read adds one initialization edge (seal-to-armed131; metadata132). Exact runtime issue and END/KIT outputs are preserved. Additional state/area and root count require fresh synthesis and CTS."
 }

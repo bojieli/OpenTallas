@@ -3,7 +3,7 @@
 # (test/ot_s81_fixed_issue_v1_frozen.sv, d71ec3cfe) on the full 128-row / 13-engine / two-context program, every
 # runtime mode of tb_s81_fixed_issue (0..3, 5..9). Every edge from tick 990 on compares cmd_v, cmd_d (84 x 13 bits),
 # END/KIT/slot/KIT token, fault, fault code, job and command counters and busy. Mode 4 (incomplete PW) differs only in
-# the arm edge (seal+128 -> seal+130, both fixtures assert their own edge). A planted v2 mutant (ISSUER_MUT=1) must
+# the arm edge (seal+128 -> seal+131, both fixtures assert their own edge). A planted v2 mutant (ISSUER_MUT=1) must
 # differ. Usage: issue_v2_diff_gate.sh <outdir>
 set -euo pipefail
 R=$(cd "$(dirname "$0")/../.." && pwd); O=$(mkdir -p "$1" && cd "$1" && pwd); T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
