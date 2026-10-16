@@ -1,0 +1,36 @@
+{
+  "status": "PASS_MAPPING_ONLY",
+  "instances": 128,
+  "proof": "Icarus evaluates literal expressions extracted from source-pinned RTL wrapper",
+  "not_qualification": "No controller compute is substituted or qualified by this constant probe",
+  "mutants": {
+    "pc_id": {
+      "status": "REJECTED",
+      "why": "source-elaborated wrapper constants disagree with binding map"
+    },
+    "refresh_reload": {
+      "status": "REJECTED",
+      "why": "source-elaborated wrapper constants disagree with binding map"
+    }
+  },
+  "source_port_gaps": {},
+  "source_S_sha256": "77df74f1df6a2060723cee8bb5764f9dd20db62ba6b30b65ce1363bdb1e9d205",
+  "dependencies_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv": "1ea5a8364761ad00cb5b696e9eace361a60d1479e5423334798dd834a50bc8a4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv": "b74adba1dfa8ac9d89bd98c17441d17c3fd080bf1b57e2b95023de1ff9ebd433",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "generated_sha256": {
+    "h4_source_sha256.txt": "9f047dc8b226e888471715256bde10412e4ad1f4d0446bc0a96ec3278b173ed0",
+    "binding.json": "75f320f0ae58f656e2316c34f5495502fba9c696c79d8df12a49eb39764c0af9",
+    "native_functional_provenance.json": "428dfdab46806f9c60f8c613ff74600093afd1735ef224025993544a95fadc89",
+    "strap_probe.sv": "75b2f56742f4ad90afeb30801023711986a242d04b6ac95d544b897b46b1c197",
+    "h4_wpay.log": "0101b7d47a8f96fd5b0c5e5ec4b7ae2e86177f652cc26f6a565aa4675f51dbf2",
+    "candidate_contract.json": "bd74a82d93280b4f41c9f781162815febac00ffb01355278188ca49f7bd9149d",
+    "strap_probe.log": "1e4ab32e199d8f11affd8de60a5e2566a4979c14ddb3d4bf28fc43a82d6e20e2",
+    "h4_issued.log": "4a78c81c6fef0c6912800972697ee1dd38d5491b65d3cda4db8c2c802450c147"
+  }
+}

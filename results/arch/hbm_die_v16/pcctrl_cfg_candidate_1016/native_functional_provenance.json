@@ -1,0 +1,21 @@
+{
+  "scope": "source-identical H4/H6 native 32-PC / 8-SM issued controller composition, 64 rows / 8 epochs; not full 128-PC die qualification",
+  "read_only_source_host": "ot-epyc1tb",
+  "source_path": "/srv/opentallas-scratch/claude/hpcctrl-0030/src4/",
+  "all_controller_dependencies_match": true,
+  "dependency_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv": "1ea5a8364761ad00cb5b696e9eace361a60d1479e5423334798dd834a50bc8a4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv": "b74adba1dfa8ac9d89bd98c17441d17c3fd080bf1b57e2b95023de1ff9ebd433",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "rtl_source_commit": "6a9d24cd25ac551688f49b25b589e046bc26d668",
+  "results": "existing issued PASS and early/noresident/cfg-PC/cfg-PHASE mutants rejected; WPAY PASS/stale_head rejected",
+  "qualification_open": [
+    "H6 routed native pins",
+    "128-PC die candidate elaboration/strict bind",
+    "full-die physical signoff"
+  ]
+}
