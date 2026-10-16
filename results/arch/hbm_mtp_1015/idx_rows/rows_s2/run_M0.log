@@ -1,0 +1,25 @@
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(cal.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(pre.mem): Not enough words in the file for the requested range [0:4095].
+WARNING: rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:98: $readmemh(chk.mem): Not enough words in the file for the requested range [0:1023].
+END_EDGE 114  done
+END_EDGE 474  done
+END_EDGE 589  done
+END_EDGE 954  done
+END_EDGE 1313  done
+END_EDGE 1679  done
+END_EDGE 1810  done
+END_EDGE 1863  done
+END_EDGE 1971  done
+END_EDGE 2059  done
+END_EDGE 2100  done
+END_EDGE 2155  done
+END_EDGE 2221  done
+END_EDGE 2267  done
+END_EDGE 2347  done
+END_EDGE 2414  done
+END_EDGE 2558  done
+END_EDGE 2621  done
+END_EDGE 2624 fault
+END_EDGE 2627 fault
+IDX_TOPK_ROWS ENGINE1 MUT0 MUTH0 records20 dones18 faults2 sectors_checked141 errors0 schedule_edges2631
+rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv:155: $finish called at 38660000 (1ps)

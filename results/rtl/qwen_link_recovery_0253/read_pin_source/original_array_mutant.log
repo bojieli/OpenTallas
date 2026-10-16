@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       admits   475 GB (avail 736, growth 213, headroom 48, waiters 0/0 GB) load 72/128 running 33 disk 816 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_m6_138-20261016-034400/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_m6_138-20261016-034400/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2086155-1792148153 after 0 s
+FAIL cyc=111 tile 6 group 0 operand ref=3f5b dvm=bef2
+FAIL cyc=111 tile 6 group 1 operand ref=bede dvm=bf62
+FAIL cyc=111 tile 6 group 2 operand ref=be2e dvm=3fde
+FAIL cyc=111 tile 6 group 3 operand ref=be3e dvm=bea7
+FAIL cyc=111 tile 7 group 0 operand ref=bf9a dvm=3ef4
+FAIL cyc=111 tile 7 group 1 operand ref=40a8 dvm=c068
+FAIL cyc=111 tile 7 group 2 operand ref=be84 dvm=3e08
+FAIL cyc=111 tile 7 group 3 operand ref=beb9 dvm=3e05
+FAIL cyc=111 tile 10 group 0 operand ref=3e39 dvm=be44
+FAIL cyc=111 tile 10 group 1 operand ref=3ffc dvm=be72
+FAIL cyc=111 tile 10 group 2 operand ref=3e18 dvm=be59
+FAIL cyc=111 tile 10 group 3 operand ref=c060 dvm=3ee3
+FAIL cyc=111 tile 11 group 0 operand ref=4073 dvm=3ed9
+FAIL cyc=111 tile 11 group 1 operand ref=403b dvm=3ea7
+FAIL cyc=111 tile 11 group 2 operand ref=4084 dvm=bfcf
+FAIL cyc=111 tile 11 group 3 operand ref=bfcc dvm=c0ac
+FAIL cyc=111 tile 14 group 0 operand ref=3f5b dvm=bef2
+FAIL cyc=111 tile 14 group 1 operand ref=bede dvm=bf62
+FAIL cyc=111 tile 14 group 2 operand ref=be2e dvm=3fde
+FAIL cyc=111 tile 14 group 3 operand ref=be3e dvm=bea7
+FAIL errors=113622 writes=496 operand_checks=66816 reused=2
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2086155-1792148153): exit 0
