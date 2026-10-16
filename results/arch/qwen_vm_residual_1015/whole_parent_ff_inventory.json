@@ -1,0 +1,73 @@
+{
+  "scope": "Actual original production-parent proc/opt_clean FF census with physical leaves blackboxed. Clock/synthesis/timing qualification remains open.",
+  "rows": [
+    {
+      "module": "$paramod$d1e3cf51c9049d13c12a084e0bd56e7eaf239e58\\qfd_sp_vector_memory",
+      "instances": 1,
+      "source_ff_per_instance": 555,
+      "source_ff_total": 555
+    },
+    {
+      "module": "$paramod$497c467d48a4dc8b75e4a7d64ff73a84cd2c0759\\ot_qfd_sp_vector_memory_bv",
+      "instances": 1,
+      "source_ff_per_instance": 87507,
+      "source_ff_total": 87507
+    },
+    {
+      "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+      "instances": 8,
+      "source_ff_per_instance": 512,
+      "source_ff_total": 4096
+    },
+    {
+      "module": "$paramod$38f86ab78b594bc1b382fca17f26ef9a86c7d93e\\ot_hdc_delay",
+      "instances": 8,
+      "source_ff_per_instance": 5491,
+      "source_ff_total": 43928
+    },
+    {
+      "module": "$paramod$48ae854e26f1cdd54c891ff62430a8d6fcfd1514\\ot_hdc_delay",
+      "instances": 8,
+      "source_ff_per_instance": 29,
+      "source_ff_total": 232
+    },
+    {
+      "module": "$paramod$aebde191c6efd6fd5015f4c8679b97495f6018a6\\ot_hdc_delay",
+      "instances": 1,
+      "source_ff_per_instance": 66,
+      "source_ff_total": 66
+    },
+    {
+      "module": "$paramod$ba7d73fdc56a5fbebb25b9757ff28072b57cb3fd\\ot_hdc_delay",
+      "instances": 8,
+      "source_ff_per_instance": 3072,
+      "source_ff_total": 24576
+    },
+    {
+      "module": "ot_qfd_vm_q_export_fixed",
+      "instances": 1,
+      "source_ff_per_instance": 1046,
+      "source_ff_total": 1046
+    }
+  ],
+  "source_ff_total": 162006,
+  "source_ff_after_existing_return_read_extraction": 128043,
+  "source_ff_BV_own_after_extraction": 53544,
+  "resetless_relay_reuse_candidate": {
+    "existing_master": "qvm_data256_native",
+    "source_body": "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+    "physical_view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+    "instances": 289,
+    "source_bits_replaced": 72666,
+    "physical_FF_bits": 73984,
+    "padding_bits": 1318,
+    "clock_entries": 289,
+    "added_normal_edges": 0,
+    "outline_each_um": [
+      25.92,
+      51.84
+    ],
+    "area_mm2": 0.3883272192000001,
+    "scope": "Not implemented yet. Reuse one existing closed master, pad unused lanes; retain resettable232FF relay control separately. Must prove exact shift feedback/phase/source and actual pins/cuts before adoption."
+  }
+}
