@@ -3,11 +3,11 @@
  "block": "ot_hbm_svc_vmdel_lane",
  "ref_tile": true,
  "owner": "Claude:H-NETLIST/kits",
- "purpose": "v4 lane leaf of the split VM delivery (v16 die: vmdel_<q><b> x32). Measured failure hv15_vmdel_lane-countvisible-flow4536 (v2 RTL): TT -184.64 in->reg / -171.07 reg->out, DRC 2, util 32%. Structural fix: v3 pin registers on every input and output (+2 interface cycles, II=1, outputs == monolithic delayed 2) + v4 kept rst_n pin flops for the control region and each PC group (rst_n reaches 7 valid + 5 copies + 5 output status flops, was 640; dq payload flops unreset; 0 cycles; v4b d60a91855 NEEDS_RTL: its output-register reset copy failed LAT=2 equivalence under the loop's Icarus 12, now PASS on Icarus 11 and 12) + pins spread over the faces (pin_balance; gate 01:19 PNG: S fill pins and N dq crowded into narrow strips) + outline 302.4x172.8 -> 257.04x151.2 (util ~46%, 20-um macro channels). Bench: production + LAT=2 lockstep equivalence; mutants group-select, SRAM slot, late reset release FAIL.",
+ "purpose": "v5 lane leaf of the split VM delivery (v16 die: vmdel_<q><b> x32). Measured failure hv15_vmdel_lane-hv15-1d140b89b (v4c): TT -73.01 ps / TNS -14.6 ns / 419 D pins, FF +7.21, DRC 0; routed STA: every failing endpoint starts at an UNREGISTERED cross-lane status input (pcbad_all[3] -> |pcbad -> landing_fault -> fill_ok -> 512 seen flops + SRAM w_ce/r_ce: 548 ps behind the E pins = 2 OR levels + 4 placement buffers across the 257-um lane + 5 gates + 2 buffers to the macro pin; full*_all -> start_ok -> issue -> fill_ok -30.8; r2r -28.05 sticky -> u_payload w_ce on a macro clock 147 ps earlier than the register leaves); boundary clock 243-386 ps (spread 142 > 80: one 302-ps-slew leaf-driver net). Structural fix: (1) owner rule 19:50 applied to the last 27 unregistered pins: cross-lane status leaves the sending lane from an output flop and is captured in a pin flop at every lane (status latency 2 edges in every lane, reference ot_hbm_svc_static_landing/vm_delivery #(STATUS_LAT=2); cost block_ready / landing-fault response +2 edges, II unchanged); (2) explicit register-sink CTS clustering 16 sinks / 30 um (as the CLOSED 259.2x151.2 4-macro qfd_bl_lane_ce: spread 34 ps). Outline 257.04x151.2 kept. Bench: production (SLAT=2) + LAT=2 lockstep equivalence vs the STATUS_LAT=2 reference; mutants group-select, SRAM slot, late reset release, status pin flops bypassed FAIL (Icarus 11 and 12).",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/hnl-kits-0030",
+  "branch": "claude/hnl-vmdel-0600",
   "commit": "COMMIT",
   "extra_paths": [
    "tools/hbm_v15_harden",
@@ -39,7 +39,7 @@
      "iverilog"
     ],
     "pass_regex": "DELIVERY_SPLIT_BENCH PASS",
-    "min_count_regex": "checks=(\\d+)"
+    "min_count_regex": "SPLIT_EQUIV PASS .*checks=(\\d+)"
    },
    {
     "name": "mutant1",
@@ -64,6 +64,16 @@
    {
     "name": "mutant3",
     "cmd": "bash tools/hbm_v15_harden/bench_delivery_split.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant4",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_split.sh {RUN}/bench/mut4 4",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 8,
