@@ -42,8 +42,12 @@ PROFILES = {
 }
 # The A2-F measurement embeds its exact staged-source manifest in the immutable
 # parent receipt. Keep legacy profiles attached to their original measurement.
-A2F_RECEIPT = 'results/rtl/s81_vm_a2f_parent_0200/record.json'
-A2F_RECEIPT_SHA256 = '0f57bf9724fd1cf7ef430e2d1092f8c09b4ba74584b70fe55faeb4fb39267e04'
+# 2026-10-16 S-FUNC: re-measured on bc297977c (S-VM full A2-F parent gate, 71 staged sources byte-identical to main
+# after the cap-diagnostic / WFC r5 / XIO-leaf / payload33 changes; same LAT lines: write P+11+n, commit P+12+n, read
+# raw Q+6, return Q+14; 23/23 runs incl. 8 fault witnesses and 6 mutants). The 0200 receipt (8849603a6) stays as
+# historical evidence.
+A2F_RECEIPT = 'results/rtl/s81_vm_a2f_parent_bc297977c/record.json'
+A2F_RECEIPT_SHA256 = '95efc5049bb8c3f4e261c641e43b01a030fa5a9f255b3953af308ae54674b301'
 PROFILES['s81_vm_a2f_hop1_r4_c2_w1'] = dict(
     rtl_tuple={'READ_PIPE': 4, 'CAP_PIPE': 2, 'WSCATTER_PIPE': 1, 'HOP1': 1},
     read_raw=6, read_return=14, write_raw=11, write_return=12, max_lane=2,
