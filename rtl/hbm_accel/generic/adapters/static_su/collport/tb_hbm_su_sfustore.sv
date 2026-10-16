@@ -23,6 +23,10 @@ initial begin
  end
  // Address identity fault is observed without rescheduling a service.
  @(negedge clk);vi_re=1;vi_addr[23:0]=addr(1,37);repeat(3)tick();if(!fault)$fatal(1,"SFUSTORE missing identity fault");
- $display("SFUSTORE PASS 224 lane-rows exact read n+2, identity fault");$finish;
+ @(negedge clk);rst_n=0;vi_re=0;repeat(3)tick();@(negedge clk);rst_n=1;
+ vi_re=1;vi_addr[23:0]=addr(0,37)|(1<<23);repeat(3)tick();if(!fault)$fatal(1,"SFUSTORE missing high-read-address fault");
+ @(negedge clk);rst_n=0;vi_re=0;repeat(3)tick();@(negedge clk);rst_n=1;
+ kv_we=1;kv_waddr[23:0]=addr(0,37)|(1<<23);repeat(3)tick();if(!fault)$fatal(1,"SFUSTORE missing high-write-address fault");
+ $display("SFUSTORE PASS 224 lane-rows exact read n+2, identity/highread/highwrite faults");$finish;
 end
 endmodule

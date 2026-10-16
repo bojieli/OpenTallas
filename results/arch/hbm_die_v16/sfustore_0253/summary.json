@@ -1,13 +1,13 @@
 {
   "scope": "mapped SRAM lane-local store component; SFU programme and whole die not qualified",
-  "positive": "224lane-rows + identity-fault",
+  "positive": "224lane-rows at exactn+2, identity/highread/highwrite faults",
   "mutants": [
     "wronglane",
     "wrongrow"
   ],
   "sources": {
-    "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_sfustore.sv": "4b9e1df5b8e88f6deeb701c719e59c7f55a4c2f1352296b7105cd6522a4a8d46",
-    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv": "8d35f0b6799440c76318fedb5f686558b19377bc9dc7c8fd8c0fe060e1593e13",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_sfustore.sv": "28958e184c853c121f63385cec6dc21157e0d15234b28425f14ab058bc7622b7",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv": "96d8450033bbb98d2262562633480afd9179455fbd63b6c2107d6455f2201f9d",
     "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
     "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
