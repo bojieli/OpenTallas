@@ -1,5 +1,5 @@
 {
- "name": "hcoll_vmwrite_static_v4-relay4-COMMIT",
+ "name": "hcoll_vmwrite_static_v4-relay4-60421f4a4",
  "block": "ot_hgi_coll_static_vmwrite",
  "ref_tile": true,
  "owner": "Claude:H-COLL+IDX",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hcoll-writer-v4-1715",
-  "commit": "COMMIT",
+  "commit": "60421f4a4",
   "extra_paths": [
    "tools/hbm_coll_static",
    "rtl/hbm_accel/generic/collective/p2p"
@@ -147,7 +147,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hcoll_physical_1339/vmwrite_v4/hcoll_vmwrite_static_v4-relay4-COMMIT"
+   "to": "results/arch/hcoll_physical_1339/vmwrite_v4/hcoll_vmwrite_static_v4-relay4-60421f4a4"
   }
  ],
  "cycles_added": 0,
