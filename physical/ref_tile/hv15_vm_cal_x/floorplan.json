@@ -31,7 +31,6 @@
  "pins": {
   "W": [
    "clk_mem",
-   "clk",
    "clk_cap",
    "rst_n",
    "cfg_we",
@@ -62,6 +61,7 @@
    "lg_local_write"
   ],
   "S": [
+   "clk",
    "calendar_v",
    "active",
    "done",
