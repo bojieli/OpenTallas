@@ -9065,7 +9065,22 @@ def cmd_recover_export_lint(a):
     import base64
     from export_lint_recovery import eligible
     j = load_job(a.name)
-    eligible(j)
+    evidence = None
+    try:
+        eligible(j)
+    except ValueError as exc:
+        if str(exc) != 'no recorded PG lint collection failure':
+            raise
+        probe = ("import hashlib,json,pathlib; "
+                 "ps=list(pathlib.Path(" + repr(j['run']) + ").glob('record/views/**/provenance/abstract_pin_stub.json')); "
+                 "print(json.dumps([dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),"
+                 "child_lint=json.loads(p.read_text()).get('child_lint',{})) for p in ps]))")
+        r = ssh(j['host'], 'python3 -c ' + shlex.quote(probe), timeout=60, check=True)
+        records = json.loads(r.stdout)
+        if len(records) != 1:
+            raise ValueError('expected one retained structured lint receipt')
+        evidence = records[0]
+        eligible(j, evidence)
     head = _ovl_head()
     rel = "tools/hier_contract/child_lint.py"
     data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
@@ -9073,6 +9088,8 @@ def cmd_recover_export_lint(a):
     request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
                    helper_sha256=hashlib.sha256(data).hexdigest(),
                    guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    if evidence:
+        request['pg_lint_evidence'] = evidence
     r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
             input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
     j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
