@@ -10,7 +10,7 @@
   "rst"
  ],
  "outline": {
-  "w": 259.2,
+  "w": 388.8,
   "h": 34.56
  },
  "pins": {
@@ -39,7 +39,7 @@
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-seltxq-1016",
-  "tag": "x1",
+  "tag": "x2",
   "purpose": "Harden dsfd_selt_xq (absent-quarter synthesiser, the open leaf of dsfd_bk_selector_c1 on the 1-stack S81 die); closure-first, removes the bk_selector_c1 stand-in once the parent binds it.",
   "benches": [
    {
