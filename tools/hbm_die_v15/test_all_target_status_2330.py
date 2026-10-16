@@ -4,7 +4,7 @@ import json, pathlib, subprocess, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 s=json.loads((ROOT/'tools/hbm_die_v15/v16_specs/cp2.json').read_text())
 p=next(i['params'] for i in s['instances'] if i['name']=='host_status')
-assert (p['NT'],p['NF'])==(67,100)
+assert (p['NT'],p['NF'])==(67+32,100+32)   # +32 attention-SM extension collars cpx_<q><k> (H-NETLIST/attn)
 # Every bit of the actual root is driven once, and the ingress accepts exactly these ids.
 for port,width in [('t_ready',p['NT']),('t_active',p['NT']),('t_fault',p['NF'])]:
     bits=[]

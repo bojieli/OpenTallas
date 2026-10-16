@@ -93,6 +93,12 @@ for k,q in enumerate(Q):
 for k,q in enumerate(Q):
     rows.append((132+k,[f'cp_ep_{q}','configured'],[f'epcal_{q}','active'],
                  [[f'cp_ep_{q}','fault'],[f'epcal_{q}','fault']]+[['ep_'+lk,'fault'] for lk in links[q]]))
+# H-NETLIST/attn 2026-10-16: 32 attention-SM extension programme collars cpx_<q><k> (TARGET 192+8*QID+k, attn_0030.json):
+# participation by the host descriptor to cpx (sent whenever the SM runs); ready = configured, active = collar active (|xcal active),
+# fault = collar fault (already ORs the xcal sticky fault through tgt_fault).
+for k,q in enumerate(Q):
+    for m in range(8):
+        rows.append((192+8*k+m,[f'cpx_{q}{m}','configured'],[f'cpx_{q}{m}','active'],[[f'cpx_{q}{m}','fault']]))
 rows.sort()
 nt,nf=original_nt,original_nf
 for t,ready,active,faults in rows:
@@ -105,7 +111,7 @@ for t,ready,active,faults in rows:
         nf+=1
     nt+=1
 all_targets=base_targets+[r[0] for r in rows]
-assert len(all_targets)==len(set(all_targets))==67
+assert len(all_targets)==len(set(all_targets))==67+32
 root['params'].update(NT=nt,NF=nf,TGTS=f"{8*nt}'h"+''.join(f'{t:02x}' for t in reversed(all_targets)))
 root['note']='All67 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open.'
 write('cp2',c)

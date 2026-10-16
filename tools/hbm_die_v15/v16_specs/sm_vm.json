@@ -5540,13 +5540,6 @@
    "note": "OUTPUTS left unconsumed on all 32 SMs: rv, rrow, rdata, fault, schedule_fault (no input of any listed instance is affected). Results of attention QK/PV (verdict B) also land here. ARCHITECTURE QUESTION (H-SM + H-COLL + H-ELEM-A, owner): where does an SM result row go? (A) always through the COLL SM stage (ot_hgi_coll_sm_stage_q into hb_coll_<q>: TP partial-sum reduction, then the VM via COLL kq) -- needs the stage instantiated in hb_coll_<q> with its calendar inputs; or (B) non-reduced results written straight into the VM by a static result writer (8 SMs -> 8 banks, sector = base_k + {rrow,k}) -- needs a VM write group: SW/SE have WG=1 (wq0 = LG) and NW/NE WG=3 (wq1 CP / ATT-retired, wq2 QUANT / HC), so (B) is a VM ABI change. vmsm did not build either (no decision)."
   },
   {
-   "id": "G-SMVM-KVDESC",
-   "owner": "H-SM / H-ELEM-A",
-   "missing_rtl": "attention SM master ot_hbm_accel_smh_attn (rtl/hbm_accel/sm/attn, on main via eb3e3e94a, ancestor of HEAD) has command[191:0] + kv_desc[63:0] + request (not expected_request); the die binds ot_hbm_accel_smh_static (83-b command from ot_hbm_svc_sm_group.sm_command[82:0], no kv_desc). Missing: (a) a 192-b command source (svc_sm_group emits 83 b), (b) a static kv_desc producer at the VM hub (grant link vmh_<q>>sm_<q>k:KV_DESC 64 b; ot_vms_hub_static has no such port).",
-   "affects": [],
-   "note": "No smh_static input affected; adoption of attention SMs at die level is blocked on (a)+(b). The 192-b command is an svg programme-envelope change (ot_hbm_svc_sm_feed_programmed W135 -> carries the attention command) and the kv_desc producer is a VM-hub port: both need the H-SM attention contract (which SM slots run attention) before RTL."
-  },
-  {
    "id": "G-SMVM-STRAP",
    "owner": "H-SM / H-DIE",
    "missing_rtl": "hfd_vms_bank_strap_q0..3 are the per-quadrant physical masters of the 8 banks INSIDE hb_vms_<q> (they replace ot_vms_bank_static u_bank in ot_vms_slice_static, rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:89), but ot_vms_slice_static on main still instantiates ot_vms_bank_static (bid=3'(b), sid from hfd_hgi_vms_static_<q> .sid(2'dN)). Not die-level instances while hb_vms_<q> stays one instance; if the coordinator flattens hb_vms into vmh/vmb slots, each vmb_<q><b> = hfd_vms_bank_strap_q<sid> with straps bid=b, sid=q (SW0 SE1 NW2 NE3; results/hbm_sm_attention_1015/vm_strap/strap_table.json; pins results/arch/hbm_die_v15/vm_strap_grants_1015.json).",
