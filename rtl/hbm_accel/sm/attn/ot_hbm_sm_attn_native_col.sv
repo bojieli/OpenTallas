@@ -33,9 +33,9 @@ module ot_hbm_sm_attn_native_col #(
 );
     wire [255:0] s0,s1;
     wire lf0,lf1,qf,mf;
-    ot_hbm_accel_smh_tcl u_h0(.clk(clk),.rst_a(rst_n),.i_v(i_v),.i_first(i_first),
+    ot_hbm_accel_smh_tcl_gu u_h0(.clk(clk),.rst_a(rst_n),.i_v(i_v),.i_first(i_first),
         .i_w(i_w[127:0]),.i_x(i_x[127:0]),.sum_o(s0),.lfault(lf0));
-    ot_hbm_accel_smh_tcl u_h1(.clk(clk),.rst_a(rst_n),.i_v(i_v),.i_first(i_first),
+    ot_hbm_accel_smh_tcl_gu u_h1(.clk(clk),.rst_a(rst_n),.i_v(i_v),.i_first(i_first),
         .i_w(i_w[255:128]),.i_x(i_x[255:128]),.sum_o(s1),.lfault(lf1));
     ot_hbm_accel_smh_tct #(.TAGW(TAGW)) u_qk(.clk(clk),.rst_a(rst_n),.i_v(i_v),
         .i_last(i_qk_last),.i_tag(i_tag),.sum_i({s1,s0}),.lf_a(lf0),.lf_b(lf1),

@@ -281,12 +281,14 @@ def build(work, kvmut, pvmut, ncol=1, native=False):
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
-    cmd = [vl, "--binary", "-j", "16", "-O3", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style",
+    # -O1 / C++ -O1: the -O3 build of the native column took 4 h on a loaded host, -O1 3.5 min; same semantics
+    cmd = [vl, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style",
            "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hbm_sm_attn",
            f"-GKVMUT={kvmut}", f"-GPVMUT={pvmut}", f"-GNCOL={ncol}", f"-GNATIVE={int(native)}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     if native:
         cmd += ["-DOT_SMH_HIER", str(ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv"),
                 str(ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"),
+                str(ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv"),
                 str(ROOT / "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv")]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (work / f"build_kv{kvmut}_pv{pvmut}.log").write_text(r.stdout + r.stderr)
