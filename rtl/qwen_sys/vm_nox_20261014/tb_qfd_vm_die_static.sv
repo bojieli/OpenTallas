@@ -2,6 +2,7 @@
 module tb_qfd_vm_die_static;
 parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,NATIVE_BANKS=0;
 parameter integer RETURN_RO=1,PARTITIONED=0,EXPECTED_RO=RETURN_RO,RETURN_PIN_INPUT=0;
+parameter integer WRITE_LEAVES=0;
 parameter integer EXPECTED_SU_VL=13+RETURN_RO+RETURN_PIN_INPUT;
 localparam integer NCK=8*(22+14*RETURN_RO)+(6*(10+RETURN_RO)+255)/256;
 localparam integer DELTA=EXPECTED_RO-1;
@@ -64,11 +65,11 @@ reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,cycles=0,start_cycle=0,requests=0,responses=0,req_start=0;
 
-qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS),.RETURN_RO(RETURN_RO),.RETURN_PIN_INPUT(RETURN_PIN_INPUT),.PAR_RB(PARTITIONED),
+qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS),.RETURN_RO(RETURN_RO),.RETURN_PIN_INPUT(RETURN_PIN_INPUT),.WRITE_LEAVES(WRITE_LEAVES),.WRITE_CLOCKS(WRITE_LEAVES),.PAR_RB(PARTITIONED),
  .USE_NATIVE_CLOCKS(PARTITIONED),.RETURN_LEAVES(PARTITIONED),.READ_CONTROL_LEAVES(PARTITIONED),.RETURN_CLOCKS(PARTITIONED),.RELAY_TILES(PARTITIONED)) dut(
 .ck(clk),.rst_n(rst_n),
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
-.native_ck({1008{clk}}),.return_ck({96{clk}}),.read_control_ck({3{clk}}),.relay_ck({NCK{clk}}),
+.native_ck({1008{clk}}),.return_ck({96{clk}}),.read_control_ck({3{clk}}),.write_ck({240{clk}}),.relay_ck({NCK{clk}}),
 `endif
 .ck_r0_0(clk),
 .ck_r0_1(clk),

@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-payload33-front-99b7ba5e5/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-payload33-front-99b7ba5e5/src
+ot-run: ot-agidock128  admits    27 GB (avail 85, growth 56, headroom 24, waiters 0/0 GB) load 28/64 running 12 disk 350 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1150760-1792146742 after 0 s
+PAY33_FRONT emitted 10 RTL files ../fixture
+PAY33_FULL_FRONT PASS: full53-source,16384-bit,3-slot,3-seed normal edge/reset differential against actual A2
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1150760-1792146742): exit 0

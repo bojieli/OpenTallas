@@ -1,0 +1,38 @@
+{
+ "verdict": "FAIL",
+ "source_revision": "050f335a3",
+ "remote_package": "ot-epyc4:/srv/opentallas-scratch/claude/s81vm-master-current-050f335a3",
+ "admission": {
+  "unit": "oth-ubuntu-593234-1792144804",
+  "exit": 1
+ },
+ "rtl_tuple": {
+  "READ_PIPE": 4,
+  "CAP_PIPE": 2,
+  "WSCATTER_PIPE": 1
+ },
+ "normal_numerical_base": {
+  "seeds": [
+   1,
+   2
+  ],
+  "result": "PASS exact"
+ },
+ "fault_modes": {
+  "passed": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   8
+  ],
+  "failed": [
+   6,
+   7
+  ]
+ },
+ "classification": "r5 core decode/range/lane fault still asserts c_st but no longer propagates to promised serial t_wfc[1028] sticky error; full-master modes6/7 correctly reject missing endpoint fault. Dedicated r5 equivalent reference had been updated to split faults; that component gate cannot qualify full ABI.",
+ "next_step": "Structural WFC request/return input pin stages plus explicit fault-domain crossing/diagnostic leaves; restore both error-report directions; measure fixed response ABI and rerun exact full-master before adoption.",
+ "mutants": "Runner stopped on fault6 after base stage; capword/wfcpair/x43phase were not built/run in this attempt, so no mutant qualification is claimed."
+}

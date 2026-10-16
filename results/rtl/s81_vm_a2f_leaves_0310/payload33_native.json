@@ -1,0 +1,24 @@
+{
+  "cell": "s81_a2_w0_payload33",
+  "view": "physical/ref_tile/s81_a2_w0_payload33_native_0330_r1/views/s81_a2_w0_payload33",
+  "lib_cell": "s81_a2_w0_payload33",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 240.5,
+  "spread_ps": 37.6,
+  "outputs": 1752,
+  "inputs": 1750,
+  "launch_ps": 162.7,
+  "launch_pin": "o_data[92]",
+  "capture_ps": 155.3,
+  "capture_pin": "i_data[51]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/payload33_closed/views/s81_a2_w0_payload33"
+}

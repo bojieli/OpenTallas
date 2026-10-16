@@ -1,0 +1,150 @@
+{
+ "top": "dsfd_vm_native_valid_diag",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_native_valid_diag.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "release_slot"
+  ],
+  "N": [
+   "expected_v"
+  ],
+  "E": [
+   "ck",
+   "rst_n",
+   "i_v",
+   "i_fault"
+  ],
+  "S": [
+   "fault"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "period_ps": 833.333,
+  "hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  },
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "name": "dsfd_vm_native_valid_diag_native_0400_r2",
+ "kind": "tile",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual production RTL already registers input data and outputs; wrapper stages change the proven static calendar. Preserve actual flops and audit native launch/capture."
+ },
+ "structural_change": "Five actual captured diagnostic cones replace unplaced combinational valid/slot and write-fault summary logic; +2 diagnostic edges, zero normal data edges; source-current full parent proof pending.",
+ "slot_change_request": {
+  "contract": "S81 VM A2F parent",
+  "version": "0310",
+  "why": "New leaf needs coherent exact connected parent home; no fit or die closure claimed."
+ },
+ "io_tcl": "physical/s81_vm_diag_0400_r2/dsfd_vm_native_valid_diag.tcl",
+ "job": {
+  "owner": "codex:S81 VM",
+  "branch": "claude/s81-vm-widehub-2210",
+  "tag": "diag2",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_native_valid_diag.sv",
+   "physical/s81_vm_diag_0400_r2/dsfd_vm_native_valid_diag.tcl",
+   "tools/s81_vm/native_valid_diag_bench.sv",
+   "tools/s81_vm/native_valid_diag_gate.sh",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv"
+  ],
+  "purpose": "Five actual captured diagnostic cones replace unplaced combinational valid/slot and write-fault summary logic; +2 diagnostic edges, zero normal data edges; source-current full parent proof pending.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "diag_gold",
+    "cmd": "bash tools/s81_vm/native_valid_diag_gate.sh /tmp/s81-diag-gate-gold gold",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "NATIVE_DIAG PASS"
+   },
+   {
+    "name": "diag_valid",
+    "cmd": "bash tools/s81_vm/native_valid_diag_gate.sh /tmp/s81-diag-gate-valid valid",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "NATIVE_DIAG FAIL"
+   },
+   {
+    "name": "diag_slot",
+    "cmd": "bash tools/s81_vm/native_valid_diag_gate.sh /tmp/s81-diag-gate-slot slot",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "NATIVE_DIAG FAIL"
+   },
+   {
+    "name": "diag_drop",
+    "cmd": "bash tools/s81_vm/native_valid_diag_gate.sh /tmp/s81-diag-gate-drop drop",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "NATIVE_DIAG FAIL"
+   },
+   {
+    "name": "diag_extra",
+    "cmd": "bash tools/s81_vm/native_valid_diag_gate.sh /tmp/s81-diag-gate-extra extra",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "NATIVE_DIAG FAIL"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}

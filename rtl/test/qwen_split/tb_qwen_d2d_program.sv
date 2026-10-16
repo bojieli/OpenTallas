@@ -20,7 +20,7 @@ module tb_qwen_d2d_program;
     wire integer re = P_RE + (lay == 0 ? P_RDELTA : 0);
     localparam integer ks = P_QS + 33, ss = P_SS;
     reg [31:0] layer_starts [0:35];
-    parameter integer MUT = 0, DRV = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 36, BAD_LAYER = -1;
+    parameter integer MUT = 0, DRV = 0, KV_PIN_SEQ = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 36, BAD_LAYER = -1;
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -103,9 +103,15 @@ module tb_qwen_d2d_program;
     qfd_d2d_cal_seq #(.START_ADJ(SADJ)) u_cseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(tok_go), .epoch_go(bump_ep[2]),
         .halt(c_abort), .cfg_tx_we(q_c_tx), .cfg_rx_we(q_c_rx), .cfg_addr(q_c_a), .cfg_data(q_c_d), .cal_start(q_c_cs), .cal_seg(q_c_sg),
         .cal_ready(q_c_rdy), .running(q_c_run), .layer(q_c_l), .adm_done(q_c_ad), .tok_start(q_c_ts), .fault(q_c_f));
+    generate if(KV_PIN_SEQ) begin: pin_calendar
+    qkd_d2d_cal_seq_pin #(.EP_SKEW(MUT == 7 ? 2 : 3)) u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .epoch_go(fwd_ep), .halt(k_abort),
+        .cfg_tx_we(q_k_tx), .cfg_rx_we(q_k_rx), .cfg_addr(q_k_a), .cfg_data(q_k_d), .cal_start(q_k_cs), .cal_seg(q_k_sg),
+        .cal_ready(q_k_rdy), .running(q_k_run), .layer(q_k_l), .adm_done(q_k_ad), .tok_start(q_k_ts), .fault(q_k_f));
+    end else begin: raw_calendar
     qkd_d2d_cal_seq #(.EP_SKEW(MUT == 7 ? 2 : 3)) u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(1'b0), .epoch_go(fwd_ep), .halt(k_abort),
         .cfg_tx_we(q_k_tx), .cfg_rx_we(q_k_rx), .cfg_addr(q_k_a), .cfg_data(q_k_d), .cal_start(q_k_cs), .cal_seg(q_k_sg),
         .cal_ready(q_k_rdy), .running(q_k_run), .layer(q_k_l), .adm_done(q_k_ad), .tok_start(q_k_ts), .fault(q_k_f));
+    end endgenerate
     integer c_ep_rise = -1, adm_c = -1, adm_k = -1, adm_auth = 0, adm_w = 0, adm_ctx = 0; reg bep_q = 0;
     always @(posedge ck) begin
         bep_q <= bump_ep[2];
@@ -207,7 +213,7 @@ module tb_qwen_d2d_program;
     integer seq_starts = 0;
     always @(posedge ck) if (DRV && rst_n) begin
         if (q_c_cs && q_c_l == 6'h3f || q_k_cs && q_k_l == 6'h3f) begin
-            if (!(q_c_cs && q_k_cs && q_c_sg && q_k_sg && q_c_l == q_k_l)) begin errs = errs + 1; $display("ERR admission starts differ cyc %0d", cyc); end
+            if (!(q_c_cs && q_k_cs && q_c_sg && q_k_sg && q_c_l == q_k_l)) begin errs = errs + 1; $display("ERR admission starts differ cyc %0d", cyc); $fatal(1,"D2D_PROGRAM_FAIL admission anchor mismatch"); end
         end else if ({q_c_cs, q_k_cs} !== {2{cstart}} || (cstart && {q_c_sg, q_k_sg} !== {2{cseg}})) begin
             errs = errs + 1; $display("ERR sequencer start cyc %0d expected %0d/%0d got C %0d/%0d K %0d/%0d", cyc, cstart, cseg, q_c_cs, q_c_sg, q_k_cs, q_k_sg);
         end
