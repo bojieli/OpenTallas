@@ -5,9 +5,10 @@
 # reroute_reason: {kind: pin_register, source: diagnosis.json, cell: qkd_ectl_a_tp8_epoch_direct, capture_ps: 220.98393,
 #   fix: remove 1826 redundant routed hold-pair cells (913 inputs), keep pin capture regs + ot_inhold/ot_ihdrv pads}
 # Unchanged: sign-off SDC set of the CLOSED ECO (signoff.sdc + io_ref_routed.sdc), HM 18 / SM 40 / FILT 40 / 2 passes,
-# full repair, TT setup / FF hold acceptance 0, DRC 0; fresh GRT only because the plan changes topology; KEEPCLK=1
+# full repair, TT setup / FF hold acceptance 0, DRC 0; plan applied inside the incremental GRT of the original guides (as the closed ECO); KEEPCLK=1
 # (attempt 1 KEEPCLK=1 died DRT-0206: DPL moved a clock buffer under a kept wire -> hold_eco.tcl now re-routes dirty clock nets;
-# attempt 2 KEEPCLK=0 fresh-routed the whole clock tree: reg2reg TT -106 / FF -297 ps = clock skew, rejected). KEEPWIRES / FREEZE are refused by hold_eco.sh/.tcl with the normalization.
+# attempt 2 KEEPCLK=0 fresh-routed the whole clock tree: reg2reg TT -106 / FF -297 ps = clock skew, rejected;
+# attempt 3 fresh GRT + KEEPCLK=1: kept clock wires had no guides -> DRT-0206 on 596 clock terms. Now incremental). KEEPWIRES / FREEZE are refused by hold_eco.sh/.tcl with the normalization.
 set -euo pipefail
 M=$1; TAR=$2
 J=/srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48
@@ -28,7 +29,7 @@ RB=$M/routes/$L/work/orfs/results/asap7/$D/base
 [ "$(sha256sum $RB/6_final.odb | cut -d' ' -f1)" = $ODB_SHA ] || { echo "copied ODB hash mismatch"; exit 2; }
 echo "{\"closed_job\":\"$J\",\"input_odb_sha256\":\"$ODB_SHA\",\"plan\":\"$PLAN\",\"plan_sha256\":\"$PLAN_SHA\",\"started\":\"$(date -Is)\"}" > $M/record/inputs.json
 cd $M/src
-ECO_SESSION=mm ALLOW_FRESH_GRT=1 NATIVE_FRESH_GRT=1 NATIVE_NORMALIZE_TCL=$M/src/$PLAN NATIVE_NORMALIZE_SHA256=$PLAN_SHA \
+ECO_SESSION=mm ALLOW_FRESH_GRT=0 NATIVE_FRESH_GRT=0 NATIVE_NORMALIZE_TCL=$M/src/$PLAN NATIVE_NORMALIZE_SHA256=$PLAN_SHA \
   HM=18 SM=40 FILT=40 PASSES=2 RESAWARE=1 HOLDCELLS=1 ACC_SS=0.0 ACC_FF=0.0 SETUP_LIB=TT KEEPCLK=1 BUF=30 \
   MACROS=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 THREADS=8 SDC_NAME=6_final.sdc ECO_RB_DB=6_final.odb \
   ROUTE_CFG=$M/routes/$L/work/orfs/config.mk \

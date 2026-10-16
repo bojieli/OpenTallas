@@ -240,17 +240,17 @@ if {$ot_native ne ""} {
   if {[envd OT_KEEP_UNTOUCHED 0] || [envd OT_FREEZE_MACRO_NETS 0]} {
     error "native normalization rejects OT_KEEP_UNTOUCHED/OT_FREEZE_MACRO_NETS (full strip required; OT_KEEP_CLOCK allowed)"
   }
-  if {![envd OT_ALLOW_FRESH_GRT 0] || ![envd OT_NATIVE_FRESH_GRT 0]} {
-    error "native normalization requires explicitly authorized fresh GRT"
+  # Default: apply the plan INSIDE the incremental GRT session of the original guides (as the resizer's own buffer
+  # removal does), so only the changed nets re-route and the routed clock tree / untouched guides stand. Measured
+  # 2026-10-15 (ECTL A r1): a fresh GRT of the whole tile re-routed the clock tree to reg2reg TT -106 / FF -297 ps,
+  # and fresh GRT + KEEPCLK left kept clock wires without guides (DRT-0206 on 596 terms). OT_NATIVE_FRESH_GRT=1 keeps
+  # the explicit fresh-route variant (requires OT_ALLOW_FRESH_GRT=1).
+  if {[envd OT_NATIVE_FRESH_GRT 0]} {
+    if {![envd OT_ALLOW_FRESH_GRT 0]} { error "native normalization fresh variant requires OT_ALLOW_FRESH_GRT=1" }
+    set guides 0
+  } elseif {!$guides} {
+    error "native normalization (incremental) needs the original route guides in the db"
   }
-  source $ot_native
-  puts "OT_ECO native normalization applied; canonical route/signoff still required"
-}
-
-# A removal plan deliberately changes net topology. Use fresh GRT only under
-# the explicit, source-bound recovery option; never reuse stale guide IDs.
-if {$ot_native ne ""} {
-  set guides 0
 }
 if {$guides} {
   puts "OT_ECO route_strategy incremental_original_guides"
@@ -260,6 +260,10 @@ if {$guides} {
   puts "OT_ECO route_strategy fresh_global reason $native_reason explicit_opt_in 1"
 } else {
   error "OT_ECO original guides unavailable; fresh GRT requires OT_ALLOW_FRESH_GRT=1"
+}
+if {$ot_native ne ""} {
+  source $ot_native
+  puts "OT_ECO native normalization applied ([expr {$guides ? {incremental, original guides} : {fresh GRT}}]); canonical route/signoff still required"
 }
 
 if {[llength [dict get $win fixable]]} {
