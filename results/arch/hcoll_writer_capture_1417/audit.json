@@ -1,0 +1,29 @@
+{
+  "original_commit": "5eb74471e3c29bfbd0240297413e00cc2473f52c",
+  "recovered_commit": "352ae86a9",
+  "method": "Icarus full production-shaped exact bench and independent prior-hardware RTL miter",
+  "results": [
+    {
+      "mutant": 0,
+      "exit_code": 0,
+      "expected_pass": true
+    },
+    {
+      "mutant": 1,
+      "exit_code": 1,
+      "expected_pass": false
+    },
+    {
+      "mutant": 2,
+      "exit_code": 1,
+      "expected_pass": false
+    },
+    {
+      "mutant": 3,
+      "exit_code": 1,
+      "expected_pass": false
+    }
+  ],
+  "miter": "PASS 4096edges 241resets fault_latency=ref+1 240fault_rises",
+  "scope": "Component functional exactness and exception timing; physical/native closure remains open."
+}
