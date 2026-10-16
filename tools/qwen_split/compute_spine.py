@@ -516,7 +516,9 @@ def place(v, m, G):
     we = xf - CH - xe
     rec['e_area'] = [round(xe, 3), round(we, 3)]
     rec['slab_cols'] = dict(W=round(xa, 3), E=round(xf, 3))
-    if we < VM_WH[0]:
+    if we < VM_WH[0] and not os.environ.get('OT_SPLIT_HOMES'):
+        # with OT_SPLIT_HOMES the source-pinned homes own every block position (their own overlap/outside checks
+        # run in gfp_homes.apply); the baseline spine only has to carry the instances there
         raise SystemExit(f'split compute spine: E sub-area {we:.1f} um < VM {VM_WH[0]} (raise OT_TP8_SPLIT_SPINE)')
     cx = xe + we / 2
     # die link at the N edge (centred on the E sub-area): PHY on the edge, adapter under it, bump + reset sync W of it
