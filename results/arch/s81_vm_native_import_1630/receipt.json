@@ -34,7 +34,7 @@
  "source_scope": "Actual candidate wiring/pins only; parent legacy instance is not replaced. Placement, native receipts, compiler calendar, clock delivery/epoch and complete reach/cuts remain open.",
  "clock_reference_view_commit": "8eabbe81095955a36d170cbbf16e45f1de13963f",
  "outputs_sha256": {
-  "plan.json.gz": "c77fe7fc21b645f2ade86abce81899dee73d457edd93c11e394cc56771d9fdc2",
+  "plan.json.gz": "d8346a4ed6cf91a942511059ce984dcb81fbc2a2b25c2099a5496c993413647b",
   "clock_records.json.gz": "5b3c1cfb2491343535a0b2c9de26a8f7f58cb7516fca190c36c33e93ac3a9aba",
   "models.json.gz": "00ef59bf0d90c9b519588a3f111d5d7381556d455dfde7af3156ab7094dd343f",
   "extraction.log": "fd3fafe32613f4bc10bc250e7100b961ea72968a86e71c6162a812cf34408dc0"
@@ -52,5 +52,6 @@
    "summary.json": "8f79a84be3296c62e7050b7c29be497d5ae115139f10a9975751bddf702719c5",
    "observability.json": "127e71a491ddfb2bb6567902efdb0ad1a22db7a4c20dcf4ec87aa96182f0eb94"
   }
- }
+ },
+ "clock_enumeration_proof": "clockproof_receipt.json"
 }
