@@ -13,7 +13,8 @@ CBD + E(k, b) + a, written to x-store address ((k mod 64) * 2 + a) + x_xb, group
 
 XW_ADD (H-SM 2026-10-15, owner rule 19:50 accepted by the coordinator): the hardened-leaf cluster
 ot_hgi_sm_xload_static_cl2 registers every leaf pin, which adds exactly 2 fixed edges to EVERY xw beat and x_done of both
-formats (raw rr pin capture + egress pin capture); VM read-group issue edges (rq) are unchanged.  Pass xw_add=2 for cl2.
+formats (raw rr pin capture + egress pin capture); VM read-group issue edges (rq) are unchanged.  cl2g (H-SM 10-16, ctlw
+f20a route TT -58.79 on rotation mux -> l_d_o pin) adds one landing stage L1: pass xw_add=3 (XW_ADD_CL2) for cl2.
 """
 from __future__ import annotations
 import sys
@@ -21,7 +22,7 @@ import sys
 XC = 3152
 PMAX = 8
 CBD = 27          # block-dot: command edge -> xw pins of a pair decided at E = 0
-XW_ADD_CL2 = 2    # ot_hgi_sm_xload_static_cl2: every xw beat / x_done + 2 edges
+XW_ADD_CL2 = 3    # ot_hgi_sm_xload_static_cl2: every xw beat / x_done + 3 edges (2 pin registers + cl2g L1 landing stage, H-SM 10-16)
 
 
 def nb_of(p: int) -> int:
