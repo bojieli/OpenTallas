@@ -22,6 +22,7 @@ GRT: real tracks M4..M9, coarse M2/M3 tracks (gcell 9.6 um, the dietop method of
 M4/M5 0.30 and M6..M9 0.146 adjustments as that die STA.  Writes CASE_DIR/{die.v, run.tcl, manifest.json}.
 """
 import argparse, json, re, shutil
+from native_view_admission import require_admitted
 from collections import defaultdict
 from pathlib import Path
 
@@ -552,6 +553,7 @@ catch {report_clock_latency > /work/out/clock_latency_plain.rpt}'''
     (out / 'run.tcl').write_text(tcl)
     vd = out / 'views'; vd.mkdir(exist_ok=True)
     for m, d in libs:
+        require_admitted(m, d)
         shutil.copy(next(d.glob('*.lef')), vd / f'{m}.lef')
         for c in ('tt', 'ff'):
             src = d / f'{m}_{c}.lib'

@@ -1486,9 +1486,18 @@ def cts_sink_env(r: dict) -> list:
         raise SpecError("spec: route.cts_sink: give both size and diameter_um, or neither (extra only)")
     sz = (f" -sink_clustering_size {int(cs['size'])} -sink_clustering_max_diameter {int(cs['diameter_um'])}"
           if "size" in cs else "")
-    if not sz and not extra:
+    # "sink_clustering": false drops -sink_clustering_enable (qkd_d2d_static 10-15: on a sparse 475x281 um macro tile
+    # with pin-band sinks, max-cap clustering hung a 24-flop SW-corner leaf on a 234 um return wire from a far H-tree
+    # tap, 637 vs 439..488 ps; measured on the gate placement, unclustered H-tree: all flops 442..508 ps)
+    clus = cs.get("sink_clustering", True)
+    if not isinstance(clus, bool):
+        raise SpecError("spec: route.cts_sink.sink_clustering: true or false")
+    if clus is False and sz:
+        raise SpecError("spec: route.cts_sink: size / diameter_um need sink_clustering")
+    if not sz and not extra and clus:
         raise SpecError("spec: route.cts_sink: empty (no size / diameter_um and no extra)")
-    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75' + sz + (' ' + extra if extra else ''))}"]
+    base = ('-sink_clustering_enable ' if clus else '') + '-repair_clock_nets -delay_buffer_derate 0.75'
+    return [f"CTSA={shq(base + sz + (' ' + extra if extra else ''))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:

@@ -6313,6 +6313,16 @@ def reevaluate_benches(jobs):
         except RuntimeError as exc:
             # An unavailable historical log must not starve later jobs or the
             # independent recovery passes. Do not consume this retry until read.
+            # RETIRED-HOST 2026-10-15: a log on a host retired from hosts.json (EPYC2/3, 10-12) can never be read
+            # again; it was re-deferred every tick (~3,400 log lines per job). Consume the retry once: verdict stands.
+            if j.get("host") and all(h["name"] != j["host"] for h in hosts_table()):
+                with job_lock(j["name"]):
+                    fresh = load_job(j["name"])
+                    if eligible(fresh) is not None and fresh.get("reason") == j.get("reason"):
+                        fresh.setdefault("fix_requeued", []).append(fid)
+                        event(fresh, f"{st['key']} not re-judged under {fid}: log on retired host {j['host']}; verdict stands")
+                        save_job(fresh)
+                continue
             log(f"[{j['name']}] bench re-judgment deferred: {exc}")
             continue
         with job_lock(j["name"]):

@@ -14,7 +14,7 @@ Writes DIR/{smcol.P.json, smcol.graph.json, smcol.metrics.json, pins/smcol.pins.
 rule, one segment per link end on the face nearest its peer, 1-D packed).
     smcol_plan.py --out DIR [--smh 2750] [--channel 930] [--mid 600]
 """
-import argparse, copy, json, sys
+import argparse, copy, json, re, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -24,6 +24,46 @@ import compact_plan as C  # noqa: E402  (tools/hbm_die_v15 on path below)
 
 GAP = 20.0
 SMGAP = 20.0
+
+
+HUBMID = False
+COLL_END = False                 # v8c: COLL stays at the inner end, only hub + SU core move
+CORE_AT = 2                      # groups placed before the quadrant core (v8b: 2 = mid-band)
+
+
+def _group(i):
+    """band group index of a grouped block (hc/sfu/su/quant: own digit; vmb pair 2g,2g+1 -> g), else None"""
+    kind, rest = i.split('_', 1)
+    d = int(re.sub(r'\D', '', rest) or -1)
+    if kind in ('hc', 'sfu', 'su', 'quant'):
+        return d
+    if kind == 'vmb':
+        return d // 2
+    return None
+
+
+def _hubmid_x(i, q, xl, r5, ctx):
+    """v8b (owner 22:30 trial): the band keeps every group intact (HC/SFU column | VM bank pair | SU slice, as v5) but
+    the quadrant core moves to the MIDDLE of the band, over the SM columns: groups 0,1 | VM hub, COLL (+ DMA back, IDX
+    operand leaf), SU core | groups 2,3.  The hub centre then sits over the SM columns' centre instead of 3 mm past
+    their inner end.  ctx[q] = (x0 core start, shift of groups 2,3), from the quadrant's own v5 band (NW carries QUANT)."""
+    x0, shift = ctx[q]
+    g = _group(i)
+    if g is not None:
+        return xl if g < CORE_AT else xl + shift
+    kind = i.split('_')[0]
+    if COLL_END and (kind in ('coll', 'dbk') or i == 'idx_op'):
+        # COLL (+ DMA back, IDX operand leaf) stays at the band's inner end, next to the centre-column rings/endpoints
+        return xl
+    if i == 'idx_op':
+        return x0 + 480.0 + GAP + 432.0 + GAP
+    off = {'vmh': 0.0, 'coll': 480.0 + GAP, 'dbk': 480.0 + GAP, 'sucore': 480.0 + GAP + 963.36 + GAP}
+    if COLL_END:
+        off['sucore'] = 480.0 + GAP
+    return x0 + off[kind] if kind in off else xl
+
+
+CORE_W = 480.0 + 20.0 + 963.36 + 20.0 + 250.0       # hub | COLL(+dbk) | SU core = 1,733.4 um
 
 
 def build(G0, smh, channel, mid, column_w, P5, W5, H5, y_band5):
@@ -55,6 +95,17 @@ def build(G0, smh, channel, mid, column_w, P5, W5, H5, y_band5):
         for k, s in enumerate(sms):
             setn(s, 1036.8, smh, f'SM column 1036.8 x {smh} (v8 candidate; synth 1.19 mm2 std + 132 x 128x256 SRAM)')
             put(s, 1457.8 + k * (1036.8 + GAP), y_sm, q)
+        ctx = {}
+        if HUBMID:
+            lo, hi = [], []
+            for i, r5 in P5.items():
+                g = _group(i) if i.split('_')[0] in ('hc', 'sfu', 'vmb', 'su', 'quant') else None
+                if g is None or i.split('_')[1][:2] != q:
+                    continue
+                xl = r5['x'] if q in ('SW', 'NW') else W5 - r5['x'] - r5['w']
+                (hi if g >= CORE_AT else lo).append((xl, xl + r5['w']))
+            x0 = max(e for _, e in lo) + GAP + 1.0
+            ctx[q] = (x0, x0 + (480.0 + GAP + 250.0 if COLL_END else CORE_W) + GAP + 1.0 - min(s0 for s0, _ in hi) if hi else 0.0)
         # the VM/SU band: compact660_v5's band EXACTLY (same blocks, x, order, tall hub), shifted to sit on the SM columns
         for i, r5 in P5.items():
             if i.split('_')[0] not in ('hc', 'sfu', 'quant', 'vmb', 'su', 'sucore', 'coll', 'vmh', 'dbk', 'idx') or i.startswith('idx_s') \
@@ -66,6 +117,8 @@ def build(G0, smh, channel, mid, column_w, P5, W5, H5, y_band5):
             xl = r5['x'] if q in ('SW', 'NW') else W5 - r5['x'] - r5['w']
             yl = r5['y'] if q in ('SW', 'SE') else H5 - r5['y'] - r5['h']
             N[i] = dict(N[i], w=r5['w'], h=r5['h'])
+            if HUBMID:
+                xl = _hubmid_x(i, q, xl, r5, ctx)
             put(i, xl, yl - y_band5 + y_band, q)
         # the stack's IDX scorer at the quadrant's inner end, beside the PHY / SM columns, below the band
         sc = {'SW': 'idx_s0', 'SE': 'idx_s1', 'NE': 'idx_s3', 'NW': 'idx_s2'}[q]
@@ -102,10 +155,18 @@ def main():
     ap.add_argument('--column', type=float, default=C.COLUMN_W)
     ap.add_argument('--mid', type=float, default=600.0, help='channel between the S and N halves (um)')
     ap.add_argument('--smgap', type=float, default=20.0, help='channel between the SM columns and the band (um)')
+    ap.add_argument('--hubmid', action='store_true', help='v8b: quadrant core (VM hub, COLL, SU core) inside the band over the SM columns')
+    ap.add_argument('--coll-end', action='store_true', help='with --hubmid: COLL/DMA back/IDX operand leaf stay at the inner end')
+    ap.add_argument('--core-at', type=int, default=2, help='with --hubmid: number of band groups before the core (2 = middle)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
-    global SMGAP
+    global SMGAP, HUBMID
     SMGAP = a.smgap
+    HUBMID = a.hubmid
+    global CORE_AT
+    CORE_AT = a.core_at
+    global COLL_END
+    COLL_END = a.coll_end
     G0 = json.loads((ROOT / a.base / 'compact.graph.json').read_text())
     P5 = json.loads((ROOT / a.base / 'compact.P.json').read_text())
     m5 = json.loads((ROOT / a.base / 'compact.metrics.json').read_text())
