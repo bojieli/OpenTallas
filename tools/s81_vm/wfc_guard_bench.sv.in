@@ -1,0 +1,77 @@
+`timescale 1ns/1ps
+// One actual A2F core + WFC endpoint. Inputs are payload sentinels, not a
+// behavioral VM or a golden computation. All actions use fixed source edges.
+module tb_wfc_guard;
+ localparam integer READ_PIPE=4,HOP1=1,ROW=1024;
+ localparam [511:0] OLD={16{32'h13579bdf}}, NEW={16{32'heca86420}};
+ reg t_ck=0,s_ck=0,rss=0,rst=0;
+ always #6 t_ck=~t_ck;
+ always #8 s_ck=~s_ck;
+ reg [559:0] fwfc=0;wire [1028:0]twfc;
+ wire wv;wire [13:0]wr;wire [511:0]wd;wire[3:0]av;wire[55:0]ar;
+ wire[7:0]xrv;wire[4095:0]xrd;wire vm_fault,wfc_fault;
+ @CORE@
+ @WFC@
+ wire[3:0]raw_write,raw_read,returned_commit;
+ genvar s;generate for(s=0;s<4;s=s+1)begin:observe
+  wire ww=u_core.u_mem.slice[s].u_slice.bank[0].u_bank.u_sram.w_ce_in;
+  wire[8:0]wa=u_core.u_mem.slice[s].u_slice.bank[0].u_bank.u_sram.w_addr_in;
+  wire[127:0]wdata=u_core.u_mem.slice[s].u_slice.bank[0].u_bank.u_sram.wd_in;
+  wire rr=u_core.u_mem.slice[s].u_slice.bank[0].u_bank.u_sram.r_ce_in;
+  wire[8:0]ra=u_core.u_mem.slice[s].u_slice.bank[0].u_bank.u_sram.r_addr_in;
+  assign raw_write[s]=ww && wa==(ROW>>5) && wdata==NEW[128*s+:128];
+  assign raw_read[s]=rr && ra==(ROW>>5);
+  assign returned_commit[s]=u_core.cm_v[32*s] && u_core.cm_a[288*s+:9]==(ROW>>5) && u_core.cm_t[256*s+:8]==52;
+ end endgenerate
+ integer gap=0,phase=0,sc=0,tc=0,errors=0;
+ integer final_serial=-1,read_serial=-1,reply_serial=-1,xi_cycle=-1;
+ integer source_cycle=-1,write_cycle=-1,read_cycle=-1,commit_cycle=-1,commits=0;
+ integer replies=0;reg got_new=0,got_old=0,other_data=0;
+ initial begin
+  if($value$plusargs("GAP=%d",gap))begin end
+  if($value$plusargs("PHASE=%d",phase))begin end
+  // Common-epoch release used by the actual typed x34/x43 component gate.
+  #190.5;rss=1;rst=1;
+ end
+ always @(negedge s_ck)if(rst)begin
+  fwfc=0;
+  // Only this initial sentinel gets a long settle. The final overwrite/read
+  // gap is the swept immutable edge count; there is no ready or completion wait.
+  if(sc==40)begin fwfc[0]=1;fwfc[527:513]=ROW;fwfc[512:1]=OLD;end
+  if(sc==80+phase)begin fwfc[0]=1;fwfc[527:513]=ROW;fwfc[512:1]=NEW;end
+  if(sc==80+phase+gap)begin fwfc[528]=1;fwfc[543:529]=ROW;end
+ end
+ always @(posedge s_ck)if(rst)begin
+  if(fwfc[0]&&fwfc[527:513]==ROW&&fwfc[512:1]==NEW)final_serial=sc;
+  if(fwfc[528])read_serial=sc;
+  #1;
+  if(twfc[514])begin
+   replies=replies+1;reply_serial=sc;
+   got_new=twfc[513:2]===NEW;got_old=twfc[513:2]===OLD;
+   if(!got_new&&!got_old)other_data=1;
+  end
+  if(sc==145+gap)begin
+   if(replies!=1||other_data||vm_fault||wfc_fault||twfc[1028])errors=errors+1;
+   if(write_cycle<0||read_cycle<0||commit_cycle<0||source_cycle<0||xi_cycle<0)errors=errors+1;
+   if(source_cycle-xi_cycle!=2)errors=errors+1;
+   $display("WFC_GUARD_RESULT phase=%0d gap=%0d new=%0d old=%0d errors=%0d write_serial=%0d read_serial=%0d reply_serial=%0d xi=%0d source=%0d raw_write=%0d raw_read=%0d commit=%0d",phase,gap,got_new,got_old,errors,final_serial,read_serial,reply_serial,xi_cycle,source_cycle,write_cycle,read_cycle,commit_cycle);
+   if(errors)$fatal(1,"WFC_GUARD INVALID");
+   if(!got_new || read_cycle<=write_cycle)$fatal(1,"WFC_GUARD EARLY");
+   $display("WFC_GUARD PASS");$finish;
+  end
+  sc=sc+1;
+ end
+ always @(posedge t_ck)begin
+  if(rss)begin
+   if(u_wfc.xv && u_wfc.xd[0] && u_wfc.xd[512:1]==NEW)xi_cycle=tc;
+   if(wv && wr==ROW && wd==NEW)source_cycle=tc;
+   if(|raw_write)begin if(raw_write!=4'hf)errors=errors+1;write_cycle=tc;end
+   if(|raw_read)begin if(raw_read!=4'hf)errors=errors+1;read_cycle=tc;end
+   if(|returned_commit)begin
+    if(returned_commit!=4'hf)errors=errors+1;
+    commits=commits+1;if(commits==2)commit_cycle=tc;
+   end
+  end
+  tc=tc+1;
+ end
+endmodule
