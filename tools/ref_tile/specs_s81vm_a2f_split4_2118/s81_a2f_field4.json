@@ -15,6 +15,10 @@
  "reset_ports": [
   "rst_n"
  ],
+ "io_budget": {
+  "in": 0.6,
+  "out": 0.57
+ },
  "outline": {
   "w": 86.4,
   "h": 129.6,
@@ -58,13 +62,13 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
+  "cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "s81_a2f_field4: field16 whole-body congestion split into four independent field4 clock/placement leaves. Input pipeline partitions by bit; selector/drain state replicated; full53/4quarters/3slots unchanged. Zero added cycles.",
+ "structural_change": "s81_a2f_field4: field16 whole-body congestion split into four independent field4 clock/placement leaves. Input pipeline partitions by bit; selector/drain state replicated; full53/4quarters/3slots unchanged. Zero added cycles. Native in0.6/out0.57T budgets, HB1 input/no firm output hold.",
  "slot_change_request": {
   "contract": "S81 VM A2-F front geometry candidate",
   "version": "a2f-1015",
