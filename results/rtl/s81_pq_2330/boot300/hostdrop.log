@@ -1,0 +1,4 @@
+S81_PQ_SEQUENCED host=34 boot=0 prime=0 start=3 cmd=0 done=0 KIT=0 valid=0 J=1462 C=-1 D=-1 seq=2a endpoint=0 cal=1 core=0 hostfault=1
+[9903000] %Fatal: tb_s81_pq_sequenced_pins.sv:77: Assertion failed in tb_s81_pq_sequenced_pins: SEQUENCED FAIL real host->c9->PHW10/mappedROM timeline
+%Error: /srv/opentallas-scratch/claude/s81-boot3002330/src/rtl/test/dsrom_sys/tb_s81_pq_sequenced_pins.sv:77: Verilog $stop
+Aborting...

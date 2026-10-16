@@ -1,0 +1,7 @@
+S81_PQ_SEQUENCED host=34 boot=7 prime=4 start=3 cmd=3 done=3 KIT=3 valid=3 J=1462 C=1463 D=1500 seq=00 endpoint=2 cal=0 core=0 hostfault=0
+INGEST_PHASE PASS h=1 i=4 actual_native_FIFO_words=12/pops=12
+S81_PQ_SEQUENCED PASS actual host CSR->asyncFIFO->c9 mailbox->engine13->PQ mapped memory; component data zero ROM
+- /srv/opentallas-scratch/claude/s81-boot3002330/src/rtl/test/dsrom_sys/tb_s81_pq_sequenced_pins.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.076 s; speed 130.862 us/s
+- Verilator: cpu 0.076 s on 1 threads; allocated 10 MB

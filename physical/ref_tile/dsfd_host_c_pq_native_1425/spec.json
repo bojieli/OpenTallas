@@ -24,7 +24,8 @@
  "defines": [
   "DSFD_HOST_C_STATIC",
   "DSFD_HOST_PQ_BOOT",
-  "OT_S81_HOST_PHASESAFE"
+  "OT_S81_HOST_PHASESAFE",
+  "OT_S81_HOST_BOOT300"
  ],
  "clock": "multiple_cts_roots",
  "clock_port": "ck",
@@ -32,16 +33,20 @@
   "ck",
   "ckv",
   "ck_ingest[0]",
-  "ck_ingest[1]"
+  "ck_ingest[1]",
+  "ck_boot"
  ],
- "clock_data_paths": "related_pll_ratio",
+ "clock_data_paths": "related_pll_dividers",
  "clock_relationship": {
   "kind": "same_pll_fixed_phase",
-  "ratio": [
-   4,
-   3
-  ],
-  "phase_ps": 0
+  "phase_ps": 0,
+  "vco_dividers": {
+   "core": 3,
+   "serial": 4,
+   "ingest_host": 3,
+   "ingest_core": 3,
+   "boot": 12
+  }
  },
  "clock_entry_domains": {
   "core": {
@@ -103,6 +108,17 @@
    ],
    "inputs": [],
    "outputs": []
+  },
+  "boot": {
+   "ratio": [
+    4,
+    1
+   ],
+   "ports": [
+    "ck_boot"
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "reset_ports": [
@@ -124,7 +140,8 @@
    "hw",
    "rst",
    "rsv",
-   "ck_ingest"
+   "ck_ingest",
+   "ck_boot"
   ],
   "E": [
    "f_collective",
@@ -136,7 +153,7 @@
    "t_pq_pw"
   ]
  },
- "io_tcl": "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_host_c.tcl",
+ "io_tcl": "physical/s81_die_pins/host_boot300_0015/dsfd_host_c.tcl",
  "recipe": 3,
  "outhold": false,
  "inhold": true,
@@ -154,24 +171,25 @@
   "macro_halo_um": 5.4,
   "pin_h": "M4",
   "pin_v": "M3 M5",
-  "m5_pg_pitch": 2.7
+  "m5_pg_pitch": 2.7,
+  "signoff_period_ps": 833.3333333333334
  },
  "slot_change_request": {
-  "contract": "S81 PQ producer explicit source-bound leaf grant",
-  "version": "18ea77d79",
-  "source": "physical/s81_die_pins/pq_producer_c9_h108_1417/grant.json",
+  "contract": "S81 HOST conditional boot300 clock grant",
+  "version": "981021400",
+  "source": "physical/s81_die_pins/host_boot300_0015/grant.json",
   "outline": [
    453.6,
    77.76
   ],
-  "why": "C9 actual14982.7um2 std with48.5% insetmargin; HOST splitrealrootmax9293FF, exact1223/993 top-down pins; no c8/oldHOST view or parentfit inheritance."
+  "why": "One real initialization clock port; all 993 old pin rectangles and the same outline preserved. Conditional grant, no inherited physical view."
  },
- "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15, n1 EARLY_FAIL_HOLD 49k buffers): kit SDC regenerated with the per-entry die-skew rule (same-root pairs keep tile-local uncertainty; the uniform hold 100 on all 4 roots' internal paths was the flood); u_hx head read 32 kept read-address copies (rbin[1] 8,230 loads). | n3 phase-safe: measured n2 core-to-ingest payload hold -107.64ps, CSR/Gray/toggle -87..-102ps and rational3:4 boot FIFO -91ps require real half-phase seams, not extra hold buffers. OT_S81_HOST_PHASESAFE adds low-source pointer/control locks, high-read-half FWFT payload latches, locally conditioned boot resets (common raw assertion), and APIPE3 descriptor decomposition (+1 boot row/address edge, no normal-token stage). Four native roots, identical port/pin/outline ABI. New source-bound numeric+fixed-program+FIFO proof required; pre-route/route/native and parent timing remain OPEN.",
+ "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15, n1 EARLY_FAIL_HOLD 49k buffers): kit SDC regenerated with the per-entry die-skew rule (same-root pairs keep tile-local uncertainty; the uniform hold 100 on all 4 roots' internal paths was the flood); u_hx head read 32 kept read-address copies (rbin[1] 8,230 loads). | n3 phase-safe: measured n2 core-to-ingest payload hold -107.64ps, CSR/Gray/toggle -87..-102ps and rational3:4 boot FIFO -91ps require real half-phase seams, not extra hold buffers. OT_S81_HOST_PHASESAFE adds low-source pointer/control locks, high-read-half FWFT payload latches, locally conditioned boot resets (common raw assertion), and APIPE3 descriptor decomposition (+1 boot row/address edge, no normal-token stage). Four native roots, identical port/pin/outline ABI. New source-bound numeric+fixed-program+FIFO proof required; pre-route/route/native and parent timing remain OPEN. | n4 boot300: low locks alone leave 3:4 coincidences. Replace direct core->serial initialization FIFO by two real 16x37 FIFOs through a common300MHz root; typed stage/PQ/length packets remove direct plen crossing and dormant static credit/pop return. +608 storage bits, +1 clock port. Fixed64-edge init prefix replaces16 (+48fast=40ns), no normal job edge changes. Eight-phase payload/identity/length proof +kind/missingclock/capacity negatives and actual3-job HOST/c9/PQ positive/HOSTDROP pass. CTS/native/die clock delivery remain OPEN.",
  "job": {
   "owner": "Codex:S81-PQ2330",
   "branch": "codex/s81-pq-2330",
-  "tag": "n3-phase-safe",
-  "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
+  "tag": "n4-boot300",
+  "purpose": "Real finite initialization-only 300MHz common-divisor FIFO transport; unchanged normal3-job command/KIT/END timing, typed die-owned994-pin clock grant, actual mapped PQ and native HOST/ingest proofs.",
   "views_to": "physical/ref_tile/dsfd_host_c_pq_native_1425/views",
   "record_to": "results/rtl/ref_tile/dsfd_host_c_pq_native_1425",
   "extra_paths": [
@@ -186,12 +204,14 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/rom_host_ingest/rtl",
    "tests/s81",
-   "rtl/link"
+   "rtl/link",
+   "physical/s81_die_pins/host_boot300_0015",
+   "tools/die_port_bind.py"
   ],
   "benches": [
    {
     "name": "actual_host_c9_PQ_pass",
-    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass phase-safe",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass boot300",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 8,
@@ -202,7 +222,7 @@
    },
    {
     "name": "actual_host_c9_PQ_hostdrop",
-    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh hostdrop {RUN}/bench_hostdrop phase-safe",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh hostdrop {RUN}/bench_hostdrop boot300",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
@@ -254,6 +274,17 @@
      "iverilog"
     ],
     "pass_regex": "HOST_PHASE_INGEST_GATE PASS"
+   },
+   {
+    "name": "boot300_typed_transport",
+    "cmd": "bash tools/s81_static_control/host_boot300_gate.sh {RUN}/boot300",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_BOOT300_GATE PASS"
    }
   ]
  },
@@ -266,5 +297,17 @@
  "pin_regs": {
   "enable": false,
   "reason": "This multiclock native RTL owns input pin captures fi/hc_q/ss1/wf and registered output bundles to/hw/t_sseq_pw/t_pq_pw/plen on their declared ck/ckv roots; duplicate single-clock wrappers would mis-clock serial outputs. HOST-only seams explicitly join the four real related roots; no extra normal token boundary cycle."
+ },
+ "boot_clock_contract": {
+  "clock": "ck_boot",
+  "period_ps": 3333.3333333333335,
+  "fixed_phase_ps": 0,
+  "stream_edges": 4,
+  "serial_edges": 3,
+  "init_only": true,
+  "grant": "physical/s81_die_pins/host_boot300_0015/grant.json",
+  "grant_commit": "981021400",
+  "reset": "shared raw rst&&rsv assertion; own boot clock deassertion conditioner",
+  "qualification": "OPEN until measured CTS/root/native boundary and die phi-R clock delivery"
  }
 }

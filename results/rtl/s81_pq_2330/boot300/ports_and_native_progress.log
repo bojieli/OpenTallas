@@ -1,0 +1,15 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/s81-boot3002330
+ot-run: ot-epyc4       admits   509 GB (avail 736, growth 59, headroom 48, waiters 0/0 GB) load 68/128 running 15 disk 754 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-boot3002330
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-boot3002330
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3671151-1792133909 after 0 s
+BOOT300 PASS phase=0 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=1 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=2 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=3 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=4 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=5 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=6 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+BOOT300 PASS phase=7 payload_identity=96 length=96 normal_clock_ratio=4:3 boot=1:4
+HOST_BOOT300_GATE PASS 8 rational phases payload/identity/length + typed-kind mutant + missing-clock/capacity faults

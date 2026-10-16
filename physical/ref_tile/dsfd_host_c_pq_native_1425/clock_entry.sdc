@@ -5,11 +5,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst} {f_collective} {f_lf} {f_sseq_st} {f_wfc_ft} {hc}} outputs {{t_collective} {hw}}} {serial} {clock ot_io_serial io_budget_ps 222.222 inputs {{rsv}} outputs {{t_sseq_pw} {t_pq_pw} {t_sseq_plen}}} {ingest_host} {clock ot_io_ingest_host io_budget_ps 166.667 inputs {} outputs {}} {ingest_core} {clock ot_io_ingest_core io_budget_ps 166.667 inputs {} outputs {}}]
-set ::ot_ce_source_domains [dict create {ck} {core} {ckv} {serial} {ck_ingest[0]} {ingest_host} {ck_ingest[1]} {ingest_core}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst} {f_collective} {f_lf} {f_sseq_st} {f_wfc_ft} {hc}} outputs {{t_collective} {hw}}} {serial} {clock ot_io_serial io_budget_ps 222.222 inputs {{rsv}} outputs {{t_sseq_pw} {t_pq_pw} {t_sseq_plen}}} {ingest_host} {clock ot_io_ingest_host io_budget_ps 166.667 inputs {} outputs {}} {ingest_core} {clock ot_io_ingest_core io_budget_ps 166.667 inputs {} outputs {}} {boot} {clock ot_io_boot io_budget_ps 666.667 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {ck} {core} {ckv} {serial} {ck_ingest[0]} {ingest_host} {ck_ingest[1]} {ingest_core} {ck_boot} {boot}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck} {ckv} {ck_ingest[0]} {ck_ingest[1]}}
-set ::ot_ce_ports {{ck} {ckv} {ck_ingest[0]} {ck_ingest[1]}}
+set ::ot_ce_cts_roots {{ck} {ckv} {ck_ingest[0]} {ck_ingest[1]} {ck_boot}}
+set ::ot_ce_ports {{ck} {ckv} {ck_ingest[0]} {ck_ingest[1]} {ck_boot}}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant

@@ -1,0 +1,23 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (c0, c1, c12): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (c3, c4, d4): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (c5, c7, ck): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_stage_seq_static_c9_pq_native_1425_20261015-232033.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_stage_seq_static_c9_pq_native_1425_20261015-232033.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/dsfd_stage_seq_static_c9_pq_native_1425-20261015-232033
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 702 s (gate total 3161 s)
+GATE INFO util: synthesized std area 18920 um2 + macros 0 in core 37343: util 51%
+GATE INFO textbook: WARN dsfd_stage_seq_static_c9 cells 145,416 flops 13,301 depth 755.2 ps util 0.5109 reach 118.1 um (3.2 s)
+GATE WARN textbook.high_fanout: net u_s.rr[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 3,195 loads (3,193 flops, e.g. pq_pw.b1[0][0]$_DFF_PN0_) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 2 input->register endpoint(s) > 3 levels (worst s13[1]->u_s.u_issue.run_fault$_DFF_PN0_/D 7 lv, s13[1]->u_s.u_issue.fev_q[9]$_DFF_PN0_/D 6 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.logic_depth: reg->reg stage u_s.u_issue.scan_index[3]$_DFF_PN0_ -> u_s.u_issue.cfg_fault$_DFF_PN0_/D: ~755 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 291.3..340.3 ps (spread 49.0), boundary mean 317.0; tt insertion all 220.0..261.8 ps (spread 41.8), boundary mean 241.5; ff insertion all 177.3..215.7 ps (spread 38.4), boundary mean 196.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      653 paths, worst slack -153.3 ps (e.g. u_s.u_issue.cfg_fault$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out      328 paths, worst slack 344.5 ps (e.g. c13[69])
+GATE INFO path_classes: in->reg       247 paths, worst slack 360.5 ps (e.g. u_s.ks.box[1][30]$_DFFE_PN0P_/D)
+GATE INFO path_classes: setup WNS -1.5326806490634226e-10 hold WNS -7.151013114992111e-11
+GATE INFO clock_rule: root port:ck: 12,923 sinks on the largest root <= 15,000; measured TT insertion 261.8 ps, leaf spread 41.8 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: dsfd_stage_seq_static_c9_pq_native_1425/gate_result.json written (exact staged source binding; commit it with the kit)

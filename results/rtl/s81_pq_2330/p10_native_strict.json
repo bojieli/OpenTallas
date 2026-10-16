@@ -1,0 +1,34 @@
+{
+  "cell": "ot_s81_pq_qb_headpc_native",
+  "view": "physical/ref_tile/s81pq_qb_headpc_native/views/ot_s81_pq_qb_headpc_native",
+  "lib_cell": "ot_s81_pq_qb_headpc_native",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 197.2,
+  "spread_ps": 22.7,
+  "outputs": 595,
+  "inputs": 1100,
+  "launch_ps": 194.3,
+  "launch_pin": "hq1[188]",
+  "capture_ps": 166.4,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "s81pq_qb_headpc_native-p10-wcap-elaunch-15f4db476",
+  "source_commit": "15f4db476308291035405860c90e755b6d5a25ef",
+  "scope": "Strict exported TT O-R/S+R component boundaries. Layout floorplan/density PNGs inspected. Full die joins/calendar still open.",
+  "route": {
+    "tt_setup_ps": 110.71,
+    "ff_hold_ps": 21.89,
+    "drc": 0,
+    "ss_sensitivity_ps": -196.17
+  },
+  "manifest_status": "HOLD pending exact recovery3f52e6014 review/publication; no exported artifact edited",
+  "layout_observation": "W-centred clock, evenly spread face pins, no hard macros,48.7%fill and uniform interior; crowded pin-adjacent top/bottom bands are visible."
+}
