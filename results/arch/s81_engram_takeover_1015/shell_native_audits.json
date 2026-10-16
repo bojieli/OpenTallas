@@ -1,0 +1,48 @@
+[
+ {
+  "cell": "ot_s81_engram_mixq_shcol",
+  "view": "physical/ref_tile/s81engm_shcol/views/ot_s81_engram_mixq_shcol",
+  "lib_cell": "ot_s81_engram_mixq_shcol",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 151.5,
+  "spread_ps": 21.3,
+  "outputs": 768,
+  "inputs": 777,
+  "launch_ps": 191.3,
+  "launch_pin": "w[15]",
+  "capture_ps": 322.9,
+  "capture_pin": "fa",
+  "launch_over": 0,
+  "capture_over": 2,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 322.9 > 190 (2 pins)"
+ },
+ {
+  "cell": "ot_s81_engram_mixq_shctl",
+  "view": "physical/ref_tile/s81engm_shctl/views/ot_s81_engram_mixq_shctl",
+  "lib_cell": "ot_s81_engram_mixq_shctl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 99.1,
+  "spread_ps": 16.1,
+  "outputs": 180,
+  "inputs": 150,
+  "launch_ps": 181.0,
+  "launch_pin": "rq_row[18]",
+  "capture_ps": 246.4,
+  "capture_pin": "start",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 246.4 > 190 (1 pins)"
+ }
+]

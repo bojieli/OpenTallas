@@ -35,6 +35,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
+# git object store for commit lookups (M6 pin-grant source commit).  ROOT can be a materialised, non-git source tree
+# (pre_route_gate.submit_check); the caller then points GIT_ROOT at the repository the tree was archived from.
+GIT_ROOT = None
 sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
@@ -1577,7 +1580,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
         import subprocess
         source_commit = lc["m6_pin_grant"]["source_commit"]
-        exists = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", source_commit + "^{commit}"],
+        git_root = str(GIT_ROOT or ROOT)
+        exists = subprocess.run(["git", "-C", git_root, "cat-file", "-e", source_commit + "^{commit}"],
                                 capture_output=True)
         if exists.returncode:
             raise SpecError("M6 pin-only grant source commit does not exist")
@@ -1588,7 +1592,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         for path in source_paths:
             path = path.removeprefix("/src/")
             file = ROOT / path
-            original = subprocess.run(["git", "-C", str(ROOT), "show", f"{source_commit}:{path}"],
+            original = subprocess.run(["git", "-C", git_root, "show", f"{source_commit}:{path}"],
                                       capture_output=True)
             if original.returncode or not file.is_file() or original.stdout != file.read_bytes():
                 raise SpecError(f"M6 pin-only grant source differs from approved commit: {path}")

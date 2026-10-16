@@ -268,8 +268,11 @@ module ot_qwen_me_spctl_w12 #(
                                          //   result-side argmax / mx timing (tree valid line tv, tag line u_ttag, accumulator clear RXA) one
                                          //   edge later to match: am_* / mx_* / idle settle one edge later, the result sequence is unchanged;
                                          //   2 = negative control (the register without the +1 compensation: MUST FAIL)
-    parameter integer PK = 0             // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
+    parameter integer PK = 0,            // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
                                          //   land_cnt pin flop) and the u_ttag line read from a register (ring D-1 + output flop: t_* straight from flops); 2 = negative control (KS carry-in dropped: progress one low)
+    // Extra fixed edges in the real port argmax tree (e.g. popcount(APIPE)).
+    // Bind this only with the matching producer; default preserves archived timing.
+    parameter integer PORT_AM_EXTRA_EDGES = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1026,7 +1029,8 @@ end endgenerate
     localparam integer CW = 1 + 32 + NW;
     wire [CW*AN-1:0] alv [LPT:LV];
     //: AMI: AMC = the +1 compensation (AMI 1 only; AMI 2 registers p_am without it); LVT = the tree-top valid tap
-    localparam integer AMC = (AMI == 1) ? 1 : 0;
+    initial if (PORT_AM_EXTRA_EDGES < 0) $fatal(1, "negative PORT_AM_EXTRA_EDGES");
+    localparam integer AMC = ((AMI == 1) ? 1 : 0) + PORT_AM_EXTRA_EDGES;
     localparam integer LVT = LV + AMC;
     reg  [LVT:0] tv;
     always @(posedge clk or negedge rst_n) begin
