@@ -1,5 +1,5 @@
 {
- "name": "qfd_xs_tap-xt10-COMMIT",
+ "name": "qfd_xs_tap-xt11-COMMIT",
  "block": "qfd_xs_tap",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-dvm-build",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_xs_tap/qfd_xs_tap-xt10-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_xs_tap/qfd_xs_tap-xt11-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -111,9 +111,9 @@
  "reroute_reason": {
   "kind": "pin_register",
   "cell": "qfd_xs_tap",
-  "launch_ps": 230.9,
-  "capture_ps": 198.6,
-  "source": "results/arch/qwen_dvm_banked_leaf_1015/native_tap8/native_audit.json",
-  "fix": "xt10: (a) aw 553-bit S bus spread 26.5 um -> 159 um (0.288 pitch) and ck moved from the NW corner to N-face centre (xt6 native capture 502 ps / xt9 gate: diagonal S->NE flop chain, corner clock, fill 7%); (b) recipe 3 pin registers on every input/output (owner 19:50); (c) pin-flop columns 8 + full-depth pin-access keepout (xt8 61 gi pins under routed M5); same RTL/outline"
+  "launch_ps": 301.4,
+  "capture_ps": 208.5,
+  "source": "results/rtl/qwen_link_0030/xs_tap_xt10_native_audit.json",
+  "fix": "xt11: CLOSED xt10 native launch 301.4 ps (50 hw_d pins) is a routed detour in the saturated N pin band (hw_d[599]: flop, INVx1 and output stage within 10 um but the INV net is 20.4 fF; INV 77 ps + ohdrv 44 ps at 211 ps slew). Re-spread hw_d over the whole N face (10.4 -> 7.9 pins/um, same order/layer) so the output stage escapes without detours; recipe-3 pin registers and output pad kept (outhold false is refuted: hold-repair BUF chains land on the launch path, qfd_xcst m5c). Capture 208.5 (sw NW corner) re-measured."
  }
 }

@@ -87,7 +87,8 @@ foreach cell $added {
         set it [$cell findITerm $power]
         if {$it eq "NULL" || [$it getNet] eq "NULL" || [[$it getNet] getName] ne $power} {error "LOCAL_MACRO_CLK missing actual $power connection for [$cell getName]"}
     }
-    $cell setDoNotTouch 1
+    # instance NOT dont_touch: TritonCTS must disconnect/reconnect the station input A as a sink of the ck tree
+    # (r7m gate 10-16: ODB-0370 on dont_touch A); the station leaf net stays dont_touch so CTS/repair keep it
 }
 if {[llength $added]!=4} {error {LOCAL_MACRO_CLK did not insert exactly four stations}}
 puts {LOCAL_MACRO_CLK exact4 legal local stations, actual VDD/VSS connected; no source clock ports/phases/edges changed}
