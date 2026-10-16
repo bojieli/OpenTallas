@@ -13,7 +13,7 @@
     "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
     "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
-    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "404a42f242aa893696a7dcfcc6ec5e590d89407fa6338db50cb96636101af04d"
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "f690f70271960a1f2f8edab2fae1b4f4826c8a1e9084f4bd5f87369bb6a7b20b"
   },
   "engines": [
     {
@@ -666,5 +666,5 @@
     "ROW_RETURN_LAT": 9,
     "source_producer": "qkd_ectl_a_tp8_epoch_direct STATIC_QK=1"
   },
-  "artifact_note": "Compact exact compiler receipt; full slots regenerated with --context 8192 --issuer-segment-latency 2 --consume-age 34"
+  "artifact_note": "Compact compiler receipt; full slots regenerated --context8192 --issuer-segment-latency2 --consume-age34"
 }
