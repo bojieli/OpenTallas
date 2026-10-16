@@ -167,5 +167,11 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Actual closed producer falsely faults N0/OFF0 empty descriptor: first_e=-1 was unconditionally rejected.",
+  "fix": "ot_s81_bf_prog_seq now guards first_e<0 with N!=0. Actual13phase4288word fault-observing trace and registeredwrapper emptygo1 pass; restoring oldlogic failsphase11/actualwrapperstfault312.",
+  "source": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/producer_empty_guard/wrapper/receipt.json"
  }
 }
