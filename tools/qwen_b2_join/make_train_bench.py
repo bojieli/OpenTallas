@@ -16,6 +16,11 @@ for(genvar h=0;h<6;h=h+1)begin:g_ser
  .rq(rq[h]),.rb(rb[h]),.fault(sf[h]));
 end
 '''
+# Exercise parameter-free physical masters rather than relying on per-instance sidecars.
+begin=head.index('for(genvar h=0;')
+head=head[:begin]
+for hb in range(6):
+ head+=f"qfd_res_train_half_b2_{hb} u_ser{hb}(.ck(clk),.ck_bank({{24{{clk}}}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[{hb}]),.rb(rb[{hb}]),.fault(sf[{hb}]));\n"
 body='''
 function automatic [511:0]image(input integer row,input integer op);
  for(integer l=0;l<16;l=l+1)image[32*l+:32]=32'h3f800000+32'(row*16+l+op*65536);

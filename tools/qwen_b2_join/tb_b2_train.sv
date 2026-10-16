@@ -5,11 +5,12 @@ integer mut=0;initial void'($value$plusargs("MUT=%d",mut));
 reg[2212:0]rq[0:5];wire[550:0]rb[0:5];wire[5:0]sf;
 reg start=0,payload=0;reg[3:0]count=0,nh=0;reg[31:0]stride=0;
 reg[20:0]svr=0;wire[511:0]svq;wire svq_v;wire[15:0]ld;wire vf;
-for(genvar h=0;h<6;h=h+1)begin:g_ser
- qfd_res_train_half_b2 #(.BAND(h),.MUT(0))u(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),
- .train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),
- .rq(rq[h]),.rb(rb[h]),.fault(sf[h]));
-end
+qfd_res_train_half_b2_0 u_ser0(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[0]),.rb(rb[0]),.fault(sf[0]));
+qfd_res_train_half_b2_1 u_ser1(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[1]),.rb(rb[1]),.fault(sf[1]));
+qfd_res_train_half_b2_2 u_ser2(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[2]),.rb(rb[2]),.fault(sf[2]));
+qfd_res_train_half_b2_3 u_ser3(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[3]),.rb(rb[3]),.fault(sf[3]));
+qfd_res_train_half_b2_4 u_ser4(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[4]),.rb(rb[4]),.fault(sf[4]));
+qfd_res_train_half_b2_5 u_ser5(.ck(clk),.ck_bank({24{clk}}),.rst_n(rst_n),.train_start(start),.train_count(count),.capture_stride(stride),.payload_write(payload),.slot_count(nh),.rq(rq[5]),.rb(rb[5]),.fault(sf[5]));
 qfd_sp_vector_memory_b2 #(.USE_MACRO(1),.NATIVE_BANKS(1),.RETURN_RO(6),.RETURN_PIN_INPUT(1))dut(
 .ck(clk),
 .rst_n(rst_n),

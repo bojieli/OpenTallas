@@ -6,7 +6,7 @@ F="physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x
  $S/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv $P/ot_qfd_vm_xplane.sv $P/ot_qfd_vm_xtree.sv
  rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv
  rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv
- rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_split/qfd_su_vm_pack.sv $N/qfd_sp_vector_memory_b2.sv rtl/qwen_split/qfd_res_train_half_b2.sv tools/qwen_b2_join/tb_b2_train.sv rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv"
+ rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_split/qfd_su_vm_pack.sv $N/qfd_sp_vector_memory_b2.sv rtl/qwen_split/qfd_res_train_half_b2.sv rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv tools/qwen_b2_join/tb_b2_train.sv rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv"
 mkdir -p "$out"
 sha256sum $F > "$out/source.sha256"
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
