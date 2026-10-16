@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.qwen.dvm_read_pin_candidate.v1",
+ "qualification": "UNQUALIFIED opt-in source candidate, no physical kit; array/static program proofs running",
+ "rtl_source_commit": "dd4b10a1b",
+ "production_bench_syntax_fix_commit": "7ae85d21d",
+ "mixed_write_bench_commit": "ef31f0701",
+ "default_enabled": false,
+ "old_leaf": {
+  "READ_PIN_PIPE": 0,
+  "head_QD": 7,
+  "DX": 10
+ },
+ "new_leaf": {
+  "READ_PIN_PIPE": 1,
+  "head_QD": 8,
+  "DX": 11
+ },
+ "physical_write_update_edges_added": 0,
+ "write_clear_edges_added": 0,
+ "write_forward_edges_added": 0,
+ "read_request_capture_edges_added": 1,
+ "read_response_edges_added": 1,
+ "same_tile_min_issue_interval_edges": 8,
+ "alternating_tile_issue_interval_edges": 4,
+ "instruction_alignment_formula": "BD=HB+3+DX+NH+3, delta=+1",
+ "headrow_HB_delta": 0,
+ "reset_delta": 0,
+ "new_raw_read_pin_flops": 31,
+ "hard_view_rule": "OT_QFD_XS_HARD leaf remains parameter-free: source-bound real view must explicitly implement selected READ_PIN_PIPE, no parameter alias or old-view inheritance",
+ "consumers": [
+  "ot_qfd_xhead QD and DX defaults",
+  "ot_qfd_xhead_m/qfd_xhead_e/qfd_xhead_w",
+  "ot_qfd_xcol and east/west wrappers",
+  "ot_qwen_me_array_dvm_w12 and distributed-x submodule",
+  "tb_qwen_me_dvm_w12 exact central-x comparison",
+  "tb_qfd_xdvm_prod static native-affine program"
+ ],
+ "source_proofs": {
+  "mixed_write_leaf": "PASS129reads128good1invalid; physicalwrites identical, reference effective request delayed1; swappedtile mutantFAIL58ns",
+  "array_exact": "RUNNING 2columns,128tiles,40ops,DX11,40ops variedrounding/reuse/attention writes",
+  "native_static36": "RUNNING 2columns,128tiles,36layers+6random,STATIC_SCHEDULE1,NATIVE_AFFINE1,DX11",
+  "whole_48column_parent": "NOT_PROVED",
+  "end_to_end_price_ratio": "UNMEASURED"
+ },
+ "gaps": [
+  "Current original leaf CTS rawgeometry0FAIL but native diagnostic FAIL r_v234.95/r_t228.41 and two outputs221.56/220.84ps",
+  "Original heads CTS rawgeometry0FAIL but native diagnostic FAIL hundreds outputs and rst_n",
+  "No new M6 source grant refresh, no parentM7/M9reservation, no final TT/FF/DRC/native gate for newcandidate"
+ ]
+}
