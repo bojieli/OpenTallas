@@ -16,7 +16,7 @@ def walk(name,mp,path):
   t=c['type'];cp=path+'.'+n;cc={k:[bit(b,mp,path)for b in v]for k,v in c['connections'].items()}
   physical=t in mods and bool(mods[t].get('attributes',{}).get('blackbox'))
   if t in mods and not physical:
-   if t.split('\\')[-1]in ['qvm_return_plane_pin_native','ot_qfd_vm_su_return_plane','ot_qfd_vm_su_read_control'] and not path.endswith('.u_core') and not (t.split('\\')[-1]=='ot_qfd_vm_su_return_plane' and '.g_pin_input.' in path):
+   if t.split('\\')[-1]in ['qvm_return_plane_pin_native','ot_qfd_vm_su_return_plane','ot_qfd_vm_su_read_control','ot_qfd_vm_write_control_t'] and not path.endswith('.u_core') and not (t.split('\\')[-1]=='ot_qfd_vm_su_return_plane' and '.g_pin_input.' in path):
     candidates.append(dict(instance=cp,master=t,ports=cc,directions=c.get('port_directions',{}),status='SOURCE_ONLY_NO_PHYSICAL_VIEW'))
    cm={b:label for pn,pv in mods[t]['ports'].items()for b,label in zip(pv['bits'],cc.get(pn,[]))};walk(t,cm,cp)
   else:
