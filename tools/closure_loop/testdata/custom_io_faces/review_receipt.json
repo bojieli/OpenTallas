@@ -1,0 +1,388 @@
+{
+ "scope": "Source-pinned closed_stands classifier evidence only, not physical closure or die qualification.",
+ "baseline_code_path": "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closed_stands.py",
+ "baseline_code_sha256": "ec2ebde413c82910ab4c9a10f61a856d2842fc5887859c2217263ff5edf1ce0a",
+ "candidate_files_sha256": {
+  "tools/closure_loop/closed_stands.py": "383e784fd1080bbfcac74953fc6a4bc1d886bc150c4a7d8d84bc9a455210bd5f",
+  "tools/closure_loop/custom_io_faces.py": "2a1287927e5d757c783a44bfe558544a96c06215fd8a08934e03a537cc6b46fa",
+  "tools/closure_loop/test_custom_io_faces.py": "fbd41114cf6b1dd9b726c216763fe6abecc79ea124ad9475766e06884a383846"
+ },
+ "tests": {
+  "actual_source_and_negative_cases": 10,
+  "existing_closed_stands": 31,
+  "pass": true
+ },
+ "cases": [
+  {
+   "master": "dsfd_node_LLd",
+   "old_source": "13d6772ae",
+   "new_source": "409699c63",
+   "before": {
+    "verdict": "REFUSE",
+    "message": "dsfd_node_LLd is CLOSED with a published view (fixture-lld-old @ 13d6772ae): slot_change claimed, but the kit's outline and pin faces (FH, FW, PINEX, PINS, PIN_H, PIN_V) equal those of closed fixture-lld-old (a layer-cap change alone is die_window, not slot_change); measured: RTL vs the closed commit same (4 RTL source file(s) byte-identical at 13d6772ae and 409699c63); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}",
+    "closed": [
+     "fixture-lld-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-lld-old",
+     "closed_commit": "13d6772ae",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "4 RTL source file(s) byte-identical at 13d6772ae and 409699c63",
+     "evidence_gap": null
+    }
+   },
+   "after": {
+    "verdict": "PASS",
+    "message": "dsfd_node_LLd is CLOSED with a published view (fixture-lld-old @ 13d6772ae); reroute_reason slot_change: outline / pin faces differ from the closed view per 'S81F-03 S-DIE approved E-face a/b pin plan, el1015-fill-s81.log 2026-10-16 02:41:50 PDT; physical/s81_die_pins/snet_node43_ab'",
+    "closed": [
+     "fixture-lld-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-lld-old",
+     "closed_commit": "13d6772ae",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "4 RTL source file(s) byte-identical at 13d6772ae and 409699c63",
+     "evidence_gap": null,
+     "custom_io_face_comparisons": {
+      "fixture-lld-old": {
+       "new": {
+        "status": "verified",
+        "commit": "409699c63",
+        "source": "physical/s81_die_pins/snet_node43_ab/dsfd_node_LLd.tcl",
+        "sha256": "03056b4f3eee0329e17b30fafc56ae80b06c11603896fe73e0b3bfc3e52d95a6",
+        "pins": 195,
+        "outline": [
+         43.2,
+         77.76
+        ]
+       },
+       "old": {
+        "status": "verified",
+        "commit": "13d6772ae",
+        "source": "physical/s81_die_pins/snet_node43/dsfd_node_LLd.tcl",
+        "sha256": "7098c0bb91b6533f9fa07d9b815982cfaa5dd9a7f89e54c6b09e22c55de38009",
+        "pins": 195,
+        "outline": [
+         43.2,
+         77.76
+        ]
+       },
+       "status": "changed",
+       "changed_pins": 126,
+       "examples": {
+        "a[0]": [
+         "W",
+         "E"
+        ],
+        "a[10]": [
+         "W",
+         "E"
+        ],
+        "a[11]": [
+         "W",
+         "E"
+        ],
+        "a[12]": [
+         "W",
+         "E"
+        ],
+        "a[13]": [
+         "W",
+         "E"
+        ],
+        "a[14]": [
+         "W",
+         "E"
+        ],
+        "a[15]": [
+         "W",
+         "E"
+        ],
+        "a[16]": [
+         "W",
+         "E"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_node_LLfd",
+   "old_source": "13d6772ae",
+   "new_source": "409699c63",
+   "before": {
+    "verdict": "REFUSE",
+    "message": "dsfd_node_LLfd is CLOSED with a published view (fixture-llfd-old @ 13d6772ae): slot_change claimed, but the kit's outline and pin faces (FH, FW, PINEX, PINS, PIN_H, PIN_V) equal those of closed fixture-llfd-old (a layer-cap change alone is die_window, not slot_change); measured: RTL vs the closed commit same (4 RTL source file(s) byte-identical at 13d6772ae and 409699c63); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}",
+    "closed": [
+     "fixture-llfd-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-llfd-old",
+     "closed_commit": "13d6772ae",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "4 RTL source file(s) byte-identical at 13d6772ae and 409699c63",
+     "evidence_gap": null
+    }
+   },
+   "after": {
+    "verdict": "PASS",
+    "message": "dsfd_node_LLfd is CLOSED with a published view (fixture-llfd-old @ 13d6772ae); reroute_reason slot_change: outline / pin faces differ from the closed view per 'S81F-03 S-DIE approved E-face a/b pin plan, el1015-fill-s81.log 2026-10-16 02:41:50 PDT; physical/s81_die_pins/snet_node43_ab'",
+    "closed": [
+     "fixture-llfd-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-llfd-old",
+     "closed_commit": "13d6772ae",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "4 RTL source file(s) byte-identical at 13d6772ae and 409699c63",
+     "evidence_gap": null,
+     "custom_io_face_comparisons": {
+      "fixture-llfd-old": {
+       "new": {
+        "status": "verified",
+        "commit": "409699c63",
+        "source": "physical/s81_die_pins/snet_node43_ab/dsfd_node_LLfd.tcl",
+        "sha256": "b7e74406dea1f189146979ee81879bb8d3359fc039ac41cf4d9384465a4c6dfa",
+        "pins": 196,
+        "outline": [
+         43.2,
+         77.76
+        ]
+       },
+       "old": {
+        "status": "verified",
+        "commit": "13d6772ae",
+        "source": "physical/s81_die_pins/snet_node43/dsfd_node_LLfd.tcl",
+        "sha256": "883f3f3db6c95de7b175f5e0451437cf5bf22998cc1729ad6dad2ca33b028604",
+        "pins": 196,
+        "outline": [
+         43.2,
+         77.76
+        ]
+       },
+       "status": "changed",
+       "changed_pins": 126,
+       "examples": {
+        "a[0]": [
+         "W",
+         "E"
+        ],
+        "a[10]": [
+         "W",
+         "E"
+        ],
+        "a[11]": [
+         "W",
+         "E"
+        ],
+        "a[12]": [
+         "W",
+         "E"
+        ],
+        "a[13]": [
+         "W",
+         "E"
+        ],
+        "a[14]": [
+         "W",
+         "E"
+        ],
+        "a[15]": [
+         "W",
+         "E"
+        ],
+        "a[16]": [
+         "W",
+         "E"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_node_LLfu",
+   "old_source": "13d6772ae",
+   "new_source": "409699c63",
+   "before": {
+    "verdict": "REFUSE",
+    "message": "dsfd_node_LLfu is CLOSED with a published view (fixture-llfu-old @ 13d6772ae): slot_change claimed, but the kit's outline and pin faces (FH, FW, PINEX, PINS, PIN_H, PIN_V) equal those of closed fixture-llfu-old (a layer-cap change alone is die_window, not slot_change); measured: RTL vs the closed commit same (4 RTL source file(s) byte-identical at 13d6772ae and 409699c63); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}",
+    "closed": [
+     "fixture-llfu-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-llfu-old",
+     "closed_commit": "13d6772ae",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "4 RTL source file(s) byte-identical at 13d6772ae and 409699c63",
+     "evidence_gap": null
+    }
+   },
+   "after": {
+    "verdict": "PASS",
+    "message": "dsfd_node_LLfu is CLOSED with a published view (fixture-llfu-old @ 13d6772ae); reroute_reason slot_change: outline / pin faces differ from the closed view per 'S81F-03 S-DIE approved E-face a/b pin plan, el1015-fill-s81.log 2026-10-16 02:41:50 PDT; physical/s81_die_pins/snet_node43_ab'",
+    "closed": [
+     "fixture-llfu-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-llfu-old",
+     "closed_commit": "13d6772ae",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "4 RTL source file(s) byte-identical at 13d6772ae and 409699c63",
+     "evidence_gap": null,
+     "custom_io_face_comparisons": {
+      "fixture-llfu-old": {
+       "new": {
+        "status": "verified",
+        "commit": "409699c63",
+        "source": "physical/s81_die_pins/snet_node43_ab/dsfd_node_LLfu.tcl",
+        "sha256": "a5cbbd0176ef3f4ec5aa24dd25439594060998c5f47fce2c181ffd82b10b7c58",
+        "pins": 196,
+        "outline": [
+         43.2,
+         77.76
+        ]
+       },
+       "old": {
+        "status": "verified",
+        "commit": "13d6772ae",
+        "source": "physical/s81_die_pins/snet_node43/dsfd_node_LLfu.tcl",
+        "sha256": "a09bf163aa7f931c85640929e73988113dfdd1885acb8632a02e4bac4e04d4c1",
+        "pins": 196,
+        "outline": [
+         43.2,
+         77.76
+        ]
+       },
+       "status": "changed",
+       "changed_pins": 126,
+       "examples": {
+        "a[0]": [
+         "W",
+         "E"
+        ],
+        "a[10]": [
+         "W",
+         "E"
+        ],
+        "a[11]": [
+         "W",
+         "E"
+        ],
+        "a[12]": [
+         "W",
+         "E"
+        ],
+        "a[13]": [
+         "W",
+         "E"
+        ],
+        "a[14]": [
+         "W",
+         "E"
+        ],
+        "a[15]": [
+         "W",
+         "E"
+        ],
+        "a[16]": [
+         "W",
+         "E"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_rly_63_WE",
+   "old_source": "1480fbbb1",
+   "new_source": "3d2695940",
+   "before": {
+    "verdict": "PASS",
+    "message": "dsfd_rly_63_WE is CLOSED with a published view (fixture-63_we-old @ 1480fbbb1); reroute_reason slot_change: outline / pin faces differ from the closed view per 'S81F-14 S-DIE approved centered bit-ordered pin bands; el1015-fill-s81.log 2026-10-16 02:41:50 PDT'",
+    "closed": [
+     "fixture-63_we-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-63_we-old",
+     "closed_commit": "1480fbbb1",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "2 RTL source file(s) byte-identical at 1480fbbb1 and 3d2695940",
+     "evidence_gap": null
+    }
+   },
+   "after": {
+    "verdict": "REFUSE",
+    "message": "dsfd_rly_63_WE is CLOSED with a published view (fixture-63_we-old @ 1480fbbb1): slot_change claimed, but the kit's outline and pin faces (FH, FW, PINEX, PINS, PIN_H, PIN_V) equal those of closed fixture-63_we-old (a layer-cap change alone is die_window, not slot_change); measured: RTL vs the closed commit same (2 RTL source file(s) byte-identical at 1480fbbb1 and 3d2695940); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}",
+    "closed": [
+     "fixture-63_we-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-63_we-old",
+     "closed_commit": "1480fbbb1",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "2 RTL source file(s) byte-identical at 1480fbbb1 and 3d2695940",
+     "evidence_gap": null
+    }
+   }
+  },
+  {
+   "master": "dsfd_rly_66_ES",
+   "old_source": "1480fbbb1",
+   "new_source": "3d2695940",
+   "before": {
+    "verdict": "PASS",
+    "message": "dsfd_rly_66_ES is CLOSED with a published view (fixture-66_es-old @ 1480fbbb1); reroute_reason slot_change: outline / pin faces differ from the closed view per 'S81F-14 S-DIE approved centered bit-ordered pin bands; el1015-fill-s81.log 2026-10-16 02:41:50 PDT'",
+    "closed": [
+     "fixture-66_es-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-66_es-old",
+     "closed_commit": "1480fbbb1",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "2 RTL source file(s) byte-identical at 1480fbbb1 and 3d2695940",
+     "evidence_gap": null
+    }
+   },
+   "after": {
+    "verdict": "REFUSE",
+    "message": "dsfd_rly_66_ES is CLOSED with a published view (fixture-66_es-old @ 1480fbbb1): slot_change claimed, but the kit's outline and pin faces (FH, FW, PINEX, PINS, PIN_H, PIN_V) equal those of closed fixture-66_es-old (a layer-cap change alone is die_window, not slot_change); measured: RTL vs the closed commit same (2 RTL source file(s) byte-identical at 1480fbbb1 and 3d2695940); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}",
+    "closed": [
+     "fixture-66_es-old"
+    ],
+    "kind": "slot_change",
+    "facts": {
+     "closed_job": "fixture-66_es-old",
+     "closed_commit": "1480fbbb1",
+     "params": {},
+     "rtl": "same",
+     "rtl_detail": "2 RTL source file(s) byte-identical at 1480fbbb1 and 3d2695940",
+     "evidence_gap": null
+    }
+   }
+  }
+ ]
+}
