@@ -35,6 +35,60 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def hbm_su_local_programme_model(line_bits, edges, dict_banks, quarters=4):
+    """Source-sized alternative to the measured 9,689-load command gate.
+
+    Each quarter retains the original global bank/address numbering and stores
+    only index groups and dictionary columns needed for its contiguous command
+    slice. Boundary columns/index groups are genuinely replicated. This is an
+    opt-in candidate, with no native/physical or token-rate credit.
+    """
+    if (line_bits <= 0 or edges <= 0 or quarters != 4 or line_bits % quarters
+            or len(dict_banks) != math.ceil(line_bits / 256)
+            or any(type(n) is not int or n < 1 for n in dict_banks)):
+        raise ValueError('actual positive production dimensions and four equal quarters required')
+    cols, qw = len(dict_banks), line_bits // quarters
+    index_banks = math.ceil(edges / 128)
+    macro_w, macro_h = 94.824, 41.064
+    local = []
+    for q in range(quarters):
+        first, last = q * qw // 256, ((q + 1) * qw - 1) // 256
+        selected = list(range(first, last + 1))
+        groups = sorted({c // 16 for c in selected})
+        count = len(groups) * index_banks + sum(dict_banks[c] for c in selected)
+        local.append(dict(quarter=q, command_bits=qw, columns=selected, index_groups=groups,
+                          dictionary_macros=sum(dict_banks[c] for c in selected),
+                          index_macros=len(groups) * index_banks, macros=count,
+                          macro_area_um2=count * macro_w * macro_h,
+                          memory_read_bytes_per_cycle=32 * (len(groups) + len(selected)),
+                          output_capture_roots=len(selected)))
+    old_macros = math.ceil(cols / 16) * index_banks + sum(dict_banks)
+    new_macros = sum(q['macros'] for q in local)
+    return dict(schema='opentallas.hbm-su-local-programme-candidate.v1', opt_in_default=False,
+                macs_per_cycle=0, source_dimensions=dict(line_bits=line_bits, edges=edges,
+                    columns=cols, dict_banks=list(dict_banks), index_banks=index_banks),
+                baseline=dict(macros=old_macros, macro_area_um2=old_macros * macro_w * macro_h,
+                    measured_standard_area_um2=9394.243920, measured_ff=10144,
+                    measured_command_gate_loads=9689, command_present_after_start_edges=3),
+                quarters=local, macros=new_macros,
+                incremental_macro_area_um2=(new_macros - old_macros) * macro_w * macro_h,
+                memory_macro='actual ot_sram_1r1w_128x256_m1_r2c2',
+                macro_outline_um=[macro_w, macro_h],
+                host_write_bytes_per_cycle=32, global_install_boundary_bits=280,
+                command_bytes_per_cycle=line_bits / 8, steady_command_interval_edges=1,
+                proposed_command_present_after_start_edges=5,
+                proposed_extra_edges_per_start=2,
+                proposed_extra_edges_fraction=2 / (edges + 3),
+                output_control_load_bound_per_root=256,
+                mux_cost='Retain each selected BANKS:1 word selector; local registered read/command controls; no demand arbitration.',
+                physical_leaf_candidate=dict(max_macros=8, macro_grid=[2, 4], channel_um=20,
+                    macro_and_channel_outline_um=[2 * macro_w + 60, 4 * macro_h + 100]),
+                routing_tracks_required_per_local_word=256,
+                actual_tracks_capacity=None, physical_outline=None, mapped_logic_area=None,
+                token_starts=None, measured_token_rate_loss=None,
+                qualification='Sizing only. Exact native SRAM playback, failing mutants, mapped counts, real pins/cuts, clock and TT/FF/DRC proof required; no rate or accepted-cost credit.')
+
+
 def qwen_native_kv_programme_candidate_model(replicas=1):
     """Writer-only fixed roots; no measured route or token-rate credit."""
     if type(replicas) is not int or replicas < 1:
