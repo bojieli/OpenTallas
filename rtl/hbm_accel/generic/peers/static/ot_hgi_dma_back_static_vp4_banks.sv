@@ -145,7 +145,9 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [40:0] b_vprod,b_hprod; reg [14:0] b_nchunk; reg [7:0] b_rchunk; reg [17:0] b_total; reg b_static_ok;
     wire [10:0] a_nsec=a_mv[219:209];                     // nsec<=1024 when valid (range term below)
     wire [7:0] a_rchunk=8'((a_mv[219:209]+11'd7)>>3);      // ceil(nsec/8) <= 128 when valid
-    wire [6:0] a_rows_m1=7'(a_mv[192:186]-7'd1);           // rows<=128 when valid
+    // (rows-1) mod 128 times x == R*x - x with R = rows[6:0], or 128 when rows[6:0]==0: the decrement leaves the
+    // multiplier stage; the -x terms of a pair are the bit-concatenation {x1,x0} subtracted in the pair sum (exact).
+    wire [7:0] a_rows_r={a_mv[192:186]==7'd0,a_mv[192:186]};
     reg [226:0] p_mv,q_mv;reg [31:0] p_ci,p_cd,q_ci,q_cd;reg p_cb,q_cb;reg [15:0] p_ce,q_ce;
     reg [14:0] p_vpart[0:3],p_hpart[0:3];
     reg [22:0] q_vlo,q_vhi,q_hlo,q_hhi;
@@ -160,8 +162,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
         a_mv<=mv;a_ci<=issue_at;a_cd<=drain_at;a_cb<=mv_wb_bank;a_ce<=mv_wb_epoch;
         p_mv<=a_mv;p_ci<=a_ci;p_cd<=a_cd;p_cb<=a_cb;p_ce<=a_ce;
         for(integer i=0;i<4;i=i+1)begin
-            p_vpart[i]<=15'(a_rows_m1)*15'(a_mv[45+8*i+:8]);
-            p_hpart[i]<=15'(a_rows_m1)*15'(a_mv[138+8*i+:8]);
+            p_vpart[i]<=15'(a_rows_r)*15'(a_mv[45+8*i+:8]);
+            p_hpart[i]<=15'(a_rows_r)*15'(a_mv[138+8*i+:8]);
         end
         p_rchunk<=(a_mv[226:209]==0)?8'd0:a_rchunk;
         p_nchunk<=15'(a_mv[193:186])*15'(a_rchunk);
@@ -175,10 +177,10 @@ module ot_hgi_dma_back_static_vp4_controller #(
             (a_mv[205:186]==1||a_mv[169:138]==(32'(a_mv[226:206])<<2))&&
             (a_mv[205:186]==1||a_mv[211:206]==0);
         q_mv<=p_mv;q_ci<=p_ci;q_cd<=p_cd;q_cb<=p_cb;q_ce<=p_ce;
-        q_vlo<=23'(p_vpart[0])+(23'(p_vpart[1])<<8);
-        q_vhi<=23'(p_vpart[2])+(23'(p_vpart[3])<<8);
-        q_hlo<=23'(p_hpart[0])+(23'(p_hpart[1])<<8);
-        q_hhi<=23'(p_hpart[2])+(23'(p_hpart[3])<<8);
+        q_vlo<=23'(p_vpart[0])+(23'(p_vpart[1])<<8)-23'(p_mv[60:45]);
+        q_vhi<=23'(p_vpart[2])+(23'(p_vpart[3])<<8)-23'(p_mv[76:61]);
+        q_hlo<=23'(p_hpart[0])+(23'(p_hpart[1])<<8)-23'(p_mv[153:138]);
+        q_hhi<=23'(p_hpart[2])+(23'(p_hpart[3])<<8)-23'(p_mv[169:154]);
         q_rchunk<=p_rchunk;q_nchunk<=p_nchunk;q_total<=p_total;q_static_ok<=p_static_ok;
         b_mv<=q_mv;b_ci<=q_ci;b_cd<=q_cd;b_cb<=q_cb;b_ce<=q_ce;
         b_vprod<=41'(q_vlo)+(41'(q_vhi)<<16);
