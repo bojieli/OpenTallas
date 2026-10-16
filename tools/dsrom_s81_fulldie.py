@@ -7675,11 +7675,21 @@ def _vmc_reroute(m, path, ends, name=''):
         return path
     def dir_(p_, q_):
         return ('E' if q_[0] > p_[0] else 'W') if abs(q_[0] - p_[0]) > abs(q_[1] - p_[1]) else ('N' if q_[1] > p_[1] else 'S')
-    new_ = HR_.route(path[0], dir_(path[0], path[1]), path[-1], dir_(path[-1], path[-2]), boxes, (0.0, 0.0, DIE[0], DIE[1]),
-                     skip=ends)
-    assert new_ is not None, ('vmc: no reroute', name, path)
+    # Preserve each unaffected canonical road segment.  Replacing the entire
+    # chain by a new endpoint-to-endpoint route discards the FIELD street graph
+    # and can send wide service bundles straight across occupied ROM rows.
+    out_ = [path[0]]
+    for p_, q_ in zip(path, path[1:]):
+        if HR_.seg_hits(p_, q_, boxes, skip=ends):
+            leg_ = HR_.route(p_, dir_(p_, q_), q_, dir_(q_, p_), _vmc_boxes(m),
+                             (0.0, 0.0, DIE[0], DIE[1]), skip=ends)
+            assert leg_ is not None, ('vmc: no reroute', name, p_, q_)
+            out_.extend(leg_[1:])
+        else:
+            out_.append(q_)
     m.setdefault('vmc_rerouted', []).append(name)
-    return new_
+    return _dedup(out_)
+
 
 
 def _vmc_path(m, A, pa, Bk, pb):
