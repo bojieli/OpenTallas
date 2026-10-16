@@ -10,6 +10,7 @@ later-hop repair, final pin/footprint placement and global routing stay explicit
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import shlex
 import sys
@@ -74,6 +75,7 @@ class Collected(Exception):
 
 
 def run(root,recipe,out):
+    os.chdir(root) # match the ordinary die chain's source-root working directory
     sys.path.insert(0,str(root/'tools'))
     import dsrom_s81_fulldie as G
     options=G.die_options(argparse.ArgumentParser()).parse_args(shlex.split(recipe.read_text()))
@@ -96,7 +98,7 @@ def run(root,recipe,out):
                 loc=frame.f_locals
                 if 'path' in loc:
                     record.update(name=loc.get('name',loc.get('hbn')),path=[list(p) for p in loc['path']],bits=loc.get('bits'),
-                                  source=loc['A'].name,target=loc['Bk'].name)
+                                  source=loc['A'].name,target=loc['Bk'].name,source_key=loc['a_'],target_key=loc['b_'])
         sys.setprofile(profile)
         try:
             original_hub(*a,**kw)
@@ -128,12 +130,12 @@ def run(root,recipe,out):
             req=requests.get(call['name'])
             row=dict(call)
             row.update(audit(call['path'],req['allowed'] if req else None,boxes))
-            row['placement_failed']=any(f['source']==call['source'].removeprefix('sp_') and f['target']==call['target'].removeprefix('sp_') for f in failures)
+            row['placement_failed']=any(f['source']==call['source_key'] and f['target']==call['target_key'] for f in failures)
             rows.append(row)
     bad=[r for r in rows if r['macro_crossings'] or r['station_region_gaps'] or r['placement_failed']]
     result=dict(schema='opentallas.s81.hub-path-preflight.v1',scope='DIAGNOSTIC_FIRST_PASS_ONLY_NO_USABLE_DIE_MODEL',
         source_commit=(root/'SOURCE_SHA').read_text().strip() if (root/'SOURCE_SHA').exists() else None,
-        generator_sha256=sha(root/'tools/dsrom_s81_fulldie.py'),driver_sha256=sha(__file__),recipe_sha256=sha(recipe),
+        generator_sha256=sha(root/'tools/dsrom_s81_fulldie.py'),driver_sha256=sha(__file__),recipe_sha256=sha(recipe),working_directory=str(Path.cwd()),
         complete_hub_request_enumeration=model is not None,fatal=fatal,verdict='FAIL' if fatal or failures or bad else 'PREFLIGHT_PASS_NOT_PHYSICAL',
         requests=len(rows),problem_requests=len(bad),station_placement_failures=failures,paths=rows,
         remaining=['Hop repair and final pin/footprint placement not evaluated','Partial failed stations retained only as conservative diagnostic occupancy; no RTL/LEF emitted','Clock/PG/cut/native/STA qualification not established'])
