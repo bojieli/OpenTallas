@@ -24,7 +24,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n}} outputs {{client_seq} {response_enable} {response_seq} {bank_enable} {bank_client} {hub_ring_enable} {hub_ring_client} {rslot_v} {wslot_v} {rslot} {wslot} {ring_tx_enable} {ring_tx_source} {replay_enable} {replay_source} {lg_local_read} {lg_local_write} {calendar_v} {active} {done} {fault} {ordinal}}} {cap} {clock ot_io_cap io_budget_ps 166.667 inputs {{cfg_we} {cfg_addr} {cfg_data} {start_v} {start_base} {start_limit} {start_loops}} outputs {}} {mem} {clock ot_io_mem io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n}} outputs {{client_seq} {response_enable} {response_seq} {bank_enable} {bank_client} {hub_ring_enable} {hub_ring_client} {rslot_v} {wslot_v} {rslot} {wslot} {ring_tx_enable} {ring_tx_source} {replay_enable} {replay_source} {lg_local_read} {lg_local_write} {calendar_v} {active} {done} {fault} {ordinal}}} {cap} {clock ot_io_cap io_budget_ps 166.667 inputs {{tgt} {cfg_v} {cfg_target} {cfg_addr} {cfg_data} {desc_v} {desc_base} {desc_limit} {desc_loops} {launch_v}} outputs {{tgt_configured} {tgt_fault}}} {mem} {clock ot_io_mem io_budget_ps 166.667 inputs {} outputs {}}]
 set ::ot_ce_source_domains [dict create {clk} {core} {clk_cap} {cap} {clk_mem} {mem}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{clk} {clk_cap}}

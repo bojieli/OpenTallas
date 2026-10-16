@@ -240,15 +240,21 @@
     "clk_cap"
    ],
    "inputs": [
-    "cfg_we",
+    "tgt",
+    "cfg_v",
+    "cfg_target",
     "cfg_addr",
     "cfg_data",
-    "start_v",
-    "start_base",
-    "start_limit",
-    "start_loops"
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
    ],
-   "outputs": []
+   "outputs": [
+    "tgt_configured",
+    "tgt_fault"
+   ]
   },
   "mem": {
    "ratio": [
@@ -275,10 +281,10 @@
   "clk",
   "clk_cap"
  ],
- "slot_change_request": "H-HARDEN 0030 el1015-hbm-v15-harden.log 2026-10-16: calendar_* (x4) typed clock pins: clk (CTS root of body/E/S outputs/reset sync) at S-centre [108.336,108.432] beside the S outputs (VIS-HBM T4: no W entry wrapping under the macro to E); clk_cap (W input-capture root) W [43.632,43.728]; clk_mem (raw SRAM entry, 22.9 um from the macro clk pin) W [24.48,24.576]; W data run recentred 0.048 um down; outline/E unchanged. SRAM stays at y 23.76: the 20 um N/S macro-edge channels leave no room to move it north in the 116.64 slot.",
+ "slot_change_request": "H-NETLIST 0600: the 12 die calendars (calendar_<q>, epcal_<q>, vmfc_<q>) bind this folded master; W face takes the F20 bus + tgt strap instead of the collar programme pins; outline grows 220.32x116.64 -> 259.2x151.2 (target bitmap + data regs); H-DIE homes.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "structural: closed hv15_vm_cal_u-compact2330-24eeb93bb FAILS the native pin audit (launch 222.0 ps/4 pins, capture 206.2 ps/16 cfg_data pins, boundary spread 92.8 ps; results/rtl/hbm_harden_2330/calendar_native.json). Measured routed arrivals: W capture rung mean 288.9 ps vs E outputs 220.2 ps on one root. RTL changes the clock structure (clk_cap capture root, clk_mem raw SRAM entry); logic and normal edges unchanged.",
-  "source": "results/rtl/hbm_harden_2330/calendar_native.json"
+  "why": "H-DIE option A collar fold: the F20 programme target (standalone ~630-pin ot_static_program_target, pin-bound below 30% util) is folded into the closed universal calendar hv15_vm_cal_x-xcap0030-cce3264d2 as pin-registered soft logic on clk_cap; equivalence vs the two-tile composition every edge (rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh)",
+  "source": "results/rtl/hbm_fill_universal_0600/f20_run0.log"
  }
 }
