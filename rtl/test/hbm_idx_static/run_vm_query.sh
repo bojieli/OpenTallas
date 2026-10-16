@@ -11,12 +11,15 @@ src=(rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv rtl/hbm_accel/index/ot_hb
  rtl/hbm_accel/index/ot_hbm_idx_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv rtl/hdc/ot_hdc_delay_rf.sv physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
  rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv
  rtl/proto/ot_fp32_add_rne_pipe.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/test/hbm_idx_static/tb_vm_query_static.sv)
-for m in 0 1 2 3; do
+# Optional 2nd arg MUT: run only that variant and exit with its own status (closure-job pass / fail benches).
+single=${2:-}
+for m in ${single:-0 1 2 3}; do
  iverilog -g2012 -s tb_vm_query_static -Ptb_vm_query_static.MUT="$m" -o "$out/vq$m.vvp" "${src[@]}" > "$out/vqbuild$m.log" 2>&1
  set +e
  (cd "$out"&&vvp "vq$m.vvp") > "$out/vqrun$m.log" 2>&1
  rc=$?
  set -e
  cat "$out/vqrun$m.log"
+ if [ -n "$single" ]; then exit "$rc"; fi
  if [ "$m" = 0 ];then test "$rc" = 0;else test "$rc" != 0;fi
 done
