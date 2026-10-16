@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-cd "$(dirname "$0")/../../../../../../.."
+cd "$(dirname "$0")/../../../../../.."
 OUT=${OUT:?set OUT to a scratch directory}; mkdir -p "$OUT"
 S=rtl/hbm_accel/generic/adapters/static_su
 SRC=("$S/collport/tb_hbm_su_sfustore.sv" "$S/collport/ot_hbm_su_static_sfustore.sv" "$S/data_store/ot_hbm_su_static_pinned_bank.sv" "$S/data_store/ot_hbm_su_static_data_store.sv" physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
