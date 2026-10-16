@@ -9,6 +9,9 @@ tools/die_port_bind.py's parser and emits, for S-BIND / S-DIE:
     hardened master whose clock pin it feeds and that master's routed TT boundary insertion R (insertion.json), so the
     parent delivers phi - wire - R at each root (bank128: R = 222.0 ps).  A category without a closed view is OPEN.
 It infers nothing about physical qualification; per-bit instance identity stays with the S-BIND clock contract.
+--a2f: the same census for the A2-F / hop-1 parent dsfd_sp_vm_a2f (dsfd_sp_vm_a2f.sv, HOP1 1): the RETIRED_BY_A2F write
+roots are gone, the A2-F front roots and the 16-entry b8-only relay ports are bound to their leaf masters
+(results/arch/s81_vm_die_abi_a2f_0200/contract.json).
 """
 import json
 import sys
@@ -84,6 +87,25 @@ DISPOSITION = {
 }
 
 
+# A2-F / hop-1 parent (S-VM-RTL 2026-10-16): category -> master / pin / kit, overriding VIEWS; None = no view (OPEN)
+SRC_A2F = 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_a2f.sv'
+VIEWS_A2F = {
+    'ck_mem_relay_req_t': ('dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)', 'ck_req', 'dsfd_vm_static_relay128_b8_native_cb'),
+    'ck_mem_relay_rsp_t': ('dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)', 'ck_rsp', 'dsfd_vm_static_relay128_b8_native_cb'),
+    'ck_mem_wscatter_t': ('dsfd_vm_static_scatter_b8_out PIPE 1 (B0|B8|B16|B24)', 'ck', 'dsfd_vm_direct_scatter_b0_native_cb4|dsfd_vm_direct_scatter_b8_native_cb5|dsfd_vm_direct_scatter_b16_native_cb4|dsfd_vm_direct_scatter_b24_native_cb4b'),
+    'ck_write_data_t': ('s81_a2f_field4 (data: bit 32*slice + 4*field + nibble)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
+    'ck_write_meta_t': ('s81_a2f_field4 (metadata: bit 7*slice + nibble; same master as data)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
+    'ck_write_control_t': ('s81_a2f_control4_resetlocal (bit = slice)', 'ck_control', 's81_a2f_control4_resetlocal_pilot_2118_r3'),
+}
+DISPOSITION_A2F = {
+    'ck_rsched_t': ('VIEW_OWED', 'dsfd_vm_a2f_rsched_p (REL 8, hop-1 release) is a new netlist: the closed '
+                    'dsfd_vm_static_rsched_p_native_1015_l16 view is REL 10 and does not bind; build a kit from the same recipe'),
+    'ck_write_header_t': ('VIEW_OWED', 's81_a2_w0_header (53 x {v, row 14, tag 8} pin register + epoch): no hard view'),
+    'ck_write_payload_t': ('VIEW_OWED', 's81_a2_w0_payload x4 (53 x {mask 4, data 128} per slice + epoch): no hard view'),
+    'ck_write_fault_t': ('VIEW_OWED', 's81_a2f_fault_join4 x4 (40 pin flops + 4 sticky): no hard view'),
+}
+
+
 def insertion_r(kit, pin):
     out = []
     for k in kit.split('|'):
@@ -96,20 +118,28 @@ def insertion_r(kit, pin):
 
 
 def main():
-    src = (ROOT / SRC).read_text()
-    mod = next(m for m in bind.parse_modules(bind.preprocess(src, {'DSFD_SP_VM_MIX4': ''}), SRC) if m.name == 'dsfd_sp_vm')
+    a2f = '--a2f' in sys.argv
+    src_path = SRC_A2F if a2f else SRC
+    views = dict(VIEWS, **VIEWS_A2F) if a2f else VIEWS
+    disposition = dict(DISPOSITION, **DISPOSITION_A2F) if a2f else DISPOSITION
+    if a2f:
+        for k in ('ck_rsched_t',):
+            views.pop(k)
+    src = (ROOT / src_path).read_text()
+    mod = next(m for m in bind.parse_modules(bind.preprocess(src, {'DSFD_SP_VM_MIX4': ''}), src_path)
+               if m.name == ('dsfd_sp_vm_a2f' if a2f else 'dsfd_sp_vm'))
     ports = {n: {'dir': d[0], 'bits': mod.width(n, mod.env())} for n, d in mod.ports.items()}
     clocks, resets, func = {}, {}, {}
     for n, p in sorted(ports.items()):
         if n.startswith('ck_') or n == 'cks':
             dom = 'serial' if n.endswith('_s') else 'stream'
-            v = VIEWS.get(n)
+            v = views.get(n)
             clocks[n] = dict(p, domain=dom, master=v[0] if v else None, child_pin=v[1] if v else None,
                              routed_R=(insertion_r(v[2], v[1]) if v else None),
                              delivery='phi - wire - R per root (R from the bound routed view)' if v else
                              'OPEN: no closed native view; parent leaf/CTS root pending',
-                             disposition=DISPOSITION.get(n, ('BOUND', ''))[0] if v else DISPOSITION.get(n, ('OPEN', ''))[0],
-                             disposition_why=DISPOSITION.get(n, ('', ''))[1])
+                             disposition=disposition.get(n, ('BOUND', ''))[0] if v else disposition.get(n, ('OPEN', ''))[0],
+                             disposition_why=disposition.get(n, ('', ''))[1])
         elif n.startswith(('rss', 'rst_')):
             resets[n] = dict(p, domain='serial' if n.startswith('rst_') else 'stream')
         else:
@@ -127,7 +157,7 @@ def main():
     for v in legacy.values():
         stat[v['status']] = stat.get(v['status'], 0) + 1
     rec = {
-        'schema': 'opentallas.s81.vm-die-abi.v1', 'source': SRC, 'defines': ['DSFD_SP_VM_MIX4'],
+        'schema': 'opentallas.s81.vm-die-abi.v1', 'source': src_path, 'defines': ['DSFD_SP_VM_MIX4'],
         'legacy_18_15_list': {'count': len(LEGACY_40), 'status': stat, 'ports': legacy},
         'functional_ports': func, 'clock_entries': clocks, 'reset_entries': resets,
         'counts': {'ports': len(ports), 'functional': len(func), 'clock_ports': len(clocks),
@@ -141,7 +171,7 @@ def main():
             'MIX4 slot: f_mx_* / t_mx_* nets to dsfd_engram_mix4_c (DSFD_SP_VM_MIX4 in layer1.f)'],
         'not_claimed': 'no die netlist bound, no physical / native qualification; generator side owned by S-BIND/S-DIE',
     }
-    out = ROOT / 'results/arch/s81_vm_die_abi_1015/contract.json'
+    out = ROOT / ('results/arch/s81_vm_die_abi_a2f_0200/contract.json' if a2f else 'results/arch/s81_vm_die_abi_1015/contract.json')
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps({'legacy40': stat, 'counts': rec['counts'],
