@@ -17325,3 +17325,12 @@ def hbm_host_static_ingress_model():
       area_slot_um=[432,432], slot_area_um2=186624,
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+# Qwen VM opt-in parent physical relay binding, 2026-10-16. Existing register
+# stages are packed into the closed 256-bit relay master without extra edges.
+QWEN_VM_PARTITIONED_RELAY_1016 = dict(
+    source_state_bits=72666, relay_tiles=289, bits_per_tile=256,
+    padding_bits=1318, added_cycles=0, sustained_rate_change=0,
+    relay_area_um2=388327, parent_outline_um=(4872, 3239.36),
+    independent_relay_clock_entries=289, physical_qualified=False,
+    open="Actual placement, assigned pins, incident cuts, phi-R timing and write/control hardening")
