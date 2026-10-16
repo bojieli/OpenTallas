@@ -35,6 +35,7 @@ SU_W, SU_H = 1250.0, 1780.0
 CORE_W = 250.0
 HC = 500.0
 SFU_A = 400000.0
+SFU_DIM = dict(core_h=1936.44, store_w=763.56, store_h=524.88, store_yoff=None)
 HUB = 1100.0
 COLL_W, COLL_H = 963.36, 721.44
 DBK_W, DBK_H = 432.0, 360.72
@@ -115,11 +116,16 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
 
     def sfu_stack(q, x):
         if carry:
-            setn(f'sfucore_{q}', 763.56, 1936.44, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
+            # H-DIE 0600 10-16: SFU_DIM overrides (H-SU sfucore_sizing_0600: measured core does not fit 763.56 x 1936.44)
+            ch, sw_, sh_, syo = SFU_DIM['core_h'], SFU_DIM['store_w'], SFU_DIM['store_h'], SFU_DIM['store_yoff']
+            syo = (21.77 + ch + 21.6) if syo is None else syo
+            setn(f'sfucore_{q}', 763.56, ch, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
             put(f'sfucore_{q}', x, y_band + 21.77, q)
-            setn(f'sfus_{q}', 763.56, 524.88, 'SU SFU store ot_hbm_su_static_sfustore (~0.40 mm2, abuts sfucore, 0 relays)')
-            put(f'sfus_{q}', x + (763.56 + 21.6 if sfu_store_side else 0), y_band + 21.77 + 1936.44 + 21.6, q)
-            assert y_band + 21.77 + 1936.44 + 21.6 + 524.88 <= y_band + BAND - 21.6 + 1e-6, (q, 'band too short for sfus')
+            setn(f'sfus_{q}', sw_, sh_, 'SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays)')
+            put(f'sfus_{q}', x + (763.56 + 21.6 if sfu_store_side else 0), y_band + syo, q)
+            assert syo + sh_ <= BAND - 21.6 + 1e-6, (q, 'band too short for sfus')
+            assert sfu_store_side or 21.77 + ch + 21.6 <= syo + 1e-6, (q, 'sfus overlaps sfucore')
+            assert 21.77 + ch <= BAND - 21.6 + 1e-6, (q, 'band too short for sfucore')
             x += 763.56 + 21.6
         return x
 
@@ -317,6 +323,9 @@ def main():
     ap.add_argument('--sfu-store-side',action='store_true',help='unqualified SFU store in side-upper bay, opens north core access')
     ap.add_argument('--core-column-w',type=float,help='compact core horizontal column pitch; upper core may overhang low join with exact overlap checks')
     ap.add_argument('--core-at', type=int, default=4, help="col layout: band groups west of the quarter core (4 = inner end)")
+    ap.add_argument('--sfucore-h', type=float, default=1936.44, help='sfucore_<q> height (width 763.56)')
+    ap.add_argument('--sfus-wh', nargs=2, type=float, default=[763.56, 524.88], help='sfus_<q> SU SFU store w h')
+    ap.add_argument('--sfus-yoff', type=float, help='sfus_<q> y offset from the band bottom (default: on top of sfucore)')
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
@@ -325,6 +334,7 @@ def main():
         EDGE = a.edge
     if a.column is not None:
         COLUMN_W = a.column
+    SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
     kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
