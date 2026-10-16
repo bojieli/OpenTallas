@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.qwen.dvm.head_pin_change.v1",
+ "master": "qfd_xhead_e",
+ "kit": "physical/ref_tile/qfd_xhead_e_w130",
+ "owner": "Q-LINK-D2D 2026-10-16",
+ "approved_by": [
+  "Q-ELEM",
+  "Q-COMPUTE-DIE"
+ ],
+ "change": "ck: W face M4 y 210.492 -> E face M4 y 210.492",
+ "shifted_pins": "299 E-face M4 pins with y >= 210.492 move up one 96-nm slot (cascade to the next existing gap; last pin unchanged at 279.276)",
+ "unchanged": [
+  "qfd_xhead_w_w130 (ck stays W face, job qfd_xhead_w_w130-w3-64ae90680)",
+  "rst_n (W face 212.508)",
+  "N/S faces",
+  "M6 E/W grant contacts"
+ ],
+ "die_action": "Q-DIEPLAN2r: route the E-side head clocks (qfd_xhead_e, columns E of the tap) to the E face at y 210.492; die_clock_check must see the E-face entry",
+ "reason": "w3 E native: capture 193.8 (12 w_d) / launch 226.8 (4 cs_wm), spread 62.6 with ck beside the chain inputs"
+}
