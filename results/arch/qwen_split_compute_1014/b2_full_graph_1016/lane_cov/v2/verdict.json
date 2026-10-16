@@ -7,8 +7,41 @@
   "HL+1": "REJECTED (rq mismatch)",
   "SEL+1 (SEL4)": "NOT rejected"
  },
- "selector_age_sweep": {"pass": [0, 1, 2, 3, 4, 5, 6, 7], "fail": [8, 10, 12, 16, 20, 23],
+ "selector_age_sweep": {
+  "pass": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "fail": [
+   8,
+   10,
+   12,
+   16,
+   20,
+   23
+  ],
   "law": "selector select lines are quasi-static per op: results are identical for any DUT selector age 0..7 edges (REF 3); 8+ edges corrupt rq/am (select changes after the op's first words). The selector is therefore NOT an exact-phase path in this bench protocol (idle drain between ops): the phase protocol must treat it as a window constraint age <= 7, and a SEL negative control must use >= +5 (SEL8), not +1.",
-  "caveat": "window measured with the bench's full idle drain between ops; a compiler calendar that issues the next op before drain can shrink it -- re-measure on the actual allocator-age temporal gate"},
- "status": "BASELINE PASS + TC/AM/HL negatives rejected; actual allocator-age gate pending the b2 allocation (owner_a 739418 / owner-2 trial_o2)"
+  "caveat": "window measured with the bench's full idle drain between ops; a compiler calendar that issues the next op before drain can shrink it -- re-measure on the actual allocator-age temporal gate"
+ },
+ "status": "BASELINE PASS + TC/AM/HL negatives rejected; actual allocator-age gate pending the b2 allocation (owner_a 739418 / owner-2 trial_o2)",
+ "selector_window": {
+  "min": 0,
+  "max": 7,
+  "ref_age": 3,
+  "edge_pass_log": {
+   "path": "results/arch/qwen_split_compute_1014/b2_full_graph_1016/lane_cov/v2/sel7.log",
+   "sha256": "aa9e10417d7e47a2bd0503779b8d3a15ff87aba24ac23f7975ffecf9fea940bd"
+  },
+  "edge_fail_log": {
+   "path": "results/arch/qwen_split_compute_1014/b2_full_graph_1016/lane_cov/v2/sel8.log",
+   "sha256": "d16bd84d2d7c203c9b6cb84d77c0d1774bde79bc430e43b15f722cee3f87bfb5"
+  },
+  "calibration_rule": "choose a selector age with >=1 edge margin on both sides (centre 3..4 preferred); bench keeps SEL=max PASS and SEL=max+1 as a must-fail mutant"
+ }
 }
