@@ -88766,11 +88766,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 30484.8,
+    "x": 30495.6,
     "y": 15190.333,
     "orient": "R0"
    },
@@ -88778,7 +88778,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -91128,13 +91128,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -91142,13 +91142,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -91166,12 +91166,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -91234,11 +91234,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 27825.272,
+    "x": 27836.072,
     "y": 15190.333,
     "orient": "R0"
    },
@@ -91246,7 +91246,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -93596,13 +93596,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -93610,13 +93610,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -93634,12 +93634,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -93682,11 +93682,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 25165.744,
+    "x": 25176.544,
     "y": 15190.333,
     "orient": "R0"
    },
@@ -93694,7 +93694,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -96044,13 +96044,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -96058,13 +96058,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -96082,12 +96082,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -96130,11 +96130,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 22506.216,
+    "x": 22517.016,
     "y": 15190.333,
     "orient": "R0"
    },
@@ -96142,7 +96142,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -98492,13 +98492,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -98506,13 +98506,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -98530,12 +98530,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -98578,11 +98578,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 490.4,
+    "x": 501.2,
     "y": 14925.333,
     "orient": "R0"
    },
@@ -98590,7 +98590,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -100940,13 +100940,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -100954,13 +100954,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -100978,12 +100978,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -101046,11 +101046,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 3149.928,
+    "x": 3160.728,
     "y": 14925.333,
     "orient": "R0"
    },
@@ -101058,7 +101058,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -103408,13 +103408,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -103422,13 +103422,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -103446,12 +103446,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -103494,11 +103494,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 5809.456,
+    "x": 5820.256,
     "y": 14925.333,
     "orient": "R0"
    },
@@ -103506,7 +103506,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -105856,13 +105856,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -105870,13 +105870,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -105894,12 +105894,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -105942,11 +105942,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 8468.984,
+    "x": 8479.784,
     "y": 14925.333,
     "orient": "R0"
    },
@@ -105954,7 +105954,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -108304,13 +108304,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -108318,13 +108318,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -108342,12 +108342,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -108390,11 +108390,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 30484.8,
+    "x": 30495.6,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -108402,7 +108402,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -110752,13 +110752,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -110766,13 +110766,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -110790,12 +110790,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -110858,11 +110858,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 27861.992,
+    "x": 27872.792,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -110870,7 +110870,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -113220,13 +113220,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -113234,13 +113234,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -113258,12 +113258,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -113306,11 +113306,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 25239.184,
+    "x": 25249.984,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -113318,7 +113318,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -115668,13 +115668,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -115682,13 +115682,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -115706,12 +115706,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -115754,11 +115754,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 22616.376,
+    "x": 22627.176,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -115766,7 +115766,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -118116,13 +118116,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -118130,13 +118130,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -118154,12 +118154,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -118202,11 +118202,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 490.4,
+    "x": 501.2,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -118214,7 +118214,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -120564,13 +120564,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -120578,13 +120578,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -120602,12 +120602,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -120670,11 +120670,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 3113.208,
+    "x": 3124.008,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -120682,7 +120682,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -123032,13 +123032,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -123046,13 +123046,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -123070,12 +123070,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -123118,11 +123118,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 5736.016,
+    "x": 5746.816,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -123130,7 +123130,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -125480,13 +125480,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -125494,13 +125494,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -125518,12 +125518,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -125566,11 +125566,11 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 43.2,
+    "w": 21.6,
     "h": 129.6
    },
    "origin": {
-    "x": 8358.824,
+    "x": 8369.624,
     "y": 5957.76,
     "orient": "R0"
    },
@@ -125578,7 +125578,7 @@
     "pin": "clk",
     "face": "N",
     "layer": "M5",
-    "offset": 21.612
+    "offset": 10.812
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -127928,13 +127928,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.612
+      10.812
      ],
      "span_um": [
-      21.564,
-      21.66
+      10.764,
+      10.86
      ],
-     "offset": 21.612,
+     "offset": 10.812,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     },
     {
@@ -127942,13 +127942,13 @@
      "face": "N",
      "layer": "M5",
      "bit_centres_um": [
-      21.804
+      11.004
      ],
      "span_um": [
-      21.756,
-      21.852
+      10.956,
+      11.052
      ],
-     "offset": 21.804,
+     "offset": 11.004,
      "bit_centres_rule": "Explicit ascending RTL bit index; exact actual-track centres."
     }
    ],
@@ -127966,12 +127966,12 @@
    "params": {
     "PIN_RST": 1
    },
-   "source_prerequisite": "a62be42dc",
+   "source_prerequisite": "f8a9ca970",
    "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
    "assigned_pins_file": "physical/hbm_sfu_pair_2330/assignment.json",
-   "assigned_pins_sha256": "78b02ed4d9e767ab8f9d20f06514109410155530c5275a4a71c4766657b37084",
+   "assigned_pins_sha256": "dc97c7eeec0b7ed82a07b9ef14145b31462ad0601aaca5b02de1b549078c3493",
    "assigned_io_tcl": "physical/hbm_sfu_pair_2330/io.tcl",
-   "assigned_io_tcl_sha256": "10c9ab14d43e5b20f224f3ff68d78fe6fbc0cdde0a87221dfa166f05bfb97d30",
+   "assigned_io_tcl_sha256": "fbf3482f673210c74865af7fc9db47e30472cbb475ac6d3bd675d9ec747e1e54",
    "qualified": false,
    "normal_edges_each_direction": 1,
    "reset_initialization_edges": 2,
@@ -170798,7 +170798,7 @@
   "scope": "Candidate slot and source binding only; no inherited view/native or full die qualification."
  },
  "sfu_pair_candidate_2330": {
-  "source": "a62be42dc",
+  "source": "f8a9ca970",
   "homes": [
    "sfu_NE0",
    "sfu_NE1",
