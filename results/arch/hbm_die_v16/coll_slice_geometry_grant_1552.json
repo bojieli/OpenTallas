@@ -22,7 +22,7 @@
     ],
     "replicas": 16,
     "clock_entries": 16,
-    "placement": "4x4 in existing216x216 upipe region, pitch45.36, local firstorigin22.68,22.68; span170.64x170.64",
+    "placement": "4x4 in existing216x216 upipe region, pitch56.16, local firstorigin6.48,6.48; span203.04x203.04;21.6um between leaf outlines",
     "literal_pin_plan": "Exact per-bit rectangles in pinned request. Every N clk centre17.292; no scalar expansion. Actual ODB BPin/grid/PG projection readback mandatory.",
     "clock_rule": "same logical edge, actual phi-R per literal entry; <=80ps coherent pair spread TT+FF"
   },
