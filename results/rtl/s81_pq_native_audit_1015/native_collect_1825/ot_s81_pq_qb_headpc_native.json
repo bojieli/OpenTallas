@@ -1,0 +1,178 @@
+{
+  "schema": "opentallas.source-pinned-component-native-boundary-audit.v1",
+  "job": "s81pq_qb_headpc_native-p9-pinload-1705-a71cd9050",
+  "source_commit": "a71cd9050cc56c965abe9c17a3a862ccf150e2d9",
+  "record_commit": "2f0cf436778d7a40f82f758e74df4de803d5347d",
+  "audit_base_commit": "c64286ea6c5c50fb79b4444f379e19aa3f142076",
+  "scope": "Component exported boundary only; not full layer, token, production adoption or die qualification.",
+  "route": {
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas/claude/closure-loop/s81pq_qb_headpc_native-p9-pinload-1705-a71cd9050",
+    "tt_setup_ps": 98.31,
+    "ff_hold_ps": 25.23,
+    "drc": 0,
+    "ss_sensitivity_ps": -215.94
+  },
+  "source": {
+    "path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv",
+    "job_git_blob": "b47ed304ff19c905ec18cb5b22526d5722e50b98",
+    "current_main_git_blob": "b47ed304ff19c905ec18cb5b22526d5722e50b98",
+    "matches_current_main": true
+  },
+  "view_sha256": {
+    "insertion.json": "8e7523a0df8d5f789afad373aa489dd3171cb84e63681aa993661e842cd6531b",
+    "ot_s81_pq_qb_headpc_native_tt.lib": "5932b55bff13e2bc11d24e9b0eb984697f39f06198d261c10aa87f50e7c0bc94",
+    "ot_s81_pq_qb_headpc_native_ff.lib": "d50ad95c08324697d302d401213ee2ceb492ee41f386fe9e52fbba8039651f8f"
+  },
+  "clock_references": {
+    "clk": {
+      "rise": 199.4,
+      "fall": 212.03776000000002,
+      "min": 168.14194,
+      "max": 213.37631,
+      "src": "insertion.json boundary mean",
+      "bmin": 186.6,
+      "bmax": 209.4,
+      "n": 1679
+    }
+  },
+  "raw_metrics": {
+    "launch": {
+      "pin": "rq1[2]",
+      "clock": "clk",
+      "ps": 333.27432
+    },
+    "capture": {
+      "pin": "h_b1[1]",
+      "clock": "clk",
+      "ps": 221.06929
+    },
+    "spread_ps": 22.80000000000001,
+    "ff_min_launch_minus_max_hold_ps": 142.27204
+  },
+  "violating_launch_arcs": [
+    {
+      "pin": "rq0[3]",
+      "clock": "clk",
+      "ps": 330.04696
+    },
+    {
+      "pin": "rq0[2]",
+      "clock": "clk",
+      "ps": 325.43484
+    },
+    {
+      "pin": "rq0[1]",
+      "clock": "clk",
+      "ps": 324.75009
+    },
+    {
+      "pin": "rq0[0]",
+      "clock": "clk",
+      "ps": 327.36489000000006
+    },
+    {
+      "pin": "rq1[3]",
+      "clock": "clk",
+      "ps": 323.97445000000005
+    },
+    {
+      "pin": "rq1[2]",
+      "clock": "clk",
+      "ps": 333.27432
+    },
+    {
+      "pin": "rq1[1]",
+      "clock": "clk",
+      "ps": 325.39767000000006
+    },
+    {
+      "pin": "rq1[0]",
+      "clock": "clk",
+      "ps": 321.2108400000001
+    }
+  ],
+  "violating_capture_arcs": [
+    {
+      "pin": "h_b0[8]",
+      "clock": "clk",
+      "ps": 196.8551
+    },
+    {
+      "pin": "h_b0[7]",
+      "clock": "clk",
+      "ps": 200.00023
+    },
+    {
+      "pin": "h_b0[6]",
+      "clock": "clk",
+      "ps": 191.13097
+    },
+    {
+      "pin": "h_b0[4]",
+      "clock": "clk",
+      "ps": 198.06109999999998
+    },
+    {
+      "pin": "h_b0[3]",
+      "clock": "clk",
+      "ps": 192.71176
+    },
+    {
+      "pin": "h_b0[0]",
+      "clock": "clk",
+      "ps": 199.60266
+    },
+    {
+      "pin": "h_b1[8]",
+      "clock": "clk",
+      "ps": 200.02008
+    },
+    {
+      "pin": "h_b1[6]",
+      "clock": "clk",
+      "ps": 198.05954
+    },
+    {
+      "pin": "h_b1[5]",
+      "clock": "clk",
+      "ps": 197.89894999999999
+    },
+    {
+      "pin": "h_b1[4]",
+      "clock": "clk",
+      "ps": 201.86625999999998
+    },
+    {
+      "pin": "h_b1[2]",
+      "clock": "clk",
+      "ps": 197.33013
+    },
+    {
+      "pin": "h_b1[1]",
+      "clock": "clk",
+      "ps": 221.06929
+    },
+    {
+      "pin": "h_b1[0]",
+      "clock": "clk",
+      "ps": 195.44668
+    }
+  ],
+  "combinational_pins": [],
+  "unconstrained_or_unused_inputs": [],
+  "unconstrained_note": "ETM omitted timing arcs: requires source/parameter/integration classification; no waiver inferred.",
+  "bench_state": {
+    "bench_lint": "done",
+    "bench_native_pinread_exact_and_mutants": "done",
+    "bench_mutant_capture_bypass": "done",
+    "bench_p9_equiv_vs_p8": "done",
+    "bench_mutant_r0c_early": "done"
+  },
+  "limits": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+  },
+  "boundary_status": "FAIL"
+}
