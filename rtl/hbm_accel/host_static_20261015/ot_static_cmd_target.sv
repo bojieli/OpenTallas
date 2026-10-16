@@ -33,9 +33,11 @@ module ot_static_cmd_target #(
     parameter integer NA    = 1,
     parameter integer NF    = 1,
     parameter integer LEAD  = 8,
-    parameter integer MUT   = 0      // 1: fire one cycle late; 2: ignore the target id
+    parameter integer MUT   = 0,     // 1: fire one cycle late; 2: ignore the target id
+    parameter integer TGT_PIN = 0    // 1: target id from the identity strap pin tgt (one master for all ids, H-NETLIST 0600)
 )(
     input  wire clk, rst_n,
+    input  wire [7:0] tgt,           // identity strap (die constant), used only when TGT_PIN = 1
     input  wire cfg_v,
     input  wire [7:0] cfg_target,
     input  wire [11:0] cfg_addr,
@@ -87,7 +89,9 @@ module ot_static_cmd_target #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cv <= 0; dv <= 0; lv <= 0; act_q <= 0; flt_q <= 0; end
         else begin cv <= cfg_v; dv <= desc_v; lv <= launch_v; act_q <= tgt_active; flt_q <= tgt_fault; end
-    wire hit = (MUT == 2) ? 1'b1 : (target_q == TARGET);
+    reg [7:0] tgt_q; always @(posedge clk) tgt_q <= tgt;   // static strap captured at the pin
+    wire [7:0] tid = (TGT_PIN != 0) ? tgt_q : TARGET;
+    wire hit = (MUT == 2) ? 1'b1 : (target_q == tid);
     wire [1:0] win = addr_q[11:10];
     wire [9:0] row = addr_q[9:0];
     // ---------------- sequencer state ----------------

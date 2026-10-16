@@ -5,7 +5,7 @@ module tb_hbm_svc_wb_kshare_drain;
  reg clk=0,rst=0;always #5 clk=~clk;
  reg[3:0]gv=0,done=0,wv=0;wire[3:0]gr,cv,wr,gdone,wdone;wire[67:0]ctag;
  reg cmd=0;integer accepted=0,returned=0,wbissued=0;
- ot_hbm_svc_vm_kshare u(.hbm_clk(clk),.hbm_rst_n(rst),.stream_clk(clk),.stream_rst_n(rst),
+ ot_hbm_svc_vm_kshare u(.sm(3'd0),.hbm_clk(clk),.hbm_rst_n(rst),.stream_clk(clk),.stream_rst_n(rst),
   .g_k_v(gv),.g_k_rdy(gr),.g_k_addr(120'd0),.g_k_len({4{4'd1}}),.g_k_tag(68'd0),
   .g_k_we(4'hf),.g_k_wdata(1024'd0),.g_k_wstrb({128{1'b1}}),.g_k_wr_done(gdone),
   .g_kr_v(),.g_kr_rdy(4'hf),.g_kr_tag(),.g_kr_beat(),.g_kr_data(),

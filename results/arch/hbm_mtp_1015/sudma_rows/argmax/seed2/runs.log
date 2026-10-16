@@ -1,0 +1,7 @@
+ARGMAX_ROWS MUT0 records32 dones28 faults4 sectors_checked167 errors0 schedule_edges5604
+ARGMAX_ROWS MUT1 records32 dones5 faults26 sectors_checked167 errors6591 schedule_edges5604
+FATAL: rtl/test/hbm_idx_static/tb_argmax_static_rows.sv:127: ARGMAX_ROWS FAIL: P-row static ARGMAX on actual SW slice mismatch
+ARGMAX_ROWS MUT2 records32 dones28 faults4 sectors_checked167 errors5840 schedule_edges5604
+FATAL: rtl/test/hbm_idx_static/tb_argmax_static_rows.sv:127: ARGMAX_ROWS FAIL: P-row static ARGMAX on actual SW slice mismatch
+ARGMAX_ROWS MUT3 records32 dones28 faults4 sectors_checked167 errors75 schedule_edges5604
+FATAL: rtl/test/hbm_idx_static/tb_argmax_static_rows.sv:127: ARGMAX_ROWS FAIL: P-row static ARGMAX on actual SW slice mismatch

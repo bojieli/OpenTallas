@@ -41,7 +41,7 @@ module tb_hbm_svc_wb_kshare_q;
  wire[31:0]fill_v,fill_bank;wire[191:0]fill_slot;wire[511:0]fill_epoch;wire[8191:0]fill_data;wire[7:0]ks_fault;
  genvar k;
  generate for(k=0;k<8;k=k+1)begin:gks
-  ot_hbm_svc_vm_kshare #(.SM(k),.MUT(KSMUT)) u(.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_clk(stream),.stream_rst_n(srst),
+  ot_hbm_svc_vm_kshare #(.MUT(KSMUT)) u(.sm(3'(k)),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_clk(stream),.stream_rst_n(srst),
    .g_k_v(g_k_v[4*k+:4]),.g_k_rdy(g_k_rdy[4*k+:4]),.g_k_addr(g_k_addr[120*k+:120]),.g_k_len(g_k_len[16*k+:16]),.g_k_tag(g_k_tag[68*k+:68]),
    .g_k_we(g_k_we[4*k+:4]),.g_k_wdata(g_k_wdata[1024*k+:1024]),.g_k_wstrb(g_k_wstrb[128*k+:128]),.g_k_wr_done(g_k_wr_done[4*k+:4]),
    .g_kr_v(g_kr_v[4*k+:4]),.g_kr_rdy(g_kr_rdy[4*k+:4]),.g_kr_tag(g_kr_tag[68*k+:68]),.g_kr_beat(g_kr_beat[16*k+:16]),.g_kr_data(g_kr_data[1024*k+:1024]),
