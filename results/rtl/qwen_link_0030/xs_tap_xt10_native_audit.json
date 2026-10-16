@@ -1,0 +1,37 @@
+{
+ "cell": "qfd_xs_tap",
+ "view": "qfd_xs_tap",
+ "lib_cell": "qfd_xs_tap",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 260.4,
+ "spread_ps": 63.4,
+ "outputs": 3135,
+ "inputs": 3145,
+ "launch_ps": 301.4,
+ "launch_pin": "hw_d[599]",
+ "capture_ps": 208.5,
+ "capture_pin": "sw[2035]",
+ "launch_over": 50,
+ "capture_over": 103,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 301.44039 > 220 (50 pins); capture 208.46303 > 190 (103 pins)",
+ "job": "qfd_xs_tap-xt10-b6db05fde",
+ "record": "849e822a1",
+ "audited": "2026-10-16 Q-DVM+LINK",
+ "diagnosis": {
+  "launch": "hw_d[599]: flop (89.9,206.3) -> INVx1 (91.9,207.1) -> ohdrv (92.0,213.6) all within 10 um, but the INVx1 output net is 20.4 fF (routed detour in the congested N pin band, 1567 hw_d pins on 150 um = 10.4 pins/um): INV 77.4 ps + wire 24 ps + ohdrv 44.2 ps at 211 ps slew; clock 292.2, arrival 560.8 ps (launch 301.4 vs R 260.4)",
+  "capture": "sw[2035] (W face, y 200.8, NW corner): inhold HB2 87.7 ps at 150 ps input slew + 3 hold-repair buffers 77 ps; clock 248.7 ps (early) -> capture 208.5",
+  "per_bus": {
+   "hw_d N out": "1567, 50 > 220, max 301.4",
+   "sw W in": "2137, 67 > 190, max 208.5",
+   "aw S in": "553, 28 > 190, max 203.2",
+   "gi E in": "380, 8 > 190, max 193.3",
+   "he_d E out": "1567, 0 bad, max 196.7"
+  }
+ }
+}
