@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.qwen.ectl_capture_diagnosis.v1",
+  "status": "IC1_REJECTED_NO_SUBMISSION; ROUTED_INPUT_OVERPADDING_CONFIRMED",
+  "closed_job": "qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48",
+  "closed_source": "fbaf25d48360ade54f8f6c0c0ddb61fcef62cb7b",
+  "native_TT": {
+    "launch_ps": 198.4,
+    "capture_ps": 220.98393,
+    "capture_over": 913,
+    "R_ps": 413.6,
+    "spread_ps": 52.5
+  },
+  "worst_input": "rs[405]",
+  "capture_register": "u.u.rsp_data_p[404]$_DFF_P_",
+  "data_chain": [
+    "ot_inhold_00369 HB2xp67",
+    "ot_ihdrv_00369 BUFx4f",
+    "hold15738 HB2xp67",
+    "hold13638 BUFx2",
+    "hold15739 HB2xp67",
+    "hold10387 BUFx2",
+    "rsp_data_p[404]/D"
+  ],
+  "TT_report_setup_ps": 280.36584,
+  "FF_report_hold_ps": 102.62952,
+  "new_structure": "replace macro-oriented equal-delay spine with sink-clustered CTS; require actual pin flops",
+  "added_data_edges": 0,
+  "added_control_edges": 0,
+  "added_valid_edges": 0,
+  "parameters": {
+    "STATIC_QK": 1,
+    "QK_ISSUE_AGE": 34,
+    "ROW_RETURN_LAT": 21,
+    "HXK": 13
+  },
+  "response_edges": {
+    "A_rs_to_rsp_data_p_and_rv1": 1,
+    "A_rs_to_rs_o_rse_and_rv2": 2,
+    "A_rs_to_local_ring_input_rd3_and_rv3": 3,
+    "A_rs_to_B_ring_input_via_rs_o_and_B_rd2_rv1": 3,
+    "A_rs_to_C_ring_valid_via_rs_o_and_C_rv1": 3
+  },
+  "control_edges": {
+    "C_si_to_x_a_and_x_b": 2,
+    "C_si_to_A_and_B_consumption": 3,
+    "C_si_to_C_consumption": 3
+  },
+  "scope": "Unchanged RTL and mapped SRAM. HXK13 inherits full native G3S2 production composition at 22ff95ba0:53/53 contexts,32QK streams. New CTS requires exact route TT/FF/DRC and all-pin native gate before qualification. No extra capture leaf, no change to compiler/calendar/throughput.",
+  "reports": {
+    "rs405_ff.rpt": "94750c761dcb95c74f02e80b7caf89ed8cfe3fcda2c32563656d86b2cd9216db",
+    "rs405_tt.rpt": "1e17d19f8177a891ad608c42db60a1207dc58e78705bd5732fc813d9faecfea8"
+  },
+  "old_spine_CTS_placement_diagnostic": {
+    "cell": "qkd_ectl_a_tp8_epoch_direct",
+    "view": "ectl-a-old-native",
+    "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 359.1,
+    "spread_ps": 26.3,
+    "outputs": 1554,
+    "inputs": 1046,
+    "launch_ps": 180.9,
+    "launch_pin": "rs_o[379]",
+    "capture_ps": 141.1,
+    "capture_pin": "rs[838]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "rejected_ic1_CTS_placement_diagnostic": {
+    "cell": "qkd_ectl_a_tp8_epoch_direct",
+    "view": "ectl-a-ic1-native",
+    "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 281.9,
+    "spread_ps": 102.7,
+    "outputs": 1554,
+    "inputs": 1046,
+    "launch_ps": 230.1,
+    "launch_pin": "t0_row[128]",
+    "capture_ps": 151.8,
+    "capture_pin": "rs[94]",
+    "launch_over": 68,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 230.12966 > 220 (68 pins)"
+  },
+  "conclusion": "Original spine already passes all native budgets at CTS placement RC. Routed final adds excess boundary cells and fails capture. New generic CTS does not solve the native clock spread and output launch; no functional pipeline or ABI change is justified by this evidence.",
+  "next": "Normalize only redundant physical hold cells in a source-bound route successor, preserve original pin hold stage, run unchanged TT setup/FF hold constraints, DRC0 and actual all-pin native ETM. No closure claim from placement RC or modified unrouted ODB.",
+  "artifact_hashes": {
+    "/tmp/ectl-a-old-native/qkd_ectl_a_tp8_epoch_direct_tt.lib": "805a7828d44f7b222148282885ac1074a70b926010734505ccad2d7382baf9f6",
+    "/tmp/ectl-a-ic1-native/qkd_ectl_a_tp8_epoch_direct_tt.lib": "0c972dbeff87b8425f164e31a096e04e40a85cf269f1ce05c4e746ad62f0cafd"
+  }
+}

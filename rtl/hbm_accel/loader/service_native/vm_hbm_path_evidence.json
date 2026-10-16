@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.hbm.vm-hbm-path-bench.v1",
+ "author": "H-NETLIST/vmsm 2026-10-15",
+ "source_commit": "5c95ab790",
+ "runner": "rtl/hbm_accel/loader/service_native/run_vm_hbm_path_bench.sh (Icarus iverilog -g2012)",
+ "verdict": "PASS",
+ "expected": {
+  "sf_m0": "PASS",
+  "sf_m1": "FAIL",
+  "aq_f0_r0_m0": "PASS",
+  "aq_f1_r1_m0": "PASS",
+  "aq_f0_r1_m0": "DIFF",
+  "aq_f0_r0_m1": "DIFF",
+  "ks_m0": "PASS",
+  "ks_m0_fasthbm": "PASS",
+  "ks_m0_slowhbm": "PASS",
+  "ks_m1": "FAIL",
+  "ks_m2": "FAIL",
+  "q_m0": "PASS",
+  "q_m1": "FAIL"
+ },
+ "results": {
+  "sf_m0": "PASS tb_hbm_svc_stack_fault MUT=0 errors=0",
+  "sf_m1": "FAIL tb_hbm_svc_stack_fault MUT=1 errors=7",
+  "aq_f0_r0_m0": "PASS tb_hbm_xp_aq_tree13_fmt FP4=0 REF_FP4=0 MUT=0 blocks=2228 mismatching_cycles=0",
+  "aq_f0_r1_m0": "DIFF tb_hbm_xp_aq_tree13_fmt FP4=0 REF_FP4=1 MUT=0 blocks=2228 mismatching_cycles=2228",
+  "aq_f1_r1_m0": "PASS tb_hbm_xp_aq_tree13_fmt FP4=1 REF_FP4=1 MUT=0 blocks=2228 mismatching_cycles=0",
+  "aq_f0_r0_m1": "DIFF tb_hbm_xp_aq_tree13_fmt FP4=0 REF_FP4=0 MUT=1 blocks=2228 mismatching_cycles=2228",
+  "ks_m0_fasthbm": "PASS tb_hbm_svc_vm_kshare SM=2 MUT=0 hbm_half=400 str_half=700 windows=8 group_reads=1600 fills=2048",
+  "ks_m0_slowhbm": "PASS tb_hbm_svc_vm_kshare SM=2 MUT=0 hbm_half=700 str_half=400 windows=8 group_reads=1600 fills=2048",
+  "q_m1": "FAIL tb_hbm_vm_hbm_path_q MUT=1 dq_words=0+0 group_reads=1920 errors=2",
+  "ks_m2": "FAIL tb_hbm_svc_vm_kshare MUT=2 errors=2560",
+  "ks_m0": "PASS tb_hbm_svc_vm_kshare SM=2 MUT=0 hbm_half=600 str_half=500 windows=8 group_reads=1600 fills=2048",
+  "q_m0": "PASS tb_hbm_vm_hbm_path_q MUT=0 dq_words=2048+2048 group_reads=1920 errors=0",
+  "ks_m1": "FAIL tb_hbm_svc_vm_kshare MUT=1 errors=184"
+ },
+ "notes": [
+  "positive benches PASS, every mutant / negative control FAILS or DIFFERS as required",
+  "q_m0: quadrant composition exactly as vmsm.json + engine_region (fill calendar, 8 kshare, 8 vmdel lanes, 32 K-port controller models with random accept / out-of-order beats, SM groups streaming 1,920 reads): 2 blocks x 2,048 dq words bit-exact (sector, data, mask), no fault",
+  "ks_*: 8 windows interleaved with 1,600 random group reads (tickets collide with VM tag values), 3 hbm:stream clock ratios",
+  "Verilator 4.038 lint-only -Wall: ot_hbm_svc_vm_kshare / ot_hbm_svc_stack_fault clean (warnings only inside the existing ot_hbm_svc_async_fifo)"
+ ]
+}

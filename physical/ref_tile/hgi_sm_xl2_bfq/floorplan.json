@@ -153,8 +153,16 @@
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
  "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/ref_tile/hgi_sm_xl2_bfq/kit.env",
