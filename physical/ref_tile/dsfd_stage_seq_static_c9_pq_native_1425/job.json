@@ -2,12 +2,12 @@
  "name": "dsfd_stage_seq_static_c9_pq_native_1425-n1-COMMIT",
  "block": "dsfd_stage_seq_static_c9",
  "ref_tile": true,
- "owner": "Codex:s81-pq-producer-1425",
+ "owner": "Claude:S-ELEM-PQ",
  "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "codex/s81-pq-producer-1425",
+  "branch": "claude/s81-pq-producer-kits-1705",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
