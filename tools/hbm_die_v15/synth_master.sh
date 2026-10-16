@@ -14,13 +14,15 @@ PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
 HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
-python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" "${LIBCELLS:-0}" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
 for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
     d['files'].insert(0, f)
 ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 L=[]
+if sys.argv[11] == '1':   # LIBCELLS=1: RTL instantiates ASAP7 cells directly (ICG of OT_SMH_CG): read them as cell boxes
+    L.append("read_liberty -lib /tmp/lib/seq.lib")
 for m in d['macros']: L.append(f"read_verilog -lib {m['file']}")
 for f in d['files']: L.append(f"read_verilog -sv -DSYNTHESIS{dfs} {f}")
 for b in ([] if bb=='-' else bb.split(',')):
