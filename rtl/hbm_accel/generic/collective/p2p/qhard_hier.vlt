@@ -1,0 +1,8 @@
+`verilator_config
+// q3 lockstep bench (tb_hgi_coll_q_hard_v5 -DQ3): the host_v4 reference and the hard_v5 parent each hold a KMAX-2048
+// TKM, a 16-lane FP32 reduce and the captured ring with identical parameters; compile each once as a hierarchical
+// block (one flattened elaboration of both parents oom-killed 128 GB on EPYC4, 10-16).
+hier_block -module "ot_hgi_coll_tkm_tile"
+hier_block -module "ot_hgi_coll_tkm_static"
+hier_block -module "ot_hgi_coll_reduce_static"
+hier_block -module "ot_hgi_coll_pring_captured_static"

@@ -10735,6 +10735,9 @@ def _faces_r8(m, Mx, it, ports):
             Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
         _lay(Mx, 'N', P_(['rd', 'rq', 'rk', 'wd', 'hw', 'hc']), 'M5')   # s81-gen: rq / rk / wd (--ctrl-rq), host hw / hc
         _lay(Mx, 'N', P_(['ckh', 'rst']), 'M5', start=60.0)
+        # Actual controller status {fault, live}; retain its diagnostic contacts too.
+        # Give it a separate free interval so the existing data and clock pins stay put.
+        _lay(Mx, 'N', P_(['st']), 'M5', start=66.48)
         # die-gaps 2026-10-08: the stream-side clock entry sits at the face end under the stream peer's (dsfd_svc) clock
         # entry (svc 'ck' is laid toward the clk_stream root at the same end), so the hbm_read interface ctrl -> svc is
         # one clock region; at the west end (60 um) the two entries were 8.4 mm apart in two regions and the plan's

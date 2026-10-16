@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_ctl_v5_q3",
+ "enable": false,
+ "reason": "The hard_v5 V5 lockstep bench (tb_hgi_coll_q_hard_v5, hard outputs at +2 vs production host_v4) fixes this protocol leaf's edges: every output is a flop Q (vm_req/inj/obase/rgx/sequence pins, INJLAT-12 / VM-10 meta pipes, vm_assembled(_v), held_epoch, protocol_fault, cycles); tap_iteration/tap_steps are captured at the pin by ot_hgi_coll_iter_mul (it/a/v/b/c/d/k flops) and the products are registered 16b partials, so inst fields meet only field+partial adders before their flops. A synthesis pin stage would add +1/+1 edges the V5 schedule and bench do not carry."
+}
