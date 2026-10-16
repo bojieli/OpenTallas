@@ -25,13 +25,26 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
   assign fault=0;assign landed_debug=0;
   always @(*)begin in_cr=0;out_v=0;out_d=0;end
  end else begin:g_on
+`ifdef OT_S81_HOST_PHASESAFE
+  wire rn_c,rn_h;
+  ot_reset_sync rs_c(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn_c));
+  ot_reset_sync rs_h(.clk(clk_h),.async_rst_n(rst_n),.sync_rst_n(rn_h));
+  reg ack_seam,req_seam,fc_seam;
+  reg [31:0] snapshot_seam;
+  always @* if (!clk_h) ack_seam=ack_host;
+  always @* if (!ck) begin req_seam=req;snapshot_seam=snapshot;fc_seam=fc;end
+`else
+  wire rn_c=rst_n,rn_h=rst_n;
+  wire ack_seam=ack_host,req_seam=req,fc_seam=fc;
+  wire [31:0]snapshot_seam=snapshot;
+`endif
   reg[31:0] commits,snapshot;reg commit_p,snapshot_p,req;
   reg ack_host,ac1,ac2;reg fc;
   wire[32:0] add={1'b0,commits}+ack_n;
-  always @(posedge ck or negedge rst_n)begin
-   if(!rst_n)begin commits<=0;snapshot<=0;commit_p<=0;snapshot_p<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
+  always @(posedge ck or negedge rn_c)begin
+   if(!rn_c)begin commits<=0;snapshot<=0;commit_p<=0;snapshot_p<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
    else begin
-    ac1<=ack_host;ac2<=ac1;
+    ac1<=ack_seam;ac2<=ac1;
     if((PROTECT&&(commit_p!=(^commits)||snapshot_p!=(^{snapshot,req})))||add[32])fc<=1;
     if(!fc)begin
      commits<=add[31:0];commit_p<=^add[31:0];
@@ -40,7 +53,7 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
    end
   end
   reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg landed_p,fh;reg snap_lt_q;
-  always @(posedge clk_h) snap_lt_q<=snapshot<landed;
+  always @(posedge clk_h) snap_lt_q<=snapshot_seam<landed;
   localparam integer QW=PROTECT?72:64;
   reg[QW-1:0] q[0:7];reg[2:0] wp,rp;reg[3:0] count;reg qp;
   reg[2:0] host_credits;reg hp;
@@ -58,8 +71,8 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
   reg hr_q;
   wire pop=(PIPE!=0)?(hr_q&&host_credits!=0&&!fh&&!fc2&&!bad_q&&!bad_h&&!bad_land&&!uncorrectable):
        (count!=0&&host_credits!=0&&!fh&&!fc2&&!bad_q&&!bad_h&&!bad_land&&!uncorrectable&&(!is_done||landed>=head[31:0]));
-  always @(posedge clk_h or negedge rst_n)
-   if(!rst_n)hr_q<=1'b0;
+  always @(posedge clk_h or negedge rn_h)
+   if(!rn_h)hr_q<=1'b0;
 `ifdef OT_FENCE_MUT_HRSTALE
    else hr_q<=hr_now;                                  // mutant: release flag not cleared on a pop (next head unchecked)
 `else
@@ -67,18 +80,18 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
 `endif
   assign fault=fc2|fh;assign landed_debug=landed;
   reg[2:0] nw,nr,nh;reg[3:0] nc;
-  always @(posedge clk_h or negedge rst_n)begin
-   if(!rst_n)begin rc1<=0;rc2<=0;ack_host<=0;fc1<=0;fc2<=0;landed<=0;landed_p<=0;fh<=0;
+  always @(posedge clk_h or negedge rn_h)begin
+   if(!rn_h)begin rc1<=0;rc2<=0;ack_host<=0;fc1<=0;fc2<=0;landed<=0;landed_p<=0;fh<=0;
     wp<=0;rp<=0;count<=0;qp<=0;host_credits<=4;hp<=1;in_cr<=0;out_v<=0;out_d<=0;
    end else begin
-    rc1<=req;rc2<=rc1;fc1<=fc;fc2<=fc1;in_cr<=0;out_v<=0;
+    rc1<=req_seam;rc2<=rc1;fc1<=fc_seam;fc2<=fc1;in_cr<=0;out_v<=0;
     if(rc2!=ack_host)begin
 `ifdef OT_FENCE_MUT_LTSTALE
      if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?1'b0:(snapshot<landed)))fh<=1;   // mutant: monotonic check dropped
 `else
      if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?snap_lt_q:(snapshot<landed)))fh<=1;
 `endif
-     else begin landed<=snapshot;landed_p<=^snapshot;end
+     else begin landed<=snapshot_seam;landed_p<=^snapshot_seam;end
      ack_host<=rc2;
     end
     if(bad_q||bad_h||bad_land||(count!=0&&uncorrectable))fh<=1;

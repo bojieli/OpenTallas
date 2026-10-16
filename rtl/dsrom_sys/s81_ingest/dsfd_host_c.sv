@@ -64,6 +64,16 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     always @(posedge ck or negedge rst) if (!rst) rq <= 2'b00; else rq <= {rq[0], 1'b1};
     always @(posedge ckv or negedge rsv) if (!rsv) rvq <= 2'b00; else rvq <= {rvq[0], 1'b1};
     wire rn = rq[1], rvn = rvq[1];
+`ifdef OT_S81_HOST_PHASESAFE
+    // Each raw assertion flushes both boot FIFO interfaces; each release is
+    // conditioned only by its own clock. Never drive cross-root reset pins
+    // from another root's conditioned reset.
+    wire pwrn,pwrrn;
+    ot_reset_sync pw_wrs(.clk(ck),.async_rst_n(rst&&rsv),.sync_rst_n(pwrn));
+    ot_reset_sync pw_rrs(.clk(ckv),.async_rst_n(rst&&rsv),.sync_rst_n(pwrrn));
+`else
+    wire pwrn=rn,pwrrn=rvn;
+`endif
     // ---------------- input pin flops
     reg [515:0] fi;
 `ifdef DSFD_HOST_C_STATIC
@@ -91,13 +101,39 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     wire ov, owe, ocr, hf, sf; wire [31:0] oa; wire [255:0] od; wire [7:0] ack;
     wire pw_wr, pw_v, pw_ovf, pw_unf, pw_take; wire [PWW-1:0] pw_d;
     reg [1:0] pace;
+`ifdef OT_S81_HOST_PHASESAFE
+    reg [65:0] ret_seam;
+    always @* if (!ingest_h_ck) ret_seam={hf,t_v,t_d};
+    wire hf_core=ret_seam[65],tv_core=ret_seam[64];
+    wire [63:0] td_core=ret_seam[63:0];
+    reg pop_seam;
+    always @* if (!rvn) pop_seam=0;else if (!ckv) pop_seam=pop_t;
+    reg [7:0] plen_seam;
+    always @* if (!ck) plen_seam=plen;
+`else
+    wire hf_core=hf,tv_core=t_v;
+    wire [63:0]td_core=t_d;
+    wire pop_seam=pop_t;
+    wire [7:0]plen_seam=plen;
+`endif
     `ifdef DSFD_HOST_PQ_BOOT
     wire ingest_h_ck=ck_ingest[0],ingest_i_ck=ck_ingest[1];
 `else
     wire ingest_h_ck=ck,ingest_i_ck=ck;
 `endif
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(2)) u_h (.rst_n(rn), .clk_h(ingest_h_ck), .h_v(to_ing), .h_cls(hcl),
-        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr), .clk_i(ingest_i_ck), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
+`ifdef OT_S81_HOST_PHASESAFE
+    reg [514:0] host_seam;
+    reg tcr_seam;
+    always @* if (!ck) begin host_seam={hcl,hd,to_ing};tcr_seam=tcr;end
+    wire ing_rst=rst;
+    localparam integer ING_APIPE=3;
+`else
+    wire [514:0] host_seam={hcl,hd,to_ing};
+    wire tcr_seam=tcr,ing_rst=rn;
+    localparam integer ING_APIPE=2;
+`endif
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(ING_APIPE)) u_h (.rst_n(ing_rst), .clk_h(ingest_h_ck), .h_v(host_seam[0]), .h_cls(host_seam[514:513]),
+        .h_d(host_seam[512:1]), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_seam), .clk_i(ingest_i_ck), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     dsfd_host_sd #(.NS(NS), .KVS(KVS), .ENG(ENG), .MUT(0)) u_sd (.ck(ck), .rst_n(rn), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .hw(hw), .hc(hc), .host_ack_n(ack), .fault(sf));
@@ -107,17 +143,21 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     reg [6:0] crn_x;                     // credits owed to the sender beyond the ingest's own h_crn
     wire [5:0] crn_sum = crn + ((crn_x != 0) ? 6'd1 : 6'd0);
     reg pop_t; (* async_reg = "true" *) reg [2:0] pop_s;
-    always @(posedge ck or negedge rn) if (!rn) pop_s <= 3'b000; else pop_s <= {pop_s[1:0], pop_t};
+    always @(posedge ck or negedge rn) if (!rn) pop_s <= 3'b000; else pop_s <= {pop_s[1:0], pop_seam};
     always @(posedge ck or negedge rn)
         if (!rn) crn_x <= 0;
         else crn_x <= crn_x + ((csr_l && (MUT != 2)) ? 7'd1 : 7'd0) + (((pop_s[2] ^ pop_s[1]) && (MUT != 2)) ? 7'd1 : 7'd0)
                       - ((crn_x != 0 && crn_sum <= 6'd31) ? 7'd1 : 7'd0);
-    ot_async_fifo #(.WIDTH(PWW), .DEPTH(PWD)) u_pw (.wr_clk(ck), .wr_rst_n(rn), .wr_valid((csr_p || csr_pq) && (MUT != 1)), .wr_ready(pw_wr),
+    ot_async_fifo #(.WIDTH(PWW), .DEPTH(PWD)
+`ifdef OT_S81_HOST_PHASESAFE
+        ,.EXT_RST(1)
+`endif
+    ) u_pw (.wr_clk(ck), .wr_rst_n(pwrn), .wr_valid((csr_p || csr_pq) && (MUT != 1)), .wr_ready(pw_wr),
         `ifdef DSFD_HOST_PQ_BOOT
         .wr_data({csr_pq, hd[102:96], hd[59:32]}),
 `else
         .wr_data({hd[102:96], hd[59:32]}),
-`endif .wr_overflow(pw_ovf), .rd_clk(ckv), .rd_rst_n(rvn), .rd_valid(pw_v),
+`endif .wr_overflow(pw_ovf), .rd_clk(ckv), .rd_rst_n(pwrrn), .rd_valid(pw_v),
         .rd_ready(pw_take), .rd_data(pw_d), .rd_underflow(pw_unf));
     assign pw_take = pw_v && pace == 2'd0;
     always @(posedge ckv or negedge rvn)
@@ -139,7 +179,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     reg [7:0] plen;
     always @(posedge ck or negedge rn) if (!rn) plen <= 8'd0; else if (csr_l) plen <= hd[39:32];
     reg [7:0] pl1;
-    always @(posedge ckv) begin pl1 <= plen; t_sseq_plen <= pl1; end
+    always @(posedge ckv) begin pl1 <= plen_seam; t_sseq_plen <= pl1; end
     // ---------------- status (ck): sequencer status (ckv, 2-flop), WFC faults, ingest / decode / crossing faults
     reg [5:0] ss1, ss2; reg [3:0] wf;
     always @(posedge ck) begin ss1 <= f_sseq_st; ss2 <= ss1; wf <= f_wfc_ft; end
@@ -155,13 +195,13 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
             for (li = 0; li < 2 * NS; li = li + 1) a = a | f_lf[2 * li + 1];
             lf_q <= a && (MUT != 4);
         end
-    always @(posedge ck or negedge rn) if (!rn) tcr_l <= 1'b0; else tcr_l <= t_v;
+    always @(posedge ck or negedge rn) if (!rn) tcr_l <= 1'b0; else tcr_l <= tv_core;
     reg [76:0] to;
-    always @(posedge ck) to <= rn ? {1'b1, hf | sf | xf | lf_q | ss2[5] | (|wf), wf, ss2, t_v && (MUT != 3), t_d} : 77'd0;
+    always @(posedge ck) to <= rn ? {1'b1, hf_core | sf | xf | lf_q | ss2[5] | (|wf), wf, ss2, tv_core && (MUT != 3), td_core} : 77'd0;
     assign t_collective = to;
 `else
     reg [80:0] to;
-    always @(posedge ck) to <= rn ? {hf | sf | xf | ss2[5] | (|wf), wf, ss2, crn_sum[4:0], t_v, t_d} : 81'd0;
+    always @(posedge ck) to <= rn ? {hf_core | sf | xf | ss2[5] | (|wf), wf, ss2, crn_sum[4:0], tv_core, td_core} : 81'd0;
     assign t_collective = to;
 `endif
 endmodule

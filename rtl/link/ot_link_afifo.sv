@@ -56,6 +56,15 @@ module ot_link_afifo #(
         end
     endfunction
 
+`ifdef OT_S81_HOST_PHASESAFE
+    // Low-source lockups defer every pointer transition until the source's
+    // falling edge. Related 1:1 and 3:4 positive edges cannot race this seam.
+    reg [AW:0] wgray_seam, rgray_seam;
+    always @* if (!wrst_n) wgray_seam='0; else if (!wclk) wgray_seam=wgray;
+    always @* if (!rrst_n) rgray_seam='0; else if (!rclk) rgray_seam=rgray;
+`else
+    wire [AW:0] wgray_seam=wgray, rgray_seam=rgray;
+`endif
     // ---- write domain ----------------------------------------------------------------------------------
     reg  [AW:0] wbin, wgray, rbin_seen;
     reg  [AW:0] rgray_s [0:SYNC-1];
@@ -71,7 +80,7 @@ module ot_link_afifo #(
             wbin <= 0; wgray <= 0; ovf <= 1'b0; rbin_seen <= 0; wfreed <= 0;
             for (i = 0; i < SYNC; i = i + 1) rgray_s[i] <= 0;
         end else begin
-            rgray_s[0] <= rgray;
+            rgray_s[0] <= rgray_seam;
             for (i = 1; i < SYNC; i = i + 1) rgray_s[i] <= rgray_s[i-1];
             wfreed <= rbin_w - rbin_seen;
             rbin_seen <= rbin_w;
@@ -89,6 +98,7 @@ module ot_link_afifo #(
     reg  [AW:0] wgray_s [0:SYNC-1];
     wire [AW:0] wgray_r = wgray_s[SYNC-1];
     assign rempty = (rgray == wgray_r);
+    wire [W-1:0] raw_rdata;
     localparam integer RS = (RCOPY > 0) ? (W + RCOPY - 1) / RCOPY : W;
     if (RCOPY > 0) begin : g_rcopy
         (* keep *) reg [RCOPY*AW-1:0] rbin_c;
@@ -105,19 +115,26 @@ module ot_link_afifo #(
             localparam integer LO = gs * RS, HI = ((gs + 1) * RS > W) ? W : (gs + 1) * RS;
             if (LO < W) begin : g_on
                 wire [W-1:0] row = mem[rbin_c[AW*gs +: AW]];
-                assign rdata[HI-1:LO] = row[HI-1:LO];
+                assign raw_rdata[HI-1:LO] = row[HI-1:LO];
             end
         end
     end else begin : g_r1
-        assign rdata  = mem[rbin[AW-1:0]];
+        assign raw_rdata  = mem[rbin[AW-1:0]];
     end
+`ifdef OT_S81_HOST_PHASESAFE
+    reg [W-1:0] head_seam;
+    always @* if (rclk) head_seam=raw_rdata;
+    assign rdata=head_seam;
+`else
+    assign rdata=raw_rdata;
+`endif
     assign rcount = g2b(wgray_r) - rbin;
     always @(posedge rclk or negedge rrst_n) begin
         if (!rrst_n) begin
             rbin <= 0; rgray <= 0;
             for (i = 0; i < SYNC; i = i + 1) wgray_s[i] <= 0;
         end else begin
-            wgray_s[0] <= wgray;
+            wgray_s[0] <= wgray_seam;
             for (i = 1; i < SYNC; i = i + 1) wgray_s[i] <= wgray_s[i-1];
             if (rd && !rempty) begin
                 rbin <= rbin_n; rgray <= rbin_n ^ (rbin_n >> 1);

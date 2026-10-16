@@ -65,6 +65,17 @@ module ot_async_fifo #(
     reg wr_online, rd_online;
     (* async_reg = "true" *) reg rd_online_w1, rd_online_w2;
     (* async_reg = "true" *) reg wr_online_r1, wr_online_r2;
+`ifdef OT_S81_HOST_PHASESAFE
+    reg [PTR_W-1:0] wr_gray_seam, rd_gray_seam;
+    reg wr_online_seam, rd_online_seam;
+    always @* if (!wr_domain_rst_n) begin wr_gray_seam='0;wr_online_seam=0;end
+              else if (!wr_clk) begin wr_gray_seam=wr_gray;wr_online_seam=wr_online;end
+    always @* if (!rd_domain_rst_n) begin rd_gray_seam='0;rd_online_seam=0;end
+              else if (!rd_clk) begin rd_gray_seam=rd_gray;rd_online_seam=rd_online;end
+`else
+    wire [PTR_W-1:0] wr_gray_seam=wr_gray,rd_gray_seam=rd_gray;
+    wire wr_online_seam=wr_online,rd_online_seam=rd_online;
+`endif
     reg wr_full, rd_empty;
     wire wr_fire = wr_valid && wr_ready;
     wire rd_fire = rd_valid && rd_ready;
@@ -136,7 +147,13 @@ module ot_async_fifo #(
         always @(posedge wr_clk) if(wr_domain_rst_n && wr_fire) mem[wr_bin[ADDR_W-1:0]] <= wr_data;
     end endgenerate
 `else
+`ifdef OT_S81_HOST_PHASESAFE
+    reg [WIDTH-1:0] head_seam;
+    always @* if (rd_clk) head_seam=mem[rd_bin[ADDR_W-1:0]];
+    assign rd_data=head_seam;
+`else
     assign rd_data = mem[rd_bin[ADDR_W-1:0]];
+`endif
 `endif
 
     always @(posedge wr_clk or negedge wr_domain_rst_n) begin
@@ -152,9 +169,9 @@ module ot_async_fifo #(
             wr_overflow <= 1'b0;
         end else begin
             wr_online <= 1'b1;
-            rd_online_w1 <= rd_online;
+            rd_online_w1 <= rd_online_seam;
             rd_online_w2 <= rd_online_w1;
-            rd_gray_w1 <= rd_gray;
+            rd_gray_w1 <= rd_gray_seam;
             rd_gray_w2 <= rd_gray_w1;
             // Valid may legally remain asserted while ready is low.
 `ifndef OT_VMFE_FCC_PIPE
@@ -180,12 +197,12 @@ module ot_async_fifo #(
             rd_underflow <= 1'b0;
         end else begin
             rd_online <= 1'b1;
-            wr_online_r1 <= wr_online;
+            wr_online_r1 <= wr_online_seam;
             wr_online_r2 <= wr_online_r1;
 `ifdef OT_VMFE_FCC_PIPE
             wr_gray_r1 <= wr_gray_visible;
 `else
-            wr_gray_r1 <= wr_gray;
+            wr_gray_r1 <= wr_gray_seam;
 `endif
             wr_gray_r2 <= wr_gray_r1;
             // Ready may legally remain asserted while valid is low.
