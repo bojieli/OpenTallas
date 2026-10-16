@@ -24,7 +24,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_SW",
    "owner": "H-SU",
@@ -44,7 +45,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW0",
    "owner": "H-SU",
@@ -64,7 +66,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW1",
    "owner": "H-SU",
@@ -84,7 +87,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW2",
    "owner": "H-SU",
@@ -104,7 +108,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SW3",
    "owner": "H-SU",
@@ -115,7 +120,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_SE",
    "owner": "H-SU",
@@ -135,7 +141,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE0",
    "owner": "H-SU",
@@ -155,7 +162,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE1",
    "owner": "H-SU",
@@ -175,7 +183,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE2",
    "owner": "H-SU",
@@ -195,7 +204,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_SE3",
    "owner": "H-SU",
@@ -206,7 +216,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_NW",
    "owner": "H-SU",
@@ -226,7 +237,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW0",
    "owner": "H-SU",
@@ -246,7 +258,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW1",
    "owner": "H-SU",
@@ -266,7 +279,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW2",
    "owner": "H-SU",
@@ -286,7 +300,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NW3",
    "owner": "H-SU",
@@ -297,7 +312,8 @@
    "master": "ot_hbm_su_static_qcore",
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "params": {
-    "MUT": 0
+    "MUT": 0,
+    "COLLPORT": 1
    },
    "slot": "sucore_NE",
    "owner": "H-SU",
@@ -317,7 +333,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE0",
    "owner": "H-SU",
@@ -337,7 +354,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE1",
    "owner": "H-SU",
@@ -357,7 +375,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE2",
    "owner": "H-SU",
@@ -377,7 +396,8 @@
     "ALAT": 3,
     "LEAF": 1,
     "MUT": 0,
-    "MULTIRATE": 1
+    "MULTIRATE": 1,
+    "COLLPORT": 1
    },
    "slot": "su_NE3",
    "owner": "H-SU",
@@ -41177,10 +41197,6 @@
     [
      "sfucore_SW",
      "vi_q"
-    ],
-    [
-     "sfucore_SW",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
@@ -41261,10 +41277,6 @@
     [
      "sfucore_SE",
      "vi_q"
-    ],
-    [
-     "sfucore_SE",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
@@ -41345,10 +41357,6 @@
     [
      "sfucore_NW",
      "vi_q"
-    ],
-    [
-     "sfucore_NW",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
@@ -41429,10 +41437,6 @@
     [
      "sfucore_NE",
      "vi_q"
-    ],
-    [
-     "sfucore_NE",
-     "side_y"
     ]
    ],
    "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."

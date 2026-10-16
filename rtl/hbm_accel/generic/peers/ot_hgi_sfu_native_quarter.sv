@@ -86,8 +86,6 @@ assign control=raw_control;
 wire [15:0] l_vm_we,l_kv_we,l_rov;
 wire [383:0] l_vm_waddr,l_kv_waddr;
 wire [511:0] l_vm_wdata,l_kv_wdata,l_rox;
-wire [15:0] unused_side_v;
-wire [511:0] unused_side_x;
 ot_hgi_sfu_ctl_extract #(.ENABLE_NATIVE(ENABLE_NATIVE),.SPLIT_S_PIPE(SPLIT_S_PIPE)) u_ctl (
 .clk(clk),
 .rst_n(rst_n),
@@ -180,9 +178,8 @@ ot_hgi_sfu_ctl_extract #(.ENABLE_NATIVE(ENABLE_NATIVE),.SPLIT_S_PIPE(SPLIT_S_PIP
 .l_vm_wdata(l_vm_wdata),.l_kv_wdata(l_kv_wdata),.l_rox(l_rox));
 ot_hgi_sfu_arithmetic_grid u_grid (
 .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
-.control(control),.vi_q(vi_q),.rd_q(rd_q),.side_y(512'd0),
+.control(control),.vi_q(vi_q),.rd_q(rd_q),
 .vi_re(vi_re),.vi_addr(vi_addr),.rd_addr(rd_addr),.rd_re(rd_re),.rd_src(rd_src),
 .vm_we(l_vm_we),.kv_we(l_kv_we),.ro_v(l_rov),.fault(lane_fault),.coll(lane_coll),
-.vm_waddr(l_vm_waddr),.kv_waddr(l_kv_waddr),.vm_wdata(l_vm_wdata),.kv_wdata(l_kv_wdata),.ro_x(l_rox),
-.side_v(unused_side_v),.side_x(unused_side_x));
+.vm_waddr(l_vm_waddr),.kv_waddr(l_kv_waddr),.vm_wdata(l_vm_wdata),.kv_wdata(l_kv_wdata),.ro_x(l_rox));
 endmodule
