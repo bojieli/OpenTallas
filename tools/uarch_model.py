@@ -16840,7 +16840,7 @@ def s81_hcx_systolic_partition_model():
     return dict(schema='opentallas.s81-hcx-systolic-candidate.v1',
         adoption=False, native_qualified=False, numerical_component_build_only=True,
         partition=dict(lane_leaves=32, lanes_per_leaf=8, half_banks=16,
-                       controllers=1, total_child_roots=49, projection_replicas_per_rank=6),
+                       controllers=1, proposed_child_boundaries=49, actual_source_clock_roots=1, projection_replicas_per_rank=6),
         compute=dict(MACs_per_cycle=256, MACs_per_task=20480,
                      arithmetic='unchanged FP32 chunk8 sequential adds and canonical tree',
                      MACs_per_weight_byte=0.25, MACs_per_x_byte=0.5),
@@ -16869,13 +16869,49 @@ def s81_hcx_systolic_partition_model():
                      measured_flat_command_cycles=264, measured_delta_serial_cycles=54,
                      measured_delta_fast_cycles=72,
                      evidence='results/rtl/s81_hcx_sys_1016/report.json'),
-        clock=dict(root_sink_counts=None, insertion_ps=None, spread_ps=None,
-                   status='existing lane master does not qualify new bank/controller roots'),
+        clock=dict(root_sink_counts={'clk':524046}, macro_clock_pins=80,
+                   lane_FF_bits=14956, half_bank_FF_bits=1455, controller_FF_bits=22174,
+                   insertion_ps=None, spread_ps=None,
+                   evidence='results/rtl/s81_hcx_sys_1016/census/report.json',
+                   status='ONE actual source clock; controller exceeds15k even after a tree-only split'),
         physical_submit_allowed=False,
         open_gates=['exact vs flat and independent golden; real mutant',
                     'current slot and actual child placement/pins/cuts <=0.60',
                     'root census/CTS, TT setup/FF hold/DRC0',
                     'fixed full-shape throughput and compiler cycle/visibility integration'])
+
+
+def s81_hcx_sys_clocked_model():
+    """Opt-in source repair; existing state migrates to explicit clock entries.
+
+    Analytical counts below are derived from the original actual Yosys census.
+    New source census and same-phase component proof must confirm them. No
+    physical pin/register/calendar qualification is implied by a clock port.
+    """
+    return dict(schema='opentallas.s81-hcx-sys-clocked-candidate.v1',
+        adoption=False, physical_submit_allowed=False,
+        source='rtl/dsrom_sys/s81_hcx/ot_s81_hcx_sys_clocked.sv',
+        proposed_clock_ports=dict(core=1, tree=1, scalar=1, banks=16, lanes=32, total=51),
+        predicted_FF_bits=dict(core=11318, tree=7442, scalar=3414,
+                               each_bank=1455, each_lane=14956, total=524046),
+        derivation=dict(original_controller=22174, old_tree=6417, scalar_pipes=3081,
+                        relocated_tree_capture=1025, relocated_scalar_state=333,
+                        added_pipeline_edges=0, added_FF_bits=0),
+        boundary_ports=dict(tree_inputs=1027, tree_outputs=35,
+                            scalar_inputs=102, scalar_outputs=68),
+        pin_ownership=dict(tree='Relocated existing leaf[1023:0] and leaf_v capture; addtree root/vo/fault already registered',
+                           scalar='Relocated existing operand/state/rv flops with the three unchanged arithmetic pipes',
+                           open='rs_take/rs_fault inherited combinational surfaces and occupancy scheduling need native static/pin repair; no physical submission'),
+        lane_root_margin_FF_bits=44,
+        wrapper_warning='Additional lane pin/clock wrapper flops can exceed15k; no new flops may be assumed free',
+        equal_phase_expected_serial_cycles=318, equal_phase_cycles_measured=False,
+        previous_measured_SYS_serial_cycles=318, flat_serial_cycles=264,
+        previous_measured_delta_fast_cycles=72,
+        clock_rule='Same logical edge proof only; actual phi-R/insertion/reach requires die binding',
+        geometry='six coarse1728x1296 reservations are not actual51root homes',
+        macros=dict(ROM4096x266=64, SRAM128x256=16),
+        storage_and_BW='unchanged s81_hcx_systolic_partition_model ports/storage',
+        static_occupancy_gap_retained=True)
 
 
 def s81_native_functional_homes_1014_model():

@@ -1,0 +1,15 @@
+{
+  "source_commit": "0daea3401d3100bfa35b88fa43a561b13b4efd3a",
+  "sha256": {
+    "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_sys_tiles.sv": "8feefad0c97bda999fecaf14e4abcd40740f0a2d92b4d621d4c207fb787d8e83",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "eac33983ff7fb15706851dbc14dc89cb6986bfa0abdfd98c850b3c7379dee474"
+  },
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1031046-1792146996",
+  "ot_run_exit": 0,
+  "admission_GB": 16,
+  "measured_yosys_peak_MB": 100.65,
+  "command": "yosys -Q -l census_yosys.log census.ys",
+  "netlist": "hierarchy.json.gz",
+  "arithmetic_component_evidence": "../report.json"
+}

@@ -1,0 +1,2556 @@
+{
+  "schema": "opentallas.s81-hcx-sys-role-home-candidate.v1",
+  "scope": "Compiler semantic/provider-home binding only; no complete native program, transformed placement or physical grant",
+  "topology_source_commit": "17b13fb0637869d53580a1084bdd250d18828d9b",
+  "coarse_source": "results/physical/die_iter_1012/s81/canonical_widehub_1015/rm5_p1973h_ns43.json",
+  "coarse_sha256": "7f21428401bd3f94f817517538aa315b2cc3d8c5d81f2ac219091faf78911326",
+  "stage_map": "results/arch/s81_rom_trade_1015/alloc/p1973s89h/stage_map.json",
+  "stage_map_sha256": "481091dbaf4820aa6537708bdeefda2b8a397a345d297c70087c586abeb2e18f",
+  "provider_homes": {
+    "0": 0,
+    "1": 2,
+    "2": 4,
+    "3": 6,
+    "4": 8,
+    "5": 11,
+    "6": 13,
+    "7": 15,
+    "8": 17,
+    "9": 19,
+    "10": 22,
+    "11": 24,
+    "12": 26,
+    "13": 28,
+    "14": 31,
+    "15": 33,
+    "16": 35,
+    "17": 37,
+    "18": 39,
+    "19": 42,
+    "20": 44,
+    "21": 46,
+    "22": 48,
+    "23": 51,
+    "24": 53,
+    "25": 55,
+    "26": 57,
+    "27": 59,
+    "28": 62,
+    "29": 64,
+    "30": 66,
+    "31": 68,
+    "32": 70,
+    "33": 73,
+    "34": 75,
+    "35": 77,
+    "36": 79,
+    "37": 82,
+    "38": 84,
+    "39": 86
+  },
+  "reservation_slots": [
+    {
+      "slot": 0,
+      "legacy_name": "sp_hcx_south0",
+      "at_um": [
+        9417.6,
+        24624.0
+      ],
+      "outline": {
+        "w": 1728.0,
+        "h": 1296.0
+      },
+      "source_master": "ot_s81_hcx_projection_leaf",
+      "source_candidate": "ot_s81_hcx_projection_partition",
+      "candidate_SYS_master": "ot_s81_hcx_projection_sys_clocked",
+      "actual_child_locations": null,
+      "status": "COARSE RESERVATION ONLY;51root SYS not instantiated or granted"
+    },
+    {
+      "slot": 1,
+      "legacy_name": "sp_hcx_south1",
+      "at_um": [
+        11232.0,
+        24624.0
+      ],
+      "outline": {
+        "w": 1728.0,
+        "h": 1296.0
+      },
+      "source_master": "ot_s81_hcx_projection_leaf",
+      "source_candidate": "ot_s81_hcx_projection_partition",
+      "candidate_SYS_master": "ot_s81_hcx_projection_sys_clocked",
+      "actual_child_locations": null,
+      "status": "COARSE RESERVATION ONLY;51root SYS not instantiated or granted"
+    },
+    {
+      "slot": 2,
+      "legacy_name": "sp_hcx_north0",
+      "at_um": [
+        13046.400000000001,
+        24624.0
+      ],
+      "outline": {
+        "w": 1728.0,
+        "h": 1296.0
+      },
+      "source_master": "ot_s81_hcx_projection_leaf",
+      "source_candidate": "ot_s81_hcx_projection_partition",
+      "candidate_SYS_master": "ot_s81_hcx_projection_sys_clocked",
+      "actual_child_locations": null,
+      "status": "COARSE RESERVATION ONLY;51root SYS not instantiated or granted"
+    },
+    {
+      "slot": 3,
+      "legacy_name": "sp_hcx_north1",
+      "at_um": [
+        14860.800000000001,
+        24624.0
+      ],
+      "outline": {
+        "w": 1728.0,
+        "h": 1296.0
+      },
+      "source_master": "ot_s81_hcx_projection_leaf",
+      "source_candidate": "ot_s81_hcx_projection_partition",
+      "candidate_SYS_master": "ot_s81_hcx_projection_sys_clocked",
+      "actual_child_locations": null,
+      "status": "COARSE RESERVATION ONLY;51root SYS not instantiated or granted"
+    },
+    {
+      "slot": 4,
+      "legacy_name": "sp_hcx_west0",
+      "at_um": [
+        16675.2,
+        24624.0
+      ],
+      "outline": {
+        "w": 1728.0,
+        "h": 1296.0
+      },
+      "source_master": "ot_s81_hcx_projection_leaf",
+      "source_candidate": "ot_s81_hcx_projection_partition",
+      "candidate_SYS_master": "ot_s81_hcx_projection_sys_clocked",
+      "actual_child_locations": null,
+      "status": "COARSE RESERVATION ONLY;51root SYS not instantiated or granted"
+    },
+    {
+      "slot": 5,
+      "legacy_name": "sp_hcx_west1",
+      "at_um": [
+        18489.6,
+        24624.0
+      ],
+      "outline": {
+        "w": 1728.0,
+        "h": 1296.0
+      },
+      "source_master": "ot_s81_hcx_projection_leaf",
+      "source_candidate": "ot_s81_hcx_projection_partition",
+      "candidate_SYS_master": "ot_s81_hcx_projection_sys_clocked",
+      "actual_child_locations": null,
+      "status": "COARSE RESERVATION ONLY;51root SYS not instantiated or granted"
+    }
+  ],
+  "location_rule": "Use coordinates; legacy south/north/west names all refer to y24624 and do not define faces",
+  "actual_source_census": "report.json",
+  "source_roles": {
+    "original": {
+      "controller": 22174,
+      "half_banks": [
+        16,
+        1455
+      ],
+      "lane8": [
+        32,
+        14956
+      ],
+      "actual_clocks": 1,
+      "total_FF_bits": 524046
+    },
+    "future_clocked": {
+      "controller_core": 11318,
+      "controller_tree": 7442,
+      "controller_scalar": 3414,
+      "actual_clock_ports": 51,
+      "predicted_counts": true,
+      "leaf_wrapper_added_FF_budget": 44,
+      "per_rank_clock_entries_for_six_projections": 306
+    }
+  },
+  "storage": {
+    "ROM_count": 64,
+    "ROM_physical_bits": 69730304,
+    "ROM_payload_capacity_bits": 67108864,
+    "ROM_used_payload_bits": 56360960,
+    "ROM_pages_per_lane_column": 2,
+    "SRAM_count": 16,
+    "SRAM_physical_bits": 524288,
+    "SRAM_used_bits": 327680,
+    "per_half": {
+      "ROM_count": 4,
+      "ROM_read_ports": 4,
+      "concurrently_enabled_ROM_read_ports": 2,
+      "ROM_payload_read_bits_per_cycle": 512,
+      "SRAM_read_ports": 1,
+      "SRAM_write_ports": 1,
+      "SRAM_port_bits": 256
+    },
+    "per_projection": {
+      "ROM_payload_read_bytes_per_cycle": 1024,
+      "ROM_physical_read_bytes_per_cycle": 1064,
+      "SRAM_read_bytes_per_cycle": 512,
+      "staging_write_bytes_per_cycle": 512,
+      "stage_write_beats": 80,
+      "SS_then_dot_descriptors": 160,
+      "SRAM_read_transactions_per_command": 2560,
+      "ROM_read_transactions_per_command": 2560
+    }
+  },
+  "compiler_operations": [
+    {
+      "operation": "L0.attn.hc.fn",
+      "fused_aliases": [
+        "L0.attn.hc.sumsq",
+        "L0.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 0,
+      "cmd_ffn": 0,
+      "provider_stage": 0,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L0.ffn.hc.fn",
+      "fused_aliases": [
+        "L0.ffn.hc.sumsq",
+        "L0.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 0,
+      "cmd_ffn": 1,
+      "provider_stage": 0,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L1.attn.hc.fn",
+      "fused_aliases": [
+        "L1.attn.hc.sumsq",
+        "L1.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 1,
+      "cmd_ffn": 0,
+      "provider_stage": 2,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L1.ffn.hc.fn",
+      "fused_aliases": [
+        "L1.ffn.hc.sumsq",
+        "L1.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 1,
+      "cmd_ffn": 1,
+      "provider_stage": 2,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L2.attn.hc.fn",
+      "fused_aliases": [
+        "L2.attn.hc.sumsq",
+        "L2.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 2,
+      "cmd_ffn": 0,
+      "provider_stage": 4,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L2.ffn.hc.fn",
+      "fused_aliases": [
+        "L2.ffn.hc.sumsq",
+        "L2.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 2,
+      "cmd_ffn": 1,
+      "provider_stage": 4,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L3.attn.hc.fn",
+      "fused_aliases": [
+        "L3.attn.hc.sumsq",
+        "L3.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 3,
+      "cmd_ffn": 0,
+      "provider_stage": 6,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L3.ffn.hc.fn",
+      "fused_aliases": [
+        "L3.ffn.hc.sumsq",
+        "L3.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 3,
+      "cmd_ffn": 1,
+      "provider_stage": 6,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L4.attn.hc.fn",
+      "fused_aliases": [
+        "L4.attn.hc.sumsq",
+        "L4.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 4,
+      "cmd_ffn": 0,
+      "provider_stage": 8,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L4.ffn.hc.fn",
+      "fused_aliases": [
+        "L4.ffn.hc.sumsq",
+        "L4.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 4,
+      "cmd_ffn": 1,
+      "provider_stage": 8,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L5.attn.hc.fn",
+      "fused_aliases": [
+        "L5.attn.hc.sumsq",
+        "L5.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 5,
+      "cmd_ffn": 0,
+      "provider_stage": 11,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L5.ffn.hc.fn",
+      "fused_aliases": [
+        "L5.ffn.hc.sumsq",
+        "L5.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 5,
+      "cmd_ffn": 1,
+      "provider_stage": 11,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L6.attn.hc.fn",
+      "fused_aliases": [
+        "L6.attn.hc.sumsq",
+        "L6.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 6,
+      "cmd_ffn": 0,
+      "provider_stage": 13,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L6.ffn.hc.fn",
+      "fused_aliases": [
+        "L6.ffn.hc.sumsq",
+        "L6.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 6,
+      "cmd_ffn": 1,
+      "provider_stage": 13,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L7.attn.hc.fn",
+      "fused_aliases": [
+        "L7.attn.hc.sumsq",
+        "L7.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 7,
+      "cmd_ffn": 0,
+      "provider_stage": 15,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L7.ffn.hc.fn",
+      "fused_aliases": [
+        "L7.ffn.hc.sumsq",
+        "L7.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 7,
+      "cmd_ffn": 1,
+      "provider_stage": 15,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L8.attn.hc.fn",
+      "fused_aliases": [
+        "L8.attn.hc.sumsq",
+        "L8.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 8,
+      "cmd_ffn": 0,
+      "provider_stage": 17,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L8.ffn.hc.fn",
+      "fused_aliases": [
+        "L8.ffn.hc.sumsq",
+        "L8.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 8,
+      "cmd_ffn": 1,
+      "provider_stage": 17,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L9.attn.hc.fn",
+      "fused_aliases": [
+        "L9.attn.hc.sumsq",
+        "L9.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 9,
+      "cmd_ffn": 0,
+      "provider_stage": 19,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L9.ffn.hc.fn",
+      "fused_aliases": [
+        "L9.ffn.hc.sumsq",
+        "L9.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 9,
+      "cmd_ffn": 1,
+      "provider_stage": 19,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L10.attn.hc.fn",
+      "fused_aliases": [
+        "L10.attn.hc.sumsq",
+        "L10.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 10,
+      "cmd_ffn": 0,
+      "provider_stage": 22,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L10.ffn.hc.fn",
+      "fused_aliases": [
+        "L10.ffn.hc.sumsq",
+        "L10.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 10,
+      "cmd_ffn": 1,
+      "provider_stage": 22,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L11.attn.hc.fn",
+      "fused_aliases": [
+        "L11.attn.hc.sumsq",
+        "L11.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 11,
+      "cmd_ffn": 0,
+      "provider_stage": 24,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L11.ffn.hc.fn",
+      "fused_aliases": [
+        "L11.ffn.hc.sumsq",
+        "L11.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 11,
+      "cmd_ffn": 1,
+      "provider_stage": 24,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L12.attn.hc.fn",
+      "fused_aliases": [
+        "L12.attn.hc.sumsq",
+        "L12.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 12,
+      "cmd_ffn": 0,
+      "provider_stage": 26,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L12.ffn.hc.fn",
+      "fused_aliases": [
+        "L12.ffn.hc.sumsq",
+        "L12.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 12,
+      "cmd_ffn": 1,
+      "provider_stage": 26,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L13.attn.hc.fn",
+      "fused_aliases": [
+        "L13.attn.hc.sumsq",
+        "L13.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 13,
+      "cmd_ffn": 0,
+      "provider_stage": 28,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L13.ffn.hc.fn",
+      "fused_aliases": [
+        "L13.ffn.hc.sumsq",
+        "L13.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 13,
+      "cmd_ffn": 1,
+      "provider_stage": 28,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L14.attn.hc.fn",
+      "fused_aliases": [
+        "L14.attn.hc.sumsq",
+        "L14.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 14,
+      "cmd_ffn": 0,
+      "provider_stage": 31,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L14.ffn.hc.fn",
+      "fused_aliases": [
+        "L14.ffn.hc.sumsq",
+        "L14.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 14,
+      "cmd_ffn": 1,
+      "provider_stage": 31,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L15.attn.hc.fn",
+      "fused_aliases": [
+        "L15.attn.hc.sumsq",
+        "L15.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 15,
+      "cmd_ffn": 0,
+      "provider_stage": 33,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L15.ffn.hc.fn",
+      "fused_aliases": [
+        "L15.ffn.hc.sumsq",
+        "L15.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 15,
+      "cmd_ffn": 1,
+      "provider_stage": 33,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L16.attn.hc.fn",
+      "fused_aliases": [
+        "L16.attn.hc.sumsq",
+        "L16.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 16,
+      "cmd_ffn": 0,
+      "provider_stage": 35,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L16.ffn.hc.fn",
+      "fused_aliases": [
+        "L16.ffn.hc.sumsq",
+        "L16.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 16,
+      "cmd_ffn": 1,
+      "provider_stage": 35,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L17.attn.hc.fn",
+      "fused_aliases": [
+        "L17.attn.hc.sumsq",
+        "L17.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 17,
+      "cmd_ffn": 0,
+      "provider_stage": 37,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L17.ffn.hc.fn",
+      "fused_aliases": [
+        "L17.ffn.hc.sumsq",
+        "L17.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 17,
+      "cmd_ffn": 1,
+      "provider_stage": 37,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L18.attn.hc.fn",
+      "fused_aliases": [
+        "L18.attn.hc.sumsq",
+        "L18.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 18,
+      "cmd_ffn": 0,
+      "provider_stage": 39,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L18.ffn.hc.fn",
+      "fused_aliases": [
+        "L18.ffn.hc.sumsq",
+        "L18.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 18,
+      "cmd_ffn": 1,
+      "provider_stage": 39,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L19.attn.hc.fn",
+      "fused_aliases": [
+        "L19.attn.hc.sumsq",
+        "L19.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 19,
+      "cmd_ffn": 0,
+      "provider_stage": 42,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L19.ffn.hc.fn",
+      "fused_aliases": [
+        "L19.ffn.hc.sumsq",
+        "L19.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 19,
+      "cmd_ffn": 1,
+      "provider_stage": 42,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L20.attn.hc.fn",
+      "fused_aliases": [
+        "L20.attn.hc.sumsq",
+        "L20.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 20,
+      "cmd_ffn": 0,
+      "provider_stage": 44,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L20.ffn.hc.fn",
+      "fused_aliases": [
+        "L20.ffn.hc.sumsq",
+        "L20.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 20,
+      "cmd_ffn": 1,
+      "provider_stage": 44,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L21.attn.hc.fn",
+      "fused_aliases": [
+        "L21.attn.hc.sumsq",
+        "L21.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 21,
+      "cmd_ffn": 0,
+      "provider_stage": 46,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L21.ffn.hc.fn",
+      "fused_aliases": [
+        "L21.ffn.hc.sumsq",
+        "L21.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 21,
+      "cmd_ffn": 1,
+      "provider_stage": 46,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L22.attn.hc.fn",
+      "fused_aliases": [
+        "L22.attn.hc.sumsq",
+        "L22.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 22,
+      "cmd_ffn": 0,
+      "provider_stage": 48,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L22.ffn.hc.fn",
+      "fused_aliases": [
+        "L22.ffn.hc.sumsq",
+        "L22.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 22,
+      "cmd_ffn": 1,
+      "provider_stage": 48,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L23.attn.hc.fn",
+      "fused_aliases": [
+        "L23.attn.hc.sumsq",
+        "L23.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 23,
+      "cmd_ffn": 0,
+      "provider_stage": 51,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L23.ffn.hc.fn",
+      "fused_aliases": [
+        "L23.ffn.hc.sumsq",
+        "L23.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 23,
+      "cmd_ffn": 1,
+      "provider_stage": 51,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L24.attn.hc.fn",
+      "fused_aliases": [
+        "L24.attn.hc.sumsq",
+        "L24.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 24,
+      "cmd_ffn": 0,
+      "provider_stage": 53,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L24.ffn.hc.fn",
+      "fused_aliases": [
+        "L24.ffn.hc.sumsq",
+        "L24.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 24,
+      "cmd_ffn": 1,
+      "provider_stage": 53,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L25.attn.hc.fn",
+      "fused_aliases": [
+        "L25.attn.hc.sumsq",
+        "L25.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 25,
+      "cmd_ffn": 0,
+      "provider_stage": 55,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L25.ffn.hc.fn",
+      "fused_aliases": [
+        "L25.ffn.hc.sumsq",
+        "L25.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 25,
+      "cmd_ffn": 1,
+      "provider_stage": 55,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L26.attn.hc.fn",
+      "fused_aliases": [
+        "L26.attn.hc.sumsq",
+        "L26.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 26,
+      "cmd_ffn": 0,
+      "provider_stage": 57,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L26.ffn.hc.fn",
+      "fused_aliases": [
+        "L26.ffn.hc.sumsq",
+        "L26.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 26,
+      "cmd_ffn": 1,
+      "provider_stage": 57,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L27.attn.hc.fn",
+      "fused_aliases": [
+        "L27.attn.hc.sumsq",
+        "L27.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 27,
+      "cmd_ffn": 0,
+      "provider_stage": 59,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L27.ffn.hc.fn",
+      "fused_aliases": [
+        "L27.ffn.hc.sumsq",
+        "L27.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 27,
+      "cmd_ffn": 1,
+      "provider_stage": 59,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L28.attn.hc.fn",
+      "fused_aliases": [
+        "L28.attn.hc.sumsq",
+        "L28.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 28,
+      "cmd_ffn": 0,
+      "provider_stage": 62,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L28.ffn.hc.fn",
+      "fused_aliases": [
+        "L28.ffn.hc.sumsq",
+        "L28.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 28,
+      "cmd_ffn": 1,
+      "provider_stage": 62,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L29.attn.hc.fn",
+      "fused_aliases": [
+        "L29.attn.hc.sumsq",
+        "L29.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 29,
+      "cmd_ffn": 0,
+      "provider_stage": 64,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L29.ffn.hc.fn",
+      "fused_aliases": [
+        "L29.ffn.hc.sumsq",
+        "L29.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 29,
+      "cmd_ffn": 1,
+      "provider_stage": 64,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L30.attn.hc.fn",
+      "fused_aliases": [
+        "L30.attn.hc.sumsq",
+        "L30.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 30,
+      "cmd_ffn": 0,
+      "provider_stage": 66,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L30.ffn.hc.fn",
+      "fused_aliases": [
+        "L30.ffn.hc.sumsq",
+        "L30.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 30,
+      "cmd_ffn": 1,
+      "provider_stage": 66,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L31.attn.hc.fn",
+      "fused_aliases": [
+        "L31.attn.hc.sumsq",
+        "L31.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 31,
+      "cmd_ffn": 0,
+      "provider_stage": 68,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L31.ffn.hc.fn",
+      "fused_aliases": [
+        "L31.ffn.hc.sumsq",
+        "L31.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 31,
+      "cmd_ffn": 1,
+      "provider_stage": 68,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L32.attn.hc.fn",
+      "fused_aliases": [
+        "L32.attn.hc.sumsq",
+        "L32.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 32,
+      "cmd_ffn": 0,
+      "provider_stage": 70,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L32.ffn.hc.fn",
+      "fused_aliases": [
+        "L32.ffn.hc.sumsq",
+        "L32.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 32,
+      "cmd_ffn": 1,
+      "provider_stage": 70,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L33.attn.hc.fn",
+      "fused_aliases": [
+        "L33.attn.hc.sumsq",
+        "L33.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 33,
+      "cmd_ffn": 0,
+      "provider_stage": 73,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L33.ffn.hc.fn",
+      "fused_aliases": [
+        "L33.ffn.hc.sumsq",
+        "L33.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 33,
+      "cmd_ffn": 1,
+      "provider_stage": 73,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L34.attn.hc.fn",
+      "fused_aliases": [
+        "L34.attn.hc.sumsq",
+        "L34.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 34,
+      "cmd_ffn": 0,
+      "provider_stage": 75,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L34.ffn.hc.fn",
+      "fused_aliases": [
+        "L34.ffn.hc.sumsq",
+        "L34.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 34,
+      "cmd_ffn": 1,
+      "provider_stage": 75,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L35.attn.hc.fn",
+      "fused_aliases": [
+        "L35.attn.hc.sumsq",
+        "L35.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 35,
+      "cmd_ffn": 0,
+      "provider_stage": 77,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L35.ffn.hc.fn",
+      "fused_aliases": [
+        "L35.ffn.hc.sumsq",
+        "L35.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 35,
+      "cmd_ffn": 1,
+      "provider_stage": 77,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L36.attn.hc.fn",
+      "fused_aliases": [
+        "L36.attn.hc.sumsq",
+        "L36.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 36,
+      "cmd_ffn": 0,
+      "provider_stage": 79,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L36.ffn.hc.fn",
+      "fused_aliases": [
+        "L36.ffn.hc.sumsq",
+        "L36.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 36,
+      "cmd_ffn": 1,
+      "provider_stage": 79,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L37.attn.hc.fn",
+      "fused_aliases": [
+        "L37.attn.hc.sumsq",
+        "L37.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 37,
+      "cmd_ffn": 0,
+      "provider_stage": 82,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L37.ffn.hc.fn",
+      "fused_aliases": [
+        "L37.ffn.hc.sumsq",
+        "L37.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 37,
+      "cmd_ffn": 1,
+      "provider_stage": 82,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L38.attn.hc.fn",
+      "fused_aliases": [
+        "L38.attn.hc.sumsq",
+        "L38.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 38,
+      "cmd_ffn": 0,
+      "provider_stage": 84,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L38.ffn.hc.fn",
+      "fused_aliases": [
+        "L38.ffn.hc.sumsq",
+        "L38.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 38,
+      "cmd_ffn": 1,
+      "provider_stage": 84,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L39.attn.hc.fn",
+      "fused_aliases": [
+        "L39.attn.hc.sumsq",
+        "L39.attn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 39,
+      "cmd_ffn": 0,
+      "provider_stage": 86,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    },
+    {
+      "operation": "L39.ffn.hc.fn",
+      "fused_aliases": [
+        "L39.ffn.hc.sumsq",
+        "L39.ffn.hc.rsqrt"
+      ],
+      "source_compiler_endpoint": {
+        "engine": "hcx",
+        "port": 11,
+        "endpoint": "dsfd_sp_hcx_projection",
+        "kind": "HCP",
+        "source": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+        "owner": "s_hc_home",
+        "semantic": "normalized HC projection includes exact H sumsq and rsqrt"
+      },
+      "cmd_layer": 39,
+      "cmd_ffn": 1,
+      "provider_stage": 86,
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "per_rank_projection_rows": "6*rank + slot, slot0..5",
+      "leaf_component_serial_cycles": 318,
+      "planning_delta_fast_cycles": 72,
+      "whole_endpoint_duration_admissible": false
+    }
+  ],
+  "unmapped_resident_set_homes": [
+    40,
+    41,
+    42
+  ],
+  "calendar": {
+    "measured_leaf_source": "0daea3401d3100bfa35b88fa43a561b13b4efd3a",
+    "measured_leaf_serial_cycles": 318,
+    "flat_leaf_serial_cycles": 264,
+    "leaf_delta_serial": 54,
+    "leaf_delta_fast": 72,
+    "current_wrapper": "rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv",
+    "current_wrapper_instantiates": "ot_s81_hcx_projection_leaf (six old flat leaves)",
+    "current_RETURN_CYC_default": 264,
+    "SYS_RETURN_CYC_candidate": 318,
+    "SYS_FAST_CYC": null,
+    "whole_HCP_pin_to_pin_duration": null,
+    "issuer_rule": "done = issue +1 + measured endpoint pin_to_pin latency; 318 is leaf serial, not endpoint fast latency",
+    "next": "Implement measured51root clock/relay/VM phase calendar and full endpoint source proof before changing RETURN_CYC/FAST_CYC/compiler durations",
+    "static_occupancy_gap": "HCP iss credit/acc_cnt, raw FIFO rs_take/r_ok/output occupancy remain inherited runtime controls; component proof does not qualify production static execution"
+  },
+  "physical_submit_allowed": false,
+  "native_qualified": false,
+  "adoption": false
+}

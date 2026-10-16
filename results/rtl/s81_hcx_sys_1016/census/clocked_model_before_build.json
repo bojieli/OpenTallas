@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.s81-hcx-sys-clocked-candidate.v1",
+  "adoption": false,
+  "physical_submit_allowed": false,
+  "source": "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_sys_clocked.sv",
+  "proposed_clock_ports": {
+    "core": 1,
+    "tree": 1,
+    "scalar": 1,
+    "banks": 16,
+    "lanes": 32,
+    "total": 51
+  },
+  "predicted_FF_bits": {
+    "core": 11318,
+    "tree": 7442,
+    "scalar": 3414,
+    "each_bank": 1455,
+    "each_lane": 14956,
+    "total": 524046
+  },
+  "derivation": {
+    "original_controller": 22174,
+    "old_tree": 6417,
+    "scalar_pipes": 3081,
+    "relocated_tree_capture": 1025,
+    "relocated_scalar_state": 333,
+    "added_pipeline_edges": 0,
+    "added_FF_bits": 0
+  },
+  "boundary_ports": {
+    "tree_inputs": 1027,
+    "tree_outputs": 35,
+    "scalar_inputs": 102,
+    "scalar_outputs": 68
+  },
+  "pin_ownership": {
+    "tree": "Relocated existing leaf[1023:0] and leaf_v capture; addtree root/vo/fault already registered",
+    "scalar": "Relocated existing operand/state/rv flops with the three unchanged arithmetic pipes",
+    "open": "rs_take/rs_fault inherited combinational surfaces and occupancy scheduling need native static/pin repair; no physical submission"
+  },
+  "lane_root_margin_FF_bits": 44,
+  "wrapper_warning": "Additional lane pin/clock wrapper flops can exceed15k; no new flops may be assumed free",
+  "equal_phase_expected_serial_cycles": 318,
+  "equal_phase_cycles_measured": false,
+  "previous_measured_SYS_serial_cycles": 318,
+  "flat_serial_cycles": 264,
+  "previous_measured_delta_fast_cycles": 72,
+  "clock_rule": "Same logical edge proof only; actual phi-R/insertion/reach requires die binding",
+  "geometry": "six coarse1728x1296 reservations are not actual51root homes",
+  "macros": {
+    "ROM4096x266": 64,
+    "SRAM128x256": 16
+  },
+  "storage_and_BW": "unchanged s81_hcx_systolic_partition_model ports/storage",
+  "static_occupancy_gap_retained": true
+}
