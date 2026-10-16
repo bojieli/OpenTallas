@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_vm_wfc_request",
+ "enable": false,
+ "reason": "Explicit first-stage capture and registered outputs in RTL; fixed +1core request/+4core total response proven by independent parent differential gate."
+}

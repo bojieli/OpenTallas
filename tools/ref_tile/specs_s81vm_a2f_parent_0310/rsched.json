@@ -1,0 +1,141 @@
+{
+ "name": "dsfd_vm_a2f_rsched_p_native_0310_r1",
+ "top": "dsfd_vm_a2f_rsched_p",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_rsched.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 117.72,
+  "h": 117.72,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rst_n",
+   "su_v",
+   "su_row",
+   "hc_v",
+   "hc_row",
+   "aux_v",
+   "aux_row",
+   "mx_v",
+   "mx_row"
+  ],
+  "E": [
+   "n_v",
+   "n_row",
+   "n_slot",
+   "n_group",
+   "a_v",
+   "a_row"
+  ],
+  "S": [
+   "release_v",
+   "release_group",
+   "release_mask",
+   "prepare_v",
+   "prepare_group",
+   "prepare_mask",
+   "expected_v",
+   "release_slot",
+   "aux_expected",
+   "mx_expected",
+   "mx_rslot"
+  ],
+  "N": [
+   "obs_row",
+   "sched_fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_a2f_parent_0310/dsfd_vm_a2f_rsched_p.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  }
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "First physical view of exact production A2F rsched master, already composed in parent 8849603a6. Independent root, unchanged full source width and fixed calendar. REL8 read release replaces REL10; no clock or SDC relaxation.",
+ "slot_change_request": {
+  "contract": "S81 VM A2F parent",
+  "version": "0310",
+  "why": "Missing production hard view; M4 W/E and M5 N/S pins within existing outline. Parent actual-pin rebind owed before adoption."
+ },
+ "job": {
+  "owner": "codex:S81 parent leaves",
+  "branch": "claude/s81-vm-a2f-parent-0200",
+  "tag": "p1",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_rsched.sv",
+   "tools/s81_vm/a2f_hardleaf_gate.py",
+   "tools/die_port_bind.py",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv",
+   "physical/s81_vm_a2f_parent_0310/dsfd_vm_a2f_rsched_p.tcl"
+  ],
+  "purpose": "Four missing A2F production masters, exact actual RTL and cycle oracle with observed output/tap mutant.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "rsched_gold",
+    "cmd": "python3 tools/s81_vm/a2f_hardleaf_gate.py rsched",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "LEAF PASS rsched"
+   },
+   {
+    "name": "rsched_mutant",
+    "cmd": "python3 tools/s81_vm/a2f_hardleaf_gate.py rsched --mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "LEAF FAIL rsched"
+   }
+  ]
+ },
+ "params": {
+  "REL": 8
+ },
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual production RTL already registers input data and outputs; wrapper stages change the proven static calendar. Preserve actual flops and audit native launch/capture."
+ }
+}

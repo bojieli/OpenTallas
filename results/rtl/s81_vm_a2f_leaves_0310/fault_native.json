@@ -1,0 +1,23 @@
+{
+ "cell": "s81_a2f_fault_join4",
+ "view": "physical/ref_tile/s81_a2f_fault_join4_native_0310_r1/views/s81_a2f_fault_join4",
+ "lib_cell": "s81_a2f_fault_join4",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 57.3,
+ "spread_ps": 1.5,
+ "outputs": 4,
+ "inputs": 41,
+ "launch_ps": 155.2,
+ "launch_pin": "fault[0]",
+ "capture_ps": 115.9,
+ "capture_pin": "i_fault[2]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

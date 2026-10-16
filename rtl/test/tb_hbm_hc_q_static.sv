@@ -119,7 +119,10 @@ module tb_hbm_hc_q_static;
         for(integer i=0;i<n_words;i=i+1)f20_cfg(8'd108,12'(i),word(i,prog[i]));
         f20_cfg(8'd109,12'd0,word(0,79'd1)); // another target: must be ignored
         @(negedge clk);desc_v=1;cfg_target=8'd108;desc_base=0;desc_limit=13'(n_words);desc_loops=1;@(negedge clk);desc_v=0;
-        repeat(3)@(negedge clk);launch_v=1;@(negedge clk);launch_v=0;
+        // Host initialization: the actual installed-row validator must finish before launch.
+        for(integer warm=0;warm<n_words+8 && !t_conf;warm++)@(negedge clk);
+        if(!t_conf || t_fault)$fatal(1,"HC programme installation not ready");
+        launch_v=1;@(negedge clk);launch_v=0;
         wait(prog_done);repeat(60)@(negedge clk);
         // stores
         for(integer p=0;p<4;p=p+1)for(integer j=0;j<3;j=j+1)

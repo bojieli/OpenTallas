@@ -66,10 +66,10 @@ def lower(source, out, extra=None, extra_bits=0, line_bits=9688, param_prefix="P
         'dictionary_columns':[{'first_macro':groups*ib+sum(db[:c]),'count':db[c]} for c in range(cols)]}
     m['source_pins']={p:sha(ROOT/p) for p in pins}
     (out/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')
-    dbstr="'{"+','.join(map(str,db))+"}"
+    dbstr="{"+','.join("32'd"+str(x) for x in reversed(db))+"}"
     (out/'programme_params.svh').write_text(
         f'localparam integer {param_prefix}_BITS={bits}, {param_prefix}_COLS={cols}, {param_prefix}_WRITES={len(config)}, {param_prefix}_MACROS={base}, {param_prefix}_INDEX_PACK={index_pack};\n'
-        f'localparam integer {param_prefix}_DICT_BANKS[0:{param_prefix}_COLS-1]={dbstr};\n')
+        f'localparam [32*{param_prefix}_COLS-1:0] {param_prefix}_DICT_BANKS={dbstr};\n')
     (out/'tb.sv').write_text(TB.replace('@BITS@',str(bits)).replace('@EDGES@',str(len(rows)))
         .replace('@WRITES@',str(len(config))).replace('@DB@',dbstr).replace('@DICT@',str(groups*ib)).replace('@MACROS@',str(base)).replace('@PACK@',str(index_pack)))
     return m
@@ -77,7 +77,7 @@ def lower(source, out, extra=None, extra_bits=0, line_bits=9688, param_prefix="P
 TB='''`timescale 1ns/1ps
 module tb;
 localparam integer B=@BITS@, N=@EDGES@, W=@WRITES@;
-localparam integer DB[0:(B+255)/256-1]=@DB@;
+localparam [32*((B+255)/256)-1:0] DB=@DB@;
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0,cfg_we=0,start=0;
 logic [15:0] cfg_bank=0; logic [6:0] cfg_row=0; logic[255:0] cfg_data=0;

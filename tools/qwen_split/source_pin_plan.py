@@ -71,19 +71,40 @@ def tile_grant():
     return g
 
 
+_NL_DROP = {}
+
+
+def nl_drop(g):
+    """ports of the grant's tree-host tile absent from its node-less twin (Q-NETLIST 10-16: derived from the twin's RTL,
+    rtl/physical/<top with nk -> nl>.sv, e.g. qfd_tile_nl_rp2_45 also drops ck_fa0/ck_fa1/ck_fa3, the n_a/n_b/n_y face
+    roots); the historical four when no twin RTL exists"""
+    top = g.get('top', '')
+    if top in _NL_DROP:
+        return _NL_DROP[top]
+    nk, nl = ROOT / f'rtl/physical/{top}.sv', ROOT / f"rtl/physical/{top.replace('_nk_', '_nl_')}.sv"
+    if top and nk.exists() and nl.exists():
+        a = rtl_ports(nk, top)
+        b = rtl_ports(nl, top.replace('_nk_', '_nl_'))
+        _NL_DROP[top] = tuple(sorted(set(a) - set(b)))
+        return _NL_DROP[top]
+    return NL_DROP
+
+
 def grant_clocks(name):
     g = tile_grant()
     if g is None:
         return None
-    return [c for c in g['clocks'] if not (name == 'qfd_tile_nl' and c in NL_DROP)]
+    drop = nl_drop(g)
+    return [c for c in g['clocks'] if not (name == 'qfd_tile_nl' and c in drop)]
 
 
 def apply_tile_grant(q, g):
     q.w, q.h = g['home_um']
+    drop = nl_drop(g)
     by = {}
     for p in g['pins']:
         base = p['name'].split('[')[0]
-        if q.name == 'qfd_tile_nl' and base in NL_DROP:
+        if q.name == 'qfd_tile_nl' and base in drop:
             continue
         idx = int(p['name'].split('[')[1][:-1]) if '[' in p['name'] else 0
         by.setdefault(base, []).append((idx, p))

@@ -1,0 +1,69 @@
+{
+  "scope": "Exact published old one-root column baseline; no inherited qualification for the new roots",
+  "source_receipt_commit": "5c37003e9",
+  "old_native": {
+    "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+    "clocks": {
+      "clk": {
+        "ref_ps": 535.0,
+        "min_ps": 499.1,
+        "max_ps": 681.0,
+        "src": "insertion.json boundary mean",
+        "boundary_min_ps": 526.0,
+        "boundary_max_ps": 589.4,
+        "boundary_spread_ps": 63.4,
+        "boundary_n": 839
+      }
+    },
+    "clocks_ff": {
+      "clk": {
+        "ref_ps": 430.9,
+        "boundary_min_ps": 419.7,
+        "boundary_max_ps": 460.3,
+        "src": "insertion.json boundary mean"
+      }
+    },
+    "summary": {
+      "pins": 843,
+      "buses": 25,
+      "comb_bits": 0,
+      "out_over_bits": 64,
+      "in_over_bits": 764,
+      "no_clock_arc_out_bits": 0,
+      "no_setup_arc_in_bits": 4,
+      "worst_out_ps": 225.0,
+      "worst_out_bus": "pnseg",
+      "worst_in_ps": 224.7,
+      "worst_in_bus": "i2x_q1",
+      "L_min_ps": 107.3,
+      "L_min_bus": "prow",
+      "H_max_ps": -72.0,
+      "H_max_bus": "i2x_e1",
+      "min_delay_margin_ps": 179.3,
+      "min_delay_bits_out": 0,
+      "min_delay_bits_in": 0,
+      "pair_cost_ps": 449.7,
+      "reach_self_um": 307.4,
+      "side_budget_ps": 151.7,
+      "pair_available_ps": 683.3,
+      "q_lb_ps": 170.6,
+      "q_lb_bus": "pnseg",
+      "p_lb_ps": 215.7,
+      "p_lb_bus": "i2x_q1",
+      "out_unreg_bits": 0,
+      "in_unreg_bits": 35,
+      "out_unreg_buses": [],
+      "in_unreg_buses": [
+        "i2x_q1",
+        "i2x_q0",
+        "so_row",
+        "i1_t",
+        "i2x_e1",
+        "a_ctr",
+        "so_n",
+        "i2x_e0"
+      ],
+      "clock_out_bits": 0
+    }
+  }
+}

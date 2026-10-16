@@ -1,0 +1,162 @@
+{
+  "name": "dsfd_vm_xio_fault_join_native_1016_r2",
+  "top": "dsfd_vm_xio_fault_join",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_fault_join.sv"
+  ],
+  "params": {},
+  "defines": [],
+  "clock": "core",
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 43.2,
+    "h": 43.2,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "request_fault",
+      "return_fault",
+      "serial_valid",
+      "serial_level",
+      "transport_fault"
+    ],
+    "E": [
+      "fault"
+    ],
+    "N": [
+      "ck",
+      "rst_n"
+    ]
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.4,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "period_ps": 770,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "recipe": 2,
+  "pin_regs": {
+    "enable": false,
+    "reason": "Actual source first-stage input return captures, issue/output pin registers; component exact fixed-edge differential gate plus six observed mutants."
+  },
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": false
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "orfs_vars": {
+    "GPL_ROUTABILITY_DRIVEN": "0"
+  },
+  "children": [],
+  "inter": [],
+  "structural_change": "Actual input request pin captures before decode; actual request+2core and collective return+4core total. Query/gather remains+4core/+3serial with one shorter tail. Independent source-bound leaf file. Fixed II and tuple edge unchanged; no backpressure or clock relaxation.",
+  "slot_change_request": {
+    "contract": "S81 VM connected A2F physical rebind candidate",
+    "version": "xio-native-1016-r2",
+    "why": "Source-current XML proved inline XIO p_ret q_d512/g_d511 and issue/phase logic absent from old geometry. New explicit leaves must receive actual homes and all-incident cut proof; no inherited frame-fit claim."
+  },
+  "job": {
+    "owner": "codex:S81-XIO-native",
+    "branch": "codex/s81-vm-margin-0305",
+    "tag": "fault_join2",
+    "extra_paths": [
+      "tools/s81_vm",
+      "rtl/dsrom_sys/s81_ph/vm"
+    ],
+    "purpose": "Real XIO static native leaf; exact latency/II/differential/warmreset component proof; no full parent qualification.",
+    "benches": [
+      {
+        "name": "partition",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/partition",
+        "expect": "pass",
+        "pass_regex": "XIO_PARTITION_GATE PASS",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_request",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_REQUEST OT_VM_XIO_MUT_REQUEST",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_return",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_RETURN OT_VM_XIO_MUT_RETURN",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_gather",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_GATHER OT_VM_XIO_MUT_GATHER",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_tag",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_TAG OT_VM_XIO_MUT_TAG",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_fault",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_FAULT OT_VM_XIO_MUT_FAULT",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_warm",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_WARM OT_VM_XIO_MUT_WARM",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ]
+  }
+}

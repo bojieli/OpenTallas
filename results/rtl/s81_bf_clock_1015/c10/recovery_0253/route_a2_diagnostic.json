@@ -1,0 +1,138 @@
+{
+  "name": "s81bf_front_static_clk-c10-5fce4c7b5",
+  "status": "ECO",
+  "commit_full": "5fce4c7b5607c476c206908187ebf6371fbb73ba",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5",
+  "stage_key": "hold_eco",
+  "stage_started": "2026-10-16T02:47:48-07:00",
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/work/orfs/logs/asap7/opentallas_dsfd_bf_front_static_asap7_ref_s81bf_front_static_clk_c10_5fce4c7b5/base/5_2_route.json"
+    ],
+    "ff_ps": -12.07,
+    "clock_periods_ps": {
+      "core_clk": 833.333,
+      "ot_io_boundary": 833.333,
+      "ot_entry_0": 833.333,
+      "ot_entry_1": 833.333
+    },
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/work/orfs",
+    "post_sdc": [
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -311.32,
+    "ss_sensitivity_tns_ps": -606366.0,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/corner_sta.json",
+    "ss_ps": 0.0,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "2|/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/work/orfs|0|ae0410-cecorner-1015",
+      "at": "2026-10-16T02:45:26-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "ot_entry_0": {
+            "boundary": 45,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          },
+          "ot_entry_1": {
+            "boundary": 3254,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "ot_entry_0": {
+            "boundary": 45,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          },
+          "ot_entry_1": {
+            "boundary": 3254,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 0.0,
+      "ff": -12.07,
+      "errors": [],
+      "ioref": {
+        "tt": {},
+        "ff": {}
+      },
+      "tt_i2r": 237.57,
+      "tt_out": 351.86,
+      "ff_i2r": -12.07,
+      "ff_out": 12.71,
+      "ff_r2r": -4.43,
+      "json": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/cl/routed_ioref.a2.json",
+      "registers": 18165,
+      "registers_clocked": 18165,
+      "tt_resta_raw": 0.0,
+      "ff_resta_raw": -12.07
+    },
+    "route_sdc_clock": {
+      "ss_ps": 0.0,
+      "ff_ps": -12.07
+    }
+  },
+  "eco": {
+    "tried": true,
+    "rb": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/work/orfs/results/asap7/opentallas_dsfd_bf_front_static_asap7_ref_s81bf_front_static_clk_c10_5fce4c7b5/base",
+    "ob": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/routes/s81bf_front_static_clk_c10_5fce4c7b5/work/orfs/results/asap7/opentallas_dsfd_bf_front_static_asap7_ref_s81bf_front_static_clk_c10_5fce4c7b5/base",
+    "out": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/cl/eco",
+    "post_sdc": [
+      "physical/ref_tile/dsfd_bf_front_static_ref/signoff.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "pre": {
+      "ss_ps": 0.0,
+      "ff_ps": -12.07
+    },
+    "started": "2026-10-16T02:47:32-07:00",
+    "keepwires": false,
+    "resources": {
+      "threads": 8,
+      "ram": 32
+    }
+  },
+  "hold_stop_log": [
+    {
+      "stage": "grt",
+      "buffers": 113,
+      "why": "5_1_grt near-miss hold stall (WNS -1.8 >= -15 ps, setup gate clear): stop the grt hold repair at 113 buffers and continue to route; hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -1.8 ps (start -22.37), 3110 it / 5368 buffers, 12487 endpoints in margin, 0.4 h in step, HM guard present",
+      "at": "2026-10-16T02:20:41-07:00",
+      "attempt": 2,
+      "prev_status": "RUNNING"
+    }
+  ],
+  "helper_overlay_verification": {
+    "status": "verified_original",
+    "origin_main": "f74f32eef4d8770868888f122223bd5a45da68d0",
+    "content_sha256": "0918b61809bbdb2fac88c3e1aa4f0fbff72af4b16806d94b2e532c40d8fbf235",
+    "files": 46,
+    "verified_at": "2026-10-16T02:47:44-07:00",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5",
+    "mutation": false
+  },
+  "scope": "Pre-ECO route diagnostic. Not native closure. Preserve running ECO; only terminal qualified view can establish native220/190/80.",
+  "collected_at": "2026-10-16T09:57:05.424787+00:00"
+}

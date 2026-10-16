@@ -64,18 +64,30 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 2.16
  },
  "aspect": 1.0,
  "job": {
   "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "tag": "v1",
-  "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccr at the HIER2 parameters; reference tile flow",
+  "owner": "Claude:S-ELEM-PQ/HC3",
+  "branch": "claude/s81hc3-native-0030",
+  "tag": "pr1",
+  "purpose": "S-ELEM-PQ/HC3 native pin re-kit of CLOSED s81hc_ccrh2_ref-v1-70eafa55c (ot_s81_hc_ccr: launch 264.06348 > 220 (27 pins); capture 191.644 > 190 (1 pins) at phi - R, results/rtl/s81_hc_native_0030/native_audit.json); same outline and pin faces, kit recipe 3 (OWNER RULE 19:50)",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ccrh2_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_ccrh2_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_ccrh2_ref",
+  "reroute_reason": {
+   "kind": "pin_register",
+   "source": "results/rtl/s81_hc_native_0030/native_audit.json",
+   "cell": "ot_s81_hc_ccr",
+   "fix": "recipe 3 pin stage at the closed RTL / outline / pin faces, 0 cycles: pin_reg_split clones every subtree-loaded crd launch flop so each crd_o feed-through bit has a dedicated flop (same D, same cycle) placed freely between its W capture pin and E launch pin; non-feed-through pin flops anchored at their pins; kept pin registers; HB2 pads",
+   "launch_ps": 264.1,
+   "capture_ps": 191.6,
+   "closed_job": "s81hc_ccrh2_ref-v1-70eafa55c",
+   "added_cycles_per_port": {}
+  },
+  "structural_change": "recipe 3 pin stage at the closed RTL / outline / pin faces, 0 cycles: pin_reg_split clones every subtree-loaded crd launch flop so each crd_o feed-through bit has a dedicated flop (same D, same cycle) placed freely between its W capture pin and E launch pin; non-feed-through pin flops anchored at their pins; kept pin registers; HB2 pads"
  },
  "params": {
   "HALF": 1,
@@ -84,5 +96,29 @@
   "DW": 6
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 3,
+ "outline": {
+  "w": 151.2,
+  "h": 151.2,
+  "exact": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_s81_hc_ccr is a lockstep return-chain root: ch_rv / ch_rd are captured at the pin (crv / crd), crd IS crd_o (stage 0 of the centre return, continued by the hard pads f5r1/r6/r5 at the exact production depth tuple), crv_o / cpi_o / ex1_o are the last u_prv / u_ppi / u_pex stages. Any added register moves the centre return against the W/E chains at crx (exact register counts). Measured cause of the 27 launch misses: tree-loaded crd bits (108..1515 feed u_tree1) are pulled toward the subtree; unloaded crd bits meet both budgets (launch <= 212.3, capture <= 173.4). Fix: pin_reg_split gives every crd_o its own feed-through flop (same D, 0 cycles) left free between W and E (OT_OFLOP_PORT_RE [rpx][v1i] anchors only ch_rv / crv_o / cpi_o / ex1_o, not ch_rd / crd_o), the original flop keeps the subtree loads."
+ },
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "[rpx][v1i]"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

@@ -1,0 +1,161 @@
+{
+ "name": "qfd_res_train_issue_c2",
+ "top": "qfd_res_train_issue",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_res_train_issue.sv"
+ ],
+ "params": {
+  "TRAIN_EDGES": 11,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 30.24,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "me_go",
+   "me_oen",
+   "me_split",
+   "me_tiles",
+   "me_ts",
+   "ck",
+   "rst_n"
+  ],
+  "W": [
+   "capture_stride",
+   "payload_write",
+   "slot_count",
+   "train_count",
+   "train_start",
+   "tag_last",
+   "tag_v"
+  ],
+  "E": [
+   "fault"
+  ]
+ },
+ "assigned_pin_source": {
+  "file": "physical/qwen_compute_cmp_0140/qfd_res_train_issue.die_pins.json",
+  "note": "die-assigned pins: Qwen compute die v1.4 netlist_0030 g2 elements.lef sha256 09bb809ec33bec02 (E4 /srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case), extracted to physical/qwen_compute_cmp_0140/<master>.die_pins.json; faces kept, positions re-placed by the flow in the 30.24 frame",
+  "owner": "Q-COMPUTE-DIE / Q-NETLIST"
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "children": [],
+ "inhold": true,
+ "outhold": true,
+ "pin_regs": {
+  "enable": true
+ },
+ "job": {
+  "owner": "Claude:Q-ELEM-CMP",
+  "branch": "claude/qelem-cmp-0140",
+  "tag": "c2",
+  "purpose": "Qwen compute die v1.4 master qfd_res_train_issue (x1): result-train command issuer, 30.24 um square frame (die 129.6 frame measured util 2%: slot change requested), die faces; recipe 3 pin registers on every input/output (+1 edge in, +1 out: the compiler TRAIN_EDGES absorbs them); rst_n captured by one station flop (cold init only). TRAIN_EDGES 11 = the last computed die value (globalfp_q_1705 te-fpq_s6.json); the die netlist_0030 instance carries no TRAIN_EDGES (RTL default -1 refuses elaboration) -> Q-COMPUTE-DIE must confirm/assign the r2h value incl. the 2 pin-register edges (re-route of this 129.6 tile if it differs).",
+  "benches": [
+   {
+    "name": "rti_exact_400_instructions",
+    "cmd": "bash tools/qwen_split/run_res_train_issue_bench.sh 0 11 {RUN}/bench/m0",
+    "expect": "pass",
+    "pass_regex": "RTI_BENCH PASS MUT=0 TE=11 starts=400 instructions=400 errors=0",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rti_mut1_start_late",
+    "cmd": "bash tools/qwen_split/run_res_train_issue_bench.sh 1 11 {RUN}/bench/m1",
+    "expect": "fail",
+    "fail_regex": "RTI_BENCH FAIL MUT=1",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rti_mut3_slots_halved",
+    "cmd": "bash tools/qwen_split/run_res_train_issue_bench.sh 3 11 {RUN}/bench/m3",
+    "expect": "fail",
+    "fail_regex": "RTI_BENCH FAIL MUT=3",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "physical/qwen_compute_cmp_0140",
+   "tools/qwen_split",
+   "rtl/test/qwen_split"
+  ],
+  "views_to": "physical/ref_tile/qfd_res_train_issue_c2/views",
+  "record_to": "results/rtl/ref_tile/qfd_res_train_issue_c2"
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "Die frame 129.6 x 129.6 -> 30.24 x 30.24 um: c1 CTS gate (c5ab86ca3) measured 607 FF / 315 um2 std = util 2.0% in the 129.6 frame (one huge empty region, owner 20:45 reject) and the die-assigned pins sat in the N-W corner. Same faces (me_*/ck/rst_n N, train_*/tag_* W, fault E), pins placed by the flow along the face; the die adopts the view's frame and pins.",
+ "pin_ranges": {
+  "ck": [
+   14.8,
+   15.4
+  ],
+  "rst_n": [
+   16.0,
+   16.6
+  ],
+  "me_go": [
+   3.0,
+   13.8
+  ],
+  "me_oen": [
+   3.0,
+   13.8
+  ],
+  "me_split": [
+   3.0,
+   13.8
+  ],
+  "me_tiles": [
+   3.0,
+   13.8
+  ],
+  "me_ts": [
+   3.0,
+   13.8
+  ]
+ }
+}

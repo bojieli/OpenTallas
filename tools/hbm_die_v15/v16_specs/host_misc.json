@@ -62,7 +62,7 @@
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
    "params": {
     "MUT": 0,
-    "TARGET_MASK": "256'hf001f1ffffffffffff0ff1000000000000"
+    "TARGET_MASK": "256'hffffffff0000003f000000f001f1ffffffffffff0ff1000000000000"
    },
    "slot": "host_cp_ingress",
    "owner": "host owner",
@@ -1025,6 +1025,54 @@
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
+  },
+  {
+   "inst": "calendar_SW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_SW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_SE",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_SE",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_NW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_NW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_NE",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_NE",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
   }
  ],
  "straps": [

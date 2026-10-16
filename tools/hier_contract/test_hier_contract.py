@@ -55,6 +55,20 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["verdict"], "PASS", r["fails"])
         self.assertEqual(r["info"]["pg"]["nets"]["VDD"]["stripes"], 3)
 
+    def test_pg_half_span_uses_exact_lef_decimals(self):
+        # Actual qfd_rly_26_NE_9x9 geometry: binary centres yield < 0.5.
+        for horizontal in (False, True):
+            for last, expected in (("7.992", True), ("7.991999999999", False)):
+                with self.subTest(horizontal=horizontal, last=last):
+                    rects = [("M5", 2.592, 0.0, 2.712, 10.8),
+                             ("M5", float(last), 0.0, float(last) + 0.12, 10.8)]
+                    if horizontal:
+                        rects = [(ly, y0, x0, y1, x1) for ly, x0, y0, x1, y1 in rects]
+                    m = {"W": 10.8, "H": 10.8, "obs": [], "pins": {
+                        n: {"use": use, "rects": rects} for n, use in
+                        (("VDD", "POWER"), ("VSS", "GROUND"))}}
+                    self.assertEqual(child_lint.check_pg(m)["ok"], expected)
+
     def test_bloat_fails(self):
         r = self.run_lint(lef(pg="M6", obs=[("M6", 0, 0, 20, 10)]))
         self.assertIn("a", self.checks(r))
