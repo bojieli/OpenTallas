@@ -17372,3 +17372,9 @@ QWEN_VM_RETURN_PIN_INPUT_1016 = dict(
     source_ff_per_leaf=668, additional_SU_edges=1, row_read_edges_added=0,
     RO6_SU_VL=20, RO6_row_RL=18, source_widths_unchanged=True,
     outline_um=(64.8,64.8), physical_qualified=False, compiler_adopted=False)
+
+
+def s81_qb_read_root_candidate_model(**kwargs):
+    """Size separate real QB read-output clocks before RTL or physical build."""
+    from uarch_model_s81_qb_read_root import model
+    return model(**kwargs)

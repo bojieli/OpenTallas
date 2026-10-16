@@ -47,7 +47,9 @@ class PortLatencyRecord(unittest.TestCase):
         self.repo, self.run = t / "repo", t / "run"
         kit = self.repo / "physical/ref_tile/ex"
         kit.mkdir(parents=True)
-        (kit / "spec.json").write_text(json.dumps({"top": "example"}))
+        (kit / "spec.json").write_text(json.dumps({"top": "example", "clock_port": "ck",
+                                                  "reset_ports": ["rst_n"],
+                                                  "pin_regs": {"enable": True, "exclude": "^cfg$"}}))
         (kit / "kit.env").write_text("EXTRA=('--orfs-var' 'OT_PIN_REGS=1' '--orfs-var' 'OT_PIN_REGS_CLOCK=ck')\n")
         g = ["git", "-C", str(self.repo)]
         subprocess.run(g + ["init", "-q"], check=True)

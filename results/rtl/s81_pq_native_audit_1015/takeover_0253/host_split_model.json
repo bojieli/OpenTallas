@@ -2,9 +2,21 @@
   "schema": "opentallas.s81.host_split.uarch.v1",
   "scope": "Initialization/offchip ingress component source model; NOT normal-token reservation/native-throughput qualification",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+    "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+    "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+    "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
     "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
-    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8"
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725"
   },
   "baseline": {
     "host_master": "dsfd_host_c",
@@ -56,7 +68,21 @@
       "shared_cross_leaf_pointer_wires": 0,
       "invariant": "Independent reset/identicalnativepacket snapshot; bench asserts wp/rp/n equality everyedge",
       "credit_state": "availability/fault accounting, cannot defer STATIC1 service; queue-nonempty head service limited to ingress scope"
-    }
+    },
+    "native_output_FIFO_read_select": {
+      "instance": "ingest.native_ingest.host.u_hi.u_ox",
+      "source": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+      "source_sha256": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+      "W": 289,
+      "AW": 4,
+      "RCOPY": 32,
+      "added_kept_pointer_bits": 128,
+      "added_service_edges": 0,
+      "head_equality_invariant": "All32 local read pointer copies equal canonical rbin after each read edge; independent singlepointer vs32copy20kedge proof and stalledcopy mutantFAILedge8",
+      "measured_STD_newsource": "OPEN; bb4ea307a area14527.92024 measured BEFORE output selector replication and cannot transfer"
+    },
+    "added_native_output_select_bits": 128,
+    "added_SD_and_output_select_bits": 1248
   },
   "capacity": {
     "max_sector_payload_bytes_per_active_edge": 32,
@@ -126,7 +152,7 @@
     ],
     "local_new_die_area_um2": 0,
     "slot_grant": "PENDING die_live S81-HOST-SD-SPLIT-1016-v2; actualdatachild all2.16umlattice, nativeheight77.76 to avoid estimated75-85pctutil in former51.84highregion",
-    "native_ingest_ECTL_measurement": "OPEN",
+    "native_ingest_ECTL_measurement": "bb4ea307a historical sizing-only: native14527.92024/ECTL1358.7102 STD; native predatesRCOPY32u_ox, no newsource area or physical qualification",
     "previous_unbuilt_parent_proposal_um": [
       453.6,
       77.76
@@ -447,14 +473,49 @@
   "accepted_cost_ledger": "NO new acceptance/reprice; measuredtokenloss and parentactualarea remain OPEN",
   "route_admission": "No full leaf route until unifiedmodel owner incorporates row and actual parent cuts/pin slots accepted; preserve current gates",
   "measured_gate_flow_scope": "97069e10d historical snapshots are at datawidth93.96. Latest proposed data95.04 aligns allrepeatedchild origins to2.16umlattice, pincentres snapped to real layergrid. Shared501be7692+7c1815717+07ce6450a integrated and kits regenerated; freshcurrenthelpergates pending.",
+  "measured_native_sizing_historical": {
+    "commit": "bb4ea307a",
+    "ot_rom_host_ingest_sha256": "b7f28f505df5f0ad1cc472a6d181b81e5e554f8953e77f32ed1873d137860931",
+    "newsource_sha256": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+    "native_STD_um2": 14527.92024,
+    "native_sequential_area_um2": 5709.84876,
+    "ECTL_STD_um2": 1358.7102,
+    "native_sequential_cells": 20708,
+    "native_root_sinks": {
+      "ck_core": 10096,
+      "ck_host": 9351,
+      "ck_write": 745,
+      "ck_launch": 516
+    },
+    "ECTL_sequential_cells": 2540,
+    "ECTL_root_sinks": {
+      "ck": 1633,
+      "ck_boot": 689,
+      "ckv": 152,
+      "ck_return": 66
+    },
+    "scope": "Synthesis sizing before u_ox128FF addition; not current native TT/FF/clock area evidence"
+  },
+  "current_full_HOST_proof": {
+    "record": "results/rtl/s81_host_recovery_1016/output_select_rcopy/record.json",
+    "record_sha256": "899caeb659b47edf4cd46af6d98548e1a043f2e539745948ad8e63ca3b283356",
+    "emit_calendar": "results/rtl/s81_host_recovery_1016/output_select_rcopy/emit_calendar_exact.tsv",
+    "emit_calendar_sha256": "54dc358cc9bb3ef0736390cb8a419991f1bc7982f451f14fb6cd3edc1a3f8472",
+    "row_count": 544,
+    "exact_edges": 59989,
+    "packets": 1093,
+    "completions": 1,
+    "negative_controls": "payload, interceptedCSR leak, bootkind and FIFOstalledpointer all observedFAIL",
+    "prior_artifact_scope_correction": "Old emit_calendar_m0 filename overwritten by later MUT0 negative; exact assertions valid, persistent positive timeline only newlypreserved emit_calendar_exact.tsv"
+  },
   "unified_schema": "opentallas.s81.host-native-split.candidate.v1",
   "default_off": true,
   "adopted": false,
-  "source_model_commit": "52576ecf8394188843ab5aa3379269d304391c37",
-  "source_model_sha256": "75a228b6ca44ed97c180c33be62b26223f6daa43866ab2b8c262021eef25c0dc",
+  "source_model_commit": "9aefcd0dbb1955e63f30d6db29ba8a74c23a432e",
+  "source_model_sha256": "7af09e8a335771c5ac9be19fe818879dbeaa2785b9e33e9fac466e704ac242a9",
   "source_graph_hashes": {
-    "whole_host_graph.json": "a9bec6177375998c9a259d53a0e8dceec9482d2f61ae0669837163f56918176f",
-    "source_graph.json": "9ca0042a406e3daff87fa7ff297e6c7b946d0ea8efeecf00d36a8d0bf99da8c0"
+    "whole_host_graph.json": "cbd5a0b7adc1f342d4996ad3d462d12d611ae67afe600ba826b3ab66c34c7200",
+    "source_graph.json": "23875092fa6cca0dc41baca5a3b85798a7b155699e4a19b9d7703c11fadb3ff2"
   },
   "actual_clock_delivery_pins": 12,
   "clock_delivery_pins_added": 7,
