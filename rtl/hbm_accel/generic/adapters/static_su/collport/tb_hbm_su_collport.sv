@@ -82,7 +82,8 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
  // ------------------------------------------------------------------ helpers
  function automatic [39:0] saddr(input integer lane, input integer row); saddr={22'd0,2'(QID),9'(row),7'(lane)}; endfunction
  integer seed=1;
- integer ph2=0, collide=0;
+ integer ph2=0, collide=0; reg collision_busy=0; reg saw_collision=0;
+ always @(posedge clk_q) if(rst && (|g_sl[1].u_slice.st_inj_drain)) saw_collision<=1;
  initial begin
   if($test$plusargs("PHASE2")) ph2=1;
   if($test$plusargs("COLLIDE")) collide=1;
@@ -113,7 +114,7 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
     end
     del_valid<=dv; del_flit<=df; del_obase<=ob; dcount=dcount+1;
     if(dcount>=NDEL) stage=1;
-   end else if(stage==1 && pn>20+NDEL*2) begin
+   end else if(stage==1 && pn>20+NDEL*2 && !collision_busy) begin
     reg [1:0] rd; reg [159:0] ad; reg [1023:0] ex; integer at;
     rd=0; ad=0; ex=0;
     for(integer j=0;j<2;j=j+1) if($urandom%5!=0) begin
@@ -147,7 +148,7 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
     if(icount>=NINJ) stage=2;
    end
   end
-  if(ph2 && pn==60) begin del_valid<=4'b0001; del_obase<=saddr(0,1); del_flit[544]<=1'b1; end   // captured at phase 2
+  if(ph2 && pn==61) begin del_valid<=4'b0001; del_obase<=saddr(0,1); del_flit[544]<=1'b1; end   // captured at phase 2
  end
  // inject check: value after edge q equals expectation registered for q
  always @(posedge clk_s) if(rst) begin
@@ -160,15 +161,21 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
  end
  // +COLLIDE: a drain of slice 1 port 0 group (h=0,hi=0) row 5 in the same serial edge as an inject of that group
  // (inject captured at A=4k -> serial 3k+1; drain vmw_cmd presented for serial edge 3k+1)
- initial if(collide) begin
-  wait(stage==1); @(posedge clk_s);
-  @(posedge clk_s); while(((p+2)%4)!=0) @(posedge clk_s);
-  // this edge P: request captured at A=P+1 (phase 0) -> serial s2q(A)
-  inj_rd<=2'b01; inj_addr<={40'd0,saddr(8*2,5)};      // group g=2 -> slice 1, h=0, hi=0
-  begin : dr
-   integer ns; ns=s2q(p+2);
-   wait(n==ns-1); #0.1;
-   vmw_cmd[78*1+:39]<={1'b1,1'b0,1'b0,9'd5,16'd0,8'hff}; @(posedge clk_q); #0.1; vmw_cmd<=0;
+ initial begin
+  wait(rst);  // plusargs are initialized before the common epoch release
+  if(collide) begin
+   wait(stage==1); @(negedge clk_s); collision_busy=1;
+   while(((p+1)%4)!=0) @(negedge clk_s);
+   // Stable before capture A=P+1, phase0; both sectors use the same legal group/row.
+   inj_rd=2'b01; inj_addr={80'd0,saddr(16,5),saddr(16,5)};
+   begin : dr
+    integer ns; ns=s2q(p+1);
+    wait(n==ns-1); #0.1;
+    vmw_cmd[78*1+:39]<=(39'd1<<38)|(39'd2<<33)|(39'd5<<24)|
+                             (39'((QID<<13)|(5<<4)|2)<<8)|39'hff;
+    @(posedge clk_q); #0.1; vmw_cmd<=0;
+   end
+   repeat(3)@(negedge clk_s);collision_busy=0;
   end
  end
  // ------------------------------------------------------------------ stage 2: RED_CARRY, RR, SFU ro
@@ -248,7 +255,8 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
   end
   repeat(20) @(posedge clk_q);
   if(collide||ph2) begin
-   if(any_fault) $display("SU_COLLPORT PASS negative control faulted (cx %0d core %0d slices %b)",cx_fault,core_fault,sl_fault);
+   if((!ph2 || (cx_fault && u_cx.sfault_s)) && (!collide || (sl_fault[1] && saw_collision)))
+    $display("SU_COLLPORT PASS negative control faulted PHASE2=%0d COLLIDE=%0d seen_overlap=%0d (cx %0d core %0d slices %b)",ph2,collide,saw_collision,cx_fault,core_fault,sl_fault);
    else begin $display("SU_COLLPORT FAIL negative control did not fault"); $fatal(1,"SU_COLLPORT gate rejected"); end
    $finish;
   end
