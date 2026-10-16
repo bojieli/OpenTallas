@@ -27,6 +27,15 @@ if {[llength [get_ports -quiet fo0]] && [llength [get_ports -quiet fi0]]} {
   if {![llength [get_clocks -quiet fo0_fwd]]} {
     create_generated_clock -name fo0_fwd -source [get_ports fi0] -invert -divide_by 1 [get_ports fo0]
   }
+  # (4) fn0 (dsfd_stnv_566x1 only): the NON-inverted forwarded clock tap (two kept inverters on fi0), a clock output like
+  #     fo0.  As a data pin the io_ref output budget timed fi0 -> fn0 as an I2O hold path (f8 e40f0ef1c FF -51.98 ps,
+  #     output external delay 115 ps; the hold ECO cannot fix a clock pin) -> generated clock fn0_fwd, no data budget.
+  if {[llength [get_ports -quiet fn0]]} {
+    unset_output_delay [get_ports fn0]
+    if {![llength [get_clocks -quiet fn0_fwd]]} {
+      create_generated_clock -name fn0_fwd -source [get_ports fi0] -divide_by 1 [get_ports fn0]
+    }
+  }
   set ot_fw_do [get_ports -quiet do*]
   set ot_fw_di [get_ports -quiet di*]
   if {[llength $ot_fw_do]} {
@@ -39,5 +48,5 @@ if {[llength [get_ports -quiet fo0]] && [llength [get_ports -quiet fi0]]} {
     set_input_delay $ot_fw_ib -max -clock core_clk $ot_fw_di
     set_input_delay 0 -min -clock core_clk $ot_fw_di
   }
-  puts "OT_FWD_CLOCK_OUT: fo0 = generated clock fo0_fwd (inverted fi0); [llength $ot_fw_do] do* vs fo0_fwd fall (max $ot_fw_ob / min -$ot_fw_hk), [llength $ot_fw_di] di* vs fi0 rise (max $ot_fw_ib / min 0)"
+  puts "OT_FWD_CLOCK_OUT: fo0 = generated clock fo0_fwd (inverted fi0)[expr {[llength [get_ports -quiet fn0]] ? {, fn0 = fn0_fwd (non-inverted fi0)} : {}}]; [llength $ot_fw_do] do* vs fo0_fwd fall (max $ot_fw_ob / min -$ot_fw_hk), [llength $ot_fw_di] di* vs fi0 rise (max $ot_fw_ib / min 0)"
 }
