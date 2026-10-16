@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.s81.die-current-construction-timing.v1",
+  "at": "2026-10-15T15:08:33.636006-07:00",
+  "signoff": "TTsetup>=0;FFhold>=0;DRC0;SSsensitivityonly;nativeL220/C190/spread80ps unchanged",
+  "priority_order": [
+    {
+      "case": "GEN21g current-fa44",
+      "state": "CONSTRUCTION_FAIL",
+      "source_commit": "fa44c38ee1803df8ef56b3007a38d3ddfd279155",
+      "unit": "oth-ubuntu-1615474-1792099652",
+      "actual_failure": "crE2_W0_hub: no station spot at s1600 of5895um near(14242,16526)",
+      "cause_class": "Default transverse samples floor(cy-h/2)=16515.36 outside bay lower16515.768 by0.408um, then +/-19.44um. Sole legal row16517.52 is absent. Across orientation cannot fit20.76um bay.",
+      "grt": "NOT_RUN",
+      "tt_setup": "NOT_RUN",
+      "ff_hold": "NOT_RUN",
+      "ss": "NOT_RUN",
+      "drc": "NOT_MEASURED",
+      "model_capture": "NOT_PRODUCED; failure precedes finalized model",
+      "failure_log_sha256": "527a0c0c5a6276b1904776187c107f5de85668792ee7c1614bd880a746e7cec7",
+      "next": "actual endpoint/home/channel/local-capture repair linked to full connected-group road alternative, not wider fallback search",
+      "partial_capture": "36MB exception snapshot only; not finalized or usable for route",
+      "exact_boundary_audit": "gen21g_boundary_audit.json"
+    },
+    {
+      "case": "c19b",
+      "state": "PLACE_FAIL_DIAGNOSTIC",
+      "host": "ot-epyc4",
+      "pid": 1146563,
+      "declared_source": "d8072c7473d745faf514fcd5398fdf941f92a751",
+      "source_scope": "diagnostic; full working-byte source manifest not re-attested",
+      "grt": "NOT_REACHED",
+      "tt_setup": "NOT_REACHED",
+      "ff_hold": "NOT_REACHED",
+      "model_capture": "NONE",
+      "action": "preserve original CPU job",
+      "actual_failure": "ot_mts sp_su_s y has no legal origin on this track grid",
+      "cause_class": "assigned M4 y coordinates have incompatible8nm/24nm residues modulo48nm; actual pinned tracks offset12nm; original continuous repin shifted groups off common lattice",
+      "gen": "DONE80654instances pin_alignFAIL5",
+      "preserved_live_child_pids": [
+        1675245,
+        1675251,
+        1675252
+      ]
+    },
+    {
+      "case": "c21",
+      "state": "GEN_FAIL_SOURCE_MIXED_DIAGNOSTIC",
+      "host": "ot-epyc4",
+      "pid": 1461160,
+      "declared_source": "f22723676528c75a9ddac988b3bab0ea08f4722c",
+      "disk_SOURCE_SHA": "21540610611c82e28784e5a105922193012fdc69",
+      "source_scope": "original live Python and later overwritten disk differ; declaredSHA alone is insufficient",
+      "grt": "NOT_REACHED",
+      "tt_setup": "NOT_REACHED",
+      "ff_hold": "NOT_REACHED",
+      "action": "preserve original CPU job; no native claim",
+      "actual_failure": "hb_hc_s_hc_t_d0 assertion no position within both pin reaches"
+    }
+  ],
+  "native_full_die_qualified": false,
+  "old_pin_freeze": "1c19c1930+4de171b99 all11567602bit geometry nonregression already published; not repeated or promoted to route/STA",
+  "road_direction": "primaryA VM<=~14mm2 plus jointallincidenthome/roadC inside33x26;29.4mmreticle notauthorized"
+}

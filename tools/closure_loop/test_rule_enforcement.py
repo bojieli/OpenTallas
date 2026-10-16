@@ -111,7 +111,7 @@ class GateClock(unittest.TestCase):
             g, it = self.item(gate_out(48000, lo, hi), True)
             self.assertEqual(it["severity"], "FAIL", (lo, hi))
 
-    def kit(self, td, clock=None):
+    def kit(self, td, clock=None, hold_context=True):
         kd = Path(td) / "kit"
         kd.mkdir(exist_ok=True)
         if clock is not None:
@@ -122,6 +122,8 @@ class GateClock(unittest.TestCase):
                         "git_blob": PG.SB.blob_hash(payload), "source": "working_tree"}]
             binding = {"schema": PG.SB.SCHEMA, "files": entries, "manifest_sha256": PG.SB.canonical_digest(entries),
                        "remote_archive_verified": True}
+            if hold_context:        # every current gate records the route hold context (gate_route_hold_context)
+                binding["route_hold_context"] = {"fixture": True}
             (kd / PG.CLOCK_RESULT).write_text(json.dumps({"clock": clock, "source_binding": binding}))
         return kd
 
@@ -134,6 +136,7 @@ class GateClock(unittest.TestCase):
             self.assertEqual(sev(self.kit(td), known_sinks=48000, closed_stands=True), "PASS")
             self.assertEqual(sev(self.kit(td), known_sinks=9000), "PASS")
             self.assertEqual(sev(self.kit(td, GOOD), known_sinks=48000), "PASS")   # measured evidence in the kit
+            self.assertEqual(sev(self.kit(td, GOOD, hold_context=False), known_sinks=48000), "WARN")  # historical gate
             self.assertEqual(sev(self.kit(td, dict(GOOD, tt_spread_ps=95.0))), "FAIL")
             self.assertEqual(sev(self.kit(td, dict(GOOD, tt_insertion_ps=None, tt_spread_ps=None))), "FAIL")
             small = {"max_root_sinks": 9000, "tt_insertion_ps": None, "tt_spread_ps": None}

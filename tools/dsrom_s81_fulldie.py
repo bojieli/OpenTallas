@@ -1292,7 +1292,15 @@ def pin_rects(mst, k, wmap):
                                   'S': (x0, x1, y0 + d_, y1 + d_), 'N': (x0, x1, y0 - d_, y1 - d_)}[spec[2]]
             ins.append((nm, ly, (x0, y0, x1, y1)))
         rects = ins
-    return out + rects
+    out = out + rects
+    if PIN_LATTICE and k == 1:
+        # --pin-lattice (S-DIE 2026-10-15): one legal site-grid origin per axis for every generated master (die PLACE
+        # snap.tcl ot_mts::rule); off-lattice assigned/generated pins move the least distance onto it, reported
+        from s81.pin_lattice_legalize import legalize as _pl_legalize
+        out, rep_ = _pl_legalize(mst.name, mst.w, mst.h, out)
+        if rep_['moved']:
+            PIN_LATTICE_REPORT[mst.name] = rep_
+    return out
 
 
 def lef_text(mst, k, wmap):
@@ -1349,6 +1357,11 @@ def write_lefs(m, k, path):
         txt.append(t)
         npins += n
     Path(path).write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(txt) + 'END LIBRARY\n')
+    if PIN_LATTICE and k == 1:
+        Path(str(path) + '.lattice.json').write_text(json.dumps(PIN_LATTICE_REPORT, indent=1, sort_keys=True))
+        print('OT_PIN_LATTICE masters_moved', len(PIN_LATTICE_REPORT), 'pins_moved',
+              sum(r['moved'] for r in PIN_LATTICE_REPORT.values()), 'max_move_nm',
+              max([r['max_move_nm'] for r in PIN_LATTICE_REPORT.values()] + [0]), flush=True)
     return npins
 
 
@@ -8698,6 +8711,8 @@ def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
 
 _LAY_K = [1]
 PIN_ALIGN = False               # --pin-align (s81-die v17): field-frame pins bit-aligned with their abutting peers
+PIN_LATTICE = False             # --pin-lattice (S-DIE 2026-10-15): legalize generated pins onto one track/site origin
+PIN_LATTICE_REPORT = {}
 RLY_WIDE_ORIENTED = False       # --relay-wide-oriented (S-DIE r3): >= 1,000-b relays reserve the hop-direction outline only
 RLY_WIDE_DEPTH = 36.72          # deepest granted station footprint (FILL-S 14:06)
 STN70_ACROSS_FB = False         # --stn70-across-fallback (S-DIE r3)
@@ -8906,6 +8921,17 @@ def _assigned_record(master):
         rec = json.loads(path.read_text()) if path.exists() else None
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
+            # Reject an impossible shared origin before constructing thousands
+            # of stations. This never moves assigned pins. The complete
+            # actual-platform track/site gate still owns physical qualification.
+            from s81.assigned_pin_lattice import local_residue_conflicts
+            # Qualified bound views use their measured LEF pins; assigned
+            # records may still supply clock/reset metadata for those views.
+            # --pin-lattice legalizes these pins at LEF emission (reported), so the record stands as assigned
+            conflicts = [] if master in bound_views() or PIN_LATTICE else local_residue_conflicts(rec)
+            if conflicts:
+                raise ValueError('assigned pins have no common track origin: '
+                                 + str(path) + ': ' + json.dumps(conflicts, sort_keys=True))
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 
@@ -10364,6 +10390,7 @@ def die_options(ap):
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
+    ap.add_argument('--pin-lattice', action='store_true', help='S-DIE 2026-10-15: move off-lattice generated/assigned pins the least distance onto one legal site-grid origin per axis (die PLACE snap rule); report in <lef>.lattice.json')
     ap.add_argument('--relay-wide-oriented', action='store_true', help='S-DIE r3: >= 1,000-b relays reserve only the hop-direction outline (depth >= 36.72 um), not the two-orientation square')
     ap.add_argument('--stn70-across-fallback', action='store_true', help='S-DIE r3: with --stn70-split, a 70xK group with no along-flow spot retries stacked across the flow')
     ap.add_argument('--stn-wide-square', action='store_true', help='S-BIND r6: >= 1,000-b forwarded stations (the packed static x lane) square at the same area')
@@ -10514,7 +10541,7 @@ def apply_options(a):
     global WFC_PRICED, PEER_PIN_POS, HOP_R_HUB
     HOP_R_HUB = float(getattr(a, 'hop_r_hub', 0.0) or 0.0)
     PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
-    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP, STN_WIDE_SQUARE, RLY_WIDE_ORIENTED, STN70_ACROSS_FB
+    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP, STN_WIDE_SQUARE, RLY_WIDE_ORIENTED, STN70_ACROSS_FB, PIN_LATTICE
     PIN_ALIGN = bool(getattr(a, 'pin_align', False))
     global XB_RGAP_FIRST, X_SITE_PAIR
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
@@ -10540,6 +10567,7 @@ def apply_options(a):
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     STN_WIDE_SQUARE = bool(getattr(a, 'stn_wide_square', False))
     RLY_WIDE_ORIENTED = bool(getattr(a, 'relay_wide_oriented', False))
+    PIN_LATTICE = bool(getattr(a, 'pin_lattice', False))
     STN70_ACROSS_FB = bool(getattr(a, 'stn70_across_fallback', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     global RTL_BIND, HOST_CF_BITS, HOST_TC_BITS   # HC_T_FWD / HC_T_RET / HC_RTL_WIDTHS declared global above (r6: was a SyntaxError)
