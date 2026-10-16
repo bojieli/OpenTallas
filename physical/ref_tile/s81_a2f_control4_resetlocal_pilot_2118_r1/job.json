@@ -10,7 +10,9 @@
   "branch": "codex/s81-vm-structural-2118",
   "commit": "COMMIT",
   "extra_paths": [
-   "tools/s81_vm",
+   "tools/s81_vm/area_a2f.sv",
+   "tools/s81_vm/area_a2f_control_resetlocal.sv",
+   "tools/s81_vm/area_a2f_control_resetlocal_gate.py",
    "physical/s81_vm_a2f_control_resetlocal_2118"
   ]
  },
@@ -18,7 +20,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; s81_a2f_control4_resetlocal u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv tools/s81_vm/area_a2f.sv tools/s81_vm/area_a2f_split4_composed.sv tools/s81_vm/area_a2_controlled.sv tools/s81_vm/area_id_native.sv tools/s81_vm/area_id_native_join.sv tools/s81_vm/area_a2_hardmasters.sv tools/s81_vm/area_a2f_control_resetlocal.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; s81_a2f_control4_resetlocal u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv tools/s81_vm/area_a2f.sv tools/s81_vm/area_a2f_control_resetlocal.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,

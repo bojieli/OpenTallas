@@ -80,7 +80,14 @@
   "branch": "codex/s81-vm-structural-2118",
   "tag": "split4",
   "extra_paths": [
-   "tools/s81_vm",
+   "tools/s81_vm/area_a2f.sv",
+   "tools/s81_vm/area_a2f_split4_composed.sv",
+   "tools/s81_vm/area_a2_controlled.sv",
+   "tools/s81_vm/area_id_native.sv",
+   "tools/s81_vm/area_id_native_join.sv",
+   "tools/s81_vm/area_a2_hardmasters.sv",
+   "tools/s81_vm/area_a2f_field4.sv",
+   "tools/s81_vm/area_a2f_split4_equiv_gate.py",
    "physical/s81_vm_a2f_split4_2118"
   ],
   "purpose": "A2-F pilot: measured area/closure of the planned outline (cut screen input).",

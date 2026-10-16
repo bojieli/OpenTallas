@@ -27,8 +27,7 @@ def sites(length, layer):
     return out
 
 SRC = 'tools/s81_vm/area_a2f_control_resetlocal.sv'
-DEPS = ['tools/s81_vm/area_a2f.sv', 'tools/s81_vm/area_a2f_split4_composed.sv', 'tools/s81_vm/area_a2_controlled.sv', 'tools/s81_vm/area_id_native.sv', 'tools/s81_vm/area_id_native_join.sv',
-        'tools/s81_vm/area_a2_hardmasters.sv']
+DEPS = ['tools/s81_vm/area_a2f.sv']
 OUT = ROOT / 'physical/s81_vm_a2f_control_resetlocal_2118'
 SPECS = ROOT / 'tools/ref_tile/specs_s81vm_a2f_control_resetlocal_2118'
 BRANCH = 'codex/s81-vm-structural-2118'
@@ -93,7 +92,7 @@ def build(key):
         slot_change_request=dict(contract='S81 VM A2-F front geometry candidate', version='a2f-1015',
                                  why='new hardened leaf; VM parent plan a2f_route_plan.py'),
         job=dict(owner='codex:S81 VM structural', branch=BRANCH, tag='split4',
-                 extra_paths=['tools/s81_vm', 'physical/s81_vm_a2f_control_resetlocal_2118'],
+                 extra_paths=DEPS + [SRC, 'tools/s81_vm/area_a2f_control_resetlocal_gate.py', 'physical/s81_vm_a2f_control_resetlocal_2118'],
                  purpose='A2-F pilot: measured area/closure of the planned outline (cut screen input).',
                  benches=benches, cycles_added=0))
     path = SPECS / f'{c["top"]}.json'

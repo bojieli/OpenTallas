@@ -100,7 +100,7 @@ def build(key):
         slot_change_request=dict(contract='S81 VM A2-F front geometry candidate', version='a2f-1015',
                                  why='new hardened leaf; VM parent plan a2f_route_plan.py'),
         job=dict(owner='codex:S81 VM structural', branch=BRANCH, tag='split4',
-                 extra_paths=['tools/s81_vm', 'physical/s81_vm_a2f_split4_2118'],
+                 extra_paths=DEPS + [SRC, 'tools/s81_vm/area_a2f_split4_equiv_gate.py', 'physical/s81_vm_a2f_split4_2118'],
                  purpose='A2-F pilot: measured area/closure of the planned outline (cut screen input).',
                  benches=benches, cycles_added=0))
     path = SPECS / f'{c["top"]}.json'

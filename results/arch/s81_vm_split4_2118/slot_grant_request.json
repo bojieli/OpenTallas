@@ -53,7 +53,7 @@
   "extra_diagnostic_cycles": 0,
   "actual_programme_adoption": false
  },
- "live_proof": "Full16384-bit controlled composition same pins/all output edges remains running; component and native physical gates not adoption",
+ "live_proof": "Full16384-bit field4 composition3seed x267edge PASS, all5mutants observedFAIL; originalcontrol4 in this snapshot. Separate resetlocal threshold-control exact proof/gate required before composition adoption.",
  "open": [
   "89272 leaflinks over500um; real relay reach/count and schedule cost",
   "Full-composition exact/mutant receipt",
@@ -68,10 +68,10 @@
  "sources": {
   "tools/s81_vm/area_a2f_field4.sv": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d",
   "tools/s81_vm/area_a2f_split4_composed.sv": "aaf555a3790e55465ce60ba60664bf533551091970fdf6e2eaa31d452eaf19b6",
-  "tools/s81_vm/area_a2f_control_resetlocal.sv": "76ee6a4294154abf2ad324d8f4c3a2ca68a0c51ea8a62036020ee4c7ff4e79f1",
+  "tools/s81_vm/area_a2f_control_resetlocal.sv": "59907c651f325341ec872da56ae3fa965ae01eac3a2fb8d40ade35aa73841d62",
   "tools/s81_vm/a2f_split4_route_plan.py": "9e0ac2667c436bfa8c546b92303e1997d97093f289daa982eb57911a51876fb8",
   "physical/s81_vm_a2f_split4_2118/s81_a2f_field4.pins.json": "933535b948fec16030b10a2df009d7c6341f10ce4a97fd2059976dcf619e0839",
-  "physical/s81_vm_a2f_control_resetlocal_2118/s81_a2f_control4_resetlocal.pins.json": "738461a9e9f6e6811644d842ec77aa9eaab44930ba0dfdb37937221b358e3295",
+  "physical/s81_vm_a2f_control_resetlocal_2118/s81_a2f_control4_resetlocal.pins.json": "a695800014135678dca90afd18397c109d5843f4df54761a35e8dc7d4a91a3d2",
   "results/arch/s81_vm_split4_2118/route_plan.json": "2aa6593193dc04ed319935b938d79688c75fbc04ad47663754ff63493efb5957"
  }
 }
