@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_wfc_return256_native_1016_r1",
+ "name": "dsfd_vm_wfc_return256_native_1016_r2",
  "top": "dsfd_vm_wfc_return256",
  "kind": "tile",
  "sources": [
@@ -65,7 +65,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "r6 (new kit; RTL 320d5b77d byte-identical). History: r2 194.4x324 gate WARN (util 5%, W half empty, TT insertion 293.8). r3 a77910722 86.4x151.2 PPL pins EARLY_FAIL GRT-0116 (E/N pin hold bands, PPL stacked layers ~20 pins/um). r4 ff7ba99bc 108x172.8 balanced place_pin FLOORPLAN_MARGIN (place_pin used one M2 track per 0.27 um row: 390 M2 pins off-die). r5 2986a61e5 108x237.6 balanced M4 M4 M2: route CLOSED TT +217.81 / FF +13.48 DRC 0 but routed native FAIL launch 238.2 > 220 ps on 8 NE outputs (clock W-centre 227 um from the NE sinks, R 206.2 ps); images: logic in the N/NE triangle, S half only the E pin column because each lane512 mux reads e_d[j],[512+j],[1024+j],[1536+j] from four face quarters. r6 fix: exact io_tcl pin plan (tools/ref_tile/specs_s81vm_wfc_r6_1016/gen_return_r6_io.py, real DEF track grid): MUX-LOCAL INTERLEAVED ORDER -- E e_d[j],e_d[512+j],e_d[1024+j],e_d[1536+j] adjacent (e_v[0..3] at the E centre), N s_d[j],s_d[513+j] adjacent (s_d[512],s_d[1025],s_v,r_bad at the N centre); E alternates M4 (Y 0.012+0.048k) / M2 using two of the six M2 tracks per row (offsets 0.081/0.189, 3 tracks apart, 2 from each rail): 1,026 + 1,026 pins over 192.4 um = 5.33 pins/um/layer; N alternates M5/M3: 514 + 514 over 84.4 um = 6.09 pins/um/layer. Outline 86.4x194.4 (4 x 21.6, 9 x 21.6) = 16,796 um2, std 3,183 um2 -> util ~20%. Clock: ck on M4 at the W-face centre (rn above, return_valid/lane below), farthest sink corner 86.4+97.2 = 184 um (r5 227 um, -19%). tq[1] sync-clear fan-out (~4.1k loads on r_q/pad) left in RTL (frozen, proven source); buffered by repair_design.",
+ "structural_change": "Actual256bit return data-slice structural split, same stage counts and small clock roots. r1 CTS native timing PASS but actual gate/route pin rectangles were invalid: place_pin heterogeneous M2 Y indexing shifted514assigned pins and put38 off die. r2 preserves all assigned coordinates and existing seed pin sizes using existing actual-track OpenDB BPin helper assigned_pin_exact.tcl, then requires explicit fp_margin_lint bounds/track/min-width and exact centre audit before route. Same64.8x129.6 outline/RTL/no pitch or gate waiver. Data pair sinks7224 (+28), plus existing145-sink native diagnostic leaf =173 additional sinks; roots1to3; normal edges0/diagnostic+2.",
  "slot_change_request": {
   "contract": "S81 VM WFC structural native successor",
   "version": "hop1-r7-1016",
@@ -143,12 +143,12 @@
   ],
   "cycles_added": 0,
   "peak_ram_gb": 12,
-  "structural_change": "Split full2048input/1026output/7196FF return root into two1024input/514output256bit lane slices, each own local root; repeated tq clear fanout halves and longest corner shrinks184->129.6um. Same exact data stages; actual independent faultcopies observed through existing native diagnostic master in wrapper (+2 diagnostic edges). Two64.8x129.6 reservations equal old86.4x194.4 data area; plus21.6square diagnostic=+466.56um2/+2roots. Oldr6 measured CTS launch221.409/3pins, capture163.278/sp32.8; no r6 route."
+  "structural_change": "Actual256bit return data-slice structural split, same stage counts and small clock roots. r1 CTS native timing PASS but actual gate/route pin rectangles were invalid: place_pin heterogeneous M2 Y indexing shifted514assigned pins and put38 off die. r2 preserves all assigned coordinates and existing seed pin sizes using existing actual-track OpenDB BPin helper assigned_pin_exact.tcl, then requires explicit fp_margin_lint bounds/track/min-width and exact centre audit before route. Same64.8x129.6 outline/RTL/no pitch or gate waiver. Data pair sinks7224 (+28), plus existing145-sink native diagnostic leaf =173 additional sinks; roots1to3; normal edges0/diagnostic+2."
  },
  "orfs_vars": {
   "GPL_ROUTABILITY_DRIVEN": "0"
  },
  "children": [],
  "inter": [],
- "io_tcl": "physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1/io_pins.tcl"
+ "io_tcl": "physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r2/io_pins.tcl"
 }
