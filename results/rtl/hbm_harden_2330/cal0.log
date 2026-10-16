@@ -1,0 +1,21 @@
+CAL_UNIVERSAL_STIM SW words=40 loops=3 edges=120 W=187 superset=OK
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(cfg.hex): Not enough words in the file for the requested range [0:1023].
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(expect.hex): Not enough words in the file for the requested range [0:65535].
+VM_CALENDAR_UNIVERSAL PASS120 edges exact, reset window + async assert
+rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:47: $finish called at 1796000 (1ps)
+CAL_UNIVERSAL_STIM SE words=40 loops=3 edges=120 W=187 superset=OK
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(cfg.hex): Not enough words in the file for the requested range [0:1023].
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(expect.hex): Not enough words in the file for the requested range [0:65535].
+VM_CALENDAR_UNIVERSAL PASS120 edges exact, reset window + async assert
+rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:47: $finish called at 1796000 (1ps)
+CAL_UNIVERSAL_STIM NW words=40 loops=3 edges=120 W=187 superset=OK
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(cfg.hex): Not enough words in the file for the requested range [0:1023].
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(expect.hex): Not enough words in the file for the requested range [0:65535].
+VM_CALENDAR_UNIVERSAL PASS120 edges exact, reset window + async assert
+rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:47: $finish called at 1796000 (1ps)
+CAL_UNIVERSAL_STIM NE words=40 loops=3 edges=120 W=187 superset=OK
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(cfg.hex): Not enough words in the file for the requested range [0:1023].
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(expect.hex): Not enough words in the file for the requested range [0:65535].
+VM_CALENDAR_UNIVERSAL PASS120 edges exact, reset window + async assert
+rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:47: $finish called at 1796000 (1ps)
+VM_CALENDAR_UNIVERSAL_ALL PASS4 quadrants

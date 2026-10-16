@@ -129,9 +129,9 @@
  },
  "job": {
   "owner": "Claude:H-ELEM-B",
-  "branch": "claude/hbm-elemb-su-1015",
+  "branch": "claude/hsu-bank-r10-2215",
   "tag": "r2",
-  "purpose": "Static SU LIGHT lane (KIND 0) at the accepted LAT4 point (MLAT4/ALAT3/LEAF1, FETCH_EXTRA 2; full512 LAT4 arithmetic join PASS 31 cases, ledger row SU.VOP static F2 spread LAT4): 384 replicas (96 per quarter, 24 per port-group slice of ot_hbm_su_static_top). Seven related 1:1 phase-0 stage roots at the serial 1111 ps clock. First route of this leaf. Outline from the measured LAT4 mapping (7,207 um2 std, lat4_kind0_map) at util 0.5 instead of the 216x216 prototype (util 14%). r2 (H-SU 10-15 23:55): r1 route NEEDS_HUMAN, GRT-0232 twice: initial GRT overflow 0, but post-GRT repair_timing (hold margin 30) pushed the incremental GRT to 3-13 overflows (M5); r1 gate measured 8,909 um2 std in a 14,631 um2 core = util 61 % (spec std_area 7,207 was stale) and 1,649 inputs > 3 logic levels, rst_n 506 async loads. r2 STRUCTURE: owner rule 19:50 pin-registered lane (ot_hbm_su_static_lane_pinreg: every input/output registered at its pin, measured +2 edges requests / +4 writes, absorbed by su_top_compile --pin-reg; whole-SU PIN_REG=1 native proof PASS main 5e84e5bdd) with rst_n registered (PIN_RST=1, b5800d05e); outline re-sized from the measured area at util 0.45 (std ~9,600 um2 incl. ~2,000 pin flops) instead of 0.61. Bench: leaf PASS 3,968 checks first_output 40 (SU_PINREG=1), ADDR/DATA/PHASE mutants FAIL.",
+  "purpose": "Static SU LIGHT lane (KIND 0) at the accepted LAT4 point (MLAT4/ALAT3/LEAF1, FETCH_EXTRA 2; full512 LAT4 arithmetic join PASS 31 cases, ledger row SU.VOP static F2 spread LAT4): 384 replicas (96 per quarter, 24 per port-group slice of ot_hbm_su_static_top). Seven related 1:1 phase-0 stage roots at the serial 1111 ps clock. First route of this leaf. Outline from the measured LAT4 mapping (7,207 um2 std, lat4_kind0_map) at util 0.5 instead of the 216x216 prototype (util 14%). r2 (H-SU 10-15 23:55): r1 route NEEDS_HUMAN, GRT-0232 twice: initial GRT overflow 0, but post-GRT repair_timing (hold margin 30) pushed the incremental GRT to 3-13 overflows (M5); r1 gate measured 8,909 um2 std in a 14,631 um2 core = util 61 % (spec std_area 7,207 was stale) and 1,649 inputs > 3 logic levels, rst_n 506 async loads. r2 STRUCTURE: owner rule 19:50 pin-registered lane (ot_hbm_su_static_lane_pinreg: every input/output registered at its pin, measured +2 edges requests / +4 writes, absorbed by su_top_compile --pin-reg; whole-SU PIN_REG=1 native proof PASS main 5e84e5bdd) with rst_n registered (PIN_RST=1, b5800d05e); outline re-sized from the measured area at util 0.45 (std ~9,600 um2 incl. ~2,000 pin flops) instead of 0.61. Bench: leaf PASS 3,968 checks first_output 40 (SU_PINREG=1), ADDR/DATA/PHASE mutants FAIL. Clock-entry domains follow the pin registers: every input on clk_stage_0 (command root); fetch/side outputs on clk_stage_0, write/reducer/fault/coll outputs on clk_stage_7.",
   "extra_paths": [],
   "views_to": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route",
@@ -250,7 +250,21 @@
     "clk_insert_0",
     "clk_insert_1",
     "clk_insert_2",
-    "clk_insert_3"
+    "clk_insert_3",
+    "cp_m1",
+    "cp_imm1",
+    "cm_m1",
+    "cm_m2",
+    "cm_qm",
+    "cm_imm1",
+    "ca_ad",
+    "ca_imm2",
+    "cs_e1",
+    "cs_imm2",
+    "ce_e2",
+    "ce_imm1",
+    "co_rnd",
+    "co_dst"
    ],
    "outputs": [
     "vi_re",
@@ -259,7 +273,7 @@
     "rd_re",
     "rd_src",
     "side_v",
-    "coll"
+    "side_x"
    ]
   },
   "stage1": {
@@ -270,10 +284,7 @@
     1,
     1
    ],
-   "inputs": [
-    "cp_m1",
-    "cp_imm1"
-   ],
+   "inputs": [],
    "outputs": []
   },
   "stage2": {
@@ -284,12 +295,7 @@
     1,
     1
    ],
-   "inputs": [
-    "cm_m1",
-    "cm_m2",
-    "cm_qm",
-    "cm_imm1"
-   ],
+   "inputs": [],
    "outputs": []
   },
   "stage3": {
@@ -300,13 +306,8 @@
     1,
     1
    ],
-   "inputs": [
-    "ca_ad",
-    "ca_imm2"
-   ],
-   "outputs": [
-    "side_x"
-   ]
+   "inputs": [],
+   "outputs": []
   },
   "stage5": {
    "ports": [
@@ -316,10 +317,7 @@
     1,
     1
    ],
-   "inputs": [
-    "cs_e1",
-    "cs_imm2"
-   ],
+   "inputs": [],
    "outputs": []
   },
   "stage6": {
@@ -330,10 +328,7 @@
     1,
     1
    ],
-   "inputs": [
-    "ce_e2",
-    "ce_imm1"
-   ],
+   "inputs": [],
    "outputs": []
   },
   "stage7": {
@@ -344,10 +339,7 @@
     1,
     1
    ],
-   "inputs": [
-    "co_rnd",
-    "co_dst"
-   ],
+   "inputs": [],
    "outputs": [
     "vm_we",
     "vm_waddr",
@@ -357,7 +349,8 @@
     "kv_wdata",
     "ro_v",
     "ro_x",
-    "fault"
+    "fault",
+    "coll"
    ]
   }
  },

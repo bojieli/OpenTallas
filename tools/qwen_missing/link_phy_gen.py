@@ -273,13 +273,49 @@ def generate_static_serdes(out: Path) -> dict:
     return {name: sheet}
 
 
+def generate_nface(out: Path) -> dict:
+    """Q-COMPUTE-DIE r2h (00:30 10-16): the same two compute-die PHY configurations (UCIe 1,043-bit TP8 flit,
+    597-bit static SerDes) with the FDI pin block on the core-facing TOP edge (M5, 0.048 um pitch, centred): the
+    shoreline-PHY form this generator first emitted (west=False). Footprint, latency, timing and libs unchanged; it
+    lets the PHYs sit in one south-edge row under the collective (router fpq_r2hBCESV: die 522 mm2, cut 0.592)."""
+    import shutil
+    tmp = out / "_tp8"
+    recs = generate(tmp, tp8=True)
+    res = {}
+    for name, base, fw in (("ot_qfd_ucie_x64_phy", recs["ot_qfd_ucie_x64_phy"], None),
+                           (STATIC_SERDES, recs["ot_qfd_serdes_112g_x12_phy"], STATIC_SERDES_FW)):
+        fw = fw or base["fdi"]["flit_bits"]
+        w, h = base["footprint"]["width_um"], base["footprint"]["height_um"]
+        plist = pins(fw)
+        lef, pin_info = write_lef(name, w, h, plist, 0.048, west=False)
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{name}.lef").write_text(lef)
+        comment = f"{name}: licensed link PHY abstract, core-facing top FDI, boundary timing only (ASSUMED registered pins)"
+        for c, t in base["timing"].items():
+            (d / f"{name}_{c}.lib").write_text(write_liberty(name, Timing(**t), plist, w * h, None, comment))
+        (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment))
+        (d / f"{name}_model.sv").write_text(model_sv(name, fw, base["fdi"]["latency_fdi_cycles_one_way"]))
+        sheet = dict(schema="opentallas.qwen-missing.link-phy-abstract.v1", generator="tools/qwen_missing/link_phy_gen.py --nface",
+                     name=name, derived_from=f"{base['name']} tp8_1013 revision: same footprint, latency, timing; FDI block on the top edge",
+                     footprint=base["footprint"], fdi=dict(base["fdi"], flit_bits=fw), assumed=base["assumed"],
+                     published=base["published"], pins=pin_info, timing=base["timing"], claim_boundary=base["claim_boundary"])
+        files = sorted(q.name for q in d.iterdir() if q.name != f"{name}.json")
+        sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+        (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+        res[name] = sheet
+    shutil.rmtree(tmp)
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--tp8", action="store_true", help="approved TP8 RXD512 / west-face M4 FDI frames (write a new view revision)")
     ap.add_argument("--static-serdes", action="store_true", help="597-bit static-FDI SerDes revision for the static collective")
+    ap.add_argument("--nface", action="store_true", help="compute-die UCIe + static SerDes with the FDI block on the top edge")
     a = ap.parse_args()
-    r = generate_static_serdes(a.out) if a.static_serdes else generate(a.out, tp8=a.tp8)
+    r = (generate_nface(a.out) if a.nface else generate_static_serdes(a.out) if a.static_serdes else generate(a.out, tp8=a.tp8))
     print(json.dumps({k: dict(v["footprint"], **v["fdi"]) for k, v in r.items()}, indent=1))
 
 

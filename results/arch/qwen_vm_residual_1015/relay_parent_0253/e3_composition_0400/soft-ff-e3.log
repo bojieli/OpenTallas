@@ -1,0 +1,16 @@
+{
+  "scope": "Actual hierarchical source FF Q-bit census after proc/opt_clean, physical children blackboxed. Source FFs are unhardened and unqualified. No wires-only parent claim.",
+  "all_soft_ff_bits": 80647,
+  "parent_clock_ff_bits": 12198,
+  "BV_parent_clock_ff_bits": 10365,
+  "BV_categories": {
+    "other_write_control": 10342,
+    "row_read": 23
+  },
+  "parent_clock_module_totals": {
+    "ot_qfd_sp_vector_memory_bv": 10365,
+    "qfd_sp_vector_memory": 555,
+    "ot_hdc_delay": 232,
+    "ot_qfd_vm_q_export_fixed": 1046
+  }
+}

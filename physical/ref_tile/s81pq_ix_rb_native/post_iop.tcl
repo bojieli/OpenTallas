@@ -2,7 +2,7 @@
 # 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result
 set ot_blk [ord::get_db_block]
 foreach bt [$ot_blk getBTerms] { if {[$bt getSigType] in {POWER GROUND}} continue; foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }
-source /src/physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl
+source /src/physical/ref_tile_specs/s81pq_native/s81pq_ix_rb_native_spread_pins.tcl
 set ot_n 0; set ot_miss {}
 foreach bt [$ot_blk getBTerms] {
   if {[$bt getSigType] in {POWER GROUND}} continue

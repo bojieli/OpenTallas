@@ -1834,7 +1834,7 @@ def host_cores(cfg):
     return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
-TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
+TOOL_REF_HOST = "ot-epyc4"  # 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
@@ -2775,9 +2775,21 @@ def ship_helpers(host, run, job=None):
             current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
-            ok, why = HO.compare_plans(frozen, current)
+            ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            if sanctioned:
+                # FLEET-RUN SANCTION (ROOT 2026-10-16): only fleet-run helpers (tt_overlay.py: the route executes the
+                # fleet copy kept at main, fleet-first since 00cbddaea) drifted, to exactly origin/main's blob.  Keep the
+                # gate's plan, record both shas, and freeze the executed bytes so a later verify/reinstall matches cl/.
+                job.setdefault("route_overlay_plan_gate", frozen)
+                job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
+                                                                       for r in sanctioned)
+                for r in sanctioned:
+                    event(job, f"FLEET-RUN SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
+                               f"{r['current_git_blob'][:9]} (sha256 {r['current_sha256'][:16]}, origin/main "
+                               f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
+                job["route_overlay_plan"] = frozen = current
             HO.store_payloads(HELPER_STORE, frozen, payloads)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
@@ -2948,14 +2960,32 @@ TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/clo
 SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
 
 
+def _snapshot_main_sha(name):
+    """sha256 of the bytes the daemon ships for helper basename `name` now (origin/main resolution), or None"""
+    helper = next((h for h in HELPERS if Path(h).name == name), None)
+    if helper is None:
+        return None
+    try:
+        return hashlib.sha256(overlay_helper_bytes(helper)).hexdigest()
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def snapshot_refresh_sh(run):
-    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv)"""
+    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv).
+    SNAPSHOT-MAIN-ONLY (ROOT 2026-10-16): a copy is refreshed only when {run}/cl/<f> has the sha256 of the bytes the
+    daemon ships from origin/main NOW.  A frozen job (verified original / reinstalled / bench relocation) carries its
+    gate-time helpers in cl/, and the old unconditional copy would have pushed e.g. tt_overlay ba24e51 (deletes
+    GRT183_HOOK) back over the fleet snapshot every route runs (tt_overlay_fallback is fleet-first)."""
     out = ""
     for dirs, files in SNAPSHOT_REFRESH:
-        out += (f"for fh in {' '.join(dirs)}; do for fd in {' '.join(f + ':' + d for f, d in files)}; do "
-                f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
-                f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
-                f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; ")
+        for f, d in files:
+            sha = _snapshot_main_sha(f)
+            if not sha:
+                continue
+            out += (f"for fh in {' '.join(dirs)}; do t=$fh/{d}; [ -f {run}/cl/{f} ] && [ -d $t ] && "
+                    f"[ \"$(sha256sum < {run}/cl/{f} | cut -c1-64)\" = {sha} ] && ! cmp -s {run}/cl/{f} $t/{f} && "
+                    f"cp -f {run}/cl/{f} $t/.{f}.$$ && mv -f $t/.{f}.$$ $t/{f}; done; ")
     return out
 
 
@@ -4197,6 +4227,12 @@ def stage_output_dirs(j, st):
         return [subst(d, j) for d in ([out] if isinstance(out, str) else out)]
     if st["kind"] in ("calibrate", "route"):
         return [f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"]
+    # EXPORT-ASIDE (ROOT 2026-10-16, qkd_rlys_1-v1-838dc5048): a retried ref_tile collect re-exported into the same
+    # views dir and export_provenance refused it ('existing provenance: use a fresh export directory'), so EVERY
+    # failed first collect became NEEDS_HUMAN on the retry.  The export --out dir is the stage's output.
+    m = re.search(r"ref_tile\.py export\b[^&;|>]*?--out\s+(\S+)", st.get("cmd") or "")
+    if m:
+        return [subst(m.group(1), j)]
     return []
 
 
@@ -6235,8 +6271,11 @@ def child_lint_gate_checks(spec):
 
 def pick_view_lef(paths, block):
     """the block's own view among the record's LEFs (not bloat / macro copies of its children)"""
-    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p and "/macros/" not in p]
-    return next((p for p in cand if Path(p).stem == block), None)
+    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p
+            and not {"macros", "provenance"}.intersection(Path(p).parts) and Path(p).stem == block]
+    # Collect retries retain <block>.attemptN beside the active view. Prefer the
+    # canonical bundle; provenance/raw is immutable evidence, never an active view.
+    return next((p for p in cand if Path(p).parent.name == block), next(iter(cand), None))
 
 
 def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
@@ -9041,7 +9080,23 @@ def cmd_recover_export_lint(a):
     import base64
     from export_lint_recovery import eligible
     j = load_job(a.name)
-    eligible(j)
+    evidence = None
+    try:
+        eligible(j)
+    except ValueError as exc:
+        if str(exc) != 'no recorded PG lint collection failure':
+            raise
+        probe = ("import hashlib,json,pathlib; "
+                 "ps=[p for p in pathlib.Path(" + repr(j['run']) + ").glob('record/views/**/provenance/abstract_pin_stub.json') "
+                 "if p.parent.parent.name==" + repr(j['spec']['block']) + "]; "
+                 "print(json.dumps([dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),"
+                 "child_lint=json.loads(p.read_text()).get('child_lint',{})) for p in ps]))")
+        r = ssh(j['host'], 'python3 -c ' + shlex.quote(probe), timeout=60, check=True)
+        records = json.loads(r.stdout)
+        if len(records) != 1:
+            raise ValueError('expected one retained structured lint receipt')
+        evidence = records[0]
+        eligible(j, evidence)
     head = _ovl_head()
     rel = "tools/hier_contract/child_lint.py"
     data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
@@ -9049,6 +9104,8 @@ def cmd_recover_export_lint(a):
     request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
                    helper_sha256=hashlib.sha256(data).hexdigest(),
                    guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    if evidence:
+        request['pg_lint_evidence'] = evidence
     r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
             input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
     j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())

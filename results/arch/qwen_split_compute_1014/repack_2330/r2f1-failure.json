@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.qwen.compute.trial-failure.v1",
+  "trial": "r2f1",
+  "source_commit": "1834d4b61",
+  "status": "GEN_FAIL_NO_CASE",
+  "error": "relays: no free spot for bword_1 near (2143,9369)",
+  "log_sha256": "1a9b5af3aa03445e0dd4479a6b38af5d9c3723f36b26b26572e299cb55979f55",
+  "physical_gate": "FAIL: not allocated; no GRT/STA/DRC qualification",
+  "cause": "Generic field placement rejected whole-frame-vacant row channels, despite repacked 129.6um row gaps; failed target is in the actual 821um head-row gap.",
+  "successor_source": "bf04c007d",
+  "successor": "r2f2: search actual legal row intervals; all occupancy/pin-to-pin/cut/timing gates retained",
+  "remaining": [
+    "cut 0.6715 exceeds 0.60",
+    "frame-only held45 tile has no closed native view",
+    "71 unconnected producer inputs and 30 missing RTL clock ports in r2b2",
+    "regional clocks, actual boundary phi-R and physical reset distribution"
+  ]
+}

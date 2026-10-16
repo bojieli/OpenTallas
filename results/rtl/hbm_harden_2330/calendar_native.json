@@ -1,0 +1,23 @@
+{
+  "cell": "hfd_hgi_vm_calendar",
+  "view": "physical/ref_tile/hv15_vm_cal_u/views/hfd_hgi_vm_calendar",
+  "lib_cell": "hfd_hgi_vm_calendar",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 260.8,
+  "spread_ps": 92.8,
+  "outputs": 223,
+  "inputs": 306,
+  "launch_ps": 222.0,
+  "launch_pin": "bank_client[0]",
+  "capture_ps": 206.2,
+  "capture_pin": "cfg_data[251]",
+  "launch_over": 4,
+  "capture_over": 16,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 222.01589 > 220 (4 pins); capture 206.21348 > 190 (16 pins)"
+}

@@ -1,0 +1,38 @@
+{
+ "owner": "Q-ATTN-RATE (Claude 0030)",
+ "date": "2026-10-16",
+ "decision": "The V block transposer is replaced by a placement change (no 8-sector buffer). qkd_kv_static_writer VMAP=1 puts V row t in group {t[5:4],t[0]} of stack t[8:7], PC sector {1,0,t[6],t[12:9],t[3:1]}; K is unchanged. Each w16 port k then reads only groups {k,0} (even q) and {k,1} (odd q). Every PC delivers its rows in the controller's EXISTING v_consumer_order (ascending ordinal {t[12:9],t[6],t[3:1]}), one sector every 2nd core edge; the rows t<T are an ordinal prefix. The KV-die V port qkd_pv16_vport is a static 2:1 select of two 4-PC quads with input+output pin registers.",
+ "cycles": {
+  "pv_service_layer": "unchanged: 1,605 vs 1,816 price (0.88x); pair out_age identical at every T (169 @T<=129 ... 665 @8192)",
+  "vport_edges": "2 (in + out pin registers) inside the RL 19 request->V budget (pops compiled at request+17)",
+  "v_prefetch_lead_core": {
+   "refresh_as_implemented": 68,
+   "refresh_upper_bound": 79
+  },
+  "ring_peak": "<=64 at every T with ring pacing (DEPTH 64 kept)",
+  "per_pc_consume_gap_core": 2
+ },
+ "area_kv_die": {
+  "vport_tiles": 16,
+  "vport_outline_um": [
+   86.4,
+   172.8
+  ],
+  "vport_mm2_total": 0.2389,
+  "vport_ff_each": 3210,
+  "vport_std_um2_each": 1230,
+  "vport_is_pin_bound": "3,276 pins; util 9%",
+  "transposer_alternative_ff": "128 PCs x 8 sectors x 256 b = 262,144 FF of buffer, plus the same port select (not built)"
+ },
+ "evidence": {
+  "writer": "tb_qkd_kv_static_writer VMAP=0 and VMAP=1: PASS 36 stages x 8,192 positions, 2,359,296 sectors (independent inverse oracle); VMAP=1 mutants 1-6 all OBSERVED_FAIL",
+  "composition": "tb_qwen_pv16_vservice (8 actual qkd_pv16_vport + actual ot_qwen_tp8_pv_wide_pair; PC rings popped only at their head on compiled slots): pair0 T 1/100/129/300/1000/2049/4097/8192 and pair1 T 1/129/300/2049/4097/8192 EXACT 512 words, 0 faults, out_age unchanged",
+  "negatives": "vport sel inverted: 8/8 vport faults; quarter swap: 256 wrong words; raw sector-order stream: pair fault; pair join-order mutant: 115 wrong words",
+  "kv_calendar": "tools/qwen_static_schedule/kv_calendar.py compile_pv16_v / pv16_receipt -> kv_calendar_v_pass.json"
+ },
+ "open": [
+  "vport kit qkd_pv16_vport_r1 in the closure loop",
+  "KV-die integration: 16 vport homes + ring->vport wiring (each PC ring feeds exactly one port), writer VMAP=1 in the die build, landing get_sector VMAP for V",
+  "K/V concurrent ring sharing in a 36-layer timeline"
+ ]
+}

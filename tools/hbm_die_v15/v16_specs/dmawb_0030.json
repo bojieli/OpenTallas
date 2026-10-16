@@ -1,0 +1,4782 @@
+{
+ "region": "dmawb",
+ "author": "H-NETLIST/dmawb 2026-10-16",
+ "basis_commit": "origin/main d8c4aa677",
+ "instances": [
+  {
+   "name": "wbk_SW",
+   "master": "ot_hbm_svc_wb_kport",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   },
+   "slot": "hb_dbk_SW",
+   "owner": "H-NETLIST/dmawb",
+   "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
+  },
+  {
+   "name": "wbk_SE",
+   "master": "ot_hbm_svc_wb_kport",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   },
+   "slot": "hb_dbk_SE",
+   "owner": "H-NETLIST/dmawb",
+   "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
+  },
+  {
+   "name": "wbk_NW",
+   "master": "ot_hbm_svc_wb_kport",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   },
+   "slot": "hb_dbk_NW",
+   "owner": "H-NETLIST/dmawb",
+   "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
+  },
+  {
+   "name": "wbk_NE",
+   "master": "ot_hbm_svc_wb_kport",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   },
+   "slot": "hb_dbk_NE",
+   "owner": "H-NETLIST/dmawb",
+   "note": "DMA write-back partner: pin regs + ot_hbm_svc_wb_cutthrough_cdc (32 x 128x256 SRAM, 32 CDC payload FIFOs, per-PC posted count on true k_wr_done) + reservation receipts (wb_ready, wa) + WB window command to vmks_<q>0..7; 32 K write ports via pin skids"
+  }
+ ],
+ "retire_v15": [],
+ "edges": [
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_reserve_v"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_reserve_v"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_reserve_bank"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_reserve_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_fill_bank"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_fill_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_reserve_epoch"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_reserve_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_fill_epoch"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_fill_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_reserve_sectors"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_reserve_sectors"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_reserve_base"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_reserve_base"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wb_fill_start"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wb_fill_start"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SW",
+    "wd"
+   ],
+   "dst": [
+    "wbk_SW",
+    "wd"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wb_ready"
+   ],
+   "dst": [
+    "hb_dbk_SW",
+    "wb_ready"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wa"
+   ],
+   "dst": [
+    "hb_dbk_SW",
+    "wa"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    0,
+    4
+   ],
+   "dst": [
+    "vmks_SW0",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "dst": [
+    "vmks_SW0",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "dst": [
+    "vmks_SW0",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW0",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW0",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    4,
+    8
+   ],
+   "dst": [
+    "vmks_SW1",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    120,
+    240
+   ],
+   "dst": [
+    "vmks_SW1",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    1024,
+    2048
+   ],
+   "dst": [
+    "vmks_SW1",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW1",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW1",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW2",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW2",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW2",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    8,
+    12
+   ],
+   "dst": [
+    "vmks_SW2",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    240,
+    360
+   ],
+   "dst": [
+    "vmks_SW2",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    2048,
+    3072
+   ],
+   "dst": [
+    "vmks_SW2",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW2",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW2",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW3",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW3",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW3",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    12,
+    16
+   ],
+   "dst": [
+    "vmks_SW3",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    360,
+    480
+   ],
+   "dst": [
+    "vmks_SW3",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    3072,
+    4096
+   ],
+   "dst": [
+    "vmks_SW3",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW3",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW3",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW4",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW4",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW4",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    16,
+    20
+   ],
+   "dst": [
+    "vmks_SW4",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    480,
+    600
+   ],
+   "dst": [
+    "vmks_SW4",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    4096,
+    5120
+   ],
+   "dst": [
+    "vmks_SW4",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW4",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW4",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW5",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW5",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW5",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    20,
+    24
+   ],
+   "dst": [
+    "vmks_SW5",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    600,
+    720
+   ],
+   "dst": [
+    "vmks_SW5",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    5120,
+    6144
+   ],
+   "dst": [
+    "vmks_SW5",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW5",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW5",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW6",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW6",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW6",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    24,
+    28
+   ],
+   "dst": [
+    "vmks_SW6",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    720,
+    840
+   ],
+   "dst": [
+    "vmks_SW6",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    6144,
+    7168
+   ],
+   "dst": [
+    "vmks_SW6",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW6",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW6",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SW7",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SW7",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SW7",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_v",
+    28,
+    32
+   ],
+   "dst": [
+    "vmks_SW7",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_addr",
+    840,
+    960
+   ],
+   "dst": [
+    "vmks_SW7",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SW",
+    "w_k_wdata",
+    7168,
+    8192
+   ],
+   "dst": [
+    "vmks_SW7",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SW7",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_rdy",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SW7",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SW",
+    "w_k_wr_done",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_reserve_v"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_reserve_v"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_reserve_bank"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_reserve_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_fill_bank"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_fill_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_reserve_epoch"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_reserve_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_fill_epoch"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_fill_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_reserve_sectors"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_reserve_sectors"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_reserve_base"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_reserve_base"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wb_fill_start"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wb_fill_start"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_SE",
+    "wd"
+   ],
+   "dst": [
+    "wbk_SE",
+    "wd"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wb_ready"
+   ],
+   "dst": [
+    "hb_dbk_SE",
+    "wb_ready"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wa"
+   ],
+   "dst": [
+    "hb_dbk_SE",
+    "wa"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    0,
+    4
+   ],
+   "dst": [
+    "vmks_SE0",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "dst": [
+    "vmks_SE0",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "dst": [
+    "vmks_SE0",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE0",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE0",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    4,
+    8
+   ],
+   "dst": [
+    "vmks_SE1",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    120,
+    240
+   ],
+   "dst": [
+    "vmks_SE1",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    1024,
+    2048
+   ],
+   "dst": [
+    "vmks_SE1",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE1",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE1",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE2",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE2",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE2",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    8,
+    12
+   ],
+   "dst": [
+    "vmks_SE2",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    240,
+    360
+   ],
+   "dst": [
+    "vmks_SE2",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    2048,
+    3072
+   ],
+   "dst": [
+    "vmks_SE2",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE2",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE2",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE3",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE3",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE3",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    12,
+    16
+   ],
+   "dst": [
+    "vmks_SE3",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    360,
+    480
+   ],
+   "dst": [
+    "vmks_SE3",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    3072,
+    4096
+   ],
+   "dst": [
+    "vmks_SE3",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE3",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE3",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE4",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE4",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE4",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    16,
+    20
+   ],
+   "dst": [
+    "vmks_SE4",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    480,
+    600
+   ],
+   "dst": [
+    "vmks_SE4",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    4096,
+    5120
+   ],
+   "dst": [
+    "vmks_SE4",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE4",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE4",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE5",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE5",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE5",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    20,
+    24
+   ],
+   "dst": [
+    "vmks_SE5",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    600,
+    720
+   ],
+   "dst": [
+    "vmks_SE5",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    5120,
+    6144
+   ],
+   "dst": [
+    "vmks_SE5",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE5",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE5",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE6",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE6",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE6",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    24,
+    28
+   ],
+   "dst": [
+    "vmks_SE6",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    720,
+    840
+   ],
+   "dst": [
+    "vmks_SE6",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    6144,
+    7168
+   ],
+   "dst": [
+    "vmks_SE6",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE6",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE6",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_SE7",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_SE7",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_SE7",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_v",
+    28,
+    32
+   ],
+   "dst": [
+    "vmks_SE7",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_addr",
+    840,
+    960
+   ],
+   "dst": [
+    "vmks_SE7",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_SE",
+    "w_k_wdata",
+    7168,
+    8192
+   ],
+   "dst": [
+    "vmks_SE7",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_SE7",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_rdy",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_SE7",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_SE",
+    "w_k_wr_done",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_reserve_v"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_reserve_v"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_reserve_bank"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_reserve_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_fill_bank"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_fill_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_reserve_epoch"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_reserve_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_fill_epoch"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_fill_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_reserve_sectors"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_reserve_sectors"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_reserve_base"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_reserve_base"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wb_fill_start"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wb_fill_start"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NW",
+    "wd"
+   ],
+   "dst": [
+    "wbk_NW",
+    "wd"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wb_ready"
+   ],
+   "dst": [
+    "hb_dbk_NW",
+    "wb_ready"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wa"
+   ],
+   "dst": [
+    "hb_dbk_NW",
+    "wa"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    0,
+    4
+   ],
+   "dst": [
+    "vmks_NW0",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "dst": [
+    "vmks_NW0",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "dst": [
+    "vmks_NW0",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW0",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW0",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    4,
+    8
+   ],
+   "dst": [
+    "vmks_NW1",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    120,
+    240
+   ],
+   "dst": [
+    "vmks_NW1",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    1024,
+    2048
+   ],
+   "dst": [
+    "vmks_NW1",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW1",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW1",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW2",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW2",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW2",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    8,
+    12
+   ],
+   "dst": [
+    "vmks_NW2",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    240,
+    360
+   ],
+   "dst": [
+    "vmks_NW2",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    2048,
+    3072
+   ],
+   "dst": [
+    "vmks_NW2",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW2",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW2",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW3",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW3",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW3",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    12,
+    16
+   ],
+   "dst": [
+    "vmks_NW3",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    360,
+    480
+   ],
+   "dst": [
+    "vmks_NW3",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    3072,
+    4096
+   ],
+   "dst": [
+    "vmks_NW3",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW3",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW3",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW4",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW4",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW4",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    16,
+    20
+   ],
+   "dst": [
+    "vmks_NW4",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    480,
+    600
+   ],
+   "dst": [
+    "vmks_NW4",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    4096,
+    5120
+   ],
+   "dst": [
+    "vmks_NW4",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW4",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW4",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW5",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW5",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW5",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    20,
+    24
+   ],
+   "dst": [
+    "vmks_NW5",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    600,
+    720
+   ],
+   "dst": [
+    "vmks_NW5",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    5120,
+    6144
+   ],
+   "dst": [
+    "vmks_NW5",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW5",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW5",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW6",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW6",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW6",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    24,
+    28
+   ],
+   "dst": [
+    "vmks_NW6",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    720,
+    840
+   ],
+   "dst": [
+    "vmks_NW6",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    6144,
+    7168
+   ],
+   "dst": [
+    "vmks_NW6",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW6",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW6",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NW7",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NW7",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NW7",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_v",
+    28,
+    32
+   ],
+   "dst": [
+    "vmks_NW7",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_addr",
+    840,
+    960
+   ],
+   "dst": [
+    "vmks_NW7",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NW",
+    "w_k_wdata",
+    7168,
+    8192
+   ],
+   "dst": [
+    "vmks_NW7",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NW7",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_rdy",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NW7",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NW",
+    "w_k_wr_done",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_reserve_v"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_reserve_v"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_reserve_bank"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_reserve_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_fill_bank"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_fill_bank"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_reserve_epoch"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_reserve_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_fill_epoch"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_fill_epoch"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_reserve_sectors"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_reserve_sectors"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_reserve_base"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_reserve_base"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wb_fill_start"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wb_fill_start"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "hb_dbk_NE",
+    "wd"
+   ],
+   "dst": [
+    "wbk_NE",
+    "wd"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wb_ready"
+   ],
+   "dst": [
+    "hb_dbk_NE",
+    "wb_ready"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wa"
+   ],
+   "dst": [
+    "hb_dbk_NE",
+    "wa"
+   ],
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv (DMA <-> write-back composition, same port names) + rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv header"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE0",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE0",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE0",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    0,
+    4
+   ],
+   "dst": [
+    "vmks_NE0",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "dst": [
+    "vmks_NE0",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "dst": [
+    "vmks_NE0",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE0",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE0",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE1",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE1",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE1",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    4,
+    8
+   ],
+   "dst": [
+    "vmks_NE1",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    120,
+    240
+   ],
+   "dst": [
+    "vmks_NE1",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    1024,
+    2048
+   ],
+   "dst": [
+    "vmks_NE1",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE1",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE1",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    4,
+    8
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE2",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE2",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE2",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    8,
+    12
+   ],
+   "dst": [
+    "vmks_NE2",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    240,
+    360
+   ],
+   "dst": [
+    "vmks_NE2",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    2048,
+    3072
+   ],
+   "dst": [
+    "vmks_NE2",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE2",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE2",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    8,
+    12
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE3",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE3",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE3",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    12,
+    16
+   ],
+   "dst": [
+    "vmks_NE3",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    360,
+    480
+   ],
+   "dst": [
+    "vmks_NE3",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    3072,
+    4096
+   ],
+   "dst": [
+    "vmks_NE3",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE3",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE3",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    12,
+    16
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE4",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE4",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE4",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    16,
+    20
+   ],
+   "dst": [
+    "vmks_NE4",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    480,
+    600
+   ],
+   "dst": [
+    "vmks_NE4",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    4096,
+    5120
+   ],
+   "dst": [
+    "vmks_NE4",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE4",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE4",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    16,
+    20
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE5",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE5",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE5",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    20,
+    24
+   ],
+   "dst": [
+    "vmks_NE5",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    600,
+    720
+   ],
+   "dst": [
+    "vmks_NE5",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    5120,
+    6144
+   ],
+   "dst": [
+    "vmks_NE5",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE5",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE5",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    20,
+    24
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE6",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE6",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE6",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    24,
+    28
+   ],
+   "dst": [
+    "vmks_NE6",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    720,
+    840
+   ],
+   "dst": [
+    "vmks_NE6",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    6144,
+    7168
+   ],
+   "dst": [
+    "vmks_NE6",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE6",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE6",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    24,
+    28
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_v"
+   ],
+   "dst": [
+    "vmks_NE7",
+    "wbw_v"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_base"
+   ],
+   "dst": [
+    "vmks_NE7",
+    "wbw_base"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "wbw_total"
+   ],
+   "dst": [
+    "vmks_NE7",
+    "wbw_total"
+   ],
+   "clock": "stream",
+   "basis": "ot_hbm_svc_wb_kport window command {wbw_v, wbw_base, wbw_total} broadcast to the quadrant's eight ot_hbm_svc_vm_kshare leaves (per-lane exact counts computed in each kshare)"
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_v",
+    28,
+    32
+   ],
+   "dst": [
+    "vmks_NE7",
+    "w_k_v",
+    0,
+    4
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_addr",
+    840,
+    960
+   ],
+   "dst": [
+    "vmks_NE7",
+    "w_k_addr",
+    0,
+    120
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "wbk_NE",
+    "w_k_wdata",
+    7168,
+    8192
+   ],
+   "dst": [
+    "vmks_NE7",
+    "w_k_wdata",
+    0,
+    1024
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  },
+  {
+   "src": [
+    "vmks_NE7",
+    "w_k_rdy",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_rdy",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": true,
+   "allowed_exception": "HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control of the write-back K write port (vmks is the PC-side K window leaf of that boundary)"
+  },
+  {
+   "src": [
+    "vmks_NE7",
+    "w_k_wr_done",
+    0,
+    4
+   ],
+   "dst": [
+    "wbk_NE",
+    "w_k_wr_done",
+    28,
+    32
+   ],
+   "clock": "hbm",
+   "basis": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv: K write port p = PC p of the stack -> ot_hbm_svc_vm_kshare SM=p//4 lane p%4 (header: WB WRITE WINDOWS)",
+   "ready_or_credit": false,
+   "allowed_exception": null
+  }
+ ],
+ "drop_v15_edges": [],
+ "clocks": [
+  {
+   "inst": "wbk_SW",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_SW",
+   "port": "stream_fifo_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_SW",
+   "port": "hbm_clk",
+   "domain": "hbm",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_SW",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_SW",
+   "port": "hbm_rst_n",
+   "domain": "hbm",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "stream_fifo_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "hbm_clk",
+   "domain": "hbm",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "hbm_rst_n",
+   "domain": "hbm",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_NW",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_NW",
+   "port": "stream_fifo_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_NW",
+   "port": "hbm_clk",
+   "domain": "hbm",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_NW",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_NW",
+   "port": "hbm_rst_n",
+   "domain": "hbm",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_NE",
+   "port": "stream_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_NE",
+   "port": "stream_fifo_clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_NE",
+   "port": "hbm_clk",
+   "domain": "hbm",
+   "kind": "clock"
+  },
+  {
+   "inst": "wbk_NE",
+   "port": "stream_rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "wbk_NE",
+   "port": "hbm_rst_n",
+   "domain": "hbm",
+   "kind": "reset"
+  }
+ ],
+ "straps": [
+  {
+   "inst": "wbk_SW",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 0,
+   "reason": "Registered physical stack identity (same value as hb_dbk_<q>.stk); no runtime selection."
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 1,
+   "reason": "Registered physical stack identity (same value as hb_dbk_<q>.stk); no runtime selection."
+  },
+  {
+   "inst": "wbk_NW",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 2,
+   "reason": "Registered physical stack identity (same value as hb_dbk_<q>.stk); no runtime selection."
+  },
+  {
+   "inst": "wbk_NE",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 3,
+   "reason": "Registered physical stack identity (same value as hb_dbk_<q>.stk); no runtime selection."
+  }
+ ],
+ "gaps": [],
+ "notes": {
+  "closes": "G-DMA-WB (wb_ready, wa into hb_dbk_<q>) and the DMA_WRITEBACK_TO_HBM output join (wb_reserve_*/wb_fill_*/wd consumed by wbk_<q>)",
+  "timing": "static: DMA wb_reserve_v -> wb_ready valid +3 stream edges (sampled at the first drain, >= 10 edges later); DMA fill start (drain_at+1) -> wbk window command +2 stream edges -> kshare count +2 stream + CDC; wd -> WB SRAM +1 stream edge vs the unwrapped composition; K write: WB block -> wbk pin skid +1 hbm -> kshare E skid +1 -> request skid +1 -> controller KREG; k_wr_done -> kshare +1 -> wbk +1 hbm.  Variable waits only inside the HBM boundary.",
+  "fault": "wbk_<q>.fault (strap/receipt/WB block faults) has no consumer yet: ot_hbm_svc_stack_fault (H-DIE) needs a wb_fault input; listed as a request, not wired as glue.",
+  "bench": "rtl/hbm_accel/loader/service_native/run_wb_kshare_bench.sh"
+ }
+}

@@ -1,0 +1,4 @@
+DMA_VP_EQUIV PASS DESC_LAT=4 cases=20 bad_cases=11 fault_cycles=88 checks=1921 beats=6790
+STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
+FATAL: /tmp/claude-1000/hnl-harden/dma/m0/production_tb.sv:81: actual landing SRAM payload at120 q0 ordinal0
+       Time: 1236000 Scope: tb_dma_back_static.tick

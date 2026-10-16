@@ -6,6 +6,9 @@ T=$1; S=/srv/opentallas-scratch/claude/qwen-split-compute/$T; R=$S/chain
 grep -q '^rc=0' $S/out.log || { echo "build $T not rc=0"; exit 7; }
 mkdir -p $R/libs $R/case_r22k
 cd $S/src
+# several closed revisions of one master name: bind the recorded choice (bind.json lists the others per master)
+[ -z "${OT_BIND_VIEW_SELECT:-}" ] && [ -f results/arch/qwen_split_compute_1014/bind_view_select.json ] && \
+  export OT_BIND_VIEW_SELECT=results/arch/qwen_split_compute_1014/bind_view_select.json
 python3 tools/qwen_tp8/bind_real.py --case ../out/case --repo . --out ../bind.json > $R/bind.log 2>&1 || { echo bind failed; exit 8; }
 python3 tools/qwen_tp8/die_sta_libs.py --case ../out/case --repo . --bind ../bind.json --out $R/libs > $R/libs.log 2>&1 || { echo libs failed; exit 9; }
 rsync -a ../out/case/ $R/case_r22k/
@@ -24,6 +27,11 @@ if [ "$PDN_REV" = r7 ] || [ "$PDN_REV" = r8 ]; then
 # licensed link-PHY abstracts (io_serdes*, io_ucie) carry their own M4 PG straps under a full M1-M5 OBS: no die macro
 # grid reaches them (PDN-0006); their PG hookup is the PHY IP integration, recorded open (OT_PGCHECK reports it)
   python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ $UP4SKIP --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
+fi
+# Binding supplies the actual modeled PHY masters, and regroup writes the final
+# PDN grid. Apply the explicit contract here, before run.tcl creates any ODB.
+if [ "${OT_ASSUMED_PHY_PG_ACCESS:-0}" = 1 ]; then
+  python3 tools/phy_pg/apply_case.py $R/case_r22k --ack-assumed-phy-contract > $R/assumed_phy_pg_apply.json || exit 11
 fi
 # owner no-stub gate (08:05): the chain still runs for the die timing diagnosis, but its result is labelled by this verdict
 bash tools/qwen_split/port_bind_compute.sh $R/case_r22k/die.v $R/port_bind > $R/port_bind.line 2>&1; pb=$?

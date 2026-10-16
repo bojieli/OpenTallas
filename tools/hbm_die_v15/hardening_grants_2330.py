@@ -5,6 +5,7 @@ This allocates real candidate rectangles; it does not adopt a physical view or
 claim complete VM hub packing, host programming, or native die qualification.
 """
 import json
+import math
 import subprocess
 import tempfile
 from pathlib import Path
@@ -86,18 +87,18 @@ def main():
     for q in ('SW', 'SE', 'NW', 'NE'):
         name = 'calendar_' + q
         reserved = plan['vmh_' + q]
-        w, h = 220.32, 177.12
+        w, h = 220.32, 116.64
         # Dedicated lower-left home inside the existing VM-hub planning box;
         # other hub children are still unplaced and must fit around this home.
-        x = reserved['x'] + 20
+        x = math.ceil((reserved['x'] + 20) / 43.2) * 43.2
         blockers = [box(s) for s in g['slots'] if s['name'] != name
                     and s.get('parent') == 'die' and s.get('origin') and s.get('outline')]
         blockers += [(b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h'])
                      for pn, b in plan.items() if isinstance(b, dict) and 'x' in b
                      and pn != 'vmh_' + q]
-        y = reserved['y'] + 20
+        y = math.ceil((reserved['y'] + 20) / 43.2) * 43.2
         while any(overlap((x, y, x + w, y + h), b) for b in blockers):
-            y += 21.6
+            y += 43.2
         candidate = dict(name=name, cell='hfd_hgi_vm_calendar', instance=name,
             source=source, source_prerequisite=SOURCE_REF, kind='tile', parent='die',
             version=7, grant='universal_calendar_candidate_2330',
@@ -106,7 +107,8 @@ def main():
             signal_max_layer='M5', layer_cap='M5', params={},
             clock_entry=dict(port='clk', face='W', layer='M4'), pins=[],
             planning_group='vmh_' + q, qualified=False,
-            notes='Source universal W187; candidate slot only. Fresh view, host '
+            notes='Source universal W187; compact candidate slot only (174.744x70.488 SRAM, '
+                'at least20um edge channels, target51.9% total fill). Fresh view, host '
                 'programming, complete hub packing, incident pin hops and native '
                 'die timing remain OPEN. Universal output low slices are explicit in consumers.')
         assert x + w + 20 <= reserved['x'] + reserved['w']

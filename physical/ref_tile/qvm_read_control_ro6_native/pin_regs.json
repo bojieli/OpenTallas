@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qfd_vm_su_read_control",
+ "enable": false,
+ "reason": "Actual ot_qfd_vm_su_read_control RTL owns E1 descriptor input FFs and every output is an existing E3/age-pipeline FF. Zero new edges; retain these source FFs at pins and measure native220/190/80. No generic extra wrapper latency."
+}

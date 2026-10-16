@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_native_valid_diag_native_0400_r2-20261016-040053
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_native_valid_diag_native_0400_r2-20261016-040053
+ot-run: ot-agidock128  admits    39 GB (avail 87, growth 62, headroom 24, waiters 0/0 GB) load 39/64 running 16 disk 331 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1305146-1792148659 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+ACTUAL_PG VDD/M1 32
+ACTUAL_PG VDD/M2 32
+ACTUAL_PG VDD/M3 128
+ACTUAL_PG VDD/M5 4
+ACTUAL_PG VSS/M1 33
+ACTUAL_PG VSS/M2 33
+ACTUAL_PG VSS/M3 132
+ACTUAL_PG VSS/M5 4
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1305146-1792148659): exit 0

@@ -354,24 +354,30 @@ proc ot_ce_clock_wire {pin clock} {
 }
 # Match ck_insertion.py's exported insertion.json boundary population: input
 # timing endpoints plus output timing launch registers, intersected with this root.
-proc ot_ce_boundary_pins {pins} {
-  set regs {}; set boundary {}
-  foreach pin $pins { dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin }
+proc ot_ce_boundary_cells {} {
+  set boundary {}
   set inputs [all_inputs -no_clocks]
   if {[llength $inputs]} {
     foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      set name [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}]
-      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
     }
   }
   if {[llength [all_outputs]]} {
     foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      set name [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}]
-      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
     }
+  }
+  return $boundary
+}
+proc ot_ce_boundary_pins {pins boundary_cells} {
+  set regs {}; set boundary {}
+  foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
+  dict for {name unused} $boundary_cells {
+    if {[dict exists $regs $name]} {dict set boundary $name [dict get $regs $name]}
   }
   return [dict values $boundary]
 }
+
 proc ot_ce_apply {} {
   set corner [ot_ce_corner]
   set clk [get_clocks core_clk]
@@ -443,6 +449,10 @@ proc ot_ce_apply {} {
   dict for {m n} $::ot_ce_counts {
     if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
   }
+  # Source latencies are zero for this whole measurement loop, and no STA
+  # constraints/netlist change until rows are complete. Query the same bounded
+  # boundary population once per apply/current corner, never across calls.
+  set boundary_cells {}; set boundary_cells_ready 0
   # Each glue root owns a real CTS tree. Measure every propagated standard-cell
   # clock sink in the current scene; never substitute a declared/common phase.
   foreach name $::ot_ce_cts_roots {
@@ -469,7 +479,10 @@ proc ot_ce_apply {} {
     if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
       error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
     }
-    set boundary [ot_ce_boundary_pins $pins]
+    if {!$boundary_cells_ready} {
+      set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
+    }
+    set boundary [ot_ce_boundary_pins $pins $boundary_cells]
     set scope boundary
     if {![llength $boundary]} { set boundary $pins; set scope all_internal_only }
     set arrivals {}; set total 0.0
@@ -674,6 +687,23 @@ proc ot_ce_constant_cone {start} {
   if {$pin in {"" NULL}} {return 0}
   return [ot_ce_constant_iterm $pin {} 64]
 }
+# Classification is immutable during one ownership validation. Memoize only
+# in the caller's local dictionary; no STA object/classification survives it.
+proc ot_ce_startpoint_class {start purpose memo_name} {
+  upvar 1 $memo_name memo
+  set name [get_full_name $start]
+  set key [list $purpose [sta::object_type $start] $name]
+  if {[dict exists $memo $key]} {return [dict get $memo $key]}
+  if {$purpose eq "input" && [llength [get_ports -quiet $name]]} {
+    set result [list port $name]
+  } elseif {$purpose eq "output" && [sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+    set result [list top_pin $name]
+  } else {
+    set result [list cell [get_full_name [get_cells -quiet -of_objects $start]]]
+  }
+  dict set memo $key $result
+  return $result
+}
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
@@ -701,6 +731,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   set ::ot_ce_register_cells {}
   foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
   set ::ot_ce_const_memo {}
+  set startpoint_classes {}
   # OpenSTA's -data_pins population includes asynchronous clear/preset
   # controls. Classify these from the actual loaded Liberty sequential arcs,
   # never from port names or reset_ports. They retain recovery/removal timing;
@@ -712,14 +743,13 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set cell [get_full_name [get_cells -of_objects $pin]]
     set expected [dict get $cells $cell]
     foreach start [get_fanin -flat -startpoints_only -to $pin] {
-      set ports [get_ports -quiet [get_full_name $start]]
-      if {[llength $ports]} {
+      lassign [ot_ce_startpoint_class $start input startpoint_classes] source_kind source
+      if {$source_kind eq "port"} {
         set name [get_full_name $start]
         if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
           error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
         }
       } else {
-        set source [get_full_name [get_cells -quiet -of_objects $start]]
         if {![dict exists $cells $source]} {
           if {[ot_ce_constant_cone $start]} {
             puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
@@ -740,14 +770,14 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
       # synthesis-buffered, has no clock and no data domain to own; it must be
       # proved constant above. Registers and ports keep their domain checks.
-      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+      lassign [ot_ce_startpoint_class $start output startpoint_classes] source_kind source
+      if {$source_kind eq "top_pin"} {
         if {[ot_ce_constant_cone $start]} {
           puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
           continue
         }
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
       }
-      set source [get_full_name [get_cells -quiet -of_objects $start]]
       if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
         puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
         continue

@@ -1,0 +1,37 @@
+{
+ "status": "ACTUAL_FULL_SHAPE_COMPONENT_PASS_AND_NEW_CLOCK_MUTANT_REJECTED",
+ "source_commit": "1b01109ab6cb404d0365db85ea9a7bbade26e89d",
+ "source_files": 34,
+ "all_source_hashes_verified_against_commit": true,
+ "clock_entries": 217,
+ "all_clock_indexes_consumed": true,
+ "actual_FP_RTL": true,
+ "exact_words": 20480,
+ "writes": 640,
+ "reads": 4161,
+ "fixed_cycles": 810,
+ "write_span": [
+  639,
+  798
+ ],
+ "positive_host": "ot-agidock128",
+ "positive_unit": "oth-ubuntu-1095109-1792145834",
+ "mutant_host": "ot-epyc4",
+ "mutant_unit": "oth-ubuntu-738622-1792145869",
+ "mutant": {
+  "MUT": 24,
+  "physical_clock_index_stopped": 193,
+  "return_lane": 0,
+  "actual_DUT_rejection": "endpoint fault at cycle28, cluster_faults0000, ep0, top1",
+  "build_returncode": 0,
+  "DUT_returncode": 1,
+  "raw_runner_status_preserved": "MUTANT_NOT_REJECTED_OR_UNCLASSIFIED",
+  "classification_correction": "Initial runner recognized timeout only. Actual declared top fault from missing registered descriptor reply is a valid stopped-clock rejection. Raw unclassified runner receipt/log preserved unchanged; no retry was needed."
+ },
+ "scope": [
+  "Actual full4x5120 arithmetic and fixed RS5 calendar at declared external VM stimulus boundary only",
+  "Unrestricted test memory supplies external rows; actual mapped VM parent/layer/token is not qualified",
+  "No pin/placement/cut/PG/clock delivery/native TTsetup FFhold DRC qualification",
+  "217 source proof does not qualify later source changes"
+ ]
+}

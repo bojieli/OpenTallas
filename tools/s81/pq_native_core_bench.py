@@ -38,6 +38,7 @@ def main():
     ap.add_argument("--qb-split", action="store_true")
     ap.add_argument("--qb-mut-bank", type=int, choices=range(4), default=0)
     ap.add_argument("--qb-pipe", action="store_true", help="opt-in QB +2 physical pipeline; independent feedback timing comparison")
+    ap.add_argument("--qb-pinread", action="store_true", help="production QB: P10 pin-registered head (+4 read edges) + two align instances; implies --qb-pipe")
     ap.add_argument("--qb-one", action="store_true", help="QB with ONE bank master placed four times (ot_s81_pq_qb_one_native.sv)")
     ap.add_argument("--ix-pins", action="store_true")
     ap.add_argument("--ix-split", action="store_true")
@@ -47,6 +48,7 @@ def main():
     ap.add_argument("--bc-sliced", action="store_true")
     ap.add_argument("--bc-mut-slice", type=int, choices=range(4), default=0)
     a = ap.parse_args(); a.ix_split = a.ix_split or a.ix_bank_split; w = a.work.resolve(); w.mkdir(parents=True, exist_ok=True)
+    if a.qb_pinread: a.qb_pipe=True
     if a.qb_pipe: a.qb_split=True
     src = CORE.read_text()
     ref = src.replace("module ot_s81_pq_core_native", "module ot_s81_pq_core_ref", 1)
@@ -75,6 +77,7 @@ def main():
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_split_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_one_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+            ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv"])
         defs = ["+define+OT_PQ_ROM_PORTS", "+define+OT_PQ_BENCH_TELEMETRY"]
         if name == "dut" and a.aq_pin: defs += ["+define+OT_PQ_AQ_PIN_LAUNCH"]
@@ -84,6 +87,7 @@ def main():
         if name == "dut" and a.aq_split: defs += ["+define+OT_PQ_AQ_PHYS_SPLIT"]
         if name == "dut" and a.qb_split: defs += ["+define+OT_PQ_QB_PHYS_SPLIT"]
         if name == "dut" and a.qb_pipe: defs += ["+define+OT_PQ_QB_PIPE"]
+        if name == "dut" and a.qb_pinread: defs += ["+define+OT_PQ_QB_PINREAD"]
         if name == "dut" and a.qb_one: defs += ["+define+OT_PQ_QB_ONE_BANK"]
         if name == "dut" and a.ix_pins: defs += ["+define+OT_PQ_IX_PIN_VARIANTS"]
         if name == "dut" and a.ctl_fixed: defs += ["+define+OT_PQ_CTL_FIXED"]

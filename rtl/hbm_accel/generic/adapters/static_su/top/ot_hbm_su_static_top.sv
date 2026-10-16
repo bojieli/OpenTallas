@@ -40,11 +40,11 @@ module ot_hbm_su_static_top #(
  output wire [19:0] fault                        // per quarter {core, slice 3..0}
 );
  localparam integer QMUT=(MUT==8)?0:MUT;
- wire [3:0] red_sv; wire [4*32-1:0] red_tag,red_x;
+ wire [3:0] red_sv,red_rf_v; wire [4*32-1:0] red_tag,red_x;
  // relay[w][d]: reducer w -> replica d, RF_RELAY stages of {v, addr8, data32}
  wire [40:0] rly_out [0:3][0:3];
  for(genvar w=0;w<4;w=w+1)begin:g_src
-  wire [40:0] head={red_sv[w]&&red_tag[w*32+8],red_tag[w*32+:8],red_x[w*32+:32]};
+  wire [40:0] head={red_rf_v[w],red_tag[w*32+:8],red_x[w*32+:32]};   // red_rf_v = red_sv && tag[8], decoded in the core
   for(genvar d=0;d<4;d=d+1)begin:g_dst
    if(RF_RELAY==0)begin:g_wire
     assign rly_out[w][d]=head;
@@ -72,7 +72,7 @@ module ot_hbm_su_static_top #(
    .clk_red(clk_red[q]),.clk_side(clk_side),.rst_n(rst_n),.bridge_rst_n(bridge_rst_n),.control(control[q*1742+:1742]),
    .vmr_cmd(vmr_cmd[q*240+:240]),.vmw_cmd(vmw_cmd[q*312+:312]),.rf_rd_cmd(rf_rd_cmd[q*54+:54]),
    .red_cmd(red_cmd[q*74+:74]),.rf_wv(wv),.rf_wa(wa),.rf_wd(wd),.red_sv(red_sv[q]),.red_tag(red_tag[q*32+:32]),
-   .red_x(red_x[q*32+:32]),.lg_rq(lg_rq[q*136+:136]),.lg_wq(lg_wq[q*2248+:2248]),.lg_rr(lg_rr[q*2056+:2056]),
+   .red_x(red_x[q*32+:32]),.red_rf_v(red_rf_v[q]),.lg_rq(lg_rq[q*136+:136]),.lg_wq(lg_wq[q*2248+:2248]),.lg_rr(lg_rr[q*2056+:2056]),
    .lg_w_done(lg_w_done[q*8+:8]),.fault(fault[q*5+:5]));
  end
 endmodule

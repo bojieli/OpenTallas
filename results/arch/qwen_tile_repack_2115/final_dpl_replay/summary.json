@@ -1,0 +1,108 @@
+{
+  "schema": "qwen.final_dpl.actual_sequence.v1",
+  "gate_source": "a7a08ca3c14f4ac919fcd291240e74fec5fcdcec",
+  "flow_candidate": "fab0163ee",
+  "scope": "Frozen component geometry sequence replay; fresh canonical full CTS/trialGRT and native/routed timing still required",
+  "sequence": [
+    "read original3_4_place_resized.odb",
+    "source originalpre_dpl releases",
+    "ordinarydetailed_placement with originalpadding0",
+    "unchangedcheck_placement beforeDPO",
+    "originalimprove_placement max_displacement5 1 thenoptimize_mirroring",
+    "unchangedcheck expectedDPL0033",
+    "ordinaryfinaldetailed_placement",
+    "unchangedcheck PASS"
+  ],
+  "tiles": {
+    "nk": {
+      "before_dpo": {
+        "cells": 33,
+        "x_mod_54_dbu": {
+          "0": 33
+        },
+        "row_y_mod_270_dbu": {
+          "0": 33
+        },
+        "groups": {
+          "NULL": 33
+        }
+      },
+      "after_dpo": {
+        "cells": 33,
+        "x_mod_54_dbu": {
+          "53": 32,
+          "27": 1
+        },
+        "row_y_mod_270_dbu": {
+          "0": 33
+        },
+        "groups": {
+          "NULL": 33
+        },
+        "density_max_bin": 0.792,
+        "density_bins_ge_1": 0,
+        "density_png_inspected": true
+      },
+      "canonical_final": {
+        "cells": 33,
+        "x_mod_54_dbu": {
+          "0": 33
+        },
+        "row_y_mod_270_dbu": {
+          "0": 33
+        },
+        "groups": {
+          "NULL": 33
+        },
+        "density_max_bin": 0.792,
+        "density_bins_ge_1": 0,
+        "density_png_inspected": true
+      }
+    },
+    "nl": {
+      "before_dpo": {
+        "cells": 3,
+        "x_mod_54_dbu": {
+          "0": 3
+        },
+        "row_y_mod_270_dbu": {
+          "0": 3
+        },
+        "groups": {
+          "NULL": 3
+        }
+      },
+      "after_dpo": {
+        "cells": 3,
+        "x_mod_54_dbu": {
+          "53": 3
+        },
+        "row_y_mod_270_dbu": {
+          "0": 3
+        },
+        "groups": {
+          "NULL": 3
+        },
+        "density_max_bin": 0.782,
+        "density_bins_ge_1": 0,
+        "density_png_inspected": true
+      },
+      "canonical_final": {
+        "cells": 3,
+        "x_mod_54_dbu": {
+          "0": 3
+        },
+        "row_y_mod_270_dbu": {
+          "0": 3
+        },
+        "groups": {
+          "NULL": 3
+        },
+        "density_max_bin": 0.782,
+        "density_bins_ge_1": 0,
+        "density_png_inspected": true
+      }
+    }
+  },
+  "image_review": "All four actualODB postDPO/finaldensity PNGs viewed via image tool; hard geometry unchanged, no density bin >=1.0; pin gutters remain open. Microscopic offsite defect is established by ODB coordinate tables, not visible at bin scale."
+}

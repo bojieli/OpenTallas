@@ -86,10 +86,15 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pre_gpl.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
   "physical/common_flow/clock_entries.tcl",
   "physical/ref_tile/qfd_ucie_gearbox_r10/clock_entry.sdc"
  ]

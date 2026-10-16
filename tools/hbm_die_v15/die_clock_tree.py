@@ -24,8 +24,8 @@ Output: dict(buffers=[(name, cell, x, y)], nets=[(net, driver_ref, [load_refs])]
 import heapq, math
 from collections import defaultdict
 
-GRID = 20.0          # um
-SPAN = 420.0         # max wire between repeaters (um): M8 r 8.45 ohm/um c 0.104 fF/um -> 0.38RC ~ 64 ps at 420 um
+GRID = 10.0          # um (10 um so 20-um die gaps between abutted blocks are usable; 20 um left them all blocked)
+SPAN = 200.0         # max wire between repeaters (um); stage_ps(L)=25+8.6e-4 L^2 is minimal per um near 170 um (420 um cost 0.42 ps/um, 200 um 0.30)
 MAX_RUN = 400.0      # max length of a route segment over blocked area (repeater cannot sit there)
 BUF = 'BUFx24_ASAP7_75t_R'
 PAD = 'BUFx12f_ASAP7_75t_R'
@@ -33,13 +33,15 @@ STAGE_PS = 70.0      # model: one repeater stage incl. 420 um M8 (TT); used only
 
 
 class Grid:
-    def __init__(self, W, H, obstacles, margin=4.0):
+    def __init__(self, W, H, obstacles, margin=0.0):
         self.W, self.H = W, H
         self.nx, self.ny = int(W // GRID), int(H // GRID)
         self.blk = bytearray(self.nx * self.ny)
         for (x0, y0, x1, y1) in obstacles:
-            i0 = max(0, int((x0 - margin) // GRID)); i1 = min(self.nx - 1, int((x1 + margin) // GRID))
-            j0 = max(0, int((y0 - margin) // GRID)); j1 = min(self.ny - 1, int((y1 + margin) // GRID))
+            # a cell is blocked iff it overlaps the obstacle grown by margin (exact: a 20-um abutment gap keeps its two
+            # 10-um cells free at margin 0; the old floor/floor rule blocked both)
+            i0 = max(0, int(math.floor((x0 - margin) / GRID))); i1 = min(self.nx - 1, int(math.ceil((x1 + margin) / GRID)) - 1)
+            j0 = max(0, int(math.floor((y0 - margin) / GRID))); j1 = min(self.ny - 1, int(math.ceil((y1 + margin) / GRID)) - 1)
             for j in range(j0, j1 + 1):
                 row = j * self.nx
                 for i in range(i0, i1 + 1):
@@ -86,16 +88,27 @@ class Grid:
         R = int(max_run // GRID)
         start = (a, 0)
         dist = {start: 0}
+        # At a cell, a path no longer in steps and no longer into a blocked
+        # run dominates the other label: it has every remaining continuation
+        # available to that label. Keep this exact Pareto frontier instead of
+        # expanding up to R equivalent labels throughout a large die detour.
+        # Preserve predecessor records even when a queued label is dominated;
+        # an already-discovered child's valid path may still refer to it.
+        labels = {a: [(0, 0)]}
         prev = {}
+        # Among equal admissible f values, advance the deeper path first. The
+        # old smaller-g tie break floods an entire rectangle of equally short
+        # Manhattan paths before taking the final step to a distant endpoint.
         pq = [(abs(a[0] - b[0]) + abs(a[1] - b[1]), 0, a, 0)]
         while pq:
-            f, g, c, run = heapq.heappop(pq)
+            f, neg_g, c, run = heapq.heappop(pq)
+            g = -neg_g
             if c == b:
                 path = [c]; s = (c, run)
                 while s in prev:
                     s = prev[s]; path.append(s[0])
                 return path[::-1]
-            if dist.get((c, run), 1 << 60) < g:
+            if dist.get((c, run)) != g:
                 continue
             for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 n = (c[0] + d[0], c[1] + d[1])
@@ -106,8 +119,15 @@ class Grid:
                     continue
                 s = (n, nr); ng = g + 1
                 if ng < dist.get(s, 1 << 60):
+                    old = labels.get(n, ())
+                    if any(lr <= nr and lg <= ng for lr, lg in old):
+                        continue
+                    for lr, lg in old:
+                        if nr <= lr and ng <= lg:
+                            dist.pop((n, lr), None)
+                    labels[n] = [(lr, lg) for lr, lg in old if not (nr <= lr and ng <= lg)] + [(nr, ng)]
                     dist[s] = ng; prev[s] = (c, run)
-                    heapq.heappush(pq, (ng + abs(n[0] - b[0]) + abs(n[1] - b[1]), ng, n, nr))
+                    heapq.heappush(pq, (ng + abs(n[0] - b[0]) + abs(n[1] - b[1]), -ng, n, nr))
         raise SystemExit(f'no clock route {a} -> {b}')
 
 
@@ -120,7 +140,8 @@ def stage_ps(L):
 PAD_PS = 20.0
 
 
-def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pads=None, root_search_um=3000.0):
+def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pads=None, root_search_um=3000.0,
+          mode='htree', bin_um=1600.0):
     """sinks: [(inst, pin, x, y)]; quadrant_of(inst) -> 'SW'|'SE'|'NW'|'NE'.
     leaf_pads {inst: n} / quad_pads {quadrant: n}: measured skew corrections (STA feedback), outside the model."""
     leaf_pads = leaf_pads or {}
@@ -210,6 +231,8 @@ def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pad
                 out[inst] = dl + v + n * PAD_PS
         return out
 
+    if mode == 'htree':
+        return _htree(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad, subtree, bin_um)
     # quadrant roots, then the global root that best equalises the four model branch delays
     qc = {}
     for q, pts in quads.items():
@@ -277,4 +300,74 @@ def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pad
                  model_insertion_ps=[round(min(v), 1), round(max(v), 1)],
                  grid_um=GRID, span_um=SPAN, max_run_over_blocks_um=MAX_RUN, pad_ps_model=PAD_PS,
                  free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
+    return dict(buffers=bufs, nets=merged, model=model)
+
+
+def _htree(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad, subtree, bin_um):
+    """H-DIE 0030 (coordinator D1, 10-16): d2's median-bisection tree over all sinks padded every branch (46k of 67k stream
+    repeaters were pads, model insertion 20.2 ns). Here: a geometric H-tree over the die (split the longer side at its
+    midpoint, branch points at region centres snapped to the nearest free die cell, so every root-to-region path has the
+    same nominal length), ending in BIN roots (<= bin_um square regions holding sinks); each bin is a small local
+    bisection tree (the old subtree, short wires); ONE balancing level: pads only at the bin roots, to the slowest bin."""
+    bins = defaultdict(list)
+    for s in sinks:
+        bins[(int(s[2] // bin_um), int(s[3] // bin_um))].append(s)
+    binroots = {}      # bin -> (buf, cell, model ps from the die root buffer output)
+
+    def region(x0, y0, x1, y1, drv_ref, drv_c, d_in, tag):
+        keys = [k for k in bins if x0 <= (k[0] + 0.5) * bin_um < x1 and y0 <= (k[1] + 0.5) * bin_um < y1]
+        if not keys:
+            return
+        if len(keys) == 1 or (x1 - x0 <= bin_um and y1 - y0 <= bin_um):
+            for k in keys:
+                pts = bins[k]
+                cx = sum(s[2] for s in pts) / len(pts); cy = sum(s[3] for s in pts) / len(pts)
+                c = g.nearest_free(cx, cy)
+                d, dl = chain(drv_ref, drv_c, c, tag)
+                b = newbuf(tag + 'R', c)
+                nets.append((f'n_{b}', d, [('buf', b)]))
+                binroots[k] = (b, c, d_in + dl)
+            return
+        halves = ([(x0, y0, (x0 + x1) / 2, y1), ((x0 + x1) / 2, y0, x1, y1)] if x1 - x0 >= y1 - y0 else
+                  [(x0, y0, x1, (y0 + y1) / 2), (x0, (y0 + y1) / 2, x1, y1)])
+        for i, (a0, b0, a1, b1) in enumerate(halves):
+            if not any(a0 <= (k[0] + 0.5) * bin_um < a1 and b0 <= (k[1] + 0.5) * bin_um < b1 for k in keys):
+                continue
+            c = g.nearest_free((a0 + a1) / 2, (b0 + b1) / 2)
+            d, dl = chain(drv_ref, drv_c, c, tag)
+            b = newbuf(tag + 'H', c)
+            nets.append((f'n_{b}', d, [('buf', b)]))
+            region(a0, b0, a1, b1, ('buf', b), c, d_in + dl + stage_ps(10.0), tag)
+
+    rc = g.nearest_free(*root_xy)
+    gc = g.nearest_free(W / 2, H / 2)
+    d0, dl0 = chain(('port', 'clk_hbm'), rc, gc, 'g')
+    G = newbuf('gR', gc)
+    nets.append(('n_' + G, d0, [('buf', G)]))
+    region(0.0, 0.0, W, H, ('buf', G), gc, 0.0, 'h')
+    # local trees, then one balancing level at the bin roots
+    tot = {}
+    for k, (b, c, d) in binroots.items():
+        sub = subtree(bins[k], ('buf', b), c, 'l')
+        tot[k] = (d, sub)
+    top = max(d + max(sub.values()) for d, sub in tot.values())
+    ins, npad = {}, 0
+    for k, (d, sub) in tot.items():
+        n = int(round((top - d - max(sub.values())) / PAD_PS))
+        b, c, _ = binroots[k]
+        # pad on the bin root's input (pad() splices pads on the net that loads this buffer)
+        pad(b, c, n, 'bP')
+        npad += n
+        for inst, v in sub.items():
+            ins[inst] = dl0 + d + v + n * PAD_PS
+    by = defaultdict(list)
+    for n_, d_, loads in nets:
+        by[d_].append((n_, loads))
+    merged = [(lst[0][0], d_, [l for _, ls in lst for l in ls]) for d_, lst in by.items()]
+    v = list(ins.values())
+    local_pads = sum(1 for b in bufs if b[0].startswith('dck_lP'))
+    model = dict(mode='htree', bin_um=bin_um, bins=len(bins), buffers=len(bufs), bin_pad_buffers=npad,
+                 local_pad_buffers=local_pads, global_root_um=[round(x, 1) for x in g.xy(gc)],
+                 model_insertion_ps=[round(min(v), 1), round(max(v), 1)], grid_um=GRID, span_um=SPAN,
+                 max_run_over_blocks_um=MAX_RUN, pad_ps_model=PAD_PS, free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
     return dict(buffers=bufs, nets=merged, model=model)

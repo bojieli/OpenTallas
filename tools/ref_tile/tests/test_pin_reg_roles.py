@@ -24,7 +24,7 @@ SPEC = dict(top='example', clock_port='ck', clock_ports=['ck', 'ckv'],
             reset_ports=['rst', 'rsv'], pin_regs=dict(enable=True, clock='ck'))
 
 
-def generate(path, clocks='ck,ckv', resets='rst,rsv', ports=PORTS):
+def generate(path, clocks='ck,ckv', resets='rst,rsv', ports=PORTS, reset_regex=None, exclude=None):
     # Only the elaborated Yosys port-list IO is stubbed. Classification,
     # generated Verilog and latency table are the actual production helper.
     script = '''set ::env(DESIGN_NAME) example
@@ -40,12 +40,44 @@ proc yosys {args} {
 }
 if {[catch {source {%s}} message]} {puts stderr $message; exit 1}
 ''' % (clocks, resets, path, ports, ROOT/'physical/common_flow/ot_pin_regs.tcl')
+    if reset_regex is not None:
+        script=script.replace('set ::env(RESULTS_DIR)', 'set ::env(OT_PIN_REGS_RESET) {' + reset_regex + '}\nset ::env(RESULTS_DIR)',1)
+    if exclude is not None:
+        script=script.replace('set ::env(RESULTS_DIR)', 'set ::env(OT_PIN_REGS_EXCLUDE) {' + exclude + '}\nset ::env(RESULTS_DIR)',1)
     if resets is None:
         script=script.replace('set ::env(OT_PIN_REGS_RESET_PORTS) {None}\n','')
     return subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
 
 
 class Roles(unittest.TestCase):
+    def test_intended_tcl_data_exclusions_match_actual_wrapper(self):
+        spec = dict(SPEC, pin_regs=dict(enable=True, clock='ck', exclude=r'\mcommand\M'))
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td)
+            self.assertEqual(generate(path, exclude=r'\mcommand\M').returncode, 0)
+            wrapper = path/'ot_pin_regs_wrapper.v'
+            report = PL.export(path/'ot_pin_regs.tsv', wrapper, 'example', 'a'*40)
+            self.assertEqual(PL.validate_roles(report, wrapper, spec, lambda _:None)['excluded_data_ports'], ['command'])
+            # Reproduce the Make-corrupted pattern population, with controls still correct.
+            self.assertEqual(generate(path, exclude='^no_match$').returncode, 0)
+            report = PL.export(path/'ot_pin_regs.tsv', wrapper, 'example', 'a'*40)
+            with self.assertRaisesRegex(ValueError, 'excluded data'):
+                PL.validate_roles(report, wrapper, spec, lambda _:None)
+            report['ports']['command']['register_edges'] = 0
+            with self.assertRaisesRegex(ValueError, 'not direct'):
+                PL.validate_roles(report, wrapper, spec, lambda _:None)
+
+    def test_unintended_data_bypass_and_invalid_tcl_pattern_refuse(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td)
+            self.assertEqual(generate(path, exclude='^command$').returncode, 0)
+            wrapper = path/'ot_pin_regs_wrapper.v'
+            report = PL.export(path/'ot_pin_regs.tsv', wrapper, 'example', 'a'*40)
+            with self.assertRaisesRegex(ValueError, 'intended data'):
+                PL.validate_roles(report, wrapper, SPEC, lambda _:None)
+        with self.assertRaisesRegex(ValueError, 'invalid intended Tcl'):
+            PL.excluded_ports('[', ['command'])
+
     def test_plan_preserves_secondary_clock_independent_of_clock_policy(self):
         plan = RT.pin_regs_plan(SPEC)
         self.assertEqual(plan['clock_ports'], ['ck', 'ckv'])
@@ -108,7 +140,7 @@ endmodule
     def test_gate_rejects_registered_control_immediately_and_forged_table(self):
         with tempfile.TemporaryDirectory() as td:
             path=Path(td)
-            generate(path, 'ck', '')  # actual old selection: ckv and rsv data
+            generate(path, 'ck', 'rst')  # bad selection: ckv and rsv data
             (path/'kit.env').write_text("EXTRA=('--orfs-var' 'OT_PIN_REGS=1')")
             def output():
                 enc=lambda f:base64.b64encode(zlib.compress((path/f).read_bytes())).decode()
@@ -118,6 +150,19 @@ endmodule
             table=path/'ot_pin_regs.tsv';table.write_text(table.read_text().replace('ckv\tinput\t1\t1\tpin register','ckv\tinput\t1\t0\tclock').replace('rsv\tinput\t1\t1\tpin register','rsv\tinput\t1\t0\treset'))
             gate=PG.Gate();PG.check_port_latency(gate,path,SPEC,output(),'a'*40)
             self.assertEqual(gate.verdict,'FAIL')
+
+    def test_legacy_reset_contract_must_not_change_silently(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)
+            run=generate(path, resets='rst', ports=PORTS.replace('rsv','clear_n'), reset_regex='^clear_n$')
+            self.assertNotEqual(run.returncode,0)
+            self.assertIn('legacy reset regexp/default matches undeclared reset clear_n',run.stderr)
+            self.assertFalse((path/'ot_pin_regs_wrapper.v').exists())
+            run=generate(path, resets='')
+            self.assertNotEqual(run.returncode,0)
+            self.assertIn('undeclared reset rst',run.stderr)
+            run=generate(path, resets='rst,clear_n', ports=PORTS.replace('rsv','clear_n'), reset_regex='^clear_n$')
+            self.assertEqual(run.returncode,0,run.stderr)
 
     def test_quoted_literal_options_and_ambiguous_variables(self):
         from kit_orfs_vars import parse
@@ -129,6 +174,13 @@ endmodule
             path=Path(td);(path/'kit.env').write_text('EXTRA=("$UNKNOWN_OPTIONS")')
             gate=PG.Gate();PG.check_port_latency(gate,path,SPEC,'', 'a'*40)
             self.assertEqual(gate.verdict,'FAIL')
+
+    def test_later_array_mutations_cannot_disable_role_checks(self):
+        from kit_orfs_vars import parse
+        for text in ("EXTRA=(); EXTRA+=('--orfs-var' 'OT_PIN_REGS=1')",
+                     "EXTRA=(); EXTRA=('--orfs-var' 'OT_PIN_REGS=1')",
+                     "EXTRA=('--orfs-var' 'OT_PIN_REGS=1'); EXTRA[1]=0"):
+            with self.assertRaises(ValueError):parse(text)
 
     def test_unknown_sdc_clock_role_is_not_accepted(self):
         with tempfile.TemporaryDirectory() as td:

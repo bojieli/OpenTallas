@@ -77,7 +77,7 @@ source [lindex $argv 1]
             enc = lambda f: base64.b64encode(zlib.compress((path/f).read_bytes())).decode()
             out = 'GATE_PIN_REGS_B64 %s %s\n' % (enc('ot_pin_regs.tsv'), enc('ot_pin_regs_wrapper.v'))
             g = G.Gate()
-            G.check_port_latency(g, path, dict(top='example'), out, 'b' * 40)
+            G.check_port_latency(g, path, dict(top='example', clock_port='ck'), out, 'b' * 40)
             self.assertEqual(g.verdict, 'PASS')
             self.assertEqual(g.port_latency['source_commit'], 'b' * 40)
             self.assertEqual(g.port_latency['ports']['done']['register_edges'], 1)

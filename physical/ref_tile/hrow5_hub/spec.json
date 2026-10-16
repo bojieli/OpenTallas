@@ -45,13 +45,14 @@
   "pd": 0.55,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:el1011-ds-mtp",
-  "branch": "claude/el1011-ds-mtp-hrow",
-  "tag": "r5d",
-  "purpose": "el1011-ds-mtp 2026-10-12 hub r5d: hrow5_hub-r5c-1f107b1e4 NEEDS_RTL TT -8.08 (4 D, reg2reg v2->ok2; WC -71: ABC re-merged the r5c dual lookup into one lookup on an adv-selected key, v2 -> 8 buffer levels -> 128:1 tag mux -> XNOR/AND -> ok2) / FF -20.68 (383 D: in->reg -20.68, reg2reg -16.83, out -7.63; combo ECO reached -5.76 on the pre-b1e49e8f1 config). Fix (RTL, structural): both lookup results + the select registered (okn2/okh2/hzn2/hzh2/sel2), ok2 = sel2 mux after the flops so no v2->tag-mux path exists; per-part/per-slot tag state with 6 reset synchronisers (1,573-load reset net -> 6 x 256); per-part key regs; ck/rst/t_vrq scalar ports. On main >= b1e49e8f1 (ECO config) / eb642d870. FF classes (path_summary): in f_pr0/f_pr2 -> pr -20.68/-18.21 (248 D), reg2reg r_d -> o_rs -16.83 (73), out t_vrs -7.63 (31) -> inhold + outhold.",
+  "owner": "Claude:S-ELEM-PQ/HROW",
+  "branch": "claude/hrow-native-0030",
+  "tag": "n1-0030",
+  "purpose": "S-ELEM-PQ/HROW 2026-10-16: closed hrow5_hub-r5d-1a91bcdd1 fails the native pin audit (R 236.3, spread 45.0, TT launch 316.0 on 202 outputs e.g. t_rc1[3], capture 357.3 on 2436 of 3180 inputs e.g. f_pr1[693]; results/physical/s81_hrow_native_0030/native_audit_s81_hc_hrow_0030.json). Cause: inhold/outhold pads but the RTL pin flops float into the core and synthesis merges the three rcq[p] read-command copies. Fix: recipe 3 kit (io_flop_at_pins + pin_reg_split + keep_pin_regs + HB2 pads); RTL, outline, pin faces unchanged; 0 cycles added (every port already registered in RTL; pin_regs wrapper opted out with reason). Pass: TT/FF >= 0, DRC 0, native launch <= 220 / capture <= 190 / spread <= 80, hrow_tiles pos PASS / mut FAIL.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
@@ -89,5 +90,27 @@
  "params": {},
  "macros": [],
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "The hub RTL already registers every data port at a dedicated boundary flop (inputs f_vrq->lrx pv/pd, f_clr->i_clr, f_ev*->ev_c, f_if*->pflt, f_pr*->pr; outputs t_vrq=grant flop, t_vrs=o_rs, t_rc*=rcq[p], t_flt=o_flt). The native miss is placement (pin flops not at the pins, rcq copies merged), fixed by io_flop_at_pins + pin_reg_split + keep_pin_regs; a generic wrapper would add 2 cycles per hub traversal for no structural gain. 0 cycles added."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/physical/s81_hrow_native_0030/native_audit_s81_hc_hrow_0030.json",
+  "cell": "dsfd_mtp_hrow_hub",
+  "launch_ps": 316.0,
+  "capture_ps": 357.3,
+  "fix": "kit recipe 3 (owner rule 19:50): io_flop_at_pins anchors the RTL's existing pin flops at their faces, pin_reg_split gives every output its own launch flop (rcq[p] copies were merged), keep_pin_regs, HB2 pin pads; RTL unchanged, 0 cycles"
+ }
 }

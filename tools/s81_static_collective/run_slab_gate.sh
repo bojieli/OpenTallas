@@ -6,8 +6,9 @@
 #   queue drops the completion pulse (the slot beat carries none: must FAIL); MUT=3: calendar controller reads the next ROM row (must FAIL); MUT=4: CAL7
 #   output root 1 reset pin held (per-root reset delivery, must FAIL)
 #   PINCAP (default 1) = native VM boundary write-path pin capture (+1 edge on t_vm)
+#   NARROW (4th arg, default 0) = VM boundary leaf takes only the bits it reads (VMB_NARROW)
 set -euo pipefail
-ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}; PINCAP=${3:-1}; DEFS=(); [ "$MUT" = 3 ] && { DEFS=(+define+OT_S81_COLL_CAL_MUT_ROW); MUT=0; MUTANT=1; }
+ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}; PINCAP=${3:-1}; NARROW=${4:-0}; DEFS=(); [ "$MUT" = 3 ] && { DEFS=(+define+OT_S81_COLL_CAL_MUT_ROW); MUT=0; MUTANT=1; }
 V=${OT_VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 cd "$W"; python3 "$ROOT/tools/s81_static_collective/build_slab_fixture.py" --out "$W" > fixture.json
 S=$ROOT/rtl/dsrom_sys
@@ -27,7 +28,7 @@ SRC=("${SRC[@]:0:${#SRC[@]}-1}" "${VMF[@]}" "${SRC[@]: -1}")
 mapfile -t SRC < <(for f in "${SRC[@]}"; do realpath "$f"; done | awk '!seen[$0]++')
 for f in "${SRC[@]}"; do [ -f "$f" ] || { echo "SLAB_GATE missing $f"; exit 2; }; done
 sha256sum "${SRC[@]}" > sources.sha256
-"$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" "${DEFS[@]}" --Mdir obj "${SRC[@]}" > build.log 2>&1
+"$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" -GVMB_NARROW="$NARROW" "${DEFS[@]}" --Mdir obj "${SRC[@]}" > build.log 2>&1
 set +e; ./obj/Vtb_s81_static_collective_slab > run.log 2>&1; rc=$?; set -e
 # Preserve the actual work-count line for closure-loop non-vacuity admission.
 # Verilator appends four report lines after the DUT summary.
