@@ -112,7 +112,7 @@ module qkd_static_writer_pc_mux(
  assign es_context={native_q,identity_q,mask_q};
  always @(posedge ck)begin
   es[287:1]<=native_mode?native_es[287:1]:host_es[287:1];
-  identity_q<=native_context[316:256];mask_q<=native_context[255:0];
+  identity_q<=native_mode?native_context[316:256]:61'd0;mask_q<=native_mode?native_context[255:0]:256'd0;
   es_expected_identity<=native_expected_identity;es_expected_address<=native_expected_address;
   es_expected_pc<=native_expected_pc;es_expected_stack<=native_expected_stack;
  end
