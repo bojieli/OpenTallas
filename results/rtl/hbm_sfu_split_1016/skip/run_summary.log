@@ -1,0 +1,7 @@
+SFU_SPLIT_EQUIV_MISMATCH edge=5624 out=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5625 out=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5626 out=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5627 out=1 status=0
+[4734000] %Fatal: tb_hgi_sfu_split_equiv.sv:133: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=0 core=1
+Aborting...
+SFU_SPLIT_GATE MUTANT skip REJECTED (expected)

@@ -1,0 +1,145 @@
+{
+ "name": "qkd_pv16_vport_r3",
+ "top": "qkd_pv16_vport",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "in_v0",
+   "in_t0",
+   "in_d0"
+  ],
+  "E": [
+   "in_v1",
+   "in_t1",
+   "in_d1"
+  ],
+  "N": [
+   "out_valid",
+   "out_t",
+   "out_v_hi",
+   "ck",
+   "slot",
+   "sel"
+  ],
+  "S": [
+   "out_v_lo",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "purpose": "Q-ATTN-RATE 2026-10-16: PV16 V port of the KV die (16 per die, ONE master). Replaces the 8-sector double-buffered transposer: with the VMAP=1 V placement each w16 port reads only groups {lane,0}/{lane,1}, every PC streams in the controller's v_consumer_order; the port is a static 2:1 quad select with input + output pin registers and tag checks. Pin-bound (3,276 pins, ~1,230 um2 of cells): 86.4 x 172.8 is the smallest outline at ~6 pins/um per face.",
+ "job": {
+  "owner": "Claude:Q-ATTN-RATE",
+  "branch": "claude/q-vmwb-0030",
+  "tag": "r3",
+  "purpose": "r2 qkd_pv16_vport_r2-r2-b30e76bb9 CLOSED (TT +166.08 / FF +15.01 / DRC 0) but routed native audit FAIL: launch 220.23 ps > 220 on ONE pin out_v_lo[142] (next 207.0; capture 152.5 PASS, rst_n fixed). Path: DFFHQN -> INVx1 drives a 12.1 fF detoured net to the FIRM pin BUF (slew 112 ps) -> HB2 pad -> BUF -> output BUF; the BUF->HB2->BUF pad costs 84 ps on every output. Fix: output pad HB1xp67 (hold_pad.out_cell, S81 VM F6 precedent) ~-29 ps on every output launch; FF output-port hold had +30.37 ps. Inputs keep HB2. 0 cycles, RTL unchanged.",
+  "benches": [
+   {
+    "name": "pv16_p0",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_p0 0 0 0 steady '1 100 1000 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS T=8192 pair=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv16_p1",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_p1 1 0 0 steady '1 129 2049 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS T=8192 pair=1",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv16_mut_sel",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_mut_sel 0 0 1 steady '1000'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS"
+   },
+   {
+    "name": "pv16_mut_order",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_mut_order 0 0 0 legacy_order '1000'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/qwen_attention_native",
+   "tools/qwen_nearhbm_attn_ref.py"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv16_vport_r3/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv16_vport_r3",
+  "reroute_reason": {
+   "kind": "pin_register",
+   "cell": "qkd_pv16_vport",
+   "launch_ps": 220.23,
+   "capture_ps": 152.5,
+   "source": "results/arch/qwen_attention_rate_1015/native_pv16_vport_r2_0600.json",
+   "fix": "output hold pad HB2xp67 -> HB1xp67 (hold_pad.out_cell) on every output pin: the FIRM BUF->HB2->BUF output stage costs 84 ps TT per pin; HB1 ~-29 ps per output; FF output-port hold had +30.37 ps. Same RTL, outline and pin faces."
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every port at the module boundary: every input (slot/sel/in_v*/in_t*/in_d*) -> *_q, every output (out_valid/out_t/out_v/fault) a flop"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r2 qkd_pv16_vport_r2-r2-b30e76bb9 CLOSED (TT +166.08 / FF +15.01 / DRC 0) but routed native audit FAIL: launch 220.23 ps > 220 on ONE pin out_v_lo[142] (next 207.0; capture 152.5 PASS, rst_n fixed). Path: DFFHQN -> INVx1 drives a 12.1 fF detoured net to the FIRM pin BUF (slew 112 ps) -> HB2 pad -> BUF -> output BUF; the BUF->HB2->BUF pad costs 84 ps on every output. Fix: output pad HB1xp67 (hold_pad.out_cell, S81 VM F6 precedent) ~-29 ps on every output launch; FF output-port hold had +30.37 ps. Inputs keep HB2. 0 cycles, RTL unchanged."
+}

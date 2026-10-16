@@ -1,0 +1,11 @@
+{
+ "scope": "relay flow variants the die requested (c26b GEN --rly-face-pins kit_requests; VIS-ROM S81F-01): native pin audit + export_fix on the auto-merged CLOSED views; layout PNGs (6_final density) read; no die binding here",
+ "rows": [
+  {"cell": "dsfd_rly_283_WN", "job": "s81_rly_283_wn-rfp1-21a144591", "outline_um": [34.56, 30.24], "faces": "i W / o N / ck rs S", "c26b_request": {"instances": 753, "gain_um_max": 103.8},
+   "tt_setup_ps": 304.57, "ff_hold_ps": 26.34, "drc": 0, "native": {"pass": true, "launch_ps": 210.6, "capture_ps": 130.6, "spread_ps": 10.3, "R_ps": 82.4}, "export_fix": true},
+  {"cell": "dsfd_rly_283_WW", "job": "s81_rly_283_ww-rfp1-02911f75d", "outline_um": [23.76, 60.48], "faces": "U: i W y 1.08-29.16 / o W y 31.32-59.4 / ck rs N", "c26b_request": {"instances": 467, "gain_um_max": 106.0},
+   "tt_setup_ps": 302.14, "ff_hold_ps": 30.12, "drc": 0, "native": {"pass": true, "launch_ps": 215.1, "capture_ps": 125.2, "spread_ps": 4.6, "R_ps": 76.9}, "export_fix": true}
+ ],
+ "layout_note": "pin-flop bands at the data faces (L: W + N, U: W only); interiors empty by construction (12-18% util, face-pin limited, same class as the closed 283 standards)",
+ "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_rfp.sv (body = closed 283 standards: ot_s81_rly W 283 RSREG 1)"
+}

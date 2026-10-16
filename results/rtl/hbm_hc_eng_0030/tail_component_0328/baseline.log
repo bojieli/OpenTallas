@@ -1,0 +1,16 @@
+TAIL RESULT_PULSE cycle=501 delta=496 fault=0
+TAIL PHASE phase=0 delta=496 checked=24 bad=0
+TAIL RESULT_PULSE cycle=1005 delta=496 fault=0
+TAIL PHASE phase=1 delta=496 checked=24 bad=0
+TAIL RESULT_PULSE cycle=1510 delta=496 fault=0
+TAIL PHASE phase=2 delta=496 checked=24 bad=0
+TAIL RESULT_PULSE cycle=2015 delta=496 fault=0
+TAIL PHASE phase=3 delta=496 checked=24 bad=0
+TAIL RESULT_PULSE cycle=2520 delta=496 fault=0
+TAIL PHASE phase=4 delta=496 checked=24 bad=0
+TAIL RESULT_PULSE cycle=3025 delta=496 fault=0
+TAIL PHASE phase=5 delta=496 checked=24 bad=0
+TAIL RESULT_PULSE cycle=3530 delta=496 fault=0
+TAIL PHASE phase=6 delta=496 checked=24 bad=0
+HC_TAIL_UNIT PASS phases=7 words=168 fixed timing
+rtl/test/tb_hbm_hc_tail_unit_static.sv:44: $finish called at 7068000 (1ps)

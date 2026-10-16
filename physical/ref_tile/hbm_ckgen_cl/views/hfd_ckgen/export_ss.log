@@ -1,0 +1,32 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_hbm_pll_bb.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /mv1/hfd_ckgen_rel4.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-1062] generated clock pll_stream_o source pin pll_stream missing paths from master clock core_clk.
+QDM reference pin u_rel/ck_hbm clock arrival max 25.840948 min 25.655651 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+OT_IOREF clock-port pll_stream (pll_stream_o): data input delays dropped
+OT_IOREF clock-port pll_serial (pll_serial_o): data input delays dropped
+OT_IOREF clock-port pll_hbm (pll_hbm_o): data input delays dropped
+OT_IOREF clock-port pll_link (pll_link_o): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 4 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ck_serial boundary 4 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ck_hbm boundary 4 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ck_link boundary 4 negedge 0 noarc 0 inverted 0
+SIGNAL_LAYER_AUDIT signal=M6 PG=M7 nonPG=M4 166 M3 125 M5 166 M6 54 M1 40 M2 85 PGmetal=M4 41518 M5 28421 M6 6002 M7 2009 M2 20261 M1 3102 M3 51477 violations=
+OT_WS max -9.151945867813538e-11 min 3.182961949566021e-10
+OT_EXPORT_DONE
