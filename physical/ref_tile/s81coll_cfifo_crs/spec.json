@@ -147,11 +147,11 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "r5 HALF-CYCLE READ over r4 (S-ELEM CFIFO-HOLD 2026-10-16): route s81coll_cfifo_crs-crs2isolated-COMMIT EARLY_FAIL_HOLD (4_1_cts 21.7k hold buffers, WNS -78.4 -> -56.4 stalled); gate replay of the same CTS needed 38,574 hold buffers, 32k on the two full-cycle cross-root hops bank(xf/xf2)->o(cr_s) and o(cr_s)->xa/xb/x2/cc(cr) that carry the 100 ps die-skew hold reserve. Column read register now: bank -> h (negedge cr_s, one-hot select registered a full cycle ahead) -> o (posedge cr); both cross-root hops half-cycle. Zero stream/status/initialization edge change (bench calendars identical), +1118 FF per instance. r5b: epoch Gray observer is a dedicated register (wgr==gray(wc), same edges) so wc->wg1 hold buffers are not blocked by wc's bank-decode max path (r5 gate chunk 1: RSZ stuck 9k it at -14.3 ps on wg1[1]); +8 FF. r4 RESET FRONTIER and r3 CR ROOT SPLIT retained. Fresh exact-source CTS gate and native audit REQUIRED.",
+ "structural_change": "r5 HALF-CYCLE READ over r4 (S-ELEM CFIFO-HOLD 2026-10-16): route s81coll_cfifo_crs-crs2isolated-COMMIT EARLY_FAIL_HOLD (4_1_cts 21.7k hold buffers, WNS -78.4 -> -56.4 stalled); gate replay of the same CTS needed 38,574 hold buffers, 32k on the two full-cycle cross-root hops bank(xf/xf2)->o(cr_s) and o(cr_s)->xa/xb/x2/cc(cr) that carry the 100 ps die-skew hold reserve. Column read register now: bank -> h (negedge cr_s, one-hot select registered a full cycle ahead) -> o (posedge cr); both cross-root hops half-cycle. Zero stream/status/initialization edge change (bench calendars identical), +1118 FF per instance. r5b: epoch Gray observer is a dedicated register (wgr==gray(wc), same edges) so wc->wg1 hold buffers are not blocked by wc's bank-decode max path (r5 gate chunk 1: RSZ stuck 9k it at -14.3 ps on wg1[1]); +8 FF. r4 RESET FRONTIER and r3 CR ROOT SPLIT retained. Fresh exact-source CTS gate and native audit REQUIRED. r6: deterministic 3xHB4+resizable drivers at each of the 8 wg1 D pins; measured r5b chunk-1 plateau -48.174ps through 10940 iterations / 20471 buffers. Same RTL/clock/epoch/cycles; +24 hold cells +32 drivers per instance. No constraint changes.",
  "job": {
   "owner": "Claude:S-ELEM-CFIFO-HOLD",
-  "branch": "main",
-  "tag": "hr5",
+  "branch": "codex/s81-elements-1552",
+  "tag": "hr6gray",
   "purpose": "Additive opt-in dsfd_cfifo_crs r5: split cr roots, pin-capture ri (+1 status edge), reset frontier (+2 init edges), half-cycle column read (0 edges; removes the cross-root full-cycle hold flood). No default parent adoption.",
   "views_to": "physical/ref_tile/s81coll_cfifo_crs/views",
   "record_to": "results/rtl/ref_tile/s81coll_cfifo_crs",
@@ -290,5 +290,8 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "why": "r5 HALF-CYCLE READ over r4 (S-ELEM CFIFO-HOLD 2026-10-16): route s81coll_cfifo_crs-crs2isolated-COMMIT EARLY_FAIL_HOLD (4_1_cts 21.7k hold buffers, WNS -78.4 -> -56.4 stalled); gate replay of the same CTS needed 38,574 hold buffers, 32k on the two full-cycle cross-root hops bank(xf/xf2)->o(cr_s) and o(cr_s)->xa/xb/x2/cc(cr) that carry the 100 ps die-skew hold reserve. Column read register now: bank -> h (negedge cr_s, one-hot select registered a full cycle ahead) -> o (posedge cr); both cross-root hops half-cycle. Zero stream/status/initialization edge change (bench calendars identical), +1118 FF per instance. r5b: epoch Gray observer is a dedicated register (wgr==gray(wc), same edges) so wc->wg1 hold buffers are not blocked by wc's bank-decode max path (r5 gate chunk 1: RSZ stuck 9k it at -14.3 ps on wg1[1]); +8 FF. r4 RESET FRONTIER and r3 CR ROOT SPLIT retained. Fresh exact-source CTS gate and native audit REQUIRED."
- }
+ },
+ "pre_dpl_extra": [
+  "physical/ref_tile/s81coll_cfifo_crs/gray_hold.tcl"
+ ]
 }
