@@ -1,0 +1,968 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "pc": 0,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 0,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "09c74da022f215714b5f9cba314c8a4c2fb04f54d6c9076b22a0b4eba0003864",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 1,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 1,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "eb8da4a53eb78f88aa3c1c322112c7235a99acd569c0f2e1e6a79100d193e158",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 2,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 2,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "a22e1e362296c81205318e2604fc63d6a332eb835d586a150d3d35c3826e7792",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 3,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 3,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "3aab94da076df2c370e98ee2936303c88d7912367457236f8c42b622d15ca313",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 4,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 4,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "3c3fecb4b84bc82594bb546c5602234cac0719d73e10bd666e055b84e811c147",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 5,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 5,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "bacfb9f542ef12d27ebe0f48c42ce4c4c01436571280d80d34b5c28d222751eb",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 6,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 6,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "e1c4fc05d8aa1d967327ca210efff7016adfaa90546096b85a86371755f6aecd",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 7,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 7,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "17b8ed49fee610eb9488410c636d0644db447409a2e21a692202d57c9131a36b",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 8,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 8,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "6131167003c12367b89ea18c6d8c749ac3ffbfc331e26f85f84057b6b08dd0d3",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 9,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 9,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "6bf645680fc74a46afd8393cc74e56f4e2f10c8e0a3998dc89afc723492cb9eb",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 10,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 10,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "5382a313f0146e8255d6dd75523c76cb658806d6b61bb7d40c78a7209340e8ef",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 11,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 11,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "34fcf27e229d67bc48dd68f1c1adc1c01d11aa5e4c62e1064ae9a160d235dc81",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 12,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 12,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "5a4edc660abb0b53b440b68a4ca8ff1b2c5e5377f0171520110503b77068ccd5",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 13,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 13,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "7d64a63a36101952a311bcfe5df77492bb266744eb6566858d4b5817aa49e626",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 14,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 14,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "a6784871d4dbef7422f93d2c0041821c7ebbbe1aca71360930704cbeaa6fc836",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 15,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 15,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "86d01edb215d7afff21b07e8fb6e2391571ddde742d0b37bc1713d400ac195f3",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 16,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 16,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "605e6a159de9bc6f59eb1695371873299a925b1e0bee43cd74025ba9b74a6e29",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 17,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 17,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "8c67426c4fd6f33005aaafcfe67bd31e9187b9c6a209ce755173993080eb11da",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 18,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 18,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "5619a38252729921c23d4ce073e9de3fbc6e1b79562d7b652b753792c7004e5d",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 19,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 19,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "061080846c539c11602baf1ab01e7eee4795936aba694815d502ef71540ca665",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 20,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 20,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "40d482a590232b1590c0930fc770a62148c861a88e2ddf10270c3d7ec8079255",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 21,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 21,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "2b4fd5c0893c1e30da0e939cbed064d1eb7afc7bd653431f7883b9656b2313de",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 22,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 22,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "82f961c332aca921af02119d769e8cd094404805b2d3160c3932b2b1ae86f2c6",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 23,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 23,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "189eaeef8b3192274ea5c80e02098059e73e1965760c20fa0a894016c2042e2b",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 24,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 24,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "8e541af7c98b17b562c17f506f20c83c63c74bd80036b2cae929b23a0886ac16",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 25,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 25,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "309f7252626077b1089c5a3f385f6683cbf447e9d938a2f5e61b9a4d0a765d66",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 26,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 26,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "eb4455ae8fe2641c91bd1c912f89004b2f44103a4b1d47b78032faef238ccee8",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 27,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 27,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "7d78590b80b29cb716c3c9838286217f3c77bb2d263142f1d4369648e5a67530",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 28,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 28,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "9363c2b81a69a39e4dbdaf8bd6ace45c797583e09453ff77f9bc46bb0140797d",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 29,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 29,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "0c1ca876df06ba05b296616f61ba99eb30939f7d5dff3dea67525e24fe78fe74",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 30,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 30,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "8be75220c3f252c16837f0004f9cc8f3b4a2a0985018ab411017f1b2cc118694",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 31,
+      "mutant": 0,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "receipt": {
+        "mutant": 0,
+        "pc": 31,
+        "exit": 0,
+        "output": "PASS context controller PROFILE0 persistent36layers total6626 exact address and slots\n/srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:32: $finish called at 92406784000 (1fs)\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "9248f72ad28ed5332f3c959cf951db116351ab0840cfd190686367e3f187c163",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 13,
+      "mutant": 1,
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "receipt": {
+        "mutant": 1,
+        "pc": 13,
+        "exit": 1,
+        "output": "FATAL: /srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:37: FAIL context controller calendar timeline edge300\n       Time: 517633000  Scope: tb_context_controller\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "0ba48a7656283808b8721a2b9816a0312a477edee56bc4cb7cac10be1420d647",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 13,
+      "mutant": 2,
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "receipt": {
+        "mutant": 2,
+        "pc": 13,
+        "exit": 1,
+        "output": "FATAL: /srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:37: FAIL context controller calendar timeline edge308\n       Time: 3086849000  Scope: tb_context_controller\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "7b3e8f806cb1b3df4294c584f37965a60cf132037dae808e93e23f6ce86258a5",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 13,
+      "mutant": 3,
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "receipt": {
+        "mutant": 3,
+        "pc": 13,
+        "exit": 1,
+        "output": "FATAL: /srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:37: FAIL context controller calendar timeline edge382\n       Time: 74871297000  Scope: tb_context_controller\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "1fd2782d3fb1ac6a1a8d3cf35d190a09624e7a1a5c231530269ecc2e1ccb96ac",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 13,
+      "mutant": 4,
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "receipt": {
+        "mutant": 4,
+        "pc": 13,
+        "exit": 1,
+        "output": "FATAL: /srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:41: FAIL context controller layer0 address[1] bank1 col0 expected512 row64\n       Time: 1543681000  Scope: tb_context_controller\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "934971c2e4bdac350525daa6bf22d30cf0acfc1750100421743b26010bf16738",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    },
+    {
+      "pc": 13,
+      "mutant": 5,
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "receipt": {
+        "mutant": 5,
+        "pc": 13,
+        "exit": 1,
+        "output": "FATAL: /srv/opentallas-scratch/codex/qwen-context-calendar-eab7d9dc3/rtl/test/qwen_static_kv/tb_context_controller.sv:44: FAIL context controller V banksets4/5 protection\n       Time: 1135105000  Scope: tb_context_controller\n",
+        "source_sha256": {
+          "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+          "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+          "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+          "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "d2d94c0b390cc77d26736611a3d0fcd526abaa3fe518f9aff0d1aba698af8076",
+          "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6"
+        },
+        "binary_sha256": "a53566516584aaf34cfdfbbb2ed2f7df5b8cbf67ba822c2ad41c684fe9c810a2",
+        "image_sha256": "4a8a7185f248f02a5e87506d1657957a89bd00b37c6696790e72745bda35b5e8",
+        "expected_sha256": "da26f73acbecd4f6b859497fe57f94a07f2cad97331bee4c39a769a5e46fd878",
+        "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+        "compiler_sha256": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+        "scope": "component actual calendar+PROFILE0 JEDEC core;36persistentlayers with changing T; excludes PHY/clock/other onchip/native chip"
+      }
+    }
+  ],
+  "scope": "component variable-context calendar+realPROFILE0controller, not integrated die"
+}
