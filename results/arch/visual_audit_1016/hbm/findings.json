@@ -41,7 +41,20 @@
     }
    },
    "structural_fix": "die_clock_tree._route allows runs over blocks (max_run_over_blocks_um 400) but then PLACES buffers FIRM on grid points inside ot_hbm_accel_smh_static outlines -> overlaps the GRT/DPL will reject or silently route through. Forbid buffer homes inside hard outlines (snap to channel), and replace the one central root with 4 quadrant roots (or an H-tree spine in the 600-um IDX channels) fed from the die clock entry: 31.6 ns modelled insertion = 38 cycles at 833 ps; per-quadrant root halves branch length and removes the NE/NW pad imbalance (0 vs 249).",
-   "geometry": null
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "d2 GRT/STA still running on E1 (unit oth-ubuntu-2130580-1792135616); no d3 / clock-generator fix yet"
+    }
+   ]
   },
   {
    "id": "D2",
@@ -68,7 +81,20 @@
     "band_slivers_240um_x4_mm2": 12.4
    },
    "structural_fix": "~33 mm2 of corner voids sit next to the PHY/PC rows: move the SU heavy/SIDE/RF overflow (H-DIE: SU lower bound exceeds usable by 3.71 mm2) or the HC/COLL blocks there, or shift PHY_NW/SW right and PHY_NE/SE left to hug the EP column and shrink die width ~1.5 mm (660 -> ~630 mm2). The 240-um band slivers (4 x 12.9 mm) are below a useful block height: merge into the SU band or remove.",
-   "geometry": null
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no new plan revision"
+    }
+   ]
   },
   {
    "id": "D3",
@@ -107,7 +133,20 @@
     "sm_tile_fill": 0.195
    },
    "structural_fix": "SM slots are 55% of the die at ~19.5% fill (H-SM rp3 body exceeds the slot width only because the frame is pin-bound, see T6): re-pack SM to its cell area and pull SM rows 4-7 next to their PC row (mirror the quadrant: PHY|PC|SM0-3|band|SM4-7 -> PC row in the middle, SMs both sides) -> SM_HBM max ~8 mm / 16 stages. HBM_VM 21 stages: VM slices belong next to the PC rows they read, not at the band inner end.",
-   "geometry": null
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no SM-near-PC plan yet"
+    }
+   ]
   },
   {
    "id": "T1",
@@ -213,7 +252,20 @@
      "frac_gt_0p8": 0.004,
      "frac_lt_0p1": 0.675
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "owner fix = cl2e RTL (registered lookahead lane_en->bsel); no cl2e gate/route yet; pin-bound 12% fill not addressed"
+    }
+   ]
   },
   {
    "id": "T2",
@@ -302,7 +354,20 @@
      "frac_gt_0p8": 0.022,
      "frac_lt_0p1": 0.495
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "owner fix = cl2e (removes output inverter); clock-face move deferred unless cl2e native fails"
+    }
+   ]
   },
   {
    "id": "T3",
@@ -410,7 +475,20 @@
      "frac_gt_0p8": 0.038,
      "frac_lt_0p1": 0.542
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "strap4hookfix (same geometry): q1 CLOSED TT +18.72; q0 -149.91 (strap2) -> -62.49; q2/q3 -111.27 unchanged. Owner path fix = strap5 RTL, not geometry; no strap5 gate yet"
+    }
+   ]
   },
   {
    "id": "T4",
@@ -502,7 +580,26 @@
      "frac_gt_0p8": 0.032,
      "frac_lt_0p1": 0.869
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "confirmed-provisional",
+     "evidence": "owner adopted (H-HARDEN cce3264d2: clk S-centre beside S outputs, clk_cap W, clk_mem W). Before: routed native L222/C206.2/spread 92.8 ps (24eeb93bb). After: gate CTS TT insertion 170.9 ps, spread 37.4 ps, 649 sinks (hv15_vm_cal_x gate PASS 01:05). Route not yet run: jobs REFUSED CLOSED_STANDS (slot-change request pending)"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:45",
+     "status": "confirmed",
+     "evidence": "hv15_vm_cal_x-xcap0030-cce3264d2 CLOSED TT +45.93 / FF +24.17 / DRC 0 (record b2e290032); routed native PASS (main results/rtl/hbm_harden_0030/calendar_x_native.json, verified): launch 222.0 -> 179.0 ps, capture 206.2 -> 133.0 ps, spread 92.8 -> 37.2 ps (clk S-centre, R 147.5); clk_cap W rung R 85.6 / spread 8.1. SRAM stays centred (20-um N/S channels); clock no longer wraps under the macro."
+    }
+   ]
   },
   {
    "id": "T5",
@@ -604,7 +701,20 @@
      "frac_gt_0p8": 0.051,
      "frac_lt_0p1": 0.476
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no new spread revision"
+    }
+   ]
   },
   {
    "id": "T6",
@@ -710,7 +820,20 @@
      "frac_gt_0p8": 0.0,
      "frac_lt_0p1": 1.0
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "rp3 route running on E4; no rp4 plan seen"
+    }
+   ]
   },
   {
    "id": "T7",
@@ -801,7 +924,20 @@
      "frac_gt_0p8": 0.0,
      "frac_lt_0p1": 1.0
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "withdrawn",
+     "evidence": "owner dropped the d62 leaf re-harden (coordinator 23:2x); last run FLOORPLAN_MARGIN util 64.1%"
+    }
+   ]
   },
   {
    "id": "T8",
@@ -818,7 +954,20 @@
     "pins": 1292
    },
    "structural_fix": "abut SRAMs to the E edge (pins facing W), logic becomes one W block; clk at W mid-height; 128 instances x the saved E strip ~0.6-0.9 mm2 die-wide.",
-   "geometry": null
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no new pc_ctrl_cfg geometry"
+    }
+   ]
   },
   {
    "id": "T9",
@@ -1009,7 +1158,32 @@
       "frac_lt_0p1": 0.898
      }
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "H-SU bank r12 submit REFUSED LOCALLY 00:58: FileNotFoundError ot-run (tool not on PATH), nothing submitted"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:25",
+     "status": "partially-refuted (estimate)",
+     "evidence": "H-SU: kit generator keeps >=20 um macro-to-pin-face + 2.16 um core margin and the 151.2 height is fixed by the row/track lattice; only the 33-um W/E margins shrink to 21.6 um -> bank6 slot 369.36 x 151.2 (accepted by H-DIE), -5.5% / -1.672 mm2 over 512 banks, not the ~20% I estimated. bank r12 re-gating. reduce r4 (ot_hbm_su_reduce_static, Codex:HBM-SU-structural job) ownership queried."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:30",
+     "status": "reduce half: noted / no action",
+     "evidence": "H-SU: ot_hbm_su_reduce_static is 4 per die; 216x151.2 -> 216x110 saves 4 x 216 x 41.2 um2 = 0.036 mm2 (1% of the 3.7 mm2 SU deficit), not worth re-routing a CLOSED (TT +154.98) tile; W/E 14 pins/um revisited only if die GRT shows overflow at the reducer faces"
+    }
+   ]
   },
   {
    "id": "T10",
@@ -1107,7 +1281,20 @@
      "frac_gt_0p8": 0.007,
      "frac_lt_0p1": 0.905
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "cl2c still routing"
+    }
+   ]
   },
   {
    "id": "T11",
@@ -1205,7 +1392,20 @@
      "frac_gt_0p8": 0.27,
      "frac_lt_0p1": 0.134
     }
-   }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no re-kit yet"
+    }
+   ]
   },
   {
    "id": "T12",
@@ -1220,7 +1420,26 @@
     "centre_channel_um": 47
    },
    "structural_fix": "macro pins face each other across a 47-um channel: rotate the columns so SRAM pins face OUTWARD to the band, or widen the channel to >= 2 x pin-escape (~90 um); render gate_layout before resubmit.",
-   "geometry": null
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "owner adopted a structural change (route 3 kit e4e436536: macro rows separated by a 21.6-um horizontal channel), route queued; gate shows a new clock problem (R2-1)"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:35",
+     "status": "confirmed-provisional",
+     "evidence": "route 2 GRT-0116 with 12 overflow edges at the inward SRAM faces -> route-3 kit e4e436536 (21.6-um channel between macro rows) trial GRT overflow 0, M2 16% (H-LKEP). Route itself pending. 90-um channel / outward rotation infeasible at the fixed 434.72 width (owner)."
+    }
+   ]
   },
   {
    "id": "N1",
@@ -1236,7 +1455,81 @@
     "closed_native_pass": 1
    },
    "structural_fix": "owners: run the pre_route_gate (gate_layout) on every new kit; VIS-HBM re-inspects as images land.",
-   "geometry": null
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "info",
+     "evidence": ""
+    }
+   ]
+  },
+  {
+   "id": "R2-1",
+   "severity": "P1",
+   "owner": "H-LKEP",
+   "master": "hfd_ep_static route 3 kit",
+   "job": "hep_static_ref_1015-ep1-e4e436536 (QUEUED)",
+   "images": [
+    "/home/ubuntu/wt/h-lkep-1015/physical/ref_tile/hep_static_ref_1015/gate_layout/floorplan.png",
+    "/home/ubuntu/wt/h-lkep-1015/physical/ref_tile/hep_static_ref_1015/gate_layout/density.png",
+    "results/arch/visual_audit_1016/hbm/contact_sheet_round2.png"
+   ],
+   "what_i_see": "2x2 SRAM block in the top half; the bottom ~45% of the 434.7 x 315.4 tile is empty; logic hugs the W and S edges; clock pin at S-centre",
+   "measured": {
+    "gate_tt_insertion_ps": 444.9,
+    "gate_tt_spread_ps": 109.6,
+    "limits": [
+     300,
+     80
+    ],
+    "sinks": 7194,
+    "fill": 0.42,
+    "pins": {
+     "S": "1306 over 98%",
+     "W": "1084 over 49%",
+     "N": 0,
+     "E": 58
+    }
+   },
+   "structural_fix": "height 315 -> ~200 um so the macros sit next to the S pins; move clk to W mid-height or the SW corner beside the logic. The gate already fails the clock rule (444.9/109.6 vs 300/80), so do not spend route 3 as is.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "new"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:35",
+     "status": "clock-rule claim refuted; native risk open",
+     "evidence": "H-LKEP: the 300/80 ps measured-form limit applies only above 15k sinks/root; 7,194 sinks -> gate PASS (memory clock-rule-measured-form agrees). Remaining measured risk: boundary insertion 348.3-396.4 ps (mean 370.9) vs native launch <= 220 / capture <= 190 ps -> native audit likely FAILs. Owner gating compact variant hep_static_cmp_1016 434.72 x 224.64, fill ~59%, rows 20 um from S face (my height fix adopted); clk stays S-centre (parent contract)."
+    }
+   ]
   }
- ]
+ ],
+ "rounds": {
+  "1": {
+   "date": "2026-10-16T01:00",
+   "findings": 16
+  },
+  "2": {
+   "date": "2026-10-16T01:15",
+   "scored": 15,
+   "confirmed": 1,
+   "confirmed_provisional": 1,
+   "refuted": 0,
+   "withdrawn": 1,
+   "open": 13,
+   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant; T4 now fully confirmed (routed native PASS: L222/C206.2/sp92.8 -> L179/C133/sp37.2)",
+   "new_findings": 1
+  }
+ }
 }

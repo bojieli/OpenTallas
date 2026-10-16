@@ -11,13 +11,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
-from die_port_bind import parse_modules, preprocess
+from die_port_bind import parse_modules, preprocess, strip_comments
 
 
-def rtl_ports(path, name, defines=None):
-    # production port list: preprocessed without opt-in defines (Q-NETLIST 10-16: VM 6fcd017d8 put the partitioned-clock
-    # ABI under `ifdef OT_QFD_VM_PARTITIONED_CLOCKS in the port list; unpreprocessed parsing refused the whole module)
-    mods = [m for m in parse_modules(preprocess(path.read_text(), dict(defines or {})), str(path)) if m.name == name]
+def rtl_ports(path, name):
+    # production die build defines nothing: opt-in `ifdef ports (e.g. OT_QFD_VM_PARTITIONED_CLOCKS) are not die pins
+    mods = [m for m in parse_modules(preprocess(strip_comments(path.read_text()), {}), str(path)) if m.name == name]
     if len(mods) != 1 or mods[0].port_parse_errors:
         raise ValueError(f'{name}: cannot resolve one complete RTL port list')
     m = mods[0]
