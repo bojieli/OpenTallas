@@ -20,7 +20,7 @@ LINK_SOURCE='rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
 CONTROL=('cfg_tx_we','cfg_rx_we','cfg_addr','cfg_data','cal_start','cal_seg')
 
 
-def propose(packet):
+def propose(packet, outline=(43.2,43.2), relative_y=None):
     ports=rtl_ports(ROOT/SOURCE,TOP)
     linkports=rtl_ports(ROOT/LINK_SOURCE,'qkd_d2d_static')
     for p in CONTROL:
@@ -35,13 +35,13 @@ def propose(packet):
     pp=packet['pins']
     if packet['master']!='qkd_d2d_static' or any(p not in pp for p in names):
         raise ValueError('actual link packet must contain all42 control bits and both return pins')
-    w,h=packet['outline_um']; gap=21.6; size=43.2
+    w,h=packet['outline_um']; gap=21.6; sw,sh=outline
     if any(pp[n]['layer']!='M4' or abs(pp[n]['center_um'][0]-w)>.2 for n in names):
         raise ValueError('proposal requires actual east-facing M4 link pins')
     low=min(pp[n]['center_um'][1] for n in names)
     high=max(pp[n]['center_um'][1] for n in names)
-    yoff=round(round(((low+high-size)/2)/2.16)*2.16,6)
-    if not 1.0<=low-yoff<=high-yoff<=size-1.0:
+    yoff=round(round(((low+high-sh)/2)/2.16)*2.16,6) if relative_y is None else relative_y
+    if not 1.0<=low-yoff<=high-yoff<=sh-1.0:
         raise ValueError('actual pin span needs a taller sequencer slot')
     # The actual captured geometry is a baseline, not a closure claim.
     # New sequencer pins use >=3 M4 tracks even
@@ -68,12 +68,14 @@ def propose(packet):
         edges.append(dict(link_pin=n,seq_pin=sn,control_bit=bits.index(n) if n in bits else None,
                           direction='seq_to_link' if n in bits else 'link_to_seq',
                           delta_um=delta,manhattan_um=round(abs(delta[0])+abs(delta[1]),6),extra_relay_edges=0))
-    for n,x in (('ck',21.612),('rst_n',23.772),('reload',10.812),('tok_go',30.252)):
+    ck=.012+round((sw/2-.012)/.048)*.048
+    reload_x=10.812 if sw==43.2 else .012+round((sw/4-.012)/.048)*.048
+    for n,x in (('ck',ck),('rst_n',ck+2.16),('reload',reload_x),('tok_go',sw-12.948)):
         if n in ports:
             pinlist.append(dict(name=n,layer='M5',face='S',center_um=[x,.072],size_um=[.024,.144]))
     status=['cal_ready','running']+[f'layer[{i}]' for i in range(6)]+['adm_done','tok_start','fault']
     for i,n in enumerate(status):
-        pinlist.append(dict(name=n,layer='M4',face='E',center_um=[size-.072,round(4.332+1.728*i,6)],size_um=[.144,.024]))
+        pinlist.append(dict(name=n,layer='M4',face='E',center_um=[sw-.072,round(4.332+1.728*i,6)],size_um=[.144,.024]))
     actual={p if n==1 else f'{p}[{i}]' for p,(n,d) in ports.items() for i in range(n)}
     if {p['name'] for p in pinlist}!=actual or len(pinlist)!=len(actual):
         raise ValueError('pin proposal is not a one-to-one cover of the actual source ABI')
@@ -97,7 +99,7 @@ def propose(packet):
     return dict(scope='PROPOSED_DIE_DRIVEN_PINS_AND_SOURCE_MAP_ONLY',top=TOP,source=SOURCE,
                 source_sha256=hashlib.sha256((ROOT/SOURCE).read_bytes()).hexdigest(),
                 link_interface_source=LINK_SOURCE,link_interface_sha256=hashlib.sha256((ROOT/LINK_SOURCE).read_bytes()).hexdigest(),
-                link_packet=packet,outline_um=[size,size],orient='R0',
+                link_packet=packet,outline_um=[sw,sh],orient='R0',
                 relative_to_link_R0_origin_um=[w+gap,yoff],link_gap_um=gap,
                 link_matched_pin_span_um=[low,high],new_face_min_pitch_um=.144,pins=pinlist,edges=edges,
                 control_bundle_lsb_first=bits,
@@ -132,7 +134,7 @@ def draw(r,out):
             ax.plot([x,sx+q[0]],[y,sy+q[1]],color='#265a98' if e['control_bit'] is not None else '#b44728',lw=.7)
         ax.set_aspect('equal');ax.set_xlabel('um');ax.set_ylabel('um');ax.grid(alpha=.15)
     axes[0].text(lw/2,lh/2,'qkd_d2d_static\nactual routed DEF footprint',ha='center',va='center')
-    axes[0].text(sx+sw/2,sy+sh+8,'proposed cal seq\n43.2 x 43.2',ha='center',va='bottom',fontsize=8)
+    axes[0].text(sx+sw/2,sy+sh+8,f'proposed cal seq\n{sw} x {sh}',ha='center',va='bottom',fontsize=8)
     axes[0].set_xlim(-10,sx+sw+10);axes[0].set_ylim(-10,lh+10)
     axes[0].set_title('R0 relative frames; die home not assigned')
     axes[1].set_xlim(lw-5,sx+8);axes[1].set_ylim(147,174)
@@ -144,13 +146,13 @@ def draw(r,out):
         x,y=p['center_um']
         ax.plot(x,y,'o',ms=2.5,color='red' if p['name']=='ck' else '#265a98')
         if p['face']=='E':ax.text(x+1,y,p['name'],fontsize=6,va='center')
-    for n,textxy in [('ck',(15,-7)),('rst_n',(31,-10)),('reload',(4,-7))]:
+    for n,textxy in [('ck',(sw/2,-5)),('rst_n',(sw+5,-8)),('reload',(sw/4,-7))]:
         p=by[n]
         ax.annotate(n,xy=p['center_um'],xytext=textxy,fontsize=8,ha='center',arrowprops={'arrowstyle':'->','lw':.7})
-    for n,ty in [('epoch_go',29.5),('halt',25.5)]:
+    for n,ty in [('epoch_go',sh-1),('halt',sh-5)]:
         ax.annotate(n,xy=by[n]['center_um'],xytext=(-6,ty),fontsize=7,ha='right',arrowprops={'arrowstyle':'->','lw':.6})
     ax.text(-2,13,'cfg/cal\n3 tracks',fontsize=7,ha='right',va='center')
-    ax.text(-2,32,'cfg\n3 tracks',fontsize=7,ha='right',va='center')
+    ax.text(-2,sh-3,'cfg\n3 tracks',fontsize=7,ha='right',va='center')
     ax.set_xlim(-15,sw+22);ax.set_ylim(-12,sh+3);ax.set_aspect('equal');ax.grid(alpha=.15)
     ax.set_title(f'Sequencer source pin assignment ({len(r["pins"])} bits)\ncentred ck; AUTO tok_go internal0',fontsize=10)
     ax.set_xlabel('local um');ax.set_ylabel('local um')
@@ -163,6 +165,8 @@ def main():
     ap.add_argument('packet',type=Path);ap.add_argument('out',type=Path)
     ap.add_argument('--consumer-e-packet',type=Path,help='all actual Eface pins; propose a coherent monotone3track repair of the unclosed consumer')
     ap.add_argument('--pin-capture',action='store_true',help='actual captured-input successor; raw source stays historical')
+    ap.add_argument('--outline',type=float,nargs=2,default=(43.2,43.2),metavar=('W','H'))
+    ap.add_argument('--relative-y',type=float,help='explicit source Y relative to link; source lattice and pin span still checked')
     a=ap.parse_args()
     global SOURCE,TOP
     if a.pin_capture:
@@ -194,7 +198,7 @@ def main():
         packet['basis_source_def_sha256']=packet.pop('source_def_sha256')
         packet['basis_source_commit']=packet.pop('source_commit')
         packet['pins']={n:target[n] for n in original['pins']}
-    r=propose(packet);a.out.mkdir(parents=True,exist_ok=True)
+    r=propose(packet,a.outline,a.relative_y);a.out.mkdir(parents=True,exist_ok=True)
     if full:
         r['actual_link_pin_packet']=original
         r['consumer_e_packet_sha256']=hashlib.sha256(a.consumer_e_packet.read_bytes()).hexdigest()
@@ -212,7 +216,7 @@ def main():
     r['packet_sha256']=hashlib.sha256(a.packet.read_bytes()).hexdigest()
     (a.out/'plan.json').write_text(json.dumps(r,indent=2)+'\n')
     lines=['# PROPOSED die-driven calendar pins; actual link DEF packet sha256 '+r['packet_sha256'],
-           '# 43.2 x 43.2; R0 source ABI only, no home/clock/route qualification.']
+           f'# {a.outline[0]} x {a.outline[1]}; R0 source ABI only, no home/clock/route qualification.']
     for p in r['pins']:
         x,y=p['center_um'];w,h=p['size_um']
         lines.append(f'place_pin -pin_name {{{p["name"]}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} -pin_size {{{w:.6f} {h:.6f}}}')
