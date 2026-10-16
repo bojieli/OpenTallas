@@ -162,10 +162,10 @@
    "vi_addr_e",
    "vi_q_e",
    "ro_v_e",
-   "kv_ee_e",
+   "kv_we_e",
    "ro_x_e",
-   "kv_edata_e",
-   "kv_eaddr_e"
+   "kv_wdata_e",
+   "kv_waddr_e"
   ]
  },
  "pin_ranges": {
@@ -217,7 +217,7 @@
    23.76,
    2818.8
   ],
-  "kv_ee_e": [
+  "kv_we_e": [
    23.76,
    2818.8
   ],
@@ -225,11 +225,11 @@
    23.76,
    2818.8
   ],
-  "kv_edata_e": [
+  "kv_wdata_e": [
    23.76,
    2818.8
   ],
-  "kv_eaddr_e": [
+  "kv_waddr_e": [
    23.76,
    2818.8
   ],
