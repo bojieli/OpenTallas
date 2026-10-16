@@ -1,0 +1,22 @@
+{
+ "master": "dsfd_cfifo",
+ "rtl": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv",
+ "grown": "S-ELEM-PQ/CFIFO 2026-10-16: 51.84 -> 69.12 um high (down only) for core util ~0.56 of the measured post-CTS area; cr at the measured sink centroid x",
+ "old_view": {
+  "outline": [
+   431.976,
+   95.016
+  ],
+  "source": "c21h a_real/elements.lef"
+ },
+ "new_outline": [
+  280.8,
+  69.12
+ ],
+ "origin_shift_um": [
+  103.68,
+  25.896
+ ],
+ "note": "absolute die x/y of xa/xb/x2-start/xd/rd-start kept; x2 pitch = station x2i pitch (jog 0); cc/st under station cci/so; xd2/xf2 new pins (die bits had none); xf beside xd; rd pitch 0.096; ports ck/co/rf removed (clock feed-throughs: die drives ck_col_<r> and the rd return-lane clock from its column clock root)",
+ "pins": 2347
+}
