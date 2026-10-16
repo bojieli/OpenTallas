@@ -1,0 +1,132 @@
+{
+ "name": "ot_s81_vm_x34_s_w1026_1015_n2",
+ "top": "ot_s81_vm_x34_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv"
+ ],
+ "params": {
+  "W": 1026
+ },
+ "clock_port": "s_ck",
+ "reset_ports": [
+  "s_rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 345.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "s_d",
+   "s_v"
+  ],
+  "E": [
+   "b0",
+   "b1",
+   "b2",
+   "bpar",
+   "s_mark"
+  ],
+  "N": [
+   "s_ck",
+   "s_rst_n"
+  ],
+  "S": []
+ },
+ "io_tcl": "physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x34_s_w1026_1015_n2.tcl",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "x34_s W1026 n1 view is native FAIL launch 234.5 > 220 ps (74 bank output pins, R 250.1 ps, 4.1k sinks in a 43.2-um column). n2: outline 43.2 -> 86.4 um wide (same pins, faces, RTL, root; E face moved out), so the 3,085 bank output registers and their clock tree spread over twice the width (lower insertion / shorter output legs); zero cycles.",
+ "slot_change_request": {
+  "contract": "S81 VM CDC leaf native geometry candidate (F4 1015)",
+  "version": "claude/s81-vm-f4-leaves-1015",
+  "why": "New per-root category master (ABI ck_landing_x34_s) with no prior slot; die geometry reservation required before parent adoption"
+ },
+ "job": {
+  "owner": "claude:S-VM a2hier",
+  "branch": "claude/s81-vm-clockabi-1015",
+  "tag": "n2",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_cdc_leaves_1015"
+  ],
+  "purpose": "Native ck_landing_x34_s master ot_s81_vm_x34_s W1026: exact transfer bench at W1026 + gate + observed mutant, TT/FF/DRC0 + measured R; parent 3:4 arcs and die slot remain open",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_vm_x34_s #(.W(1026)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_w1026",
+    "cmd": "mkdir -p {RUN} && sed 's/localparam integer W = 64;/localparam integer W = 1026;/' rtl/dsrom_sys/s81_ph/test/tb_ot_s81_vm_x34.sv > {RUN}/tb_w.sv && iverilog -g2012 -o {RUN}/sim -s tb_ot_s81_vm_x34 rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv {RUN}/tb_w.sv && for m in 0 1 2; do vvp -n {RUN}/sim +mode=$m; done",
+    "expect": "pass",
+    "pass_regex": "TB_X34 PASS mode 0",
+    "min_count_regex": "words (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "gate_x34",
+    "cmd": "bash tools/s81_vm/x34_gate.sh {RUN}/gate",
+    "expect": "pass",
+    "pass_regex": "X34_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "neg_s",
+    "cmd": "mkdir -p {RUN} && sed 's/localparam integer W = 64;/localparam integer W = 1026;/' rtl/dsrom_sys/s81_ph/test/tb_ot_s81_vm_x34.sv > {RUN}/tb_w.sv && iverilog -g2012 -DOT_VM_X34_MUT_SBANK -o {RUN}/sim -s tb_ot_s81_vm_x34 rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv {RUN}/tb_w.sv && vvp -n {RUN}/sim +mode=0",
+    "expect": "fail",
+    "fail_regex": "TB_X34 FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 0
+ },
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.2
+ }
+}
