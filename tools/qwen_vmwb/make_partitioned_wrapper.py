@@ -9,7 +9,7 @@ s=s.replace('module '+old+' (','module '+new+' (',1)
 s=s.replace('    input wire ck,','    input wire [1007:0] native_ck,\n    input wire [95:0] return_ck,\n    input wire [2:0] read_control_ck,\n    input wire ck,',1)
 removed=[]
 for r in range(8):
- for i in [3*b+2 for b in range(8)]+[34+3*j for j in range(6)]:
+ for i in [4*b+2 for b in range(8)]+[34+3*j for j in range(6)]:
   n=f'ck_r{r}_{i}';line=f'    input wire {n},\n';assert line in s;s=s.replace(line,'',1)
   # These old single-bank entries are elaboration-dead when independent bank clocks are selected.
   s=s.replace(f'.{n}({n})',f'.{n}(1\'b0)');removed.append(n)
