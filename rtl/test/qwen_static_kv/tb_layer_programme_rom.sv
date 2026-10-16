@@ -3,7 +3,7 @@
 //  (a) the boot-loaded qkd_static_kv_layer_programme sealed with the same compiled image (boot.hex, written through its
 //      cfg port): every output equal on every edge over NTOK tokens (cycle equivalence), and
 //  (b) the KV link calendar sequencer qkd_d2d_cal_seq_pin (committed compiler image): the programme start is the token
-//      cal_start (layer 0); every layer run's cal_start (layer l >= 1) must land on stage l + 1's stage_start at the
+//      tok_start (one edge before the token cal_start); every layer run's cal_start (layer l >= 1) must land on stage l + 1's stage_start at the
 //      fixed offset of the token run's (the stage frames ARE the link calendar's layer starts), and stage 36 ends at
 //      the link program's token_cycles_through_L35.
 // Prints one LAYER_ROM line; MUT (ROM variant only) 1..4 must FAIL.
@@ -18,7 +18,7 @@ module tb_layer_programme_rom #(parameter integer MUT = 0, parameter integer NTO
         .cfg_tx_we(c_tx_we), .cfg_rx_we(c_rx_we), .cfg_addr(c_addr), .cfg_data(c_data), .cal_start(cal_start),
         .cal_seg(cal_seg), .cal_ready(cal_ready), .running(running), .layer(layer), .adm_done(adm_done),
         .tok_start(tok_start), .fault(sq_fault));
-    wire start = cal_start && layer == 6'd0;
+    wire start = tok_start;                       // the die's programme start: the sequencer's token go (one edge before cal_start)
     reg [63:0] boot [0:326];
     initial $readmemh({GOLD, "/boot.hex"}, boot);
     reg [15:0] aep = 16'h0123; reg [17:0] atok = 4242, apos = 77; reg [1:0] agen = 0;
