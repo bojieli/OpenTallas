@@ -8,7 +8,7 @@ module tb #(parameter integer RLAT=13,parameter integer SEED=0);
  dsfd_vm_static_xio #(.RLAT(RLAT))dut(.ck_control_t(ct),.ck_control_s(cs),.ck_return_t(ct),.rss_return_t(rt),.ck_fault_t(ct),.ck_fault_s(cs),.ck_fault_join_t(ct),.rss_fault_join_t(rt),.rss_fault_t(rt),.rst_fault_s(rs),.ck_x43_t({2{ct}}),.ck_x43_s({2{cs}}),.rss_control_t(rt),.rst_control_s(rs),.rss_x43_t({2{rt}}),.rst_x43_s({2{rs}}),.n_v(nv),.n_d(nd),.a_v(av1),.a_row(ar1),.e_v(ev1),.e_d(ed1),.f_collective(coll),.f_crq(crq),.t_crs(crs1),.w_v(wv1),.w_row(wr1),.w_d(wd1),.w_m(wm1),.w_t(wt1),.t_gather(g1),.f_xgo(11'd0),.qSW(qs1),.qSWs(qstatus),.fault(f1));
  function[511:0]data(input[13:0]row);integer b;begin for(b=0;b<16;b=b+1)data[32*b+:32]=32'h93ab7200^(32'(row)<<2)^32'(b*131);data[1:0]=3;end endfunction
  reg[3:0]pv0[0:RLAT-1],pv1[0:RLAT-1];reg[2047:0]pd0[0:RLAT-1],pd1[0:RLAT-1];
- reg[3:0]avh;reg[55:0]arh;reg[512:0]ch[0:3];reg[512:0]qh[0:3];reg[511:0]gh[0:3];
+ reg[3:0]avh;reg[55:0]arh;reg[512:0]ch[0:4];reg[512:0]qh[0:3];reg[511:0]gh[0:3];
  integer k,j,cyc=0,scyc=0,requests=0,creads=0,qreads=0,greads=0, faultedge0=-1,faultedge1=-1;reg checking=0,inject=0;
  always @(posedge ct)begin
   pv0[0]<=av0;pv1[0]<=av1;for(k=0;k<4;k=k+1)begin pd0[0][512*k+:512]<=data(ar0[14*k+:14]);pd1[0][512*k+:512]<=data(ar1[14*k+:14]);end
@@ -16,16 +16,16 @@ module tb #(parameter integer RLAT=13,parameter integer SEED=0);
   ev0<=pv0[RLAT-2];ev1<=pv1[RLAT-2];ed0<=pd0[RLAT-2];ed1<=pd1[RLAT-2];
   #0.1;
   if(checking)begin
-   if(pv1[0]!==pv0[1])$fatal(1,"REQUEST DELTA cycle%0d new%h olddelay%h",cyc,pv1[0],pv0[1]);
-   for(integer lane=0;lane<4;lane=lane+1)if(pv1[0][lane]&&pd1[0][512*lane+:512]!==pd0[1][512*lane+:512])$fatal(1,"REQUEST ROW DELTA");
-   if(crs1[0]!==ch[2][0] || (crs1[0]&&crs1[512:1]!==ch[2][512:1]))$fatal(1,"COLLECTIVE DELTA cycle%0d got%h expected%h",cyc,crs1,ch[2]);
+   if(pv1[0]!==pv0[2])$fatal(1,"REQUEST DELTA cycle%0d new%h olddelay%h",cyc,pv1[0],pv0[2]);
+   for(integer lane=0;lane<4;lane=lane+1)if(pv1[0][lane]&&pd1[0][512*lane+:512]!==pd0[2][512*lane+:512])$fatal(1,"REQUEST ROW DELTA");
+   if(crs1[0]!==ch[3][0] || (crs1[0]&&crs1[512:1]!==ch[3][512:1]))$fatal(1,"COLLECTIVE DELTA cycle%0d got%h expected%h",cyc,crs1,ch[3]);
    if({wv1,wr1,wd1,wm1,wt1}!=={wv0,wr0,wd0,wm0,wt0})$fatal(1,"TUPLE tag/row/mask/data mismatch");
    if(inject&&f0&&faultedge0<0)faultedge0=cyc;
    if(inject&&f1&&faultedge1<0)faultedge1=cyc;
    if(!inject&&(f0||f1))$fatal(1,"VALID PROGRAM FAULT cycle%0d old%0b new%0b req%0b ret%0b serial%0b",cyc,f0,f1,dut.req_fault,dut.ret_fault,dut.serial_fault);
    if(av1!=0)requests=requests+1;if(crs1[0])creads=creads+1;
   end
-  avh=av0;arh=ar0;for(j=3;j>0;j=j-1)ch[j]=ch[j-1];ch[0]=crs0;cyc=cyc+1;
+  avh=av0;arh=ar0;for(j=4;j>0;j=j-1)ch[j]=ch[j-1];ch[0]=crs0;cyc=cyc+1;
  end
  always @(posedge cs)begin
   #0.2;
@@ -45,7 +45,7 @@ module tb #(parameter integer RLAT=13,parameter integer SEED=0);
  end endtask
  initial begin
   avh=0;arh=0;for(k=0;k<RLAT;k=k+1)begin pv0[k]=0;pv1[k]=0;pd0[k]=0;pd1[k]=0;end
-  for(k=0;k<4;k=k+1)begin ch[k]=0;qh[k]=0;gh[k]=0;end
+  for(k=0;k<5;k=k+1)ch[k]=0;for(k=0;k<4;k=k+1)begin qh[k]=0;gh[k]=0;end
   #95;rt=1;rs=1;waitcore(60);checking=1;
   for(j=0;j<4;j=j+1)coll[551*j+:551]={8'(40+j),512'(100+j),16'(16'h8110+j),14'(777+101*j),1'b1};
   for(integer n=0;n<128;n=n+1)begin @(negedge ct);crq={14'(200+n),1'b1};end
@@ -61,7 +61,7 @@ module tb #(parameter integer RLAT=13,parameter integer SEED=0);
   @(negedge ct);crq=0;waitcore(50);
   stream(0,14'd5000,5'd3);waitcore(100);
   if(f0||f1)$fatal(1,"WARM RESET recovery fault old%0b new%0b",f0,f1);
-  $display("XIO_PARTITION PASS requests%0d collective%0d query%0d gather%0d deltaRequest1 deltaCollective3 deltaQGcore4 deltaQGserial3 IIunchanged faultreflected oldFaultEdge%0d newFaultEdge%0d",requests,creads,qreads,greads,faultedge0,faultedge1);$finish;
+  $display("XIO_PARTITION PASS requests%0d collective%0d query%0d gather%0d deltaRequest2 deltaCollective4 deltaQGcore4 deltaQGserial3 IIunchanged faultreflected oldFaultEdge%0d newFaultEdge%0d",requests,creads,qreads,greads,faultedge0,faultedge1);$finish;
  end
  initial begin #20000;$fatal(1,"timeout");end
 endmodule
