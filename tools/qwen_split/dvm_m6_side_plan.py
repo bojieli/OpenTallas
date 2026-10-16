@@ -70,8 +70,9 @@ def main():
         selected=[slots[((2*i+1)*len(slots))//400][0]+origin for i in range(200)]
         assert len(set(selected))==200 and all((x-16)%64==0 for x in selected)
         requests[name]=dict(global_M7_x_nm=selected,available_slots=len(slots),cut=200/len(slots),
-                            required_seam_y_um=[round(h['y']+y,3) for y in [138.24,276.48,414.72,552.96,920.16,1058.4,1196.64,1334.88]],
-                            requested_seam_band_y_um=[-43.2,43.2])
+                            required_seam_y_um=[round(h['y']+y,3) for y in [138.24,276.48,414.72,563.76,920.16,1058.4,1196.64,1334.88]],
+                            requested_seam_band_y_um=[-43.2,43.2],
+                            requested_head_south_gap_band_y_um=[h['y']+563.76-54,h['y']+563.76+54])
     r['parent_M7_track_requests']=requests
     r['source_homes_fixture_sha256']=S.digest(a.origins)
     r['parent_M7_candidate_cut']=max(v['cut'] for v in requests.values())

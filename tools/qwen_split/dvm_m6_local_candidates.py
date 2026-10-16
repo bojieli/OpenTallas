@@ -29,7 +29,20 @@ def build():
             layer='M6' if typ=='leaf' else 'M4'
             slots=[v/1000 for v in range(43216 if typ=='leaf' else 43212,round((h-43.2)*1000),128 if typ=='leaf' else 48)]
             assert len(slots)>=len(remaining)
-            for i,n in enumerate(remaining):put(n,layer,face,slots[((2*i+1)*len(slots))//(2*len(remaining))])
+            if typ=='head':
+                # Preserve the prior literal port bands: north read/answer near N,
+                # south read/answer near S, and the measured clock location.
+                original=json.loads((root/f'physical/ref_tile/{base}/spec.json').read_text())
+                grouped={}
+                for n in remaining:grouped.setdefault(n.split('[')[0],[]).append(n)
+                for port,names in grouped.items():
+                    names.sort(key=lambda n:int(n.split('[')[1][:-1]) if '[' in n else -1)
+                    lo,hi=original['pin_ranges'][port]
+                    legal=[v/1000 for v in range(12,round(h*1000),48) if lo<=v/1000<=hi]
+                    assert len(legal)>=len(names),(base,port,len(legal),len(names))
+                    for i,n in enumerate(names):put(n,layer,face,legal[((2*i+1)*len(legal))//(2*len(names))])
+            else:
+                for i,n in enumerate(remaining):put(n,layer,face,slots[((2*i+1)*len(slots))//(2*len(remaining))])
         assert set(assignments)==expected,(name,sorted(expected-assignments.keys()))
         s['io_tcl']=kd+'/assigned_pins.tcl';s['route']['pin_h']='M6' if typ=='leaf' else 'M4 M6';s['route']['pin_v']='M3 M5';s['route'].pop('pin_balance',None)
         s['pin_source']='Exact source candidate. R0 origin-y phase0 and MX phase32 reuse one M6 frame at H138.24; actual exported outline and all parent tracks are unqualified.'
