@@ -16,7 +16,7 @@ module tb_qwen_tp8_pv_wide_pair;
   .fault(fault),.busy(busy),.out_age(out_age));
  reg [1023:0] vr[0:8191];reg [63:0] er[0:8191];reg [31:0] gold[0:511];
  integer due[0:7][0:63],tt[0:7][0:63],wp[0:7],rp[0:7];
- integer cyc=0,scyc=-1,ocyc=-1,errors=0,words=0,nreq=0,i,k,n;
+ integer cyc=0,scyc=-1,ocyc=-1,errors=0,words=0,nreq=0,i,k,n;reg late_done=0;
  always @(posedge clk)cyc<=cyc+1;
  initial begin
   if(!$value$plusargs("VEC=%s",vec))$fatal(1,"+VEC");
@@ -33,11 +33,12 @@ module tb_qwen_tp8_pv_wide_pair;
   for(k=0;k<8;k=k+1)if(rp[k]!=wp[k]&&due[k][rp[k]%64]==cyc)begin
    n=tt[k][rp[k]%64];rp[k]=rp[k]+1;
    in_valid[k]=1;in_t[14*k+:14]=14'(n);in_epoch[16*k+:16]=16'd23;in_v[1024*k+:1024]=vr[n];in_e[64*k+:64]=er[n];
-   if(mode=="v_swap"&&nreq==200&&k==2)in_v[1024*k+:1024]=vr[(n+1)%CTX];
+   if(mode=="v_swap"&&rp[k]==40&&k==2)in_v[1024*k+:1024]=vr[(n+1)%CTX];
   end
   #0.5;
   for(k=0;k<8;k=k+1)if(req_valid[k])begin
-   due[k][wp[k]%64]=cyc+RL+((mode=="v_late"&&nreq==150&&k==5)?1:0);tt[k][wp[k]%64]=req_t[14*k+:14];wp[k]=wp[k]+1;nreq=nreq+1;
+   due[k][wp[k]%64]=cyc+RL+((mode=="v_late"&&nreq>=150&&k==5&&!late_done)?1:0);if(mode=="v_late"&&nreq>=150&&k==5)late_done=1;
+   tt[k][wp[k]%64]=req_t[14*k+:14];wp[k]=wp[k]+1;nreq=nreq+1;
   end
  end
  always @(posedge clk)if(rst_n&&out_valid)begin
