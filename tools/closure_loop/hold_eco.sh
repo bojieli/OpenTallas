@@ -25,8 +25,8 @@
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
 #    {ss_ps (= tt_ps: setup at TT, option B), tt_ps, ss_sensitivity_ps, ff_ps, drc, sdc_name, setup_post_sdc, cells_added, pass, session, window}
 set -eo pipefail
-# Explicit A native-capture recovery only. The plan is source-pinned, hash-bound,
-# and reapplied in each fresh session from the same immutable original ODB.
+# Explicit native-capture recovery. Legacy plans default to ECTL A; HEP
+# recovery must declare its exact block. The source/SHA-bound plan is reapplied in each fresh session from the same immutable original ODB.
 # Normal hold repair, routing, extraction and TT/FF acceptance remain unchanged.
 NATIVE_NORMALIZE_ENV=()
 if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
@@ -40,8 +40,13 @@ if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
   [ "${KEEPWIRES:-0}" = 0 ] || { echo "native normalization rejects KEEPWIRES (OT_KEEP_UNTOUCHED)"; exit 2; }
   [ "${FREEZE:-0}" = 0 ] || { echo "native normalization rejects FREEZE (OT_FREEZE_MACRO_NETS)"; exit 2; }
   [ "$(sha256sum "$NATIVE_REAL" | cut -d ' ' -f 1)" = "$NATIVE_NORMALIZE_SHA256" ] || { echo "native normalization hash mismatch"; exit 2; }
+  NATIVE_BLOCK=${NATIVE_NORMALIZE_BLOCK:-qkd_ectl_a_tp8_epoch_direct}
+  case "$NATIVE_BLOCK" in qkd_ectl_a_tp8_epoch_direct|hfd_ep_static) ;; *) echo "unsupported native normalization block: $NATIVE_BLOCK"; exit 2 ;; esac
+  for vt in ${NATIVE_NORMALIZE_VT:-}; do
+    case "$vt" in RVT|LVT|SLVT) ;; *) echo "unsupported native normalization VT: $vt"; exit 2 ;; esac
+  done
   NATIVE_REL=${NATIVE_REAL#"$PWD"/}
-  NATIVE_NORMALIZE_ENV=(-e OT_NATIVE_FRESH_GRT=${NATIVE_FRESH_GRT:-0} -e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
+  NATIVE_NORMALIZE_ENV=(-e OT_ECO_NATIVE_NORMALIZE_BLOCK="$NATIVE_BLOCK" -e OT_NATIVE_FRESH_GRT=${NATIVE_FRESH_GRT:-0} -e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
 fi
 ECO_SESSION=${ECO_SESSION:-mm}
 case "$ECO_SESSION" in mm|ff|auto) ;; *) echo "ECO_SESSION must be mm, ff or auto"; exit 2 ;; esac
@@ -159,6 +164,13 @@ seed_sdc() {  # the ECO base carries the sign-off SDC (also as 6_final.sdc: a co
 }
 # MULTI-VT (2026-10-07): a route with LVT/SLVT cells is timed with those libraries too (absent: RVT only, unchanged)
 OT_VT="RVT"; for t in L SL; do grep -aqE "_ASAP7_75t_${t}([^A-Za-z0-9_]|\$)" $RB/$DB && OT_VT="$OT_VT $([ $t = L ] && echo LVT || echo SLVT)"; done
+# A physical recovery plan may introduce a VT absent from its immutable input
+# ODB. Load those declared libraries before applying the source-pinned plan.
+if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
+  for vt in ${NATIVE_NORMALIZE_VT:-}; do
+    case " $OT_VT " in *" $vt "*) ;; *) OT_VT="$OT_VT $vt" ;; esac
+  done
+fi
 orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
   local log=$1 tcl=$2; shift 2
   docker run --rm -v $CUR_DIR:/in:ro -v $(dirname $CUR_SPEF):/inspef:ro -v $OB:/ob:ro -v $P:/p -v $PWD:/src:ro -v $CLD:/cl:ro \
