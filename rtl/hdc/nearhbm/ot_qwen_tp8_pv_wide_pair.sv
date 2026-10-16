@@ -8,15 +8,16 @@
 // 4 actual ot_sram_1r1w_32x128_m1 macros, local address a). Each chain still adds its rows serially in t order (one step per 16-cycle round >= the 11-edge
 // slice loop), so every leaf is bit-identical to the 1-row/cycle pair.
 //   tree levels 1-4 (c bits 0-3): inside each slice, its own SRAM tree (TRA/TRB/TRADD, nodes 16 -> 1);
-//   tree levels 5-7 (c bits 4-6 = bank bits 0-2): ((b0+b1)+(b2+b3))+((b4+b5)+(b6+b7)) per 16-lane column;
+//   tree levels 5-7 (c bits 4-6 = bank bits 0-2): ((b0+b1)+(b2+b3))+((b4+b5)+(b6+b7)) per 16-lane column join;
 //   level 8 (pair 0 + pair 1) and x 1/Z stay in ot_qwen_tp8_pv256_finalize_static_cal (unchanged).
 // Walk (compiler-fixed, a pure function of T): issue cycle q = 16 r + a; bank l (h = l>>2) takes step n = r - h, i.e.
 // the high half (c >= 64) runs one round behind, so in every cycle 4 rows come from HBM stack 2(n&1)+p of the low
 // half and 4 from the other stack of the pair (balanced V bandwidth), and the 4 same-stack reads of one cycle sit on
 // 4 distinct EP owners c[5:3] = {l[1:0], a[3]} (one e-read port per EP).
 //
-// PHYSICAL PARTITION (one replicated master): 32 x ot_qwen_tp8_pv_col (column S = head h, dims 16 gs..16 gs+15: the 8
-// bank slices of that column + its 16-lane level 5-7 join; EVERY port registered) + ot_qwen_tp8_pv_wide_ctl (calendar,
+// PHYSICAL PARTITION: 32 x ot_qwen_tp8_pv_col (wires only; column S = head h, dims 16 gs..16 gs+15) = 8 x
+// ot_qwen_tp8_pv_slice_t (the replicated leaf, 256 per pair) + 1 x ot_qwen_tp8_pv_join_t (32 per pair), EVERY tile port
+// registered, + ot_qwen_tp8_pv_wide_ctl (calendar,
 // arrival identity checks, slice/tree/join commands, V requests). The pair itself is wires only. Inputs arrive per V
 // PORT (8 ports: stack PAIR lanes 0-3, stack PAIR+2 lanes 0-3); the column maps port -> bank by the round parity.
 // Every arrival is checked against the calendar (valid, t, epoch); faults are sticky and never move a slot.
@@ -32,7 +33,7 @@ module ot_qwen_tp8_pv_wide_pair #(
  output wire fault,output wire busy,output wire[15:0] out_age
 );
  wire[59:0] cmd;wire[31:0] cf,cv;wire ctl_fault;
- ot_qwen_tp8_pv_wide_ctl #(.PAIR(PAIR),.FIRST_INPUT_AGE(FIRST_INPUT_AGE)) u_ctl(.clk(col_clk[32]),.rst_n(rst_n),.start(start),
+ ot_qwen_tp8_pv_wide_ctl #(.FIRST_INPUT_AGE(FIRST_INPUT_AGE)) u_ctl(.clk(col_clk[32]),.rst_n(rst_n),.pair_id(1'(PAIR)),.start(start),
   .context_len(context_len),.epoch(epoch),.in_valid(in_valid),.in_t(in_t),.in_epoch(in_epoch),
   .req_valid(req_valid),.req_t(req_t),.cmd(cmd),.col_valid(cv),.col_fault(cf),
   .out_epoch(out_epoch),.fault(ctl_fault),.busy(busy),.out_age(out_age));
@@ -53,96 +54,120 @@ module ot_qwen_tp8_pv_wide_pair #(
  assign fault=ctl_fault;
 endmodule
 
-// One P.V column: head H, dims 16 GS .. 16 GS + 15 of all 8 banks (8 x ot_qwen_tp8_pv16_slice, 32 SRAM macros 32x128) and the
-// 16-lane level 5-7 join. Every input and output port is registered at the pin (one edge each way); the column checks
-// its own slices (commit slots, adder flags) and reports one sticky fault.
-// cmd (60 b, from ot_qwen_tp8_pv_wide_ctl, all broadcast): {join_go, reduce_dst[2:0], reduce_last, reduce_capture,
-//  reduce_issue, leaf_c[3:0], rd_leaf, init_c[3:0], init, a[3:0], first_hi, first_lo, take[7:0], swap, epoch_rsv...}
-module ot_qwen_tp8_pv_col #(parameter integer MUT=0, J_LAT=7)(
+// One P.V column (wires only): head H, dims 16 GS .. 16 GS + 15 of all 8 banks = 8 x ot_qwen_tp8_pv_slice_t (one
+// hardened tile each: an ot_qwen_tp8_pv16_slice + its pin registers) and 1 x ot_qwen_tp8_pv_join_t (the 16-lane level
+// 5-7 join, pin registers). Bank l reads V port l (even round) or its partner l^4 (odd round): both port words go to
+// the bank tile, which selects by the command's round parity.
+// cmd (60 b, from ot_qwen_tp8_pv_wide_ctl): [0] swap, [8:1] take per bank, [9] first_lo, [10] first_hi, [14:11] a,
+//  [15] init, [19:16] init_c, [20] rd_leaf, [24:21] leaf_c, [25] red_issue, [26] red_capture, [27] red_last,
+//  [30:28] red_dst, [31] join_go
+module ot_qwen_tp8_pv_col #(parameter integer MUT=0)(
  input wire clk,rst_n,
  input wire[1023:0] pv,input wire[127:0] pe,     // per V port k (0-3: stack PAIR lane k; 4-7: stack PAIR+2 lane k-4)
  input wire[59:0] cmd,
- output reg[511:0] y,output reg y_valid,output reg fault
+ output wire[511:0] y,output wire y_valid,output wire fault
 );
- localparam integer J_OUT=3*J_LAT+3;
- // ---- pin registers ----
- reg[1023:0] v_r;reg[127:0] e_r;reg[59:0] c_r;
- always @(posedge clk)begin v_r<=pv;e_r<=pe;end
- always @(posedge clk or negedge rst_n)if(!rst_n)c_r<=0;else c_r<=cmd;
- wire swap=c_r[0];wire[7:0] take=c_r[8:1];wire first_lo=c_r[9],first_hi=c_r[10];wire[3:0] a=c_r[14:11];
- wire init=c_r[15];wire[3:0] init_c=c_r[19:16];wire rd_leaf=c_r[20];wire[3:0] leaf_c=c_r[24:21];
- wire red_issue=c_r[25],red_capture=c_r[26],red_last=c_r[27];wire[2:0] red_dst=c_r[30:28];wire join_go=c_r[31];
- // ---- 8 bank slices; port -> bank: bank l<4 takes port l (even round) or l+4 (odd), bank l>=4 the other one ----
- wire[7:0] sf,cv;wire[6:0] cc[0:7];wire[511:0] ts[0:7];
- reg[10:0] feed_commit[0:7];reg[6:0] tree_commit;
+ wire[4095:0] ts;wire[7:0] sf;
  genvar l;
  generate for(l=0;l<8;l=l+1)begin:g_bank
-  localparam integer P0=l,P1=(l<4)?l+4:l-4;
-  wire[127:0] bv=swap?v_r[128*P1+:128]:v_r[128*P0+:128];
-  wire[15:0] be=swap?e_r[16*P1+:16]:e_r[16*P0+:16];
-  wire[511:0] raw;
-  ot_qwen_tp8_pv16_slice u_slice(.clk(clk),.rst_n(rst_n),.take(take[l]),.c({3'd0,a}),
-   .first((l<4)?first_lo:first_hi),.init_zero(init),.init_c({3'd0,init_c}),
-   .v(bv),.e(be),.read_leaf(rd_leaf),.leaf_c({3'd0,leaf_c}),
-   .reduce_issue(red_issue),.reduce_capture(red_capture),.reduce_last(red_last),.reduce_dst({4'd0,red_dst}),
-   .tree_sum(ts[l]),.leaf(raw),.commit(cv[l]),.commit_c(cc[l]),.fault(sf[l]));
+  localparam integer PA=l,PB=l^4;
+  wire[22:0] bc={cmd[30:15],cmd[14:11],(l<4)?cmd[9]:cmd[10],cmd[1+l],cmd[0]};
+  ot_qwen_tp8_pv_slice_t u_bank(.clk(clk),.rst_n(rst_n),.pv2({pv[128*PB+:128],pv[128*PA+:128]}),
+   .pe2({pe[16*PB+:16],pe[16*PA+:16]}),.bc(bc),.ts(ts[512*l+:512]),.fault(sf[l]));
  end endgenerate
- // ---- level 5-7 join (16 lanes), two node registers, static slots from join_go ----
+ ot_qwen_tp8_pv_join_t #(.MUT(MUT)) u_join(.clk(clk),.rst_n(rst_n),.ts0(ts[1023:0]),.ts1(ts[2047:1024]),.ts2(ts[3071:2048]),
+  .ts3(ts[4095:3072]),.join_go(cmd[31]),.sf(sf),
+  .y(y),.y_valid(y_valid),.fault(fault));
+endmodule
+
+// P.V bank slice tile (the replicated leaf, 512 per KV/system die): the 16 chains of one bank for one 16-dim x head
+// column. Every port registered at the pin. bc = {red_dst[2:0], red_last, red_capture, red_issue, leaf_c[3:0],
+// rd_leaf, init_c[3:0], init, a[3:0], first, take, swap}. Checks its own commit slots (feed take+11, tree issue+7)
+// and the slice/adder flags; reports one registered sticky fault.
+module ot_qwen_tp8_pv_slice_t(
+ input wire clk,rst_n,input wire[255:0] pv2,input wire[31:0] pe2,input wire[22:0] bc,
+ output reg[511:0] ts,output reg fault
+);
+ reg[255:0] v_r;reg[31:0] e_r;reg[22:0] c_r;
+ always @(posedge clk)begin v_r<=pv2;e_r<=pe2;c_r<=bc;end
+ wire swap=c_r[0],take=c_r[1],first=c_r[2];wire[3:0] a=c_r[6:3];wire init=c_r[7];wire[3:0] init_c=c_r[11:8];
+ wire rd_leaf=c_r[12];wire[3:0] leaf_c=c_r[16:13];wire red_issue=c_r[17],red_capture=c_r[18],red_last=c_r[19];
+ wire[2:0] red_dst=c_r[22:20];
+ wire[511:0] tsum,raw;wire cv,sf;wire[6:0] cc;
+ ot_qwen_tp8_pv16_slice u_slice(.clk(clk),.rst_n(rst_n),.take(take),.c({3'd0,a}),.first(first),.init_zero(init),
+  .init_c({3'd0,init_c}),.v(swap?v_r[255:128]:v_r[127:0]),.e(swap?e_r[31:16]:e_r[15:0]),.read_leaf(rd_leaf),
+  .leaf_c({3'd0,leaf_c}),.reduce_issue(red_issue),.reduce_capture(red_capture),.reduce_last(red_last),
+  .reduce_dst({4'd0,red_dst}),.tree_sum(tsum),.leaf(raw),.commit(cv),.commit_c(cc),.fault(sf));
+ reg[10:0] fc;reg[6:0] tc;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin fc<=0;tc<=0;fault<=0;end
+  else begin
+   fc<={fc[9:0],take};tc<={tc[5:0],red_issue};
+   if(sf||(cv!=(fc[10]||tc[6])))fault<=1;
+  end
+ always @(posedge clk)ts<=tsum;
+endmodule
+
+// P.V column join tile (64 per KV/system die): ((b0+b1)+(b2+b3))+((b4+b5)+(b6+b7)) over the 8 bank tree sums of one
+// column, 16 FP32 lanes, one adder set + two node registers on static slots from join_go. Every port registered.
+module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7)(
+ input wire clk,rst_n,input wire[1023:0] ts0,ts1,ts2,ts3,   // bank tree sums {b1,b0}, {b3,b2}, {b5,b4}, {b7,b6} (one face each)
+ input wire join_go,input wire[7:0] sf,
+ output reg[511:0] y,output reg y_valid,output reg fault
+);
+ wire[4095:0] ts={ts3,ts2,ts1,ts0};
+ localparam integer J_OUT=3*J_LAT+3;
+ reg[4095:0] t_r;reg go_r;reg[7:0] sf_r;
+ always @(posedge clk)t_r<=ts;
+ always @(posedge clk or negedge rst_n)if(!rst_n)begin go_r<=0;sf_r<=0;end else begin go_r<=join_go;sf_r<=sf;end
+ wire[511:0] tb[0:7];
+ genvar g;
+ generate for(g=0;g<8;g=g+1)begin:g_t assign tb[g]=t_r[512*g+:512]; end endgenerate
  reg jrun;reg[4:0] jage;reg[511:0] xr,yr,ja,jb;reg jissue;
  wire[511:0] jy;wire[15:0] jv;wire[31:0] jerr;
  always @*begin
   ja=0;jb=0;jissue=0;
   if(jrun)case(jage)
-   5'd0:begin jissue=1;ja=ts[0];jb=(MUT==1)?ts[2]:ts[1];end
-   5'd1:begin jissue=1;ja=(MUT==1)?ts[1]:ts[2];jb=ts[3];end
-   5'd2:begin jissue=1;ja=ts[4];jb=ts[5];end
-   5'd3:begin jissue=1;ja=ts[6];jb=ts[7];end
+   5'd0:begin jissue=1;ja=tb[0];jb=(MUT==1)?tb[2]:tb[1];end
+   5'd1:begin jissue=1;ja=(MUT==1)?tb[1]:tb[2];jb=tb[3];end
+   5'd2:begin jissue=1;ja=tb[4];jb=tb[5];end
+   5'd3:begin jissue=1;ja=tb[6];jb=tb[7];end
    5'(J_LAT+1):begin jissue=1;ja=xr;jb=jy;end
    5'(J_LAT+3):begin jissue=1;ja=xr;jb=jy;end
    5'(2*J_LAT+3):begin jissue=1;ja=yr;jb=jy;end
    default:;
   endcase
  end
- genvar g;
  generate for(g=0;g<16;g=g+1)begin:g_join
-  ot_hdc_fp32_add_lat #(.LAT(J_LAT)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(jissue),
+  ot_hdc_fp32_add_lat #(.LAT(J_LAT),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(jissue),
    .a(ja[32*g+:32]),.b(jb[32*g+:32]),.y(jy[32*g+:32]),.err(jerr[2*g+:2]),.valid_out(jv[g]));
  end endgenerate
  wire jexp=jrun&&(jage==J_LAT||jage==J_LAT+1||jage==J_LAT+2||jage==J_LAT+3||jage==2*J_LAT+1||jage==2*J_LAT+3||jage==J_OUT);
- // ---- integrity: commit slots of every slice (feed take+11, tree issue+7), slice faults, join flags ----
- reg bad;integer k;
- always @*begin
-  bad=|sf;
-  for(k=0;k<8;k=k+1)if(cv[k]!=(feed_commit[k][10]||tree_commit[6]))bad=1;
-  if(jv!={16{jexp}})bad=1;
-  if(jexp&&(|jerr))bad=1;
-  if(join_go&&jrun)bad=1;
- end
+ wire bad=(|sf_r)||(jv!={16{jexp}})||(jexp&&(|jerr))||(go_r&&jrun);
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin jrun<=0;jage<=0;xr<=0;yr<=0;y_valid<=0;fault<=0;tree_commit<=0;for(k=0;k<8;k=k+1)feed_commit[k]<=0;end
+  if(!rst_n)begin jrun<=0;jage<=0;y_valid<=0;fault<=0;end
   else begin
-   for(k=0;k<8;k=k+1)feed_commit[k]<={feed_commit[k][9:0],take[k]};
-   tree_commit<={tree_commit[5:0],red_issue};
    if(bad)fault<=1;
    y_valid<=jrun&&jage==J_OUT;
-   if(join_go)begin jrun<=1;jage<=0;end
-   else if(jrun)begin
-    jage<=jage+1'b1;
-    if(jage==J_LAT)xr<=jy;                      // L5_0
-    if(jage==J_LAT+2)xr<=jy;                    // L5_2
-    if(jage==2*J_LAT+1)yr<=jy;                  // L6_0
-    if(jage==J_OUT)jrun<=0;
-   end
+   if(go_r)begin jrun<=1;jage<=0;end
+   else if(jrun)begin jage<=jage+1'b1;if(jage==J_OUT)jrun<=0;end
   end
  end
- always @(posedge clk)if(jrun&&jage==J_OUT)y<=jy;
+ always @(posedge clk)begin
+  if(jrun&&jage==J_LAT)xr<=jy;                      // L5_0
+  if(jrun&&jage==J_LAT+2)xr<=jy;                    // L5_2
+  if(jrun&&jage==2*J_LAT+1)yr<=jy;                  // L6_0
+  if(jrun&&jage==J_OUT)y<=jy;
+ end
 endmodule
 
 // Pair control tile: calendar walk, V requests, arrival identity per port, the column command word, output check.
 // Every port is registered at the pin: inputs (start/context/epoch, arrival identities, column flags) one edge in,
 // outputs (V requests, command word, flags, out_age) one edge out. Internal age 'pa' counts from the registered start.
-module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
- input wire clk,rst_n,start,input wire[13:0] context_len,input wire[15:0] epoch,
+module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
+ input wire clk,rst_n,
+ input wire pair_id,                            // die strap: one master serves both pairs
+ input wire start,input wire[13:0] context_len,input wire[15:0] epoch,
  input wire[7:0] in_valid,input wire[111:0] in_t,input wire[127:0] in_epoch,
  output reg[7:0] req_valid,output reg[111:0] req_t,
  output reg[59:0] cmd,input wire[31:0] col_valid,input wire[31:0] col_fault,
@@ -150,7 +175,8 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
 );
  localparam IDLE=0,FEED=1,DRAIN=2,TRA=3,TRB=4,TRADD=5,TRDRAIN=6,JOIN=7;
  localparam integer FIRSTI=FIRST_INPUT_AGE+1;      // + the request pin register: arrival pa of q = 0
- localparam integer COL_LAT=3+3*7+3+1;          // JOIN -> column y_valid: cmd reg, column pin reg, jrun start, J_OUT 24, y reg
+ localparam integer JGO=2;                       // join_go 2 edges into JOIN: bank tree sums cross the bank out + join in pin regs
+ localparam integer COL_LAT=JGO+3+3*7+3+1;      // JOIN -> column y_valid: + cmd reg, join pin reg, jrun start, J_OUT 24, y reg
  // ---- input pin registers ----
  reg start_r;reg[13:0] ctx_r;reg[15:0] epoch_r;reg[7:0] iv_r;reg[111:0] it_r;reg[127:0] ie_r;reg[31:0] cv_r,cf_r;
  always @(posedge clk or negedge rst_n)
@@ -175,18 +201,18 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
   for(l=0;l<8;l=l+1)pexp_t[l]=0;
   for(l=0;l<8;l=l+1)begin
    automatic integer n=int'(rc)-(l>>2);
-   automatic integer t=256*n+128*PAIR+16*l+int'(ac);
+   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(ac);
    automatic integer port=4*(n&1)+(l&3);
    if(chk_window&&n>=0&&t<int'(lim))begin pexp_v[port]=1'b1;pexp_t[port]=14'(t);end
   end
   for(l=0;l<8;l=l+1)begin
    automatic integer n=int'(rn)-(l>>2);
-   automatic integer t=256*n+128*PAIR+16*l+int'(an);
+   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(an);
    if(next_window&&n>=0&&t<int'(lim))exp_take[l]=1'b1;
   end
  end
  wire[7:0] rq;wire[111:0] rqt;
- ot_qwen_tp8_vrow_wide #(.PAIR(PAIR)) u_req(.clk(clk),.rst_n(rst_n),.start(start_r),.context_len(ctx_r),
+ ot_qwen_tp8_vrow_wide u_req(.clk(clk),.rst_n(rst_n),.pair_id(pair_id),.start(start_r),.context_len(ctx_r),
   .req_valid(rq),.req_t(rqt),.fault());
  always @(posedge clk or negedge rst_n)if(!rst_n)req_valid<=0;else req_valid<=rq;
  always @(posedge clk)req_t<=rqt;
@@ -210,7 +236,7 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
    cmd[15]<=(state==FEED)&&pa>=1&&pa<=16;cmd[19:16]<=4'(pa-1);
    cmd[20]<=(state==TRA)||(state==TRB);cmd[24:21]<={ti,1'b0}+4'(state==TRB);
    cmd[25]<=state==TRADD;cmd[26]<=state==TRB;cmd[27]<=nodes==2;cmd[30:28]<=ti;
-   cmd[31]<=(state==JOIN)&&wage==0;
+   cmd[31]<=(state==JOIN)&&wage==6'(JGO);
   end
  // output pin registers: flags and the static output age (service cycles after start_pv: + the start pin register)
  always @(posedge clk or negedge rst_n)
@@ -227,7 +253,7 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
    case(state)
     IDLE:if(start_r)begin
      ep<=epoch_r;lim<=ctx_r;age<=0;
-     nq<=(ctx_r>14'(128*PAIR))?16'(16*(((int'(ctx_r)-128*PAIR+255)>>8)+1)):16'd0;
+     nq<=(ctx_r>14'(128*int'(pair_id)))?16'(16*(((int'(ctx_r)-128*int'(pair_id)+255)>>8)+1)):16'd0;
      if(ctx_r==0||ctx_r>8192)flt<=1;else state<=FEED;
     end
     FEED:if(pa>=16'(FIRSTI)+nq-16'd1&&pa>=16'd16)begin state<=DRAIN;drain_left<=12;end
@@ -253,8 +279,8 @@ endmodule
 
 // Per-pair V request calendar (the same walk as the pair): port order {stack PAIR lanes 0-3, stack PAIR+2 lanes 0-3}.
 // Bank l issues on lane l&3 of stack 2(n&1)+PAIR; the low and high half always hit different stacks in one cycle.
-module ot_qwen_tp8_vrow_wide #(parameter integer PAIR=0)(
- input wire clk,rst_n,start,input wire[13:0] context_len,
+module ot_qwen_tp8_vrow_wide (
+ input wire clk,rst_n,pair_id,start,input wire[13:0] context_len,
  output reg[7:0] req_valid,output reg[111:0] req_t,output reg fault
 );
  reg active;reg[15:0] q;reg[15:0] nq;reg[13:0] lim;
@@ -263,7 +289,7 @@ module ot_qwen_tp8_vrow_wide #(parameter integer PAIR=0)(
   req_valid=0;req_t=0;
   if(active&&q<nq)for(l=0;l<8;l=l+1)begin
    automatic integer n=int'(q>>4)-(l>>2);
-   automatic integer t=256*n+128*PAIR+16*l+int'(q&15);
+   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(q&15);
    automatic integer port=4*(n&1)+(l&3);
    if(n>=0&&t<int'(lim))begin req_valid[port]=1'b1;req_t[14*port+:14]=14'(t);end
   end
@@ -273,7 +299,7 @@ module ot_qwen_tp8_vrow_wide #(parameter integer PAIR=0)(
   else if(start)begin
    if(active&&q<nq)fault<=1;
    active<=1;q<=0;lim<=context_len;
-   nq<=(context_len>14'(128*PAIR))?16'(16*(((int'(context_len)-128*PAIR+255)>>8)+1)):16'd0;
+   nq<=(context_len>14'(128*int'(pair_id)))?16'(16*(((int'(context_len)-128*int'(pair_id)+255)>>8)+1)):16'd0;
   end else if(active)begin
    if(q<nq)q<=q+1'b1;else active<=0;
   end

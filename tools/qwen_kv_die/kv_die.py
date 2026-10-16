@@ -198,9 +198,21 @@ HEAD_R4_PLAN = 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json
 V143 = dict(on=False)
 HEAD_FT_PLAN = 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/head_ft_plan.json'
 SPLIT_HEAD_FT = (1080.0, 508.68)
-V143_BAND_LO, V143_BAND_HI = 119.88, 118.8     # ECTL face bands (4 stage rows at 28.08 pitch + clearance); GY-grid totals
-V143_NF_LO, V143_NF_HI = 32.4, 33.48           # near | far bands (one 21.6 row + 5.4 each side)
-V143_X = dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4)   # ECTL-local x (R0 ECTL)
+# v1.4.3b (owner rule 20:45, visual inspection of v1.4.3: 6.48-um slivers between stacked stage rows, one 324-um column
+# carrying every word): rows at 43.2 pitch (21.6-um gaps >= the 20-um sliver rule), T1n moved off the G column
+# OT_KV_V143B=1 selects it; default = v1.4.3 as run in kvs9-v143 (28.08 pitch, 6.48-um gaps, T1n in the G column).
+# v1.4.3b status 2026-10-15 21:00: the +2.18 mm/stack it needs does not fit the relay allocator in any tried anchoring
+# (middle closes: no route astk_WN -> seq; top apron: HOST tree corners at y ~24.0 mm; taller pitch 432-864: slice chains
+# corner at x 1501) -> needs a smaller band (T1n into the near head's channel) or a die height step with the HOST apron.
+V143B = __import__('os').environ.get('OT_KV_V143B', '0') == '1'
+V143_ROW = 43.2 if V143B else 28.08
+V143_GAP = 21.6 if V143B else 6.48
+V143_BAND_LO, V143_BAND_HI = (195.48, 194.4) if V143B else (119.88, 118.8)
+V143_NF_LO, V143_NF_HI = (64.8, 65.88) if V143B else (32.4, 33.48)
+V143_X = (dict(g=226.8, t1n=-54.0, t2n=108.0, t2f=108.0, s1n=486.0, s2n=556.2, s1f=486.0) if V143B else
+          dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4))   # ECTL-local x (R0 ECTL)
+V143_CENTER = __import__('os').environ.get('OT_KV_V143_CENTER', '0') == '1'   # 1: v1.4.2 centring (the die grows)
+V143_N_UP = float(__import__('os').environ.get('OT_KV_V143_NUP', '1404.0'))                             # N groups' top may rise this far into the empty top (the rest grows down)
 V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
 HGS, HSS = (324.0, 21.6), (21.6, 21.6)
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
@@ -913,7 +925,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # split: the engine group (4 engine columns of 4 heads + ectl) is taller than the 12.1-mm band: stack pitch sp, the band
     # centred on it (band_shift per half)
     gh_ = 4 * RENG[1] + 3 * GY
-    if split and V143['on']:
+    if split and V143['on'] and not V143_CENTER:
         gh_ = 4 * V143['eng_h_v142'] + 3 * GY      # v1.4.3: groups keep the v1.4.2 bottom (no die lift); they grow up
     # 2 x CHAN of relay channel above and below each group: the S | N groups leave a 518-um channel between them (the
     # col-1 engines' KV rows krq / krs and the centre words cross the W / E stack walls there)
@@ -921,6 +933,10 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # keeps the legal origin residues of its hard macros (kvs1 real case: phy_WN MY had no legal origin at a GY shift)
     LAT = 43.2
     sp = (stack_h + up(max(0.0, gh_ + 4 * CHAN - stack_h), LAT)) if split else stack_h
+    if split and V143['on'] and V143_CENTER:
+        # v1.4.3b: the grown groups leave the HOST tree / slice chains their N-apron and the S|N channel only with a taller
+        # stack pitch (die height + 2 x this, measured by the relay allocator)
+        sp += up(float(__import__('os').environ.get('OT_KV_V143_EXTRA', '0')), LAT)
     band_shift = {'S': up((sp - stack_h) / 2, LAT), 'N': up((sp - stack_h) / 2, LAT) + (sp - stack_h)}
     # split: the S engine groups reach down to the die edge, where the host SerDes PHY (2,400 wide, wider than the centre
     # column) sits: lift everything above it by d0
@@ -971,13 +987,13 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
         gh = 4 * RENG[1] + 3 * GY
         gy = up(y0 + (stack_h - gh) / 2, GY)
-        if split and V143['on']:
-            # v1.4.3: both halves grow INTO the middle S | N channel (3.7 mm in v1.4.2; >= 1 mm left): S groups keep their
-            # v1.4.2 bottom (the SerDes corridor), N groups keep their v1.4.2 top (the HOST / D2D relay apron)
+        if split and V143['on'] and not V143_CENTER:
+            # v1.4.3b: S groups keep their v1.4.2 bottom (the SerDes corridor) and grow up into the middle; N groups rise
+            # into the empty top by <= V143_N_UP and grow the rest down
             gh_old = 4 * V143['eng_h_v142'] + 3 * GY
             gy = up(y0 + (stack_h - gh_old) / 2, GY)
             if st[1] == 'N':
-                gy = gy + gh_old - gh - float(__import__('os').environ.get('OT_KV_V143_NDROP', '0'))
+                gy = (up(gy + gh_old + min(V143_N_UP, gh - gh_old) - gh, GY) if V143B else gy + gh_old - gh)
         grp_y = locals().setdefault('grp_y', {})
         grp_y[st] = (gy, gy + gh)
         # qwen-1010/b 2026-10-10 (KV11 die STA: land -> ectl rs hops of ~3 mm between pins): every stack group is the
@@ -1080,7 +1096,7 @@ def _v143_stages(add, se, cx, ey, col):
         o = ('R180' if col == 1 else 'MX') if lower else ('MY' if col == 1 else 'R0')
         add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
     for lower, near, far in ((True, 1, 0), (False, 2, 3)):
-        row = (lambda k: cy - 28.08 * k) if lower else (lambda k: cy + ECTL[1] + 6.48 + 28.08 * (k - 1))
+        row = (lambda k: cy - V143_ROW * k) if lower else (lambda k: cy + ECTL[1] + V143_GAP + V143_ROW * (k - 1))
         put(f'{near}_g', 'qkd_hgs', V143_X['g'], row(1), lower)
         put(f'{far}_g', 'qkd_hgs', V143_X['g'], row(2), lower)
         put(f'{near}_t1', 'qkd_hgs', V143_X['t1n'], row(3), lower)
@@ -1088,9 +1104,9 @@ def _v143_stages(add, se, cx, ey, col):
         put(f'{near}_t2', 'qkd_hgs', V143_X['t2n'], row(4), lower)
         put(f'{near}_s1', 'qkd_hss', V143_X['s1n'], row(4), lower)
         if lower:
-            yf = ey + HEAD[1] + 5.4                                   # far head 0 top + 5.4
+            yf = ey + HEAD[1] + (21.6 if V143B else 5.4)              # far head 0 top + gap
         else:
-            yf = ey + TILE_Y['h2'] + SPLIT_HEAD_FT[1] + 5.4           # near head 2 top + 5.4
+            yf = ey + TILE_Y['h2'] + SPLIT_HEAD_FT[1] + (21.6 if V143B else 5.4)   # near head 2 top + gap
         put(f'{far}_t2', 'qkd_hgs', V143_X['t2f'], yf, lower)
         put(f'{far}_s1', 'qkd_hss', V143_X['s1f'], yf, lower)
 
@@ -2912,7 +2928,10 @@ source /work/die_constant_pg_check.tcl"""
     # VSS still failed (die_kv12 PSM-0069); without it VSS passes (pgb test on the die_kv11 floorplan).
     (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + '''
 set phy_cells {}
-foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]] || [string match OT_PDN_BBOX_ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
+# 2026-10-15 (kvs8-codex-1338 PSM-0039 ucie_rom / serdes_host VDD): the UCIe and host SerDes PHY abstracts carry the same
+# single horizontal M4 PG rails as the HBM PHY -> the same M5-strap grid
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { foreach pp {ot_hbm3e_phy* OT_PDN_BBOX_ot_hbm3e_phy* ot_qkvd_ucie_x64_phy* OT_PDN_BBOX_ot_qkvd_ucie_x64_phy* ot_qfd_serdes_112g_x12_phy* OT_PDN_BBOX_ot_qfd_serdes_112g_x12_phy*} { if {[string match $pp [$c getName]]} { lappend phy_cells [$c getName] } } } }
+set phy_cells [lsort -unique $phy_cells]
 if {[llength $phy_cells]} {
   define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
   add_pdn_stripe -grid {phy} -layer {M5} -width {0.12} -pitch {10.88} -offset {1.0}
@@ -2969,9 +2988,26 @@ foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
 } }
 set hv5_cells [lsort -unique $hv5_cells]
 puts "OT_HV5 masters [llength $hv5_cells]: $hv5_cells"
+# 2026-10-15 (Q-KVSYS-DIE, kvs8-codex-1338 PSM-0069: 998+ head nb1 / nb2 leaves VDD unconnected): a SHORT M5-PG leaf (the
+# 32.4 x 10.8 node-beat stations: one VDD M5 pin spanning y 2.15..8.65) is crossed by a core M8 VDD strap (10.88 pitch) only
+# ~60 % of the time.  Leaves shorter than two core pitches get their own M8 straps at 5.44 (each net inside any 5.4-um pin
+# span), stacked M5 -> M8 and M8 -> core M9 (the M9 straps cross every leaf >= 10.88 wide).  Fixture: 3 nb leaves R0/MX,
+# without: PSM-0069 VDD + VSS; with: check_power_grid VDD / VSS PASS, 0 M8 VDD/VSS overlaps.
+set hv5s_cells {}
+foreach n $hv5_cells { foreach mst [[ord::get_db] getLibs] { set c [$mst findMaster $n]
+  if {$c ne "NULL" && [$c getHeight] < 21760} { lappend hv5s_cells $n } } }
+set hv5s_cells [lsort -unique $hv5s_cells]
+set hv5_cells [lmap n $hv5_cells { if {[lsearch -exact $hv5s_cells $n] >= 0} continue; set n }]
+puts "OT_HV5S short masters [llength $hv5s_cells]: $hv5s_cells"
 if {[llength $hv5_cells]} {
   define_pdn_grid -macro -cells $hv5_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv5}
   add_pdn_connect -grid {hv5} -layers {M5 M8}
+}
+if {[llength $hv5s_cells]} {
+  define_pdn_grid -macro -cells $hv5s_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv5s}
+  add_pdn_stripe -grid {hv5s} -layer {M8} -width {0.48} -pitch {5.44} -offset {2.4}
+  add_pdn_connect -grid {hv5s} -layers {M5 M8}
+  add_pdn_connect -grid {hv5s} -layers {M8 M9}
 }
 ''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
