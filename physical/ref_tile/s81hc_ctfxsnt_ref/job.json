@@ -1,14 +1,14 @@
 {
- "name": "s81hc_ctfxsnt_ref-s2-2root-1da74f562",
+ "name": "s81hc_ctfxsnt_ref-s3-spread-COMMIT",
  "block": "ot_s81_hc_ctfxs_nt",
  "ref_tile": true,
- "owner": "Claude:S-NORM",
+ "owner": "Claude:s81-norm-1705",
  "purpose": "el1014-s81-norm-tree: ctfx_nt broadcast source without the local re-register (LOCAL_SPLIT 1)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-norm-tree-1014",
-  "commit": "1da74f562"
+  "branch": "claude/s81-norm-1705",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfxsnt_ref/s81hc_ctfxsnt_ref-s2-2root-1da74f562"
+   "to": "results/rtl/ref_tile/s81hc_ctfxsnt_ref/s81hc_ctfxsnt_ref-s3-spread-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -104,12 +104,9 @@
  "merge_target": null,
  "structural_change": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
+ "hold_merge": "v25 NORM-tree candidate: adoption with the v25 set after native PASS and S-DIE pin grant.",
  "reroute_reason": {
-  "kind": "pin_register",
-  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/ctfxs_s1_native_audit.json",
-  "cell": "ot_s81_hc_ctfxs_nt",
-  "launch_ps": 236.5,
-  "capture_ps": 283.3,
-  "fix": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped. clk at the N-face centre x 286.04, clk_l at the lanes x 68.2 (M3)."
+  "kind": "slot_change",
+  "slot_change_request": "S-ENGRAM+NORM 1705 v27 ctfxs_nt spread candidate (same 576.72x25.92 outline, faces unchanged): native audit of CLOSED s2 (1da74f562) failed 11 pins - lane inputs dl_in/cs_n/cs_s capture up to 231.3 > 190 (275 dl bits in 26 um and 64 cs bits in 6 um = 10.5 b/um) and core outputs fdx launch up to 229.3 > 220 (1,128 bits in 113 um = 10 b/um). v27 halves both densities about their group centres in bit order (lane x 8-118, core x 170-398, ~5 b/um like ctfn/ctfs_nt) and centres clk_l on the lane group. Posted to S-DIE el1011-s81die.log."
  }
 }
