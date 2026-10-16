@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.hbm.sm_repack.v1",
+ "agent": "Claude H-SM-REPACK",
+ "date": "2026-10-15",
+ "content_per_sm_mm2": 2.21,
+ "inputs": {
+  "v5_frame": "codex/sm-dense-pack-1015 complete35.json",
+  "v5_tile": "codex/sm-dense-pack-1015 complete16.json"
+ },
+ "v5_frame": {
+  "outline_um": [
+   6609.6,
+   1712.08
+  ],
+  "area_mm2": 11.3162,
+  "child_outline_mm2": 7.9014,
+  "child_coverage": 0.698,
+  "overlaps": 0,
+  "slivers_um": [
+   10.8,
+   12.96
+  ],
+  "min_gap_um": 10.8,
+  "sm32_mm2": 362.1,
+  "fill_content": 0.195
+ },
+ "v5_tile": {
+  "outline_um": [
+   693.44,
+   609.92
+  ],
+  "area_mm2": 0.4229,
+  "child_outline_mm2": 0.2864,
+  "child_coverage": 0.677,
+  "overlaps": 0,
+  "slivers_um": [],
+  "min_gap_um": 20.0,
+  "note": "UNBUILT: 6 new transport masters (rowW/beatW/beatE/rowE0/rowE1) + the 3,705-bit E-W bus on M8 over the leaves; the cluster contract caps signals at M7 unless H-DIE issues a cluster_layer_grant (die M8/M9 then PG-only over every tile)"
+ },
+ "rp3_tile": {
+  "outline_um": [
+   406.08,
+   1192.32
+  ],
+  "area_mm2": 0.4842,
+  "child_outline_mm2": 0.2342,
+  "child_coverage": 0.484,
+  "overlaps": 0,
+  "slivers_um": [],
+  "min_gap_um": 23.76,
+  "channel_um": [
+   468.72,
+   734.4
+  ],
+  "transport": "beat_e x2 hard (W transit + E beat), N/S landings, rows, pin registers = tile cells",
+  "parent_sinks_est": 14586
+ },
+ "rp3_frame": {
+  "outline_um": [
+   3767.04,
+   2505.6
+  ],
+  "area_mm2": 9.4387,
+  "child_outline_mm2": 8.428,
+  "child_coverage": 0.893,
+  "overlaps": 0,
+  "slivers_um": [],
+  "min_gap_um": 21.6,
+  "sm32_mm2": 302.0,
+  "fill_content": 0.234,
+  "saving_32sm_mm2": 60.1
+ }
+}

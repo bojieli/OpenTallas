@@ -38,10 +38,17 @@ CHAN_RP2 = {(200.0, 600.0): (150.0, 670.0), (200.0, 520.0): (150.0, 560.0), (220
             (100, 640): (100, 700), (215, 640): (215, 700), (220, 560): (220, 620), (200, 690): (120, 740)}
 
 
+# rp3: channel stations in the band between the two landings (y 541.6-659.4, x < 262)
+CHAN_RP3 = {(200.0, 600.0): (150.0, 600.0), (200.0, 520.0): (150.0, 560.0), (220, 700): (200, 640), (220, 680): (200, 620),
+            (100, 640): (60, 600), (215, 640): (230, 600), (220, 560): (220, 575), (200, 690): (100, 650)}
+
+
 def Y(x, y):
     """rp1 station (x, y) -> this variant"""
     if T.VARIANT == "rp1":
         return x, y
+    if T.VARIANT == "rp3":
+        return CHAN_RP3.get((x, y), (x, y))
     if (x, y) in CHAN_RP2:
         return CHAN_RP2[(x, y)]
     return x, (round(y + T.DY0, 3) if y >= 734.4 else y)
@@ -167,7 +174,8 @@ def spec(variant):
                     "H cut 0.56); (4) no child gap under 20 um (min 21.6), every port registered at its pin by RTL. "
                     "Same RTL cycles (GROUP_TRANSPORT / WEST_SPLIT are the exact-bench-proven group bodies).  Outline "
                     "388.8 x 1,183.68 = 0.460 mm2 (cpt 0.627, r16 0.790): SM frame 9.03 vs 11.32 mm2."),
-                "purpose": (f"[H-SM-REPACK {T.VARIANT}] " + ("A/B clock-safe twin of rp1: the N/S landings are the CLOSED ot_smh_tr_group_land master too (parent sinks ~10.4k), channel +138 um, tile 397.44 x 1,330.56.  " if T.VARIANT == "rp2" else "") + "smallest closable SM tile from closed children only (M7 cluster cap, "
+                "purpose": (f"[H-SM-REPACK {T.VARIANT}] " + ({"rp2": "A/B clock-safe twin of rp1: the N/S landings are the CLOSED ot_smh_tr_group_land master too, channel +138 um, tile 397.44 x 1,330.56.  ",
+                             "rp3": "rp1 successor (rp1 verdict FLOORPLAN_MARGIN: 18,690 sinks on one root > 15k): the N/S landings are the CLOSED ot_smh_tr_group_land master at the channel edges (rp2 measured ~13.1k flops), beats moved E, tile 406.08 x 1,192.32.  "}.get(T.VARIANT, "")) + "smallest closable SM tile from closed children only (M7 cluster cap, "
                             "no new master): ot_hbm_accel_smh_tile_eg with 10 closed leaves + 2 closed beat_e transport "
                             "groups + tile cells; measures whether the re-packed SM frame (3,628.8 x 2,488.32) can be "
                             "built.  production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus "
