@@ -271,7 +271,8 @@ class Module:
             rhs = m.group(2).strip()
             if not re.fullmatch(r"[\s{}(),\d'bBhHdDoOxXzZ_]*", rhs):
                 self._kind = 'real'; return 'real'
-        for m in re.finditer(r'^\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
+        # (?:^|;): a one-line module ('module m (...); child #(..) u (...); endmodule') has its body start at ';'
+        for m in re.finditer(r'(?:^|;)\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
             if m.group(1) in idx and m.group(1) != self.name:
                 self._kind = 'real'; return 'real'
         # gate primitives count as behaviour (a hand netlist)
@@ -589,21 +590,30 @@ def pad_bits(spec, width):
 
 def load_pads(obj):
     """{"pads": {master: {"reason": str, "ports": {port: [[lo, hi], ...] | {"logical_width": L}}}}} ->
-    {(master, port): spec}.  DEDUPE padding (main f041848a1, owner rule 19:50 'fewer distinct tiles'): a standard master
+    Optional "instances" entries add master/reason/ports per instance and load as (master, port, instance).
+    The instance entry takes precedence over a master entry, keeping mixed logical widths independent.
+    DEDUPE padding (main f041848a1, owner rule 19:50 'fewer distinct tiles'): a standard master
     replicated at a smaller logical width ties its spare INPUT bits low and leaves its spare OUTPUT bits open; only the
     declared bits may be tied (to 0), everything else stays INPUT_TIED.  A master entry without a reason is refused."""
     pads = {}
-    for mst, ent in (obj.get("pads", obj) if isinstance(obj, dict) else {}).items():
+    master_map = obj.get("pads", {}) if "instances" in obj else obj.get("pads", obj)
+    for mst, ent in master_map.items():
         if not isinstance(ent, dict) or not str(ent.get("reason", "")).strip() or not isinstance(ent.get("ports"), dict):
             raise SystemExit(f"die_port_bind: pad declaration for {mst} needs a reason and a ports map")
         for pn, spec in ent["ports"].items():
             pads[(mst, pn)] = spec
+    for inst, ent in obj.get("instances", {}).items():
+        if (not isinstance(ent, dict) or not str(ent.get("reason", "")).strip()
+                or not isinstance(ent.get("ports"), dict) or not ent.get("master")):
+            raise SystemExit(f"die_port_bind: instance pad declaration for {inst} needs master, reason and ports")
+        for pn, spec in ent["ports"].items():
+            pads[(ent["master"], pn, inst)] = spec
     return pads
 
 
 def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset(), pads=None):
     """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
-    numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  pads: {(master, port): bit spec}
+    numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  pads: {(master, port[, instance]): bit spec}
     declared PAD bits (load_pads): a constant 0 on a declared input bit is a pad bit, not INPUT_TIED; a tie to 1 / 'z, or
     on any undeclared bit, still fails.  Every other tied input fails."""
     pads = pads or {}
@@ -665,7 +675,8 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             w = mod.width(pn, env)
             if w is not None and w != len(bits):
                 rec['width_mismatch'].setdefault(pn, set()).add((len(bits), w))
-            pset = pad_bits(pads[(mst, pn)], w if w is not None else len(bits)) if (mst, pn) in pads else set()
+            pad_key = (mst, pn, inst) if (mst, pn, inst) in pads else (mst, pn)
+            pset = pad_bits(pads[pad_key], w if w is not None else len(bits)) if pad_key in pads else set()
             for k_msb, b in enumerate(bits):
                 if b[0] in ('CONST', 'Z'):
                     if d != 'output':
@@ -842,7 +853,7 @@ def main(argv=None):
     ap.add_argument('--strap-file', help='JSON [[master, port], ...] or {"straps": [[master, port], ...]}')
     ap.add_argument('--pad-file', help='JSON {"pads": {master: {"reason": ..., "ports": {port: [[lo, hi], ...] | '
                     '{"logical_width": L}}}}}: declared DEDUPE padding bits (spare inputs tied low, spare outputs open); '
-                    'default DIE_V.pads.json beside the die netlist (like DIE_V.params.json)')
+                    'or {"instances": {inst: {"master": master, "reason": ..., "ports": ...}}}; instance entries bind each logical width independently; default DIE_V.pads.json')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)

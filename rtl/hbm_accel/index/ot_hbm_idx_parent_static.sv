@@ -47,7 +47,11 @@ module ot_hbm_idx_parent_static(
  .addr(sel_addr),.k(10'd512),.in_line(sel_in),.out_v(unused_ov),.out_line(unused_ol),.selected_v(selected_v),.selected_line(selected_line),
  .threshold_observe(threshold),.selected_observe(selected_count),.fault(sf));
  wire[9:0]total;
- ot_hbm_idx_topk_link_static link(.clk(clk_link),.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(frame_start),.ingest_v(&selected_v),
+`ifdef OT_IDX_DENSE_LINK
+ ot_hbm_idx_topk_link_static_dense link(.clk(clk_link),
+`else
+ ot_hbm_idx_topk_link_static link(.clk(clk_link),
+`endif.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(frame_start),.ingest_v(&selected_v),
  .selected_line(selected_line),.flush(link_flush),.emit_v(link_emit),.emit_group(link_group),.rank({1'b0,rank}),.gbase(gbase),.tx_v(tx_v),.tx(tx),.fault(lf),.selected_count(total));
  reg calendar_fault;
  always @(posedge clk_sel or negedge rst_n)begin

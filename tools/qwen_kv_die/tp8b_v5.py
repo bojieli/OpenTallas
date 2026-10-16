@@ -1971,12 +1971,13 @@ def _wrap(v, m, G, peers):
                     continue
                 _, n0, f, layer, poss, _ = mine[p]
                 n = min(wmap.get(p, n0), len(poss))
+                lays = getattr(mst, 'view_pin_layers', {}).get(p)   # closed_view.install_master: per-bit view layer
                 for i in range(n):
                     pos = poss[i]
                     hw = 0.012
                     r = {'W': (0.0, pos - hw, depth, pos + hw), 'E': (mst.w - depth, pos - hw, mst.w, pos + hw),
                          'S': (pos - hw, 0.0, pos + hw, depth), 'N': (pos - hw, mst.h - depth, pos + hw, mst.h)}[f]
-                    out.append((f'{p}[{i}]', layer, r))
+                    out.append((f'{p}[{i}]', lays[i] if lays else layer, r))
         else:
             out = base_pr(mst, k, wmap)
         sp_ = split.get(mst.name)
@@ -2070,7 +2071,21 @@ def _wrap(v, m, G, peers):
                             j += nb
                     else:
                         conns[inst].append(f'.{pn}({net})')
+        open_outputs = model.get('port_join_open_outputs', {})
         for (inst, real), vals in joined.items():
+            width = open_outputs.get(byi[inst].master, {}).get(real) if k == 1 else None
+            if width is not None:
+                # Source-aware sparse OUTPUT join (b2 compact selector-4): the receipt-checked RTL declares `real` an
+                # OUTPUT of `width` bits; bits no die bus consumes go to one dedicated declared open net per port.
+                # Never used for inputs; no constant, stub or synthetic port.
+                if max(vals) >= width:
+                    raise RuntimeError(f'{inst}.{real}: join bit {max(vals)} outside declared output width {width}')
+                spare = [b for b in range(width) if b not in vals]
+                if spare:
+                    onet = f'n_open_{inst}_{real}'
+                    V.append(f'  wire [{len(spare) - 1}:0] {onet};')
+                    for j, bit in enumerate(spare):
+                        vals[bit] = f'{onet}[{j}]'
             assert set(vals) == set(range(max(vals) + 1)), (inst, real, 'incomplete join')
             conns[inst].append(f'.{real}({joined_expr(vals)})')
         tie_self = set(model.get('tie_self', []))

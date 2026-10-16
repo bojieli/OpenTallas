@@ -30,6 +30,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import re
 from pathlib import Path
 import sys
@@ -1108,6 +1109,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         if m.get('corridor_lanes'):
             v.CORR = min(w_ for _, w_ in m['corridor_lanes'])
         try:
+            if os.environ.get('OT_SPLIT_B2', '0') == '1':
+                from qwen_split.b2_graph import apply as apply_b2_graph
+                apply_b2_graph(v, m)
             _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0
@@ -4292,10 +4296,24 @@ def _reset_tree(v, m):
         _json.dump(dict(nets=nets, rects=rects, W=m['die']['w'], H=m['die']['h'], gx=v.GX, gy=v.GY), open(_os.environ['OT_RESET_DUMP'], 'w'))
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
-        rec.update(errors=errors, per_net=per)
-        if _os.environ.get('OT_RESET_GATE') == 'warn':     # diagnosis only: the long nets are left in place and reported
+        rec.update(errors=errors, per_net=dict(per))
+        if _os.environ.get('OT_RESET_GATE') != 'warn':
+            raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+        # diagnosis only (warn): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
+        # 10-16: every OTHER reset net still gets its tree (r2h2: 3 unreachable pins on rst_spine / rst_io dropped the whole
+        # tree, so rst_field reached 1,584 sinks as one 47.5 mm net and die STA read -3.96 us on it)
+        if _os.environ.get('OT_RESET_PARTIAL', '1') == '0':
             return rec
-        raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+        bad = {e['net'] for e in errors}
+        cells = [c for c in cells if c[4] not in bad]
+        wires = [w for w in wires if w[1] not in bad]
+        nets = [n for n in nets if n['bid'] not in bad]
+        per = {k: r for k, r in per.items() if k not in bad}
+        idx_of = {k: j for k, j in idx_of.items() if k not in bad}
+        ck_of_bus = {k: c for k, c in ck_of_bus.items() if k not in bad}
+        rec['partial_unbuilt_nets'] = sorted(bad)
+        if not nets:
+            return rec
     dom_inst = {n['bid']: n['domain'] for n in nets}
     ck_add = {}
     for nm, mst, x, y, bid, _ in cells:

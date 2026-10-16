@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       admits    32 GB (avail 516, growth 436, headroom 48, waiters 0/0 GB) load 76/128 running 42 disk 923 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-pq-count-0830
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-pq-count-0830
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3838576-1792164413 after 0 s
+RWBC_GATE PASS cycles=200000 count_cycles=186523 q2f_cycles=147122
+RWBC MISMATCH cyc=13 ga15 0000/0000 q2f15 1/1 ga2 0100/0000 q2f2 0/0
+RWBC MISMATCH cyc=15 ga15 1110/1100 q2f15 1/1 ga2 1000/1000 q2f2 1/1
+RWBC MISMATCH cyc=17 ga15 0122/0112 q2f15 1/1 ga2 0020/0010 q2f2 0/0
+RWBC_GATE FAIL errs=133371 count_cycles=186523 q2f_cycles=147122
+PASS actual12leaf live profile mode0 fill12 root_to_ga4 root_to_q2f-1 counts128
+/srv/opentallas-scratch/codex/s81-pq-count-0830/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_count_lifetimes.sv:29: $finish called at 530000 (1ps)
+PASS actual12leaf live profile mode1 fill12 root_to_ga4 root_to_q2f5 counts128
+/srv/opentallas-scratch/codex/s81-pq-count-0830/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_count_lifetimes.sv:29: $finish called at 410000 (1ps)
+PASS actual12leaf live profile mode2 fill12 root_to_ga4 root_to_q2f5 counts128
+/srv/opentallas-scratch/codex/s81-pq-count-0830/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_count_lifetimes.sv:29: $finish called at 530000 (1ps)
+FATAL: /srv/opentallas-scratch/codex/s81-pq-count-0830/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_count_lifetimes.sv:41: count leaf0 data000e
+       Time: 316000  Scope: tb_s81_pq_count_lifetimes
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3838576-1792164413): exit 0

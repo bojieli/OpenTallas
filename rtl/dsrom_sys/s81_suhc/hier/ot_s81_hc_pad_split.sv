@@ -7,7 +7,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad_split #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1,
+    // FWD_TRIM (HC-COMB 2026-10-16, opt-in, default 0): forward pad stages removed from u_f5r1 because the CCF successor
+    // ot_s81_hc_ccf_bankpipe adds exactly FWD_TRIM (= 2) public edges; ch_fv / ch_fd / the centre round trip keep the
+    // old cycle (0 calendar cost).  Only the y push moves FWD_TRIM edges later relative to its pop (HC bench checked).
+    parameter integer FWD_TRIM = 0
 ) (
     input  wire                 sk, srs,
     input  wire [RDW-1:0]       crd_i,
@@ -35,9 +39,13 @@ module ot_s81_hc_cpad_split #(
     localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     // No assembly data/valid flop: each hard child's first/last flop is its boundary.
     localparam integer F0 = (FP-2 > 8) ? 8 : FP-2;
-    localparam integer F1 = FP-2-F0;
-    localparam integer R0 = (RP-2 > 6) ? 6 : RP-2;
-    localparam integer R1 = RP-2-R0;
+    localparam integer F1 = FP-2-FWD_TRIM-F0;
+    // HC-COMB-3 2026-10-16: ot_s81_hc_ccr now registers crd twice (W-pin capture + E-pin output, CCR_OREG = 1; native
+    // audit of the closed single crd flop: launch 279.7 / capture 257.1 ps, one flop cannot sit at both faces), so the
+    // return pad chain is one stage shorter: R0 = R1 = 5, both on the closed ot_s81_hc_pad_r5 master (r6 retired).
+    localparam integer CCR_OREG = 1;
+    localparam integer R1 = (RP-2-CCR_OREG > 5) ? 5 : RP-2-CCR_OREG;
+    localparam integer R0 = RP-2-CCR_OREG-R1;
     wire [FVW-1:0] fm;
     wire [FSW-1:0] dm;
     wire [RDW-1:0] rpin, rm;
@@ -54,7 +62,7 @@ module ot_s81_hc_cpad_split #(
 `endif
         .sk(sk),.srs(srs),.v_i(fm),.d_i(dm),.v_o(fv_o),.d_o(fd_o),.r_i(crd_i),.r_o(rpin));
 `ifdef OT_S81_HC_PAD_HARD
-    ot_s81_hc_pad_r6 u_r6 (
+    ot_s81_hc_pad_r5 u_r6 (
 `else
     ot_s81_hc_pad_r6 #(.W(RDW),.DEPTH(R0)) u_r6 (
 `endif
@@ -70,7 +78,7 @@ module ot_s81_hc_cpad_split #(
         if (F0<0 || F1<0 || R0<0 || R1<0) $fatal(1,"pad split requires nonnegative soft relay depths");
 `ifdef OT_S81_HC_PAD_HARD
         if(NG!=256 || HALF!=1 || RLY!=2 || RF!=5 || RT!=1 || RET_EXTRA!=1 ||
-           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=5 || R0!=6 || R1!=5)
+           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=5 || R0!=5 || R1!=5)
             $fatal(1,"pad hard views require exact production depth/width tuple");
 `endif
     end

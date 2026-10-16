@@ -67,8 +67,12 @@ class Repo:
 
     def module_index(self, ref='origin/main'):
         """module name -> [file] for every committed .sv/.v (routed-view netlists, benches and lint stubs excluded)."""
-        out = subprocess.run(['git', '-C', str(self.root), 'grep', '-nE', r'^\s*module\s+[A-Za-z_]\w*', ref, '--',
-                              '*.sv', '*.v', ':!*/views/*'], capture_output=True, text=True, timeout=300).stdout
+        # routed/synth NETLISTS are not module sources and are huge (89 MB 6_final.v): a default-threaded git grep over
+        # them peaked at 1.4 GB and OOM-crashlooped fleet-viz 10-16 10:56 (MemoryMax). Excluded: ~70 MB peak, same index
+        # (results/ and views/ were already skipped by SKIP_MODULE_FILES; the one extra is a closed 6_final.v netlist)
+        out = subprocess.run(['git', '-C', str(self.root), 'grep', '--threads=4', '-nE', r'^\s*module\s+[A-Za-z_]\w*', ref, '--',
+                              '*.sv', '*.v', ':!*/views/*', ':!*/closed/*', ':!*_final.v', ':!*yosys*.v', ':!*_artifacts/*',
+                              ':!results/*'], capture_output=True, text=True, timeout=300).stdout
         idx = collections.defaultdict(list)
         for ln in out.splitlines():
             parts = ln.split(':', 3)
@@ -215,6 +219,13 @@ class Contracts:
                         elems[n]['parents'].pop(d['design'], None)
                         if not elems[n]['designs']: del elems[n]
                 if pats: retired['re:' + pats] = retired_rule
+            for sc in d.get('scope', []):
+                # S-DIE-NETLIST 2026-10-16: contract elements that are NOT masters of this design's die netlist (role
+                # homes reserved for other die roles / die kinds, leaves of a present parent): role 'scope:<kind>' (not
+                # 'master', so die completeness does not count them absent), with the lead's evidence; they keep rows
+                for n in sc.get('elements') or []:
+                    put(n, d, 'scope:' + sc.get('kind', 'other'), sc.get('parent'), None, None, sc.get('evidence'), sc.get('stream'))
+                    elems[n]['roles'][d['design']] = 'scope:' + sc.get('kind', 'other')
             streams = [(re.compile(p), s) for p, s in d.get('streams', [])]
             info['_streams'] = streams
             designs.append(info)

@@ -1,0 +1,88 @@
+{
+ "status": "PASS",
+ "scope": "hc_<q> master (ot_hbm_hc_q_static) with real tap/pair leaves + VM model, x_wave link TX (residual leaf BEATS=4) -> engine receiver ot_hbm_hc_xw_rx_static; folded F20 target (TGT_PIN strap 108)",
+ "commit": "62b1b615414694fb010a62f6dece8df335371d3f",
+ "simulator": "Icarus 12 (local, light bench)",
+ "xwb1": {
+  "waves": 160,
+  "result": "TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=1 waves=160 mixes=72 stores=12"
+ },
+ "xwb4": {
+  "waves": 160,
+  "result": "TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=160 mixes=72 stores=12"
+ },
+ "equivalence": {
+  "identical_wave_word_sequence": true,
+  "edge_offset_xwb4_minus_xwb1": [
+   0
+  ],
+  "note": "wave content checked against the VM snapshot in both runs; the reassembled wave is visible at the engine pin level on the SAME edge (+0), not +3: the residual reader already receives one 8-sector group (2,048 b) per edge, so beats are forwarded as captured and beat 3 leaves on the old wave edge. Compiler x_wave landing constant unchanged."
+ },
+ "wire_bits": {
+  "xwb1": 8203,
+  "xwb4": 2061
+ },
+ "mutants": {
+  "1": {
+   "kind": "residual wave word",
+   "verdict": "REJECTED",
+   "line": [
+    "TB_HBM_HC_Q_STATIC FAIL MUT=1 XWB=4 errors=5120"
+   ]
+  },
+  "2": {
+   "kind": "result store one sector late",
+   "verdict": "REJECTED",
+   "line": [
+    "TB_HBM_HC_Q_STATIC FAIL MUT=2 XWB=4 errors=5"
+   ]
+  },
+  "3": {
+   "kind": "capture edge early",
+   "verdict": "REJECTED",
+   "line": [
+    "fault dut=1 rx=0 bank=00000000",
+    "TB_HBM_HC_Q_STATIC FAIL MUT=3 XWB=4 errors=5121"
+   ]
+  },
+  "4": {
+   "kind": "tap advances return reservation",
+   "verdict": "REJECTED",
+   "line": [
+    "fault dut=1 rx=0 bank=00000000",
+    "TB_HBM_HC_Q_STATIC FAIL MUT=4 XWB=4 errors=1"
+   ]
+  },
+  "5": {
+   "kind": "x_wave beats 1/2 swapped on the wire",
+   "verdict": "REJECTED",
+   "line": [
+    "fault dut=0 rx=1 bank=00000000",
+    "TB_HBM_HC_Q_STATIC FAIL MUT=5 XWB=4 errors=2561"
+   ]
+  },
+  "6": {
+   "kind": "x_wave beat 3 one edge late",
+   "verdict": "REJECTED",
+   "line": [
+    "fault dut=0 rx=1 bank=00000000",
+    "TB_HBM_HC_Q_STATIC FAIL MUT=6 XWB=4 errors=1273"
+   ]
+  }
+ },
+ "sources": {
+  "rtl/test/tb_hbm_hc_q_static.sv": "b8e1a0469987a6d1c89f74066130bc369d9f3e63bafc22088e93549ed4c4a63a",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "a5be01572ff46af2db22e770d8815e4a3b16b91bfb970d66e9bd35d7c936ba07",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv": "8da48b3e10760e87b620cb281bc0e640fbd3efff3e8368845885891c705b4ecf",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "f8e19a5cf9de239481c78e0cc8e61c8053b5a52af2aa307177ffa931b46b0a0d",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv": "7baf37a97f136e3e847430baea1cdd50667c495cdf3fcd032afa2a89c12c574b",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv": "b8383e7154ee8ee796bdf056e4d8eb433c47986ffe39994062053745c06a962e",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "ad019878c0235da13659042ce79c6bfad9ef8c664d5438dd5c3a51ed9c07a453",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv": "535499a9426194b4d29fd0df34134375d96e2ea6927e78d5f477a4f5b48682ed",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+ }
+}

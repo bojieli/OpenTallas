@@ -14,7 +14,10 @@ Selected native construction READ_PIPE=4 / CAP_PIPE=2 / WSCATTER_PIPE=1 (measure
   visibility: a dependent read sees the new value only if its raw read edge is strictly after the matching raw
          write edge (macro is read-before-write on the same edge): Q+7 > P+10+lane, i.e. Q >= P+4+lane.
 WSCATTER_PIPE=0 (same READ/CAP) is kept as its own measured profile: raw write P+9+lane, returned P+11+lane.
-All cycles are stream edges (VM stream clock).  Every number is fixed: equality, never a minimum.
+A2-F / hop-1 parent (independently measured, opt-in s81_vm_a2f_hop1_r4_c2_w1):
+  write raw P+11+lane, returned commit P+12+lane; read raw Q+6, returned Q+14.
+  New-value visibility requires Q >= P+6+lane. Physical die wire relays are outside this core profile.
+All cycles are stream edges (VM stream clock). Every number is fixed: equality, never a minimum.
 """
 from __future__ import annotations
 
@@ -31,19 +34,37 @@ PROFILES = {
         read_raw=7, read_return=16, write_raw=10, write_return=12, max_lane=2,
         receipts=['results/rtl/s81_vm_raw_read_calendar_20261015/record.json',
                   'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json',
-                  'results/rtl/s81_vm_master_current_scatter_20261016/record.json']),
+                  'results/rtl/s81_vm_master_current_scatter_419d72270/record.json']),
     's81_vm_r4_c2_w0': dict(
         rtl_tuple={'READ_PIPE': 4, 'CAP_PIPE': 2, 'WSCATTER_PIPE': 0},
         read_raw=7, read_return=16, write_raw=9, write_return=11, max_lane=2,
-        receipts=['results/rtl/s81_vm_master_current_scatter_20261016/record.json']),
+        receipts=['results/rtl/s81_vm_master_current_scatter_419d72270/record.json']),
 }
+# The A2-F measurement embeds its exact staged-source manifest in the immutable
+# parent receipt. Keep legacy profiles attached to their original measurement.
+# 2026-10-16 S-FUNC: re-measured on bc297977c (S-VM full A2-F parent gate, 71 staged sources byte-identical to main
+# after the cap-diagnostic / WFC r5 / XIO-leaf / payload33 changes; same LAT lines: write P+11+n, commit P+12+n, read
+# raw Q+6, return Q+14; 23/23 runs incl. 8 fault witnesses and 6 mutants). The 0200 receipt (8849603a6) stays as
+# historical evidence.
+A2F_RECEIPT = 'results/rtl/s81_vm_a2f_parent_419d72270/record.json'
+A2F_RECEIPT_SHA256 = '50a35a811ab8d49bb5e89df3ed97d07d8df6951f1d5691077565fa34755bdcef'
+PROFILES['s81_vm_a2f_hop1_r4_c2_w1'] = dict(
+    rtl_tuple={'READ_PIPE': 4, 'CAP_PIPE': 2, 'WSCATTER_PIPE': 1, 'HOP1': 1},
+    read_raw=6, read_return=14, write_raw=11, write_return=12, max_lane=2,
+    receipts=[A2F_RECEIPT], embedded_manifest='source_sha256')
+
+# 2026-10-16 ~08:30 S-FUNC: both profiles re-measured on main 419d72270 (XIO return r3, A2-F u_xsw x34_sw2): legacy
+# master gate PASS both pipes, A2-F parent gate 30/30 PASS, identical LAT; bc297977c receipts kept as historical.
+# 2026-10-16 ~07:00 S-FUNC: re-measured again on bc297977c (XIO leaves 2222002d4/643419d7d, wfc_ctl r2-r5, capture
+# diagnostic split, parent/tb witness paths): full master gate PASS both WSCATTER_PIPE, same markers/calendar; the
+# 20261016 (89c48ea9d) receipt is kept as historical evidence.
 # 2026-10-16 S-FUNC: re-measured on 89c48ea9d (WFC ctl leaf 60bbca547 changed a boundary file; same calendar, same
 # markers, all 8 fault witnesses + 3 mutants); the 20261015 receipt (36732083b) is kept as historical evidence.
 # These measurements are immutable evidence, rather than caller-provided
 # claims about the current checkout. A changed measurement needs a reviewed
 # new profile; evidence_for() cannot create a new measurement by rehashing RTL.
-MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_20261016/source_manifest.json'
-MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_20261016/source_manifest.json': 'c3f3ff9d16e48057297a3172312921d339ba916800a35b5aea4388e280d25ed3', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_20261016/record.json': '637e49209a4c6e6ccb572afd5d1c2ecd3e60a58aac2c9444e868c8224d250b72'}
+MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_419d72270/source_manifest.json'
+MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_419d72270/source_manifest.json': 'a0e89a55da203e3d22077b43467f90191f13ae6a8e22a7fdec1ab464c57f7fca', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_419d72270/record.json': '793b8099b9b22c35108e071cdbbf832309cdbd50cd440e7f03855b3cee15f7c6'}
 # The profile starts at read pins / core write-source pins. The serial CDC
 # adapter's reset implementation lies outside that boundary; its own fixed
 # phase, startup and physical proof remain separate. The testbench is evidence
@@ -67,6 +88,23 @@ RTL_SOURCES = [
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def measurement_for(prof: dict, root: Path):
+    """Return immutable measurement pins; never derive a measurement from current RTL."""
+    if 'embedded_manifest' in prof:
+        receipt = json.loads((root / A2F_RECEIPT).read_text())
+        if sha(root / A2F_RECEIPT) != A2F_RECEIPT_SHA256:
+            raise ValueError('rewritten A2-F receipt')
+        if receipt.get('verdict') != 'PASS':
+            raise ValueError('failed A2-F receipt')
+        manifest = receipt[prof['embedded_manifest']]
+        if not isinstance(manifest, dict) or not manifest:
+            raise ValueError('missing A2-F source manifest')
+        return manifest, {A2F_RECEIPT: A2F_RECEIPT_SHA256}, set()
+    return (json.loads((root / MEASURED_MANIFEST).read_text()),
+            {p: MEASURED_ARTIFACT_SHA256[p] for p in prof['receipts'] + [MEASURED_MANIFEST]},
+            set(OUTSIDE_PROFILE_BOUNDARY))
 
 
 def resolve(contract: dict, source_root: Path | None = None):
@@ -93,7 +131,12 @@ def resolve(contract: dict, source_root: Path | None = None):
         if not isinstance(item, dict) or 'path' not in item or 'sha256' not in item:
             bad.append('invalid_vm_service_profile_evidence'); continue
         pinned[item['path']] = item['sha256']
-    for path in prof['receipts'] + [MEASURED_MANIFEST] + RTL_SOURCES:
+    try:
+        measured, artifacts, outside = measurement_for(prof, root)
+    except (OSError, ValueError, TypeError, KeyError):
+        return None, bad + ['vm_service_profile_invalid_measured_manifest']
+    sources = list(measured) if 'embedded_manifest' in prof else RTL_SOURCES
+    for path in list(artifacts) + sources:
         if path not in pinned:
             bad.append(f'vm_service_profile_unpinned:{path}'); continue
         p = (root / path).resolve()
@@ -102,24 +145,21 @@ def resolve(contract: dict, source_root: Path | None = None):
                 bad.append(f'vm_service_profile_stale:{path}')
         except OSError:
             bad.append(f'vm_service_profile_missing:{path}')
-    for path in prof['receipts'] + [MEASURED_MANIFEST]:
+    for path in artifacts:
         try:
-            if sha(root / path) != MEASURED_ARTIFACT_SHA256[path]:
+            if sha(root / path) != artifacts[path]:
                 bad.append(f'vm_service_profile_unmeasured_artifact:{path}')
         except OSError:
             bad.append(f'vm_service_profile_missing_measurement:{path}')
-    try:
-        manifest_path = root / MEASURED_MANIFEST
-        if sha(manifest_path) == MEASURED_ARTIFACT_SHA256[MEASURED_MANIFEST]:
-            measured = json.loads(manifest_path.read_text())
-            for path, expected in measured.items():
-                if path in OUTSIDE_PROFILE_BOUNDARY:
-                    continue
-                source = (root / path).resolve()
-                if not source.is_relative_to(root) or sha(source) != expected:
-                    bad.append(f'vm_service_profile_unmeasured_source:{path}')
-    except (OSError, ValueError, TypeError):
-        bad.append('vm_service_profile_invalid_measured_manifest')
+    for path, expected in measured.items():
+        if path in outside:
+            continue
+        source = (root / path).resolve()
+        try:
+            if not source.is_relative_to(root) or sha(source) != expected:
+                bad.append(f'vm_service_profile_unmeasured_source:{path}')
+        except OSError:
+            bad.append(f'vm_service_profile_missing_measurement:{path}')
     if req.get('measured_native_bounds_override') is not None:
         bad.append('vm_service_profile_forbids_caller_bounds_override')
     return (prof if not bad else None), bad
@@ -128,7 +168,10 @@ def resolve(contract: dict, source_root: Path | None = None):
 def evidence_for(name: str, source_root: Path | None = None) -> list:
     """the evidence list a compiler emits for the CURRENT source (helper for producers and tests)."""
     root = (source_root or ROOT)
-    return [dict(path=p, sha256=sha(root / p)) for p in PROFILES[name]['receipts'] + [MEASURED_MANIFEST] + RTL_SOURCES]
+    prof = PROFILES[name]
+    measured, artifacts, _ = measurement_for(prof, root)
+    sources = list(measured) if 'embedded_manifest' in prof else RTL_SOURCES
+    return [dict(path=p, sha256=sha(root / p)) for p in list(artifacts) + sources]
 
 
 def check_event(prof: dict, event: dict) -> list:

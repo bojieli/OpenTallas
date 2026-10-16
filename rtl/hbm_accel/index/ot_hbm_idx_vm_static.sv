@@ -3,8 +3,12 @@
 // a registered request; bank samples at n+1, responds n+7 (bank ABI n+6),
 // and this face captures at n+8. No queue, credit, lease or runtime waiting.
 // SID, bank ownership, and all eight capture edges belong to the compiler.
+// RT_EXTRA: fixed extra round-trip edges between this face and the banks (the
+// owning tile's vm_rq output and vm_rr input pin registers, +1 each = 2); the
+// capture edge becomes n+8+RT_EXTRA. Default 0 = the historical n+8 face.
 module ot_hbm_idx_vm_static #(
- parameter integer MUT=0
+ parameter integer MUT=0,
+ parameter integer RT_EXTRA=0
 )(
  input wire clk,rst_n,
  input wire [1:0] sid,
@@ -16,17 +20,18 @@ module ot_hbm_idx_vm_static #(
  output reg [127:0] result_tag,
  output reg fault
 );
- reg [7:0] due[0:7];
- reg [127:0] tags[0:7];
- wire [7:0] expected=due[(MUT==2)?6:7];
+ localparam integer D=8+RT_EXTRA;
+ reg [7:0] due[0:D-1];
+ reg [127:0] tags[0:D-1];
+ wire [7:0] expected=due[(MUT==2)?D-2:D-1];
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    vm_rq<=0;result<=0;result_tag<=0;fault<=0;
-   for(integer d=0;d<8;d=d+1) begin due[d]<=0;tags[d]<=0;end
+   for(integer d=0;d<D;d=d+1) begin due[d]<=0;tags[d]<=0;end
   end else begin
-   for(integer d=1;d<8;d=d+1) begin due[d]<=due[d-1];tags[d]<=tags[d-1];end
+   for(integer d=1;d<D;d=d+1) begin due[d]<=due[d-1];tags[d]<=tags[d-1];end
    tags[0]<=read_tag;
-   result_tag<=tags[(MUT==3)?6:7];
+   result_tag<=tags[(MUT==3)?D-2:D-1];
    for(integer b=0;b<8;b=b+1) begin
     // Remote main reads are illegal on this face, never silently remapped.
     due[0][b]<=read_slot[17*b+16];

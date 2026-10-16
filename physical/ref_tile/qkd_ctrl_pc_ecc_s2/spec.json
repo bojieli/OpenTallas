@@ -1,0 +1,116 @@
+{
+ "name": "qkd_ctrl_pc_ecc_s2",
+ "top": "qkd_ctrl_pc_ecc_child",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+  "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv"
+ ],
+ "params": {},
+ "clock_port": "hclk",
+ "reset_ports": [],
+ "outline": {
+  "w": 41.04,
+  "h": 43.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "i_sec",
+   "i_row",
+   "o_v",
+   "o_data",
+   "o_sec",
+   "o_row",
+   "fault"
+  ],
+  "S": [
+   "i_v",
+   "i_code"
+  ],
+  "N": [
+   "hclk",
+   "hrst"
+  ],
+  "E": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "slot_change_request": "KVCTRL split: children of the wires-parent qkd_ctrl_pc_host_static inside the existing 247.512x378 controller slot (core W 97.2x216, ECC 38.88^2 + port 64.8x71.28 E column).",
+ "job": {
+  "owner": "Claude:Q-KVSYS-DIE KVCTRL",
+  "branch": "claude/qkvctrl-split-1016",
+  "tag": "s2",
+  "purpose": "KVCTRL split 2026-10-16 (Codex-prescribed, no third same-shape retry, no waiver): e1 one HBM root 17,150 sinks at measured insertion 426.8 ps (>300 rule) and e2 plateaued at native_commit_identity -58.453 ps. qkd_ctrl_pc_host_static becomes a wires-parent of three hardened roots: core (scheduler/tags/CDC/observer/drain, ~13.3k hclk sinks est), port (actual ot_qfd_emb_pcport KVW2/RQD64 + its data pin flops, ~2.9k), ECC (actual ot_qfd_kv_landing_ecc, ~0.9k). Every seam output flop-driven; priced edges: native commit +1 hclk (new pin register; SDC moves native_commit_* to the hclk domain), static write data +1 hclk into the port (hidden, column >= 4 edges later), KV read/write 0.",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ],
+  "benches": [
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "structural_change": "KVCTRL split 2026-10-16 (Codex-prescribed, no third same-shape retry, no waiver): e1 one HBM root 17,150 sinks at measured insertion 426.8 ps (>300 rule) and e2 plateaued at native_commit_identity -58.453 ps. qkd_ctrl_pc_host_static becomes a wires-parent of three hardened roots: core (scheduler/tags/CDC/observer/drain, ~13.3k hclk sinks est), port (actual ot_qfd_emb_pcport KVW2/RQD64 + its data pin flops, ~2.9k), ECC (actual ot_qfd_kv_landing_ecc, ~0.9k). Every seam output flop-driven; priced edges: native commit +1 hclk (new pin register; SDC moves native_commit_* to the hclk domain), static write data +1 hclk into the port (hidden, column >= 4 edges later), KV read/write 0. s2: coordinator FLOORPLAN_MARGIN on s1 (ecc 63.5% / port 65.6% routed util) -> outline grown to 41.04x43.2 for ~55% util; pins/faces/registers unchanged.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every seam/pin explicitly (children: input pin flops or the wrapped module's first stage; outputs flop-driven). No extra wrapper edges."
+ },
+ "std_area_um2": 600,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

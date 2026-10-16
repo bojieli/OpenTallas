@@ -11,6 +11,8 @@
 // the small begin/start/aperture/owned/epoch/running state (identical inputs -> identical state in every lane).
 // The only cross-lane signals are three registered status bits per lane (all-64-slots-full per bank, PC fault),
 // fanned out by the wires-only parent to every lane: one lane->lane hop per cycle, launched from flops.
+// v5: launched from an output flop AND captured in a pin flop at every lane (cross-lane status latency 2 edges,
+// reference STATUS_LAT=2).
 // v3: lane pin registers on every input and output (+2 cycles interface latency, II=1); every output bit equals the
 // monolithic module delayed exactly 2 cycles (lockstep bench tb_hbm_svc_vmdel_split_equiv.sv, LAT=2); no credit,
 // ready or retry added. Lane 0 drives block_ready/busy/fault.
@@ -51,7 +53,7 @@ module ot_hbm_svc_vmdel_lane (
  input wire start_i,start_bank_i,input wire [15:0] start_epoch_i,start_base_sector_i,
  input wire [3:0] fill_v_i,fill_bank_i,input wire [23:0] fill_slot_i,input wire [63:0] fill_epoch_i,input wire [1023:0] fill_data_i,
  input wire [7:0] full0_all,full1_all,pcbad_all,
- output wire full0,full1,pcbad,
+ output reg full0,full1,pcbad,
  output reg [1:0] block_ready,output reg busy,output reg fault,
  output reg [280:0] dq
 );
@@ -62,16 +64,17 @@ module ot_hbm_svc_vmdel_lane (
  // registered-state ANDs) stay mutually consistent.  Measured cost: lane interface latency +2 cycles (start->first dq
  // 1->3, fill->block_ready 1->3), II=1 unchanged; equivalence = v2/monolithic outputs delayed exactly 2 cycles.
  // ---- v4 (H-NETLIST/kits 10-16, owner rule 19:50 'register every pin, both directions'; v2 gate textbook.high_fanout:
- // rst_n port -> 640 reset flops): the rst_n PIN reaches only the 7 valid pin registers and reset pin flops rst_r
+ // rst_n port -> 640 reset flops): the rst_n PIN reaches only the 7 valid pin registers and reset pin flops rst_ctl/pc[g].rst_pc (+ the 5 output status bits)
  // (async assert, sync release, writer-v4 pattern).  Every other flop (replicated control, PC seen/count state, output
- // registers) resets from its region's rst_r copy, so the port net is a pin-local net and the reset fan-out launches from a flop.  The
+ // registers) resets from its region's copy, so the port net is a pin-local net and the reset fan-out launches from a flop.  The
  // internal state releases one edge later, exactly when the first pin-registered input reaches it: outputs remain the
  // monolithic module delayed exactly 2 cycles (same LAT=2 benches), 0 added cycles.
  // Six kept copies (one per region: control, output registers, PC group 0..3; gate 10-16 01:19 textbook.high_fanout:
  // a single reset flop drove 925 flops), each a pin flop of rst_n: rst_n reaches 7 + 6 flops; each copy <= ~290 loads.
- (* keep = "true", dont_touch = "true" *) reg [5:0] rst_r;
- always @(posedge clk or negedge rst_n) if(!rst_n) rst_r<=6'b0; else rst_r<=6'h3f;
- wire rst_ctl=rst_r[0], rst_out=rst_r[1];
+ // Scalar flops, not bits of one vector driving the async clears through wires: Icarus 12 (closure-loop bench host)
+ // dropped dq[0] bit 0 after a reset release with the vector form (job hv15_vmdel_lane-hv15-d60a91855, cycle 354).
+ (* keep = "true", dont_touch = "true" *) reg rst_ctl;
+ always @(posedge clk or negedge rst_n) if(!rst_n) rst_ctl<=1'b0; else rst_ctl<=1'b1;
  reg begin_v,begin_bank,start,start_bank; reg [15:0] begin_epoch,start_epoch,start_base_sector;
  reg [3:0] fill_v,fill_bank; reg [23:0] fill_slot; reg [63:0] fill_epoch; reg [1023:0] fill_data;
  always @(posedge clk or negedge rst_n)
@@ -82,16 +85,38 @@ module ot_hbm_svc_vmdel_lane (
   start_base_sector<=start_base_sector_i;fill_bank<=fill_bank_i;fill_slot<=fill_slot_i;fill_epoch<=fill_epoch_i;fill_data<=fill_data_i;
  end
  wire [1:0] block_ready_c; wire busy_c,fault_c; wire [280:0] dq_c;
- always @(posedge clk or negedge rst_out)
-  if(!rst_out) begin block_ready<=0;busy<=0;fault<=0;dq<=0; end
-  else begin block_ready<=block_ready_c;busy<=busy_c;fault<=fault_c;dq<=dq_c; end
+ // Output registers: only the 5 status/valid bits are reset (from the pin, async assert); the 280 dq payload bits are
+ // unreset data flops (the bench skips the LAT edges after release).  A flop-driven reset copy on the output registers
+ // failed the LAT=2 equivalence under Icarus 12 (job hv15_vmdel_lane-hv15-d60a91855: dq[0][0], cycle 354).
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin block_ready<=0;busy<=0;fault<=0;dq[280]<=0; end
+  else begin block_ready<=block_ready_c;busy<=busy_c;fault<=fault_c;dq[280]<=dq_c[280]; end
+ always @(posedge clk) dq[279:0]<=dq_c[279:0];
  // ---- replicated control (ot_hbm_svc_static_landing + ot_hbm_svc_static_vm_delivery, bit for bit) ----
  reg [1:0] owned; reg [15:0] epoch0,epoch1,base_q; reg running,bank_q,sticky,bad,out_v;
  reg [5:0] slot_q,out_slot; reg [1:0] group_q,out_group;
- wire landing_fault=sticky || |pcbad_all;
+ // ---- v5 (H-NETLIST/vmdel 10-16, route hv15_vmdel_lane-hv15-1d140b89b TT -73.01 in->reg / -28.05 reg->reg, 419 D pins):
+ // every failing endpoint started at an UNREGISTERED cross-lane status input (pcbad_all[3] -> |pcbad -> landing_fault ->
+ // fill_ok -> 512 seen flops + SRAM w_ce/r_ce, 548 ps behind the east pins: 2 OR levels, 4 placement buffers across the
+ // 257-um lane, 5 gate levels, 2 more buffers to the macro pins; full*_all -> start_ok -> issue -> fill_ok likewise).
+ // Owner rule 19:50 (register every pin, both directions): the three cross-lane status bits now leave from an output
+ // flop (full0/full1/pcbad <= AND/OR of this lane's 4 PCs) and are captured in a pin flop at every receiving lane
+ // (full0_q/full1_q/pcbad_q, the 8-lane AND / OR reduced in front of the pin flop: <= 2 gate levels).  Cross-lane status is therefore observed STATUS_LAT=2 edges later, identically in all
+ // eight lanes (the lane's own bits take the same parent loop), so the replicated control stays cycle-consistent.
+ // Reference: ot_hbm_svc_static_landing/vm_delivery #(.STATUS_LAT(2)) (the 32 per-PC full/fault bits pass two register
+ // stages before use); every output bit = that reference delayed LAT=2.  Cost: block_ready and the landing-fault
+ // response +2 edges (block ready -> compiler start; a 64-fill block, 256 read slots per start: no II change).
+ // v5b (gate 06:17 CTS STA, reg->reg +2.5 ps: pcbad_q[6] pin flop on the E face, 186 ps of wire buffers to the
+ // control logic at the W/S corner + a 4-level OR of the 8 status bits): the reduction moves in front of the pin flop
+ // (3 flops, not 24) and the 24 status inputs move to the W face beside the begin/start control pins.
+ reg full0_q,full1_q,pcbad_q;
+ always @(posedge clk or negedge rst_ctl)
+  if(!rst_ctl) begin full0_q<=0;full1_q<=0;pcbad_q<=0; end
+  else begin full0_q<=&full0_all;full1_q<=&full1_all;pcbad_q<=|pcbad_all; end
+ wire landing_fault=sticky || pcbad_q;
  assign fault_c=bad||landing_fault;
  assign busy_c=running;
- assign block_ready_c={owned[1] && (&full1_all),owned[0] && (&full0_all)};
+ assign block_ready_c={owned[1] && full1_q,owned[0] && full0_q};
  wire aperture_ok=start_base_sector[4:0]==0 && start_base_sector[12:0]<=13'd6144 &&
                   (!start_base_sector[15] || start_base_sector[14:13]==0);
  wire lstart=start && aperture_ok && !bad;
@@ -130,7 +155,9 @@ module ot_hbm_svc_vmdel_lane (
  wire [1023:0] macro_data; wire [3:0] f0,f1,bad_v;
  genvar g;
  generate for(g=0;g<4;g=g+1)begin:pc
-  reg [63:0] seen0,seen1; reg [6:0] n0,n1; reg pbad; wire rst_pc=rst_r[2+g];
+  reg [63:0] seen0,seen1; reg [6:0] n0,n1; reg pbad;
+  (* keep = "true", dont_touch = "true" *) reg rst_pc;
+  always @(posedge clk or negedge rst_n) if(!rst_n) rst_pc<=1'b0; else rst_pc<=1'b1;
   wire fb=fill_bank[g]; wire [5:0] fs=fill_slot[g*6+:6];
   wire [15:0] ep=fb?epoch1:epoch0;
   wire [63:0] seen_fb=fb?seen1:seen0;
@@ -152,7 +179,10 @@ module ot_hbm_svc_vmdel_lane (
    .w_ce_in(fill_ok),.w_addr_in({fb,fs}),.wd_in(fill_data[g*256+:256]),.w_mask_in({256{1'b1}}),
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
- assign full0=&f0; assign full1=&f1; assign pcbad=|bad_v;
+ // v5: cross-lane status output flops (see full0_q above)
+ always @(posedge clk or negedge rst_ctl)
+  if(!rst_ctl) begin full0<=0;full1<=0;pcbad<=0; end
+  else begin full0<=&f0;full1<=&f1;pcbad<=|bad_v; end
  // decoded constant-index group select (no runtime part-select)
  wire [255:0] sel=({256{out_group==2'd0}}&macro_data[0+:256])|({256{out_group==2'd1}}&macro_data[256+:256])|
                   ({256{out_group==2'd2}}&macro_data[512+:256])|({256{out_group==2'd3}}&macro_data[768+:256]);

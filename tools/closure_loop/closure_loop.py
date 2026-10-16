@@ -62,6 +62,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import bench_count
 import macro_clk
 import helper_overlay as HO
 import status_report
@@ -309,14 +310,10 @@ def validate(spec: dict) -> list[str]:
     for b in st.get("bench", []) if isinstance(st, dict) else []:
         if b.get("expect") not in ("pass", "fail") or not b.get("cmd") or not b.get("name"):
             e.append(f"bench entry needs name, cmd and expect pass|fail: {b}")
-        mcr = b.get("min_count_regex") if isinstance(b, dict) else None
-        if mcr:
-            try:
-                ng = re.compile(mcr).groups
-            except re.error as x:
-                ng = -1; e.append(f"bench {b.get('name')}: min_count_regex does not compile: {x}")
-            if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
-                e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
+        # bench_work counts the ONE captured group: none or several read every pass as vacuous (suctlw r2 10-11, b2/xcal 10-16)
+        e.extend(bench_count.count_regex_errors([b]))
+        # BENCH-LINT (ROOT 2026-10-16): git in the command itself / regexes that do not compile (scripts: at intake)
+        e.extend(bench_count.bench_lint([b])[0])
     benches = st.get("bench", []) if isinstance(st, dict) else []
     if spec.get("benched_by") is not None:
         bspec, berr = expand_benched_by(spec)
@@ -828,6 +825,33 @@ def bench_paths_at_submit(j):
         src = j["spec"]["source"]
         src["extra_paths"] = list(src.get("extra_paths", [])) + need
         event(j, f"bench needs repo paths outside the source sync: added {need} to source.extra_paths")
+
+
+def bench_lint_at_submit(j):
+    """BENCH-LINT (ROOT 2026-10-16, bench_count.bench_lint): scan the bench commands and the scripts they call at the
+    source commit.  git with no fallback (benches run in a non-git export) / an unmatched declared witness REFUSE the
+    job before any compute (STATE/bench_lint.json {"mode": "warn"} demotes to an event); warnings are one event."""
+    spec = j["spec"]
+    commit = str((spec.get("source") or {}).get("commit", ""))
+    try:
+        git_ = submit_lint.Git(REPO)
+        errs, warns = bench_count.bench_lint((spec.get("stages") or {}).get("bench") or [],
+                                             (lambda p: git_.show(commit, p)) if commit else None)
+    except Exception as ex:  # noqa: BLE001  (never block intake on the scan itself)
+        event(j, f"bench lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    j.setdefault("submit_checks", {})["bench_lint"] = {"errors": errs, "warnings": warns[:20]}
+    if warns:
+        event(j, f"bench lint WARN ({len(warns)}): " + " | ".join(warns[:4])[:900])
+    if not errs:
+        return
+    if _state_mode("bench_lint.json", "refuse") != "refuse":
+        event(j, "bench lint ERROR (mode warn): " + " | ".join(errs)[:1200])
+        return
+    j["status"] = "REFUSED"
+    j["reason"] = ("SUBMIT_LINT BENCH_LINT: " + " | ".join(errs))[:1500]
+    event(j, j["reason"])
+    ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
 
 
 def lint_at_submit(j):
@@ -1453,6 +1477,8 @@ def ingest():
                     closed_stands_at_submit(j, hist)  # history + a few blob ids: a CLOSED tile stands
                 if j["status"] == "QUEUED":
                     bench_gate_at_submit(j)          # seconds, before the commit-reading lints
+                if j["status"] == "QUEUED":
+                    bench_lint_at_submit(j)          # bench commands + called scripts at the commit (seconds)
                 if j["status"] == "QUEUED":
                     j.setdefault("submit_checks", {}).setdefault("bench_gate", {"verdict": "PASS"})
                     lint_at_submit(j)
@@ -8543,6 +8569,13 @@ def cmd_validate(a):
             errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
         elif res["verdict"] == "FIX":
             print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
+        commit = str((spec.get("source") or {}).get("commit", ""))
+        g_ = submit_lint.Git(REPO)
+        berrs, bwarns = bench_count.bench_lint((spec.get("stages") or {}).get("bench") or [],
+                                               lambda p: g_.show(commit, p))
+        for w in bwarns:
+            print(f"BENCH_LINT WARN: {w}")
+        errs.extend(f"SUBMIT_LINT BENCH_LINT: the loop would REFUSE this job: {x}" for x in berrs)
         need = bench_missing_paths(spec)
         if need:
             print(f"bench needs repo paths outside the source sync: the loop will add {need} to source.extra_paths "

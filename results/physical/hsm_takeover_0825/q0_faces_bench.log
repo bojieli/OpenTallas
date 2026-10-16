@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   162 GB (avail 399, growth 189, headroom 48, waiters 0/0 GB) load 86/128 running 39 disk 876 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-57656-1792167716 after 0 s
+positive rc=0 VM_NATIVE_ABI PASS RG=5 WG=2 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1
+latency rc=1 FATAL: rtl/hbm_accel/generic/vm/static/faces_q0/tb_hbm_vm_q0_faces.sv:82: DMA commit phase RG=5 cycle=6
+response rc=1 FATAL: rtl/hbm_accel/generic/vm/static/faces_q0/tb_hbm_vm_q0_faces.sv:87: actual bank response group mismatch RG=5 cycle=146 bank=0 group=0
+clock_n rc=1 FATAL: rtl/hbm_accel/generic/vm/static/faces_q0/tb_hbm_vm_q0_faces.sv:82: DMA commit phase RG=5 cycle=7
+clock_s rc=1 FATAL: rtl/hbm_accel/generic/vm/static/faces_q0/tb_hbm_vm_q0_faces.sv:89: actual SRAM readback mismatch
+clock_e rc=1 FATAL: rtl/hbm_accel/generic/vm/static/faces_q0/tb_hbm_vm_q0_faces.sv:82: DMA commit phase RG=5 cycle=8
+clock_w rc=1 FATAL: rtl/hbm_accel/generic/vm/static/faces_q0/tb_hbm_vm_q0_faces.sv:82: DMA commit phase RG=5 cycle=7
+Q0_FACE_CLOCKS BENCH PASS: actual 8 banks/24 SRAM; return7/write4; latency, response, and four independent clock-drop negatives rejected
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-57656-1792167716): exit 0

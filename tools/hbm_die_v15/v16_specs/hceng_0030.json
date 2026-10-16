@@ -1,7 +1,7 @@
 {
  "region": "hceng",
  "author": "Claude H-NETLIST sub-agent hceng (2026-10-16)",
- "basis_commit": "af22cc9d1",
+ "basis_commit": "aa54435c7",
  "instances": [
   {
    "name": "hc_eng",
@@ -33,30 +33,6 @@
    "slot": "hc_eng",
    "owner": "HC owner (H-NETLIST hceng)",
    "note": "Static full-form HC engine (HC.HC_MIX: 2,048 FP32 MAC lanes W256 in 8 bank tiles, 4 weight slots in 256 x 1024x256 macros, 2 exact tail units, event programme, bases/scales table). Pin-registered (every input a pin flop, every output a flop). Area estimate ~9.5 mm2 (results/uarch/hbm_hc_eng_0030/model.json). Bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
-  },
-  {
-   "name": "hc_eng_tgt",
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "TARGET": "8'd164",
-    "PCW": 10
-   },
-   "slot": null,
-   "owner": "HC owner (H-NETLIST hceng)",
-   "note": "F20 programme target 164: engine event programme of hc_eng (H-NETLIST ids 164..167 reserved for hceng); host_cp_ingress TARGET_MASK must admit it"
-  },
-  {
-   "name": "hc_tbl_tgt",
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "TARGET": "8'd165",
-    "PCW": 10
-   },
-   "slot": null,
-   "owner": "HC owner (H-NETLIST hceng)",
-   "note": "F20 programme target 165: bases/scales table rows of hc_eng (H-NETLIST ids 164..167 reserved for hceng); host_cp_ingress TARGET_MASK must admit it"
   }
  ],
  "retire_v15": [],
@@ -67,12 +43,12 @@
     "cfg_v"
    ],
    "dst": [
-    "hc_eng_tgt",
+    "hc_eng",
     "cfg_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -80,12 +56,12 @@
     "cfg_target"
    ],
    "dst": [
-    "hc_eng_tgt",
+    "hc_eng",
     "cfg_target"
    ],
    "bits": 8,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -93,142 +69,12 @@
     "cfg_addr"
    ],
    "dst": [
-    "hc_eng_tgt",
-    "cfg_addr"
-   ],
-   "bits": 12,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "cfg_data"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "cfg_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "desc_v"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "desc_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "desc_base"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "desc_base"
-   ],
-   "bits": 12,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "desc_limit"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "desc_limit"
-   ],
-   "bits": 13,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "desc_loops"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "desc_loops"
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "launch_v"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "launch_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
     "hc_eng",
-    "program_active"
-   ],
-   "dst": [
-    "hc_eng_tgt",
-    "program_active"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "launch/install interlock: no table or programme rows while the engine programme runs"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "cfg_v"
-   ],
-   "dst": [
-    "hc_tbl_tgt",
-    "cfg_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "cfg_target"
-   ],
-   "dst": [
-    "hc_tbl_tgt",
-    "cfg_target"
-   ],
-   "bits": 8,
-   "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "host_cp_ingress",
-    "cfg_addr"
-   ],
-   "dst": [
-    "hc_tbl_tgt",
     "cfg_addr"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -236,12 +82,12 @@
     "cfg_data"
    ],
    "dst": [
-    "hc_tbl_tgt",
+    "hc_eng",
     "cfg_data"
    ],
    "bits": 256,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -249,12 +95,12 @@
     "desc_v"
    ],
    "dst": [
-    "hc_tbl_tgt",
+    "hc_eng",
     "desc_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -262,12 +108,12 @@
     "desc_base"
    ],
    "dst": [
-    "hc_tbl_tgt",
+    "hc_eng",
     "desc_base"
    ],
    "bits": 12,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -275,12 +121,12 @@
     "desc_limit"
    ],
    "dst": [
-    "hc_tbl_tgt",
+    "hc_eng",
     "desc_limit"
    ],
    "bits": 13,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -288,12 +134,12 @@
     "desc_loops"
    ],
    "dst": [
-    "hc_tbl_tgt",
+    "hc_eng",
     "desc_loops"
    ],
    "bits": 16,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -301,155 +147,12 @@
     "launch_v"
    ],
    "dst": [
-    "hc_tbl_tgt",
+    "hc_eng",
     "launch_v"
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)"
-  },
-  {
-   "src": [
-    "hc_eng",
-    "program_active"
-   ],
-   "dst": [
-    "hc_tbl_tgt",
-    "program_active"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "launch/install interlock: no table or programme rows while the engine programme runs"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_cfg_we"
-   ],
-   "dst": [
-    "hc_eng",
-    "cfg_we"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_cfg_addr"
-   ],
-   "dst": [
-    "hc_eng",
-    "cfg_addr"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_cfg_data"
-   ],
-   "dst": [
-    "hc_eng",
-    "cfg_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_start_v"
-   ],
-   "dst": [
-    "hc_eng",
-    "start_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_start_base"
-   ],
-   "dst": [
-    "hc_eng",
-    "start_base"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_start_limit"
-   ],
-   "dst": [
-    "hc_eng",
-    "start_limit"
-   ],
-   "bits": 11,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_eng_tgt",
-    "program_start_loops"
-   ],
-   "dst": [
-    "hc_eng",
-    "start_loops"
-   ],
-   "bits": 16,
-   "clock": "stream",
-   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins"
-  },
-  {
-   "src": [
-    "hc_tbl_tgt",
-    "program_cfg_we"
-   ],
-   "dst": [
-    "hc_eng",
-    "tbl_we"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) written through the target row port into the engine table macro"
-  },
-  {
-   "src": [
-    "hc_tbl_tgt",
-    "program_cfg_addr"
-   ],
-   "dst": [
-    "hc_eng",
-    "tbl_addr"
-   ],
-   "bits": 10,
-   "clock": "stream",
-   "basis": "table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) written through the target row port into the engine table macro"
-  },
-  {
-   "src": [
-    "hc_tbl_tgt",
-    "program_cfg_data"
-   ],
-   "dst": [
-    "hc_eng",
-    "tbl_data"
-   ],
-   "bits": 256,
-   "clock": "stream",
-   "basis": "table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) written through the target row port into the engine table macro"
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer folded into hc_eng (ids 164/165)"
   },
   {
    "src": [
@@ -464,7 +167,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -479,7 +182,7 @@
    ],
    "bits": 10,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -490,11 +193,26 @@
     "hc_eng",
     "x_wave",
     0,
-    8192
+    2048
    ],
-   "bits": 8192,
+   "bits": 2048,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "x_wave_beat"
+   ],
+   "dst": [
+    "hc_eng",
+    "x_wave_beat",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -509,7 +227,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -524,7 +242,7 @@
    ],
    "bits": 5,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -539,7 +257,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -554,7 +272,7 @@
    ],
    "bits": 32,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -569,7 +287,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -584,7 +302,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -599,7 +317,7 @@
    ],
    "bits": 768,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -614,7 +332,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -629,7 +347,7 @@
    ],
    "bits": 10,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -639,12 +357,27 @@
    "dst": [
     "hc_eng",
     "x_wave",
-    8192,
-    16384
+    2048,
+    4096
    ],
-   "bits": 8192,
+   "bits": 2048,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "x_wave_beat"
+   ],
+   "dst": [
+    "hc_eng",
+    "x_wave_beat",
+    2,
+    4
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -659,7 +392,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -674,7 +407,7 @@
    ],
    "bits": 5,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -689,7 +422,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -704,7 +437,7 @@
    ],
    "bits": 32,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -719,7 +452,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -734,7 +467,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -749,7 +482,7 @@
    ],
    "bits": 768,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -764,7 +497,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -779,7 +512,7 @@
    ],
    "bits": 10,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -789,12 +522,27 @@
    "dst": [
     "hc_eng",
     "x_wave",
-    16384,
-    24576
+    4096,
+    6144
    ],
-   "bits": 8192,
+   "bits": 2048,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "x_wave_beat"
+   ],
+   "dst": [
+    "hc_eng",
+    "x_wave_beat",
+    4,
+    6
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -809,7 +557,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -824,7 +572,7 @@
    ],
    "bits": 5,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -839,7 +587,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -854,7 +602,7 @@
    ],
    "bits": 32,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -869,7 +617,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -884,7 +632,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -899,7 +647,7 @@
    ],
    "bits": 768,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -914,7 +662,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -929,7 +677,7 @@
    ],
    "bits": 10,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -939,12 +687,27 @@
    "dst": [
     "hc_eng",
     "x_wave",
-    24576,
-    32768
+    6144,
+    8192
    ],
-   "bits": 8192,
+   "bits": 2048,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "x_wave_beat"
+   ],
+   "dst": [
+    "hc_eng",
+    "x_wave_beat",
+    6,
+    8
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -959,7 +722,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -974,7 +737,7 @@
    ],
    "bits": 5,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -989,7 +752,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -1004,7 +767,7 @@
    ],
    "bits": 32,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)"
   },
   {
    "src": [
@@ -1019,7 +782,7 @@
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -1034,7 +797,7 @@
    ],
    "bits": 3,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   },
   {
    "src": [
@@ -1049,7 +812,7 @@
    ],
    "bits": 768,
    "clock": "stream",
-   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)"
   }
  ],
  "drop_v15_edges": [],
@@ -1065,37 +828,21 @@
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
-  },
-  {
-   "inst": "hc_eng_tgt",
-   "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "hc_eng_tgt",
-   "port": "rst_n",
-   "domain": "stream",
-   "kind": "reset"
-  },
-  {
-   "inst": "hc_tbl_tgt",
-   "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "hc_tbl_tgt",
-   "port": "rst_n",
-   "domain": "stream",
-   "kind": "reset"
   }
  ],
- "straps": [],
+ "straps": [
+  {
+   "inst": "hc_eng",
+   "port": "tgt",
+   "bits": 8,
+   "value": 164,
+   "note": "F20 identity: programme 164, table 165 (= tgt + 1)"
+  }
+ ],
  "gaps": [],
  "notes": [
-  "Closes G-HC-ENG (hc_<q>.result_v/result_position/result, 12 ports / 3,088 b) and the required output join HC_ENGINE_INPUTS (hc_<q>.x_wave_v/x_wave_word/x_wave + gathered_mix_*, 28 ports / 32,976 b) with ONE new die master hc_eng = ot_hbm_hc_eng_static and two existing ot_static_program_target collars (TARGET 164 programme, 165 table).",
+  "Closes G-HC-ENG (hc_<q>.result_v/result_position/result, 12 ports / 3,088 b) and the required output join HC_ENGINE_INPUTS (hc_<q>.x_wave_v/x_wave_word/x_wave + gathered_mix_*, 28 ports / 32,976 b) with ONE new die master hc_eng = ot_hbm_hc_eng_static (F20 targets 164/165 folded inside, 0600).",
   "HC weights: next (layer, attn|ffn) set reaches the quadrant VM by the existing DMA.LOAD / kshare VM fill windows (vmks_<q><k>), and the hc_<q> residual reader moves it into the engine weight macros as weight waves (1,920 waves = 1,920 edges a set, 4 quadrants staggered one wave an edge); no dedicated HBM PC or new K-port wiring.",
-  "Static timing contract (programme time t of hc_eng): ingest event T -> quadrant wave n on x_wave pins at t = T + 1 + 4n (hc_<q> reader launched 23 edges earlier); launch TL -> raw a at TL + RAW0 + 10a; tail launch -> result 496 edges later; emit -> result pins +1, hc_<q> result store +1 (pin) and its write-done +19. Measured values: results/rtl/hbm_hc_eng_0030/receipt.json."
+  "Static timing contract (programme time t of hc_eng): ingest event T -> quadrant wave n on x_wave pins at t = T + 1 + 4n (XW_BEATS=4: beat b at t = T - 2 + 4n + b, reassembled wave at the same pin-level edge) (hc_<q> reader launched 23 edges earlier); launch TL -> raw a at TL + RAW0 + 10a; tail launch -> result 496 edges later; emit -> result pins +1, hc_<q> result store +1 (pin) and its write-done +19. Measured values: results/rtl/hbm_hc_eng_0030/receipt.json."
  ]
 }

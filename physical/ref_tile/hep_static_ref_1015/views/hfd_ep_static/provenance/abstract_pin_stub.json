@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/hfd_ep_static.lef",
-    "sha256": "8435d3ab257f9af07fafa2c7098143b3f0dff5ccc37bd0440933c45369fad9ec"
+    "sha256": "66fe2c4adfe636636a2d9512bf289637fa0f851c8723da8bb51e23bf5366c3ef"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/hep_static_ref_1015-ep1-e4e436536/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hep_static_w5c_1016-w5c-9a74c4da4/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/hep_static_ref_1015-ep1-e4e436536/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/hep_static_ref_1015-ep1-e4e436536/record/views/hfd_ep_static/provenance/raw/hfd_ep_static.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/hep_static_ref_1015-ep1-e4e436536/record/views/hfd_ep_static/provenance/hfd_ep_static.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hep_static_w5c_1016-w5c-9a74c4da4/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hep_static_w5c_1016-w5c-9a74c4da4/record/views/hfd_ep_static/provenance/raw/hfd_ep_static.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hep_static_w5c_1016-w5c-9a74c4da4/record/views/hfd_ep_static/provenance/hfd_ep_static.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 41 OBS rects moved into 40 pins: clk, fault, fault_cause[0], fault_cause[10], fault_cause[1], fault_cause[2], fault_cause[3], fault_cause[4], fault_cause[5], fault_cause[6], fault_cause[7], fault_cause[8]; pockets: 1561 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 40 OBS rects moved into 40 pins: clk, fault, fault_cause[0], fault_cause[10], fault_cause[1], fault_cause[2], fault_cause[3], fault_cause[4], fault_cause[5], fault_cause[6], fault_cause[7], fault_cause[8]; pockets: 2444 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,15 +30,15 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/hep_static_ref_1015-ep1-e4e436536/record/views/hfd_ep_static/provenance/hfd_ep_static.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hep_static_w5c_1016-w5c-9a74c4da4/record/views/hfd_ep_static/provenance/hfd_ep_static.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "hfd_ep_static 434.72 x 315.36: PG M5 VDD 80 stripes (98% spread, 100% cov) / VSS 80 stripes (98% spread, 100% cov); strap M6; face pins 2288 blocked-above 0 blocked-same 0; clock clk insertion 510 ps; pockets M5 0 (closed)",
+    "summary": "hfd_ep_static 434.72 x 371.52: PG M5 VDD 80 stripes (98% spread, 100% cov) / VSS 80 stripes (98% spread, 100% cov); strap M6; face pins 2288 blocked-above 0 blocked-same 0; clock clk insertion 514 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "hfd_ep_static",
       "W": 434.72,
-      "H": 315.36,
+      "H": 371.52,
       "pg": {
         "nets": {
           "VDD": {
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 2288,
         "blocked_above": 0,
-        "covered_below": 230,
+        "covered_below": 176,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 510.42,
-          "min_ps": 316.87
+          "max_ps": 513.51,
+          "min_ps": 347.3
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 1561
+          "added": 2444
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "hfd_ep_static.lef",
-    "sha256": "b0802127852d82b8db95fc8adfea2345e179570247959df3e288268d8e85e771"
+    "sha256": "6201dd8197938f64d11fa2fb341b8def8958aee0339869e14be0165ddc33478a"
   }
 }

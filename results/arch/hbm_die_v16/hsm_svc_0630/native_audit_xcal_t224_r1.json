@@ -1,0 +1,92 @@
+{
+ "cell": "ot_hbm_svc_sm_xcal_t",
+ "view": "physical/ref_tile/hsm_xcal_t224_r1/views/ot_hbm_svc_sm_xcal_t",
+ "lib_cell": "ot_hbm_svc_sm_xcal_t",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 273.5,
+ "spread_ps": 109.0,
+ "outputs": 177,
+ "inputs": 329,
+ "launch_ps": 213.6,
+ "launch_pin": "kv_desc[35]",
+ "capture_ps": 203.4,
+ "capture_pin": "desc_loops[12]",
+ "launch_over": 0,
+ "capture_over": 103,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 203.42805 > 190 (103 pins)",
+ "job": "hsm_xcal_t224_r1-r1-c3e947611",
+ "verdict": "CLOSED TT +94.11 / FF +1.25 / DRC 0",
+ "capture_over_by_bus": {
+  "desc_loops": 16,
+  "desc_limit": 12,
+  "desc_base": 6,
+  "cfg_data": 65,
+  "cfg_target": 1,
+  "launch_v": 1,
+  "desc_v": 1,
+  "cfg_addr": 1
+ },
+ "capture_over_worst10": [
+  [
+   203.4,
+   "desc_loops[12]"
+  ],
+  [
+   201.4,
+   "desc_limit[5]"
+  ],
+  [
+   201.4,
+   "desc_base[6]"
+  ],
+  [
+   201.4,
+   "cfg_data[147]"
+  ],
+  [
+   201.3,
+   "desc_base[2]"
+  ],
+  [
+   201.1,
+   "cfg_data[154]"
+  ],
+  [
+   200.6,
+   "cfg_target[2]"
+  ],
+  [
+   200.4,
+   "desc_limit[2]"
+  ],
+  [
+   200.3,
+   "desc_limit[6]"
+  ],
+  [
+   200.3,
+   "cfg_data[155]"
+  ]
+ ],
+ "tt_boundary_insertion": {
+  "n": 506,
+  "mean": 273.5,
+  "min": 224.1,
+  "max": 333.1
+ },
+ "classification": "clock-spread capture miss: TT boundary insertion 224.1..333.1 ps (spread 109 > 80); the 103 failing inputs are the N-face F20 pins at x ~78..209 um (cfg_data[129..217], desc_*, cfg_target, launch_v) whose pin flops get the EARLY end of the tree (capture = S + R, R = boundary mean 273.5); no combinational pins, launch 213.6 passes. Cause: boundary flops on two opposite 224-um faces (N inputs, S outputs) fed from a W-mid clock entry with two macros between them; the closed predecessor hbm_xcal216_r1 (pins within ~70 um of W) had spread 49.",
+ "fix": "r2: every signal pin on the W face (outputs y 4..95 beside the calendar macro, F20 inputs y 114..212), clock W mid, macros pushed east to leave a 46 um W flop column",
+ "superseded_by": {
+  "job": "hsm_xcal_t224_r2-r2-38e71c4dc",
+  "view": "physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t",
+  "receipt": "results/arch/hbm_die_v16/hsm_svc_0630/native_audit_xcal_t224_r2.json",
+  "why": "r1 native FAIL (capture 203.4 > 190 on 103 N-face pins, spread 109); r2 CLOSED TT +143.41 / FF +5.48 (vs +1.25) and native PASS",
+  "deleted": "2026-10-16 10:04 PDT: r1 views/ removed from main (superseded; die binds by master name), closed_archive copy deleted, remote run dir already absent"
+ }
+}

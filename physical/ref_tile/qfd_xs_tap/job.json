@@ -1,5 +1,5 @@
 {
- "name": "qfd_xs_tap-xt10-COMMIT",
+ "name": "qfd_xs_tap-xt12-COMMIT",
  "block": "qfd_xs_tap",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-dvm-build",
@@ -56,7 +56,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_xs_tap/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_xs_tap/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_xs_tap/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_xs_tap/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_xs_tap/qfd_xs_tap-xt10-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_xs_tap/qfd_xs_tap-xt12-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -111,9 +111,9 @@
  "reroute_reason": {
   "kind": "pin_register",
   "cell": "qfd_xs_tap",
-  "launch_ps": 230.9,
-  "capture_ps": 198.6,
-  "source": "results/arch/qwen_dvm_banked_leaf_1015/native_tap8/native_audit.json",
-  "fix": "xt10: (a) aw 553-bit S bus spread 26.5 um -> 159 um (0.288 pitch) and ck moved from the NW corner to N-face centre (xt6 native capture 502 ps / xt9 gate: diagonal S->NE flop chain, corner clock, fill 7%); (b) recipe 3 pin registers on every input/output (owner 19:50); (c) pin-flop columns 8 + full-depth pin-access keepout (xt8 61 gi pins under routed M5); same RTL/outline"
+  "launch_ps": 206.5,
+  "capture_ps": 210.8,
+  "source": "results/rtl/qwen_link_0030/xs_tap_xt11_native_audit.json",
+  "fix": "xt12: CLOSED xt11 native capture 210.8 (34 sw NW-corner pins) = 7 route hold-repair BUFx2 (~131 ps) behind the HB2 inhold pad on late-clock corner flops; the route FF repair uses the 30 ps hold margin at the boundary. io_hold_margin_ns 0.010 relieves only the boundary-input route repair (sign-off SDC unchanged; FF >= 0 still required). Pins/RTL identical to xt11."
  }
 }

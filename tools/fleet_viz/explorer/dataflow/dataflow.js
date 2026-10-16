@@ -44,10 +44,14 @@ export async function mountDataflow(root, opts) {
   const wIn = H('input', { type: 'range', min: 0.3, max: 2.5, step: 0.1, value: 0.7, 'aria-label': 'Link width scale', class: 'df-w' });
   const wLab = H('label', { class: 'df-tog', title: 'Stroke width scale (width ∝ log₂ bits, capped)' }, 'width ', wIn);
   const fitB = H('button', { type: 'button', title: 'Fit the die (key 0)' }, 'Fit');
-  const top = H('div', { class: 'df-top' }, dieSel, H('div', { class: 'df-seg', role: 'group', 'aria-label': 'View' }, ...modeBtns),
-    tog('cong', 'cut congestion', 'Bits crossing each 260 µm cut window ÷ routing tracks; red above the 0.60 limit'),
-    tog('man', 'Manhattan', 'Draw links as L-shaped (x then y) routes'), data ? tog('trail', 'trail', 'Fade recently used links') : null,
-    tog('bypass', 'bypass only', 'Only links whose flight line crosses unrelated blocks'), minSel, lenSel, wLab, fitB);
+  const pt = (t, ...kids) => H('div', { class: 'df-ptitle' }, H('span', {}, t), ...kids);
+  // left column: navigation and selectors (record, view, filters); `top` delegates the toggle changes
+  const top = H('div', { class: 'df-top' },
+    H('div', { class: 'df-grp' }, H('div', { class: 'df-row' }, H('div', { class: 'df-seg', role: 'group', 'aria-label': 'View' }, ...modeBtns), fitB)),
+    H('div', { class: 'df-grp df-togs' }, tog('cong', 'cut congestion', 'Bits crossing each 260 µm cut window ÷ routing tracks; red above the 0.60 limit'),
+      tog('man', 'Manhattan', 'Draw links as L-shaped (x then y) routes'), data ? tog('trail', 'trail', 'Fade recently used links') : null,
+      tog('bypass', 'bypass only', 'Only links whose flight line crosses unrelated blocks')),
+    H('div', { class: 'df-grp df-fields' }, H('label', { class: 'df-fld' }, H('span', {}, 'min width'), minSel), H('label', { class: 'df-fld' }, H('span', {}, 'min length'), lenSel), wLab));
   const cov = H('div', { class: 'df-cov' });
   const cmp = H('details', { class: 'df-cmp', ...(rows.some((r) => r.role === 'candidate') ? { open: true } : {}) });
   const strip = H('canvas', { class: 'df-strip', role: 'slider', tabindex: 0, 'aria-label': 'Token stages; click to jump' });
@@ -63,14 +67,26 @@ export async function mountDataflow(root, opts) {
   const floorEl = H('div', { class: 'df-floorbox' });
   const legend = H('div', { class: 'df-legend' });
   const lod = H('div', { class: 'df-lod', 'aria-live': 'polite' });
-  const side = H('aside', { class: 'df-side', 'aria-label': 'Current window and selection' });
+  const side = H('div', { class: 'df-side', 'aria-label': 'Current window and selection' });
   const tipEl = H('div', { class: 'df-tip', role: 'tooltip' });
   const dagEl = H('div', {}); const tableEl = H('div', {});
-  const dagP = data ? H('section', { class: 'df-panel' }, H('h3', {}, 'Logical flow of the current stage'), dagEl) : null;
-  const tableP = H('section', { class: 'df-panel' }, H('h3', {}, 'Worst links'), tableEl);
-  const prov = H('details', { class: 'df-prov' });
-  root.replaceChildren(top, cov, cmp, ...(data ? [stripBox, ctl] : []), H('div', { class: 'df-main' }, H('div', { class: 'df-floorwrap' }, floorEl, legend, lod), side),
-    ...(dagP ? [dagP] : []), tableP, prov, tipEl);
+  const prov = H('details', { class: 'df-prov', open: true });
+  // right column: information. Legend + coverage on top, the window/selection card, then tabs (stage DAG, worst links, source)
+  const tabs = [...(data ? [['dag', 'Stage flow', H('section', { class: 'df-panel' }, H('h3', {}, 'Logical flow of the current stage'), dagEl)]] : []),
+    ['table', 'Worst links', H('section', { class: 'df-panel df-fill' }, H('h3', {}, 'Worst links'), tableEl)], ['src', 'Source', H('section', { class: 'df-panel' }, prov)]];
+  const tabBody = H('div', { class: 'df-tabbody' });
+  const tabBtns = tabs.map(([k, label]) => H('button', { type: 'button', role: 'tab', 'data-tab': k, onclick: () => showTab(k) }, label));
+  function showTab(k) { tabs.forEach(([kk, , el], j) => { tabBtns[j].setAttribute('aria-selected', String(kk === k)); el.hidden = kk !== k; }); tabBody.scrollTop = 0; }
+  tabBody.append(...tabs.map((t) => t[2])); showTab(tabs[0][0]);
+  const left = H('aside', { class: 'df-pane df-left', 'aria-label': 'Record and view controls' },
+    pt('Die record'), H('div', { class: 'df-grp' }, dieSel), pt('View and filters'), top, pt('Compare'), cmp);
+  const center = H('div', { class: 'df-center' }, H('div', { class: 'df-floorwrap' }, floorEl, lod), ...(data ? [H('div', { class: 'df-timeline' }, stripBox, ctl)] : []));
+  const right = H('aside', { class: 'df-pane df-right', 'aria-label': 'Link and block information' },
+    H('div', { class: 'df-rhead' }, pt('Legend'), legend, cov),
+    H('div', { class: 'df-rsel' }, side),
+    H('div', { class: 'df-rtabs' }, H('div', { class: 'df-tablist', role: 'tablist' }, ...tabBtns), tabBody));
+  root.replaceChildren(left, center, right, tipEl);
+  const rsel = right.querySelector('.df-rsel');
 
   let lodText = '';
   const floor = new Floor(floorEl, { onPick: pick, onHover: hover, onPaint: (f) => {
@@ -104,19 +120,21 @@ export async function mountDataflow(root, opts) {
   function renderCompare() {
     const num = (v, f) => v == null ? H('span', { class: 'dim' }, 'n/a') : f(v);
     const gb = (v) => fmtBitUm(v), bits = (v) => fmtBits(v);
-    const head = ['revision / candidate', 'Σ width·length', 'Σ bit·µm (hops)', 'Σ traffic·length', 'over-reach bits', 'relay bit·stages', 'needed relay bit·stages ≥', 'worst cut'];
+    const pick = (r) => { dieSel.value = r.id; dieSel.dispatchEvent(new Event('change')); };
+    const cell = (lab, title, v, hot) => H('div', { class: 'df-cm' + (hot ? ' hot' : ''), title }, H('span', {}, lab), H('b', {}, v));
     const body = rows.map((r) => {
       const x = r.coverage?.metrics || {};
-      const tr = H('tr', { tabindex: 0, 'aria-selected': String(r.id === S.row.id), onclick: () => { dieSel.value = r.id; dieSel.dispatchEvent(new Event('change')); },
-        onkeydown: (e) => { if (e.key === 'Enter') { dieSel.value = r.id; dieSel.dispatchEvent(new Event('change')); } } },
-        H('td', { title: r.scope || '' }, r.label, H('span', { class: 'dim' }, ` · ${r.role === 'candidate' ? `candidate of ${r.candidate?.of} (${r.candidate?.agent || '?'})` : r.role}`)),
-        H('td', {}, num(x.sum_width_length_bit_um, gb)), H('td', {}, num(x.sum_bit_um_hops, gb)), H('td', {}, num(x.sum_traffic_length, (v) => fmtBitUm(v).replace('bit·µm', 'bit/token·µm'))),
-        H('td', {}, num(x.over_reach_bits, bits)), H('td', {}, num(x.relay_bit_stages, (v) => v.toLocaleString())), H('td', {}, num(x.needed_relay_bit_stages_lower_bound, (v) => v.toLocaleString())),
-        H('td', { class: x.worst_cut > (0.6) ? 'hot' : '' }, num(x.worst_cut, (v) => `${v.toFixed(2)} (${x.cut_windows_over_limit} > 0.6)`)));
-      return tr;
+      return H('div', { class: 'df-card', role: 'button', tabindex: 0, 'aria-selected': String(r.id === S.row.id), title: r.scope || '', onclick: () => pick(r),
+        onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(r); } } },
+        H('div', { class: 'df-cardh' }, r.label), H('div', { class: 'df-cardr' }, r.role === 'candidate' ? `candidate of ${r.candidate?.of} (${r.candidate?.agent || '?'})` : r.role),
+        H('div', { class: 'df-cmg' },
+          cell('Σ width·length', 'Σ width·length', num(x.sum_width_length_bit_um, gb)), cell('Σ bit·µm (hops)', 'Σ bit·µm (hops)', num(x.sum_bit_um_hops, gb)),
+          cell('Σ traffic·length', 'Σ traffic·length', num(x.sum_traffic_length, (v) => fmtBitUm(v).replace('bit·µm', 'bit/token·µm'))), cell('over-reach bits', 'over-reach bits', num(x.over_reach_bits, bits)),
+          cell('relay bit·stages', 'relay bit·stages', num(x.relay_bit_stages, (v) => v.toLocaleString())), cell('needed relay ≥', 'needed relay bit·stages ≥', num(x.needed_relay_bit_stages_lower_bound, (v) => v.toLocaleString())),
+          cell('worst cut', 'worst cut (windows over 0.6)', num(x.worst_cut, (v) => `${v.toFixed(2)} (${x.cut_windows_over_limit} > 0.6)`), x.worst_cut > 0.6)));
     });
     cmp.replaceChildren(H('summary', {}, `Revisions and floorplan candidates (${rows.length}) · same metrics, click to switch`),
-      H('div', { class: 'df-cmpscroll' }, H('table', {}, H('thead', {}, H('tr', {}, ...head.map((x) => H('th', {}, x)))), H('tbody', {}, ...body))),
+      H('div', { class: 'df-cards' }, ...body),
       H('div', { class: 'df-kv dim' }, 'Σ width·length = bits × longest driver→sink length; traffic·length needs per-link traffic (t) from the source, else n/a; relay bit·stages only where registers are placed; cut = L-route per hop in 260 µm windows (limit 0.60). Pin-less records measure to block outlines (lower bounds).'));
   }
 
@@ -376,6 +394,7 @@ export async function mountDataflow(root, opts) {
       if (sb >= 0) { x0 = Math.min(x0, m.bx[sb]); y0 = Math.min(y0, m.by[sb]); x1 = Math.max(x1, m.bx[sb] + m.bw[sb]); y1 = Math.max(y1, m.by[sb] + m.bh[sb]); }
       if (Number.isFinite(x0)) floor.zoomTo(x0, y0, x1, y1);
     }
+    if (rsel) rsel.scrollTop = 0;
     renderSel();
   }
   function selectLink(i, zoom) { if (clock) clock.pause(); select({ kind: 'link', i }, zoom); }
@@ -429,7 +448,7 @@ export async function mountDataflow(root, opts) {
     let wasPlaying = false;
     unsub = clock.on((t) => { onTime(t); if (clock.playing !== wasPlaying) { wasPlaying = clock.playing; floor.set({ flow: clock.playing }); } });
   }
-  const ro = new ResizeObserver(() => { if (data && m) drawStrip(clock.t); }); ro.observe(root);
+  const ro = new ResizeObserver(() => { if (data && m) drawStrip(clock.t); }); ro.observe(strip);
   await load(S.row);
   return {
     destroy() { unsub && unsub(); ro.disconnect(); floor.destroy(); },

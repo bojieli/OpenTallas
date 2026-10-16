@@ -1,0 +1,33 @@
+{
+ "actual_clock_entries": 2238,
+ "actual_pin_track_failures": 0,
+ "scope": "ACTUAL_PUBLISHED_VIEW_SOURCE_GRAPH_AND_LITERAL_PINSET_REPLAY_ONLY_NOT_INCIDENT_ROUTING_CLOCK_PG_OR_STATIC_CALENDAR_QUALIFICATION",
+ "view_table_sha256": "fb27690b25a837c8f4267118929dc95a280102bd1aba7823c0ce2010119d75c9",
+ "placement_sha256": "adbb8f6c5b26887a19cd1181071e8073c0efe32f2195f7fce7f9216461f64715",
+ "source_model_sha256": "3e08661ecfa7c141b02d1f54ef0f69592205e577f1f940d0d249ec733c06a357",
+ "map_sha256": "46dcbd13d8897d645e0c4cbbbe6d5d714d286804427c0c0f82df00727bf72fc3",
+ "instances": 85264,
+ "source_buses": 146146,
+ "split_parents": 1119,
+ "children": 2238,
+ "unchanged_all_bus_name_class_width": true,
+ "child_abi_mismatches": 0,
+ "missing_actual_signal_pins": 0,
+ "neutral_role_input_instances": 1119,
+ "masters": {
+  "ot_s81_sstn_base566": {
+   "job": "s81_sstn_base566-split1-9cb51937c",
+   "w": 84.24,
+   "h": 30.24,
+   "signal_pins": 1143,
+   "lef": "physical/ref_tile/s81_sstn_base566/views/ot_s81_sstn_base566/ot_s81_sstn_base566.lef"
+  },
+  "ot_s81_sstn_payload536": {
+   "job": "s81_sstn_payload536-split1-9cb51937c",
+   "w": 86.4,
+   "h": 25.92,
+   "signal_pins": 1074,
+   "lef": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536.lef"
+  }
+ }
+}

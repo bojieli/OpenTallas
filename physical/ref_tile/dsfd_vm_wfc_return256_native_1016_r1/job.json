@@ -1,0 +1,147 @@
+{
+ "name": "dsfd_vm_wfc_return256_native_1016_r1-valid2-COMMIT",
+ "block": "dsfd_vm_wfc_return256",
+ "ref_tile": true,
+ "owner": "codex:S-VM",
+ "purpose": "Structural256bit WFC return data slice after r6 CTS native launch221.409ps failure. Two identical masters plus reused native diagnostic leaf; unchanged normal pipeline stages, +2diagnostic edges only. Standalone candidate not parent adoption.",
+ "threads": 8,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "claude/s81-vm-wfcret-0615",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_ctl_native_1015",
+   "tools/s81_wfc_hop1",
+   "tools/s81_wfc_valid",
+   "tools/s81_wfc_return256"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_wfc_return256 #(.RESPONSE_PAD(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_wfc_return256.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_native_valid_diag.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "return256_gold",
+    "cmd": "bash tools/s81_wfc_return256/gate.sh {RUN}/return256_gold",
+    "expect": "pass",
+    "pass_regex": "RETURN256 PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "return256_high",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_high S81_RETURN256_MUT_HIGH",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "return256_tail",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_tail S81_RETURN256_MUT_TAIL",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "return256_fault_hi",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_fault_hi S81_RETURN256_MUT_FAULT_HI",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "return256_fault_lo",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_fault_lo S81_RETURN256_MUT_FAULT_LO",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 12
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1 --out {RUN}/record/views/dsfd_vm_wfc_return256  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_vm_wfc_return256_native_1016_r1/dsfd_vm_wfc_return256_native_1016_r1-valid2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r6 (new kit; RTL 320d5b77d byte-identical). History: r2 194.4x324 gate WARN (util 5%, W half empty, TT insertion 293.8). r3 a77910722 86.4x151.2 PPL pins EARLY_FAIL GRT-0116 (E/N pin hold bands, PPL stacked layers ~20 pins/um). r4 ff7ba99bc 108x172.8 balanced place_pin FLOORPLAN_MARGIN (place_pin used one M2 track per 0.27 um row: 390 M2 pins off-die). r5 2986a61e5 108x237.6 balanced M4 M4 M2: route CLOSED TT +217.81 / FF +13.48 DRC 0 but routed native FAIL launch 238.2 > 220 ps on 8 NE outputs (clock W-centre 227 um from the NE sinks, R 206.2 ps); images: logic in the N/NE triangle, S half only the E pin column because each lane512 mux reads e_d[j],[512+j],[1024+j],[1536+j] from four face quarters. r6 fix: exact io_tcl pin plan (tools/ref_tile/specs_s81vm_wfc_r6_1016/gen_return_r6_io.py, real DEF track grid): MUX-LOCAL INTERLEAVED ORDER -- E e_d[j],e_d[512+j],e_d[1024+j],e_d[1536+j] adjacent (e_v[0..3] at the E centre), N s_d[j],s_d[513+j] adjacent (s_d[512],s_d[1025],s_v,r_bad at the N centre); E alternates M4 (Y 0.012+0.048k) / M2 using two of the six M2 tracks per row (offsets 0.081/0.189, 3 tracks apart, 2 from each rail): 1,026 + 1,026 pins over 192.4 um = 5.33 pins/um/layer; N alternates M5/M3: 514 + 514 over 84.4 um = 6.09 pins/um/layer. Outline 86.4x194.4 (4 x 21.6, 9 x 21.6) = 16,796 um2, std 3,183 um2 -> util ~20%. Clock: ck on M4 at the W-face centre (rn above, return_valid/lane below), farthest sink corner 86.4+97.2 = 184 um (r5 227 um, -19%). tq[1] sync-clear fan-out (~4.1k loads on r_q/pad) left in RTL (frozen, proven source); buffered by repair_design."
+}

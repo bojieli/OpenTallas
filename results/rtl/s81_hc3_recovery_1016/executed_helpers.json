@@ -1,0 +1,150 @@
+[
+  {
+    "kit": "s81hc_ccrh2_ref",
+    "source_commit": "1ff35833163b65515b502451d3ca631f472271e4",
+    "daemon_start_commit": "85fcc1f96936d9da9298c648cc6a48c6deacf1a2",
+    "archive_sha256": "149129981b1d798779a995054a16b91e585f45cda38d7b5b431b35ad6c8ddb31",
+    "manifest_sha256": "825d0c1de860ce0228c9b99807314295bd5b03f005ad3a802e89cc794661749c",
+    "helpers": [
+      {
+        "path": "physical/common_flow/pin_reg_split.tcl",
+        "kind": "file",
+        "sha256": "e7a78e58d9cc0fc6baca366f525a7b706f8f01bcced8d5721defdadeab290ea5",
+        "git_blob": "2caf356dcae8a3ad0d6fe2d333d4b4fbd322df60",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "physical/dsrom_window_source/leaf_iohold.tcl",
+        "kind": "file",
+        "sha256": "cf3b8c355b37762a48d3d73fa0dfe96710f5b68a09a85519b85fa77c8e14b76d",
+        "git_blob": "5f002c5d4afd8d6680dc65bb5f2922da9b042147",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "physical/qwen_die_masters/io_flop_at_pins.tcl",
+        "kind": "file",
+        "sha256": "fd57e8617b08d7c039cabb63c4cdaf7a52fab5b9bd63717441d83bda888ef26a",
+        "git_blob": "09e4879787fd8da142087be659db57a51336ea3e",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/orfs_hold_mm.tcl",
+        "kind": "file",
+        "sha256": "3704bb44866f35c432846c900bc0360e2bd4e846ae2c050b4c9a876ae93ce2c9",
+        "git_blob": "cb3f2b5d07fd59f8e4df98984ac61d157bc1f8f6",
+        "source": "daemon_overlay",
+        "matches_provenance_commit": false
+      },
+      {
+        "path": "tools/ref_tile/layout_dump.tcl",
+        "kind": "file",
+        "sha256": "0fbcf52283a929344d570838c7f22680a5787cbd58b6f5b2bf0267911cdc9093",
+        "git_blob": "e161285953dc30a309ea16dd0cafd51277bf1a25",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/ref_tile/layout_png.py",
+        "kind": "file",
+        "sha256": "5e4a62ac851abcca4a11bb144e844a307d93789d413bf104f0cb18725d624d6c",
+        "git_blob": "73f8f46181e2a7bbe56d1a40044c536084332187",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/ref_tile/pre_route_gate.py",
+        "kind": "file",
+        "sha256": "ace283ae53fe0f38f7e6ff478886736004c3093b94e243c2c2c54e006cadd3ee",
+        "git_blob": "a03d5137920cf9ff42cf5f383d65059333e434d5",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/ref_tile/ref_route.sh",
+        "kind": "file",
+        "sha256": "c1a6880be495c76907b4e116c6f31c5383eebecf66992e2368e08debf6fd9a40",
+        "git_blob": "51dac7b88893980ddc2fc1ca9b34ddc60e7d672d",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      }
+    ],
+    "scope": "Actual immutable gate-shipped helpers; new main quoted-EXTRA/final-image updates are not claimed to have executed here."
+  },
+  {
+    "kit": "s81hc_cseqh2_ref",
+    "source_commit": "1ff35833163b65515b502451d3ca631f472271e4",
+    "daemon_start_commit": "85fcc1f96936d9da9298c648cc6a48c6deacf1a2",
+    "archive_sha256": "b218ffee70c367ca7fa8f0204123aec76598cd28fd9aecea05caf1e85d335708",
+    "manifest_sha256": "3439061e97fec3bb0ec3b31479a5b2d26030221811946e8571d84f90aa619720",
+    "helpers": [
+      {
+        "path": "physical/common_flow/pin_reg_split.tcl",
+        "kind": "file",
+        "sha256": "e7a78e58d9cc0fc6baca366f525a7b706f8f01bcced8d5721defdadeab290ea5",
+        "git_blob": "2caf356dcae8a3ad0d6fe2d333d4b4fbd322df60",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "physical/dsrom_window_source/leaf_iohold.tcl",
+        "kind": "file",
+        "sha256": "cf3b8c355b37762a48d3d73fa0dfe96710f5b68a09a85519b85fa77c8e14b76d",
+        "git_blob": "5f002c5d4afd8d6680dc65bb5f2922da9b042147",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "physical/qwen_die_masters/io_flop_at_pins.tcl",
+        "kind": "file",
+        "sha256": "fd57e8617b08d7c039cabb63c4cdaf7a52fab5b9bd63717441d83bda888ef26a",
+        "git_blob": "09e4879787fd8da142087be659db57a51336ea3e",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/orfs_hold_mm.tcl",
+        "kind": "file",
+        "sha256": "3704bb44866f35c432846c900bc0360e2bd4e846ae2c050b4c9a876ae93ce2c9",
+        "git_blob": "cb3f2b5d07fd59f8e4df98984ac61d157bc1f8f6",
+        "source": "daemon_overlay",
+        "matches_provenance_commit": false
+      },
+      {
+        "path": "tools/ref_tile/layout_dump.tcl",
+        "kind": "file",
+        "sha256": "0fbcf52283a929344d570838c7f22680a5787cbd58b6f5b2bf0267911cdc9093",
+        "git_blob": "e161285953dc30a309ea16dd0cafd51277bf1a25",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/ref_tile/layout_png.py",
+        "kind": "file",
+        "sha256": "5e4a62ac851abcca4a11bb144e844a307d93789d413bf104f0cb18725d624d6c",
+        "git_blob": "73f8f46181e2a7bbe56d1a40044c536084332187",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/ref_tile/pre_route_gate.py",
+        "kind": "file",
+        "sha256": "ace283ae53fe0f38f7e6ff478886736004c3093b94e243c2c2c54e006cadd3ee",
+        "git_blob": "a03d5137920cf9ff42cf5f383d65059333e434d5",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      },
+      {
+        "path": "tools/ref_tile/ref_route.sh",
+        "kind": "file",
+        "sha256": "c1a6880be495c76907b4e116c6f31c5383eebecf66992e2368e08debf6fd9a40",
+        "git_blob": "51dac7b88893980ddc2fc1ca9b34ddc60e7d672d",
+        "source": "working_tree",
+        "matches_provenance_commit": true
+      }
+    ],
+    "scope": "Actual immutable gate-shipped helpers; new main quoted-EXTRA/final-image updates are not claimed to have executed here."
+  }
+]

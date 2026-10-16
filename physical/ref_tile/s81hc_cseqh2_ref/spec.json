@@ -108,24 +108,20 @@
  "aspect": 1.0,
  "job": {
   "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:S-ELEM-PQ/HC3",
-  "branch": "claude/s81hc3-native-0030",
-  "tag": "pr1",
+  "owner": "Claude:S-ENGRAM+NORM",
+  "branch": "claude/s81hc-comb3-bank256b",
+  "tag": "pr4pk",
   "purpose": "S-ELEM-PQ/HC3 native pin re-kit of CLOSED s81hc_cseqh2_ref-v1-70eafa55c (ot_s81_hc_cseq: launch 305.29711 > 220 (88 pins) at phi - R, results/rtl/s81_hc_native_0030/native_audit.json); same outline and pin faces, kit recipe 3 (OWNER RULE 19:50)",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cseqh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_cseqh2_ref",
   "reroute_reason": {
-   "kind": "pin_register",
-   "source": "results/rtl/s81_hc_native_0030/native_audit.json",
-   "cell": "ot_s81_hc_cseq",
-   "fix": "recipe 3 pin stage at the closed outline / pin faces (current main RTL: PIPE=1 production default), 0 cycles: keep_pin_regs stops the merge of the w_fd / e_fd / c_fd forward copies, pin_reg_split gives every internally loaded output its own launch flop, io_flop_at_pins anchors each at its own face, HB2 pin pads",
-   "launch_ps": 305.3,
-   "capture_ps": 167.1,
-   "closed_job": "s81hc_cseqh2_ref-v1-70eafa55c",
-   "added_cycles_per_port": {}
+   "kind": "rtl_change",
+   "why": "ot_s81_hc_cseq RTL changed since the closed v1 view (70eafa55c): ordered POST dispatch at production wrapper defaults (deda9c6ca, 9aed046be) -- 5 of 28 RTL files differ; the closed v1 view also fails native launch (305.3 ps on 88 pins > 220; results/rtl/s81_pq_native_audit_1015/pq_0600/hc_cseq_v1.json)",
+   "slot_change_request": "GRANTED by S-DIE 6e712a1ab, published main 3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json (ot_s81_hc_cseq 190.08x190.08, was 155.52x155.52 in closed s81hc_cseqh2_ref-v1-70eafa55c); leaf routing only; parent pins/cuts/clock/incident hops/adoption remain HELD.",
+   "fix": "HC-COMB-3 pr4pk: pr3spread-deb6a6f5a routed CLOSED but export child_lint (f) 13 E-corner face pins covered on M5 -> full-depth pin keepout (pin_access frac 1.0); even per-face pin plan (w_fd/e_fd were clumped into the top 45 um of W/E at ~25 pins/um next to FIRM output hold stacks) + OT_OUTHOLD_FREE=1 output stage; slot growth 190.08x190.08 GRANTED by S-DIE (results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json)"
   },
-  "structural_change": "recipe 3 pin stage at the closed outline / pin faces (current main RTL: PIPE=1 production default), 0 cycles: keep_pin_regs stops the merge of the w_fd / e_fd / c_fd forward copies, pin_reg_split gives every internally loaded output its own launch flop, io_flop_at_pins anchors each at its own face, HB2 pin pads"
+  "structural_change": "2026-10-16 HC-COMB-3: pr3spread-deb6a6f5a routed CLOSED (TT +26.62 / FF +0.68 / DRC 0 after hold ECO) but its export child_lint FAILS (f) face-pin access: 13 of 4633 face pins (e_fd[10..] M4, E face bottom corner x 189.888 y 7.3..) have OBS on the layer above (DRT-0073 class at the parent). The kit keepout covered only the outer half of each pin depth (OT_PK_FRAC 0.5) -> pin_access frac 1.0: the whole pin footprint is kept clear on the layer above (removed after DRT). Same RTL, outline, pins. 2026-10-16 HC-COMB (S-ENGRAM+NORM helper): pr2shore-f8b71b8b8 route EARLY_FAIL_CONGESTION GRT-0116. Measured: 627 hot regions only in the NW/NE corners (y > 140 um): PPL ordered groups clumped w_fd / e_fd (1,128 + 8 each) into the top ~45 um of the W / E faces (~25 pins/um, gate floorplan image) next to their FIRM output hold stacks (9,560 of 16,000 hot-net refs w_fd/e_fd/ot_outhold). Fix = explicit even pin plan io_spread.tcl (tools/ref_tile/spread_face_pins.py: every face spread evenly, bus bits in order, W/E M4 2-track, N/S M3/M5, clocks sk and cck centred on their faces; S-ELEM-B PQ class) + OT_OUTHOLD_FREE=1 (Q-DVM xcst m5d, CLOSED + native PASS). Same RTL, outline 190.08x190.08 (S-DIE grant), pin faces, 0 cycles."
  },
  "params": {
   "HALF": 1,
@@ -137,8 +133,8 @@
  "inter": [],
  "recipe": 3,
  "outline": {
-  "w": 155.52,
-  "h": 155.52,
+  "w": 190.08,
+  "h": 190.08,
   "exact": true
  },
  "pin_regs": {
@@ -155,5 +151,13 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "GRANTED by S-DIE6e712a1ab, published main3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json; leaf routing only, enclosing comb580.312x851.04; actual parent pins/cuts/clock/all incident hops/adoption remain HELD.",
+ "orfs_vars": {
+  "OT_OUTHOLD_FREE": "1"
+ },
+ "io_tcl": "physical/ref_tile/s81hc_cseqh2_ref/io_spread.tcl",
+ "pin_access": {
+  "frac": 1.0
  }
 }

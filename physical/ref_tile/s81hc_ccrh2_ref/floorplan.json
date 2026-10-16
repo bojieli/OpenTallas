@@ -7,16 +7,16 @@
   0,
   0,
   151.2,
-  151.2
+  190.08
  ],
  "core": [
   2.16,
   2.16,
   149.04,
-  149.04
+  187.92000000000002
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 11047,
+ "std_area_um2": 11747,
  "layer_contract": {
   "children": {},
   "pg_layer": "M6",
@@ -48,7 +48,14 @@
  },
  "clock_port": "sk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 43% outside 45%-60% (std 11747 + macro 0 in core 27284 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccr.sv",
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",

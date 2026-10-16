@@ -20,9 +20,12 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
 );
  localparam integer AW=$clog2(DEPTH);
  initial if(DEPTH<4 || (DEPTH&(DEPTH-1))!=0)$error("static return depth must be power of two >=4");
- (* keep *)reg hr,rs;
+ (* keep *)reg hr;
  always @(posedge pll_hbm)hr<=hrst;
- always @(posedge ck)rs<=rsi;
+ // mc_r4: the core reset capture is replicated per region (VIS-ROM QKV-13: one rs flop drove 301 loads in the mc3b gate):
+ // rs_a ring state (rp/consumed/actual/fault), rs_b publication synchronisers, rs_c slot/idle/read-pointer copies
+ (* keep *)reg rs_a,rs_b,rs_c;
+ always @(posedge ck)begin rs_a<=rsi;rs_b<=rsi;rs_c<=rsi;end
  (* keep *)reg observed,write_slot;
  (* keep *)reg [287:0] hd;
  always @(posedge pll_hbm)hd<={controller_epoch,controller_co[17:12],controller_co[11:9],controller_co[7:1],controller_co[281:26]};
@@ -32,7 +35,7 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  (* keep *)reg slot;
  (* keep *)reg [31:0] meta;
  always @(posedge ck)meta<={expected_epoch,expected_layer,expected_sector};
- always @(posedge ck or negedge rs)if(!rs)slot<=0;else slot<=expected_put;
+ always @(posedge ck or negedge rs_c)if(!rs_c)slot<=0;else slot<=expected_put;
  wire [287:0] read_data;
  reg [DEPTH-1:0] published,consumed,observed_valid;
  (* async_reg="true" *)reg [DEPTH-1:0] pub_sync1,pub_sync2,done_sync1,done_sync2;
@@ -51,9 +54,12 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
    obs_d<=observed;ws_d<=write_slot;
    idle_hbm<=(published==done_sync2) && !observed && !write_slot && !obs_d && !ws_d;
   end
- always @(posedge ck or negedge rs)
-  if(!rs)idle_core<=0;
-  else idle_core<=(pub_sync2==consumed) && !slot && !expected_put && !actual_valid;
+ always @(posedge ck or negedge rs_c)
+  if(!rs_c)idle_core<=0;
+  // mc_r4 (Q-KVSYS-DIE 10-16): idle_core from registered captures only (slot = this edge's expected_put capture,
+  // actual_valid = last edge's). mc3b's raw expected_put term put a compare between the pin and the first flop: native
+  // capture 259.3 ps > 190 on expected_put. Drain observation one ck edge later, never earlier; no schedule uses it.
+  else idle_core<=(pub_sync2==consumed) && !slot && !actual_valid;
  reg [AW:0] wp,rp;
  wire [AW-1:0] wa=wp[AW-1:0];
 `ifdef OT_KV_RETURN_MUT_READ_ADDR
@@ -88,16 +94,18 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
 `else
     .INIT(0)
 `endif
-   ) u_rq(.clk(ck),.rst_n(rs),.adv(slot),.q(rq));
+   ) u_rq(.clk(ck),.rst_n(rs_c),.adv(slot),.q(rq));
    assign read_data[bank*72+q*18+:18]=bank_data[rq][q*18+:18];
   end
   always @(posedge pll_hbm_data[bank])
    if(hr && write_slot)bank_data[wa]<=hd[bank*72+:72];
  end endgenerate
- always @(posedge ck or negedge rs)
-  if(!rs)begin rp<=0;consumed<=0;pub_sync1<=0;pub_sync2<=0;actual_valid<=0;fault_core<=0;end
+ always @(posedge ck or negedge rs_b)
+  if(!rs_b)begin pub_sync1<=0;pub_sync2<=0;end
+  else begin pub_sync1<=published;pub_sync2<=pub_sync1;end
+ always @(posedge ck or negedge rs_a)
+  if(!rs_a)begin rp<=0;consumed<=0;actual_valid<=0;fault_core<=0;end
   else begin
-   pub_sync1<=published;pub_sync2<=pub_sync1;
    actual_valid<=slot;
    if(slot)begin
     actual_data<=read_data[255:0];actual_sector<=read_data[265:256];

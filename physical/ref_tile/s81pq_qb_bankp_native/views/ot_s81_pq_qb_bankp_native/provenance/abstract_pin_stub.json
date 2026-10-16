@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_s81_pq_qb_bankp_native.lef",
-    "sha256": "5c8a7b416e3936c17f0fe54716abdd96a5ff1aea765ec260b591da39202bbfc2"
+    "sha256": "1a6375d594381c65fd02ae1e187276928410fd92fcf66de92316f45fb0520dc4"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas/claude/closure-loop/s81pq_qb_bankp_native-b2-d49573885-arg1/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/s81pq_qb_bankp_native-b6hb33-7432af155/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas/claude/closure-loop/s81pq_qb_bankp_native-b2-d49573885-arg1/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas/claude/closure-loop/s81pq_qb_bankp_native-b2-d49573885-arg1/record/views/ot_s81_pq_qb_bankp_native/provenance/raw/ot_s81_pq_qb_bankp_native.lef",
-    "/srv/opentallas/claude/closure-loop/s81pq_qb_bankp_native-b2-d49573885-arg1/record/views/ot_s81_pq_qb_bankp_native/provenance/ot_s81_pq_qb_bankp_native.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/s81pq_qb_bankp_native-b6hb33-7432af155/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/s81pq_qb_bankp_native-b6hb33-7432af155/record/views/ot_s81_pq_qb_bankp_native/provenance/raw/ot_s81_pq_qb_bankp_native.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/s81pq_qb_bankp_native-b6hb33-7432af155/record/views/ot_s81_pq_qb_bankp_native/provenance/ot_s81_pq_qb_bankp_native.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 300 OBS rects moved into 299 pins: aq_q[173], aq_q[255], aq_q[291], aq_q[305], aq_q[371], aq_q[429], aq_q[449], aq_q[505], aq_q[71], clk, i0[1], i0[2]; pockets: 187 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 272 OBS rects moved into 265 pins: clk, i0[1], i0[2], i0[4], i0[5], i0[6], i0[7], i0[8], i1[1], i1[2], i1[4], i1[5]; pockets: 269 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas/claude/closure-loop/s81pq_qb_bankp_native-b2-d49573885-arg1/record/views/ot_s81_pq_qb_bankp_native/provenance/ot_s81_pq_qb_bankp_native.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/s81pq_qb_bankp_native-b6hb33-7432af155/record/views/ot_s81_pq_qb_bankp_native/provenance/ot_s81_pq_qb_bankp_native.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_s81_pq_qb_bankp_native 142.56 x 86.4: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 820 blocked-above 0 blocked-same 0; clock clk insertion 274 ps; pockets M5 0 (closed)",
+    "summary": "ot_s81_pq_qb_bankp_native 142.56 x 86.4: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 820 blocked-above 0 blocked-same 0; clock clk insertion 229 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_s81_pq_qb_bankp_native",
       "W": 142.56,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 820,
         "blocked_above": 0,
-        "covered_below": 43,
+        "covered_below": 0,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 273.93,
-          "min_ps": 152.12
+          "max_ps": 229.02,
+          "min_ps": 130.15
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 187
+          "added": 269
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_s81_pq_qb_bankp_native.lef",
-    "sha256": "f5a877fb6b369cf57eacfb8c1cba488e8de1e06555ab6abe331f7726759ce648"
+    "sha256": "13ec9ba1d2d875b501c3547b49fe15b002fce4fb1426cd87c19d269338d53354"
   }
 }

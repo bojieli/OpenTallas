@@ -1,0 +1,180 @@
+{
+ "name": "s81engm_mx4rq1",
+ "kind": "tile",
+ "top": "ot_s81_mx4_rq",
+ "sources": [
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_flat.sv"
+ ],
+ "params": {
+  "VM_LAT": 17,
+  "SUP": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "N": [],
+  "S": [],
+  "W": [
+   "u_v",
+   "u_row",
+   "u_vtag",
+   "ck",
+   "rst",
+   "dtag",
+   "vtag",
+   "fault"
+  ],
+  "E": [
+   "desc_row",
+   "desc_rq",
+   "rq_v",
+   "rq_row"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "why_floorplan": "MIX4 flat parent VM request port of quarter 1..3 (SUP=1 V-lane suppression): at the slot E face on the quarter's VM rq band (E face toward the VM W face), shell-control requests from the W | p17b: native capture FAIL at desc_rq (S 122.8 + R 86 = 209/212 ps > 190: the W-face scalar fanned out to the E output cluster); desc_rq/desc_row moved to the E face beside rq_row[0..13] (the descriptor injection mux), full-face pin ranges on both faces | p17c: p17b still native FAIL capture desc_rq 200.0 ps (pin move gained ~8 ps; 17-way fanout of the scalar incl. the inhold pad) -> RTL pin register dq_q/dr_q, the scalar now loads one flop",
+ "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: new tile of the MIX4 flat parent (dsfd_engram_mix4_flat 1b429b606): top-level glue hardened as tiles so the parent is wires-only",
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
+  "branch": "claude/s81-mix4-parent-0600",
+  "tag": "p17c",
+  "purpose": "S81 Engram MIX4 flat parent request port ot_s81_mx4_rq (VM_LAT 17 production, SUP 1)",
+  "benches": [
+   {
+    "name": "flat_prodlat_exact",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --flat --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --tb-g VML=17 --tb-g WCL=12 --out {RUN}/f_m0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS native Engram MIX4 flat.*20480words.*writes640 reads4161.*cycles=879"
+   },
+   {
+    "name": "flat_prodlat_mut2",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --flat --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --tb-g VML=17 --tb-g WCL=12 --mut 2 --out {RUN}/f_m2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault|FAIL [0-9]+ words"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engm_mx4rq1/views",
+  "record_to": "results/rtl/ref_tile/s81engm_mx4rq1",
+  "extra_paths": [
+   "physical/s81_die_pins/v21_engram_arithmetic",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_engram_mix",
+   "tools/s81_suhc",
+   "results/rtl/s81_engram_mix_1014/fixtures"
+  ],
+  "hold_merge": "flat MIX4 parent tile: adopt with the flat parent (slot A geometry pending S-DIE).",
+  "cycles_added": 1
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/s81_mix4_banded_1016/native_rq_audit_p17b_1016.json",
+  "cell": "ot_s81_mx4_rq",
+  "capture_ps": 200.0,
+  "fix": "ot_s81_mx4_rq registers desc_rq/desc_row at the pin (dq_q/dr_q); the descriptor injection mux, the clash fault and the dtag delay line take the registered copy, so the scalar pin loads a single flop. +1 cycle on the descriptor read only (dtag stays aligned); flat MIX4 production bench 878 -> 879 cycles PASS, MUT2 FAIL (EPYC4). Pins unchanged from p17b."
+ },
+ "defines": [
+  "DSFD_ENGRAM_STATIC_ISSUE"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every port at the tile boundary (input and output registers); flow pin stages would add an unmodelled cycle to the fixed calendar"
+ },
+ "pin_ranges": {
+  "u_v": [
+   0.5,
+   2.5
+  ],
+  "u_row": [
+   3.0,
+   33.0
+  ],
+  "u_vtag": [
+   33.5,
+   34.5
+  ],
+  "ck": [
+   35.0,
+   36.0
+  ],
+  "rst": [
+   36.5,
+   37.5
+  ],
+  "dtag": [
+   38.0,
+   39.0
+  ],
+  "vtag": [
+   39.5,
+   40.5
+  ],
+  "fault": [
+   41.0,
+   42.0
+  ],
+  "desc_row": [
+   0.5,
+   8.0
+  ],
+  "desc_rq": [
+   8.5,
+   9.5
+  ],
+  "rq_v": [
+   10.0,
+   12.0
+  ],
+  "rq_row": [
+   12.5,
+   42.5
+  ]
+ }
+}

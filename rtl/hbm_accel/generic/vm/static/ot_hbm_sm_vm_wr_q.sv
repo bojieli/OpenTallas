@@ -10,7 +10,7 @@
 //
 // Address contract (fixed, no arbitration): SM k writes ONLY bank k.  Result (SM k, row r, slot p < P) is the FP32 word
 //     VM word  W = 64*(base_row + p*stride_row + r[11:3]) + 8*k + r[2:0]
-//     sector   = {mirror, mirror ? 2'b00 : QUAD, row10 = base_row + p*stride_row + r[11:3], bank3 = k}, lane r[2:0]
+//     sector   = {mirror, mirror ? 2'b00 : quad, row10 = base_row + p*stride_row + r[11:3], bank3 = k}, lane r[2:0]
 // i.e. the compiler interleaves output rows over the 8 SMs in blocks of 8 (global row g -> SM g[5:3], r = {g>>6, g[2:0]}),
 // so every slot vector is contiguous in VM (the x-load reads it as base + p*stride + i) and no two SMs ever share a bank.
 // One masked single-word write per (row, slot): data = the word replicated on all 8 lanes, mask = 1 << r[2:0].
@@ -32,12 +32,13 @@
 // reaches the host status join through the descriptor target's tgt_fault (no separate OR tile; participation per target).
 // =====================================================================================================================
 module ot_hbm_sm_vm_wr_q #(
-    parameter integer QUAD  = 0,     // quadrant id strap value carried in non-mirror sectors (SW0 SE1 NW2 NE3)
     parameter integer DEPTH = 4,     // rows buffered per SM (the SM retires SUB=4 rows back to back)
-    parameter integer MUT   = 0      // bench mutants: 1 wrong row (stride ignored), 2 wrong phase (one edge late)
+    parameter integer MUT   = 0      // bench mutants: 1 wrong row (stride ignored), 2 wrong phase (one edge late), 3 quad strap ignored
 ) (
     input  wire          clk,
     input  wire          rst_n,
+    input  wire [1:0]    quad,              // die strap (H-SM DEDUPE 2026-10-16, was parameter QUAD): quadrant id carried in
+                                            // non-mirror sectors (SW0 SE1 NW2 NE3); one hardened master for all 4 instances
     input  wire [7:0]    rv,
     input  wire [95:0]   rrow,
     input  wire [2047:0] rdata,
@@ -49,7 +50,7 @@ module ot_hbm_sm_vm_wr_q #(
     output reg           busy,
     output reg           fault
 );
-    initial if (DEPTH < 1 || DEPTH > 16 || QUAD < 0 || QUAD > 3) $fatal(1, "ot_hbm_sm_vm_wr_q: DEPTH 1..16, QUAD 0..3");
+    initial if (DEPTH < 1 || DEPTH > 16) $fatal(1, "ot_hbm_sm_vm_wr_q: DEPTH 1..16");
     localparam integer AW = (DEPTH > 1) ? $clog2(DEPTH) : 1;
     function automatic [31:0] rb(input [31:0] x, input en);     // to_bf16 (RNE) as a BF16-valued FP32 word
         reg [31:0] r;
@@ -59,26 +60,31 @@ module ot_hbm_sm_vm_wr_q #(
             else begin r = x + 32'h7FFF + {31'd0, x[16]}; rb = {r[31:16], 16'd0}; end
         end
     endfunction
+    // ---------------- local reset release at the rst_n pin (H-SM 2026-10-16, native capture rule): rst_n lands on ONE
+    // async-clear flop at the pin face (assert async, release synchronous, one edge later); every other flop clears
+    // from rst_q (reg->recovery inside the tile).  No operation edge changes.
+    reg rst_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
     // ---------------- pin flops ----------------
     reg [7:0] rv_q; reg [95:0] rrow_q; reg [2047:0] rdata_q;
-    reg cv_q; reg [25:0] cmd_q; reg [7:0] smf_q, sms_q;
-    always @(posedge clk) begin rrow_q <= rrow; rdata_q <= rdata; cmd_q <= cmd; end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rv_q <= 8'd0; cv_q <= 1'b0; smf_q <= 8'd0; sms_q <= 8'd0; end
+    reg cv_q; reg [25:0] cmd_q; reg [7:0] smf_q, sms_q; reg [1:0] quad_q;
+    always @(posedge clk) begin rrow_q <= rrow; rdata_q <= rdata; cmd_q <= cmd; quad_q <= quad; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin rv_q <= 8'd0; cv_q <= 1'b0; smf_q <= 8'd0; sms_q <= 8'd0; end
         else begin rv_q <= rv; cv_q <= cmd_v; smf_q <= sm_fault; sms_q <= sm_sched_fault; end
     // ---------------- descriptor ----------------
     reg d_v, d_fmt, d_mir; reg [3:0] d_p; reg [9:0] d_base, d_stride;
     wire [7:0] sm_busy, lane_fault;
     reg cmd_fault;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin d_v <= 1'b0; d_fmt <= 1'b0; d_mir <= 1'b0; d_p <= 4'd0; d_base <= 10'd0; d_stride <= 10'd0; cmd_fault <= 1'b0; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin d_v <= 1'b0; d_fmt <= 1'b0; d_mir <= 1'b0; d_p <= 4'd0; d_base <= 10'd0; d_stride <= 10'd0; cmd_fault <= 1'b0; end
         else if (cv_q) begin
             if (busy || (|rv_q) || cmd_q[23:20] == 4'd0 || cmd_q[23:20] > 4'd8) cmd_fault <= 1'b1;
             d_v <= 1'b1; d_base <= cmd_q[9:0]; d_stride <= cmd_q[19:10]; d_p <= cmd_q[23:20];
             d_mir <= cmd_q[24]; d_fmt <= cmd_q[25];
         end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin busy <= 1'b0; fault <= 1'b0; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin busy <= 1'b0; fault <= 1'b0; end
         else begin busy <= |sm_busy || |rv_q; fault <= fault | cmd_fault | (|lane_fault) | (|smf_q) | (|sms_q); end
     // ---------------- per-SM serial servers (statically indexed) ----------------
     genvar k;
@@ -100,8 +106,8 @@ module ot_hbm_sm_vm_wr_q #(
         wire [31:0] col = hd[32*ps[2:0] +: 32];
         assign sm_busy[k] = emit || o_v;
         assign lane_fault[k] = flt;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin wp <= '0; rp <= '0; cnt <= '0; ps <= 4'd0; acc <= 11'd0; flt <= 1'b0; o_v <= 1'b0; l_v <= 1'b0; end
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) begin wp <= '0; rp <= '0; cnt <= '0; ps <= 4'd0; acc <= 11'd0; flt <= 1'b0; o_v <= 1'b0; l_v <= 1'b0; end
             else begin
                 if (push && !d_v) flt <= 1'b1;
                 if (push && full && !pop) flt <= 1'b1;
@@ -115,7 +121,7 @@ module ot_hbm_sm_vm_wr_q #(
             end
         always @(posedge clk) begin
             if (push && !(full && !pop)) fq[wp] <= {rrow_q[12*k +: 12], rdata_q[256*k +: 256]};
-            o_sec <= {d_mir, d_mir ? 2'b00 : 2'(QUAD), row[9:0], 3'(k)};
+            o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(k)};
             o_w <= rb(col, d_fmt);
             o_m <= 8'd1 << hr[2:0];
             l_sec <= o_sec; l_w <= o_w; l_m <= o_m;

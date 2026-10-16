@@ -1,0 +1,24 @@
+{
+ "schema": "s81-sstn-x2-retire-v1",
+ "date": "2026-10-16T10:20-07:00",
+ "decision": "RETIRE dsfd_sstn_*_x2 (5 masters, 1,119 c26b instances). Adopt the CLOSED same-envelope split ot_s81_sstn_base566 + ot_s81_sstn_payload536 for every role.",
+ "authority": "S-NET+FILL stream technical call. It follows the coordinator verdict 10-16 (x2 structurally unroutable, no third shape retry) and the owner direction CLOSURE FIRST (prefer the closed split if function allows).",
+ "evidence_x2_fail": {
+  "jobs_failed_GRT0116": ["s81net_sstn_e0c0_x2-x2nh-fdd7273b9", "s81net_sstn_e0c0si_x2-x2nh-fdd7273b9", "s81net_sstn_e0c0sinf_x2-x2nh-fdd7273b9",
+                          "s81net_sstn_e0e1c0c1si_x2-x2nh-803a44c04", "s81net_sstn_e0e1c0c1sinf_x2-x2nh-803a44c04",
+                          "s81net_sstn_e0c0_x2-x1-b4d4457bc", "s81net_sstn_e0c0si_x2-x1-7e7e1522a", "s81net_sstn_e0c0sinf_x2-x1-5fcdb3f0b",
+                          "s81net_sstn_e0e1c0c1si_x2-x1-93b225846", "s81net_sstn_e0e1c0c1sinf_x2-x1-485d74194"],
+  "overflow_e0c0_x2nh": "6,743 GRT overflow (M2 1616 / M3 2392 / M4 1698 / M5 1037), concentrated in the N-face pin-flop band",
+  "image_looked": "x1 gate density.png (s81net_sstn_e0c0si_x2): a saturated red band (>=1.0) along the N face and a bottom red strip, with the interior empty. About 1,100 pins and their pin flops are packed into one 172.8-um face, so the cause is structural: the face/pin plan, not the shape."
+ },
+ "replacement": {
+  "parent_outline_um": [172.8, 30.24],
+  "base": {"master": "ot_s81_sstn_base566", "outline_um": [84.24, 30.24], "job": "s81_sstn_base566-split1-9cb51937c", "closure": "TT +329.25 / FF +24.82 / DRC 0", "native": "launch 189.6 / capture 167.2 / spread 14.5 PASS", "record_main": "5eca7715b"},
+  "payload": {"master": "ot_s81_sstn_payload536", "outline_um": [86.4, 25.92], "job": "s81_sstn_payload536-split1-9cb51937c", "closure": "TT +344.20 / FF +26.61 / DRC 0", "native": "launch 173.8 / capture 128.1 / spread 8.8 PASS", "record_main": "2884d5a6a"},
+  "function": "results/arch/native_pin_audit_snetfill_1015/sstn_split_1016 (parent_map.json: 5 roles map to base straps + payload; exact pass + payload bit/edge/reset + base control benches). 1 production edge, 0 extra edges.",
+  "images_looked": "sstn_split_final_1016/base566_floorplan.png (straight N/S edge bands, sparse interior) and payload536_density.png (bottom input-hold band, routed and closed)",
+  "same_envelope": "same 172.8 x 30.24 slot: no home change. The 56.16-sq service536 rehoming (1,106 conflicts) is NOT needed for these instances."
+ },
+ "open_owner_S-DIE": "Generator integration: b2c16e884 (claude/sdie-0600, default OFF) goes to main and is turned ON. Parent join: separate ck_base/ck_payload clock delivery, per-instance straps, and a port-bind check of the actual die.v.",
+ "x2_kits_status": "the x2 kits/specs on claude/el1015-snetfill-2215 are NOT merged to main and are superseded"
+}

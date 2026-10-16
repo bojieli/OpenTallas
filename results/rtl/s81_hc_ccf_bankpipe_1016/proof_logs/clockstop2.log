@@ -1,0 +1,5 @@
+CCF_DIFF cycle=64 mode=2 reset=1 fvnew=00 fvexpected=00
+CCF_DIFF cycle=65 mode=2 reset=1 fvnew=00 fvexpected=00
+CCF_DIFF cycle=66 mode=2 reset=1 fvnew=00 fvexpected=00
+FATAL: rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv:67: CCF_BANKPIPE_FAIL checks=2379 mismatches=2336 mode=2 seed=17
+       Time: 2400501  Scope: tb_ccf_bankpipe
