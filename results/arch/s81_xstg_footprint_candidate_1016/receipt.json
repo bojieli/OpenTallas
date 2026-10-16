@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81.xstg_footprint_source_candidate.v1",
- "status": "OFF_DEFAULT_SOURCE_CANDIDATE_NO_LIVE_GEN_ADOPTION",
+ "status": "HELD_SIZE_FIX_ALONE_INVALID_MY_NO_SYMMETRY_NO_PARENT_TARGET_NATIVE_PROOF",
  "measured_source": "17b13fb0637869d53580a1084bdd250d18828d9b",
  "observed_master": "dsfd_xstg_515",
  "actual_view": {
@@ -61,5 +61,89 @@
  "live_jobs_unchanged": [
   "c26b source17b13fb06",
   "nl0030_26n source2e442504c"
- ]
+ ],
+ "orientation_blocker": {
+  "actual_lef_symmetry": [],
+  "legal_declared_orientations": [
+   "R0"
+  ],
+  "replay_orientations": [
+   "MY",
+   "MY"
+  ],
+  "actual_R0_data_faces": {
+   "i": "E/M4",
+   "o": "W/M4"
+  },
+  "actual_clock_pins": {
+   "ck": [
+    21.069,
+    0.072,
+    "S",
+    "M3"
+   ],
+   "cw": [
+    54.54,
+    0.096,
+    "S",
+    "M5"
+   ]
+  },
+  "no_header_waiver": true
+ },
+ "source_only_replay": {
+  "verdict": "EXIT0_PRE_FINALIZE_DIAGNOSTIC",
+  "base_source": "17b13fb0637869d53580a1084bdd250d18828d9b",
+  "overlay_commit": "e506b0fe8",
+  "overlay_generator_sha256": "ed4f08e4200c1fd5ed27528db9f44524836c9f0b56618430dec2c089246470dc",
+  "local_artifacts": "/home/ubuntu/artifacts/s81-xstg-replay-0404",
+  "actual_new_homes": [
+   {
+    "instance": "xsix_SW",
+    "at_um": [
+     13627.872,
+     1514.16
+    ]
+   },
+   {
+    "instance": "xsco_SW",
+    "at_um": [
+     13627.872,
+     23870.16
+    ]
+   }
+  ],
+  "declared_box_overlaps": 0,
+  "personally_viewed": "before_after_actual_replay.png",
+  "unqualified": [
+   "MY not allowed by actual LEF declaration",
+   "pre-finalize/pre-global-clock-reset only",
+   "no actual native selector/collector target pin views"
+  ]
+ },
+ "R0_topology_screen": {
+  "personally_viewed": "r0_topology_screen.png",
+  "samehome_U": {
+   "max_output_polyline_um": [
+    664.296,
+    575.736
+   ],
+   "return_slit_um": 4.752,
+   "optimistic_M5_fraction": 5.2020202,
+   "extra_ix_obstacle": "179 bits cross f_ixSW_16"
+  },
+  "coherent_rehome": {
+   "max_output_polyline_um": [
+    450.83988349514357,
+    470.8199999999906
+   ],
+   "return_road_um": 64.8,
+   "optimistic_fraction_before_PG": 0.38148148,
+   "ix_opaque_hit_bits": 0,
+   "co_opaque_hit_bits": 234,
+   "co_obstacle": "f_coSW_60; cannot remove without all its own incident/cycle/clock proof"
+  },
+  "planned_target_pin_band_fraction": 1.0,
+  "decision": "Neither alternative qualifies; actual parent target pin hardening/access and full incident proofs required. No across-macro assumption."
+ }
 }
