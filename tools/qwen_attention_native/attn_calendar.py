@@ -113,7 +113,7 @@ def hub(z, lmax):
 
 
 # ---- Q-ATTN-RATE 2026-10-15: 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16, 2 x ot_qwen_tp8_pv_wide_pair) ----
-W16_FIRST = 20          # pair cycle of the q = 0 arrival: request cycle 1 + V_EXT 16 + ER3 3
+W16_FIRST = 22          # pair cycle of the q = 0 arrival: start pin reg 1 + request cycle 1 + request pin reg 1 + V_EXT 16 + ER3 3
 W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 28   # last arrival -> TRA; in-bank tree 16 -> 1; column join 24 behind cmd reg + column pin regs (+4)
 W16_PV_AFTER_EXP = 188   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
 

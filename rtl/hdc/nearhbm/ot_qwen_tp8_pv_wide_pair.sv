@@ -35,7 +35,9 @@ module ot_qwen_tp8_pv_wide_pair #(
  ot_qwen_tp8_pv_wide_ctl #(.PAIR(PAIR),.FIRST_INPUT_AGE(FIRST_INPUT_AGE)) u_ctl(.clk(col_clk[32]),.rst_n(rst_n),.start(start),
   .context_len(context_len),.epoch(epoch),.in_valid(in_valid),.in_t(in_t),.in_epoch(in_epoch),
   .req_valid(req_valid),.req_t(req_t),.cmd(cmd),.col_valid(cv),.col_fault(cf),
-  .out_valid(out_valid),.out_epoch(out_epoch),.fault(ctl_fault),.busy(busy),.out_age(out_age));
+  .out_epoch(out_epoch),.fault(ctl_fault),.busy(busy),.out_age(out_age));
+ // the pair output pulse is column 0's own pinned y_valid; the control tile checks every column against its slot
+ assign out_valid=cv[0];
  genvar s;
  generate for(s=0;s<32;s=s+1)begin:g_col
   localparam integer H=s/8,GS=s%8;
@@ -137,84 +139,98 @@ module ot_qwen_tp8_pv_col #(parameter integer MUT=0, J_LAT=7)(
 endmodule
 
 // Pair control tile: calendar walk, V requests, arrival identity per port, the column command word, output check.
+// Every port is registered at the pin: inputs (start/context/epoch, arrival identities, column flags) one edge in,
+// outputs (V requests, command word, flags, out_age) one edge out. Internal age 'pa' counts from the registered start.
 module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
  input wire clk,rst_n,start,input wire[13:0] context_len,input wire[15:0] epoch,
  input wire[7:0] in_valid,input wire[111:0] in_t,input wire[127:0] in_epoch,
- output wire[7:0] req_valid,output wire[111:0] req_t,
+ output reg[7:0] req_valid,output reg[111:0] req_t,
  output reg[59:0] cmd,input wire[31:0] col_valid,input wire[31:0] col_fault,
- output wire out_valid,output wire[15:0] out_epoch,output reg fault,output wire busy,output wire[15:0] out_age
+ output reg[15:0] out_epoch,output reg fault,output reg busy,output reg[15:0] out_age
 );
  localparam IDLE=0,FEED=1,DRAIN=2,TRA=3,TRB=4,TRADD=5,TRDRAIN=6,JOIN=7;
- localparam integer COL_LAT=3+3*7+3+1;          // ctl JOIN -> column y_valid: cmd reg, column pin reg, jrun start, J_OUT 24, y reg
- reg[3:0] state;reg[15:0] age;reg[15:0] ep;reg[13:0] lim;reg[15:0] nq;
+ localparam integer FIRSTI=FIRST_INPUT_AGE+1;      // + the request pin register: arrival pa of q = 0
+ localparam integer COL_LAT=3+3*7+3+1;          // JOIN -> column y_valid: cmd reg, column pin reg, jrun start, J_OUT 24, y reg
+ // ---- input pin registers ----
+ reg start_r;reg[13:0] ctx_r;reg[15:0] epoch_r;reg[7:0] iv_r;reg[111:0] it_r;reg[127:0] ie_r;reg[31:0] cv_r,cf_r;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin start_r<=0;iv_r<=0;cv_r<=0;cf_r<=0;end
+  else begin start_r<=start;iv_r<=in_valid;cv_r<=col_valid;cf_r<=col_fault;end
+ always @(posedge clk)begin ctx_r<=context_len;epoch_r<=epoch;it_r<=in_t;ie_r<=in_epoch;end
+ reg[3:0] state;reg[15:0] age;reg[15:0] ep;reg[13:0] lim;reg[15:0] nq;reg flt;
  reg[4:0] nodes;reg[2:0] ti;reg[3:0] drain_left,reduce_left;reg[5:0] wage;
- wire[15:0] pa=age+16'd1;                         // cycles since the start cycle
- wire[15:0] q=pa-16'(FIRST_INPUT_AGE);
- wire in_window=(state==FEED)&&pa>=16'(FIRST_INPUT_AGE)&&q<nq;
- wire[11:0] r=q[15:4];wire[3:0] a=q[3:0];
- wire[15:0] qn=q+16'd1;wire next_window=(state==FEED)&&pa+16'd1>=16'(FIRST_INPUT_AGE)&&qn<nq;
+ wire[15:0] pa=age+16'd1;                         // cycles since the registered start
+ // checks: the registered arrival seen at pa arrived at pa-1, i.e. q = pa - 1 - FIRSTI
+ wire[15:0] qc=pa-16'd1-16'(FIRSTI);
+ wire chk_window=(state!=IDLE)&&pa>=16'(FIRSTI+1)&&qc<nq;
+ wire[11:0] rc=qc[15:4];wire[3:0] ac=qc[3:0];
+ // slice takes: the command word for the arrival at pa+1 (cmd reg + column pin reg = 2 edges, payload 1 edge)
+ wire[15:0] qn=pa+16'd1-16'(FIRSTI);
+ wire next_window=(state==FEED)&&pa+16'd1>=16'(FIRSTI)&&qn<nq;
  wire[11:0] rn=qn[15:4];wire[3:0] an=qn[3:0];
- // expected arrival per bank, mapped onto the V port it uses (port 4*(n&1)+(l&3))
  reg[7:0] exp_take,pexp_v;reg[13:0] pexp_t[0:7];
  integer l;
  always @*begin
   exp_take=0;pexp_v=0;
   for(l=0;l<8;l=l+1)pexp_t[l]=0;
   for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(r)-(l>>2);
-   automatic integer t=256*n+128*PAIR+16*l+int'(a);
+   automatic integer n=int'(rc)-(l>>2);
+   automatic integer t=256*n+128*PAIR+16*l+int'(ac);
    automatic integer port=4*(n&1)+(l&3);
-   if(in_window&&n>=0&&t<int'(lim))begin pexp_v[port]=1'b1;pexp_t[port]=14'(t);end
- end
-  // the slice take of the NEXT arrival cycle: the command word is registered here and at the column pin (2 edges),
-  // the V/e payload only at the column pin (1 edge), so the command leads its data by one cycle
+   if(chk_window&&n>=0&&t<int'(lim))begin pexp_v[port]=1'b1;pexp_t[port]=14'(t);end
+  end
   for(l=0;l<8;l=l+1)begin
    automatic integer n=int'(rn)-(l>>2);
    automatic integer t=256*n+128*PAIR+16*l+int'(an);
    if(next_window&&n>=0&&t<int'(lim))exp_take[l]=1'b1;
   end
  end
- ot_qwen_tp8_vrow_wide #(.PAIR(PAIR)) u_req(.clk(clk),.rst_n(rst_n),.start(start),.context_len(context_len),
-  .req_valid(req_valid),.req_t(req_t),.fault());
+ wire[7:0] rq;wire[111:0] rqt;
+ ot_qwen_tp8_vrow_wide #(.PAIR(PAIR)) u_req(.clk(clk),.rst_n(rst_n),.start(start_r),.context_len(ctx_r),
+  .req_valid(rq),.req_t(rqt),.fault());
+ always @(posedge clk or negedge rst_n)if(!rst_n)req_valid<=0;else req_valid<=rq;
+ always @(posedge clk)req_t<=rqt;
  reg cbad;integer k;
+ wire out_slot=(state==JOIN)&&wage==6'(COL_LAT+1);
  always @*begin
   cbad=0;
-  if(in_valid!=(pexp_v&{8{state==FEED}}))cbad=1;
-  for(k=0;k<8;k=k+1)if(in_valid[k]&&(in_t[14*k+:14]!=pexp_t[k]||in_epoch[16*k+:16]!=ep))cbad=1;
-  if(|col_fault)cbad=1;
-  if(col_valid!={32{col_valid[0]}})cbad=1;
-  if(col_valid[0]!=out_valid_slot)cbad=1;
+  if(state!=IDLE&&iv_r!=pexp_v)cbad=1;
+  for(k=0;k<8;k=k+1)if(iv_r[k]&&(it_r[14*k+:14]!=pexp_t[k]||ie_r[16*k+:16]!=ep))cbad=1;
+  if(|cf_r)cbad=1;
+  if(cv_r!={32{cv_r[0]}})cbad=1;
+  if(state!=IDLE&&cv_r[0]!=out_slot)cbad=1;
  end
- assign busy=state!=IDLE;assign out_epoch=ep;
- // static output age (pair cycles after the start cycle): FIRST + NQ - 1 (last arrival) + 13 (drain) + 73 (tree)
- // + COL_LAT (column join behind its pin registers); the compiler calendar (P0/P1) must equal it
- assign out_age=16'(FIRST_INPUT_AGE)+nq-16'd1+16'd13+16'd73+16'(COL_LAT);
- wire out_valid_slot=(state==JOIN)&&wage==6'(COL_LAT);
- assign out_valid=out_valid_slot&&!fault;
  // column command word, registered at this tile's output pin (the column registers it again at its input pin)
  wire n0_lo=(rn==0),n0_hi=(rn==1);
  always @(posedge clk or negedge rst_n)
   if(!rst_n)cmd<=0;
   else begin
    cmd<=0;
-   cmd[0]<=rn[0];cmd[8:1]<=exp_take&{8{!fault}};cmd[9]<=n0_lo;cmd[10]<=n0_hi;cmd[14:11]<=an;
+   cmd[0]<=rn[0];cmd[8:1]<=exp_take&{8{!flt}};cmd[9]<=n0_lo;cmd[10]<=n0_hi;cmd[14:11]<=an;
    cmd[15]<=(state==FEED)&&pa>=1&&pa<=16;cmd[19:16]<=4'(pa-1);
    cmd[20]<=(state==TRA)||(state==TRB);cmd[24:21]<={ti,1'b0}+4'(state==TRB);
    cmd[25]<=state==TRADD;cmd[26]<=state==TRB;cmd[27]<=nodes==2;cmd[30:28]<=ti;
    cmd[31]<=(state==JOIN)&&wage==0;
   end
+ // output pin registers: flags and the static output age (service cycles after start_pv: + the start pin register)
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin fault<=0;busy<=0;out_age<=0;out_epoch<=0;end
+  else begin
+   fault<=flt;busy<=state!=IDLE;out_epoch<=ep;
+   out_age<=16'd1+16'(FIRSTI)+nq-16'd1+16'd13+16'd73+16'(COL_LAT);
+  end
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin state<=IDLE;fault<=0;age<=0;ep<=0;lim<=0;nq<=0;nodes<=0;ti<=0;drain_left<=0;reduce_left<=0;wage<=0;end
-  else if((start&&state!=IDLE)||(state!=IDLE&&cbad))begin state<=IDLE;fault<=1;end
+  if(!rst_n)begin state<=IDLE;flt<=0;age<=0;ep<=0;lim<=0;nq<=0;nodes<=0;ti<=0;drain_left<=0;reduce_left<=0;wage<=0;end
+  else if((start_r&&state!=IDLE)||(state!=IDLE&&cbad))begin state<=IDLE;flt<=1;end
   else begin
    if(state!=IDLE)age<=age+1'b1;
    case(state)
-    IDLE:if(start)begin
-     ep<=epoch;lim<=context_len;age<=0;
-     nq<=(context_len>14'(128*PAIR))?16'(16*(((int'(context_len)-128*PAIR+255)>>8)+1)):16'd0;
-     if(context_len==0||context_len>8192)fault<=1;else state<=FEED;
+    IDLE:if(start_r)begin
+     ep<=epoch_r;lim<=ctx_r;age<=0;
+     nq<=(ctx_r>14'(128*PAIR))?16'(16*(((int'(ctx_r)-128*PAIR+255)>>8)+1)):16'd0;
+     if(ctx_r==0||ctx_r>8192)flt<=1;else state<=FEED;
     end
-    FEED:if(pa>=16'(FIRST_INPUT_AGE)+nq-16'd1&&pa>=16'd16)begin state<=DRAIN;drain_left<=12;end
+    FEED:if(pa>=16'(FIRSTI)+nq-16'd1&&pa>=16'd16)begin state<=DRAIN;drain_left<=12;end
     DRAIN:begin
      drain_left<=drain_left-1'b1;
      if(drain_left<=1)begin nodes<=16;ti<=0;state<=TRA;end
@@ -228,7 +244,7 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer PAIR=0,FIRST_INPUT_AGE=20)(
       if(nodes==2)begin state<=JOIN;wage<=0;end else begin nodes<=nodes/2;ti<=0;state<=TRA;end
      end
     end
-    JOIN:begin wage<=wage+1'b1;if(wage==6'(COL_LAT))state<=IDLE;end
+    JOIN:begin wage<=wage+1'b1;if(wage==6'(COL_LAT+1))state<=IDLE;end
     default:;
    endcase
   end
