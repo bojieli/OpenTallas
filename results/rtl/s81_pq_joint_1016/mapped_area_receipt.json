@@ -1,0 +1,60 @@
+{
+  "ot_s81_pq_control_joint": {
+    "source_candidate_sha256": "56994b4d5744d5fecbf93759e3d2746714108c8de16161b5a6671d486b717905",
+    "scope": "Actual ORFS mapped synthesis only; no body/pins/CTS/route or native qualification",
+    "counts": {
+      "std_cell": 42917,
+      "macro": 2
+    },
+    "area_um2": {
+      "std_cell": 6228.692639997269,
+      "macro": 4789.38816
+    },
+    "macros": [
+      {
+        "instance": "u_calendar.u_action",
+        "master": "ot_rom_4096x72_m8",
+        "width_um": 38.04,
+        "height_um": 62.952
+      },
+      {
+        "instance": "u_calendar.u_time",
+        "master": "ot_rom_4096x72_m8",
+        "width_um": 38.04,
+        "height_um": 62.952
+      }
+    ],
+    "odb_sha256": "42657d34462940f02bcecb2cbe6fc19d3baf9f4427b2fab0ef4f112c449e734b"
+  },
+  "ot_s81_pq_lane_joint": {
+    "source_candidate_sha256": "56994b4d5744d5fecbf93759e3d2746714108c8de16161b5a6671d486b717905",
+    "scope": "Actual ORFS mapped synthesis only; no body/pins/CTS/route or native qualification",
+    "counts": {
+      "std_cell": 5169
+    },
+    "area_um2": {
+      "std_cell": 620.014500000037
+    },
+    "macros": [],
+    "odb_sha256": "182e8bbc02d67d1bb410f5e7db888f724c6563f97af59a2e406d334345a72ff7"
+  },
+  "_provenance": {
+    "run_directory": "/srv/opentallas-scratch/codex/s81-pq-parent-0830/mapped_area",
+    "host": "ot-epyc4",
+    "otrun_synthesis_unit": "oth-ubuntu-96313-1792168186",
+    "otrun_measure_unit": "oth-ubuntu-117183-1792168362",
+    "image": "openroad/orfs:asap7lock",
+    "mapping": "Actual ORFS make synth, standard RVT, stock SS mapping corner; area only, no timing claim",
+    "physical_transform": "Only simulation-only ROM INSTANCE/VIAMAP parameter overrides removed for physical synthesis; original mapped memory blackbox/LEF/Liberty from actual v2 macro. Exact candidate simulation uses original image parameters and real functional model.",
+    "rom_lef_sha256": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+    "rom_liberty_sha256": "37a56b32f239ec2c943bf640131f67d0d2fd152a73a32da608e0551a12647336",
+    "not_qualified": [
+      "native pins",
+      "clock trees",
+      "body assignment",
+      "routing",
+      "actual static calendar",
+      "full token"
+    ]
+  }
+}
