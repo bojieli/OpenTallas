@@ -25,18 +25,18 @@
   "N": [],
   "S": [],
   "W": [
-   "ck",
-   "rst",
    "u_v",
    "u_row",
    "u_vtag",
-   "desc_rq",
-   "desc_row",
+   "ck",
+   "rst",
    "dtag",
    "vtag",
    "fault"
   ],
   "E": [
+   "desc_row",
+   "desc_rq",
    "rq_v",
    "rq_row"
   ]
@@ -49,14 +49,17 @@
   "pin_h": "M4",
   "pin_min_tracks": 1,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
- "why_floorplan": "MIX4 flat parent VM request port of quarter 0 (descriptor injection, SUP=0): at the slot E face on the quarter's VM rq band (E face toward the VM W face), shell-control requests from the W",
+ "why_floorplan": "MIX4 flat parent VM request port of quarter 0 (descriptor injection, SUP=0): at the slot E face on the quarter's VM rq band (E face toward the VM W face), shell-control requests from the W | p17b: native capture FAIL at desc_rq (S 122.8 + R 86 = 209/212 ps > 190: the W-face scalar fanned out to the E output cluster); desc_rq/desc_row moved to the E face beside rq_row[0..13] (the descriptor injection mux), full-face pin ranges on both faces",
  "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: new tile of the MIX4 flat parent (dsfd_engram_mix4_flat 1b429b606): top-level glue hardened as tiles so the parent is wires-only",
  "job": {
   "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
   "branch": "claude/s81-mix4-parent-0600",
-  "tag": "p17",
+  "tag": "p17b",
   "purpose": "S81 Engram MIX4 flat parent request port ot_s81_mx4_rq (VM_LAT 17 production, SUP 0)",
   "benches": [
    {
@@ -110,8 +113,11 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "reroute_reason": {
-  "kind": "rtl_change",
-  "reason": "new master ot_s81_mx4_rq VM_LAT 17 SUP 0 (MIX4 flat parent tile)"
+  "kind": "pin_register",
+  "source": "results/arch/s81_mix4_banded_1016/native_rq_audit_1016.json",
+  "cell": "ot_s81_mx4_rq",
+  "capture_ps": 208.9,
+  "fix": "desc_rq / desc_row pins moved from the W face to the E face next to the rq_row[0..13] / rq_v[0] output flops they select into (the descriptor injection mux), so the scalar no longer crosses the 43.2 um tile to the E cluster; explicit full-face pin ranges (pin_balance) on W and E; same RTL, 0 cycles"
  },
  "defines": [
   "DSFD_ENGRAM_STATIC_ISSUE"
@@ -119,5 +125,55 @@
  "pin_regs": {
   "enable": false,
   "reason": "the RTL registers every port at the tile boundary (input and output registers); flow pin stages would add an unmodelled cycle to the fixed calendar"
+ },
+ "pin_ranges": {
+  "u_v": [
+   0.5,
+   2.5
+  ],
+  "u_row": [
+   3.0,
+   33.0
+  ],
+  "u_vtag": [
+   33.5,
+   34.5
+  ],
+  "ck": [
+   35.0,
+   36.0
+  ],
+  "rst": [
+   36.5,
+   37.5
+  ],
+  "dtag": [
+   38.0,
+   39.0
+  ],
+  "vtag": [
+   39.5,
+   40.5
+  ],
+  "fault": [
+   41.0,
+   42.0
+  ],
+  "desc_row": [
+   0.5,
+   8.0
+  ],
+  "desc_rq": [
+   8.5,
+   9.5
+  ],
+  "rq_v": [
+   10.0,
+   12.0
+  ],
+  "rq_row": [
+   12.5,
+   42.5
+  ]
  }
 }

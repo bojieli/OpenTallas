@@ -1,0 +1,194 @@
+{
+ "name": "qfd_sys_face",
+ "top": "qfd_sys_face",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_sys_face.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
+  "rtl/qwen_sys/context_transport_20261014/qfd_program_record_port.sv",
+  "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "params": {},
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 216.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_rom",
+   "at": [
+    241.92,
+    77.76
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "fwd_epoch",
+   "admit_ready",
+   "cal_seg",
+   "cal_start",
+   "cfg_addr",
+   "cfg_data",
+   "cfg_rx_we",
+   "cfg_tx_we",
+   "collective_busy",
+   "collective_drained",
+   "crom_fault",
+   "d2d_epoch_abort",
+   "d2d_fault",
+   "emb_rx_slot",
+   "emb_rx_v",
+   "execution_active",
+   "prog_auth_slot",
+   "prog_context_slot",
+   "prog_rx_v",
+   "prog_tx_observed_v",
+   "prog_tx_record",
+   "prog_witness_slot",
+   "result_cause",
+   "result_cycles",
+   "result_done",
+   "result_fault",
+   "result_gen",
+   "result_tag",
+   "result_token",
+   "result_v",
+   "result_value",
+   "status_epoch16",
+   "vm_drained",
+   "rx_payload"
+  ],
+  "S": [
+   "io_cmd_free",
+   "io_fault",
+   "io_shared_fault",
+   "seq_cfg_image_ready",
+   "seq_dc",
+   "seq_descriptor_obs",
+   "seq_dh",
+   "seq_program_obs",
+   "tt_command_stage",
+   "tt_layer_context_v",
+   "tt_native_pos",
+   "tt_native_tok",
+   "complete_slot",
+   "crom_fault_code",
+   "host_epoch",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_generation",
+   "host_tag",
+   "kv_word_index",
+   "kv_word_slot",
+   "native_fault",
+   "q_slot",
+   "q_slot_beat",
+   "visibility_slot",
+   "fault"
+  ],
+  "W": [
+   "res_issue_fault",
+   "tt_control_stores_ready",
+   "tt_fab",
+   "tt_kok",
+   "tt_kwd",
+   "tt_program_obs",
+   "tt_pw",
+   "emb_core_epoch",
+   "emb_expected_epoch",
+   "emb_expected_scale",
+   "emb_expected_slot",
+   "emb_expected_token",
+   "emb_expected_word",
+   "emb_fill_begin",
+   "emb_fill_epoch",
+   "emb_fill_token",
+   "emb_word_data",
+   "emb_word_epoch",
+   "emb_word_index",
+   "emb_word_scale",
+   "emb_word_token",
+   "emb_word_v"
+  ],
+  "E": []
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24
+ },
+ "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, Q-COMPUTE-DIE go 10-16): compute-die system face qfd_sys_face (Q-NETLIST ab5f73bcc/c9415e73d/3effaa228: config ROM ot_rom_4096x72_m8 boot + program replay, static T/L/E calendars, qfd_d2d_cal_seq, record port, embedding row RX, STATUS/RESULT, fab), CONTRACT v1.4 frame 302.4 x 216 um, one ck root. Recipe 3: every data input and output registered at its pin (+1 edge in, +1 edge out, pin_regs.json; the compiled calendar offsets absorb it). Synthesis-only RTL guard: the ROM instance drops its VIAMAP/INSTANCE parameters under SYNTHESIS (OpenROAD's netlist reader rejects instance parameters; the hard macro is content-independent), simulation unchanged. Pin FACES = the die tool's top-down q2o1 assignment (N D2D/record/STATUS face, S sequencer/TT/native59 face, W embedding-provider + TT pw face); 'fault' (absent from the die file: unloaded at die level, folded into fab inside) on S. Ports spread over each face; q2o2 face moves are a re-kit only.",
+ "slot_change_request": "none: CONTRACT.md v1.4 frame 302.4 x 216 (results/arch/qwen_split_compute_1014/CONTRACT.md:39); ROM macro against the pin-free E face.",
+ "job": {
+  "owner": "Claude:ELEM-CENSUS kit helper",
+  "branch": "claude/census-qkit-1016",
+  "tag": "ec1",
+  "cycles_added": 2,
+  "purpose": "Compute-die system face leaf, never kitted before (census 10-16). Bench = Q-NETLIST tb_qfd_sys_face on the production 36-layer START table (boot 54 records, PW 1024 / DW 8, 1,512 events exact, embedding row 64 + scale exact) with mutants 1-4 (T events late / embedding word index / PW replay skip / ...) that must FAIL.",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "rtl/qwen_split",
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "tools/qwen_split",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "sys_face_events_exact",
+    "cmd": "bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/exact 1 2 3 4",
+    "expect": "pass",
+    "pass_regex": "^SYS_FACE_PASS MUT=0 .*1512 events exact",
+    "min_count_regex": "^SYS_FACE_PASS MUT=0 .* (\\d+) events exact",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "sys_face_t_late_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "^SYS_FACE_FAIL MUT=1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "sys_face_emb_index_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "^SYS_FACE_FAIL MUT=2",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}

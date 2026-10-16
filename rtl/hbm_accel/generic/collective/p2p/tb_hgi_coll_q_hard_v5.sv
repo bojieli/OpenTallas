@@ -66,11 +66,11 @@ module tb_hgi_coll_q_hard_v5;
   .vm_rq(r_rq),.vm_rr(2056'd0),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
  ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),
-  .clk_issue({4{clk}}),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
+  .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
 `else
  ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),
-  .clk_issue({4{clk}}),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
+  .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
   .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
 `endif
   .cfg_v(cv),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),

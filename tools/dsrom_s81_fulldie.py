@@ -4063,6 +4063,29 @@ class Chains:
     def bus(self, bid, cls, bits, eps):
         self.B.append((bid, cls, bits, eps))
 
+    def _fallback_guard(self, name, target, planned, w, h, seen):
+        """Fail fast when the station fallback returns to a stop it already served: the displaced station cannot
+        re-anchor the chain (its hop exceeds the reach), so every later stop falls back again -- never finishes."""
+        key = round(target, 1)
+        seen[key] = seen.get(key, 0) + 1
+        if seen[key] < 2:
+            return
+        cx, cy = planned
+        fb = [f for f in self.m.get('station_fallback', []) if f.get('chain') == name]
+        block = sorted((abs(i_.x + i_.w / 2 - cx) + abs(i_.y + i_.h / 2 - cy), i_.name, getattr(i_, 'kind', '?'))
+                       for i_ in self.m.get('insts', [])
+                       if i_.x < cx + w / 2 + 200 and i_.x + i_.w > cx - w / 2 - 200
+                       and i_.y < cy + h / 2 + 200 and i_.y + i_.h > cy - h / 2 - 200)
+        kinds = {}
+        for _, _, k_ in block:
+            kinds[k_] = kinds.get(k_, 0) + 1
+        msg = (f'OT_STATION_FALLBACK_NO_PROGRESS station {name} s={key} planned ({cx:.1f}, {cy:.1f}) {w:.1f}x{h:.1f}: '
+               f'fallback {seen[key]}x at the same stop (displaced {[f["displaced_um"] for f in fb[-3:]]} um); '
+               f'blocking: {len(block)} instances within 200 um of the planned spot (by kind {kinds}), nearest '
+               f'{[n_ for _, n_, _ in block[:8]]} -- give this chain a free street / spot, the fallback cannot')
+        print(msg, file=sys.stderr, flush=True)
+        raise RuntimeError(msg)
+
     def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None, force_horiz=False):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
@@ -4089,7 +4112,13 @@ class Chains:
         out, pos, cur = [], 0.0, src
         end = path[-1]
         fi = 0
+        # PROGRESS GUARD (ROOT 2026-10-16; S-DIE v3i3/v3i4 GEN re-placed one station >4,000 times, drifting 10 mm): a
+        # chain needs at most ~L/step stations plus its forced stops; the fallback may place a stop's station once
+        fb_seen, max_stn = {}, int(L / 100.0) + len(stops) + 32
         while True:
+            if len(out) > max_stn:
+                raise RuntimeError(f'OT_CHAIN_NO_PROGRESS chain {name}: {len(out)} stations > bound {max_stn} for '
+                                   f'{L:.0f} um (last at s={pos:.0f}, cur={tuple(round(v, 1) for v in cur)}, end={end})')
             nxt = stops[fi] if fi < len(stops) else None
             R_ = reach or FWD_REACH
             if nxt is None and _mh(cur, end) <= R_ - 30.0 and L - pos <= R_ - 30.0:
@@ -4159,6 +4188,7 @@ class Chains:
                             at=[round(placed[0], 1), round(placed[1], 1)],
                             displaced_um=round(abs(placed[0] - cx) + abs(placed[1] - cy), 1)))
                         print('OT_STATION_FALLBACK', json.dumps(self.m['station_fallback'][-1]), file=sys.stderr, flush=True)
+                        self._fallback_guard(name, target, (cx, cy), w, h, fb_seen)
                         break
             if placed is None:
                 print('OT_CHAIN_NO_SPOT', name, [(round(p_[0], 1), round(p_[1], 1)) for p_ in path], file=sys.stderr, flush=True)

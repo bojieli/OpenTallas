@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/dsfd_capt_status_dual_split1016b/clock_entry.sdc
