@@ -67,7 +67,6 @@
     "clock-audit-e3.log": "fdd2e16c0bac5c42fb6a815425db45bd104bd176e305722c204daa80d53af8fd",
     "parent-source-graph-e3.json.gz": "9bdb2bb6caf80e425a41c68efa828850b395ef9bc150377bdf99c3f8dd5fed39",
     "clock-audit-e3.json": "90ed73056a37f0e71b26605309485ad9e7800707054cab9324be7d6810f9efb6",
-    "clock-tie-e3.json": "c89182aacb92cce8fb15695c8226bb3e6782002f99548296eec1c71f9fde2641",
     "static.log": "15eb5f640b0b4212c0e6cb19d44f7e8bef84cc8e7c500dc15e0f744cdec345d3",
     "soft-ff-e3.log": "63e94b7dea1c0b2b1438af3d62d6cd146ad5e07f825adcf15dd4f330df11e283",
     "graph-summary.json": "ef4934db9941bc9bdf7c99ed49927ba87e5ee0bd62524f342216b44103ffa985",
@@ -78,6 +77,9 @@
     "soft-ff-e3.json": "8baaa0c99a11e00eb090a1c8295f181efcff88454a036bd4e84725c665536469",
     "static/build.log": "3c995dafae7960528d5afa4d6171d00421636b54d69fedc1f3380d0040225f7a",
     "static/run.log": "15eb5f640b0b4212c0e6cb19d44f7e8bef84cc8e7c500dc15e0f744cdec345d3",
-    "static/obj/Vtb_qfd_vm_die_static__verFiles.dat": "3257387ad9e49ebcf7a9d4a80e1debf5edc388bb20bfb8485e18f52a2c670555"
-  }
+    "static/obj/Vtb_qfd_vm_die_static__verFiles.dat": "3257387ad9e49ebcf7a9d4a80e1debf5edc388bb20bfb8485e18f52a2c670555",
+    "mutate_actual_write_clock.py": "a2df3e0bc38c0b044456cbacab05fdd276fe0bd2771a25cb7ce4a9fdc5ce0237"
+  },
+  "discarded_bulk_negative_netlist_sha256": "c89182aacb92cce8fb15695c8226bb3e6782002f99548296eec1c71f9fde2641",
+  "negative_reproduction": "From staged src cwd, run ../mutate_actual_write_clock.py against committed-source positive netlist; metadata records both SHA values and exact connection edit. Bulk negative netlist deleted after failure/hash evidence collection."
 }
