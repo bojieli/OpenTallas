@@ -18,7 +18,8 @@ python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "$
 import json,sys
 d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
 for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
-    d['files'].insert(0, f) ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
+    d['files'].insert(0, f)
+ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 L=[]
 for m in d['macros']: L.append(f"read_verilog -lib {m['file']}")
 for f in d['files']: L.append(f"read_verilog -sv -DSYNTHESIS{dfs} {f}")
