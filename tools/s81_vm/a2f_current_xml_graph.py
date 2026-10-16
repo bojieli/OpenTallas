@@ -9,14 +9,12 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--xml',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--boundaries',type=Path,help='JSON add/expand master lists for the exact physical candidate');a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--xml',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
  root=ET.parse(a.xml).getroot();net=root.find('netlist');mods={m.get('name'):m for m in net.findall('module')};types={t.get('id'):t for t in net.find('typetable')}
  inv=json.loads((ROOT/'results/arch/s81_vm_area_1417/a2_inventory.json').read_text())
  hard={l['master'] for l in inv['leaves']}|{'s81_a2f_field4','s81_a2f_control4_resetlocal','s81_a2f_fault_join4','dsfd_vm_a2f_rsched_p','dsfd_vm_static_wfc_ctl'}
  # Inventory's A2 substitution names differ from actual source; expand wrappers and stop on implemented leaves.
  hard.discard('s81_a2_stripe_data16');hard.discard('s81_a2_stripe_meta26')
- boundary_profile=json.loads(a.boundaries.read_text())if a.boundaries else {}
- hard.update(boundary_profile.get('add',[]));hard.difference_update(boundary_profile.get('expand',[]))
  unknown=collections.Counter();scope_env={};uf={};rank={};leaves=[];pending=[];logic=[];alias_blocks=[];exprseq=0
  def find(x):
   trail=[]
@@ -255,7 +253,7 @@ def main():
   for _,c in instances(m):out.update(census(mods[c.get('defName')]))
   return out
  cc=census(top)
- summary=dict(schema='opentallas.s81.vm-source-current-xml-graph.v1',status='SOURCE_CURRENT_GRAPH_WITH_EXPLICIT_PHYSICAL_GAPS_NOT_CUT_QUALIFIED',xml_path=str(a.xml),xml_sha256=hashlib.sha256(a.xml.read_bytes()).hexdigest(),boundary_selection=dict(profile_path=str(a.boundaries)if a.boundaries else None,profile_sha256=hashlib.sha256(a.boundaries.read_bytes()).hexdigest()if a.boundaries else None,masters=sorted(hard)),hard_leaves=len(leaves),hierarchical_sram_macros=cc['ot_sram_1r1w_512x128_m4_r2c2'],hard_families=dict(collections.Counter(l['master'] for l in leaves)),join_status=dict(counts),unknown_operations=dict(unknown),softlogic_nodes=len(logic),static_alias_blocks=alias_blocks,physical_home_gaps=[dict(master=m,port=p,status=s,bits=n) for (m,p,s),n in gaps.most_common()],scope='All chosen hard-boundary ports enumerated; pure wires bit-exact; operators/procedural nodes explicit with no physical home. Conservative procedural/dynamic dependencies do NOT establish exact connectivity/cut.',not_claimed=['Exact procedural dynamic bit mapping','Physical placement or clock delivery','Native closure or throughput','Any <0.60 complete cut'])
+ summary=dict(schema='opentallas.s81.vm-source-current-xml-graph.v1',status='SOURCE_CURRENT_GRAPH_WITH_EXPLICIT_PHYSICAL_GAPS_NOT_CUT_QUALIFIED',xml_path=str(a.xml),xml_sha256=hashlib.sha256(a.xml.read_bytes()).hexdigest(),hard_leaves=len(leaves),hierarchical_sram_macros=cc['ot_sram_1r1w_512x128_m4_r2c2'],hard_families=dict(collections.Counter(l['master'] for l in leaves)),join_status=dict(counts),unknown_operations=dict(unknown),softlogic_nodes=len(logic),static_alias_blocks=alias_blocks,physical_home_gaps=[dict(master=m,port=p,status=s,bits=n) for (m,p,s),n in gaps.most_common()],scope='All chosen hard-boundary ports enumerated; pure wires bit-exact; operators/procedural nodes explicit with no physical home. Conservative procedural/dynamic dependencies do NOT establish exact connectivity/cut.',not_claimed=['Exact procedural dynamic bit mapping','Physical placement or clock delivery','Native closure or throughput','Any <0.60 complete cut'])
  for name,data in [('inventory.json',dict(leaves=leaves)),('parent_logic.json',logic),('summary.json',summary)]: (a.out/name).write_text(json.dumps(data,indent=1)+'\n')
  print(json.dumps(summary,indent=1))
 if __name__=='__main__':main()
