@@ -109,6 +109,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "DVM.HEAD_ROW_ONWARD2 (qfd_xhead_e/w_w130 ONWARD_REG 2)",
+   "group": "DVM.HEAD_ROW_ONWARD2 (qfd_xhead_e/w_w130 ONWARD_REG 2)",
+   "measured": 28.0,
+   "price": 5.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 5.6,
+   "e2e_loss_pct": 1.319,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 252766.0,
+     "added_cycles": 3335.0,
+     "runs_per_token": 145,
+     "critical_runs": 145,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 3335.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.319
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_link_recovery_0253/head_onward2_receipt.json (branch codex/qwen-link-recovery-0253 ecbb50fc0)",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "Q-ELEM option (a), accepted by Q-COMPUTE-DIE 2026-10-16: the 129.6-um head's 0-cycle onward copy failed native capture (243.6/233.7 ps); input+output onward registers add 1 edge per head-row hop (23 hops a side, equalised) = +23 edges on every dependent ME op's x/go broadcast; prod36 full48 HEAD_CHAIN PASS dvm_minus_ref 5 -> 28. Not hideable (the fill carries the previous op's result). Structural removal: fewer hops (e.g. a mid-row root per half or two heads a slot)."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "KV-end d2d credit class 6 (HCTL, 4 credits)",
    "group": "KV_END.class6",
    "measured": 0.4,
@@ -1978,11 +2011,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 4.331,
-   "accepted_plus_proposed_pct": 5.396,
+   "proposed_pct": 5.65,
+   "accepted_plus_proposed_pct": 6.715,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 7,
+   "proposed_rows": 8,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
@@ -2000,8 +2033,8 @@
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 113.829,
-   "accepted_plus_proposed_pct": 114.724,
+   "proposed_pct": 113.912,
+   "accepted_plus_proposed_pct": 114.807,
    "limit_pct": 15.0,
    "accepted_rows": 1,
    "proposed_rows": 21,
