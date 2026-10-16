@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen.romleaf.measured_cause.v1",
+  "source_parent": "3692f3390 g4t/g4u",
+  "files": {
+    "/home/ubuntu/artifacts/qcd-romleaf-1016/findings.txt": "3922e4ccb21df4bfab7ae5bd43d2388a893976dd22038b897ada08dacfa77b29",
+    "/home/ubuntu/artifacts/qcd-romleaf-1016/sta/setup_top5.rpt": "92a1ff7d9bbe2f54509908f77c9158f1e3e99d445a1d4a4284813ffc228f84e2",
+    "/home/ubuntu/artifacts/qcd-romleaf-1016/sta/summary.rpt": "70dabf594e9f4e38af2d7d485276d82359b8a6cdc38e312084e186b2deed081c",
+    "/home/ubuntu/artifacts/qwen-romleaf-1552/g4t_terminal/nl_4_1_cts.tmp.log": "dc20e1cefc9c3ecbd8fe65e65fcd8e361d9a54b1eb40143bfce5d3e8c2a6abe5",
+    "/home/ubuntu/artifacts/qwen-romleaf-1552/g4t_terminal/nl_job.json": "b9a5d40483aeedecdf8235cc4fa1985b9fa65227b2da984c307e8c67f3b06a21"
+  },
+  "measured_g4u_NK": {
+    "setup_wns_ps": -468.6,
+    "worst_start": "XTX final transmit rung ck",
+    "worst_end": "LSL7 x_d",
+    "manhattan_um": 248,
+    "reported_path_wire_um": 1550,
+    "cells": 13,
+    "rom_gs_to_mq_slack_ps": -101,
+    "request_to_ROM_ps": -357,
+    "reset_to_rpair_ps": -339,
+    "LSL_to_node_ps": -319,
+    "hold_ps": -41.7,
+    "conclusion": "Single ck fence detours final TX rungs away from LSL consumers. Hardened ROM alone does not fix this class. Consumer hierarchy must own final rung placement; no ROM feed relay justified by this path."
+  },
+  "measured_g4t_NL_terminal": {
+    "job": "qfd_tile_nl_rp2_g4t-g4t-3692f3390",
+    "state": "EARLY_FAIL_HOLD",
+    "hold_ps": -43.309,
+    "iterations": 4210,
+    "buffers": 8186,
+    "margin_endpoints": 19350,
+    "worst_end": "tile_id_q[7]",
+    "process_receipt": "PVE pgrep had no matching job processes at collection; untouched, no kill/retry"
+  },
+  "measured_leaf_gate": {
+    "source": "f86dc3ab0 exact snapshot",
+    "R_tt_ps": 189.4,
+    "spread_tt_ps": 43.5,
+    "ff": 2233,
+    "clock_sinks": 2234,
+    "setup_ps": 154.3,
+    "hold_ps": 45.7498,
+    "pins": 528,
+    "pins_inaccessible": 0,
+    "synth_std_area_um2": 1060,
+    "macro_area_um2": 7664,
+    "gate_verdict": "PASS 0fail0warn",
+    "images_viewed": [
+      "physical/ref_tile/ot_qwen_tile_romleaf/gate_layout/floorplan.png",
+      "physical/ref_tile/ot_qwen_tile_romleaf/gate_layout/density.png"
+    ]
+  }
+}
