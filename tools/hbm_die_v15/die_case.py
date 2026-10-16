@@ -176,6 +176,13 @@ def main():
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
     ap.add_argument('--ckgen', default='hb_ckgen')
+    ap.add_argument('--clock-mode', default='hbm=quad,stream=htree',
+                    help='per domain: htree = geometric H-tree to <= bin_um bins + one pad level (0030); quad = d1/d2 median '
+                         'bisection. 0030 measured (service+SM case, no repeater in a hard outline): hbm quad 7.9 ns/1.6k '
+                         'bufs vs htree 12.4/2.9k; stream htree 13.8 ns/22k vs quad 19.2/46.7k')
+    ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--clock-in-reserved-channels', action='store_true',
+                    help='allow die clock repeaters in the slot reserved_channels (only when the views carve them)')
     a = ap.parse_args()
     G = json.loads(GRANTS.read_text()); P = json.loads(PLAN.read_text())
     slots = {s['name']: s for s in G['slots']}
@@ -438,14 +445,18 @@ def main():
                         nr.append(r)
             rects = nr
         return rects
+    # 10-16 (coordinator + VIS-HBM D1): die clock repeaters never sit inside a hard block outline. The SM grants' reserved
+    # feedthrough column/row are NOT carved out of the SYNTH abstracts (OBS M1-M5 over the whole outline), so d2 put
+    # 15,671 repeaters FIRM on top of SMs. Only --clock-in-reserved-channels (a view that really carves them) restores it.
+    carve = minus_channels if a.clock_in_reserved_channels else (lambda n, x0, y0, w, h, o: [(x0, y0, x0 + w, y0 + h)])
     obs = []
     for l, v in leaves.items():
         if v['m'] == STN_M:      # relay stages are small: the clock wire crosses them (no repeater on them, Grid margin)
             continue
-        obs += minus_channels(l, v['x'], v['y'], v['w'], v['h'], v['o'])
+        obs += carve(l, v['x'], v['y'], v['w'], v['h'], v['o'])
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
-            obs += minus_channels(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
+            obs += carve(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
     trees = {}
     clkpins = defaultdict(lambda: defaultdict(list))   # domain -> inst -> [pins]
     for l, v in leaves.items():
@@ -464,7 +475,7 @@ def main():
             sinks.append((l, sorted(pl)[0], x, y))
         dp = pads.get(dom, {})
         t = dct.build(W, H, obs, (rx, ry), sinks, lambda inst: re.search(r'(SW|SE|NW|NE)', inst).group(1),
-                      leaf_pads=dp.get('leaf'), quad_pads=dp.get('quadrant'))
+                      leaf_pads=dp.get('leaf'), quad_pads=dp.get('quadrant'), mode=dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree'), bin_um=a.clock_bin_um)
         pre = {'hbm': 'dkh', 'stream': 'dks'}[dom]
         ren = lambda s: s.replace('dck_', pre + '_')
         port = f'clk_{dom}'
