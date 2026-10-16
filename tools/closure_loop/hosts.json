@@ -165,7 +165,7 @@
    ],
    "ram_gb": 125,
    "min_free_ram_gb": 2,
-   "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB. | 2026-10-12 13:05 coordinator: min_free_disk_gb 100 -> 200 (run root is on the OS root disk /dev/sda1; protect sshd/OS).",
+   "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB. | 2026-10-12 13:05 coordinator: min_free_disk_gb 100 -> 200 (run root is on the OS root disk /dev/sda1; protect sshd/OS). | ROOT 2026-10-15 19:20: smoke_only (no new loop jobs) after 3 VM resets in one day; release (delete smoke_only) once stable 2 h, with ~/.config/ot-run/held_hosts.",
    "reserve_ram_gb": 0,
    "external_jobs": [
     {
@@ -178,7 +178,8 @@
     }
    ],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "smoke_only": true
   },
   {
    "name": "localhost",

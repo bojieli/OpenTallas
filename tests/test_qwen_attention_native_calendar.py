@@ -25,17 +25,17 @@ def test_lmax_is_qk_pass_not_t_over_32():
 def test_pairs_and_empty_pair():
     assert cal.pair_rows(1) == [1, 0]
     assert cal.pair_rows(8192) == [4096, 4096]
-    c = cal.calendar(100)
+    c = cal.calendar(100, pv="w1")
     assert c["P1"] == cal.EMPTY_PAIR_OUT and c["P0"] == cal.PAIR_OUT + 100 and c["R"] == c["P0"]
 
 
 def test_r3_8192_capture_slots():
-    c = cal.calendar(8192)
+    c = cal.calendar(8192, pv="w1")
     assert c["R"] == c["P0"] == c["P1"] == cal.R3_8192["R"]
 
 
 def test_minimal_laws_8192():
-    c = cal.calendar(8192)
+    c = cal.calendar(8192, pv="w1")
     assert (c["LMAX"], c["EXP"], c["Z"], c["PV_START"]) == (406, 421, 911, 627)
     assert c["PV_START"] + c["R"] < cal.R3_8192["PV_START"] + cal.R3_8192["R"]   # earlier than the generous r3 calendar
 
@@ -45,7 +45,7 @@ def test_zwalk_block0():
 
 
 def test_pv_binds_reciprocal_for_tiny_context():
-    c = cal.calendar(1)
+    c = cal.calendar(1, pv="w1")
     assert c["PV_START"] + c["R"] >= c["HUB_PUB"] + cal.RZ_MARGIN
     with pytest.raises(ValueError):
         cal.check(dict(c, PV_START=c["HUB_PUB"] + cal.RZ_MARGIN - c["R"] - 1))
@@ -68,3 +68,22 @@ def test_rules_refuse():
         cal.calendar(0)
     with pytest.raises(ValueError):
         cal.calendar(8193)
+
+
+def test_w16_measured_service_cycles():
+    # Q-ATTN-RATE: measured on the w16 production binary (results/arch/qwen_attention_rate_1015/receipt.json)
+    for T, cyc in [(1, 882), (1000, 943), (4096, 1129), (6144, 1335), (7000, 1445), (8192, 1555)]:
+        assert cal.service_cycles(cal.calendar(T, pv="w16")) == cyc
+
+
+def test_w16_pair_out_and_pv_law():
+    assert cal.w16_pair_out(8192, 0) == cal.w16_pair_out(8192, 1) == 657
+    assert cal.w16_pair_out(100, 1) == 129          # empty pair: tree of the 16 zero-initialised leaves + join
+    c = cal.calendar(8192, pv="w16")
+    assert c["PV_START"] - c["EXP"] - cal.zwalk(8192) == cal.W16_PV_AFTER_EXP
+
+
+def test_production_default_is_w16():
+    assert cal.calendar(8192) == cal.calendar(8192, pv="w16")
+    assert cal.calendar(8192)["P0"] == cal.w16_pair_out(8192, 0)
+    assert cal.main(["--ctx", "8192"]) is None
