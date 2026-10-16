@@ -1,0 +1,227 @@
+{
+ "name": "s81issuer_c10_localtree3",
+ "top": "dsfd_stage_seq_static_c10",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 540.0,
+  "h": 86.4,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "c0",
+   "c1",
+   "c12",
+   "c2",
+   "c6",
+   "d0",
+   "d1",
+   "d12",
+   "d2",
+   "d3",
+   "d6",
+   "f_plen",
+   "f_pw",
+   "s1",
+   "s12",
+   "s2",
+   "s3",
+   "s6",
+   "s7",
+   "t_kd",
+   "t_st",
+   "c13",
+   "d13",
+   "s13",
+   "f_pq_pw",
+   "t_pq_desc_pw",
+   "calendar_prime",
+   "stage_start",
+   "calendar_base",
+   "calendar_length",
+   "pq_image_sealed",
+   "pq_calendar_primed",
+   "pq_calendar_fault"
+  ],
+  "N": [
+   "c3",
+   "c4",
+   "d4",
+   "s4",
+   "c10",
+   "d10",
+   "s10"
+  ],
+  "S": [
+   "c5",
+   "c7",
+   "ck",
+   "ckv",
+   "d5",
+   "d7",
+   "f_ks",
+   "rst",
+   "rsv",
+   "s0",
+   "s5"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c10_localtree.tcl",
+ "recipe": 3,
+ "outhold": false,
+ "sdc_extra": [
+  "physical/s81_fill2/sseq_ser_ref_c10.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_fill2/sseq_ser_ref_c10.tcl"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "reason": "S-DIE topdown assignment: engine10 N toward MIX4 S-West; engine13/PQboot/status E toward underVM floor. Real128x76 calendar plus PQboot, no c8 view inheritance. 540x86.4 provisional fullshape outline to measure; die reassigns peer endpoints after gate.",
+  "outline": [
+   540,
+   86.4
+  ],
+  "generator_slot": [
+   1727.976,
+   88.536
+  ]
+ },
+ "structural_change": "Real production c10 full128x76 issuer local registered diagnostic-tree repair, engines0..7+10+12+13 plus actualPQboot mailbox/controller. Distinct measured area and pin plan, no c8 view inheritance. E face engine13/PQboot/host, N face engine10 as assigned by die_live; all original subset pin orders preserved. Raw calendar edges unchanged, fault diagnostic+1edge; recipe3 ck pin stages+1input/+1output, serialmailbox native ckv ports excluded explicitly. Proposed24000um2 area allowance is not synthesis evidence; gate must measure sinks, utilization, native timing. Measured recipe3 port-table defect fixed: ckv actual secondary clock explicitly excluded from ck data flops; rst/rsv reset regex explicit (reset_ports field alone did not inform transformer). Every real data port remains pin registered or native ckv mailbox boundary as recorded.",
+ "job": {
+  "owner": "Codex:S81-issuer",
+  "branch": "codex/s81-issuer-0253",
+  "tag": "localtree3",
+  "purpose": "Fullshape actual c10 production stage controller distinct physical master, native MIX4/PQboot faces and local fault trees",
+  "views_to": "physical/ref_tile/s81issuer_c10_localtree3/views",
+  "record_to": "results/rtl/ref_tile/s81issuer_c10_localtree3",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_control",
+   "tools/s81_static_control",
+   "tools/s81/fill2_c8_bench.sh",
+   "physical/s81_fill2",
+   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c10_localtree.tcl",
+   "tools/s81_compile_schedule",
+   "tools/s81/issuer_pinreg_boundary_gate.py"
+  ],
+  "benches": [
+   {
+    "name": "c8_wrapper_and_128row_issuer",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "pass_regex": "C8 BENCH PASS",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm_absent_mutant",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh mut_vm_absent {RUN}/bench_mut_vm_absent",
+    "expect": "fail",
+    "fail_regex": "C8 BENCH FAIL mut_vm_absent",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "issuer_timing_mutant",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh mut_issuer {RUN}/bench_mut_issuer",
+    "expect": "fail",
+    "fail_regex": "C8 BENCH FAIL mut_issuer",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "issuer_fault_capture_mutant",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh mut_fault {RUN}/bench_mut_fault",
+    "expect": "fail",
+    "fail_regex": "C8 BENCH FAIL mut_fault",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "c10_actual_mix4_pq_faces",
+    "cmd": "bash rtl/dsrom_sys/s81_static_control/test/run_static_c10.sh {RUN}/c10",
+    "expect": "pass",
+    "pass_regex": "S81_STATIC_C10 GATE PASS",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "actual_pinreg_clock_reset_schedule",
+    "cmd": "python3 tools/s81/issuer_pinreg_boundary_gate.py {RUN}/actual_pinreg_boundary --kind c10",
+    "expect": "pass",
+    "pass_regex": "ISSUER_PINREG_BOUNDARY PASS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "yosys",
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 2,
+  "notes": "cycles_added=2 describes ck data command/done roundtrip only (+1 output pin and +1 input pin); compiler done rows add2. Runtime diagnostics add1ck separately; c8/c10 serial status observation profile and all downstream registers/relays must be bound from tools/s81_static_control/status_observation_contract.json. Total layer/token performance remains UNMEASURED and native consumer remains BLOCKED until actual physical/compiler binding; never infer total cost from this scalar."
+ },
+ "std_area_um2": 24000,
+ "pin_regs": {
+  "clock": "ck",
+  "exclude": "^ckv$|^(f_ks|f_pw|f_pq_pw|t_kd|t_st)(\\[.*\\])?$",
+  "reason": "ckv is the actual related3:4 serial CLOCK and passes directly; rst/rsv are explicit core/serial asynchronous RESET roles and pass directly. Serial mailbox data already terminate in ckv registers and are excluded from ck data-pin stages. Measured previous transformation incorrectly flopped ckv/rsv; this correction restores actual clock/reset topology, not an exception to data pin registers.",
+  "reset": "^(rst|rsv)(\\[.*\\])?$"
+ },
+ "clock_ports": [
+  "ck",
+  "ckv"
+ ],
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
