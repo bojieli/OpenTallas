@@ -5104,20 +5104,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [959:0] wbk_NE__w_k_addr;
   wire [8191:0] wbk_NE__w_k_wdata;
   wire [0:0] wbk_NE__fault;
-  wire [0:0] hc_tgt_SW__program_cfg_we;
-  wire [9:0] hc_tgt_SW__program_cfg_addr;
-  wire [255:0] hc_tgt_SW__program_cfg_data;
-  wire [0:0] hc_tgt_SW__program_start_v;
-  wire [9:0] hc_tgt_SW__program_start_base;
-  wire [10:0] hc_tgt_SW__program_start_limit;
-  wire [15:0] hc_tgt_SW__program_start_loops;
-  wire [0:0] hc_tgt_SW__configured;
-  wire [0:0] hc_tgt_SW__fault;
+  wire [0:0] hc_SW__configured;
   wire [135:0] hc_SW__lg_rq;
   wire [2247:0] hc_SW__lg_wq;
   wire [0:0] hc_SW__x_wave_v;
   wire [9:0] hc_SW__x_wave_word;
-  wire [8191:0] hc_SW__x_wave;
+  wire [2047:0] hc_SW__x_wave;
+  wire [1:0] hc_SW__x_wave_beat;
   wire [0:0] hc_SW__residual_done;
   wire [0:0] hc_SW__gathered_mix_v;
   wire [4:0] hc_SW__gathered_mix_row;
@@ -5143,20 +5136,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hc_SW3__c_w_done;
   wire [33:0] hc_SW3__lg_rq;
   wire [561:0] hc_SW3__lg_wq;
-  wire [0:0] hc_tgt_SE__program_cfg_we;
-  wire [9:0] hc_tgt_SE__program_cfg_addr;
-  wire [255:0] hc_tgt_SE__program_cfg_data;
-  wire [0:0] hc_tgt_SE__program_start_v;
-  wire [9:0] hc_tgt_SE__program_start_base;
-  wire [10:0] hc_tgt_SE__program_start_limit;
-  wire [15:0] hc_tgt_SE__program_start_loops;
-  wire [0:0] hc_tgt_SE__configured;
-  wire [0:0] hc_tgt_SE__fault;
+  wire [0:0] hc_SE__configured;
   wire [135:0] hc_SE__lg_rq;
   wire [2247:0] hc_SE__lg_wq;
   wire [0:0] hc_SE__x_wave_v;
   wire [9:0] hc_SE__x_wave_word;
-  wire [8191:0] hc_SE__x_wave;
+  wire [2047:0] hc_SE__x_wave;
+  wire [1:0] hc_SE__x_wave_beat;
   wire [0:0] hc_SE__residual_done;
   wire [0:0] hc_SE__gathered_mix_v;
   wire [4:0] hc_SE__gathered_mix_row;
@@ -5182,20 +5168,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hc_SE3__c_w_done;
   wire [33:0] hc_SE3__lg_rq;
   wire [561:0] hc_SE3__lg_wq;
-  wire [0:0] hc_tgt_NW__program_cfg_we;
-  wire [9:0] hc_tgt_NW__program_cfg_addr;
-  wire [255:0] hc_tgt_NW__program_cfg_data;
-  wire [0:0] hc_tgt_NW__program_start_v;
-  wire [9:0] hc_tgt_NW__program_start_base;
-  wire [10:0] hc_tgt_NW__program_start_limit;
-  wire [15:0] hc_tgt_NW__program_start_loops;
-  wire [0:0] hc_tgt_NW__configured;
-  wire [0:0] hc_tgt_NW__fault;
+  wire [0:0] hc_NW__configured;
   wire [135:0] hc_NW__lg_rq;
   wire [2247:0] hc_NW__lg_wq;
   wire [0:0] hc_NW__x_wave_v;
   wire [9:0] hc_NW__x_wave_word;
-  wire [8191:0] hc_NW__x_wave;
+  wire [2047:0] hc_NW__x_wave;
+  wire [1:0] hc_NW__x_wave_beat;
   wire [0:0] hc_NW__residual_done;
   wire [0:0] hc_NW__gathered_mix_v;
   wire [4:0] hc_NW__gathered_mix_row;
@@ -5221,20 +5200,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hc_NW3__c_w_done;
   wire [33:0] hc_NW3__lg_rq;
   wire [561:0] hc_NW3__lg_wq;
-  wire [0:0] hc_tgt_NE__program_cfg_we;
-  wire [9:0] hc_tgt_NE__program_cfg_addr;
-  wire [255:0] hc_tgt_NE__program_cfg_data;
-  wire [0:0] hc_tgt_NE__program_start_v;
-  wire [9:0] hc_tgt_NE__program_start_base;
-  wire [10:0] hc_tgt_NE__program_start_limit;
-  wire [15:0] hc_tgt_NE__program_start_loops;
-  wire [0:0] hc_tgt_NE__configured;
-  wire [0:0] hc_tgt_NE__fault;
+  wire [0:0] hc_NE__configured;
   wire [135:0] hc_NE__lg_rq;
   wire [2247:0] hc_NE__lg_wq;
   wire [0:0] hc_NE__x_wave_v;
   wire [9:0] hc_NE__x_wave_word;
-  wire [8191:0] hc_NE__x_wave;
+  wire [2047:0] hc_NE__x_wave;
+  wire [1:0] hc_NE__x_wave_beat;
   wire [0:0] hc_NE__residual_done;
   wire [0:0] hc_NE__gathered_mix_v;
   wire [4:0] hc_NE__gathered_mix_row;
@@ -5260,30 +5232,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hc_NE3__c_w_done;
   wire [33:0] hc_NE3__lg_rq;
   wire [561:0] hc_NE3__lg_wq;
+  wire [0:0] hc_eng__configured;
   wire [3:0] hc_eng__result_v;
   wire [11:0] hc_eng__result_position;
   wire [3071:0] hc_eng__result;
   wire [0:0] hc_eng__program_active;
   wire [0:0] hc_eng__program_done;
   wire [0:0] hc_eng__fault;
-  wire [0:0] hc_eng_tgt__program_cfg_we;
-  wire [9:0] hc_eng_tgt__program_cfg_addr;
-  wire [255:0] hc_eng_tgt__program_cfg_data;
-  wire [0:0] hc_eng_tgt__program_start_v;
-  wire [9:0] hc_eng_tgt__program_start_base;
-  wire [10:0] hc_eng_tgt__program_start_limit;
-  wire [15:0] hc_eng_tgt__program_start_loops;
-  wire [0:0] hc_eng_tgt__configured;
-  wire [0:0] hc_eng_tgt__fault;
-  wire [0:0] hc_tbl_tgt__program_cfg_we;
-  wire [9:0] hc_tbl_tgt__program_cfg_addr;
-  wire [255:0] hc_tbl_tgt__program_cfg_data;
-  wire [0:0] hc_tbl_tgt__program_start_v;
-  wire [9:0] hc_tbl_tgt__program_start_base;
-  wire [10:0] hc_tbl_tgt__program_start_limit;
-  wire [15:0] hc_tbl_tgt__program_start_loops;
-  wire [0:0] hc_tbl_tgt__configured;
-  wire [0:0] hc_tbl_tgt__fault;
   wire [0:0] epcal_SW__tgt_configured;
   wire [0:0] epcal_SW__tgt_fault;
   wire [0:0] epcal_SW__calendar_v;
@@ -18541,16 +18496,16 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pad_fault(host_phy__pad_fault),
     .phy_fault(host_phy__phy_fault)
   );
-  ot_hbm_status_join #(.NT(105), .NF(151), .NH(6), .TGTS(840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430)) host_status (
+  ot_hbm_status_join #(.NT(105), .NF(145), .NH(6), .TGTS(840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430)) host_status (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .desc_v(host_cp_ingress__desc_v[0]),
     .launch_v(host_cp_ingress__launch_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
-    .t_ready({xc_NE7__configured[0], xc_NE6__configured[0], xc_NE5__configured[0], xc_NE4__configured[0], xc_NE3__configured[0], xc_NE2__configured[0], xc_NE1__configured[0], xc_NE0__configured[0], xc_NW7__configured[0], xc_NW6__configured[0], xc_NW5__configured[0], xc_NW4__configured[0], xc_NW3__configured[0], xc_NW2__configured[0], xc_NW1__configured[0], xc_NW0__configured[0], xc_SE7__configured[0], xc_SE6__configured[0], xc_SE5__configured[0], xc_SE4__configured[0], xc_SE3__configured[0], xc_SE2__configured[0], xc_SE1__configured[0], xc_SE0__configured[0], xc_SW7__configured[0], xc_SW6__configured[0], xc_SW5__configured[0], xc_SW4__configured[0], xc_SW3__configured[0], xc_SW2__configured[0], xc_SW1__configured[0], xc_SW0__configured[0], hc_tbl_tgt__configured[0], hc_eng_tgt__configured[0], smw_NE__configured[0], smw_NW__configured[0], smw_SE__configured[0], smw_SW__configured[0], epcal_NE__tgt_configured[0], epcal_NW__tgt_configured[0], epcal_SE__tgt_configured[0], epcal_SW__tgt_configured[0], hc_tgt_NE__configured[0], hc_tgt_NW__configured[0], hc_tgt_SE__configured[0], hc_tgt_SW__configured[0], hb_dbk_NE__cp_configured[0], hb_dbk_NW__cp_configured[0], hb_dbk_SE__cp_configured[0], hb_dbk_SW__cp_configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], calendar_NE__tgt_configured[0], calendar_NW__tgt_configured[0], calendar_SE__tgt_configured[0], calendar_SW__tgt_configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], vmfc_NE__tgt_configured[0], vmfc_NW__tgt_configured[0], vmfc_SE__tgt_configured[0], vmfc_SW__tgt_configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
+    .t_ready({xc_NE7__configured[0], xc_NE6__configured[0], xc_NE5__configured[0], xc_NE4__configured[0], xc_NE3__configured[0], xc_NE2__configured[0], xc_NE1__configured[0], xc_NE0__configured[0], xc_NW7__configured[0], xc_NW6__configured[0], xc_NW5__configured[0], xc_NW4__configured[0], xc_NW3__configured[0], xc_NW2__configured[0], xc_NW1__configured[0], xc_NW0__configured[0], xc_SE7__configured[0], xc_SE6__configured[0], xc_SE5__configured[0], xc_SE4__configured[0], xc_SE3__configured[0], xc_SE2__configured[0], xc_SE1__configured[0], xc_SE0__configured[0], xc_SW7__configured[0], xc_SW6__configured[0], xc_SW5__configured[0], xc_SW4__configured[0], xc_SW3__configured[0], xc_SW2__configured[0], xc_SW1__configured[0], xc_SW0__configured[0], hc_eng__configured[0], hc_eng__configured[0], smw_NE__configured[0], smw_NW__configured[0], smw_SE__configured[0], smw_SW__configured[0], epcal_NE__tgt_configured[0], epcal_NW__tgt_configured[0], epcal_SE__tgt_configured[0], epcal_SW__tgt_configured[0], hc_NE__configured[0], hc_NW__configured[0], hc_SE__configured[0], hc_SW__configured[0], hb_dbk_NE__cp_configured[0], hb_dbk_NW__cp_configured[0], hb_dbk_SE__cp_configured[0], hb_dbk_SW__cp_configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], calendar_NE__tgt_configured[0], calendar_NW__tgt_configured[0], calendar_SE__tgt_configured[0], calendar_SW__tgt_configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], vmfc_NE__tgt_configured[0], vmfc_NW__tgt_configured[0], vmfc_SE__tgt_configured[0], vmfc_SW__tgt_configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
     .t_active({xc_NE7__active[0], xc_NE6__active[0], xc_NE5__active[0], xc_NE4__active[0], xc_NE3__active[0], xc_NE2__active[0], xc_NE1__active[0], xc_NE0__active[0], xc_NW7__active[0], xc_NW6__active[0], xc_NW5__active[0], xc_NW4__active[0], xc_NW3__active[0], xc_NW2__active[0], xc_NW1__active[0], xc_NW0__active[0], xc_SE7__active[0], xc_SE6__active[0], xc_SE5__active[0], xc_SE4__active[0], xc_SE3__active[0], xc_SE2__active[0], xc_SE1__active[0], xc_SE0__active[0], xc_SW7__active[0], xc_SW6__active[0], xc_SW5__active[0], xc_SW4__active[0], xc_SW3__active[0], xc_SW2__active[0], xc_SW1__active[0], xc_SW0__active[0], hc_eng__program_active[0], hc_eng__program_active[0], smw_NE__active[0], smw_NW__active[0], smw_SE__active[0], smw_SW__active[0], epcal_NE__active[0], epcal_NW__active[0], epcal_SE__active[0], epcal_SW__active[0], hc_NE__program_active[0], hc_NW__program_active[0], hc_SE__program_active[0], hc_SW__program_active[0], hb_dbk_NE__cp_active[0], hb_dbk_NW__cp_active[0], hb_dbk_SE__cp_active[0], hb_dbk_SW__cp_active[0], cp_xl_NE__active[0], cp_xl_NW__active[0], cp_xl_SE__active[0], cp_xl_SW__active[0], calendar_NE__active[0], calendar_NW__active[0], calendar_SE__active[0], calendar_SW__active[0], cp_svg_NE7__active[0], cp_svg_NE6__active[0], cp_svg_NE5__active[0], cp_svg_NE4__active[0], cp_svg_NE3__active[0], cp_svg_NE2__active[0], cp_svg_NE1__active[0], cp_svg_NE0__active[0], cp_svg_NW7__active[0], cp_svg_NW6__active[0], cp_svg_NW5__active[0], cp_svg_NW4__active[0], cp_svg_NW3__active[0], cp_svg_NW2__active[0], cp_svg_NW1__active[0], cp_svg_NW0__active[0], cp_svg_SE7__active[0], cp_svg_SE6__active[0], cp_svg_SE5__active[0], cp_svg_SE4__active[0], cp_svg_SE3__active[0], cp_svg_SE2__active[0], cp_svg_SE1__active[0], cp_svg_SE0__active[0], cp_svg_SW7__active[0], cp_svg_SW6__active[0], cp_svg_SW5__active[0], cp_svg_SW4__active[0], cp_svg_SW3__active[0], cp_svg_SW2__active[0], cp_svg_SW1__active[0], cp_svg_SW0__active[0], vmfc_NE__active[0], vmfc_NW__active[0], vmfc_SE__active[0], vmfc_SW__active[0], col_idx__active[0], col_sfu_NE__active[0], col_sfu_NW__active[0], col_sfu_SE__active[0], col_sfu_SW__active[0], col_su__active[0], hb_coll_NE__hgi_busy[0], hb_coll_NW__hgi_busy[0], hb_coll_SE__hgi_busy[0], hb_coll_SW__hgi_busy[0], hb_quant_NW__program_active[0]}),
-    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], xc_NE7__fault[0], xc_NE6__fault[0], xc_NE5__fault[0], xc_NE4__fault[0], xc_NE3__fault[0], xc_NE2__fault[0], xc_NE1__fault[0], xc_NE0__fault[0], xc_NW7__fault[0], xc_NW6__fault[0], xc_NW5__fault[0], xc_NW4__fault[0], xc_NW3__fault[0], xc_NW2__fault[0], xc_NW1__fault[0], xc_NW0__fault[0], xc_SE7__fault[0], xc_SE6__fault[0], xc_SE5__fault[0], xc_SE4__fault[0], xc_SE3__fault[0], xc_SE2__fault[0], xc_SE1__fault[0], xc_SE0__fault[0], xc_SW7__fault[0], xc_SW6__fault[0], xc_SW5__fault[0], xc_SW4__fault[0], xc_SW3__fault[0], xc_SW2__fault[0], xc_SW1__fault[0], xc_SW0__fault[0], hc_tbl_tgt__fault[0], hc_eng__fault[0], hc_eng_tgt__fault[0], smw_NE__fault[0], smw_NW__fault[0], smw_SE__fault[0], smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], epcal_NE__tgt_fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], epcal_NW__tgt_fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], epcal_SE__tgt_fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], epcal_SW__tgt_fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], hb_dbk_NE__cp_fault[0], hb_dbk_NW__cp_fault[0], hb_dbk_SE__cp_fault[0], hb_dbk_SW__cp_fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], calendar_NE__tgt_fault[0], calendar_NW__fault[0], calendar_NW__tgt_fault[0], calendar_SE__fault[0], calendar_SE__tgt_fault[0], calendar_SW__fault[0], calendar_SW__tgt_fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], vmfc_NE__tgt_fault[0], vmfc_NW__fault[0], vmfc_NW__tgt_fault[0], vmfc_SE__fault[0], vmfc_SE__tgt_fault[0], vmfc_SW__fault[0], vmfc_SW__tgt_fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
+    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], xc_NE7__fault[0], xc_NE6__fault[0], xc_NE5__fault[0], xc_NE4__fault[0], xc_NE3__fault[0], xc_NE2__fault[0], xc_NE1__fault[0], xc_NE0__fault[0], xc_NW7__fault[0], xc_NW6__fault[0], xc_NW5__fault[0], xc_NW4__fault[0], xc_NW3__fault[0], xc_NW2__fault[0], xc_NW1__fault[0], xc_NW0__fault[0], xc_SE7__fault[0], xc_SE6__fault[0], xc_SE5__fault[0], xc_SE4__fault[0], xc_SE3__fault[0], xc_SE2__fault[0], xc_SE1__fault[0], xc_SE0__fault[0], xc_SW7__fault[0], xc_SW6__fault[0], xc_SW5__fault[0], xc_SW4__fault[0], xc_SW3__fault[0], xc_SW2__fault[0], xc_SW1__fault[0], xc_SW0__fault[0], hc_eng__fault[0], smw_NE__fault[0], smw_NW__fault[0], smw_SE__fault[0], smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], epcal_NE__tgt_fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], epcal_NW__tgt_fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], epcal_SE__tgt_fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], epcal_SW__tgt_fault[0], hc_NE__fault[0], hc_NW__fault[0], hc_SE__fault[0], hc_SW__fault[0], hb_dbk_NE__cp_fault[0], hb_dbk_NW__cp_fault[0], hb_dbk_SE__cp_fault[0], hb_dbk_SW__cp_fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], calendar_NE__tgt_fault[0], calendar_NW__fault[0], calendar_NW__tgt_fault[0], calendar_SE__fault[0], calendar_SE__tgt_fault[0], calendar_SW__fault[0], calendar_SW__tgt_fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], vmfc_NE__tgt_fault[0], vmfc_NW__fault[0], vmfc_NW__tgt_fault[0], vmfc_SE__fault[0], vmfc_SE__tgt_fault[0], vmfc_SW__fault[0], vmfc_SW__tgt_fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
     .h_fault({host_phy__phy_fault[0], host_phy__pad_fault[0], host_cp_ep_face__f_lk_tx[547], host_cp_landing__fault[0], host_cp_packet__protocol_fault[0], host_cp_ingress__fault[0]}),
     .block_ready(host_status__block_ready),
     .program_active(host_status__program_active),
@@ -18670,7 +18625,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .w_k_wr_done({vmks_NE7__w_k_wr_done[3:0], vmks_NE6__w_k_wr_done[3:0], vmks_NE5__w_k_wr_done[3:0], vmks_NE4__w_k_wr_done[3:0], vmks_NE3__w_k_wr_done[3:0], vmks_NE2__w_k_wr_done[3:0], vmks_NE1__w_k_wr_done[3:0], vmks_NE0__w_k_wr_done[3:0]}),
     .fault(wbk_NE__fault)
   );
-  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_SW (
+  ot_hbm_hc_q_static #(.MUT(0)) hc_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd108),
@@ -18683,27 +18638,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .program_active(hc_SW__program_active[0]),
-    .program_cfg_we(hc_tgt_SW__program_cfg_we),
-    .program_cfg_addr(hc_tgt_SW__program_cfg_addr),
-    .program_cfg_data(hc_tgt_SW__program_cfg_data),
-    .program_start_v(hc_tgt_SW__program_start_v),
-    .program_start_base(hc_tgt_SW__program_start_base),
-    .program_start_limit(hc_tgt_SW__program_start_limit),
-    .program_start_loops(hc_tgt_SW__program_start_loops),
-    .configured(hc_tgt_SW__configured),
-    .fault(hc_tgt_SW__fault)
-  );
-  ot_hbm_hc_q_static #(.MUT(0)) hc_SW (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(hc_tgt_SW__program_cfg_we[0]),
-    .cfg_addr(hc_tgt_SW__program_cfg_addr[9:0]),
-    .cfg_data(hc_tgt_SW__program_cfg_data[255:0]),
-    .start_v(hc_tgt_SW__program_start_v[0]),
-    .start_base(hc_tgt_SW__program_start_base[9:0]),
-    .start_limit(hc_tgt_SW__program_start_limit[10:0]),
-    .start_loops(hc_tgt_SW__program_start_loops[15:0]),
+    .configured(hc_SW__configured),
     .lg_rq(hc_SW__lg_rq),
     .lg_wq(hc_SW__lg_wq),
     .lg_rr({hc_SW3__c_rr[513:0], hc_SW2__c_rr[513:0], hc_SW1__c_rr[513:0], hc_SW0__c_rr[513:0]}),
@@ -18711,6 +18646,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .x_wave_v(hc_SW__x_wave_v),
     .x_wave_word(hc_SW__x_wave_word),
     .x_wave(hc_SW__x_wave),
+    .x_wave_beat(hc_SW__x_wave_beat),
     .residual_done(hc_SW__residual_done),
     .gathered_mix_v(hc_SW__gathered_mix_v),
     .gathered_mix_row(hc_SW__gathered_mix_row),
@@ -18772,7 +18708,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_rr({lg_SW_2_b7__local_rr[256:0], lg_SW_2_b6__local_rr[256:0]}),
     .lg_w_done({lg_SW_2_b7__local_w_done[0], lg_SW_2_b6__local_w_done[0]})
   );
-  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_SE (
+  ot_hbm_hc_q_static #(.MUT(0)) hc_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd109),
@@ -18785,27 +18721,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .program_active(hc_SE__program_active[0]),
-    .program_cfg_we(hc_tgt_SE__program_cfg_we),
-    .program_cfg_addr(hc_tgt_SE__program_cfg_addr),
-    .program_cfg_data(hc_tgt_SE__program_cfg_data),
-    .program_start_v(hc_tgt_SE__program_start_v),
-    .program_start_base(hc_tgt_SE__program_start_base),
-    .program_start_limit(hc_tgt_SE__program_start_limit),
-    .program_start_loops(hc_tgt_SE__program_start_loops),
-    .configured(hc_tgt_SE__configured),
-    .fault(hc_tgt_SE__fault)
-  );
-  ot_hbm_hc_q_static #(.MUT(0)) hc_SE (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(hc_tgt_SE__program_cfg_we[0]),
-    .cfg_addr(hc_tgt_SE__program_cfg_addr[9:0]),
-    .cfg_data(hc_tgt_SE__program_cfg_data[255:0]),
-    .start_v(hc_tgt_SE__program_start_v[0]),
-    .start_base(hc_tgt_SE__program_start_base[9:0]),
-    .start_limit(hc_tgt_SE__program_start_limit[10:0]),
-    .start_loops(hc_tgt_SE__program_start_loops[15:0]),
+    .configured(hc_SE__configured),
     .lg_rq(hc_SE__lg_rq),
     .lg_wq(hc_SE__lg_wq),
     .lg_rr({hc_SE3__c_rr[513:0], hc_SE2__c_rr[513:0], hc_SE1__c_rr[513:0], hc_SE0__c_rr[513:0]}),
@@ -18813,6 +18729,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .x_wave_v(hc_SE__x_wave_v),
     .x_wave_word(hc_SE__x_wave_word),
     .x_wave(hc_SE__x_wave),
+    .x_wave_beat(hc_SE__x_wave_beat),
     .residual_done(hc_SE__residual_done),
     .gathered_mix_v(hc_SE__gathered_mix_v),
     .gathered_mix_row(hc_SE__gathered_mix_row),
@@ -18874,7 +18791,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_rr({lg_SE_2_b7__local_rr[256:0], lg_SE_2_b6__local_rr[256:0]}),
     .lg_w_done({lg_SE_2_b7__local_w_done[0], lg_SE_2_b6__local_w_done[0]})
   );
-  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_NW (
+  ot_hbm_hc_q_static #(.MUT(0)) hc_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd110),
@@ -18887,27 +18804,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .program_active(hc_NW__program_active[0]),
-    .program_cfg_we(hc_tgt_NW__program_cfg_we),
-    .program_cfg_addr(hc_tgt_NW__program_cfg_addr),
-    .program_cfg_data(hc_tgt_NW__program_cfg_data),
-    .program_start_v(hc_tgt_NW__program_start_v),
-    .program_start_base(hc_tgt_NW__program_start_base),
-    .program_start_limit(hc_tgt_NW__program_start_limit),
-    .program_start_loops(hc_tgt_NW__program_start_loops),
-    .configured(hc_tgt_NW__configured),
-    .fault(hc_tgt_NW__fault)
-  );
-  ot_hbm_hc_q_static #(.MUT(0)) hc_NW (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(hc_tgt_NW__program_cfg_we[0]),
-    .cfg_addr(hc_tgt_NW__program_cfg_addr[9:0]),
-    .cfg_data(hc_tgt_NW__program_cfg_data[255:0]),
-    .start_v(hc_tgt_NW__program_start_v[0]),
-    .start_base(hc_tgt_NW__program_start_base[9:0]),
-    .start_limit(hc_tgt_NW__program_start_limit[10:0]),
-    .start_loops(hc_tgt_NW__program_start_loops[15:0]),
+    .configured(hc_NW__configured),
     .lg_rq(hc_NW__lg_rq),
     .lg_wq(hc_NW__lg_wq),
     .lg_rr({hc_NW3__c_rr[513:0], hc_NW2__c_rr[513:0], hc_NW1__c_rr[513:0], hc_NW0__c_rr[513:0]}),
@@ -18915,6 +18812,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .x_wave_v(hc_NW__x_wave_v),
     .x_wave_word(hc_NW__x_wave_word),
     .x_wave(hc_NW__x_wave),
+    .x_wave_beat(hc_NW__x_wave_beat),
     .residual_done(hc_NW__residual_done),
     .gathered_mix_v(hc_NW__gathered_mix_v),
     .gathered_mix_row(hc_NW__gathered_mix_row),
@@ -18976,7 +18874,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_rr({lg_NW_2_b7__local_rr[256:0], lg_NW_2_b6__local_rr[256:0]}),
     .lg_w_done({lg_NW_2_b7__local_w_done[0], lg_NW_2_b6__local_w_done[0]})
   );
-  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_NE (
+  ot_hbm_hc_q_static #(.MUT(0)) hc_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd111),
@@ -18989,27 +18887,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .program_active(hc_NE__program_active[0]),
-    .program_cfg_we(hc_tgt_NE__program_cfg_we),
-    .program_cfg_addr(hc_tgt_NE__program_cfg_addr),
-    .program_cfg_data(hc_tgt_NE__program_cfg_data),
-    .program_start_v(hc_tgt_NE__program_start_v),
-    .program_start_base(hc_tgt_NE__program_start_base),
-    .program_start_limit(hc_tgt_NE__program_start_limit),
-    .program_start_loops(hc_tgt_NE__program_start_loops),
-    .configured(hc_tgt_NE__configured),
-    .fault(hc_tgt_NE__fault)
-  );
-  ot_hbm_hc_q_static #(.MUT(0)) hc_NE (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(hc_tgt_NE__program_cfg_we[0]),
-    .cfg_addr(hc_tgt_NE__program_cfg_addr[9:0]),
-    .cfg_data(hc_tgt_NE__program_cfg_data[255:0]),
-    .start_v(hc_tgt_NE__program_start_v[0]),
-    .start_base(hc_tgt_NE__program_start_base[9:0]),
-    .start_limit(hc_tgt_NE__program_start_limit[10:0]),
-    .start_loops(hc_tgt_NE__program_start_loops[15:0]),
+    .configured(hc_NE__configured),
     .lg_rq(hc_NE__lg_rq),
     .lg_wq(hc_NE__lg_wq),
     .lg_rr({hc_NE3__c_rr[513:0], hc_NE2__c_rr[513:0], hc_NE1__c_rr[513:0], hc_NE0__c_rr[513:0]}),
@@ -19017,6 +18895,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .x_wave_v(hc_NE__x_wave_v),
     .x_wave_word(hc_NE__x_wave_word),
     .x_wave(hc_NE__x_wave),
+    .x_wave_beat(hc_NE__x_wave_beat),
     .residual_done(hc_NE__residual_done),
     .gathered_mix_v(hc_NE__gathered_mix_v),
     .gathered_mix_row(hc_NE__gathered_mix_row),
@@ -19081,33 +18960,6 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   ot_hbm_hc_eng_static hc_eng (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(hc_eng_tgt__program_cfg_we[0]),
-    .cfg_addr(hc_eng_tgt__program_cfg_addr[9:0]),
-    .cfg_data(hc_eng_tgt__program_cfg_data[255:0]),
-    .start_v(hc_eng_tgt__program_start_v[0]),
-    .start_base(hc_eng_tgt__program_start_base[9:0]),
-    .start_limit(hc_eng_tgt__program_start_limit[10:0]),
-    .start_loops(hc_eng_tgt__program_start_loops[15:0]),
-    .tbl_we(hc_tbl_tgt__program_cfg_we[0]),
-    .tbl_addr(hc_tbl_tgt__program_cfg_addr[9:0]),
-    .tbl_data(hc_tbl_tgt__program_cfg_data[255:0]),
-    .x_wave_v({hc_NE__x_wave_v[0], hc_NW__x_wave_v[0], hc_SE__x_wave_v[0], hc_SW__x_wave_v[0]}),
-    .x_wave_word({hc_NE__x_wave_word[9:0], hc_NW__x_wave_word[9:0], hc_SE__x_wave_word[9:0], hc_SW__x_wave_word[9:0]}),
-    .x_wave({hc_NE__x_wave[8191:0], hc_NW__x_wave[8191:0], hc_SE__x_wave[8191:0], hc_SW__x_wave[8191:0]}),
-    .gathered_mix_v({hc_NE__gathered_mix_v[0], hc_NW__gathered_mix_v[0], hc_SE__gathered_mix_v[0], hc_SW__gathered_mix_v[0]}),
-    .gathered_mix_row({hc_NE__gathered_mix_row[4:0], hc_NW__gathered_mix_row[4:0], hc_SE__gathered_mix_row[4:0], hc_SW__gathered_mix_row[4:0]}),
-    .gathered_mix_pos({hc_NE__gathered_mix_pos[2:0], hc_NW__gathered_mix_pos[2:0], hc_SE__gathered_mix_pos[2:0], hc_SW__gathered_mix_pos[2:0]}),
-    .gathered_mix_data({hc_NE__gathered_mix_data[31:0], hc_NW__gathered_mix_data[31:0], hc_SE__gathered_mix_data[31:0], hc_SW__gathered_mix_data[31:0]}),
-    .result_v(hc_eng__result_v),
-    .result_position(hc_eng__result_position),
-    .result(hc_eng__result),
-    .program_active(hc_eng__program_active),
-    .program_done(hc_eng__program_done),
-    .fault(hc_eng__fault)
-  );
-  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_eng_tgt (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd164),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
@@ -19118,40 +18970,21 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .program_active(hc_eng__program_active[0]),
-    .program_cfg_we(hc_eng_tgt__program_cfg_we),
-    .program_cfg_addr(hc_eng_tgt__program_cfg_addr),
-    .program_cfg_data(hc_eng_tgt__program_cfg_data),
-    .program_start_v(hc_eng_tgt__program_start_v),
-    .program_start_base(hc_eng_tgt__program_start_base),
-    .program_start_limit(hc_eng_tgt__program_start_limit),
-    .program_start_loops(hc_eng_tgt__program_start_loops),
-    .configured(hc_eng_tgt__configured),
-    .fault(hc_eng_tgt__fault)
-  );
-  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tbl_tgt (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .tgt(8'd165),
-    .cfg_v(host_cp_ingress__cfg_v[0]),
-    .cfg_target(host_cp_ingress__cfg_target[7:0]),
-    .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
-    .cfg_data(host_cp_ingress__cfg_data[255:0]),
-    .desc_v(host_cp_ingress__desc_v[0]),
-    .desc_base(host_cp_ingress__desc_base[11:0]),
-    .desc_limit(host_cp_ingress__desc_limit[12:0]),
-    .desc_loops(host_cp_ingress__desc_loops[15:0]),
-    .launch_v(host_cp_ingress__launch_v[0]),
-    .program_active(hc_eng__program_active[0]),
-    .program_cfg_we(hc_tbl_tgt__program_cfg_we),
-    .program_cfg_addr(hc_tbl_tgt__program_cfg_addr),
-    .program_cfg_data(hc_tbl_tgt__program_cfg_data),
-    .program_start_v(hc_tbl_tgt__program_start_v),
-    .program_start_base(hc_tbl_tgt__program_start_base),
-    .program_start_limit(hc_tbl_tgt__program_start_limit),
-    .program_start_loops(hc_tbl_tgt__program_start_loops),
-    .configured(hc_tbl_tgt__configured),
-    .fault(hc_tbl_tgt__fault)
+    .configured(hc_eng__configured),
+    .x_wave_v({hc_NE__x_wave_v[0], hc_NW__x_wave_v[0], hc_SE__x_wave_v[0], hc_SW__x_wave_v[0]}),
+    .x_wave_word({hc_NE__x_wave_word[9:0], hc_NW__x_wave_word[9:0], hc_SE__x_wave_word[9:0], hc_SW__x_wave_word[9:0]}),
+    .x_wave({hc_NE__x_wave[2047:0], hc_NW__x_wave[2047:0], hc_SE__x_wave[2047:0], hc_SW__x_wave[2047:0]}),
+    .x_wave_beat({hc_NE__x_wave_beat[1:0], hc_NW__x_wave_beat[1:0], hc_SE__x_wave_beat[1:0], hc_SW__x_wave_beat[1:0]}),
+    .gathered_mix_v({hc_NE__gathered_mix_v[0], hc_NW__gathered_mix_v[0], hc_SE__gathered_mix_v[0], hc_SW__gathered_mix_v[0]}),
+    .gathered_mix_row({hc_NE__gathered_mix_row[4:0], hc_NW__gathered_mix_row[4:0], hc_SE__gathered_mix_row[4:0], hc_SW__gathered_mix_row[4:0]}),
+    .gathered_mix_pos({hc_NE__gathered_mix_pos[2:0], hc_NW__gathered_mix_pos[2:0], hc_SE__gathered_mix_pos[2:0], hc_SW__gathered_mix_pos[2:0]}),
+    .gathered_mix_data({hc_NE__gathered_mix_data[31:0], hc_NW__gathered_mix_data[31:0], hc_SE__gathered_mix_data[31:0], hc_SW__gathered_mix_data[31:0]}),
+    .result_v(hc_eng__result_v),
+    .result_position(hc_eng__result_position),
+    .result(hc_eng__result),
+    .program_active(hc_eng__program_active),
+    .program_done(hc_eng__program_done),
+    .fault(hc_eng__fault)
   );
   hfd_hgi_vm_calendar_f20 epcal_SW (
     .clk(hb_ckgen__pll_stream[0]),
