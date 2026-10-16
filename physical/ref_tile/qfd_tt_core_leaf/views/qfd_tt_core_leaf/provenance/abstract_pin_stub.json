@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_tt_core_leaf.lef",
-    "sha256": "b29f26661bd3fe8004078215d594735e1baefa657a749acab4c0474260df47f3"
+    "sha256": "7503d28e1115316dea3a1bef7e2e70a76aa870e5d8d003e2e43243aa55efea00"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/qtt-r3/core_tc1_reexport/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_core_leaf-tc3-53cd5c59e/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/qtt-r3/core_tc1_reexport/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/qtt-r3/core_tc1_reexport/views/qfd_tt_core_leaf/provenance/raw/qfd_tt_core_leaf.lef",
-    "/srv/opentallas-scratch2/claude/qtt-r3/core_tc1_reexport/views/qfd_tt_core_leaf/provenance/qfd_tt_core_leaf.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_core_leaf-tc3-53cd5c59e/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_core_leaf-tc3-53cd5c59e/record/views/qfd_tt_core_leaf/provenance/raw/qfd_tt_core_leaf.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_core_leaf-tc3-53cd5c59e/record/views/qfd_tt_core_leaf/provenance/qfd_tt_core_leaf.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 95 OBS rects moved into 95 pins: clk[0], rst_n[0], scale_rst_n[0], scale_tag[0], scale_tag[10], scale_tag[11], scale_tag[12], scale_tag[13], scale_tag[14], scale_tag[15], scale_tag[16], scale_tag[17]; pockets: 3928 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 95 OBS rects moved into 95 pins: clk[0], rst_n[0], scale_rst_n[0], scale_tag[0], scale_tag[10], scale_tag[11], scale_tag[12], scale_tag[13], scale_tag[14], scale_tag[15], scale_tag[16], scale_tag[17]; pockets: 3930 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/qtt-r3/core_tc1_reexport/views/qfd_tt_core_leaf/provenance/qfd_tt_core_leaf.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_core_leaf-tc3-53cd5c59e/record/views/qfd_tt_core_leaf/provenance/qfd_tt_core_leaf.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_tt_core_leaf 345.6 x 216.0: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 0 blocked-above 0 blocked-same 0; clock clk[0] insertion 434 ps; pockets M5 0 (closed)",
+    "summary": "qfd_tt_core_leaf 345.6 x 216.0: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 0 blocked-above 0 blocked-same 0; clock clk[0] insertion 423 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_tt_core_leaf",
       "W": 345.6,
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk[0]": {
-          "max_ps": 434.42,
-          "min_ps": 295.79
+          "max_ps": 423.02,
+          "min_ps": 291.04
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 3928
+          "added": 3930
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "qfd_tt_core_leaf.lef",
-    "sha256": "0b4ad092f3a32c064f70a993fdc0a3acd3c444f701aaa5060a7edb57544a1df5"
+    "sha256": "0a206fbe942bc2f8ea7fa296502ec9d2e21e7e7163cb5ccf5a1520888d3a8a34"
   }
 }
