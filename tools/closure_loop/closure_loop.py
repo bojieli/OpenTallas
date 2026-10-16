@@ -94,7 +94,20 @@ RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-k
                          r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
 # g++ bus error on EPYC2 -> NEEDS_RTL although the bench never ran): crash -> retry once on another host -> NEEDS_HUMAN
-BENCH_CRASH_RC = (124, 134, 135, 137, 139, 143)
+BENCH_CRASH_RC = (124, 126, 127, 134, 135, 137, 139, 143)   # 126/127: cannot execute / not found (a truncated
+# binary left by a stage killed in a host reset: s81fill_hstnv_1029-f8 'Vtb: Permission denied' was judged a mutant that
+# failed to fail -> NEEDS_RTL); a crash is retried once with the bench's own output directories cleared
+BENCH_KEEP_DIRS = {"src", "cl", "routes", "record", "eco", "orfs", "work"}
+
+
+def bench_scratch_dirs(cmd):
+    """the per-bench output directories a bench command names under the run dir ({RUN}/<dir>...), never the source
+    snapshots, the loop's cl/ or route trees"""
+    out = []
+    for d in re.findall(r"\{RUN\}/([A-Za-z0-9_.-]+)", cmd or ""):
+        if d not in BENCH_KEEP_DIRS and not d.startswith(("bench_src", "src")) and d not in out and d not in (".", ".."):
+            out.append(d)
+    return out
 
 
 def bench_crashed(st, rc, tail):
@@ -3314,7 +3327,12 @@ elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout
     note_host(j.get("host"), bool(w))
     if not w:
         return "UNREACHABLE", None
-    return (w[0], int(w[1])) if w[0] == "RC" else (w[0], None)
+    if w[0] == "RC":
+        # an EMPTY / non-numeric rc file (the host reset while the wrapper wrote it: AGIdock 10-15, s81fill_hstnv_560-f8
+        # bench_payload_bit_mutant -> 'RC' alone, IndexError x10 -> NEEDS_HUMAN) is a stage that died without an exit
+        # status: LOST, handled like a vanished wrapper
+        return ("RC", int(w[1])) if len(w) > 1 and re.fullmatch(r"-?\d+", w[1]) else ("LOST", None)
+    return w[0], None
 
 
 def remote_ok(j, cmd, timeout=300):
@@ -4605,6 +4623,12 @@ def bench_track(j, fleet, stl):
                     launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             n = (e or {}).get("n", 0) + 1
             v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
+            if e is not None and e.get("state") == "retry":
+                stale = bench_scratch_dirs(st["cmd"])
+                if stale:       # a crashed attempt's partial outputs (half-built simulator) must not be reused
+                    ssh(host, "rm -rf " + " ".join(shlex.quote(f"{location['run'].rstrip('/')}/{d}") for d in stale),
+                        timeout=300)
+                    event(j, f"bench track: {k} retry clears its outputs {stale}")
             try:
                 launch_stage(v, st, st["cmd"])
             finally:
