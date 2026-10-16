@@ -5,6 +5,7 @@
 // Inside, the x descriptor is the constant "no tuple" (an internal wire, not a port), so the x schedule, rotation,
 // planes and line logic never issue and synthesis removes them; banks, SU reads / writes, row reads, skid writes, the
 // merge of the ME result links and me_en (maxima writes, row-read admission) are unchanged edge for edge.
+`define OT_QFD_VM_RELAY ot_qfd_vm_relay256
 `ifdef OT_QFD_VM_NOX
 `ifndef OT_QFD_VM_TILE_MOD
 `define OT_QFD_VM_TILE_MOD ot_qfd_vm_region_nx
@@ -189,6 +190,10 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer READ_CONTROL_LEAVES = 0,
     parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
     parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
+    // Q-VMWB 0030: 1 = the resetless region relays (u_id RV, u_rr / u_sr RO, u_rb) built from the CLOSED 256-bit register
+    // master qvm_data256_native (padded; D>1 chains fold through the same tiles), zero added edges.  Needs VMT 1 (any RV / RO).
+    parameter integer RELAY_TILES = 0,
+    parameter integer RELAY_NCK = 1,     // relay tile clock entries (RETURN_CLOCKS 1); must equal the elaborated count
     parameter integer NATIVE_BANKS = 0   // Q-VMWB 2026-10-15: native storage successors in every region (ot_qfd_vm_region_nx)
 ) (
     input  wire                    clk,
@@ -197,6 +202,7 @@ module ot_qfd_sp_vector_memory_bv #(
 `endif
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
     input wire [NSU-1:0] read_control_ck,
+    input wire [RELAY_NCK-1:0] relay_ck,
 `endif
 `ifdef OT_QFD_VM_NOX
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
@@ -277,6 +283,7 @@ module ot_qfd_sp_vector_memory_bv #(
     // production port list is unchanged (no unbound/tied pins in die consumers).  Without it the opt-in clock modes are refused.
     wire [NSU*32-1:0] return_ck = {NSU*32{1'b0}};
     wire [NSU-1:0] read_control_ck = {NSU{1'b0}};
+    wire [RELAY_NCK-1:0] relay_ck = {RELAY_NCK{1'b0}};
     wire [(NRB+NSU*NRBS)*9-1:0] native_ck = {(NRB+NSU*NRBS)*9{1'b0}};
     if (USE_NATIVE_CLOCKS != 0 || RETURN_CLOCKS != 0) begin : g_need_partitioned_clocks
         initial $fatal(1, "ot_qfd_sp_vector_memory_bv: USE_NATIVE_CLOCKS / RETURN_CLOCKS need +define+OT_QFD_VM_PARTITIONED_CLOCKS");
@@ -330,6 +337,18 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer TPP = (VMT != 0) ? 1 : 0;
     localparam integer XPOP = 4 + RV - RO + TLX - TPP;           // the x stage whose valid becomes the tiles' pop
     localparam integer NG = (NRB >= 8) ? NRB / 8 : 1;
+    // Q-VMWB 0030 relay tiles per region (qvm_data256_native): u_id, u_rr, u_sr; + u_rb once
+    localparam integer RT_ID = ((16*LAW + 8*16 + 8*512 + 3 + NSU*NSB*LAWS + NSB*LAWS + NSB*16 + NSB*512)*RV + 255) / 256;
+    localparam integer RT_RR = (512*RO + 255) / 256;
+    localparam integer RT_SR = (NSU*NSB*512*RO + 255) / 256;
+    localparam integer RT_G = RT_ID + RT_RR + RT_SR;
+    localparam integer RT_ALL = NG*RT_G + (LNRB*(RV + RO + 3 + TLR) + 255) / 256;
+    if (RELAY_TILES != 0 && VMT == 0) begin : g_relay_bad
+        initial $fatal(1, "ot_qfd_sp_vector_memory_bv RELAY_TILES: needs VMT 1");
+    end
+    if (RELAY_TILES != 0 && RETURN_CLOCKS != 0 && RELAY_NCK != RT_ALL) begin : g_relay_nck
+        initial $fatal(1, "ot_qfd_sp_vector_memory_bv RELAY_NCK %0d != %0d relay tiles", RELAY_NCK, RT_ALL);
+    end
     localparam integer NSB = NRBS / NG;
     localparam integer NWR = (SW + 30) / 16;           // rows an SU vector can span
     localparam integer NWE = NWR * 16;
@@ -993,8 +1012,9 @@ module ot_qfd_sp_vector_memory_bv #(
                 .q({d_re, d_we, d_xv, d_rq, d_sre, d_sv, d_swe}));
             wire [8*LAW-1:0] d_ra, d_wl; wire [8*16-1:0] d_wm; wire [8*512-1:0] d_wd; wire [2:0] d_rqb;
             wire [NSU*NSB*LAWS-1:0] d_sra; wire [NSB*LAWS-1:0] d_swl; wire [NSB*16-1:0] d_swm; wire [NSB*512-1:0] d_swd;
-            ot_hdc_delay #(.W(16*LAW + 8*16 + 8*512 + 3 + NSU*NSB*LAWS + NSB*LAWS + NSB*16 + NSB*512), .D(RV)) u_id (
-                .clk(clk), .rst_n(rst_n),
+            `OT_QFD_VM_RELAY #(.W(16*LAW + 8*16 + 8*512 + 3 + NSU*NSB*LAWS + NSB*LAWS + NSB*16 + NSB*512), .D(RV),
+                .TILES(RELAY_TILES), .CK_BASE(g*RT_G), .NCK(RELAY_NCK), .OWN_CK(RETURN_CLOCKS)) u_id (
+                .clk(clk), .tck(relay_ck),
                 .d({b_ra[g*8*LAW +: 8*LAW], bw_line[g*8*LAW +: 8*LAW], bw_mask[g*8*16 +: 8*16], bw_data[g*8*512 +: 8*512],
                     rr_b0[2:0], t_sra, ws_line[g*NSB*LAWS +: NSB*LAWS], ws_mask[g*NSB*16 +: NSB*16],
                     ws_data[g*NSB*512 +: NSB*512]}),
@@ -1052,17 +1072,20 @@ module ot_qfd_sp_vector_memory_bv #(
             end
             assign capx[g*8*512 +: 8*512] = xw[XRN*8*512 +: 8*512];
             wire [511:0] ro_r;
-            ot_hdc_delay #(.W(512), .D(RO)) u_rr (.clk(clk), .rst_n(rst_n), .d(ro_t), .q(ro_r));
+            `OT_QFD_VM_RELAY #(.W(512), .D(RO), .TILES(RELAY_TILES), .CK_BASE(g*RT_G + RT_ID), .NCK(RELAY_NCK), .OWN_CK(RETURN_CLOCKS))
+                u_rr (.clk(clk), .tck(relay_ck), .d(ro_t), .q(ro_r));
             assign ro_all[g*512 +: 512] = ro_r;
             wire [NSU*NSB*512-1:0] so_r;
-            ot_hdc_delay #(.W(NSU*NSB*512), .D(RO)) u_sr (.clk(clk), .rst_n(rst_n), .d(so_t), .q(so_r));
+            `OT_QFD_VM_RELAY #(.W(NSU*NSB*512), .D(RO), .TILES(RELAY_TILES), .CK_BASE(g*RT_G + RT_ID + RT_RR), .NCK(RELAY_NCK),
+                .OWN_CK(RETURN_CLOCKS), .MUT((MUT == 21 && g == 0) ? 1 : 0)) u_sr (.clk(clk), .tck(relay_ck), .d(so_t), .q(so_r));
             for (gc = 0; gc < NSU; gc = gc + 1) begin : g_sc
                 assign su_cap[(gc*NRBS + g*NSB)*512 +: NSB*512] = so_r[gc*NSB*512 +: NSB*512];
             end
             assign ovf_all[g] = ovf_t;
         end
         wire [LNRB-1:0] rbq;
-        ot_hdc_delay #(.W(LNRB), .D(RV + RO + 3 + TLR)) u_rb (.clk(clk), .rst_n(rst_n), .d(rr_b0), .q(rbq));
+        `OT_QFD_VM_RELAY #(.W(LNRB), .D(RV + RO + 3 + TLR), .TILES(RELAY_TILES), .CK_BASE(NG*RT_G), .NCK(RELAY_NCK),
+            .OWN_CK(RETURN_CLOCKS)) u_rb (.clk(clk), .tck(relay_ck), .d(rr_b0), .q(rbq));
         reg [511:0] r_qr;
         always @(posedge clk) if (rr_v[RV + RO + 3 + TLR]) r_qr <= ro_all[(rbq >> 3)*512 +: 512];
         assign r_q = r_qr;
@@ -1855,4 +1878,36 @@ module ot_qfd_vm_su_read_control #(
 
     assign {ov3,ov5,ov6,ov7,osi7}={d3_v,d5_v,d6_v,d7_v,d7_si};
     assign {oa5,oa6,oa7}={d5_a0,d6_a0,d7_a0};
+endmodule
+
+// Q-VMWB 0030: a fixed W x D resetless delay line (ot_hdc_delay, RESET 0) built from the CLOSED 256-bit register master
+// qvm_data256_native.  The W*D state bits are packed into ceil(W*D/256) tiles; stage k+1 is fed from stage k through the
+// tiles' own q -> d wiring, so a D>1 line folds through the same tiles.  Padding lanes register their own q (no tied pins,
+// no constant inputs).  TILES 0 = ot_hdc_delay exactly.  OWN_CK 1: tile i clocks on tck[CK_BASE + i].
+module ot_qfd_vm_relay256 #(
+    parameter integer W = 32, D = 1, TILES = 0, CK_BASE = 0, NCK = 1, OWN_CK = 0, MUT = 0   // MUT 1: bench negative (bit 0 inverted)
+)(
+    input wire clk,
+    input wire [NCK-1:0] tck,
+    input wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    if (TILES == 0 || D == 0) begin : g_soft
+        ot_hdc_delay #(.W(W), .D(D)) u_d (.clk(clk), .rst_n(1'b1), .d(d), .q(q));
+    end else begin : g_tiles
+        localparam integer NB = W*D, NT = (NB + 255) / 256;
+        wire [NT*256-1:0] s;                  // tile outputs: stage k at s[k*W +: W]
+        wire [NT*256-1:0] nx;                 // tile inputs
+        assign nx[W-1:0] = (MUT != 0) ? (d ^ {{(W-1){1'b0}}, 1'b1}) : d;
+        if (D > 1) begin : g_chain
+            assign nx[W +: W*(D-1)] = s[0 +: W*(D-1)];
+        end
+        if (NT*256 > NB) begin : g_pad
+            assign nx[NT*256-1:NB] = s[NT*256-1:NB];
+        end
+        for (genvar i = 0; i < NT; i = i + 1) begin : g_t
+            qvm_data256_native u_t (.clk((OWN_CK != 0) ? tck[CK_BASE + i] : clk), .d(nx[i*256 +: 256]), .q(s[i*256 +: 256]));
+        end
+        assign q = s[W*(D-1) +: W];
+    end
 endmodule

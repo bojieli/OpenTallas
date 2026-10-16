@@ -11,11 +11,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
-from die_port_bind import parse_modules
+from die_port_bind import parse_modules, preprocess, strip_comments
 
 
 def rtl_ports(path, name):
-    mods = [m for m in parse_modules(path.read_text(), str(path)) if m.name == name]
+    # production die build defines nothing: opt-in `ifdef ports (e.g. OT_QFD_VM_PARTITIONED_CLOCKS) are not die pins
+    mods = [m for m in parse_modules(preprocess(strip_comments(path.read_text()), {}), str(path)) if m.name == name]
     if len(mods) != 1 or mods[0].port_parse_errors:
         raise ValueError(f'{name}: cannot resolve one complete RTL port list')
     m = mods[0]

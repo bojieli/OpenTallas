@@ -21,6 +21,11 @@ source $KITENV
 # The kit.env's own `export OT_PIN_GROUP_MAX=` (route.pin_balance) wins, then the caller's, then the route default
 # (tools/pin_fit.py ROUTE_PIN_GROUP_MAX; test_pin_fit.py keeps the two equal).
 export OT_PIN_GROUP_MAX=${OT_PIN_GROUP_MAX:-32}
+# CORNER AVOIDANCE (ROOT 2026-10-16): balanced pins (OT_PIN_BALANCE_H/V, place_pin) stay OT_PIN_CORNER_UM (1.0 um) off
+# the tile corners (run_abi3_physical.io_constraints_tcl).  place_pins keeps its own measured margin (first slot 0.732 um
+# from the corner, tools/pin_fit.py PPL_FIRST_SLOT_UM): no corner DRC seen on that path, and the gate's slot model
+# stays exact.
+export OT_PIN_CORNER_UM=${OT_PIN_CORNER_UM:-1.0}
 K=${KIT#/src/}
 D=/src/physical/qwen_die_masters
 hook() {

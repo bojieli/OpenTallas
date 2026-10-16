@@ -35,3 +35,25 @@ of compact.P.json) and a scan of the d2 case placement (run.tcl place_inst vs bl
 
 Not inspectable: 27 of 39 HBM netlist masters are RTL-only (no odb); several failed runs were deleted before an image
 was taken (smh_tile_rp2, strap2 q0, hep ep1, hcoll_ring_state, smh_tcl_gu d62). Owners: render gate_layout before submit.
+
+## Round 2 (01:15 PT, event-driven, scored)
+Only work that changed since pass 1 was re-audited; `contact_sheet_round2.png`. Per-finding status is in `findings.json` (`round` lists, `rounds` summary).
+
+| finding | status | evidence |
+|---|---|---|
+| T4 VM calendar | **confirmed (provisional, gate)** | owner moved clk to S-centre (cce3264d2). Routed native spread 92.8 ps (L222/C206.2) -> gate CTS spread 37.4 ps, insertion 170.9 ps. Route not run yet (CLOSED_STANDS refusal, slot change pending) |
+| T7 smh_bdc d62 | withdrawn | leaf re-harden dropped by the owner (last run FLOORPLAN_MARGIN util 64.1%) |
+| T12 LK EP | **confirmed (provisional, trial GRT)** | route 2: 12 overflow edges at the inward SRAM faces -> route-3 kit (21.6-um channel between rows): trial GRT overflow 0, M2 16 %. Route pending. The 90-um channel I suggested does not fit the fixed 434.72 width (owner) |
+| T3 strap | open | same geometry: q1 CLOSED +18.72; q0 -149.91 -> -62.49; q2/q3 -111.27. strap5 (RTL fix) has no gate yet |
+| T9 SU | magnitude refuted, direction confirmed | H-SU: 20-um macro-to-face rule + 151.2 row lattice leave only the W/E margins (33 -> 21.6 um): bank6 slot 369.36 x 151.2, -5.5 % = -1.672 mm2 over 512 banks (my ~20 % estimate was wrong); r12 re-gating. reduce r4 half: noted / no action (4 per die, 0.036 mm2 = 1 % of the deficit; pin density re-checked only if die GRT overflows at its faces). Earlier r12 submit had failed on `ot-run` not on PATH |
+| D1-D3, T1, T2, T5, T6, T8, T10, T11 | open | no d3, cl2e, rp4 or re-kit has a gate or route yet |
+
+Hit rate: 1 of 1 decided findings confirmed (gate-level, provisional), 0 refuted, 1 withdrawn, 13 open.
+
+New, measured:
+- **R2-1 P1 H-LKEP** `hfd_ep_static` route-3 kit gate fails the clock rule.
+  - Measured: TT insertion 444.9 ps and spread 109.6 ps, against limits of 300 / 80; fill 42%.
+  - Image: the 2x2 SRAMs sit in the top half and the bottom ~45% is empty; the logic hugs the W and S edges; the N face has 0 pins.
+  - Fix: cut the height from ~315 to ~200 um and put clk at W mid-height, before spending route 3.
+
+R2-1 correction (01:35): the 300/80 ps limit applies only above 15k sinks per root; this tile has 7,194, so the gate PASS stands and my clock-rule claim is **refuted**. The open risk is the native audit: boundary insertion is 348.3-396.4 ps against native launch <= 220 / capture <= 190. H-LKEP adopted the height fix as compact variant `hep_static_cmp_1016`: 434.72 x 224.64, fill ~59%. Its clk stays at S-centre (parent contract).
