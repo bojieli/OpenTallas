@@ -180,6 +180,13 @@ module ot_hbm_r14_stream_pc_strap #(
     // reset relay holds this sequencer until the pins have been captured.
     always @(posedge clk)
       if(!rst_n) ref_c<=RW'(refresh_reload); else ref_c<=ref_n;
+    // ref_lead_q == (ref_c == LEAD || ref_c == LEAD + 1) on every edge, registered from the same next value ref_c loads
+    // (H-PCCTRL 2026-10-16: the comparator fanned out to all WQ write-ACT candidates and led the measured TT critical path
+    // ref_c -> wq_act_physical -> pwin -> wab_oh; exact, no cycle change)
+    reg ref_lead_q;
+    always @(posedge clk)
+      if(!rst_n) ref_lead_q<=(RW'(refresh_reload)==RW'(LEAD) || RW'(refresh_reload)==RW'(LEAD + 1));
+      else ref_lead_q<=(ref_n==RW'(LEAD) || ref_n==RW'(LEAD + 1));
     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
                               : (ref_n <= RW'(T_RP + T_RAS + 2));
     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
@@ -370,10 +377,10 @@ module ot_hbm_r14_stream_pc_strap #(
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
       wire [4:0] bq = wq_bq[i*5 +: 5];
       assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
-                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+                         !(REF_MODE && ref_lead_q && bq == bsel);
       assign wq_act_physical[i] = W && wq_pv[i] &&
           (|(wq_boh[i] & ~open & ~blk & aok_z)) && (|(wq_bgoh[i] & rrdl_z)) &&
-          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wq_bank[i] == bsel);
+          !(REF_MODE && ref_lead_q && wq_bank[i] == bsel);
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
     // against the current bank state with one-hot reductions, keeping the queue indexing and the
@@ -405,7 +412,7 @@ module ot_hbm_r14_stream_pc_strap #(
       if (!rst_n) begin wcand_q <= 1'b0; wab <= 0; wab_oh <= 0; wcrd_q <= 1'b0; end
       else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= wab_oh_n; wcrd_q <= wcrd_n; end
     wire wact_ok = wcand_q && !(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
-                   !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
+                   !(REF_MODE && ref_lead_q && wab == bsel) &&
                    !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
     // ---- PULLIN: refresh ahead of schedule while not reading ---------------------------------
     localparam integer PIW = $clog2(PULLIN + 2);

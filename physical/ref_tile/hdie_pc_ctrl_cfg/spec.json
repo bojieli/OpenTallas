@@ -72,10 +72,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:H-DIE-2330",
-  "branch": "claude/hdie-2210",
-  "tag": "cfg-wact2-spine",
-  "purpose": "H2 uses registered physical bank onehots for both oldest-write ACT and current queue PRE exclusion, removing remaining1669-load rotated rp network with no normal edges/extra state; full same-cycle policy and full service proof retained. Replace measured H1 TritonCTS97.7ps spread with supported explicit equal-delay balanced clock spine, including each real SRAM clock as its own leaf, preserving all timing constraints/ports/outline. Clock delay/area and setup require fresh measurement; H1 is unqualified at setup-122.9ps.",
+  "owner": "Claude:H-PCCTRL",
+  "branch": "claude/hpcctrl-0030",
+  "tag": "cfg-h3-reflead",
+  "purpose": "H3 (H-PCCTRL 2026-10-16): measured H2 TT critical path ref_c -> REF lead compare (fanned out to all 32 write-ACT candidates) -> wq_act_physical -> pwin -> wab_oh (-37.9 ps): the compare is now the register ref_lead_q loaded from the same next value ref_c loads (exact, checked equal on every edge of the 54,018-edge policy bench); outline re-sized to util 0.52 from the measured std area 6,327 um2 (H2 gate util 43 %, east third empty). Spine clock kept (H1 default CTS spread 97.7 ps).",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -160,12 +160,13 @@
   "enable": false,
   "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
  },
- "outline": {
-  "w": 185.76,
-  "h": 185.76
- },
  "io_tcl": "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl",
- "structural_change": "H2 uses registered physical bank onehots for both oldest-write ACT and current queue PRE exclusion, removing remaining1669-load rotated rp network with no normal edges/extra state; full same-cycle policy and full service proof retained. Replace measured H1 TritonCTS97.7ps spread with supported explicit equal-delay balanced clock spine, including each real SRAM clock as its own leaf, preserving all timing constraints/ports/outline. Clock delay/area and setup require fresh measurement; H1 is unqualified at setup-122.9ps.",
+ "structural_change": "H3 (H-PCCTRL 2026-10-16): measured H2 TT critical path ref_c -> REF lead compare (fanned out to all 32 write-ACT candidates) -> wq_act_physical -> pwin -> wab_oh (-37.9 ps): the compare is now the register ref_lead_q loaded from the same next value ref_c loads (exact, checked equal on every edge of the 54,018-edge policy bench); outline re-sized to util 0.52 from the measured std area 6,327 um2 (H2 gate util 43 %, east third empty). Spine clock kept (H1 default CTS spread 97.7 ps).",
  "clock": "spine",
- "spine_macro_leaf": true
+ "spine_macro_leaf": true,
+ "std_area_um2": 6327,
+ "outline": {
+  "w": 164.16,
+  "h": 164.16
+ }
 }
