@@ -1,0 +1,97 @@
+{
+ "name": "hbm_ckgen",
+ "top": "hfd_ckgen",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/control/hfd_ckgen.sv",
+  "rtl/hbm_accel/control/ot_hbm_pll_bb.sv"
+ ],
+ "clock_port": "refclk",
+ "reset_ports": [
+  "por_n"
+ ],
+ "pins": {
+  "N": [
+   "refclk",
+   "por_n"
+  ],
+  "S": [
+   "pll_stream",
+   "pll_serial",
+   "pll_hbm",
+   "pll_link",
+   "por_stream",
+   "por_serial",
+   "por_hbm",
+   "por_link"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 1,
+ "outline": {
+  "w": 220.32,
+  "h": 220.32,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
+   "count": 1,
+   "at": [
+    22.464,
+    23.76
+   ]
+  }
+ ],
+ "sdc_extra": [
+  "physical/hbm_pll_views/sdc/hfd_ckgen_clocks.sdc"
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03
+ },
+ "slot_change_request": "H-DIE hb_ckgen (v6, 216x216, granted 17:30): (1) outline 220.32 x 220.32: the 172.8 um PLL abstract needs the 20 um macro channel to every core edge plus the 2.16 um core margin (172.8+2x20+2x2.16 = 217.1 > 216; next row/site lattice with the macro on its 0.432/2.16 lattice = 220.32); (2) pins: grant has refclk/por_n (N) + pll_* (face 'centre', M9) only; the RTL also drives por_stream/por_serial/por_hbm/por_link (domain reset releases into the staged reset trees): all 8 outputs on the S face, cap M5 (ref_tile has no centre face). Request: grow the slot 4.32 um, grant por_* and confirm S/M5 taps. H-HARDEN el1015-hbm-v15-harden.log",
+ "job": {
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hbm-harden-1705",
+  "tag": "ck1",
+  "merge_target": "main",
+  "purpose": "HBM die clock root hb_ckgen (hfd_ckgen): PLL modelled hard core ot_hbm_pll_bb (172.8 um abstract cloned from the S81 die PLL class, pins only) + four real two-flop async-assert/sync-release reset synchronisers (one per PLL domain). Clocks defined at the PLL output pins; outputs are clock forwards/async resets.",
+  "extra_paths": [
+   "physical/hbm_pll_views",
+   "rtl/hbm_accel/control",
+   "tools/hbm_v15_harden"
+  ],
+  "record_to": "results/rtl/ref_tile/hbm_ckgen",
+  "benches": [
+   {
+    "name": "reset_release",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CKGEN_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "one_flop_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}
