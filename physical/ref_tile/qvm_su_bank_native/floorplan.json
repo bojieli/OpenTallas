@@ -1,0 +1,314 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qvm_su_bank_native",
+ "top": "qvm_su_bank_native",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  371.52,
+  241.92
+ ],
+ "core": [
+  2.16,
+  2.16,
+  369.35999999999996,
+  239.76
+ ],
+ "why": "spec outline",
+ "std_area_um2": 0,
+ "layer_contract": {
+  "children": {
+   "qvm_su_bank_ctrl_native": "M5",
+   "qvm_data256_native": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm",
+   "wd",
+   "ck_in_lo",
+   "ck_in_hi",
+   "ck_ctrl",
+   "rst_n"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "ck_mem_lo",
+   "ck_mem_hi",
+   "ck_out_lo",
+   "ck_out_hi"
+  ],
+  "N": [
+   "ck_cap_lo",
+   "ck_cap_hi"
+  ]
+ },
+ "clock_port": "ck_ctrl",
+ "clock_ports": [
+  "ck_ctrl",
+  "ck_in_lo",
+  "ck_in_hi",
+  "ck_mem_lo",
+  "ck_mem_hi",
+  "ck_cap_lo",
+  "ck_cap_hi",
+  "ck_out_lo",
+  "ck_out_hi"
+ ],
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_lo",
+   "idx": 0,
+   "x": 73.44,
+   "y": 25.92,
+   "w": 174.744,
+   "h": 70.488,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_hi",
+   "idx": 0,
+   "x": 73.44,
+   "y": 116.64,
+   "w": 174.744,
+   "h": 70.488,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native",
+   "master": "qvm_su_bank_ctrl_native",
+   "inst": "u_ctrl",
+   "idx": 0,
+   "x": 25.92,
+   "y": 190.08,
+   "w": 17.28,
+   "h": 21.6,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "master": "qvm_data256_native",
+   "inst": "u_in_lo",
+   "idx": 0,
+   "x": 25.92,
+   "y": 25.92,
+   "w": 25.92,
+   "h": 51.84,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "master": "qvm_data256_native",
+   "inst": "u_in_hi",
+   "idx": 0,
+   "x": 25.92,
+   "y": 116.64,
+   "w": 25.92,
+   "h": 51.84,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "master": "qvm_data256_native",
+   "inst": "u_cap_lo",
+   "idx": 0,
+   "x": 272.16,
+   "y": 25.92,
+   "w": 25.92,
+   "h": 51.84,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "master": "qvm_data256_native",
+   "inst": "u_cap_hi",
+   "idx": 0,
+   "x": 272.16,
+   "y": 116.64,
+   "w": 25.92,
+   "h": 51.84,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "master": "qvm_data256_native",
+   "inst": "u_out_lo",
+   "idx": 0,
+   "x": 319.68,
+   "y": 25.92,
+   "w": 25.92,
+   "h": 51.84,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "master": "qvm_data256_native",
+   "inst": "u_out_hi",
+   "idx": 0,
+   "x": 319.68,
+   "y": 116.64,
+   "w": 25.92,
+   "h": 51.84,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_su_bank_ctrl_native#0: origin (25.92, 190.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_data256_native#0: origin (25.92, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_data256_native#0: origin (25.92, 116.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_data256_native#0: origin (272.16, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_data256_native#0: origin (272.16, 116.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_data256_native#0: origin (319.68, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qvm_data256_native#0: origin (319.68, 116.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_hard_native.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/ref_tile/qvm_su_bank_native/kit.env",
+  "physical/ref_tile/qvm_su_bank_native/clock.sdc",
+  "physical/ref_tile/qvm_su_bank_native/signoff.sdc",
+  "physical/ref_tile/qvm_su_bank_native/pdn.tcl",
+  "physical/ref_tile/qvm_su_bank_native/pre_cts.tcl",
+  "physical/ref_tile/qvm_su_bank_native/post_cts.tcl",
+  "physical/ref_tile/qvm_su_bank_native/post_grt.tcl",
+  "physical/ref_tile/qvm_su_bank_native/pre_drt.tcl",
+  "physical/ref_tile/qvm_su_bank_native/pre_fill.tcl",
+  "physical/ref_tile/qvm_su_bank_native/post_fill.tcl",
+  "physical/ref_tile/qvm_su_bank_native/pre_grt.tcl",
+  "physical/ref_tile/qvm_su_bank_native/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qvm_su_bank_native/pre_gpl.tcl",
+  "physical/ref_tile/qvm_su_bank_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qvm_su_bank_native/clock_entry.sdc",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native/insertion.json",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/insertion.json",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native/qvm_su_bank_ctrl_native.lef",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native/qvm_su_bank_ctrl_native_ss.lib",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native/qvm_su_bank_ctrl_native_ff.lib",
+  "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native/qvm_su_bank_ctrl_native_tt.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ss.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ff.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_tt.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ss.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ff.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_tt.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ss.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ff.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_tt.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ss.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ff.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_tt.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ss.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ff.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_tt.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ss.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_ff.lib",
+  "physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native_tt.lib",
+  "physical/ref_tile/qvm_su_bank_native/place.tcl"
+ ]
+}

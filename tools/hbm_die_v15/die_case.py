@@ -255,11 +255,16 @@ def main():
     for q in Q:
         b = P[f'phy_{q}']; north = b['y'] > 10000
         phy = f'phy_{q}'
-        leaves[phy] = dict(m=PHY_M, x=b['x'], y=b['y'], o='MX' if north else 'R0', w=b['w'], h=b['h'])
+        east = b['x'] > W / 2
+        # east PHYs mirrored so channel order runs with the PC band boxes (grants v5 lesson: SE/NE channel order is
+        # reversed vs the box order otherwise; v4 had 9.1 mm PHY-PC hops)
+        po = ('R180' if east else 'MX') if north else ('MY' if east else 'R0')
+        leaves[phy] = dict(m=PHY_M, x=b['x'], y=b['y'], o=po, w=b['w'], h=b['h'])
         lp = vxy[PHY_M]
         for pc in range(32):
             xs = [lp[f'{n}[{pc * w + k}]'][0] for n, w, _ in per for k in range(w)]
-            cx = b['x'] + sum(xs) / len(xs)
+            mx = sum(xs) / len(xs)
+            cx = b['x'] + (b['w'] - mx if po in ('MY', 'R180') else mx)
             l = f'ctl_{q}_p{pc:02d}'
             y = round(b['y'] - 10.8 - ch, 3) if north else round(b['y'] + b['h'] + 10.8, 3)
             leaves[l] = dict(m=CTL_M, x=round(round((cx - cw / 2) / 0.216) * 0.216, 3), y=y, o='MX' if north else 'R0',
@@ -296,6 +301,14 @@ def main():
                 net(f'pk_{q}{k}_{j}', (g, f'sm_packet[{j}]'), [(f'sm_{q}{k}', f'packet[{j}]')])
             for j in range(83):
                 net(f'cm_{q}{k}_{j}', (g, f'sm_command[{j}]'), [(f'sm_{q}{k}', f'command[{j}]')])
+    worst = 0
+    for q in Q:
+        for k in range(8):
+            g = leaves[f'svg_{q}{k}']
+            for lane in range(4):
+                c = leaves[f'ctl_{q}_p{4 * k + lane:02d}']
+                worst = max(worst, abs(g['x'] + g['w'] / 2 - c['x'] - c['w'] / 2) + abs(g['y'] + g['h'] / 2 - c['y'] - c['h'] / 2))
+    print(f'max group-controller centre distance {worst:.0f} um')
     ls = list(leaves.items())
     for i, (l1, v1) in enumerate(ls):
         for l2, v2 in ls[i + 1:]:
@@ -314,10 +327,34 @@ def main():
                     'hbm_pc_clk': 'hbm'}.get(b)
     ck = slots[a.ckgen]
     pads = json.loads(a.clock_pads.read_text()) if a.clock_pads else {}
-    obs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for v in leaves.values()]
+    # obstacles: every placed view and every other plan block, MINUS the die-owned feedthrough relay column/row each
+    # cluster slot reserves (grants reserved_channels): die clock repeaters sit there, as the die relay stations do
+    def minus_channels(name, x0, y0, w, h, o):
+        sl = slots.get(name)
+        rects = [(x0, y0, x0 + w, y0 + h)]
+        for ch_ in (sl or {}).get('reserved_channels', []):
+            cx0, cx1 = ch_['x_um']; cy0, cy1 = ch_['y_um']
+            if o in ('MY', 'R180'):
+                cx0, cx1 = w - cx1, w - cx0
+            if o in ('MX', 'R180'):
+                cy0, cy1 = h - cy1, h - cy0
+            cut = (x0 + cx0, y0 + cy0, x0 + cx1, y0 + cy1)
+            nr = []
+            for (a0, b0, a1, b1) in rects:
+                if cut[0] >= a1 or cut[2] <= a0 or cut[1] >= b1 or cut[3] <= b0:
+                    nr.append((a0, b0, a1, b1)); continue
+                for r in ((a0, b0, cut[0], b1), (cut[2], b0, a1, b1), (max(a0, cut[0]), b0, min(a1, cut[2]), cut[1]),
+                          (max(a0, cut[0]), cut[3], min(a1, cut[2]), b1)):
+                    if r[2] - r[0] > 0.01 and r[3] - r[1] > 0.01:
+                        nr.append(r)
+            rects = nr
+        return rects
+    obs = []
+    for l, v in leaves.items():
+        obs += minus_channels(l, v['x'], v['y'], v['w'], v['h'], v['o'])
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
-            obs.append((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+            obs += minus_channels(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
     trees = {}
     clkpins = defaultdict(lambda: defaultdict(list))   # domain -> inst -> [pins]
     for l, v in leaves.items():
