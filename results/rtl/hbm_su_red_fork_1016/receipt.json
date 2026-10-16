@@ -13,12 +13,16 @@
     "su_top_compile exports only RF tag bit8; no CW/EMIT/RR_EN lowering exists in that compiler revision.",
     "Existing collport bench drives reducer red_sv/red_tag/red_x externally; qcore red outputs are disconnected in that bench. This proves a declared-boundary component, not a native reducer->COLL composition.",
     "New directed lowering reserves qcore commands, stream carry publication, returned RF-sector bank ports, and four RF replicas separately. It emits 74-bit native commands and no arithmetic values.",
-    "Upstream readiness declarations and actual COLL lp/rr slots still require authoritative whole-layer composition. Directed input is not production evidence."
+    "Upstream readiness declarations and actual COLL lp/rr slots still require authoritative whole-layer composition. Directed input is not production evidence.",
+    "Current component proof replaces the earlier hand-driven reducer pins with real scratch SRAM->qcore scalar producer; direct RED path is demonstrated legal. Production whole-layer join remains open."
   ],
   "next": "Bind actual source-ready reducer values and collective lp/rr programme rows to this lowering, then run actual reducer->cxport->COLL->RF composition with failing latency/tag mutants.",
   "tests": {
     "cases": 11,
     "exit_code": 0,
     "scope": "compiler reservation unit tests only"
-  }
+  },
+  "native_component_gate": "native_receipt.json",
+  "native_component_scope": "actual qcore with two mapped SRAMs drives cxport directly; 8 FP32 scalar words; exact rc update161 and LATE162; collective returned sector writes actual RF banks. Upstream slice operands and collective return are explicit external boundary stimuli.",
+  "excluded_development_fixture": "Initial stimulus advanced slice operand one edge too early. Corrected to actual qcore consumption E+1 before final proof; no DUT or expected values changed."
 }
