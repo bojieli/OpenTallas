@@ -13,7 +13,9 @@
   "NOPS": 128,
   "STAGE": 0
  },
- "defines": [],
+ "defines": [
+  "OT_S81_ISSUE_SCANPIPE"
+ ],
  "clock": "multiple_cts_roots",
  "clock_port": "ck",
  "clock_ports": [
@@ -203,9 +205,9 @@
  "structural_change": "n4 issuer timing (c9 n2 CTS gate: reg->reg -527.4 ps at u_s.u_issue.run_fault, 653 paths; age -> 24-bit calendar compare -> per-row seen_cmd priority chain -> run_fault): (a) every row's issue/done hit is registered one edge ahead (compare against the value age takes on this edge), so every runtime event cone starts at a flop; (b) duplicate-issue, legit-completion and bad-completion detection are per-engine parallel OR / at-least-two trees (Codex 2154 candidate, fixed: its row_hit function in a continuous assignment did not track tag_oh -> false fault 6 in c8); (c) run_fault/cfg_fault are sticky ORs of the registered event flags. Same command/KIT/END edges and payloads (differential bench vs the frozen n3 issuer, 0 mismatches); one stricter protocol check: a calendar write on the job-accept edge is a run fault (n3 started the job on a half-written calendar). +512 flops. Kit, pins, outline unchanged from n3 (h1296 grant).",
  "job": {
   "owner": "Claude:S-ELEM-PQ",
-  "branch": "claude/s81-pq-2210",
-  "tag": "n4-issuepred",
-  "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
+  "branch": "claude/s81-pq-0030",
+  "tag": "n5-scanpipe",
+  "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants. n5: OT_S81_ISSUE_SCANPIPE registers the 76-bit row/loaded/tag before the boot-validation accumulation (n4 gate setup -153.3 ps scan_index->cfg_fault); init 128->130 edges, normal issue schedule unchanged; 12-seed issuer DIFF 0 mismatches + MUT=1 FAIL.",
   "views_to": "physical/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/views",
   "record_to": "results/rtl/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425",
   "extra_paths": [

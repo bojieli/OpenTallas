@@ -1,13 +1,13 @@
 {
- "name": "dsfd_stage_seq_static_c9_pq_native_1425-n4-issuepred-COMMIT",
+ "name": "dsfd_stage_seq_static_c9_pq_native_1425-n5-scanpipe-COMMIT",
  "block": "dsfd_stage_seq_static_c9",
  "ref_tile": true,
  "owner": "Claude:S-ELEM-PQ",
- "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
+ "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants. n5: OT_S81_ISSUE_SCANPIPE registers the 76-bit row/loaded/tag before the boot-validation accumulation (n4 gate setup -153.3 ps scan_index->cfg_fault); init 128->130 edges, normal issue schedule unchanged; 12-seed issuer DIFF 0 mismatches + MUT=1 FAIL.",
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/s81-pq-2210",
+  "branch": "claude/s81-pq-0030",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
@@ -27,7 +27,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_stage_seq_static_c9 #(.NOPS(128), .STAGE(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_stage_seq_static_c9 #(.NOPS(128), .STAGE(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81_ISSUE_SCANPIPE --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -138,7 +138,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/dsfd_stage_seq_static_c9_pq_native_1425-n4-issuepred-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/dsfd_stage_seq_static_c9_pq_native_1425-n5-scanpipe-COMMIT"
   }
  ],
  "cycles_added": 0,
