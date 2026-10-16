@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261016-025738
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261016-025738
+ot-run: ot-agidock128  admits    54 GB (avail 102, growth 45, headroom 24, waiters 0/0 GB) load 34/64 running 11 disk 362 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1160497-1792146963 after 0 s
+orfs_hold_mm: final legalization patched
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+orfs_hold_mm: final legalization already patched
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "status": "already patched"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook already patched
+orfs_hold_mm: sliver block hook already patched
+orfs_hold_mm: pre-route gate hook already patched
+a86b26b72a3a7d9c357cb4b421245a66b242df454ffe4159732c2661439f3300  /OpenROAD-flow-scripts/flow/scripts/detail_place.tcl
+  }
+  log_cmd optimize_mirroring
+
+  puts "OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring"
+  log_cmd detailed_placement {*}$dpl_args
+
+  utl::info FLW 12 "Placement violations [check_placement -verbose]."
+
+  log_cmd estimate_parasitics -placement
+}
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1160497-1792146963): exit 0
