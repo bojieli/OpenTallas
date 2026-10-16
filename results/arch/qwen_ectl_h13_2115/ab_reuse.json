@@ -29,7 +29,30 @@
    "adoption": "reuse h5 physical view only after actual CLOSED plus native gate; do not route a second copy",
    "physical": {
     "job": "qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48",
-    "status": "live preserved; no h13 physical qualification claimed"
+    "status": "CLOSED, native capture FAIL; reuse HOLD"
+   },
+   "native": {
+    "cell": "qkd_ectl_a_tp8_epoch_direct",
+    "view": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct",
+    "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 413.6,
+    "spread_ps": 52.5,
+    "outputs": 1554,
+    "inputs": 1046,
+    "launch_ps": 198.4,
+    "launch_pin": "rq[7]",
+    "capture_ps": 221.0,
+    "capture_pin": "rs[405]",
+    "launch_over": 0,
+    "capture_over": 913,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 220.98393 > 190 (913 pins)"
    }
   },
   "b": {
