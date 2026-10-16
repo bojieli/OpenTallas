@@ -291,7 +291,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM",
   "branch": "claude/s81-static14-0600",
-  "tag": "st3-main0600",
+  "tag": "st4-xroot",
   "purpose": "S81 Engram lookup element, STATIC 14-root form dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
   "structural_change": "Static successor of the credit wrapper dsfd_engram_lkp_14roots: ot_s81_engram_lookup_static (Codex 05:03 draft, preserved 257284f61) behind one input and one output pin register; win_cred/rel/hq_cred/o_cred removed, win_slot/hr_slot added. Element proof: STATIC PASS 16 windows/96 requests/768 beats/96 statuses vs ot_dsrom_engram_lookup reference, 7 mutants rejected.",
   "extra_paths": [
