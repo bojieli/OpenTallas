@@ -1,0 +1,55 @@
+violation type: Horizontal congestion
+	srcs: net:_06313_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (39.3300, 46.7400) - (39.9000, 47.3100) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_16942_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (35.9100, 43.8900) - (36.4800, 44.4600) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09839_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (34.2000, 46.7400) - (34.7700, 47.3100) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09730_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (37.6200, 43.8900) - (38.1900, 44.4600) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_16942_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (35.3400, 43.8900) - (35.9100, 44.4600) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_06313_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (39.9000, 46.7400) - (40.4700, 47.3100) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09730_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (37.0500, 43.8900) - (37.6200, 44.4600) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09839_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (34.7700, 46.7400) - (35.3400, 47.3100) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09963_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (38.7600, 43.8900) - (39.3300, 44.4600) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09730_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (38.1900, 43.8900) - (38.7600, 44.4600) on Layer -
+violation type: Horizontal congestion
+	srcs: net:_09860_
+	comment: capacity:0 usage:1 congestion:1
+	bbox = (36.4800, 43.8900) - (37.0500, 44.4600) on Layer -
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             1297492        361682           27.88%             0 /  0 /  0
+M3             1538503        420264           27.32%             0 /  0 /  0
+M4             1185012        242507           20.46%             1 /  0 / 11
+M5             1699783        213280           12.55%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          5720790       1237733           21.64%             1 /  0 / 11
