@@ -1,0 +1,843 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_45_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tile_nk_rp2_45_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tile_nk_rp2_45_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nk_rp2_45_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 5714 FIRM hold cells / drivers for DPL
+OT_OFLOP released 2343 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 370355.33 um^2
+[INFO DPL-0007] Movable instances area: 18462.86 um^2
+[INFO DPL-0008] Fixed instances area within core: 210118.80 um^2
+[INFO DPL-0009] Utilization: 61.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 150790 cells
+[INFO DPL-0393]   height 233 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      31451 |      9777 |     20747
+        1 |      28322 |      8940 |     18146
+        2 |      24921 |      8725 |     15377
+        3 |      22614 |      8592 |     13488
+        4 |      21385 |      8503 |     12357
+        5 |      20942 |      8460 |     11966
+        6 |      20306 |      8420 |     11370
+        7 |      20117 |      8399 |     11202
+        8 |      19894 |      8390 |     10988
+        9 |      19701 |      8381 |     10804
+       10 |      19674 |      8374 |     10784
+       20 |      19550 |      8362 |     10672
+       29 |      19540 |      8360 |     10664
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 19540 for 3 consecutive iterations.
+Using old diamond search for 8360 remaining illegal cells.
+diamond recovery: recovered 8083/8360 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |        329 |       277 |        47
+      403 |        329 |       277 |        47
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 329 for 3 consecutive iterations. Using diamond search for 277 remaining illegal cells.
+diamond recovery: recovered 0/277 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 277
+[INFO DPL-0500] Runtime: 61.38s
+Placement Analysis
+---------------------------------
+total displacement     176948.1 u
+average displacement        1.2 u
+max displacement           64.0 u
+original HPWL         2377114.7 u
+legalized HPWL        2439208.9 u
+delta HPWL                    3 %
+
+Took 62 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 40569 fixed cells.
+[INFO DPL-0318] Collected 121150 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (455760, 818640)
+[INFO DPL-0310] Assigned 121150 cells into segments.  Movement in X-direction is 6768954.000000, movement in Y-direction is 2492640.000000.
+[WARNING DPL-0200] Unexpected displacement during legalization.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 606 site alignment problems.
+[INFO DPL-0311] Found 240 overlaps between adjacent cells.
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/place25538
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[1\].u_tx/_502_
+Violation in place28127
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_462_
+Violation in place25647
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_665_
+Violation in wire37022
+Violation in place25997
+Violation in place25969
+Violation in place25413
+Violation in place25967
+Violation in place27769
+Violation in place25974
+Violation in place25451
+Violation in place25439
+Violation in place25440
+Violation in place25447
+Violation in wire37044
+Violation in place25418
+Violation in place25437
+Violation in place25410
+Violation in u_tile.u_tile.u_logic.u_me.u_v.line\[5\]$_DFF_PN0__1129
+Violation in u_tile.u_tile.u_logic.u_me.u_v.line\[28\]$_DFF_PN0__1120
+Violation in place26729
+Violation in place26428
+Violation in wire36863
+Violation in place25397
+Violation in place26123
+Violation in place25473
+Violation in place26734
+Violation in place25405
+Violation in place25138
+Violation in u_tile.u_tile.u_logic.u_me.s2_v$_DFF_PN0__1090
+Violation in place25404
+Violation in place26099
+Violation in place27263
+Violation in place26007
+Violation in place26122
+Violation in u_tile.u_tile.u_logic.u_me.u_mv.line\[5\]$_DFF_PN0__1097
+Violation in place27265
+Violation in u_tile.u_tile.u_logic.u_me.u_mv.line\[4\]$_DFF_PN0__1096
+Violation in place26078
+Violation in place25981
+Violation in place25155
+Violation in place25453
+Violation in wire35523
+Violation in place25145
+Violation in place25139
+Violation in place25463
+Violation in wire35521
+Violation in place25089
+Violation in place25456
+Violation in place25457
+Violation in _070962_
+Violation in place30750
+Violation in wire35745
+Violation in place31046
+Violation in place31987
+Violation in place30879
+Violation in place32506
+Violation in place30288
+Violation in place30622
+Violation in place29242
+Violation in place30596
+Violation in place30595
+Violation in place31859
+Violation in place30698
+Violation in place29766
+Violation in place31641
+Violation in place31455
+Violation in place29216
+Violation in wire35741
+Violation in place30882
+Violation in place29213
+Violation in place25951
+Violation in place30455
+Violation in place30142
+Violation in place29478
+Violation in place25958
+Violation in wire35711
+Violation in wire35737
+Violation in place32490
+Violation in wire35735
+Violation in place29434
+Violation in place25940
+Violation in place30296
+Violation in place25971
+Violation in place29484
+Violation in place32427
+Violation in place30899
+Violation in place32130
+Violation in place25890
+Violation in wire35589
+Violation in place32568
+Violation in place25421
+Violation in place25871
+Violation in place31331
+Violation in wire37086
+Violation in place31167
+Violation in wire37081
+Violation in place32527
+Violation in place29251
+Violation in place31862
+Violation in place29481
+Violation in wire35592
+Violation in place29423
+Violation in place31966
+Violation in place30616
+Violation in place25966
+Violation in place29501
+Violation in place32621
+Violation in place25953
+Violation in place25954
+Violation in place25913
+Violation in wire37097
+Violation in place29274
+Violation in place25874
+Violation in place25885
+Violation in place29367
+Violation in place25924
+Violation in place29270
+Violation in place29249
+Violation in place31743
+Violation in place25928
+Violation in wire37099
+Violation in place29389
+Violation in place31367
+Violation in place29296
+Violation in place31866
+Violation in place25896
+Violation in wire37107
+Violation in place29329
+Violation in place29345
+Violation in place25422
+Violation in place26009
+Violation in place30399
+Violation in place32577
+Violation in place30385
+Violation in place31555
+Violation in place29289
+Violation in place25888
+Violation in place31037
+Violation in place29449
+Violation in place29333
+Violation in place25877
+Violation in place25882
+Violation in place25995
+Violation in place29342
+Violation in wire37093
+Violation in place30569
+Violation in place26001
+Violation in place30497
+Violation in place30633
+Violation in place31044
+Violation in place25423
+Violation in place25443
+Violation in _070317_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].r\[173\]$_DFF_P_
+Violation in _069687_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g\[173\]$_DFF_P_
+Violation in _088995_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[1\].r\[170\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[0\].r\[39\]$_DFF_P_
+Violation in _088980_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[1\].r\[223\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[1\].r\[216\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[220\]$_SDFF_PN0_
+Violation in _085474_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[0\].g\[29\]$_DFF_P_
+Violation in _092256_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_sf.u_rp.g_pair\[0\].r\[67\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[1\].g\[221\]$_DFF_P_
+Violation in wire37175
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].r\[261\]$_DFF_P_
+Violation in _085433_
+Violation in _089007_
+Violation in _088585_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[0\].r\[100\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[0\].r\[63\]$_DFF_P_
+Violation in place32089
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g\[246\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[0\].r\[119\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[0\].g\[26\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].r\[259\]$_DFF_P_
+Violation in _092275_
+Violation in _099261_
+Violation in wire38559
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[224\]$_DFF_P_
+Violation in wire38019
+Violation in wire37934
+Violation in wire37915
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[77\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g\[77\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g_bank.g_capx2.cap2x\[77\]$_SDFF_PN0_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[175\]$_DFF_P_
+Violation in wire37953
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g_bank.g_capx2.cap2x\[75\]$_SDFF_PN0_
+Violation in wire37424
+Violation in wire37476
+Violation in wire38675
+Violation in wire38001
+Violation in wire37984
+Violation in wire38527
+Violation in wire37625
+Violation in wire37614
+Violation in wire37574
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[75\]$_DFF_P_
+Violation in _095742_
+Violation in _073898_
+Violation in _096300_
+Violation in place32406
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[245\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[428\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[252\]$_DFF_P_
+Violation in _099197_
+Violation in wire37449
+Violation in _099308_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].r\[210\]$_DFF_P_
+Violation in wire38648
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].g\[157\]$_DFF_P_
+Violation in _074678_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].g\[365\]$_DFF_P_
+Violation in _099467_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[172\]$_DFF_P_
+Violation in wire38594
+Violation in _099499_
+Violation in _099501_
+Violation in wire37846
+Violation in wire37766
+Violation in wire37560
+Violation in wire38543
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].r\[125\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[138\]$_DFF_P_
+Violation in wire37882
+Violation in place33612
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[125\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[170\]$_DFF_P_
+Violation in wire38692
+Violation in wire38561
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[413\]$_SDFF_PN0_
+Violation in wire37410
+Violation in wire37962
+Violation in wire37558
+Violation in wire37871
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/_609_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/_587_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/_488_
+Violation in _141305_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/_748_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/_673_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/_559_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/_612_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/_424_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/q\[389\]$_DFF_PN0__1148
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/_725_
+Violation in place25018
+Violation in place24659
+Violation in place25672
+Violation in place24735
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/_669_
+Violation in place24815
+Violation in place24897
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/_563_
+Violation in place25116
+Violation in place25072
+Violation in place25665
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/_633_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_541_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_545_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_420_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_439_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_739_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_731_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_685_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/_668_
+Violation in place26243
+Violation in place25494
+Violation in _082533_
+Violation in place27616
+Violation in place25044
+Violation in _082389_
+Violation in place26223
+Violation in place27693
+Violation in place26785
+Violation in place24938
+Violation in place26482
+Violation in place26216
+Violation in _082520_
+Violation in _082387_
+Violation in place27176
+Violation in place26765
+Violation in _082303_
+Violation in _082145_
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/_538_
+Violation in place26408
+Violation in place25402
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/_496_
+Violation in place26255
+Violation in place25889
+Violation in place27757
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/_404_
+Violation in wire35719
+Violation in place29288
+Violation in place29427
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g\[95\]$_DFF_P_
+Violation in place29461
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/place28923
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/place28934
+Violation in _087399_
+Violation in _137280_
+Violation in _086248_
+Violation in wire35738
+Violation in place25433
+Violation in place26820
+Violation in place29268
+Violation in place29269
+Violation in wire35724
+Violation in wire35588
+Violation in place30464
+Violation in place26558
+Violation in place31080
+Violation in place29710
+Violation in place30325
+Violation in place30866
+Violation in place31292
+Violation in place29943
+Violation in place29895
+Violation in place32674
+Violation in place31391
+Violation in _069593_
+Violation in place25553
+Violation in place26358
+Violation in place25051
+Violation in place27485
+Violation in load_slew35479
+Violation in place24786
+Violation in place24932
+Violation in place25520
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25221
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25596
+Violation in place24805
+Violation in place24773
+Violation in place24787
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25248
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place24949
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25627
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/load_slew35344
+Violation in load_slew35451
+Violation in place25689
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_684_
+Violation in place24683
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25302
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/load_slew35441
+Violation in place27519
+Violation in place25720
+Violation in place25497
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_624_
+Violation in place24976
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_589_
+Violation in place24723
+Violation in place24780
+Violation in place24991
+Violation in place25039
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/wire35418
+[INFO DPL-0312] Found 364 edge spacing violations and 37 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 2.447184e+09.
+[INFO DPL-0302] End of matching; objective is 2.444986e+09, improvement is 0.09 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 2.436466e+09.
+[INFO DPL-0307] End of global swaps; objective is 2.436466e+09, improvement is 0.35 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 2.434866e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 2.434866e+09, improvement is 0.07 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 2.433453e+09.
+[INFO DPL-0305] End of reordering; objective is 2.433453e+09, improvement is 0.06 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 2423000 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 2423000, swaps 173551, moves 816469 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 2.425905e+09, Scratch cost 2.415546e+09, Incremental cost 2.415546e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 2.415546e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.43 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.427019 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 42536 cell flips.
+[INFO DPL-0384] End of flipping; objective is 2.403103e+09, improvement is 0.83 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 296 site alignment problems.
+[INFO DPL-0311] Found 117 overlaps between adjacent cells.
+Violation in place27769
+Violation in place25397
+Violation in wire37073
+Violation in place26127
+Violation in place25405
+Violation in u_tile.u_tile.u_logic.u_me.u_mv.line\[4\]$_DFF_PN0__1096
+Violation in place25453
+Violation in place25145
+Violation in place25877
+Violation in place25882
+Violation in place29342
+Violation in wire37093
+Violation in place30569
+Violation in place26001
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_sf.u_rp.g_pair\[1\].r\[203\]$_DFF_P_
+Violation in wire37182
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[220\]$_SDFF_PN0_
+Violation in _096300_
+Violation in wire38631
+Violation in wire37560
+Violation in wire38543
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].g\[170\]$_DFF_P_
+Violation in place33612
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[125\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[170\]$_DFF_P_
+Violation in wire38692
+Violation in wire37410
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24701
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24745
+Violation in place25018
+Violation in u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25714
+Violation in place24815
+[INFO DPL-0312] Found 32 edge spacing violations and 12 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          2439208.9 u ( 1043567.1,  1395641.9)
+Final HPWL             2401438.3 u ( 1014354.7,  1387083.6)
+Delta HPWL                  -1.5 % (      -2.8,       -0.6)
+
+Took 31 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 6250 instances
+[INFO DPL-0021] HPWL before          2401438.3 u
+[INFO DPL-0022] HPWL after           2401163.6 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[WARNING DPL-0005] Overlap check failed (1).
+ wire37560 (BUFx12f_ASAP7_75t_R) overlaps wire37422 (BUFx12_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (1).
+ wire37560
+[WARNING DPL-0006] Site aligned check failed (296).
+ _082145_
+ _096300_
+ _114668_
+ _141323_
+ load_slew35580
+ place24723
+ place24735
+ place24815
+ place24834
+ place24851
+ place24897
+ place24902
+ place25018
+ place25051
+ place25072
+ place25116
+ place25138
+ place25139
+ place25149
+ place25188
+ place25397
+ place25404
+ place25405
+ place25407
+ place25409
+ place25410
+ place25413
+ place25421
+ place25422
+ place25438
+ place25443
+ place25444
+ place25451
+ place25453
+ place25456
+ place25457
+ place25461
+ place25496
+ place25665
+ place25689
+ place25871
+ place25874
+ place25877
+ place25879
+ place25881
+ place25882
+ place25885
+ place25888
+ place25890
+ place25896
+ place25913
+ place25924
+ place25925
+ place25928
+ place25940
+ place25951
+ place25953
+ place25954
+ place25956
+ place25958
+ place25960
+ place25961
+ place25966
+ place25967
+ place25969
+ place25971
+ place25974
+ place25978
+ place25980
+ place25981
+ place25991
+ place25995
+ place26001
+ place26002
+ place26004
+ place26007
+ place26008
+ place26009
+ place26012
+ place26014
+ place26064
+ place26074
+ place26099
+ place26108
+ place26109
+ place26110
+ place26123
+ place26127
+ place26142
+ place26150
+ place26721
+ place26722
+ place26724
+ place26729
+ place26891
+ place26900
+ place26903
+ place26909
+ place26937
+ place27263
+ place27265
+ place27269
+ place27429
+ place27769
+ place27823
+ place29213
+ place29216
+ place29242
+ place29249
+ place29270
+ place29274
+ place29289
+ place29291
+ place29296
+ place29329
+ place29333
+ place29342
+ place29345
+ place29363
+ place29423
+ place29449
+ place29472
+ place29478
+ place29484
+ place29501
+ place29766
+ place30142
+ place30288
+ place30296
+ place30399
+ place30455
+ place30569
+ place30595
+ place30596
+ place30622
+ place30698
+ place30882
+ place30899
+ place31037
+ place31167
+ place31331
+ place31367
+ place31455
+ place31555
+ place31626
+ place31641
+ place31743
+ place31859
+ place31866
+ place32130
+ place32427
+ place32490
+ place32527
+ place32568
+ place32577
+ place32621
+ place33612
+ place35270
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[220\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[221\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].r\[173\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[1\].r\[156\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_sf.u_rp.g_pair\[1\].r\[170\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_sf.u_rp.g_pair\[1\].r\[184\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_sf.u_rp.g_pair\[1\].r\[203\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g\[77\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g_bank.g_capx2.cap2x\[75\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g_bank.g_capx2.cap2x\[77\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[75\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[77\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[89\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[125\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].g\[132\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].g\[170\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[148\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[157\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[170\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[175\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].g\[365\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[224\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[389\]$_DFF_PN0__1145
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/wire37168
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[1\].u_tx/q\[389\]$_DFF_PN0__1146
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[389\]$_DFF_PN0__1147
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[1\].u_tx/q\[389\]$_DFF_PN0__1148
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24701
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24745
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24833
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24840
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place24844
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25071
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25129
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25685
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25714
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25717
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place25742
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/place29041
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/_404_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/_450_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_589_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_631_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/_743_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/wire35415
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/load_slew35301
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/load_slew35441
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/load_slew35483
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25213
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25248
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/place25633
+ u_tile.u_tile.u_logic.u_me.s1_v$_DFF_PN0__1088
+ u_tile.u_tile.u_logic.u_me.s1b_v$_DFF_PN0__1089
+ u_tile.u_tile.u_logic.u_me.s2_v$_DFF_PN0__1090
+ u_tile.u_tile.u_logic.u_me.s3_v$_DFF_PN0__1091
+ u_tile.u_tile.u_logic.u_me.u_mv.line\[2\]$_DFF_PN0__1094
+ u_tile.u_tile.u_logic.u_me.u_mv.line\[3\]$_DFF_PN0__1095
+ u_tile.u_tile.u_logic.u_me.u_mv.line\[4\]$_DFF_PN0__1096
+ u_tile.u_tile.u_logic.u_me.u_mv.line\[5\]$_DFF_PN0__1097
+ u_tile.u_tile.u_logic.u_me.u_mv.line\[6\]$_DFF_PN0__1098
+ u_tile.u_tile.u_logic.u_me.u_mv.line\[8\]$_DFF_PN0__1100
+ u_tile.u_tile.u_logic.u_me.u_v.line\[4\]$_DFF_PN0__1128
+ u_tile.u_tile.u_logic.u_me.u_v.line\[5\]$_DFF_PN0__1129
+ u_tile.u_tile.u_logic.u_me.u_v.line\[9\]$_DFF_PN0__1133
+ wire35312
+ wire35347
+ wire35348
+ wire35368
+ wire35436
+ wire35494
+ wire35519
+ wire35520
+ wire35521
+ wire35522
+ wire35523
+ wire35537
+ wire35582
+ wire35589
+ wire35592
+ wire35608
+ wire35711
+ wire35735
+ wire35737
+ wire35741
+ wire36936
+ wire36975
+ wire36976
+ wire36984
+ wire37016
+ wire37017
+ wire37054
+ wire37068
+ wire37073
+ wire37081
+ wire37086
+ wire37093
+ wire37097
+ wire37098
+ wire37099
+ wire37107
+ wire37182
+ wire37217
+ wire37410
+ wire37424
+ wire37469
+ wire37472
+ wire37476
+ wire37558
+ wire37574
+ wire37600
+ wire37614
+ wire37625
+ wire37817
+ wire37824
+ wire37884
+ wire37915
+ wire37934
+ wire37940
+ wire37953
+ wire37962
+ wire37984
+ wire38001
+ wire38019
+ wire38052
+ wire38145
+ wire38182
+ wire38252
+ wire38376
+ wire38527
+ wire38541
+ wire38543
+ wire38559
+ wire38565
+ wire38625
+ wire38631
+ wire38648
+ wire38675
+ wire38692
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_45_asap7_ref_gate/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 DPL-0033
+Elapsed time: 1:40.38[h:]min:sec. CPU time: user 99.84 sys 0.54 (99%). Peak memory: 1942776KB.

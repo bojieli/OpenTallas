@@ -464,12 +464,12 @@
  },
  "refglob": "*",
  "inter": [],
- "structural_change": "Q-TILE45 node-less twin of qfd_tile_nk_rp2_45_a2 for the 48 qfd_tile_nl slots: NODE 0 (no node leaf, no n_a/n_b/n_y faces), 41 entries = the 45 minus ck_node/ck_fa0/ck_fa1/ck_fa3; same 457.92x820.8 outline, macro/LSL geometry, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).",
+ "structural_change": "Q-TILE45 node-less twin of qfd_tile_nk_rp2_45_a2 for the 48 qfd_tile_nl slots: NODE 0 (no node leaf, no n_a/n_b/n_y faces), 41 entries = the 45 minus ck_node/ck_fa0/ck_fa1/ck_fa3; same 457.92x820.8 outline, macro/LSL geometry, shared-logic corridors, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).",
  "job": {
-  "owner": "Claude:q_tile45",
-  "branch": "claude/qtile45-2210",
+  "owner": "Codex:q_tile45_2330",
+  "branch": "codex/qtile45-2330",
   "tag": "lc41",
-  "purpose": "Q-TILE45 node-less twin of qfd_tile_nk_rp2_45_a2 for the 48 qfd_tile_nl slots: NODE 0 (no node leaf, no n_a/n_b/n_y faces), 41 entries = the 45 minus ck_node/ck_fa0/ck_fa1/ck_fa3; same 457.92x820.8 outline, macro/LSL geometry, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).",
+  "purpose": "Q-TILE45 node-less twin of qfd_tile_nk_rp2_45_a2 for the 48 qfd_tile_nl slots: NODE 0 (no node leaf, no n_a/n_b/n_y faces), 41 entries = the 45 minus ck_node/ck_fa0/ck_fa1/ck_fa3; same 457.92x820.8 outline, macro/LSL geometry, shared-logic corridors, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).",
   "extra_paths": [
    "tools/qwen_repack",
    "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
@@ -536,6 +536,10 @@
  "pin_hook_before_flops": [
   "physical/ref_tile/qfd_tile_nl_rp2_45_a2/regions.tcl"
  ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required."
+ },
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  }

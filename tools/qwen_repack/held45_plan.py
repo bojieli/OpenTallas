@@ -85,6 +85,17 @@ def build(nl=False):
     for n in range(10):
         regions['ck_rp%d' % n] = []
         why['ck_rp%d' % n] = 'unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers'
+    # 0e1289147 actual DPL: every reported illegal cell was ungrouped repair/shared logic squeezed
+    # against an EXCLUSIVE root fence. Core-to-RQR and cross-TX controls cannot be assigned to one
+    # data cone. Reserve a 2.16 um shared-logic corridor around core/TX/RQR roots; keep the face
+    # capture/launch strips unchanged. Actual mapped worst inset fill is 39.6 percent (TX0..5).
+    shared_corridor_um = 2.16
+    for root, boxes in regions.items():
+        if root.startswith('ck_fa'):
+            continue
+        regions[root] = [[round(x0 + shared_corridor_um, 3), round(y0 + shared_corridor_um, 3),
+                          round(x1 - shared_corridor_um, 3), round(y1 - shared_corridor_um, 3)]
+                         for x0, y0, x1, y1 in boxes]
     pins = []
     moved = {}
     def place(name, face, value, clock=False):
@@ -184,15 +195,16 @@ def build(nl=False):
     s['sources'] = [p.replace('rtl/physical/qfd_tile_nk_rp1.sv', 'rtl/physical/%s.sv' % top) for p in s['sources']]
     s['pins'] = {f: sorted(set(p['name'].split('[')[0] for p in pins if p['face'] == f)) for f in 'WENS' if any(p['face'] == f for p in pins)}
     s.pop('pin_ranges', None)
-    s['structural_change'] = 'HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks.'
+    s['pin_regs'] = dict(enable=False, reason='Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required.')
+    s['structural_change'] = 'HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. Reserve2.16um shared-logic corridors around core/TX/RQR fences after actual373-cell ungrouped repair/control failure; footprint/pins/RTL/normaledges unchanged.'
     s['slot_change_request'] = 'HELD candidate machine grant in held_grant.json; existing457.92x820.8a2 home,45 clock entries. Production die contract adoption requires measured local and regional clock proof.'
-    s['job'].update(owner='Claude:q_tile45', branch='claude/qtile45-2210', tag='lc45', purpose=s['structural_change'], views_to=f'physical/ref_tile/{NAME}/views', record_to=f'results/rtl/ref_tile/{NAME}', cycles_added=0)
+    s['job'].update(owner='Codex:q_tile45_2330', branch='codex/qtile45-2330', tag='lc45', purpose=s['structural_change'], views_to=f'physical/ref_tile/{NAME}/views', record_to=f'results/rtl/ref_tile/{NAME}', cycles_added=0)
     s['job']['extra_paths'] = ['tools/qwen_repack', 'tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json', 'rtl/physical/qfd_tile_nk_rp1.sv', 'rtl/test/tb_qwen_repack45_native.sv', 'rtl/physical/ot_qwen_tile_lsl_fp1.sv', 'rtl/physical/ot_qwen_tile_node.sv', 'rtl/lib/ot_rst_relay.sv', 'physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v', 'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
     s['job']['benches'] = [dict(name=f'native45_{n}', cmd=f'bash tools/qwen_repack/native45_bench.sh {{RUN}}/bench/native45_{n} {n}', expect='pass' if n == 0 else 'fail', threads=8, peak_ram_gb=8, needs=['verilator'], **({'pass_regex': '^REPACK45_NATIVE_PASS checks6399 valids2560 nonzero2560'} if n == 0 else {'fail_regex': 'REPACK45_NATIVE_FAIL|^FAIL rph'})) for n in range(4)]
     if nl:
         s['structural_change'] = ('Q-TILE45 node-less twin of qfd_tile_nk_rp2_45_a2 for the 48 qfd_tile_nl slots: NODE 0 (no node leaf, no '
                                   'n_a/n_b/n_y faces), 41 entries = the 45 minus ck_node/ck_fa0/ck_fa1/ck_fa3; same 457.92x820.8 outline, '
-                                  'macro/LSL geometry, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).')
+                                  'macro/LSL geometry, shared-logic corridors, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).')
         s['slot_change_request'] = 'qfd_tile_nl slot -> 457.92 x 820.8 (same footprint as qfd_tile_nk_rp2_45_a2); 41 clock entries at the nk coordinates.'
         s['job'].update(tag='lc41', purpose=s['structural_change'])
         s['job']['extra_paths'] = [x.replace('rtl/test/tb_qwen_repack45_native.sv', 'rtl/test/tb_qwen_repack45_nl_native.sv') for x in s['job']['extra_paths']]

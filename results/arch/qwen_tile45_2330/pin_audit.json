@@ -1,0 +1,14 @@
+{
+  "schema": "qwen.held45.actual_pin_audit.v1",
+  "actual_dump_sha256": "d772ac93de4f0ee9de46ad57c362f7162d7b88808e99f11d311205f11145e21c",
+  "source": "0e1289147 immutable NK gate floorplan OpenDB dump",
+  "signal_clock_pins": 2628,
+  "grant_pins": 2628,
+  "clock_pins": 45,
+  "unassigned_actual_pins": [],
+  "grant_coordinate_mismatches": [],
+  "same_face_center_spacing_under96nm": [],
+  "same_layer_pin_pg_overlap": [],
+  "same_layer_pin_pg_spacing_under24nm": [],
+  "scope": "Actual top-level signal/clock BPin shapes versus edge-band PG wires/via bounding boxes. Child and ROM internal routing/native timing still require actual CTS/full route proof."
+}

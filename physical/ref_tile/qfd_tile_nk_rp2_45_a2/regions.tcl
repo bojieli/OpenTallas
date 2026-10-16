@@ -14,7 +14,7 @@ dict set q45_why ck_rp6 {unfenced: one macro per root, sinks cluster at its pins
 dict set q45_why ck_rp7 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
 dict set q45_why ck_rp8 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
 dict set q45_why ck_rp9 {unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers}
-dict set q45_boxes ck {{329.832 367.2 435.456 507.6}}
+dict set q45_boxes ck {{331.992 369.36 433.296 505.44}}
 dict set q45_boxes ck_rp0 {}
 dict set q45_boxes ck_rp5 {}
 dict set q45_boxes ck_rp1 {}
@@ -25,16 +25,16 @@ dict set q45_boxes ck_rp3 {}
 dict set q45_boxes ck_rp8 {}
 dict set q45_boxes ck_rp4 {}
 dict set q45_boxes ck_rp9 {}
-dict set q45_boxes ck_rqr0 {{149.688 513 308.232 536.76}}
-dict set q45_boxes ck_rqr1 {{162.648 799.254 296.568 818.64}}
-dict set q45_boxes ck_tx0 {{75.384 367.2 84.672 507.6}}
-dict set q45_boxes ck_tx1 {{75.384 196.56 84.672 336.96000000000004}}
-dict set q45_boxes ck_tx2 {{75.384 25.92 84.672 166.32}}
-dict set q45_boxes ck_tx3 {{315.144 367.2 324.432 507.6}}
-dict set q45_boxes ck_tx4 {{315.144 196.56 324.432 336.96000000000004}}
-dict set q45_boxes ck_tx5 {{315.144 25.92 324.432 166.32}}
-dict set q45_boxes ck_tx6 {{435.024 196.56 455.76 336.96000000000004}}
-dict set q45_boxes ck_tx7 {{435.024 25.92 455.76 166.32}}
+dict set q45_boxes ck_rqr0 {{151.848 515.16 306.072 534.6}}
+dict set q45_boxes ck_rqr1 {{164.808 801.414 294.408 816.48}}
+dict set q45_boxes ck_tx0 {{77.544 369.36 82.512 505.44}}
+dict set q45_boxes ck_tx1 {{77.544 198.72 82.512 334.8}}
+dict set q45_boxes ck_tx2 {{77.544 28.08 82.512 164.16}}
+dict set q45_boxes ck_tx3 {{317.304 369.36 322.272 505.44}}
+dict set q45_boxes ck_tx4 {{317.304 198.72 322.272 334.8}}
+dict set q45_boxes ck_tx5 {{317.304 28.08 322.272 164.16}}
+dict set q45_boxes ck_tx6 {{437.184 198.72 453.6 334.8}}
+dict set q45_boxes ck_tx7 {{437.184 28.08 453.6 164.16}}
 dict set q45_boxes ck_fa0 {}
 dict set q45_boxes ck_fa1 {}
 dict set q45_boxes ck_fa2 {{2.16 262.16 17.064 362.66}}

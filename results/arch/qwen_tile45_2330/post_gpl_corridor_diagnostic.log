@@ -1,0 +1,626 @@
+ot-run: ot-epyc1tb     admits   399 GB (avail 626, growth 130, headroom 64, waiters 0/0 GB) load 46/128 running 20 disk 494 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261015-231646
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261015-231646
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261015-231646
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1833827-1792132860 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+INHOLD released 5714 FIRM hold cells / drivers for DPL
+OT_OFLOP released 2343 output-port flops for DPL
+CORRIDOR inset2.16um q45_ck
+CORRIDOR inset2.16um q45_ck_rqr0
+CORRIDOR inset2.16um q45_ck_rqr1
+CORRIDOR inset2.16um q45_ck_tx0
+CORRIDOR inset2.16um q45_ck_tx1
+CORRIDOR inset2.16um q45_ck_tx2
+CORRIDOR inset2.16um q45_ck_tx3
+CORRIDOR inset2.16um q45_ck_tx4
+CORRIDOR inset2.16um q45_ck_tx5
+CORRIDOR inset2.16um q45_ck_tx6
+CORRIDOR inset2.16um q45_ck_tx7
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[INFO DPL-0006] Core area: 370355.33 um^2
+[INFO DPL-0007] Movable instances area: 18462.86 um^2
+[INFO DPL-0008] Fixed instances area within core: 210118.80 um^2
+[INFO DPL-0009] Utilization: 61.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 150790 cells
+[INFO DPL-0393]   height 233 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      59169 |     12593 |     41794
+        1 |      45656 |      9748 |     31288
+        2 |      36609 |      8625 |     24081
+        3 |      30805 |      7985 |     19253
+        4 |      27672 |      7686 |     16440
+        5 |      25962 |      7526 |     14911
+        6 |      24753 |      7431 |     13803
+        7 |      24100 |      7376 |     13205
+        8 |      23721 |      7347 |     12855
+        9 |      23366 |      7322 |     12525
+       10 |      23305 |      7315 |     12471
+       20 |      22826 |      7276 |     12031
+       29 |      22816 |      7274 |     12023
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 22816 for 3 consecutive iterations.
+Using old diamond search for 7274 remaining illegal cells.
+diamond recovery: recovered 6829/7274 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |       5437 |       445 |      1917
+      403 |       5437 |       445 |      1917
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 5437 for 3 consecutive iterations. Using diamond search for 445 remaining illegal cells.
+diamond recovery: recovered 0/445 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 445
+[INFO DPL-0500] Runtime: 63.76s
+Placement Analysis
+---------------------------------
+total displacement     185918.4 u
+average displacement        1.2 u
+max displacement           64.0 u
+original HPWL         2377114.7 u
+legalized HPWL        2448781.5 u
+delta HPWL                    3 %
+
+[WARNING DPL-0005] Overlap check failed (143).
+ _076063_ (INVx1_ASAP7_75t_R) overlaps _076050_ (INVx1_ASAP7_75t_R)
+ _076481_ (INVx1_ASAP7_75t_R) overlaps _076475_ (INVx1_ASAP7_75t_R)
+ _076484_ (INVx1_ASAP7_75t_R) overlaps _076475_ (INVx1_ASAP7_75t_R)
+ _076485_ (INVx1_ASAP7_75t_R) overlaps _076482_ (INVx1_ASAP7_75t_R)
+ _076486_ (INVx1_ASAP7_75t_R) overlaps _076475_ (INVx1_ASAP7_75t_R)
+ _076839_ (INVx1_ASAP7_75t_R) overlaps _076329_ (INVx1_ASAP7_75t_R)
+ _077357_ (AND3x1_ASAP7_75t_R) overlaps _077355_ (AND3x1_ASAP7_75t_R)
+ _077361_ (AND3x1_ASAP7_75t_R) overlaps _077355_ (AND3x1_ASAP7_75t_R)
+ _077365_ (AND3x1_ASAP7_75t_R) overlaps _077363_ (AND3x1_ASAP7_75t_R)
+ _077367_ (AND3x1_ASAP7_75t_R) overlaps _077359_ (AND3x1_ASAP7_75t_R)
+ _077369_ (AND3x1_ASAP7_75t_R) overlaps _077363_ (AND3x1_ASAP7_75t_R)
+ _077373_ (AND3x1_ASAP7_75t_R) overlaps _077359_ (AND3x1_ASAP7_75t_R)
+ _077459_ (AND3x1_ASAP7_75t_R) overlaps _077355_ (AND3x1_ASAP7_75t_R)
+ _077647_ (AND3x1_ASAP7_75t_R) overlaps _077363_ (AND3x1_ASAP7_75t_R)
+ _077675_ (AND3x1_ASAP7_75t_R) overlaps _077355_ (AND3x1_ASAP7_75t_R)
+ _077685_ (AND3x1_ASAP7_75t_R) overlaps _077359_ (AND3x1_ASAP7_75t_R)
+ _077697_ (AND3x1_ASAP7_75t_R) overlaps _077355_ (AND3x1_ASAP7_75t_R)
+ _077705_ (AND3x1_ASAP7_75t_R) overlaps _077365_ (AND3x1_ASAP7_75t_R)
+ _077709_ (AND3x1_ASAP7_75t_R) overlaps _077363_ (AND3x1_ASAP7_75t_R)
+ _077721_ (AND3x1_ASAP7_75t_R) overlaps _077365_ (AND3x1_ASAP7_75t_R)
+ _077725_ (AND3x1_ASAP7_75t_R) overlaps _077363_ (AND3x1_ASAP7_75t_R)
+ _077909_ (AND3x1_ASAP7_75t_R) overlaps _077831_ (AND3x1_ASAP7_75t_R)
+ _078189_ (AND3x1_ASAP7_75t_R) overlaps _077832_ (INVx1_ASAP7_75t_R)
+ _078200_ (INVx1_ASAP7_75t_R) overlaps _078199_ (AND3x1_ASAP7_75t_R)
+ _078219_ (AND3x1_ASAP7_75t_R) overlaps _077358_ (INVx1_ASAP7_75t_R)
+ _078225_ (AND3x1_ASAP7_75t_R) overlaps _077358_ (INVx1_ASAP7_75t_R)
+ _078933_ (AND3x1_ASAP7_75t_R) overlaps _078931_ (AND3x1_ASAP7_75t_R)
+ _078935_ (AND3x1_ASAP7_75t_R) overlaps _078925_ (AND3x1_ASAP7_75t_R)
+ _078937_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _078977_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _078987_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _078991_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _078995_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079001_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _079003_ (AND3x1_ASAP7_75t_R) overlaps _078931_ (AND3x1_ASAP7_75t_R)
+ _079073_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _079083_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079087_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _079095_ (AND3x1_ASAP7_75t_R) overlaps _078931_ (AND3x1_ASAP7_75t_R)
+ _079099_ (AND3x1_ASAP7_75t_R) overlaps _078925_ (AND3x1_ASAP7_75t_R)
+ _079179_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _079231_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _079233_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _079243_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079245_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079247_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079249_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079251_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _079253_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _079255_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _079257_ (AND3x1_ASAP7_75t_R) overlaps _078927_ (AND3x1_ASAP7_75t_R)
+ _079259_ (AND3x1_ASAP7_75t_R) overlaps _078929_ (AND3x1_ASAP7_75t_R)
+ _079261_ (AND3x1_ASAP7_75t_R) overlaps _078913_ (AND3x1_ASAP7_75t_R)
+ _079378_ (NAND2x1_ASAP7_75t_R) overlaps _079363_ (NAND2x1_ASAP7_75t_R)
+ _079457_ (NAND2x1_ASAP7_75t_R) overlaps _079363_ (NAND2x1_ASAP7_75t_R)
+ _079459_ (NAND2x1_ASAP7_75t_R) overlaps _079363_ (NAND2x1_ASAP7_75t_R)
+ _079463_ (NAND2x1_ASAP7_75t_R) overlaps _079363_ (NAND2x1_ASAP7_75t_R)
+ _079464_ (NAND2x1_ASAP7_75t_R) overlaps _079363_ (NAND2x1_ASAP7_75t_R)
+ _079712_ (NAND2x1_ASAP7_75t_R) overlaps _079664_ (NAND2x1_ASAP7_75t_R)
+ _079883_ (NAND2x1_ASAP7_75t_R) overlaps _079855_ (NAND2x1_ASAP7_75t_R)
+ _079940_ (NAND2x1_ASAP7_75t_R) overlaps _079867_ (NAND2x1_ASAP7_75t_R)
+ _079947_ (NAND2x1_ASAP7_75t_R) overlaps _079867_ (NAND2x1_ASAP7_75t_R)
+ _079966_ (NAND2x1_ASAP7_75t_R) overlaps _079855_ (NAND2x1_ASAP7_75t_R)
+ _080016_ (NAND2x1_ASAP7_75t_R) overlaps _079943_ (NAND2x1_ASAP7_75t_R)
+ _080066_ (NAND2x1_ASAP7_75t_R) overlaps _079363_ (NAND2x1_ASAP7_75t_R)
+ _109260_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _109263_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _112699_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _113151_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _113163_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _113175_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _113231_ (NAND2x2_ASAP7_75t_R) overlaps _087352_ (NAND2x2_ASAP7_75t_R)
+ _141350_ (OR4x1_ASAP7_75t_R) overlaps _141338_ (OR4x1_ASAP7_75t_R)
+ place25440 (BUFx3_ASAP7_75t_R) overlaps place25439 (BUFx6f_ASAP7_75t_R)
+ place25860 (BUFx3_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1700_4_27790 (TAPCELL_ASAP7_75t_R)
+ place25900 (BUFx3_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1741_4_27892 (TAPCELL_ASAP7_75t_R)
+ place26008 (BUFx3_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1612_4_27570 (TAPCELL_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[144\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R) overlaps _079664_ (NAND2x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[572\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R) overlaps _079713_ (NAND2x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[604\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R) overlaps _080256_ (NAND2x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[822\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[821\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[829\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R) overlaps _079519_ (NAND2x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[531\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps _078199_ (AND3x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[537\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps _077894_ (INVx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[676\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps _078189_ (AND3x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[684\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[537\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[715\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[557\]$_DFF_P_ (DFFHQNx2_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[24\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[10\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[35\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[10\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[13\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[56\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[83\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[24\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[87\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[8\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[10\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[336\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps _076052_ (INVx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[348\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/_441_ (INVx3_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[349\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[246\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[119\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[16\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[115\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[13\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[119\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[50\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[115\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[56\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[58\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[59\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[115\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[84\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[83\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[91\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[83\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/q\[128\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[128\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[128\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/_651_ (INVx3_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[1\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[0\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[0\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[301\]$_DFF_P__479 (TIELOx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[301\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[3\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[1\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[6\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[7\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[0\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/q\[130\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[0\].u_tx/q\[130\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_647_ (INVx3_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_639_ (INVx3_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[132\]$_DFF_P__774 (TIELOx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[132\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[140\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[132\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[176\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[157\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[179\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[157\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[181\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[157\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[132\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_647_ (INVx3_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[140\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[132\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[16\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[28\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[26\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[26\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[60\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[30\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[26\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.s2_x\[12\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps _141338_ (OR4x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.s2_x\[13\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps _141333_ (OR4x1_ASAP7_75t_R)
+ u_tile.u_tile.u_logic.u_me.s2_x\[8\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps u_tile.u_tile.u_logic.u_me.s2_x\[15\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (143).
+ _076063_
+ _076481_
+ _076484_
+ _076485_
+ _076486_
+ _076839_
+ _077357_
+ _077361_
+ _077365_
+ _077367_
+ _077369_
+ _077373_
+ _077459_
+ _077647_
+ _077675_
+ _077685_
+ _077697_
+ _077705_
+ _077709_
+ _077721_
+ _077725_
+ _077909_
+ _078189_
+ _078200_
+ _078219_
+ _078225_
+ _078933_
+ _078935_
+ _078937_
+ _078977_
+ _078987_
+ _078991_
+ _078995_
+ _079001_
+ _079003_
+ _079073_
+ _079083_
+ _079087_
+ _079095_
+ _079099_
+ _079179_
+ _079231_
+ _079233_
+ _079243_
+ _079245_
+ _079247_
+ _079249_
+ _079251_
+ _079253_
+ _079255_
+ _079257_
+ _079259_
+ _079261_
+ _079378_
+ _079457_
+ _079459_
+ _079463_
+ _079464_
+ _079712_
+ _079883_
+ _079940_
+ _079947_
+ _079966_
+ _080016_
+ _080066_
+ _109260_
+ _109263_
+ _112699_
+ _113151_
+ _113163_
+ _113175_
+ _113231_
+ _141350_
+ place25440
+ place25860
+ place25900
+ place26008
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[144\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[572\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[604\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[822\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[829\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[531\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[537\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[676\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[684\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[715\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[24\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[35\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[56\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[83\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[87\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[8\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[336\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[348\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[349\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[119\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[16\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[50\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[56\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[58\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[59\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[84\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[91\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/q\[128\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[128\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[1\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[301\]$_DFF_P__479
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[3\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[6\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[7\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/q\[130\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_647_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[132\]$_DFF_P__774
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[140\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[176\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[179\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[181\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[132\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[140\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[16\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[28\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[60\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[12\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[13\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[8\]$_DFF_P_
+[WARNING DPL-0008] Region placement check failed (254).
+ _076050_
+ _076052_
+ _076062_
+ _076063_
+ _076329_
+ _076471_
+ _076473_
+ _076475_
+ _076478_
+ _076481_
+ _076482_
+ _076484_
+ _076485_
+ _076486_
+ _076582_
+ _076839_
+ _077355_
+ _077357_
+ _077358_
+ _077359_
+ _077361_
+ _077363_
+ _077365_
+ _077367_
+ _077369_
+ _077373_
+ _077459_
+ _077647_
+ _077675_
+ _077685_
+ _077697_
+ _077705_
+ _077709_
+ _077715_
+ _077721_
+ _077725_
+ _077831_
+ _077832_
+ _077894_
+ _077909_
+ _078189_
+ _078199_
+ _078200_
+ _078219_
+ _078225_
+ _078911_
+ _078913_
+ _078925_
+ _078927_
+ _078929_
+ _078931_
+ _078933_
+ _078935_
+ _078937_
+ _078977_
+ _078987_
+ _078991_
+ _078995_
+ _079001_
+ _079003_
+ _079021_
+ _079073_
+ _079083_
+ _079087_
+ _079093_
+ _079095_
+ _079099_
+ _079165_
+ _079179_
+ _079231_
+ _079233_
+ _079243_
+ _079245_
+ _079247_
+ _079249_
+ _079251_
+ _079253_
+ _079255_
+ _079257_
+ _079259_
+ _079261_
+ _079363_
+ _079378_
+ _079456_
+ _079457_
+ _079459_
+ _079463_
+ _079464_
+ _079519_
+ _079617_
+ _079619_
+ _079664_
+ _079712_
+ _079713_
+ _079855_
+ _079862_
+ _079864_
+ _079866_
+ _079867_
+ _079883_
+ _079935_
+ _079940_
+ _079943_
+ _079946_
+ _079947_
+ _079948_
+ _079966_
+ _080016_
+ _080066_
+ _080141_
+ _080224_
+ _080226_
+ _080256_
+ _087352_
+ _109211_
+ _109260_
+ _109263_
+ _112412_
+ _112699_
+ _113151_
+ _113163_
+ _113175_
+ _113231_
+ _141333_
+ _141338_
+ _141341_
+ _141350_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[144\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[572\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[59\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[604\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[668\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[821\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[822\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gn_q\[829\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[531\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[537\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[557\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[676\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[684\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.gs_q\[715\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[10\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[13\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[14\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[24\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[35\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[54\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[56\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[62\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[83\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[87\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[8\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/_441_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/_646_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[133\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[246\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[336\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[338\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[348\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.g_tx.g_r\[0\].u_tx/q\[349\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_lrr.rq$_DFF_PN0__1071
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/_651_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[10\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[115\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[119\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[120\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[128\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[13\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[16\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[18\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[23\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[35\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[50\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[56\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[58\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[59\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[72\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[83\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[84\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[91\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/q\[93\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[1\].u_tx/q\[128\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/_480_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/_641_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/_651_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[0\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[128\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[128\]$_DFF_P__386
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[138\]$_DFF_P__396
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[1\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[299\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[2\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[301\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[301\]$_DFF_P__479
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[3\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[44\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[6\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[7\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/q\[128\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[1\].u_tx/q\[138\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[0\].u_tx/_649_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[0\].u_tx/q\[130\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[0\].u_tx/q\[130\]$_DFF_P__516
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[0\].u_tx/q\[137\]$_DFF_P__523
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.g_tx.g_r\[1\].u_tx/q\[130\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[114\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[125\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[55\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[80\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_598_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_600_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_639_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/_647_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[132\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[132\]$_DFF_P__774
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[140\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[140\]$_DFF_P__782
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[154\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[157\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[176\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[179\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[0\].u_tx/q\[181\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[132\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.g_tx.g_r\[1\].u_tx/q\[140\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[112\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[125\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[16\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[26\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[28\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[30\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[31\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[48\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[60\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.g_tx.g_r\[0\].u_tx/q\[92\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[12\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[13\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[15\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.s2_x\[8\]$_DFF_P_
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: corridor_dpl_child.tcl, 3 DPL-0033
+Error: corridor_dpl.tcl, 34 child process exited abnormally
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1833827-1792132860): exit 1

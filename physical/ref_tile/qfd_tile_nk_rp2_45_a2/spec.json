@@ -492,12 +492,12 @@
  },
  "refglob": "*",
  "inter": [],
- "structural_change": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks.",
+ "structural_change": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. Reserve2.16um shared-logic corridors around core/TX/RQR fences after actual373-cell ungrouped repair/control failure; footprint/pins/RTL/normaledges unchanged.",
  "job": {
-  "owner": "Claude:q_tile45",
-  "branch": "claude/qtile45-2210",
+  "owner": "Codex:q_tile45_2330",
+  "branch": "codex/qtile45-2330",
   "tag": "lc45",
-  "purpose": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks.",
+  "purpose": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. Reserve2.16um shared-logic corridors around core/TX/RQR fences after actual373-cell ungrouped repair/control failure; footprint/pins/RTL/normaledges unchanged.",
   "extra_paths": [
    "tools/qwen_repack",
    "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
@@ -564,6 +564,10 @@
  "pin_hook_before_flops": [
   "physical/ref_tile/qfd_tile_nk_rp2_45_a2/regions.tcl"
  ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required."
+ },
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  }
