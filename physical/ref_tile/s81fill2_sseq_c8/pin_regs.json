@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_stage_seq_static_c8",
+ "enable": true,
+ "clock": "ck",
+ "clock_ports": [
+  "ck"
+ ],
+ "exclude": "^(f_ks|f_pw|t_kd|t_st)$",
+ "reset": "",
+ "reason": "serial-domain (ckv, 3:4) mailbox ports: f_ks / f_pw enter ot_s81_fixed_mailbox source flops on ckv and t_kd / t_st leave ckv flops (ret mailbox d side, st2); a ck pin register would add an unclocked crossing. Every ck data port (c*, d*, s*, f_plen) is registered at its pin.",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

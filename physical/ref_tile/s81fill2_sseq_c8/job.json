@@ -3,11 +3,11 @@
  "block": "dsfd_stage_seq_static_c8",
  "ref_tile": true,
  "owner": "Claude:fill-s81-2",
- "purpose": "S81 FILL-S2: die master dsfd_stage_seq_static_c8 (1 replicas, hardened once): exact lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread",
+ "purpose": "S81 S-DIE-ELEM 2026-10-16: die master dsfd_stage_seq_static_c8 (x1 on layer1, c21h port_bind PASS), static stage sequencer (engines 0..7 + VM 12, fixed mailboxes, no credit/ready): exact lockstep bench + failing mutants; recipe 3 (pin registers on every ck data port, serial mailbox ports excluded with reason), M5 cap, compact 302.4 x 64.8 at the east end of the 1727.976 x 88.536 reservation (vmc2 hub sp_sseq), GEN19b pins evenly spread",
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/el1015-fill-s2-1015",
+  "branch": "claude/sdie-elem-0030",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_control",
