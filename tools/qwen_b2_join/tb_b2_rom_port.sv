@@ -26,7 +26,7 @@ for(genvar h=0;h<6;h=h+1)begin:g_port
 end
 reg[255:0]expected_scale[0:30575];reg[8191:0]expected_path;
 integer op_pc=0,op_sp=0,op_tiles=0,op_nout=0,op_wcs=0,op_base=0,op_ots=0,op_ojs=0,op_oen=1,op_amax=0;
-integer burst[0:5],firstcap[0:5],firsttag=-1,cycle=0,writes=0,checked_lanes=0;
+integer burst[0:5],firstcap[0:5],firsttag=-1,cycle=0,rowchecks=0,actualwrites=0,checked_lanes=0;
 integer g,k,nb,addr,mask,sa;reg[31:0]want;
 reg[50:0]am_expect[0:5][0:7];integer am_due[0:5][0:7];
 reg[50:0]head_winner,entry,global_winner;
@@ -61,7 +61,7 @@ always @(negedge clk)if(rs)begin
      head_winner=winner(head_winner,entry);global_winner=winner(global_winner,entry);
      checked_lanes=checked_lanes+1;
     end
-    writes=writes+1;
+    rowchecks=rowchecks+1;if(op_oen)actualwrites=actualwrites+1;
    end else if(rq[h][2208+q])$fatal(1,"out of b2frame row");
   end
   am_expect[h][k%8]=head_winner;am_due[h][k%8]=cycle+5;
@@ -92,6 +92,6 @@ initial begin
  op(16,3072,1,32,256,112,7,336,2975,8,1,1,4096,32);
  op(20,4096,3,6,48,368,8,528,0,8,1,1,55280,6);
  op(103,6144,8,8,64,0,9,29376,0,8,1,1,8192,8,0,1);
- $display("PASS actual native controller→releasedROM→384hardmul port operations writes%0d checkedlanes%0d",writes,checked_lanes);$finish;
+ $display("PASS actual native controller→releasedROM→384hardmul port operations checkedrows%0d actualwrites%0d checkedlanes%0d",rowchecks,actualwrites,checked_lanes);$finish;
 end
 endmodule

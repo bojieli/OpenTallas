@@ -258,7 +258,7 @@
     },
     {
       "source": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_b2.sv",
-      "sha256": "0b58fc1e857d254946e62bea703885e9e617c5b8f167d870841e9d4109415812",
+      "sha256": "f92862cf9b314dd6a04fd584f06fe11e9f891d3cda7d5c0d72fc2a509cbfafaf",
       "top": "ot_qfd_tt_ctl_b2",
       "ports": {
         "clk": {
@@ -5456,6 +5456,7 @@
   "cycles": {
     "controller_result_phase_added_edges": 4,
     "scale_prefetch_advance_edges": 6,
+    "controller_phase_status": "RELEASED_ROM_WHOLEPORT_COMPONENT_PASS_PHYSICAL_AGES_OPEN",
     "train_source_copy_edges": 1,
     "cold_reset_release_edges": 1,
     "am_station_added_vs_old_master": 0,
@@ -5468,9 +5469,9 @@
     "capture_bits_per_half": 53088,
     "capture_and_emit_ff_per_half": 66336,
     "parent_output_ff_per_half": 551,
-    "parent_control_ff_census": "66507 total genericFF before cold reset stations; +25 resetFF in successor, rerun pending",
+    "parent_control_ff_census": "BAND0 generic synthesis measured66532FF including25cold-resetFF;24banks*2746+628parent. OtherHBs not individually synthesized",
     "clock_entries_per_half": 25,
-    "per_bank_ff": 2764,
+    "per_bank_ff": 2746,
     "max_capture_bits_per_edge": 13278,
     "max_result_bits_per_edge": 3306,
     "new_external_vm_payload_pins": 1653,

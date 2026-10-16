@@ -2,7 +2,7 @@
   "status": "COMPONENT_PASS_NATIVE_FULL_LAYER_OPEN",
   "native_full_layer_qualified": false,
   "physical_qualified": false,
-  "source_revision": "3801d12c4 halftrain inclrealRTLmutant guard; c136c9c01 uf8controller; dependency1c8974782 restoredports pendingactualwholeport bench",
+  "source_revision": "fbeda6a53 actual released-ROM wholeport phase6early/result+4 PASS, successor adds actual prefetch RTL mutant guard",
   "checks": {
     "native_sram": {
       "status": "PASS",
@@ -102,6 +102,39 @@
       "all8actualupperfaults_checked": true,
       "actual_hardware_mutant": "swappedAM0/1 wires rejected",
       "operation_calibration": "OPEN, nextwholeportactualROMbench"
+    },
+    "native_rom_port": {
+      "status": "PASS",
+      "source_revision": "fbeda6a53",
+      "unit": "oth-ubuntu-36553-1792167502",
+      "ot_run_exit": 0,
+      "released_cohort_manifest_sha256": "c68b3f56641add21e4d151f1975f1f18780b3d873a7b193d0d7698aa3442a0f5",
+      "real_scale_macros": 384,
+      "hard_fp32_mul_lanes": 384,
+      "shipped_decoder_pcs": [
+        1,
+        12,
+        16,
+        20
+      ],
+      "head_bursts": 64,
+      "checked_rows": 1200,
+      "actual_decoder_write_rows": 816,
+      "head_oen0_rows": 384,
+      "checked_lanes": 18176,
+      "all_six_tag_to_rq_edges": 14,
+      "rq_to_partial_am_edges": 5,
+      "controller_native_head_scalar": "bit-exact ordered max and index",
+      "required_source_phase_changes": {
+        "scale_request_advance_edges": 6,
+        "controller_result_phase_added_edges": 4,
+        "scale_lat": 10,
+        "band": 2,
+        "tcut": 7
+      },
+      "declared_component_boundary": "already-reduced tree words FP32 ones; BW0. Actual DUT owns native command/frame,384releasedROM macros,hardmul,partialAM and native controller scalar head. Expected bytes observer only. External land_cnt=0 in component. Not full native layer/token.",
+      "previous_actual_source_failure": "out_native same real bench first PC1 scale0 versus expected36aa0000; confirms old ideal-scale timing was wrong",
+      "physical_ages": "TC/RQ/AM/selector forks and die relays remain OPEN; TE not frozen"
     }
   },
   "prior_failure_receipts": [

@@ -150,10 +150,15 @@ module ot_qfd_tt_ctl_b2 #(
     wire [W-1:0] c_mxmask;
     wire [W*32-1:0] c_mxdata;
     wire [15:0] c_prog;
+`ifdef OT_QFD_B2_PREFETCH_MUT
+    localparam integer B2_SCALE_ADVANCE=0; // Actual RTL negative control: historical ideal-scale phase.
+`else
+    localparam integer B2_SCALE_ADVANCE=6;
+`endif
     ot_qwen_me_spctl_b2 #(.XADDR(XADDR), .RDMEM(RDMEM), .PK(PK), .SC(SC), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
         .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
-        .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .SCALE_ADVANCE(6), .LANDED(LANDED),
+        .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .SCALE_ADVANCE(B2_SCALE_ADVANCE), .LANDED(LANDED),
         .RX((BAND != 0) ? 5 + 2 * LNK + CLNK : 0), .RXA((BAND != 0) ? 5 + 2 * LNK : 0), .BANDF(BAND), .AMR(AMR), .SPRE(SPRE), .AMI(AMI)) u_ctl (
         .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle), .land_cnt(land_q),
         .i_nout(q_nout), .i_tiles(q_tiles), .i_k(q_k), .i_wsrc(q_wsrc),
