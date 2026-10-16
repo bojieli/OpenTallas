@@ -231,6 +231,11 @@ def route(a, fa, b, fb, boxes, die, skip=(), narrow=True):
             if not inside(q):
                 return q
         return _stub(p, f, 1.0)
+    # pin-span centres of two facing ports differ by rounding (pf17 capture.t_vm -> VM.f_capture: 0.001 um): one wire
+    if fa in 'NS' and fb in 'NS' and 0 < abs(a[0] - b[0]) < 0.005:
+        b = (a[0], b[1])
+    if fa in 'EW' and fb in 'EW' and 0 < abs(a[1] - b[1]) < 0.005:
+        b = (b[0], a[1])
     sa, sb = stub(a, fa), stub(b, fb)
     cands = []
     if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6:
@@ -264,29 +269,37 @@ def hanan_route(a, fa, b, fb, boxes, die, clr=CLR, narrow=True):
     300 / 900 / WINDOW um around the endpoints; the first leg leaves a along fa and the last enters b against fb.
     None when no legal path exists in the largest window."""
     import numpy as np
-    for c_ in ((WIDE_CLR, clr) if narrow else (WIDE_CLR,)):         # a real channel first (wide buses), the slit-level clearance only when none exists
-        out = _hanan_once(a, fa, b, fb, boxes, die, c_)
+    # a real channel first (stations fit), slit-level clearance only inside ESCAPE um of the pins (a pin slot between
+    # neighbours); then, only when narrow, slit clearance everywhere
+    tries = [(WIDE_CLR, 0.0), (WIDE_CLR, ESCAPE)] + ([(clr, 0.0)] if narrow else [])
+    for c_, esc_ in tries:
+        out = _hanan_once(a, fa, b, fb, boxes, die, c_, esc=esc_, nclr=clr)
         if out is not None:
             return out
     return None
 
 
+ESCAPE = 150.0
+
+
 WIDE_CLR = 21.6     # a channel that also holds 17-um relay stations (>= 43.2 um); slits (CLR) only when none exists
 
 
-def _hanan_once(a, fa, b, fb, boxes, die, clr):
+def _hanan_once(a, fa, b, fb, boxes, die, clr, esc=0.0, nclr=CLR):
     import numpy as np
     a0, b0 = a, b
-    a, b = _stub(a0, fa, clr + 0.5), _stub(b0, fb, clr + 0.5)
+    sc = nclr if esc > 0 else clr
+    a, b = _stub(a0, fa, sc + 0.5), _stub(b0, fb, sc + 0.5)
     if any(x < p[0] < x + w and y < p[1] < y + h for p in (a, b) for _, x, y, w, h in boxes):
         return None
     for win in (300.0, 900.0, WINDOW):
         x0 = max(die[0], min(a[0], b[0]) - win); x1 = min(die[2], max(a[0], b[0]) + win)
         y0 = max(die[1], min(a[1], b[1]) - win); y1 = min(die[3], max(a[1], b[1]) + win)
-        bx = [(x - clr, y - clr, x + w + clr, y + h + clr) for _, x, y, w, h in boxes
-              if x + w > x0 and x < x1 and y + h > y0 and y < y1]
-        xs = sorted({round(v, 3) for v in [a[0], b[0], x0, x1] + [r[0] for r in bx] + [r[2] for r in bx] if x0 <= v <= x1})
-        ys = sorted({round(v, 3) for v in [a[1], b[1], y0, y1] + [r[1] for r in bx] + [r[3] for r in bx] if y0 <= v <= y1})
+        raw = [(x, y, x + w, y + h) for _, x, y, w, h in boxes if x + w > x0 and x < x1 and y + h > y0 and y < y1]
+        bx = [(r[0] - clr, r[1] - clr, r[2] + clr, r[3] + clr) for r in raw]
+        nb = [(r[0] - nclr, r[1] - nclr, r[2] + nclr, r[3] + nclr) for r in raw] if esc > 0 else []
+        xs = sorted({round(v, 3) for v in [a[0], b[0], x0, x1] + [r[0] for r in bx + nb] + [r[2] for r in bx + nb] if x0 <= v <= x1})
+        ys = sorted({round(v, 3) for v in [a[1], b[1], y0, y1] + [r[1] for r in bx + nb] + [r[3] for r in bx + nb] if y0 <= v <= y1})
         X, Y = np.array(xs), np.array(ys)
         nx, ny = len(xs), len(ys)
         node = np.zeros((nx, ny), bool)      # node strictly inside an expanded box
@@ -299,6 +312,19 @@ def _hanan_once(a, fa, b, fb, boxes, die, clr):
             node[np.ix_(ix, iy)] = True
             eh[np.ix_(jx, iy)] = True
             ev[np.ix_(ix, jy)] = True
+        if esc > 0:
+            # wide clearance is waived within esc of either pin stub; the slit clearance always holds
+            def far(PX, PY):
+                return np.minimum(np.abs(PX - a[0]) + np.abs(PY - a[1]), np.abs(PX - b[0]) + np.abs(PY - b[1])) > esc
+            node &= far(X[:, None], Y[None, :])
+            eh &= far(mx[:, None], Y[None, :])
+            ev &= far(X[:, None], my[None, :])
+            for r in nb:
+                ix = (X > r[0] + 1e-4) & (X < r[2] - 1e-4); iy = (Y > r[1] + 1e-4) & (Y < r[3] - 1e-4)
+                jx = (mx > r[0]) & (mx < r[2]); jy = (my > r[1]) & (my < r[3])
+                node[np.ix_(ix, iy)] = True
+                eh[np.ix_(jx, iy)] = True
+                ev[np.ix_(ix, jy)] = True
         ia, ja = xs.index(round(a[0], 3)), ys.index(round(a[1], 3))
         ib, jb = xs.index(round(b[0], 3)), ys.index(round(b[1], 3))
         D = {'E': (1, 0), 'W': (-1, 0), 'N': (0, 1), 'S': (0, -1)}
