@@ -30,7 +30,7 @@ Placement order (every generated home is reported in manifest.json 'homes'):
      nearest free area to each point.
 Generated homes keep a 10.8 um halo (>= 21.6 um channels between them); relays have no halo.
 """
-import argparse, json, math, re, shutil, sys
+import argparse, hashlib, json, math, re, shutil, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -536,8 +536,11 @@ def main():
 
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
-    manifest = dict(schema='opentallas.hbm_v16.die_case.v1', label='NOT_A_DIE_RESULT (v16 strict port bind FAIL: 51 exposed '
-                    'input ports / 21,737 b; SYNTH views are estimates)', die_um=[W, H], contract=str(a.contract),
+    exposed = C.get('exposed_inputs', {})
+    manifest = dict(schema='opentallas.hbm_v16.die_case.v1',
+                    label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
+                          f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
+                          'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags,
                     excluded_cells=excluded, excluded_instances=out_inst,
                     instances={c: sum(1 for n in inst if cell_of[n] == c) for c in kinds},
@@ -546,6 +549,16 @@ def main():
                     signal_nets=len(nets), die_ports=len(die_ports),
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
                     placement=pl, corners='setup TT, hold FF (owner option B); SS not run')
+    # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
+    # A source path alone cannot establish lineage after another branch changes a view.
+    digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    manifest['input_sha256'] = {name: digest(path) for name, path in
+                                [('contract', a.contract), ('plan', a.plan), ('grants', a.grants),
+                                 ('lanes', a.lanes), ('view_inventory', a.views / 'views.json'),
+                                 ('generator', Path(__file__))]}
+    manifest['consumed_view_sha256'] = {p.name: digest(p) for p in sorted(vd.iterdir())
+                                        if p.suffix in ('.lef', '.lib')}
+    manifest['native_complete'] = False
     render(out, manifest, P, W, H)
     if a.no_clock:
         (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
