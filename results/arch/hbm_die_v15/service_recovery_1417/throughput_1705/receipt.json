@@ -69,7 +69,8 @@
   "native_stack1": "PASS 200 records, early mutant rejected",
   "capacity_stack3": "PASS 64 rows x 8 SMs, early mutant rejected",
   "note": "with OVERLAP=1 DECOUPLE=1 defaults",
-  "lbanks4": "archived native stack0 320 / stack1 200 records PASS, capacity stack2 64 rows x 8 SMs PASS, steady PASS; early-calendar and copy-into-owned-cache mutants rejected"
+  "lbanks4": "archived native stack0 320 / stack1 200 records PASS, capacity stack2 64 rows x 8 SMs PASS, steady PASS; early-calendar and copy-into-owned-cache mutants rejected",
+  "lbanks4_programmed_kport": "tb_hbm_svc_sm_stack_programmed (K-port PHY model) stack0 320 records PASS, early mutant rejected"
  },
  "qualified": "THROUGHPUT within price (1.053x, bench production-shape 8 SM x 64 rows x 8 epochs); physical/native whole-die qualification still open",
  "ledger": "no ledger row needed for the service stage (>= price)",
@@ -92,6 +93,7 @@
   "l4_cap_s2_positive.log": "deb17d0f0ea43fc3ee85fb8bbf0ddf24c3c0f2bb5f2e01e2acb0b8e8305eae7b",
   "l4_native_s0_positive.log": "17c4832bdc898ed9a0ade686ba3c7838547313ebe6859daaaa792c473ac9cbe9",
   "l4_native_s1_positive.log": "5d222fc8638a22bec1da728c7a977c2074143ce0fcb8349ca74be4df3d9c2928",
+  "l4_programmed_s0_positive.log": "898e4b1788582c590cc025deefb3f4028540028788053560ae4a2b94e29110a0",
   "ov_cap_s3_positive.log": "e2289bdd4970d9cc7a61f11a71f7aa308ff3c878c5be794cc8e5b6a525ee7d4d",
   "ov_native_s0_positive.log": "17c4832bdc898ed9a0ade686ba3c7838547313ebe6859daaaa792c473ac9cbe9",
   "ov_native_s1_positive.log": "5d222fc8638a22bec1da728c7a977c2074143ce0fcb8349ca74be4df3d9c2928",
