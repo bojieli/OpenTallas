@@ -283,6 +283,22 @@
   "rst_n": [
    515.0,
    519.0
+  ],
+  "io_word": [
+   23.0,
+   290.0
+  ],
+  "compiler_control": [
+   296.0,
+   1004.0
+  ],
+  "cfg_data": [
+   20.0,
+   215.0
+  ],
+  "io_cfg_data": [
+   232.0,
+   427.0
   ]
  },
  "layer_cap": "M5",
@@ -313,12 +329,12 @@
  },
  "children": [],
  "inter": [],
- "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N.",
+ "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10).",
  "job": {
   "owner": "Claude:H-SU/store-kit",
   "branch": "claude/hsu-storekit-0700",
   "tag": "r1",
-  "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N.",
+  "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10).",
   "views_to": "physical/ref_tile/hbm_sfu_programme_store_1016/views",
   "record_to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016",
   "extra_paths": [
@@ -354,5 +370,9 @@
     ]
    }
   ]
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_LEAF_N": "16"
  }
 }
