@@ -1,0 +1,385 @@
+{
+ "name": "smh_tile_rp4d",
+ "top": "ot_hbm_smh_rp4_entries",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP"
+ ],
+ "clock_port": "clk_hard[0]",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 406.08,
+  "h": 1529.28
+ },
+ "child_lattice_um": 4.32,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    25.92,
+    1071.36
+   ],
+   "orient": "R0",
+   "inst": "u.g_lf?0?.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    25.92,
+    1287.36
+   ],
+   "orient": "R0",
+   "inst": "u.g_lf?0?.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    164.16,
+    1382.4
+   ],
+   "orient": "R0",
+   "inst": "u.g_lf?0?.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    276.48,
+    1382.4
+   ],
+   "orient": "R0",
+   "inst": "u.g_lf?0?.u_lh.u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    164.16,
+    1287.36
+   ],
+   "orient": "R0",
+   "inst": "u.g_lf?0?.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    25.92,
+    298.104
+   ],
+   "orient": "MX",
+   "inst": "u.g_lf?1?.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    25.92,
+    99.36
+   ],
+   "orient": "MX",
+   "inst": "u.g_lf?1?.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    164.16,
+    25.92
+   ],
+   "orient": "MX",
+   "inst": "u.g_lf?1?.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    276.48,
+    25.92
+   ],
+   "orient": "MX",
+   "inst": "u.g_lf?1?.u_lh.u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    185.76,
+    168.576
+   ],
+   "orient": "R0",
+   "inst": "u.g_lf?1?.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+   "count": 1,
+   "at": [
+    56.16,
+    479.544
+   ],
+   "orient": "MX",
+   "inst": "u.u_ptw.u_land_s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    56.16,
+    544.344
+   ],
+   "orient": "MX",
+   "inst": "u.u_ptw.u_row1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "count": 1,
+   "at": [
+    56.16,
+    656.64
+   ],
+   "orient": "R0",
+   "inst": "u.u_ptw.u_beat_t"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    56.16,
+    894.24
+   ],
+   "orient": "R0",
+   "inst": "u.u_ptw.u_row0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+   "count": 1,
+   "at": [
+    56.16,
+    1006.56
+   ],
+   "orient": "R0",
+   "inst": "u.u_ptw.u_land_n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    336.96,
+    544.344
+   ],
+   "orient": "MX",
+   "inst": "u.u_pte.u_row1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "count": 1,
+   "at": [
+    336.96,
+    656.64
+   ],
+   "orient": "R0",
+   "inst": "u.u_pte.u_beat"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    336.96,
+    894.24
+   ],
+   "orient": "R0",
+   "inst": "u.u_pte.u_row0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin",
+   "bin",
+   "clk_hard",
+   "clk_pin",
+   "clk_oper",
+   "clk_region"
+  ],
+  "E": [
+   "rout",
+   "bout"
+  ],
+  "S": [
+   "gout",
+   "xs_a1",
+   "xs_a2",
+   "xs_g1",
+   "xs_g2"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "rst_n"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tile_rp4d_pins.tcl",
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL pin capture and launch registers retained from rp3, explicit18hard-child clocks and10local roots; no data edge change. rin/bin land in own pin flops, rout/bout launch from existing hard row/beat cells, gin/gout from existing input/output registers, xs_* through retained five-stage strap registers, rst_n through regional reset relay. External gating companion is separately instantiated actual RTL, never replaced by free-running production clocks."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude H-SM rp4d helper 0945",
+  "branch": "claude/hsm-rp4-0030",
+  "tag": "rp4d",
+  "structural_change": "RP4c gate smh_tile_rp4c-20261016-061544 killed at trial GRT extra 19/30 (3.5 h): 3,705 W pin flops + recipe-3 pin hold stages + 3 clk_pin trees + 2 x 2,069 bin_l feeds to the lands in a 25.92 um W strip; pc.log reg->macro -309.2 ps (leaf1 u_xs/xs_g1) and reg->reg -308.1 ps (g_strap[1]) because leaf1's straps entered N and crossed the tile over clk_region[0/1/2]. RP4d: W-column lands/rows/beat_t x 25.92 -> 56.16 (strip 2.17x, entries 56.26-57.18 um < 60), lands nearer the x-store bk1 centre, pin flop columns 6 -> 10; leaf1 xs_* straps on the S face (x 141-158 channel under leaf1's x store), all 5 strap stages on the leaf's own regional root (same cycle count). W/E pass-through y unchanged (abutment).",
+  "purpose": "MATVEC body clock-structure closure only; not attention/fullSM/native chip qualification.",
+  "benches": [
+   {
+    "name": "rp4_lockstep",
+    "expect": "pass",
+    "pass_regex": "PASS total_cycles [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "python3 tools/hbm_sm_repack_1015/local_clock_lockstep.py --out {RUN}/positive.json --workdir {RUN}/positive --jobs 8"
+   },
+   {
+    "name": "rp4_clockdrop",
+    "expect": "fail",
+    "fail_regex": "FAIL total_cycles",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "python3 tools/hbm_sm_repack_1015/local_clock_lockstep.py --mut-clockdrop --out {RUN}/mutant.json --workdir {RUN}/mutant --jobs 8"
+   }
+  ],
+  "extra_paths": [
+   "physical/common_flow/anchor_row_packing.tcl",
+   "tools/hbm_sm_repack_1015",
+   "tools/dshbm_sm_pq_seq.py",
+   "rtl/test/tb_hbm_accel_sm_pq_seq.sv"
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk_hard[0]",
+  "clk_hard[1]",
+  "clk_hard[2]",
+  "clk_hard[3]",
+  "clk_hard[4]",
+  "clk_hard[5]",
+  "clk_hard[6]",
+  "clk_hard[7]",
+  "clk_hard[8]",
+  "clk_hard[9]",
+  "clk_hard[10]",
+  "clk_hard[11]",
+  "clk_hard[12]",
+  "clk_hard[13]",
+  "clk_hard[14]",
+  "clk_hard[15]",
+  "clk_hard[16]",
+  "clk_hard[17]",
+  "clk_pin[0]",
+  "clk_pin[1]",
+  "clk_pin[2]",
+  "clk_oper[0]",
+  "clk_oper[1]",
+  "clk_oper[2]",
+  "clk_oper[3]",
+  "clk_region[0]",
+  "clk_region[1]",
+  "clk_region[2]"
+ ],
+ "clock_cts_roots": [
+  "clk_pin[0]",
+  "clk_pin[1]",
+  "clk_pin[2]",
+  "clk_oper[0]",
+  "clk_oper[1]",
+  "clk_oper[2]",
+  "clk_oper[3]",
+  "clk_region[0]",
+  "clk_region[1]",
+  "clk_region[2]"
+ ]
+}

@@ -406,11 +406,12 @@ module ot_hbm_smh_rp4_rst(input wire[2:0]clk_region,input wire rst_n,
  assign gn=f_gn;assign lhn=f_lhn;assign gm=f_gm;assign ptw=f_ptw;assign pte=f_pte;assign gs=f_gs;assign lhs=f_lhs;
 endmodule
 module ot_hbm_smh_rp4_strap #(parameter integer NORTH=0)(input wire[2:0]clk_region,input wire[25:0]d,output wire[25:0]q);
+ // RP4d: each leaf's strap enters on its own leaf face (leaf0 N, leaf1 S) and all five stages run on that leaf's
+ // regional root (RP4c pc.log: leaf1's strap crossed the tile N->S over clk_region[0/1/2], reg->reg -308.1 ps,
+ // reg->macro -309.2 ps at u_xs/xs_g1). Same five stages, same cycle count; only the stage clock root changes.
  (*keep*)reg[25:0]s0,s1,s2,s3,s4;
- always @(posedge clk_region[0])begin s0<=d;s1<=s0;end
- wire cm=NORTH?clk_region[0]:clk_region[1],cs=NORTH?clk_region[0]:clk_region[2];
- always @(posedge cm)s2<=s1;
- always @(posedge cs)begin s3<=s2;s4<=s3;end
+ wire cl=NORTH?clk_region[0]:clk_region[2];
+ always @(posedge cl)begin s0<=d;s1<=s0;s2<=s1;s3<=s2;s4<=s3;end
  assign q=s4;
 endmodule
 // The physical parent has eighteen direct hard-child clock entries and ten
