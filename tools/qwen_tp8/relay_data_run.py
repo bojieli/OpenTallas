@@ -100,6 +100,16 @@ if '--case' in sys.argv:
                 rev = nb == 1 and sub.endswith(('_cr', '_r'))
                 dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
     (out / 'case' / 'port_dirs.json').write_text(json.dumps(dirs, indent=0, sort_keys=True) + '\n')
+    # VIS-ROM D-QC-02 (Q-COMPUTE-DIE 10-16): generated frame abstracts wrote every signal pin DIRECTION INOUT (xcol rst_n,
+    # every unclosed parent); give each frame pin its die-bus direction (driver first, as die_sta_libs) so GRT/STA and the
+    # reset-tree audit see real inputs/outputs. Pins without a die bus stay INOUT (unconnected frame pins).
+    from qwen_tp8.frame_pin_directions import apply_frame_directions
+    _elef = out / 'case' / 'elements.lef'
+    if _elef.exists():
+        _text, _audit = apply_frame_directions(_elef.read_text(), dirs)
+        _elef.write_text(_text)
+        rec['frame_pin_directions_fixed'] = _audit['fixed']
+        rec['frame_pin_directions_audit'] = _audit
     if m.get('native_static_io_bind'):
         from qwen_split.clock_contract import build as source_clock_contract
         (out / 'case' / 'clock_contract.json').write_text(

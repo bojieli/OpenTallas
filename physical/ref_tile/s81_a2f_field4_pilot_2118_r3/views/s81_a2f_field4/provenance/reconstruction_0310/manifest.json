@@ -1,0 +1,26 @@
+{
+ "kit": "s81_a2f_field4_pilot_2118_r3",
+ "source_revision": "4dc084455",
+ "status": "PASS_EXACT_ORIGINALRAW_RECONSTRUCTION_AND_UNCHANGED_FINAL_REPLAY",
+ "original_orfs": "/srv/opentallas/claude/closure-loop/s81_a2f_field4_pilot_2118_r3-r3outhb3-4dc084455/routes/s81_a2f_field4_pilot_2118_r3_r3outhb3_4dc084455/work/orfs",
+ "source_odb_sha256": "192c207466b3a2a4bc0b3f16aeb706928d6312f319cbc5b2dd2c98c421bca967",
+ "source_odb_bytes": 82419457,
+ "raw_expected": "e64b575245ea4681e9532cffb97df4ee006638f25fa9fe0cf141f4dae841ed70",
+ "raw_actual": "e64b575245ea4681e9532cffb97df4ee006638f25fa9fe0cf141f4dae841ed70",
+ "final_before_after": "3b7f880da59f66d219e91558acd04b6f199c0a8d88a90bf9430469c23b826bc7",
+ "replayed_final": "3b7f880da59f66d219e91558acd04b6f199c0a8d88a90bf9430469c23b826bc7",
+ "helper_sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+ "openroad_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "original_odb_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/raw_recovery/field4_r3/original.odb",
+ "execution_host": "ot-agidock128",
+ "admission_unit": "oth-ubuntu-1052653-1792145347",
+ "scope": "Original raw reconstructed from preserved routed ODB; raw SHA exactly matches immutable original export manifest. Pinned original helper reconstructs byte-identical current final. No final/raw copy, reroute, RTL, timing or final-view change. No E1 compute; E1 preserved inputs copied read-only.",
+ "reconstruction_dir": "physical/ref_tile/s81_a2f_field4_pilot_2118_r3/views/s81_a2f_field4/provenance/reconstruction_0310",
+ "reconstruction_sha256": {
+  "raw_export.log": "5be8d2ec6c9db8e77fcf792047e529a7067a036aeda1c920137ce33013fac618",
+  "source_export_helper.py": "0afa30db35fd1cd94bfe6a4b27c297e136a6f7cd5973703a75af9cd2dc195e4a",
+  "raw.tcl": "669de32d939b852b0640ee534b1c2d92618d5cf5a3c461120082eebeb53b3a49",
+  "abstract_pin_stub.py": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+  "run.sh": "8e2c0a72bf66abc07ad3973459b1b7b156829c1955eeb51616caf5cda97a94d4"
+ }
+}

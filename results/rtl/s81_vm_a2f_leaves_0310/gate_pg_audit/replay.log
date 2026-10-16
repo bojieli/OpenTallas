@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-leaf-gate-pg-0310
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-leaf-gate-pg-0310
+ot-run: ot-agidock128  admits    66 GB (avail 100, growth 36, headroom 24, waiters 0/0 GB) load 24/64 running 8 disk 352 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1087128-1792145725 after 0 s
+73341f54b3c005b44d0541c426a409eed88d21af3326b501684a4b8e5f6c922d  /srv/opentallas-scratch/claude/ref_gate/s81_a2f_fault_join4_native_0310_r1-20261016-030122/routes/gate/work/orfs/results/asap7/opentallas_s81_a2f_fault_join4_asap7_ref_gate/base/4_cts.odb
+s81_a2f_fault_join4_native_0310_r1
+run.sh: line 9: rg: command not found
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1087128-1792145725): exit 127
