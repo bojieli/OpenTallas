@@ -11,6 +11,29 @@ from pathlib import Path
 # selector_to_upper is checked as a window (selector_window), all other groups as exact ages.
 PATH_GROUPS=('tc_to_port','am_to_controller','rq_to_train','tag_copy_to_issuer','issuer_to_train','lc_to_halfband','selector_to_upper','upper_to_halfband','rb_to_vm')
 
+EXACT_PHASE_MUTANTS = ('tc', 'am', 'hl')
+
+def validate_temporal_controls(a, checked_file):
+ """Check observed selector edges and one-edge exact-phase negative controls."""
+ w = a.get('selector_window')
+ if not isinstance(w, dict) or type(w.get('min')) is not int or type(w.get('max')) is not int or (w['min'], w['max']) != (0, 7):
+  raise ValueError('selector window must be the measured [0,7] edges')
+ passed = checked_file(w['edge_pass_log']).read_text()
+ failed = checked_file(w['edge_fail_log']).read_text()
+ if not re.search(r'PASS b2 lane route equivalence .*\bSEL7\b', passed):
+  raise ValueError('selector age7 pass log lacks the measured edge witness')
+ if not re.search(r'FAIL b2 lane route equivalence errors[1-9][0-9]*', failed):
+  raise ValueError('selector age8 fail log lacks an actual equivalence failure')
+ g = a['temporal_gate']
+ for name in EXACT_PHASE_MUTANTS:
+  m = g.get('exact_phase_mutants', {}).get(name, {})
+  if type(m.get('delta')) is not int or m['delta'] != 1 or type(m.get('exit_code')) is not int or m['exit_code'] <= 0:
+   raise ValueError('missing one-edge rejected '+name+' phase mutant')
+  log = checked_file(m['log']).read_text()
+  if not re.search(r'FAIL b2 lane route equivalence errors[1-9][0-9]*', log):
+   raise ValueError(name+' phase mutant lacks an actual equivalence failure')
+ return w
+
 def validate_calibration(manifest,root,*,phase="post_allocator",current_graph=None,current_stage_of=None):
  root=Path(root).resolve();a=json.loads(Path(manifest).read_text())
  if a.get('protocol')!='qwen-b2-native-phase-v1':raise ValueError('wrong phase protocol')
@@ -77,9 +100,7 @@ def validate_calibration(manifest,root,*,phase="post_allocator",current_graph=No
  # Lane bench v2 sweep: total selector age 0..7 edges PASS, 8+ REJECTED.  The record carries the measured window, the
  # chosen ages keep >= 1 edge margin on both sides (or a written justification), and the bench keeps both edges
  # (max PASS, max+1 FAIL as a mutant) bound by log hash.
- w=a.get('selector_window')
- if not isinstance(w,dict)or type(w.get('min'))is not int or type(w.get('max'))is not int or not 0<=w['min']<=w['max']:raise ValueError('selector window [min,max] not recorded')
- for n in ('edge_pass_log','edge_fail_log'):checked_file(w[n])
+ w=validate_temporal_controls(a,checked_file)
  for h in '012345':
   e=halves[h]['selector_to_upper']['edges']
   if not w['min']<=e<=w['max']:raise ValueError('selector age %d of half %s outside the measured window [%d,%d]'%(e,h,w['min'],w['max']))

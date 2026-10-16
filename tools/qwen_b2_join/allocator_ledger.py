@@ -12,7 +12,7 @@ Derived constants (fail closed, never a zero/fake calibration):
   halfband_lnk    (F + R) / 2 for HB0's band<->upper round trip (pword forward F, upper return R), applied to all six
                   halves so the six result ages stay equal (b0 = 0 halves ignore the return)
   controller_clnk CLNK = LC - TC (selects made CLNK edges early meet the port's tree words at the lanes), >= 0;
-                  and the upper selects must satisfy SEL = LC + 3 + F (tb_qfd_halfband control law)
+                  selector_to_upper uses the measured selector window 0..7 (actual-age temporal proof still required)
   xpf_transport   stage_of[xs_pf] - 1 (controller xpf -> tap)
 Odd round trips and negative CLNK are reported as STRUCTURAL (need a real pad stage), never rounded.
 """
@@ -129,11 +129,11 @@ def derive(halves, sel, ret, xpf):
     CL = LC - TC
     if CL < 0:
         issues.append(f'CLNK = LC {LC} - TC {TC} = {CL} < 0: lane control would arrive after the tree words; pad LC by {-CL}')
-    # the upper's selects (compact selector-4 fork tree: 3 fork registers) must meet the halfband words at the upper:
-    # tb_qfd_halfband law: upper control = lane control + 3 + forward word link
-    if SEL != LC + 3 + Fm:
-        issues.append(f'selector age {SEL} != LC {LC} + 3 + F {Fm} = {LC + 3 + Fm}: structural pad on the '
-                      f'{"selector" if SEL < LC + 3 + Fm else "lane-control/word"} path required')
+    # The accepted selector is quasi-static for an op. The measured boundary is a
+    # window, not SEL == LC + 3 + F. Actual-age composition is still proved by
+    # the temporal gate; this precheck must not reinstate the retired equality.
+    if not 0 <= SEL <= 7:
+        issues.append(f'selector age {SEL} outside measured 0..7 window: structural re-home required')
     out = dict(TC=TC, AM=AM, RQ=RQ, LC=LC, RB=RB, CMD=CMD, TAG=TAG, ME=ME, F=Fm, R=R, SEL=SEL,
                controller_lnk=L, controller_clnk=CL, train_edges=TE, halfband_lnk=HL,
                xpf_transport_edges=(xpf['edges'] if xpf else None))

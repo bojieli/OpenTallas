@@ -52,6 +52,10 @@ def main(argv=None):
                 'selector_and_upper_returns_exact', 'selector_window_max_pass', 'selector_window_max_plus1_rejected'):
         if tg.get(key) is not True:
             open_fields.append(f'temporal gate {key} not observed')
+    for name in ('tc', 'am', 'hl'):
+        mutant = tg.get('exact_phase_mutants', {}).get(name, {})
+        if mutant.get('delta') != 1 or type(mutant.get('exit_code')) is not int or mutant['exit_code'] <= 0:
+            open_fields.append(f'one-edge {name} phase mutant not rejected')
     # selector = measured window (Q-B2r 10-16), carried from the gate record: {min, max, edge_pass_log, edge_fail_log}
     sw = gate.get('selector_window')
     if not sw:
