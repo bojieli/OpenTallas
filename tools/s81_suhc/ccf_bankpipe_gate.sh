@@ -8,10 +8,10 @@ root=$(pwd)
 old=rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv
 new=rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv
 fifo=rtl/link/ot_fifo_sram_fwft.sv
-macro=physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+macro="physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 tb=rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv
 compile() {
-  iverilog -g2012 -s tb_ccf_bankpipe -Ptb_ccf_bankpipe.EXTRA=$extra -o "$out/$1.vvp" "$old" "$2" "$fifo" "$macro" "$tb" > "$out/$1.build.log" 2>&1
+  iverilog -g2012 -s tb_ccf_bankpipe -Ptb_ccf_bankpipe.EXTRA=$extra -o "$out/$1.vvp" "$old" "$2" "$fifo" $macro "$tb" > "$out/$1.build.log" 2>&1
 }
 compile positive "$new"
 for seed in 1 17 91; do
