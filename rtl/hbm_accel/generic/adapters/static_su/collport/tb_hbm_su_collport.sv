@@ -249,17 +249,17 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
   repeat(20) @(posedge clk_q);
   if(collide||ph2) begin
    if(any_fault) $display("SU_COLLPORT PASS negative control faulted (cx %0d core %0d slices %b)",cx_fault,core_fault,sl_fault);
-   else begin $display("SU_COLLPORT FAIL negative control did not fault"); $finish(1); end
+   else begin $display("SU_COLLPORT FAIL negative control did not fault"); $fatal(1,"SU_COLLPORT gate rejected"); end
    $finish;
   end
   if(errors==0 && !any_fault && checks>NINJ/2 && rc_seen==6)
    $display("SU_COLLPORT PASS QID=%0d INJ_RET=%0d SD=%0d checks=%0d deliveries=%0d injects=%0d rc=%0d",QID,INJ_RET,SD,checks,dcount,icount,rc_seen);
   else begin
    $display("SU_COLLPORT FAIL errors=%0d fault(cx %0d core %0d slices %b) checks=%0d rc=%0d",errors,cx_fault,core_fault,sl_fault,checks,rc_seen);
-   $finish(1);
+   $fatal(1,"SU_COLLPORT gate rejected");
   end
   $finish;
  end
- initial begin #2000000; $display("SU_COLLPORT FAIL timeout stage=%0d",stage); $finish(1); end
+ initial begin #2000000; $display("SU_COLLPORT FAIL timeout stage=%0d",stage); $fatal(1,"SU_COLLPORT gate rejected"); end
 endmodule
 `default_nettype wire
