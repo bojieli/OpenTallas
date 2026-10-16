@@ -4070,5 +4070,6 @@
   "cycles_added": 0,
   "views_to": "physical/ref_tile/qfd_sp_su64_sfu_pr/views",
   "record_to": "results/rtl/ref_tile/qfd_sp_su64_sfu_pr"
- }
+ },
+ "slot_change_request": "Q-COMPUTE-DIE el1014-qwen-split-compute.log 2026-10-16 11:53:46 DECISION SU parent option (a) FINAL (outline 3239.976x3671.976, 346 interior clock entries, S M5+M7 / W,E M4+M6) + 12:28:40 pin plan accepted (physical/ref_tile/qfd_sp_su64_sfu_pr/assigned_pins.json); the q2o2 split-die frame supersedes qwen_rom_tp8.json v4 slot sp_su64_sfu"
 }

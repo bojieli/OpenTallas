@@ -40,8 +40,10 @@ body=f"""`timescale 1ns/1ps
 // (64 lanes, real lane/SFU RTL, all 346 clock entries on one bench clock), each DUT on its OWN fixed-latency VM model
 // (answer 15 edges after the va-pin strobe), its own seq_su embedding mask/decode model (answer 1 edge after the
 // external_a strobe) and the common random cb (cq) / instruction (si) / copy (cp) stimulus.
-// MODE 0 (SU ops, random si; no copy): va, ca0..7, kv_*, acc, native_issue, xsw, cp_* must be equal on EVERY edge
-//   (0-edge contract); sd(PINREG=1) = sd(PINREG=0) one edge later (status +1; the idle bit, whose cut mixes the
+// MODE 0 (SU ops, random si; no copy): va, ca0..7 request part (crom_re/addr), kv_*, acc, native_issue, xsw, cp_* must
+//   be equal on EVERY edge (0-edge contract); the ca cb_stage field (si[481:476] feed-through, now a pin register) is
+//   the PINREG=0 value one edge later, and on every edge a group carries a request its stage equals PINREG=0's on that
+//   SAME edge (request/stage pairing unchanged); sd(PINREG=1) = sd(PINREG=0) one edge later (status +1; the idle bit, whose cut mixes the
 //   lane write strobes, is checked separately for being at most one edge early/late); external_a_re/addr(1) = (0) one
 //   edge EARLIER (embedding request -1; the answers are re-aligned inside).
 // MODE 1 (copy only): copy read beats at va + 2, write beats / xsw + 3, cp_done + 2 (same data).
@@ -59,8 +61,10 @@ module tb_qfd_su64_pinreg;
 {inst('d0',0,0)}{inst('d1',1,'PRMUT')}
     integer cyc = 0, errs = 0, g, ops = 0, copies = 0, ev0 = 0, ev1 = 0;
     // one-edge history of d0 / d1 for the shifted compares
-    reg [107:0] d0_sd_p; reg [63:0] d1_ea_re_p; reg [1535:0] d1_ea_addr_p;
-    always @(posedge clk) begin d0_sd_p <= d0_sd; d1_ea_re_p <= d1_ea_re; d1_ea_addr_p <= d1_ea_addr; end
+    reg [107:0] d0_sd_p; reg [63:0] d1_ea_re_p; reg [1535:0] d1_ea_addr_p; reg [5:0] d0_cst_p [0:7]; integer gp;
+    always @(posedge clk) begin d0_sd_p <= d0_sd; d1_ea_re_p <= d1_ea_re; d1_ea_addr_p <= d1_ea_addr;
+        for (gp = 0; gp < 8; gp = gp + 1) d0_cst_p[gp] <= d0_ca[gp][205:200]; end
+    integer n_req = 0;   // group-edges carrying a constant-ROM request (pairing check coverage)
     task automatic bad(input [8*48-1:0] what);
         begin errs = errs + 1; if (errs <= 12) $display("MISMATCH cyc%0d %0s", cyc, what); end
     endtask
@@ -70,7 +74,11 @@ module tb_qfd_su64_pinreg;
     always @(negedge clk) if (rst_n && cyc > 2) begin
         if (MODE == 0) begin
             if (d0_va !== d1_va) bad("va");
-            for (g = 0; g < 8; g = g + 1) if (d0_ca[g] !== d1_ca[g]) bad("ca");
+            for (g = 0; g < 8; g = g + 1) begin
+                if (d0_ca[g][199:0] !== d1_ca[g][199:0]) bad("ca request (0)");
+                if (d1_ca[g][205:200] !== d0_cst_p[g]) bad("ca stage (+1)");
+                if (|d1_ca[g][7:0]) begin n_req = n_req + 1; if (d1_ca[g][205:200] !== d0_ca[g][205:200]) bad("ca request/stage pairing"); end
+            end
             if (d0_kvwe !== d1_kvwe || d0_kvwa !== d1_kvwa || d0_kvwd !== d1_kvwd) bad("kv");
             if (d0_acc !== d1_acc) bad("acc");
             if (d0_ni !== d1_ni) bad("native_issue");
@@ -144,7 +152,7 @@ module tb_qfd_su64_pinreg;
             end
         end
         if (MODE == 0 && (d0_sd[107] || d1_sd[107])) $display("NOTE fault bits d0 %0d d1 %0d", d0_sd[107], d1_sd[107]);
-        if (errs == 0) $display("PASS qfd_su64_pinreg mode%0d ops=%0d copies=%0d cycles=%0d", MODE, ops, copies, cyc);
+        if (errs == 0) $display("PASS qfd_su64_pinreg mode%0d ops=%0d copies=%0d cycles=%0d crom_req_group_edges=%0d", MODE, ops, copies, cyc, n_req);
         else $display("FAIL qfd_su64_pinreg mode%0d errors=%0d", MODE, errs);
         $finish;
     end
