@@ -1,0 +1,358 @@
+{
+ "schema": "opentallas.s81.vm-native-physical-proof.v1",
+ "status": "FAIL_COMPONENT_NATIVE",
+ "time": "2026-10-16T03:03:18.699114-07:00",
+ "job": "dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f",
+ "source_commit": "d0344ba3f7890dda7651d0afbdf4e3890f341de8",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "5403019810e4e1687908d2b2a56808a441f7e39867ac5df4397bff8a845fd569",
+  "tools/s81_vm/wfc_ctl_equiv_gate.sh": "5e7588bf21812b6dc84fbeaaf6d810e0dc6bf28f98f45cb46a2915002b1db10c",
+  "tools/s81_vm/wfc_ctl_equiv_bench.sv": "fcbd7650f3db0c4e036d48d048ded6314961ea663bddf3510fc47ac9d271202b",
+  "tools/s81_vm/wfc_ref_r9.sv": "ead14152e651e85973c0c8b8f0a91133c925cde379482a70df23173040c3f954",
+  "physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/floorplan.json": "55f25e2ec6951b8736899f3b6fb38d2ff1fa359b9c5dfb7d732baf51d0b546c9",
+  "physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/spec.json": "93f0ef3e2c9487d1121d5f36738e748e948885fd29c247484186077a6f38f370",
+  "physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/signoff.sdc": "f48aea1d0368f391d110da3001f8d936c7032b0e745a654bcb613881397c9180"
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/routes/dsfd_vm_static_wfc_ctl_native_1015_r5_split5_d0344ba3f/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/routes/dsfd_vm_static_wfc_ctl_native_1015_r5_split5_d0344ba3f/work/orfs/logs/asap7/opentallas_dsfd_vm_static_wfc_ctl_asap7_ref_dsfd_vm_static_wfc_ctl_native_1015_r5_split5_d0344ba3f/base/5_2_route.json"
+  ],
+  "ff_ps": 5.41,
+  "clock_periods_ps": {
+   "core_clk": 833.333,
+   "ot_io_serial": 1111.110666667,
+   "ot_entry_0": 833.333,
+   "ot_entry_1": 1111.110666667
+  },
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/routes/dsfd_vm_static_wfc_ctl_native_1015_r5_split5_d0344ba3f/work/orfs",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "sdc_name": "6_final.sdc",
+  "setup_post_sdc": [],
+  "ss_sensitivity_ps": 28.16,
+  "ss_sensitivity_tns_ps": 0.0,
+  "setup_corner": "tt",
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/routes/dsfd_vm_static_wfc_ctl_native_1015_r5_split5_d0344ba3f/corner_sta.json",
+  "ss_ps": 176.85,
+  "ss_tns_ps": 0.0,
+  "errors": [],
+  "drc": 0,
+  "routed_ioref": {
+   "key": "1|/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/routes/dsfd_vm_static_wfc_ctl_native_1015_r5_split5_d0344ba3f/work/orfs|0|ae0410-cecorner-1015",
+   "at": "2026-10-16T02:55:18-07:00",
+   "available": true,
+   "ioref_edge": {
+    "tt": {
+     "ot_entry_0": {
+      "boundary": 1625,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     },
+     "ot_entry_1": {
+      "boundary": 4,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    },
+    "ff": {
+     "ot_entry_0": {
+      "boundary": 1625,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     },
+     "ot_entry_1": {
+      "boundary": 4,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    }
+   },
+   "tt": 176.85,
+   "ff": 5.41,
+   "errors": [],
+   "ioref": {
+    "tt": {},
+    "ff": {}
+   },
+   "tt_i2r": 176.85,
+   "tt_out": 360.48,
+   "ff_i2r": 21.95,
+   "ff_out": 5.41,
+   "ff_r2r": 20.43,
+   "json": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/cl/routed_ioref.a1.json",
+   "registers": 1731,
+   "registers_clocked": 1731,
+   "tt_resta_raw": 176.85,
+   "ff_resta_raw": 5.41
+  },
+  "route_sdc_clock": {
+   "ss_ps": 176.85,
+   "ff_ps": 5.41
+  }
+ },
+ "native": {
+  "cell": "dsfd_vm_static_wfc_ctl",
+  "view": "views/dsfd_vm_static_wfc_ctl",
+  "lib_cell": "dsfd_vm_static_wfc_ctl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 243.2,
+  "spread_ps": 46.7,
+  "outputs": 1617,
+  "inputs": 2618,
+  "launch_ps": 185.4,
+  "launch_pin": "w_d[123]",
+  "capture_ps": 311.1,
+  "capture_pin": "xd[518]",
+  "launch_over": 0,
+  "capture_over": 102,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 311.06175 > 190 (102 pins)",
+  "raw_launch_ps": 185.36195000000004,
+  "raw_capture_ps": 311.06174999999996,
+  "clocks": {
+   "ck_control_s": {
+    "rise": 42.8,
+    "fall": 48.006814999999996,
+    "min": 41.91588,
+    "max": 42.89187,
+    "src": "insertion.json boundary mean",
+    "bmin": 42.8,
+    "bmax": 42.9,
+    "n": 4
+   },
+   "ck_control_t": {
+    "rise": 243.2,
+    "fall": 261.65270999999996,
+    "min": 214.74847,
+    "max": 271.95554,
+    "src": "insertion.json boundary mean",
+    "bmin": 225.3,
+    "bmax": 272.0,
+    "n": 1625
+   }
+  },
+  "strict_spread_pass": true
+ },
+ "child_lint": {
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views/dsfd_vm_static_wfc_ctl/dsfd_vm_static_wfc_ctl.lef",
+  "verdict": "FAIL",
+  "fails": [
+   "(c) strap layer M6+ not clear: 73 OBS on M6, 0 signal pins, PG on M6 (child signals must stop below the parent strap layer, or own M5 as full PG stripes and leave M6 free)"
+  ],
+  "warns": [],
+  "summary": "dsfd_vm_static_wfc_ctl 194.4 x 394.2: PG M6 VDD 73 stripes (99% spread, 100% cov) / VSS 73 stripes (99% spread, 100% cov); strap M6; face pins 4237 blocked-above 0 blocked-same 0; clock ck_control_s insertion 48 ps; clock ck_control_t insertion 292 ps; pockets M6 0 (closed)",
+  "info": {
+   "cell": "dsfd_vm_static_wfc_ctl",
+   "W": 194.4,
+   "H": 394.2,
+   "pg": {
+    "nets": {
+     "VDD": {
+      "top_layer": "M6",
+      "stripes": 73,
+      "dir": "H",
+      "spread": 0.986,
+      "coverage": 1.0,
+      "shapes_on_top": 73
+     },
+     "VSS": {
+      "top_layer": "M6",
+      "stripes": 73,
+      "dir": "H",
+      "spread": 0.986,
+      "coverage": 1.0,
+      "shapes_on_top": 73
+     }
+    },
+    "top_layer": "M6",
+    "ok": true,
+    "why": []
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "cap": "M5",
+   "face": {
+    "face_pins": 4237,
+    "blocked_above": 0,
+    "covered_below": 0,
+    "examples": [],
+    "blocked_same": 0,
+    "same_examples": [],
+    "band_same": 0,
+    "band_examples": []
+   },
+   "clock_insertion": {
+    "ck_control_s": {
+     "max_ps": 48.08,
+     "min_ps": 41.92
+    },
+    "ck_control_t": {
+     "max_ps": 291.86,
+     "min_ps": 214.75
+    }
+   },
+   "pockets": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "marker": {
+     "layer": "M6",
+     "d_um": 2.048,
+     "added": 0
+    },
+    "count": 0,
+    "area_um2": 0,
+    "examples": []
+   }
+  }
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.058 MB sources in 6 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.010 s (elab=0.002, cvt=0.004, bld=0.000); cpu 0.010 s on 1 threads; allocated 33.133 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_wfc_ctl_equiv": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "WFC_CTL_GATE PASS\n",
+   "track": "parallel"
+  },
+  "bench_wfc_ctl_mut_lane": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "WFC_CTL_GATE FAIL OT_VM_WFC_CTL_MUT_LANE\n",
+   "track": "parallel"
+  },
+  "bench_wfc_ctl_mut_fault": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "WFC_CTL_GATE FAIL OT_VM_WFC_CTL_MUT_FAULT\n",
+   "track": "parallel"
+  }
+ },
+ "file_sha256": {
+  "abstract.json": "90b87c8224173bcf0736b53c2a72eff3a3e7330cb1637bf8e626f98f4196c632",
+  "child_lint.json": "5afbf5d5c183baea36c593f63c99b8ebef742f1dac3e90206791692cdaaa8262",
+  "dsfd_vm_static_wfc_ctl.lef": "ae00624e6d1843fc1f11b9fc80dae1366a74cadde6e6250e09ee483173430370",
+  "dsfd_vm_static_wfc_ctl_ff.lib": "a7ffa01586be13229074c5fad32e1797360150db6af39dfb90bb43fd8da945c7",
+  "dsfd_vm_static_wfc_ctl_ss.lib": "77cc64b572af93eda3517f4567981696e93917050333311bf575f12eb9c8df10",
+  "dsfd_vm_static_wfc_ctl_tt.lib": "1c3e70cda8fc4763a0849083cc7294d626b43c60404646b879920295265ae7e0",
+  "export_ff.log": "0443540c1387cef1f02f80b15e892b71b52e8176203a97e51db32c643d0ab86a",
+  "export_ff.tcl": "fe2d617f51bc6a3cda81bc5b6bafb6ca54ef6d62d4e43a727fb72242cabb4434",
+  "export_ss.log": "11b48eeacd01725103c310c9aa7c53034a07c77bb6f3faca79805a9538edf340",
+  "export_ss.tcl": "864c82b6344e0af63a5240d00d0d0491588472e5fe7f8e40503a5234421dcb08",
+  "export_tt.log": "00c748d909af5c4a0191c7d4ed7763e6538daca9ed84ca86a8f2f86a7ff483d5",
+  "export_tt.tcl": "76130f02fb20b1d57fdabbaf5dc11eb63e0e97d6ff8e8d3add6815e97c94f1be",
+  "insertion.json": "6c71222a478e71e18f0e42b9f6f5b6b89e9d2c60cc9ab47e75e50ef76ab4e3d3"
+ },
+ "parser_sha256": {
+  "tools/hier_contract/native_pin_audit.py": "deb55cfe73d790fd16fa635a9df474c4f87a41c09dced57530e001705f88b3c9",
+  "tools/hier_contract/pinreg_audit.py": "92044e596e362e836ae157bfc4b03f607eb9f8e6cec7561eebd3cf2f4763eeb1",
+  "tools/hier_contract/child_lint.py": "b682d871603dc7b4c2fafb794eea4c939ccbef6fe1535b9ca01734113a657050"
+ },
+ "layout": {
+  "viewed_with": "tools.view_image",
+  "sha256": {
+   "density.png": "81922ba6451875c9ddad913f190942abc2dac8bf4ddedcecd8a62c37be4e7be2",
+   "floorplan.png": "74d6ec78d4d72b7fd130062b56e16c23610d9935bba1721ee3a320ab581d4210"
+  },
+  "assessment": "Actual routed density and floorplan viewed. Pin-bound 194.4 x 394.2 um, approximately 2% fill, no macros. Diffuse W/E occupied bands; no yellow/red density hotspot. Dense W/E face-pin walls and clock entry E near lower quarter. Sparse interior cannot justify shrink without connected parent pin-capacity proof."
+ },
+ "scope": "Exact d0344ba3f routed WFC control leaf only. r5 splits faults by native clock domain; zero data/schedule edges. Requires adoption of exact r5 RTL and die per-root phi-minus-R. Standalone differential reference modified under OT_WFC_FAULT_SPLIT; not full parent/native token qualification. Main source may predate r5; do not bind this receipt to older RTL.",
+ "export": {
+  "host": "ot-agidock128",
+  "out": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/artifacts/codex_wfc_native_0300/views/dsfd_vm_static_wfc_ctl",
+  "method": "Exact existing spec collect export command, read-only route/source and separate artifacts output through ot-run 8 GB one thread."
+ },
+ "export_default_child_lint": {
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/artifacts/codex_wfc_native_0300/views/dsfd_vm_static_wfc_ctl/provenance/dsfd_vm_static_wfc_ctl.candidate.lef",
+  "verdict": "PASS",
+  "fails": [],
+  "warns": [],
+  "summary": "dsfd_vm_static_wfc_ctl 194.4 x 394.2: PG M6 VDD 73 stripes (99% spread, 100% cov) / VSS 73 stripes (99% spread, 100% cov); strap M7; face pins 4237 blocked-above 0 blocked-same 0; clock ck_control_s insertion 48 ps; clock ck_control_t insertion 292 ps; pockets M6 0 (closed)",
+  "info": {
+   "cell": "dsfd_vm_static_wfc_ctl",
+   "W": 194.4,
+   "H": 394.2,
+   "pg": {
+    "nets": {
+     "VDD": {
+      "top_layer": "M6",
+      "stripes": 73,
+      "dir": "H",
+      "spread": 0.986,
+      "coverage": 1.0,
+      "shapes_on_top": 73
+     },
+     "VSS": {
+      "top_layer": "M6",
+      "stripes": 73,
+      "dir": "H",
+      "spread": 0.986,
+      "coverage": 1.0,
+      "shapes_on_top": 73
+     }
+    },
+    "top_layer": "M6",
+    "ok": true,
+    "why": []
+   },
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "cap": null,
+   "face": {
+    "face_pins": 4237,
+    "blocked_above": 0,
+    "covered_below": 0,
+    "examples": [],
+    "blocked_same": 0,
+    "same_examples": [],
+    "band_same": 0,
+    "band_examples": []
+   },
+   "clock_insertion": {
+    "ck_control_s": {
+     "max_ps": 48.08,
+     "min_ps": 41.92
+    },
+    "ck_control_t": {
+     "max_ps": 291.86,
+     "min_ps": 214.75
+    }
+   },
+   "pockets": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "marker": {
+     "layer": "M6",
+     "d_um": 2.048,
+     "added": 0
+    },
+    "count": 0,
+    "area_um2": 0,
+    "examples": []
+   }
+  }
+ },
+ "child_lint_scope": "Independent cap=M5 strict-pockets audit matches promised floorplan cap; default exporter lint passed by inferred PG=M6 but violates promised PG=M5/strap=M6."
+}

@@ -4215,6 +4215,12 @@ def stage_output_dirs(j, st):
         return [subst(d, j) for d in ([out] if isinstance(out, str) else out)]
     if st["kind"] in ("calibrate", "route"):
         return [f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"]
+    # EXPORT-ASIDE (ROOT 2026-10-16, qkd_rlys_1-v1-838dc5048): a retried ref_tile collect re-exported into the same
+    # views dir and export_provenance refused it ('existing provenance: use a fresh export directory'), so EVERY
+    # failed first collect became NEEDS_HUMAN on the retry.  The export --out dir is the stage's output.
+    m = re.search(r"ref_tile\.py export\b[^&;|>]*?--out\s+(\S+)", st.get("cmd") or "")
+    if m:
+        return [subst(m.group(1), j)]
     return []
 
 

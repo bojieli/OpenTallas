@@ -6,7 +6,7 @@
       "target": "Qwen ROM",
       "owner": "Claude:Q-KVSYS-DIE",
       "recorded_at": "2026-10-16T02:30:00-07:00",
-      "description": "KV/system die relay STANDARD, 1 b one register stage (a W -> b E, ck S), 10.8 x 10.8 um, M4 pins at 3 tracks, no reset, 1 cycle/stage; 6106 replicas in kvs11-v143c under OT_KV_RLY_STD=1 (replaces qkd_rly_<W> per-width frames)",
+      "description": "KV/system die relay STANDARD, 1 b one register stage (a W -> b E, ck S), 12.96 x 12.96 um, M4 pins at 3 tracks, no reset, 1 cycle/stage; 6106 replicas in kvs11-v143c under OT_KV_RLY_STD=1 (replaces qkd_rly_<W> per-width frames)",
       "source": {
         "commit": "87a3ec144",
         "paths": [
@@ -45,7 +45,7 @@
       "target": "Qwen ROM",
       "owner": "Claude:Q-KVSYS-DIE",
       "recorded_at": "2026-10-16T02:30:00-07:00",
-      "description": "KV/system die relay STANDARD, 36 b one register stage (a W -> b E, ck S), 10.8 x 10.8 um, M4 pins at 3 tracks, no reset, 1 cycle/stage; 1557 replicas in kvs11-v143c under OT_KV_RLY_STD=1 (replaces qkd_rly_<W> per-width frames)",
+      "description": "KV/system die relay STANDARD, 36 b one register stage (a W -> b E, ck S), 12.96 x 12.96 um, M4 pins at 3 tracks, no reset, 1 cycle/stage; 1557 replicas in kvs11-v143c under OT_KV_RLY_STD=1 (replaces qkd_rly_<W> per-width frames)",
       "source": {
         "commit": "87a3ec144",
         "paths": [

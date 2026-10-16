@@ -45,6 +45,7 @@ import argparse
 import json
 import re
 import sys
+from decimal import Decimal
 from pathlib import Path
 
 AREA_FRAC = 0.90          # (a) bloat threshold and (b) full-stripe span fraction
@@ -205,10 +206,16 @@ def check_pg(m: dict) -> dict:
         area = sum((r[3] - r[1]) * (r[4] - r[2]) for r in sh) or 1.0
         cov = sum((r[3] - r[1]) * (r[4] - r[2]) for r in full) / area
         if full:
-            cs = [((r[2] + r[4]) / 2 if horiz else (r[1] + r[3]) / 2) for r in full]
-            spread = (max(cs) - min(cs)) / (H if horiz else W)
+            # Compare decimal LEF coordinates exactly: e.g. 8.052 - 2.652
+            # is precisely half of 10.8, but binary float arithmetic rejects it.
+            # Do not round or add a tolerance to the 50% physical requirement.
+            cs = [(Decimal(str(r[2])) + Decimal(str(r[4])) if horiz else
+                   Decimal(str(r[1])) + Decimal(str(r[3]))) / 2 for r in full]
+            spread_decimal = (max(cs) - min(cs)) / Decimal(str(H if horiz else W))
+            spread = float(spread_decimal)
         else:
             spread = 0.0
+            spread_decimal = Decimal(0)
         e = {"top_layer": f"M{tops[n]}" if tops[n] else None, "stripes": len(full), "dir": "H" if horiz else "V",
              "spread": round(spread, 3), "coverage": round(cov, 3), "shapes_on_top": len(sh)}
         rec["nets"][n] = e
@@ -216,7 +223,7 @@ def check_pg(m: dict) -> dict:
             rec["why"].append(f"{n} top layer {e['top_layer']} != {rec['top_layer']}")
         if len(full) < MIN_STRIPES:
             rec["why"].append(f"{n}: {len(full)} full-length stripes on {rec['top_layer']} (< {MIN_STRIPES})")
-        elif spread < MIN_SPREAD:
+        elif spread_decimal < Decimal(str(MIN_SPREAD)):
             rec["why"].append(f"{n}: stripes span only {spread:.0%} of the macro")
     for need in ("VDD", "VSS"):
         if need not in nets and not any(p["use"] == ("POWER" if need == "VDD" else "GROUND") for p in nets.values()):
