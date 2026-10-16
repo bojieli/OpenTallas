@@ -522,6 +522,15 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
           f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
 
 
+def check_kit_shell(g: Gate, kd: Path):
+    syntax = subprocess.run(["bash", "-n", str(kd / "kit.env")], capture_output=True, text=True)
+    if syntax.returncode or syntax.stderr.strip():
+        g.add("FAIL", "kit_shell", "kit.env is not valid Bash: " + syntax.stderr.strip()[-400:],
+              "regenerate with the current quoted EXTRA generator, commit, then run an exact source-bound gate")
+        return False
+    return True
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     stale = stale_multi_root_sdcs(kd)
     if stale:
@@ -549,6 +558,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if [round(x, 3) for x in fp["die"][2:]] != [round(x, 3) for x in fresh["outline"]]:
         g.add("FAIL", "kit", f"kit outline {fp['die'][2:]} != regenerated {fresh['outline']}", "re-run ref_tile.py gen")
     env = (kd / "kit.env").read_text()
+    check_kit_shell(g, kd)
     if "pin_group_max" in spec.get("route", {}):
         pgm = re.search(r"^export OT_PIN_GROUP_MAX=(\d+)$", env, re.M)
         if not pgm or int(pgm[1]) != RT.pin_group_max(spec):
