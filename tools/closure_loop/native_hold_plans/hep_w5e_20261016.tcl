@@ -27,7 +27,7 @@ foreach name [concat $ot_hep_remove [dict keys $ot_hep_swap]] {
   }
 }
 dict for {name master} $ot_hep_swap {
-  if {[odb::dbMaster_find [ord::get_db] $master] eq "NULL"} {
+  if {[[ord::get_db] findMaster $master] eq "NULL"} {
     error "HEP normalization target master missing: $master (declare NATIVE_NORMALIZE_VT=LVT)"
   }
 }

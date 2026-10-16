@@ -39,7 +39,7 @@ proc ot_load_extra_vt_lefs {} {
   foreach vt [envd OT_VT RVT] {
     if {$vt eq "RVT"} continue
     set tag [string map {SLVT SL LVT L} $vt]
-    if {[odb::dbMaster_find [ord::get_db] BUFx2_ASAP7_75t_$tag] eq "NULL"} {
+    if {[[ord::get_db] findMaster BUFx2_ASAP7_75t_$tag] eq "NULL"} {
       read_lef -library $::P/lef/asap7sc7p5t_28_${tag}_1x_220121a.lef
     }
   }
