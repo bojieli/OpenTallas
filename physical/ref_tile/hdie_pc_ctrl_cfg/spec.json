@@ -1,0 +1,151 @@
+{
+ "name": "hdie_pc_ctrl_cfg",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "pc_fault",
+   "owner_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-DIE",
+  "branch": "claude/hdie-2210",
+  "tag": "cfg1",
+  "purpose": "HBM v15 die: ONE configured physical per-PC controller master for all 128 PCs (Codex 2116 configured-PC identity: pc_id/refresh_reload straps, die constants captured in flops at reset); real ot_hbm_r14_stream_pc_strap sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM + (WPAY=1, H-DIE 22:50) the 256-bit write payload in a second 128x256 SRAM: 8,192 queue flops and the 32:1x256 head mux removed, clock root 15,219 -> ~7k sinks (hdie_pc_ctrl gate FAIL: CTS rc=137 + 15,219-sink root). Service rate unchanged (issued steady 69,583.3 ps/epoch, capacity PASS, cfg PC/PHASE mutants rejected; write path WR640 exact, stale_head mutant rejected). K side N face (SM service group), PHY row/column/data S face, straps E. Flow control k_rdy/kr_rdy = HBM-stack boundary (owner 10-14). Signs off at die 833.333 ps (runs at 1024 ps).",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/arch/hbm_die_v15/checkpoint_allocation",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/model_ready_hbm_r14",
+   "tools/hbm_die_v15",
+   "tools/hbm_svc_packed136_image.py",
+   "tools/w19_payload_loader.py"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_cfg",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_leaf.sh {RUN}/bench/exact 0 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SM_STACK_CAPACITY PASS",
+    "min_count_regex": "records=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_leaf.sh {RUN}/bench/mut1 1 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wpay",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_wpay.sh {RUN}/bench/wpay",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CTRL_WPAY PASS"
+   }
+  ]
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
+ }
+}
