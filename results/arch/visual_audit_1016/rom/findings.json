@@ -1,0 +1,3626 @@
+{
+ "schema": "opentallas.visual_audit.v1",
+ "stream": "VIS-ROM",
+ "date": "2026-10-16",
+ "order": "owner 2026-10-16 ~01:00 PT: crowding and pin positioning problems must be fixed",
+ "scope": "ROM dies (Qwen compute, Qwen KV/system, DeepSeek S81): every master not closed+native PASS in results/arch/die_completeness_1015/completeness.json plus newer successors, and the latest die runs/plans",
+ "counts": {
+  "findings": 56,
+  "by_severity": {
+   "1": 12,
+   "2": 31,
+   "3": 13
+  }
+ },
+ "classes": {
+  "P1": "pin face away from consumer",
+  "P2": "pins crowded on one edge/layer",
+  "P3": "narrow channel / sliver / no glue room",
+  "P4": "hot congestion window",
+  "P5": "empty / wasted area or util>60%",
+  "P6": "clock/reset entry or long internal chain"
+ },
+ "findings": [
+  {
+   "id": "QC-01",
+   "die": "qwen_compute",
+   "master": "qfd_tile_nk (rp2_45_a2 repack)",
+   "level": "tile",
+   "owner": "Q-COMPUTE-DIE",
+   "job": "ref_gate qfd_tile_nk_rp2_45_a2 (exact 4ecca5d9c gate, DPL-0033 at 3_5_place_dp); r3 8a47f4f41 gate running 00:47",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261015-234522",
+   "see": "KNOWN pin-face glue squeeze, NOT FIXED in the newest image: the 47.5x432 um ot_qwen_tile_node macro sits 20.3 um off the W wall, and the 2,076 W-face pins (n_a/n_b/n_y/t_out, 514 each) must land their glue in that strip. 145 of the 170 located DPL-illegal cells are at x<50 um, y 200-500 um, i.e. in the W channel beside the node macro. Every other channel is also about 20 um wide (node->LSL 20.1, LSL col gaps 20.1/20.1, E gap 26.1). r3 (8a47f4f41) changes only the fences/regions; the macro x positions in the kit floorplan.json are unchanged (node x=22.464).",
+   "numbers": {
+    "outline_um": [
+     457.9,
+     820.8
+    ],
+    "fill": 0.606,
+    "dpl_util": 0.618,
+    "W_face_pins": 2076,
+    "W_pin_span_um": 701,
+    "W_layer": "M4",
+    "W_channel_um": 20.3,
+    "node_to_lsl_gap_um": 20.1,
+    "lsl_col_gaps_um": [
+     20.1,
+     20.1
+    ],
+    "E_gap_um": 26.1,
+    "dpl_violations_final": {
+     "site_align": 186,
+     "overlap": 136,
+     "edge_spacing": 64,
+     "padding": 50
+    },
+    "illegal_cells_located": 170,
+    "illegal_in_W_channel": 145,
+    "fixed_cells": 40569,
+    "released_out_flops": 2343,
+    "released_hold_cells": 5714
+   },
+   "classes": [
+    "P3",
+    "P2",
+    "P1"
+   ],
+   "fix": "Give the W pin face a glue band of at least 40 um. Either move the node column right by about 20 um, which needs the outline widened 457.9->~478 um or the LSL columns repitched with their 20 um gaps kept and the 26 um E gap consumed, or put n_a/n_b/n_y/t_out on the node macro's own W edge as pass-through so the node pins abut the tile pins and no output flops sit in the channel. Changing only the fences (r3) cannot fix this: the failing cells already have nowhere to go in the 20.3 um strip.",
+   "severity": 1,
+   "images_committed": [
+    "img/QC-01__F01_nk_rp2_45_floorplan.png",
+    "img/QC-01__F01_nk_rp2_45_density.png",
+    "img/QC-01__F01_nk_rp2_45_kit_gate_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F01_nk_rp2_45_floorplan.png",
+    "/tmp/visrom/qwen_compute/F01_nk_rp2_45_density.png",
+    "/tmp/visrom/qwen_compute/F01_nk_rp2_45_kit_gate_floorplan.png"
+   ],
+   "status_1016_0115": "owner: r3 fence-only gate; if still illegal -> repitch macro columns for >=40 um W glue band (NK) / move NL tap glue into empty NE slot + widen ROM-top band.",
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-01",
+     "outcome": "confirmed",
+     "evidence": "Owner changed fences (r3 8a47f4f41: one-sided <=40 um fences, pin-face bands unfenced); r3 gate ff8ffa4d6 on ot-epyc1tb (ref_gate/qfd_tile_nk_rp2_45_a2-20261016-004719, dir deleted after FAIL) still DPL-0033 but illegal cells 170 -> 92 and violation counts 186/136/64/50 -> 88/68/8/0 (site/overlap/edge/padding). Per the stream's r4 receipts (f9033f6a1) and the sampled cell coordinates (x=84.67, 320.1, 320.4 um) the residue sits in the two LSL pin gutters (x 75-85 and 300-325, 9.3 um placeable), NOT in the W node strip that held 145/170 in pass 1. Node macro still at x=22.464 (W channel 20.3 um) - the band fix worked without moving the node. Gate still FAIL, so closure is not yet shown; r4 (LSL repitch, gutters 20.1->30.1 um) is the next gate.",
+     "before": {
+      "illegal_cells": 170,
+      "in_W_strip": 145,
+      "dpl": {
+       "site": 186,
+       "overlap": 136,
+       "edge": 64,
+       "padding": 50
+      }
+     },
+     "after": {
+      "illegal_cells": 92,
+      "in_W_strip": "~0 (all in LSL gutters per r3 receipts)",
+      "dpl": {
+       "site": 88,
+       "overlap": 68,
+       "edge": 8,
+       "padding": 0
+      },
+      "verdict": "FAIL DPL-0033",
+      "image": "/tmp/visrom/r2/img/QC-01_nk_r3_gate_floorplan.png"
+     }
+    }
+   }
+  },
+  {
+   "id": "QC-02",
+   "die": "qwen_compute",
+   "master": "qfd_tile_nl (rp2_45_a2 repack)",
+   "level": "tile",
+   "owner": "Q-COMPUTE-DIE",
+   "job": "ref_gate qfd_tile_nl_rp2_45_a2 (exact 4ecca5d9c gate, DPL-0033); r3 gate running 00:47",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_rp2_45_a2-20261015-234518",
+   "see": "The NL tile has the same outline and LSL/ROM grid as NK but no node macro, so the W column (x 2-90 um, about 340 um tall) is empty while the cells that fail legalisation crowd elsewhere: 38 at x 350-400/y 500-600 (the channel under the right ROM stack and the empty NE slot, next to the 548 E-face tap pins), 23 in the 24.8 um band above the ROMs (y>800, N-face clock roots), and 16 at E x400/y400. The W pin squeeze is not the NL failure. The failures sit in the ROM-bottom/E-tap corner and the ROM-top band.",
+   "numbers": {
+    "outline_um": [
+     457.9,
+     820.8
+    ],
+    "fill": 0.55,
+    "dpl_util": 0.561,
+    "E_tap_pins": 548,
+    "W_pins": 530,
+    "dpl_violations_final": {
+     "site_align": 124,
+     "overlap": 65,
+     "edge_spacing": 24,
+     "padding": 15
+    },
+    "illegal_located": 96,
+    "cluster_E_rom_bottom": 38,
+    "cluster_top_band": 23,
+    "top_band_um": 24.8,
+    "empty_W_column_um": [
+     88,
+     340
+    ]
+   },
+   "classes": [
+    "P3",
+    "P5"
+   ],
+   "fix": "Use the empty W node slot: move the E tap glue / repair corridor into the vacant NE LSL slot (126x141 um), or swap the NE LSL with the vacant slot so the tap pins face open area. Widen the ROM-top band from 24.8 to about 40 um by moving the ROM stacks down into the NE slot area. Also reconsider sharing one 457.9x820.8 outline for NK and NL: NL leaves about 30k um2 empty.",
+   "severity": 1,
+   "images_committed": [
+    "img/QC-02__F02_nl_rp2_45_floorplan.png",
+    "img/QC-02__F02_nl_rp2_45_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F02_nl_rp2_45_floorplan.png",
+    "/tmp/visrom/qwen_compute/F02_nl_rp2_45_density.png"
+   ],
+   "status_1016_0115": "owner: r3 fence-only gate; if still illegal -> repitch macro columns for >=40 um W glue band (NK) / move NL tap glue into empty NE slot + widen ROM-top band.",
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-02",
+     "outcome": "confirmed",
+     "evidence": "Same r3 change; NL gate (ref_gate/qfd_tile_nl_rp2_45_a2-20261016-004715) still DPL-0033 but 96 -> 53 illegal cells, violations 124/65/24/15 -> 53/42/10/0. Sampled residue at x=84.67 and 320.4 um = LSL pin gutters (the stream's r4 receipt says all residue in gutters; ROM-top band and E-tap corner clusters gone). The suggested NE-slot move was not done; r4 repitch is the next gate.",
+     "before": {
+      "illegal_cells": 96,
+      "dpl": {
+       "site": 124,
+       "overlap": 65,
+       "edge": 24,
+       "padding": 15
+      }
+     },
+     "after": {
+      "illegal_cells": 53,
+      "dpl": {
+       "site": 53,
+       "overlap": 42,
+       "edge": 10,
+       "padding": 0
+      },
+      "verdict": "FAIL DPL-0033",
+      "image": "/tmp/visrom/r2/img/QC-02_nl_r3_gate_floorplan.png"
+     }
+    }
+   }
+  },
+  {
+   "id": "QC-03",
+   "die": "qwen_compute",
+   "master": "qfd_ucie_gearbox_r10 (block qfd_ucie_six_five)",
+   "level": "tile",
+   "owner": "Q-DVM+LINK",
+   "job": "qfd_ucie_gearbox_r10-r12-COMMIT-b10299672 (CLOSED TT +31.9/FF +17.6, SS -123.8); r13-428ab16dd RUNNING (at 4_1_cts)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qfd_ucie_gearbox_r10-r12-COMMIT-b10299672",
+   "see": "The 129.6x216 um gearbox carries 2,089 E-face pins (phy_rx/tx_frame, 1,043 each) on M4 alone, at 10 pins/um over 210 um. The E pin wall is a solid red column (bin density >1.0), and final congestion is red over the whole E half. W face: 1,199 pins at 6.7/um. GRT M2 49%, M3 33% overall, overflow 0. r13 is at CTS: max bin density down 1.077->1.005 and hot fraction 2.7%->0.5%, but the pin geometry is identical.",
+   "numbers": {
+    "outline_um": [
+     129.6,
+     216.0
+    ],
+    "fill_r12": 0.455,
+    "fill_r13": 0.434,
+    "E_pins": 2091,
+    "E_pins_per_um": 9.9,
+    "E_layer": "M4 only",
+    "W_pins": 1199,
+    "W_pins_per_um": 6.7,
+    "density_max_r12": 1.077,
+    "hot_frac_r12": 0.027,
+    "hot_frac_r13": 0.005,
+    "grt_usage": {
+     "M2": 0.494,
+     "M3": 0.33,
+     "M4": 0.216,
+     "M5": 0.08
+    },
+    "clock_entry": "core_ck/fdi_ck S face centre x=64.9"
+   },
+   "classes": [
+    "P2",
+    "P4"
+   ],
+   "fix": "Split the E-face frame bus over M4+M6 (about 5 pins/um per layer), or lengthen the PHY-facing edge: rotate so the frame buses sit on the 216 um faces on two layers, or widen 129.6->~170 um to give the E pin-flop wall room. It closed, so this is a margin issue, not a blocker.",
+   "severity": 2,
+   "images_committed": [
+    "img/QC-03__F03_ucie_r12_density.png",
+    "img/QC-03__F03_ucie_r12_congestion.png",
+    "img/QC-03__F03_ucie_r13_cts_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F03_ucie_r12_density.png",
+    "/tmp/visrom/qwen_compute/F03_ucie_r12_congestion.png",
+    "/tmp/visrom/qwen_compute/F03_ucie_r13_cts_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-03",
+     "outcome": "refuted",
+     "evidence": "Owner: tile layer cap is M5, so the M4+M6 split is not available (refuted part). r13 (qfd_ucie_gearbox_r10-r13-428ab16dd, ot-epyc1tb) routed with the same E-face geometry (2,091 pins at 10.05/um on M4): GRT overflow 0, usage M2 49.5 / M3 33.4 / M4 18.3 / M5 7.1 % (r12 M4 21.6 %), DRC 0, TT +22.53 / FF -2.69 ps (hold ECO running). The routed final_congestion shows uniform orange over the core and no red E-face wall; max bin density 1.077 -> 1.005, hot fraction 2.7 % -> 0.5 %. The E-face crowding did not turn into a routing or setup cost.",
+     "before": {
+      "E_pins_per_um": 9.9,
+      "density_max": 1.077,
+      "hot_frac": 0.027,
+      "grt_M4": 0.216,
+      "tt_ps": 31.9
+     },
+     "after": {
+      "E_pins_per_um": 10.05,
+      "density_max": 1.005,
+      "hot_frac": 0.005,
+      "grt_M4": 0.183,
+      "grt_overflow": 0,
+      "tt_ps": 22.53,
+      "ff_ps": -2.69,
+      "image": "/tmp/visrom/r2/img/QC-03_gearbox_r13_final_congestion.png"
+     }
+    }
+   }
+  },
+  {
+   "id": "QC-04",
+   "die": "qwen_compute",
+   "master": "qfd_d2d_static",
+   "level": "tile",
+   "owner": "Q-DVM+LINK",
+   "job": "newest pre-route gate qfd_d2d_static_r1-20261016-002934 (at CTS, 3_5_place_dp snapped); previous routes r1-r3-cb4ec1b91 EARLY_FAIL_CONGESTION (GRT-0116), r1-r1-87cafef19 EARLY_FAIL_HOLD (-52 ps, clock detour, 481 um avg macro clock wire)",
+   "host_run": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_r1-20261016-002934",
+   "see": "All data pins are packed into the W half of a 475x281 um outline. N: 0-56 um and 180-295 um at about 10 pins/um on M5 alone (fdi/native/prog/rx buses 548-583 wide). S: 40-140 and 200-260 um at up to 10/um. W: 760 pins on M4. The E half (x>300) has no data pins and no cells, and 70% of density bins are empty. The single clock ck enters at the E-face midpoint (475, 145), about 300 um from the W-half sink mass (10.8k flops), which is why the r1 CTS detoured and left the S-face band 76 ps late. The new gate already widened the centre macro gap from 20.1 um (r3, congestion fail) to 40.8 um, which is fixed. The pin clustering and the clock entry are not fixed.",
+   "numbers": {
+    "outline_um": [
+     475.2,
+     280.8
+    ],
+    "fill": 0.456,
+    "N_pins": 1673,
+    "S_pins": 1170,
+    "W_pins": 760,
+    "peak_pins_per_um": 10.0,
+    "peak_layer": "M5",
+    "frac_empty_bins": 0.7,
+    "centre_gap_um_r3": 20.1,
+    "centre_gap_um_new": 40.8,
+    "row_gap_um": 21.6,
+    "clock_entry": [
+     475.2,
+     145.3
+    ],
+    "flops": 10789,
+    "cts_insertion_ps": [
+     514.8,
+     573.7
+    ],
+    "r1_hold_wns_ps": -52.2
+   },
+   "classes": [
+    "P2",
+    "P6",
+    "P5",
+    "P4"
+   ],
+   "fix": "Spread the N/S fdi_tx/rx_flit and native/prog/rx buses over the full 475 um faces, or onto M5+M7 to halve per-layer density. Move the clock entry to the N-face centre near x 237 (sink centroid). If the E half must stay empty, shrink the outline 475->~330 um wide.",
+   "severity": 2,
+   "images_committed": [
+    "img/QC-04__F04_d2d_gate_floorplan.png",
+    "img/QC-04__F04_d2d_gate_density.png",
+    "img/QC-04__F04_d2d_r3_congfail_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F04_d2d_gate_floorplan.png",
+    "/tmp/visrom/qwen_compute/F04_d2d_gate_density.png",
+    "/tmp/visrom/qwen_compute/F04_d2d_r3_congfail_floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-04",
+     "outcome": "open",
+     "evidence": "Owner moved in two steps. r4 (f779ceecf) only widened the centre gap 20.1 -> 40.8 um; its gate passes (GRT 0 overflow, M2 17.5 % / M3 19.4 %, reg->reg +109 ps). But it still has the E-face clock: gate TT insertion 416.8-501.0 ps, spread 84.2 ps (SS 535-649 / 113.5). That is over the measured clock rule (<=300 ps insertion, <=80 ps spread). r4 is now RUNNING in the loop (qfd_d2d_static_r1-r4-f779ceecf) with these numbers. FLAG: it was submitted with a clock-rule miss already measured at its gate. r5 (c38379ae2: every port spread over the full face, ck at the S-face centre) gate started 01:07 (/tmp/ref_gate_qfd_d2d_static_r5_20261016-010745); no images yet. Decided by the r5 gate: insertion/spread and the N/S pins/um.",
+     "before": {
+      "peak_pins_per_um": 10.0,
+      "clock_entry": "E mid",
+      "cts_insertion_ps": [
+       514.8,
+       573.7
+      ]
+     },
+     "after": {
+      "r4_gate_tt_insertion_ps": [
+       416.8,
+       501.0
+      ],
+      "r4_gate_tt_spread_ps": 84.2,
+      "r4_grt_overflow": 0,
+      "r5": "gate running"
+     }
+    }
+   }
+  },
+  {
+   "id": "QC-05",
+   "die": "qwen_compute",
+   "master": "qfd_xs_tap",
+   "level": "tile",
+   "owner": "Q-DVM+LINK",
+   "job": "qfd_xs_tap-xt6-b36b1cfd5 (CLOSED; native capture 502 ps FAIL) - newest; no successor after 15:50",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qfd_xs_tap-xt6-b36b1cfd5",
+   "see": "Calibration finding. The 216x216 um tile has 6,361 pins at 13% fill. The S face (aw bus, 553 pins) is packed into 26.5 um on M5, 20.9 pins/um, which makes a hot congestion block at bottom centre. Flops are pulled to the pin walls (N 9.2/um, E/W 10.4/um), and a long diagonal chain runs S->NE. Native capture 502 ps fails. GRT M2 40%, overflow 0.",
+   "numbers": {
+    "outline_um": [
+     216,
+     216
+    ],
+    "fill": 0.132,
+    "pins": 6361,
+    "S_pins": 553,
+    "S_span_um": 26.5,
+    "S_pins_per_um": 20.87,
+    "N_pins_per_um": 9.21,
+    "E_W_pins_per_um": 10.43,
+    "density_hot_frac": 0.052,
+    "grt_M2": 0.401,
+    "native_capture_ps": 502
+   },
+   "classes": [
+    "P2",
+    "P4",
+    "P6",
+    "P5"
+   ],
+   "fix": "Spread the S-face aw bus over the full 216 um on M5 (+M7), from 20.9 to about 2.6 pins/um. Place it opposite its N/E consumers, or re-face aw to the side its consumer sits on, to kill the S->NE diagonal. Fill is 13%, so shrinking is limited by the pin perimeter: 6,361 pins need about 640 um of 2-layer perimeter at 10/um.",
+   "severity": 1,
+   "images_committed": [
+    "img/QC-05__F05_xs_tap_floorplan.png",
+    "img/QC-05__F05_xs_tap_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F05_xs_tap_floorplan.png",
+    "/tmp/visrom/qwen_compute/F05_xs_tap_density.png",
+    "/tmp/visrom/qwen_compute/F05_xs_tap_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-05",
+     "outcome": "confirmed",
+     "evidence": "Owner changed the kit (xt10 21bec030e): aw S bus spread 26.5 -> 159 um (x 28.4-187.4, M5), ck moved to the N-face centre (x=108), pin registers. The xt10 gate (b6db05fde, /tmp/ref_gate_qfd_xs_tap_20261016-010354.log, images in wt/qdvm-0030) is WARN with 0 fails: TT setup +120.3 / hold +12.9 ps, TT insertion 241.6-294.0 ps (spread 52.4). The density image no longer shows the S hot block. Residue: the full-width N-face band is red (density ~1.0, N pins about 9.2/um unchanged), and the SW->NE diagonal logic band remains. Fill is 0.115 (pin-limited, 6,361 pins). The native capture (pass 1: 502 ps) still needs a route to measure.",
+     "before": {
+      "S_pins_per_um": 20.87,
+      "S_span_um": 26.5,
+      "clock": "NW corner (xt9)",
+      "native_capture_ps": 502
+     },
+     "after": {
+      "S_span_um": 159,
+      "S_pins_per_um": 3.5,
+      "clock": "N centre x=108",
+      "gate_tt_setup_ps": 120.3,
+      "gate_hold_ps": 12.9,
+      "tt_insertion_ps": [
+       241.6,
+       294.0
+      ],
+      "image": "/tmp/visrom/r2/img/QC-05_xs_tap_xt10_gate_density.png"
+     }
+    }
+   }
+  },
+  {
+   "id": "QC-06",
+   "die": "qwen_compute",
+   "master": "qfd_crom_g",
+   "level": "tile",
+   "owner": "Q-ELEM",
+   "job": "qfd_crom_g_m5-nl1-deb1e0461 (CLOSED TT +45.5/FF +12.1, SS -332.7)",
+   "host_run": "ot-pve1:/srv/opentallas-scratch/claude/closure-loop/qfd_crom_g_m5-nl1-deb1e0461",
+   "see": "Six ROMs are stacked in a 194x551 um column and all 729 outputs exit the N face. They sit in two clusters (x 20-80 um and 140-180 um at about 9.6 pins/um on M5 alone) with 60 um of the N face unused, which makes red hot spots (density about 0.98) at the two N corners. The bottom ROM is about 450 um from the pins. The clock enters at the NW corner (30.9, 551) while the sinks span the full 551 um height. 80% of density bins are empty.",
+   "numbers": {
+    "outline_um": [
+     194.4,
+     550.8
+    ],
+    "fill": 0.462,
+    "N_pins": 729,
+    "N_cluster_pins_per_um": 9.6,
+    "N_used_span_um": 157,
+    "density_max": 0.979,
+    "frac_empty": 0.8,
+    "clock_entry": [
+     30.9,
+     550.8
+    ],
+    "rom_to_pin_um_max": 450,
+    "ss_ps": -332.7
+   },
+   "classes": [
+    "P2",
+    "P6",
+    "P5"
+   ],
+   "fix": "Spread crom_q/crom_addr evenly across the whole 194 um N face on M5+M7. Move clock entry to N-face centre or, better, put the clock and a pipeline-register row at the column mid-height. Alternatively rotate the tile so ROM outputs exit the 551 um long side toward the su_cbuf_g consumer.",
+   "severity": 2,
+   "images_committed": [
+    "img/QC-06__F06_crom_g_floorplan.png",
+    "img/QC-06__F06_crom_g_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F06_crom_g_floorplan.png",
+    "/tmp/visrom/qwen_compute/F06_crom_g_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-06",
+     "outcome": "open",
+     "evidence": "No new crom_g job since qfd_crom_g_m5-nl1-deb1e0461 (CLOSED 10-15 18:05). Decided by a re-pin kit: crom_q/addr over the full 194 um N face, ck at the N centre. Gate check: N pins/um <=5 and SS slack vs -332.7 ps.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "QC-07",
+   "die": "qwen_compute",
+   "master": "qfd_sp_band_lanes",
+   "level": "tile",
+   "owner": "Q-ELEM",
+   "job": "qfd_sp_band_lanes_q4_aau-dace0dae3-tc-hm0 (CLOSED TT +7.5/FF +0.3, block ot_qfd_band_lanes); odb released, ORFS images only. Newest full-tile attempts be5b56d78-*-ls2 EARLY_FAIL_HOLD (-33.5 ps, 21.5k endpoints), run dirs deleted",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qfd_sp_band_lanes_q4_aau-dace0dae3-tc-hm0",
+   "see": "Sixteen SRAMs in two tight columns sit at the centre of a 389x583 um outline. The centre channel between the columns is about 19 um and the row gaps about 16 um, and the centre channel and the row gaps glow red/orange in final congestion. Meanwhile the bands between the macros and the W/E pin faces (about 82-88 um each) are near-empty. Overflow is 0 and the tile closed with only +7.5 ps TT.",
+   "numbers": {
+    "outline_um": [
+     388.8,
+     583.2
+    ],
+    "macros": 213,
+    "centre_channel_um": 19,
+    "row_gap_um": 16,
+    "side_band_um": [
+     82,
+     88
+    ],
+    "grt_usage": {
+     "M2": 0.2,
+     "M3": 0.21,
+     "M5": 0.15
+    },
+    "tt_slack_ps": 7.5
+   },
+   "classes": [
+    "P3",
+    "P5",
+    "P4"
+   ],
+   "fix": "Pull the two macro columns apart. Use the 82-88 um side bands to widen the centre channel to about 40 um and the row gaps to about 25 um, or split into 4 columns with pins facing each consumer. Apply the same channel widths to the full-tile be5b56d78 variants that keep failing hold.",
+   "severity": 2,
+   "images_committed": [
+    "img/QC-07__F07_band_lanes_q4_placement.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F07_band_lanes_q4_placement.png",
+    "/tmp/visrom/qwen_compute/F07_band_lanes_q4_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-07",
+     "outcome": "open",
+     "evidence": "No new band_lanes job; the newest is qfd_sp_band_lanes_t-be5b56d78-...-d2140 (FLOORPLAN_MARGIN, 10-15 14:52). Decided by a gate with the macro columns pulled apart: centre channel >=40 um, row gaps >=25 um.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "QC-08",
+   "die": "qwen_compute",
+   "master": "qfd_su_cbuf_g",
+   "level": "tile",
+   "owner": "Q-ELEM",
+   "job": "qfd_su_cbuf_g_tp8r-tp8r-d9aecd9e9 (CLOSED TT +68.0/FF +18.4, SS -244.8)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qfd_su_cbuf_g_tp8r-tp8r-d9aecd9e9",
+   "see": "Pin faces are fine: crom_q in on N, f_q out on S, both spread over the full 194 um at 3.7-3.9 pins/um. The clock enters at the extreme NW corner (0.1, 216), and the S-face output band (density up to 0.9) is the far end of the clock tree. The E third of the tile is empty, with 60% of bins under 0.05.",
+   "numbers": {
+    "outline_um": [
+     194.4,
+     216.0
+    ],
+    "fill": 0.374,
+    "N_pins": 720,
+    "S_pins": 762,
+    "pins_per_um": [
+     3.7,
+     3.9
+    ],
+    "clock_entry": [
+     0.1,
+     216.0
+    ],
+    "frac_empty": 0.6,
+    "density_max": 0.895
+   },
+   "classes": [
+    "P6",
+    "P5"
+   ],
+   "fix": "Move clock entry to the W-face mid-height or the N-face centre. Optionally shift the SRAM column left or shrink the width by about 40 um.",
+   "severity": 3,
+   "images_committed": [
+    "img/QC-08__F08_su_cbuf_g_floorplan.png",
+    "img/QC-08__F08_su_cbuf_g_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F08_su_cbuf_g_floorplan.png",
+    "/tmp/visrom/qwen_compute/F08_su_cbuf_g_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-08",
+     "outcome": "open",
+     "evidence": "No new su_cbuf_g job (newest su_cbuf job: qfd_su_cbuf_native_l0_sp-l0sp3, CLOSED 15:48, a different master). Decided by a re-gate with the clock at the W mid-height or N centre, compared on SS -244.8 ps.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "QC-09",
+   "die": "qwen_compute",
+   "master": "qfd_tt_scale_leaf (Q-ELEM scale tc1)",
+   "level": "tile",
+   "owner": "Q-ELEM",
+   "job": "qfd_tt_scale_leaf-tc1-f9c257836 (CLOSED TT +117.8/FF +0.07, SS -189.9)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_scale_leaf-tc1-f9c257836",
+   "see": "Only 3,262 um2 of standard cells sit in a 345.6x216 um outline (14.8% fill incl. 2 SRAMs), and the E half is near-empty. The 576 scale_addr pins sit in three 20 um clusters on the W face (about 10 pins/um on M4), each with a green glue knot. The outline is the same as qfd_tt_core_leaf (deduped footprint).",
+   "numbers": {
+    "outline_um": [
+     345.6,
+     216.0
+    ],
+    "fill": 0.148,
+    "std_area_um2": 3262,
+    "W_pins": 604,
+    "W_cluster_pins_per_um": 10,
+    "density_p90": 0.08,
+    "frac_empty": 0.6
+   },
+   "classes": [
+    "P5",
+    "P2"
+   ],
+   "fix": "If the scale leaf is instanced often, give it its own outline of about 200x216 um, or merge two scale leaves per core-leaf footprint. Spread the scale_addr groups evenly along the W face.",
+   "severity": 3,
+   "images_committed": [
+    "img/QC-09__F09_tt_scale_leaf_floorplan.png",
+    "img/QC-09__F09_tt_scale_leaf_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F09_tt_scale_leaf_floorplan.png",
+    "/tmp/visrom/qwen_compute/F09_tt_scale_leaf_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-09",
+     "outcome": "open",
+     "evidence": "tc3 (628d63039, gate images a7e85572d) keeps the same 345.6x216 outline, W SRAMs and W pin islands. Its submit was REFUSED (CLOSED_STANDS, 01:10). No outline change, so fill 0.148 stands. Decided by a resized-outline kit (~200x216).",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "QC-10",
+   "die": "qwen_compute",
+   "master": "qfd_tt_core_leaf",
+   "level": "tile",
+   "owner": "Q-ELEM",
+   "job": "qfd_tt_core_leaf-tc1-3ca5a5850 (ot-epyc4, daemon READY, 6_final present); tg1-4485b28e4 CLOSED TT +73.3/FF +7.4",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_core_leaf-tc1-3ca5a5850",
+   "see": "Pins are well spread (S mx_data 569 over 307 um at 1.9/um, E cmd 538 at 2.7/um, W 455 at 2.6/um), with no channels under 20 um, a clock at the E-face mid, and GRT M2 25%. The only issue is a low 19.8% fill: uniform thin placement (p90 0.17) over 345.6x216 um.",
+   "numbers": {
+    "outline_um": [
+     345.6,
+     216.0
+    ],
+    "fill": 0.198,
+    "std_area_um2": 6994,
+    "density_p90": 0.17,
+    "grt_M2": 0.249
+   },
+   "classes": [
+    "P5"
+   ],
+   "fix": "Optional: shrink to about 260x216 um, but the pin perimeter (1,779 pins) supports the current size at a comfortable density. Low priority.",
+   "severity": 3,
+   "images_committed": [
+    "img/QC-10__F10_tt_core_leaf_floorplan.png",
+    "img/QC-10__F10_tt_core_leaf_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_compute/F10_tt_core_leaf_floorplan.png",
+    "/tmp/visrom/qwen_compute/F10_tt_core_leaf_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QC-10",
+     "outcome": "open",
+     "evidence": "tc1-3ca5a5850 CLOSED 01:00 at the same 345.6x216 outline, fill 0.198. Low priority (sev 3); no change made.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_pv (PV 2x16 block: pv_slice/pv_join/pv_ctl)",
+   "owner": "Q-ELEM / Q-KVSYS-DIE",
+   "job": "qkd_pv_join_rstpin_r5-r5-fa546b7f3 (RUNNING) + pv_parent_screen",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qkd_pv_join_rstpin_r5-r5-fa546b7f3",
+   "see": "Actual PV column array (32 columns of 8 slices+join, 21.6 um gaps) is 1144.8x9309.6 um; the north home between ahub top (y=12675) and embgw/seq (y=21663) is only 8987.7 um tall, and the candidate box itself is 1080x8640. The north box also overlaps embgw, seq and 547 relay frames already placed in that channel.",
+   "numbers": {
+    "envelope_um": [
+     1144.8,
+     9309.6
+    ],
+    "candidate_home_um": [
+     1080,
+     8640
+    ],
+    "north_clear_height_um": 8987.7,
+    "height_overrun_um": 321.9,
+    "width_overrun_vs_candidate_um": 64.8,
+    "north_collisions": {
+     "qkd_seq": 1,
+     "qkd_embgw": 1,
+     "qkd_rly_32": 266,
+     "qkd_rly_1": 193,
+     "qkd_rly_521": 52,
+     "qkd_rly_520": 23,
+     "qkd_rly_289": 4,
+     "qkd_rly_13": 2
+    },
+    "south_clear_height_um": 10329,
+    "gap_um": 21.6,
+    "gaps_total_um": 324
+   },
+   "classes": [
+    "P3",
+    "P5"
+   ],
+   "fix": "Either drop the inter-slice gap 21.6->0 (gap=0 screen already shows worst matched-bit Manhattan 227 um vs 249 um): 16 x 518.4 = 8294 um tall, fits the 8988 um north slot with 690 um left over; or move seq+embgw north by >=330 um (host/d2d stack has room below ucie). Re-plan relay lanes rly_32/rly_1/rly_520/521 to run beside the PV column (x<4827 or x>5972), not through it. South half fits as is (10.3 mm clear).",
+   "severity": 1,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-01",
+   "images_committed": [
+    "img/QKV-01__pv_envelope.png",
+    "img/QKV-01__pv_parent_screen.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/pv_block/pv_envelope.png",
+    "/tmp/visrom/qwen_kvsys/pv_block/pv_parent_screen.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-01",
+     "outcome": "open",
+     "evidence": "No new PV parent placement. The pv_slice/pv_join r5 tiles keep 172.8x172.8 um, so the 32x(8+1) column is still 1144.8x9309.6 um vs the 8987.7 um north clear height. Decided by the kvs11-v143c die trial (PDN running on ot-epyc1tb since 23:01, no GRT yet) or a gap=0 PV parent screen.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_ectl_a_tp8_epoch_direct",
+   "owner": "Q-ELEM",
+   "job": "qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48 (CLOSED) + manual recovery ectl_a_native_r1 (RUNNING)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48 ; ot-epyc4:/srv/opentallas-scratch2/claude/qelem-manual/ectl_a_native_r1",
+   "see": "Two 128x256 SRAMs sit across the full 255 um width with a ~21 um channel between them; the 1025-bit rs bus enters on W at 8.6 pins/um M4-only, and both 512-bit row buses (t0 S, t1 N) are crowded onto the right half only, so the left SRAM pins route 120+ um along the macro edges. The congestion map shows red bands along both long macro edges and in the centre channel. The hold-ECO recovery has been stuck at 4 DRT shorts (M2 1, M3 2, M4 1) for 53+ iterations (from 12242 at iter 0).",
+   "numbers": {
+    "die_um": [
+     254.9,
+     129.6
+    ],
+    "fill": 0.354,
+    "W_rs_pins": 1044,
+    "W_pins_per_um_M4": 8.58,
+    "N_t1_row_span_um": 122.5,
+    "N_span_frac": 0.48,
+    "macro_channel_um": 21,
+    "grt_usage_pct": 27.3,
+    "native_capture_ps": 221,
+    "recovery_drt_violations_stuck": 4,
+    "recovery_drt_iter0": 12242,
+    "hold_pair_cells_removed": 1826
+   },
+   "classes": [
+    "P2",
+    "P3",
+    "P1"
+   ],
+   "fix": "Split the t0/t1 row buses into two 256-bit halves, each over its own SRAM (both halves of N and S), instead of the right half only; put rs on M4+M6 alternate (or split it to W 512 + S/N corners) so it is <=5 pins/um; widen the centre channel to >=30 um or abut the SRAMs (0 gap) and route through the outer channels. For the recovery: the 4 stuck shorts are a guide/keep-wire problem; rerun DRT with fresh guides in the 2 affected gcell tiles instead of more stubborn-tile iterations.",
+   "severity": 1,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-02",
+   "images_committed": [
+    "img/QKV-02__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_ectl_a/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_ectl_a/final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-02",
+     "outcome": "open",
+     "evidence": "No new ectl_a job. The manual recovery ectl_a_native_r1 (ot-epyc4 qelem-manual) has had no file change since 10-15 23:12; its DRT is still at 4 violations. Decided by a re-pin kit (t0/t1 rows split over both SRAMs, rs on M4+M6/M5).",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_d2ds (qkd_d2d_static)",
+   "owner": "Q-DVM+LINK",
+   "job": "qkd_d2d_static_r1sp-r3sp-19298aba3 (EARLY_FAIL_CONGESTION)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qkd_d2d_static_r1sp-r3sp-19298aba3",
+   "see": "Four 64x512 SRAMs in a 2x2 grid in a 475x281 um tile, ~20 um vertical centre channel. All 33 GRT overflow points sit inside x 224.6-249.7, y 70.7-102.6 um: the centre channel between the lower SRAM pair. M6 shows 0 routing resource, so the tile routes on M2-M5 only. Clock enters mid-E face; pins are scattered in short groups along N and S.",
+   "numbers": {
+    "die_um": [
+     475.2,
+     280.8
+    ],
+    "fill_gate": 0.481,
+    "pins": 5045,
+    "grt_overflow_total": 45,
+    "M4_overflow": 34,
+    "M5_overflow": 11,
+    "hotspot_bbox_um": [
+     224.6,
+     70.7,
+     249.7,
+     102.6
+    ],
+    "M6_resource": 0,
+    "centre_channel_um": 20,
+    "die_frame_d2ds_um": [
+     777.6,
+     518.4
+    ]
+   },
+   "classes": [
+    "P3",
+    "P4"
+   ],
+   "fix": "Open the centre channel to >=40 um (or move the SRAM pair to the outer edges with a 60 um central spine). Enable M6 for signal routing (resource is 0 now). Spread the N/S bus groups evenly. The die frame reserves 777.6x518.4 um, so the tile can grow from 475x281 to about 560x320 within its home.",
+   "severity": 1,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-03",
+   "images_committed": [
+    "img/QKV-03__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_d2d_static_gate/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_d2d_static/5_1_grt.log",
+    "/tmp/visrom/qwen_kvsys/qkd_d2d_static/congestion.rpt"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-03",
+     "outcome": "open",
+     "evidence": "Owner correction: QKV-03 belongs to Q-KVSYS-DIE, not Q-DVM+LINK. No successor to qkd_d2d_static_r1sp-r3sp-19298aba3 (EARLY_FAIL_CONGESTION, 33 overflow points in the 20 um centre channel). Decided by a gate with the centre channel >=40 um and M6 enabled.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_rly_* family (relays)",
+   "owner": "Q-KVSYS-ELEM",
+   "job": "none (RTL only; abstract in die LEF)",
+   "host_run": "local:/home/ubuntu/artifacts/kv-die-2330/elements.lef.preexp",
+   "see": "Every relay abstract puts all bits on M4 only, on W and E, packed at minimum M4 pitch (20.9 pins/um), whatever the face length. The wide ones fill their face: rly_2089 (61 inst) has 2089 pins over 100 of 105.8 um; rly_1025 (252 inst) and rly_1048 (82 inst) fill 49-50 um; rly_520/521/540/563 fill 25-27 of 30-32 um. That is 2.5x the 8 pins/um crowding limit, with no layer spread.",
+   "numbers": {
+    "pins_per_um_M4": 20.9,
+    "rly_2089": {
+     "inst": 61,
+     "pins_per_face": 2089,
+     "face_um": 105.8
+    },
+    "rly_1025": {
+     "inst": 252,
+     "pins_per_face": 1025,
+     "face_um": 54.0
+    },
+    "rly_1048": {
+     "inst": 82,
+     "face_um": 56.1
+    },
+    "rly_520_521_540_563": {
+     "inst": 191,
+     "face_um": [
+      30.2,
+      32.4
+     ]
+    },
+    "rly_32": {
+     "inst": 934,
+     "span_um": 1.5
+    },
+    "total_relay_frames": 2970
+   },
+   "classes": [
+    "P2"
+   ],
+   "fix": "Size relays from the bit count at <=8 pins/um per layer: put the bus on M4+M6 (or M5+M7 for vertical runs) and make the face length about bits/16 um (rly_2089 -> ~130 um face on 2 layers; rly_1025/1048 -> ~65 um; rly_5xx -> ~35 um). Alternatively split rly_2089 into 2-4 narrower relays at the same stage. Gate a pre-route trial on rly_2089 and rly_1025 (largest x count) before the die run.",
+   "severity": 1,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-04",
+   "images_committed": [],
+   "images_local": [],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-04",
+     "outcome": "open",
+     "evidence": "Still unfixed in the live die trial: kvs11-v143c case_kv/elements.lef (epyc1tb, 23:01) has qkd_rly_2089 = 4,178 M4 pin shapes on a 52.7x105.8 um frame and qkd_rly_1025 = 2,050 M4 shapes on 54.0 um, all M4. Decided by a relay abstract regen at <=8 pins/um/layer over two layers.",
+     "before": {
+      "rly_2089_layers": "M4 only",
+      "face_um": 105.8
+     },
+     "after": {
+      "kvs11_lef_rly_2089": "M4 only, 4178 shapes",
+      "face_um": 105.8
+     }
+    }
+   }
+  },
+  {
+   "master": "qkd_embgw",
+   "owner": "Q-ELEM",
+   "job": "qkd_embgw-sl2-4ca7b8091 (CLOSED, native FAIL)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qkd_embgw-sl2-4ca7b8091",
+   "see": "About 4,100 pins on a 173x216 tile; E and W are M4-only at 8.7-8.9 pins/um. The NE quadrant (~25% of area) is empty while a red congestion cluster sits W-centre where the W emr/t_eq buses meet the S emr buses. The routed tile (4143 pins, N face 298) does not match the die abstract (3541 pins, no N face, W 1398, S 1042 at 9.8/um).",
+   "numbers": {
+    "die_um": [
+     172.8,
+     216.0
+    ],
+    "fill": 0.338,
+    "pins": 4143,
+    "E_pins_per_um": 8.73,
+    "W_pins_per_um": 8.91,
+    "S_pins_per_um": 6.76,
+    "N_span_frac": 0.29,
+    "frac_empty": 0.27,
+    "grt_usage_pct": 25.5,
+    "lef_pins": 3541,
+    "lef_S_pins_per_um": 9.8
+   },
+   "classes": [
+    "P2",
+    "P4",
+    "P5",
+    "P1"
+   ],
+   "fix": "Re-pin from the die abstract (pin set and faces must match the die LEF; today they differ by 600 pins and a whole N face). Put the 4x520 emr buses on two layers (M4+M6 / M5+M7) at <=5 pins/um, and use the N face (now empty) for emr_EN/WN so the NE quadrant takes logic. Then the hot W-centre cluster spreads out.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-05",
+   "images_committed": [
+    "img/QKV-05__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_embgw/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_embgw/final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-05",
+     "outcome": "open",
+     "evidence": "No new embgw job since qkd_embgw-sl2-4ca7b8091 (10-15 15:51). The routed tile vs die abstract mismatch (4143 vs 3541 pins) needs a re-pin from the die abstract and an LEF diff.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_ctrl_pc",
+   "owner": "Q-ELEM",
+   "job": "qkd_ctrl_pc-np1-24a3e3d02 (CLOSED, native FAIL)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qkd_ctrl_pc-np1-24a3e3d02",
+   "see": "The W face carries 1171 pins on M4 only (8.2/um over 144 um). The E po/pi buses (617 pins) are packed into the middle 80 um of the E face at 7.7/um, and a dense red cluster forms just inside it. The top ~35% of the tile and the SE corner are empty (fill 0.24); the clock enters at N-centre-left.",
+   "numbers": {
+    "die_um": [
+     246.2,
+     172.8
+    ],
+    "fill": 0.241,
+    "W_pins": 1171,
+    "W_pins_per_um": 8.16,
+    "E_pins": 617,
+    "E_span_um": 79.9,
+    "E_span_frac": 0.46,
+    "frac_empty": 0.48,
+    "grt_usage_pct": 16.7
+   },
+   "classes": [
+    "P2",
+    "P5",
+    "P4"
+   ],
+   "fix": "Spread E po/pi over the full 173 um E face (span 0.46 -> 0.9) and the W ci/co/es/er buses onto M4+M6. Shrink the outline about 246x173 -> 200x150 (fill 0.24 -> ~0.35), keeping the ctrl column width 247.5 by stacking narrower tiles.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-06",
+   "images_committed": [
+    "img/QKV-06__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_ctrl_pc/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_ctrl_pc/final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-06",
+     "outcome": "open",
+     "evidence": "No new ctrl_pc job since qkd_ctrl_pc-np1-24a3e3d02 (15:50). Decided by an E-face spread plus a ~200x150 outline kit.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_ahub (parent) / qkd_ahub_core",
+   "owner": "Q-KVSYS-DIE",
+   "job": "qkd_ahub_ref-q8-fcb9fa5a5 (EARLY_FAIL_HOLD, no odb) ; qkd_ahub_core-hd2-aaeefb4c1 (CLOSED)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qkd_ahub_core-hd2-aaeefb4c1",
+   "see": "In ahub_core, 1345 N pins (zh_sid/zh_we/zh_root, 1280 bits) fill the whole N face at 8.9/um, half of them on M3. The congestion map shows a solid red strip along N while the tile body is 56% empty (fill 0.185). Logic sits in two diagonal clusters linking the N bus to the E out_data and S si_data. The ahub parent route (q8) failed at hold with no layout kept, and the parent has never been hardened.",
+   "numbers": {
+    "die_um": [
+     151.2,
+     151.2
+    ],
+    "fill": 0.185,
+    "N_pins": 1345,
+    "N_pins_per_um": 8.9,
+    "N_layers": {
+     "M3": 673,
+     "M5": 672
+    },
+    "frac_empty": 0.56,
+    "grt_usage_pct": 14.1,
+    "parent_frame_um": [
+     1175.0,
+     760.3
+    ]
+   },
+   "classes": [
+    "P2",
+    "P5"
+   ],
+   "fix": "Move half of the zh buses (e.g. zh_we 512) to S or W, and use M5+M7 instead of M3 for face pins. Shrink the core 151 -> ~120 um square, or keep 151 and spread. Re-run the ahub parent with a kept 3_place odb so the hold failure can be inspected.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-07",
+   "images_committed": [
+    "img/QKV-07__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_ahub_core/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_ahub_core/final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-07",
+     "outcome": "open",
+     "evidence": "Newest ahub job qkd_ahub_ref-q13e-6b847a5d7 is NEEDS_RTL (15:50). The parent has never been placed, so no layout exists to judge.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_astk (astk_pv_tp8 leaf)",
+   "owner": "Q-KVSYS-ELEM",
+   "job": "qkd_astk_pv_tp8-tp1-24a3e3d02 (CLOSED); qkd_astk_ep-ks4-1dfea0ac7 EARLY_FAIL_CONGESTION (no odb kept)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qkd_astk_pv_tp8-tp1-24a3e3d02",
+   "see": "The 162x104 tile has fill 0.60 and 4120 pins: N and S each carry ~1490 pins at 9.4/um (M3+M5), and W/E 512-bit wa/wb are at 8.3-9.1/um on M4 over about 60% of the face. Congestion is orange-red across nearly the whole tile, darkest bottom-centre and bottom-left. The clock enters at the NE corner.",
+   "numbers": {
+    "die_um": [
+     162.0,
+     103.7
+    ],
+    "fill": 0.601,
+    "pins": 4120,
+    "N_pins_per_um": 9.37,
+    "S_pins_per_um": 9.43,
+    "W_pins_per_um": 8.26,
+    "E_pins_per_um": 9.07,
+    "hot_frac": 0.139,
+    "clock": "NE corner"
+   },
+   "classes": [
+    "P2",
+    "P4",
+    "P6"
+   ],
+   "fix": "Grow the outline to ~180x130 (fill ~0.45; the astk column is 220 um wide) and spread N/S buses on M5+M7. Move the clock entry to the centre of the N face.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-08",
+   "images_committed": [
+    "img/QKV-08__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_astk_pv_tp8/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_astk_pv_tp8/final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-08",
+     "outcome": "open",
+     "evidence": "No new astk_pv_tp8 job. qkd_astk_zn-np1-0a9705ab5 (CLOSED 15:50) is a different leaf. Decided by a ~180x130 re-gate.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "ot_qkh_lane8",
+   "owner": "Q-KVSYS-ELEM",
+   "job": "qkh_lane8_ref_c-q13d-35050e0a4 (CLOSED, native FAIL)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qkh_lane8_ref_c-q13d-35050e0a4",
+   "see": "336 of 375 pins are on E (M4, 3.9/um, two clusters in the middle 86 um), nothing faces N/S/W, and the clock enters at the NW corner, ~100 um from the pin face and sink centroid. Fill is 0.635 with 17% of bins over 0.85 and long vertical red streaks.",
+   "numbers": {
+    "die_um": [
+     108.0,
+     151.2
+    ],
+    "fill": 0.635,
+    "E_pins": 336,
+    "E_span_um": 85.9,
+    "hot_frac": 0.171,
+    "grt_usage_pct": 24.9,
+    "clock": "NW corner"
+   },
+   "classes": [
+    "P6",
+    "P5"
+   ],
+   "fix": "Move the clock entry to the E face centre (or tile centre via M8 bump) and lower util to <=0.55 (108x151 -> 120x160) or spread the E buses across the full 151 um.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-09",
+   "images_committed": [
+    "img/QKV-09__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/ot_qkh_lane8/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/ot_qkh_lane8/final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-09",
+     "outcome": "open",
+     "evidence": "No new lane8 job since qkh_lane8_ref_c-q13d-35050e0a4 (CLOSED, native FAIL). Decided by a clock-at-E-centre re-gate.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_pv_join (ot_qwen_tp8_pv_join_t)",
+   "owner": "Q-ELEM",
+   "job": "qkd_pv_join_rstpin_r5-r5-fa546b7f3 (RUNNING, DRT)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/qkd_pv_join_rstpin_r5-r5-fa546b7f3",
+   "see": "4685 pins on a 172.8 square: ts0..ts3 1024 each on all four faces and the 512-bit y output also on E, so E carries 1540 M4 pins at 9.4/um. Pin-capture registers form red walls along N, S and E while the NW quadrant and SW/SE pockets are empty. GRT usage is 39% (M2 46%, M3 48%), the highest in this die; DRT iter 0 has 23,840 violations. No clock pin is recognised in the dump.",
+   "numbers": {
+    "die_um": [
+     172.8,
+     172.8
+    ],
+    "fill": 0.372,
+    "pins": 4685,
+    "E_pins": 1540,
+    "E_pins_per_um": 9.39,
+    "W_N_S_pins_per_um": 6.3,
+    "grt_usage_pct": 39.2,
+    "M2_pct": 46.3,
+    "M3_pct": 48.4,
+    "drt_iter0_viol": 23840
+   },
+   "classes": [
+    "P2",
+    "P4"
+   ],
+   "fix": "Move the 512-bit y output off E (to the NW/SW corners of W, or M6/M7 face pins) so E carries ts3 only (<=6.3/um). Spread the capture registers inward (pin-reg placement region 10-15 um deep instead of the edge row). If the PV gap goes to 0 (QKV-01), the bank-facing faces line up directly with slice pins.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-10",
+   "images_committed": [
+    "img/QKV-10__floorplan.png",
+    "img/QKV-10__density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_pv_join_r5/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_pv_join_r5/density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-10",
+     "outcome": "open",
+     "evidence": "The owner kept the r5 pin plan. qkd_pv_join_rstpin_r5-r5-fa546b7f3 (ot-epyc4) routed with the same E face (1,540 M4 pins at 9.39/um): GRT 39.18 % (M2 46.3 / M3 48.4 / M4 35.0 / M5 23.2), overflow 0. DRT converged 23,840 -> 7 -> 0, DRC 0. TT +60.38 / FF -5.24 ps, now in hold ECO. The routed congestion map has a dense red core band (centre/E). Max bin density is 1.062 with 2.4 % of bins over 0.85. The crowding did not block the route but it is the hottest PV tile. Decided by whether the hold ECO closes. If FF stays negative, move y off E.",
+     "before": {
+      "E_pins_per_um": 9.39,
+      "grt_pct": 39.2,
+      "drt_iter0": 23840
+     },
+     "after": {
+      "E_pins_per_um": 9.39,
+      "grt_pct": 39.18,
+      "drt_final": 0,
+      "tt_ps": 60.38,
+      "ff_ps": -5.24,
+      "density_max": 1.062,
+      "image": "/tmp/visrom/r2/img/QKV-10_pvjoin_r5_final_congestion.png"
+     }
+    }
+   }
+  },
+  {
+   "master": "qkd_ectl_c_tp8_direct / qkd_ectl_b_tp8_direct (h13)",
+   "owner": "Q-ELEM",
+   "job": "qkd_ectl_c_tp8_direct_h13-h13-046dfbe85 (CLOSED); ectl_b h13 gate kit",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qkd_ectl_c_tp8_direct_h13-h13-046dfbe85",
+   "see": "ECTL-C: E face carries 1059 M4 pins at 9.0/um; N/S row buses use only 60% of the face, and the tile is 61% empty (fill 0.186). ECTL-B gate: same two-SRAM layout as A but the row buses sit on the LEFT half of N/S, mirror of A (right half), so in the 648-um ectl parent the A->B->C row columns do not line up.",
+   "numbers": {
+    "ectl_c_die_um": [
+     138.2,
+     129.6
+    ],
+    "ectl_c_fill": 0.186,
+    "ectl_c_E_pins_per_um": 8.98,
+    "ectl_c_frac_empty": 0.61,
+    "ectl_b_gate_fill": 0.262,
+    "ectl_parent_W_E_pins_per_um_M4": 9.3
+   },
+   "classes": [
+    "P2",
+    "P1",
+    "P5"
+   ],
+   "fix": "Align the t0/t1 row pins of A, B and C to the same x columns (or spread all three over the full width) so the parent N/S faces pass straight through. Put the C si/so (634+425) bus on M4+M6. Shrink C to ~110x130.",
+   "severity": 2,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-11",
+   "images_committed": [
+    "img/QKV-11__floorplan.png",
+    "img/QKV-11__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_ectl_c_h13/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_ectl_b_h13_gate/floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-11",
+     "outcome": "open",
+     "evidence": "Newest ectl_c job is still h13-046dfbe85 (CLOSED 21:56). No row-column alignment between A, B and C yet.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "master": "qkd_cdc_wleaf / qkd_host_rt(host_ctl) / qkd_pv_ctl / qkd_land_emb_ifw / qkd_seq_xs_tp8",
+   "owner": "Q-KVSYS-ELEM / Q-KVSYS-DIE",
+   "job": "qkd_cdc_wleaf_ref-q13r3-0e8018007; qkd_host_ctl-hc1-71ffdaf23; qkd_pv_ctl_rstpin_r5-r5-12631adee; qkd_land_emb_ifw-if4-0389349bb; qkd_seq_xs_tp8-tp1-11f7d4997",
+   "host_run": "mixed (see job)",
+   "see": "Minor items. land_emb_ifw (173x65, fill 0.61): one hot window at W-centre. pv_ctl (43 um square): 68 S pins packed in 6.4 um (10.6/um) and 15% of bins hot. host_ctl: 744-bit tk bus on W at 9.2/um, fill 0.12 (78% empty). cdc_wleaf and seq_xs_tp8 are clean (<=4 pins/um, no hot windows).",
+   "numbers": {
+    "land_emb_ifw_fill": 0.607,
+    "land_emb_ifw_hot_frac": 0.141,
+    "pv_ctl_S_pins_per_um": 10.57,
+    "pv_ctl_hot_frac": 0.154,
+    "host_ctl_W_pins_per_um": 9.22,
+    "host_ctl_fill": 0.121,
+    "cdc_wleaf_max_pins_per_um": 4.02,
+    "seq_xs_tp8_max_pins_per_um": 3.66
+   },
+   "classes": [
+    "P2",
+    "P5"
+   ],
+   "fix": "pv_ctl: spread the S epoch/out_age buses over the full 43 um face. host_ctl: shrink 65x108 -> ~50x80 and put tk on M4+M6. land_emb_ifw: widen to ~190 um or lower util to 0.5.",
+   "severity": 3,
+   "die": "qwen_kvsys",
+   "level": "tile",
+   "id": "QKV-12",
+   "images_committed": [
+    "img/QKV-12__floorplan.png",
+    "img/QKV-12__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/qwen_kvsys/qkd_land_emb_ifw/final_congestion.png",
+    "/tmp/visrom/qwen_kvsys/qkd_pv_ctl_r5/floorplan.png",
+    "/tmp/visrom/qwen_kvsys/qkd_host_ctl/floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "QKV-12",
+     "outcome": "open",
+     "evidence": "pv_ctl r5 (qkd_pv_ctl_rstpin_r5-r5-12631adee) CLOSED 00:23. land_emb_ifw if4 CLOSED 00:48. Neither changed the cited geometry (pass-1 snaps were of these runs). host_ctl and cdc_wleaf are unchanged. Minor (sev 3).",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-01",
+   "die": "s81",
+   "master": "dsfd_host_c",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "dsfd_host_c_pq_native_1425-n1-COMMIT-1b9fab129",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/dsfd_host_c_pq_native_1425-n1-COMMIT-1b9fab129",
+   "see": "No odb survives (EARLY_FAIL_HOLD, deleted); 4_1_cts log: four independent CTS roots ck (4,853 sinks), ck_ingest[0] (9,279), ck_ingest[1] (9,293), ckv (118). Hold repair cannot converge: 23,633 hold violators, WS -100 ps, 44,160 hold buffers inserted in the first 1 h chunk, still 22,965 violators.",
+   "numbers": {
+    "core_um2": 32995,
+    "util": 0.53,
+    "hold_ws_ps": -100.05,
+    "hold_tns_ps": -1263560,
+    "hold_viol": 23633,
+    "hold_bufs_chunk1": 44160,
+    "sinks": {
+     "ck": 4853,
+     "ck_ingest0": 9279,
+     "ck_ingest1": 9293,
+     "ckv": 118
+    }
+   },
+   "classes": [
+    "P6"
+   ],
+   "fix": "Do not let CTS build the ingest roots and ck as separate unbalanced trees: either one root (ck) with ck_ingest as generated/derived clocks balanced to it (common-root CTS, or set_clock_latency/skew-group the four roots to one insertion target), or put a retiming register stage at every ck_ingest->ck crossing so hold is local. Re-submit only after a pre-route gate shows the same-root insertion.",
+   "severity": 1,
+   "images_committed": [],
+   "images_local": [],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-01",
+     "outcome": "open",
+     "evidence": "No new dsfd_host_c route since n1 EARLY_FAIL_HOLD (10-15 20:13). An n5 job.json was prepared on claude/s81-pq-0030 (1c8f71915, 00:39, fence-declaration fix), but it has not been submitted and there is no evidence the four CTS roots were merged. Decided by: the n5 route 4_1_cts hold-violator count and root structure.",
+     "before": {
+      "hold_viol": 23633,
+      "hold_ws_ps": -100.05
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-02",
+   "die": "s81",
+   "master": "dsfd_stage_seq_static_c8",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "dsfd_stage_seq_static_c9_pq_native_1425-n1-COMMIT-1b9fab129",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/dsfd_stage_seq_static_c9_pq_native_1425-n1-COMMIT-1b9fab129",
+   "see": "Successor c9 refused at floorplan (FLOORPLAN_MARGIN), no odb left: std-cell 20,396 um2 in a 30,905 um2 core = 66% util (rule <=60%).",
+   "numbers": {
+    "core_um2": 30905,
+    "std_um2": 20396,
+    "util": 0.66
+   },
+   "classes": [
+    "P5"
+   ],
+   "fix": "Grow outline to ~36,000-37,000 um2 (55-57% util), e.g. +10% on the face that does not carry the stage bus, and re-gate; c8 is still RTL-only so c9 is the live route.",
+   "severity": 1,
+   "images_committed": [],
+   "images_local": [],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-02",
+     "outcome": "open",
+     "evidence": "c9 is still FLOORPLAN_MARGIN (66% util). c10 RTL (e24047f3f, 01:04: adds engine 10) is larger again, and no grown-outline c10 kit or gate log exists yet. The c9 gate source snapshot (00:42) has no log. Decided by: a c10 gate at <=57% util.",
+     "before": {
+      "util": 0.66
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-03",
+   "die": "s81",
+   "master": "dsfd_bf_front_static",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "s81bf_front_static_clk-c9-COMMIT-89a4f6900 (ECO)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c9-COMMIT-89a4f6900",
+   "see": "100x199 um tile at 63% fill. W (c0) and E (c1) buses of 776 pins each are squeezed onto M4 in the middle 74.5 um of a 199 um face (10.4 pins/um); N xb bus 1,024 pins on M5 at 10.4 pins/um over the full 100 um. A red density band (density >1.0) fills the top ~20% under the N wall, plus a second hot band at the S wall. Clock enters at the S face, x=24 um (SW corner area), far from the N-wall flops. GRT overflow 0, but FF -7.86 ps after route, now in hold ECO.",
+   "numbers": {
+    "die_um": [
+     100.2,
+     198.7
+    ],
+    "fill": 0.632,
+    "W_pins": 778,
+    "E_pins": 776,
+    "WE_span_um": 74.5,
+    "WE_span_frac": 0.37,
+    "WE_pins_per_um": 10.4,
+    "N_pins": 1024,
+    "N_pins_per_um": 10.4,
+    "S_pins": 693,
+    "dens_frac_hot": 0.212,
+    "dens_max": 1.19,
+    "grt_overflow": 0,
+    "ff_ps": -7.86,
+    "clk_xy_um": [
+     24,
+     0
+    ]
+   },
+   "classes": [
+    "P2",
+    "P4",
+    "P6"
+   ],
+   "fix": "Spread c0/c1 over the full 199 um W/E faces (M4+M6 or M4 with 2x pitch) to drop them to ~4 pins/um; split the 1,024-bit N xb bus over M5+M3 or move half to W/E, or widen the tile to ~140 um (fill ~0.45) so the N pin-wall flops have room; move the clock pin to the centre of the S face (x~50) or the tile centre.",
+   "severity": 2,
+   "images_committed": [
+    "img/S81H-03__bf_front_static_c9_floorplan.png",
+    "img/S81H-03__bf_front_static_c9_density.png",
+    "img/S81H-03__bf_front_static_c9_congestion.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/bf_front_static_c9_floorplan.png",
+    "/tmp/visrom/s81/img/bf_front_static_c9_density.png",
+    "/tmp/visrom/s81/img/bf_front_static_c9_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-03",
+     "outcome": "open",
+     "evidence": "Same job c9; snap 01:10 shows identical pins (W/E 10.4 pins/um over 74.5 um, N 10.4/um, hot 0.212). Verdict now TT -35.73 / FF -7.86 (setup also misses, not only hold), in combo VT-swap+hold ECO. s81-bf-c10 kit floorplan/spec identical to main. Decided by: c10 kit with spread W/E pins + centred clock.",
+     "before": {
+      "tt_ps": null,
+      "ff_ps": -7.86
+     },
+     "after": {
+      "tt_ps": -35.73,
+      "ff_ps": -7.86,
+      "state": "ECO"
+     }
+    }
+   }
+  },
+  {
+   "id": "S81H-04",
+   "die": "s81",
+   "master": "dsfd_sp_collective_static_c",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "s81coll_vm_boundary-b7-02a0655f8 (CLOSED TT +88 / FF +16.9)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81coll_vm_boundary-b7-02a0655f8",
+   "see": "s81_static_vm_boundary (collective|VM seam leaf) is a pin-to-pin wall: W 2,234 and E 2,146 pins on M4 (9.4-9.8 pins/um), S 1,651 on M3+M5 (11.6/um). All cells sit in 1-2 bin columns against the W/E walls and the S edge; the centre is 74% empty. A diagonal staircase of cells and a hot congestion knot at the SW corner show a bus that enters at S-left and fans across to the E face mid-height (long internal chain).",
+   "numbers": {
+    "die_um": [
+     151.2,
+     237.6
+    ],
+    "fill": 0.138,
+    "pins": 6670,
+    "W_pins": 2236,
+    "E_pins": 2148,
+    "S_pins": 1651,
+    "S_pins_per_um": 11.6,
+    "frac_empty": 0.74,
+    "dens_frac_hot": 0.085,
+    "tt_ps": 88.15,
+    "ff_ps": 16.88
+   },
+   "classes": [
+    "P2",
+    "P5",
+    "P6"
+   ],
+   "fix": "Order the W and E pins so bit i sits at the same y on both faces and the S bus lands under its E/W destination (removes the diagonal); then shrink width 151->~60 um (fill ~0.35) or merge into the collective parent as a channel. Spread S over full 151 um on M3/M5 at <=8 pins/um.",
+   "severity": 2,
+   "images_committed": [
+    "img/S81H-04__vm_boundary_b7_density.png",
+    "img/S81H-04__vm_boundary_b7_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/vm_boundary_b7_density.png",
+    "/tmp/visrom/s81/img/vm_boundary_b7_congestion.png",
+    "/tmp/visrom/s81/img/vm_boundary_b7_floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-04",
+     "outcome": "open",
+     "evidence": "No route after vm_boundary b7 (pass-1 job). Decided by: a b8 kit with matched W/E bit order and narrower outline.",
+     "before": {
+      "fill": 0.138
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-05",
+   "die": "s81",
+   "master": "dsfd_sp_hc_c / dsfd_sp_hc_t (HC kit ot_s81_hc_ctfl_nt)",
+   "level": "tile",
+   "owner": "S-FUNC",
+   "job": "s81hc_ctflnt_ref-s5-centre-7babf39ca (CLOSED TT +270)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctflnt_ref-s5-centre-7babf39ca",
+   "see": "576.7 x 25.9 um strip, fill 0.064: N and S buses (1,135 pins each, M5) sit only in x=227-341 um (span_frac 0.20, 10 pins/um); all logic is a red block (density >1) under that 113 um window; the other 80% of the strip is empty (88% empty bins).",
+   "numbers": {
+    "die_um": [
+     576.7,
+     25.9
+    ],
+    "fill": 0.064,
+    "N_pins": 1136,
+    "S_pins": 1136,
+    "span_um": 113.5,
+    "span_frac": 0.2,
+    "pins_per_um": 10.0,
+    "frac_empty": 0.88,
+    "dens_max": 1.35
+   },
+   "classes": [
+    "P2",
+    "P5"
+   ],
+   "fix": "Either spread N/S buses across the full 576 um, as the ctfn/ctfs siblings do (5.1-5.6 pins/um, span 1.0), or shrink the outline to ~140 x 26 um around the window and let the HC row put the gap to other use.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-05__hc_ctfl_nt_s5_floorplan.png",
+    "img/S81H-05__hc_ctfl_nt_s5_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/hc_ctfl_nt_s5_floorplan.png",
+    "/tmp/visrom/s81/img/hc_ctfl_nt_s5_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-05",
+     "outcome": "open",
+     "evidence": "Newer s6-nohb4 (22:13, CLOSED TT +331 / FF +23.6) has the same pins: N/S 1,136 each in 113.5 um, span 0.20, 10.0 pins/um; fill 0.08, 85% empty bins. Not acted on (it closes with margin); the area waste stands.",
+     "before": {
+      "span_frac": 0.2,
+      "fill": 0.064
+     },
+     "after": {
+      "span_frac": 0.2,
+      "fill": 0.08,
+      "frac_empty": 0.85,
+      "job": "s81hc_ctflnt_ref-s6-nohb4-COMMIT-16fc576b0"
+     }
+    }
+   }
+  },
+  {
+   "id": "S81H-06",
+   "die": "s81",
+   "master": "dsfd_sp_hc_c / dsfd_sp_hc_t (HC kit ot_s81_hc_ctfxs_nt)",
+   "level": "tile",
+   "owner": "S-FUNC",
+   "job": "s81hc_ctfxsnt_ref-s2-2root-1da74f562 (CLOSED TT +137 / FF +18.8)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81hc_ctfxsnt_ref-s2-2root-1da74f562",
+   "see": "Same 576.7x25.9 strip, fill 0.134: pins span x=40-341 um (span_frac 0.52); logic forms two islands, a red block at x=230-340 and a smaller one at x=40-90. The E 40% of the strip is empty (76% empty bins). SS sensitivity is -184 ps against +144..+243 for siblings.",
+   "numbers": {
+    "fill": 0.134,
+    "pins": 3237,
+    "span_frac": 0.52,
+    "frac_empty": 0.76,
+    "tt_ps": 137.12,
+    "ff_ps": 18.83,
+    "ss_ps": -184.34
+   },
+   "classes": [
+    "P2",
+    "P5"
+   ],
+   "fix": "Spread both islands' buses over the full width so the logic distributes like ctfn/ctfs, or cut the strip to ~350 um.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-06__hc_ctfxs_nt_s2_density.png",
+    "img/S81H-06__hc_ctfxs_nt_s2_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/hc_ctfxs_nt_s2_density.png",
+    "/tmp/visrom/s81/img/hc_ctfxs_nt_s2_floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-06",
+     "outcome": "confirmed",
+     "evidence": "Owner spread pins (s3-spread/pinrepair -> s4-dlpin -> s5-dlpin-fence). The s5 snap shows the N/S span grown from 0.52 to 0.68 (3.9 pins/um), SS sensitivity -184.3 -> +49.5 ps, and TT +137 -> +282. The E ~30% of the strip is still empty (frac_empty 0.73), and a red N-wall row is visible in the density image.",
+     "before": {
+      "span_frac": 0.52,
+      "tt_ps": 137.12,
+      "ff_ps": 18.83,
+      "ss_ps": -184.34,
+      "frac_empty": 0.76
+     },
+     "after": {
+      "span_frac": 0.68,
+      "pins_per_um": 3.89,
+      "tt_ps": 282.3,
+      "ff_ps": 8.85,
+      "ss_ps": 49.54,
+      "frac_empty": 0.73,
+      "job": "s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c",
+      "images": [
+       "/tmp/visrom/r2/img/s81_S81H-06_ctfxs_s5_density.png"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "S81H-07",
+   "die": "s81",
+   "master": "dsfd_sp_hc_c / dsfd_sp_hc_t (HC kits ctfn_nt / ctfs_nt / ctfnq*)",
+   "level": "tile",
+   "owner": "S-FUNC",
+   "job": "s81hc_ctfsnt_ref-v5-spread-1da74f562; s81hc_ctfnnt_ref-n3-nohb4-COMMIT-92a2c5553; s81hc_ctfnq3_ref-bank-native2330-COMMIT-85e95731c (all CLOSED)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81hc_ctfsnt_ref-v5-spread-1da74f562",
+   "see": "Pins spread well (5.1-5.6 pins/um, span 1.0), but in a 25.9 um-tall strip every flop is pulled to the N pin wall: a continuous red row (density >1.1, p90 1.12-1.14) along N, a thin green row at S, and an empty centre. A congestion hot box at x~40-70 um in ctfs (local logic island).",
+   "numbers": {
+    "ctfs": {
+     "fill": 0.296,
+     "pins": 6685,
+     "p90": 1.119,
+     "frac_hot": 0.127
+    },
+    "ctfn": {
+     "fill": 0.329,
+     "pins": 6069,
+     "p90": 1.143,
+     "frac_hot": 0.144
+    },
+    "ctfnq3": {
+     "die_um": [
+      143.9,
+      25.9
+     ],
+     "fill": 0.355,
+     "p90": 1.137,
+     "frac_hot": 0.156
+    }
+   },
+   "classes": [
+    "P4"
+   ],
+   "fix": "Raise strip height 25.9->~35 um, or put alternate N bits on M3 to split the N-wall flop row into two rows; closed with large margin, so do it only if the HC row has height to spare.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-07__hc_ctfs_nt_v5_density.png",
+    "img/S81H-07__hc_ctfn_nt_n3_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/hc_ctfs_nt_v5_density.png",
+    "/tmp/visrom/s81/img/hc_ctfn_nt_n3_density.png",
+    "/tmp/visrom/s81/img/hc_ctfs_nt_v5_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-07",
+     "outcome": "open",
+     "evidence": "No new ctfn/ctfs/ctfnq3 route after pass 1. Closed with margin, so this is low priority.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-08",
+   "die": "s81",
+   "master": "s81_a2f_field4 (dsfd_sp_vm child)",
+   "level": "tile",
+   "owner": "S-VM",
+   "job": "s81_a2f_field4_pilot_2118_r3c-r3ckmid-48321fb79 (RUNNING, GRT done)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81_a2f_field4_pilot_2118_r3c-r3ckmid-48321fb79",
+   "see": "86x130 um, fill 0.40, GRT overflow 0 (M2/M3 58% used). i_sel (672 pins) is a single M4 wall on W at 5.6 pins/um, and its flops form a red column against W; i_data (212) makes a red row at S. The E strip (~10 um) and SE corner are empty. Clock at W mid-face (r3c 'ckmid'). r2 predecessor missed hold at FF -28.7 ps; the hold risk is pin-wall flops close to the W clock entry.",
+   "numbers": {
+    "die_um": [
+     86.4,
+     129.6
+    ],
+    "fill": 0.403,
+    "W_pins": 676,
+    "W_pins_per_um": 5.6,
+    "grt_overflow": 0,
+    "M2_use": 0.58,
+    "M3_use": 0.59,
+    "r2_ff_ps": -28.72
+   },
+   "classes": [
+    "P2",
+    "P6"
+   ],
+   "fix": "Split i_sel over W M4 + N/S M5 (or move half to E, which carries only 102 pins) so the flop wall is not one column; move the clock entry toward the tile centroid (N or S face centre) rather than the W wall the flops sit on.",
+   "severity": 2,
+   "images_committed": [
+    "img/S81H-08__a2f_field4_r3c_floorplan.png",
+    "img/S81H-08__a2f_field4_r3c_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/a2f_field4_r3c_floorplan.png",
+    "/tmp/visrom/s81/img/a2f_field4_r3c_density.png"
+   ],
+   "status_1016_0130": "S-VM: -28.7 ps was the cancelled arg2 variant (density 0.35); r2 failed outputs only (-10.52); r3c already moves clock SW->W-face centre; next kit splits i_sel W+S if input hold stays tight (needs S-DIE pin grant).",
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-08",
+     "outcome": "confirmed-partial",
+     "evidence": "Clock part refuted by A/B on the same RTL: r3 (clock at the SW corner, outhb3) CLOSED TT +55.11 / FF +8.41 / SS -150.7, and r3c (clock at W mid-face) CLOSED TT +53.07 / FF +5.25 / SS -216.9. Moving the clock toward the centre made FF and SS slightly WORSE. Both closed because of the output hold pads (r2 FF -10.52 / arg2 -28.72). The i_sel W pin wall is unchanged (676 pins on M4 at 5.6/um), and the W red flop column and S red row are still visible, but neither costs closure now. | 02:30 S-VM: r3c (W-centre clock) SELECTED on native clock: insertion R 173.7 -> 158.1 ps, spread 38.0 -> 31.1 ps vs r3 corner clock; FF 8.41 -> 5.25 (hold closed by output pads, not the clock). Density image LOOKED: mild W i_sel wall remains. Clock part confirmed on native metric, not on FF.",
+     "before": {
+      "r2_ff_ps": -10.52,
+      "r2_arg2_ff_ps": -28.72
+     },
+     "after": {
+      "r3_ff_ps": 8.41,
+      "r3_ss_ps": -150.67,
+      "r3c_ff_ps": 5.25,
+      "r3c_ss_ps": -216.93,
+      "W_pins_per_um": 5.6,
+      "images": [
+       "/tmp/visrom/r2/img/s81_S81H-08_field4_r3_floorplan.png",
+       "/tmp/visrom/r2/img/s81_S81H-08_field4_r3c_floorplan.png",
+       "/tmp/visrom/r2/img/s81_S81H-08_field4_r3c_density.png"
+      ]
+     },
+     "image_r2b": "img_r2/S81H-08__field4_r3c_selected_density.png"
+    }
+   }
+  },
+  {
+   "id": "S81H-09",
+   "die": "s81",
+   "master": "s81_a2f_control4 (dsfd_sp_vm child)",
+   "level": "tile",
+   "owner": "S-VM",
+   "job": "s81_a2f_control4_resetlocal_pilot_2118_r3-r3outhb2-COMMIT-8452b506f (CLOSED TT +27.4 / FF +6.7)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81_a2f_control4_resetlocal_pilot_2118_r3-r3outhb2-COMMIT-8452b506f",
+   "see": "194x130 um, fill 0.187: all logic is one blob in the middle 2/3; the W and E thirds are empty (43% empty bins). W/E faces carry 4 and 6 pins. ids (672) on N and src_bank (424) on S are well spread (2.6-4.1 pins/um).",
+   "numbers": {
+    "die_um": [
+     194.4,
+     129.6
+    ],
+    "fill": 0.187,
+    "frac_empty": 0.43,
+    "N_pins": 768,
+    "S_pins": 492,
+    "grt_total_use": 0.27
+   },
+   "classes": [
+    "P5"
+   ],
+   "fix": "Shrink width 194->~130 um (fill ~0.28) keeping the N/S pin pitch at <=6 pins/um; this returns ~8,000 um2 per instance x4 to the VM hub.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-09__a2f_control4_r3_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/a2f_control4_r3_placement.png",
+    "/tmp/visrom/s81/img/a2f_control4_r3_density.png"
+   ],
+   "status_1016_0130": "S-VM: closed, stands; narrower outline queued as a re-pack item (needs S-DIE slot change).",
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-09",
+     "outcome": "open",
+     "evidence": "control4 r3 closed and stands. The narrower outline is queued as a re-pack item that needs an S-DIE slot change. No new route.",
+     "before": {
+      "fill": 0.187
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-10",
+   "die": "s81",
+   "master": "s81_a2f_field16 / s81_a2f_meta26 (VM a2f, superseded by field4/control4)",
+   "level": "tile",
+   "owner": "S-VM",
+   "job": "s81_a2f_field16_pilot_1015_r1-pilot1-COMMIT-da5aa1e62; s81_a2f_meta26_pilot_1015_r1-pilot1-COMMIT-da5aa1e62 (EARLY_FAIL_CONGESTION)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81_a2f_meta26_pilot_1015_r1-pilot1-COMMIT-da5aa1e62",
+   "see": "field16 183.6x140.4: GRT overflow markers saturate the whole tile at 20,000 (cap); this is global wire demand, not a pin hotspot. meta26 259x162 at 55% util stalls the same way (markers 20000 flat over 20 iterations).",
+   "numbers": {
+    "field16_markers": 20000,
+    "meta26_markers": 20000,
+    "meta26_die_um": [
+     259.2,
+     162.0
+    ],
+    "meta26_util": 0.552
+   },
+   "classes": [
+    "P4"
+   ],
+   "fix": "Already structurally handled by the 4-way field4/control4 split (field4 r3c GRT overflow 0). Do not re-submit field16/meta26; delete the run data per the failed-job rule.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-10__a2f_field16_grt_overflow.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/a2f_field16_grt_overflow.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-10",
+     "outcome": "retired",
+     "evidence": "field16/meta26 are superseded: field4 r3/r3c and control4 r3 are CLOSED and are the masters in the VM.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-11",
+   "die": "s81",
+   "master": "ot_s81_engram_dispatch (S81 engram)",
+   "level": "tile",
+   "owner": "S-ENGRAM+NORM",
+   "job": "s81engm_dispatch-d1-4e3b2ead4 (CLOSED TT +330)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81engm_dispatch-d1-4e3b2ead4",
+   "see": "130x86 um, fill 0.048, 91% empty bins: logic is three islands (W-mid, NW, E-edge) tied to the W/E pins (98 each, 27% span) and to an N bus of 96 pins packed in 11 um (8.7 pins/um, span 0.09).",
+   "numbers": {
+    "die_um": [
+     129.6,
+     86.4
+    ],
+    "fill": 0.048,
+    "frac_empty": 0.91,
+    "N_pins": 96,
+    "N_span_frac": 0.09,
+    "N_pins_per_um": 8.7
+   },
+   "classes": [
+    "P5",
+    "P2"
+   ],
+   "fix": "Shrink to ~45x45 um (fill ~0.3), or spread the N bus over >=40 um and align the W/E groups so the islands merge.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-11__engram_dispatch_d1_density.png",
+    "img/S81H-11__engram_dispatch_d1_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/engram_dispatch_d1_density.png",
+    "/tmp/visrom/s81/img/engram_dispatch_d1_floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-11",
+     "outcome": "confirmed",
+     "evidence": "Gate-level only. Compact s81engm_dispatch_c35 (15071e425 / job 633539f1d): 34.56x34.56 um, down from 129.6x86.4 (1,194 vs 11,197 um2, -89%). Gate fill 0.306 (util 38%, std 352 um2), clock at S-face centre, CTS TT insertion 98.3 ps / spread 4.1 ps (724 sinks), verdict WARN. Gate WARN: reset sync fanout 321 loads. A route is still needed to confirm timing. | 02:20 final c35 30.24x30.24 um (cut from 34.56 after util 40%): area 11,197 -> 914 um2 (-92%), fill 0.048 -> 0.40; gate images LOOKED (pins centred all faces, uniform density, clock S centre). Route verdict pending.",
+     "before": {
+      "fill": 0.048,
+      "area_um2": 11197
+     },
+     "after": {
+      "outline_um": [
+       30.24,
+       30.24
+      ],
+      "area_um2": 914.5,
+      "fill": 0.4,
+      "pin_pitch_um": 0.192,
+      "clock": "S-face centre",
+      "job": "s81engm_dispatch_c35-c1-d7833e5f1 (submitted)",
+      "image": "img_r2/S81H-11__c35_30um_gate_density.png"
+     }
+    }
+   }
+  },
+  {
+   "id": "S81H-12",
+   "die": "s81",
+   "master": "dsfd_ctrl (leaf dsfd_ctrl_pc)",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "dsfd_ctrl_pc_m5-m5-5b76815db (CLOSED TT +265)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/dsfd_ctrl_pc_m5-m5-5b76815db",
+   "see": "123x248 um, fill 0.139, 59% empty: N (624) and S (622) M5 buses, logic is a central blob; the N/S bands and W/E margins are empty.",
+   "numbers": {
+    "die_um": [
+     123.1,
+     248.4
+    ],
+    "fill": 0.139,
+    "frac_empty": 0.59,
+    "N_pins": 624,
+    "S_pins": 622
+   },
+   "classes": [
+    "P5"
+   ],
+   "fix": "Shrink height 248->~140 um (fill ~0.25); N/S pin pitch is unaffected.",
+   "severity": 3,
+   "images_committed": [
+    "img/S81H-12__ctrl_pc_density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/img/ctrl_pc_density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-12",
+     "outcome": "open",
+     "evidence": "No new ctrl_pc route.",
+     "before": {
+      "fill": 0.139
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-01",
+   "master": "dsfd_rly_283_EW (+dsfd_rly_266_EW, rebind target)",
+   "owner": "S-DIE",
+   "job": "s81_rly_283_ew-r4-1480fbbb1 / s81_rly_266_ew-v3-f96151f35",
+   "host_run": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/s81_rly_283_ew-r4-1480fbbb1 ; ot-pve1:/srv/opentallas-scratch/claude/closure-loop/s81_rly_266_ew-v3-f96151f35",
+   "see": "Input bus i is on the E face and output o on the W face, but at die level every driver (sstn xa/xb) sits WEST of the relay, so all 1521+1521 input bundles wrap around the tile. Inside the tile the flops cluster at the E (input) face and the launch path to the W output runs the full 24 um width plus a detour under the core.",
+   "numbers": {
+    "instances": 3042,
+    "bits_per_inst": [
+     283,
+     266
+    ],
+    "die_input_bundles_facing_away": "1521/1521 each (100%), driver up to 205 um behind the E face",
+    "die_output_facing_away": "896/4329 (21%), o on W but qbank_S.i_x0/x1 229-243 um EAST",
+    "wrapped_bits_in": 835029,
+    "native_launch_ps": {
+     "283_EW": "243.3 (132 pins)",
+     "266_EW": "237.4 (126 pins)"
+    },
+    "native_capture_ps": {
+     "283_EW": 293.9,
+     "266_EW": 271.7
+    },
+    "tile_um": [
+     23.8,
+     30.2
+    ],
+    "face_pins_per_um": 10.1,
+    "span_frac": 0.92,
+    "fill": 0.46,
+    "grt_overflow": 0
+   },
+   "classes": [
+    "P1",
+    "P6"
+   ],
+   "fix": "Make the input face W and the output face E (WE), toward the actual drivers and loads. Fix the generator so it picks faces from the driver/load PIN positions, not from instance centres (tools/dsrom_s81_fulldie.py ~L4416-4426 and ~L4622-4630: fi/fo = fc(centre of driver/load INSTANCE), and \"if fo == fi: fo = opposite\" forces a fold). Put the single register column at mid-tile (or split the in/out flops toward their faces) so launch and capture each cross about 12 um. 266_EW folds into 283_EW (planned dedupe), so one fix covers 3042 instances.",
+   "severity": 1,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-01__dsfd_rly_266_EW__final_worst_path.png",
+    "img/S81F-01__dsfd_rly_266_EW__final_placement.png",
+    "img/S81F-01__dsfd_rly_283_EW__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_rly_266_EW__final_worst_path.png",
+    "/tmp/visrom/s81/dsfd_rly_266_EW__final_placement.png",
+    "/tmp/visrom/s81/dsfd_rly_283_EW__floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-01",
+     "outcome": "open",
+     "evidence": "Generator not fixed. On origin/main, tools/dsrom_s81_fulldie.py L6986-6990 fc() still picks faces from neighbour INSTANCE centres, with the forced fo=opposite(fi) fold, and no face-selection commit exists since 22:00. Branch claude/sdie-relayface-0030 exists (created 00:57) but has no commits. There is no new die netlist/pin_align (c26a2 GEN_FAIL 01:07; c21h stopped), so the facing-away fraction cannot be recomputed and stays 100% / ~835k wrapped bits. The r4 relays (1480fbbb1) changed only the node strip.",
+     "before": {
+      "in_facing_away": "1521/1521",
+      "wrapped_bits": 835029
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-02",
+   "master": "dsfd_cfifo",
+   "owner": "S-ELEM-PQ",
+   "job": "s81-dsfd-cfifo-colck-a6ca75fbe-tt (latest 4 all NEEDS_RTL; last CLOSED s81-dsfd-cfifo-290446310 on retired ot-epyc2)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-cfifo-colck-a6ca75fbe-tt (no odb on disk)",
+   "see": "No routed odb exists, so there is no tile image. The die binds an elements.lef cfifo view (432x95 um) whose pins are cc,ck,co,cr,rd,rf,ri,rs,rst,st,x2,xa,xb,xd,xf. Die.v connects xd2 and xf2 on all 128 instances, and the view has no pins for them.",
+   "numbers": {
+    "instances": 128,
+    "bits_without_pin": 68864,
+    "ports_missing": [
+     "xd2 (538 b)",
+     "xf2"
+    ],
+    "die_pin_align_FAIL_bundles": 128,
+    "fail_detail": "cfifo.x2 -> sstn_*sinf_x2.x2i: jog 25.7 um in a 9.0 um channel, cut 0.95 > 0.6",
+    "die_input_facing_away": "49/384 (ri on N, rly_66_EW/WE/NE drivers behind)",
+    "native_launch_ps": "263.3 (252 pins)",
+    "native_capture_ps": 205.7
+   },
+   "classes": [
+    "P1",
+    "P3"
+   ],
+   "fix": "Close a cfifo with the xd2/xf2 ports (v2 RTL) and rebind it. Until then 68,864 die bits connect to nothing, which breaks the no-stub/port-bind rule. Place x2 directly under the sinf station x2i column (zero jog), or widen the 9 um channel to at least 26 um.",
+   "severity": 1,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [],
+   "images_local": [],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-02",
+     "outcome": "open",
+     "evidence": "No cfifo route after colck-r2pin NEEDS_HUMAN (10-15 12:51). The die netlist now uses --cfifo-v2, but no closed v2 view with xd2/xf2 exists.",
+     "before": {
+      "bits_without_pin": 68864
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-03",
+   "master": "dsfd_node_LLfd (=LLfu canonical, LLd)",
+   "owner": "S-DIE",
+   "job": "s81net_node_llfd-n5-4ff0e837d",
+   "host_run": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/s81net_node_llfd-n5-4ff0e837d",
+   "see": "Both 63-bit inputs a and b sit in 7 um at mid-W. The logic blob spreads from there to S-left. The clock enters at mid-E, 40+ um from the logic, and the E third of the tile is empty. At die level the drivers (rly_63_NS/WS outputs) are EAST of the node, so the W-face inputs face away.",
+   "numbers": {
+    "instances": {
+     "LLfd": 1265,
+     "LLfu": 1024,
+     "LLd": 128
+    },
+    "tile_um": [
+     86.4,
+     77.8
+    ],
+    "fill": 0.222,
+    "W_face_pins": 126,
+    "W_span_um": 7.0,
+    "pins_per_um": 18.4,
+    "span_frac": 0.09,
+    "die_input_facing_away": {
+     "LLfd": "1686/3795 (44%)",
+     "LLfu": "1490/3072 (49%)",
+     "LLd": "256/256 (100%)"
+    },
+    "driver_behind_face_um": "63-98",
+    "native_capture_ps": {
+     "LLfd": 207.3,
+     "LLfu": 246.4,
+     "LLd": 267.7
+    },
+    "grt_overflow": 0
+   },
+   "classes": [
+    "P1",
+    "P2",
+    "P5",
+    "P6"
+   ],
+   "fix": "Move a/b to the E face (toward the relays) and spread them over at least 30 um on M4 at 2-track pitch. Put the clock entry at the logic centroid (S face near x=35%). Shrink the outline from 86 to about 55 um wide. Apply to LLfu (canonical) so LLfd/LLd rebinds inherit it.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-03__dsfd_node_LLfd__floorplan.png",
+    "img/S81F-03__dsfd_node_LLfd__final_placement.png",
+    "img/S81F-03__dsfd_node_LLfd__final_worst_path.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_node_LLfd__floorplan.png",
+    "/tmp/visrom/s81/dsfd_node_LLfd__final_placement.png",
+    "/tmp/visrom/s81/dsfd_node_LLfd__final_worst_path.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-03",
+     "outcome": "confirmed-partial",
+     "evidence": "P5 confirmed: n6 re-cut 86.4 -> 43.2 x 77.76 um (f545fd6d9). LLfu n6 fill 0.222 -> 0.444, area ~6,722 -> 3,359 um2 per instance, x2,417 LL* instances = ~8.1 mm2 returned. n6 CLOSED LLfd TT +88.7/FF +24.7, LLfu +82.3/+18.5, LLd +109.3/+20.8; native rst capture fixed by the pin register. P1/P2/P6 NOT fixed: a/b are still 126 pins in 7.0 um on W (18.4 pins/um, span 0.09), the clock is still at mid-E, and the density image is now red-saturated in the upper-W half (max 2.03, 18.8% bins >0.85).",
+     "before": {
+      "fill": 0.222,
+      "W_pins_per_um": 18.4
+     },
+     "after": {
+      "fill": 0.444,
+      "W_pins_per_um": 18.39,
+      "dens_max": 2.03,
+      "frac_hot": 0.188,
+      "images": [
+       "/tmp/visrom/r2/img/s81_S81F-03_llfu_n6_floorplan.png",
+       "/tmp/visrom/r2/img/s81_S81F-03_llfu_n6_density.png"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "S81F-04",
+   "master": "ot_s81_cfg7_seq",
+   "owner": "S-ELEM-PQ",
+   "job": "s81fill2_cfg7_seq_l1pd-g1-61d2351bf",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81fill2_cfg7_seq_l1pd-g1-61d2351bf",
+   "see": "The tile is 17.3x41 um. q0..q6 (336 b) and a sit on W at 9.75 pins/um, cfg/go on N, and the clock at S centre. The worst path is a combinational W-in -> N-out feed-through. At die level the N-face cfg bus lands 152 um off qbank_S.i_cfg across a 4 um gap, the mirrored row is bit-reversed, and every ROM rd->q bundle is interleaved.",
+   "numbers": {
+    "instances": 1898,
+    "cfg_to_qbank_jog_um": 151.7,
+    "go_e_jog_um": 152.9,
+    "gap_um": 4.07,
+    "reversed_bundles": "896/1898 (cfg->qbank_S, ef, go_tag)",
+    "rom_rd_to_q_interleaved_bundles": 13286,
+    "addr_jog_um": 36.9,
+    "W_pins_per_um": 9.75,
+    "fill": 0.273,
+    "native_capture_ps": "300.6 (189 pins)",
+    "native_launch_ps": 221.6,
+    "combinational_pins": 20,
+    "die_lc_input_facing_away": "119/17082; lc fed by rly_15_* outputs that face away (see S81F-07)"
+   },
+   "classes": [
+    "P1",
+    "P2",
+    "P6"
+   ],
+   "fix": "Register the 20 feed-through pins. Place cfg/go_e pins at the x of qbank_S.i_cfg, or co-place cfg7_seq centred under its qbank, so the jog is ~0. Give the mirrored row a mirrored-order variant or a centre-symmetric pin order. Order q0..q6 pins to match the ROM rd bit order. Put the clock entry at the W-face centroid of the q capture flops.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-04__ot_s81_cfg7_seq__floorplan.png",
+    "img/S81F-04__ot_s81_cfg7_seq__final_worst_path.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/ot_s81_cfg7_seq__floorplan.png",
+    "/tmp/visrom/s81/ot_s81_cfg7_seq__final_worst_path.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-04",
+     "outcome": "open",
+     "evidence": "No new cfg7_seq route after the g1 jobs.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-05",
+   "master": "dsfd_qbank_S",
+   "owner": "S-DIE",
+   "job": "s81fill2_qbank_s_t-g1-5dd9ba367",
+   "host_run": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/s81fill2_qbank_s_t-g1-5dd9ba367",
+   "see": "The 60.5x25.9 um tile has 604 pins on each of N and S, across 93% of the face on M3+M5. The cells pack into the S (input) half and the N half is nearly empty, so every output has to climb 13 um. The clock enters at mid-W, at one end of a 60 um wide tile. At die level, 896 of the 1898 instances (mirrored row) get i_x0/i_x1/i_cfg bit-reversed, and 896 input bundles from rly_283/266 U-turn.",
+   "numbers": {
+    "instances": 1898,
+    "tile_um": [
+     60.5,
+     25.9
+    ],
+    "fill": 0.413,
+    "pins_per_um": 10.77,
+    "span_frac": 0.93,
+    "die_reversed_bundles": 896,
+    "die_uturn_input_bundles": 1792,
+    "native_capture_ps": "303.5 (1 pin)",
+    "native_launch_ps": 222.1,
+    "grt_overflow": 0,
+    "usage_pct": 21.6
+   },
+   "classes": [
+    "P1",
+    "P6"
+   ],
+   "fix": "Put the clock entry at the S-face centre (sink centroid). Spread placement over the full height or cut the height to about 18 um. Provide a mirror-order variant, or the die must not mirror qbank_S rows. The S81F-01 face fix removes the U-turns.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-05__dsfd_qbank_S__floorplan.png",
+    "img/S81F-05__dsfd_qbank_S__final_placement.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_qbank_S__floorplan.png",
+    "/tmp/visrom/s81/dsfd_qbank_S__final_placement.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-05",
+     "outcome": "open",
+     "evidence": "No new qbank_S route.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-06",
+   "master": "dsfd_rly_536_SN (RTL only, 898 inst) + dsfd_sstn_*_x2",
+   "owner": "S-DIE / S-NET+FILL",
+   "job": "none (RTL only)",
+   "host_run": "die c21h ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/a_real",
+   "see": "Die-level pin geometry only (no route). The sstn x2 -> 536_SN.i bus is straight but jogs 52-74 um inside a 6-10 um channel: pin-align FAIL, and the jog wires spill onto the over-tile tracks. 536_SN.o is on N while 354 of its loads (sstn x2i) are 70 um SOUTH.",
+   "numbers": {
+    "instances": 898,
+    "bits": 536,
+    "pin_align_FAIL_bundles": 156,
+    "jog_max_um": 74.4,
+    "channel_um": 6.2,
+    "jog_cut": 2.63,
+    "output_facing_away": "354/1289 (27%)",
+    "sstn_e0c0si_x2_drv_FAIL": 104,
+    "sstn_e0e1c0c1si_x2_drv_FAIL": 52,
+    "rly_536_SW_to_sstn_x2i_uturn": "403/403"
+   },
+   "classes": [
+    "P1",
+    "P3"
+   ],
+   "fix": "Align the 536_SN i pin window with the sstn x2 pin window (same x span), or move the relay so the jog is under 20 um. Open the station-relay channel to at least 36 um. Recompute the 536_SN/SW faces from pin positions (generator fix in S81F-01).",
+   "severity": 2,
+   "die": "s81",
+   "level": "die-interface",
+   "images_committed": [],
+   "images_local": [],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-06",
+     "outcome": "open",
+     "evidence": "RTL only; S-DIE owns the windows (status 01:40). There is no new die pin_align.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-07",
+   "master": "dsfd_rly_15_* (SN 786, EN 244, NS 439, WE 73, SW 30)",
+   "owner": "S-DIE",
+   "job": "s81_rly_15_ns-g18-8a9388ce8 (snap); others v3-faf093855",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81_rly_15_ns-g18-8a9388ce8",
+   "see": "The 15-bit relays that feed ot_s81_cfg7_seq.lc have outputs facing away from the load. The 15_NS input faces away from the sstn cc driver, which sits 338 um behind it. The tile is 17.3x17.3 um at 5.6% fill, and the 15 pins sit in 1.3 um.",
+   "numbers": {
+    "out_facing_away": {
+     "15_SN": "578/1364 (42%)",
+     "15_EN": "488/732 (67%)",
+     "15_WE": "73/73 (100%, 311 um behind)",
+     "15_SW": "30/90"
+    },
+    "in_facing_away": {
+     "15_NS": "333/439 (76%, up to 338 um)"
+    },
+    "fill": 0.056,
+    "pins_per_um": 11.2
+   },
+   "classes": [
+    "P1",
+    "P5"
+   ],
+   "fix": "Re-derive faces from pin positions (generator fix in S81F-01). Merge the 15-bit cc/lc chain into the adjacent 63/66-bit relay tiles, or use a ~6x6 um tile.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-07__dsfd_rly_15_NS__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_rly_15_NS__floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-07",
+     "outcome": "open",
+     "evidence": "Same generator root cause as S81F-01, which is unfixed.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-08",
+   "master": "small relay members with 100% facing-away: dsfd_rly_63_EW (44), 63_SN (62), 66_WE (26), 66_NE (5), 63_ES (131 in), 2_EW (47/67)",
+   "owner": "S-DIE",
+   "job": "various (63_EW, 66_WE RTL only)",
+   "host_run": "die c21h pin_align",
+   "see": "The output faces the opposite way from the load (63_EW o on W, load 697 um EAST; 63_SN o on N, node_LLfd.b 140 um south; 66_WE o on E, cfifo.ri 100 um west). 63_ES has i on E while all 131 drivers (rly_63_WE.o) are west. This is the same generator root cause as S81F-01, including the forced fold when driver and load are on the same side.",
+   "numbers": {
+    "63_EW": "44/44 out, 697 um",
+    "63_SN": "62/62 out, 140 um",
+    "66_WE": "26/26 out, 100 um",
+    "66_NE": "5/5",
+    "63_ES": "131/131 in",
+    "2_EW": "47/67 out, 119 um"
+   },
+   "classes": [
+    "P1"
+   ],
+   "fix": "Same generator fix as S81F-01. For a same-side driver and load, emit an L or U variant with both pins on that face instead of forcing the opposite face.",
+   "severity": 2,
+   "die": "s81",
+   "level": "die-interface",
+   "images_committed": [],
+   "images_local": [],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-08",
+     "outcome": "open",
+     "evidence": "Same generator root cause as S81F-01, which is unfixed.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-09",
+   "master": "dsfd_m2l_vr_68x11__hr_E4 (rebind -> hr_W1, identical RTL)",
+   "owner": "S-DIE",
+   "job": "s81net_m2l_vr_68x11__hr_e4-n3-1134272d6",
+   "host_run": "ot-pve1:/srv/opentallas-scratch/claude/closure-loop/s81net_m2l_vr_68x11__hr_e4-n3-1134272d6",
+   "see": "The tile is 157.7 um square. Ten 70-bit inputs (di0-9) sit on N, di10 alone on S, and the 761-bit output on W. The clock enters at the SW corner. Logic hugs the W and N faces, and the SE ~35% is empty, so capture flops at the N-E corner are about 200 um from the clock entry.",
+   "numbers": {
+    "tile_um": [
+     157.7,
+     157.7
+    ],
+    "fill": 0.263,
+    "density_frac_empty": 0.42,
+    "W_pins": 761,
+    "W_pins_per_um": 5.1,
+    "N_pins": 710,
+    "native_launch_ps": "380.3 (13 pins)",
+    "native_capture_ps": "485.1 (22 pins)",
+    "grt_overflow": 0,
+    "die": "stnh_70x4.do -> di4/6/8/9: 4 U-turn bundles (E face vs N face)"
+   },
+   "classes": [
+    "P5",
+    "P6"
+   ],
+   "fix": "Move the clock entry to the NW corner or N-face centre (sink centroid). Move di10 to N with di0-9. Shrink to about 158x100 um. Do this on the hr_W1 canonical.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-09__dsfd_m2l_vr_68x11__hr_E4__floorplan.png",
+    "img/S81F-09__dsfd_m2l_vr_68x11__hr_E4__final_placement.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_m2l_vr_68x11__hr_E4__floorplan.png",
+    "/tmp/visrom/s81/dsfd_m2l_vr_68x11__hr_E4__final_placement.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-09",
+     "outcome": "open",
+     "evidence": "No hr_W1/E4 kit change. The hr_W1 n3 route predates pass 1.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-10",
+   "master": "dsfd_stnh_70x1 (2505) / dsfd_stnv_70x1 (1350)",
+   "owner": "S-NET+FILL",
+   "job": "s81fill_stnh_70x1-f4-d00852275",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81fill_stnh_70x1-f4-d00852275",
+   "see": "The 70-bit di/do buses are packed into 3.5 um of a 17.3 um face, which uses every M4 track. Native timing passes, but the die router must fan out 70 wires from a 3.5 um window at 3,855 instances. 10-12% of die bundles face away (do0 E vs di0 W chains).",
+   "numbers": {
+    "instances": 3855,
+    "pins_per_um": 20.8,
+    "span_frac": 0.2,
+    "fill": 0.224,
+    "die_facing_away": {
+     "stnh_70x1 out": "297/2505",
+     "in": "244/2505"
+    },
+    "jog_max_um": 194
+   },
+   "classes": [
+    "P2"
+   ],
+   "fix": "Spread di/do over at least 7 um at 2-track pitch (or M4+M6), aligned to the same y window on both faces. Planned rebind to 86x1: apply it there.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-10__dsfd_stnh_70x1__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_stnh_70x1__floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-10",
+     "outcome": "open",
+     "evidence": "The S-NET+FILL 86x1 2-track window proposal is waiting on S-DIE. No re-route.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-11",
+   "master": "dsfd_sstn_e0c0si / e0e1c0c1si (and _x2 RTL-only, 476+746 inst)",
+   "owner": "S-NET+FILL",
+   "job": "s81net_sstn_e0c0si-n2-779bcd4be / s81net_sstn_e0e1c0c1si-n2-61a4164c1",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81net_sstn_e0c0si-n2-779bcd4be",
+   "see": "The station is 172.8x30.2 um at 10.7% fill. 566-574 pins per face on M5 only cover 50-62% of the face. xa/xb leave on N, but the rly_283/266 inputs they feed are to the EAST (20% of bundles U-turn on the station side).",
+   "numbers": {
+    "tile_um": [
+     172.8,
+     30.2
+    ],
+    "fill": 0.107,
+    "frac_empty": 0.85,
+    "N_pins": 570,
+    "M5_only": true,
+    "die_out_facing_away": {
+     "e0e1c0c1si_x2": "746/3730",
+     "e0c0si_x2": "556/2840"
+    },
+    "grt_overflow": 0
+   },
+   "classes": [
+    "P1",
+    "P5"
+   ],
+   "fix": "Put pins on M3+M5 (as qbank does) and halve the width to about 90 um. Put xa/xb on the face toward the relays. With the S81F-01 fix (relay i on W) the corner becomes straight.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-11__dsfd_sstn_e0c0si__floorplan.png",
+    "img/S81F-11__dsfd_sstn_e0c0si__density.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_sstn_e0c0si__floorplan.png",
+    "/tmp/visrom/s81/dsfd_sstn_e0c0si__density.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-11",
+     "outcome": "open",
+     "evidence": "Deferred by S-DIE until gen26a shows the pin windows, and gen26a has not produced a die (c26a2 GEN_FAIL).",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-12",
+   "master": "dsfd_hstnv_129s (new variant, newest job EARLY_FAIL_CONGESTION 10-16 00:12)",
+   "owner": "S-NET+FILL",
+   "job": "s81fill_hstnv_129s-f7-e91db33bb",
+   "host_run": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/s81fill_hstnv_129s-f7-e91db33bb",
+   "see": "GRT finished congested (odb not kept). All 8 overflow gcells sit in one row at y=27.9-29.1 um on a 12.96x34.56 um tile, at the N output face. The source nets are dq bits plus ot_outhold hold-pad buffers bunched at the output pins.",
+   "numbers": {
+    "overflow_total": 8,
+    "M3": 4,
+    "M5": 4,
+    "usage_pct": 31.2,
+    "tile_um": [
+     12.96,
+     34.56
+    ]
+   },
+   "classes": [
+    "P4",
+    "P2"
+   ],
+   "fix": "Spread dq over the full N face on M3+M5, or move the hold padding off the output face (input side or mid-tile). Widen the tile to about 20 um if needed.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_hstnv_129s__congestion.rpt"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-12",
+     "outcome": "retired",
+     "evidence": "The hstnv_129s pilot was withdrawn 10-15 18:28 and is not in the die.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-13",
+   "master": "dsfd_xstg_515",
+   "owner": "S-DIE",
+   "job": "s81net_xstg_515-n4refclk-bbc0958a4",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81net_xstg_515-n4refclk-bbc0958a4",
+   "see": "The tile is 75.6x92.9 um at 0.60 fill, with 5668 registers for 515 bits on two clocks. Congestion is uniformly orange (M2 52%) with no overflow. The clock enters at S x=27%. At die level, o -> bk_collector_c1 jogs 82 um inside a 6.3 um gap (pin-align FAIL, cut 2.58), and both m2l inputs U-turn (W vs W).",
+   "numbers": {
+    "fill": 0.602,
+    "regs": 5668,
+    "grt_overflow": 0,
+    "M2_usage_pct": 52.1,
+    "die_FAIL_jog_um": 82.1,
+    "die_gap_um": 6.3,
+    "completeness_capture_ps": "356.0 (515 pins, pre-n4 view)",
+    "n4_ioref_boundary_mean_ps": 133.4
+   },
+   "classes": [
+    "P1",
+    "P3"
+   ],
+   "fix": "Re-audit native timing on the n4refclk view (the 356 ps capture predates it). Align the o pin window with the bk_collector_c1 cSW window, or open the gap to at least 36 um. Put i on the face toward the m2l hix/hco drivers.",
+   "severity": 2,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-13__dsfd_xstg_515__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_xstg_515__floorplan.png",
+    "/tmp/visrom/s81/dsfd_xstg_515__final_congestion.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-13",
+     "outcome": "confirmed-partial",
+     "evidence": "Tile native part confirmed: the n4refclk view (CLOSED TT +178.1 / FF +20.8) gives native PASS launch 115.1 / capture 126.4 / spread 13.5 ps (50db8c699), down from 356.0 ps capture on the pre-n4 view. Die part open: o -> bk_collector_c1 jog 82 um in a 6.3 um gap. No new die pin_align.",
+     "before": {
+      "native_capture_ps": 356.0
+     },
+     "after": {
+      "native_capture_ps": 126.4,
+      "native_launch_ps": 115.1,
+      "W_E_pins_per_um": 6.15,
+      "images": [
+       "/tmp/visrom/r2/img/s81_S81F-13_xstg_n4_floorplan.png"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "S81F-14",
+   "master": "dsfd_rly_63_* (WE 8471, WS 5538, NS 5250, NE 2052, WN 993, SE 636)",
+   "owner": "S-DIE",
+   "job": "s81_rly_63_{we,ws,wn,se}-r4-1480fbbb1, s81_rly_63_ns-v2-88e22fcbf",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81_rly_63_we-r4-1480fbbb1",
+   "see": "The faces match the chain for 96-98% of bundles. The 63-bit i/o buses sit in 6.0 um of a 15.1 um face (2-track pitch). The i and o windows are offset by about 4.5 um (WE: in at y 45-85%, out at y 15-55%), so a straight chain jogs at every hop. 63_NE.o -> 63_WS.i has 16 pin-align FAILs (jog 119 um in a 3.1 um gap).",
+   "numbers": {
+    "pins_per_um": 10.5,
+    "span_frac": 0.4,
+    "fill": 0.31,
+    "grt_overflow": 0,
+    "usage_pct": 11.4,
+    "facing_away_pct": {
+     "WE": "3/2",
+     "WS": "2/3",
+     "NS": "3/4",
+     "NE": "10/9",
+     "WN": "7/6"
+    },
+    "native": "1-pin fails <= 224 ps (WE capture 198.9, WS launch 220.6, WN launch 223.7, SE capture 217.0)",
+    "die_FAIL_63NE_to_63WS": 16
+   },
+   "classes": [
+    "P2",
+    "P3"
+   ],
+   "fix": "Put i and o in the same window (centre the band) so straight hops have zero jog, and spread to about 12 um. Fix the 63_NE -> 63_WS placement (3.1 um gap) or open it to at least 36 um.",
+   "severity": 3,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-14__dsfd_rly_63_WE__floorplan.png",
+    "img/S81F-14__dsfd_rly_63_WS__final_worst_path.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_rly_63_WE__floorplan.png",
+    "/tmp/visrom/s81/dsfd_rly_63_WS__final_worst_path.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-14",
+     "outcome": "open",
+     "evidence": "The r4 63_* relays (CLOSED 23:14-23:27, TT +333..+336) come from the node-strip source 1480fbbb1, with no change to the i/o windows.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81F-15",
+   "master": "narrow-bus relays/stations: dsfd_rly_2_* (5890 inst), rly_1_* (903), rly_15_* (1573), hstnh/hstnv_<=20 (~600)",
+   "owner": "S-DIE / S-NET+FILL",
+   "job": "s81_rly_2_ne-v3-faf093855; s81fill_hstnh_2-f3-61c3c6803; s81fill_hstnv_2-f3-e0b98db3e",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81_rly_2_ne-v3-faf093855",
+   "see": "Tiles of 1-20 bits use the 15.1-17.3 um minimum outline: rly_2_NE at 1.1% fill, hstnh_2/hstnv_2 at 0.8%, rly_15 at 5.6%. Each is almost entirely empty power grid.",
+   "numbers": {
+    "rly_2_area_mm2": 1.35,
+    "rly_15_area_mm2": 0.47,
+    "rly_1_area_mm2_est": 0.21,
+    "hstn_small_area_mm2_est": 0.18,
+    "total_mm2_est": 2.2,
+    "fill": {
+     "rly_2_NE": 0.011,
+     "hstnh_2": 0.008,
+     "hstnv_2": 0.008,
+     "rly_15_NS": 0.056
+    }
+   },
+   "classes": [
+    "P5"
+   ],
+   "fix": "Fold the 1/2/15-bit control relays into the wide relay or station tiles they travel beside (one tile, several buses), or allow a ~6x6 um minimum tile. Most hstn small members are already marked REBIND to _20.",
+   "severity": 3,
+   "die": "s81",
+   "level": "tile",
+   "images_committed": [
+    "img/S81F-15__dsfd_rly_2_NE__floorplan.png",
+    "img/S81F-15__dsfd_hstnh_2__floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/s81/dsfd_rly_2_NE__floorplan.png",
+    "/tmp/visrom/s81/dsfd_hstnh_2__floorplan.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81F-15",
+     "outcome": "open",
+     "evidence": "Phase-3 DEDUPE item that needs S-DIE; not started.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "D-QC-01",
+   "die": "qwen_compute",
+   "master": "DIE r2b2 (GRT running E4) / r2f2 plan",
+   "level": "die",
+   "owner": "Q-COMPUTE-DIE",
+   "see": "Centre column between the two NK tile arrays (x 12.52-20.20 mm) is 7.68 mm wide but only 45% covered; south strips left/right of the IO row are completely empty. Port-tile buses cross the empty centre to the far edges of both arrays (r2f2 plan buses all red, 6+ stage reach).",
+   "numbers": {
+    "die_um": [
+     32772,
+     16140
+    ],
+    "die_mm2": 528.9,
+    "centre_column_mm2": 111.1,
+    "centre_empty_mm2": 61.6,
+    "south_strip_W_empty_mm2": 17.1,
+    "south_strip_E_empty_mm2": 17.0,
+    "total_empty_mm2": 95.7,
+    "empty_frac_of_die": 0.18
+   },
+   "classes": [
+    "P5",
+    "P1"
+   ],
+   "fix": "Narrow the centre column to its content (~4.5 mm: SFU 3.24 mm + one port column): pull the east NK array west by ~3 mm; split the six port tiles 3 west / 3 east so each array's port column sits on its own inner edge (today all six sit west of SFU so the east array is fed across the whole centre); spread the three SerDes PHYs along the south shoreline under the arrays (or lower the arrays into the empty south strips) instead of a centre IO block with two empty 10 mm wings. Expected: die ~-15% area or the same area with ~3 mm shorter port->array buses.",
+   "severity": 2,
+   "images_committed": [
+    "img/D-QC-01__qc_r2b2_floorplan.png",
+    "img/D-QC-01__qc_r2f2_plan_buses.png"
+   ],
+   "images_local": [
+    "die/img/qc_r2b2_floorplan.png",
+    "die/img/qc_r2f2_plan_buses.png"
+   ],
+   "status_1016_0115": "owner reply: port 3W/3E split measured earlier r1 cut 1.096 FAIL (port<->f1 6.3 kb > 4.1 kb saved); 4.87 mm VM blocks a 4.5 mm centre; PHYs must stay on an edge. Owner pricing (a) die height -1.6 mm with centred 2-row IO shoreline block, (b) port-stack trim / centre narrowed to content. New homes r2h: centre 7.88 mm, cut 0.592.",
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "D-QC-01",
+     "outcome": "confirmed-partial",
+     "evidence": "PARTIAL, plan level only (owner instruction). Candidate (a) = fpq_r2hs / fpq_r2hBCESV (423dfee5e, branch claude/q-compute-die-0030) puts the PHY row on the south edge inside the centre column and drops both NK arrays to the die bottom. Die 33.00x15.82 = 521.9 mm2 vs r2h 33.00x17.44 = 575.3 (-53.4) and r2b2 32.77x16.14 = 528.9 (-7.0); router cut 0.592. My block-cover count on the homes json (25 um grid, blocks >=2000 um2): both 17.3 mm2 south strips are gone. The centre column (x 12.50-20.43 mm, still 7.93 mm wide) has 53.3 mm2 empty of 125.4 mm2 (r2h: 72.6/138.2; r2b2 pass 1: 61.6/111.1). The ~4x3.5 mm above su64 is reserved for the new producer masters. Candidate (b) (centre trim) is not done. Pass-1 fix parts refuted by the owner: the 3W/3E port split (r1 cut 1.096 FAIL) and the 4.5 mm centre (4.87 mm VM). No GEN/GRT yet: r2h3 (r2hs homes) is in FULL GEN on ot-epyc4 after its relay-skip smoke (worst cut 1.385, reset_over_500 7). r2b2 GRT (grt_r22k) finished 00:55: overflow 0, max layer usage M5 12.54 % / M8 9.78 %. It is a relay-skip diagnostic, so the STA WNS -13.3 us has no timing meaning. [plan level only: r2hs/fpq-0030 homes; no GEN/GRT of r2hs yet]",
+     "before": {
+      "die_mm2": 528.9,
+      "centre_empty_mm2": 61.6,
+      "south_strips_empty_mm2": 34.1,
+      "total_empty_mm2": 95.7
+     },
+     "after": {
+      "die_mm2": 521.9,
+      "centre_empty_mm2": 53.3,
+      "south_strips_empty_mm2": 0,
+      "centre_width_mm": 7.93,
+      "cut": 0.592,
+      "r2b2_grt_overflow": 0,
+      "images": [
+       "/tmp/visrom/r2/img/DQC_fpq_r2hs_homes_render.png",
+       "/tmp/visrom/r2/img/DQC_fpq_r2h_full.png"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "D-QC-02",
+   "die": "qwen_compute",
+   "master": "DIE r2b2 net n_rst_field (rstseq_rom.rso_f)",
+   "level": "die",
+   "owner": "Q-COMPUTE-DIE",
+   "see": "One field reset net drives 1,585 terminals across the whole die from rstseq_rom at (13.7, 7.6) mm (GRT-0281 large fanout 1585); the bus picture shows it as the fan from the west-edge xcol h_0 because qfd_xcol_w's LEF declares rst_n[0] DIRECTION INOUT. Clock nets n_clk_r* have 1,135-1,289 terminals each (CTS, fine).",
+   "numbers": {
+    "terminals": 1585,
+    "max_manhattan_um": 39007,
+    "source": "rstseq_rom (13668,7586)",
+    "lef_pin": "qfd_xcol_w rst_n[0] INOUT"
+   },
+   "classes": [
+    "P6"
+   ],
+   "fix": "Registered reset tree for n_rst_field (<=500 um hops, one sync flop per tile row / station group, as the r9 die rule says) instead of one 39 mm, 1,585-sink net (with OT_ROUTE_RESET=1 GRT routes it as a plain signal net; otherwise it is left to nobody); fix the xcol_w/xcol_e abstract so rst_n is INPUT. Note r2b2 GRT has sat on extra iteration 3/12 for >80 min (M4/M5 derated 30%).",
+   "severity": 1,
+   "images_committed": [
+    "img/D-QC-02__qc_r2b2_buses.png"
+   ],
+   "images_local": [
+    "die/img/qc_r2b2_buses.png"
+   ],
+   "status_1016_0115": "owner reply: r2b2/C23s were RELAY-SKIP diagnostics (skip the registered reset tree); r2h1/r2h2 FULL relay generations include it; owner will check rst_field fan-out/reset_over_500 and fix xcol rst_n INOUT.",
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "D-QC-02",
+     "outcome": "open",
+     "evidence": "Owner refutation supported by code but not yet measured. In tools/qwen_rom_fulldie_b3r2.py (q-compute-die-0030), _reset_tree() returns at once under OT_RELAY_SKIP=1. In FULL mode it turns every reset bus beyond RELAY_REACH into a registered repeater tree and raises on any leftover. So the 1,585-terminal n_rst_field is a relay-skip artefact. Measured state: r2b2 GRT/STA (relay-skip) shows n_rst_field as the die's worst path, rstseq_rom.rso_f -> t_47_0.rst_n with 10.1 us wire delay (slack -13.34 us), GRT-0281 fanout 1585. r2h3 relay-skip smoke (01:09): reset_tree null, rst_field 1,585 sinks over 47.5 mm, reset_over_500 = 7 (also rst_spine 19.6 mm / 36, rst_fwd_s 14.2 mm, rst_io 11.0 mm, rst_seq 10.7 mm, rst_seq_ctlm 6.9 mm, rst_d2d 508 um). FULL GEN r2h1/r2h2 (ot-epyc4, started 00:46/00:48) has no output yet. Verdict needs relay_run.json reset.reset_tree (repeaters, max_net_um <=500) and reset_over_500 = 0 from r2h1/r2h2/r2h3 FULL.",
+     "before": {
+      "terminals": 1585,
+      "max_manhattan_um": 39007
+     },
+     "after": {
+      "r2b2_sta_worst_path": "n_rst_field slack -13.34 us (skip)",
+      "r2h3_skip_reset_over_500": 7,
+      "r2h3_skip_rst_field_um": 47518.7,
+      "full_gen": "pending"
+     }
+    }
+   }
+  },
+  {
+   "id": "D-QK-01",
+   "die": "qwen_kvsys",
+   "master": "DIE kvs11-v143c case (PDN) / kvs10",
+   "level": "die",
+   "owner": "Q-KVSYS-DIE",
+   "see": "Central spine is almost empty in both halves (only relays) and the NW/NE corners above the arrays are empty; the owner's pvw0/pvw1 split-PV candidate (2 x 1080x8640) uses exactly this space - correct direction. South spine clear width at y=5 mm is only 1,287 um (north 1,567 um), so 1080 + 2 x 259.2 um channels (1,598 um) does not fit south.",
+   "numbers": {
+    "die_um": [
+     10798,
+     24587
+    ],
+    "spine_S_empty_mm2": 13.9,
+    "spine_N_empty_mm2": 12.1,
+    "corner_NW_empty_mm2": 5.1,
+    "corner_NE_empty_mm2": 5.0,
+    "spine_clear_width_um": {
+     "y5000": 1287,
+     "y17000": 1567
+    },
+    "relays_in_spine": 525
+   },
+   "classes": [
+    "P5"
+   ],
+   "fix": "Adopt the N/S PV split flanking AHUB; widen the south spine to >=1,600 um by shifting the two south lane arrays outward ~160 um each (the north arrays already sit there), and re-plan the 525 spine relays (qkd_rly_32/_t1/_1/_17 chains) into the 259 um side channels before GEN.",
+   "severity": 2,
+   "images_committed": [
+    "img/D-QK-01__qkv_kvs11_floorplan.png",
+    "img/D-QK-01__qkv_pv_envelope.png"
+   ],
+   "images_local": [
+    "die/img/qkv_kvs11_floorplan.png",
+    "die/img/qkv_pv_envelope.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "D-QK-01",
+     "outcome": "open",
+     "evidence": "kvs10-v143p (PDN running 2 h+) and kvs11-v143c (PDN running since 00:03) on ot-epyc1tb are both still in run_pdn.tcl. Case is legal for both (27,814 / 29,013 instances, 0 overlaps). No GRT and no congestion map yet. Both are marked NATIVE PORT BIND FAIL = diagnostic only. Decided by the kvs11 GRT (overflow + spine congestion) and the PV home in its window.json.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "D-QK-02",
+   "die": "qwen_kvsys",
+   "master": "qkd_astk / qkd_astk_n / qkd_land / qkd_land_n",
+   "level": "die",
+   "owner": "Q-KVSYS-DIE",
+   "see": "Four parents are planned as hair-thin full-height strips: astk 220 x 9,675 um (aspect 44:1), land 173 x 12,141 um (70:1). astk->ectl_c links reach 9.06 mm; the bus picture shows every lane fanning to the strip centre. These are still RTL-only parents (13/14 leaves closed).",
+   "numbers": {
+    "astk_um": [
+     220.3,
+     9674.6
+    ],
+    "land_um": [
+     172.8,
+     12141.3
+    ],
+    "astk_ectl_c_mean_um": 2815,
+    "astk_max_link_um": 9061
+   },
+   "classes": [
+    "P5",
+    "P6"
+   ],
+   "fix": "Do not harden a 9.7/12.1 mm strip as one parent: cut each strip into per-head-group segments (8 x ~1.2 mm) hardened once and replicated, each beside the lanes it serves, with a registered spine between segments; one clock entry per segment.",
+   "severity": 2,
+   "images_committed": [
+    "img/D-QK-02__qkv_kvs11_floorplan.png",
+    "img/D-QK-02__qkv_kvs10_buses.png"
+   ],
+   "images_local": [
+    "die/img/qkv_kvs11_floorplan.png",
+    "die/img/qkv_kvs10_buses.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "D-QK-02",
+     "outcome": "open",
+     "evidence": "astk/land parents are still RTL-only strips; no parent kit or run since pass 1.",
+     "before": null,
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "D-S81-01",
+   "die": "s81",
+   "master": "DIE VM-centred v2 plan (vmc2_plan)",
+   "level": "die",
+   "owner": "S-DIE",
+   "see": "The hub band between the field columns (x ~10-22 mm) is half white: large empty areas west of SU_S, between SU_S and HC, and around BK_SELECTOR. HC_T sits ~10 mm south of VM and its bus to VM is one long red (6+ stage) run; SU_S is fed by a long red diagonal from the gather/capture node; BK_COLLECTOR (top) and BK_SELECTOR (bottom) are ~22 mm apart.",
+   "numbers": {
+    "die_um": [
+     33000,
+     26000
+    ],
+    "hub_band_mm2": 314.9,
+    "hub_band_white_mm2": 161.0,
+    "hub_core_white_mm2": 138.8,
+    "um_per_px": 18.6,
+    "method": "white-pixel count on the plan PNG"
+   },
+   "classes": [
+    "P5",
+    "P1"
+   ],
+   "fix": "Compact the hub around VM: HC_S/HC_T as an east tower directly against VM's east face, SU_S directly under VM, BK_COLLECTOR/BK_SELECTOR adjacent; then either return ~2-3 field columns' worth of area (~60-90 mm2) to fields or shrink the die width. Generous hub room (owner 10-15) is still met with <25% white instead of 51%.",
+   "severity": 2,
+   "images_committed": [
+    "img/D-S81-01__s81_vmc2_plan_floorplan.png",
+    "img/D-S81-01__s81_vmc2_plan_buses.png"
+   ],
+   "images_local": [
+    "die/img/s81_vmc2_plan_floorplan.png",
+    "die/img/s81_vmc2_plan_buses.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "D-S81-01",
+     "outcome": "open",
+     "evidence": "The v2 hub was not regenerated: vmc2_plan PNGs are unchanged since 10-15 23:34. gen26a failed twice: pf21 preflight FAIL \"canonical frame width/source mismatch\", then c26a2 GEN_FAIL 01:07 \"chain KW0t: no station spot near s=28550 of 28957 (607, 9406)\", a station spot at the die W edge. White-area remeasure needs the first gen26a/26n die dump. The adopted S-VM variant (slot A + hop-1 + lever 2) is a VM-internal cut model, not a hub-band layout.",
+     "before": {
+      "hub_band_white_mm2": 161.0,
+      "hub_band_mm2": 314.9
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "D-S81-02",
+   "die": "s81",
+   "master": "DIE c21h (inherited, GRT running E4, iter 9/12) - column reset/clock nets",
+   "level": "die",
+   "owner": "S-DIE",
+   "see": "Every field column shows a red fan from its qbank row: n_rs_col_<c> (451 terminals) and n_ck_col_<c> (584) are single nets per column. In the dump 29,861 qbank_N->relay and 14,058 qbank_N->ROM links exceed 600 um (max 4.1 mm / 6.6 mm). dsfd_qbank_N's LEF declares ck[0]/rs[0] DIRECTION INOUT. Relay-relay hops are healthy (p50 197 um, p99 456 um, none >1 mm).",
+   "numbers": {
+    "rs_col_terminals": 451,
+    "ck_col_terminals": 584,
+    "qbank_links_gt600um": 43919,
+    "max_um": 6560,
+    "relay_hop_p50_um": 197,
+    "relay_hop_p99_um": 456
+   },
+   "classes": [
+    "P6"
+   ],
+   "fix": "Registered per-column reset tree (one sync stage per ~500 um / per qbank row) instead of one 451-sink net; write qbank_N ck/rs as INPUT in the abstract. Column clocks stay with CTS but check insertion against the 300 ps rule per column root.",
+   "severity": 2,
+   "images_committed": [
+    "img/D-S81-02__s81_c21h_floorplan.png",
+    "img/D-S81-02__s81_c21h_buses.png"
+   ],
+   "images_local": [
+    "die/img/s81_c21h_floorplan.png",
+    "die/img/s81_c21h_buses.png"
+   ],
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "D-S81-02",
+     "outcome": "open",
+     "evidence": "c21h GRT was STOPPED by S-DIE at iter 9/12 (07:54Z), before any overflow verdict; the netlist was superseded by c26a. The generator still emits one rs_col_<r>/ck_col_<r> net per column (origin/main L4934-4935, 5082-5083). The committed qbank_N view says ck/rs INPUT (020c17118), but the die elements.lef abstract (c21h a_real) still declares ck[0]/rs[0] INOUT, so the die binds the lattice abstract and not the closed view. Decided by: gen26n GRT (nl0030_26n started 01:08).",
+     "before": {
+      "rs_col_terminals": 451
+     },
+     "after": null
+    }
+   }
+  },
+  {
+   "id": "S81H-13",
+   "die": "s81",
+   "master": "dsfd_vm_static_bank128_e_m4_v20 (VM bank, single SRAM)",
+   "level": "tile",
+   "owner": "S-VM",
+   "job": "dsfd_vm_static_bank128_e_m4_v20-bke1-2fe24dc01 (gate 2026-10-16 00:55)",
+   "host_run": "local gate kit /home/ubuntu/wt/s81-vm-widehub-2210/physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20",
+   "images_committed": [
+    "img/S81H-13__bank128_e_m4_v20_density.png",
+    "img/S81H-13__bank128_e_m4_v20_floorplan.png"
+   ],
+   "images_local": [],
+   "see": "220.3x75.6 um, one 512x128 SRAM centred; all 409 pins on the LOWER half of the W and E faces, the 338 flops form two clusters there (E cluster red), clock enters the NW top corner, ~20 um empty band above the SRAM and the whole centre empty.",
+   "numbers": {
+    "outline_um": [
+     220.3,
+     75.6
+    ],
+    "pins": 409,
+    "flops": 338,
+    "util_lint": 0.344,
+    "fill": 0.318,
+    "clock": "NW corner"
+   },
+   "classes": [
+    "P6",
+    "P5"
+   ],
+   "fix": "Clock entry at the S-face centre (between the two flop clusters, equal reach to both); drop the empty top band (outline ~220x55 um -> util ~47%), or spread W/E pins over the full face height so the clusters relax.",
+   "severity": 2,
+   "round": {
+    "1": {
+     "reported": "2026-10-16 01:15"
+    },
+    "2": {
+     "id": "S81H-13",
+     "outcome": "refuted",
+     "evidence": "Timing risk refuted: the bke1 route (the gated kit, unchanged: clock at the NW corner, W/E pins in the lower half, E 7.4 pins/um over 22.8 um) CLOSED TT +343.0 / FF +27.5 / SS +215.9. Owner: bke1 is a reference only; the pins are re-placed in the VM parent kit. The area part (fill 0.326, empty top band) stays open until that parent kit is routed.",
+     "before": {
+      "fill": 0.318,
+      "clock": "NW corner"
+     },
+     "after": {
+      "tt_ps": 343.02,
+      "ff_ps": 27.53,
+      "fill": 0.326,
+      "images": [
+       "/tmp/visrom/r2/img/s81_S81H-13_bke1_floorplan.png"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "QKV-13",
+   "round": 2,
+   "die": "qwen_kvsys",
+   "master": "qkd_static_kv_return_slots_mc (mc_r3)",
+   "level": "tile",
+   "owner": "Q-KV (Codex Q-KV-2330 kit, adopted under Q-ELEM)",
+   "job": "qkd_static_kv_return_slots_mc_r3-mc3-9196b2eb1 (RUNNING)",
+   "host_run": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3-9196b2eb1",
+   "see": "Submitted before anyone looked at the images. Placement (3_5_place_dp) is a round blob in a 194.4x216 um outline at fill 0.32, with a 25-40 um empty ring on every side; 23 % of bins are under 0.05. The pins are fine: W/E 1.6-1.67 pins/um over 90 % of the face. The gate log names one async-reset-flop output, rp[0] (DFFASRHQNx1 QN), driving 8,940 loads, plus rp[3] at 3,260. The thin margins line up with this broadcast: reg->reg +3.7 ps and in->reg -69.5 ps (idle_hbm) at the placement-RC gate. ck enters the S face near x=53 um, not the centre.",
+   "numbers": {
+    "outline_um": [
+     194.4,
+     216.0
+    ],
+    "fill": 0.32,
+    "frac_empty_bins": 0.23,
+    "rp0_loads": 8940,
+    "rp3_loads": 3260,
+    "gate_reg2reg_ps": 3.7,
+    "gate_in2reg_ps": -69.5,
+    "hdata_roots_sinks": [
+     4608,
+     4608,
+     4608,
+     4608
+    ],
+    "clock_entry_x_um": 53
+   },
+   "classes": [
+    "P5",
+    "P6"
+   ],
+   "fix": "Replicate rp[] per hdata quadrant/bank group (<=256 loads each, one copy per data root) instead of one 8,940-load QN net. Shrink the outline to about 160x180 um (fill ~0.47). Move ck to the S-face centre.",
+   "severity": 2,
+   "images_committed": [
+    "img_r2/QKV-13__r2_rslots_density.png",
+    "img_r2/QKV-13__r2_rslots_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/r2/img/r2_rslots_density.png",
+    "/tmp/visrom/r2/img/r2_rslots_floorplan.png"
+   ]
+  },
+  {
+   "id": "QC-11",
+   "round": 2,
+   "die": "qwen_compute",
+   "master": "qfd_tile_nk_rp2_45_a2 / qfd_tile_nl_rp2_45_a2 (r4 kit)",
+   "level": "tile",
+   "owner": "Q-TILE45",
+   "job": "r4 kit f9033f6a1 (codex/qtile45-2330), not yet gated",
+   "host_run": "local:/home/ubuntu/OpenTallas git f9033f6a1 physical/ref_tile/qfd_tile_n{k,l}_rp2_45_a2/floorplan.json",
+   "see": "The r4 repitch abuts LSL col1 (MY, x 100.224) and col2 (R0, x 200.016) E-W with a 0 um seam to widen the pin gutters 20.1 -> 30.1 um. The kit's own floorplan lint records 3 FAIL 'channel -0.0 um (< 20 um)', one per LSL row, for NK and NL. Its abutted_stack exemption only covers deliberate N-S abutment. If the gate treats these as hard FAILs, r4 is refused before placement. Even if accepted, the two 5.4 um halos now overlap in the seam, and the 43.2 um lattice WARN stays (x 100.224 / 200.016 are off-lattice).",
+   "numbers": {
+    "lint_fail_channel": 3,
+    "seam_um": 0.0,
+    "gutter_um_before": 20.088,
+    "gutter_um_after": 30.132,
+    "r3_residual_cells": {
+     "nk": 92,
+     "nl": 53
+    }
+   },
+   "classes": [
+    "P3"
+   ],
+   "fix": "Extend abutted_stack to E-W pin-free abutment (both touching faces pin-free: MY col1 E face, R0 col2 W face) before the r4 gate, or keep a 0.1 um declared seam. Put col1/col2 origins on the 43.2 um lattice (e.g. 99.36 / 198.72 + 0.864 shifts) so PDN straps line up.",
+   "severity": 2,
+   "images_committed": [
+    "img_r2/QC-11__QC-01_nk_r3_gate_floorplan.png"
+   ],
+   "images_local": [
+    "/tmp/visrom/r2/img/QC-01_nk_r3_gate_floorplan.png"
+   ]
+  },
+  {
+   "id": "D-S81-03",
+   "round": 2,
+   "die": "s81",
+   "master": "VM (MIX4 slot A + hop-1 + lever 2, adopted)",
+   "level": "die",
+   "owner": "S-VM / S-DIE",
+   "job": "mix4-A-ctr-hop1-0030 (ot-agidock128)",
+   "host_run": "/home/ubuntu/artifacts/s81-vm-widehub-2210/mix4-A-ctr-hop1-0030.log",
+   "see": "The adopted VM variant has zero cut margin. Its PathFinder gcell model gives worst edge share 0.600 (the ceiling) and p99 0.585. The W_1x4 alternative already breaks it: 0.606, 8 edges >0.60. 98,672 leaf links run >500 um. Face pin bits are lopsided: S 19,288 / N 16,411 / W 12,732 / E 6,987, so E carries 12.7% of the bits.",
+   "numbers": {
+    "worst_share": 0.6,
+    "p99_share": 0.585,
+    "edges_over_060": 0,
+    "leaf_links_over_500um": 98672,
+    "connections": 403474,
+    "face_pin_bits": {
+     "S": 19288,
+     "N": 16411,
+     "W": 12732,
+     "E": 6987
+    },
+    "alt_W_1x4_worst": 0.606,
+    "alt_W_1x4_edges_over_060": 8,
+    "price_AR_pct": 5.714,
+    "price_MTP_pct": 5.085
+   },
+   "classes": [
+    "P4",
+    "P2"
+   ],
+   "fix": "Before freezing: move ~4-6k bits from the S/N faces to E (E has 2.8x less load than S) or widen the VM band by one gcell row, to bring the worst share to <=0.55 (the rule range is 0.55-0.60). Any later VM addition (PQ producer, MIX4 engine 10) pushes the current cut over 0.60.",
+   "severity": 2,
+   "images_committed": [],
+   "images_local": [],
+   "owner_ack": "S-VM 02:30: noted; E face (6,987 bits) is the relief lever in the parent kit."
+  },
+  {
+   "id": "S81H-14",
+   "round": 2,
+   "die": "s81",
+   "master": "dsfd_vm_static_wfc_ctl",
+   "level": "tile",
+   "owner": "S-VM",
+   "job": "dsfd_vm_static_wfc_ctl_native_1015_r1-native1b-0d6f52a39 (NEEDS_HUMAN 01:03)",
+   "host_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r1-native1b-0d6f52a39",
+   "see": "No image: the route dies in 1_2 synth SDC check on both attempts. The cause is OT_MULTI_ROOT \"input vm_fault has wrong domain for e_q\". In rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv (ctl module L72), e_q <= sq[1] && (own | x43f | vm_fault) is clocked by ck_control_s (serial domain), but vm_fault/x43f are declared core-domain (core_clk) inputs in clock_entry.sdc and are captured with no synchroniser. The r1 predecessor failed bench_wfc_ctl_equiv. The daemon also warns of 3 runtime part-selects e_d[512*l0 +: 512] (1,536 bits, yosys SHARE stall risk).",
+   "numbers": {
+    "route_attempts": 2,
+    "failing_stage": "1_2_yosys.sdc",
+    "cross_domain_inputs": [
+     "vm_fault",
+     "x43f",
+     "own?"
+    ],
+    "runtime_partselect_bits": 1536
+   },
+   "classes": [
+    "P6"
+   ],
+   "fix": "Register vm_fault/x43f/own in the core domain and hand them to the serial domain through a static-schedule capture, or declare e_q in the core domain. Replace e_d[512*l0 +: 512] with decoded constant-index slices. This is an RTL fix; no layout is possible until it lands.",
+   "severity": 1,
+   "images_committed": [],
+   "images_local": [],
+   "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted."
+  }
+ ],
+ "no_image": [
+  {
+   "master": "qfd_sp_su64_sfu",
+   "reason": "all newest runs CANCELLED (bv/ab/_s2 e0370c82c/e3c1fcf68 18:08) and ab-d95c2ebddtt NEEDS_HUMAN (source commit not on branch); no odb, no gate kit found"
+  },
+  {
+   "master": "qfd_tile_nk tp8/r5 closure jobs (ot_qwen_rom_tile_nk)",
+   "reason": "EARLY_FAIL_HOLD runs released (no odb); superseded by rp2_45 gates, see QC-01"
+  },
+  {
+   "master": "qfd_tt_ctlm_static_s / qfd_tt_ctlm_tree_static",
+   "reason": "RTL only in scope; tree_static t4 EARLY_FAIL_CONGESTION run released (not snapped, out of named scope)"
+  },
+  {
+   "master": "qfd_band_upper_tp8",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_clkrx",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_collective_static_io_production",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_native59_compute_service",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_port_tiles_0",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_port_tiles_0_f1",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_port_tiles_1",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_port_tiles_1_f1",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_port_tiles_2",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_port_tiles_2_f1",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_res_train_issue",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_rly_26_NE_9x9",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_seq_su_static",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_sp_res_train_par_0",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_sp_res_train_par_1",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_sp_res_train_par_2",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_sp_vector_memory_par",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_xcol_e",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qfd_xcol_w",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qkd_embedding_static_core_provider",
+   "reason": "RTL only (no route yet), no gate kit found"
+  },
+  {
+   "master": "qkd_astk_n, qkd_land_n, qkd_hslice, qkd_hslice_dn, qkd_hgs, qkd_hss, qkd_rst_region, qkd_rly_t1",
+   "reason": "RTL only, no route/gate_layout (hslice kit has no gate_layout); pins checked from die LEF only: hslice 4.5/um, astk_n 3.4/um, fine"
+  },
+  {
+   "master": "qkd_host_rt, qkd_seq (parents)",
+   "reason": "not hardened; leaves host_ctl / seq_xs_tp8 snapped. Parent LEF: host_rt E 3025 pins at 5.9/um, seq W/E 3244 at 6.9/um (OK)"
+  },
+  {
+   "master": "qkd_ahub parent",
+   "reason": "qkd_ahub_ref-q8 EARLY_FAIL_HOLD, no odb kept (see QKV-07)"
+  },
+  {
+   "master": "qkd_astk_ep",
+   "reason": "qkd_astk_ep-ks4 EARLY_FAIL_CONGESTION, odb deleted; only reports"
+  },
+  {
+   "master": "dsfd_sp_vm",
+   "reason": "parent: leaves closed, not hardened; only the plan view s81-vm-widehub-2210/meta4-white.png exists (copied to img/vm_parent_meta4_plan.png). The hub VM|collective seam and stale VM pins are already known (S-DIE); not re-reported."
+  },
+  {
+   "master": "dsfd_sp_capture_c",
+   "reason": "parent, not hardened; no route or gate kit"
+  },
+  {
+   "master": "dsfd_sp_gather_c",
+   "reason": "parent, not hardened; no route or gate kit"
+  },
+  {
+   "master": "dsfd_sp_su_c",
+   "reason": "RTL only"
+  },
+  {
+   "master": "dsfd_sp_pq_n",
+   "reason": "parent, not hardened; leaf ot_s81_pq_qb_headpc_native p10 image (artifacts/s81-pq-2330/p10_closed) checked: OK (fill 0.49, uniform, only a thin N pin-wall row), no finding"
+  },
+  {
+   "master": "dsfd_svc_c",
+   "reason": "parent, not hardened; no route"
+  },
+  {
+   "master": "dsfd_wfc_stg",
+   "reason": "parent; leaf dsfd_wfc_tok_hard snapped (fill 0.33, W pins 3.8/um, TT +4.3 thin but layout has no visual defect), no finding"
+  },
+  {
+   "master": "dsfd_bk_collector_c1",
+   "reason": "parent, not hardened; only m2l/l2r relays closed"
+  },
+  {
+   "master": "dsfd_bk_selector_c1",
+   "reason": "RTL only"
+  },
+  {
+   "master": "dsfd_stage_seq_static_c8",
+   "reason": "RTL only; successor c9 reported as S81H-02 (log numbers, odb deleted)"
+  },
+  {
+   "master": "dsfd_bf_col",
+   "reason": "RTL only"
+  },
+  {
+   "master": "dsfd_host_c",
+   "reason": "odb deleted after EARLY_FAIL_HOLD; reported from logs as S81H-01"
+  },
+  {
+   "master": "ot_s81_hc_ctfx_cap_pinpipe",
+   "reason": "snapped (fill 0.12, 80% empty, 576.7x51.8, S 2,270 pins on M3+M5 at 4 pins/um); same strip-waste pattern as S81H-05/06, not separately ranked"
+  },
+  {
+   "master": "dsfd_cfifo",
+   "reason": "no routed odb on any live host (latest 4 jobs NEEDS_RTL, run dirs gone; CLOSED run on retired ot-epyc2); die-level finding S81F-02 recorded"
+  },
+  {
+   "master": "dsfd_rly_536_EN/SN/SW, dsfd_rly_38_WN, dsfd_rly_63_EW, dsfd_rly_66_WE, dsfd_rly_15_NE, dsfd_rly_15_WE",
+   "reason": "RTL only, no route/gate kit; die-level pin_align facing-away numbers in S81F-06/07/08"
+  },
+  {
+   "master": "dsfd_sstn_e0c0_x2, e0c0si_x2, e0c0sinf_x2, e0e1c0c1si_x2, e0e1c0c1sinf_x2",
+   "reason": "RTL only; base (non-x2) stations snapped as proxy (S81F-11)"
+  },
+  {
+   "master": "dsfd_stnh_538x1, dsfd_stnv_538x1",
+   "reason": "RTL only, no route"
+  },
+  {
+   "master": "dsfd_stnh_70x2/3/4, dsfd_stnv_70x2/3/4",
+   "reason": "superseded but in netlist; not snapped"
+  },
+  {
+   "master": "dsfd_hstnh_{1027,138_sp*,16,17,207_sp*,2164,276_sp*,292,2_sp6,3,3056,512,69_sp7,84}, dsfd_hstnv_{1,12,16,17,292,48,692,84}",
+   "reason": "RTL only per scope_jobs (no route/gate kit); family represented by hstnh_2/hstnv_2 snaps"
+  },
+  {
+   "master": "ot_s81_cfg7_seq_bfp, ot_s81_pq_rwbc15, ot_s81_pq_rwbc2",
+   "reason": "RTL only; die-level: cfg7_seq_bfp out facing away 1557/9342 (17%), go_e N vs rly_1_WN; pq_rwbc15 6/23 out, rwbc2 2/12 out facing away"
+  }
+ ],
+ "round2": {
+  "date": "2026-10-16",
+  "scored": {
+   "confirmed": 5,
+   "refuted": 2,
+   "open": 43,
+   "confirmed-partial": 4,
+   "retired": 2
+  },
+  "hit_rate": {
+   "hits_confirmed_incl_partial": 9,
+   "refuted": 2,
+   "decided": 11,
+   "hit_rate": 0.818,
+   "open": 43,
+   "retired": 2,
+   "note": "refuted: QC-03 gearbox E face (r13 routed overflow 0, no hot wall; M6 impossible, M5 cap), S81H-13 bank128_e timing (bke1 TT +343/FF +27.5). Owner-refuted parts of open findings: D-QC-01 3W/3E port split (cut 1.096), D-QC-02 reset fan-out is a relay-skip artefact (code-verified; full-relay r2h1/r2h2 pending). S81H-08 moved to partial 02:30 (native clock R 173.7->158.1, spread 38.0->31.1)."
+  },
+  "new_findings": 4,
+  "reaudited": [
+   {
+    "item": "Qwen NK/NL rp2_45 r3 gate",
+    "job/run": "ot-epyc1tb ref_gate qfd_tile_n{k,l}_rp2_45_a2-2026101600471{9,5} (deleted after FAIL); kit wt/qtile45-2210",
+    "images": [
+     "/tmp/visrom/r2/img/QC-01_nk_r3_gate_floorplan.png",
+     "/tmp/visrom/r2/img/QC-02_nl_r3_gate_floorplan.png"
+    ],
+    "verdict": "Still FAIL DPL-0033, but improved: NK 170 -> 92 cells, NL 96 -> 53. The W strip is clean and the residue is in the LSL gutters. The r4 repitch (f9033f6a1) is committed and not gated; see QC-11 for its lint FAILs."
+   },
+   {
+    "item": "Qwen compute r2h1/r2h2 FULL",
+    "job/run": "ot-epyc4 /srv/opentallas-scratch/claude/qwen-split-compute/r2h1, r2h2 (GEN running, out/ empty); r2h3 relay-skip smoke done",
+    "images": [
+     "/tmp/visrom/r2/img/DQC_fpq_r2h_full.png",
+     "/tmp/visrom/r2/img/DQC_fpq_r2hs_homes_render.png",
+     "/tmp/visrom/r2/img/DQC_fpq_r2hABCDEV_spine.png"
+    ],
+    "verdict": "No FULL output yet, so n_rst_field cannot be measured. The r2h3 skip smoke has reset_over_500 = 7 with rst_field 1,585 sinks / 47.5 mm, as expected under skip. r2b2 grt_r22k: overflow 0, worst layer M5 12.54 %; STA dominated by unregistered (skip) nets, rst_field slack -13.3 us. r2hs plan: 521.9 mm2, centre empty 53.3 mm2, south strips gone."
+   },
+   {
+    "item": "Qwen KV kvs10-v143p / kvs11-v143c",
+    "job/run": "ot-epyc1tb /srv/opentallas-scratch/claude/qwen-kvsys/kvs1{0,1}-*/case_kv",
+    "images": [],
+    "verdict": "Both still in PDN (docker run_pdn), so there is no GRT and no congestion map. The case is legal (0 overlaps). Port bind FAIL marks both as diagnostic only."
+   },
+   {
+    "item": "KV mc_r3 return_slots",
+    "job/run": "qkd_static_kv_return_slots_mc_r3-mc3-9196b2eb1 ot-agidock128 (RUNNING, 3_5_place_dp)",
+    "images": [
+     "/tmp/visrom/r2/img/r2_rslots_floorplan.png",
+     "/tmp/visrom/r2/img/r2_rslots_density.png"
+    ],
+    "verdict": "FLAG (moderate, not a blocker). Fill 0.32 with an empty ring, plus an 8,940-load rp[0] async-reset-flop broadcast and thin gate margins (reg->reg +3.7, in->reg -69.5 ps). New finding QKV-13."
+   },
+   {
+    "item": "KV mc_r3 elastic_front",
+    "job/run": "qkd_kv_hbm_elastic_front_mc_r3-mc3-9196b2eb1 ot-epyc1tb (RUNNING, 3_5_place_dp)",
+    "images": [
+     "/tmp/visrom/r2/img/r2_efront_floorplan.png",
+     "/tmp/visrom/r2/img/r2_efront_density.png"
+    ],
+    "verdict": "OK. Uniform placement at fill 0.476 (max bin 0.675, 0 hot bins). W/E co_in/co_out at 1.6 pins/um over 90 % of the face. Nothing to flag."
+   },
+   {
+    "item": "PV slice r5",
+    "job/run": "qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3 ot-epyc4 (RUNNING, 3_5_place_dp)",
+    "images": [
+     "/tmp/visrom/r2/img/r2_pvslice_floorplan.png",
+     "/tmp/visrom/r2/img/r2_pvslice_density.png"
+    ],
+    "verdict": "OK. Fill 0.461, max bin 0.83, 4 SRAMs in a 2x2 grid with channels above 20 um. N ts 512 bits at 3.1/um (M3+M5), S 1.9/um. One clock root of 14,861 sinks (< 15k), clock pin on the W face. Nothing new."
+   },
+   {
+    "item": "PV join r5",
+    "job/run": "qkd_pv_join_rstpin_r5-r5-fa546b7f3 ot-epyc4 (ECO)",
+    "images": [
+     "/tmp/visrom/r2/img/QKV-10_pvjoin_r5_final_congestion.png",
+     "/tmp/visrom/r2/img/QKV-10_pvjoin_r5_density.png"
+    ],
+    "verdict": "Routed: DRT 23,840 -> 0, GRT 39.18 %, TT +60.38 / FF -5.24 (hold ECO). Dense red core band. QKV-10 stays open."
+   },
+   {
+    "item": "xs_tap xt10 gate",
+    "job/run": "/tmp/ref_gate_qfd_xs_tap_20261016-010354.log; images wt/qdvm-0030/physical/ref_tile/qfd_xs_tap/gate_layout",
+    "images": [
+     "/tmp/visrom/r2/img/QC-05_xs_tap_xt10_gate_floorplan.png",
+     "/tmp/visrom/r2/img/QC-05_xs_tap_xt10_gate_density.png"
+    ],
+    "verdict": "Improved (QC-05 confirmed): S hot block gone, clock at the N centre, TT +120.3 / hold +12.9, insertion 294 ps. The N band stays red."
+   },
+   {
+    "item": "ucie_gearbox r13",
+    "job/run": "qfd_ucie_gearbox_r10-r13-428ab16dd ot-epyc1tb (ECO)",
+    "images": [
+     "/tmp/visrom/r2/img/QC-03_gearbox_r13_final_congestion.png",
+     "/tmp/visrom/r2/img/QC-03_gearbox_r13_floorplan.png"
+    ],
+    "verdict": "Routed: GRT 27.97 %, overflow 0, DRC 0, TT +22.53 / FF -2.69 (hold ECO). No E-face hot wall. QC-03 refuted."
+   },
+   {
+    "item": "d2d_static r4/r5",
+    "job/run": "qfd_d2d_static_r1-r4-f779ceecf (RUNNING); r5 gate 20261016-010745 running",
+    "images": [],
+    "verdict": "FLAG: r4 entered the loop with a measured gate clock of TT insertion 416.8-501.0 ps and spread 84.2 ps, over 300/80. r5 (ck at the S centre) is the fix; its gate is running and has no images yet."
+   },
+   {
+    "item": "ectl_a, embgw, ctrl_pc, lane8, crom_g, band_lanes",
+    "job/run": "closure_loop jobs scan",
+    "images": [],
+    "verdict": "No job newer than pass 1 (newest 10-15 14:52-21:56). The ectl_a manual recovery is unchanged since 23:12 (DRT 4)."
+   },
+   {
+    "item": "S81 hub v2 regeneration / gen26a",
+    "job/run": "ot-epyc4 s81-die-iter/c26a2 (GEN_FAIL 01:07), sdie-2210/pf21_claude0030.json (preflight FAIL), nl0030_25n/26n (netlist+port-bind started 01:08)",
+    "images": [
+     "/home/ubuntu/artifacts/s81-die-2330/vmc2_plan/die_floorplan.png (unchanged since 23:34)"
+    ],
+    "verdict": "No new die plan or dump, so pass-1 161/315 mm2 white stands unmeasured. gen26a cannot place station KW0t at the die W edge (x=607 um)."
+   },
+   {
+    "item": "c21h GRT",
+    "job/run": "ot-epyc4 s81-die-iter/c21h/grt/grt.log",
+    "images": [],
+    "verdict": "Stopped at extra iteration 9/12 by S-DIE (superseded). No overflow number. n_clk_stream[0] 2,280 terminals flagged by GRT-0281."
+   },
+   {
+    "item": "relay face-selection fix",
+    "job/run": "origin/main tools/dsrom_s81_fulldie.py fc() L6986",
+    "images": [],
+    "verdict": "Not fixed (instance-centre faces + forced fold). No new pin_align, so no recompute."
+   },
+   {
+    "item": "field4 r3 / r3c",
+    "job/run": "s81_a2f_field4_pilot_2118_r3-r3outhb3-4dc084455 / r3c-r3ckmid-48321fb79 (ot-epyc1tb, both CLOSED)",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81H-08_field4_r3_floorplan.png",
+     "/tmp/visrom/r2/img/s81_S81H-08_field4_r3c_floorplan.png",
+     "/tmp/visrom/r2/img/s81_S81H-08_field4_r3c_density.png"
+    ],
+    "verdict": "Both closed. The W-centre clock (r3c) did not help: FF +5.25 vs +8.41, SS -216.9 vs -150.7. Prefer r3 as the view."
+   },
+   {
+    "item": "wfc_ctl",
+    "job/run": "dsfd_vm_static_wfc_ctl_native_1015_r1-native1b-0d6f52a39 NEEDS_HUMAN",
+    "images": [],
+    "verdict": "RTL CDC: vm_fault (core) is captured into e_q (ck_control_s), so the synth SDC check fails and no layout exists. New finding S81H-14."
+   },
+   {
+    "item": "bf_front_static c9 ECO",
+    "job/run": "s81bf_front_static_clk-c9-COMMIT-89a4f6900 (ot-epyc4, ECO)",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81H-03_bf_c9_density.png"
+    ],
+    "verdict": "TT -35.73 / FF -7.86 in combo ECO. Geometry is identical to pass 1. c10 kit unchanged."
+   },
+   {
+    "item": "node_LL* n6",
+    "job/run": "s81net_node_llfu/llfd/lld-n6-13d6772ae (CLOSED)",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81F-03_llfu_n6_floorplan.png",
+     "/tmp/visrom/r2/img/s81_S81F-03_llfu_n6_density.png"
+    ],
+    "verdict": "Width halved (fill 0.44, ~8.1 mm2 saved). a/b W pin wall and E clock unchanged, and density is now hot (max 2.03)."
+   },
+   {
+    "item": "bank128_e bke1",
+    "job/run": "dsfd_vm_static_bank128_e_m4_v20-bke1-2fe24dc01 (CLOSED 01:08)",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81H-13_bke1_floorplan.png"
+    ],
+    "verdict": "Closed TT +343 / FF +27.5 with the NW clock. Reference only (owner)."
+   },
+   {
+    "item": "HC ctfl s6 / ctfxs s5",
+    "job/run": "s81hc_ctflnt_ref-s6-nohb4-COMMIT-16fc576b0 / s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81H-05_ctfl_s6_density.png",
+     "/tmp/visrom/r2/img/s81_S81H-06_ctfxs_s5_density.png"
+    ],
+    "verdict": "ctfl unchanged (span 0.20). ctfxs spread to 0.68 and SS -184 -> +49.5."
+   },
+   {
+    "item": "engram dispatch c35 gate",
+    "job/run": "/tmp/ref_gate_s81engm_dispatch_c35_20261016-010756.log (WARN)",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81H-11_engm_c35_gate_density.png"
+    ],
+    "verdict": "34.56 um square, gate fill 0.31, CTS 98 ps / 4 ps."
+   },
+   {
+    "item": "xstg_515 n4refclk",
+    "job/run": "s81net_xstg_515-n4refclk-bbc0958a4 (CLOSED)",
+    "images": [
+     "/tmp/visrom/r2/img/s81_S81F-13_xstg_n4_floorplan.png"
+    ],
+    "verdict": "Native capture 126.4 ps (was 356.0)."
+   },
+   {
+    "item": "host_c / cfifo / stage_seq / rly r4-r5",
+    "job/run": "closure_loop jobs",
+    "images": [],
+    "verdict": "No new host_c/cfifo/stage_seq routes. The rly r4 set (23:14-23:31) is the node-strip source, and there is no r5."
+   }
+  ]
+ }
+}

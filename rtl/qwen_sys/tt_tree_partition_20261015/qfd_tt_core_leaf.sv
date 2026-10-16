@@ -53,8 +53,20 @@ module qfd_tt_core_leaf #(parameter integer PORT_AM_EXTRA_EDGES=0,
     output wire [94:0] ret
 );
     wire rs;
-    assign scale_rst_n=rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk),.rst_n(rst_n),.rst_q(rs));
+    // Q-TT-LEAF r3 (2026-10-16): DEDICATED scale reset launch.  scale_rst_n was the core's own internal reset net rs
+    // (the root of the whole core reset tree), so the output pin hung off that buffer tree: routed tg1 launch
+    // 257.91 ps > 220.  A separate kept station copy (same raw rst_n, same IS release edge, so the scale leaf sees the
+    // identical assert/release edges) drives ONLY the scale_rst_n pin; the scale leaf re-captures it at its own pin.
+    generate if (IS == 0) begin : g_srs_w
+        assign scale_rst_n = rst_n;
+    end else begin : g_srs
+        (* keep *) reg [IS-1:0] srs_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) srs_q <= {IS{1'b0}};
+            else srs_q <= {srs_q, 1'b1};
+        assign scale_rst_n = srs_q[IS-1];
+    end endgenerate
     // Static tree owns no duplicate/shadow instruction controller. Every assigned
     // production edge clocks the real engine; schedule violations fault upstream.
     wire ec=clk;

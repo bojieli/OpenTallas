@@ -354,5 +354,44 @@ class HelperOverlay(unittest.TestCase):
         self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
 
 
+    def test_fleet_run_helper_drift_to_main_is_sanctioned_and_recorded(self):
+        _, binding = self.gate()
+        gate_plan = binding['route_overlay_plan']
+        newest = b'# fleet copy fix on main\n'
+        tip = self.commit_helper(newest)
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': gate_plan}
+        run = Path(self.tmp.name) / 'sanctioned'
+        with patch.object(HO, 'FLEET_RUN', (self.rel,)), patch.object(CL, 'event'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), newest)
+        self.assertEqual(job['route_overlay_plan_gate'], gate_plan)
+        self.assertEqual(job['route_overlay_plan']['origin_main'], tip)
+        row = job['helper_overlay_sanctioned'][0]
+        self.assertEqual((row['path'], row['frozen_git_blob'], row['current_git_blob']),
+                         (self.rel, HO.blob_id(self.new), HO.blob_id(newest)))
+        self.assertEqual(row['current_sha256'], hashlib.sha256(newest).hexdigest())
+        # the executed (re-frozen) plan now verifies in place without mutation
+        CL.ship_helpers('local', str(run), job)
+        self.assertFalse(job['helper_overlay_verification']['mutation'])
+
+    def test_fleet_run_sanction_refuses_frozen_blob_outside_main_history(self):
+        foreign = b'# never on main\n'
+        (self.daemon / self.rel).write_bytes(foreign)
+        frozen, _ = HO.capture_plan(self.daemon, self.root)          # daemon_only resolution
+        (self.daemon / self.rel).write_bytes(self.old)
+        current, _ = HO.capture_plan(self.daemon, self.root)
+        with patch.object(HO, 'FLEET_RUN', (self.rel,)):
+            ok, why, rows = HO.compare_plans_sanctioned(frozen, current, self.root)
+        self.assertFalse(ok)
+        self.assertIn('not an earlier main revision', why)
+        self.assertEqual(rows, [])
+
+    def test_snapshot_refresh_copies_only_main_bytes(self):
+        sh = CL.snapshot_refresh_sh('/run')
+        sha = hashlib.sha256(self.new).hexdigest()
+        self.assertIn(f'= {sha} ]', sh)
+        self.assertIn('/run/cl/orfs_hold_mm.tcl', sh)
+        self.assertNotIn('for fd in', sh)
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,379 @@
+{
+ "schema": "opentallas.hgi_sim.ds_mtp_sim.v2",
+ "golden": "/home/ubuntu/hbm-mtp2-1015/golden",
+ "drafter": "dspark (real, lowered)",
+ "golden_summary": {
+  "prompt": [
+   0
+  ],
+  "y": 5,
+  "verify_tokens": [
+   5,
+   223,
+   18,
+   16,
+   223,
+   18
+  ],
+  "drafts": [
+   223,
+   18,
+   16,
+   223,
+   18
+  ],
+  "targets": [
+   223,
+   939,
+   16,
+   23,
+   89804,
+   16
+  ],
+  "accepted": 1,
+  "emitted": [
+   5,
+   223,
+   939
+  ]
+ },
+ "machine_tokens": [
+  5,
+  223,
+  939
+ ],
+ "steps": [
+  {
+   "anchor": 0,
+   "drafts": [
+    223,
+    18,
+    16,
+    223,
+    18
+   ],
+   "targets": [
+    223,
+    939,
+    16,
+    23,
+    89804,
+    16
+   ],
+   "accepted": 1
+  }
+ ],
+ "accept_stream_equals_golden": true,
+ "l0_columns": [
+  {
+   "pos": 0,
+   "kind": "prefill",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  },
+  {
+   "pos": 1,
+   "kind": "verify",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  },
+  {
+   "pos": 2,
+   "kind": "verify",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  },
+  {
+   "pos": 3,
+   "kind": "verify",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  },
+  {
+   "pos": 4,
+   "kind": "verify",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  },
+  {
+   "pos": 5,
+   "kind": "verify",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  },
+  {
+   "pos": 6,
+   "kind": "verify",
+   "bit_exact_all_ranks": true,
+   "rank0_words_differing": 0
+  }
+ ],
+ "l0_all_bit_exact": true,
+ "draft_checks": {
+  "dsk_rows_bit_exact": {
+   "st0_p0": true,
+   "st0_p1": true,
+   "st0_p2": true,
+   "st0_p3": true,
+   "st0_p4": true,
+   "st0_p5": true,
+   "st0_p6": true,
+   "st1_p0": true,
+   "st1_p1": true,
+   "st1_p2": true,
+   "st1_p3": true,
+   "st1_p4": true,
+   "st1_p5": true,
+   "st1_p6": true,
+   "st2_p0": true,
+   "st2_p1": true,
+   "st2_p2": true,
+   "st2_p3": true,
+   "st2_p4": true,
+   "st2_p5": true,
+   "st2_p6": true
+  },
+  "stage_rows_bit_exact": {
+   "st0_row0": true,
+   "st0_row1": true,
+   "st0_row2": true,
+   "st0_row3": true,
+   "st0_row4": true,
+   "st1_row0": true,
+   "st1_row1": true,
+   "st1_row2": true,
+   "st1_row3": true,
+   "st1_row4": true,
+   "st2_row0": true,
+   "st2_row1": true,
+   "st2_row2": true,
+   "st2_row3": true,
+   "st2_row4": true
+  },
+  "stage_mismatch_detail": {},
+  "drafts": [
+   223,
+   18,
+   16,
+   223,
+   18
+  ],
+  "golden_drafts": [
+   223,
+   18,
+   16,
+   223,
+   18
+  ],
+  "all_ok": true
+ },
+ "verdict": "PASS",
+ "step1_diverged": null,
+ "swapin_round_trip": {
+  "n": 322,
+  "bad": 0,
+  "first": []
+ },
+ "swap_layout": "stripe4",
+ "colslot_image": {
+  "layout": "stripe4",
+  "rank": 0,
+  "slots": 13,
+  "slot_bytes": 131072,
+  "stack_sha256": [
+   "4ea8b993b7f80ffebc3eb84eafcf598c3c204e01e97ff91c22f76711287cc096",
+   "2af033f33410bc5f9f72db8a78757f0dca555e37026b2942509c4c337e15f39b",
+   "915f9543e0fdd55a18ea01e405970e60abd5a6027f53ed5c5ccd4fe823abc638",
+   "70599ab4d48801049762060f962bb0e47ff2eea68fa4266308c4a4b99f6f6f33"
+  ],
+  "file": "colslots_rank0.npz"
+ },
+ "launches": 978,
+ "s2_job_cycles": 741463.7,
+ "price_pos": null,
+ "att_pricing": "ATT table (option A)",
+ "s2_l0_cycles": [
+  12395.2,
+  12395.2,
+  12395.2,
+  12395.2,
+  12395.2,
+  12395.2,
+  12395.2
+ ],
+ "s2_by_kind": {
+  "swapin": 108159.8,
+  "swapout": 74710.0,
+  "embed": 2282.0,
+  "layer": 186636.1,
+  "head": 15850.1,
+  "seed": 50940.4,
+  "demb": 1630.0,
+  "dsa": 66105.0,
+  "dsb": 195454.0,
+  "dhead": 24887.5,
+  "markov": 14827.5
+ },
+ "kernel_records": {
+  "swapin": 2,
+  "swapout": 2,
+  "embed": 5,
+  "layer": 88,
+  "layer1": 2,
+  "layer37": 7,
+  "head": 4,
+  "seed": 38,
+  "demb": 5,
+  "dsa": 26,
+  "dsa1": 26,
+  "dsa2": 26,
+  "dsb": 56,
+  "dsb1": 56,
+  "dsb2": 56,
+  "dhead": 3,
+  "markov": 6
+ },
+ "hc_plan": "mtp",
+ "fused_hll": 1,
+ "rows_proof": {
+  "p_row": {
+   "rows": 6,
+   "positions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "bad": {},
+   "equal": true,
+   "wall_s": 12.8
+  },
+  "mutant_pos0": {
+   "rows": 6,
+   "positions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "bad": {
+    "1": {
+     "dies_differing": 96,
+     "words_differing_max": 73868
+    },
+    "2": {
+     "dies_differing": 96,
+     "words_differing_max": 73319
+    },
+    "3": {
+     "dies_differing": 96,
+     "words_differing_max": 75599
+    },
+    "4": {
+     "dies_differing": 96,
+     "words_differing_max": 73213
+    },
+    "5": {
+     "dies_differing": 96,
+     "words_differing_max": 73899
+    },
+    "6": {
+     "dies_differing": 96,
+     "words_differing_max": 76257
+    }
+   },
+   "equal": false,
+   "wall_s": 26.0
+  }
+ },
+ "s2_first_launch_cycles": {
+  "swapin": 335.9,
+  "embed": 326.0,
+  "layer": 12395.2,
+  "swapout": 241.0,
+  "layer1": 335.9,
+  "layer37": 724.9,
+  "head": 2264.3,
+  "seed": 7277.2,
+  "demb": 326.0,
+  "dsa": 4407.0,
+  "dsb": 13030.6,
+  "dsa1": 4407.0,
+  "dsb1": 13030.6,
+  "dsa2": 4407.0,
+  "dsb2": 13029.6,
+  "dhead": 4977.5,
+  "markov": 2965.5
+ },
+ "hc_row_rank": {
+  "rank": 3,
+  "s2_job_cycles": 752339.8,
+  "s2_by_kind": {
+   "swapin": 108149.9,
+   "swapout": 74710.0,
+   "embed": 2351.1,
+   "layer": 188840.3,
+   "head": 15850.2,
+   "seed": 50940.1,
+   "demb": 1679.3,
+   "dsa": 69920.0,
+   "dsb": 200184.1,
+   "dhead": 24887.5,
+   "markov": 14827.4
+  },
+  "s2_first_launch_cycles": {
+   "swapin": 335.9,
+   "embed": 335.9,
+   "layer": 12711.3,
+   "swapout": 241.0,
+   "layer1": 335.9,
+   "layer37": 724.9,
+   "head": 2264.3,
+   "seed": 7277.2,
+   "demb": 335.9,
+   "dsa": 4661.3,
+   "dsb": 13345.6,
+   "dsa1": 4661.3,
+   "dsb1": 13345.6,
+   "dsa2": 4661.3,
+   "dsb2": 13345.6,
+   "dhead": 4977.5,
+   "markov": 2965.5
+  },
+  "kernel_records": {
+   "swapin": 2,
+   "swapout": 2,
+   "embed": 6,
+   "layer": 91,
+   "layer1": 2,
+   "layer37": 7,
+   "head": 4,
+   "seed": 38,
+   "demb": 6,
+   "dsa": 28,
+   "dsa1": 28,
+   "dsa2": 28,
+   "dsb": 58,
+   "dsb1": 58,
+   "dsb2": 57,
+   "dhead": 3,
+   "markov": 6
+  }
+ },
+ "stubbed": [
+  "layer bodies L1..L39: LABELLED REPLAY of the golden h / pre after the layer (L37..39 store their input's main hidden part with real SU records)"
+ ],
+ "wall_s": 763.1,
+ "source_sha256": {
+  "hgi_sim/ds_mtp_kernels.py": "31b4967bc6400300515498c6579c953e0887d95ef5f138041d9c8ea18ac5ab2c",
+  "hgi_sim/ds_native.py": "6af1c4439743aaf5575f41cdb3fa4c85b35aba82e8af95b7d9504cbe4b8de799",
+  "hgi_sim/machine.py": "3afa99805a7ca0fdf0a006f84b73802f074646599f5046a23a1a8cd2e7788877",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+  "gpu_sys/v41_dspark.py": "49cede655f035171558b93680a0ba38a8a6730d4338d22b1b6307ac1bfb4da5f",
+  "hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+ }
+}

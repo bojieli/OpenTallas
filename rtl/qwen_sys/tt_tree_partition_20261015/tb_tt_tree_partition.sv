@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_tt_tree_partition;
-parameter integer MUT=0,PROD=0;
+parameter integer MUT=0,PROD=0,WARM=0;  // WARM: a 6-edge warm reset at the first edge >= WARM with scale words in flight
 localparam integer PERIOD=PROD?100000:1200,NCYC=PROD?90000:30000;
 localparam integer XW=24,G=3072;
 reg clk=0;always #0.4166665 clk=~clk;
@@ -30,12 +30,16 @@ reg [379:0] cmd=0;
 wire [94:0] ref_ret,dut_ret;
 qfd_tt_ctlm_tree_static u_ref(.clk(clk),.rst_n(rst_n),.me_acc_o(ref_me_acc_o),.me_idle_o(ref_me_idle_o),.me_prog_o(ref_me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.scale_re(ref_scale_re),.scale_gre(ref_scale_gre),.scale_addr(ref_scale_addr),.t_sel_e(ref_t_sel_e),.t_tv_e(ref_t_tv_e),.tr_fault(tr_fault),.p_v_e2(ref_p_v_e2),.p_f_e2(ref_p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(ref_ov),.mx_we(ref_mx_we),.mx_addr(ref_mx_addr),.mx_mask(ref_mx_mask),.mx_data(ref_mx_data),.cmd(cmd),.ret(ref_ret));
 qfd_tt_tree_partition #(.MUT(MUT)) u_dut(.ck_core(clk),.ck_scale(clk),.rst_n(rst_n),.me_acc_o(dut_me_acc_o),.me_idle_o(dut_me_idle_o),.me_prog_o(dut_me_prog_o),.up_fault(up_fault),.land_cnt(land_cnt),.scale_re(dut_scale_re),.scale_gre(dut_scale_gre),.scale_addr(dut_scale_addr),.t_sel_e(dut_t_sel_e),.t_tv_e(dut_t_tv_e),.tr_fault(tr_fault),.p_v_e2(dut_p_v_e2),.p_f_e2(dut_p_f_e2),.p_am(p_am),.p_fault(p_fault),.fab_fault(fab_fault),.ov(dut_ov),.mx_we(dut_mx_we),.mx_addr(dut_mx_addr),.mx_mask(dut_mx_mask),.mx_data(dut_mx_data),.cmd(cmd),.ret(dut_ret));
-integer cyc,checks=0,errors=0,scale_seen=0,go_seen=0,valid_scale_mismatches=0; reg [31:0] rng=32'h4a9bf831;
+integer last_sv=-1000,warm_at=-1,first_sv=-1,warm_sv=0,cyc,checks=0,errors=0,scale_seen=0,go_seen=0,valid_scale_mismatches=0; reg [31:0] rng=32'h4a9bf831;
 task step_rng;begin rng=(rng<<13)^rng;rng=(rng>>17)^rng;rng=(rng<<5)^rng;end endtask
 initial begin
 repeat(8) @(negedge clk);rst_n=1;
 for(cyc=0;cyc<NCYC;cyc=cyc+1)begin
 @(negedge clk);step_rng();
+if(first_sv<0 && u_dut.scale_v)begin first_sv=cyc;$display("TT_SPLIT_COLD first scale_v %0d edges after rst_n release",cyc);end
+if(u_dut.scale_v)last_sv=cyc;
+if(WARM!=0 && warm_at<0 && cyc>=WARM && cyc==last_sv+3)begin warm_at=cyc;warm_sv=1;$display("TT_SPLIT_WARM reset at %0d with scale words in flight",cyc);end
+rst_n=!(warm_at>=0 && cyc<warm_at+6);
 cmd[0]=0;
 if(cyc%PERIOD==0)begin
 cmd={24'd96,1'b1,1'b1,1'b1,1'b0,24'd32,24'd8,24'd0,1'b1,24'd8192,4'(PROD?7:(7+(cyc/PERIOD)%5)),3'd0,24'd1,24'd1,24'd1,24'd0,24'd1,24'd1,24'd8,24'd128,1'b0,18'(PROD?4096:4),18'd2,18'd4096,1'b0};
@@ -65,7 +69,8 @@ if(ref_ret !== dut_ret)begin errors=errors+1;if(errors<8)$display("MISMATCH %0d 
 end
 end
 if(scale_seen==0||go_seen<(PROD?1:10))$fatal(1,"TT_SPLIT_UNSENSITIZED scale=%0d go=%0d",scale_seen,go_seen);
-if(MUT!=0 && valid_scale_mismatches==0)$fatal(1,"TT_SPLIT_MUTANT_UNOBSERVED");
+if(WARM!=0 && warm_sv==0)$fatal(1,"TT_SPLIT_WARM_UNSENSITIZED");
+if(MUT!=0 && MUT<3 && valid_scale_mismatches==0)$fatal(1,"TT_SPLIT_MUTANT_UNOBSERVED");
 if(errors)$fatal(1,"TT_SPLIT_FAIL MUT=%0d errors=%0d checks=%0d scale=%0d valid_scale_errors=%0d",MUT,errors,checks,scale_seen,valid_scale_mismatches);
 $display("TT_SPLIT_PASS MUT=%0d PROD=%0d checks=%0d scale=%0d",MUT,PROD,checks,scale_seen);$finish;
 end
