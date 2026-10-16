@@ -810,6 +810,33 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
     return True
 
 
+def abutted_row(a: dict, b: dict, gx: float, gy: float) -> bool:
+    """two blocks (macros OR hard children) side by side E-W with no cell row between them (0 <= gap <= ABUT_UM,
+    overlapping in y) whose touching faces are BARE: no pin of any use (signal, clock, power, ground) within 200 nm of
+    either touching face.  A bare face needs no channel -- no pin to reach, no strap to land, no glue to place (Q-TILE45
+    r4 2026-10-16: the qfd_tile LSL master carries all 465 signal pins and the clock on its E face and keeps its PG rails
+    2.16 um inside, so a MY column and an R0 column abut back to back and give their 20 um to the two pin gutters).
+    Any pin on a touching face keeps the channel rule.  R0 / MX keep the LEF's W / E faces, MY / R180 swap them;
+    rotated (R90 / R270 ...) blocks keep the channel rule."""
+    flip = {"R0": False, "MX": False, "MY": True, "R180": True}
+    if a.get("orient", "R0") not in flip or b.get("orient", "R0") not in flip:
+        return False
+    if not (-1e-6 <= gx <= ABUT_UM + 1e-6 and gy < -1e-6):
+        return False
+    lo, hi = (a, b) if a["x"] < b["x"] else (b, a)
+    for blk, edge in ((lo, "E"), (hi, "W")):
+        if blk.get("_tm") is None:
+            blk["_tm"] = track_macro(blk["view"])
+        tm = blk["_tm"]
+        if flip[blk.get("orient", "R0")]:                       # the LEF face that ends up touching the neighbour
+            edge = "W" if edge == "E" else "E"
+        for pin in tm["pins"]:
+            for _layer, (x0, _y0, x1, _y1) in pin["rects"]:
+                if (x1 >= tm["W"] - 200) if edge == "E" else (x0 <= 200):
+                    return False
+    return True
+
+
 def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
     """nearest origin to (x, y) that puts the block's signal pins on the asap7 tracks (DRT-0255 / 0418 / 0419)"""
     if b.get("_tm") is None:
@@ -933,12 +960,14 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gap = max(gx, gy)
             if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
                 continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
+            if gap < CHANNEL_UM - 1e-6 and abutted_row(a, b, gx, gy):
+                continue    # side-by-side abutment of two bare faces (no pin of any use on either): no channel needed
             if ab is not None and ch_min - 1e-6 <= gap < CHANNEL_UM - 1e-6:
                 ab_n["channel"] += 1
                 continue
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"))
     if ab is not None and (ab_n["channel"] or ab_n["macro_edge"]):
         out.append(("WARN", "abut_plan", f"PROBE: {ab_n['channel']} tile-tile channels in [{ch_min:g}, {CHANNEL_UM:g}) um and "
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
@@ -1829,6 +1858,9 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     for v in macro_views:
         cmd += ["--macro-view", str(ROOT / v)]
     rc = subprocess.run(cmd).returncode
+    if rc:
+        print(f"REF_TILE export {top}: view_export failed rc={rc}; no post-processing")
+        return 1
     base = next(Path(orfs_dir).glob("results/asap7/*/base"), None)
     ck = ROOT / "tools/closure_loop/ck_insertion.py"
     if base is not None and ck.exists():
@@ -1842,11 +1874,6 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
         else:
             (o / "CLOCK_INSERTION_FAILED").unlink(missing_ok=True)
-    lef = o / f"{top}.lef"
-    if lef.exists() and not grant:
-        # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
-        # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
-        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
     routed_def = None
     if grant and base is not None:
         # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
@@ -1856,9 +1883,11 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             routed_def = str(o / "pin_only_routed.def")
             shutil.copyfile(candidates[0], routed_def)
         (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
-    res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
-                          pin_grant=grant, routed_def=routed_def,
-                          tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+    from export_provenance import finalize
+    res = finalize(o, top, ROOT / "tools/hier_contract/abstract_pin_stub.py", child_lint,
+                   lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
+                       tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
+                   transform=not bool(grant))
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

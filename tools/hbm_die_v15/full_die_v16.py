@@ -53,12 +53,14 @@ RETIRE_V15 = {
     'svc_': 'v15 service band (hfd_svc_v15_*): replaced by the SM-specific 4-PC service engine (ctl_<q>_pNN + svg_<q><k>), '
             'Codex DECISION 14:40, H-DIE 1705 (exposed 816 band inputs retired with it)',
     'delivery_': 'ot_hbm_svc_static_vm_delivery: no v7 slot (grants_v7_1925: VM HBM path open, H-DIE); its band inputs '
-                 'retire with the bands; the VM dq input it drove is a gap (G-VM-HBM-PATH)',
+                 'retire with the bands; successor = vmks_<q><k> K windows + 8 vmdel_<q><b> lanes + vmfc_<q> '
+                 '(v16_specs/vmsm.json, G-VM-HBM-PATH closed)',
     'phy_': 'ot_hbm3e_phy_v41x_aw30_e8p5 carried a modelled controller K interface; v16 uses the PHY-ONLY abstract '
             'ot_hbm3e_phy_rc_e8p5 + 128 real controllers (die_case.py, owner rule 10-14: only the PHY is modelled)',
 }
 # off-die pins: (master, port regex) -> die top-level port (never an on-die driver)
-DIE_PIN = [('ot_pdie_serdes', r'^pma_'), ('ot_pdie_ucie', r'^pma_'), ('hfd_ckgen', r'^(refclk|por_n)$')]
+DIE_PIN = [('ot_pdie_serdes', r'^pma_'), ('ot_pdie_ucie', r'^pma_'), ('hfd_ckgen', r'^(refclk|por_n)$'),
+           ('ot_hbm_host_phy_adapt', r'^session_pad$')]   # host link session id: package strap pins (cp2)
 ALLOW_MODEL = ['ot_hbm3e_phy_rc_e8p5', 'ot_hbm_pll_bb']
 
 
@@ -101,7 +103,8 @@ class Rtl:
 
 # ------------------------------------------------------------------------------------------------ engine region
 def engine_region():
-    """PHY rc + controllers + service groups + SM service side, bit-exact as tools/hbm_die_v15/die_case.py."""
+    """PHY rc + controllers + service groups + SM service side, bit-exact as tools/hbm_die_v15/die_case.py, with the
+    K ports of each group routed through its VM fill window leaf vmks_<q><k> (H-NETLIST/vmsm 2026-10-15)."""
     inst, edges, clocks = [], [], []
     per = [('row_v', 1, 'c'), ('row_op', 3, 'c'), ('row_bank', 5, 'c'), ('row_row', 19, 'c'), ('col_v', 1, 'c'),
            ('col_we', 1, 'c'), ('col_bank', 5, 'c'), ('col_col', 5, 'c'), ('col_data', 256, 'c'), ('col_strb', 32, 'c'),
@@ -111,6 +114,10 @@ def engine_region():
           ('kr_tag', 17, 'c'), ('kr_beat', 4, 'c'), ('kr_data', 256, 'c')]
     rdy = {'k_rdy', 'kr_rdy'}
     basis = 'tools/hbm_die_v15/die_case.py (PHY<->controller per PC, controller p <-> group p//4 lane p%4, group -> SM)'
+    KBASIS = ('tools/hbm_die_v15/die_case.py controller p <-> group p//4 lane p%4, through vmks_<q><p//4> '
+              '(rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv header: g_* = group packing, '
+              'c_* lane l = PC 4k+l)')
+    KSHARE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv'
     for q in Q:
         phy = f'phy_{q}'
         inst.append(dict(name=phy, master='ot_hbm3e_phy_rc_e8p5', source=PHY_BB, params={}, slot=phy, owner='H-DIE',
@@ -132,7 +139,7 @@ def engine_region():
             g, s = f'svg_{q}{k}', f'sm_{q}{k}'
             inst.append(dict(name=g, master='ot_hbm_svc_sm_group',
                              source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group.sv',
-                             params=dict(STACK=QID[q], SM=k), slot=f'pc_{q}{k}', owner='H-DIE', region='engine',
+                             params=dict(STACK=QID[q], SM=k, FIXED_GO=1), slot=f'pc_{q}{k}', owner='H-DIE', region='engine',
                              note='SM k service group: issuer (descriptor SRAM) + four-PC feed (LBANKS 4)'))
             inst.append(dict(name=s, master='ot_hbm_accel_smh_static', source='rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv',
                              params={}, slot=s, owner='H-SM', region='engine', note='static SM tile (grant v6 real pins)'))
@@ -143,24 +150,37 @@ def engine_region():
                        dict(inst=g, port='hbm_rst_n', domain='hbm', kind='reset'),
                        dict(inst=s, port='clk', domain='stream', kind='clock'),
                        dict(inst=s, port='rst_n', domain='stream', kind='reset')]
+            # H-NETLIST/vmsm 2026-10-15: the group's four K ports reach the controllers through the VM fill window leaf
+            # vmks_<q><k> (compiler-windowed K-port share: G-VM-HBM-PATH; vmsm.json holds the fill calendar, delivery
+            # lanes and their edges).  Group side = the group's own packing; controller side = lane slices.
+            ks = f'vmks_{q}{k}'
+            inst.append(dict(name=ks, master='ot_hbm_svc_vm_kshare', source=KSHARE, params=dict(SM=k, MUT=0),
+                             slot=f'pc_{q}{k}', owner='H-DIE', region='engine',
+                             note='K-port VM fill window of SM group k: NORM pass-through, compiler window -> 16 x len-4 '
+                                  'VM reads per PC, phase-steered beats -> CDC -> delivery fills (pin-registered)'))
+            clocks += [dict(inst=ks, port='hbm_clk', domain='hbm', kind='clock'),
+                       dict(inst=ks, port='hbm_rst_n', domain='hbm', kind='reset'),
+                       dict(inst=ks, port='stream_clk', domain='stream', kind='clock'),
+                       dict(inst=ks, port='stream_rst_n', domain='stream', kind='reset')]
+            kexc = ('HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control (vmks is the PC-side K '
+                    'window leaf of that boundary)')
+            for p, w, d in kw:
+                e = (dict(src=[g, p], dst=[ks, 'g_' + p]) if d == 'g' else dict(src=[ks, 'g_' + p], dst=[g, p]))
+                e.update(clock='hbm', basis=KBASIS, ready_or_credit=p in rdy, allowed_exception=kexc if p in rdy else None)
+                edges.append(e)
             for lane in range(4):
                 c = f'ctl_{q}_p{4 * k + lane:02d}'
                 for p, w, d in kw:
-                    e = (dict(src=[g, p, lane * w, lane * w + w], dst=[c, p, 0, w]) if d == 'g'
-                         else dict(src=[c, p, 0, w], dst=[g, p, lane * w, lane * w + w]))
-                    e.update(clock='hbm', basis=basis, ready_or_credit=p in rdy,
-                             allowed_exception='HBM stack / PHY controller boundary (HANDOFF 0az): K-port flow control'
-                             if p in rdy else None)
+                    e = (dict(src=[ks, 'c_' + p, lane * w, lane * w + w], dst=[c, p, 0, w]) if d == 'g'
+                         else dict(src=[c, p, 0, w], dst=[ks, 'c_' + p, lane * w, lane * w + w]))
+                    e.update(clock='hbm', basis=KBASIS, ready_or_credit=p in rdy,
+                             allowed_exception=kexc if p in rdy else None)
                     edges.append(e)
             edges.append(dict(src=[g, 'sm_packet'], dst=[s, 'packet'], clock='stream', basis=basis))
             edges.append(dict(src=[g, 'sm_command'], dst=[s, 'command'], clock='stream', basis=basis))
-    gaps = [dict(id='G-ENG-STACK-FAULT', owner='H-DIE', missing_rtl='stack fault glue leaf (ca_fault channel-pair check + '
-                 'fault OR of ot_hbm_svc_native_sector_pipeline_leaves has no die tile)', affects=[],
-                 note='outputs pc_fault/owner_fault of 128 controllers and fault of 32 groups are unconsumed'),
-            dict(id='G-VM-HBM-PATH', owner='H-DIE', missing_rtl='HBM -> VM write path of the service engine: the static '
-                 'VM delivery (ot_hbm_svc_static_vm_delivery) fed by the retired v15 bands has no successor driven by the '
-                 'SM-specific engine (grants_v7_1925: "VM HBM path open"); the engine groups only feed their SM',
-                 affects=[[f'hb_vms_{q}', 'dq'] for q in Q], note='hb_vms_<q>.dq (8 x 281 b) undriven')]
+    # G-ENG-STACK-FAULT (-> sfault_<q> = ot_hbm_svc_stack_fault) and G-VM-HBM-PATH (-> vmks_<q><k> + vmdel_<q><b> +
+    # vmfc_<q>) are closed by tools/hbm_die_v15/v16_specs/vmsm.json (H-NETLIST/vmsm 2026-10-15).
+    gaps = []
     return dict(region='engine', instances=inst, edges=edges, clocks=clocks, gaps=gaps, straps=[], retire_v15=[],
                 drop_v15_edges=[], notes='coordinator region (die_case.py)')
 
@@ -213,6 +233,8 @@ def build(specs_dir, out):
             insts[n] = dict(master=i['master'], source=i['source'], params=i.get('params') or {}, slot=i.get('slot'),
                             owner=i.get('owner'), region=s['region'], note=i.get('note', ''),
                             replaces_v15=prev['master'] if prev else None)
+            if i.get('rtl_deps'):
+                insts[n]['rtl_deps'] = list(i['rtl_deps'])
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])

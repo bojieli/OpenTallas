@@ -17,14 +17,14 @@ module tb_s81_pq_qb_pinread;
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw_sv), .hq0(ref0), .hq1(ref1), .he0(refe0), .he1(refe1));
     wire [9:0] aq_p = {^aq_e[19:10], ^aq_q[511:448], ^aq_q[447:384], ^aq_q[383:320], ^aq_q[319:256],
                                   ^aq_e[9:0], ^aq_q[255:192], ^aq_q[191:128], ^aq_q[127:64], ^aq_q[63:0]};
-    reg[531:0] ref_d1,ref_d2,ref_d3;
-    always @(posedge clk) begin ref_d1<={ref0,ref1,refe0,refe1};ref_d2<=ref_d1;ref_d3<=ref_d2; end
+    reg[531:0] ref_d1,ref_d2,ref_d3,ref_d4;
+    always @(posedge clk) begin ref_d1<={ref0,ref1,refe0,refe1};ref_d2<=ref_d1;ref_d3<=ref_d2;ref_d4<=ref_d3; end
     reg compare = 0;
     integer checks = 0, cycle = 0, par, block, k, i;
     always @(negedge clk) begin
         cycle = cycle + 1;
         if (compare) begin
-            if ({q0,q1,e0,e1} !== ref_d3) begin
+            if ({q0,q1,e0,e1} !== ref_d4) begin
                 $display("PQ_QB_PINREAD FAIL cycle=%0d q0=%h ref0=%h q1=%h ref1=%h", cycle,q0,ref0,q1,ref1);
                 $fatal(1, "bit-exact mismatch");
             end
@@ -68,7 +68,7 @@ module tb_s81_pq_qb_pinread;
         if (!fault) $fatal(1, "exponent corruption was not caught");
         hw_sv = 0; repeat (4) @(negedge clk);
         if (!fault) $fatal(1, "parity fault not sticky");
-        $display("PQ_QB_PINREAD PASS checks=%0d logical_words=384 rows=96 macros=4 exponent_fault=1 read_latency_delta=3", checks);
+        $display("PQ_QB_PINREAD PASS checks=%0d logical_words=384 rows=96 macros=4 exponent_fault=1 read_latency_delta=4", checks);
         $finish;
     end
 endmodule

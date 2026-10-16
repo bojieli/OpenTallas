@@ -232,10 +232,7 @@ module qfd_embedding_stage_static (
         .va(vm_sa),.vq(vm_sq),.cp(su_copy_command),.cp_active(su_copy_active),.cp_done(su_copy_done),.xsw(su_copy_xsw),
         .kv_we(su_kv_we),.kv_waddr(su_kv_waddr),.kv_wdata(su_kv_wdata),
         // The selected external decoder owns the returned-code preload.
-        // No resident row SRAM is instantiated by EXTERNAL_EMBED=1.
-        .fill_begin(embed_fill_begin),.fill_token(embed_fill_token),.fill_epoch(embed_fill_epoch),
-        .preload_slot(embed_expected_word_slot),.preload_v(embed_expected_word_slot),.preload_scale(embed_expected_scale),
-        .preload_word(embed_expected_word),.preload_token(embed_expected_token),.preload_epoch(embed_expected_epoch),.preload_data(embed_code_q),
+        // No resident row SRAM is instantiated by EXTERNAL_EMBED=1 (no preload ports on the die master).
         .ck_head0(ck_su_head[0]),
         .ck_head1(ck_su_head[1]),
         .ck_head2(ck_su_head[2]),

@@ -29,6 +29,10 @@ RES_WH = (777.6, 518.4)
 LANES_WH = (881.28, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
 VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: distributed x slices adopted; banks / SU ports / row reads only, M7 cap, no wall)
+# OT_SPLIT_VM_WH=W,H (Q-COMPUTE-DIE r2h, 00:30 10-16): the VM parent outline Q-VMWB adopted (paired-bank 4872 x 3239.36,
+# main b73b3e82c results/arch/qwen_vm_residual_1015/outline_0030.json); the router cut PASS (0.592) assumes it
+if os.environ.get('OT_SPLIT_VM_WH', '').strip():
+    VM_WH = tuple(float(z) for z in os.environ['OT_SPLIT_VM_WH'].split(','))
 CTLM_WH = (777.6, 1814.4)
 UP4_WH = (345.6, 388.8)
 CLKRX_WH = (412.488, 412.488)
@@ -90,6 +94,14 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
 # v1.3 (compute lead r4): the static slab masters (rtl/qwen_split/qfd_port_tiles.sv @10c74d529) take 49 entries each
 _SLAB_CK = (['ck'] + [f'ck_bw{k}' for k in range(8)] + [f'ck_pair{k}' for k in range(4)] + [f'ck_col{k}' for k in range(16)]
             + [f'ck_mul{k}' for k in range(16)] + [f'ck_group{k}' for k in range(4)])
+# OT_SPLIT_TILE_GRANT (re-packed 64-lane tile): the tile's 45 compensated clock entries (node-less tile: 44)
+try:
+    from qwen_split.source_pin_plan import grant_clocks as _gck
+    for _t in ('qfd_tile_nk', 'qfd_tile_nl'):
+        if _gck(_t):
+            CHILD_CK[_t] = _gck(_t)
+except ImportError:
+    pass
 for _b in range(3):
     CHILD_CK[f'qfd_port_tiles_{_b}'] = CHILD_CK[f'qfd_port_tiles_{_b}_f1'] = list(_SLAB_CK)
 
@@ -504,7 +516,9 @@ def place(v, m, G):
     we = xf - CH - xe
     rec['e_area'] = [round(xe, 3), round(we, 3)]
     rec['slab_cols'] = dict(W=round(xa, 3), E=round(xf, 3))
-    if we < VM_WH[0]:
+    if we < VM_WH[0] and not os.environ.get('OT_SPLIT_HOMES'):
+        # with OT_SPLIT_HOMES the source-pinned homes own every block position (their own overlap/outside checks
+        # run in gfp_homes.apply); the baseline spine only has to carry the instances there
         raise SystemExit(f'split compute spine: E sub-area {we:.1f} um < VM {VM_WH[0]} (raise OT_TP8_SPLIT_SPINE)')
     cx = xe + we / 2
     # die link at the N edge (centred on the E sub-area): PHY on the edge, adapter under it, bump + reset sync W of it
@@ -596,7 +610,9 @@ def place(v, m, G):
     # Actual hardened parent outlines have no legacy24-nm shape shave.
     for parent in m['insts']:
         if parent.master in ('qfd_tile_nk','qfd_tile_nl'):
-            parent.w, parent.h = 449.28, 1442.88
+            from qwen_split.source_pin_plan import tile_grant
+            _tg = tile_grant()
+            parent.w, parent.h = tuple(_tg['home_um']) if _tg else (449.28, 1442.88)
         elif parent.master.startswith('qfd_port_tiles_'):
             parent.w, parent.h = PORT_WH
         elif parent.master=='qfd_sp_band_lanes':
@@ -654,6 +670,10 @@ def place(v, m, G):
         if os.environ.get('OT_SPLIT_RES_TRAIN', '1') != '0':
             from qwen_split.res_train_bind import apply as res_train_apply
             rec['res_train_bind'] = res_train_apply(m)
+        # Q-NETLIST 2026-10-16: compute-die system face + rank straps close every open functional input (strict bind)
+        if os.environ.get('OT_SPLIT_SYS_FACE', '1') != '0' and 'static_link_bind' in m:
+            from qwen_split.sys_face_bind import apply as sys_face_apply
+            rec['sys_face_bind'] = sys_face_apply(m)
     # Freeze pre-pin source identity: later master installation adds derived pin receipts.
     from qwen_split.gfp_homes import source_fingerprint
     m['gfp_source_fingerprint'] = source_fingerprint(m)
@@ -661,6 +681,15 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_HOMES'):
         from qwen_split.gfp_homes import apply as gfp_homes_apply
         rec['gfp_homes'] = gfp_homes_apply(m, os.environ['OT_SPLIT_HOMES'])
+        if 'sys_face_bind' in m:
+            from qwen_split.sys_face_bind import place as sys_face_place
+            rec['sys_face_place'] = sys_face_place(m, rec['gfp_homes'].get('named_new', ()))
+        if rec['gfp_homes'].get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
+            from qwen_split.relay_geometry import rebuild as rebuild_relay_geometry
+            rec['relay_geometry'] = rebuild_relay_geometry(v, m)
+    if 'sys_face_bind' in m and not os.environ.get('OT_SPLIT_HOMES'):
+        from qwen_split.sys_face_bind import place as sys_face_place
+        rec['sys_face_place'] = sys_face_place(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

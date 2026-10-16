@@ -1,0 +1,77 @@
+{
+ "action": "os.kill(3081887,SIGSTOP) only after checking GNU timeout5000 command and child3081889 PPID",
+ "source_parent_tool_timestamp_utc": "2026-10-16T05:38:40.821Z",
+ "last_task_output_mtime": "2026-10-15T23:50:35-07:00",
+ "verified_start_ticks": "Read and compared in attempted postcondition; values not printed or persisted before process exit and cannot be recovered",
+ "postcondition": "FAIL: timeout,parent shell and Python child no longer exist one second after signal",
+ "child_signal_sent": false,
+ "group_signal_sent": false,
+ "continue_sent": false,
+ "kernel_oom_check": "No OOM/killed process/segfault in23:48..23:51 journal",
+ "runner_evidence": "Stopped foreground job -> rc147 -> shell task exited0",
+ "classification": "Bash treated stopped foreground job as wait completion; task shell exited; subsequent remaining-tree cleanup inferred",
+ "source_outputs": {
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_accel_smh_static_ff.lib": {
+   "bytes": 2146863,
+   "sha256": "f1e5ada980dd7a7d1f3186dfde8ca3d773f39e57513ed647e1fb3391b9fefc6a"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_svc_pc_ctrl_leaf_tt.lib": {
+   "bytes": 989685,
+   "sha256": "b5f1c582565f2d24039334555eb6ad5a1959f96e93297364f1e9b0d673eb2611"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm3e_phy_rc_e8p5_ff.lib": {
+   "bytes": 34317,
+   "sha256": "8387ed137259fddd941faf93e7348fac9415dca67374a7758915c8faef8e2c19"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_svc_sm_group_ff.lib": {
+   "bytes": 7395034,
+   "sha256": "4948cf3424a1efba8fa8519ca220b3260bcc8f354400867fbdf987894b81de03"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm3e_phy_rc_e8p5.lef": {
+   "bytes": 3529839,
+   "sha256": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_accel_smh_static.lef": {
+   "bytes": 561410,
+   "sha256": "c884936287ebab7af34d747f4d9173e7effff6d37938f4f7b230037bef5bc4c6"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_svc_pc_ctrl_leaf_ff.lib": {
+   "bytes": 988023,
+   "sha256": "65eb9c7e1234fcf455304ada5ee9cd63dcc9dc31f088bb1ce52c5e106499224a"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_svc_sm_group_tt.lib": {
+   "bytes": 7412801,
+   "sha256": "b05486243202388be9ccfb50ca9493cfa27887390887680d9dc912159d3f889c"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/hfd_stn_v15_cc1182.lef": {
+   "bytes": 331441,
+   "sha256": "0f01c5418d2612dc8fb7d9c8297159c0b891beb63fdc91793b4a2baf8d0dfe32"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_accel_smh_static_tt.lib": {
+   "bytes": 2151274,
+   "sha256": "f3e01cb97d540fe1d9ab3a7ff21c3771d8b0a37e85a9ec07082aebab4da74f75"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_svc_sm_group.lef": {
+   "bytes": 1166189,
+   "sha256": "08f4aa6be2149cc9b108be1afc21ec35bb9a740e0b8733673af30cd6d47a6261"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm_svc_pc_ctrl_leaf.lef": {
+   "bytes": 186562,
+   "sha256": "2cf0e770eaf8ca02731b349971a51b90e9177d47542583a544e40cc522181983"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/ot_hbm3e_phy_rc_e8p5_tt.lib": {
+   "bytes": 34388,
+   "sha256": "f70496c4db224f43d8b3effc80c8f8b51995583c202f66bf6916181c9b964dd3"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/hfd_stn_v15_cc1182_ff.lib": {
+   "bytes": 1907698,
+   "sha256": "b6995d95892931b0622a2e3220f2aefb37e1042b5635cbebfa7289f0acd8aea6"
+  },
+  "/tmp/claude-1000/hdie2210/diecase_v5_d1/views/hfd_stn_v15_cc1182_tt.lib": {
+   "bytes": 1913609,
+   "sha256": "5eb3ff3a026632bd2aba82462fa3bef7240bbcd09b46447c773dfdbe6dc83d88"
+  }
+ },
+ "qualification": false,
+ "next": "New remote-admitted generation only after exact constrained A-star search correction; no arbitrary deadline"
+}

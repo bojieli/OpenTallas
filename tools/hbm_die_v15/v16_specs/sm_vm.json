@@ -55,25 +55,33 @@
   },
   {
    "name": "xl_SW_aqlo",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant SW block-dot quantiser lo half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant SW block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_SW_aqhi",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant SW block-dot quantiser hi half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant SW block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_SW_bd",
@@ -139,25 +147,33 @@
   },
   {
    "name": "xl_SE_aqlo",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant SE block-dot quantiser lo half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant SE block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_SE_aqhi",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant SE block-dot quantiser hi half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant SE block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_SE_bd",
@@ -223,25 +239,33 @@
   },
   {
    "name": "xl_NW_aqlo",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant NW block-dot quantiser lo half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant NW block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_NW_aqhi",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant NW block-dot quantiser hi half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant NW block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_NW_bd",
@@ -307,25 +331,33 @@
   },
   {
    "name": "xl_NE_aqlo",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant NE block-dot quantiser lo half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant NE block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_NE_aqhi",
-   "master": "ot_hbm_xp_aq_tree13",
-   "source": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
    "params": {
+    "FP4": 0,
     "MUT": 0
    },
    "slot": null,
    "owner": "H-SM",
-   "note": "quadrant NE block-dot quantiser hi half (CLOSED tile hgi_xp_aq reused)"
+   "note": "quadrant NE block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
   },
   {
    "name": "xl_NE_bd",
@@ -5505,14 +5537,14 @@
    "owner": "H-SM (+H-COLL+IDX for the stage, H-ELEM-A for the VM hub)",
    "missing_rtl": "a STATIC consumer of the SM results rv/rrow[11:0]/rdata[255:0]/fault/schedule_fault (grant link sm_<q>k>vmh_<q>:SM_OUT 270 b). ot_vms_hub_static / hfd_hgi_vms_static have no SM result port; ot_hgi_sm_pub(_hier/_slice) is credited (pub_rdy, sm_cr, cq338 record client) and non-static; ot_hgi_coll_sm_stage_q (8 SMs x rv/rrow/rdata, static, rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv) exists but is instantiated only in its tb, is not in hb_coll_<q> (ot_hfd_coll_q*_static) and needs its own calendar inputs (fill_begin/fill_bank/pub_*/prefetch_*/lp_*). fault/schedule_fault need the status aggregate.",
    "affects": [],
-   "note": "OUTPUTS left unconsumed on all 32 SMs: rv, rrow, rdata, fault, schedule_fault (no input of any listed instance is affected). Results of attention QK/PV (verdict B) also land here."
+   "note": "OUTPUTS left unconsumed on all 32 SMs: rv, rrow, rdata, fault, schedule_fault (no input of any listed instance is affected). Results of attention QK/PV (verdict B) also land here. ARCHITECTURE QUESTION (H-SM + H-COLL + H-ELEM-A, owner): where does an SM result row go? (A) always through the COLL SM stage (ot_hgi_coll_sm_stage_q into hb_coll_<q>: TP partial-sum reduction, then the VM via COLL kq) -- needs the stage instantiated in hb_coll_<q> with its calendar inputs; or (B) non-reduced results written straight into the VM by a static result writer (8 SMs -> 8 banks, sector = base_k + {rrow,k}) -- needs a VM write group: SW/SE have WG=1 (wq0 = LG) and NW/NE WG=3 (wq1 CP / ATT-retired, wq2 QUANT / HC), so (B) is a VM ABI change. vmsm did not build either (no decision)."
   },
   {
    "id": "G-SMVM-KVDESC",
    "owner": "H-SM / H-ELEM-A",
    "missing_rtl": "attention SM master ot_hbm_accel_smh_attn (rtl/hbm_accel/sm/attn, on main via eb3e3e94a, ancestor of HEAD) has command[191:0] + kv_desc[63:0] + request (not expected_request); the die binds ot_hbm_accel_smh_static (83-b command from ot_hbm_svc_sm_group.sm_command[82:0], no kv_desc). Missing: (a) a 192-b command source (svc_sm_group emits 83 b), (b) a static kv_desc producer at the VM hub (grant link vmh_<q>>sm_<q>k:KV_DESC 64 b; ot_vms_hub_static has no such port).",
    "affects": [],
-   "note": "No smh_static input affected; adoption of attention SMs at die level is blocked on (a)+(b)."
+   "note": "No smh_static input affected; adoption of attention SMs at die level is blocked on (a)+(b). The 192-b command is an svg programme-envelope change (ot_hbm_svc_sm_feed_programmed W135 -> carries the attention command) and the kv_desc producer is a VM-hub port: both need the H-SM attention contract (which SM slots run attention) before RTL."
   },
   {
    "id": "G-SMVM-STRAP",
@@ -5683,7 +5715,7 @@
      6744
     ]
    ],
-   "note": "Listed for accounting (H-SM 1705 list, 8 ports); owners: SW cq client1 = record \"1\" DMA owner (PENDING); NW cq (records cp/fmv/fused/quant) + rq3/wq1 \"CP\" = host/CP owner; NE rq3/wq1 = ATT RETIRE (VM ABI change H-ELEM-A, verdict B); NE rq4/wq2 = HC engine owner. The RG2 range [272,408) of every hb_vms rq IS bound here (x-load). Coordinator: drop duplicates if another region claims them."
+   "note": "Listed for accounting (H-SM 1705 list, 8 ports); owners: SW cq client1 = record \"1\" DMA owner (PENDING); NW cq (records cp/fmv/fused/quant) + rq3/wq1 \"CP\" = host/CP owner; NE rq3/wq1 = ATT RETIRE (VM ABI change H-ELEM-A, verdict B); NE rq4/wq2 = HC engine owner. The RG2 range [272,408) of every hb_vms rq IS bound here (x-load). Coordinator: drop duplicates if another region claims them. vmsm 2026-10-15: none of these ranges is an SM/VM-path port: SW cq client1 = DMA owner (G-DMA), NW cq 0..3 + rq3/wq1 = host/CP owner, NE rq4/wq2 = HC engine (G-HC), NE rq3/wq1 = retired ATT slot: H-ELEM-A must either remove it from hfd_hgi_vms_static_NE (VM ABI change) or assign it (candidate: the SM result writer of G-SMVM-SMOUT option B for NE). The HBM->VM path (dq) is closed by vmsm.json and does not use these slots."
   },
   {
    "id": "G-SMVM-KEYSTAGE",
@@ -5696,47 +5728,7 @@
     ]
    ],
    "note": "H-SM 1705 list item; not an SM port"
-  },
-  {
-   "id": "G-SMVM-AQFP4",
-   "owner": "H-SM",
-   "missing_rtl": "x-load quantiser FP4 format-mode source: the cl2 parent ties ot_hbm_xp_aq_tree13.fp4 to 1'b0; a mode is not an identity strap (owner rule: no ties) -- either fold the mode into the leaf as a parameter or drive it from the x-load command/config",
-   "affects": [
-    [
-     "xl_SW_aqlo",
-     "fp4"
-    ],
-    [
-     "xl_SW_aqhi",
-     "fp4"
-    ],
-    [
-     "xl_SE_aqlo",
-     "fp4"
-    ],
-    [
-     "xl_SE_aqhi",
-     "fp4"
-    ],
-    [
-     "xl_NW_aqlo",
-     "fp4"
-    ],
-    [
-     "xl_NW_aqhi",
-     "fp4"
-    ],
-    [
-     "xl_NE_aqlo",
-     "fp4"
-    ],
-    [
-     "xl_NE_aqhi",
-     "fp4"
-    ]
-   ],
-   "note": "H-NETLIST converted the region agent's proposed strap to a gap"
   }
  ],
- "notes": "X-LOAD TOPOLOGY: one static x-load cluster per quadrant (4 total), flattened from ot_hgi_sm_xload_static_cl2 (wires-only parent) into its hardened leaves (ctl, bfq x4, aq_tree13 x2, bdring = 8 instances/quadrant, 32 total). Reasons: each quadrant VM has exactly ONE read group 2 (\"SM xload\", 8 banks x 17 b rq / 257 b rr = the cl2 rq/rr widths), and the SM x-store write has no SM-select (xw_grp = beat), so the quadrant x vector is written once and broadcast to its 8 SMs (v14 \"x written once / quadrant x copy\"). RD_LAT=6 = ot_vms_bank_static rq->rr (n+6) with ZERO die-level stages between hb_vms_<q> banks and xl_<q>_ctl: if placement needs relays on rq/rr, RD_LAT must grow (compiler model tools/hbm_sm_xload_static_timing.py) -- DOUBT, no slot granted yet (compact660_v5 has no x-load slot). xw broadcast fan-out: 2063 b x 8 SMs from one ctl per quadrant spans the SM rows (6.6 mm slots) -> die relays/feedthrough on xw will be needed; the static schedule tolerates fixed stages only if every SM sees the same count (SM front deskew) -- DOUBT for H-SM/H-DIE. eb3e3e94a IS an ancestor of HEAD: attention SM (ot_hbm_accel_smh_attn, kv_desc) is on main but not bindable (G-SMVM-KVDESC). Bank strap masters are leaves inside hb_vms (G-SMVM-STRAP), nothing at die level. fp4 of the quantisers declared as strap (format mode, owner composition tie) -- coordinator may reclassify. Coordinator-owned SM ports (clk/rst_n/command/packet/expected_request) untouched; every SM input bit of xw_* is driven here."
+ "notes": "X-LOAD TOPOLOGY: one static x-load cluster per quadrant (4 total), flattened from ot_hgi_sm_xload_static_cl2 (wires-only parent) into its hardened leaves (ctl, bfq x4, aq_tree13 x2, bdring = 8 instances/quadrant, 32 total). Reasons: each quadrant VM has exactly ONE read group 2 (\"SM xload\", 8 banks x 17 b rq / 257 b rr = the cl2 rq/rr widths), and the SM x-store write has no SM-select (xw_grp = beat), so the quadrant x vector is written once and broadcast to its 8 SMs (v14 \"x written once / quadrant x copy\"). RD_LAT=6 = ot_vms_bank_static rq->rr (n+6) with ZERO die-level stages between hb_vms_<q> banks and xl_<q>_ctl: if placement needs relays on rq/rr, RD_LAT must grow (compiler model tools/hbm_sm_xload_static_timing.py) -- DOUBT, no slot granted yet (compact660_v5 has no x-load slot). xw broadcast fan-out: 2063 b x 8 SMs from one ctl per quadrant spans the SM rows (6.6 mm slots) -> die relays/feedthrough on xw will be needed; the static schedule tolerates fixed stages only if every SM sees the same count (SM front deskew) -- DOUBT for H-SM/H-DIE. eb3e3e94a IS an ancestor of HEAD: attention SM (ot_hbm_accel_smh_attn, kv_desc) is on main but not bindable (G-SMVM-KVDESC). Bank strap masters are leaves inside hb_vms (G-SMVM-STRAP), nothing at die level. fp4 of the quantisers: closed by ot_hbm_xp_aq_tree13_fmt #(FP4=0) (mode = leaf parameter, vmsm 2026-10-15). Coordinator-owned SM ports (clk/rst_n/command/packet/expected_request) untouched; every SM input bit of xw_* is driven here."
 }

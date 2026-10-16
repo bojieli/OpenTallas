@@ -22,6 +22,7 @@ import argparse
 import collections
 import hashlib
 import json
+import os
 import re
 import shutil
 import sys
@@ -143,6 +144,9 @@ def find_view(root, master, explicit):
         return Path(explicit[master])
     cands = [root / 'physical/ref_tile' / master / 'views' / master]
     cands += sorted((root / 'physical/ref_tile').glob(f'*/views/{master}'))
+    if os.environ.get('OT_SPLIT_PHY_NFACE', '0') == '1':
+        # Q-COMPUTE-DIE r2h S: the case was generated against the top-edge FDI PHY revision; bind that exact view
+        cands.insert(0, root / 'physical/qwen_missing_phy/nface_0030' / master)
     cands += [root / 'physical/qwen_die_masters/views' / master, root / 'physical/qwen_missing_phy/tp8_1013' / master,
               root / 'physical/qwen_missing_phy' / master]
     for c in cands:

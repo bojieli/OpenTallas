@@ -20,7 +20,9 @@ git -C "$root" rev-parse "$rev" > "$out/source.rev" 2>/dev/null || echo "staged-
 fi
 [ "${PREP_ONLY:-0}" = 1 ] && exit 0
 mapfile -d '' sources < <(find "$src" -name '*.sv' -print0)
-b(){ local tag=$1;shift;verilator --binary --timing -Wno-fatal -j "${JOBS:-4}" --top-module tb_kv_hbm_elastic_boundary "$@" --Mdir "$out/obj_$tag" "${sources[@]}" > "$out/build_$tag.log" 2>&1; }
+# NBLK / RDEPTH (env): production front blocks and return-ring depth under test (r1 defaults 4 / 8; r2 kits 10 / 64)
+TBP=(-GNBLK="${NBLK:-4}" -GRDEPTH="${RDEPTH:-8}")
+b(){ local tag=$1;shift;verilator --binary --timing -Wno-fatal -j "${JOBS:-4}" --top-module tb_kv_hbm_elastic_boundary "${TBP[@]}" "$@" --Mdir "$out/obj_$tag" "${sources[@]}" > "$out/build_$tag.log" 2>&1; }
 if [ "${BUILD_SERIAL:-0}" = 1 ]; then
  b prod; b fm1 -GFRONT_MUT=1; b fm2 -GFRONT_MUT=2; b fm3 -GFRONT_MUT=3; b ce0 -GCTRL_ELASTIC=0
 else

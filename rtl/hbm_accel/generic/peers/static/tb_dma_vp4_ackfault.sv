@@ -7,7 +7,7 @@ reg rst_n=0;reg[31:0]cycle=0;reg[11:0]wa=0;
 wire old_fault,new_fault;
 always @(posedge clk)cycle<=cycle+1;
 ot_hgi_dma_back_static_cursor ref_i(.clk(clk),.rst_n(rst_n),.cycle(cycle),.mv_v(1'b0),.mv(227'd0),.issue_at(32'd0),.drain_at(32'd0),.mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.rr(2056'd0),.wb_ready(1'b1),.wa(wa),.mv_fault(old_fault));
-ot_hgi_dma_back_static_vp4_banks dut(.clk(clk),.clk_bank({8{clk}}),.rst_n(rst_n),.cycle(cycle),.mv_v(1'b0),.mv(227'd0),.issue_at(32'd0),.drain_at(32'd0),.mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.rr(2056'd0),.wb_ready(1'b1),.wa(wa),.mv_fault(new_fault));
+ot_hgi_dma_back_static_vp4_banks dut(.clk(clk),.clk_bank({8{clk}}),.rst_n(rst_n),.stk(2'd0),.cycle(cycle),.mv_v(1'b0),.mv(227'd0),.issue_at(32'd0),.drain_at(32'd0),.mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.rr(2056'd0),.wb_ready(1'b1),.wa(wa),.mv_fault(new_fault));
 initial begin
  repeat(3)@(negedge clk);rst_n=1;
  repeat(3)@(negedge clk);wa=1;

@@ -11,11 +11,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
-from die_port_bind import parse_modules
+from die_port_bind import parse_modules, preprocess, strip_comments
 
 
 def rtl_ports(path, name):
-    mods = [m for m in parse_modules(path.read_text(), str(path)) if m.name == name]
+    # production die build defines nothing: opt-in `ifdef ports (e.g. OT_QFD_VM_PARTITIONED_CLOCKS) are not die pins
+    mods = [m for m in parse_modules(preprocess(strip_comments(path.read_text()), {}), str(path)) if m.name == name]
     if len(mods) != 1 or mods[0].port_parse_errors:
         raise ValueError(f'{name}: cannot resolve one complete RTL port list')
     m = mods[0]
@@ -53,7 +54,74 @@ def on_track(layer, xy, w=None, h=None):
     return (round(v[0], 4), round(v[1], 4))
 
 
+NL_DROP = ('n_a', 'n_b', 'n_y', 'ck_node')
+
+
+def tile_grant():
+    """OT_SPLIT_TILE_GRANT=<held_grant.json> (Q-COMPUTE-DIE 2026-10-15, owner 20:35 re-pack): the re-packed 64-lane tile
+    (Q-TILE45 kit, e.g. physical/ref_tile/qfd_tile_nk_rp2_45_a2/held_grant.json) replaces the 449.28 x 1442.88 slot.  The
+    grant's outline and every pin (data windows granted by the die lead, 45 clock entries) are used as-is; the node-less
+    tile takes the same pins minus n_a / n_b / n_y / ck_node."""
+    path = os.environ.get('OT_SPLIT_TILE_GRANT', '').strip()
+    if not path:
+        return None
+    g = json.loads((ROOT / path if not os.path.isabs(path) else Path(path)).read_text())
+    if len(g['home_um']) != 2 or sum(1 for p in g['pins'] if p['clock']) != 45:
+        raise ValueError('OT_SPLIT_TILE_GRANT: need an outline and 45 clock entries')
+    return g
+
+
+_NL_DROP = {}
+
+
+def nl_drop(g):
+    """ports of the grant's tree-host tile absent from its node-less twin (Q-NETLIST 10-16: derived from the twin's RTL,
+    rtl/physical/<top with nk -> nl>.sv, e.g. qfd_tile_nl_rp2_45 also drops ck_fa0/ck_fa1/ck_fa3, the n_a/n_b/n_y face
+    roots); the historical four when no twin RTL exists"""
+    top = g.get('top', '')
+    if top in _NL_DROP:
+        return _NL_DROP[top]
+    nk, nl = ROOT / f'rtl/physical/{top}.sv', ROOT / f"rtl/physical/{top.replace('_nk_', '_nl_')}.sv"
+    if top and nk.exists() and nl.exists():
+        a = rtl_ports(nk, top)
+        b = rtl_ports(nl, top.replace('_nk_', '_nl_'))
+        _NL_DROP[top] = tuple(sorted(set(a) - set(b)))
+        return _NL_DROP[top]
+    return NL_DROP
+
+
+def grant_clocks(name):
+    g = tile_grant()
+    if g is None:
+        return None
+    drop = nl_drop(g)
+    return [c for c in g['clocks'] if not (name == 'qfd_tile_nl' and c in drop)]
+
+
+def apply_tile_grant(q, g):
+    q.w, q.h = g['home_um']
+    drop = nl_drop(g)
+    by = {}
+    for p in g['pins']:
+        base = p['name'].split('[')[0]
+        if q.name == 'qfd_tile_nl' and base in drop:
+            continue
+        idx = int(p['name'].split('[')[1][:-1]) if '[' in p['name'] else 0
+        by.setdefault(base, []).append((idx, p))
+    q.ports, q.order = {}, []
+    for base, ps in by.items():
+        ps.sort()
+        faces = {p['face'] for _, p in ps}; layers = {p['layer'] for _, p in ps}
+        if len(faces) != 1 or len(layers) != 1 or [i for i, _ in ps] != list(range(len(ps))):
+            raise ValueError(f'OT_SPLIT_TILE_GRANT: {q.name}.{base} not one face/layer/contiguous')
+        q.ports[base] = ('pins', len(ps), faces.pop(), layers.pop(), [p['coordinate_um'] for _, p in ps], 1)
+        q.order.append(base)
+
+
 def apply_tile(q, entries):
+    g = tile_grant()
+    if g is not None:
+        return apply_tile_grant(q, g)
     q.w, q.h = 449.28, 1442.88  # actual parent-kit outline, never legacy SHAVE
     ports = rtl_ports(ROOT / 'rtl/physical/qfd_tile_nk_slot.sv', q.name)
     old = q.ports
@@ -140,11 +208,21 @@ def apply_slabs(M):
                 s = old.get(p)
                 f = s[2] if s and s[0] in ('face', 'pins') else 'W'
             faces[f].append((p, n))
+        spread = os.environ.get('OT_SPLIT_BW_SPREAD', '0') == '1'
         for f, groups in faces.items():
             L = q.w if f in 'NS' else q.h
             need = sum(n * .096 + 1.0 for _, n in groups)
             if need > L - 8:
                 raise ValueError(f'{q.name}.{f}: {need:.1f}um pins exceed {L-8:.1f}um face')
+            if spread and f in 'WE' and groups and all(p.startswith('bw') for p, _ in groups):
+                # Q-COMPUTE-DIE r2h: a face carrying only the tile-tree words (8 x 514 b) spreads them evenly over
+                # the face (router: the 401-um packed block was the 0.665 cut window beside the W tile column)
+                gap = (L - 240.0 - need) / max(1, len(groups) - 1)
+                cursor = 120.0
+                for p, n in groups:
+                    q.face(p, n, f, 'M4', snap(cursor + n * .096 / 2), 2)
+                    cursor += n * .096 + 1. + gap
+                continue
             cursor = (L - need) / 2
             for p, n in groups:
                 q.face(p, n, f, 'M5' if f in 'NS' else 'M4', snap(cursor + n * .096 / 2), 2)

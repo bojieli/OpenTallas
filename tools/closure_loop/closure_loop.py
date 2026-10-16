@@ -1933,8 +1933,10 @@ def tt_overlay_fallback(cmd):
     overlay copy (kept at main on every host) instead; a snapshot that carries the file keeps its own."""
     if TT_OVERLAY_REL not in cmd:
         return cmd
-    pick = ("python3 \"$(test -f tools/closure_loop/tt_overlay.py && echo tools/closure_loop/tt_overlay.py || "
-            f"ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1)\" ")
+    # FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
+    # overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit
+    pick = (f"python3 \"$(ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1 | grep . || "
+            "echo tools/closure_loop/tt_overlay.py)\" ")
     return cmd.replace(TT_OVERLAY_REL, pick)
 
 
@@ -2773,9 +2775,21 @@ def ship_helpers(host, run, job=None):
             current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
-            ok, why = HO.compare_plans(frozen, current)
+            ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            if sanctioned:
+                # FLEET-RUN SANCTION (ROOT 2026-10-16): only fleet-run helpers (tt_overlay.py: the route executes the
+                # fleet copy kept at main, fleet-first since 00cbddaea) drifted, to exactly origin/main's blob.  Keep the
+                # gate's plan, record both shas, and freeze the executed bytes so a later verify/reinstall matches cl/.
+                job.setdefault("route_overlay_plan_gate", frozen)
+                job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
+                                                                       for r in sanctioned)
+                for r in sanctioned:
+                    event(job, f"FLEET-RUN SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
+                               f"{r['current_git_blob'][:9]} (sha256 {r['current_sha256'][:16]}, origin/main "
+                               f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
+                job["route_overlay_plan"] = frozen = current
             HO.store_payloads(HELPER_STORE, frozen, payloads)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
@@ -2946,14 +2960,32 @@ TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/clo
 SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
 
 
+def _snapshot_main_sha(name):
+    """sha256 of the bytes the daemon ships for helper basename `name` now (origin/main resolution), or None"""
+    helper = next((h for h in HELPERS if Path(h).name == name), None)
+    if helper is None:
+        return None
+    try:
+        return hashlib.sha256(overlay_helper_bytes(helper)).hexdigest()
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def snapshot_refresh_sh(run):
-    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv)"""
+    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv).
+    SNAPSHOT-MAIN-ONLY (ROOT 2026-10-16): a copy is refreshed only when {run}/cl/<f> has the sha256 of the bytes the
+    daemon ships from origin/main NOW.  A frozen job (verified original / reinstalled / bench relocation) carries its
+    gate-time helpers in cl/, and the old unconditional copy would have pushed e.g. tt_overlay ba24e51 (deletes
+    GRT183_HOOK) back over the fleet snapshot every route runs (tt_overlay_fallback is fleet-first)."""
     out = ""
     for dirs, files in SNAPSHOT_REFRESH:
-        out += (f"for fh in {' '.join(dirs)}; do for fd in {' '.join(f + ':' + d for f, d in files)}; do "
-                f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
-                f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
-                f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; ")
+        for f, d in files:
+            sha = _snapshot_main_sha(f)
+            if not sha:
+                continue
+            out += (f"for fh in {' '.join(dirs)}; do t=$fh/{d}; [ -f {run}/cl/{f} ] && [ -d $t ] && "
+                    f"[ \"$(sha256sum < {run}/cl/{f} | cut -c1-64)\" = {sha} ] && ! cmp -s {run}/cl/{f} $t/{f} && "
+                    f"cp -f {run}/cl/{f} $t/.{f}.$$ && mv -f $t/.{f}.$$ $t/{f}; done; ")
     return out
 
 

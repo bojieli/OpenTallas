@@ -36,6 +36,12 @@ module tb_hbm_su_native_multirate_top;
   .fault(stream_fault),.edge_index(stream_edge),.command(stream_command));
  reg [9687:0] line;reg[63:0]cal_line;
  bit mut_data,mut_addr,mut_rf,mut_red,mut_cal,mut_epoch;
+ // +BRIDGE_LEAF (H-NETLIST 10-15): bridge_rst_n from the die leaf ot_hbm_su_bridge_release (prog_busy = the serial
+ // programme busy) instead of the ideal half-tick E0-1 release below; the leaf must not fault.
+ bit bridge_leaf; wire leaf_bridge_rst_n,leaf_bridge_fault;
+ ot_hbm_su_bridge_release u_bridge_release(.clk_serial(serial_clk),.clk_stream(stream_clk),.rst_n(rst_n),
+  .rst_stream_n(rst_n),.prog_busy(serial_busy),.bridge_rst_n(leaf_bridge_rst_n),.fault(leaf_bridge_fault));
+ wire dut_bridge_rst_n=bridge_leaf?leaf_bridge_rst_n:bridge_rst_n;
  always_comb begin
   line=serial_valid?serial_command:'0;cal_line=stream_valid?stream_command:'0;
   if(mut_addr&&serial_edge==1040)line[QW+680+(1742-2-1200)+:24]=24'd3;
@@ -61,7 +67,7 @@ module tb_hbm_su_native_multirate_top;
   .pg_clk({16{stream_clk}}),.clk_lane({4096{serial_clk}}),.clk_insert({2048{serial_clk}}),.rst_lane_n({512{rst_n}}),
   .clk_bcast({64{serial_clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{serial_clk}}),.clk_bank_macro({3072{serial_clk}}),
   .clk_rf({256{serial_clk}}),.clk_ctl({16{serial_clk}}),.clk_core({4{serial_clk}}),.clk_red({4{serial_clk}}),
-  .clk_side({6{serial_clk}}),.clk_relay({4{serial_clk}}),.rst_n(rst_n),.bridge_rst_n(bridge_rst_n),
+  .clk_side({6{serial_clk}}),.clk_relay({4{serial_clk}}),.rst_n(rst_n),.bridge_rst_n(dut_bridge_rst_n),
   .control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_rd_cmd(rf),.red_cmd(red),
   .lg_rq(lg_rq),.lg_wq(lg_wq),.lg_rr(lg_rr),.lg_w_done(lg_w_done),.fault(fault));
  wire[127:0]lw[0:3];
@@ -159,7 +165,7 @@ module tb_hbm_su_native_multirate_top;
   string dir;reg[255:0]data;reg[15:0]sec;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR missing");
   mut_data=$test$plusargs("MUT_DATA");mut_addr=$test$plusargs("MUT_ADDR");mut_rf=$test$plusargs("MUT_RF");
-  mut_red=$test$plusargs("MUT_RED");mut_cal=$test$plusargs("MUT_CAL");mut_epoch=$test$plusargs("MUT_EPOCH");
+  mut_red=$test$plusargs("MUT_RED");mut_cal=$test$plusargs("MUT_CAL");mut_epoch=$test$plusargs("MUT_EPOCH");bridge_leaf=$test$plusargs("BRIDGE_LEAF");
   for(integer t=0;t<32;t=t+1)for(integer b=0;b<32;b=b+1)begin pend_v[t][b]=0;pend_w[t][b]=0;end
   $readmemh({dir,"/serial/config.mem"},serial_config);$readmemh({dir,"/stream/config.mem"},stream_config);
   $readmemh({dir,"/phase/stream_expw.mem"},expw);$readmemh({dir,"/exps.mem"},exps);
@@ -203,6 +209,7 @@ module tb_hbm_su_native_multirate_top;
   wait(half_tick>=epoch_half+8*(NE+40));#2;
   if(ew!=NW||es!=NS||reads!=32768||writes!=NW||bridge_reads!=32768||bridge_acks!=NW)fail($sformatf("counts reads%0d writes%0d/%0d scalars%0d/%0d",reads,writes,NW,es,NS));
   if(serial_fault||stream_fault||(|fault)||(|lg_fault)||bank_status!==0)fail("final faults");
+  if(bridge_leaf&&leaf_bridge_fault)fail("bridge release leaf fault");
   $display("SU_NATIVE_MULTIRATE_ENDPOINTS {\"last_read_issue_stream\":%0d,\"last_read_return_stream\":%0d,\"last_write_issue_stream\":%0d,\"last_lg_ack_stream\":%0d,\"last_bridge_read_serial\":%0d,\"last_bridge_ack_serial\":%0d,\"last_lane_write_serial\":%0d,\"last_scalar_serial\":%0d,\"last_store_sram_commit_serial\":%0d,\"last_rf_register_commit_serial\":%0d,\"config_serial_transactions\":%0d,\"config_stream_transactions\":%0d,\"serial_prime_edges\":4,\"stream_prime_edges\":4,\"serial_programme_edges\":%0d,\"stream_calendar_edges\":%0d,\"checker_tail_serial_edges\":40}",
    last_read_issue,last_read_return,last_write_issue,last_lg_ack,last_bridge_read,last_bridge_ack,last_lane,last_scalar,last_store_commit,last_rf_commit,SERIAL_WRITES,STREAM_WRITES,NE,PE);
   if(errors)$fatal(1,"SU_NATIVE_MULTIRATE_TOP FAIL errors=%0d",errors);

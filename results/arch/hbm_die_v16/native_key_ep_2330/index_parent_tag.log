@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits   543 GB (avail 769, growth 39, headroom 64, waiters 0/0 GB) load 49/128 running 10 disk 453 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1535459-1792130469 after 0 s
+NEW rc=0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 16.247 s; speed 902.326 ns/s
+- Verilator: cpu 16.246 s on 66 threads; allocated 86 MB
+25:   payload=(two<<11)|(((a*8+p)&1023)<<1)|1   # service tag (128*port + beat) % 1024 (ot_hbm_idx_score_static)
+OLD rc=1
+[14660000000] %Fatal: tb_idx_parent_static.sv:101: Assertion failed in tb_idx_parent_static: fullshape real static INDEX parent mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_parent_static.sv:101: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1535459-1792130469): exit 0
