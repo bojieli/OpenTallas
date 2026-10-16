@@ -104,9 +104,36 @@ def stats(v):
                 p90=round(v[min(len(v) - 1, int(0.9 * len(v)))], 1), max=round(v[-1], 1), spread=round(v[-1] - v[0], 1))
 
 
-def report(dump, pairs_file=None, top=20):
+def region_of(nodes, anc):
+    """DIE-CLOCK 2026-10-16: the clock region of an entry = the tree of its leaf cell (cells named dc_<region>_<kind><n>
+    by tools/die_clock/build.py); otherwise the clock root it hangs from (H-DIE / Codex trees, ideal nets)."""
+    import re
+    for a in anc:
+        if nodes[a]["kind"] == "cell":
+            m = re.match(r"^dc_(.+)_[LBRTP]\d+(?:_tp\d+)?$", a)
+            if m:
+                return m.group(1)
+    return anc[-1]
+
+
+def load_targets(path):
+    """kit.json masters -> (master, port) -> TT in-arc insertion R (die_sta.py balance_latency semantics)."""
+    if not path:
+        return None
+    km = json.load(open(path))["masters"]
+    def R(master, pin):
+        port = pin.rsplit("/", 1)[1]
+        port = port[:-3] if port.endswith("[0]") else port
+        r = km.get(master, {})
+        v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
+        return v[2] if v else 0.0
+    return R
+
+
+def report(dump, pairs_file=None, top=20, targets=None):
     nodes, pairs, summ = load(dump)
     model = model_arrivals(nodes)
+    R = load_targets(targets)
     entries = {}   # tile inst -> [entry pin nodes]
     for n, d in nodes.items():
         if d["kind"] == "tile":
@@ -117,6 +144,7 @@ def report(dump, pairs_file=None, top=20):
             d = nodes[p]
             anc = ancestors(nodes, p)
             tiles.append(dict(inst=inst, entry=p, master=d["cell"], x=d["x"], y=d["y"], root=anc[-1],
+                              region=region_of(nodes, anc), R_tt_ps=(R(d["cell"], p) if R else None),
                               levels=sum(1 for a in anc if nodes[a]["kind"] == "cell"),
                               model_ps=round(model[p], 1), sta_max_ps=d["sta_max"], sta_min_ps=d["sta_min"]))
     src = "netlist"
@@ -167,7 +195,16 @@ def report(dump, pairs_file=None, top=20):
                                    sta_ps=round(max(sa - sl, sb - sl), 1), sta_sum_ps=round(sa + sb - 2 * sl, 1))
                     if None not in (sa, sb):
                         rec["sta_skew_ps"] = round(abs(sa - sb), 1)
-                score = rec.get("sta_ps", rec.get("model_ps", float("inf")))
+                        if R:   # flop-arrival skew: pin arrival + in-arc insertion on each side
+                            rec["flop_skew_ps"] = round(abs(sa + R(nodes[pa]["cell"], pa) - sb - R(nodes[pb]["cell"], pb)), 1)
+                    rec["region_a"], rec["region_b"] = region_of(nodes, aa), region_of(nodes, anc_of(pb))
+                # DIE-CLOCK 2026-10-16: a multi-entry tile (sp_vm has 42 serial / 651 stream clock pins on its faces)
+                # talks to a neighbour through the entry beside it, so the pair is judged on the geometrically NEAREST
+                # entry pair (ties: worst non-common path); the old worst-over-all-entries pairing reported the root-level
+                # branch of a far face (2.5 ns) for an abutting station.
+                dist = abs(nodes[pa]["x"] - nodes[pb]["x"]) + abs(nodes[pa]["y"] - nodes[pb]["y"])
+                rec["entry_distance_um"] = round(dist, 1)
+                score = (-dist, rec.get("sta_ps", rec.get("model_ps", float("inf"))))
                 if best is None or score > best[0]:
                     best = (score, rec)
         rec = best[1]
@@ -175,6 +212,27 @@ def report(dump, pairs_file=None, top=20):
             cross += 1
         prs.append(dict(a=a, b=b, net=net, source=how, **rec))
     prs.sort(key=lambda r: -(r.get("sta_ps") if r.get("sta_ps") is not None else r.get("model_ps", 1e18)))
+    # per region: insertion (late / early), flop arrival spread (with targets), intra-region pair NCP / skew;
+    # pairs whose ends sit in different regions are listed separately (meso / forwarded crossings or a plan defect)
+    regions = {}
+    by_reg = {}
+    for t in tiles:
+        by_reg.setdefault(t["region"], []).append(t)
+    for rg, ts in sorted(by_reg.items()):
+        intra = [p for p in prs if p.get("region_a") == rg and p.get("region_b") == rg]
+        regions[rg] = dict(entries=len(ts), insertion_sta_max_ps=stats([t["sta_max_ps"] for t in ts]),
+                           insertion_sta_min_ps=stats([t["sta_min_ps"] for t in ts]),
+                           flop_arrival_ps=(stats([t["sta_max_ps"] + t["R_tt_ps"] for t in ts if t["sta_max_ps"] is not None])
+                                            if R else None),
+                           pairs=len(intra), noncommon_sta_ps=stats([p.get("sta_ps") for p in intra]),
+                           skew_sta_ps=stats([p.get("sta_skew_ps") for p in intra]),
+                           flop_skew_ps=stats([p.get("flop_skew_ps") for p in intra]) if R else None)
+    inter = [p for p in prs if p.get("region_a") and p.get("region_a") != p.get("region_b")]
+    inter_summary = dict(pairs=len(inter), by_pair={})
+    for p in inter:
+        k = "|".join(sorted((p["region_a"], p["region_b"])))
+        inter_summary["by_pair"].setdefault(k, []).append(p.get("flop_skew_ps", p.get("sta_skew_ps")))
+    inter_summary["by_pair"] = {k: stats(v) for k, v in sorted(inter_summary["by_pair"].items())}
     out = dict(
         schema="opentallas.die_clock_check.v1", dump=os.path.abspath(dump), dump_summary=summ,
         model="tools/hbm_die_v15/die_clock_tree.stage_ps over Manhattan node-to-node wire, %g um/stage (H-DIE 9bcff2c0b)" % SPAN,
@@ -187,6 +245,7 @@ def report(dump, pairs_file=None, top=20):
         counts=dict(tile_entries=len(tiles), tiles=len(entries), clock_cells=sum(1 for d in nodes.values() if d["kind"] == "cell"),
                     die_flops=sum(1 for d in nodes.values() if d["kind"] == "flop"),
                     roots=[n for n, d in nodes.items() if d["kind"] == "root"]),
+        regions=regions, inter_region=inter_summary,
         tiles=tiles, pairs=prs, unmatched_pairs=missing[:200])
     return out
 
@@ -205,6 +264,15 @@ def table(r, top=20):
     L.append(f"non-common model ps: {s(nc['model_ps'])}")
     L.append(f"non-common STA ps  : {s(nc['sta_ps'])}")
     L.append(f"pair skew STA ps   : {s(nc['sta_skew_ps'])}")
+    if r.get("regions"):
+        L.append(f"per region ({len(r['regions'])}): entries | insertion STA late | flop arrival spread | intra pairs NCP / skew")
+        for rg, x in sorted(r["regions"].items(), key=lambda kv: -((kv[1]["insertion_sta_max_ps"] or {}).get("spread", 0)))[:top]:
+            ins_, fa = x["insertion_sta_max_ps"], x.get("flop_arrival_ps")
+            L.append(f"  {rg[:28]:28} {x['entries']:6} | {('n/a' if not ins_ else str(ins_['min'])+'..'+str(ins_['max'])):>18} | "
+                     f"{('n/a' if not fa else fa['spread']):>8} | {x['pairs']:6} "
+                     f"{('n/a' if not x['noncommon_sta_ps'] else x['noncommon_sta_ps']['max'])} / "
+                     f"{('n/a' if not x['skew_sta_ps'] else x['skew_sta_ps']['max'])}")
+        L.append(f"inter-region pairs: {r['inter_region']['pairs']}")
     L.append(f"worst {min(top, len(r['pairs']))} pairs (non-common = max side from the branch point):")
     L.append(f"  {'tile A':34} {'tile B':34} {'model':>8} {'STA':>8} {'skew':>8}  branch")
     for p in r["pairs"][:top]:
@@ -221,12 +289,13 @@ def main():
     r.add_argument("--out")
     r.add_argument("--pairs")
     r.add_argument("--top", type=int, default=20)
+    r.add_argument("--targets", help="die kit kit.json: per master clock pin in-arc insertion R -> flop arrival / skew")
     sub.add_parser("tcl")
     a = ap.parse_args()
     if a.cmd == "tcl":
         print(os.path.join(HERE, "die_clock_check.tcl"))
         return
-    res = report(a.dump, a.pairs, a.top)
+    res = report(a.dump, a.pairs, a.top, a.targets)
     txt = table(res, a.top)
     if a.out:
         with open(a.out, "w") as fh:
