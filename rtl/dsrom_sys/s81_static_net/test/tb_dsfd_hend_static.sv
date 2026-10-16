@@ -47,7 +47,12 @@ module tb_dsfd_hend_static;
     endfunction
 `ifdef L2R
     reg [PW:0] i = 0; wire [PW+1:0] od; wire fo;
-`ifdef HAS_ST
+`ifdef SPLIT_OAB
+    // S-NET-RESID 10-16: split-output l2r (oa / ob, fo2): od is rebuilt from oa and ob; ob[1:0] must repeat od[1:0]
+    wire [2:0] st; wire fo2; wire [`OAW-1:0] oa; wire [PW+1-`OAW+2:0] ob;
+    assign od = {ob[PW+1-`OAW+2:2], oa};
+    `DUT dut (.ck(ck), .cks(cks), .fo(fo), .i(i), .oa(oa), .ob(ob), .rs(rs), .rss(rss), .st(st), .fo2(fo2));
+`elsif HAS_ST
     wire [2:0] st;
     `DUT dut (.ck(ck), .cks(cks), .fo(fo), .i(i), .od(od), .rs(rs), .rss(rss), .st(st));
 `else
@@ -83,6 +88,9 @@ module tb_dsfd_hend_static;
 `endif
     // checker
     integer exp_k [0:NL-1]; integer started [0:NL-1]; integer bad = 0, seen = 0, j, q, lat0 = -999;
+`ifdef SPLIT_OAB
+    always @(posedge cks) begin #1; if (ob[1:0] !== oa[1:0] || fo2 !== fo) begin bad = bad + 1; if (bad < 5) $display("HEND split copy mismatch"); end end
+`endif
     initial for (j = 0; j < NL; j = j + 1) begin exp_k[j] = -1; started[j] = 0; end
 `ifdef L2R
     integer bub = 0, oute = 0;
