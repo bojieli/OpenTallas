@@ -5,7 +5,7 @@
 // Configuration ROM/memory macro and production placement/phase/image are open
 // qualification gates. Missing ROM fails closed, never fabricates a schedule.
 module s81_static_collective_slab #(
- parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0,parameter integer VMB_PINCAP=1
+ parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0,parameter integer VMB_PINCAP=1,parameter integer VMB_NARROW=0
 )(
  input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire rst_n,input wire[1:0]f_rank,
@@ -228,13 +228,20 @@ module s81_static_collective_slab #(
  assign t_host=host_rx[514:0];
  // VMB_PINCAP=1: native-qualified boundary leaf b7 (write path pin-captured, collective->VM write +1 fixed edge;
  // the v3 calendar image prices it: gather_to_vm_source 2, hc_reduce_to_write 19)
- s81_static_vm_boundary #(.MUT(MUT),.PINCAP(VMB_PINCAP)) vm_boundary(
+ // VMB_NARROW=1 (opt-in, S-ELEM-PQ/COLL 10-16): the leaf takes only the bits it reads (tags [7:0], host_rx {515, 0})
+ wire[(VMB_NARROW?8:32)-1:0]vmb_gather_tag,vmb_reduced_tag;wire[(VMB_NARROW?2:516)-1:0]vmb_host_rx;
+ generate if(VMB_NARROW)begin:g_vmbn
+  assign vmb_gather_tag=gather_tag[7:0];assign vmb_reduced_tag=reduced_tag[7:0];assign vmb_host_rx={host_rx[515],host_rx[0]};
+ end else begin:g_vmbw
+  assign vmb_gather_tag=gather_tag;assign vmb_reduced_tag=reduced_tag;assign vmb_host_rx=host_rx;
+ end endgenerate
+ s81_static_vm_boundary #(.MUT(MUT),.PINCAP(VMB_PINCAP),.NARROW(VMB_NARROW)) vm_boundary(
  .clk(ck_control[2]),.rst_n(rn_control[2]),.read_slot(read_slot),.read_row(read_row),.t_crq(t_crq),.t_vm(t_vm),
- .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(gather_tag),
+ .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(vmb_gather_tag),
  .hc_write_slot(hc_write_slot),.reduced_valid(reduced_valid),.reduced_error(reduced_error),.reduced_last(reduced_last),.reduced_seq(reduced_seq),
- .hc_expect_seq(hc_expect_seq),.hc_expect_last(hc_expect_last),.reduced_data(reduced_data),.reduced_tag(reduced_tag),.raw_sources(raw_sources),
+ .hc_expect_seq(hc_expect_seq),.hc_expect_last(hc_expect_last),.reduced_data(reduced_data),.reduced_tag(vmb_reduced_tag),.raw_sources(raw_sources),
  .phy_rx_fault(phy_rx_fault),.phy_rx_valid(phy_rx_valid),.phy_rx_live(phy_rx_live),.issue_slot(issue_slot),.raw_capture(raw_capture),
- .raw_capture_payload_slot(raw_capture_payload_slot),.raw_capture_meta_slot(raw_capture_meta_slot),.raw_tx_count(raw_tx_count),.host_rx(host_rx),
+ .raw_capture_payload_slot(raw_capture_payload_slot),.raw_capture_meta_slot(raw_capture_meta_slot),.raw_tx_count(raw_tx_count),.host_rx(vmb_host_rx),
  .pack_bad_out(pack_bad),.fault(boundary_fault));
 
 endmodule

@@ -82,7 +82,48 @@ def spans_for(hub, W, H):
     raise SystemExit('unknown hub ' + hub)
 
 
-def install_spans(spans):
+def spans_from_plan(plan, W, H):
+    """Project each declared peer's actual box onto its agreed VM face.
+
+    This binds planning pins to the current die graph. It does not establish a
+    collision-free route from the peer to that face; the die preflight owns it.
+    """
+    d = json.loads(Path(plan).read_text())
+    boxes = d['blocks']
+    vx, vy, vw, vh = boxes['sp_vm'][:4]
+    assert abs(vw-W) < 0.1 and abs(vh-H) < 0.1, ('VM outline mismatch', vw, vh, W, H)
+    def span(name, face):
+        x, y, w, h = (d['mix4_slot'] if name == 'mix4_slot' else boxes[name])[:4]
+        lo, hi, cap = (x-vx, x+w-vx, W) if face in 'NS' else (y-vy, y+h-vy, H)
+        lo, hi = max(0.0, lo), min(cap, hi)
+        assert hi > lo, ('peer has no face overlap', name, face, lo, hi)
+        return (face, round(lo, 4), round(hi, 4))
+    # MIX4 face from its actual box (S-DIE 2330 holds two reservations: A_W_1x4 west of the VM, B_NW_2x2 above its
+    # NW corner).  The face is the VM edge the box sits beyond; anything else (overlap / diagonal) fails closed.
+    mx, my, mw, mh = d['mix4_slot'][:4]
+    if mx + mw <= vx + 1e-3 and my < vy + vh and my + mh > vy:
+        mix4_face = 'W'
+    elif my >= vy + vh - 1e-3 and mx < vx + vw and mx + mw > vx:
+        mix4_face = 'N'
+    else:
+        raise AssertionError(('MIX4 box neither W of nor N of the VM', d['mix4_slot'], boxes['sp_vm']))
+    assignments = [
+        ('sp_su_s', 'S', ('f_su','t_su','t_inp_su')),
+        ('sp_capture', 'N', ('f_capture',)),
+        ('sp_gather', 'N', ('t_gather',)),
+        ('bk_collector', 'N', ('col',)),
+        ('sp_pq', 'N', ('f_pqx','t_pqx')),
+        ('mix4_slot', mix4_face, ('f_mx','t_mx')),
+        ('sp_sseq', 'S', ('c_',)),
+        ('sp_collective', 'E', ('t_crs',)),
+        ('sp_wfc', 'E', ('f_wfc','t_wfc')),
+        ('sp_hc_s', 'E', ('f_hc','t_hc','t_inp_hc')),
+        ('bk_selector', 'S', ('aSW','qSW','sel')),
+    ]
+    return {p: span(name, face) for name,face,ports in assignments for p in ports}
+
+
+def install_spans(spans, assigned=None):
     """replace R.port_face / R.connections port placement by the span-clipped version (same Prim tree otherwise)."""
     if spans is None:
         return
@@ -112,13 +153,22 @@ def install_spans(spans):
                 continue
             ports = [e for e in eps if e[0] < 0]
             for e in ports:
-                groups[e[1]].append((len(raw), pts[0]))
-            raw.append((pts, tags, [e[1] for e in ports]))
+                groups[e[1]].append((len(raw), pts[0], e[2]))
+            raw.append((pts, tags, [(e[1], e[2]) for e in ports]))
         place, face_bits = {}, collections.Counter()
         for pname, lst in groups.items():
             f, lo, hi = look(pname)
             face_bits[f] += len(lst)
-            proj = sorted((p[1] if f in 'WE' else p[0]) for _, p in lst)
+            if assigned and pname in assigned['ports']:
+                ps=assigned['ports'][pname]
+                assert len(ps['per_bit'])==ps['bits']
+                aw,ah=assigned['outline_um']
+                for ni,_,bit in lst:
+                    af,layer,c,depth=ps['per_bit'][bit]
+                    assert af==f, ('assigned face mismatch',pname,bit,af,f)
+                    place[(ni,pname)]={'W':(depth/2,c),'E':(aw-depth/2,c),'N':(c,ah-depth/2),'S':(c,depth/2)}[af]
+                continue
+            proj = sorted((p[1] if f in 'WE' else p[0]) for _, p, _ in lst)
             c = proj[len(proj) // 2]
             span = min(max(len(lst) / port_density, proj[-1] - proj[0] if len(proj) > 1 else 0.0), hi - lo)
             a = min(max(c - span / 2, lo), hi - span)
@@ -126,10 +176,11 @@ def install_spans(spans):
             for r, k in enumerate(order):
                 t = a + span * (r + 0.5) / len(lst)
                 place[(lst[k][0], pname)] = {'W': (0.0, t), 'E': (W, t), 'N': (t, H), 'S': (t, 0.0)}[f]
+        R._last_port_place = place      # read-only stash for a2f_affine_reach.py (same pins, no behaviour change)
         out = []
         for n, (pts, tags, ports) in enumerate(raw):
             pts, tags = list(pts), list(tags)
-            for pname in ports:
+            for pname,bit in ports:
                 pts.append(place[(n, pname)])
                 tags.append('PORT_' + look(pname)[0] + ':' + pname)
             done, todo = [0], list(range(1, len(pts)))
@@ -200,7 +251,7 @@ def _install_read_near():
 RP.PATHS['write'].insert(0, ('capture_port_cap', {('port', 'cap')}))
 
 
-def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
+def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False, meta4=False):
     """exactly a2f_split4_route_plan.main's placement (midcapd + field4 expansion)."""
     F.install_pin_models()
     baseface = R.port_face
@@ -209,6 +260,8 @@ def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
     leaves, nets = R.load()
     ol = dict(F.OUTLINES)
     ol.update(s81_a2f_field16=(194.4, 280.8), s81_a2f_meta26=(259.2, 162.0), s81_a2f_control4=(194.4, 129.6))
+    if meta4:
+        ol['s81_a2f_meta26'] = (734.4, 162.0) # seven standard leaves, existing row height retained
     leaves, nets = F.transform(leaves, nets, ol)
     import copy
     vo = copy.deepcopy(F.VARIANTS['midcapd'])
@@ -218,7 +271,7 @@ def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
         _install_read_near()
     vo['rows'] = rows or [['f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6'], ['ctl', 'fj', 'meta', 'f7']]
     P, W, H, struct = F.build_mid(leaves, nets, body_w, vo)
-    P, nets = S4.expand(P, nets)
+    P, nets = S4.expand(P, nets, meta4=meta4)
     oldpm = R.pin_models
 
     def pm(lv):
@@ -230,7 +283,124 @@ def build_split4(body_w=3369.6, rows=None, read_near=False, return_far=False):
     return P, nets, W, H, struct, baseface
 
 
-def arrange(P, W, H, struct, arr):
+RELAY_PAIRS = ('rv', 'wv', 'ra', 'wa', 'rt', 'wt', 'wm', 'wd', 'sv', 'cv', 'sd', 'st', 'ct', 'ca', 'cm')
+
+
+def hop1(P, nets):
+    """A2-F hop 1: the eight b4 quarter relays (dsfd_vm_static_relay128_b4, one register per direction) are removed;
+    each b8 bridge drives its eight bank128 directly (RTL: o_X of b8 -> bank, bank -> i_X of b8, -1 edge each way).
+    Nets through a b4 (i_X bit b == o_X bit b) are merged and the b4 endpoints dropped.  Every storage unit is
+    re-packed inside its own box: [bank column B (mirrored, inputs E) | scatter + b8 column | bank column A], b8 kept
+    at its row, so b8 -> farthest bank stays well inside one cycle's reach."""
+    L = P.leaves
+    M = [l['master'] for l in L]
+    b4 = {i for i in P.pos if M[i] == 'dsfd_vm_static_relay128_b4'}
+    # nets: union through b4 (i_X[b] <-> o_X[b])
+    parent = list(range(len(nets)))
+
+    def f(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    where = {}
+    for n, eps in enumerate(nets):
+        for e in eps:
+            if e[0] in b4:
+                i, p, b = e
+                key = (i, p[2:], b)
+                if key in where:
+                    parent[f(n)] = f(where[key])
+                else:
+                    where[key] = n
+    groups = collections.defaultdict(list)
+    for n in range(len(nets)):
+        groups[f(n)].append(n)
+    new = []
+    for g in groups.values():
+        eps = [e for n in g for e in nets[n] if e[0] not in b4]
+        seen, out = set(), []
+        for e in eps:
+            if e not in seen:
+                seen.add(e)
+                out.append(e)
+        if len(out) > 1:
+            new.append(out)
+    # re-pack each unit: members by adjacency of the (old) graph
+    for i in b4:
+        del P.pos[i]
+    b8s = [i for i in P.pos if M[i] == 'dsfd_vm_static_relay128_b8']
+    adj = collections.defaultdict(set)
+    for eps in new:
+        ls = {e[0] for e in eps if e[0] >= 0}
+        if len(ls) <= 4:
+            for a in ls:
+                adj[a] |= ls
+    for j in b8s:
+        banks = sorted([i for i in adj[j] if M[i] == 'dsfd_vm_static_bank128'], key=lambda i: L[i]['name'])
+        scs = [i for i in adj[j] if M[i] == 'dsfd_vm_static_scatter_b8_out']
+        assert len(banks) == 8, (L[j]['name'], len(banks))
+        mem = banks + scs + [j]
+        x0 = min(P.pos[i][0] for i in mem)
+        bw = L[banks[0]]['w']
+        colw = max(L[i]['w'] for i in scs + [j])
+        xs = x0 + bw + CH
+        xa = xs + colw + CH
+        bx, by, bfx, bfy = P.pos[j]
+        P.pos[j] = (round(xs, 4), by, bfx, bfy)
+        for i in scs:
+            _, y, fx, fy = P.pos[i]
+            P.pos[i] = (round(xs, 4), y, fx, fy)
+        ys = sorted({P.pos[i][1] for i in banks})
+        rows = collections.defaultdict(list)
+        for i in banks:
+            rows[P.pos[i][1]].append(i)
+        for y, ids in rows.items():
+            ids = sorted(ids, key=lambda i: P.pos[i][0])
+            for k, i in enumerate(ids):
+                _, _, fx, fy = P.pos[i]
+                P.pos[i] = ((round(x0, 4), y, True, fy) if k == 0 else (round(xa, 4), y, False, fy))
+    return new
+
+
+def center_ctl(P, W, H, step=21.6):
+    """Lever 2 (S-FUNC 10-16): move the request scheduler (rsched) and the sequencer tile (seq) to the legal spot nearest
+    the centroid of the leaves they serve (rsched: the 16 FSR leaves; seq: the 16 b8 bridges), keeping every other
+    leaf, the outline and all faces.  Returns {leaf: (old xy, new xy)}."""
+    L = P.leaves
+    moved = {}
+    for key, served in (('rsched', 'fsr_b'), ('seq_tile', 'relay128_b8')):
+        i = next(k for k in P.pos if key in L[k]['master'])
+        tg = [k for k in P.pos if served in L[k]['master']]
+        cx = sum(P.rect(k)[0] + P.rect(k)[2] / 2 for k in tg) / len(tg)
+        cy = sum(P.rect(k)[1] + P.rect(k)[3] / 2 for k in tg) / len(tg)
+        old = P.pos.pop(i)
+        w, h = L[i]['w'], L[i]['h']
+        others = [P.rect(k) for k in P.pos]
+        best = None
+        nx, ny = int(W // step), int(H // step)
+        for gx in range(nx):
+            x = gx * step
+            if x + w > W:
+                break
+            for gy in range(ny):
+                y = gy * step
+                if y + h > H:
+                    break
+                d = abs(x + w / 2 - cx) + abs(y + h / 2 - cy)
+                if best is not None and d >= best[0]:
+                    continue
+                if any(x < ox + ow + CH and ox < x + w + CH and y < oy + oh + CH and oy < y + h + CH
+                       for ox, oy, ow, oh in others):
+                    continue
+                best = (d, x, y)
+        assert best, ('no legal centre spot', key)
+        P.pos[i] = (round(best[1], 4), round(best[2], 4), old[2], old[3])
+        moved[L[i]['name']] = [list(old[:2]), [best[1], best[2]], [round(cx, 1), round(cy, 1)]]
+    return moved
+
+
+def arrange(P, W, H, struct, arr, capture_hints=None):
     """returns the (possibly new) outline"""
     if arr == 'caprow':
         # the capture lanes leave the two E columns and form a capture ROW across the top of the body (directly
@@ -245,6 +415,8 @@ def arrange(P, W, H, struct, arr):
             col = 0 if x >= W - (capw / 2) - 1e-6 else 1
             rows[(col, round(y, 1))].append(i)
         groups = sorted(rows.values(), key=lambda g: (P.pos[g[0]][1], -P.pos[g[0]][0]))
+        if capture_hints:
+            groups.sort(key=lambda g: min(capture_hints.get(i, float('inf')) for i in g))
         per = CAPROW_PER
         gw = max(max(P.pos[i][0] + P.leaves[i]['w'] for i in g) - min(P.pos[i][0] for i in g) for g in groups)
         gh = max(max(P.pos[i][1] + P.leaves[i]['h'] for i in g) - min(P.pos[i][1] for i in g) for g in groups)
@@ -253,7 +425,7 @@ def arrange(P, W, H, struct, arr):
         assert roww <= body + 1e-6, ('capture row wider than the body', roww, body)
         x0 = (body - roww) / 2
         for n, g in enumerate(groups):
-            r, c = n // per, n % per
+            r, c = (n % nrow, n // nrow) if capture_hints else (n // per, n % per)
             gx0 = min(P.pos[i][0] for i in g)
             gy0 = min(P.pos[i][1] for i in g)
             for i in g:
@@ -311,6 +483,13 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--width', type=float, default=4104.0, help='total VM width (body = width - capture columns)')
     ap.add_argument('--caprow-per', type=int, default=8)
+    ap.add_argument('--assigned-pins', help='actual per-bit parent pin record; supplied ports override span packing')
+    ap.add_argument('--hub-plan', help='exact current die hub_layout.json; overrides nominal peer spans')
+    ap.add_argument('--capture-order', action='store_true', help='place capture lane groups by actual assigned external-bit medians')
+    ap.add_argument('--center-band', action='store_true', help='center the actual control/landing/CDC band in its empty middle strip')
+    ap.add_argument('--meta4', action='store_true', help='seven standard field4 metadata leaves per slice')
+    ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
+    ap.add_argument('--center-ctl', action='store_true', help='lever 2: rsched and seq tile at the centroid of FSR / b8')
     ap.add_argument('--read-near', action='store_true')
     ap.add_argument('--return-far', action='store_true', help='with --read-near: return lanes stay at the outer end (beside the storage)')
     ap.add_argument('--su-x0', type=float, default=0.0, help='SU W edge along the VM S face; -1 centred')
@@ -320,19 +499,61 @@ def main():
     CAPROW_PER = a.caprow_per
     SU_X0 = a.su_x0
     rows = [r.split(',') for r in a.rows.split('/')] if a.rows else None
-    P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far)
+    P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far, a.meta4)
     print('outline', W, H, struct, flush=True)
-    W, H = arrange(P, W, H, struct, a.arr)
+    assigned=json.loads(Path(a.assigned_pins).read_text()) if a.assigned_pins else None
+    capture_hints=None
+    if a.capture_order:
+        assert assigned and 'f_capture' in assigned['ports'], 'capture ordering requires actual f_capture assignment'
+        coords=collections.defaultdict(list)
+        for net in nets:
+            bits=[e[2] for e in net if e[0]<0 and e[1]=='f_capture']
+            caps=[e[0] for e in net if e[0]>=0 and 'cap_leaf' in P.leaves[e[0]]['master']]
+            for i in caps:
+                coords[i].extend(assigned['ports']['f_capture']['per_bit'][b][2] for b in bits)
+        capture_hints={i:sorted(c)[len(c)//2] for i,c in coords.items()}
+        assert len(capture_hints)==16, ('not all actual capture lanes assigned',len(capture_hints))
+    W, H = arrange(P, W, H, struct, a.arr, capture_hints)
+    if a.center_band:
+        # The old E-aligned cluster funnels landing/payload and read/return traffic
+        # through one E gcell column. Center its intact connected group in the
+        # empty middle strip; keep every leaf, face, root and parent dimension.
+        y0 = struct['slice_block_um'][1] + CH
+        yh = y0 + struct['band_um'][1]
+        ids = [i for i in P.pos if P.pos[i][1] >= y0-1e-4 and
+               P.pos[i][1]+P.leaves[i]['h'] <= yh+1e-4]
+        x0 = min(P.pos[i][0] for i in ids)
+        x1 = max(P.pos[i][0]+P.leaves[i]['w'] for i in ids)
+        dx = (W-(x1-x0))/2-x0
+        for i in ids:
+            x,y,fx,fy=P.pos[i]; P.pos[i]=(round(x+dx,4),y,fx,fy)
+        struct['center_band_shift_um']=round(dx,4)
+        struct['center_band_leaves']=len(ids)
+
+    moved = center_ctl(P, W, H) if a.center_ctl else None
+    if a.hop1:
+        nets = hop1(P, nets)
+        for path in ('write', 'read'):
+            RP.PATHS[path] = [h for h in RP.PATHS[path] if h[0] not in ('b8_b4', 'b4_bank')]
+        RP.PATHS['write'].append(('b8_bank', {('b8', 'bank')}))
+        RP.PATHS['read'].insert(RP.PATHS['read'].index(next(h for h in RP.PATHS['read'] if h[0] == 'b8_return')),
+                                ('b8_bank', {('b8', 'bank')}))
     print('arranged', W, H, flush=True)
-    sp = spans_for(a.hub, W, H)
+    sp = spans_from_plan(a.hub_plan, W, H) if a.hub_plan else spans_for(a.hub, W, H)
     if sp is None:          # split4 reference: the grant's face map, free spans
         cdc = ('aSW', 't_wfc', 'f_wfc', 'sel', 'col', 'qSW', 't_gather')
         R.port_face = lambda p: 'E' if p.startswith(cdc) else baseface(p)
-    install_spans(sp)
+    install_spans(sp, assigned)
     bad, outside = P.check(W, H)
-    res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
+    res = dict(center_ctl=moved, schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
-               spans=sp, by_reach={})
+               spans=sp, by_reach={}, metadata_standard_field4=a.meta4, center_band=a.center_band, capture_order=a.capture_order, structure=struct)
+    if a.assigned_pins:
+        res['assigned_pins']=dict(path=a.assigned_pins,sha256=hashlib.sha256(Path(a.assigned_pins).read_bytes()).hexdigest(),
+                                  ports=sorted(assigned['ports']),outline_um=assigned['outline_um'],scope='Partial grant; other ports retain peer-span planning positions. Parent fit and remaining pin/clock assignment open.')
+    if a.hub_plan:
+        res['peer_plan'] = dict(path=a.hub_plan, sha256=hashlib.sha256(Path(a.hub_plan).read_bytes()).hexdigest(),
+                                source=json.loads(Path(a.hub_plan).read_text()))
     for rr in a.reach:
         m = RP.measure(P, nets, W, H, rr)
         m['price'] = RP.price(m['write']['added_edges'], m['read']['added_edges'])

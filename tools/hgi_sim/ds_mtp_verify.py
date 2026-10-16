@@ -81,20 +81,21 @@ def att_T(r):
     return r.desc["O"].n if r.op == "QK" else r.desc["A"].n
 
 
-def classify(r):
-    """'shared' | 'pos' | ('expert', slot) | ('egather', slot)"""
+def classify(r, topk=6):
+    """'shared' | 'pos' | ('expert', slot) | ('egather', slot); topk = the routed experts a position (slots >= topk
+    are the shared expert)"""
     u, op, tag = r.unit, r.op, r.tag or ""
     m = EXPERT_RE.match(tag)
     if u == "SM" and m:
         k = int(m.group(1))
-        return ("expert", k) if k < 6 else "shared"
+        return ("expert", k) if k < topk else "shared"
     if u == "SM":
         return "shared"
     if u == "COLL":
         g = GATHER_RE.search(tag)
         if op == "ALL_GATHER" and g:
             k = int(g.group(1))
-            return ("egather", k) if k < 6 else "shared"
+            return ("egather", k) if k < topk else "shared"
         if op in ("ALL_GATHER", "GROUP_REDUCE_MCAST") and not ("kv" in tag and "gather" in tag and "slot" in tag):
             return "shared"
         return "pos"
@@ -117,22 +118,109 @@ class Rec:
     pass
 
 
+def rebuild(recs):
+    """T.rebuild_waits (the Builder's hazard rule over region names) OR each record's wait_floor: the wait mask the
+    kernel compiler set explicitly (the DSpark draft bodies' full-drain 0xFFFE waits on records it appends without
+    region names); records without one (the AR program) are unchanged"""
+    out = T.rebuild_waits(recs)
+    for r in out:
+        r.wait |= getattr(r, "wait_floor", 0)
+    return out
+
+
 def shift(iv, k):
     return (iv[0], iv[1] + k, iv[2] + k) if iv[0] == "VM" else iv
+
+
+# ---- multi-position (P-row) records: the H-MTP2 design (2026-10-15) ---------------------------------------------------
+# ISA form (no new opcode): a per-position record carries R = P rows; every descriptor with m = R steps by its stride
+# per row (the per-position copies of a VM region), a descriptor with m = 1 is broadcast to every row (gains, weights,
+# tables); the record retires when the last row's last write is visible.  Cost of a P-row record = c1 + (P - 1) II:
+# c1 = the single-row record (its price / measured cost), II = the per-row initiation interval of the binding resource
+# AFTER the hardware change (the latency, fixed and broadcast parts are paid once).  Two bases: II_price (the price
+# table's own structure), II_meas (the measured RTL structure; None = ratio x II_price).
+# Window ring: a P-row DMA.KVWB_DS appends all P rows before the P attention rows; a 128-slot ring (= the window) then
+# lets position p+j's append overwrite a slot inside row p's window (test_mtp_rows: FAILS at 1M); the batched verify
+# needs a ring of 256 slots (power of two >= 128 + P - 1: KVWB O.m = ATT B.m = 256, no ISA change, +128 rows of HBM a
+# layer).  Row r of a P-row record runs with POS = POS0 + r (and WIN, POS1 from it).
+FCOLL = 108.6 + 377.6e-9 * CLK + 0.15e-6 * CLK      # perf.coll_cycles fixed part (endpoint + crossing + tail), 741.7
+HBM_RATIO = 136 / 98.96                              # SM line 136 B at 1 line/cycle vs the SM's 98.96 B/cycle HBM share
+SK_PRICE = 0.52778 * 1200                            # Sinkhorn node of the HC_MIX price (ot_hdc_sinkhorn 41 clocks)
+HC_STATIC_C1, HC_STATIC_P6 = 9554.0, 31481.0           # static HC engine measured (see row_ii HC)
+HC_STATIC_II = (HC_STATIC_P6 - HC_STATIC_C1) / 5
+HCP_II = (1578 - 328) / 5                            # HCP RTL spec W256 measured x1 328 / x6 (MTP verify) 1,578 cycles
+ROW_FAMILIES = ("FUSED.PRE", "FUSED.POST", "FUSED.QDQ", "HC", "ATT", "COLL", "IDX.TOPK", "IDX.INDEX", "SU", "DMA",
+                "ARGMAX")
+
+
+def row_family(r):
+    u, op = r.unit, r.op
+    if u == "FUSED":
+        return {"HC_PRE_NORM": "FUSED.PRE", "HC_POST": "FUSED.POST"}.get(op, "FUSED.QDQ")
+    if u == "IDX":
+        return "IDX.TOPK" if op == "TOPK" else "IDX.INDEX"
+    return u
+
+
+def row_ii(r, c1, dyn, L, sk_rep=3):
+    """(II_price, II_meas | None, basis) of a per-position record as a P-row record (see the block comment)."""
+    fam = row_family(r)
+    if fam == "FUSED.PRE":
+        # price: SU chain 20,480 + 5,120 words at M256 (100 beats) | actquant 32 / cycle on 5,120 (160): 160 binds.
+        # LL engine: each of the 32 lanes reads 4 h sectors x 20 (80 VM-bank reads a row; gain kept, writes on W port)
+        # MEASURED (results/arch/hbm_mtp_1015/p6_rtl_2330/measurement.json, RTL 8fe5d18bd, mapped VM, D 5,120): one
+        # P6 job 1,451 cycles vs one row 466 -> (1,451 - 466) / 5 = 197 a further row (KX = 2 x slots: row starts
+        # alternate 80 / 258); the price form 649.4 + 5 x 160 = 1,449 matches the measured job to 0.2 %
+        return 160.0, 197.0, "price: actquant 5,120 / 32; LL P6 RTL measured (1,451 - 466) / 5"
+    if fam == "FUSED.POST":
+        return 100.0, 100.0, "SU chain 25,600 words / 256; LL: 5 reads x 20 sectors a lane"
+    if fam == "FUSED.QDQ":
+        n = r.desc["A"].n
+        return float(math.ceil(n / 32)), float(math.ceil(n / 32)), "quantiser 32 / cycle"
+    if fam == "HC":
+        # MEASURED (static HC engine, codex/hc-static-engine-1014 a35449ada, results/rtl/hbm_hc_static_1015, K 20,480,
+        # 24 rows, Sinkhorn 20): P1 engine_967 9,554 cycles; P6 sys1_split92_ee1 31,481 (row period 193 + 160 P,
+        # 128 MAC lanes; tail serial a position) -> a further position (31,481 - 9,554) / 5 = 4,385
+        return max(HCP_II, SK_PRICE / sk_rep), HC_STATIC_II, f"HCP x6 measured II {HCP_II:.0f}; Sinkhorn {SK_PRICE:.0f} / {sk_rep} units"
+    if fam == "COLL":
+        fixed = FCOLL + (T.first_access() if r.op == "ROW_GATHER" else 0.0)
+        return max(c1 - fixed, 1.0), None, "collective fixed part paid once (one message train of P payloads)"
+    if fam == "IDX.TOPK":
+        return 47.0, 47.0, "router top-6 RTL 47 cycles a row (SU route chain 2 beats)"
+    if fam == "IDX.INDEX":
+        return c1 * 152.0 / 658.9, None, "key stream shared; array ingest 126.7 ns (152 cyc) a query of the 658.9 frame"
+    if fam == "SU":
+        r2 = copy.copy(r)
+        r2.desc = {k: copy.copy(v) for k, v in r.desc.items()}
+        for v in r2.desc.values():
+            v.m = v.m * 2
+        return max(T.su_cost(r2, dyn, L)[0] - T.su_cost(r, dyn, L)[0], 1.0), None, "SU nv x P, depth once"
+    if fam == "DMA":
+        return max(c1 - T.first_access(), 2.0), None, "first access once; row bytes at full bandwidth"
+    if fam == "ARGMAX":
+        return 6.0, None, "1,347-row shard / 256 lanes"
+    return c1, None, "no P-row form"
 
 
 SWAP_IN, SWAP_OUT = 335.9, 241.0   # ds_mtp_kernels column swap launch S2 cycles (STRIPE4 h + PRE, results/rtl/hgi_e2e_mtp_20261010)
 
 
-def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=None, swap=False, pos_scale=None):
+def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=None, swap=False, pos_scale=None,
+                   rows=(), sm_k=None, att_k=None, bcomp=None, sk_rep=3, topk=6, swap_out="between"):
     """swap: the P columns' residual h (20,480 words + PRE) do NOT all fit the 2^18-word VM (the AR map ends at
     ~261.7k words): each layer swaps every column in from / out to the HBM column store (ds_mtp_kernels' swap bodies,
     DMA) -- the as-built form; swap=False: VM-resident columns (needs VM growth).  pos_scale: {unit: factor} on the
-    per-position records' cost (binding-unit sensitivity)."""
+    per-position records' cost (binding-unit sensitivity).  rows: the ROW_FAMILIES emitted as ONE P-row record (cost
+    c1 + (P - 1) II, row_ii); sm_mode "slots": the SM carries sm_k MAC slot sets (one HBM read of a weight line serves
+    sm_k positions a pass, ceil(P / sm_k) passes, never faster than the HBM share); att_k: SM attention query slots
+    (option B, "ATT" in rows: fixed spans once, the measured component span bcomp x ceil(P / att_k)).  topk: routed
+    experts a position (6 the main layers, 3 the DSpark stages); swap_out (with swap): "between" = swap the columns out
+    at every segment change (the verify: the head segment's columns are not stored back), "all" = also after the last
+    segment (a DSpark stage body), "none" = swap in only (DHEAD)."""
     """-> (records, notes): the verify(P) record stream; every record carries .fp (reads, writes intervals) and
     .price(scale) (its cost)."""
     dyn = T.Dyn(DT.POS)
-    U = max(6, int(round(union))) if P > 1 else 6
+    U = max(topk, int(round(union))) if P > 1 else topk
     out = []
     stats = dict(shared=0, per_position=0, expert_slots=U, union_records=0)
 
@@ -151,14 +239,16 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
         c.orig_op = f"{r.unit}.{r.op}"
         c.mtp_kind = kind
         c.npos = len(poss)
+        c.ii = None
         if unit:
             c.unit = unit
         out.append(c)
         return c
 
     allp = list(range(P))
-    hrec = next(r for r in recs if r.unit == "FUSED" and r.op == "HC_PRE_NORM")
-    h_iv = T.footprint(hrec, dyn, 0)[0]          # the residual h + PRE intervals (HC pre-norm reads them)
+    hrec = next((r for r in recs if r.unit == "FUSED" and r.op == "HC_PRE_NORM"), None)
+    h_iv = T.footprint(hrec, dyn, 0)[0] if hrec else []      # the residual h + PRE intervals (HC pre-norm reads them)
+    assert hrec or not swap, "column swaps need the HC pre-norm's h / PRE footprint"
     seg_key = None
 
     def swaps(kind, cyc, layer):
@@ -177,15 +267,22 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
             continue
         k_ = r.layer if isinstance(r.layer, int) and r.layer < 40 else "head"
         if swap and P > 1 and k_ != seg_key:
-            if seg_key is not None:
+            if seg_key is not None and swap_out != "none":
                 swaps("out", SWAP_OUT, seg_key)
             swaps("in", SWAP_IN, k_)
             seg_key = k_
         L = r.layer if isinstance(r.layer, int) else 0
         base = cf(r, dyn, L)[0]
-        cls = classify(r)
+        cls = classify(r, topk)
         if r.unit == "ATT":
             T_ = att_T(r)
+            if "ATT" in rows and P > 1 and att != "A":
+                c_b = bmodel[str(T_)][r.op.lower()]
+                comp = bcomp[str(T_)][r.op.lower()]
+                k_ = att_k or 1
+                emit(r, allp, base, unit="SM", cost=c_b + comp * (math.ceil(P / k_) - 1), kind=f"att_B{T_}_rows")
+                stats["shared"] += 1
+                continue
             if att == "A":
                 for p in allp:
                     emit(r, [p], base, kind="att_A")
@@ -202,6 +299,8 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
                 stats["per_position"] += P
                 continue
             c = base
+            if r.unit == "SM" and sm_mode == "slots" and P > 1:
+                c = base * max(1.0, math.ceil(P / sm_k) / HBM_RATIO)
             if r.unit == "COLL" and P > 1:
                 nb = 4 * r.desc["A"].n
                 c = base * coll_cycles(r.op, P * nb, 96)[0] / coll_cycles(r.op, nb, 96)[0]
@@ -222,20 +321,31 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
                     emit(r, [p], base, kind="expert_serial")
                 stats["per_position"] += P
                 continue
-            for j in range(k, U, 6):                   # union slots j = k, k + 6, ...: P_e = 6 P / U positions each
-                pe = 6 * P / U
+            for j in range(k, U, topk):                # union slots j = k, k + 6, ...: P_e = 6 P / U positions each
+                pe = topk * P / U
                 c = base
                 if what == "egather" and P > 1:
                     nb = 4 * r.desc["A"].n
                     c = base * coll_cycles(r.op, int(round(pe * nb)), 96)[0] / coll_cycles(r.op, nb, 96)[0]
-                emit(r, allp, base, extra_shift=(j // 6) * SLOT_OFF, cost=c, kind=what)
-            stats["shared"] += len(range(k, U, 6))
+                if what == "expert" and sm_mode == "slots" and P > 1:
+                    c = base * max(1.0, math.ceil(math.ceil(pe) / sm_k) / HBM_RATIO)
+                emit(r, allp, base, extra_shift=(j // topk) * SLOT_OFF, cost=c, kind=what)
+            stats["shared"] += len(range(k, U, topk))
             continue
         # per position
+        if P > 1 and row_family(r) in rows:
+            iip, iim, _ = row_ii(r, base, dyn, L, sk_rep=sk_rep)
+            c = emit(r, allp, base, cost=base + (P - 1) * iip, kind="rows")
+            c.ii, c.ii_meas, c.c1 = iip, iim, base
+            stats["shared"] += 1
+            if r.unit == "IDX" and r.op == "TOPK" and (r.tag or "").startswith("route.top") and sm_mode != "serial":
+                emit(r, allp, base, kind="expert_union")
+                stats["union_records"] += 1
+            continue
         for p in allp:
             emit(r, [p], base, kind="pos")
         stats["per_position"] += P
-        if r.unit == "IDX" and r.op == "TOPK" and (r.tag or "").startswith("route.top6") and P > 1 and sm_mode != "serial":
+        if r.unit == "IDX" and r.op == "TOPK" and (r.tag or "").startswith("route.top") and P > 1 and sm_mode != "serial":
             emit(r, allp, base, kind="expert_union")       # the per-die union of the P positions' top-6 (ISA gap)
             stats["union_records"] += 1
     end = [r for r in recs if r.unit == "CTL" and r.op == "END"]
@@ -244,7 +354,9 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
         c.fp, c.base_cost, c.orig_op, c.mtp_kind, c.npos = ([], []), 1.0, "CTL.END", "end", P
         c.implicit = ()
         out.append(c)
-    out = T.rebuild_waits(out)
+    if swap and P > 1 and seg_key is not None and swap_out == "all":
+        swaps("out", SWAP_OUT, seg_key)
+    out = rebuild(out)
     return out, stats
 
 
@@ -261,7 +373,11 @@ def cost_fn(scale=None):
 
     def cf(r, dyn, L):
         c = r.base_cost
-        if not r.mtp_kind.startswith("att_B"):
+        if getattr(r, "ii", None) is not None and k:
+            q = k.get(r.orig_op, 1.0)
+            iim = r.ii_meas if (r.ii_meas is not None and r.orig_op in k) else q * r.ii
+            c = q * r.c1 + (r.npos - 1) * iim
+        elif not r.mtp_kind.startswith("att_B"):
             c *= k.get(r.orig_op, 1.0)
         return c, "mtp_verify", f"{r.orig_op} {r.mtp_kind} x{r.npos}"
     return cf
@@ -297,7 +413,7 @@ def run(recs, scale=None, whole=False):
             return dict(cycles=round(s["total_cycles"], 1), records=len(recs), unit_busy=busy, timing="whole token")
         tot, busy, per = 0.0, {}, {}
         for key, seg in segments(recs):
-            seg = T.rebuild_waits(seg + end)
+            seg = rebuild(seg + end)
             s = T.schedule(seg, DT.POS, "S2", cost_fn=cost_fn(scale))
             tot += s["total_cycles"]
             per[str(key)] = round(s["total_cycles"], 1)

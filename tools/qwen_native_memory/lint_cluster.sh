@@ -18,5 +18,8 @@ files=(
 )
 sha256sum "${files[@]}" > "$out/source.sha256"
 "${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --lint-only -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD +define+OT_QFD_VM_NOX --top-module ot_qwen_native_memory_cluster "${files[@]}" > "$out/lint.log" 2>&1
-! grep -Eq 'PINMISSING|PINNOTFOUND|MODMISSING' "$out/lint.log"
+# Q-VMWB 0030: '! grep' never trips set -e (negated pipelines are exempt), so this check PASSED with missing pins.
+if grep -Eq 'PINMISSING|PINNOTFOUND|MODMISSING' "$out/lint.log"; then
+  grep -E 'PINMISSING|PINNOTFOUND|MODMISSING' "$out/lint.log" | head -20; echo FAIL_native_cluster_unbound_pins; exit 1
+fi
 echo PASS_native_cluster_elaboration_real_SRAM_ROM_all_clock_ports

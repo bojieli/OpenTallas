@@ -1,0 +1,12 @@
+{
+  "scope": "Exact original three return stages vs32source-instantiated bitplane leaves; one full64lane operand copy",
+  "checks": 4994,
+  "positive_errors": 0,
+  "lane_shift_mutant_errors": 4269,
+  "native_timing": "OPEN",
+  "actual_full_VM_native_SRAM_composition": "Next test; not covered by this component test",
+  "source_sha256": {
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "4e82f4fd7d2d34f84bb54736c856582db6e674d1ef214ae015a750514705bdcb",
+    "rtl/test/qwen_vm_residual/tb_return_plane.sv": "b8356bf9b7bda85b989610c6bcf2d3b1c8628c9c72966b348a5c842871604a41"
+  }
+}

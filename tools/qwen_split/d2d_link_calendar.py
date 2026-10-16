@@ -124,6 +124,9 @@ def handoff_windows(path):
     return out
 
 
+PREC_K0 = 3   # first S->C program-record slot of the token run (token-run cycle)
+
+
 def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
@@ -151,12 +154,23 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     l0_start = int(groups[0]["start"])
     e_last = emb - (txl + phy + 2)
     m1 = [dict(seg=1, src="C", cyc=2, tx_port=2, rx_port=2, kind=15, beat=0)]
+    # kind-8 row header (Q-NETLIST qfd_sys_face record layout, 2026-10-16) one edge before word 0: 65 port-2 records
+    m1.append(dict(seg=1, src="K", cyc=e_last - 64, tx_port=2, rx_port=2, kind=8, beat=0))
     m1 += [dict(seg=1, src="K", cyc=e_last - 63 + w, tx_port=2, rx_port=2, kind=6 + w // 32, beat=w % 32) for w in range(64)]
+    # program-record slots (port 1, every token run; a slot without a HOST / face record carries observed = 0):
+    # S->C kind 13 beat 1 BEGIN, kind 13 beat 2 AUTH, kind 12 CONTEXT; C->S kind 14 WITNESS after the context is out
+    # of the compute RX (arrival + 2) plus 2 face edges, with slack for the pin registers
+    m1 += [dict(seg=1, src="K", cyc=PREC_K0 + i, tx_port=1, rx_port=1, kind=k, beat=b)
+           for i, (k, b) in enumerate(((13, 1), (13, 2), (12, 0)))]
+    prec_w = PREC_K0 + 2 + txl + phy + 12
+    m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
     ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs)
     layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]), cycles=int(g["cycles"])) for g in groups],
                   embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, map(int, win[lay[0]]))),
                   L1_35=dict(zip(ops, map(int, win[lay[1]])))), layer=l1, token_run_L0=l0,
-                  emb_send=[e_last - 63, e_last],
+                  emb_send=[e_last - 63, e_last], emb_header_send=e_last - 64,
+                  program_records=dict(k_send=[PREC_K0, PREC_K0 + 2], kinds="13/1 BEGIN, 13/2 AUTH, 12 CONTEXT S->C; 14 WITNESS C->S",
+                                       witness_send=prec_w),
                   result_handoff=(dict(source=handoff, op="qkv", pc=hw["qkv"][1], visible_after_go=hw["qkv"][0],
                                        priced_qkv=int(priced_qkv[lay[1]]), qkv_window=int(win[lay[1]][1]),
                                        q_send_shift=int(win[lay[1]][1] - priced_qkv[lay[1]]),
