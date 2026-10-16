@@ -54,6 +54,7 @@ def build():
     bus("rst_n", 1, "N", 22, 22.3)
     bus("ck", 1, "N", 32, 32.3)
     bus("fault", 1, "S", 32, 32.3)
+    bus("idle_issuer", 1, "S", 36, 36.3)
     face_stats = {}
     for face in "WENS":
         pp = sorted(

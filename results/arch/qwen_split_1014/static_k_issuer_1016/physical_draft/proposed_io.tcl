@@ -2166,3 +2166,4 @@ place_pin -pin_name {layer[5]} -layer M5 -location {18.684 280.800} -pin_size {.
 place_pin -pin_name {rst_n} -layer M5 -location {22.140 280.800} -pin_size {.024 .144}
 place_pin -pin_name {ck} -layer M5 -location {32.124 280.800} -pin_size {.024 .144}
 place_pin -pin_name {fault} -layer M5 -location {32.124 0.000} -pin_size {.024 .144}
+place_pin -pin_name {idle_issuer} -layer M5 -location {36.156 0.000} -pin_size {.024 .144}
