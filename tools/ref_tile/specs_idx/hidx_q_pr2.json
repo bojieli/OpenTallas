@@ -1,0 +1,206 @@
+{
+ "name": "hidx_q_pr2",
+ "top": "ot_hbm_idx_query_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "ql_head",
+   "ql_v",
+   "fault",
+   "emit_v",
+   "emit_head",
+   "frame_start",
+   "block_v",
+   "block_head",
+   "block_number",
+   "head_weight",
+   "clk",
+   "clk_quant",
+   "clk_quant_delay",
+   "clk_bank",
+   "rst_n",
+   "block_data"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_query_static.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "ql_codes": [
+   3.708,
+   52.86
+  ],
+  "ql_sc": [
+   52.86,
+   55.932
+  ],
+  "ql_w": [
+   55.932,
+   57.468
+  ],
+  "ql_head": [
+   57.468,
+   58.236
+  ],
+  "ql_v": [
+   58.236,
+   58.332
+  ],
+  "fault": [
+   58.332,
+   58.428
+  ],
+  "emit_v": [
+   58.428,
+   58.524
+  ],
+  "emit_head": [
+   58.524,
+   59.004
+  ],
+  "frame_start": [
+   59.004,
+   59.1
+  ],
+  "block_v": [
+   59.1,
+   59.196
+  ],
+  "block_head": [
+   59.196,
+   59.676
+  ],
+  "block_number": [
+   59.676,
+   59.868
+  ],
+  "head_weight": [
+   59.868,
+   61.404
+  ],
+  "clk": [
+   61.404,
+   61.5
+  ],
+  "clk_quant": [
+   61.5,
+   61.596
+  ],
+  "clk_quant_delay": [
+   61.596,
+   61.692
+  ],
+  "clk_bank": [
+   61.692,
+   62.076
+  ],
+  "rst_n": [
+   62.076,
+   62.172
+  ],
+  "block_data": [
+   62.172,
+   160.476
+  ]
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/IDXP-OPQ-1405",
+  "branch": "claude/hnl-idxopq-1405",
+  "tag": "idxopq1405",
+  "purpose": "idx_q successor of hidx_q_pr (7 CTS roots = 7 die entries; CTS hold repair -56.6 ps / TNS -29,474 ps on cross-entry transfers, 100 ps die-skew reserve): ONE clock root clk for every flop and SRAM (no data path between two clock entries; clk_quant/clk_quant_delay/clk_bank ports kept, unloaded), 4x8-head flop banks -> 5 SRAM 32x128, quant element line ot_hdc_delay_rf, rst -> ot_rst_relay; same ports, same latency. Clocks on the W (logic) face. Benches run_query.sh (MUT0 pass / MUT1-3 fail) + run_scheduled.sh.",
+  "extra_paths": [
+   "tools/hbm_idx_static_calendar.py",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_static_parent_vectors.py",
+   "tools/hbm_idx_static_query_vectors.py",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+  ],
+  "benches": []
+ },
+ "clock": "cts",
+ "outline": {
+  "w": 170.64,
+  "h": 164.16
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "core.gcode[0].mem",
+   "at": [
+    23.76,
+    23.76
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "core.gcode[1].mem",
+   "at": [
+    23.76,
+    64.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "core.gcode[2].mem",
+   "at": [
+    23.76,
+    105.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "core.gcode[3].mem",
+   "at": [
+    95.472,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "core.scmem",
+   "at": [
+    95.472,
+    84.24
+   ]
+  }
+ ]
+}
