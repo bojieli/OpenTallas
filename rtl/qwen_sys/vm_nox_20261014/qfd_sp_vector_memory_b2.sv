@@ -1,4 +1,4 @@
-// NEW b2 six-source ABI. No inherited physical view. Shared fixed24-slot calendar; PAR_RB must remain0.
+// NEW b2 six-source ABI. No inherited physical view. Production halftrain uses PAR_RB1; shared24 remains diagnostic.
 `timescale 1ns/1ps
 // Native STATIC compute-die VM binding (HANDOFF0ah). No credit ports,queues or runtime scheduling. This wrapper requires OT_QFD_VM_NOX and binds the real tiled VM.
 // SA uses qfd_su_vm_pack. Row/ar/ME bundles are MSB-valid; payload data occupies the low bits.
@@ -6,7 +6,7 @@
 module qfd_sp_vector_memory_b2 #(
     parameter integer USE_MACRO=1, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0,
     // Six native producer ports land through the existing static NB6 merge. No runtime arbitration.
-    parameter integer PAR_RB=0, PMUT=0,
+    parameter integer PAR_RB=1, PMUT=0,
     parameter integer USE_NATIVE_CLOCKS=0,
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, RETURN_CLOCKS=0,
     parameter integer RETURN_PIN_INPUT=0,
@@ -1122,5 +1122,4 @@ module qfd_sp_vector_memory_b2 #(
         .write_commit_v(raw_commit_v),.write_commit_line(raw_commit_line),.write_commit_mask(raw_commit_mask));
     assign fault=qfault | w_fault | w_hazard | ar_bad | slot_fault;
     assign mo=~fault;
-    initial if(PAR_RB!=0) $fatal(1,"b2 shared24 calendar requires PAR_RB=0");
 endmodule

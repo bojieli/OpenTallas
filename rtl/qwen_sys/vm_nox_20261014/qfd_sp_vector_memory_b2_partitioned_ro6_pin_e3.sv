@@ -1,4 +1,4 @@
-// NEW b2 NB6 native E3 candidate: fixed24 shared calendar, real macro banks, no physical inheritance.
+// NEW b2 NB6 native E3 candidate: six parallel fixed halftrain calendar, real macro banks, no physical inheritance.
 `timescale 1ns/1ps
 // Source-specialized parallel writeback VM. The fixed PAR_RB=1 binding survives
 // plain macro netlist emission; it does not depend on a parameter sidecar.
@@ -418,7 +418,7 @@ module qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3 (
 );
     qfd_sp_vector_memory_b2 #(
         .USE_MACRO(1), .USE_LEAF_CLOCKS(1), .OBS_MUT(0), .MUT(0),
-        .PAR_RB(0), .PMUT(0), .NATIVE_BANKS(1), .RETURN_RO(6), .RETURN_PIN_INPUT(1), .WRITE_LEAVES(1), .WRITE_CLOCKS(1),
+        .PAR_RB(1), .PMUT(0), .NATIVE_BANKS(1), .RETURN_RO(6), .RETURN_PIN_INPUT(1), .WRITE_LEAVES(1), .WRITE_CLOCKS(1),
         .USE_NATIVE_CLOCKS(1), .RETURN_LEAVES(1), .READ_CONTROL_LEAVES(1), .RETURN_CLOCKS(1), .RELAY_TILES(1)
     ) u_vm (
         .native_ck(native_ck), .return_ck(return_ck), .read_control_ck(read_control_ck), .write_ck(write_ck), .relay_ck(relay_ck),
