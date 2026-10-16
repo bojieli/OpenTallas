@@ -142,8 +142,12 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------
 // Issuer leaf: actual issuer (3 x ot_sram_1r1w_64x512_m1_r2c2) with host_v4's `uop_v ? uop : 0` mask inside the
 // leaf (bank face flop AND uop_v flop: no input-to-output path).
+// COLL-CTL 1045: ONE clock entry. The mask ANDs a bank face flop (issuer clk_mem[b]) with uop_v (clk_control) at the
+// same output pin, so separate clk_mem entries would give every uop bit two launch domains (multiple_cts_roots
+// refuses a port owned by two roots). The leaf's own CTS tree clocks the control flops, the 3 macro clock pins and
+// the 1536 bank face flops: same logical edge as host_v4's related clk_issue[3:0] (lockstep bench unchanged).
 module ot_hgi_coll_issuer_m(
- input wire clk_control,input wire [2:0] clk_mem,input wire rst_n,
+ input wire clk_control,input wire rst_n,
  input wire [36:0] cfg,input wire start,input wire [5:0] start_pc,
  output wire busy,done,fault,uop_v,
  output wire [1535:0] uop,
@@ -151,7 +155,7 @@ module ot_hgi_coll_issuer_m(
  output wire [5:0] uop_pc
 );
  wire [1535:0] raw;
- ot_hgi_coll_static_issuer u_issuer(.clk_control(clk_control),.clk_mem(clk_mem),.rst_n(rst_n),
+ ot_hgi_coll_static_issuer u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
   .cfg(cfg),.start(start),.start_pc(start_pc),.busy(busy),.done(done),.fault(fault),
   .uop_v(uop_v),.uop(raw),.iteration(iteration),.uop_pc(uop_pc));
 `ifdef OT_COLL_V5_MUT_NOMASK
@@ -306,7 +310,7 @@ module ot_hfd_coll_q_hard_v5_body #(
  input wire rst_n,
  input wire [1:0] qid,
  input wire clk_program,clk_control,
- input wire [3:0] clk_issue,
+ input wire clk_issue,
  input wire [NCK-1:0] clk_qslots,       // [NS-1:0] capture leaves, [NCK-1:NS] switch slices
  input wire [16:0] clk_ring,
  input wire [32:0] clk_reduce,
@@ -333,7 +337,7 @@ module ot_hfd_coll_q_hard_v5_body #(
  // ---- issuer + programme target + fault join
  wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;
  wire issue_fault,issue_done,uop_v;wire [1535:0] inst;wire [31:0] iteration;wire [5:0] uop_pc;
- ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue[0]),.clk_mem(clk_issue[3:1]),.rst_n(rst_n),
+ ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(hgi_busy),.done(issue_done),
   .fault(issue_fault),.uop_v(uop_v),.uop(inst),.iteration(iteration),.uop_pc(uop_pc));
  assign hgi_done=issue_done;assign done=issue_done;assign hgi_fault=fault;
@@ -541,10 +545,10 @@ endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // Die-facing masters. Ports equal host_v4 except: QID parameter -> `qid` strap input; clk_qslots 2 -> NS+18;
-// clk_vmwrite 1 -> 16; new output fault_cause[15:0].
+// clk_vmwrite 1 -> 16; clk_issue 4 -> 1 (issuer leaf has one CTS root, COLL-CTL 1045); new output fault_cause[15:0].
 module ot_hfd_coll_q3_hard_v5(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,input wire [3:0] clk_issue,input wire [28:0] clk_qslots,
+ input wire clk_program,clk_control,input wire clk_issue,input wire [28:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,input wire [33:0] clk_tkm,
  input wire [15:0] clk_vmwrite,input wire [14:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -566,7 +570,7 @@ endmodule
 
 module ot_hfd_coll_q2_hard_v5(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,input wire [3:0] clk_issue,input wire [26:0] clk_qslots,
+ input wire clk_program,clk_control,input wire clk_issue,input wire [26:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
