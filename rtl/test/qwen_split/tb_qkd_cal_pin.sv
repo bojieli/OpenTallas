@@ -32,9 +32,9 @@ module tb_qkd_cal_pin;
    if(cs)begin
     if(layer!==6'(li)||sg!==(li==0||li==63))$fatal(1,"CALPIN_FAIL layer/segment identity");
     starts=starts+1;
-    if(li==63)begin li=0;next_c=origin+3+D2D_FIRST_TOKEN;end
-    else if(li==35)begin tok=tok+1;li=0;next_c=origin+3+D2D_FIRST_TOKEN+tok*D2D_TOKEN_PERIOD;end
-    else begin li=li+1;next_c=origin+3+D2D_FIRST_TOKEN+tok*D2D_TOKEN_PERIOD+20'(D2D_CAL_START[20*li+:20]);end
+    if(li==63)begin li=0;next_c=origin+3+D2D_FIRST_TOKEN-1;end
+    else if(li==35)begin tok=tok+1;li=0;next_c=origin+3+D2D_FIRST_TOKEN-1+tok*D2D_TOKEN_PERIOD;end
+    else begin li=li+1;next_c=origin+3+D2D_FIRST_TOKEN-1+tok*D2D_TOKEN_PERIOD+20'(D2D_CAL_START[20*li+:20]);end
    end
   end
  end
@@ -45,6 +45,7 @@ module tb_qkd_cal_pin;
   if(!ready||init_words!=66)$fatal(1,"CALPIN_FAIL init count");
   repeat(30)@(negedge ck);epoch_go=1;origin=cyc+1;li=63;tok=0;next_c=origin+3+D2D_ADM_OFS;check_calendar=1;
   @(negedge ck);epoch_go=0;
+  // Token-control Q is published one edge before its compiled input capture.
   // Two complete36layer token programmes, then token3 L0 tests halt while active.
   wait(starts==74);@(negedge ck);check_calendar=0;
   if(!running)$fatal(1,"CALPIN_FAIL halt test did not reach active programme");
