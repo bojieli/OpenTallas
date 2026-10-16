@@ -1,0 +1,3 @@
+SFU_SPLIT_EQUIV PASS edges=6681 active_output_edges=6513 delay_core=3 delay_status=2 lg_path=23
+PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=3072 exact_VM_committed_words=307
+SFU_SPLIT_GATE POSITIVE PASS

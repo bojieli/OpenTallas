@@ -1,0 +1,158 @@
+{
+  "schema": "opentallas.ccf.seven_leaf_geometry_proposal.v1",
+  "qualification": "bbox geometry only; no pin/track/clock/cut/native grant",
+  "outline_um": [
+    492.48,
+    531.36
+  ],
+  "minimum_internal_channel_um": 20,
+  "external_channel_um": 20,
+  "external_channel_policy": "20um needed between CCF box and othercombchildren; parentdieport/edgeactualaudit stillrequired",
+  "children": [
+    {
+      "name": "ccf_capture_n",
+      "master": "ot_s81_hc_ccf_bankpipe_capture",
+      "xy_um": [
+        0,
+        488.16
+      ],
+      "wh_um": [
+        492.48,
+        43.2
+      ],
+      "orient": "R0",
+      "clock": "sk_n"
+    },
+    {
+      "name": "ccf_control_s",
+      "master": "ot_s81_hc_ccf_bankpipe_control",
+      "xy_um": [
+        0,
+        0
+      ],
+      "wh_um": [
+        492.48,
+        43.2
+      ],
+      "orient": "R0",
+      "clock": "sk_s"
+    },
+    {
+      "name": "ccf_bank_0",
+      "master": "ot_s81_hc_ccf_bankpipe_bank",
+      "xy_um": [
+        20.24,
+        63.2
+      ],
+      "wh_um": [
+        216,
+        120.96
+      ],
+      "orient": "R0",
+      "clock": "bank_ck[0]",
+      "macro_local_xy_um": [
+        22.356,
+        21.588
+      ],
+      "macro_wh_um": [
+        171.288,
+        77.784
+      ]
+    },
+    {
+      "name": "ccf_bank_1",
+      "master": "ot_s81_hc_ccf_bankpipe_bank",
+      "xy_um": [
+        256.24,
+        63.2
+      ],
+      "wh_um": [
+        216,
+        120.96
+      ],
+      "orient": "R0",
+      "clock": "bank_ck[1]",
+      "macro_local_xy_um": [
+        22.356,
+        21.588
+      ],
+      "macro_wh_um": [
+        171.288,
+        77.784
+      ]
+    },
+    {
+      "name": "ccf_bank_2",
+      "master": "ot_s81_hc_ccf_bankpipe_bank",
+      "xy_um": [
+        20.24,
+        204.16000000000003
+      ],
+      "wh_um": [
+        216,
+        120.96
+      ],
+      "orient": "R0",
+      "clock": "bank_ck[2]",
+      "macro_local_xy_um": [
+        22.356,
+        21.588
+      ],
+      "macro_wh_um": [
+        171.288,
+        77.784
+      ]
+    },
+    {
+      "name": "ccf_bank_3",
+      "master": "ot_s81_hc_ccf_bankpipe_bank",
+      "xy_um": [
+        256.24,
+        204.16000000000003
+      ],
+      "wh_um": [
+        216,
+        120.96
+      ],
+      "orient": "R0",
+      "clock": "bank_ck[3]",
+      "macro_local_xy_um": [
+        22.356,
+        21.588
+      ],
+      "macro_wh_um": [
+        171.288,
+        77.784
+      ]
+    },
+    {
+      "name": "ccf_bank_4",
+      "master": "ot_s81_hc_ccf_bankpipe_bank",
+      "xy_um": [
+        20.24,
+        345.12
+      ],
+      "wh_um": [
+        216,
+        120.96
+      ],
+      "orient": "R0",
+      "clock": "bank_ck[4]",
+      "macro_local_xy_um": [
+        22.356,
+        21.588
+      ],
+      "macro_wh_um": [
+        171.288,
+        77.784
+      ]
+    }
+  ],
+  "open_checks": [
+    "Newhardleafplacement43.2um-all-layerlattice mustbe reconciledagainstactualexportedLEFpinphases; these are geometricproposalsonly, NOT trackaligned claims.",
+    "Pinhomes/cutcapacity allincidentnets and measuredphi-R pending realnativeviews.",
+    "S81wholecomb20child fit mustusecurrentgrownCCR/CSEQ/CAQ origins, no presumedEroadreserve.",
+    "Bankmacroclockentry andSRAM20umedge actualpins needed.",
+    "Uniform2edge model totalretimingcyclecost unmeasured onactualnative89stageledger."
+  ]
+}

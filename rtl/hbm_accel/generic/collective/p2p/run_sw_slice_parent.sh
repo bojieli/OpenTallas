@@ -7,7 +7,7 @@ ROOT=${HCOLL_ROOT:-$(cd "$HERE/../../../../.." && pwd)}
 OUT=$(realpath -m "${1:?output directory}"); mkdir -p "$OUT"
 p=$ROOT/rtl/hbm_accel/generic/collective/p2p; v=$ROOT/rtl/hbm_accel/generic/vm/static; t=$ROOT/rtl/hbm_accel/generic/collective/tkm
 src=("$p/tb_hgi_coll_sw_slice_parent.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv" "$p/ot_hgi_coll_static_program_target.sv"
- "$p/ot_hfd_coll_q_static_v4.sv" "$p/ot_hgi_coll_static_issuer.sv" "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_pring_static.sv"
+ "$p/ot_hfd_coll_q_static_v4.sv" "$p/ot_hgi_coll_static_issuer.sv" "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_pring_static.sv" "$p/ot_hgi_coll_pring_captured_static.sv" "$p/ot_hgi_coll_pring_static_state_capture.sv"
  "$p/ot_hgi_coll_reduce_static.sv" "$p/ot_hgi_coll_argmax_static.sv" "$ROOT/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv"
  "$p/ot_hgi_coll_static_vmwrite.sv" "$p/ot_hgi_coll_static_link_capture.sv" "$p/ot_hgi_coll_static_capture_ctl.sv"
  "$p/ot_hgi_coll_static_pinreg_ctl.sv" "$p/ot_hgi_coll_static_pinreg_store.sv" "$p/ot_hgi_coll_static_seq_ctl.sv"

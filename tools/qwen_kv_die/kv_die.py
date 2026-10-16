@@ -214,9 +214,19 @@ V143B = __import__('os').environ.get('OT_KV_V143B', '0') == '1'
 # G_n->T1n 291.6, T1n->T2n 372.6, T2n->near fronts 479.6, G_f->T1f 432.0, score->S1n 215.7, S1n->S2n 37.1, S2n->ECTL 110.9
 # (all <= 500; v1.4.3: 285.9 / 314.0 / 34.6 / 125.3 / 436.4 / 337.0).  Far T2f / S1f band (5.4-um gaps) unchanged.
 V143C = __import__('os').environ.get('OT_KV_V143C', '0') == '1'
+# v1.4.3d (Q-KVSYS-HOP 2026-10-16, OT_KV_V143D=1, needs OT_KV_V143C=1): THREE-ROW band (one more 43.2-um row a side).
+# kvs11-v143c TT failed real->real on the G3S2 stage hops (ECTL a/b -> G multicast -72.45 / -47.99, G_far -> FT -60.78 /
+# -42.59, T2 -> front q -51.55, T1 -> T2 -14.16; 6,983 violators): in two rows no placement gets every hop under the
+# calibrated realized reach (exhaustive search over all four 324-um stages x 10.8-um x / row on the realized kvs11 pins
+# and bit order: best = 481 um 2-pin, 307 um ECTL-multicast HPWL).  Three rows: worst 2-pin 367 um (T2 -> front),
+# G_far -> FT 259, G_near -> T1 356, ECTL -> {G_n, G_f} HPWL 200 (kvs11: 524 / 524 / 292 / 372).  Same leaves, same
+# cycles; the band grows 43.2 um a side.  Search: results/arch/qwen_kv_hop_1016.
+V143D = V143C and __import__('os').environ.get('OT_KV_V143D', '0') == '1'
 V143_ROW = 43.2 if (V143B or V143C) else 28.08
 V143_GAP = 21.6 if (V143B or V143C) else 6.48
 V143_BAND_LO, V143_BAND_HI = (195.48, 194.4) if V143B else ((111.24, 108.0) if V143C else (119.88, 118.8))
+if V143D:
+    V143_BAND_LO, V143_BAND_HI = V143_BAND_LO + V143_ROW, V143_BAND_HI + V143_ROW
 V143_NF_LO, V143_NF_HI = (64.8, 65.88) if V143B else (32.4, 33.48)
 V143_X = (dict(g=226.8, t1n=-54.0, t2n=108.0, t2f=108.0, s1n=486.0, s2n=556.2, s1f=486.0) if V143B else
           dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4))   # ECTL-local x (R0 ECTL)
@@ -486,8 +496,34 @@ def _host_rt_v14(b):
     return b
 
 
+# Q-KVSYS-DIE 2026-10-16 (OT_KV_DCAL=1, default off): the KV link calendar sequencer qkd_d2d_cal_seq_pin (CLOSED view
+# physical/ref_tile/qkd_d2d_cal_seq_pin_ep3, Q-LINK/Codex 3365a45b8 + fbc4a2e0d) drives the static D2D end's cfg loader /
+# cal_start / cal_seg (6 of the 23 strict-bind open inputs); epoch_go <- the end's own fwd_epoch, halt <- epoch_abort,
+# reload <- the HOST root's program_begin_v (a new program image begins: the calendar image restarts).  KV AUTO: no tok_go.
+DCAL = __import__('os').environ.get('OT_KV_DCAL', '0') == '1'
+DCAL_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv'
+DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_seg']
+DCAL_WH = (18.792, 28.08)
+
+
+def dcal_binding():
+    return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),
+                ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CFG), ego=['epoch_go'], hlt=['halt'], rld=['reload']),
+                sliced={}, classed={})
+
+
+def _d2ds_binding_dcal():
+    # always bound (a die without the dcal instance has no cal / eab pins, so the groups are unused): the post-prep
+    # chain re-runs the strict bind without the OT_KV_* environment and must see the same bindings
+    b = d2ds_binding()
+    b['ports'].update(cal=list(DCAL_CFG), eab=['epoch_abort'])
+    return b
+
+
 BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding(),
-                qkd_d2ds=d2ds_binding())
+                qkd_d2ds=_d2ds_binding_dcal())
+BINDINGS.update(qkd_dcal=dcal_binding())
+RTL.update(qkd_dcal=DCAL_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
@@ -854,6 +890,50 @@ def _band(T, side, Wk):
 
 
 _PIN_HINT = {}
+# Q-KVSYS-HOP 2026-10-16 (OT_KV_HOP=1; default off): hop rules calibrated on the kvs11-v143c GRT/TT run (realized named
+# pins, routed wirelength; results/arch/qwen_kv_hop_1016).  (1) A frame port that kv_expand binds to a CLOSED leaf is
+# reached at that leaf's realized LEF pin, not the frame face: kvs11 ctrl kc kf -> rly_lkf planned 450 um at the frame
+# face, realized 558 um at the kc leaf (TT -196.7 ps).  (2) Late-launch closed views take their first relay nearer:
+# ectl_a rq (R 414 ps, insertion spread 63 ps) -> rly_krq passes <= ~380 um, fails at 437-444 um (-63 ps).  (3) Relay
+# chains keep every hop <= HOP_REACH (the closed standards' native self-reach: rlys_296 446 um, rlys_528 460 um).
+HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
+HOP_REACH = 445.0
+HOP_FIRST = dict(krq=340.0, krs=340.0)
+_LEAF_PIN_CACHE = {}
+
+
+def _leaf_pin(it, port):
+    """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    if not HOP or it.master not in ('qkd_ctrl', 'qkd_ctrl_n'):
+        return None
+    if 'kc' not in _LEAF_PIN_CACHE:
+        lef = Path(__file__).resolve().parents[2] / 'physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc/qkd_ctrl_kc.lef'
+        pins, cur, size = {}, None, None
+        for ln in lef.read_text().split('\n'):
+            t = ln.split()
+            if not t:
+                continue
+            if t[0] == 'SIZE':
+                size = (float(t[1]), float(t[3]))
+            elif t[0] == 'PIN':
+                cur = t[1].split('[')[0]
+            elif t[0] == 'RECT' and cur and cur not in pins:
+                x0, y0, x1, y1 = map(float, t[1:5])
+                pins[cur] = ((x0 + x1) / 2, (y0 + y1) / 2)
+        _LEAF_PIN_CACHE['kc'] = (pins, size)
+    pins, (lw, lh) = _LEAF_PIN_CACHE['kc']
+    p = pins.get(port.lstrip('*').split('[')[0])
+    if p is None:
+        return None
+    rev = it.master == 'qkd_ctrl'                       # kv_expand._ctrl_plan: u_kc at the strip's outer end
+    cx, cy = it.w / 2 - 23.76, (0.0 if rev else it.h - 43.2)
+    lx, ly = (p[0], lh - p[1]) if rev else p           # leaf MX in the reversed strip
+    fx, fy = cx + lx, cy + ly                           # frame-canonical
+    if it.orient in ('MY', 'R180'):
+        fx = it.w - fx
+    if it.orient in ('MX', 'R180'):
+        fy = it.h - fy
+    return it.x + fx, it.y + fy
 
 
 def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
@@ -873,10 +953,12 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     _PIN_HINT.clear()
     m = _build(**kw)
     best = None
+    passes_ = []          # Q-KVSYS-HOP: every planned pass, so a pass whose pin repair fails can fall back to another
     for _ in range(3):                      # re-plan from the drawn pins; keep the pass with the fewest pin-hop violations
         M = masters(m, 1)
         nv = pin_reach(m, M)['violations']
         print(f'kv die: plan pass pin-hop violations {nv}', file=sys.stderr)
+        passes_.append((nv, len(passes_), m))
         if best is None or nv < best[0]:
             best = (nv, m)
         if nv == 0:
@@ -920,8 +1002,20 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     _PIN_HINT.clear()
     if split and best[0]:
         import kv_pin_repair
+        snap_ = copy.deepcopy(best[1]) if HOP else None
         repaired = kv_pin_repair.repair(sys.modules[__name__], best[1])
         failures = pin_reach(repaired, masters(repaired, 1))
+        if failures['violations'] and HOP:
+            # OT_KV_HOP: the best pass's repair can be boxed in (d2d_kv fwd_* pins under the abutted UCIe PHY, first
+            # relay 1,208 um west): repair the other planned passes in order of pin-hop violations
+            for nv_, _, m_ in sorted(passes_, key=lambda t: t[:2]):
+                if m_ is best[1] or (snap_ is not None and m_ is snap_):
+                    continue
+                r_ = kv_pin_repair.repair(sys.modules[__name__], m_)
+                f_ = pin_reach(r_, masters(r_, 1))
+                print(f'kv die: OT_KV_HOP fallback pass ({nv_} pin-hop violations) -> {f_["violations"]} after repair', file=sys.stderr)
+                if not f_['violations']:
+                    return r_
         if failures['violations']:
             raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
         return repaired
@@ -1112,7 +1206,14 @@ def _v143_stages(add, se, cx, ey, col):
         add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
     for lower, near, far in ((True, 1, 0), (False, 2, 3)):
         row = (lambda k: cy - V143_ROW * k) if lower else (lambda k: cy + ECTL[1] + V143_GAP + V143_ROW * (k - 1))
-        if V143C:
+        if V143D:
+            put(f'{near}_g', 'qkd_hgs', 172.8, row(1), lower)
+            put(f'{far}_g', 'qkd_hgs', 183.6, row(2), lower)
+            put(f'{near}_t1', 'qkd_hgs', -162.0, row(2), lower)
+            put(f'{near}_t2', 'qkd_hgs', 32.4, row(3), lower)
+            put(f'{near}_s1', 'qkd_hss', 480.6, row(3), lower)
+            put(f'{near}_s2', 'qkd_hss', 540.0, row(3), lower)
+        elif V143C:
             put(f'{near}_g', 'qkd_hgs', 54.0, row(1), lower)
             put(f'{far}_g', 'qkd_hgs', 405.0, row(1), lower)
             put(f'{near}_t1', 'qkd_hgs', -216.0, row(2), lower)
@@ -1374,7 +1475,8 @@ def _host_v14_buses(m):
     add(('rst_die', 'reset', 1, [('host', 'die_rst_n')] + list(dict.fromkeys(die_l))))
     add(('rst_hbm', 'reset', 1, [('host', 'hbm_rst_n')] + list(dict.fromkeys(hbm_l)) + [(s, 'hbm_rst_n') for s in slices]))
     link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
-    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l))))
+    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l)) +
+         ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else [])))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
     # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
@@ -1465,6 +1567,22 @@ def _d2ds_swap(m):
         m['insts'].append(it)
         add((f'h{p_}', 'kv_oneway', 1, [('d2d_kv', p_), (n_, 'a')]))
     m.setdefault('extra_conns', {})['d2d_kv'] = ['.serdes_up(n_host_fdi[0])']     # SerDes tx_up (fdi bit 0) also feeds link_up[1]
+    if DCAL:
+        # OT_KV_DCAL: the calendar sequencer sits one channel E of the D2D frame, level with the frame centre (the relays
+        # are planned after, around it); its cfg / cal word is a 42-bit abutting-distance spine_local bus
+        d_ = by['d2d_kv']
+        w_, h_ = up(DCAL_WH[0] + SHAVE, GX), up(DCAL_WH[1] + SHAVE, GY)       # frame on the grid, >= the real view
+        it = F.Inst('dcal', 'qkd_dcal', up(d_.x + d_.w + 21.6, GX), up(d_.y + d_.h / 2 - h_ / 2, GY), w_ - SHAVE, h_ - SHAVE,
+                    'R0', kind='ctl', region='io')
+        m['insts'].append(it)
+        add(('dcal_cfg', 'spine_local', 1 + 1 + 6 + 32 + 1 + 1, [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
+        add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
+        for i_, (bid, cl, bits, eps) in enumerate(B):
+            if bid == 'clk_core_c':
+                B[i_] = (bid, cl, bits, list(eps) + [('dcal', 'ck')])
+        # epoch_go taps the end's fwd_epoch die net at its source (the bump chain keeps its relays and its one driver)
+        m.setdefault('extra_conns', {})['dcal'] = ['.ego(n_hfwd_epoch)']
 
 
 def _centre(it, port=None):
@@ -1574,7 +1692,9 @@ def _relays(m):
                 # v1.2: never along the die-edge cell ring (no relay fits there: kc_ES ran 24 mm up and down the E edge
                 # past the PHY to the controller strip's N-end PHY gap once the landing strip closed its old channel)
                 if q not in prev and 1 <= q[0] < nx - 1 and 1 <= q[1] < ny - 1 and not owner.get(q) and \
-                        not (SP['on'] and q in rocc):
+                        not (SP['on'] and q in rocc) and \
+                        not (SP.get('dil') and any((q[0] + i_, q[1] + j_) in rocc for i_ in range(-SP['dil'], SP['dil'] + 1)
+                                                   for j_ in range(-SP['dil'], SP['dil'] + 1))):
                     prev[q] = c
                     dq.append(q)
         if hit is None:
@@ -1739,6 +1859,9 @@ def _relays(m):
         def fixed_pin(inst, port):
             if bid in tree_meta and inst in by and max(by[inst].w, by[inst].h) > 2 * PIN_REACH:
                 return None       # v1.4.2 tree: a big frame's area reset pin is reached at the frame (over-macro last hop)
+            lp_ = _leaf_pin(by[inst], port) if inst in by else None
+            if lp_ is not None:
+                return lp_
             if (inst, port.lstrip('*')) in _PIN_HINT:
                 return _PIN_HINT[(inst, port.lstrip('*'))]
             it_ = by[inst]
@@ -1791,6 +1914,9 @@ def _relays(m):
         def reach_():
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
             # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
+            if HOP:
+                fr_ = FIRST_REACH.get(bid.rsplit('_', 2)[0], HOP_FIRST.get(bid.split('_')[0], HOP_REACH))
+                return min(fr_, HOP_REACH) if st_['prev_pt'] is None else HOP_REACH
             if st_['prev_pt'] is None:
                 return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
             return PIN_REACH
@@ -1810,6 +1936,8 @@ def _relays(m):
                     px, py = path_[idx]
                     best_ = None
                     for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
+                        if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
+                            continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
                         qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
@@ -1856,13 +1984,39 @@ def _relays(m):
                 rocc[cell].remove(r_)
             cells_added.clear()
             st_.update(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0)
-        for attempt in (0, 1):
+        # Q-KVSYS-HOP 2026-10-16 (OT_KV_RLY_STD=1 case: rst_die_t0_6 stage 19 found no spot): the std relay rows
+        # (up to 118.8 x 106 um) fill the channels, and the wide (24-cell) spot search strands a chain off its path, so a
+        # chain that fails BOTH attempts gets up to three more (below).  Reached only where the planner raised before:
+        # every case that built is unchanged.
+        for attempt in (0, 1, 2, 3):
             try:
                 chain_()
                 break
             except ValueError:
-                if attempt or not m['geo'].get('split'):
+                if attempt == 3 or not m['geo'].get('split') or (attempt and bid not in tree_meta
+                                                                    and __import__('os').environ.get('OT_KV_RLY_STD', '0') != '1'):
                     raise
+                if attempt:
+                    # retries 2-4: route 1 / 2 / 0 cells clear of placed relays, and every spot within PIN_REACH / 2 of
+                    # its path point (an off-path hop up to 24 cells away stranded rst_die_t0_6 500 um from its path)
+                    rollback_()
+                    st_['wide'] = True
+                    st_['offmax'] = PIN_REACH / 2
+                    SP['on'] = True
+                    SP['dil'] = (1, 2, 0)[attempt - 1]
+                    try:
+                        st_['path'] = route(a, b, pa, pb)
+                    except ValueError:
+                        SP['dil'] = 0
+                        try:
+                            st_['path'] = route(a, b, pa, pb)
+                        except ValueError:
+                            SP['on'] = False       # as the v1.4.2 tree retry: the relay-avoiding route can be closed
+                            st_['path'] = route(a, b, pa, pb)
+                    finally:
+                        SP['on'] = False
+                        SP['dil'] = 0
+                    continue
                 # v1.1 (split): the chain ran out of relay spots in a corridor other chains fill: re-route it around
                 # every cell those chains' relays hold and place it again
                 rollback_()
@@ -2145,6 +2299,10 @@ def masters(m, k=1, port_bits=None):
                 face = 'S' if p in ('ti_a', 'e_a') else 'N' if p in ('ti_b', 'e_b') else 'W'
             if mst == 'qkd_hss':
                 face = 'W' if p == 's_a' else 'E' if p == 's_b' else 'S'
+            if HOP and mst in ('qkd_d2d', 'qkd_d2ds') and face in _covered_faces(m, inst0, peer=pe):
+                # OT_KV_HOP: a face covered by an abutting block (the UCIe PHY on the D2D frame's N face) has no die
+                # routing: the fwd_epoch / fwd_link_rst_n words were drawn there, 1,208 um from their first relay
+                face = ('E' if dxp > 0 else 'W') if face in 'NS' else ('N' if dyp > 0 else 'S')
             if mst in ('qkd_land', 'qkd_land_n') and face in 'NS':
                 # the landing is a 172.8 um x 12 mm column: its short faces cannot hold its words (die_kv7: 3,186
                 # overlapping pin shapes, PA DRT-0073); every word leaves on the long face toward its peer
@@ -2197,6 +2355,8 @@ def masters(m, k=1, port_bits=None):
         _split_pins(M, m)
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
+    if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
+        M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
@@ -2519,7 +2679,17 @@ def _strip_face_pins(mst, mm):
             y = STRIP_KF_Y
         else:
             continue
+        if HOP and mt and mst in _HOP_STRIP_DY:
+            # OT_KV_HOP: the controller strip's es / er words sit where its closed pc leaf's pins are (2 tracks, the
+            # leaf's bit order), as the HOST slices' controller faces (_slice_pins) -- same measured kvs11 offsets
+            mm.ports[p] = ('face', sp[1], 'W', 'M4', round(y + _HOP_STRIP_DY[mst][mt.group(1)], 3), 2)
+            if mst == 'qkd_ctrl':
+                F.PIN_REVERSE.add((mst, p))
+            continue
         mm.ports[p] = ('face', sp[1], 'E' if mst.startswith('qkd_land') else 'W', 'M4', y, 1)
+
+
+_HOP_STRIP_DY = dict(qkd_ctrl=dict(er=-50.9, es=159.4), qkd_ctrl_n=dict(er=-28.9, es=120.5))
 
 
 def _slice_pins(m, mm, down=False):
@@ -2532,9 +2702,21 @@ def _slice_pins(m, mm, down=False):
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
+    # OT_KV_HOP (kvs11 TT: ctrl_pc er -> slice ctrl_er -97.0 ps, 869 violators; slice ctrl_es -> ctrl_pc es -38.1): the
+    # slice's controller-face words were at 6 M4 tracks a bit while the closed pc leaf's er / es are at 2, and the S
+    # strips' pc leaves are MX (bit order descending): realized dy grew to 101 (er) / 215 um (es) on a 423.5-um dx hop.
+    # Under the flag they take the leaf's 2-track pitch and order, centred on the leaf's words (measured kvs11 offsets of
+    # the middle bit, identical for all 32 PCs of a stack): every bit's dy <= ~14 um
+    hop_ = dict(qkd_hslice={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl'].items()},
+                qkd_hslice_dn={'ctrl_' + k: v for k, v in _HOP_STRIP_DY['qkd_ctrl_n'].items()}) if HOP else {}
     for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
                             ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
         if p in w:
+            if p in hop_.get(mm.name, {}):
+                mm.face(p, w[p], face, 'M4', round(centre + hop_[mm.name][p], 3), 2)
+                if not down:
+                    F.PIN_REVERSE.add((mm.name, p))
+                continue
             mm.face(p, w[p], face, 'M4', round(centre, 3), 6)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
@@ -2561,6 +2743,29 @@ def _slice_pins(m, mm, down=False):
     for p in rest:
         face, offset = centres[p]
         mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
+
+
+def _covered_faces(m, it, gap=4.32, peer=None):
+    """OT_KV_HOP: faces of instance it (in its own frame) that another block abuts over more than half their length."""
+    out = set()
+    for o in m['insts']:
+        if o is it or o is peer or o.kind == 'relay':
+            continue
+        ox = min(it.x + it.w, o.x + o.w) - max(it.x, o.x)
+        oy = min(it.y + it.h, o.y + o.h) - max(it.y, o.y)
+        if ox > it.w / 2 and 0 <= o.y - (it.y + it.h) <= gap:
+            out.add('N')
+        if ox > it.w / 2 and 0 <= it.y - (o.y + o.h) <= gap:
+            out.add('S')
+        if oy > it.h / 2 and 0 <= o.x - (it.x + it.w) <= gap:
+            out.add('E')
+        if oy > it.h / 2 and 0 <= it.x - (o.x + o.w) <= gap:
+            out.add('W')
+    if it.orient in ('MY', 'R180'):
+        out = {dict(E='W', W='E').get(f, f) for f in out}
+    if it.orient in ('MX', 'R180'):
+        out = {dict(N='S', S='N').get(f, f) for f in out}
+    return out
 
 
 def _land_level_pins(m, mm, inst0, face_load, by):
@@ -2647,8 +2852,8 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
             continue
         n += 1
         try:
-            xa, ya = pin_xy(ia, M[ia.master], pa.lstrip('*'))
-            xb, yb = pin_xy(ib, M[ib.master], pb.lstrip('*'))
+            xa, ya = _leaf_pin(ia, pa) or pin_xy(ia, M[ia.master], pa.lstrip('*'))
+            xb, yb = _leaf_pin(ib, pb) or pin_xy(ib, M[ib.master], pb.lstrip('*'))
         except (TypeError, KeyError):
             continue
         d = abs(xa - xb) + abs(ya - yb)

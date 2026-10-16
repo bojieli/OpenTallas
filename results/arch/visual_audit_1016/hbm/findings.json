@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.visual_audit_1016.hbm.v1",
  "stream": "VIS-HBM",
- "date": "2026-10-16",
- "scope": "HBM 660 v5: die plan, die case d2, every HBM tile with a placed/routed odb on the fleet",
+ "date": "2026-10-16T10:30",
+ "scope": "HBM 830.2 mm2 v5 plan (main 03162300c) + d3b die case + 15 closure-critical tiles",
  "method": "remote tools/ref_tile/layout_dump.tcl on the latest odb of each job + tools/ref_tile/layout_png.py + ORFS reports/*.webp (final_worst_path, routing, clocks); die: compact.P.json grid scan and d2 manifest/run.tcl placement scan",
  "findings": [
   {
@@ -1543,6 +1543,188 @@
      "evidence": "H-LKEP: the 300/80 ps measured-form limit applies only above 15k sinks/root; 7,194 sinks -> gate PASS (memory clock-rule-measured-form agrees). Remaining measured risk: boundary insertion 348.3-396.4 ps (mean 370.9) vs native launch <= 220 / capture <= 190 ps -> native audit likely FAILs. Owner gating compact variant hep_static_cmp_1016 434.72 x 224.64, fill ~59%, rows 20 um from S face (my height fix adopted); clk stays S-centre (parent contract)."
     }
    ]
+  },
+  {
+   "id": "R3-V1",
+   "severity": "P0",
+   "owner": "H-SM",
+   "master": "hfd_vms_bank_native_q0 / q2 (nat2 f084d0a8b / ee83da123)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_round3_tiles.png"
+   ],
+   "what_i_see": "270x270, three abutted SRAMs (175x211 um, 0 um channels) centred; logic is a perimeter ring; single clk pin at N-centre (135,270)",
+   "measured": {
+    "q0": {
+     "launch": 258.5,
+     "launch_over": 711,
+     "capture": 207.5,
+     "capture_over": 42,
+     "R": 672.0,
+     "spread": 88.3,
+     "failing": [
+      "rr3 S x6-68 (248)",
+      "rr0 W y7-68 (197)",
+      "rr2 N x14-104 (142)",
+      "rr4 W y72-133 (122)",
+      "dq S x70-103 capture (35)"
+     ]
+    },
+    "q2": {
+     "launch": 250.8,
+     "launch_over": 370,
+     "capture": 194.4,
+     "R": 704.0,
+     "spread": 46.9,
+     "failing": [
+      "rr0 W y6-68 (154)",
+      "rr4 W y72-134 (133)",
+      "rr3 S x7-67 (71)",
+      "wq1 E y113-159 capture (19)"
+     ]
+    },
+    "q1": {
+     "launch": 201.9,
+     "capture": 170.0,
+     "spread": 42.5,
+     "passes": true
+    }
+   },
+   "structural_fix": "the failing return outputs are the SW corner, the point farthest (~400 um Manhattan around the stack) from the N-centre clk: give the rr0/rr3/rr4 output flops their own SW/W-low clock entry (or move rr* pins to the N half of W/E), plus direct clk_macro entries; the 4-face clock gate (q0_faces AGI 093214) failed CTS because core clk still reaches the SRAM clock pins"
+  },
+  {
+   "id": "R3-V2",
+   "severity": "P0",
+   "owner": "H-SM",
+   "master": "ot_hbm_smh_rp4_entries (smh_tile_rp4c gate E4 061544)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_round3_tiles.png"
+   ],
+   "what_i_see": "406x1529, 18 hard sub-blocks, std cells 1.7% of area; pins only in the feedthrough window",
+   "measured": {
+    "W_pins": 3759,
+    "W_pins_y500_1000": 3710,
+    "E_pins": 3750,
+    "E_pins_y500_1000": 3708,
+    "avg_pins_per_um": 7.4,
+    "peak_pins_per_um_y700_800": 10.4,
+    "N_pins": 155,
+    "S_pins": 202,
+    "M8_derate_pct": 100,
+    "grt_blockages": 233216,
+    "trial_grt": "extra iteration 18/30 at 09:52 after 3.5 h",
+    "placement_reg_to_macro_ps": -309.2,
+    "placement_reg_to_reg_ps": -308.1
+   },
+   "structural_fix": "T6 moved, not removed (rp3 18.2 pins/um in 203 um -> rp4c 7.4/um in 500 um). Spread the W/E pass-through over >=1,000 um of each face (tr_group rows interleaved with the XS/land blocks), or release M8; with the -309 ps hard-glue fix, re-floorplan instead of retrying the GRT"
+  },
+  {
+   "id": "R3-V3",
+   "severity": "P0",
+   "owner": "H-NETLIST",
+   "master": "ot_hbm_svc_vmdel_lane (hv15_vmdel_lane-hv15-20b84db92, CLOSED TT +49.22)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_round3_tiles.png"
+   ],
+   "what_i_see": "257x151, 4 SRAMs in 2x2, clk on W at y 40.6; 1,120 pins on S face",
+   "measured": {
+    "native": "FAIL",
+    "launch": 346.6,
+    "launch_over": 3,
+    "capture": 274.2,
+    "capture_over": 64,
+    "R": 286.7,
+    "spread": 96.4,
+    "failing": [
+     "fill_data_i S x50-245 capture (42)",
+     "full0/full1/pcbad W y42-85 (21)",
+     "rst_n W",
+     "dq N x230-232 launch (3)"
+    ]
+   },
+   "structural_fix": "CLOSED but not native-good: clock at the W end of a 257-um S pin field. Move clk to S-mid (x~128) or add a second entry for the E half; register rst_n"
+  },
+  {
+   "id": "R3-V4",
+   "severity": "P1",
+   "owner": "H-SM",
+   "master": "ot_hbm_svc_sm_xcal (hbm_xcal216_r1-r1-a380caec1, CLOSED TT +89.98)",
+   "measured": {
+    "native": "FAIL",
+    "capture": 254.0,
+    "capture_pin": "rst_n",
+    "capture_over": 1,
+    "launch": 203.9,
+    "R": 273.8,
+    "spread": 49.0
+   },
+   "structural_fix": "only rst_n over budget: reset pin flop / relay at the W face"
+  },
+  {
+   "id": "R3-V5",
+   "severity": "P1",
+   "owner": "H-SU",
+   "master": "ot_hgi_sfu_core_split (hbm_sfucore_split gate E4 073718)",
+   "measured": {
+    "outline": [
+     763.56,
+     3580
+    ],
+    "macros": "80 SRAM 256x256 + 16 ot_su12_sfu",
+    "clk_root_flops": 18063,
+    "rst_n_loads": 13745,
+    "empty_strip": "x 583-740 over the SRAM block (~0.24 mm2)"
+   },
+   "structural_fix": "clock rule: >15k sinks on one root needs measured insertion <=300 / spread <=80 or a split (clk_lane entries exist; move the 18k non-lane flops to per-region roots); replicate rst_n per region (ot_rst_relay)"
+  },
+  {
+   "id": "R3-V6",
+   "severity": "P1",
+   "owner": "H-NETLIST",
+   "master": "hfd_hgi_vm_calendar_f20 (f20 GRT-0232 fail -> ww ad9c630eb routed TT -1.82, VT-ECO)",
+   "measured": {
+    "outline": [
+     241.92,
+     116.64
+    ],
+    "empty_N_strip_um": [
+     242,
+     23
+    ],
+    "W_logic_block_um": 44,
+    "channel_under_sram_um": 6,
+    "W_pins": 353,
+    "W_pin_span_um": 55.5,
+    "S_pins": 40,
+    "S_pin_span_um": 3.7
+   },
+   "structural_fix": "if the VT-ECO does not close: SRAM to the N edge (its pins are on its S edge) so logic gets a ~45 um band under it; spread the W pins over the full 117 um"
+  },
+  {
+   "id": "R3-D2",
+   "severity": "P2",
+   "owner": "H-DIE",
+   "master": "v5 plan core4_sfu2_b3624 830.2 mm2",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_round3_die.png"
+   ],
+   "measured": {
+    "placed_mm2": 664.8,
+    "not_in_blocks_mm2": 165.4,
+    "corner_voids_mm2": [
+     10.13,
+     9.43,
+     7.57,
+     7.42
+    ],
+    "band_strips_mm2": [
+     5.31,
+     5.31,
+     5.31,
+     5.17
+    ],
+    "centre_channel_mm2": 11.08
+   },
+   "structural_fix": "OWNER 09:46 closure-first: floorplan changes only when they unblock GRT/timing, so area recovery is deferred. Use the voids for relay/clock homes if d4 GRT needs room"
   }
  ],
  "rounds": {
@@ -1560,6 +1742,26 @@
    "open": 13,
    "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant; T4 now fully confirmed (routed native PASS: L222/C206.2/sp92.8 -> L179/C133/sp37.2)",
    "new_findings": 1
+  },
+  "3": {
+   "date": "2026-10-16T10:30",
+   "tiles_rendered": 15,
+   "native_audits_run": 8,
+   "new_findings": [
+    "R3-V1",
+    "R3-V2",
+    "R3-V3",
+    "R3-V4",
+    "R3-V5",
+    "R3-V6",
+    "R3-D2"
+   ],
+   "confirmed": [
+    "T5 (writer fsw v6 native PASS L189.8/C142.1/sp20.3)",
+    "T6 improved but moved (R3-V2)",
+    "T12 still SW-corner (route 4 native FAIL L259.7/C221.3/sp100.8, matches image)"
+   ],
+   "notes": "d3b still in GRT (extra 23/30) on the old compact660_v5 plan (grants v6); d4 (v5 plan) not launched. HC hc_eng/hc_q have no physical view (ETM only): not auditable"
   }
  }
 }

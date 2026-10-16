@@ -7,18 +7,37 @@ Never route through a leaf; failed placement remains an explicit plan defect.
 import math
 
 
+def _cands(K, target, grid, r):
+    return [(K.up(target[0]+x*grid, K.GX), K.up(target[1]+y*grid, K.GY)) for x in range(-r, r+1) for y in range(-r, r+1)]
+
+
+def _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=0.0):
+    if x < 4.32 or y < 4.32 or x+width+4.32 > m['die']['w'] or y+height+4.32 > m['die']['h']:
+        return None
+    orient = 'MY' if bp[0] < ap[0] else 'R0'
+    inp_x, out_x = (x+width-K.SHAVE,x) if orient=='MY' else (x,x+width-K.SHAVE)
+    left = abs(ap[0]-inp_x)+abs(ap[1]-(y+height/2))
+    remaining = abs(bp[0]-out_x)+abs(bp[1]-(y+height/2))
+    if left > cap or remaining >= distance-1+detour:
+        return None
+    if any(min(x+width+4.32,i.x+i.w)-max(x-4.32,i.x) > .001 and
+           min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in m['insts']+staged):
+        return None
+    return (remaining,x,y,left,out_x,orient)
+
+
 def repair(K, m):
     M = K.masters(m, 1)
     m['assigned_ports'] = {n: {p: list(v) for p, v in mm.ports.items()}
                            for n, mm in M.items() if not n.startswith('qkd_rly')}
     by = {i.name: i for i in m['insts']}
-    additions, buses, unresolved = [], [], []
+    additions, buses, unresolved, widened = [], [], [], {}
     for bid, cls, bits, eps in m['buses']:
         if len(eps) != 2 or cls in K.ABUT or cls in ('clock_trunk', 'reset', 'constant'):
             buses.append((bid, cls, bits, eps)); continue
         (a, pa), (b, pb) = eps
         ap, bp = K.pin_xy(by[a], M[by[a].master], pa.lstrip('*')), K.pin_xy(by[b], M[by[b].master], pb.lstrip('*'))
-        if abs(ap[0]-bp[0]) + abs(ap[1]-bp[1]) <= K.PIN_REACH:
+        if abs(ap[0]-bp[0]) + abs(ap[1]-bp[1]) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             buses.append((bid, cls, bits, eps)); continue
         width, height = 52.68, 30.24 if bits <= 512 else K.up(bits * .048 + 4, K.GY)
         if __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
@@ -31,7 +50,7 @@ def repair(K, m):
         # Several registered stages are necessary for a long fault-chain return.
         # Each stage is chosen in free channel space; a trapped chain is rolled back.
         for stage in range(math.ceil((abs(ap[0]-bp[0])+abs(ap[1]-bp[1]))/200)+12):
-            cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else K.PIN_REACH
+            cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH)
             if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= cap:
                 break
             distance = abs(ap[0]-bp[0])+abs(ap[1]-bp[1])
@@ -39,22 +58,21 @@ def repair(K, m):
             target = (ap[0]+fraction*(bp[0]-ap[0])-width/2,
                       ap[1]+fraction*(bp[1]-ap[1])-height/2)
             grid = K.GRID/2
-            candidates = [(K.up(target[0]+x*grid, K.GX), K.up(target[1]+y*grid, K.GY))
-                          for x in range(-16,17) for y in range(-16,17)]
             choices = []
-            for x,y in candidates:
-                if x < 4.32 or y < 4.32 or x+width+4.32 > m['die']['w'] or y+height+4.32 > m['die']['h']:
-                    continue
-                orient = 'MY' if bp[0] < ap[0] else 'R0'
-                inp_x, out_x = (x+width-K.SHAVE,x) if orient=='MY' else (x,x+width-K.SHAVE)
-                left = abs(ap[0]-inp_x)+abs(ap[1]-(y+height/2))
-                remaining = abs(bp[0]-out_x)+abs(bp[1]-(y+height/2))
-                if left > cap or remaining >= distance-1:
-                    continue
-                if any(min(x+width+4.32,i.x+i.w)-max(x-4.32,i.x) > .001 and
-                       min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in m['insts']+staged):
-                    continue
-                choices.append((remaining,x,y,left,out_x,orient))
+            for x,y in _cands(K, target, grid, 16):
+                c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance)
+                if c_:
+                    choices.append(c_)
+            if not choices and not widened.get(bid):
+                # Q-KVSYS-HOP 2026-10-16: a pin boxed in by blocks (d2d_kv fwd_* 1-bit pins, ~1,200 um to the first
+                # relay) finds no spot within 16 half-cells; look again up to 40 (only where repair failed before)
+                widened[bid] = True
+                ring = [(x, y) for x, y in _cands(K, target, grid, 40)]
+                for x, y in ring:
+                    # a boxed-in pin may step AROUND its blocker first (bounded detour; later stages must progress)
+                    c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap)
+                    if c_:
+                        choices.append(c_)
             if not choices:
                 break
             remaining,x,y,left,out_x,orient=min(choices)
@@ -64,7 +82,7 @@ def repair(K, m):
             sbid=bid if not chain else bid+'__pinfix'+str(stage)
             chain.append((sbid,cls,bits,[previous,(name,'a')]))
             previous=(name,'b');ap=(out_x,y+height/2)
-        if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > K.PIN_REACH:
+        if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             unresolved.append(dict(bus=bid,um=abs(initial_ap[0]-bp[0])+abs(initial_ap[1]-bp[1])));
             buses.append((bid,cls,bits,eps)); continue
         if not staged:

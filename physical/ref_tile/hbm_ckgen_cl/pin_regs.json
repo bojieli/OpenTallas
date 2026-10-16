@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_ckgen",
+ "enable": false,
+ "reason": "Parent is wires only (PLL modelled hard core + the closed hfd_ckgen_rel4 leaf): every por_* output IS a domain release flop inside the leaf (registered at the leaf pin by RTL), pll_* are the forwarded die clocks (generated clocks), refclk is a clock and por_n the asynchronous power-on assert (a pin register would make the assert synchronous to a clock that does not run before lock). No parent flop exists to register."
+}

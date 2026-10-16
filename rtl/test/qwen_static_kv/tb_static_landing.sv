@@ -9,10 +9,16 @@
 module tb_static_landing;
  parameter integer VMAP=0;
  parameter integer DUT_VMAP=VMAP;   // negative control: DUT_VMAP != VMAP must FAIL
+ parameter integer VREQ=0;          // 1: V gets on the vreq face (qkd_pv16_vport), K on req; latency 6
+ parameter integer VREQ_MUT=0;      // 1: the DUT is built VREQ=0 while V gets use the vreq face (must FAIL)
+ localparam integer LAT=5+VREQ;
+ parameter integer CTX=8192;        // K rows t < CTX (V phase stays the T=8192 walk)
+ parameter integer DUT_MUT=0;       // 3: the DUT's old K row ordinal sec[7:0] (aliases t6 = 0 / 1 rows 8 positions apart: must FAIL)
+ integer klen[0:31],kord[0:31][0:255],ktot=0;
  reg ck=0;always #0.416667 ck=~ck;
  reg rst=0,arm=0;
  reg [31:0] put=0,av=0,rq=0;
- reg [31:0] vv=0;
+ reg [31:0] vv=0,kx=0;   // kx: faultmode 5 drives a K get beside a V get (VREQ collision)
  reg [9:0] sec[0:31];reg [13:0] tt[0:31];
  wire [31:0] ov,ff;wire [1023:0] od[0:31];wire [13:0] ot[0:31];wire [31:0] outv;
  reg [1023:0] wd[0:31];
@@ -35,39 +41,40 @@ module tb_static_landing;
  genvar g;
  generate for(g=0;g<32;g=g+1)begin:groups
   wire [15:0] oe;wire [5:0] ol;wire rv;
-  qkd_static_kv_landing_grp #(.STACK(g/8),.GROUP(g%8),.VMAP(DUT_VMAP))dut(
+  qkd_static_kv_landing_grp #(.STACK(g/8),.GROUP(g%8),.MUT(DUT_MUT),.VMAP(DUT_VMAP),.VREQ(VREQ_MUT?0:VREQ))dut(
    .ck(ck),.ck_pc({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),
    .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
    .actual_epoch({4{16'd7}}),.actual_layer({4{6'd3}}),.actual_data(wd[g]),
-   .req_valid(rq[g]),.req_t(tt[g]),.req_v(vv[g]),.req_epoch(16'd7),.req_layer(6'd3),
+   .req_valid(VREQ?((rq[g]&~vv[g])|kx[g]):rq[g]),.req_t(tt[g]),.req_v(VREQ?1'b0:vv[g]),.req_epoch(16'd7),.req_layer(6'd3),
+   .vreq_valid(VREQ?(rq[g]&vv[g]):1'b0),.vreq_t(tt[g]),
    .rsp_valid(ov[g]),.rsp_data(od[g]),.rsp_t(ot[g]),.rsp_v(outv[g]),.rsp_epoch(oe),.rsp_layer(ol),.fault(ff[g]));
  end endgenerate
- reg [31:0] expv[0:5],expkind[0:5];
- reg [13:0] expt[0:5][0:31];reg [1023:0] expd[0:5][0:31];
+ reg [31:0] expv[0:6],expkind[0:6];
+ reg [13:0] expt[0:6][0:31];reg [1023:0] expd[0:6][0:31];
  always @(posedge ck)begin
   cycles++;
-  if(!rst)for(integer d=0;d<6;d=d+1)expv[d]<=0;
+  if(!rst)for(integer d=0;d<7;d=d+1)expv[d]<=0;
   else begin
    expv[0]<=rq;expkind[0]<=vv;
    for(integer n=0;n<32;n=n+1)begin expt[0][n]<=tt[n];expd[0][n]<=pattern(tt[n],vv[n]);end
-   for(integer d=1;d<6;d=d+1)begin
+   for(integer d=1;d<7;d=d+1)begin
     expv[d]<=expv[d-1];expkind[d]<=expkind[d-1];
     for(integer n=0;n<32;n=n+1)begin expt[d][n]<=expt[d-1][n];expd[d][n]<=expd[d-1][n];end
    end
   end
   #0.001;
   if(rst)begin
-   if(ov!==expv[5])begin if(errors<8)$display("BAD valid c%0d actual%h expected%h",cycles,ov,expv[5]);errors++;end
+   if(ov!==expv[LAT])begin if(errors<8)$display("BAD valid c%0d actual%h expected%h",cycles,ov,expv[LAT]);errors++;end
    for(integer n=0;n<32;n=n+1)if(ov[n])begin
     seen++;
-    if(od[n]!==expd[5][n]||ot[n]!==expt[5][n]||outv[n]!==expkind[5][n])begin
-     if(errors<8)$display("BAD row c%0d group%0d t%0d expected%0d",cycles,n,ot[n],expt[5][n]);errors++;
+    if(od[n]!==expd[LAT][n]||ot[n]!==expt[LAT][n]||outv[n]!==expkind[LAT][n])begin
+     if(errors<8)$display("BAD row c%0d group%0d t%0d expected%0d",cycles,n,ot[n],expt[LAT][n]);errors++;
     end
    end
   end
  end
  task automatic idle;
-  put=0;rq=0;vv=0;
+  put=0;rq=0;vv=0;kx=0;
   for(integer g=0;g<32;g=g+1)begin ap[g]=0;as[g]=0;end
  endtask
  task automatic loadrow(input integer g,o,v);
@@ -86,9 +93,13 @@ module tb_static_landing;
   void'($value$plusargs("faultmode=%d",faultmode));
   for(integer n=0;n<32;n=n+1)begin sec[n]=0;tt[n]=0;wd[n]=0;ap[n]=0;as[n]=0;end
   repeat(8)@(negedge ck);rst=1;repeat(8)@(negedge ck);arm=1;@(negedge ck);arm=0;repeat(4)@(negedge ck);
-  for(integer i=0;i<64;i=i+1)begin idle();for(integer g=0;g<32;g=g+1)loadrow(g,i,0);@(negedge ck);end
+  // K stream of each group in the controller's order: rows t < CTX ascending, i.e. stream position p = {t[12:9], t6,
+  // t[5:3]} ascending; the row's sector index i (kt / js) = {t6, t[12:9], t[5:3]}
+  for(integer g=0;g<32;g=g+1)begin klen[g]=0;for(integer p=0;p<256;p=p+1)begin automatic integer i=((p>>3)&1)*128+(p>>4)*8+(p&7);
+   if(kt(i,g/8,g%8)<CTX)begin kord[g][klen[g]]=i;klen[g]=klen[g]+1;end end ktot=ktot+klen[g];end
+  for(integer i=0;i<64;i=i+1)begin idle();for(integer g=0;g<32;g=g+1)if(i<klen[g])loadrow(g,kord[g][i],0);@(negedge ck);end
   for(integer i=0;i<256;i=i+1)begin
-   idle();for(integer g=0;g<32;g=g+1)begin rq[g]=1;tt[g]=kt(i,g/8,g%8);if(i+64<256)loadrow(g,i+64,0);end
+   idle();for(integer g=0;g<32;g=g+1)if(i<klen[g])begin rq[g]=1;tt[g]=kt(kord[g][i],g/8,g%8);if(i+64<klen[g])loadrow(g,kord[g][i+64],0);end
    @(negedge ck);
   end
   idle();repeat(8)@(negedge ck);
@@ -118,6 +129,7 @@ module tb_static_landing;
       if(o!=nexto[g])begin $display("BAD group %0d ordinal %0d expected %0d",g,o,nexto[g]);errors++;end
       nexto[g]=o+1;vreq++;
       rq[g]=1;tt[g]=14'(t);vv[g]=1;if(o+64<256)loadrow(g,o+64,1);
+      if(faultmode==5&&g==0&&o==20)kx[g]=1;
      end
     end
     @(negedge ck);
@@ -125,7 +137,7 @@ module tb_static_landing;
    if(vreq!=8192)begin $display("BAD V gets %0d",vreq);errors++;end
   end
   idle();repeat(10)@(negedge ck);
-  if((|ff)||errors||seen!=16384)begin $display("FAIL staticlanding ctx8192 rows%0d errors%0d fault%h mode%0d",seen,errors,ff,faultmode);$fatal(1);end
-  $display("PASS staticlanding ctx8192 groups32 PCs128 rows%0d sectors65536 fixed_latency5 cycles%0d",seen,cycles);$finish;
+  if((|ff)||errors||seen!=ktot+8192)begin $display("FAIL staticlanding ctx8192 rows%0d errors%0d fault%h mode%0d",seen,errors,ff,faultmode);$fatal(1);end
+  $display("PASS staticlanding ctxK%0d groups32 PCs128 rows%0d fixed_latency%0d vreq%0d cycles%0d",CTX,seen,LAT,VREQ,cycles);$finish;
  end
 endmodule

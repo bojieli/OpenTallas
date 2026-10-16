@@ -66,7 +66,7 @@ for k,q in enumerate(Q):
 # Universal calendar fields are zero-extended whole packed fields by the compiler.
 # Connect each original quadrant ABI to its low contiguous field bits, preserving its lane packing.
 s['drop_v15_edges']=[]
-for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NW=(8,4,8,16,4),NE=(2,1,2,8,2)).items():
+for q,widths in dict(SW=(6,3,6,16,4),SE=(2,1,2,8,2),NW=(2,1,2,8,2),NE=(2,1,2,8,2)).items():  # H-NETLIST 0600: SW NC2, NW NC0 (vm_retire_0600.py)
     for field,w in zip(('client_seq','response_enable','response_seq','bank_client','hub_ring_client'),widths):
         s['drop_v15_edges'].append(f'calendar_{q}_{field}')
         e([f'calendar_{q}',field,0,w],[f'hb_vms_{q}',field,0,w],w)
@@ -90,8 +90,8 @@ for n, r in read('cp1')['status_outputs'].items():
 for k,q in enumerate(Q):
     rows.append((56+k,[f'cp_fill_{q}','configured'],[f'vmfc_{q}','active'],
                  [[f'cp_fill_{q}','fault'],[f'vmfc_{q}','fault']]))
-    rows.append((108+k,[f'hc_tgt_{q}','configured'],[f'hc_{q}','program_active'],
-                 [[f'hc_tgt_{q}','fault'],[f'hc_{q}','fault']]))
+    rows.append((108+k,[f'hc_{q}','configured'],[f'hc_{q}','program_active'],
+                 [[f'hc_{q}','fault']]))   # 0600 fold: target inside hc_q; its fault includes the target fault
 for k,q in enumerate(Q):
     rows.append((132+k,[f'cp_ep_{q}','configured'],[f'epcal_{q}','active'],
                  [[f'cp_ep_{q}','fault'],[f'epcal_{q}','fault']]+[['ep_'+lk,'fault'] for lk in links[q]]))
@@ -108,8 +108,8 @@ for k,q in enumerate(Q):
 # H-NETLIST 0600 2026-10-16: static HC engine collars (hceng_0030.json): TARGET 164 engine programme, 165 table rows;
 # active = the engine's programme_active (table rows are data, never launched); faults = collar faults + engine sticky fault.
 if (SP / 'hceng_0030.json').exists():
-    rows.append((164,['hc_eng_tgt','configured'],['hc_eng','program_active'],[['hc_eng_tgt','fault'],['hc_eng','fault']]))
-    rows.append((165,['hc_tbl_tgt','configured'],['hc_eng','program_active'],[['hc_tbl_tgt','fault']]))
+    rows.append((164,['hc_eng','configured'],['hc_eng','program_active'],[['hc_eng','fault']]))   # 0600 fold: both targets inside
+    rows.append((165,['hc_eng','configured'],['hc_eng','program_active'],[]))
 rows.sort()
 nt,nf=original_nt,original_nf
 for t,ready,active,faults in rows:
@@ -122,7 +122,7 @@ for t,ready,active,faults in rows:
         nf+=1
     nt+=1
 # New static component safety faults are observations only, never production stalls.
-for spec_name, prefix in [('dmawb_0030', 'wbk_'), ('su_collport_0253', 'sucx_'), ('su_collport_0253', 'sfus_')]:
+for spec_name, prefix in [('dmawb_0030', 'wbk_'), ('su_collport_0253', 'sucx_'), ('su_collport_0253', 'sfus_'), ('su_sfu', 'sfup_')]:
     if not (SP / (spec_name + '.json')).exists(): continue
     for q in Q:
         c['edges'].append(dict(src=[prefix+q,'fault'],dst=['host_status','t_fault',nf,nf+1],bits=1,

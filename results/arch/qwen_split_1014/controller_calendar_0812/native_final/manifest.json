@@ -1,0 +1,39 @@
+{
+  "source_commit": "c93c86d48 plus committed native bench/runner in this commit",
+  "actual_unit": "ot-pve1 oth-ubuntu-2091052-1792164455",
+  "exit": 0,
+  "frame_count": 36,
+  "k_sectors_per_frame": 256,
+  "v_sectors_per_frame": 256,
+  "positive_jitter_hbm": [
+    0,
+    8,
+    16
+  ],
+  "positive_reads_each": 18432,
+  "positive_corrected_each": 18432,
+  "negative_cases": [
+    {
+      "MUT": 1,
+      "fault": "PHY exact pin timeline edge125"
+    },
+    {
+      "MUT": 2,
+      "fault": "PHY exact pin timeline edge133"
+    }
+  ],
+  "fixed_timeline": {
+    "reservation_to_phy_observed_preNBA": 5,
+    "reservation_to_corrected_observed_preNBA": "33+jitter"
+  },
+  "scope": "Actual one PC persistent native PROFILE0/ELASTIC1 controller, independent compiled six-run image; allowed external HBM PHY model only.",
+  "excluded": [
+    "HOST static reads/writes",
+    "new token own-row writes",
+    "128 PC/32 strap all-phase coverage",
+    "front/ring/landing/core consumer integration",
+    "native full-layer/full-token",
+    "physical timing closure"
+  ],
+  "fully_native_qualified": false
+}

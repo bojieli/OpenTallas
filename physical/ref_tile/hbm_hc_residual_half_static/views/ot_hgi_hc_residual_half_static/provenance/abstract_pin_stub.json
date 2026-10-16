@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hgi_hc_residual_half_static.lef",
-    "sha256": "e463d57a2c5a020756799571624403e42f1feac4255d3d5f9ad66526f3193e6e"
+    "sha256": "9b05a1f9f7745e7960dc58d6aab22eb041918f854e5fab9f049ac3a61b309d67"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas/claude/closure-loop/hbm_hc_residual_half_static-native1-ea5b169e7/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-ccc30d64a/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas/claude/closure-loop/hbm_hc_residual_half_static-native1-ea5b169e7/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas/claude/closure-loop/hbm_hc_residual_half_static-native1-ea5b169e7/record/views/ot_hgi_hc_residual_half_static/provenance/raw/ot_hgi_hc_residual_half_static.lef",
-    "/srv/opentallas/claude/closure-loop/hbm_hc_residual_half_static-native1-ea5b169e7/record/views/ot_hgi_hc_residual_half_static/provenance/ot_hgi_hc_residual_half_static.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-ccc30d64a/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-ccc30d64a/record/views/ot_hgi_hc_residual_half_static/provenance/raw/ot_hgi_hc_residual_half_static.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-ccc30d64a/record/views/ot_hgi_hc_residual_half_static/provenance/ot_hgi_hc_residual_half_static.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 78 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 86 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas/claude/closure-loop/hbm_hc_residual_half_static-native1-ea5b169e7/record/views/ot_hgi_hc_residual_half_static/provenance/ot_hgi_hc_residual_half_static.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-ccc30d64a/record/views/ot_hgi_hc_residual_half_static/provenance/ot_hgi_hc_residual_half_static.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hgi_hc_residual_half_static 220.32 x 125.28: PG M5 VDD 40 stripes (96% spread, 100% cov) / VSS 40 stripes (96% spread, 100% cov); strap M6; face pins 538 blocked-above 0 blocked-same 0; clock clk insertion 282 ps; pockets M5 0 (closed)",
+    "summary": "ot_hgi_hc_residual_half_static 220.32 x 125.28: PG M5 VDD 40 stripes (96% spread, 100% cov) / VSS 40 stripes (96% spread, 100% cov); strap M6; face pins 538 blocked-above 0 blocked-same 0; clock clk insertion 306 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hgi_hc_residual_half_static",
       "W": 220.32,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 538,
         "blocked_above": 0,
-        "covered_below": 17,
+        "covered_below": 35,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 282.15,
-          "min_ps": 190.44
+          "max_ps": 305.84,
+          "min_ps": 198.81
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 78
+          "added": 86
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hgi_hc_residual_half_static.lef",
-    "sha256": "88ccdb3f98cf2742d2dce9c58fa4312ee7089665fbed9ed5418907e674039277"
+    "sha256": "6eaa1cc83e481c1eea0718c1a95369fd6b084f85fdb04ea64f2b64046a466333"
   }
 }

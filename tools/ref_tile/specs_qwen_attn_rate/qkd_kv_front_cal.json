@@ -1,0 +1,120 @@
+{
+ "name": "qkd_kv_front_cal",
+ "top": "qkd_kv_front_cal",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "hck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data"
+  ],
+  "N": [
+   "hck",
+   "rst_n",
+   "kgo_h",
+   "vgo_h",
+   "ctx_t"
+  ],
+  "E": [
+   "blk_go",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
+ },
+ "recipe": 3,
+ "purpose": "Q-VMWB 2026-10-16: HBM-side KV calendar leaf (KV die MISSING_PRODUCER: elastic front blk_go), one master, 32 per die beside each group's 4 PC fronts, pll_hbm only; blk_go of every 8-sector block at A + G0 + off(8b) from compiled kgo_h/vgo_h, T and boot cfg. Static.",
+ "job": {
+  "owner": "Claude:Q-ATTN-RATE",
+  "branch": "claude/q-vmwb-0030",
+  "tag": "f1",
+  "purpose": "Q-VMWB 2026-10-16: HBM-side KV calendar leaf (KV die MISSING_PRODUCER: elastic front blk_go), one master, 32 per die beside each group's 4 PC fronts, pll_hbm only; blk_go of every 8-sector block at A + G0 + off(8b) from compiled kgo_h/vgo_h, T and boot cfg. Static.",
+  "benches": [
+   {
+    "name": "exact_vs_kv_calendar",
+    "cmd": "bash tools/qwen_static_kv/run_front_cal.sh {RUN}/bench/fc 1 77 700 2048 4500 8192",
+    "expect": "pass",
+    "pass_regex": "^RESULT OK front_cal positives_pass=",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_floor_blocks",
+    "cmd": "MUTONLY=1 bash tools/qwen_static_kv/run_front_cal.sh {RUN}/bench/m1 77 700",
+    "expect": "fail",
+    "pass_regex": "^RESULT OK front_cal",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_no_pacing",
+    "cmd": "MUTONLY=2 bash tools/qwen_static_kv/run_front_cal.sh {RUN}/bench/m2 8192",
+    "expect": "fail",
+    "pass_regex": "^RESULT OK front_cal",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "tools/qwen_static_schedule",
+   "tools/qwen_kv_die",
+   "tools/qwen_attention_native",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design"
+  ],
+  "views_to": "physical/ref_tile/qkd_kv_front_cal/views",
+  "record_to": "results/rtl/ref_tile/qkd_kv_front_cal"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands on a pin register (rn, kgo_q/vgo_q/we_q, ad_q/cd_q/ctx_q); the outputs blk_go/fault are registers"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Q-VMWB 2026-10-16: HBM-side KV calendar leaf (KV die MISSING_PRODUCER: elastic front blk_go), one master, 32 per die beside each group's 4 PC fronts, pll_hbm only; blk_go of every 8-sector block at A + G0 + off(8b) from compiled kgo_h/vgo_h, T and boot cfg. Static."
+}

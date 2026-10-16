@@ -62,14 +62,35 @@ def compile_calendar(context, row_latency, consume_age):
                 ROW_RETURN_LAT=row_latency + 5, LANE_D=4, capacity=128,
                 sources={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SOURCES}, engines=engines)
 
+def compile_issuer_calendar(context, segment_latency, consume_age):
+    """Actual STATIC_QK ECTL -> registered K bridge -> segment -> bridge -> ECTL.
+
+    segment_latency is the implemented req-pin to rsp-pin edge distance, not
+    a nominal HBM service delay. The off-chip elastic boundary is unchanged.
+    """
+    if segment_latency < 1:
+        raise ValueError('implemented segment latency must be positive')
+    cal = compile_calendar(context, segment_latency + 2, consume_age)
+    source = 'rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv'
+    cal['sources'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    cal['static_k_issuer'] = dict(segment_latency=segment_latency, outbound_pin_edges=1,
+                                  return_pin_edges=1, total_added_edges=2,
+                                  RESPONSE_LAT=segment_latency, ROW_RETURN_LAT=segment_latency + 7,
+                                  source_producer='qkd_ectl_a_tp8_epoch_direct STATIC_QK=1')
+    cal['scope'] += '; includes registered K issuer; actual HBM elastic front and complete physical segment still required'
+    return cal
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--context', type=int, default=8192)
-    p.add_argument('--row-latency', type=int, required=True)
+    lat = p.add_mutually_exclusive_group(required=True)
+    lat.add_argument('--row-latency', type=int)
+    lat.add_argument('--issuer-segment-latency', type=int, help='implemented req->rsp segment latency; adds both K issuer pin edges')
     p.add_argument('--consume-age', type=int, required=True)
     p.add_argument('--output', type=Path)
     args = p.parse_args()
-    result = compile_calendar(args.context, args.row_latency, args.consume_age)
+    result = (compile_calendar(args.context, args.row_latency, args.consume_age) if args.row_latency is not None
+              else compile_issuer_calendar(args.context, args.issuer_segment_latency, args.consume_age))
     text = json.dumps(result, indent=2) + '\n'
     if args.output:
         args.output.write_text(text)

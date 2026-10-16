@@ -5,7 +5,16 @@
 // fed the descriptor TABLE directly): cfg, go_e, st and f_prog must be identical on every edge over NPH random
 // broadcast / go phases (random descriptors, every programme finishes before the next go).  Negative control:
 // +define+OT_S81_CFG7_BFP_MUT_ROW (descriptor rows captured one row late) must FAIL.
+// +define+TB_BFP_PINREG (S-ELEM-PQ 2026-10-16): DUT at LAYOUT 1 / PINREG 1 with the macro models in the LAYOUT 1 image
+// (word k of phase p in macro k%7 row 4p+k/7); the reference loader is the same LAYOUT 1 / PINREG 1 ot_s81_cfg7_seq_bf
+// (itself gated exact against PINREG 0 by tb_ot_s81_cfg7_seq.sv +TB_CFG7_PINREG); the DUT st is compared 1 edge late
+// (re-registered after the programme-fault OR).  +define+OT_S81_CFG7_BFP_MUT_SPDL must FAIL.
 module tb_ot_s81_cfg7_seq_bfp;
+`ifdef TB_BFP_PINREG
+    localparam integer PINREG = 1, LAYOUT = 1;
+`else
+    localparam integer PINREG = 0, LAYOUT = 0;
+`endif
     localparam integer PHW = 10, CW = 25, NW = CW << PHW, NPH = 160;
     reg clk = 0;
     always #0.416667 clk = ~clk;
@@ -34,7 +43,7 @@ module tb_ot_s81_cfg7_seq_bfp;
             if (k >= 8 && k < 16) w[0] = 1'b1;                       // every phase active (go_e follows go)
             sp = (k < 4) ? 24'({14'd0, dtab[p]} >> (24 * k)) : 24'(g * 131 + 5);   // other rows: unrelated spare bits
             w[71:48] = sp;
-            mem[g / 4096][g % 4096] = w;
+            if (LAYOUT != 0) mem[k % 7][4 * p + k / 7] = w; else mem[g / 4096][g % 4096] = w;
         end
     end
     wire [11:0] a, ra;
@@ -44,19 +53,22 @@ module tb_ot_s81_cfg7_seq_bfp;
     // synchronous macro read models (ot_rom_4096x72_m8 timing: rd_out = word at the edge ce is sampled)
     always @(posedge clk) for (m = 0; m < 7; m = m + 1) begin if (ce[m]) q[m] <= mem[m][a]; if (rce[m]) rq[m] <= mem[m][ra]; end
     wire [53:0] cfg, rcfg; wire ge, rge; wire [1:0] st, rst_; wire [37:0] fp, rfp;
-    ot_s81_cfg7_seq_bfp dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq_bfp #(.LAYOUT(LAYOUT), .PINREG(PINREG)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
         .q0(q[0]), .q1(q[1]), .q2(q[2]), .q3(q[3]), .q4(q[4]), .q5(q[5]), .q6(q[6]), .cfg(cfg), .go_e(ge), .st(st), .f_prog(fp));
-    ot_s81_cfg7_seq_bf ref_ld (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(ra),
+    ot_s81_cfg7_seq_bf #(.LAYOUT(LAYOUT), .PINREG(PINREG)) ref_ld (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(ra),
         .ce0(rce[0]), .ce1(rce[1]), .ce2(rce[2]), .ce3(rce[3]), .ce4(rce[4]), .ce5(rce[5]), .ce6(rce[6]),
         .q0(rq[0][47:0]), .q1(rq[1][47:0]), .q2(rq[2][47:0]), .q3(rq[3][47:0]), .q4(rq[4][47:0]), .q5(rq[5][47:0]), .q6(rq[6][47:0]),
         .cfg(rcfg), .go_e(rge), .st(rst_));
     reg [PHW-1:0] cur = 0;
     wire rpf;
     ot_s81_bf_prog_seq ref_prog (.ck(clk), .rst_n(rst_n), .go(rge), .desc(dtab[cur]), .f_prog(rfp), .fault(rpf));
+    reg [1:0] rst_e_q = 2'd0;
+    always @(posedge clk) rst_e_q <= rst_n ? {rst_[1] | rpf, rst_[0]} : 2'd0;
+    wire [1:0] rst_e = PINREG ? rst_e_q : {rst_[1] | rpf, rst_[0]};
     always @(posedge clk) if (rst_n) begin
         cyc <= cyc + 1;
-        if ({cfg, ge, st, fp} !== {rcfg, rge, {rst_[1] | rpf, rst_[0]}, rfp})
+        if ({cfg, ge, st, fp} !== {rcfg, rge, rst_e, rfp})
             $fatal(1, "BFP MISMATCH cyc=%0d phase=%0d fp=%h ref=%h cfg=%h ref=%h", cyc, cur, fp, rfp, cfg, rcfg);
         if (fp[0]) nissue <= nissue + 1;
         if (st[1]) $fatal(1, "BFP unexpected fault cyc=%0d", cyc);

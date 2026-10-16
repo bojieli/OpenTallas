@@ -17,6 +17,7 @@ NUMBER = r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
 PLACE = re.compile(
     r"place_pin\s+-pin_name\s+\{(?P<pin>[A-Za-z_][A-Za-z_0-9]*(?:\[\d+\])?)\}"
     r"\s+-layer\s+(?P<layer>M\d+)\s+-location\s+\{\s*(?P<x>" + NUMBER + r")\s+(?P<y>" + NUMBER + r")\s*\}"
+    r"(?:\s+-pin_size\s+\{\s*" + NUMBER + r"\s+" + NUMBER + r"\s*\})?"   # spread_face_pins.py writes the pin size
     r"\s+-force_to_die_boundary\s*;?\s*"
 )
 

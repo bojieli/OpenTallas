@@ -5,7 +5,7 @@ cd "$ROOT"
 D=rtl/hbm_accel/generic/vm/static
 OUT=${1:?output}; mkdir -p "$OUT"
 M=physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
-for shape in 0:5:2 1:4:2 2:5:3 3:5:3;do
+for shape in 0:5:2 1:4:2 2:5:3 3:4:2;do
  IFS=: read -r sid rg wg <<< "$shape"
  for mut in 0 1 3 4;do
   stem=q${sid}_m${mut}

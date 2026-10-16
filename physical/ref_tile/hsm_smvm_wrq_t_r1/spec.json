@@ -1,0 +1,212 @@
+{
+ "name": "hsm_smvm_wrq_t_r1",
+ "top": "ot_hbm_sm_vm_wr_q_t",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "DEPTH": 4,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 142.56,
+  "h": 388.8
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    23.328,
+    302.4
+   ],
+   "inst": "u_tgt.g_tab.g_w[0].u_tab"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rv",
+   "rrow",
+   "rdata"
+  ],
+  "E": [
+   "wq"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "tgt",
+   "quad",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "sm_fault",
+   "sm_sched_fault",
+   "configured",
+   "fault",
+   "active"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "recipe": 3,
+ "purpose": "H-SM 2026-10-16: hardened SM result -> VM writer smw_<q>, ONE master for the 4 instances (option A wrapper: folded ot_static_cmd_target MODE 1 command calendar CW 26 + 128x256 table, tgt strap; quad strap replaces parameter QUAD). Pin-bound: W rv/rrow/rdata 2,152, E wq 2,248 at ~6 pins/um -> 388.8 um faces; width 142.56 for the 94.8 um table macro with >= 20 um channels; N F20 bus + straps + status. ~11.3k writer flops + collar. The RTL registers every input at its pin and every output is a flop; pin_reg_split gives each replicated wq data pin its own launch flop: 0 added edges (calendar fire edge unchanged; rv(t) -> wq slot0 at t+3). rst_n lands on one local reset-release flop.",
+ "job": {
+  "owner": "Claude:H-SM-svc-0630",
+  "branch": "claude/hsm-svc-0630",
+  "tag": "r1",
+  "purpose": "new tile: ot_hbm_sm_vm_wr_q_t (4 instances; option A wrapper)",
+  "benches": [
+   {
+    "name": "wrq_t_bench",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t.sh {RUN}/bench/wrqt",
+    "expect": "pass",
+    "pass_regex": "SM_VM_WR_Q_T BENCH PASS \\(positive PASS, mutants 1/2/3/4 FAIL\\)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r1/views",
+  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r1"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a source pin flop (F20 bus in the folded collar pin rung, tgt/quad strap flops, rv/rrow/rdata/sm_fault/sm_sched_fault pin flops, rst_n local reset-release flop) and every output is a source flop (wq o_*, collar configured/fault/active); pin_reg_split duplicates the launch flop per replicated wq data pin"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "rv": [
+   3,
+   6
+  ],
+  "rrow": [
+   7,
+   30
+  ],
+  "rdata": [
+   32,
+   385
+  ],
+  "wq": [
+   3,
+   385
+  ],
+  "cfg_data": [
+   4,
+   52
+  ],
+  "tgt": [
+   54,
+   62
+  ],
+  "rst_n": [
+   64,
+   65
+  ],
+  "clk": [
+   70,
+   71
+  ],
+  "quad": [
+   74,
+   75
+  ],
+  "cfg_v": [
+   77,
+   78
+  ],
+  "cfg_target": [
+   79,
+   86
+  ],
+  "cfg_addr": [
+   87,
+   96
+  ],
+  "desc_v": [
+   97,
+   98
+  ],
+  "desc_base": [
+   99,
+   108
+  ],
+  "desc_limit": [
+   109,
+   119
+  ],
+  "desc_loops": [
+   120,
+   132
+  ],
+  "launch_v": [
+   133,
+   134
+  ],
+  "sm_fault": [
+   135,
+   137.4
+  ],
+  "sm_sched_fault": [
+   137.6,
+   139.4
+  ],
+  "configured": [
+   139.6,
+   140
+  ],
+  "fault": [
+   140.2,
+   140.6
+  ],
+  "active": [
+   140.8,
+   141.2
+  ]
+ },
+ "structural_change": "gate r1 (unsubmitted) PNG: W/E pins packed into the middle ~55% of the 388.8 um faces (~10 pins/um, red pin-flop columns) and an empty bottom fifth; now every bus spread over disjoint full-face ranges (W rdata 32..385, E wq 3..385, ~5.8 pins/um), clock at N mid-face."
+}

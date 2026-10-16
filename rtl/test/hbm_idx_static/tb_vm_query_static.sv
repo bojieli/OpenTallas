@@ -7,12 +7,12 @@ module tb_vm_query_static;
  wire[135:0]vm_rq;wire[2055:0]vm_rr;wire block_v;wire[4:0]block_head;wire[1:0]block_number;
  wire[1023:0]block_data;wire[15:0]head_weight;wire operand_fault;
  reg[2247:0]wr=0;wire[143:0]status;
- ot_hbm_idx_vm_query_static operand(.clk(clk),.rst_n(rst_n),.sid(2'd0),.weight_slot(weight_slot),.query_slot(query_slot),.query_index(query_index),
+ ot_hbm_idx_vm_query_static_core operand(.clk(clk),.rst_n(rst_n),.sid(2'd0),.weight_slot(weight_slot),.query_slot(query_slot),.query_index(query_index),
   .weight_sector(weight_sector),.query_sector(query_sector),.vm_rq(vm_rq),.vm_rr(vm_rr),.block_v(block_v),.block_head(block_head),.block_number(block_number),
   .block_data(block_data),.head_weight(head_weight),.fault(operand_fault));
  reg frame_start=0,emit_v=0;reg[4:0]emit_head=0;
  wire ql_v;wire[7:0]ql_head;wire[511:0]ql_codes;wire[31:0]ql_sc;wire[15:0]ql_w;wire query_fault;
- ot_hbm_idx_query_static quant(.clk(clk),.clk_quant(clk),.clk_quant_delay(clk),.clk_bank({4{clk}}),.rst_n(rst_n),.frame_start(frame_start),
+ ot_hbm_idx_query_static_core quant(.clk(clk),.clk_quant(clk),.clk_quant_delay(clk),.clk_bank({4{clk}}),.rst_n(rst_n),.frame_start(frame_start),
   .block_v(block_v),.block_head(block_head),.block_number(block_number),.block_data(block_data),.head_weight(head_weight),
   .emit_v(emit_v),.emit_head(emit_head),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.fault(query_fault));
  for(genvar b=0;b<8;b=b+1)begin:bank

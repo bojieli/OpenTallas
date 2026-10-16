@@ -1,11 +1,10 @@
-# HBM die v16 full netlist: gaps (af22cc9d1)
+# HBM die v16 full netlist: gaps (32d169ff9)
 
-1506 instances / 62 masters / 11716 edges (1,233,867 bits). Exposed inputs 1,070 ports / 177,247 bits (v15.1, 83 instances) -> 4 ports / 3,736 bits (v16 full die).
+1532 instances / 61 masters / 12117 edges (1,192,829 bits). Exposed inputs 1,070 ports / 177,247 bits (v15.1, 83 instances) -> 0 ports / 0 bits (v16 full die).
 
 | gap | owner | missing RTL | undriven ports | undriven bits |
 |---|---|---|---:|---:|
 | G-CIL-DEL | H-COLL / H-SU | consumer of COLL delivery lanes del_valid[4]/del_flit[2180]/hgi_del_obase[160] (words delivered to the quadrant slice); v15 retired delivery_<q>; no v16 static consumer port identified | 0 | 9,376 |
-| G-SMVM-VMCLIENT | see note per range (not SM) | static client source migration for VM ports outside RG2: no static producer on main for these client slots | 4 | 4,074 |
 | G-CIL-IDXCP | host owner (programme loader) + H-COLL+IDX | IDX programme/record issuer: hb_idx takes a raw programme SRAM write port (program_we/addr[8]/data[256]) + start/length + per-record operands + TOPK descriptor; no IDX host target (cf. ot_hgi_coll_static_program_target for COLL, which decodes the host F20 cfg bus) and no IDX/TOPK record issuer exist on main | 0 | 2,446 |
 | G-CIL-RC | H-SU / H-COLL | RED_CARRY reduction-carry port pair to the quadrant SU (rc_v/rc_tag[3]/rc_d[256] in, rr_v/rr_tag/rr_d out; ot_hfd_coll_q.sv:17-18, ring lp_data at ot_hfd_coll_q_static_v4.sv:302): no SU-side static RTL port named on main | 0 | 1,040 |
 | G-CIL-INJ | H-SU (SU quarter inject read) / H-COLL | no static producer of COLL inj_d[1023:0] (2 x 512-b SU-quarter inject words answered INJLAT=12 edges after inj_rd/inj_idx/hgi_inj_addr, ot_hfd_coll_q_static_v4.sv:201-217) exists among the v16 SU/sucore masters known to this region; v15 also unbound ("actual VM programme SRAM calendar issuer") | 0 | 582 |
@@ -40,4 +39,3 @@
 
 | owner | ports | bits |
 |---|---:|---:|
-| see note per range (not SM) | 4 | 3,736 |

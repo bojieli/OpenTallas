@@ -27,6 +27,8 @@ def build():
     for name,n,lo,hi in [('ck',1,70,72),('rst_n',1,75,77),('cfg_stack',2,80,81),('cfg_group',3,84,85)]:pins(pc,name,n,'S',lo,hi)
     ctl=master('qkd_static_kv_rowctl',86.4,302.4)
     for name,n,lo,hi in [('req_valid',1,4,5),('req_t',14,6,8),('req_v',1,9,10),('req_epoch',16,12,14.4),('req_layer',6,15,16),('rsp_data',1024,24,284),('rsp_valid',1,286,286.4),('rsp_t',14,287,289),('rsp_v',1,289.5,289.8),('rsp_epoch',16,290.5,292.8),('rsp_layer',6,293.5,294.5),('fault',1,296,296.4)]:pins(ctl,name,n,'W',lo,hi)
+    for name,n,lo,hi in [('vreq_valid',1,297,297.4),('vreq_t',14,298,300.2)]:pins(ctl,name,n,'W',lo,hi)
+    for name,n,lo,hi in [('arm',1,46,47),('epoch',16,48,51),('layer',6,52,53.5)]:pins(ctl,name,n,'S',lo,hi)   # VREQ: armed epoch / layer   # Q-VMWB 10-16: VREQ=1 V get face
     for name,n,lo,hi in [('ck',1,40,41),('rst_n',1,43,44)]:pins(ctl,name,n,'S',lo,hi)
     for name,n,lo,hi in [('pc_get',4,4,4.6),('pc_get_t',56,5,13),('pc_get_v',4,13.5,14.1),('pc_get_epoch',64,14.5,23.6),('pc_get_layer',24,24,27.4)]:pins(ctl,name,n,'E',lo,hi)
     for q in range(4):
