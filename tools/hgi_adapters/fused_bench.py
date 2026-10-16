@@ -124,8 +124,8 @@ def main():
         opnd = sum(1 << j for j, e in enumerate(eff) if e)
         return dict(hdr=C.SV.header(unit, op, opnd=opnd, imm_a=imm, param=param), eff=eff, n=n)
     import os
-    only = int(os.environ.get('FUSED_ONLY_D', '0'))     # debug: only the HC cases of this d
-    for D in ((only,) if only else (64, 512, 4096, 5120)):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
+    only = int(os.environ.get('FUSED_ONLY_D', '0'))     # debug: only the HC cases of this d (-1: none)
+    for D in (() if only < 0 else (only,) if only else (64, 512, 4096, 5120)):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
         h = (rng.standard_normal((4, D)) * 2).astype(np.float32)
         pre = (rng.random(4) * 1.5).astype(np.float32)
         w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
@@ -164,6 +164,43 @@ def main():
         dd = rec(2, [md(space=1, base=yb, n=D), md(space=1, base=rb, n=4 * D), md(space=1, base=mb, n=20), 0,
                      md(space=1, fmt=1, base=ob2, n=4 * D), 0, 0], [D, 4 * D, 20, 0, 4 * D, 0, 0])
         add([dd], vin, {ob2 + i: int(v) for i, v in enumerate(f32w(hout.reshape(-1)))})
+    # H-MTP2 (2026-10-15): FUSED_ROWS = P -> one more DS HC_PRE_NORM case at d 5,120: the MTP verify's P positions as
+    # P back-to-back per-position records (FUSED_ROWS_FORM=recs, the as-built ISA: P records, one gain, P h / pre / y)
+    # or as ONE P-row record (FUSED_ROWS_FORM=rows: A.m = C.m = O.m = P with row strides, B.m = 1 broadcast gain).
+    # Row p: h at p 20,480, pre at 160,000 + 8 p, y at 122,880 + 5,120 p (all bank phase 0); one GPK gain image.
+    nrow = int(os.environ.get('FUSED_ROWS', '0'))
+    if nrow:
+        D = 5120
+        hl = (rng.standard_normal((nrow, 4, D)) * 2).astype(np.float32)
+        prel = (rng.random((nrow, 4)) * 1.5).astype(np.float32)
+        w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
+        eps = np.float32(1e-6)
+        HS, OB, CB, CS, OS = 4 * D, 122880, 160000, 8, D
+        bb = 0x4_0000_0000
+        gb = (f32w(w) >> 16).astype(np.uint32)
+        hb = {}
+        for e in range(D):
+            s_, i_ = divmod(e, 8)
+            wd = (bb >> 2) + 8 * ((s_ % 32) + 32 * (s_ // 64)) + 4 * ((s_ // 32) % 2) + i_ // 2
+            hb[wd] = hb.get(wd, 0) | (int(gb[e]) << (16 * (i_ % 2)))
+        vin, vout, ds = {}, {}, []
+        for r_ in range(nrow):
+            x = GV.to_bf16(GV.seqsum([GV.mul(prel[r_, j], hl[r_, j]) for j in range(4)]))
+            y = GV.rmsnorm_bf16(x, w, eps)
+            vin.update({r_ * HS + i: int(v) for i, v in enumerate(f32w(hl[r_].reshape(-1)))})
+            vin.update({CB + CS * r_ + j: int(f32w(prel[r_])[j]) for j in range(4)})
+            vout.update({OB + OS * r_ + i: int(v) for i, v in enumerate(f32w(y))})
+        if os.environ.get('FUSED_ROWS_FORM', 'recs') == 'rows':
+            ds.append(rec(0, [md(space=1, base=0, n=4 * D, m=nrow, stride=HS), md(space=0, fmt=1, base=bb, n=D),
+                              md(space=1, base=CB, n=4, m=nrow, stride=CS), 0,
+                              md(space=1, fmt=1, base=OB, n=D, m=nrow, stride=OS), 0, 0],
+                          [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32))))
+        else:
+            for r_ in range(nrow):
+                ds.append(rec(0, [md(space=1, base=r_ * HS, n=4 * D), md(space=0, fmt=1, base=bb, n=D),
+                                  md(space=1, base=CB + CS * r_, n=4), 0, md(space=1, fmt=1, base=OB + OS * r_, n=D), 0, 0],
+                              [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32))))
+        add(ds, vin, vout, hb)
     qd = [d for v, tr2, c2, vm2 in C.conformance(lambda v: v['row'] == 'CF-QDQ') for d in tr2 if C.unit_of(d) == 4]
     for d in qd:
         add([d])
