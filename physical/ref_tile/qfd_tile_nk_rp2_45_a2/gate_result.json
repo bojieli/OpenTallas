@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tile_nk_rp2_45_a2",
  "verdict": "FAIL",
- "generated": "2026-10-16T02:27:08-0700",
+ "generated": "2026-10-16T03:21:27-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "e9ce9fd28143049cda97b233e1226699d67ecba3",
+  "start_commit": "a7a08ca3c14f4ac919fcd291240e74fec5fcdcec",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "7cae7668f548e995297132c03597d699f7024883c0bf2415b84949dc9c4cdedc",
-  "manifest_sha256": "0477a6fff60fcf14822df7a510c18644ed78d0cd4af1ee5349184adb39346374",
+  "archive_sha256": "46848a227fe42390a9385433b3ab718c2dffb03d3f1ebe824c77ffec883cd2f0",
+  "manifest_sha256": "6eb172a0a19a719c05f924213abeb3c907fd653553539dc09e6b1cd828ab2247",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json",
@@ -17587,16 +17587,16 @@
    {
     "path": "physical/ref_tile/qfd_tile_nk_rp2_45_a2/held_grant.json",
     "kind": "file",
-    "sha256": "30e2401a721f15b948081246ac6134f3d2a33dd0d35b7f7142bc069ce6c6ffdb",
-    "git_blob": "34fb6c1c2161ece4d6361404cfb4a2ec6dbf3aae",
+    "sha256": "fdff2dd2a6ea44791e052cf31cba730a9ba407d448736acbba41eafcd9dd63bc",
+    "git_blob": "875894576f1ce5a91e4b883bdb094497d31b221c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_tile_nk_rp2_45_a2/job.json",
     "kind": "file",
-    "sha256": "03d07c289cf0873cbc05f1d5189cd51b2bd724adac37331cc75d93f6d45e8c2e",
-    "git_blob": "d690be3b9b335600bc5e48357974a77eac1f5393",
+    "sha256": "f2a71d5eae081ae228aba114140b247eb952499e434a0513ebd84480adad0d7f",
+    "git_blob": "6aa0e2e9a88bda502aa1f152e1ed6aaf94fb02ce",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17715,8 +17715,8 @@
    {
     "path": "physical/ref_tile/qfd_tile_nk_rp2_45_a2/regions.tcl",
     "kind": "file",
-    "sha256": "be5dd325211a724c83c37bc856c7e53c40121bf538f4787927ee1d1fe89e73db",
-    "git_blob": "f78a6035a9c6e65d41268fe543d974e881992cd0",
+    "sha256": "0cee7ee53a0f41d4dbb5c25448e0617cfddf06cfff10864a42f5f1930b9a9090",
+    "git_blob": "49690b03435b0e09e89bb672170983045a3c81d4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17731,8 +17731,8 @@
    {
     "path": "physical/ref_tile/qfd_tile_nk_rp2_45_a2/spec.json",
     "kind": "file",
-    "sha256": "b0ab04de3191aa9503efd50378fac019a07ce5de75cff2df5b42920e4974b9a0",
-    "git_blob": "505334432f02eed9564ebdcf11efb32d4dce56e1",
+    "sha256": "7dac8cc224fe8e156c3befc3c927295a7d403832d0c7abc0ee19e32e197bf78d",
+    "git_blob": "aed124e223a9f463182752af4e6093d6516be1ac",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -112339,8 +112339,8 @@
    {
     "path": "tools/qwen_repack/held45_plan.py",
     "kind": "file",
-    "sha256": "1b1d0beec6db18093b67e0e673b310c99683460ae502ef586a969ecee1fad156",
-    "git_blob": "a229c814f918c2105ee9ece27de6767030725fd0",
+    "sha256": "3dfbfd81ca048b56baaf31f1e5949ba43e854b5cd1b2851d9c9ab61ed9475cac",
+    "git_blob": "5161371c797a738530a8c2c055539a4cea67aac5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -121499,16 +121499,16 @@
    {
     "path": "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp2_45_a2.json",
     "kind": "file",
-    "sha256": "b43cd4b19d4e2333984f6f0ebc89ef362528158d346a6a4868976bea82c65c12",
-    "git_blob": "dc548909de7fb0873c705f3f0964880e1d672a4a",
+    "sha256": "7987b14feeafcc31d0875cfee5d95e7ef060547bd6bccdea372f05f65cf44f23",
+    "git_blob": "40081b0e4062b8c0f45d28d4688b9975d8e16c11",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_q_tile_repack/qfd_tile_nl_rp2_45_a2.json",
     "kind": "file",
-    "sha256": "941743fcf74e1f9d1a3debea37b80feee53f97233c4638dc4860c9d72f63551a",
-    "git_blob": "25d20de42909e07520396c589204b1c7562c1671",
+    "sha256": "584f5489036b6b5af3963ec9a0e43298b649d2ac605e6559ca64dde81dd3c2d1",
+    "git_blob": "2e5fb62622ed5ee19c09e61d488507e570291425",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -150547,15 +150547,15 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 134518708,
+   "archive_bytes": 134519451,
    "unpacked_bytes": 821862400,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "24aebc62947df57ef1446d410b920fff94fe315f",
-   "content_sha256": "0918b61809bbdb2fac88c3e1aa4f0fbff72af4b16806d94b2e532c40d8fbf235",
+   "origin_main": "6cb6715249516e67afb70350a93fc0cfe3c8cfce",
+   "content_sha256": "9355d67a807c49c7ed60c70f716512ff830c633f9d079a491d0a86b8fc722ebd",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -150855,11 +150855,11 @@
     },
     {
      "path": "tools/hier_contract/child_lint.py",
-     "sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
-     "git_blob": "eaa6a76b2941db65e7a882624c31a5b0f8fd52cb",
-     "mode": 436,
+     "sha256": "b682d871603dc7b4c2fafb794eea4c939ccbef6fe1535b9ca01734113a657050",
+     "git_blob": "99670d66a7eaf27d2f33c600c17c2ad567c68910",
+     "mode": 420,
      "resolution": "same",
-     "literal_git_blob": "eaa6a76b2941db65e7a882624c31a5b0f8fd52cb"
+     "literal_git_blob": "99670d66a7eaf27d2f33c600c17c2ad567c68910"
     },
     {
      "path": "tools/hier_contract/m6_pin_grant.py",
@@ -151129,7 +151129,7 @@
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/clock.sdc": "485824db15c206c76ec8ca8daa5494f4bd6d785b5fbdb7b702d4e8a917485b1b",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/clock_entry.sdc": "b035fed0e1747bf87970b54434db3d237adda464e391361f3653752557171dba",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/floorplan.json": "ece31bfb575e2e92faee34560aab119351764a016862476c4e6396db8b86333d",
-    "physical/ref_tile/qfd_tile_nk_rp2_45_a2/held_grant.json": "30e2401a721f15b948081246ac6134f3d2a33dd0d35b7f7142bc069ce6c6ffdb",
+    "physical/ref_tile/qfd_tile_nk_rp2_45_a2/held_grant.json": "fdff2dd2a6ea44791e052cf31cba730a9ba407d448736acbba41eafcd9dd63bc",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/kit.env": "34d3309c3ac2c632329950119ce6a68c6ca1a85fe45d19d4cbe5cd3ba865d4e5",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/pdn.tcl": "a5a55387767a4a5d22abf73c00927fd48504c2e457dbbcbf3f7c006321ae625b",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/pin_regs.json": "ea45242929da6424cc775c47be50d5a371af8d16bc3ba7e2e1d26621e6d11dcb",
@@ -151144,9 +151144,9 @@
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/pre_fill.tcl": "3a5a2b7c234c278209d3cce0cfa8c6264a79201067d8a9c082d4e2a2a372fa3c",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/pre_gpl.tcl": "8aa3e596c08bf8c16d8630dc0e7ccfc1b14db7d3bc62662f7484bf6ae0cb5d6c",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/pre_grt.tcl": "1b71c01e22e5b6e19f555d8a699bec05fac5a134c5580e82fb232cacd2105623",
-    "physical/ref_tile/qfd_tile_nk_rp2_45_a2/regions.tcl": "be5dd325211a724c83c37bc856c7e53c40121bf538f4787927ee1d1fe89e73db",
+    "physical/ref_tile/qfd_tile_nk_rp2_45_a2/regions.tcl": "0cee7ee53a0f41d4dbb5c25448e0617cfddf06cfff10864a42f5f1930b9a9090",
     "physical/ref_tile/qfd_tile_nk_rp2_45_a2/signoff.sdc": "c542a4bcc18923633d46ac5920108f33929f05b700e07a7b524bdd1aac192a3e",
-    "physical/ref_tile/qfd_tile_nk_rp2_45_a2/spec.json": "b0ab04de3191aa9503efd50378fac019a07ce5de75cff2df5b42920e4974b9a0",
+    "physical/ref_tile/qfd_tile_nk_rp2_45_a2/spec.json": "7dac8cc224fe8e156c3befc3c927295a7d403832d0c7abc0ee19e32e197bf78d",
     "rtl/hdc/kv/ot_qwen_kv_land_merge.sv": "07d162625286adc13b760d477f0bf74f1e6fe810ce63ca4b5e2b41abc05a8627",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
@@ -151188,7 +151188,7 @@
     "tools/orfs_hold_mm.py": "d34ce8c6de00df77fa712798fb2a99038b641642719516e34cd3b23e5f56203d",
     "tools/orfs_hold_mm.tcl": "3704bb44866f35c432846c900bc0360e2bd4e846ae2c050b4c9a876ae93ce2c9",
     "tools/preroute_gate.tcl": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
-    "tools/qwen_repack/held45_plan.py": "1b1d0beec6db18093b67e0e673b310c99683460ae502ef586a969ecee1fad156",
+    "tools/qwen_repack/held45_plan.py": "3dfbfd81ca048b56baaf31f1e5949ba43e854b5cd1b2851d9c9ab61ed9475cac",
     "tools/qwen_repack/localize45.tcl": "cd23bf3018cfd9fac1d5ac7c40c20fed790bc491003e7e6af90bde7550e43f41",
     "tools/qwen_repack/native45_bench.sh": "e76da5351627b5abc9021659bdb458bafe5d85005f92da60a41f740a6907a8dc",
     "tools/qwen_repack/native45nl_bench.sh": "783e50e1052f055fb4af1a58489381cfe53e52efb5d9555feb8ed0d979e4b6a1",
@@ -151205,16 +151205,16 @@
    },
    "digest": "b94b48da23053ce060858329e4b7ce1a5bc5d02f1e0d24a793ddee292b879200"
   },
-  "captured": "2026-10-16T02:05:39-0700",
+  "captured": "2026-10-16T02:58:44-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tile_nk_rp2_45_a2/signoff.sdc"
   },
-  "remote_script_sha256": "38c048d4dd030c9783387de4e03db7f583f9fffc7c70af3641a1a0f155655909",
+  "remote_script_sha256": "b9048b77086168b41531c49ff128596844d4dfa154e0249d0461f1e11189c464",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261016-020458",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261016-025738",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
