@@ -246,7 +246,8 @@ module ot_s81_engram_mix_relay_localized_candidate #(parameter integer N=32, D=5
  wire g_v;
  wire [31:0] a_gate,g_x,gy;wire [63:0] norm_rstd;
  wire [7:0] mvalid,mfault,add_copy;wire [3:0] avalid,af;wire [1023:0] hd,kd,dot,oy;
- // Physical hierarchy (S-ELEM-C 2026-10-15, MIX4 home 771 x 3229, results/arch/s81_mix4_phys_plan_1015): rows N->S
+ // Historical relay partition rationale (S-ELEM-C 2026-10-15); old 771x3229 N-to-S pack is SUPERSEDED.
+ // Current SLOT A q0-SOUTH R0 candidate geometry and all parent transports remain unqualified:
  // shell | add8 | mul4 | mul4 | chunk8 | chunk8+sum | norm/gate/control/sum.  The scalar row is ~470-620 um from the
  // shell, add8 and mul4 rows, so every signal between them crosses ONE registered relay leaf (ot_s81_engram_rly, own
  // clock entry on the control's root, mid-cluster):
