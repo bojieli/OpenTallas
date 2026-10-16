@@ -14,8 +14,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 95.04,
-  "h": 95.04
+  "w": 129.6,
+  "h": 116.64
  },
  "pins": {
   "W": [
@@ -46,12 +46,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_balance": {
-   "h": "M3 M5",
-   "v": "M2 M4"
+   "h": "M2 M4",
+   "v": "M3 M5"
   }
  },
  "hold_merge": true,
- "structural_change": "Actualper-portthree-stage7headsnapshotroot11487FF<15k, head/data/count/epoch coherent, per-childclockpin forwardedexplicitly. Masksphys6edgepopflight with7headlookahead,CAP8 preserved;512full545II1PASS. Measureactualstd/pin/CTSbeforeclosure. ActualR2std3671/core6718=54.6percent butGPL0305afterrealpin-hooks; preservefailedreceipt, raiseactualH82.08to95.04(core7667,std47.9percent)withoutclock/epochchange.",
+ "structural_change": "Actualper-portthree-stage7headsnapshotroot11487FF<15k, head/data/count/epoch coherent, per-childclockpin forwardedexplicitly. Masksphys6edgepopflight with7headlookahead,CAP8 preserved;512full545II1PASS. Measureactualstd/pin/CTSbeforeclosure. ActualR2std3671/core6718=54.6percent butGPL0305afterrealpin-hooks; preservefailedreceipt, raiseactualH82.08to95.04(core7667,std47.9percent)withoutclock/epochchange. ActualODBpinorientationdefect: N/S3815headsplacedx0withy162outside95die. CorrectW/EverticalM2/M4,N/ShorizontalM3/M5, disjointphysicalbusfacecapacityandretainedallholdstages. PreservefailedODB, freshactualCTSrequired.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -83,5 +83,15 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "pin_ranges": {
+  "heads": [
+   2.16,
+   127.44
+  ],
+  "out_heads": [
+   2.16,
+   127.44
+  ]
+ }
 }

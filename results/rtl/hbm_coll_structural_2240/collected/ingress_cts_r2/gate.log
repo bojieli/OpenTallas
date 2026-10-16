@@ -1,0 +1,21 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 13.5 pins/um (head_e, head_m, taken): recipe-2 hold stages take 4.53 um behind the face, the pin flops need gap 5.8 um and 26 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_tkm_ingress_ref_20261014-054727.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_tkm_ingress_ref_20261014-054727.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_tkm_ingress_ref-20261014-054727
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 85 s (gate total 565 s)
+GATE INFO util: synthesized std area 5833 um2 + macros 11675 in core 37437: util 47%
+GATE INFO textbook: WARN ot_hgi_coll_tkm_lane cells 43,768 flops 10,140 depth 766.8 ps util 0.4692 reach 206.7 um (0.8 s)
+GATE WARN textbook.high_fanout: net _65190_/Y (OR3x1_ASAP7_75t_R): 5,493 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage gb[0]$_DFF_P_ -> d1_qpf[21]$_DFF_P_/D: ~767 ps estimated (22 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 403.9..550.4 ps (spread 146.5), boundary mean 440.9; tt insertion all 308.2..446.6 ps (spread 138.4), boundary mean 341.8; ff insertion all 249.7..382.7 ps (spread 133.0), boundary mean 281.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_tkm_ingress_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      300 paths, worst slack -1049.2 ps (e.g. taken[1])
+GATE INFO path_classes: in->reg         4 paths, worst slack 343.5 ps (e.g. u_rst.rst_n[1]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: reg->reg       78 paths, worst slack 361.4 ps (e.g. taken[2]$_DFFE_PN0P_/RESETN)
+GATE INFO path_classes: setup WNS -1.0492294810759972e-9 hold WNS 2.3694796125184325e-11
+GATE INFO clock_rule: root port:clk: 10,143 sinks on the largest root <= 15,000; measured TT insertion 446.6 ps, leaf spread 138.4 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/hbm-coll-clusters-2240/physical/ref_tile/hbm_tkm_ingress_ref/source_binding_history/1e29d4da06952af2a12665bdb0931e70a774ba68364ffae2a8720b98b667fc38.json
+GATE: hbm_tkm_ingress_ref/gate_result.json written (exact staged source binding; commit it with the kit)

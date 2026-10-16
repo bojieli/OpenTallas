@@ -1,0 +1,18 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 9.1 pins/um (out_qp_push, out_qp_data, out_rx_credit): recipe-2 hold stages take 3.05 um behind the face, the pin flops need gap 3.9 um and 5 columns (derived in the flow)
+GATE INFO oflop: N face 18.1 pins/um (qr_push, qr_data, rx_valid): recipe-2 hold stages take 3.96 um behind the face, the pin flops need gap 5.1 um and 35 columns (derived in the flow)
+GATE INFO oflop: S face 18.1 pins/um (out_qr_push, out_qr_data, out_rx_valid): recipe-2 hold stages take 6.07 um behind the face, the pin flops need gap 7.8 um and 35 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_coll_port_publication_ref2240_20261014-055520.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_coll_port_publication_ref2240_20261014-055520.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_coll_port_publication_ref2240-20261014-055520
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 21 s (gate total 71 s)
+GATE WARN util: synthesized std area 550 um2 + macros 0 in core 3154: util 17%  -> FIX: set "std_area_um2": 550 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hcoll_port_publication545 cells 3,279 flops 1,639 depth 0.0 ps util 0.1744 reach 73.4 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 17.4% outside 45%-65% (std 550 + macro 0 um2 in 3154 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO clock_rule: root port:clk: 1,639 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/hbm-coll-clusters-2240/physical/ref_tile/hbm_coll_port_publication_ref2240/source_binding_history/e21e451e8c4f37b4e72fd19a1b2bea3f40d12a2fa4e01c6ffcd7e657d80fe154.json
+GATE: hbm_coll_port_publication_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)

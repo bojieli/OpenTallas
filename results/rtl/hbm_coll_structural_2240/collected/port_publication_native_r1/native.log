@@ -1,0 +1,14 @@
+ot-run: ot-epyc1tb     admits   564 GB (avail 790, growth 52, headroom 64, waiters 0/0 GB) load 38/128 running 11 disk 681 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/coll_pub_native2240
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/coll_pub_native2240
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/coll_pub_native2240
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3489051-1791982578 after 0 s
+TUCFG seed=3 rank=19 NC=8 NOG=12 PF=384 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=1.000000 TOT=2304
+TUDONE seed=3 rank=19 pf=384 lat_ns=1522.050 lat_cyc=1826.5 tx_first_ns=48.372 tx_last_ns=651.354 rx_first_ns=426.174 rx_last_ns=1112.556 res_first_ns=497.898 res_last_ns=651.354 deliver_tail_ns=409.494 ndep=360 narr=2616 nres=24 got=2304 own_exact=24 mismatches=0 faults=0 credit_stall=0
+ORDERED_COLL PASS full512 got=2304 own_exact=24
+- rtl/hbm_accel/tu/tb_hcoll_columns_ordered.sv:302: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.257 s; speed 7.548 us/s
+- Verilator: cpu 0.257 s on 1 threads; allocated 20 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3489051-1791982578): exit 0

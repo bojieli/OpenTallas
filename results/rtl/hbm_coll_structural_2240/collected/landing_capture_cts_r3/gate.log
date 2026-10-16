@@ -1,0 +1,16 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 40.2 pins/um (heads): recipe-2 hold stages take 8.79 um behind the face, the pin flops need gap 11.3 um and 78 columns (derived in the flow)
+GATE INFO oflop: S face 40.2 pins/um (out_heads): recipe-2 hold stages take 13.48 um behind the face, the pin flops need gap 17.3 um and 78 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_coll_landing_capture_ref2240_20261014-055214.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_coll_landing_capture_ref2240_20261014-055214.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hbm_coll_landing_capture_ref2240-20261014-055214
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 30 s (gate total 91 s)
+GATE INFO util: synthesized std area 3854 um2 + macros 0 in core 8230: util 47%
+GATE INFO textbook: PASS ot_hcoll_landing_capture7 cells 22,981 flops 11,490 depth 11.7 ps util 0.4683 reach 0.0 um (0.3 s)
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO clock_rule: root port:clk: 11,490 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/hbm-coll-clusters-2240/physical/ref_tile/hbm_coll_landing_capture_ref2240/source_binding_history/b6666e7aa93f64938f51f1bc47cae8c03a505c20b8b4018d6e4c6b57ce4b7005.json
+GATE: hbm_coll_landing_capture_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)

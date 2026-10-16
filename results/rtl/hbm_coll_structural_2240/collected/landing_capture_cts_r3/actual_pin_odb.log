@@ -1,0 +1,29 @@
+ot-run: ot-epyc1tb     admits   584 GB (avail 810, growth 75, headroom 64, waiters 0/0 GB) load 29/128 running 10 disk 683 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/hbm_coll_landing_capture_ref2240-20261014-055214
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/hbm_coll_landing_capture_ref2240-20261014-055214
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/hbm_coll_landing_capture_ref2240-20261014-055214
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3540100-1791982933 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+DIE _e036d99cf3550000_p_odb__Rect
+DIEBOX 0 0 95040 95040 DBU1000
+PIN heads[0] 0.0 95.076 0.038 95.094
+PIN heads[1000] 0.0 27.576 0.038 27.594
+PIN heads[1001] 0.0 83.04 0.084 83.064
+PIN heads[1002] 0.0 162.846 0.038 162.864
+PIN heads[1003] 0.0 107.088 0.084 107.112
+PIN heads[1004] 0.0 27.306 0.038 27.324
+PIN heads[1005] 0.0 82.992 0.084 83.016
+PIN heads[1006] 0.0 163.116 0.038 163.134
+PIN heads[1007] 0.0 107.136 0.084 107.16
+PIN heads[1008] 0.0 27.036 0.038 27.054
+PIN heads[1009] 0.0 82.944 0.084 82.968
+PIN heads[100] 0.0 88.326 0.038 88.344
+PIN heads[1010] 0.0 163.386 0.038 163.404
+PIN heads[1011] 0.0 107.184 0.084 107.208
+PIN heads[1012] 0.0 26.766 0.038 26.784
+PIN heads[1013] 0.0 82.896 0.084 82.92
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3540100-1791982933): exit 0

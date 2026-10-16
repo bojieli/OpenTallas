@@ -49,13 +49,13 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "pin_balance": {
-   "h": "M3 M5",
-   "v": "M2 M4"
+   "h": "M2 M4",
+   "v": "M3 M5"
   },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Move actualQP545/QR545/LD545+4flag retainedpublicationinto9independentownroots; originaloneedgeandCAP8unchanged. Independent4096full1635+control/resets exactandcreditmutant; physicalport_pub_clk9throughface/body/EP/TU. Noactualdiepin/priceadoption claim. Actualpostpinholdstd1485um2 exceeds1348core at41.04sq; actualoutline60.48sq core3158 retainsallholdstages at47percentposthookutil, realN/Sband1092pins spreadover60um.",
+ "structural_change": "Move actualQP545/QR545/LD545+4flag retainedpublicationinto9independentownroots; originaloneedgeandCAP8unchanged. Independent4096full1635+control/resets exactandcreditmutant; physicalport_pub_clk9throughface/body/EP/TU. Noactualdiepin/priceadoption claim. Actualpostpinholdstd1485um2 exceeds1348core at41.04sq; actualoutline60.48sq core3158 retainsallholdstages at47percentposthookutil, realN/Sband1092pins spreadover60um. ActualODBpinorientationdefect: N/S3815headsplacedx0withy162outside95die. CorrectW/EverticalM2/M4,N/ShorizontalM3/M5, disjointphysicalbusfacecapacityandretainedallholdstages. PreservefailedODB, freshactualCTSrequired.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
