@@ -99,6 +99,18 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["verdict"], "PASS", r["fails"])
         self.assertTrue(any("several pins" in w for w in r["warns"]))
 
+    def test_band_carve_removes_band_obs_over_face_pins(self):
+        # ROOT 2026-10-15 (hbm_ckgen_rel-r1): abstract_pin_stub carves the band rect around the pins it covers; the rest
+        # of the band stays OBS and no face pin keeps a same-layer OBS over it
+        import abstract_pin_stub as APS
+        text = lef(sig=(("a", "M5", 5.0, 0.0), ("b", "M5", 7.0, 0.0)), obs=[("M5", 4.0, 0.1, 9.0, 0.4)])
+        out, _ = APS.process(text.replace("  END\nEND tile", "  END\nEND tile"))
+        r = self.run_lint(out)
+        self.assertEqual(r["info"]["face"]["band_same"], 0)
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        left = APS.obs_rects(APS.split_lef(out)[1])["M5"]
+        self.assertAlmostEqual(sum((c - a) * (d - b) for a, b, c, d in left), 5.0 * 0.3 - 2 * 0.024 * 0.092, places=6)
+
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})
         self.assertIn("d", self.checks(r))
