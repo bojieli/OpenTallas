@@ -1,0 +1,103 @@
+{
+  "qualification": "PHYSICAL_INTAKE_ONLY_NATIVE_OPEN",
+  "source_commit": "8fe5d18bda2b1c0f1d32682ebbddfc380b4a867e",
+  "changed_files_sha256": {
+    "rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv": "02f5d9c0cc0add3855c03b61bc157c85a54c4cdc01c6219228b78aa0283cf8a5",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv": "fe44e6a4f058612c3236dc9b5ff987fdb881167c9029606cfdfa7adb9f6c0953",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "6c158e8001e9f093568dcc3f7a1b2cda8f7c6900257edf35ccb6b02bd9cceac0",
+    "tools/hgi_adapters/fused_bench.py": "219e62957b042047ef4ec8a1b23314cf42b832df4fab4cb16df767e4196416db"
+  },
+  "parameters": {
+    "D": 5120,
+    "LQ": 32,
+    "FD": 64,
+    "RL": 10,
+    "HSL": 1,
+    "KX": 2,
+    "MUT": 0
+  },
+  "structure": {
+    "lanes": 32,
+    "fp_slices": 256,
+    "fp_slice_module": "ot_hgi_hc_lane_sl",
+    "fp_slice_body_unchanged_from_parent": true,
+    "fp_slice_body_sha256": "b6cddd61d15cfc4901719441629589e8ed150e4c182e4cc674d3a9f382edcb55",
+    "write_fifo_macros": {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "count": 32,
+      "capacity_bits": 1048576,
+      "payload_width_bits": 271,
+      "source": "ot_fifo_sram_fwft MACRO=0"
+    },
+    "declared_lane_arrays_bits": {
+      "xb": 10240,
+      "gb": 5120,
+      "asb": 1280,
+      "op": 1280,
+      "wt": 1024,
+      "rha": 256
+    },
+    "declared_lane_arrays_total_bits": 19200,
+    "declared_parent_lane_arrays_total_bits": 13440,
+    "declared_lane_arrays_delta_bits": 5760,
+    "declared_xb_gb_bits_all_lanes": 491520,
+    "controller_chunk_fifo_declared_bits": 32768,
+    "controller_scalar_buffer_declared_bits": 2048,
+    "lane_vm_boundary_bits_all_lanes": 17792,
+    "clock_ports_in_current_rtl": 1,
+    "physical_independent_child_roots_exposed": false
+  },
+  "fit_screen": {
+    "retained_hc_eng_reservation_um": [
+      560,
+      1785.714
+    ],
+    "retained_hc_eng_area_mm2": 0.99999984,
+    "retained_four_boundary_windows_um": [
+      500,
+      500
+    ],
+    "boundary_windows_are_not_ll_arithmetic_grants": true,
+    "historical_slice_candidate_um": [
+      140.4,
+      140.4
+    ],
+    "historical_slice_failure": "140.4um candidate failed FLOORPLAN_MARGIN at64.7percent; later158.76um successor and151.2um variant existed. No closed current slice view found.",
+    "256_slice_candidate_reuse_area_mm2": 5.04631296,
+    "is_universal_lower_bound": false,
+    "full_lane_candidate_reuse_area_mm2": 13.436928,
+    "canonical_pin_file_exists": false,
+    "conclusion": "Existing 1mm2 hc_eng window does not hold the historical candidate outline hierarchy. Actual new-source mapped area and whole-group placement are unmeasured."
+  },
+  "home_requests": [
+    {
+      "name": "A_contiguous",
+      "groups": 1,
+      "lanes_per_group": 32,
+      "width_um": 5324,
+      "height_um": 2652,
+      "area_mm2_before_controller": 14.119248,
+      "status": "REQUEST_ONLY_NOT_ASSIGNED_NOT_PROVEN_FIT",
+      "basis": "Historical 648um lane candidate envelope, with 20um between lanes; P6 added state may require growth. Controller, global reduction, die feedthroughs and clock distribution require additional explicitly assigned homes."
+    },
+    {
+      "name": "B_quadrant_local",
+      "groups": 4,
+      "lanes_per_group": 8,
+      "width_um": 2652,
+      "height_um": 1316,
+      "area_mm2_before_controller": 13.960128,
+      "status": "REQUEST_ONLY_NOT_ASSIGNED_NOT_PROVEN_FIT",
+      "basis": "Historical 648um lane candidate envelope, with 20um between lanes; P6 added state may require growth. Controller, global reduction, die feedthroughs and clock distribution require additional explicitly assigned homes."
+    }
+  ],
+  "required_before_gate": [
+    "H-DIE assigns connected full-engine home and exact face/bit/layer pin file",
+    "Actual source-pinned lane shell and controller sequential/root census; split buffers/controller roots or measure compliant CTS",
+    "Expose independent physical child clock entries; deliver phi-R per child; common RTL clk is not a physical clock proof",
+    "Prove fixed production memory/command/calendar slots and no normal runtime credit/backpressure scheduling; inherited cr, xslot_ok, blk_rdy and grant gating are not a compiler schedule",
+    "Bind post-descriptor-guard source, full P6 positive/numerical mutant, restart II and exact memory images",
+    "Price every physical relay and register stage; prove TT setup/FF hold/DRC0 and native L220/C190/sp80"
+  ],
+  "throughput_scope": "56320-word/1451-cycle result reported by H-MTP is numerical component evidence; post-descriptor-guard exact source receipt and static integrated calendar still pending."
+}
