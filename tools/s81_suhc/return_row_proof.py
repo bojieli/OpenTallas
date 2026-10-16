@@ -2,8 +2,8 @@
 """Two-row exact delayed equivalence of the column return row (HC-COLUMN 10-16, option A).
 
 Reference row = the cth_nt return path verbatim: monolithic ot_s81_hc_ctra + ot_s81_hc_ctrb + ot_s81_hc_ctrn (RLY 2), the
-hrq / yb / flag wiring copied from ot_s81_hc_cth_nt.  DUT row = ot_s81_hc_retrow (ctra/ctrb_column x4 YB_STAGE 1
-PAYLOAD_STAGE 0 + ctrn_col x4), chained through the per-column bundles; the chain enters through ot_s81_hc_rb_flat2cols
+hrq / yb / flag wiring copied from ot_s81_hc_cth_nt.  DUT row = ot_s81_hc_retrow (ot_s81_hc_ret_column x4 = ctra+ctrb column leaf YB_STAGE 1
+PAYLOAD_STAGE 0, + ctrn_col x4), chained through the per-column bundles; the chain enters through ot_s81_hc_rb_flat2cols
 behind one register (the chain-entry stage that keeps a slab's external chain input aligned with the shifted engines) and
 leaves through ot_s81_hc_rb_cols2flat.  Every fv-domain input (rst, tid, last, fv, fdx, cs, yb, flags) drives both at x(t);
 each DUT row's hrq is x(t-1) (the bank round trip follows the shifted request).  PASS = DUT chain output == reference
@@ -61,7 +61,8 @@ endmodule
 (out/'reference.sv').write_text(ref)
 cols=(r/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv').read_text()
 ntc=(r/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv').read_text()
-dut_src=cols+'\n'+ntc[:ntc.index('module ot_s81_hc_cth_ntc')]
+_b=ntc.index('module ot_s81_hc_cth_ntc'); _e=ntc.index('\nendmodule',_b)+len('\nendmodule')
+dut_src=cols+'\n'+ntc[:_b]+ntc[_e:]   # every module except the cth_ntc parent
 bench='''module check;
   reg clk=0; reg [31:0] rng=32'h2545F491; integer cycle,j,k;
   reg rst; reg [7:0] tid1,tid2; reg last1,last2; reg [6:0] fv1,fv2; reg [103:0] fdx1,fdx2;
@@ -121,9 +122,10 @@ endmodule
 '''
 (out/'check.sv').write_text(bench)
 MUT={'positive':[],
- 'partner_c1':[('localparam integer B = RBW * c, PC = (c + 2) % 4;','localparam integer B = RBW * c, PC = (c + 1) % 4;')],
+ 'partner_c1':[('localparam integer B = RBW * c, PC = (c + 2) % 4;','localparam integer B = RBW * c, PC = (c + 1) % 4;'),('localparam integer PC = (COLUMN + 2) % 4;','localparam integer PC = (COLUMN + 1) % 4;')],
  'header_from_peer':[('.rv_c(rvm), .hdr_c(hdr),','.rv_c(rvm), .hdr_c(g_col[(c + 1) % 4].hdr ^ {107\'d0, g_col[(c + 1) % 4].rvm[0]}),')],
- 'no_par_ctrb':[(".a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),",".a_par(g_col[PC].a_rdm), .b_par(b_rdm),")]}
+ 'no_par_ctrb':[(".a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),",".a_par(g_col[PC].a_rdm), .b_par(b_rdm),")],
+ 'cs_relay_skipped':[('.cs_in(c == 3 ? cs : cs_net), .cs_rel(cs_net),','.cs_in(c == 3 ? cs : cs_net), .cs_rel(cs),')]}
 res=[]
 verilator=shutil.which('verilator') or str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
 variants=list(MUT)+['no_entry_register']

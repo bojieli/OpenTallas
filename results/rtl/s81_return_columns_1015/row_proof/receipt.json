@@ -7,8 +7,8 @@
  "added_cycles_per_row": 0,
  "sources_sha256": {
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "fefa77576e22684c1cc3609e7aa4bad7d82e045f62c3aeb1316021e46f5a9174",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "ea3814ed35450d3c06d8d2c23efca8c43da8a61ad815da8c25e1eab30505c5e3",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "3f8f63d41d8d2a0014b7c966a4b3d9f9b895471779d12f55be99199947ba0f38"
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "28218cb2a3b334823cd92f36ceed379e6d0d82f76df88aff613ebd58286dd4fc",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "b57419f09edc3bdec1d9bcdc0c0137747df59837eb20b1a1cf2aa3367e16d81f"
  },
  "results": [
   {
@@ -36,11 +36,18 @@
    "log": "no_par_ctrb.log"
   },
   {
+   "variant": "cs_relay_skipped",
+   "returncode": 1,
+   "expected": true,
+   "log": "cs_relay_skipped.log"
+  },
+  {
    "variant": "no_entry_register",
    "returncode": 1,
    "expected": true,
    "log": "no_entry_register.log"
   }
  ],
- "ot_run": "oth-ubuntu-3229690-1792160553 ot-epyc4"
+ "ot_run": "oth-ubuntu-3369988-1792161176 ot-epyc4",
+ "dut_leaf": "ot_s81_hc_ret_column x4 (one leaf per column = ctra+ctrb column) + ot_s81_hc_ctrn_col x4"
 }

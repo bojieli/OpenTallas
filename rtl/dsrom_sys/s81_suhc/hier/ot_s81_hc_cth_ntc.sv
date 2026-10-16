@@ -104,46 +104,24 @@ module ot_s81_hc_retrow #(
     input  wire [7:0]             hnz_d, pflt_d
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1;
-    localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RVW = S_RT + 4, RBW = RVW + 108 + 1024;
-    genvar c, rs, rc, bank;
+    localparam integer RVW = S_RT + 4, RBW = RVW + 108 + 1024;
+    // the cs / hov relay nets (COLUMN 3 / COLUMN 0 relay one register; every other column reads the net)
+    wire [127:0] cs_net;
+    wire         hov_net;
+    genvar c;
     generate for (c = 0; c < 4; c = c + 1) begin : g_col
         localparam integer B = RBW * c, PC = (c + 2) % 4;
-        wire [RVW-1:0] rv_i  = rb_in[B +: RVW];
-        wire [107:0]   hdr_i = rb_in[B + RVW +: 108];
-        wire [255:0]   ao_i  = rb_in[B + RVW + 108 +: 256], bo_i = rb_in[B + RVW + 364 +: 256];
-        wire [255:0]   ap_i  = rb_in[B + RVW + 620 +: 256], bp_i = rb_in[B + RVW + 876 +: 256];
-        // ctra column c payload ingress: own chunk (slot rs, chunk c + 4 rc); far-half shift chunk Q - 2 from column PC
-        wire [511:0] a_rdp, b_rdp;
-        for (rs = 0; rs < 2; rs = rs + 1) begin : g_rs
-            for (rc = 0; rc < 2; rc = rc + 1) begin : g_rc
-                localparam integer Q = 8 * rs + c + 4 * rc, QS = Q - 2, A = 14 + Q;
-                assign a_rdp[64 * (2 * rs + rc) +: 64] = ao_i[128 * rs + 64 * rc +: 64];
-                if (QS >= 0) begin : g_sh
-                    assign a_rdp[256 + 64 * (2 * rs + rc) +: 64] = ap_i[128 * (QS / 8) + 64 * ((QS % 8) / 4) +: 64];
-                end else begin : g_z
-                    assign a_rdp[256 + 64 * (2 * rs + rc) +: 64] = 64'd0;
-                end
-                assign b_rdp[64 * (2 * rs + rc) +: 64] = bo_i[128 * rs + 64 * rc +: 64];
-                if (A / 8 == 1) begin : g_bsa
-                    assign b_rdp[256 + 64 * (2 * rs + rc) +: 64] = ap_i[128 + 64 * ((A % 8) / 4) +: 64];
-                end else begin : g_bsb
-                    assign b_rdp[256 + 64 * (2 * rs + rc) +: 64] = bp_i[128 * (A / 8 - 2) + 64 * ((A % 8) / 4) +: 64];
-                end
-            end
-        end
-        wire [2*64*SH-1:0] hr_n, hr_s, hrb_n, hrb_s;
-        for (bank = 0; bank < 2; bank = bank + 1) begin : g_h
-            for (genvar q = 0; q < SH; q = q + 1) begin : g_q
-                assign hr_n [64 * (SH * bank + q) +: 64] = hrq[64 * S_RT * (c + 4 * bank)     + 64 * q +: 64];
-                assign hr_s [64 * (SH * bank + q) +: 64] = hrq[64 * S_RT * (c + 4 * bank + 8) + 64 * q +: 64];
-                assign hrb_n[64 * (SH * bank + q) +: 64] = hrq[64 * S_RT * (c + 4 * bank)     + 64 * (q + SH) +: 64];
-                assign hrb_s[64 * (SH * bank + q) +: 64] = hrq[64 * S_RT * (c + 4 * bank + 8) + 64 * (q + SH) +: 64];
-            end
-        end
-        wire [63:0]  yb_loc = {yb[16 * (c + 12) +: 16], yb[16 * (c + 8) +: 16], yb[16 * (c + 4) +: 16], yb[16 * c +: 16]};
-        wire [63:0]  yb_fwd;
-        wire [191:0] yb_peer;
-        wire [2:0]   peer_fault, peer_hnz;
+        wire [RVW-1:0] rvm;
+        wire [107:0]   hdr;
+        wire [255:0]   a_rdm, b_rdm;
+        wire [63:0]    yb_fwd;
+        wire [127:0]   csf;
+        wire           hovf, flag_fault, flag_hnz;
+        wire [16*S_RT-1:0] rq;
+        wire           hsr;
+        wire [15:0]    hsc;
+        wire [191:0]   yb_peer;
+        wire [2:0]     peer_fault, peer_hnz;
         for (genvar pc = 0; pc < 4; pc = pc + 1) begin : g_peer
             if (pc != c) begin : g_p
                 localparam integer PI = (pc < c) ? pc : pc - 1;
@@ -152,34 +130,24 @@ module ot_s81_hc_retrow #(
                 assign peer_hnz[PI]   = g_col[pc].flag_hnz;
             end
         end
-        wire [255:0] yb_rel;
-        for (genvar pc = 0; pc < 4; pc = pc + 1) begin : g_rel
-            for (genvar k = 0; k < 4; k = k + 1) begin : g_k
-                assign yb_rel[16 * (pc + 4 * k) +: 16] = g_col[pc].yb_fwd[16 * k +: 16];
-            end
+        wire [4*64*S_RT-1:0] hrq_col;
+        for (genvar j = 0; j < 4; j = j + 1) begin : g_h
+            assign hrq_col[64 * S_RT * j +: 64 * S_RT] = hrq[64 * S_RT * (c + 4 * j) +: 64 * S_RT];
         end
-        wire [RVW-1:0] rvm;
-        wire [107:0]   hdr;
-        wire flag_fault, flag_hnz;
-        wire [127:0] csf;
-        wire         hovf;
-        wire [255:0]   a_rdm, b_rdm;
-        wire [16*S_RT-1:0] rq;
-        wire               hsr;
-        wire [15:0]        hsc;
-        ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c),.YB_STAGE(1),.PAYLOAD_STAGE(0)) u_a (
-            .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_i), .rdh_in(hdr_i), .rdp_in(a_rdp),
-            .rvm(rvm), .peer_fault(peer_fault), .peer_hnz(peer_hnz), .yb_loc(yb_loc), .yb_fwd(yb_fwd), .yb_peer(yb_peer),
-            .cs_fwd(csf), .cs_rel(g_col[3].csf), .hov_fwd(hovf), .hov_rel(g_col[0].hovf),
-            .rdm(a_rdm), .rq_q(rq), .hs_run(hsr), .hs_c(hsc),
-            .rq_q_c1(), .rq_q_c2(), .rq_q_c3(), .hs_run_c1(), .hs_run_c2(), .hs_run_c3(), .hs_c_c1(), .hs_c_c2(), .hs_c_c3(),
-            .hrq_n(hr_n), .hrq_s(hr_s), .yb_n(128'd0), .yb_s(128'd0), .cs(cs),
-            .nflt_n({nflt[c + 4], nflt[c]}), .nflt_s({nflt[c + 12], nflt[c + 8]}), .hov_d(hov_d),
+        ot_s81_hc_ret_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c)) u_c (
+            .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx),
+            .rv_in(rb_in[B +: RVW]), .hdr_in(rb_in[B + RVW +: 108]),
+            .ao_in(rb_in[B + RVW + 108 +: 256]), .bo_in(rb_in[B + RVW + 364 +: 256]),
+            .ap_in(rb_in[B + RVW + 620 +: 256]), .bp_in(rb_in[B + RVW + 876 +: 256]),
+            .rvm(rvm), .hdr(hdr), .a_rdm(a_rdm), .b_rdm(b_rdm), .rq_q(rq), .hs_run(hsr), .hs_c(hsc),
+            .hrq_col(hrq_col),
+            .yb_loc({yb[16 * (c + 12) +: 16], yb[16 * (c + 8) +: 16], yb[16 * (c + 4) +: 16], yb[16 * c +: 16]}),
+            .yb_fwd(yb_fwd), .yb_peer(yb_peer),
+            .cs_in(c == 3 ? cs : cs_net), .cs_rel(cs_net), .cs_fwd(csf),
+            .hov_in(c == 0 ? hov_d : hov_net), .hov_rel(hov_net), .hov_fwd(hovf),
+            .nflt_col({nflt[c + 12], nflt[c + 8], nflt[c + 4], nflt[c]}),
             .hnz_n(hnz_d[2 * c]), .hnz_s(hnz_d[2 * c + 1]), .pflt_n(pflt_d[2 * c]), .pflt_s(pflt_d[2 * c + 1]),
-            .flag_fault(flag_fault), .flag_hnz(flag_hnz), .header_delay(hdr));
-        ot_s81_hc_ctrb_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c),.YB_STAGE(1),.PAYLOAD_STAGE(0)) u_b (
-            .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_i), .rdh_in(hdr_i), .rdp_in(b_rdp),
-            .rdm(b_rdm), .hrq_n(hrb_n), .hrq_s(hrb_s), .yb_n(yb_rel[127:0]), .yb_s(yb_rel[255:128]));
+            .flag_fault(flag_fault), .flag_hnz(flag_hnz), .peer_fault(peer_fault), .peer_hnz(peer_hnz));
         ot_s81_hc_ctrn_col #(.S_RT(S_RT)) u_n (
             .clk(clk), .rst_in(rst_in), .rv_c(rvm), .hdr_c(hdr), .a_own(a_rdm), .b_own(b_rdm),
             .a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),
@@ -187,6 +155,8 @@ module ot_s81_hc_retrow #(
             .a_own_out(rb_out[B + RVW + 108 +: 256]), .b_own_out(rb_out[B + RVW + 364 +: 256]),
             .a_par_out(rb_out[B + RVW + 620 +: 256]), .b_par_out(rb_out[B + RVW + 876 +: 256]));
     end endgenerate
+    assign cs_net = g_col[3].csf;
+    assign hov_net = g_col[0].hovf;
     assign rq_q0 = g_col[0].rq; assign rq_q1 = g_col[1].rq; assign rq_q2 = g_col[2].rq; assign rq_q3 = g_col[3].rq;
     assign hs_run_c = {g_col[3].hsr, g_col[2].hsr, g_col[1].hsr, g_col[0].hsr};
     assign hs_c0 = g_col[0].hsc; assign hs_c1 = g_col[1].hsc; assign hs_c2 = g_col[2].hsc; assign hs_c3 = g_col[3].hsc;
@@ -385,4 +355,98 @@ module ot_s81_hc_cth_ntc #(
         .rq_q0(rq_col[0]), .rq_q1(rq_col[1]), .rq_q2(rq_col[2]), .rq_q3(rq_col[3]), .hs_run_c(hs_run_col),
         .hs_c0(hs_c_col[0]), .hs_c1(hs_c_col[1]), .hs_c2(hs_c_col[2]), .hs_c3(hs_c_col[3]),
         .hrq(hrq), .yb(yb), .cs(cs), .nflt(nflt), .hov_d(hov_d[0]), .hnz_d(hnz_d), .pflt_d(pflt_d));
+endmodule
+
+// ot_s81_hc_ret_column (HC-COLUMN 10-16): ONE hardened leaf per return column = ctra_column + ctrb_column of COLUMN c
+// (YB_STAGE 1, PAYLOAD_STAGE 0), merged so the ctrb y beat (ctra relays) stays inside the leaf.  The previous row's
+// ctrn_col slice c feeds it directly (own + partner chunks, header, valid).  cs_in / hov_in are the raw sources at
+// COLUMN 3 / COLUMN 0 and the relayed nets (cs_rel / hov_rel) elsewhere: the parent wires both pins of a non-relaying
+// column to the relay net, so no column carries an unused long join.
+module ot_s81_hc_ret_column #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 1,
+    parameter integer COLUMN = 0
+) (
+    input  wire                   clk,
+    input  wire                   rst_in,
+    input  wire [7:0]             tid,
+    input  wire                   last,
+    input  wire [S_RD+4:0]        fv,
+    input  wire [O_D-1:0]         fdx,
+    input  wire [S_RT+3:0]        rv_in,            // from the previous row's ctrn_col slice COLUMN
+    input  wire [107:0]           hdr_in,
+    input  wire [255:0]           ao_in, bo_in, ap_in, bp_in,
+    output wire [S_RT+3:0]        rvm,              // to this row's ctrn_col slice COLUMN
+    output wire [107:0]           hdr,
+    output wire [255:0]           a_rdm, b_rdm,     // to slice COLUMN (own) and slice (COLUMN+2)%4 (partner)
+    output wire [16*S_RT-1:0]     rq_q,             // to this x-column's four ctnl tiles
+    output wire                   hs_run,
+    output wire [15:0]            hs_c,
+    input  wire [4*64*S_RT-1:0]   hrq_col,          // ctnl[j][COLUMN].hrq, j = 0..3 (lane COLUMN + 4 j), 4 slots each
+    input  wire [63:0]            yb_loc,           // ctnl[j][COLUMN].yb, j = 0..3
+    output wire [63:0]            yb_fwd,
+    input  wire [191:0]           yb_peer,          // the other three columns' yb_fwd, ascending column
+    input  wire [127:0]           cs_in,            // COLUMN 3: the ctnl column-3 accumulators; else the cs relay net
+    input  wire [127:0]           cs_rel,
+    output wire [127:0]           cs_fwd,
+    input  wire                   hov_in,           // COLUMN 0: ctpl m0 hov_d; else the hov relay net
+    input  wire                   hov_rel,
+    output wire                   hov_fwd,
+    input  wire [3:0]             nflt_col,         // ctnl[j][COLUMN].flt, j = 0..3
+    input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,   // ctpl group COLUMN half 0 / 1
+    output wire                   flag_fault, flag_hnz,
+    input  wire [2:0]             peer_fault, peer_hnz
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, SH = S_RT / 2;
+    localparam integer PC = (COLUMN + 2) % 4;
+    initial if (COLUMN < 0 || COLUMN > 3 || S_RT != 4) $fatal(1, "ot_s81_hc_ret_column: COLUMN 0..3, S_RT 4");
+    genvar rs, rc, bank, q;
+    wire [511:0] a_rdp, b_rdp;
+    generate for (rs = 0; rs < 2; rs = rs + 1) begin : g_rs
+        for (rc = 0; rc < 2; rc = rc + 1) begin : g_rc
+            localparam integer Q = 8 * rs + COLUMN + 4 * rc, QS = Q - 2, A = 14 + Q;
+            assign a_rdp[64 * (2 * rs + rc) +: 64] = ao_in[128 * rs + 64 * rc +: 64];
+            if (QS >= 0) begin : g_sh
+                assign a_rdp[256 + 64 * (2 * rs + rc) +: 64] = ap_in[128 * (QS / 8) + 64 * ((QS % 8) / 4) +: 64];
+            end else begin : g_z
+                assign a_rdp[256 + 64 * (2 * rs + rc) +: 64] = 64'd0;
+            end
+            assign b_rdp[64 * (2 * rs + rc) +: 64] = bo_in[128 * rs + 64 * rc +: 64];
+            if (A / 8 == 1) begin : g_bsa
+                assign b_rdp[256 + 64 * (2 * rs + rc) +: 64] = ap_in[128 + 64 * ((A % 8) / 4) +: 64];
+            end else begin : g_bsb
+                assign b_rdp[256 + 64 * (2 * rs + rc) +: 64] = bp_in[128 * (A / 8 - 2) + 64 * ((A % 8) / 4) +: 64];
+            end
+        end
+    end endgenerate
+    wire [2*64*SH-1:0] hr_n, hr_s, hrb_n, hrb_s;       // [bank][slot]: N = j 0/1, S = j 2/3
+    generate for (bank = 0; bank < 2; bank = bank + 1) begin : g_h
+        for (q = 0; q < SH; q = q + 1) begin : g_q
+            assign hr_n [64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * bank       + 64 * q +: 64];
+            assign hr_s [64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * (bank + 2) + 64 * q +: 64];
+            assign hrb_n[64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * bank       + 64 * (q + SH) +: 64];
+            assign hrb_s[64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * (bank + 2) + 64 * (q + SH) +: 64];
+        end
+    end endgenerate
+    wire [255:0] yb_rel;                              // the relayed y beat for ctrb: own yb_fwd + the peers'
+    generate for (q = 0; q < 16; q = q + 1) begin : g_yr
+        localparam integer CC = q % 4, K = q / 4, P = (CC < COLUMN) ? CC : CC - 1;
+        if (CC == COLUMN) begin : g_own
+            assign yb_rel[16 * q +: 16] = yb_fwd[16 * K +: 16];
+        end else begin : g_peer
+            assign yb_rel[16 * q +: 16] = yb_peer[64 * P + 16 * K +: 16];
+        end
+    end endgenerate
+    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(1),.PAYLOAD_STAGE(0)) u_a (
+        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(a_rdp),
+        .rvm(rvm), .peer_fault(peer_fault), .peer_hnz(peer_hnz), .yb_loc(yb_loc), .yb_fwd(yb_fwd), .yb_peer(yb_peer),
+        .cs_fwd(cs_fwd), .cs_rel(cs_rel), .hov_fwd(hov_fwd), .hov_rel(hov_rel),
+        .rdm(a_rdm), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+        .rq_q_c1(), .rq_q_c2(), .rq_q_c3(), .hs_run_c1(), .hs_run_c2(), .hs_run_c3(), .hs_c_c1(), .hs_c_c2(), .hs_c_c3(),
+        .hrq_n(hr_n), .hrq_s(hr_s), .yb_n(128'd0), .yb_s(128'd0), .cs(cs_in),
+        .nflt_n(nflt_col[1:0]), .nflt_s(nflt_col[3:2]), .hov_d(hov_in),
+        .hnz_n(hnz_n), .hnz_s(hnz_s), .pflt_n(pflt_n), .pflt_s(pflt_s),
+        .flag_fault(flag_fault), .flag_hnz(flag_hnz), .header_delay(hdr));
+    ot_s81_hc_ctrb_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(1),.PAYLOAD_STAGE(0)) u_b (
+        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(b_rdp),
+        .rdm(b_rdm), .hrq_n(hrb_n), .hrq_s(hrb_s), .yb_n(yb_rel[127:0]), .yb_s(yb_rel[255:128]));
 endmodule
