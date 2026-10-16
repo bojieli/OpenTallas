@@ -12,24 +12,101 @@
   "rtl/hdc/ot_hdc_fpu.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
  ],
- "params": {"MUT": 0},
+ "params": {
+  "MUT": 0
+ },
  "clock_port": "clk",
- "reset_ports": ["rst_n"],
- "outline": {"w": 561.6, "h": 561.6},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 561.6,
+  "h": 561.6
+ },
  "layer_cap": "M5",
- "macros": [{"view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1", "count": 32}],
- "pins": {"S": ["pv", "pe", "cmd"], "N": ["y", "y_valid", "fault"], "W": ["clk", "rst_n"]},
- "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 48},
- "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 32
+  }
+ ],
+ "pins": {
+  "S": [
+   "pv",
+   "pe",
+   "cmd"
+  ],
+  "N": [
+   "y",
+   "y_valid",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48
+ },
+ "recipe": 3,
  "purpose": "Q-ATTN-RATE 2026-10-15 (owner approved 21:05): the ONE replicated P.V master of the 16-row/cycle attention (64 instances per KV/system die: 2 pairs x 32 columns). Column S = head S/8, dims 16(S%8)..+15 of the 8 bank slices (ot_qwen_tp8_pv16_slice, 32 x 32x128 SRAM) + the 16-lane level 5-7 join; every port registered at the pin (in and out). Evidence: results/arch/qwen_attention_rate_1015/receipt.json.",
  "job": {
   "owner": "Claude:Q-ATTN-RATE (el1015-qwen-attn.log)",
   "branch": "claude/q-attn-rate-1015",
   "tag": "c1",
   "purpose": "P.V column master of ot_qwen_tp8_attention_native_service_w16 (KV/system die).",
-  "benches": [],
-  "extra_paths": ["rtl", "tools/qwen_attention_native", "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"],
+  "benches": [
+   {
+    "name": "pv_pair0_exact",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pv0 0 0 steady '1 100 1000 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS T=8192 pair=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv_pair1_exact",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pv1 1 0 steady '1 129 2049 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS T=8192 pair=1",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv_pair0_mut_joinorder",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pvm 0 1 steady '1000'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/qwen_attention_native",
+   "tools/qwen_nearhbm_attn_ref.py"
+  ],
   "views_to": "physical/ref_tile/qkd_pv_col/views",
   "record_to": "results/rtl/ref_tile/qkd_pv_col"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every data port at the module boundary (ot_qwen_tp8_pv_col: pv/pe/cmd -> v_r/e_r/c_r, y/y_valid/fault are flops; ot_qwen_tp8_pv_wide_ctl: every input *_r, every output a flop; only the constant pair_id strap is unregistered) and the bench-measured static calendar includes those stages (P = 22 + NQ + 113, results/arch/qwen_attention_rate_1015/receipt.json, 53/53 exact); a flow-inserted second stage would add 1 cycle the compiler calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2)."
  }
 }

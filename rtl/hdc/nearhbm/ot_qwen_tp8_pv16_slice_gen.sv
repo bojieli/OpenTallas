@@ -18,9 +18,10 @@ module ot_qwen_tp8_pv16_slice(
  reg [511:0] old[0:2],reduce_a;
  reg[6:0] wp[0:6];reg[6:0] lastp;
  always @(posedge clk or negedge rst_n) begin
-  if(!rst_n)begin vp<=0;fp<=0;lastp<=0;tree_sum<=0;end
-  else begin vp<={vp[9:0],take};fp<={fp[9:0],first};lastp<={lastp[5:0],reduce_issue&&reduce_last};if(commit&&lastp[6])tree_sum<=sum;end
+  if(!rst_n)begin vp<=0;fp<=0;lastp<=0;end
+  else begin vp<={vp[9:0],take};fp<={fp[9:0],first};lastp<={lastp[5:0],reduce_issue&&reduce_last};end
  end
+ always @(posedge clk)if(commit&&lastp[6])tree_sum<=sum;
  integer i;
  always @(posedge clk)begin
   cp[0]<=c;for(i=1;i<11;i=i+1)cp[i]<=cp[i-1];
@@ -42,7 +43,7 @@ module ot_qwen_tp8_pv16_slice(
   assign bad_add[l]=av[l] && (|ae[2*l+:2]);
   ot_qwen_nearhbm_prod u_prod(.clk(clk),.rst_n(rst_n),.valid_in(take),.a(e),.k(v[8*l+:8]),
    .y(prod[32*l+:32]),.fault(pf[l]),.valid_out(pv[l]));
-  ot_hdc_fp32_add_lat #(.LAT(7)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(pv[l]||reduce_issue),
+  ot_hdc_fp32_add_lat #(.LAT(7),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(pv[l]||reduce_issue),
    .a(reduce_issue?reduce_a[32*l+:32]:(fp[3]?32'b0:old[2][32*l+:32])),.b(reduce_issue?rd[32*l+:32]:prod[32*l+:32]),
    .y(sum[32*l+:32]),.err(ae[2*l+:2]),.valid_out(av[l]));
  end endgenerate
