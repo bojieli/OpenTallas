@@ -1477,9 +1477,9 @@
    },
    "clock": "ck_data[0]",
    "box_um": [
-    23.76,
+    19.44,
     0,
-    117.72,
+    114.48,
     25.92
    ],
    "data_bits": 64,
@@ -1498,9 +1498,9 @@
    },
    "clock": "ck_data[1]",
    "box_um": [
-    117.72,
+    114.48,
     0,
-    211.67999999999998,
+    209.52,
     25.92
    ],
    "data_bits": 64,
@@ -1519,9 +1519,9 @@
    },
    "clock": "ck_data[2]",
    "box_um": [
-    211.67999999999998,
+    209.52,
     0,
-    305.64,
+    304.56,
     25.92
    ],
    "data_bits": 64,
@@ -1540,9 +1540,9 @@
    },
    "clock": "ck_data[3]",
    "box_um": [
-    305.64,
+    304.56,
     0,
-    399.59999999999997,
+    399.6,
     25.92
    ],
    "data_bits": 64,
@@ -1568,7 +1568,7 @@
    453.6,
    51.84
   ],
-  "whole_HOST_extraction": "OPEN: nativeingest upperregion and actualcompactbootcontrolleaf not yet extracted"
+  "whole_HOST_extraction": "SOURCE_IMPLEMENTED dsfd_host_c_sliced with sixactualleafinstances; see whole_host_graph.json. ECTL/nativephysicalgates, parentclocks/cuts/slots remainOPEN."
  },
  "clock_contract": {
   "source": "same fixed-phase PLL family as existing ck",

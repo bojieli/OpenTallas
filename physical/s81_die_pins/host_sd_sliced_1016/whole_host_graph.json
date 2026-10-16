@@ -34,7 +34,7 @@
     0,
     25.92,
     399.6,
-    77.76
+    103.68
    ]
   },
   {
@@ -50,9 +50,9 @@
     "ck_data[0]"
    ],
    "box_um": [
-    23.76,
+    19.44,
     0,
-    117.72,
+    114.48,
     25.92
    ]
   },
@@ -69,9 +69,9 @@
     "ck_data[1]"
    ],
    "box_um": [
-    117.72,
+    114.48,
     0,
-    211.67999999999998,
+    209.52,
     25.92
    ]
   },
@@ -88,9 +88,9 @@
     "ck_data[2]"
    ],
    "box_um": [
-    211.67999999999998,
+    209.52,
     0,
-    305.64,
+    304.56,
     25.92
    ]
   },
@@ -107,9 +107,9 @@
     "ck_data[3]"
    ],
    "box_um": [
-    305.64,
+    304.56,
     0,
-    399.59999999999997,
+    399.6,
     25.92
    ]
   }
@@ -198,5 +198,11 @@
   "on_chip": "Actual sourceFIFO/arithmetic/nativeingest/visibilityfence/bootbridges/decoder localreplicas",
   "legacy": "Originaldsfd_host_c used only exactcomponentreference; cannotgeneratecandidateinternalresults",
   "native_completion": "NoKIT/t_kd/rawEND consumer. t_collective tv/td are physicalwritecompletions, NOTtokensuccess. Actualcollectiveparent fixedverdict edge OPEN"
- }
+ },
+ "proposed_parent_outline_um": [
+  453.6,
+  103.68
+ ],
+ "geometry_version": 2,
+ "slot_request": "S81-HOST-SD-SPLIT-1016-v2"
 }

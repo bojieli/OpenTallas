@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_host_c_ectl",
+ "enable": false,
+ "reason": "Actual declared-domain input capture/launch RTL owns every boundary; no generic single-clock wrapper across related roots. Pure-clock source lockups are inside the receiving hardened leaf, not parent result producers."
+}

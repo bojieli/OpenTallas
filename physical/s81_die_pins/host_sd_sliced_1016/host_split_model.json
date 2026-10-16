@@ -67,47 +67,47 @@
  "geometry": {
   "parent_outline_um": [
    453.6,
-   77.76
+   103.68
   ],
-  "parent_area_um2": 35271.936,
+  "parent_area_um2": 47029.24800000001,
   "data_leaf_outline_um": [
-   93.96,
+   95.04,
    25.92
   ],
   "data_instances": [
    {
     "instance": "data0",
     "box_um": [
-     23.76,
+     19.44,
      0,
-     117.72,
+     114.48,
      25.92
     ]
    },
    {
     "instance": "data1",
     "box_um": [
-     117.72,
+     114.48,
      0,
-     211.67999999999998,
+     209.52,
      25.92
     ]
    },
    {
     "instance": "data2",
     "box_um": [
-     211.67999999999998,
+     209.52,
      0,
-     305.64,
+     304.56,
      25.92
     ]
    },
    {
     "instance": "data3",
     "box_um": [
-     305.64,
+     304.56,
      0,
-     399.59999999999997,
+     399.6,
      25.92
     ]
    }
@@ -122,11 +122,28 @@
    0,
    25.92,
    399.6,
-   77.76
+   103.68
   ],
   "local_new_die_area_um2": 0,
-  "slot_grant": "PENDING die_live request S81-HOST-SD-SPLIT-1016",
-  "native_ingest_ECTL_measurement": "OPEN"
+  "slot_grant": "PENDING die_live S81-HOST-SD-SPLIT-1016-v2; actualdatachild all2.16umlattice, nativeheight77.76 to avoid estimated75-85pctutil in former51.84highregion",
+  "native_ingest_ECTL_measurement": "OPEN",
+  "previous_unbuilt_parent_proposal_um": [
+   453.6,
+   77.76
+  ],
+  "local_parent_area_delta_um2": 11757.312000000002,
+  "local_parent_area_delta_mm2": 0.011757312000000002,
+  "die_outline_or_goal_change": false,
+  "native_ingest_STD_estimate_um2": [
+   14000,
+   16000
+  ],
+  "native_ingest_estimate_basis": "OldwholeHOST3placeSTD18612.7 less oldSD2931FF/associatedlogic and Eboot/control; estimateonly, actualnative synthesis required.",
+  "native_ingest_core_area_um2": 29029.3632,
+  "native_ingest_estimated_core_utilization": [
+   0.48227031035940876,
+   0.5511660689821815
+  ]
  },
  "cuts": {
   "parent_N_to_S_data_payload_bits": 256,
@@ -134,9 +151,36 @@
   "nominal_single_vertical_layer_pitch_um": 0.144,
   "nominal_tracks_across_native_width": 2775,
   "nominal_unblocked_upper_bound_utilization": 0.15135135135135136,
-  "actual_tracks_after_PG_and_pin_escape": "OPEN: require actualassignedpin segments/blockages plus parenttrial GRT; nominal arithmetic is sizing only",
+  "actual_tracks_after_PG_and_pin_escape": "OPEN: actualtech pitch+snappedpinfiles validated, but subtract PG/blockages/clockescape and run actualparentGRT before admission",
   "longest_logical_parent_span_um": 453.6,
-  "parent_wire_latency_budget": "OPEN: measured launch/capture, actualpin Manhattan reach, phi-R, fixedrelays must be bound"
+  "parent_wire_latency_budget": "OPEN: measured launch/capture, actualpin Manhattan reach, phi-R, fixedrelays must be bound",
+  "technology_pitch_provenance": {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+   "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+   "M3_vertical_pitch_um": 0.036,
+   "M4_horizontal_pitch_um": 0.048,
+   "M5_vertical_pitch_um": 0.048,
+   "source": "actual running ORFScontainer file read 2026-10-16 03:37PT"
+  },
+  "raw_unblocked_face_load_examples": {
+   "ECTL_E": {
+    "bits": 682,
+    "tracks": 1620,
+    "ratio": 0.42098765432098767
+   },
+   "native_E": {
+    "bits": 519,
+    "tracks": 1620,
+    "ratio": 0.32037037037037036
+   },
+   "densest_515bit_bus": {
+    "bits": 515,
+    "pin_pitch_um": 0.096,
+    "track_pitch_um": 0.048,
+    "tracks": 1029,
+    "ratio": 0.500485908649174
+   }
+  }
  },
  "latency": {
   "old_input_capture_edges": 1,
@@ -402,5 +446,5 @@
  "measured_new_sd_projection_std_area_um2": 2653.0,
  "accepted_cost_ledger": "NO new acceptance/reprice; measuredtokenloss and parentactualarea remain OPEN",
  "route_admission": "No full leaf route until unifiedmodel owner incorporates row and actual parent cuts/pin slots accepted; preserve current gates",
- "measured_gate_flow_scope": "Measured97069e10d snapshots are historical/source-bound. Current501be7692+7c1815717+07ce6450a helpers integrated and kits regenerated; freshcurrenthelpergates stillpending, no route admission."
+ "measured_gate_flow_scope": "97069e10d historical snapshots are at datawidth93.96. Latest proposed data95.04 aligns allrepeatedchild origins to2.16umlattice, pincentres snapped to real layergrid. Shared501be7692+7c1815717+07ce6450a integrated and kits regenerated; freshcurrenthelpergates pending."
 }

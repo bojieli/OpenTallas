@@ -57,7 +57,7 @@
   "enable": false,
   "reason": "Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages."
  },
- "structural_change": "Source-backed HOST split: each64-bit S-face datapath localizes prior hw full425um spread to <=93.96um; original decoder projected by output observability with local equal pointers, independently conditioned reset and die phi-R clock. STATIC1 head-service faults instead of waiting for credits. Source-specific exact256/header/calendar +4 mutants +missingcredit no-reschedule proof. WholeHOST/native die qualification remains OPEN.",
+ "structural_change": "Source-backed HOST split: each64-bit S-face datapath localizes prior hw full425um spread to <=95.04um; original decoder projected by output observability with local equal pointers, independently conditioned reset and die phi-R clock. STATIC1 head-service faults instead of waiting for credits. Source-specific exact256/header/calendar +4 mutants +missingcredit no-reschedule proof. WholeHOST/native die qualification remains OPEN.",
  "slot_change_request": "S81-HOST-SD-SPLIT-1016",
  "job": {
   "owner": "Codex:S81-HOST0253",
