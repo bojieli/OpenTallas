@@ -2,8 +2,9 @@
 `default_nettype none
 // ot_vms_calendar_static_xcap (H-HARDEN 2026-10-16): ot_vms_calendar_static with its input-capture rung
 // (cfg_*_q / start_*_q) clocked by its own related root clk_cap (same frequency, phase 0, die-delivered at phi-R_cap
-// on the input face) instead of clk.  Logic, cycles and reset are byte-for-byte the core's; with clk_cap=clk it is
-// the same machine.  Physical reason: one root could not hold the W capture flops and the E output flops within the
+// on the input face) and the programme SRAM clocked by its own raw entry clk_mem (die-delivered at the macro clock
+// pin) instead of clk.  Logic, cycles and reset are byte-for-byte the core's; with clk_cap=clk_mem=clk it is the
+// same machine.  Physical reason: one root could not hold the W capture flops and the E output flops within the
 // native boundary spread (routed hv15_vm_cal_u: W capture leaves 237-309 ps, E launch leaves 216-224 ps, R 260.8).
 // Programme SRAM is written before launch. A launch executes the fixed range
 // [base,limit), repeated loops times. Nothing observes datapath arrival/ready.
@@ -13,7 +14,7 @@ module ot_vms_calendar_static_xcap #(
     parameter integer W=146,
     parameter integer MUT=0 // 1 wrong wrap PC, 2 extra cycle at loop boundary
 )(
-    input wire clk,clk_cap,rst_n,
+    input wire clk,clk_cap,clk_mem,rst_n,
     input wire cfg_we,
     input wire [9:0] cfg_addr,
     input wire [255:0] cfg_data,
@@ -55,7 +56,7 @@ module ot_vms_calendar_static_xcap #(
     wire word_ok=captured[255:240]==16'hc7a1 && captured[233:224]==pc1 &&
                  captured[239:234]==0 && captured[223:W]==0;
     ot_sram_1r1w_1024x256_m2_r2c2 u_program(
-        .clk(clk),.r_ce_in(running),.r_addr_in(pc),.rd_out(macro_data),
+        .clk(clk_mem),.r_ce_in(running),.r_addr_in(pc),.rd_out(macro_data),
         .w_ce_in(cfg_we_q && !busy && !start_v_q),.w_addr_in(cfg_addr_q),.wd_in(cfg_data_q),.w_mask_in({256{1'b1}}),
         .rr_en(2'b00),.rr_addr(18'd0),.cr_en(2'b00),.cr_sel(16'd0));
     // Payload, ordinal and address identity have dedicated, nonreset rungs.

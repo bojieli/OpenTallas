@@ -30,6 +30,7 @@
  },
  "pins": {
   "W": [
+   "clk_mem",
    "clk",
    "clk_cap",
    "rst_n",
@@ -71,6 +72,11 @@
  "clock_port": "clk",
  "clock_ports": [
   "clk",
+  "clk_cap",
+  "clk_mem"
+ ],
+ "clock_cts_roots": [
+  "clk",
   "clk_cap"
  ],
  "blocks": [
@@ -78,7 +84,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": null,
+   "inst": "u_programme.u_program",
    "idx": 0,
    "x": 22.896,
    "y": 23.76,

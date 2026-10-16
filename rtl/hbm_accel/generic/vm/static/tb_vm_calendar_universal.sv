@@ -6,7 +6,7 @@
 module tb_vm_calendar_universal;
     parameter integer RMUT=0;
     reg clk=0;always #5 clk=~clk;
-    wire clk_cap=clk;  // die delivers both related roots at phase 0 (phi-R per root)
+    wire clk_cap=clk,clk_mem=clk;  // die delivers every related root/entry at phase 0 (phi-R per root)
     reg rst_n=0,cfg_we=0,start_v=0;
     reg [9:0] cfg_addr=0,start_base=0;
     reg [255:0] cfg_data=0;
