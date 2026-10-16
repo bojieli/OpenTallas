@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_sm_xcal_t",
+ "enable": false,
+ "reason": "every input lands in a source pin flop (F20 bus/strap in the folded ot_static_cmd_target pin rung, rst_n in the local reset-release flop) and every output is a source flop (calendar output flops cmd_ext/kv_desc, xcal done, collar configured/fault/active); added synthesis pin registers would shift the compiler-fixed lockstep with the svg collar"
+}

@@ -19,13 +19,15 @@ class OtHeavy(unittest.TestCase):
     def test_usage(self):
         self.assertEqual(subprocess.run([T, "--", "true"], capture_output=True).returncode, 2)
 
-    def test_big_slots_bound_concurrency(self):
+    def test_no_fixed_slots(self):
+        # ot-heavy v2+ (owner 2026-10-12): no fixed slot counts -- memory alone admits, so three small concurrent
+        # requests all run at once (the v1 BIG_SLOTS=2 test expected the third to wait for a "slots busy" slot).
         t0 = time.time()
-        ps = [subprocess.Popen([T, "--mem", "40", "--", "sleep", "3"], stderr=subprocess.PIPE, text=True) for _ in range(3)]
+        ps = [subprocess.Popen([T, "--mem", "1", "--", "sleep", "3"], stderr=subprocess.PIPE, text=True) for _ in range(3)]
         errs = [p.communicate()[1] for p in ps]
-        self.assertGreaterEqual(time.time() - t0, 5)            # the third waited for a slot (BIG_SLOTS=2)
-        self.assertTrue(any("slots busy" in e for e in errs))
-
+        self.assertEqual([p.returncode for p in ps], [0, 0, 0], errs)
+        self.assertLess(time.time() - t0, 9)
+        self.assertFalse(any("slots busy" in e for e in errs))
 
 if __name__ == "__main__":
     unittest.main()

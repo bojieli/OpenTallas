@@ -1,0 +1,5 @@
+GATHER_ROWS PASS checks=824 cases=24 banks=32 SRAMs=96 fixed_cycles R1=36 R2=37 R3=38 R4=39 R5=40 R6=41 R7=42 R8=43
+- rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_rows.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 8ms; walltime 7.055 s; speed 1.102 ms/s
+- Verilator: cpu 7.051 s on 1 threads; alloced 1023 MB

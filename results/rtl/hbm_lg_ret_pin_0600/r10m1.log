@@ -1,0 +1,7 @@
+MISMATCH t=150000 lrr 1/0 lwd 0/0 fault 0/0
+MISMATCH t=160000 lrr 0/1 lwd 0/0 fault 0/1
+MISMATCH t=170000 lrr 0/0 lwd 0/0 fault 0/1
+MISMATCH t=180000 lrr 0/0 lwd 0/0 fault 0/1
+LG_RET_PIN_EQ FAIL R=10 W=7 errors=3392 checks=4000 local_returns=959
+FATAL: lg_ret_pin_0600/tb_lg_bank_ret_pin_eq.sv:44: eq
+       Time: 40036000 Scope: tb_lg_bank_ret_pin_eq

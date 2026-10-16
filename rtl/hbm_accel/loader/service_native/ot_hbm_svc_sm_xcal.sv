@@ -20,7 +20,8 @@
 // [232:143]), a go slot that passes before its entry is staged (late), calendar fault (bad programme word / start
 // while busy).  Pin rule: every input lands in a flop (programme cfg in the calendar's own pin rung), every output is
 // a flop.  Fixed latency: identical to the svg programme path (go edge -> start_v_q -> macro -> capture -> calendar).
-// MUT (bench negative controls): 1 rc off by one (calendar one edge late); 2 kv_desc / cmd_ext from the wrong field.
+// MUT (bench negative controls): 1 rc off by one (calendar one edge late); 2 kv_desc / cmd_ext from the wrong field;
+// 3 local reset release never happens.
 module ot_hbm_svc_sm_xcal #(parameter integer MUT = 0) (
     input  wire          clk,
     input  wire          rst_n,
@@ -39,14 +40,23 @@ module ot_hbm_svc_sm_xcal #(parameter integer MUT = 0) (
     output reg           done,
     output reg           fault
 );
+    // ---------------- local reset release at the rst_n pin (H-SM native capture repair, 2026-10-16): r1 measured
+    // rst_n capture 254.0 ps > 190 (the pin fanned out to every async-clear flop here and in u_cal).  rst_n now lands
+    // on ONE async-clear flop at the pin face (assert async, release synchronous, one edge later); every other flop
+    // clears from rst_q, a reg->recovery path inside the leaf.  No operation edge changes (the host collar issues
+    // descriptor/programme writes only after reset; release precedes them).  MUT 3: rst_q never releases.
+    reg rst_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rst_q <= 1'b0;
+        else        rst_q <= (MUT == 3) ? 1'b0 : 1'b1;
     // ---------------- pin flops
     reg desc_we_q, run_q;
     reg [6:0] desc_addr_q, run_base_q;
     reg [255:0] desc_data_q;
     reg [7:0] run_count_q;
     always @(posedge clk) begin desc_addr_q <= desc_addr; desc_data_q <= desc_data; run_base_q <= run_base; run_count_q <= run_count; end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin desc_we_q <= 1'b0; run_q <= 1'b0; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin desc_we_q <= 1'b0; run_q <= 1'b0; end
         else begin desc_we_q <= desc_we; run_q <= run_v; end
     // ---------------- go table (copy of the svg issuer's descriptor table)
     reg running, rd_q, ent_v;
@@ -63,13 +73,13 @@ module ot_hbm_svc_sm_xcal #(parameter integer MUT = 0) (
     // ---------------- extension programme calendar (same leaf as the svg feed's programme calendar)
     wire [172:0] word;
     wire cal_v, cal_active, cal_done, cal_fault;
-    ot_smh_calendar_static #(.W(173)) u_cal (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
+    ot_smh_calendar_static #(.W(173)) u_cal (.clk(clk), .rst_n(rst_q), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .start_v(go), .start_base(e_base), .start_limit(e_limit), .start_loops(e_loops),
         .calendar(word), .calendar_v(cal_v), .ordinal(), .active(cal_active), .done(cal_done), .fault(cal_fault));
     assign cmd_ext = (MUT == 2) ? word[172:64] : word[108:0];
     assign kv_desc = (MUT == 2) ? word[63:0] : word[172:109];
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_q) begin
+        if (!rst_q) begin
             running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0; rp <= 7'd0; rp_q <= 7'd0; n_rd <= 8'd0; n_go <= 8'd0;
             rc <= 24'd0; e_at <= 24'd0; e_base <= 10'd0; e_limit <= 11'd0; e_loops <= 16'd0;
             active <= 1'b0; done <= 1'b0; fault <= 1'b0;

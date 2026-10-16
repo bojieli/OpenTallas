@@ -33,7 +33,7 @@ module tb_static_landing_physical;
    .ck(ck),.ck_pc({4{ck}}),.ck_req_rly({4{ck}}),.ck_rsp_rly({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),
    .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
    .actual_epoch({4{16'd7}}),.actual_layer({4{6'd3}}),.actual_data(wd[g]),
-   .req_valid(rq[g]),.req_t(tt[g]),.req_v(vv[g]),.req_epoch(16'd7),.req_layer(6'd3),
+   .req_valid(rq[g]),.req_t(tt[g]),.req_v(vv[g]),.req_epoch(16'd7),.req_layer(6'd3),.vreq_valid(1'b0),.vreq_t(14'd0),
    .rsp_valid(ov[g]),.rsp_data(od[g]),.rsp_t(ot[g]),.rsp_v(outv[g]),.rsp_epoch(oe),.rsp_layer(ol),.fault(ff[g]));
  end endgenerate
  reg [31:0] expv[0:7],expkind[0:7];
