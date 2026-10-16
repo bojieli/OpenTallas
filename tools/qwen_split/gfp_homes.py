@@ -12,6 +12,8 @@ import os
 from pathlib import Path
 
 ORIENTS = ('R0', 'MX', 'MY', 'R180')
+# one footprint; the generator assigns NK vs NL per tile AFTER homes (source-current identity wins on rebase)
+TILE_PAIR = {'qfd_tile_nk', 'qfd_tile_nl'}
 
 
 def source_fingerprint(model):
@@ -89,7 +91,8 @@ def apply(model, path):
     moved = []
     for n, h in homes.items():
         i = by[n]
-        if h['m'] != i.master or any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')):
+        same = h['m'] == i.master or (rebase is not None and {h['m'], i.master} <= TILE_PAIR)
+        if not same or any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')):
             raise ValueError(f'OT_SPLIT_HOMES: {n} master/outline mismatch')
         if h['o'] not in ORIENTS:
             raise ValueError(f'OT_SPLIT_HOMES: {n} unsupported orientation')
