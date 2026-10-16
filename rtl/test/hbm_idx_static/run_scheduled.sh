@@ -3,7 +3,7 @@
 # calendar SRAM -> ot_hbm_idx_scheduled_static parent (vm_query/query/4 scorers/selector/topk link), real VM banks.
 # PASS: registered programme at GAP 100 (the compiler default) and GAP 4, exact scores/records/flits AND the exact
 # compiled timeline (first key and first TX edge = compiler prediction + the calendar's start->issue 3 edges).
-# Mutants that must FAIL: 1 query index, 2 key bit, 3 link flush one edge early, PINS0 = the historical
+# Mutants that must FAIL: 1 query index, 2 key bit, link flush during compaction, PINS0 = the historical
 # unregistered programme (--pins none) on the registered tiles.
 # Usage: run_scheduled.sh OUT
 set -euo pipefail
@@ -16,6 +16,29 @@ for c in reg100:registered:100 reg4:registered:4 none100:none:100; do
  IFS=: read -r tag pins gap <<< "$c"
  python3 tools/hbm_idx_static_calendar.py "$out/cal_$tag" --pins "$pins" --gap "$gap" > "$out/cal_$tag.log"
 done
+# Reproduce the old compiler defect using the current schedule: drop the pass
+# field only on the idle SRAM-drain slots. No RTL or programme length changes.
+python3 - "$out/cal_reg100" "$out/cal_old_drain" <<'PYDRAIN'
+import json, pathlib, sys
+src, dst = map(pathlib.Path, sys.argv[1:]); dst.mkdir(parents=True, exist_ok=True)
+words = [int(x, 16) for x in (src / 'calendar_instructions.hex').read_text().split()]
+changed = 0
+for i, w in enumerate(words):
+    if ((w >> 16) & 15) == 0 and ((w >> 14) & 3):
+        words[i] = w & ~(3 << 14); changed += 1
+assert changed == 4, changed
+(dst / 'calendar_instructions.hex').write_text(''.join(f'{w:08x}\n' for w in words))
+(dst / 'calendar.json').write_text((src / 'calendar.json').read_text())
+# A one-edge-early flush is inside the legal drain margin and can pass. Move
+# flush to the start of compaction, while the link has no complete frame.
+early = dst.parent / 'cal_early_flush'; early.mkdir(parents=True, exist_ok=True)
+words = [int(x, 16) for x in (src / 'calendar_instructions.hex').read_text().split()]
+f = next(i for i, w in enumerate(words) if w & (1 << 5))
+a = next(i for i, w in enumerate(words) if ((w >> 16) & 15) == 6)
+words[f] &= ~(1 << 5); words[a] |= 1 << 5
+(early / 'calendar_instructions.hex').write_text(''.join(f'{w:08x}\n' for w in words))
+(early / 'calendar.json').write_text((src / 'calendar.json').read_text())
+PYDRAIN
 vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 [ -x "$vl" ]||vl=verilator
 src=(rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv
@@ -44,12 +67,18 @@ run(){ # tag caldir mut expect(pass|fail)
  set -e
  grep -E "IDX_SCHEDULED_STATIC|TIMELINE|SCOREBAD|TXBAD|DIAG|fatal|Error" "$out/run_$tag.log" | head -12 | sed "s/^/[$tag] /"
  if [ "$want" = pass ]; then [ "$rc" = 0 ] || { echo "RUN $tag FAILED (expected PASS)"; return 1; }
- else [ "$rc" != 0 ] || { echo "MUTANT $tag SURVIVED"; return 1; }; echo "[$tag] mutant rejected"; fi
+ else
+  [ "$rc" != 0 ] || { echo "MUTANT $tag SURVIVED"; return 1; }
+  grep -q 'IDX_SCHEDULED_STATIC N' "$out/run_$tag.log"
+  grep -q 'fullshape scheduled INDEX.*mismatch' "$out/run_$tag.log"
+  echo "[$tag] mutant rejected"
+ fi
 }
 run pos_gap100 "$out/cal_reg100" 0 pass
 run pos_gap4 "$out/cal_reg4" 0 pass
 run mut1_query "$out/cal_reg100" 1 fail
 run mut2_key "$out/cal_reg100" 2 fail
-run mut3_flush "$out/cal_reg100" 3 fail
+run mut_flush "$out/cal_early_flush" 0 fail
 run mut_pins0 "$out/cal_none100" 0 fail
+run mut_drain "$out/cal_old_drain" 0 fail
 echo IDX_SCHEDULED_GATE_PASS
