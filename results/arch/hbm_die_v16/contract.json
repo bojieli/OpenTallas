@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "85b2905fe",
+  "commit": "af22cc9d1",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -51,6 +51,11 @@
     "file": "tools/hbm_die_v15/v16_specs/hc.json",
     "author": "Claude H-NETLIST sub-agent hc (2026-10-15)",
     "basis_commit": "c458a8176"
+   },
+   "hceng": {
+    "file": "tools/hbm_die_v15/v16_specs/hceng_0030.json",
+    "author": "Claude H-NETLIST sub-agent hceng (2026-10-16)",
+    "basis_commit": "af22cc9d1"
    },
    "host_completion": {
     "file": "tools/hbm_die_v15/v16_specs/host_completion.json",
@@ -111,18 +116,18 @@
   "off-die pins (SerDes/UCIe PMA, refclk, por_n) are die top-level ports"
  ],
  "summary": {
-  "instances": 1503,
-  "masters": 61,
-  "edges": 11639,
-  "edge_bits": 1196582,
-  "clock_reset_ports": 3512,
+  "instances": 1506,
+  "masters": 62,
+  "edges": 11716,
+  "edge_bits": 1233867,
+  "clock_reset_ports": 3518,
   "straps": 94,
   "die_pins": 43,
-  "exposed_input_ports": 16,
-  "exposed_input_bits": 6824,
+  "exposed_input_ports": 4,
+  "exposed_input_bits": 3736,
   "exposed_unassigned_ports": 0,
   "gaps": 31,
-  "open_output_ports": 1152,
+  "open_output_ports": 1129,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -152,6 +157,7 @@
   "ot_hbm3e_phy_rc_e8p5": 4,
   "ot_hbm_accel_smh_attn": 32,
   "ot_hbm_argmax_static_sw_vm": 1,
+  "ot_hbm_hc_eng_static": 1,
   "ot_hbm_hc_q_static": 4,
   "ot_hbm_host_landing256": 1,
   "ot_hbm_host_packet_static": 1,
@@ -191,7 +197,7 @@
   "ot_pdie_serdes": 9,
   "ot_pdie_ucie": 1,
   "ot_static_cmd_target": 76,
-  "ot_static_program_target": 16,
+  "ot_static_program_target": 18,
   "ot_vms_calendar_static": 4,
   "ot_vms_status4_static": 1
  },
@@ -50678,15 +50684,15 @@
    "master": "ot_hbm_status_join",
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
    "params": {
-    "NT": 103,
-    "NF": 148,
+    "NT": 105,
+    "NF": 151,
     "NH": 6,
-    "TGTS": "824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
+    "TGTS": "840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
    },
    "slot": "host_cp_ingress",
    "owner": "host owner (H-NETLIST cp2)",
    "region": "cp2",
-   "note": "All103 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open.",
+   "note": "All105 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open.",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -50715,15 +50721,15 @@
     },
     "t_ready": {
      "direction": "input",
-     "bits": 103
+     "bits": 105
     },
     "t_active": {
      "direction": "input",
-     "bits": 103
+     "bits": 105
     },
     "t_fault": {
      "direction": "input",
-     "bits": 148
+     "bits": 151
     },
     "h_fault": {
      "direction": "input",
@@ -52959,6 +52965,338 @@
     }
    }
   },
+  "hc_eng": {
+   "master": "ot_hbm_hc_eng_static",
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv",
+   "params": {},
+   "slot": "hc_eng",
+   "owner": "HC owner (H-NETLIST hceng)",
+   "region": "hceng",
+   "note": "Static full-form HC engine (HC.HC_MIX: 2,048 FP32 MAC lanes W256 in 8 bank tiles, 4 weight slots in 256 x 1024x256 macros, 2 exact tail units, event programme, bases/scales table). Pin-registered (every input a pin flop, every output a flop). Area estimate ~9.5 mm2 (results/uarch/hbm_hc_eng_0030/model.json). Bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "replaces_v15": null,
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_seq_static.sv",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+   ],
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "start_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_base": {
+     "direction": "input",
+     "bits": 10
+    },
+    "start_limit": {
+     "direction": "input",
+     "bits": 11
+    },
+    "start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "tbl_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tbl_addr": {
+     "direction": "input",
+     "bits": 10
+    },
+    "tbl_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "x_wave_v": {
+     "direction": "input",
+     "bits": 4
+    },
+    "x_wave_word": {
+     "direction": "input",
+     "bits": 40
+    },
+    "x_wave": {
+     "direction": "input",
+     "bits": 32768
+    },
+    "gathered_mix_v": {
+     "direction": "input",
+     "bits": 4
+    },
+    "gathered_mix_row": {
+     "direction": "input",
+     "bits": 20
+    },
+    "gathered_mix_pos": {
+     "direction": "input",
+     "bits": 12
+    },
+    "gathered_mix_data": {
+     "direction": "input",
+     "bits": 128
+    },
+    "result_v": {
+     "direction": "output",
+     "bits": 4
+    },
+    "result_position": {
+     "direction": "output",
+     "bits": 12
+    },
+    "result": {
+     "direction": "output",
+     "bits": 3072
+    },
+    "program_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "program_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "hc_eng_tgt": {
+   "master": "ot_static_program_target",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "params": {
+    "TARGET": "8'd164",
+    "PCW": 10
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hceng)",
+   "region": "hceng",
+   "note": "F20 programme target 164: engine event programme of hc_eng (H-NETLIST ids 164..167 reserved for hceng); host_cp_ingress TARGET_MASK must admit it",
+   "replaces_v15": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 12
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_base": {
+     "direction": "input",
+     "bits": 12
+    },
+    "desc_limit": {
+     "direction": "input",
+     "bits": 13
+    },
+    "desc_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "program_active": {
+     "direction": "input",
+     "bits": 1
+    },
+    "program_cfg_we": {
+     "direction": "output",
+     "bits": 1
+    },
+    "program_cfg_addr": {
+     "direction": "output",
+     "bits": 10
+    },
+    "program_cfg_data": {
+     "direction": "output",
+     "bits": 256
+    },
+    "program_start_v": {
+     "direction": "output",
+     "bits": 1
+    },
+    "program_start_base": {
+     "direction": "output",
+     "bits": 10
+    },
+    "program_start_limit": {
+     "direction": "output",
+     "bits": 11
+    },
+    "program_start_loops": {
+     "direction": "output",
+     "bits": 16
+    },
+    "configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "hc_tbl_tgt": {
+   "master": "ot_static_program_target",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "params": {
+    "TARGET": "8'd165",
+    "PCW": 10
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hceng)",
+   "region": "hceng",
+   "note": "F20 programme target 165: bases/scales table rows of hc_eng (H-NETLIST ids 164..167 reserved for hceng); host_cp_ingress TARGET_MASK must admit it",
+   "replaces_v15": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 12
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "desc_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "desc_base": {
+     "direction": "input",
+     "bits": 12
+    },
+    "desc_limit": {
+     "direction": "input",
+     "bits": 13
+    },
+    "desc_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "program_active": {
+     "direction": "input",
+     "bits": 1
+    },
+    "program_cfg_we": {
+     "direction": "output",
+     "bits": 1
+    },
+    "program_cfg_addr": {
+     "direction": "output",
+     "bits": 10
+    },
+    "program_cfg_data": {
+     "direction": "output",
+     "bits": 256
+    },
+    "program_start_v": {
+     "direction": "output",
+     "bits": 1
+    },
+    "program_start_base": {
+     "direction": "output",
+     "bits": 10
+    },
+    "program_start_limit": {
+     "direction": "output",
+     "bits": 11
+    },
+    "program_start_loops": {
+     "direction": "output",
+     "bits": 16
+    },
+    "configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
   "cp_fill_SW": {
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
@@ -54652,7 +54990,7 @@
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
    "params": {
     "MUT": 0,
-    "TARGET_MASK": "256'hffffffff0000000f000000f001f1ffffffffffff0ff1000000000000"
+    "TARGET_MASK": "256'hffffffff0000003f000000f001f1ffffffffffff0ff1000000000000"
    },
    "slot": "host_cp_ingress",
    "owner": "host owner",
@@ -221828,7 +222166,7 @@
    "name": "cp2_434",
    "bits": 1,
    "source": [
-    "cpx_SW0",
+    "hc_eng_tgt",
     "configured",
     0,
     1
@@ -221842,15 +222180,15 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET192 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET164 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
    "name": "cp2_435",
    "bits": 1,
    "source": [
-    "cpx_SW0",
-    "active",
+    "hc_eng",
+    "program_active",
     0,
     1
    ],
@@ -221863,14 +222201,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET192 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET164 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
    "name": "cp2_436",
    "bits": 1,
    "source": [
-    "cpx_SW0",
+    "hc_eng_tgt",
     "fault",
     0,
     1
@@ -221884,56 +222222,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET192 actual sticky fault to host status",
+   "basis": "TARGET164 actual sticky fault to host status",
    "region": "cp2"
   },
   {
    "name": "cp2_437",
    "bits": 1,
    "source": [
-    "cpx_SW1",
-    "configured",
-    0,
-    1
-   ],
-   "sink": [
-    "host_status",
-    "t_ready",
-    72,
-    73
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "TARGET193 real collar/calendar status; static install/launch interlock only",
-   "region": "cp2"
-  },
-  {
-   "name": "cp2_438",
-   "bits": 1,
-   "source": [
-    "cpx_SW1",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "host_status",
-    "t_active",
-    72,
-    73
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "TARGET193 real collar/calendar status; static install/launch interlock only",
-   "region": "cp2"
-  },
-  {
-   "name": "cp2_439",
-   "bits": 1,
-   "source": [
-    "cpx_SW1",
+    "hc_eng",
     "fault",
     0,
     1
@@ -221947,14 +222243,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET193 actual sticky fault to host status",
+   "basis": "TARGET164 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_440",
+   "name": "cp2_438",
    "bits": 1,
    "source": [
-    "cpx_SW2",
+    "hc_tbl_tgt",
     "configured",
     0,
     1
@@ -221962,41 +222258,41 @@
    "sink": [
     "host_status",
     "t_ready",
-    73,
-    74
+    72,
+    73
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET194 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET165 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_441",
+   "name": "cp2_439",
    "bits": 1,
    "source": [
-    "cpx_SW2",
-    "active",
+    "hc_eng",
+    "program_active",
     0,
     1
    ],
    "sink": [
     "host_status",
     "t_active",
-    73,
-    74
+    72,
+    73
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET194 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET165 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_442",
+   "name": "cp2_440",
    "bits": 1,
    "source": [
-    "cpx_SW2",
+    "hc_tbl_tgt",
     "fault",
     0,
     1
@@ -222010,14 +222306,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET194 actual sticky fault to host status",
+   "basis": "TARGET165 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_443",
+   "name": "cp2_441",
    "bits": 1,
    "source": [
-    "cpx_SW3",
+    "cpx_SW0",
     "configured",
     0,
     1
@@ -222025,20 +222321,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    74,
-    75
+    73,
+    74
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET195 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET192 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_444",
+   "name": "cp2_442",
    "bits": 1,
    "source": [
-    "cpx_SW3",
+    "cpx_SW0",
     "active",
     0,
     1
@@ -222046,20 +222342,20 @@
    "sink": [
     "host_status",
     "t_active",
-    74,
-    75
+    73,
+    74
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET195 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET192 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_445",
+   "name": "cp2_443",
    "bits": 1,
    "source": [
-    "cpx_SW3",
+    "cpx_SW0",
     "fault",
     0,
     1
@@ -222073,14 +222369,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET195 actual sticky fault to host status",
+   "basis": "TARGET192 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_446",
+   "name": "cp2_444",
    "bits": 1,
    "source": [
-    "cpx_SW4",
+    "cpx_SW1",
     "configured",
     0,
     1
@@ -222088,20 +222384,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    75,
-    76
+    74,
+    75
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET196 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET193 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_447",
+   "name": "cp2_445",
    "bits": 1,
    "source": [
-    "cpx_SW4",
+    "cpx_SW1",
     "active",
     0,
     1
@@ -222109,20 +222405,20 @@
    "sink": [
     "host_status",
     "t_active",
-    75,
-    76
+    74,
+    75
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET196 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET193 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_448",
+   "name": "cp2_446",
    "bits": 1,
    "source": [
-    "cpx_SW4",
+    "cpx_SW1",
     "fault",
     0,
     1
@@ -222136,14 +222432,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET196 actual sticky fault to host status",
+   "basis": "TARGET193 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_449",
+   "name": "cp2_447",
    "bits": 1,
    "source": [
-    "cpx_SW5",
+    "cpx_SW2",
     "configured",
     0,
     1
@@ -222151,20 +222447,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    76,
-    77
+    75,
+    76
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET197 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET194 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_450",
+   "name": "cp2_448",
    "bits": 1,
    "source": [
-    "cpx_SW5",
+    "cpx_SW2",
     "active",
     0,
     1
@@ -222172,20 +222468,20 @@
    "sink": [
     "host_status",
     "t_active",
-    76,
-    77
+    75,
+    76
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET197 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET194 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_451",
+   "name": "cp2_449",
    "bits": 1,
    "source": [
-    "cpx_SW5",
+    "cpx_SW2",
     "fault",
     0,
     1
@@ -222199,14 +222495,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET197 actual sticky fault to host status",
+   "basis": "TARGET194 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_452",
+   "name": "cp2_450",
    "bits": 1,
    "source": [
-    "cpx_SW6",
+    "cpx_SW3",
     "configured",
     0,
     1
@@ -222214,20 +222510,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    77,
-    78
+    76,
+    77
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET198 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET195 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_453",
+   "name": "cp2_451",
    "bits": 1,
    "source": [
-    "cpx_SW6",
+    "cpx_SW3",
     "active",
     0,
     1
@@ -222235,20 +222531,20 @@
    "sink": [
     "host_status",
     "t_active",
-    77,
-    78
+    76,
+    77
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET198 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET195 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_454",
+   "name": "cp2_452",
    "bits": 1,
    "source": [
-    "cpx_SW6",
+    "cpx_SW3",
     "fault",
     0,
     1
@@ -222262,14 +222558,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET198 actual sticky fault to host status",
+   "basis": "TARGET195 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_455",
+   "name": "cp2_453",
    "bits": 1,
    "source": [
-    "cpx_SW7",
+    "cpx_SW4",
     "configured",
     0,
     1
@@ -222277,20 +222573,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    78,
-    79
+    77,
+    78
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET199 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET196 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_456",
+   "name": "cp2_454",
    "bits": 1,
    "source": [
-    "cpx_SW7",
+    "cpx_SW4",
     "active",
     0,
     1
@@ -222298,20 +222594,20 @@
    "sink": [
     "host_status",
     "t_active",
-    78,
-    79
+    77,
+    78
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET199 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET196 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_457",
+   "name": "cp2_455",
    "bits": 1,
    "source": [
-    "cpx_SW7",
+    "cpx_SW4",
     "fault",
     0,
     1
@@ -222325,14 +222621,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET199 actual sticky fault to host status",
+   "basis": "TARGET196 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_458",
+   "name": "cp2_456",
    "bits": 1,
    "source": [
-    "cpx_SE0",
+    "cpx_SW5",
     "configured",
     0,
     1
@@ -222340,20 +222636,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    79,
-    80
+    78,
+    79
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET200 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET197 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_459",
+   "name": "cp2_457",
    "bits": 1,
    "source": [
-    "cpx_SE0",
+    "cpx_SW5",
     "active",
     0,
     1
@@ -222361,20 +222657,20 @@
    "sink": [
     "host_status",
     "t_active",
-    79,
-    80
+    78,
+    79
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET200 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET197 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_460",
+   "name": "cp2_458",
    "bits": 1,
    "source": [
-    "cpx_SE0",
+    "cpx_SW5",
     "fault",
     0,
     1
@@ -222388,14 +222684,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET200 actual sticky fault to host status",
+   "basis": "TARGET197 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_461",
+   "name": "cp2_459",
    "bits": 1,
    "source": [
-    "cpx_SE1",
+    "cpx_SW6",
     "configured",
     0,
     1
@@ -222403,20 +222699,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    80,
-    81
+    79,
+    80
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET201 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET198 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_462",
+   "name": "cp2_460",
    "bits": 1,
    "source": [
-    "cpx_SE1",
+    "cpx_SW6",
     "active",
     0,
     1
@@ -222424,20 +222720,20 @@
    "sink": [
     "host_status",
     "t_active",
-    80,
-    81
+    79,
+    80
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET201 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET198 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_463",
+   "name": "cp2_461",
    "bits": 1,
    "source": [
-    "cpx_SE1",
+    "cpx_SW6",
     "fault",
     0,
     1
@@ -222451,14 +222747,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET201 actual sticky fault to host status",
+   "basis": "TARGET198 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_464",
+   "name": "cp2_462",
    "bits": 1,
    "source": [
-    "cpx_SE2",
+    "cpx_SW7",
     "configured",
     0,
     1
@@ -222466,20 +222762,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    81,
-    82
+    80,
+    81
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET202 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET199 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_465",
+   "name": "cp2_463",
    "bits": 1,
    "source": [
-    "cpx_SE2",
+    "cpx_SW7",
     "active",
     0,
     1
@@ -222487,20 +222783,20 @@
    "sink": [
     "host_status",
     "t_active",
-    81,
-    82
+    80,
+    81
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET202 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET199 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_466",
+   "name": "cp2_464",
    "bits": 1,
    "source": [
-    "cpx_SE2",
+    "cpx_SW7",
     "fault",
     0,
     1
@@ -222514,14 +222810,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET202 actual sticky fault to host status",
+   "basis": "TARGET199 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_467",
+   "name": "cp2_465",
    "bits": 1,
    "source": [
-    "cpx_SE3",
+    "cpx_SE0",
     "configured",
     0,
     1
@@ -222529,20 +222825,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    82,
-    83
+    81,
+    82
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET203 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET200 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_468",
+   "name": "cp2_466",
    "bits": 1,
    "source": [
-    "cpx_SE3",
+    "cpx_SE0",
     "active",
     0,
     1
@@ -222550,20 +222846,20 @@
    "sink": [
     "host_status",
     "t_active",
-    82,
-    83
+    81,
+    82
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET203 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET200 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_469",
+   "name": "cp2_467",
    "bits": 1,
    "source": [
-    "cpx_SE3",
+    "cpx_SE0",
     "fault",
     0,
     1
@@ -222577,14 +222873,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET203 actual sticky fault to host status",
+   "basis": "TARGET200 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_470",
+   "name": "cp2_468",
    "bits": 1,
    "source": [
-    "cpx_SE4",
+    "cpx_SE1",
     "configured",
     0,
     1
@@ -222592,20 +222888,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    83,
-    84
+    82,
+    83
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET204 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET201 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_471",
+   "name": "cp2_469",
    "bits": 1,
    "source": [
-    "cpx_SE4",
+    "cpx_SE1",
     "active",
     0,
     1
@@ -222613,20 +222909,20 @@
    "sink": [
     "host_status",
     "t_active",
-    83,
-    84
+    82,
+    83
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET204 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET201 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_472",
+   "name": "cp2_470",
    "bits": 1,
    "source": [
-    "cpx_SE4",
+    "cpx_SE1",
     "fault",
     0,
     1
@@ -222640,14 +222936,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET204 actual sticky fault to host status",
+   "basis": "TARGET201 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_473",
+   "name": "cp2_471",
    "bits": 1,
    "source": [
-    "cpx_SE5",
+    "cpx_SE2",
     "configured",
     0,
     1
@@ -222655,20 +222951,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    84,
-    85
+    83,
+    84
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET205 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET202 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_474",
+   "name": "cp2_472",
    "bits": 1,
    "source": [
-    "cpx_SE5",
+    "cpx_SE2",
     "active",
     0,
     1
@@ -222676,20 +222972,20 @@
    "sink": [
     "host_status",
     "t_active",
-    84,
-    85
+    83,
+    84
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET205 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET202 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_475",
+   "name": "cp2_473",
    "bits": 1,
    "source": [
-    "cpx_SE5",
+    "cpx_SE2",
     "fault",
     0,
     1
@@ -222703,14 +222999,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET205 actual sticky fault to host status",
+   "basis": "TARGET202 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_476",
+   "name": "cp2_474",
    "bits": 1,
    "source": [
-    "cpx_SE6",
+    "cpx_SE3",
     "configured",
     0,
     1
@@ -222718,20 +223014,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    85,
-    86
+    84,
+    85
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET206 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET203 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_477",
+   "name": "cp2_475",
    "bits": 1,
    "source": [
-    "cpx_SE6",
+    "cpx_SE3",
     "active",
     0,
     1
@@ -222739,20 +223035,20 @@
    "sink": [
     "host_status",
     "t_active",
-    85,
-    86
+    84,
+    85
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET206 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET203 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_478",
+   "name": "cp2_476",
    "bits": 1,
    "source": [
-    "cpx_SE6",
+    "cpx_SE3",
     "fault",
     0,
     1
@@ -222766,14 +223062,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET206 actual sticky fault to host status",
+   "basis": "TARGET203 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_479",
+   "name": "cp2_477",
    "bits": 1,
    "source": [
-    "cpx_SE7",
+    "cpx_SE4",
     "configured",
     0,
     1
@@ -222781,20 +223077,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    86,
-    87
+    85,
+    86
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET207 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET204 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_480",
+   "name": "cp2_478",
    "bits": 1,
    "source": [
-    "cpx_SE7",
+    "cpx_SE4",
     "active",
     0,
     1
@@ -222802,20 +223098,20 @@
    "sink": [
     "host_status",
     "t_active",
-    86,
-    87
+    85,
+    86
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET207 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET204 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_481",
+   "name": "cp2_479",
    "bits": 1,
    "source": [
-    "cpx_SE7",
+    "cpx_SE4",
     "fault",
     0,
     1
@@ -222829,14 +223125,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET207 actual sticky fault to host status",
+   "basis": "TARGET204 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_482",
+   "name": "cp2_480",
    "bits": 1,
    "source": [
-    "cpx_NW0",
+    "cpx_SE5",
     "configured",
     0,
     1
@@ -222844,20 +223140,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    87,
-    88
+    86,
+    87
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET208 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET205 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_483",
+   "name": "cp2_481",
    "bits": 1,
    "source": [
-    "cpx_NW0",
+    "cpx_SE5",
     "active",
     0,
     1
@@ -222865,20 +223161,20 @@
    "sink": [
     "host_status",
     "t_active",
-    87,
-    88
+    86,
+    87
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET208 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET205 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_484",
+   "name": "cp2_482",
    "bits": 1,
    "source": [
-    "cpx_NW0",
+    "cpx_SE5",
     "fault",
     0,
     1
@@ -222892,14 +223188,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET208 actual sticky fault to host status",
+   "basis": "TARGET205 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_485",
+   "name": "cp2_483",
    "bits": 1,
    "source": [
-    "cpx_NW1",
+    "cpx_SE6",
     "configured",
     0,
     1
@@ -222907,20 +223203,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    88,
-    89
+    87,
+    88
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET209 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET206 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_486",
+   "name": "cp2_484",
    "bits": 1,
    "source": [
-    "cpx_NW1",
+    "cpx_SE6",
     "active",
     0,
     1
@@ -222928,20 +223224,20 @@
    "sink": [
     "host_status",
     "t_active",
-    88,
-    89
+    87,
+    88
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET209 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET206 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_487",
+   "name": "cp2_485",
    "bits": 1,
    "source": [
-    "cpx_NW1",
+    "cpx_SE6",
     "fault",
     0,
     1
@@ -222955,14 +223251,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET209 actual sticky fault to host status",
+   "basis": "TARGET206 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_488",
+   "name": "cp2_486",
    "bits": 1,
    "source": [
-    "cpx_NW2",
+    "cpx_SE7",
     "configured",
     0,
     1
@@ -222970,20 +223266,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    89,
-    90
+    88,
+    89
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET210 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET207 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_489",
+   "name": "cp2_487",
    "bits": 1,
    "source": [
-    "cpx_NW2",
+    "cpx_SE7",
     "active",
     0,
     1
@@ -222991,20 +223287,20 @@
    "sink": [
     "host_status",
     "t_active",
-    89,
-    90
+    88,
+    89
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET210 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET207 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_490",
+   "name": "cp2_488",
    "bits": 1,
    "source": [
-    "cpx_NW2",
+    "cpx_SE7",
     "fault",
     0,
     1
@@ -223018,14 +223314,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET210 actual sticky fault to host status",
+   "basis": "TARGET207 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_491",
+   "name": "cp2_489",
    "bits": 1,
    "source": [
-    "cpx_NW3",
+    "cpx_NW0",
     "configured",
     0,
     1
@@ -223033,20 +223329,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    90,
-    91
+    89,
+    90
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET211 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET208 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_492",
+   "name": "cp2_490",
    "bits": 1,
    "source": [
-    "cpx_NW3",
+    "cpx_NW0",
     "active",
     0,
     1
@@ -223054,20 +223350,20 @@
    "sink": [
     "host_status",
     "t_active",
-    90,
-    91
+    89,
+    90
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET211 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET208 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_493",
+   "name": "cp2_491",
    "bits": 1,
    "source": [
-    "cpx_NW3",
+    "cpx_NW0",
     "fault",
     0,
     1
@@ -223081,14 +223377,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET211 actual sticky fault to host status",
+   "basis": "TARGET208 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_494",
+   "name": "cp2_492",
    "bits": 1,
    "source": [
-    "cpx_NW4",
+    "cpx_NW1",
     "configured",
     0,
     1
@@ -223096,20 +223392,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    91,
-    92
+    90,
+    91
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET212 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET209 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_495",
+   "name": "cp2_493",
    "bits": 1,
    "source": [
-    "cpx_NW4",
+    "cpx_NW1",
     "active",
     0,
     1
@@ -223117,20 +223413,20 @@
    "sink": [
     "host_status",
     "t_active",
-    91,
-    92
+    90,
+    91
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET212 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET209 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_496",
+   "name": "cp2_494",
    "bits": 1,
    "source": [
-    "cpx_NW4",
+    "cpx_NW1",
     "fault",
     0,
     1
@@ -223144,14 +223440,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET212 actual sticky fault to host status",
+   "basis": "TARGET209 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_497",
+   "name": "cp2_495",
    "bits": 1,
    "source": [
-    "cpx_NW5",
+    "cpx_NW2",
     "configured",
     0,
     1
@@ -223159,20 +223455,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    92,
-    93
+    91,
+    92
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET213 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET210 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_498",
+   "name": "cp2_496",
    "bits": 1,
    "source": [
-    "cpx_NW5",
+    "cpx_NW2",
     "active",
     0,
     1
@@ -223180,20 +223476,20 @@
    "sink": [
     "host_status",
     "t_active",
-    92,
-    93
+    91,
+    92
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET213 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET210 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_499",
+   "name": "cp2_497",
    "bits": 1,
    "source": [
-    "cpx_NW5",
+    "cpx_NW2",
     "fault",
     0,
     1
@@ -223207,14 +223503,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET213 actual sticky fault to host status",
+   "basis": "TARGET210 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_500",
+   "name": "cp2_498",
    "bits": 1,
    "source": [
-    "cpx_NW6",
+    "cpx_NW3",
     "configured",
     0,
     1
@@ -223222,20 +223518,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    93,
-    94
+    92,
+    93
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET214 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET211 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_501",
+   "name": "cp2_499",
    "bits": 1,
    "source": [
-    "cpx_NW6",
+    "cpx_NW3",
     "active",
     0,
     1
@@ -223243,20 +223539,20 @@
    "sink": [
     "host_status",
     "t_active",
-    93,
-    94
+    92,
+    93
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET214 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET211 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_502",
+   "name": "cp2_500",
    "bits": 1,
    "source": [
-    "cpx_NW6",
+    "cpx_NW3",
     "fault",
     0,
     1
@@ -223270,14 +223566,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET214 actual sticky fault to host status",
+   "basis": "TARGET211 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_503",
+   "name": "cp2_501",
    "bits": 1,
    "source": [
-    "cpx_NW7",
+    "cpx_NW4",
     "configured",
     0,
     1
@@ -223285,20 +223581,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    94,
-    95
+    93,
+    94
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET215 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET212 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_504",
+   "name": "cp2_502",
    "bits": 1,
    "source": [
-    "cpx_NW7",
+    "cpx_NW4",
     "active",
     0,
     1
@@ -223306,20 +223602,20 @@
    "sink": [
     "host_status",
     "t_active",
-    94,
-    95
+    93,
+    94
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET215 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET212 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_505",
+   "name": "cp2_503",
    "bits": 1,
    "source": [
-    "cpx_NW7",
+    "cpx_NW4",
     "fault",
     0,
     1
@@ -223333,14 +223629,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET215 actual sticky fault to host status",
+   "basis": "TARGET212 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_506",
+   "name": "cp2_504",
    "bits": 1,
    "source": [
-    "cpx_NE0",
+    "cpx_NW5",
     "configured",
     0,
     1
@@ -223348,20 +223644,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    95,
-    96
+    94,
+    95
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET216 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET213 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_507",
+   "name": "cp2_505",
    "bits": 1,
    "source": [
-    "cpx_NE0",
+    "cpx_NW5",
     "active",
     0,
     1
@@ -223369,20 +223665,20 @@
    "sink": [
     "host_status",
     "t_active",
-    95,
-    96
+    94,
+    95
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET216 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET213 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_508",
+   "name": "cp2_506",
    "bits": 1,
    "source": [
-    "cpx_NE0",
+    "cpx_NW5",
     "fault",
     0,
     1
@@ -223396,14 +223692,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET216 actual sticky fault to host status",
+   "basis": "TARGET213 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_509",
+   "name": "cp2_507",
    "bits": 1,
    "source": [
-    "cpx_NE1",
+    "cpx_NW6",
     "configured",
     0,
     1
@@ -223411,20 +223707,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    96,
-    97
+    95,
+    96
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET217 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET214 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_510",
+   "name": "cp2_508",
    "bits": 1,
    "source": [
-    "cpx_NE1",
+    "cpx_NW6",
     "active",
     0,
     1
@@ -223432,20 +223728,20 @@
    "sink": [
     "host_status",
     "t_active",
-    96,
-    97
+    95,
+    96
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET217 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET214 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_511",
+   "name": "cp2_509",
    "bits": 1,
    "source": [
-    "cpx_NE1",
+    "cpx_NW6",
     "fault",
     0,
     1
@@ -223459,14 +223755,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET217 actual sticky fault to host status",
+   "basis": "TARGET214 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_512",
+   "name": "cp2_510",
    "bits": 1,
    "source": [
-    "cpx_NE2",
+    "cpx_NW7",
     "configured",
     0,
     1
@@ -223474,20 +223770,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    97,
-    98
+    96,
+    97
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET218 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET215 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_513",
+   "name": "cp2_511",
    "bits": 1,
    "source": [
-    "cpx_NE2",
+    "cpx_NW7",
     "active",
     0,
     1
@@ -223495,20 +223791,20 @@
    "sink": [
     "host_status",
     "t_active",
-    97,
-    98
+    96,
+    97
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET218 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET215 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_514",
+   "name": "cp2_512",
    "bits": 1,
    "source": [
-    "cpx_NE2",
+    "cpx_NW7",
     "fault",
     0,
     1
@@ -223522,14 +223818,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET218 actual sticky fault to host status",
+   "basis": "TARGET215 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_515",
+   "name": "cp2_513",
    "bits": 1,
    "source": [
-    "cpx_NE3",
+    "cpx_NE0",
     "configured",
     0,
     1
@@ -223537,20 +223833,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    98,
-    99
+    97,
+    98
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET219 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET216 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_516",
+   "name": "cp2_514",
    "bits": 1,
    "source": [
-    "cpx_NE3",
+    "cpx_NE0",
     "active",
     0,
     1
@@ -223558,20 +223854,20 @@
    "sink": [
     "host_status",
     "t_active",
-    98,
-    99
+    97,
+    98
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET219 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET216 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_517",
+   "name": "cp2_515",
    "bits": 1,
    "source": [
-    "cpx_NE3",
+    "cpx_NE0",
     "fault",
     0,
     1
@@ -223585,14 +223881,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET219 actual sticky fault to host status",
+   "basis": "TARGET216 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_518",
+   "name": "cp2_516",
    "bits": 1,
    "source": [
-    "cpx_NE4",
+    "cpx_NE1",
     "configured",
     0,
     1
@@ -223600,20 +223896,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    99,
-    100
+    98,
+    99
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET220 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET217 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_519",
+   "name": "cp2_517",
    "bits": 1,
    "source": [
-    "cpx_NE4",
+    "cpx_NE1",
     "active",
     0,
     1
@@ -223621,20 +223917,20 @@
    "sink": [
     "host_status",
     "t_active",
-    99,
-    100
+    98,
+    99
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET220 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET217 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_520",
+   "name": "cp2_518",
    "bits": 1,
    "source": [
-    "cpx_NE4",
+    "cpx_NE1",
     "fault",
     0,
     1
@@ -223648,14 +223944,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET220 actual sticky fault to host status",
+   "basis": "TARGET217 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_521",
+   "name": "cp2_519",
    "bits": 1,
    "source": [
-    "cpx_NE5",
+    "cpx_NE2",
     "configured",
     0,
     1
@@ -223663,20 +223959,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    100,
-    101
+    99,
+    100
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET221 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET218 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_522",
+   "name": "cp2_520",
    "bits": 1,
    "source": [
-    "cpx_NE5",
+    "cpx_NE2",
     "active",
     0,
     1
@@ -223684,20 +223980,20 @@
    "sink": [
     "host_status",
     "t_active",
-    100,
-    101
+    99,
+    100
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET221 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET218 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_523",
+   "name": "cp2_521",
    "bits": 1,
    "source": [
-    "cpx_NE5",
+    "cpx_NE2",
     "fault",
     0,
     1
@@ -223711,14 +224007,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET221 actual sticky fault to host status",
+   "basis": "TARGET218 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_524",
+   "name": "cp2_522",
    "bits": 1,
    "source": [
-    "cpx_NE6",
+    "cpx_NE3",
     "configured",
     0,
     1
@@ -223726,20 +224022,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    101,
-    102
+    100,
+    101
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET222 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET219 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_525",
+   "name": "cp2_523",
    "bits": 1,
    "source": [
-    "cpx_NE6",
+    "cpx_NE3",
     "active",
     0,
     1
@@ -223747,20 +224043,20 @@
    "sink": [
     "host_status",
     "t_active",
-    101,
-    102
+    100,
+    101
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET222 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET219 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_526",
+   "name": "cp2_524",
    "bits": 1,
    "source": [
-    "cpx_NE6",
+    "cpx_NE3",
     "fault",
     0,
     1
@@ -223774,14 +224070,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET222 actual sticky fault to host status",
+   "basis": "TARGET219 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_527",
+   "name": "cp2_525",
    "bits": 1,
    "source": [
-    "cpx_NE7",
+    "cpx_NE4",
     "configured",
     0,
     1
@@ -223789,20 +224085,20 @@
    "sink": [
     "host_status",
     "t_ready",
-    102,
-    103
+    101,
+    102
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET223 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET220 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_528",
+   "name": "cp2_526",
    "bits": 1,
    "source": [
-    "cpx_NE7",
+    "cpx_NE4",
     "active",
     0,
     1
@@ -223810,20 +224106,20 @@
    "sink": [
     "host_status",
     "t_active",
-    102,
-    103
+    101,
+    102
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET223 real collar/calendar status; static install/launch interlock only",
+   "basis": "TARGET220 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
-   "name": "cp2_529",
+   "name": "cp2_527",
    "bits": 1,
    "source": [
-    "cpx_NE7",
+    "cpx_NE4",
     "fault",
     0,
     1
@@ -223837,14 +224133,56 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "TARGET223 actual sticky fault to host status",
+   "basis": "TARGET220 actual sticky fault to host status",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_528",
+   "bits": 1,
+   "source": [
+    "cpx_NE5",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_ready",
+    102,
+    103
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "TARGET221 real collar/calendar status; static install/launch interlock only",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_529",
+   "bits": 1,
+   "source": [
+    "cpx_NE5",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_active",
+    102,
+    103
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "TARGET221 real collar/calendar status; static install/launch interlock only",
    "region": "cp2"
   },
   {
    "name": "cp2_530",
    "bits": 1,
    "source": [
-    "wbk_SW",
+    "cpx_NE5",
     "fault",
     0,
     1
@@ -223858,14 +224196,56 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "basis": "TARGET221 actual sticky fault to host status",
    "region": "cp2"
   },
   {
    "name": "cp2_531",
    "bits": 1,
    "source": [
-    "wbk_SE",
+    "cpx_NE6",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_ready",
+    103,
+    104
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "TARGET222 real collar/calendar status; static install/launch interlock only",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_532",
+   "bits": 1,
+   "source": [
+    "cpx_NE6",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_active",
+    103,
+    104
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "TARGET222 real collar/calendar status; static install/launch interlock only",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_533",
+   "bits": 1,
+   "source": [
+    "cpx_NE6",
     "fault",
     0,
     1
@@ -223879,14 +224259,56 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "basis": "TARGET222 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_532",
+   "name": "cp2_534",
    "bits": 1,
    "source": [
-    "wbk_NW",
+    "cpx_NE7",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_ready",
+    104,
+    105
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "TARGET223 real collar/calendar status; static install/launch interlock only",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_535",
+   "bits": 1,
+   "source": [
+    "cpx_NE7",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_active",
+    104,
+    105
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "TARGET223 real collar/calendar status; static install/launch interlock only",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_536",
+   "bits": 1,
+   "source": [
+    "cpx_NE7",
     "fault",
     0,
     1
@@ -223900,14 +224322,14 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "basis": "TARGET223 actual sticky fault to host status",
    "region": "cp2"
   },
   {
-   "name": "cp2_533",
+   "name": "cp2_537",
    "bits": 1,
    "source": [
-    "wbk_NE",
+    "wbk_SW",
     "fault",
     0,
     1
@@ -223925,10 +224347,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_534",
+   "name": "cp2_538",
    "bits": 1,
    "source": [
-    "sucx_SW",
+    "wbk_SE",
     "fault",
     0,
     1
@@ -223946,10 +224368,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_535",
+   "name": "cp2_539",
    "bits": 1,
    "source": [
-    "sucx_SE",
+    "wbk_NW",
     "fault",
     0,
     1
@@ -223967,10 +224389,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_536",
+   "name": "cp2_540",
    "bits": 1,
    "source": [
-    "sucx_NW",
+    "wbk_NE",
     "fault",
     0,
     1
@@ -223988,10 +224410,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_537",
+   "name": "cp2_541",
    "bits": 1,
    "source": [
-    "sucx_NE",
+    "sucx_SW",
     "fault",
     0,
     1
@@ -224009,10 +224431,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_538",
+   "name": "cp2_542",
    "bits": 1,
    "source": [
-    "sfus_SW",
+    "sucx_SE",
     "fault",
     0,
     1
@@ -224030,10 +224452,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_539",
+   "name": "cp2_543",
    "bits": 1,
    "source": [
-    "sfus_SE",
+    "sucx_NW",
     "fault",
     0,
     1
@@ -224051,10 +224473,10 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_540",
+   "name": "cp2_544",
    "bits": 1,
    "source": [
-    "sfus_NW",
+    "sucx_NE",
     "fault",
     0,
     1
@@ -224072,7 +224494,70 @@
    "region": "cp2"
   },
   {
-   "name": "cp2_541",
+   "name": "cp2_545",
+   "bits": 1,
+   "source": [
+    "sfus_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    147,
+    148
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_546",
+   "bits": 1,
+   "source": [
+    "sfus_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    148,
+    149
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_547",
+   "bits": 1,
+   "source": [
+    "sfus_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    149,
+    150
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_548",
    "bits": 1,
    "source": [
     "sfus_NE",
@@ -224083,8 +224568,8 @@
    "sink": [
     "host_status",
     "t_fault",
-    147,
-    148
+    150,
+    151
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -234507,6 +234992,1476 @@
    "allowed_exception": null,
    "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108",
    "region": "hc"
+  },
+  {
+   "name": "hceng_0",
+   "bits": 1,
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "cfg_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_1",
+   "bits": 8,
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "cfg_target",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_2",
+   "bits": 12,
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_3",
+   "bits": 256,
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "cfg_data",
+    0,
+    256
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_4",
+   "bits": 1,
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "desc_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_5",
+   "bits": 12,
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "desc_base",
+    0,
+    12
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_6",
+   "bits": 13,
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "desc_limit",
+    0,
+    13
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_7",
+   "bits": 16,
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "desc_loops",
+    0,
+    16
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_8",
+   "bits": 1,
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "launch_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_9",
+   "bits": 1,
+   "source": [
+    "hc_eng",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng_tgt",
+    "program_active",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "launch/install interlock: no table or programme rows while the engine programme runs",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_10",
+   "bits": 1,
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "cfg_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_11",
+   "bits": 8,
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "cfg_target",
+    0,
+    8
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_12",
+   "bits": 12,
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_13",
+   "bits": 256,
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "cfg_data",
+    0,
+    256
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_14",
+   "bits": 1,
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "desc_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_15",
+   "bits": 12,
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "desc_base",
+    0,
+    12
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_16",
+   "bits": 13,
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "desc_limit",
+    0,
+    13
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_17",
+   "bits": 16,
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "desc_loops",
+    0,
+    16
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_18",
+   "bits": 1,
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "launch_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv F20 broadcast consumer (as hc_tgt_<q>)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_19",
+   "bits": 1,
+   "source": [
+    "hc_eng",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_tbl_tgt",
+    "program_active",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "launch/install interlock: no table or programme rows while the engine programme runs",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_20",
+   "bits": 1,
+   "source": [
+    "hc_eng_tgt",
+    "program_cfg_we",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "cfg_we",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_21",
+   "bits": 10,
+   "source": [
+    "hc_eng_tgt",
+    "program_cfg_addr",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "cfg_addr",
+    0,
+    10
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_22",
+   "bits": 256,
+   "source": [
+    "hc_eng_tgt",
+    "program_cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hc_eng",
+    "cfg_data",
+    0,
+    256
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_23",
+   "bits": 1,
+   "source": [
+    "hc_eng_tgt",
+    "program_start_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "start_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_24",
+   "bits": 10,
+   "source": [
+    "hc_eng_tgt",
+    "program_start_base",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "start_base",
+    0,
+    10
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_25",
+   "bits": 11,
+   "source": [
+    "hc_eng_tgt",
+    "program_start_limit",
+    0,
+    11
+   ],
+   "sink": [
+    "hc_eng",
+    "start_limit",
+    0,
+    11
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_26",
+   "bits": 16,
+   "source": [
+    "hc_eng_tgt",
+    "program_start_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hc_eng",
+    "start_loops",
+    0,
+    16
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_27",
+   "bits": 1,
+   "source": [
+    "hc_tbl_tgt",
+    "program_cfg_we",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "tbl_we",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) written through the target row port into the engine table macro",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_28",
+   "bits": 10,
+   "source": [
+    "hc_tbl_tgt",
+    "program_cfg_addr",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "tbl_addr",
+    0,
+    10
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) written through the target row port into the engine table macro",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_29",
+   "bits": 256,
+   "source": [
+    "hc_tbl_tgt",
+    "program_cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hc_eng",
+    "tbl_data",
+    0,
+    256
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) written through the target row port into the engine table macro",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_30",
+   "bits": 1,
+   "source": [
+    "hc_SW",
+    "x_wave_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_31",
+   "bits": 10,
+   "source": [
+    "hc_SW",
+    "x_wave_word",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_word",
+    0,
+    10
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_32",
+   "bits": 8192,
+   "source": [
+    "hc_SW",
+    "x_wave",
+    0,
+    8192
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave",
+    0,
+    8192
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_33",
+   "bits": 1,
+   "source": [
+    "hc_SW",
+    "gathered_mix_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_34",
+   "bits": 5,
+   "source": [
+    "hc_SW",
+    "gathered_mix_row",
+    0,
+    5
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_row",
+    0,
+    5
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_35",
+   "bits": 3,
+   "source": [
+    "hc_SW",
+    "gathered_mix_pos",
+    0,
+    3
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_pos",
+    0,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_36",
+   "bits": 32,
+   "source": [
+    "hc_SW",
+    "gathered_mix_data",
+    0,
+    32
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_data",
+    0,
+    32
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_37",
+   "bits": 1,
+   "source": [
+    "hc_eng",
+    "result_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_SW",
+    "result_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_38",
+   "bits": 3,
+   "source": [
+    "hc_eng",
+    "result_position",
+    0,
+    3
+   ],
+   "sink": [
+    "hc_SW",
+    "result_position",
+    0,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_39",
+   "bits": 768,
+   "source": [
+    "hc_eng",
+    "result",
+    0,
+    768
+   ],
+   "sink": [
+    "hc_SW",
+    "result",
+    0,
+    768
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_40",
+   "bits": 1,
+   "source": [
+    "hc_SE",
+    "x_wave_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_v",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_41",
+   "bits": 10,
+   "source": [
+    "hc_SE",
+    "x_wave_word",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_word",
+    10,
+    20
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_42",
+   "bits": 8192,
+   "source": [
+    "hc_SE",
+    "x_wave",
+    0,
+    8192
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave",
+    8192,
+    16384
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_43",
+   "bits": 1,
+   "source": [
+    "hc_SE",
+    "gathered_mix_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_v",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_44",
+   "bits": 5,
+   "source": [
+    "hc_SE",
+    "gathered_mix_row",
+    0,
+    5
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_row",
+    5,
+    10
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_45",
+   "bits": 3,
+   "source": [
+    "hc_SE",
+    "gathered_mix_pos",
+    0,
+    3
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_pos",
+    3,
+    6
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_46",
+   "bits": 32,
+   "source": [
+    "hc_SE",
+    "gathered_mix_data",
+    0,
+    32
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_data",
+    32,
+    64
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_47",
+   "bits": 1,
+   "source": [
+    "hc_eng",
+    "result_v",
+    1,
+    2
+   ],
+   "sink": [
+    "hc_SE",
+    "result_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_48",
+   "bits": 3,
+   "source": [
+    "hc_eng",
+    "result_position",
+    3,
+    6
+   ],
+   "sink": [
+    "hc_SE",
+    "result_position",
+    0,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_49",
+   "bits": 768,
+   "source": [
+    "hc_eng",
+    "result",
+    768,
+    1536
+   ],
+   "sink": [
+    "hc_SE",
+    "result",
+    0,
+    768
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_50",
+   "bits": 1,
+   "source": [
+    "hc_NW",
+    "x_wave_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_v",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_51",
+   "bits": 10,
+   "source": [
+    "hc_NW",
+    "x_wave_word",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_word",
+    20,
+    30
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_52",
+   "bits": 8192,
+   "source": [
+    "hc_NW",
+    "x_wave",
+    0,
+    8192
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave",
+    16384,
+    24576
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_53",
+   "bits": 1,
+   "source": [
+    "hc_NW",
+    "gathered_mix_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_v",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_54",
+   "bits": 5,
+   "source": [
+    "hc_NW",
+    "gathered_mix_row",
+    0,
+    5
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_row",
+    10,
+    15
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_55",
+   "bits": 3,
+   "source": [
+    "hc_NW",
+    "gathered_mix_pos",
+    0,
+    3
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_pos",
+    6,
+    9
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_56",
+   "bits": 32,
+   "source": [
+    "hc_NW",
+    "gathered_mix_data",
+    0,
+    32
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_data",
+    64,
+    96
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_57",
+   "bits": 1,
+   "source": [
+    "hc_eng",
+    "result_v",
+    2,
+    3
+   ],
+   "sink": [
+    "hc_NW",
+    "result_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_58",
+   "bits": 3,
+   "source": [
+    "hc_eng",
+    "result_position",
+    6,
+    9
+   ],
+   "sink": [
+    "hc_NW",
+    "result_position",
+    0,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_59",
+   "bits": 768,
+   "source": [
+    "hc_eng",
+    "result",
+    1536,
+    2304
+   ],
+   "sink": [
+    "hc_NW",
+    "result",
+    0,
+    768
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_60",
+   "bits": 1,
+   "source": [
+    "hc_NE",
+    "x_wave_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_v",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_61",
+   "bits": 10,
+   "source": [
+    "hc_NE",
+    "x_wave_word",
+    0,
+    10
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave_word",
+    30,
+    40
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_62",
+   "bits": 8192,
+   "source": [
+    "hc_NE",
+    "x_wave",
+    0,
+    8192
+   ],
+   "sink": [
+    "hc_eng",
+    "x_wave",
+    24576,
+    32768
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_63",
+   "bits": 1,
+   "source": [
+    "hc_NE",
+    "gathered_mix_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_v",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_64",
+   "bits": 5,
+   "source": [
+    "hc_NE",
+    "gathered_mix_row",
+    0,
+    5
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_row",
+    15,
+    20
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_65",
+   "bits": 3,
+   "source": [
+    "hc_NE",
+    "gathered_mix_pos",
+    0,
+    3
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_pos",
+    9,
+    12
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_66",
+   "bits": 32,
+   "source": [
+    "hc_NE",
+    "gathered_mix_data",
+    0,
+    32
+   ],
+   "sink": [
+    "hc_eng",
+    "gathered_mix_data",
+    96,
+    128
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_67",
+   "bits": 1,
+   "source": [
+    "hc_eng",
+    "result_v",
+    3,
+    4
+   ],
+   "sink": [
+    "hc_NE",
+    "result_v",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_68",
+   "bits": 3,
+   "source": [
+    "hc_eng",
+    "result_position",
+    9,
+    12
+   ],
+   "sink": [
+    "hc_NE",
+    "result_position",
+    0,
+    3
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
+  },
+  {
+   "name": "hceng_69",
+   "bits": 768,
+   "source": [
+    "hc_eng",
+    "result",
+    2304,
+    3072
+   ],
+   "sink": [
+    "hc_NE",
+    "result",
+    0,
+    768
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice (x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json); emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)",
+   "region": "hceng"
   },
   {
    "name": "host_completion_0",
@@ -345228,6 +347183,72 @@
    ]
   },
   {
+   "instance": "hc_eng",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hc_eng",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
+   "instance": "hc_eng_tgt",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hc_eng_tgt",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
+   "instance": "hc_tbl_tgt",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hc_tbl_tgt",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
    "instance": "hc_tgt_NE",
    "port": "clk",
    "bits": 1,
@@ -379762,8 +381783,8 @@
    ],
    "note": "Binding needs (a) the engine merged to main, (b) a 4:1 quadrant select of x_wave/gathered mix at the engine (programme-phase owned) or a K-split per-quadrant projection (architecture question), (c) its 128 HBM prefetch K-ports shared with the SM service PCs (G-VM-HBM-PATH owner), (d) bases[768]/scales[96] loader. hc_<q> status outputs residual_done/gather_done/program_done/fault unconsumed (status join owner).",
    "region": "hc",
-   "undriven_ports": 12,
-   "undriven_bits": 3088
+   "undriven_ports": 0,
+   "undriven_bits": 0
   },
   {
    "id": "G-HOST-PROGRAM-INSTALL",
@@ -382983,16 +385004,12 @@
   }
  ],
  "exposed_inputs": {
-  "ports": 16,
-  "bits": 6824,
+  "ports": 4,
+  "bits": 3736,
   "by_owner": {
    "see note per range (not SM)": {
     "ports": 4,
     "bits": 3736
-   },
-   "HC owner (engine) / H-DIE": {
-    "ports": 12,
-    "bits": 3088
    }
   },
   "list": [
@@ -383039,138 +385056,6 @@
      "G-SMVM-VMCLIENT"
     ],
     "owner": null
-   },
-   {
-    "instance": "hc_SW",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_v",
-    "bits": 1,
-    "port_bits": 1,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_SW",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_position",
-    "bits": 3,
-    "port_bits": 3,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_SW",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result",
-    "bits": 768,
-    "port_bits": 768,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_SE",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_v",
-    "bits": 1,
-    "port_bits": 1,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_SE",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_position",
-    "bits": 3,
-    "port_bits": 3,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_SE",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result",
-    "bits": 768,
-    "port_bits": 768,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_NW",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_v",
-    "bits": 1,
-    "port_bits": 1,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_NW",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_position",
-    "bits": 3,
-    "port_bits": 3,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_NW",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result",
-    "bits": 768,
-    "port_bits": 768,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_NE",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_v",
-    "bits": 1,
-    "port_bits": 1,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_NE",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result_position",
-    "bits": 3,
-    "port_bits": 3,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
-   },
-   {
-    "instance": "hc_NE",
-    "master": "ot_hbm_hc_q_static",
-    "port": "result",
-    "bits": 768,
-    "port_bits": 768,
-    "gaps": [
-     "G-HC-ENG"
-    ],
-    "owner": "HC owner (H-NETLIST hc)"
    }
   ]
  },
@@ -387462,43 +389347,8 @@
   ],
   [
    "hc_SW",
-   "x_wave_v",
-   1
-  ],
-  [
-   "hc_SW",
-   "x_wave_word",
-   10
-  ],
-  [
-   "hc_SW",
-   "x_wave",
-   8192
-  ],
-  [
-   "hc_SW",
    "residual_done",
    1
-  ],
-  [
-   "hc_SW",
-   "gathered_mix_v",
-   1
-  ],
-  [
-   "hc_SW",
-   "gathered_mix_row",
-   5
-  ],
-  [
-   "hc_SW",
-   "gathered_mix_pos",
-   3
-  ],
-  [
-   "hc_SW",
-   "gathered_mix_data",
-   32
   ],
   [
    "hc_SW",
@@ -387512,43 +389362,8 @@
   ],
   [
    "hc_SE",
-   "x_wave_v",
-   1
-  ],
-  [
-   "hc_SE",
-   "x_wave_word",
-   10
-  ],
-  [
-   "hc_SE",
-   "x_wave",
-   8192
-  ],
-  [
-   "hc_SE",
    "residual_done",
    1
-  ],
-  [
-   "hc_SE",
-   "gathered_mix_v",
-   1
-  ],
-  [
-   "hc_SE",
-   "gathered_mix_row",
-   5
-  ],
-  [
-   "hc_SE",
-   "gathered_mix_pos",
-   3
-  ],
-  [
-   "hc_SE",
-   "gathered_mix_data",
-   32
   ],
   [
    "hc_SE",
@@ -387562,43 +389377,8 @@
   ],
   [
    "hc_NW",
-   "x_wave_v",
-   1
-  ],
-  [
-   "hc_NW",
-   "x_wave_word",
-   10
-  ],
-  [
-   "hc_NW",
-   "x_wave",
-   8192
-  ],
-  [
-   "hc_NW",
    "residual_done",
    1
-  ],
-  [
-   "hc_NW",
-   "gathered_mix_v",
-   1
-  ],
-  [
-   "hc_NW",
-   "gathered_mix_row",
-   5
-  ],
-  [
-   "hc_NW",
-   "gathered_mix_pos",
-   3
-  ],
-  [
-   "hc_NW",
-   "gathered_mix_data",
-   32
   ],
   [
    "hc_NW",
@@ -387612,43 +389392,8 @@
   ],
   [
    "hc_NE",
-   "x_wave_v",
-   1
-  ],
-  [
-   "hc_NE",
-   "x_wave_word",
-   10
-  ],
-  [
-   "hc_NE",
-   "x_wave",
-   8192
-  ],
-  [
-   "hc_NE",
    "residual_done",
    1
-  ],
-  [
-   "hc_NE",
-   "gathered_mix_v",
-   1
-  ],
-  [
-   "hc_NE",
-   "gathered_mix_row",
-   5
-  ],
-  [
-   "hc_NE",
-   "gathered_mix_pos",
-   3
-  ],
-  [
-   "hc_NE",
-   "gathered_mix_data",
-   32
   ],
   [
    "hc_NE",
@@ -387659,6 +389404,31 @@
    "hc_NE",
    "program_done",
    1
+  ],
+  [
+   "hc_eng",
+   "program_done",
+   1
+  ],
+  [
+   "hc_tbl_tgt",
+   "program_start_v",
+   1
+  ],
+  [
+   "hc_tbl_tgt",
+   "program_start_base",
+   10
+  ],
+  [
+   "hc_tbl_tgt",
+   "program_start_limit",
+   11
+  ],
+  [
+   "hc_tbl_tgt",
+   "program_start_loops",
+   16
   ],
   [
    "epcal_SW",
@@ -389005,6 +390775,11 @@
    "Closes G-HC (lg_<q>_2 local_rq/local_wq, 8 ports / 9,536 bits): the far HC tap is driven by a static HC quadrant client hc_<q> (new master ot_hbm_hc_q_static x4) through 16 bank-pair pin-register leaves hc_<q><k> (existing ot_hgi_sfu_lg_pair_leaf). lg_<q>_2 local_rr/local_w_done are now consumed. local_read/local_write stay driven by calendar_<q>; the compiler programmes calendar_<q> and hc_<q> on the same edges (the tap faults on any disagreement).",
    "Programme: hc_<q> owns a 1024x256 programme SRAM (ot_vms_calendar_static W79), loaded and launched by hc_tgt_<q> = ot_static_program_target TARGET 108..111 from host_cp_ingress (F20). TARGET_MASK of host_cp_ingress must admit 108..111 (cp owner).",
    "Fixed added latency vs the codex direct-tap engine: +1 output pin, +1 pair leaf, +1 pair leaf return, +1 input pin => residual capture 23 (was 19), gathered response phase 23 (was 19), write-done 19 edges after the store output edge."
+  ],
+  "hceng": [
+   "Closes G-HC-ENG (hc_<q>.result_v/result_position/result, 12 ports / 3,088 b) and the required output join HC_ENGINE_INPUTS (hc_<q>.x_wave_v/x_wave_word/x_wave + gathered_mix_*, 28 ports / 32,976 b) with ONE new die master hc_eng = ot_hbm_hc_eng_static and two existing ot_static_program_target collars (TARGET 164 programme, 165 table).",
+   "HC weights: next (layer, attn|ffn) set reaches the quadrant VM by the existing DMA.LOAD / kshare VM fill windows (vmks_<q><k>), and the hc_<q> residual reader moves it into the engine weight macros as weight waves (1,920 waves = 1,920 edges a set, 4 quadrants staggered one wave an edge); no dedicated HBM PC or new K-port wiring.",
+   "Static timing contract (programme time t of hc_eng): ingest event T -> quadrant wave n on x_wave pins at t = T + 1 + 4n (hc_<q> reader launched 23 edges earlier); launch TL -> raw a at TL + RAW0 + 10a; tail launch -> result 496 edges later; emit -> result pins +1, hc_<q> result store +1 (pin) and its write-done +19. Measured values: results/rtl/hbm_hc_eng_0030/receipt.json."
   ],
   "host_completion": [
    "Four VM HBM-fill calendars use existing ot_static_program_target PCW10, TARGET56..59. Host status uses one existing parameterised pin-registered join for all67 admitted targets; no empty-participation child join can veto a launch. Native physical timing/placement remains open."
