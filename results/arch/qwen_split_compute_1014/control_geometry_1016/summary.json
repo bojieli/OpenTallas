@@ -1,0 +1,498 @@
+{
+  "input_sha256": "038f21ef92c741c961a40d7b12e44fcd0081a00f0b3726962fbcbaec3cec3aa2",
+  "source_commit": "219e84606",
+  "source_sha256": {
+    "tools/qwen_split/audit_candidate_homes.py": "b874f9760ce1e9ff03781a15da801296cb8a6c55798bdc24335ec9fc44e8bc2a",
+    "tools/qwen_split/audit_qvm_bank_pin_geometry.py": "08ef7321108cebef14b5f858bb3c66a9e0964105a42e4b365b631e0c843c3f3b",
+    "tools/qwen_split/audit_res_train_aliases.py": "103726b89e53b760d9b4f0ff24274d37b51b96a11068cf97b8e8c2164a3d4111",
+    "tools/qwen_split/band1_pin_sensitivity.py": "e12382183e981ab9fbebc0670000f7220686544402a87c3d7314802d745d2f12",
+    "tools/qwen_split/check_context_records.py": "e78b0d498c8d9e9851f2e49e5706962f36def483ef002801973aad6f55c4d260",
+    "tools/qwen_split/check_cp_serializer.py": "eddff134368caa10d5e715be385c8430695d77f0c013514706f0b245c297028a",
+    "tools/qwen_split/check_dense_image.py": "42c1d4c8bf2553ebbdbd05a2361733c9c594f644aded034edcb04fd0228eb9d9",
+    "tools/qwen_split/check_static_internal.py": "dcf227e64800cd477fa1ce4d5c693b5a979e23c433564ec09a7327fa68a68ab2",
+    "tools/qwen_split/ck_arrival_compare.py": "ef5b1084a17cd0e8bcccdbd27c95000ff7b5b59ab3804aeece5f33ef747fa88f",
+    "tools/qwen_split/clock_contract.py": "b02511fa943bb226846aabe68fde2c1fc333a93a1bbb5b7f7d2e9c9ccf858261",
+    "tools/qwen_split/closed_view.py": "67821807fc74a4c52d933bccb626cfadbdb01d3faf472f67cc90cdf103cac700",
+    "tools/qwen_split/command_abi.py": "39077543375d0391df0348f4f3cfe1e61d9a23595b4e875de489412074a46146",
+    "tools/qwen_split/compress_native_tile.py": "8d96e4b2b65195e00a522af0bea29350deeaac44245d0c33e5ff877cc7742391",
+    "tools/qwen_split/compute_spine.py": "ddaa066002a35060aab2440870f671179b2502fcf1522bc385bec629b9da0d6b",
+    "tools/qwen_split/contract_tables.py": "34d54445277bdc834d8d5ba15b351375e742c8173d639249fcd774bbda643f87",
+    "tools/qwen_split/d2d_cal_seq_image.py": "9de876f079c9508885d67f6e657dad0030ae98f71e5352e92ce107932e23830a",
+    "tools/qwen_split/d2d_link_calendar.py": "e9ecc441d61848dfc890d40bd47dc28fc025d6814d9850afa0e6fd020f49e57f",
+    "tools/qwen_split/d2d_pinreg_gen.py": "2edb30d111e4822e8aace57aa5ba18302460abb18f3a3bfb1639cd74ad1912e2",
+    "tools/qwen_split/d2d_program_params.py": "19f3edc84b19fc7945f9deb45597692ae55ee7687751a93a0be40b5c1e54f3f8",
+    "tools/qwen_split/def_mirror_my.py": "a5477688c6900f23b17c043f5648af3d5c5964b96e552ae0a5958b35af6ad25f",
+    "tools/qwen_split/derive_tt_tree_partition.py": "ea036286f396ffa7c265f5a0fe3d9d11006565d6baf5aa260e31fb63305da23b",
+    "tools/qwen_split/die_lef_pins.py": "aca05711feb484b20a1bdb44c8e27b17ce373ce0b4142fd8a4cc8ac4278f06ab",
+    "tools/qwen_split/die_port_bind.py": "008791fe8584d01a999cc8bc8a4c32ee593dbfba89bc273305d2143abca87010",
+    "tools/qwen_split/direct_up4.py": "8a197e34211e787f8dee26ab6f9c74b04b770372f751598a7109d2d1ae0bd812",
+    "tools/qwen_split/dvm_capture_rooms.py": "1950a327b8209e9d11d4a78e531c72e0c3150fa9b160ec748a0ca133c1ee5703",
+    "tools/qwen_split/dvm_gap_audit.py": "8ab1076bd5f2c4c62556f81ca6e40ec27a246a8893529f30849a64e279536769",
+    "tools/qwen_split/dvm_m6_side_plan.py": "4b2bc3c1af7985834ce9a9fe4f8d18804b8623b1c2b6bbb75d9b726a2d0323fc",
+    "tools/qwen_split/dvm_m7_seam_plan.py": "6cbd61750098a38b5a77981fc76ef5df2d2d9561744b4b95e50d3cda2265aa45",
+    "tools/qwen_split/dvm_m9_side_request.py": "05613fafb65e3a28d98b567b135d57d4cbef28d1da5ace278fdfa297a4223802",
+    "tools/qwen_split/embedding_stage_image.py": "45b379bd9b23a2193274bb47be6fdc8ed407c5c1ba29423b6f396d28ff45f735",
+    "tools/qwen_split/exact_system_geometry.py": "41daea918a3ec4264f08f5678d35dabaf38e87d8b805056d343101599c621b58",
+    "tools/qwen_split/export_dvm_tile_cohorts.py": "efa037b542eb8f034838196de36fd27432d1a7de5f0354247ac6bb9c754d08cb",
+    "tools/qwen_split/export_gateway_physical_graph.py": "cc19f31119369a51a097abe060f567eefee421cb9aea0dab794de4c8a4782eec",
+    "tools/qwen_split/export_system_geometry.py": "28ee075bfde9d30e35126e2e056e6918865eb9d699b9d1565ad7a9171e476016",
+    "tools/qwen_split/export_vm_native_inventory.py": "ad0304bb7421f128370f8f599d3aba0fcbd4b8d1d5d3cafd2993eafe8c4f02ab",
+    "tools/qwen_split/field_cohort_repack.py": "5b1a29000c1c0c62bbef5912043d2b69196ad3e4ccac0a3eee5e36a79e9549c1",
+    "tools/qwen_split/freeze_tile_bundle.py": "bedef3c5adc8fa3e187111df272c4578c354200e9a9a30280d63bfcb749da35b",
+    "tools/qwen_split/gateway_clock_variants.py": "fda1e25ab4543370341a2f517ab8fd0ad6e60767ef9dc72d48f62fa32b8927f7",
+    "tools/qwen_split/gen_relay_rtl.py": "c36d11c78839a21313d278e292a05ac078ae4c64fca170e027d544f41ac349cd",
+    "tools/qwen_split/gen_xdie_array.py": "d540ca45934b148383bb9f267730a48c818ab9f4d8ec32743d340e2da7c5b368",
+    "tools/qwen_split/geometry_search.py": "d0e663e7fbe3fd630d6fb2aba6f5b158969af020ba035cf9d7145390e4799b18",
+    "tools/qwen_split/gfp_homes.py": "476898398327a568d7430bacbc8dfd919872beaace69278850c60f7cea0e987b",
+    "tools/qwen_split/io_placement.py": "8f94629b35f789a891e07c832a24af69fa1aec058792430f0c0060f8b3771c9a",
+    "tools/qwen_split/lef_track_phase.py": "6f415a23cf7936a3f2d597b60c528260d265d5783e277e474bc3cc5568021ae2",
+    "tools/qwen_split/make_tt_partition_kits.py": "8a3e25267b6d9955c2e36d20bfda1b8c09fa2ece9f20faa3b448e831908bf5f1",
+    "tools/qwen_split/native_compute_join.py": "71d4627f591e919a65fb1e74a6df864542c1524c5b91f3b9ec7e0814425056cb",
+    "tools/qwen_split/native_control_contract.py": "9c9087602228ca6207be2c3ed9371698d10a5dbaef36e8d79a8f392963638c2f",
+    "tools/qwen_split/native_graph_bind.py": "3dcd2f00efe5af0e05af8fd5615d65e7a51fa84eb7ff66016e48ed136546b209",
+    "tools/qwen_split/native_static_io_bind.py": "3f7ec6ea334f4d93d60883c94a21e43c991f34fa7557192d90f7d93241f953ef",
+    "tools/qwen_split/natural_dataflow.py": "f373c4e0cde67e28ce82c7562034c7c63965c95bc8fd8ec1c4c7df36b7392dea",
+    "tools/qwen_split/orientation_search.py": "414a7fa876e23c31ffec6e68cd803658a0ac8fe00ae8e410b93ef2507ca15722",
+    "tools/qwen_split/pair_mirror.py": "b46696371296e2cef87ee6ebe08acb120915d743941476e34650c6f95892ff16",
+    "tools/qwen_split/pdn_regroup.py": "daf4e848454c57147f9191336ee5bd4b622293e7e2ef51307e513c9db8287056",
+    "tools/qwen_split/placement_repack.py": "bcf18e64068fcf952606635a5a11ad36caaa49aa99eaa5ed7c686c1a85783fef",
+    "tools/qwen_split/pmh_legality.py": "26b2fde22e667311ef83745dad92d450e5d103138983b5a6b8adf334bca1a71b",
+    "tools/qwen_split/prepare_native_compute_elaboration.py": "b4b207c148f8f62ba55b21f4a57b68dc097a5be2171b670839e29b98eee1a072",
+    "tools/qwen_split/relay_clock.py": "d3f543acda46e1bae893a9d1eb19cf34cb2e50703ccafc09d7e02fa4110d16d5",
+    "tools/qwen_split/relay_collision_receipt.py": "98bcfb9737519f09dda7105a9e15a5ec68d36d8196dd3c99af041bd6dabcd0e0",
+    "tools/qwen_split/relay_frame_ownership.py": "0fbc94e4ef56daac55933550aa8995662da05867ab53cb4ed44edb427cdc92be",
+    "tools/qwen_split/relay_geometry.py": "abb969f80c50316c56f6ccd2bcecd0694c07ee94b981e03862f2aa2792cd6bf2",
+    "tools/qwen_split/relay_row_gaps.py": "c9b5e955890eb4acdf8b42f5492319263ac5e316b5d763beb98711df0299e1d5",
+    "tools/qwen_split/res_train_bind.py": "f56cb3e1bfa9726ea518959d358fb2785efd1e86e559f596a3b7cab76b9ad8ab",
+    "tools/qwen_split/res_train_inventory.py": "8a6eda06ab03aa101631448c64435727fc5552c12dbeac8fe0e28ebe55f7572e",
+    "tools/qwen_split/screen_compressed_tile.py": "8c1f5359a3f304762cf9bb2e86c2fd67f4fb0621cf1e5e144bcaaff48c3f3dcd",
+    "tools/qwen_split/screen_semantic_tile.py": "1f0359866f56328b6b89b360c5ef87e669f913480732d7f3cad856ba138d5e3e",
+    "tools/qwen_split/slab_face_audit.py": "b47d7d014fa4d980ffc11bebc15c9e6aacf10e3ecfccd21ea0b97d592b1b409f",
+    "tools/qwen_split/slab_frame_plan.py": "76d3a72ee907428ec50a3f2f3f5147f47797da430cc64c0836588f1dab0a2bf6",
+    "tools/qwen_split/source_pin_plan.py": "a99f7d40266eadae89fbb2c33f7ba14a33fc8b547b2b56334da2e79b0c099f45",
+    "tools/qwen_split/source_su_geometry_coverage.py": "30282541a12ee47af1127b9d75240d1d5884f4da0969a0851543a8c8705559d9",
+    "tools/qwen_split/static_io_contract.py": "713b44e721c2c0032557a28978d9f31a24e8ecd856f5ee814b2b0b30003858b6",
+    "tools/qwen_split/static_link_bind.py": "36cc7a17c537e0a040b1d2014599744fce344995016cf7568000aa048a2612b3",
+    "tools/qwen_split/static_slot.py": "5205c7d332ef6ca701cd89ae231c6677330be255a5bbae9e97953dd13a0cfb5d",
+    "tools/qwen_split/static_successor.py": "56690dde876b775f21493c15a030c98a6391490a1986b5962f5f1937dc94b6fd",
+    "tools/qwen_split/su_lane_facing_options.py": "d472de97b78ede972fdb287af6adda49bbfbf20365838d160bc45eb9ffbc28a6",
+    "tools/qwen_split/sys_face_bind.py": "6ac3c91c3d1243700e012620dd563c29b1cbd5fcc14eb71621ef387f216b818c",
+    "tools/qwen_split/sys_face_image.py": "fc77c01090762b31b93f41434152de65ed6653d4793130c7c7def7687f930bf6",
+    "tools/qwen_split/system_geometry.py": "c7c1e668c2e3f3ce6b3b0678226e5bf980b2ceba23399adacb8e0e91cb2fb0d9",
+    "tools/qwen_split/test_assigned_pin_orientation.py": "8b560bbf781e0c357d335dd4374a3f25f2101ea66f266c1384ec8b83622002db",
+    "tools/qwen_split/test_audit_candidate_homes.py": "c074caa87aa2818e64fae7a9458a3891142ec2c2b43e43eb9c5854b4ace569d0",
+    "tools/qwen_split/test_audit_res_train_aliases.py": "c5e55134a38412e24cc3a38896fa9dfe2f939b0419c7f1784caa631e13796888",
+    "tools/qwen_split/test_closed_view_frames.py": "d6c330452ce7f30c94988122cb15ff6f9d2b9f230a068a33f04abcf402eee8ab",
+    "tools/qwen_split/test_compute_spine.py": "e59bf9faaaa9f4ba5608fa20695b71d0c6f7fd63afdf7d329130d1dffefef48d",
+    "tools/qwen_split/test_die_port_bind_header.py": "83c55ba7bb5bb60032b24ddf30341fa8d02ee339c1b47db216ee8133a42055bb",
+    "tools/qwen_split/test_direct_up4.py": "f68c83e8573094be2dcf883228db2c09771ab2d0ec185c310d7050ac9dbc6afd",
+    "tools/qwen_split/test_dvm_gap_audit.py": "8aac4c4b4100f6bd1d96ea5b37b4a311c7304f26518e90cb80c05b4243f35e91",
+    "tools/qwen_split/test_dvm_m7_seam_plan.py": "f9a730b8d0c761902cc0a4d32217d47b48cb840568976db9e62b3a33d319988e",
+    "tools/qwen_split/test_fragment_pin_rectangles.py": "d7abf4d18eda2c1cfbff7c8dd6da8df9ab90457eb946762cccec64bb7ed056bf",
+    "tools/qwen_split/test_geometry_search.py": "8ef77400841dd9c8fabba83f0548e66c54fe9fc1885bdb21fb7092cbd1f56048",
+    "tools/qwen_split/test_gfp_homes.py": "7655012755eb0ddf94daa8935af4fa8dee4259da82e512ffacf7d310b9d61ba5",
+    "tools/qwen_split/test_io_placement.py": "68cd7b6c9c12de61d2260f9ce84f117b98fac5d9506e10edc78149932d416cda",
+    "tools/qwen_split/test_native_control_contract.py": "9f686386c723a3f04e8d16c9088ea025babec41cb152cf94d76a2bb196365634",
+    "tools/qwen_split/test_native_graph_alias_preservation.py": "0fcf2922b823b092daacd9e5dad08521732e7bac9e3923fae0bb98aae423aa16",
+    "tools/qwen_split/test_native_pg_generation.py": "92fd7896e5b3491df9de7a91c2e5cc7be4d0181a1badd8228d716b33b8373797",
+    "tools/qwen_split/test_native_su_vm_seam.py": "5647f856996dec7fe78236c35bcdeb29cf19eb3c70e6d9631da13ce2b1419be5",
+    "tools/qwen_split/test_pdn_regroup_tie_local.py": "51578bb61d279fb20b6eab27dac12ba9dcde5524f2d3dc90245a0c62d046eb85",
+    "tools/qwen_split/test_phy_master_faces.py": "d0fcb65842ce00d96a37ba827510ce80662dbe6ba420558688737b14d9142180",
+    "tools/qwen_split/test_placement_repack.py": "1f23ca0197975ed1a3b78ae4aa0968dcec2065aa679bcb998f3f0e9db68fe6e4",
+    "tools/qwen_split/test_relay_clock.py": "6257c996c3a2d4a598ccb8683c398ea52e8c6c37da5a43394e49d527ff7ee384",
+    "tools/qwen_split/test_relay_collision_receipt.py": "4e82195dfa5b25154abe17b96086f013bdc8207867340944d40d6d3e9510cfa3",
+    "tools/qwen_split/test_relay_frame_ownership.py": "39a203651b964a971e0c66af12d1b23818c17ca63a4c520a8f2a7757c009446c",
+    "tools/qwen_split/test_relay_geometry.py": "56027f6ff2f3cea86ab5f21158ceae2eb152ad874083ea1db00cec46fcb769d5",
+    "tools/qwen_split/test_relay_row_gaps.py": "2947f317549b1cf54ab5d003984387c9b6c79112b524f95bf2f8979d04b48b50",
+    "tools/qwen_split/test_res_train_bind.py": "8448d6f378af57e98ae355805713b8ef87ab8861557c66e42cc4621cc0a88d70",
+    "tools/qwen_split/test_source_pin_plan.py": "7a304ec32ea1ba7429bb0353c8c19c384a320ce7a4a956fb7dc2d68f5de024ea",
+    "tools/qwen_split/test_static_link_current_abi.py": "87531242216f12ece973d72c67282dbee0be1c57954a14135efee323d7aabb66",
+    "tools/qwen_split/test_sys_face_image.py": "cfce855ebf274ac687f155b4b7a72683f6c1a8c2afee076e40517740ad916bc9",
+    "tools/qwen_split/test_tree_hosts.py": "36882ae9a07f4743ed10550803e278ed589b880bb7896882ac47545a0545e434",
+    "tools/qwen_split/test_tt_input_binding.py": "ed2576f59d3a936294a6b346ec503b2754d69157a7f154f661df82efba25c9e1",
+    "tools/qwen_split/tile_pin_constraints.py": "6f490f6d4514ceb19e25d051bd18b8299018899094548b4ebebaf7236a1fff91",
+    "tools/qwen_split/tile_tree_faces.py": "88789e7e8644b45e8ced75474a9c993dba9d8eb55ad4f2592ad2af91b9f7ee8a",
+    "tools/qwen_split/tree_hosts.py": "0101533ed1fa32f8f1650c5bd531048e24cf14302ccc8c0014158a89b5372ed6",
+    "tools/qwen_split/tree_skew.py": "65115feb1eb8ba88bea73d51e6f66124f60f6b9433bade400d65ca475fc117b7",
+    "tools/qwen_split/tt_input_binding.py": "5486afc2b34b24ce430c3903bfd9b1abaf3c6b71e7e48ae677781055b4a51bdd",
+    "tools/qwen_split/tt_tree_mapped_census.py": "16c3df789d01f5cbf12c8053709d378490e828d40e948efbd5c2e338d2122053",
+    "tools/qwen_split/tx198_geometry.py": "2acb2a69fa4b2b49e3072e1693c9c3a7d89fa34243776e3bf09bd4699d778eab",
+    "tools/qwen_split/verify_static_slot_pins.py": "e3afedadc4b6ac668990902352961abe1dedcb473be9dc7083d85c30d96a6ca7",
+    "tools/qwen_split/visualize_tx198.py": "0b5bf7f1f117de6824a44dd0bdfa642f7047d82181f4763bd057121fbb4edaa3",
+    "tools/qwen_split/vm_observer_homes.py": "23ef1a4df8079159b2f3eaaea014dbb2ac03eb31921b6ccc0eff1c65850a8e87",
+    "tools/qwen_split/xpf_schedule.py": "fcccaf19c027482e8ff655a1da44f0f4a1c62aca090ff392a5b16d1246e8c625"
+  },
+  "baseline_data_bit_branch_L1_um": 61620906.62800027,
+  "candidates": [
+    {
+      "scope": "all incident actual numeric source-pin branches, geometry only",
+      "homes": {
+        "seq_su": {
+          "x": 14671.176,
+          "y": 7800,
+          "o": "MY"
+        },
+        "tt_ctlm": {
+          "x": 14437.872,
+          "y": 8361.576,
+          "o": "R0"
+        },
+        "xs_tap": {
+          "x": 14956.272,
+          "y": 7458.48,
+          "o": "MX"
+        },
+        "res_train_issue": {
+          "x": 14979.6,
+          "y": 7741.44,
+          "o": "R0"
+        },
+        "up4_sel_station": {
+          "x": 14960.592,
+          "y": 7690.68,
+          "o": "R0"
+        }
+      },
+      "complete_numeric_pins": true,
+      "overlaps": [],
+      "all_data_bit_branch_L1_um": 57976300.628000095,
+      "clock_phase_and_registered_reach": "OPEN: geometry does not authorize long unregistered nets",
+      "face_pin_demand": {
+        "E": {
+          "pins": 9258,
+          "capacity_tracks": 13071.606666666668,
+          "utilization": 0.7082526453009346,
+          "limit": 0.6,
+          "layers": [
+            "M6",
+            "M8"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "N": {
+          "pins": 1178,
+          "capacity_tracks": 7262.1033333333335,
+          "utilization": 0.16221195787629938,
+          "limit": 0.6,
+          "layers": [
+            "M7"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "S": {
+          "pins": 1115,
+          "capacity_tracks": 7262.1033333333335,
+          "utilization": 0.1535367852564294,
+          "limit": 0.6,
+          "layers": [
+            "M7"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        }
+      },
+      "qualification": false,
+      "relay_static_cost": "OPEN: lower bounds do not include obstacles, pair reach, equal ages, physical relay sites or static-program operation counts. Real allocator required.",
+      "name": "existing_pins_contact_7800",
+      "requested_pin_changes": 0,
+      "pin_integrity": {
+        "identities": 11551,
+        "changed": 0,
+        "source_clock_reset_entries_unchanged": true,
+        "requested_track_bounds_unique": true
+      },
+      "direct_su_bits": 5862,
+      "direct_su_worst_L1_um": 414.8160000000007,
+      "VM_SQ_multicast_worst_L1_um": 1757.5999999999995,
+      "TT_cp_worst_L1_um": 190.58400000000074,
+      "all_data_branch_wire_reduction_percent": 5.914560819434744,
+      "full_source_interface_extra_pins": null,
+      "critical_L1_only_relay_depths": {
+        "ng_seq_su_0": {
+          "baseline": 2,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_su_external_a_addr_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_seq_su_va_q_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_seq_su_vm_va_addr_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_vm_sq_0": {
+          "baseline": 4,
+          "candidate": 3,
+          "scope": "not a real allocator result"
+        },
+        "ng_tt_cp_0": {
+          "baseline": 0,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        }
+      }
+    },
+    {
+      "scope": "all incident actual numeric source-pin branches, geometry only",
+      "homes": {
+        "seq_su": {
+          "x": 14671.176,
+          "y": 7850,
+          "o": "MY"
+        },
+        "tt_ctlm": {
+          "x": 14437.872,
+          "y": 8411.576,
+          "o": "R0"
+        },
+        "xs_tap": {
+          "x": 14956.272,
+          "y": 7458.48,
+          "o": "MX"
+        },
+        "res_train_issue": {
+          "x": 14979.6,
+          "y": 7741.44,
+          "o": "R0"
+        },
+        "up4_sel_station": {
+          "x": 14960.592,
+          "y": 7690.68,
+          "o": "R0"
+        }
+      },
+      "complete_numeric_pins": true,
+      "overlaps": [],
+      "all_data_bit_branch_L1_um": 58344933.97200009,
+      "clock_phase_and_registered_reach": "OPEN: geometry does not authorize long unregistered nets",
+      "face_pin_demand": {
+        "E": {
+          "pins": 9258,
+          "capacity_tracks": 13071.606666666668,
+          "utilization": 0.7082526453009346,
+          "limit": 0.6,
+          "layers": [
+            "M6",
+            "M8"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "N": {
+          "pins": 1178,
+          "capacity_tracks": 7262.1033333333335,
+          "utilization": 0.16221195787629938,
+          "limit": 0.6,
+          "layers": [
+            "M7"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "S": {
+          "pins": 1115,
+          "capacity_tracks": 7262.1033333333335,
+          "utilization": 0.1535367852564294,
+          "limit": 0.6,
+          "layers": [
+            "M7"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        }
+      },
+      "qualification": false,
+      "relay_static_cost": "OPEN: lower bounds do not include obstacles, pair reach, equal ages, physical relay sites or static-program operation counts. Real allocator required.",
+      "name": "existing_pins_margin_7850",
+      "requested_pin_changes": 0,
+      "pin_integrity": {
+        "identities": 11551,
+        "changed": 0,
+        "source_clock_reset_entries_unchanged": true,
+        "requested_track_bounds_unique": true
+      },
+      "direct_su_bits": 5862,
+      "direct_su_worst_L1_um": 364.8160000000007,
+      "VM_SQ_multicast_worst_L1_um": 1807.5999999999995,
+      "TT_cp_worst_L1_um": 240.58400000000074,
+      "all_data_branch_wire_reduction_percent": 5.316333100674608,
+      "full_source_interface_extra_pins": null,
+      "critical_L1_only_relay_depths": {
+        "ng_seq_su_0": {
+          "baseline": 2,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_su_external_a_addr_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_seq_su_va_q_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_seq_su_vm_va_addr_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_vm_sq_0": {
+          "baseline": 4,
+          "candidate": 3,
+          "scope": "not a real allocator result"
+        },
+        "ng_tt_cp_0": {
+          "baseline": 0,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        }
+      }
+    },
+    {
+      "scope": "all incident actual numeric source-pin branches, geometry only",
+      "homes": {
+        "seq_su": {
+          "x": 14671.176,
+          "y": 7900,
+          "o": "MY"
+        },
+        "tt_ctlm": {
+          "x": 14437.872,
+          "y": 8461.576,
+          "o": "R0"
+        },
+        "xs_tap": {
+          "x": 14956.272,
+          "y": 7458.48,
+          "o": "MX"
+        },
+        "res_train_issue": {
+          "x": 14979.6,
+          "y": 7741.44,
+          "o": "R0"
+        },
+        "up4_sel_station": {
+          "x": 14960.592,
+          "y": 7690.68,
+          "o": "R0"
+        }
+      },
+      "complete_numeric_pins": true,
+      "overlaps": [],
+      "all_data_bit_branch_L1_um": 57771525.548000194,
+      "clock_phase_and_registered_reach": "OPEN: geometry does not authorize long unregistered nets",
+      "face_pin_demand": {
+        "E": {
+          "pins": 5862,
+          "capacity_tracks": 13071.606666666668,
+          "utilization": 0.44845290632470064,
+          "limit": 0.6,
+          "layers": [
+            "M6",
+            "M8"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "S": {
+          "pins": 4231,
+          "capacity_tracks": 7262.1033333333335,
+          "utilization": 0.5826135770582536,
+          "limit": 0.6,
+          "layers": [
+            "M7"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "N": {
+          "pins": 1178,
+          "capacity_tracks": 7262.1033333333335,
+          "utilization": 0.16221195787629938,
+          "limit": 0.6,
+          "layers": [
+            "M7"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        },
+        "W": {
+          "pins": 280,
+          "capacity_tracks": 13071.606666666668,
+          "utilization": 0.021420473178252505,
+          "limit": 0.6,
+          "layers": [
+            "M6",
+            "M8"
+          ],
+          "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+        }
+      },
+      "qualification": false,
+      "relay_static_cost": "OPEN: lower bounds do not include obstacles, pair reach, equal ages, physical relay sites or static-program operation counts. Real allocator required.",
+      "name": "split_faces_fresh_master_7900",
+      "requested_pin_changes": 10372,
+      "pin_integrity": {
+        "identities": 11551,
+        "changed": 10372,
+        "source_clock_reset_entries_unchanged": true,
+        "requested_track_bounds_unique": true
+      },
+      "direct_su_bits": 5862,
+      "direct_su_worst_L1_um": 84.20799999999963,
+      "VM_SQ_multicast_worst_L1_um": 2063.616000000002,
+      "TT_cp_worst_L1_um": 290.58400000000074,
+      "all_data_branch_wire_reduction_percent": 6.246875112108352,
+      "full_source_interface_extra_pins": "C typed grant includes44 previously omitted kvd output bits on W; native graph consumer OPEN",
+      "critical_L1_only_relay_depths": {
+        "ng_seq_su_0": {
+          "baseline": 2,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_su_external_a_addr_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_seq_su_va_q_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_seq_su_vm_va_addr_0": {
+          "baseline": 1,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        },
+        "ng_vm_sq_0": {
+          "baseline": 4,
+          "candidate": 4,
+          "scope": "not a real allocator result"
+        },
+        "ng_tt_cp_0": {
+          "baseline": 0,
+          "candidate": 0,
+          "scope": "not a real allocator result"
+        }
+      }
+    }
+  ],
+  "qualification": false,
+  "required": [
+    "Fresh typed seq pin/body grant before any physical gate",
+    "Full current b2 native graph and all bus cut screens",
+    "Real relay allocator and static compiler cost for all incident buses",
+    "Actual phi-R clock delivery, TT setup/FF hold/DRC0"
+  ],
+  "recommendation": "C technical direction only. A/B rejected because full east-face pin-demand cut0.7083 exceeds0.60. C needs a fresh actual sequencer physical body and source-specific pin view; never bind old closed view.",
+  "added_outline_um2": 0,
+  "logic_changes": false,
+  "added_architectural_cycles": 0,
+  "physical_relay_cycles": "UNMEASURED: authoritative complete native b2 allocator and static compiler owner Q-COMPUTE-DIE",
+  "source_model_artifact": "/home/ubuntu/artifacts/qdieplan-0700/geom_dpC.json",
+  "reproduce_command": "python3 tools/qwen_split/control_geometry.py <source_model_sha256-matching geom_dpC.json> <output>"
+}

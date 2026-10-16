@@ -1,0 +1,5729 @@
+{
+ "scope": "all incident actual numeric source-pin branches, geometry only",
+ "homes": {
+  "seq_su": {
+   "x": 14671.176,
+   "y": 7900,
+   "o": "MY"
+  },
+  "tt_ctlm": {
+   "x": 14437.872,
+   "y": 8461.576,
+   "o": "R0"
+  },
+  "xs_tap": {
+   "x": 14956.272,
+   "y": 7458.48,
+   "o": "MX"
+  },
+  "res_train_issue": {
+   "x": 14979.6,
+   "y": 7741.44,
+   "o": "R0"
+  },
+  "up4_sel_station": {
+   "x": 14960.592,
+   "y": 7690.68,
+   "o": "R0"
+  }
+ },
+ "complete_numeric_pins": true,
+ "missing_pins": [],
+ "overlaps": [],
+ "links": [
+  {
+   "bus": "rst_spine",
+   "kind": "reset",
+   "bits": 1,
+   "sinks": 35,
+   "max_pin_L1_um": 16793.616,
+   "sum_bit_branch_L1_um": 246615.49400000004,
+   "endpoints": [
+    [
+     "rstseq_rom",
+     "rso_s"
+    ],
+    [
+     "sp_res_ser_1",
+     "rst_n"
+    ],
+    [
+     "sp_port_tiles_1",
+     "rst_n"
+    ],
+    [
+     "sp_port_tiles_1_f1",
+     "rst_n"
+    ],
+    [
+     "sp_res_ser_2",
+     "rst_n"
+    ],
+    [
+     "sp_port_tiles_2",
+     "rst_n"
+    ],
+    [
+     "sp_port_tiles_2_f1",
+     "rst_n"
+    ],
+    [
+     "sp_res_ser_0",
+     "rst_n"
+    ],
+    [
+     "sp_port_tiles_0",
+     "rst_n"
+    ],
+    [
+     "sp_port_tiles_0_f1",
+     "rst_n"
+    ],
+    [
+     "tt_up4_leaf0",
+     "rst_n"
+    ],
+    [
+     "tt_up4_leaf1",
+     "rst_n"
+    ],
+    [
+     "tt_up4_leaf2",
+     "rst_n"
+    ],
+    [
+     "tt_up4_leaf3",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_0",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_1",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_2",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_3",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_4",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_5",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_6",
+     "rst_n"
+    ],
+    [
+     "cbuf_g_7",
+     "rst_n"
+    ],
+    [
+     "crom_g_0",
+     "rst_n"
+    ],
+    [
+     "crom_g_1",
+     "rst_n"
+    ],
+    [
+     "crom_g_2",
+     "rst_n"
+    ],
+    [
+     "crom_g_3",
+     "rst_n"
+    ],
+    [
+     "crom_g_4",
+     "rst_n"
+    ],
+    [
+     "crom_g_5",
+     "rst_n"
+    ],
+    [
+     "crom_g_6",
+     "rst_n"
+    ],
+    [
+     "crom_g_7",
+     "rst_n"
+    ],
+    [
+     "xs_tap",
+     "rst_n"
+    ],
+    [
+     "sp_band_lanes_0",
+     "rst_n"
+    ],
+    [
+     "sp_band_lanes_1",
+     "rst_n"
+    ],
+    [
+     "sp_band_lanes_2",
+     "rst_n"
+    ],
+    [
+     "sp_vector_memory",
+     "rst_n"
+    ],
+    [
+     "sp_su64_sfu",
+     "rst_n"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 33
+  },
+  {
+   "bus": "clk_r100",
+   "kind": "clock_trunk",
+   "bits": 1,
+   "sinks": 214,
+   "max_pin_L1_um": 11218.412000000002,
+   "sum_bit_branch_L1_um": 1846765.8159999996,
+   "endpoints": [
+    [
+     "clk_rx",
+     "pll_r100"
+    ],
+    [
+     "sp_port_tiles_0",
+     "ck_group2"
+    ],
+    [
+     "sp_port_tiles_0",
+     "ck_group3"
+    ],
+    [
+     "s_22_3",
+     "ck"
+    ],
+    [
+     "s_23_3",
+     "ck"
+    ],
+    [
+     "t_23_3",
+     "ck"
+    ],
+    [
+     "t_23_3",
+     "ck_rp0"
+    ],
+    [
+     "t_23_3",
+     "ck_rp1"
+    ],
+    [
+     "t_23_3",
+     "ck_rp2"
+    ],
+    [
+     "t_23_3",
+     "ck_rp3"
+    ],
+    [
+     "t_23_3",
+     "ck_rp4"
+    ],
+    [
+     "t_23_3",
+     "ck_rp5"
+    ],
+    [
+     "t_23_3",
+     "ck_rp6"
+    ],
+    [
+     "t_23_3",
+     "ck_rp7"
+    ],
+    [
+     "t_23_3",
+     "ck_rp8"
+    ],
+    [
+     "t_23_3",
+     "ck_rp9"
+    ],
+    [
+     "t_23_3",
+     "ck_rom0"
+    ],
+    [
+     "t_23_3",
+     "ck_rom1"
+    ],
+    [
+     "t_23_3",
+     "ck_rom2"
+    ],
+    [
+     "t_23_3",
+     "ck_rom3"
+    ],
+    [
+     "t_23_3",
+     "ck_rom4"
+    ],
+    [
+     "t_23_3",
+     "ck_rom5"
+    ],
+    [
+     "t_23_3",
+     "ck_rom6"
+    ],
+    [
+     "t_23_3",
+     "ck_rom7"
+    ],
+    [
+     "t_23_3",
+     "ck_rom8"
+    ],
+    [
+     "t_23_3",
+     "ck_rom9"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl0"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl1"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl2"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl3"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl4"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl5"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl6"
+    ],
+    [
+     "t_23_3",
+     "ck_lsl7"
+    ],
+    [
+     "t_23_3",
+     "ck_node"
+    ],
+    [
+     "t_23_3",
+     "ck_tx0"
+    ],
+    [
+     "t_23_3",
+     "ck_tx1"
+    ],
+    [
+     "t_23_3",
+     "ck_tx2"
+    ],
+    [
+     "t_23_3",
+     "ck_tx3"
+    ],
+    [
+     "t_23_3",
+     "ck_tx4"
+    ],
+    [
+     "t_23_3",
+     "ck_tx5"
+    ],
+    [
+     "t_23_3",
+     "ck_tx6"
+    ],
+    [
+     "t_23_3",
+     "ck_tx7"
+    ],
+    [
+     "t_23_3",
+     "ck_rqr0"
+    ],
+    [
+     "t_23_3",
+     "ck_rqr1"
+    ],
+    [
+     "t_23_3",
+     "ck_fa0"
+    ],
+    [
+     "t_23_3",
+     "ck_fa1"
+    ],
+    [
+     "t_23_3",
+     "ck_fa2"
+    ],
+    [
+     "t_23_3",
+     "ck_fa3"
+    ],
+    [
+     "t_23_3",
+     "ck_fa4"
+    ],
+    [
+     "s_22_4",
+     "ck"
+    ],
+    [
+     "s_23_4",
+     "ck"
+    ],
+    [
+     "t_23_4",
+     "ck"
+    ],
+    [
+     "t_23_4",
+     "ck_rp0"
+    ],
+    [
+     "t_23_4",
+     "ck_rp1"
+    ],
+    [
+     "t_23_4",
+     "ck_rp2"
+    ],
+    [
+     "t_23_4",
+     "ck_rp3"
+    ],
+    [
+     "t_23_4",
+     "ck_rp4"
+    ],
+    [
+     "t_23_4",
+     "ck_rp5"
+    ],
+    [
+     "t_23_4",
+     "ck_rp6"
+    ],
+    [
+     "t_23_4",
+     "ck_rp7"
+    ],
+    [
+     "t_23_4",
+     "ck_rp8"
+    ],
+    [
+     "t_23_4",
+     "ck_rp9"
+    ],
+    [
+     "t_23_4",
+     "ck_rom0"
+    ],
+    [
+     "t_23_4",
+     "ck_rom1"
+    ],
+    [
+     "t_23_4",
+     "ck_rom2"
+    ],
+    [
+     "t_23_4",
+     "ck_rom3"
+    ],
+    [
+     "t_23_4",
+     "ck_rom4"
+    ],
+    [
+     "t_23_4",
+     "ck_rom5"
+    ],
+    [
+     "t_23_4",
+     "ck_rom6"
+    ],
+    [
+     "t_23_4",
+     "ck_rom7"
+    ],
+    [
+     "t_23_4",
+     "ck_rom8"
+    ],
+    [
+     "t_23_4",
+     "ck_rom9"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl0"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl1"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl2"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl3"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl4"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl5"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl6"
+    ],
+    [
+     "t_23_4",
+     "ck_lsl7"
+    ],
+    [
+     "t_23_4",
+     "ck_node"
+    ],
+    [
+     "t_23_4",
+     "ck_tx0"
+    ],
+    [
+     "t_23_4",
+     "ck_tx1"
+    ],
+    [
+     "t_23_4",
+     "ck_tx2"
+    ],
+    [
+     "t_23_4",
+     "ck_tx3"
+    ],
+    [
+     "t_23_4",
+     "ck_tx4"
+    ],
+    [
+     "t_23_4",
+     "ck_tx5"
+    ],
+    [
+     "t_23_4",
+     "ck_tx6"
+    ],
+    [
+     "t_23_4",
+     "ck_tx7"
+    ],
+    [
+     "t_23_4",
+     "ck_rqr0"
+    ],
+    [
+     "t_23_4",
+     "ck_rqr1"
+    ],
+    [
+     "t_23_4",
+     "ck_fa0"
+    ],
+    [
+     "t_23_4",
+     "ck_fa1"
+    ],
+    [
+     "t_23_4",
+     "ck_fa2"
+    ],
+    [
+     "t_23_4",
+     "ck_fa3"
+    ],
+    [
+     "t_23_4",
+     "ck_fa4"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l0"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l1"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l2"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l3"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l4"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l5"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l6"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l7"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l8"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l9"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l10"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l11"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l12"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l13"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l14"
+    ],
+    [
+     "sp_band_lanes_0",
+     "ck_l15"
+    ],
+    [
+     "rstseq_rom",
+     "ck"
+    ],
+    [
+     "tt_up4_leaf0",
+     "clk"
+    ],
+    [
+     "tt_up4_leaf1",
+     "clk"
+    ],
+    [
+     "tt_up4_leaf2",
+     "clk"
+    ],
+    [
+     "tt_up4_leaf3",
+     "clk"
+    ],
+    [
+     "s_22_5",
+     "ck"
+    ],
+    [
+     "s_23_5",
+     "ck"
+    ],
+    [
+     "t_23_5",
+     "ck"
+    ],
+    [
+     "t_23_5",
+     "ck_rp0"
+    ],
+    [
+     "t_23_5",
+     "ck_rp1"
+    ],
+    [
+     "t_23_5",
+     "ck_rp2"
+    ],
+    [
+     "t_23_5",
+     "ck_rp3"
+    ],
+    [
+     "t_23_5",
+     "ck_rp4"
+    ],
+    [
+     "t_23_5",
+     "ck_rp5"
+    ],
+    [
+     "t_23_5",
+     "ck_rp6"
+    ],
+    [
+     "t_23_5",
+     "ck_rp7"
+    ],
+    [
+     "t_23_5",
+     "ck_rp8"
+    ],
+    [
+     "t_23_5",
+     "ck_rp9"
+    ],
+    [
+     "t_23_5",
+     "ck_rom0"
+    ],
+    [
+     "t_23_5",
+     "ck_rom1"
+    ],
+    [
+     "t_23_5",
+     "ck_rom2"
+    ],
+    [
+     "t_23_5",
+     "ck_rom3"
+    ],
+    [
+     "t_23_5",
+     "ck_rom4"
+    ],
+    [
+     "t_23_5",
+     "ck_rom5"
+    ],
+    [
+     "t_23_5",
+     "ck_rom6"
+    ],
+    [
+     "t_23_5",
+     "ck_rom7"
+    ],
+    [
+     "t_23_5",
+     "ck_rom8"
+    ],
+    [
+     "t_23_5",
+     "ck_rom9"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl0"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl1"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl2"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl3"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl4"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl5"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl6"
+    ],
+    [
+     "t_23_5",
+     "ck_lsl7"
+    ],
+    [
+     "t_23_5",
+     "ck_node"
+    ],
+    [
+     "t_23_5",
+     "ck_tx0"
+    ],
+    [
+     "t_23_5",
+     "ck_tx1"
+    ],
+    [
+     "t_23_5",
+     "ck_tx2"
+    ],
+    [
+     "t_23_5",
+     "ck_tx3"
+    ],
+    [
+     "t_23_5",
+     "ck_tx4"
+    ],
+    [
+     "t_23_5",
+     "ck_tx5"
+    ],
+    [
+     "t_23_5",
+     "ck_tx6"
+    ],
+    [
+     "t_23_5",
+     "ck_tx7"
+    ],
+    [
+     "t_23_5",
+     "ck_rqr0"
+    ],
+    [
+     "t_23_5",
+     "ck_rqr1"
+    ],
+    [
+     "t_23_5",
+     "ck_fa0"
+    ],
+    [
+     "t_23_5",
+     "ck_fa1"
+    ],
+    [
+     "t_23_5",
+     "ck_fa2"
+    ],
+    [
+     "t_23_5",
+     "ck_fa3"
+    ],
+    [
+     "t_23_5",
+     "ck_fa4"
+    ],
+    [
+     "s_22_6",
+     "ck"
+    ],
+    [
+     "s_23_6",
+     "ck"
+    ],
+    [
+     "t_23_6",
+     "ck"
+    ],
+    [
+     "t_23_6",
+     "ck_rp0"
+    ],
+    [
+     "t_23_6",
+     "ck_rp1"
+    ],
+    [
+     "t_23_6",
+     "ck_rp2"
+    ],
+    [
+     "t_23_6",
+     "ck_rp3"
+    ],
+    [
+     "t_23_6",
+     "ck_rp4"
+    ],
+    [
+     "t_23_6",
+     "ck_rp5"
+    ],
+    [
+     "t_23_6",
+     "ck_rp6"
+    ],
+    [
+     "t_23_6",
+     "ck_rp7"
+    ],
+    [
+     "t_23_6",
+     "ck_rp8"
+    ],
+    [
+     "t_23_6",
+     "ck_rp9"
+    ],
+    [
+     "t_23_6",
+     "ck_rom0"
+    ],
+    [
+     "t_23_6",
+     "ck_rom1"
+    ],
+    [
+     "t_23_6",
+     "ck_rom2"
+    ],
+    [
+     "t_23_6",
+     "ck_rom3"
+    ],
+    [
+     "t_23_6",
+     "ck_rom4"
+    ],
+    [
+     "t_23_6",
+     "ck_rom5"
+    ],
+    [
+     "t_23_6",
+     "ck_rom6"
+    ],
+    [
+     "t_23_6",
+     "ck_rom7"
+    ],
+    [
+     "t_23_6",
+     "ck_rom8"
+    ],
+    [
+     "t_23_6",
+     "ck_rom9"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl0"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl1"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl2"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl3"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl4"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl5"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl6"
+    ],
+    [
+     "t_23_6",
+     "ck_lsl7"
+    ],
+    [
+     "t_23_6",
+     "ck_node"
+    ],
+    [
+     "t_23_6",
+     "ck_tx0"
+    ],
+    [
+     "t_23_6",
+     "ck_tx1"
+    ],
+    [
+     "t_23_6",
+     "ck_tx2"
+    ],
+    [
+     "t_23_6",
+     "ck_tx3"
+    ],
+    [
+     "t_23_6",
+     "ck_tx4"
+    ],
+    [
+     "t_23_6",
+     "ck_tx5"
+    ],
+    [
+     "t_23_6",
+     "ck_tx6"
+    ],
+    [
+     "t_23_6",
+     "ck_tx7"
+    ],
+    [
+     "t_23_6",
+     "ck_rqr0"
+    ],
+    [
+     "t_23_6",
+     "ck_rqr1"
+    ],
+    [
+     "t_23_6",
+     "ck_fa0"
+    ],
+    [
+     "t_23_6",
+     "ck_fa1"
+    ],
+    [
+     "t_23_6",
+     "ck_fa2"
+    ],
+    [
+     "t_23_6",
+     "ck_fa3"
+    ],
+    [
+     "t_23_6",
+     "ck_fa4"
+    ],
+    [
+     "seq_su",
+     "ck"
+    ],
+    [
+     "seq_su",
+     "ck_sched"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 22
+  },
+  {
+   "bus": "rst_seq",
+   "kind": "reset",
+   "bits": 1,
+   "sinks": 3,
+   "max_pin_L1_um": 9162.911999999998,
+   "sum_bit_branch_L1_um": 19420.055999999997,
+   "endpoints": [
+    [
+     "rstseq_rom",
+     "rso_seq"
+    ],
+    [
+     "seq_su",
+     "rsi"
+    ],
+    [
+     "native59",
+     "rst_n"
+    ],
+    [
+     "embed_prov",
+     "rst_n"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 18
+  },
+  {
+   "bus": "ng_io_cmd_free_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 8721.047999999999,
+   "sum_bit_branch_L1_um": 15659.608,
+   "endpoints": [
+    [
+     "io_collective",
+     "cmd_free"
+    ],
+    [
+     "seq_su",
+     "coll_cmd_free"
+    ],
+    [
+     "sys_face",
+     "io_cmd_free"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 17
+  },
+  {
+   "bus": "tt_lc2",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 1,
+   "max_pin_L1_um": 8664.223999999998,
+   "sum_bit_branch_L1_um": 225207.42400000003,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "lc2"
+    ],
+    [
+     "sp_band_lanes_2",
+     "c"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 17
+  },
+  {
+   "bus": "ng_native_native_ret_0",
+   "kind": "spine_local",
+   "bits": 95,
+   "sinks": 1,
+   "max_pin_L1_um": 8498.351999999995,
+   "sum_bit_branch_L1_um": 806700.4799999993,
+   "endpoints": [
+    [
+     "native59",
+     "native_ret"
+    ],
+    [
+     "tt_ctlm",
+     "native_ret"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "ng_tt_native_cmd_0",
+   "kind": "spine_local",
+   "bits": 380,
+   "sinks": 1,
+   "max_pin_L1_um": 8475.695999999996,
+   "sum_bit_branch_L1_um": 3210395.039999999,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "native_cmd"
+    ],
+    [
+     "native59",
+     "native_cmd"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "ng_tt_native_tok_0",
+   "kind": "spine_local",
+   "bits": 18,
+   "sinks": 2,
+   "max_pin_L1_um": 8473.871999999996,
+   "sum_bit_branch_L1_um": 235838.016,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "native_tok"
+    ],
+    [
+     "native59",
+     "native_token"
+    ],
+    [
+     "sys_face",
+     "tt_native_tok"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "ng_tt_native_pos_0",
+   "kind": "spine_local",
+   "bits": 18,
+   "sinks": 2,
+   "max_pin_L1_um": 8442.959999999995,
+   "sum_bit_branch_L1_um": 235164.09599999984,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "native_pos"
+    ],
+    [
+     "native59",
+     "native_position"
+    ],
+    [
+     "sys_face",
+     "tt_native_pos"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "ng_tt_layer_context_v_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 8410.175999999998,
+   "sum_bit_branch_L1_um": 13038.007999999996,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "layer_context_v"
+    ],
+    [
+     "native59",
+     "layer_context_v"
+    ],
+    [
+     "sys_face",
+     "tt_layer_context_v"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "ng_tt_command_stage_0",
+   "kind": "spine_local",
+   "bits": 6,
+   "sinks": 2,
+   "max_pin_L1_um": 8278.175999999998,
+   "sum_bit_branch_L1_um": 77066.39999999998,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "command_stage"
+    ],
+    [
+     "native59",
+     "command_stage"
+    ],
+    [
+     "sys_face",
+     "tt_command_stage"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "rs_fault_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 8113.083999999998,
+   "sum_bit_branch_L1_um": 8113.083999999998,
+   "endpoints": [
+    [
+     "sp_res_ser_0",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "rf0"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 16
+  },
+  {
+   "bus": "rsi_payload_write",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 3,
+   "max_pin_L1_um": 7204.979999999999,
+   "sum_bit_branch_L1_um": 20780.987999999998,
+   "endpoints": [
+    [
+     "res_train_issue",
+     "payload_write"
+    ],
+    [
+     "sp_res_ser_0",
+     "payload_write"
+    ],
+    [
+     "sp_res_ser_1",
+     "payload_write"
+    ],
+    [
+     "sp_res_ser_2",
+     "payload_write"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "rsi_capture_stride",
+   "kind": "spine_local",
+   "bits": 32,
+   "sinks": 3,
+   "max_pin_L1_um": 7200.564,
+   "sum_bit_branch_L1_um": 664991.616,
+   "endpoints": [
+    [
+     "res_train_issue",
+     "capture_stride"
+    ],
+    [
+     "sp_res_ser_0",
+     "capture_stride"
+    ],
+    [
+     "sp_res_ser_1",
+     "capture_stride"
+    ],
+    [
+     "sp_res_ser_2",
+     "capture_stride"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "rsi_slot_count",
+   "kind": "spine_local",
+   "bits": 4,
+   "sinks": 3,
+   "max_pin_L1_um": 7149.875999999999,
+   "sum_bit_branch_L1_um": 82461.16799999999,
+   "endpoints": [
+    [
+     "res_train_issue",
+     "slot_count"
+    ],
+    [
+     "sp_res_ser_0",
+     "slot_count"
+    ],
+    [
+     "sp_res_ser_1",
+     "slot_count"
+    ],
+    [
+     "sp_res_ser_2",
+     "slot_count"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "rsi_train_count",
+   "kind": "spine_local",
+   "bits": 4,
+   "sinks": 3,
+   "max_pin_L1_um": 7147.860000000001,
+   "sum_bit_branch_L1_um": 82441.584,
+   "endpoints": [
+    [
+     "res_train_issue",
+     "train_count"
+    ],
+    [
+     "sp_res_ser_0",
+     "train_count"
+    ],
+    [
+     "sp_res_ser_1",
+     "train_count"
+    ],
+    [
+     "sp_res_ser_2",
+     "train_count"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "rsi_train_start",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 3,
+   "max_pin_L1_um": 7146.132,
+   "sum_bit_branch_L1_um": 20606.555999999997,
+   "endpoints": [
+    [
+     "res_train_issue",
+     "train_start"
+    ],
+    [
+     "sp_res_ser_0",
+     "train_start"
+    ],
+    [
+     "sp_res_ser_1",
+     "train_start"
+    ],
+    [
+     "sp_res_ser_2",
+     "train_start"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "head_24",
+   "kind": "head_chain",
+   "bits": 1567,
+   "sinks": 1,
+   "max_pin_L1_um": 7116.024000000001,
+   "sum_bit_branch_L1_um": 10915233.095999999,
+   "endpoints": [
+    [
+     "xs_tap",
+     "he_d"
+    ],
+    [
+     "h_24",
+     "w_d"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "tt_c2",
+   "kind": "tree_spine",
+   "bits": 341,
+   "sinks": 1,
+   "max_pin_L1_um": 7002.608000000002,
+   "sum_bit_branch_L1_um": 2376759.0880000014,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c2"
+    ],
+    [
+     "sp_port_tiles_2",
+     "tc"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 14
+  },
+  {
+   "bus": "tt_f0",
+   "kind": "tree_spine",
+   "bits": 104,
+   "sinks": 1,
+   "max_pin_L1_um": 6999.855999999998,
+   "sum_bit_branch_L1_um": 726956.6719999994,
+   "endpoints": [
+    [
+     "sp_port_tiles_0",
+     "tf"
+    ],
+    [
+     "tt_ctlm",
+     "f0"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_io_out_err_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6874.4320000000025,
+   "sum_bit_branch_L1_um": 6874.4320000000025,
+   "endpoints": [
+    [
+     "io_collective",
+     "out_err"
+    ],
+    [
+     "seq_su",
+     "cc__516_516"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_io_out_rank_0",
+   "kind": "spine_local",
+   "bits": 3,
+   "sinks": 1,
+   "max_pin_L1_um": 6872.224000000002,
+   "sum_bit_branch_L1_um": 20616.000000000004,
+   "endpoints": [
+    [
+     "io_collective",
+     "out_rank"
+    ],
+    [
+     "seq_su",
+     "cc__513_515"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_io_out_last_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6869.632000000001,
+   "sum_bit_branch_L1_um": 6869.632000000001,
+   "endpoints": [
+    [
+     "io_collective",
+     "out_last"
+    ],
+    [
+     "seq_su",
+     "cc__512_512"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_cd_d_514",
+   "kind": "spine_local",
+   "bits": 32,
+   "sinks": 1,
+   "max_pin_L1_um": 6866.512000000001,
+   "sum_bit_branch_L1_um": 219654.22400000002,
+   "endpoints": [
+    [
+     "seq_su",
+     "cd_d__514_545"
+    ],
+    [
+     "io_collective",
+     "in_tag"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_io_out_data_0",
+   "kind": "spine_local",
+   "bits": 512,
+   "sinks": 1,
+   "max_pin_L1_um": 6862.287999999999,
+   "sum_bit_branch_L1_um": 3491017.8560000006,
+   "endpoints": [
+    [
+     "io_collective",
+     "out_data"
+    ],
+    [
+     "seq_su",
+     "cc__0_511"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_cd_d_513",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6859.072,
+   "sum_bit_branch_L1_um": 6859.072,
+   "endpoints": [
+    [
+     "seq_su",
+     "cd_d__513_513"
+    ],
+    [
+     "io_collective",
+     "in_mode"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_cd_d_512",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6856.8160000000025,
+   "sum_bit_branch_L1_um": 6856.8160000000025,
+   "endpoints": [
+    [
+     "seq_su",
+     "cd_d__512_512"
+    ],
+    [
+     "io_collective",
+     "in_last"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_cd_d_0",
+   "kind": "spine_local",
+   "bits": 512,
+   "sinks": 1,
+   "max_pin_L1_um": 6849.424000000001,
+   "sum_bit_branch_L1_um": 3484461.2479999987,
+   "endpoints": [
+    [
+     "seq_su",
+     "cd_d__0_511"
+    ],
+    [
+     "io_collective",
+     "in_data"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_io_out_valid_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6816.880000000001,
+   "sum_bit_branch_L1_um": 6816.880000000001,
+   "endpoints": [
+    [
+     "io_collective",
+     "out_valid"
+    ],
+    [
+     "seq_su",
+     "cc__517_517"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_coll_cmd_17",
+   "kind": "spine_local",
+   "bits": 32,
+   "sinks": 1,
+   "max_pin_L1_um": 6808.816000000001,
+   "sum_bit_branch_L1_um": 217807.90399999998,
+   "endpoints": [
+    [
+     "seq_su",
+     "coll_cmd__17_48"
+    ],
+    [
+     "io_collective",
+     "cmd_tag"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_cd_d_546",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6806.8960000000025,
+   "sum_bit_branch_L1_um": 6806.8960000000025,
+   "endpoints": [
+    [
+     "seq_su",
+     "cd_d__546_546"
+    ],
+    [
+     "io_collective",
+     "in_valid"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_coll_cmd_0",
+   "kind": "spine_local",
+   "bits": 16,
+   "sinks": 1,
+   "max_pin_L1_um": 6800.656000000001,
+   "sum_bit_branch_L1_um": 108796.43200000002,
+   "endpoints": [
+    [
+     "seq_su",
+     "coll_cmd__0_15"
+    ],
+    [
+     "io_collective",
+     "cmd_words"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_coll_cmd_49",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6798.8319999999985,
+   "sum_bit_branch_L1_um": 6798.8319999999985,
+   "endpoints": [
+    [
+     "seq_su",
+     "coll_cmd__49_49"
+    ],
+    [
+     "io_collective",
+     "cmd_v"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "ng_seq_coll_cmd_16",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6797.776,
+   "sum_bit_branch_L1_um": 6797.776,
+   "endpoints": [
+    [
+     "seq_su",
+     "coll_cmd__16_16"
+    ],
+    [
+     "io_collective",
+     "cmd_mode"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "clk_r49",
+   "kind": "clock_trunk",
+   "bits": 1,
+   "sinks": 220,
+   "max_pin_L1_um": 6519.836,
+   "sum_bit_branch_L1_um": 1140605.3600000006,
+   "endpoints": [
+    [
+     "clk_rx",
+     "pll_r49"
+    ],
+    [
+     "tt_ctlm",
+     "ck_head"
+    ],
+    [
+     "tt_ctlm",
+     "ck_tree"
+    ],
+    [
+     "tt_ctlm",
+     "ck_xpf"
+    ],
+    [
+     "tt_ctlm",
+     "ck_me_sched"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head0"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head1"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head2"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head3"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head4"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head5"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head6"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head7"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head8"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head9"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head10"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head11"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head12"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head13"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head14"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head15"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head16"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head17"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head18"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head19"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head20"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head21"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head22"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head23"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head24"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head25"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head26"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head27"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head28"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head29"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head30"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head31"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head32"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head33"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head34"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head35"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head36"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head37"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head38"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head39"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head40"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head41"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head42"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head43"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head44"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head45"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head46"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head47"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head48"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head49"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head50"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head51"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head52"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head53"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head54"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head55"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head56"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head57"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head58"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head59"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head60"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head61"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head62"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_head63"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp0"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp1"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp2"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp3"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp4"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp5"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp6"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp7"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp8"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp9"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp10"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp11"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp12"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp13"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp14"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp15"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp16"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp17"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp18"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp19"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp20"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp21"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp22"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp23"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp24"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp25"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp26"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp27"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp28"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp29"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp30"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp31"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp32"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp33"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp34"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp35"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp36"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp37"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp38"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp39"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp40"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp41"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp42"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp43"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp44"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp45"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp46"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp47"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp48"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp49"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp50"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp51"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp52"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp53"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp54"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp55"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp56"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp57"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp58"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp59"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp60"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp61"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp62"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_exp63"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp0"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp1"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp2"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp3"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp4"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp5"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp6"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp7"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp8"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp9"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp10"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp11"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp12"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp13"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp14"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp15"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp16"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp17"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp18"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp19"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp20"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp21"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp22"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp23"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp24"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp25"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp26"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp27"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp28"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp29"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp30"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp31"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp32"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp33"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp34"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp35"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp36"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp37"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp38"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp39"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp40"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp41"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp42"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp43"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp44"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp45"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp46"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp47"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp48"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp49"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp50"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp51"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp52"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp53"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp54"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp55"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp56"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp57"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp58"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp59"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp60"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp61"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp62"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rcp63"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq0"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq1"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq2"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq3"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq4"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq5"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq6"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq7"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq8"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq9"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq10"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq11"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq12"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq13"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq14"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq15"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq16"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq17"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq18"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq19"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq20"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq21"
+    ],
+    [
+     "sp_su64_sfu",
+     "ck_rsq22"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 13
+  },
+  {
+   "bus": "sf_res_issue_fault",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6371.951999999999,
+   "sum_bit_branch_L1_um": 6371.951999999999,
+   "endpoints": [
+    [
+     "res_train_issue",
+     "fault"
+    ],
+    [
+     "sys_face",
+     "res_issue_fault"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 12
+  },
+  {
+   "bus": "tt_c0",
+   "kind": "tree_spine",
+   "bits": 341,
+   "sinks": 1,
+   "max_pin_L1_um": 6328.191999999999,
+   "sum_bit_branch_L1_um": 2146783.232,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c0"
+    ],
+    [
+     "sp_port_tiles_0",
+     "tc"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 12
+  },
+  {
+   "bus": "tt_f2",
+   "kind": "tree_spine",
+   "bits": 104,
+   "sinks": 1,
+   "max_pin_L1_um": 6285.4400000000005,
+   "sum_bit_branch_L1_um": 652657.408,
+   "endpoints": [
+    [
+     "sp_port_tiles_2",
+     "tf"
+    ],
+    [
+     "tt_ctlm",
+     "f2"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 12
+  },
+  {
+   "bus": "xfault_e",
+   "kind": "head_chain",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 6150.696000000002,
+   "sum_bit_branch_L1_um": 6150.696000000002,
+   "endpoints": [
+    [
+     "h_24",
+     "fault"
+    ],
+    [
+     "xs_tap",
+     "he_f"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 12
+  },
+  {
+   "bus": "o4_cb_ctl_1",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 5739.680000000001,
+   "sum_bit_branch_L1_um": 143444.14400000003,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc1"
+    ],
+    [
+     "cbuf_g_1",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "o4_cb_rdy_1",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 5717.311999999999,
+   "sum_bit_branch_L1_um": 57160.44800000001,
+   "endpoints": [
+    [
+     "cbuf_g_1",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr1"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "sf_seq_descriptor_obs",
+   "kind": "spine_local",
+   "bits": 69,
+   "sinks": 1,
+   "max_pin_L1_um": 5653.664000000001,
+   "sum_bit_branch_L1_um": 390102.8159999995,
+   "endpoints": [
+    [
+     "seq_su",
+     "descriptor_obs"
+    ],
+    [
+     "sys_face",
+     "seq_descriptor_obs"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "sf_seq_dh",
+   "kind": "spine_local",
+   "bits": 187,
+   "sinks": 1,
+   "max_pin_L1_um": 5653.664000000001,
+   "sum_bit_branch_L1_um": 1057235.1679999984,
+   "endpoints": [
+    [
+     "sys_face",
+     "seq_dh"
+    ],
+    [
+     "seq_su",
+     "dh"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "sf_seq_dc",
+   "kind": "spine_local",
+   "bits": 56,
+   "sinks": 1,
+   "max_pin_L1_um": 5653.567999999999,
+   "sum_bit_branch_L1_um": 316599.8079999997,
+   "endpoints": [
+    [
+     "seq_su",
+     "dc"
+    ],
+    [
+     "sys_face",
+     "seq_dc"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "ng_seq_cfg_image_ready_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 5650.4,
+   "sum_bit_branch_L1_um": 6706.279999999999,
+   "endpoints": [
+    [
+     "seq_su",
+     "cfg_image_ready"
+    ],
+    [
+     "tt_ctlm",
+     "su_image_ready"
+    ],
+    [
+     "sys_face",
+     "seq_cfg_image_ready"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "rst_seq_ctlm",
+   "kind": "reset",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 5641.767999999998,
+   "sum_bit_branch_L1_um": 8944.887999999999,
+   "endpoints": [
+    [
+     "rstseq_rom",
+     "rso_ctlm"
+    ],
+    [
+     "tt_ctlm",
+     "rsi"
+    ],
+    [
+     "res_train_issue",
+     "rst_n"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "sf_seq_program_obs",
+   "kind": "spine_local",
+   "bits": 76,
+   "sinks": 1,
+   "max_pin_L1_um": 5592.704,
+   "sum_bit_branch_L1_um": 425045.50400000025,
+   "endpoints": [
+    [
+     "seq_su",
+     "program_obs"
+    ],
+    [
+     "sys_face",
+     "seq_program_obs"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 11
+  },
+  {
+   "bus": "o4_cb_ctl_5",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 5349.967999999999,
+   "sum_bit_branch_L1_um": 133700.14399999997,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc5"
+    ],
+    [
+     "cbuf_g_5",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 10
+  },
+  {
+   "bus": "o4_cb_rdy_5",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 5333.263999999997,
+   "sum_bit_branch_L1_um": 53320.255999999994,
+   "endpoints": [
+    [
+     "cbuf_g_5",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr5"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 10
+  },
+  {
+   "bus": "rs_fault_2",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 5117.851999999999,
+   "sum_bit_branch_L1_um": 5117.851999999999,
+   "endpoints": [
+    [
+     "sp_res_ser_2",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "rf2"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 10
+  },
+  {
+   "bus": "o4_cb_ctl_0",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 4800.751999999998,
+   "sum_bit_branch_L1_um": 119970.89599999994,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc0"
+    ],
+    [
+     "cbuf_g_0",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "ng_seq_embed_scale_addr_0",
+   "kind": "spine_local",
+   "bits": 18,
+   "sinks": 2,
+   "max_pin_L1_um": 4777.759999999998,
+   "sum_bit_branch_L1_um": 170967.74399999995,
+   "endpoints": [
+    [
+     "seq_su",
+     "embed_scale_addr"
+    ],
+    [
+     "embed_prov",
+     "embed_scale_addr"
+    ],
+    [
+     "embed_prov",
+     "core_token"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "ng_embed_embed_code_q_0",
+   "kind": "spine_local",
+   "bits": 512,
+   "sinks": 1,
+   "max_pin_L1_um": 4777.759999999998,
+   "sum_bit_branch_L1_um": 2446213.119999987,
+   "endpoints": [
+    [
+     "embed_prov",
+     "embed_code_q"
+    ],
+    [
+     "seq_su",
+     "embed_code_q"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "ng_embed_embed_scale_q_0",
+   "kind": "spine_local",
+   "bits": 16,
+   "sinks": 1,
+   "max_pin_L1_um": 4777.759999999998,
+   "sum_bit_branch_L1_um": 76444.15999999993,
+   "endpoints": [
+    [
+     "embed_prov",
+     "embed_scale_q"
+    ],
+    [
+     "seq_su",
+     "embed_scale_q"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "ng_seq_embed_code_addr_0",
+   "kind": "spine_local",
+   "bits": 24,
+   "sinks": 1,
+   "max_pin_L1_um": 4777.663999999999,
+   "sum_bit_branch_L1_um": 114663.93599999989,
+   "endpoints": [
+    [
+     "seq_su",
+     "embed_code_addr"
+    ],
+    [
+     "embed_prov",
+     "embed_code_addr"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "ng_seq_embed_scale_re_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 4777.663999999999,
+   "sum_bit_branch_L1_um": 9491.775999999998,
+   "endpoints": [
+    [
+     "seq_su",
+     "embed_scale_re"
+    ],
+    [
+     "embed_prov",
+     "embed_scale_re"
+    ],
+    [
+     "embed_prov",
+     "core_start"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "ng_seq_embed_code_re_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4777.663999999995,
+   "sum_bit_branch_L1_um": 4777.663999999995,
+   "endpoints": [
+    [
+     "seq_su",
+     "embed_code_re"
+    ],
+    [
+     "embed_prov",
+     "embed_code_re"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "o4_cb_rdy_0",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 4776.895999999996,
+   "sum_bit_branch_L1_um": 47756.57599999998,
+   "endpoints": [
+    [
+     "cbuf_g_0",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr0"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "o4_cb_ctl_3",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 4771.567999999998,
+   "sum_bit_branch_L1_um": 119240.19199999995,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc3"
+    ],
+    [
+     "cbuf_g_3",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "tt_lc0",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 1,
+   "max_pin_L1_um": 4761.615999999998,
+   "sum_bit_branch_L1_um": 123739.61599999995,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "lc0"
+    ],
+    [
+     "sp_band_lanes_0",
+     "c"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "o4_cb_rdy_3",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 4751.983999999997,
+   "sum_bit_branch_L1_um": 47507.503999999986,
+   "endpoints": [
+    [
+     "cbuf_g_3",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr3"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "sf_tt_program_obs",
+   "kind": "spine_local",
+   "bits": 76,
+   "sinks": 1,
+   "max_pin_L1_um": 4595.624000000002,
+   "sum_bit_branch_L1_um": 349264.1600000001,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "program_obs"
+    ],
+    [
+     "sys_face",
+     "tt_program_obs"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "sf_tt_control_stores_ready",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4593.368,
+   "sum_bit_branch_L1_um": 4593.368,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "control_stores_ready"
+    ],
+    [
+     "sys_face",
+     "tt_control_stores_ready"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "o4_cb_ctl_2",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 4558.351999999999,
+   "sum_bit_branch_L1_um": 113910.896,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc2"
+    ],
+    [
+     "cbuf_g_2",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "o4_cb_rdy_2",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 4537.3759999999975,
+   "sum_bit_branch_L1_um": 45361.424,
+   "endpoints": [
+    [
+     "cbuf_g_2",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr2"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "sf_tt_pw",
+   "kind": "spine_local",
+   "bits": 75,
+   "sinks": 1,
+   "max_pin_L1_um": 4526.9360000000015,
+   "sum_bit_branch_L1_um": 339520.19999999943,
+   "endpoints": [
+    [
+     "sys_face",
+     "tt_pw"
+    ],
+    [
+     "tt_ctlm",
+     "pw"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 9
+  },
+  {
+   "bus": "sf_tt_kok",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4496.216000000002,
+   "sum_bit_branch_L1_um": 4496.216000000002,
+   "endpoints": [
+    [
+     "sys_face",
+     "tt_kok"
+    ],
+    [
+     "tt_ctlm",
+     "kok"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "sf_tt_kwd",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4495.064,
+   "sum_bit_branch_L1_um": 4495.064,
+   "endpoints": [
+    [
+     "sys_face",
+     "tt_kwd"
+    ],
+    [
+     "tt_ctlm",
+     "kwd"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "sf_tt_fab",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4490.648000000001,
+   "sum_bit_branch_L1_um": 4490.648000000001,
+   "endpoints": [
+    [
+     "sys_face",
+     "tt_fab"
+    ],
+    [
+     "tt_ctlm",
+     "fab"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "clk_r90",
+   "kind": "clock_trunk",
+   "bits": 1,
+   "sinks": 296,
+   "max_pin_L1_um": 4379.740000000001,
+   "sum_bit_branch_L1_um": 1282510.5249999997,
+   "endpoints": [
+    [
+     "clk_rx",
+     "pll_r90"
+    ],
+    [
+     "up4_sel_station",
+     "ck"
+    ],
+    [
+     "res_train_issue",
+     "ck"
+    ],
+    [
+     "xs_tap",
+     "ck"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_49"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_50"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_51"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_52"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_53"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_54"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r2_55"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_0"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_1"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_2"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_3"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_4"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_5"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_6"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_7"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_8"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_9"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_10"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_11"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_12"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_13"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_14"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_15"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_16"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_17"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_18"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_19"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_20"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_21"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_22"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_23"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_24"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_25"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_26"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_27"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_28"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_29"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_30"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_31"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_32"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_33"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_34"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_35"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_36"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_37"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_38"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_39"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_40"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_41"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_42"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_43"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_44"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_45"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_46"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_47"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_48"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_49"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_50"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_51"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_52"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_53"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_54"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_55"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_0"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_1"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_2"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_3"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_4"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_5"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_6"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_7"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_8"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_9"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_10"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_11"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_12"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_13"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_14"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_15"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_16"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_17"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_18"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_19"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_20"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_21"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_22"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_23"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_24"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_25"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_26"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_27"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_28"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_29"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_30"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_31"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_32"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_33"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_34"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_35"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_36"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_37"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_38"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_39"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_40"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_41"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_42"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_43"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_44"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_45"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_46"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_47"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_48"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_49"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_50"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_51"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_52"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_53"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_54"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r4_55"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_0"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_1"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_2"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_3"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_4"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_5"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_6"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_7"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_8"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_9"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_10"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_11"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_12"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_13"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_14"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_15"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_16"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_17"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_18"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_19"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_20"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_21"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_22"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_23"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_24"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_25"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_26"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_27"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_28"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_29"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_30"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_31"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_32"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_33"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_34"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_35"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_36"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_37"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_38"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_39"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_40"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_41"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_42"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_43"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_44"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_45"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_46"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_47"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_48"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_49"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_50"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_51"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_52"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_53"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_54"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r5_55"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_0"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_1"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_2"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_3"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_4"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_5"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_6"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_7"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_8"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_9"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_10"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_11"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_12"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_13"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_14"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_15"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_16"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_17"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_18"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_19"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_20"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_21"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_22"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_23"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_24"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_25"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_26"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_27"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_28"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_29"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_30"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_31"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_32"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_33"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_34"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_35"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_36"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_37"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_38"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_39"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_40"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_41"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_42"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_43"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_44"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_45"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_46"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_47"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_48"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_49"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_50"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_51"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_52"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_53"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_54"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r6_55"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_0"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_1"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_2"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_3"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_4"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_5"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_6"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_7"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_8"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_9"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_10"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_11"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_12"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_13"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_14"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_15"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_16"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_17"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_18"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_19"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_20"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_21"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_22"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_23"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_24"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_25"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_26"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_27"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_28"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_29"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_30"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_31"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_32"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_33"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_34"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_35"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_36"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_37"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_38"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_39"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_40"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_41"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_42"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_43"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_44"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_45"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_46"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_47"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_48"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_49"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_50"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_51"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_52"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_53"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_54"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r7_55"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_56"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_57"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_58"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_59"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_60"
+    ],
+    [
+     "sp_vector_memory",
+     "ck_r3_61"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "rs_fault_1",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4379.371999999999,
+   "sum_bit_branch_L1_um": 4379.371999999999,
+   "endpoints": [
+    [
+     "sp_res_ser_1",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "rf1"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_cb_ctl_7",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 4364.528,
+   "sum_bit_branch_L1_um": 109064.28799999999,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc7"
+    ],
+    [
+     "cbuf_g_7",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_cb_rdy_7",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 4350.751999999998,
+   "sum_bit_branch_L1_um": 43494.8,
+   "endpoints": [
+    [
+     "cbuf_g_7",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr7"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_cb_ctl_4",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 4350.511999999998,
+   "sum_bit_branch_L1_um": 108714.99199999998,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc4"
+    ],
+    [
+     "cbuf_g_4",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_cb_rdy_4",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 4332.463999999996,
+   "sum_bit_branch_L1_um": 43311.96799999998,
+   "endpoints": [
+    [
+     "cbuf_g_4",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr4"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_upf_l0",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4282.6479999999965,
+   "sum_bit_branch_L1_um": 4282.6479999999965,
+   "endpoints": [
+    [
+     "tt_up4_leaf0",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "uf_l0"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_upf_l1",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4196.343999999998,
+   "sum_bit_branch_L1_um": 4196.343999999998,
+   "endpoints": [
+    [
+     "tt_up4_leaf1",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "uf_l1"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_cb_ctl_6",
+   "kind": "sequencer",
+   "bits": 25,
+   "sinks": 1,
+   "max_pin_L1_um": 4125.391999999999,
+   "sum_bit_branch_L1_um": 103087.18399999995,
+   "endpoints": [
+    [
+     "seq_su",
+     "cbc6"
+    ],
+    [
+     "cbuf_g_6",
+     "ctl"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_cb_rdy_6",
+   "kind": "sequencer",
+   "bits": 10,
+   "sinks": 1,
+   "max_pin_L1_um": 4110.175999999997,
+   "sum_bit_branch_L1_um": 41089.471999999994,
+   "endpoints": [
+    [
+     "cbuf_g_6",
+     "rdy"
+    ],
+    [
+     "seq_su",
+     "cbr6"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_upf_l2",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4110.039999999998,
+   "sum_bit_branch_L1_um": 4110.039999999998,
+   "endpoints": [
+    [
+     "tt_up4_leaf2",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "uf_l2"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "ng_tt_mee_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4024.272,
+   "sum_bit_branch_L1_um": 4024.272,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "mee__0_0"
+    ],
+    [
+     "sp_vector_memory",
+     "mee"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "ng_vm_mo_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4023.9359999999997,
+   "sum_bit_branch_L1_um": 4023.9359999999997,
+   "endpoints": [
+    [
+     "sp_vector_memory",
+     "mo"
+    ],
+    [
+     "tt_ctlm",
+     "meok"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "o4_upf_l3",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 4023.735999999998,
+   "sum_bit_branch_L1_um": 4023.735999999998,
+   "endpoints": [
+    [
+     "tt_up4_leaf3",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "uf_l3"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "head_23",
+   "kind": "head_chain",
+   "bits": 1567,
+   "sinks": 1,
+   "max_pin_L1_um": 4006.3200000000015,
+   "sum_bit_branch_L1_um": 6042326.928,
+   "endpoints": [
+    [
+     "xs_tap",
+     "hw_d"
+    ],
+    [
+     "h_23",
+     "e_d"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 8
+  },
+  {
+   "bus": "up4_sel_local",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 4,
+   "max_pin_L1_um": 3227.688,
+   "sum_bit_branch_L1_um": 321614.208,
+   "endpoints": [
+    [
+     "up4_sel_station",
+     "b"
+    ],
+    [
+     "tt_up4_leaf0",
+     "sel"
+    ],
+    [
+     "tt_up4_leaf1",
+     "sel"
+    ],
+    [
+     "tt_up4_leaf2",
+     "sel"
+    ],
+    [
+     "tt_up4_leaf3",
+     "sel"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 6
+  },
+  {
+   "bus": "tt_f1",
+   "kind": "tree_spine",
+   "bits": 104,
+   "sinks": 1,
+   "max_pin_L1_um": 3114.0800000000017,
+   "sum_bit_branch_L1_um": 323864.32000000076,
+   "endpoints": [
+    [
+     "sp_port_tiles_1",
+     "tf"
+    ],
+    [
+     "tt_ctlm",
+     "f1"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 6
+  },
+  {
+   "bus": "xfault_w",
+   "kind": "head_chain",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 3038.9760000000015,
+   "sum_bit_branch_L1_um": 3038.9760000000015,
+   "endpoints": [
+    [
+     "h_23",
+     "fault"
+    ],
+    [
+     "xs_tap",
+     "hw_f"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 6
+  },
+  {
+   "bus": "ng_vm_ld_0",
+   "kind": "spine_local",
+   "bits": 16,
+   "sinks": 1,
+   "max_pin_L1_um": 2688.047999999998,
+   "sum_bit_branch_L1_um": 43003.00799999997,
+   "endpoints": [
+    [
+     "sp_vector_memory",
+     "ld"
+    ],
+    [
+     "tt_ctlm",
+     "ld"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 5
+  },
+  {
+   "bus": "ng_tt_mx_0",
+   "kind": "spine_local",
+   "bits": 553,
+   "sinks": 1,
+   "max_pin_L1_um": 2595.7919999999976,
+   "sum_bit_branch_L1_um": 1428145.5839999986,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "mx"
+    ],
+    [
+     "sp_vector_memory",
+     "mx"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 5
+  },
+  {
+   "bus": "tt_c1__rsi_0",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 1,
+   "max_pin_L1_um": 2466.6560000000027,
+   "sum_bit_branch_L1_um": 64131.85600000002,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c1__0_25"
+    ],
+    [
+     "sp_port_tiles_1",
+     "tc__0_25"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "tt_c1__rsi_140",
+   "kind": "tree_spine",
+   "bits": 201,
+   "sinks": 1,
+   "max_pin_L1_um": 2466.6560000000027,
+   "sum_bit_branch_L1_um": 495788.40000000125,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c1__140_340"
+    ],
+    [
+     "sp_port_tiles_1",
+     "tc__140_340"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "tt_c1__rsi_27",
+   "kind": "tree_spine",
+   "bits": 112,
+   "sinks": 1,
+   "max_pin_L1_um": 2466.656000000001,
+   "sum_bit_branch_L1_um": 276260.1920000006,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c1__27_138"
+    ],
+    [
+     "sp_port_tiles_1",
+     "tc__27_138"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "tt_c1__rsi_26",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 2466.608000000002,
+   "sum_bit_branch_L1_um": 4610.472000000002,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c1__26_26"
+    ],
+    [
+     "sp_port_tiles_1",
+     "tc__26_26"
+    ],
+    [
+     "res_train_issue",
+     "tag_v"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "tt_c1__rsi_139",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 2466.608000000002,
+   "sum_bit_branch_L1_um": 4621.416000000002,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "c1__139_139"
+    ],
+    [
+     "sp_port_tiles_1",
+     "tc__139_139"
+    ],
+    [
+     "res_train_issue",
+     "tag_last"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "o4_sel",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 1,
+   "max_pin_L1_um": 2280.616000000002,
+   "sum_bit_branch_L1_um": 59233.616000000016,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "sel"
+    ],
+    [
+     "up4_sel_station",
+     "a"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "ng_vm_svq_v_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 2148.0959999999986,
+   "sum_bit_branch_L1_um": 2148.0959999999986,
+   "endpoints": [
+    [
+     "sp_vector_memory",
+     "svq_v"
+    ],
+    [
+     "seq_su",
+     "svq_v"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "ng_seq_vrd_0",
+   "kind": "spine_local",
+   "bits": 21,
+   "sinks": 1,
+   "max_pin_L1_um": 2135.039999999999,
+   "sum_bit_branch_L1_um": 44806.128,
+   "endpoints": [
+    [
+     "seq_su",
+     "vrd"
+    ],
+    [
+     "sp_vector_memory",
+     "svr"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "ng_vm_svq_0",
+   "kind": "spine_local",
+   "bits": 512,
+   "sinks": 1,
+   "max_pin_L1_um": 2129.279999999999,
+   "sum_bit_branch_L1_um": 1071360.6719999996,
+   "endpoints": [
+    [
+     "sp_vector_memory",
+     "svq"
+    ],
+    [
+     "seq_su",
+     "vrq"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "ng_vm_sq_0",
+   "kind": "spine_local",
+   "bits": 2048,
+   "sinks": 2,
+   "max_pin_L1_um": 2063.616000000002,
+   "sum_bit_branch_L1_um": 6150337.072000205,
+   "endpoints": [
+    [
+     "sp_vector_memory",
+     "sq__0_2047"
+    ],
+    [
+     "sp_su64_sfu",
+     "vq__0_2047"
+    ],
+    [
+     "seq_su",
+     "su_vm_va_q"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "ng_seq_vwr_0",
+   "kind": "spine_local",
+   "bits": 533,
+   "sinks": 1,
+   "max_pin_L1_um": 2052.9120000000003,
+   "sum_bit_branch_L1_um": 1073764.7519999996,
+   "endpoints": [
+    [
+     "seq_su",
+     "vwr"
+    ],
+    [
+     "sp_vector_memory",
+     "svw"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 4
+  },
+  {
+   "bus": "xs_aw",
+   "kind": "spine_local",
+   "bits": 553,
+   "sinks": 1,
+   "max_pin_L1_um": 1983.0800000000017,
+   "sum_bit_branch_L1_um": 1096643.2399999925,
+   "endpoints": [
+    [
+     "sp_vector_memory",
+     "xaw"
+    ],
+    [
+     "xs_tap",
+     "aw"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 3
+  },
+  {
+   "bus": "tt_ib__rsi_0",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 1388.728,
+   "sum_bit_branch_L1_um": 2298.0319999999992,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__0_0"
+    ],
+    [
+     "xs_tap",
+     "gi__0_0"
+    ],
+    [
+     "res_train_issue",
+     "me_go"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_1",
+   "kind": "tree_spine",
+   "bits": 18,
+   "sinks": 1,
+   "max_pin_L1_um": 1388.6800000000012,
+   "sum_bit_branch_L1_um": 24988.896000000015,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__1_18"
+    ],
+    [
+     "xs_tap",
+     "gi__1_18"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_19",
+   "kind": "tree_spine",
+   "bits": 18,
+   "sinks": 2,
+   "max_pin_L1_um": 1387.8160000000016,
+   "sum_bit_branch_L1_um": 41347.72800000002,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__19_36"
+    ],
+    [
+     "xs_tap",
+     "gi__19_36"
+    ],
+    [
+     "res_train_issue",
+     "me_tiles"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_37",
+   "kind": "tree_spine",
+   "bits": 43,
+   "sinks": 1,
+   "max_pin_L1_um": 1386.9520000000002,
+   "sum_bit_branch_L1_um": 59595.592000000055,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__37_79"
+    ],
+    [
+     "xs_tap",
+     "gi__37_79"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_80",
+   "kind": "tree_spine",
+   "bits": 24,
+   "sinks": 2,
+   "max_pin_L1_um": 1384.8880000000017,
+   "sum_bit_branch_L1_um": 55068.09600000001,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__80_103"
+    ],
+    [
+     "xs_tap",
+     "gi__80_103"
+    ],
+    [
+     "res_train_issue",
+     "me_ts"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_104",
+   "kind": "tree_spine",
+   "bits": 147,
+   "sinks": 1,
+   "max_pin_L1_um": 1383.7360000000017,
+   "sum_bit_branch_L1_um": 202894.10400000028,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__104_250"
+    ],
+    [
+     "xs_tap",
+     "gi__104_250"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_251",
+   "kind": "tree_spine",
+   "bits": 4,
+   "sinks": 2,
+   "max_pin_L1_um": 1376.6800000000012,
+   "sum_bit_branch_L1_um": 9047.648000000003,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__251_254"
+    ],
+    [
+     "xs_tap",
+     "gi__251_254"
+    ],
+    [
+     "res_train_issue",
+     "me_split"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_255",
+   "kind": "tree_spine",
+   "bits": 98,
+   "sinks": 1,
+   "max_pin_L1_um": 1376.4880000000012,
+   "sum_bit_branch_L1_um": 134667.68000000008,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__255_352"
+    ],
+    [
+     "xs_tap",
+     "gi__255_352"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_353",
+   "kind": "tree_spine",
+   "bits": 1,
+   "sinks": 2,
+   "max_pin_L1_um": 1371.7840000000015,
+   "sum_bit_branch_L1_um": 2248.7360000000017,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__353_353"
+    ],
+    [
+     "xs_tap",
+     "gi__353_353"
+    ],
+    [
+     "res_train_issue",
+     "me_oen"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_ib__rsi_354",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 1,
+   "max_pin_L1_um": 1371.7360000000017,
+   "sum_bit_branch_L1_um": 35649.53600000003,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "ib__354_379"
+    ],
+    [
+     "xs_tap",
+     "gi__354_379"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "xs_pf",
+   "kind": "sequencer",
+   "bits": 72,
+   "sinks": 1,
+   "max_pin_L1_um": 1340.0560000000005,
+   "sum_bit_branch_L1_um": 96361.68000000008,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "xpf"
+    ],
+    [
+     "xs_tap",
+     "xpf"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "xs_fault",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 1146.808000000001,
+   "sum_bit_branch_L1_um": 1146.808000000001,
+   "endpoints": [
+    [
+     "xs_tap",
+     "fault"
+    ],
+    [
+     "tt_ctlm",
+     "xflt"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "ng_tt_xm_0",
+   "kind": "spine_local",
+   "bits": 92,
+   "sinks": 1,
+   "max_pin_L1_um": 1034.9519999999993,
+   "sum_bit_branch_L1_um": 95215.584,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "xm"
+    ],
+    [
+     "seq_su",
+     "xm"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 2
+  },
+  {
+   "bus": "tt_lc1",
+   "kind": "tree_spine",
+   "bits": 26,
+   "sinks": 1,
+   "max_pin_L1_um": 957.6640000000007,
+   "sum_bit_branch_L1_um": 24899.26399999998,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "lc1"
+    ],
+    [
+     "sp_band_lanes_1",
+     "c"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 1
+  },
+  {
+   "bus": "xs_sw",
+   "kind": "spine_local",
+   "bits": 2137,
+   "sinks": 1,
+   "max_pin_L1_um": 481.65599999999995,
+   "sum_bit_branch_L1_um": 810042.743999999,
+   "endpoints": [
+    [
+     "sp_su64_sfu",
+     "xsw"
+    ],
+    [
+     "xs_tap",
+     "sw"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_su_observe_0",
+   "kind": "spine_local",
+   "bits": 16,
+   "sinks": 1,
+   "max_pin_L1_um": 409.0799999999981,
+   "sum_bit_branch_L1_um": 6545.27999999997,
+   "endpoints": [
+    [
+     "seq_su",
+     "su_observe"
+    ],
+    [
+     "tt_ctlm",
+     "su_observe"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_xs_0",
+   "kind": "spine_local",
+   "bits": 57,
+   "sinks": 1,
+   "max_pin_L1_um": 341.0159999999996,
+   "sum_bit_branch_L1_um": 19437.911999999873,
+   "endpoints": [
+    [
+     "seq_su",
+     "xs"
+    ],
+    [
+     "tt_ctlm",
+     "xs"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_st_0",
+   "kind": "spine_local",
+   "bits": 49,
+   "sinks": 1,
+   "max_pin_L1_um": 329.78399999999965,
+   "sum_bit_branch_L1_um": 16159.415999999908,
+   "endpoints": [
+    [
+     "seq_su",
+     "st"
+    ],
+    [
+     "tt_ctlm",
+     "st"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_tt_cp_0",
+   "kind": "spine_local",
+   "bits": 56,
+   "sinks": 1,
+   "max_pin_L1_um": 290.58400000000074,
+   "sum_bit_branch_L1_um": 16272.703999999943,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "cp"
+    ],
+    [
+     "sp_su64_sfu",
+     "cp"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_su_cp_active_0",
+   "kind": "spine_local",
+   "bits": 1,
+   "sinks": 1,
+   "max_pin_L1_um": 282.0879999999979,
+   "sum_bit_branch_L1_um": 282.0879999999979,
+   "endpoints": [
+    [
+     "sp_su64_sfu",
+     "cp_active"
+    ],
+    [
+     "tt_ctlm",
+     "cp_active"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_su_acc_0",
+   "kind": "spine_local",
+   "bits": 24,
+   "sinks": 1,
+   "max_pin_L1_um": 84.20799999999963,
+   "sum_bit_branch_L1_um": 2007.7440000000042,
+   "endpoints": [
+    [
+     "sp_su64_sfu",
+     "acc"
+    ],
+    [
+     "seq_su",
+     "acc"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_su_external_a_addr_0",
+   "kind": "spine_local",
+   "bits": 1536,
+   "sinks": 1,
+   "max_pin_L1_um": 82.0,
+   "sum_bit_branch_L1_um": 82207.96799999944,
+   "endpoints": [
+    [
+     "sp_su64_sfu",
+     "external_a_addr"
+    ],
+    [
+     "seq_su",
+     "su_va_addr"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_su_0",
+   "kind": "spine_local",
+   "bits": 482,
+   "sinks": 1,
+   "max_pin_L1_um": 53.88800000000083,
+   "sum_bit_branch_L1_um": 22071.967999999928,
+   "endpoints": [
+    [
+     "seq_su",
+     "su"
+    ],
+    [
+     "sp_su64_sfu",
+     "si"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_su_sd_0",
+   "kind": "spine_local",
+   "bits": 108,
+   "sinks": 1,
+   "max_pin_L1_um": 43.408000000001266,
+   "sum_bit_branch_L1_um": 4688.064000000004,
+   "endpoints": [
+    [
+     "sp_su64_sfu",
+     "sd"
+    ],
+    [
+     "seq_su",
+     "sd"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_su_external_a_re_0",
+   "kind": "spine_local",
+   "bits": 64,
+   "sinks": 1,
+   "max_pin_L1_um": 43.408000000001266,
+   "sum_bit_branch_L1_um": 2778.1119999999937,
+   "endpoints": [
+    [
+     "sp_su64_sfu",
+     "external_a_re"
+    ],
+    [
+     "seq_su",
+     "su_va_re"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_su_va_q_0",
+   "kind": "spine_local",
+   "bits": 2048,
+   "sinks": 1,
+   "max_pin_L1_um": 43.408000000001266,
+   "sum_bit_branch_L1_um": 88899.58399999973,
+   "endpoints": [
+    [
+     "seq_su",
+     "su_va_q"
+    ],
+    [
+     "sp_su64_sfu",
+     "external_a_q"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_su_vm_va_re_0",
+   "kind": "spine_local",
+   "bits": 64,
+   "sinks": 1,
+   "max_pin_L1_um": 43.408000000001266,
+   "sum_bit_branch_L1_um": 2778.1119999999937,
+   "endpoints": [
+    [
+     "seq_su",
+     "su_vm_va_re"
+    ],
+    [
+     "sp_su64_sfu",
+     "external_vm_a_re"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_seq_su_vm_va_addr_0",
+   "kind": "spine_local",
+   "bits": 1536,
+   "sinks": 1,
+   "max_pin_L1_um": 43.408000000001266,
+   "sum_bit_branch_L1_um": 66674.68799999941,
+   "endpoints": [
+    [
+     "seq_su",
+     "su_vm_va_addr"
+    ],
+    [
+     "sp_su64_sfu",
+     "external_vm_a_addr"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": 0
+  },
+  {
+   "bus": "ng_tt_mee_1",
+   "kind": "spine_local",
+   "bits": 7,
+   "sinks": 0,
+   "max_pin_L1_um": null,
+   "sum_bit_branch_L1_um": 0,
+   "endpoints": [
+    [
+     "tt_ctlm",
+     "mee__1_7"
+    ]
+   ],
+   "branch_relay_depth_lower_bound_at_500um": null
+  }
+ ],
+ "all_data_bit_branch_L1_um": 57771525.548000194,
+ "clock_phase_and_registered_reach": "OPEN: geometry does not authorize long unregistered nets",
+ "face_pin_demand": {
+  "E": {
+   "pins": 5862,
+   "capacity_tracks": 13071.606666666668,
+   "utilization": 0.44845290632470064,
+   "limit": 0.6,
+   "layers": [
+    "M6",
+    "M8"
+   ],
+   "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+  },
+  "S": {
+   "pins": 4231,
+   "capacity_tracks": 7262.1033333333335,
+   "utilization": 0.5826135770582536,
+   "limit": 0.6,
+   "layers": [
+    "M7"
+   ],
+   "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+  },
+  "N": {
+   "pins": 1178,
+   "capacity_tracks": 7262.1033333333335,
+   "utilization": 0.16221195787629938,
+   "limit": 0.6,
+   "layers": [
+    "M7"
+   ],
+   "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+  },
+  "W": {
+   "pins": 280,
+   "capacity_tracks": 13071.606666666668,
+   "utilization": 0.021420473178252505,
+   "limit": 0.6,
+   "layers": [
+    "M6",
+    "M8"
+   ],
+   "scope": "Full-face pin-demand screen; detailed access, channel cuts and competing traffic OPEN"
+  }
+ },
+ "qualification": false,
+ "relay_static_cost": "OPEN: lower bounds do not include obstacles, pair reach, equal ages, physical relay sites or static-program operation counts. Real allocator required.",
+ "name": "split_faces_fresh_master_7900",
+ "requested_pin_changes": 10372,
+ "pin_integrity": {
+  "identities": 11551,
+  "changed": 10372,
+  "source_clock_reset_entries_unchanged": true,
+  "requested_track_bounds_unique": true
+ }
+}
