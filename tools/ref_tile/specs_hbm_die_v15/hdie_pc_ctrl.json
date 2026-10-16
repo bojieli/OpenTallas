@@ -3,6 +3,7 @@
  "top": "ot_hbm_svc_pc_ctrl_leaf",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
@@ -111,7 +112,9 @@
  "params": {
   "P": 0,
   "PHASE": 0,
-  "OREG": 1
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1
  },
  "children": [],
  "inter": [],
@@ -125,5 +128,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid, kr_rdy only pops it). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids. Remaining unregistered inputs: kr_rdy (skid pop, 1-2 levels), dram_rvalid/dram_rdata (PHY return into the response SRAM write port, the modelled off-chip boundary)."
  }
 }

@@ -28,6 +28,8 @@ Queue candidates must have enough total physical RAM after mandatory headroom fo
 cannot take an impossible request or release a capable host's CPU hold. Older probes without a total retain legacy eligibility.
 The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
 for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
+--priority die: a die-level trial (owner 2026-10-15 23:50). On the host it waits with OT_HEAVY_PRIO=die; while it
+                 waits, ot-heavy admits other requests only if they leave its charge free (DIE-FIRST, ot-heavy-reconcile).
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
 
 Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
@@ -110,10 +112,14 @@ def choose_selftest():
 
 def status(hosts):
     """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
+    held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
         res = dict(ex.map(lambda h: probe(h, None), hosts))
     out = []
     for h in hosts:
+        if h in held:
+            out.append(f"{h} HELD ({held[h]})")
+            continue
         r = res[h]
         if not r or r.get("error"):
             out.append(f"{h} unreachable")
@@ -121,7 +127,7 @@ def status(hosts):
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, growth {r['growth_gb']}) load "
                    f"{r.get('load1', 0):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}")
-    live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu")
+    live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
             and r["disk_gb"] >= 20 and physically_capable(r, 32)}
     fits = {h: r for h, r in live.items() if r.get("admit_gb", r["free_gb"]) >= 32}
     qualifying = fits or live
@@ -132,7 +138,7 @@ def status(hosts):
     else:
         eligible = {h: r for h, r in live.items() if bypass or h in under or h not in qualifying}
         best, queue = choose(eligible, 32)
-        next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else ""
+        next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else " | next 16-thread 32 GB job: no eligible host"
     print("ot-run status: " + " | ".join(out) + next_job)
 
 
@@ -140,6 +146,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
+    env = os.environ.get("OT_RUN_PRIO_ENV", "") + env
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     remote = (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
@@ -241,6 +248,10 @@ def main():
         elif o == "--pick": pick = True
         elif o == "--max-wait": max_wait = int(a.pop(0))
         elif o == "--threads": threads = int(a.pop(0))
+        elif o == "--priority":
+            prio = a.pop(0)
+            if prio != "die": sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials)")
+            os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         else: sys.exit(__doc__)
     cmd = a[1:]
     if mem is None or not (cmd or pick):

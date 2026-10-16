@@ -44,8 +44,14 @@ proc ot_pdn_bbox::begin {dir} {
   set masters [dict create]
   foreach inst [[ord::get_db_block] getInsts] {
     set master [$inst getMaster]
+    # A new assumed PHY access contract reserves two narrow M5 power columns.
+    # Bounding those OBS would close the declared access. Keep the small exact
+    # PHY obstruction set unchanged while other masters use conservative aliases.
+    if {[file exists $dir/assumed_phy_pg_access.json] &&
+        [regexp {^ot_q(fd_serdes_112g_x12|fd_ucie_x64|kvd_ucie_x64)_phy} [$master getName]]} {continue}
     if {[llength [$master getObstructions]]} {dict set masters [$master getName] $master}
   }
+  if {![dict size $masters]} {puts "OT_PDN_BBOX BEGIN masters=0 instances=0 (exact PHY OBS preserved)"; return}
   set stamp [clock clicks]
   set exported $dir/pdn_original_$stamp.lef
   write_lef $exported

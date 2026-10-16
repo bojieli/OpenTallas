@@ -55,5 +55,13 @@
   "native_s0": "320 records PASS, prefetch 112.916 ns (+0.83 ns vs OREG=0), early mutant rejected",
   "issued": "hardware-issued groups 69722.19 ps/epoch PASS, both mutants rejected",
   "reason": "gate: col_data comb from the 32-entry queue mux (7 levels) -> native launch; owner rule: register the boundary"
+ },
+ "kreg_2030": {
+  "source_commit": "c436e0f9a",
+  "change": "KREG=1: K request through a 2-entry pin-registered skid, k_rdy from a register (+1 hbm cycle on the request, full rate)",
+  "steady": "69722.19 ps/epoch PASS = 1.052x price (+0.2%)",
+  "native": "s0 320 / s1 200 records PASS, prefetch 113.749 ns; early mutant rejected",
+  "issued": "hardware-issued groups PASS, both mutants rejected",
+  "reason": "gate: 10,996 K input->reg endpoints up to 18 levels, k_len->k_rdy combinational"
  }
 }

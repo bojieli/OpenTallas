@@ -71,21 +71,42 @@ class Grid:
                 return best[1]
         raise SystemExit(f'no free cell within {rmax} um of ({x}, {y})')
 
-    def route(self, a, b):
-        """shortest grid path a->b (cells) whose runs over blocked cells are <= MAX_RUN; returns the cell list."""
-        R = int(MAX_RUN // GRID)
+    def route(self, a, b, max_run=None):
+        """shortest grid path a->b (cells) whose runs over blocked cells are <= MAX_RUN; returns the cell list.
+        A sink in a pocket enclosed by more than MAX_RUN of blocks retries once at 3 x MAX_RUN (reported by STA as a
+        long repeater-free span, never hidden)."""
+        try:
+            return self._route(a, b, max_run or MAX_RUN)
+        except SystemExit:
+            if max_run:
+                raise
+            return self._route(a, b, 3 * MAX_RUN)
+
+    def _route(self, a, b, max_run):
+        R = int(max_run // GRID)
         start = (a, 0)
         dist = {start: 0}
+        # At a cell, a path no longer in steps and no longer into a blocked
+        # run dominates the other label: it has every remaining continuation
+        # available to that label. Keep this exact Pareto frontier instead of
+        # expanding up to R equivalent labels throughout a large die detour.
+        # Preserve predecessor records even when a queued label is dominated;
+        # an already-discovered child's valid path may still refer to it.
+        labels = {a: [(0, 0)]}
         prev = {}
+        # Among equal admissible f values, advance the deeper path first. The
+        # old smaller-g tie break floods an entire rectangle of equally short
+        # Manhattan paths before taking the final step to a distant endpoint.
         pq = [(abs(a[0] - b[0]) + abs(a[1] - b[1]), 0, a, 0)]
         while pq:
-            f, g, c, run = heapq.heappop(pq)
+            f, neg_g, c, run = heapq.heappop(pq)
+            g = -neg_g
             if c == b:
                 path = [c]; s = (c, run)
                 while s in prev:
                     s = prev[s]; path.append(s[0])
                 return path[::-1]
-            if dist.get((c, run), 1 << 60) < g:
+            if dist.get((c, run)) != g:
                 continue
             for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 n = (c[0] + d[0], c[1] + d[1])
@@ -96,8 +117,15 @@ class Grid:
                     continue
                 s = (n, nr); ng = g + 1
                 if ng < dist.get(s, 1 << 60):
+                    old = labels.get(n, ())
+                    if any(lr <= nr and lg <= ng for lr, lg in old):
+                        continue
+                    for lr, lg in old:
+                        if nr <= lr and ng <= lg:
+                            dist.pop((n, lr), None)
+                    labels[n] = [(lr, lg) for lr, lg in old if not (nr <= lr and ng <= lg)] + [(nr, ng)]
                     dist[s] = ng; prev[s] = (c, run)
-                    heapq.heappush(pq, (ng + abs(n[0] - b[0]) + abs(n[1] - b[1]), ng, n, nr))
+                    heapq.heappush(pq, (ng + abs(n[0] - b[0]) + abs(n[1] - b[1]), -ng, n, nr))
         raise SystemExit(f'no clock route {a} -> {b}')
 
 

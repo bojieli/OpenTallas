@@ -564,8 +564,27 @@ module tb_s81_die_layer;
         return r == C_BASE || r == C_BASE + 1 || r == C_BASE + C_STRIDE || r == C_BASE + C_STRIDE + 1;
     endfunction
     integer hcx_dn = 0;
+    // CHECKS (never written into the VM): the H rows each chain command finds at issue (static schedule: the producer
+    // must have landed them) and the coefficient rows at the chain's done, against the fixture's golden rows
+    reg [511:0] hcx_hin_x [0:1279]; reg [511:0] hcx_coef_x [0:3]; integer hcx_hin_bad [0:1], hcx_coef_bad [0:1];
+    initial begin hcx_hin_bad[0] = -1; hcx_hin_bad[1] = -1; hcx_coef_bad[0] = -1; hcx_coef_bad[1] = -1; end
+    always @(posedge ck) if (rst && hcx_c[84] && hcx_cmds < 2) begin
+        hcx_hin_bad[hcx_cmds] = 0;
+        for (int q = 0; q < 640; q++) if (vm[H_BASE + q] !== hcx_hin_x[640 * hcx_cmds + q]) begin
+            if (hcx_hin_bad[hcx_cmds] < 3) $display("HCX_HIN blk %0d row %0d got %h want %h", hcx_cmds, q, vm[H_BASE + q][63:0], hcx_hin_x[640 * hcx_cmds + q][63:0]);
+            hcx_hin_bad[hcx_cmds]++;
+        end
+    end
     always @(posedge ck) if (rst && hcx_d[8]) begin
         mark(C_BASE + C_STRIDE * hcx_dn); mark(C_BASE + C_STRIDE * hcx_dn + 1); hcx_dn <= hcx_dn + 1;
+        if (hcx_dn < 2) begin
+            hcx_coef_bad[hcx_dn] = 0;
+            for (int q = 0; q < 2; q++) for (int w = 0; w < 16; w++)
+                if (vm[C_BASE + C_STRIDE * hcx_dn + q][32*w+:32] !== hcx_coef_x[2 * hcx_dn + q][32*w+:32]) begin
+                    $display("HCX_COEF blk %0d row %0d word %0d got %h want %h", hcx_dn, q, w, vm[C_BASE + C_STRIDE * hcx_dn + q][32*w+:32], hcx_coef_x[2 * hcx_dn + q][32*w+:32]);
+                    hcx_coef_bad[hcx_dn]++;
+                end
+        end
     end
     always @(posedge ck) if (rst && hcx_st[0]) $fatal(1, "HCX chain fault cycle=%0d cfault=%0d post=%0d gather=%0d proj_st=%b ctl_c=%0d ctl_s=%0d",
         cyc, u_hcx.cfault, hcx_sf, hcx_gf, hcx_pst[0], g_hx[0].u_p.controller.cfault, g_hx[0].u_p.controller.sfault);
@@ -947,6 +966,10 @@ module tb_s81_die_layer;
         $readmemh({dir, "/expd.mem"}, ed);
         $readmemh({dir, "/vm_boot.mem"}, vm);
         $readmemh({dir, "/coef.mem"}, coefm);
+`ifdef TB_HCX_REAL
+        $readmemh({dir, "/hcx_hin.mem"}, hcx_hin_x);
+        $readmemh({dir, "/hcx_coef.mem"}, hcx_coef_x);
+`endif
 `ifdef TB_SU_REAL
         $readmemh({dir, "/su_n.mem"}, su_nm); SUN = su_nm[0];
         $readmemh({dir, "/su_expa.mem"}, su_ea);
@@ -1085,6 +1108,9 @@ module tb_s81_die_layer;
         $display("HCX_REAL commands=%0d at %0d,%0d rank0_h_row_reads=%0d post_vm_writes=%0d raw_gather_errors=%0d golden_coefficient_injection=0 native_layer=0",
             hcx_cmds, hcx_cmd_cyc[0], hcx_cmd_cyc[1], hcx_reads, hcx_writes, hcx_errs);
         if (hcx_cmds != 2*JOBS || hcx_reads != 2*640*JOBS || hcx_errs) begin errors++; $display("ERR HCX chain transaction count"); end
+        $display("HCX_CHECK hin_bad=%0d,%0d coef_words_bad=%0d,%0d (golden rows used only for this check)",
+            hcx_hin_bad[0], hcx_hin_bad[1], hcx_coef_bad[0], hcx_coef_bad[1]);
+        if (hcx_hin_bad[0] != 0 || hcx_hin_bad[1] != 0 || hcx_coef_bad[0] != 0 || hcx_coef_bad[1] != 0) errors++;
 `endif
 `ifdef TB_MIX4_REAL
         $display("MIX4_REAL reads=%0d writes=%0d golden_output_injection=0 native_layer=0", mx_reads, mx_writes);

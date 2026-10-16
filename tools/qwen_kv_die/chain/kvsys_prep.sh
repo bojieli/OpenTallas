@@ -29,7 +29,7 @@ python3 tools/qwen_kv_die/kv_relays.py --stubs $O/lint/qwen_kv_lint_top_stubs.sv
   --json $O/relays.json --bench $O/tb_qkd_kv_relays.sv > $O/relays.log
 for mu in 0 2; do
   python3 tools/qwen_kv_die/kv_relays.py --stubs $O/lint/qwen_kv_lint_top_stubs.sv --out $O/rly_mut$mu.sv --mut $mu > /dev/null
-  iverilog -g2012 -o $O/rly_mut$mu.vvp $O/rly_mut$mu.sv $O/tb_qkd_kv_relays.sv && vvp -n $O/rly_mut$mu.vvp | tail -1 > $O/relays_bench_mut$mu.txt
+  iverilog -g2012 -o $O/rly_mut$mu.vvp $O/rly_mut$mu.sv $O/tb_qkd_kv_relays.sv && vvp -n $O/rly_mut$mu.vvp | grep -E 'RELAY_BENCH (PASS|FAIL)' | tail -1 > $O/relays_bench_mut$mu.txt   # Icarus 12 prints '$finish called' last
 done
 grep -q 'RELAY_BENCH PASS' $O/relays_bench_mut0.txt && grep -q 'RELAY_BENCH FAIL' $O/relays_bench_mut2.txt || { echo "relay bench gate FAILED"; exit 3; }
 rm -f $O/rly_mut*.vvp $O/rly_mut*.sv

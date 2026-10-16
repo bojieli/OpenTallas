@@ -1,0 +1,95 @@
+{
+ "name": "s81hc_ctfnq3_ref",
+ "top": "ot_s81_hc_ctfnq3",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctfn_banks_candidate.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 143.856,
+  "h": 25.92,
+  "exact": true
+ },
+ "why_floorplan": "Held CTFN native-hop structural partition:4 data banks each<=1615sinks plus tiny reset leaf. Existing n3 andFSv6 routed pin arcs fail40incominghops at literal835.92; independently compensated local clocks must demonstrate safer native margin. Parent+8.64um and5actualentries, no inherited physical view.",
+ "pins": {
+  "N": [
+   "clk",
+   "fd_in"
+  ],
+  "S": [
+   "fdm"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Real target RTL already owns two straight data/valid stages at the facing pins; reset input is registered locally. A generic wrapper would add2normal cycles; this component retains2data stages, declares+1INITonly, and must prove actual placed native pins."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "Actual input capture pads; no oversizedHB4 output repair hook; full FF hold and MM margins retained."
+ },
+ "io_tcl": "physical/s81_die_pins/ctfn_banks_candidate_1015/ot_s81_hc_ctfnq3.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/ctfn_banks_candidate_1015/ot_s81_hc_ctfnq3.tcl",
+  "source": "Candidate structural local-bank partition of exact v25 per-bit pins. No grant/adoption yet."
+ },
+ "slot_change_request": "Replace held n3 flat FN slot by4data leaves+resetleaf in576.72x34.56(+8.64um),5clockentries; exact x pins preserved; data banks N flush, output parentwires8.64um; full actual peer/clock/reset/cost proof beforeadoption.",
+ "job": {
+  "owner": "Codex:S81-HC-takeover",
+  "branch": "codex/s81-hc-takeover-2116",
+  "tag": "bank-native",
+  "purpose": "Held local-clock CTFN structural component; full HC source/static/physical qualification open.",
+  "structural_change": "4 independent data roots (max1615logicalFF) replace one5856-sink full576um root; exact2data stages andperbitx preserved,reset inreal separate leaf,bankvalidresetcaptured+1INITedge. Actual benchmarkquiescence4edges afterrelease. Native per-bit hops must be remeasured; no unchanged timingretry.",
+  "hold_merge": "Candidate component only. All CTS/native/route/peer/reset/staticcalendar/fullHC gates required; no physicalview inheritance or production adoption.",
+  "views_to": "physical/ref_tile/s81hc_ctfnq3_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctfnq3_ref",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "banks_exact",
+    "cmd": "bash tools/s81_suhc/ctfn_banks_candidate/run.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^CTFN_BANKS_PASS checked=8187 bits=2920 extra_normal_cycles=0 extra_init_cycles=1 roots=5$",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "bank_clock_mutant",
+    "cmd": "bash tools/s81_suhc/ctfn_banks_candidate/run.sh {RUN}/bench/mutant 4",
+    "expect": "fail",
+    "fail_regex": "^CTFN_BANKS_FAIL checked=8187 errors=[1-9][0-9]* mutant=4$",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": []
+}

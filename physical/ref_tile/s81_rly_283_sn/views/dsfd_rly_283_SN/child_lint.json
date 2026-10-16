@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81_rly_283_sn-v1-05805dc84/record/views/dsfd_rly_283_SN/dsfd_rly_283_SN.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/s81_rly_283_sn-r4-1480fbbb1/record/views/dsfd_rly_283_SN/dsfd_rly_283_SN.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 568 of 568 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M4 (33.577,3.024), rs M4 (33.577,3.024), i[0] M5 (0.720,0.016))"
- ],
- "summary": "dsfd_rly_283_SN 34.56 x 19.44: PG M5 VDD 6 stripes (78% spread, 100% cov) / VSS 6 stripes (78% spread, 100% cov); strap M6; face pins 568 blocked-above 0 blocked-same 0; clock ck insertion 92 ps",
+ "warns": [],
+ "summary": "dsfd_rly_283_SN 34.56 x 19.44: PG M5 VDD 6 stripes (78% spread, 100% cov) / VSS 6 stripes (78% spread, 100% cov); strap M6; face pins 568 blocked-above 0 blocked-same 0; clock ck insertion 92 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsfd_rly_283_SN",
   "W": 34.56,
@@ -40,25 +38,30 @@
   "face": {
    "face_pins": 568,
    "blocked_above": 0,
-   "covered_below": 54,
+   "covered_below": 100,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 568,
-   "band_examples": [
-    "ck M4 (33.577,3.024)",
-    "rs M4 (33.577,3.024)",
-    "i[0] M5 (0.720,0.016)",
-    "i[100] M5 (0.720,0.016)",
-    "i[101] M5 (0.720,0.016)",
-    "i[102] M5 (0.720,0.016)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 92.49,
-    "min_ps": 77.37
+    "max_ps": 92.15,
+    "min_ps": 76.76
    }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 74
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

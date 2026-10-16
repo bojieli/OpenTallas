@@ -63,17 +63,20 @@ module ot_qwen_d2d_kvn_rx (
                rx_payload[532:530] != 3'd2;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            word_valid <= 0; word_tag <= 0; word_data <= 0; word_identity <= 0; word_generation <= 0;
+            word_valid <= 0;
             word_slot <= 0; word_index <= 0; fault <= 0;
         end else begin
             word_valid <= rx_event && !(bad || fault);
             word_slot <= rx_slot; word_index <= rx_beat[1:0];
             if (rx_event != rx_slot || (rx_event && bad)) fault <= 1'b1;
-            if (rx_event) begin
-                word_tag <= rx_payload[532:522]; word_data <= rx_payload[511:0];
-                word_identity <= compiled_identity; word_generation <= rx_payload[521:520];
-            end
         end
+    // Payload/context are meaningful only with word_valid. Unconditional capture removes
+    // the 512-bit rx_event enable mux/tree and the wide asynchronous reset tree.
+    // The capture edge and all valid/slot/error timing stay unchanged.
+    always @(posedge ck) begin
+        word_tag <= rx_payload[532:522]; word_data <= rx_payload[511:0];
+        word_identity <= compiled_identity; word_generation <= rx_payload[521:520];
+    end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -207,19 +210,25 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
     output wire         phy_rst_n,
     output wire         epoch_abort, output wire [31:0] recovery_cycles, output wire fault
 );
+    // Global reset reaches only this short synchronizer; regional registered
+    // reset nets remove port-to-consumer recovery/removal chains. Cold release +4
+    // edges is exceptional initialization, outside the normal compiled timeline.
+    wire [3:0] local_rst_n;
+    ot_rst_pipe #(.REGIONS(4), .STAGES(2)) u_reset_regions
+        (.clk(ck), .rst_n_in(rst_n), .rst_n(local_rst_n));
     localparam integer FW = 548;
     wire [3:0] txs, rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
     wire [3:0] tv; wire [4*FW-1:0] tp;
     wire eb, ab, endf, lu, dr, seen, rt, rec; wire [7:0] ep, fc, tf;
     wire s_vm, s_co, s_cb, s_cf, s_ea, s_ar, s_fr, s_f, kvn_f;
-    ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck), .por_n(por_n), .rst_n(rst_n), .abort(ab | endf),
+    ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck), .por_n(por_n), .rst_n(local_rst_n[0]), .abort(ab | endf),
         .fault_cause(fc), .end_fault(endf), .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_rx_v(fdi_rx_v),
         .reset_req(host_link_reset_req), .recovery_clear(host_recovery_clear), .boot_begin(host_boot_begin),
         .fwd_epoch_i(1'b0), .fwd_epoch_o(fwd_epoch), .fwd_link_rst_n(fwd_link_rst_n), .phy_rst_n(phy_rst_n),
         .epoch_begin(eb), .epoch(ep), .link_up(lu), .links_drained(dr), .link_reset_seen(seen), .retrained(rt),
         .transport_fault(tf), .recovering(rec), .recovery_cycles(recovery_cycles));
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD(TXDP), .MUT(MUT)) u_end (
-        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .ck({5{ck}}), .rst_n(local_rst_n[1]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
         .rx_event(rxe), .rx_slot(rxs), .rx_kind(rk), .rx_beat(rb), .rx_payload(rxp),
@@ -236,18 +245,18 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
     assign tv[2] = emb_tx_v; assign tp[2*FW +: FW] = emb_tx_payload;
     // port 3 carries no KV-die TX traffic in the compiled program: no producer, the end faults any stray valid
     assign tv[3] = 1'b0; assign tp[4*FW-1:3*FW] = {FW{1'b0}};
-    ot_qwen_d2d_status_rx u_st (.ck(ck), .rst_n(rst_n), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
+    ot_qwen_d2d_status_rx u_st (.ck(ck), .rst_n(local_rst_n[2]), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
         .rx_payload(rxp), .vm_drained(s_vm), .collective_drained(s_co), .collective_busy(s_cb), .crom_fault(s_cf),
         .execution_active(s_ea), .admit_ready(s_ar), .status_fresh(s_fr), .result_v(engine_result_v),
         .result_done(engine_result_done), .result_fault(engine_result_fault), .result_cause(engine_result_cause),
         .result_tag(engine_result_tag), .result_gen(engine_result_gen), .result_token(engine_result_token),
         .result_value(engine_result_value), .result_cycles(engine_result_cycles), .epoch_begin(eb), .fault(s_f));
-    ot_qwen_d2d_kvn_rx u_kvn (.ck(ck), .rst_n(rst_n & ~eb), .rx_event(rxe[3]), .rx_slot(rxs[3]), .rx_beat(rb),
+    ot_qwen_d2d_kvn_rx u_kvn (.ck(ck), .rst_n(local_rst_n[3] & ~eb), .rx_event(rxe[3]), .rx_slot(rxs[3]), .rx_beat(rb),
         .rx_payload(rxp), .compiled_identity(kvn_compiled_identity), .compiled_generation(kvn_compiled_generation),
         .word_valid(kvn_word_valid), .word_tag(kvn_word_tag), .word_data(kvn_word_data),
         .word_identity(kvn_word_identity), .word_generation(kvn_word_generation), .word_slot(kvn_word_slot),
         .word_index(kvn_word_index), .fault(kvn_f));
-    qkd_host_link_services #(.NL(NL)) u_hls (.ck(ck), .rst_n(rst_n),
+    qkd_host_link_services #(.NL(NL)) u_hls (.ck(ck), .rst_n(local_rst_n[3]),
         .d2d_link_up(lu), .serdes_up(serdes_up), .d2d_transport_fault(tf), .d2d_links_drained(dr),
         .d2d_link_reset_seen(seen), .d2d_retrained(rt),
         .rec_tx_slot(txs[1]), .rec_tx_kind(tk), .rec_tx_beat(tb), .rec_rx_event(rxe[1]), .rec_rx_slot(rxs[1]),

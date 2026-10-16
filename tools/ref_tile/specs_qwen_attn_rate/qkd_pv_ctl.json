@@ -1,0 +1,112 @@
+{
+ "name": "qkd_pv_ctl",
+ "top": "ot_qwen_tp8_pv_wide_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv"
+ ],
+ "params": {
+  "FIRST_INPUT_AGE": 20
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "in_valid",
+   "in_t",
+   "in_epoch"
+  ],
+  "E": [
+   "req_valid",
+   "req_t"
+  ],
+  "N": [
+   "cmd",
+   "col_valid",
+   "col_fault"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "pair_id",
+   "start",
+   "context_len",
+   "epoch",
+   "out_epoch",
+   "fault",
+   "busy",
+   "out_age"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24
+ },
+ "recipe": 3,
+ "purpose": "Q-ATTN-RATE 2026-10-15 (owner approved 21:05): P.V pair control tile of the 16-row/cycle attention (2 per KV/system die, ONE master: pair_id is a die strap port). Calendar walk, V requests, per-port arrival identity checks, the 60-b column command word, column flag checks; every port registered at the pin.",
+ "job": {
+  "owner": "Claude:Q-ATTN-RATE (el1015-qwen-attn.log)",
+  "branch": "claude/q-attn-rate-1015",
+  "tag": "r2",
+  "purpose": "P.V pair control of ot_qwen_tp8_attention_native_service_w16 (KV/system die).",
+  "benches": [
+   {
+    "name": "pv_pair0_exact",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pv0 0 0 steady '1 100 1000 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS T=8192 pair=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv_pair1_exact",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pv1 1 0 steady '1 129 2049 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS T=8192 pair=1",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv_pair0_mut_joinorder",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pvm 0 1 steady '1000'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/qwen_attention_native",
+   "tools/qwen_nearhbm_attn_ref.py"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv_ctl/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv_ctl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every data port at the module boundary (ot_qwen_tp8_pv_col: pv/pe/cmd -> v_r/e_r/c_r, y/y_valid/fault are flops; ot_qwen_tp8_pv_wide_ctl: every input *_r, every output a flop; only the constant pair_id strap is unregistered) and the bench-measured static calendar includes those stages (P = 22 + NQ + 113, results/arch/qwen_attention_rate_1015/receipt.json, 53/53 exact); a flow-inserted second stage would add 1 cycle the compiler calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2)."
+ }
+}

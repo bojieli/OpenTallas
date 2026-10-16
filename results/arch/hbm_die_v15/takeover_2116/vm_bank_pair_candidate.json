@@ -1,0 +1,582 @@
+{
+ "schema": "opentallas.hbm_vm_bank_pair_layout_candidate.v1",
+ "status": "PLANNING ONLY: not adopted",
+ "primary_die": "compact660_v5 unchanged",
+ "masters": 4,
+ "instances": 32,
+ "outline_um": {
+  "w": 356.4,
+  "h": 365.04
+ },
+ "central_feedthrough_gap_um": 40,
+ "rows": [
+  {
+   "quadrant": "SW",
+   "pair": 0,
+   "envelope": {
+    "x": 640.0,
+    "y": 5502.56,
+    "w": 812.808,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SW0",
+     "rectangle": {
+      "x": 670.004,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SW1",
+     "rectangle": {
+      "x": 1066.404,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SW",
+   "pair": 1,
+   "envelope": {
+    "x": 3262.808,
+    "y": 5502.56,
+    "w": 812.808,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SW2",
+     "rectangle": {
+      "x": 3292.812,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SW3",
+     "rectangle": {
+      "x": 3689.212,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SW",
+   "pair": 2,
+   "envelope": {
+    "x": 5885.616,
+    "y": 5502.56,
+    "w": 812.808,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SW4",
+     "rectangle": {
+      "x": 5915.62,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SW5",
+     "rectangle": {
+      "x": 6312.02,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SW",
+   "pair": 3,
+   "envelope": {
+    "x": 8508.424,
+    "y": 5502.56,
+    "w": 812.8079999999991,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SW6",
+     "rectangle": {
+      "x": 8538.428,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SW7",
+     "rectangle": {
+      "x": 8934.828,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SE",
+   "pair": 0,
+   "envelope": {
+    "x": 29565.592,
+    "y": 5502.56,
+    "w": 812.8080000000009,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SE0",
+     "rectangle": {
+      "x": 29595.596,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SE1",
+     "rectangle": {
+      "x": 29991.996,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SE",
+   "pair": 1,
+   "envelope": {
+    "x": 26942.784,
+    "y": 5502.56,
+    "w": 812.8080000000009,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SE2",
+     "rectangle": {
+      "x": 26972.788,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SE3",
+     "rectangle": {
+      "x": 27369.188,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SE",
+   "pair": 2,
+   "envelope": {
+    "x": 24319.976,
+    "y": 5502.56,
+    "w": 812.8080000000009,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SE4",
+     "rectangle": {
+      "x": 24349.98,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SE5",
+     "rectangle": {
+      "x": 24746.38,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "SE",
+   "pair": 3,
+   "envelope": {
+    "x": 21697.168,
+    "y": 5502.56,
+    "w": 812.8080000000009,
+    "h": 750.0799999999999
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_SE6",
+     "rectangle": {
+      "x": 21727.172,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_SE7",
+     "rectangle": {
+      "x": 22123.572,
+      "y": 5695.08,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NW",
+   "pair": 0,
+   "envelope": {
+    "x": 640.0,
+    "y": 15076.893,
+    "w": 849.528,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NW0",
+     "rectangle": {
+      "x": 688.364,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NW1",
+     "rectangle": {
+      "x": 1084.764,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NW",
+   "pair": 1,
+   "envelope": {
+    "x": 3299.528,
+    "y": 15076.893,
+    "w": 849.5279999999998,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NW2",
+     "rectangle": {
+      "x": 3347.892,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NW3",
+     "rectangle": {
+      "x": 3744.292,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NW",
+   "pair": 2,
+   "envelope": {
+    "x": 5959.056,
+    "y": 15076.893,
+    "w": 849.5280000000002,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NW4",
+     "rectangle": {
+      "x": 6007.42,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NW5",
+     "rectangle": {
+      "x": 6403.82,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NW",
+   "pair": 3,
+   "envelope": {
+    "x": 8618.584,
+    "y": 15076.893,
+    "w": 849.5280000000002,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NW6",
+     "rectangle": {
+      "x": 8666.948,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NW7",
+     "rectangle": {
+      "x": 9063.348,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NE",
+   "pair": 0,
+   "envelope": {
+    "x": 29528.872,
+    "y": 15076.893,
+    "w": 849.5279999999984,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NE0",
+     "rectangle": {
+      "x": 29577.236,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NE1",
+     "rectangle": {
+      "x": 29973.636,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NE",
+   "pair": 1,
+   "envelope": {
+    "x": 26869.344,
+    "y": 15076.893,
+    "w": 849.5279999999984,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NE2",
+     "rectangle": {
+      "x": 26917.708,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NE3",
+     "rectangle": {
+      "x": 27314.108,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NE",
+   "pair": 2,
+   "envelope": {
+    "x": 24209.816,
+    "y": 15076.893,
+    "w": 849.5279999999984,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NE4",
+     "rectangle": {
+      "x": 24258.18,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NE5",
+     "rectangle": {
+      "x": 24654.58,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  },
+  {
+   "quadrant": "NE",
+   "pair": 3,
+   "envelope": {
+    "x": 21550.288,
+    "y": 15076.893,
+    "w": 849.5279999999984,
+    "h": 698.2400000000016
+   },
+   "gap_um": 40,
+   "banks": [
+    {
+     "name": "vmb_NE6",
+     "rectangle": {
+      "x": 21598.652,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    },
+    {
+     "name": "vmb_NE7",
+     "rectangle": {
+      "x": 21995.052,
+      "y": 15243.493,
+      "w": 356.4,
+      "h": 365.04,
+      "orient": "R0"
+     },
+     "incident_paths_qualified": false
+    }
+   ]
+  }
+ ],
+ "overlaps_with_other_plan_blocks": 0,
+ "missing_physical_checks": [
+  "actual native leaf views",
+  "all incident pins/die entry clocks",
+  "pin-to-pin relay/cut calculations",
+  "parent GRT and TT/FF/DRC"
+ ],
+ "scope": "Side-by-side pair packing in original two-bank envelope fixes the16north-bank25.92umheightdeficit without changing master size or die footprint. Every oldpair envelope has enough width/height; original band and all other plan blocks unchanged."
+}

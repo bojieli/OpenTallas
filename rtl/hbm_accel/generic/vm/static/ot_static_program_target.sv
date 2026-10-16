@@ -2,7 +2,8 @@
 `default_nettype none
 // Actual local configuration/launch consumer for the F20 engine programme
 // broadcast. Two registered transport rungs; no per-cycle execution handshake.
-// Targets not configured for this kernel remain inactive at the global launch.
+// A descriptor arms exactly one global launch. Matching writes/replacements disarm first;
+// consumed descriptors never silently replay at another target's later global launch.
 module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10)(
     input wire clk,rst_n,
     input wire cfg_v,
@@ -44,15 +45,18 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
             program_cfg_we<=0;program_start_v<=0;
             if(cv && target==TARGET)begin
+                configured<=0;
                 if(program_active || lv || {1'b0,address}>=(13'd1<<PCW))fault<=1;
                 else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end
             end
             if(dv && target==TARGET)begin
-                if(program_active || lv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW))fault<=1;
+                configured<=0;
+                if(program_active || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW))fault<=1;
                 else begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;configured<=1;end
             end
             if(lv && configured)begin
-                if(program_active || fault)fault<=1;
+                configured<=0;
+                if(program_active || fault || cv || dv)fault<=1;
                 else begin
                     program_start_v<=1;program_start_base<=stored_base[PCW-1:0];
                     program_start_limit<=stored_limit[PCW:0];program_start_loops<=stored_loops;

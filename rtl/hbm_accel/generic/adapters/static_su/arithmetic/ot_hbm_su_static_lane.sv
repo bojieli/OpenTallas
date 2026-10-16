@@ -491,8 +491,9 @@ module ot_hbm_su_static_lane #(
     always @(posedge clk_stage[0]) begin
         m_o<=mf_o; m_par<=mf_par; x_o<=m_o; x_par<=m_par;
     end
-    generate if (FETCH_EXTRA_EDGES < 0 || FETCH_EXTRA_EDGES > 2) begin:g_bad_fetch
-        ot_su_response_offset_must_be_0_1_or_2 u_trap();
+    generate if (FETCH_EXTRA_EDGES < 0 || FETCH_EXTRA_EDGES > 4) begin:g_bad_fetch
+        // 0 raw macro, 2 pinned bank, 4 pinned bank behind a pin-registered lane (ot_hbm_su_static_lane_pinreg)
+        ot_su_response_offset_must_be_0_to_4 u_trap();
     end endgenerate
     // ---- X: capture (the memories answered during the cycle before) --------------------------------------
     reg [31:0] x_a, x_b, x_c, x_d;

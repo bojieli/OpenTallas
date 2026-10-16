@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sm_xload_cl2_ctl",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in pin flops c_base..c_xb / cmd_v (x_*), rr_c (rr), rw (rwq), bq_c (bq_d), qo_*_c/qf_*_c (quantiser flags); every output is a register (q_v/q_s, x_busy/x_fault/x_done, xw_*, c_d/c_wce/c_mhi/c_mlo/c_wa, r_ce/r_a, l_d, qv_*, r_wsel/zlo/zhi, ea/eb2, lane_en, rn); a recipe-3 register would add a second stage on every port."
+}

@@ -11,9 +11,9 @@
 `define LEAF_TOP ot_hbm_su_static_kind0_lat4_leaf1_physical
 `endif
 module tb_su_static_lane_leaf;
- parameter integer NOPS=31,MLAT=4,ALAT=3,LEAF=1,LANE=205;          // global lane (quarter LANE/128, local LANE%128)
+ parameter integer NOPS=31,MLAT=4,ALAT=3,LEAF=1,LANE=205,PINREG=0;  // PINREG: leaf is pin-registered (outputs +4 edges)          // global lane (quarter LANE/128, local LANE%128)
  localparam integer LATENCY=23+4*(MLAT-3)+(ALAT-3)+LEAF;
- localparam integer FIRST_OUTPUT=8+LATENCY;
+ localparam integer FIRST_OUTPUT=8+LATENCY+4*PINREG;   // pin regs: command +1, store round trip +2, write +1
  localparam integer Q=LANE/128,LOCAL=LANE%128;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,seed_v=0,drain_v=0;

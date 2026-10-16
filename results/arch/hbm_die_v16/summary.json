@@ -1,0 +1,345 @@
+{
+ "summary": {
+  "instances": 1418,
+  "masters": 55,
+  "edges": 10069,
+  "edge_bits": 1029907,
+  "clock_reset_ports": 3306,
+  "straps": 90,
+  "die_pins": 43,
+  "exposed_input_ports": 51,
+  "exposed_input_bits": 21737,
+  "exposed_unassigned_ports": 0,
+  "gaps": 36,
+  "open_output_ports": 1062,
+  "problems": 0,
+  "before_v15": {
+   "instances": 83,
+   "exposed_input_ports": 1070,
+   "exposed_input_bits": 177247,
+   "unresolved_source_ports": 1660,
+   "source": "results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json"
+  }
+ },
+ "by_owner": {
+  "see note per range (not SM)": {
+   "ports": 6,
+   "bits": 8842
+  },
+  "H-SU (SU quarter inject read) / H-COLL": {
+   "ports": 4,
+   "bits": 4096
+  },
+  "H-SU / H-COLL": {
+   "ports": 12,
+   "bits": 1040
+  },
+  "owner / H-DIE (HBM K-port ownership)": {
+   "ports": 8,
+   "bits": 52
+  },
+  "H-SU / H-ELEM-B (s_mtp)": {
+   "ports": 1,
+   "bits": 523
+  },
+  "HC owner (engine) / H-DIE": {
+   "ports": 12,
+   "bits": 3088
+  },
+  "H-SU": {
+   "ports": 8,
+   "bits": 4096
+  }
+ },
+ "problems": [],
+ "gaps": [
+  {
+   "id": "G-CIL-INJ",
+   "owner": "H-SU (SU quarter inject read) / H-COLL",
+   "missing_rtl": "no static producer of COLL inj_d[1023:0] (2 x 512-b SU-quarter inject words answered INJLAT=12 edges after inj_rd/inj_idx/hgi_inj_addr, ot_hfd_coll_q_static_v4.sv:201-217) exists among the v16 SU/sucore masters known to this region; v15 also unbound (\"actual VM programme SRAM calendar issuer\")",
+   "undriven_ports": 4,
+   "undriven_bits": 4872,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-RC",
+   "owner": "H-SU / H-COLL",
+   "missing_rtl": "RED_CARRY reduction-carry port pair to the quadrant SU (rc_v/rc_tag[3]/rc_d[256] in, rr_v/rr_tag/rr_d out; ot_hfd_coll_q.sv:17-18, ring lp_data at ot_hfd_coll_q_static_v4.sv:302): no SU-side static RTL port named on main",
+   "undriven_ports": 12,
+   "undriven_bits": 2080,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-DEL",
+   "owner": "H-COLL / H-SU",
+   "missing_rtl": "consumer of COLL delivery lanes del_valid[4]/del_flit[2180]/hgi_del_obase[160] (words delivered to the quadrant slice); v15 retired delivery_<q>; no v16 static consumer port identified",
+   "undriven_ports": 0,
+   "undriven_bits": 9376,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-COLLSTAT",
+   "owner": "host owner (host_misc) / H-DIE",
+   "missing_rtl": "status join: ot_hbm_host_static_ingress has ONE block_ready/program_active/program_fault input; 4 COLL targets (+IDX/ARGMAX) each produce program_configured/program_init_busy/program_fault/hgi_busy/hgi_done/hgi_fault/fault/done/stat_cycles -> needs a real status-aggregation leaf (an OR is glue with no die home)",
+   "undriven_ports": 0,
+   "undriven_bits": 160,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-IDXCP",
+   "owner": "host owner (programme loader) + H-COLL+IDX",
+   "missing_rtl": "IDX programme/record issuer: hb_idx takes a raw programme SRAM write port (program_we/addr[8]/data[256]) + start/length + per-record operands + TOPK descriptor; no IDX host target (cf. ot_hgi_coll_static_program_target for COLL, which decodes the host F20 cfg bus) and no IDX/TOPK record issuer exist on main",
+   "undriven_ports": 0,
+   "undriven_bits": 2446,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-IDXTX",
+   "owner": "H-COLL+IDX",
+   "missing_rtl": "COLL TopK injection: hb_idx.tx_v[4]/tx[2180] (topk link frames) has no input on any COLL master (q3 host_v4 TKM del_flit is internal: ot_hfd_coll_q_static_v4.sv:291). compact.graph.json link idx_link>coll_SW:IDX_COLL names \"COLL del_flit\", which is an OUTPUT. ot_hgi_coll_idx_tkm_join / ot_hgi_coll_vm_idx_ingress (idx_d input) exist but are only used in benches",
+   "undriven_ports": 0,
+   "undriven_bits": 2184,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-AMCP",
+   "owner": "host owner (programme loader) / MTP owner",
+   "missing_rtl": "ARGMAX.LOCAL record issuer for hb_argmax go/mode/imm_a/a_mirror/a_base/n/o_base/o_is; status join for busy/done/fault/nan_flag",
+   "undriven_ports": 0,
+   "undriven_bits": 4,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-AMSTREAM",
+   "owner": "H-SU / H-ELEM-B (s_mtp)",
+   "missing_rtl": "static SU logit stream am_stream[522:0] {bias_en,bias256,vals256,mask8,last,v}: only the historical ot_hgi_su_unit / ot_hgi_sv_unit (generic/peers) have an am_stream output; no v16 static SU master (su_<q>/sucore_<q>) exports it",
+   "undriven_ports": 1,
+   "undriven_bits": 523,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-CIL-HOSTN",
+   "owner": "host_misc region (host_cp ingress/loader)",
+   "missing_rtl": "(edge owned by host_misc) host_N.tx[511:0] driver / host_N.rx[511:0]+st[1:0] consumer = host packet bridge between UCIe 512-b beats and ot_hbm_host_static_ingress AXI-lite (s_aw/w/b/ar/r 32-b); hfd_host_native.sv (io_native_20261014, LOCALONLY candidate) is the nearest RTL",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "coll_idx_link"
+  },
+  {
+   "id": "G-DMA-WB",
+   "owner": "owner / H-DIE (HBM K-port ownership)",
+   "missing_rtl": "DMA write-back partner (wb_ready, wa[12] into hb_dbk_<q>; consumer of wd[2312] + wb_reserve_*/wb_fill_*): the real successor exists on main (ot_hbm_svc_wb_block_cdc / _pipeline_cdc: reserve/fill/wd -> two-buffer WB SRAM -> CDC -> 32 HBM K write ports per stack, wa = posted sectors on true PHY completion; composed with this DMA in ot_hgi_b2_swap_wb_grp_static.sv) but every HBM controller K port of the v16 die is owned by an svg_<q><k> read feed (4 PCs each). Binding the WB needs an architecture decision: (a) a static K-port time slot shared by svg read feed and WB write (fixed calendar slot in the feed issuer), or (b) dedicated write PCs. wa/wb_ready are true off-die completion signals and cannot be produced by a dispatcher.",
+   "undriven_ports": 8,
+   "undriven_bits": 52,
+   "region": "cp1"
+  },
+  {
+   "id": "G-HOST-SESSION",
+   "owner": "H-DIE (die pins) + host owner",
+   "missing_rtl": "die strap pads: host_phy.session_pad[23:0] is the host link session id (off-die sideband, agreed by both link ends before any configuration can cross the link). Needs DIE_PIN entry (ot_hbm_host_phy_adapt, ^session_pad$) in full_die_v16.py (parent/VMSM-owned generator).",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "cp2"
+  },
+  {
+   "id": "G-HC-ENG",
+   "owner": "HC owner (engine) / H-DIE",
+   "missing_rtl": "the single static HC engine hc_eng (projection W32/K20480 + Sinkhorn tail, 64 weight + 16 residual SRAM, programme SRAM; codex/hc-static-engine-1014 a35449ada ot_hgi_hc_programmed_sys1_split_mtp_static + weight prefetch on codex/hc-weight-prefetch-1015) is not on main; it is the producer of the per-quadrant tail result (result_v, result_position[3], result[768] = 24 FP32) that hc_<q> stores to VM. Its residual input is hc_<q>.x_wave (8192 b every 4 edges) and gathered mixes, both open outputs here.",
+   "undriven_ports": 12,
+   "undriven_bits": 3088,
+   "region": "hc"
+  },
+  {
+   "id": "G-HOST-PROGRAM-INSTALL",
+   "owner": "H-NETLIST / host programme targets",
+   "missing_rtl": "Programme-target configured proves descriptor bounds and one-launch arm only; no actual loaded-row completeness check is integrated for cp_cal/cp_fill/cp_ep/hc_tgt. Status aggregation PASS does not prove installation readiness. Integrate the actual loaded-row checker and compiled full-image evidence before native qualification.",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "host_completion"
+  },
+  {
+   "id": "G-HOST-PADS",
+   "owner": "H-DIE",
+   "missing_rtl": "none missing: ot_pdie_ucie PMA side is the off-die host boundary (declared behavioural PMA pads)",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "host_misc"
+  },
+  {
+   "id": "G-HOST-LOADER-CAL",
+   "owner": "host owner + H-SM",
+   "missing_rtl": "VM calendar programme issuer from the static ingress: ot_static_program_target #(.PCW(10)) is port-exact to hfd_hgi_vm_calendar_<q> (program_cfg_we/addr10/data256/start_v/base10/limit11/loops16) but NO target ids are assigned on main for the 4 VM calendars (only 48 QDQ, 49 attention, 52+QID COLL, 125 QDQ-SW) and ingress TARGET_MASK admits only 48; ot_vms_calendar_host_static is port-exact too (cfg_we[4]/addr[40]/data[1024]/start_* slices) but needs lcp_doorbell from ot_hgi_loader_cp (retired CP), terminates its c_* passthrough in that CP and itself decodes F20..F2c (would shadow host_cp_ingress on the single packet AXI port)",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "host_misc"
+  },
+  {
+   "id": "G-HOST-LOADER-SVG",
+   "owner": "host owner + H-DIE (service engine)",
+   "missing_rtl": "service-group programme producer: ot_hbm_svc_sm_group program_cfg_we/addr10/data256 could come from an ot_static_program_target(PCW10) collar (no target id assigned), but desc_we/desc_addr7/desc_data256 and run_v/run_base7/run_count8 have no collar/adapter on main (ot_static_program_target emits start base/limit/loops, not a descriptor-RAM write + base/count run)",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "host_misc"
+  },
+  {
+   "id": "G-HC",
+   "owner": "HC owner",
+   "missing_rtl": "static HC master with LG-pair client ports (rq 8x17 / wq 8x281 / rr 8x257 / w_done 8, no ready/credit) for hc_<q><k> (16 window slots) and hc_eng: hfd_hc (v14, ck0..7, f_sfu/t_sfu 1024 b) is an SFU-ring tile, not an LG client; ot_hgi_hc_eng/_ll use credits (wrq_cr/wwq_cr, job_v/job_rdy, rg/wg req-gnt) over 32 banks; hfd_hc_eng / ot_hgi_hc_eng_station lg_rup512/lg_rdn8256/lg_wup8960/lg_wdn64 are the 32-bank request form of the same dynamic engine; rtl/hbm_accel/generic/peers/static_hc/ has only leaves (bank shell/control/memory, weight quarter, residual half, aperture + aperture bridge consuming dq[2248]) with no tile/engine top; the HC static engine parent is on codex/hc-static-engine-1014 (a35449ada, HC_STATIC_ENGINE_HANDBACK_20261015.md), not on main",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "host_misc"
+  },
+  {
+   "id": "G-DMA",
+   "owner": "H-HARDEN (DMA)",
+   "missing_rtl": "static DMA dispatcher (cycle/mv_v/mv[227]/issue_at/drain_at/mv_wb_bank/mv_wb_epoch) and the service write-back band reservation partner (wb_ready, wa[12] in; consumer of wb_reserve_*/wb_fill_*/wd[2312]): no module on main outputs issue_at/drain_at/mv_wb_epoch/wa/wb_ready, and no module takes wb_reserve_v as input (svc bands retired; ot_hbm_svc_sm_group has no WB port)",
+   "undriven_ports": 0,
+   "undriven_bits": 52,
+   "region": "host_misc"
+  },
+  {
+   "id": "G-QUANT-SPLIT",
+   "owner": "H-SM (QUANT)",
+   "missing_rtl": "parent composition joining the target-48 programme leaf with the LG=1/TSPLIT=1 engine: ot_hgi_qdq_program_static has LG/TSPLIT but takes raw calendar ports (no target collar); ot_hgi_qdq_host_static has the collar but no LG/TSPLIT; dxl/dbq/daq decoder and programme leaf have no slot among quant_NW0..3 / _lg / _xp; glue (cmd_v=command_v&&command[0], fault OR) has no die home",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "host_misc"
+  },
+  {
+   "id": "G-SMVM-XCMD",
+   "owner": "H-SM (with HBM compiler / CP)",
+   "missing_rtl": "a STATIC x-load command issuer (programme-SRAM sequencer like ot_static_program_target + calendar) that drives x_v/x_base/x_n/x_p/x_stride/x_space/x_fmt/x_xb on fixed cycles and consumes x_done/x_fault. Every producer on main is credited (x_rdy handshake): ot_hgi_sm_record, ot_hgi_smmv, ot_hbm_b2_xload_command (and ot_hgi_cp_die ux_v/ux_rdy). None can bind to the static cl2 ctl (no x_rdy input).",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SMVM-SMOUT",
+   "owner": "H-SM (+H-COLL+IDX for the stage, H-ELEM-A for the VM hub)",
+   "missing_rtl": "a STATIC consumer of the SM results rv/rrow[11:0]/rdata[255:0]/fault/schedule_fault (grant link sm_<q>k>vmh_<q>:SM_OUT 270 b). ot_vms_hub_static / hfd_hgi_vms_static have no SM result port; ot_hgi_sm_pub(_hier/_slice) is credited (pub_rdy, sm_cr, cq338 record client) and non-static; ot_hgi_coll_sm_stage_q (8 SMs x rv/rrow/rdata, static, rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv) exists but is instantiated only in its tb, is not in hb_coll_<q> (ot_hfd_coll_q*_static) and needs its own calendar inputs (fill_begin/fill_bank/pub_*/prefetch_*/lp_*). fault/schedule_fault need the status aggregate.",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SMVM-KVDESC",
+   "owner": "H-SM / H-ELEM-A",
+   "missing_rtl": "attention SM master ot_hbm_accel_smh_attn (rtl/hbm_accel/sm/attn, on main via eb3e3e94a, ancestor of HEAD) has command[191:0] + kv_desc[63:0] + request (not expected_request); the die binds ot_hbm_accel_smh_static (83-b command from ot_hbm_svc_sm_group.sm_command[82:0], no kv_desc). Missing: (a) a 192-b command source (svc_sm_group emits 83 b), (b) a static kv_desc producer at the VM hub (grant link vmh_<q>>sm_<q>k:KV_DESC 64 b; ot_vms_hub_static has no such port).",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SMVM-STRAP",
+   "owner": "H-SM / H-DIE",
+   "missing_rtl": "hfd_vms_bank_strap_q0..3 are the per-quadrant physical masters of the 8 banks INSIDE hb_vms_<q> (they replace ot_vms_bank_static u_bank in ot_vms_slice_static, rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:89), but ot_vms_slice_static on main still instantiates ot_vms_bank_static (bid=3'(b), sid from hfd_hgi_vms_static_<q> .sid(2'dN)). Not die-level instances while hb_vms_<q> stays one instance; if the coordinator flattens hb_vms into vmh/vmb slots, each vmb_<q><b> = hfd_vms_bank_strap_q<sid> with straps bid=b, sid=q (SW0 SE1 NW2 NE3; results/hbm_sm_attention_1015/vm_strap/strap_table.json; pins results/arch/hbm_die_v15/vm_strap_grants_1015.json).",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SMVM-CALISS",
+   "owner": "host owner / H-DIE (host_cp)",
+   "missing_rtl": "VM programme SRAM calendar issuer. Candidate RTL exists: ot_vms_calendar_host_static (rtl/hbm_accel/generic/vm/static) outputs cfg_we[3:0]/cfg_addr[39:0]/cfg_data[1023:0]/start_v[3:0]/start_base[39:0]/start_limit[43:0]/start_loops[63:0] = exactly 4 x calendar_<q> inputs (quadrant i at [i*w +: w]) and takes program_active/done/fault[3:0] from calendar_<q> active/done/fault; it sits between the host AXI (s_*) and the CP loader AXI (c_*), instantiated only in tbs. Binding needs the host ingress + CP (ot_hgi_loader_cp) region; not an SM leaf. The RG2 x-load read slots are part of this programme.",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SMVM-VMCLIENT",
+   "owner": "see note per range (not SM)",
+   "missing_rtl": "static client source migration for VM ports outside RG2: no static producer on main for these client slots",
+   "undriven_ports": 6,
+   "undriven_bits": 8842,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SMVM-KEYSTAGE",
+   "owner": "H-COLL+IDX (with H-SM for attention-on-SM KV)",
+   "missing_rtl": "service key staging producer of hb_idx key_lines[35167:0] (consumes key_slot/key_index): no module on main outputs key_lines (only ot_hbm_idx_* inputs); ot_hbm_svc_sm_group has no key-line output.",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "sm_vm"
+  },
+  {
+   "id": "G-SU-PROG-HOST",
+   "owner": "H-SU + host owner",
+   "missing_rtl": "host/CP configuration writer and start/length issuer for ot_hbm_su_programme (34,420 config transactions + start at epoch-4); no die producer of cfg_we/cfg_bank/cfg_row/cfg_data/start/length exists on main (the bench drives them)",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-LOADER-SW",
+   "owner": "H-SU + host owner",
+   "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-OPERAND-JOIN-SW",
+   "owner": "H-SU",
+   "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
+   "undriven_ports": 2,
+   "undriven_bits": 1024,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-LOADER-SE",
+   "owner": "H-SU + host owner",
+   "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-OPERAND-JOIN-SE",
+   "owner": "H-SU",
+   "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
+   "undriven_ports": 2,
+   "undriven_bits": 1024,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-LOADER-NW",
+   "owner": "H-SU + host owner",
+   "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-OPERAND-JOIN-NW",
+   "owner": "H-SU",
+   "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
+   "undriven_ports": 2,
+   "undriven_bits": 1024,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-LOADER-NE",
+   "owner": "H-SU + host owner",
+   "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
+   "undriven_ports": 0,
+   "undriven_bits": 0,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SFU-OPERAND-JOIN-NE",
+   "owner": "H-SU",
+   "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
+   "undriven_ports": 2,
+   "undriven_bits": 1024,
+   "region": "su_sfu"
+  },
+  {
+   "id": "G-SU-MTP-LOGIT",
+   "owner": "H-SM (SM_OUT stream adapter) + MTP owner; was H-SU",
+   "missing_rtl": "static-SU logit stream producer for hb_argmax.am_stream (523 b); ot_hbm_su_static_top/pgslice have no logit-stream output (only the legacy ot_hgi_su_unit drives am_stream)",
+   "undriven_ports": 0,
+   "undriven_bits": 523,
+   "region": "su_sfu"
+  }
+ ]
+}

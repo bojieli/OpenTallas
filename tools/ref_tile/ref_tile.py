@@ -731,6 +731,30 @@ def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
     return pg, n_min, spread_min
 
 
+FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 2026-10-15: parent / cluster kits
+
+
+def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | None:
+    """(severity, 'fill', message, fix) for a parent / cluster kit (kind cluster, hardened children, or >= 4 macros):
+    fill = (hard macro + child area + synthesized std-cell area) / outline.  WARN < 50 %, FAIL < 35 % unless the spec
+    records "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face)."""
+    if not (s.get("kind") == "cluster" or s.get("children") or len(s.get("macros") or []) >= 4):
+        return None
+    if not std_area:
+        return ("WARN", "fill", "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+                "pass --area-um2 / std_area_um2 from the synthesis smoke")
+    mac = sum(b["w"] * b["h"] for b in blocks)
+    fill = (mac + float(std_area)) / (W * H)
+    reason = str((s.get("fill_reason") or {}).get("pin_bound", "")).strip()
+    msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
+    if fill < FILL_FAIL and not reason:
+        return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
+                "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
+    if fill < FILL_WARN:
+        return ("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+    return None
+
+
 def pg_spread_ok(rec) -> bool:
     return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
 
@@ -1462,9 +1486,18 @@ def cts_sink_env(r: dict) -> list:
         raise SpecError("spec: route.cts_sink: give both size and diameter_um, or neither (extra only)")
     sz = (f" -sink_clustering_size {int(cs['size'])} -sink_clustering_max_diameter {int(cs['diameter_um'])}"
           if "size" in cs else "")
-    if not sz and not extra:
+    # "sink_clustering": false drops -sink_clustering_enable (qkd_d2d_static 10-15: on a sparse 475x281 um macro tile
+    # with pin-band sinks, max-cap clustering hung a 24-flop SW-corner leaf on a 234 um return wire from a far H-tree
+    # tap, 637 vs 439..488 ps; measured on the gate placement, unclustered H-tree: all flops 442..508 ps)
+    clus = cs.get("sink_clustering", True)
+    if not isinstance(clus, bool):
+        raise SpecError("spec: route.cts_sink.sink_clustering: true or false")
+    if clus is False and sz:
+        raise SpecError("spec: route.cts_sink: size / diameter_um need sink_clustering")
+    if not sz and not extra and clus:
         raise SpecError("spec: route.cts_sink: empty (no size / diameter_um and no extra)")
-    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75' + sz + (' ' + extra if extra else ''))}"]
+    base = ('-sink_clustering_enable ' if clus else '') + '-repair_clock_nets -delay_buffer_derate 0.75'
+    return [f"CTSA={shq(base + sz + (' ' + extra if extra else ''))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
@@ -1694,6 +1727,9 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     place_blocks(s, W, H, blocks)
     std = area_um2 or s.get("std_area_um2")
     findings = floorplan_checks(s, W, H, blocks, std)
+    fills = fill_check(s, W, H, blocks, std)
+    if fills:
+        findings.append(fills)
     pgs = pg_stripe_spread(s, lc, W, H)
     if not pg_spread_ok(pgs):
         findings.append(("FAIL", "pg_spread",
@@ -1793,6 +1829,9 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     for v in macro_views:
         cmd += ["--macro-view", str(ROOT / v)]
     rc = subprocess.run(cmd).returncode
+    if rc:
+        print(f"REF_TILE export {top}: view_export failed rc={rc}; no post-processing")
+        return 1
     base = next(Path(orfs_dir).glob("results/asap7/*/base"), None)
     ck = ROOT / "tools/closure_loop/ck_insertion.py"
     if base is not None and ck.exists():
@@ -1806,11 +1845,6 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
         else:
             (o / "CLOCK_INSERTION_FAILED").unlink(missing_ok=True)
-    lef = o / f"{top}.lef"
-    if lef.exists() and not grant:
-        # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
-        # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
-        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
     routed_def = None
     if grant and base is not None:
         # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
@@ -1820,9 +1854,11 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             routed_def = str(o / "pin_only_routed.def")
             shutil.copyfile(candidates[0], routed_def)
         (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
-    res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
-                          pin_grant=grant, routed_def=routed_def,
-                          tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+    from export_provenance import finalize
+    res = finalize(o, top, ROOT / "tools/hier_contract/abstract_pin_stub.py", child_lint,
+                   lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
+                       tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
+                   transform=not bool(grant))
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

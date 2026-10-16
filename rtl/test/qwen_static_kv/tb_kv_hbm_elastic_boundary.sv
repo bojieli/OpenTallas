@@ -15,7 +15,7 @@
 // 5 one read earlier than nominal (controller must fault), 6 PHY silent beyond
 // watchdog (must fault). Compile-time: FRONT_MUT 1..3, CTRL_ELASTIC 0 (FAIL).
 module tb_kv_hbm_elastic_boundary;
- parameter integer FRONT_MUT=0, CTRL_ELASTIC=1, NBLK=4, BLK=8;
+ parameter integer FRONT_MUT=0, CTRL_ELASTIC=1, NBLK=4, BLK=8, RDEPTH=8;
  localparam CYCLES=2600,RL=23;
  // lateby: edges beyond the compiled window. Outstanding raw reads must stay <= TQD (64): a PHY stall
  // longer than TQD-CMD-RL needs the RD issuer stopped (block credit), which this static bench does not model.
@@ -39,7 +39,7 @@ module tb_kv_hbm_elastic_boundary;
  qkd_kv_hbm_elastic_front #(.NBLK(NBLK),.BLK(BLK),.STRIDE(1),.MUT(FRONT_MUT)) u_front(.pll_hbm(ck),.hrst(rst[1]),
   .co_in(co[1]),.epoch_in(out_epoch[1]),.blk_go(blk_go),.co_out(f_co),.epoch_out(f_epoch),.compiled_hbm_put(f_put),
   .blk_freed(f_freed),.idle(f_idle),.hold(f_hold),.stall_edges(f_stall),.occupancy(f_occ),.fault_overflow(f_ovf),.fault_go(f_gofault));
- qkd_static_kv_return_slots u_return(.pll_hbm(ck),.hrst(rst[1]),.ck(core),.rsi(rst[1]),
+ qkd_static_kv_return_slots #(.DEPTH(RDEPTH)) u_return(.pll_hbm(ck),.hrst(rst[1]),.ck(core),.rsi(rst[1]),
  .controller_co(mode==3?co[1]:f_co),.controller_epoch(mode==3?out_epoch[1]:f_epoch),.compiled_hbm_put(mode==3?predicted_corrected:f_put),
  .expected_put(expected_core_put),.expected_sector(expected_core_sector),.expected_epoch(16'd7),.expected_layer(6'd3),
  .actual_valid(return_valid),.actual_sector(return_sector),.actual_epoch(return_epoch),.actual_layer(return_layer),

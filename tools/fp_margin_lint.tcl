@@ -33,8 +33,19 @@ proc ot_fp_lint_dump {out {edge_band_um 3.0}} {
   set ls {}
   foreach l [$tech getLayers] {
     if {[$l getType] ne "ROUTING"} { continue }
+    # Actual DEF tracks, not a presumed zero-origin technology pitch. Manual
+    # BPin placement can bypass PPL's track snapping (TT fs4: 695 pins -12 nm).
+    set patterns {}
+    set grid [$block findTrackGrid $l]
+    if {$grid ne "NULL" && $grid ne ""} {
+      set axis [expr {[$l getDirection] eq "VERTICAL" ? "X" : "Y"}]
+      for {set i 0} {$i < [$grid getNumGridPatterns$axis]} {incr i} {
+        lassign [$grid getGridPattern$axis $i] start count step
+        lappend patterns [format {[%.6f,%d,%.6f]} [expr {$start / $dbu}] $count [expr {$step / $dbu}]]
+      }
+    }
     lappend ls "\{\"name\": [ot_fpl_q [$l getName]], \"level\": [$l getRoutingLevel], \"dir\": [ot_fpl_q [$l getDirection]],\
- \"pitch\": [expr {[$l getPitch] / $dbu}], \"width\": [expr {[$l getWidth] / $dbu}]\}"
+ \"pitch\": [expr {[$l getPitch] / $dbu}], \"width\": [expr {[$l getWidth] / $dbu}], \"track_patterns\": \[[join $patterns ,]\]\}"
   }
   puts $f "\"layers\": \[[join $ls ,]\],"
   # instances: per-master counts, macros (BLOCK masters) with their geometry

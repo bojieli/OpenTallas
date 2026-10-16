@@ -39,7 +39,10 @@ SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
 SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
            "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
            "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/lib/ot_rst_relay.sv", "rtl/lib/ot_hdly.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-           "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv"]   # module definitions only; selected by OT_SMH_COMPACT_PT   # --smh: the hierarchical element (ot_hbm_accel_smh)
+           "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+           # H-SM-REPACK: group transport bodies (definitions only; selected by OT_SMH_GROUP_TRANSPORT / OT_SMH_WEST_SPLIT)
+           "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv", "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+           "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv"]   # module definitions only; selected by OT_SMH_COMPACT_PT   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 
@@ -141,6 +144,9 @@ def cmd_run(a):
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
                               + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_obdrop" if a.mut_obdrop else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
                               + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else "") + "".join("_" + x.lower() for x in a.define))
+    if len(bdir.name) > 200:   # H-SM-REPACK: long define lists overflow NAME_MAX (Errno 36); keep a readable prefix + digest
+        import hashlib
+        bdir = bdir.with_name(bdir.name[:160] + "_" + hashlib.sha1(bdir.name.encode()).hexdigest()[:16])
     cgdefs = (["-DOT_SMH_CG", "-DOT_SMH_CG_LOCKSTEP"] if a.cg else []) + (["-DOT_SMH_CG_MUT_LATE"] if a.cg_mut_late else []) + (["-DOT_SMH_CG_MUT_HOLD0"] if a.cg_mut_hold0 else []) + [f"-D{x}" for x in a.define]
     if a.cg and not a.smh:
         raise SystemExit("--cg needs --smh")

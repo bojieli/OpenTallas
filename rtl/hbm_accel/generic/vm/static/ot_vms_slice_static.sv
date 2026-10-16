@@ -9,7 +9,8 @@ module ot_vms_slice_static #(
     parameter integer CW=((NC+1)>1)?$clog2(NC+1):1,
     parameter integer RB=((RG+1)>1)?$clog2(RG+1):1,
     parameter integer WB=$clog2(WG+5),
-    parameter integer BMUT=0,RMUT=0
+    parameter integer BMUT=0,RMUT=0,
+    parameter integer STRAP_QUADRANT=-1 // opt-in physical masters; -1 retains historical bank
 )(
     input wire [7:0] clk_bank,
     input wire clk_hub,
@@ -86,6 +87,19 @@ module ot_vms_slice_static #(
             assign bwq[g*281+:281]=wq[(g*8+b)*281+:281];
             assign wq_done[g*8+b]=bdone[g];
         end
+        if(STRAP_QUADRANT>=0)begin:g_physical_strap
+        ot_vms_bank_strap_physical #(.RG(RG),.WG(WG),.QUADRANT(STRAP_QUADRANT),.MUT(BMUT)) u_bank(
+            .clk(clk_bank[b]),.rst_n(rst_n),.sid(sid),.bid(3'(b)),
+            .rslot_v(rslot_v[b]),.rslot(rslot[b*RB+:RB]),
+            .wslot_v(wslot_v[b]),.wslot(wslot[b*WB+:WB]),
+            .rq(brq),.rr(brr),.wq(bwq),.wq_done(bdone),
+            .dq(dq[b*281+:281]),.dq_done(dq_done[b]),
+            .kq(kq[b*281+:281]),.kq_done(kq_done[b]),
+            .xq(xq0[b*276+:276]),.xq_done(xd0[b]),
+            .xq2(xq1[b*276+:276]),.xq2_done(xd1[b]),
+            .eg(eg[b*276+:276]),.pq(pq[b*285+:285]),.pr(pr[b*266+:266]),
+            .status(bank_status[b*18+:18]));
+        end else begin:g_historical_bank
         ot_vms_bank_static #(.RG(RG),.WG(WG),.MUT(BMUT)) u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),.sid(sid),.bid(3'(b)),
             .rslot_v(rslot_v[b]),.rslot(rslot[b*RB+:RB]),
@@ -97,6 +111,7 @@ module ot_vms_slice_static #(
             .xq2(xq1[b*276+:276]),.xq2_done(xd1[b]),
             .eg(eg[b*276+:276]),.pq(pq[b*285+:285]),.pr(pr[b*266+:266]),
             .status(bank_status[b*18+:18]));
+        end
     end endgenerate
     ot_vms_rstop_static #(.MUT(RMUT)) u_cw(
         .clk(clk_ring[0]),.rst_n(rst_n),.sid(sid),.dir(1'b0),

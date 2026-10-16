@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.s81.vm-affinity-price.v1",
+  "input": {
+    "basis": "mapping A on the actual inventory (results/arch/s81_vm_affinity_1016/plan.json): per-access-set W+R relay edges at R 900 um on the S-VM 5,037 x 4,600.8 VM (S-VM affine_A / message 10-15). su = own [0,1] 23; SU ops that write field/PQ inputs into [3] (quant, q_quant, z_quant, ffn quant/quant2/shared_quant) +1 write = 24; hc (incl. hc_pre/post H accesses) [3] 18; field/PQ x reads [3] 20; coll reads [1] (ret 7 vs 9) but writes [0,1,3] = 23; svc/sel read [1], svc aSW writes into SU [0,1] at all-slices reach = 21; mix reads H in [3] and K/W/V in [0,2] = all-slices 27 (12 nodes).",
+    "edges": {
+      "su": 23,
+      "mix": 27,
+      "hc": 18,
+      "field": 20,
+      "coll": 23,
+      "svc": 21,
+      "sel": 21
+    },
+    "op_edges": {
+      "^(attn\\.(quant|q_quant|z_quant)|ffn\\.(quant|quant2|shared_quant))$": 24
+    }
+  },
+  "grade": "MODEL on the token path; edges from the S-VM reach screen (not a routed die)",
+  "ar": {
+    "base_cycles": 828866.4,
+    "cycles": 866739.4,
+    "added_cycles": 37873.0,
+    "e2e_loss_pct": 4.37,
+    "nodes_per_class": {
+      "hc": 560,
+      "su": 1280,
+      "field": 332,
+      "coll": 212,
+      "svc": 168,
+      "sel": 105,
+      "mix": 12
+    },
+    "uniform_vm_class": {
+      "base_cycles": 828866.4,
+      "cycles": 877222.4,
+      "added_cycles": 48356.0,
+      "e2e_loss_pct": 5.512,
+      "nodes_per_class": {
+        "hc": 560,
+        "su": 1280,
+        "field": 332,
+        "coll": 212,
+        "svc": 168,
+        "sel": 105,
+        "mix": 12
+      }
+    }
+  },
+  "mtp": {
+    "base_cycles": 1177516.1,
+    "cycles": 1224621.1,
+    "added_cycles": 47105.0,
+    "e2e_loss_pct": 3.846,
+    "nodes_per_class": {
+      "hc": 172,
+      "su": 1041,
+      "field": 310,
+      "coll": 189,
+      "svc": 83,
+      "sel": 110,
+      "mix": 6
+    },
+    "uniform_vm_class": {
+      "base_cycles": 1177516.1,
+      "cycles": 1237604.1,
+      "added_cycles": 60088.0,
+      "e2e_loss_pct": 4.855,
+      "nodes_per_class": {
+        "hc": 172,
+        "su": 1041,
+        "field": 310,
+        "coll": 189,
+        "svc": 83,
+        "sel": 110,
+        "mix": 6
+      }
+    }
+  }
+}

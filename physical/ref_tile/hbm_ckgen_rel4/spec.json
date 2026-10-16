@@ -1,0 +1,105 @@
+{
+ "name": "hbm_ckgen_rel4",
+ "top": "hfd_ckgen_rel4",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/control/hfd_ckgen.sv",
+  "rtl/hbm_accel/control/ot_hbm_pll_bb.sv"
+ ],
+ "clock_port": "ck_stream",
+ "reset_ports": [
+  "por_n",
+  "locked"
+ ],
+ "pins": {
+  "N": [
+   "ck_stream",
+   "ck_serial",
+   "ck_hbm",
+   "ck_link",
+   "por_n",
+   "locked"
+  ],
+  "S": [
+   "rst_stream",
+   "rst_serial",
+   "rst_hbm",
+   "rst_link"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "sdc_extra": [
+  "physical/hbm_pll_views/sdc/hfd_ckgen_rel4_clocks.sdc"
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 2,
+  "peak_ram_gb": 4,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "coordinator 10-15 dedupe decision: hb_ckgen = PLL modelled hard macro ot_hbm_pll_bb + ONE leaf hfd_ckgen_rel4 (21.6 um, four domain release synchronisers, clock pins ck_stream/ck_serial/ck_hbm/ck_link on N from the PLL outputs, rst_* on S into the die reset tree); replaces 4 x hfd_ckgen_rel. H-DIE grant still lacks por_* pins. H-HARDEN el1015-hbm-v15-harden.log",
+ "job": {
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hbm-harden-2100",
+  "tag": "one1",
+  "merge_target": "main",
+  "purpose": "HBM hb_ckgen reset-release leaf, ONE per die (coordinator dedupe 10-15): four 2-flop async-assert/sync-release synchronisers, one per PLL domain clock, por_n & lock inside. Replaces 4 x hfd_ckgen_rel (hbm_ckgen_rel-r2 CLOSED, retired).",
+  "extra_paths": [
+   "rtl/hbm_accel/control",
+   "tools/hbm_v15_harden",
+   "physical/hbm_pll_views"
+  ],
+  "record_to": "results/rtl/ref_tile/hbm_ckgen_rel4",
+  "benches": [
+   {
+    "name": "reset_release",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CKGEN_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "one_flop_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_ckgen.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every output rst_* IS its domain's release flop (registered at the pin by RTL); the inputs por_n/locked are asynchronous-assert reset arms of those flops by function (a pin register would turn the async assert synchronous and add a release edge); clock pins are clocks."
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

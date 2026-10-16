@@ -1,0 +1,23 @@
+{
+  "parameters": {
+    "P_SS": 639,
+    "P_QS": 599,
+    "P_RS": 2364,
+    "P_RE": 2397,
+    "P_RDELTA": 222,
+    "P_ES": 192,
+    "P_L0": 272,
+    "P_FINISH": 246329
+  },
+  "expected": {
+    "attention_C_to_K": 1188,
+    "attention_K_to_C": 1188,
+    "kvn_words": 144,
+    "layer_results": 36,
+    "host_checks": 36,
+    "embedding_words": 64,
+    "terminal_results": 1
+  },
+  "native_compute_qualification": false,
+  "physical_qualification": false
+}

@@ -117,7 +117,8 @@ class SourceBindingTest(unittest.TestCase):
                 self.assertTrue(g.source_binding['remote_archive_verified'])
                 self.assertEqual(g.clock['tt_insertion_ps'], 280.)
                 self.assertEqual(g.clock['tt_spread_ps'], 70.)
-                self.assertEqual(g.verdict, 'PASS')
+                # the mocked remote returns no layout dump (owner rule 20:45 WARN); everything else must be INFO
+                self.assertEqual([i['check'] for i in g.items if i['severity'] != 'INFO'], ['layout_images'])
 
     def test_recovery_requires_full_manifest_log_script_and_staged_bytes(self):
         import hashlib
@@ -164,7 +165,8 @@ class SourceBindingTest(unittest.TestCase):
 
     def test_remote_script_verifies_archive_before_extracting(self):
         script = PG.REMOTE_SH.format(R='/tmp/test', ARCHIVE_SHA256='a' * 64, COMMIT='snapshot-sha256:abc', CAP=1,
-                                    KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk')
+                                    KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk',
+                                    TRIAL=0, CLKS='clk', STEP_CAP=1)
         self.assertLess(script.index('sha256sum'), script.index('tar -xzf'))
         self.assertIn('GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL', script)
 

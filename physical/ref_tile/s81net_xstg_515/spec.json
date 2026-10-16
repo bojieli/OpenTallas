@@ -29,7 +29,7 @@
   ]
  },
  "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_xstg_515.tcl",
- "recipe": 2,
+ "recipe": 3,
  "route": {
   "pd": 0.5,
   "threads": 4,
@@ -40,14 +40,18 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-NET dsfd_xstg_515 (2 die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/ready/placement), o = {data, valid & live, live}; RTL = the case glue module rendered by the generator (module sha256 1d1b0ddf83cc9d4b, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 3458 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 75.6 x 92.88 vs generator slot 17.256 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages)",
+ "structural_change": "S-NET dsfd_xstg_515 (2 die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/ready/placement), o = {data, valid & live, live}; RTL = the case glue module rendered by the generator (module sha256 1d1b0ddf83cc9d4b, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 3458 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 75.6 x 92.88 vs generator slot 17.256 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages) | n4refclk: actual retained515inputpaths had10\u201311 extra holdbuffers because input virtualclock vw stayed atzero (not a recognized insertion reference). Name its explicit wclk reference ot_lb_v_wclk and use common corner-aware routed boundary measurement afterCTS. Same clocks/0.2T IO delays/uncertainties and actual RTL pin stages; no normalcycle added. Read-only actual515-path FF diagnostic proves oldslack27.03\u201380.74 versus mappedreference149.28\u2013202.99ps, not permission to waivehold.",
  "reroute_reason": {
-  "kind": "rtl_change"
+  "kind": "pin_register",
+  "cell": "dsfd_xstg_515",
+  "capture_ps": 355.9881,
+  "source": "results/arch/native_pin_audit_snetfill_1015/native_current_2330.json",
+  "fix": "Correct the actual cw input boundary reference from unrecognized vw atzero to corner-measured ot_lb_v_wclk, preserving all physical budgets; this prevents the ten or eleven excess input holdbuffers that violate native capture."
  },
  "job": {
   "owner": "Claude:s81-net",
-  "branch": "claude/el1015-s81-net-static",
-  "tag": "n3",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "n4refclk",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_xstg_515 (2 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_xstg_515/views",
   "record_to": "results/rtl/ref_tile/s81net_xstg_515",
@@ -109,5 +113,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every i data bit already has the actual cw-clocked u_x.pin RTL capture flop and every o bit has the actual ck-clocked orr RTL launch flop. A generic ck input wrapper would corrupt the forwarded-clock domain. Clock ports ck/cw pass through; no additional data edges."
  }
 }

@@ -1,0 +1,722 @@
+{
+ "region": "su",
+ "author": "Claude H-NETLIST sub-agent su (2026-10-15)",
+ "basis_commit": "4b43cd77c",
+ "instances": [
+  {
+   "name": "subr_SW",
+   "master": "ot_hbm_su_bridge_release",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SU",
+   "note": "SU quarter SW multirate bridge epoch release (closes G-SU-BRIDGE-EPOCH-SW): serial pin register of su_prog.busy at the common edge E0-12q, three stream stages, bridge_rst_n deasserts at stream edge E0-3q (last stream edge before E0); sticky; later starts checked for the same epoch phase (fault). 6 flops + 2-bit phase counter; pin-registered in and out. No slot: place beside sucore (H-DIE)."
+  },
+  {
+   "name": "subr_SE",
+   "master": "ot_hbm_su_bridge_release",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SU",
+   "note": "SU quarter SE multirate bridge epoch release (closes G-SU-BRIDGE-EPOCH-SE): serial pin register of su_prog.busy at the common edge E0-12q, three stream stages, bridge_rst_n deasserts at stream edge E0-3q (last stream edge before E0); sticky; later starts checked for the same epoch phase (fault). 6 flops + 2-bit phase counter; pin-registered in and out. No slot: place beside sucore (H-DIE)."
+  },
+  {
+   "name": "subr_NW",
+   "master": "ot_hbm_su_bridge_release",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SU",
+   "note": "SU quarter NW multirate bridge epoch release (closes G-SU-BRIDGE-EPOCH-NW): serial pin register of su_prog.busy at the common edge E0-12q, three stream stages, bridge_rst_n deasserts at stream edge E0-3q (last stream edge before E0); sticky; later starts checked for the same epoch phase (fault). 6 flops + 2-bit phase counter; pin-registered in and out. No slot: place beside sucore (H-DIE)."
+  },
+  {
+   "name": "subr_NE",
+   "master": "ot_hbm_su_bridge_release",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SU",
+   "note": "SU quarter NE multirate bridge epoch release (closes G-SU-BRIDGE-EPOCH-NE): serial pin register of su_prog.busy at the common edge E0-12q, three stream stages, bridge_rst_n deasserts at stream edge E0-3q (last stream edge before E0); sticky; later starts checked for the same epoch phase (fault). 6 flops + 2-bit phase counter; pin-registered in and out. No slot: place beside sucore (H-DIE)."
+  }
+ ],
+ "edges": [
+  {
+   "src": [
+    "su_prog",
+    "busy"
+   ],
+   "dst": [
+    "subr_SW",
+    "prog_busy"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_programme busy rises after the start sample S = E0-4 serial edges (su_multirate_top_contract.json both_programmes_start); ot_hbm_su_bridge_release.sv header"
+  },
+  {
+   "src": [
+    "subr_SW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SW0",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_SW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SW1",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_SW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SW2",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_SW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SW3",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    165,
+    167
+   ],
+   "dst": [
+    "sucore_SW",
+    "rf_drain_cmd",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "quarter SW vmw_cmd slice 0 port 0 bits [38:37] = su_prog command[165+:2] (quarter base 0*2422, vmw at +128); ot_hbm_su_static_qcore decodes rf_drain_now = cmd[1]&&cmd[0] (was the quarter composition AND)"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SW_SW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SW_SE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SW_NW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SW_NE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "su_prog",
+    "busy"
+   ],
+   "dst": [
+    "subr_SE",
+    "prog_busy"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_programme busy rises after the start sample S = E0-4 serial edges (su_multirate_top_contract.json both_programmes_start); ot_hbm_su_bridge_release.sv header"
+  },
+  {
+   "src": [
+    "subr_SE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SE0",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_SE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SE1",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_SE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SE2",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_SE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_SE3",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    2587,
+    2589
+   ],
+   "dst": [
+    "sucore_SE",
+    "rf_drain_cmd",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "quarter SE vmw_cmd slice 0 port 0 bits [38:37] = su_prog command[2587+:2] (quarter base 1*2422, vmw at +128); ot_hbm_su_static_qcore decodes rf_drain_now = cmd[1]&&cmd[0] (was the quarter composition AND)"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SE_SW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SE_SE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SE_NW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_SE_NE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "su_prog",
+    "busy"
+   ],
+   "dst": [
+    "subr_NW",
+    "prog_busy"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_programme busy rises after the start sample S = E0-4 serial edges (su_multirate_top_contract.json both_programmes_start); ot_hbm_su_bridge_release.sv header"
+  },
+  {
+   "src": [
+    "subr_NW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NW0",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_NW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NW1",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_NW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NW2",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_NW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NW3",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    5009,
+    5011
+   ],
+   "dst": [
+    "sucore_NW",
+    "rf_drain_cmd",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "quarter NW vmw_cmd slice 0 port 0 bits [38:37] = su_prog command[5009+:2] (quarter base 2*2422, vmw at +128); ot_hbm_su_static_qcore decodes rf_drain_now = cmd[1]&&cmd[0] (was the quarter composition AND)"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NW_SW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NW_SE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NW_NW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NW_NE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "su_prog",
+    "busy"
+   ],
+   "dst": [
+    "subr_NE",
+    "prog_busy"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_programme busy rises after the start sample S = E0-4 serial edges (su_multirate_top_contract.json both_programmes_start); ot_hbm_su_bridge_release.sv header"
+  },
+  {
+   "src": [
+    "subr_NE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NE0",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_NE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NE1",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_NE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NE2",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "subr_NE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "su_NE3",
+    "bridge_rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "pgslice MULTIRATE=1 bridge reset (ot_hbm_su_multirate_bridge rst_n): released between the last stream edge before E0 and E0 (tb_hbm_su_native_multirate_top releases at half-tick E0-1); leaf releases at E0-6 half-ticks, bench tb_hbm_su_bridge_release compares a real bridge against the ideal release"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    7431,
+    7433
+   ],
+   "dst": [
+    "sucore_NE",
+    "rf_drain_cmd",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "quarter NE vmw_cmd slice 0 port 0 bits [38:37] = su_prog command[7431+:2] (quarter base 3*2422, vmw at +128); ot_hbm_su_static_qcore decodes rf_drain_now = cmd[1]&&cmd[0] (was the quarter composition AND)"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NE_SW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NE_SE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NE_NW_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_rf_v"
+   ],
+   "dst": [
+    "rfr_NE_NE_00",
+    "i",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "RF relay head valid = red_sv && red_tag[8], now the qcore output red_rf_v (was the top composition AND); same edge as red_tag/red_x on i[39:0]"
+  }
+ ],
+ "clocks": [
+  {
+   "inst": "subr_SW",
+   "port": "clk_serial",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_SW",
+   "port": "clk_stream",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_SW",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_SW",
+   "port": "rst_stream_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_SE",
+   "port": "clk_serial",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_SE",
+   "port": "clk_stream",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_SE",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_SE",
+   "port": "rst_stream_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_NW",
+   "port": "clk_serial",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_NW",
+   "port": "clk_stream",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_NW",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_NW",
+   "port": "rst_stream_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_NE",
+   "port": "clk_serial",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_NE",
+   "port": "clk_stream",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "subr_NE",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "subr_NE",
+   "port": "rst_stream_n",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [],
+ "gaps": [],
+ "notes": "Closes G-SU-DRAIN-NOW-* (qcore input rf_drain_cmd[1:0]), G-SU-RFR-VALID-* (qcore output red_rf_v) and G-SU-BRIDGE-EPOCH-* (new leaf ot_hbm_su_bridge_release x4). qcore/quarter/top RTL changed additively in function (port moves only; tb_hbm_su_qcore_ports equivalence vs the pre-change core). Remaining SU/SFU/COLL joins stay gaps in su_sfu.json / coll specs with the architecture question recorded there."
+}

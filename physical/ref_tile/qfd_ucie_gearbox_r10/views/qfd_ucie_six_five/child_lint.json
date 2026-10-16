@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/qfd_ucie_gearbox_r10-r12-COMMIT-b10299672/record/views/qfd_ucie_six_five/qfd_ucie_six_five.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "qfd_ucie_six_five 129.6 x 216.0: PG M5 VDD 24 stripes (96% spread, 100% cov) / VSS 24 stripes (96% spread, 100% cov); strap M6; face pins 3292 blocked-above 0 blocked-same 0; clock blk_rx_ck insertion 221 ps; clock blk_tx_ck insertion 229 ps; clock core_ck insertion 257 ps; clock fdi_ck insertion 231 ps; clock fdi_rx_ck insertion 237 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qfd_ucie_six_five",
+  "W": 129.6,
+  "H": 216.0,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 24,
+     "dir": "V",
+     "spread": 0.958,
+     "coverage": 1.0,
+     "shapes_on_top": 24
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 24,
+     "dir": "V",
+     "spread": 0.958,
+     "coverage": 1.0,
+     "shapes_on_top": 24
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 3292,
+   "blocked_above": 0,
+   "covered_below": 302,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "blk_rx_ck": {
+    "max_ps": 221.07,
+    "min_ps": 179.03
+   },
+   "blk_tx_ck": {
+    "max_ps": 228.61,
+    "min_ps": 178.42
+   },
+   "core_ck": {
+    "max_ps": 256.79,
+    "min_ps": 204.23
+   },
+   "fdi_ck": {
+    "max_ps": 231.12,
+    "min_ps": 171.22
+   },
+   "fdi_rx_ck": {
+    "max_ps": 236.77,
+    "min_ps": 181.78
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 4730
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

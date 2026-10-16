@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.assumed-phy-pg-final-proof.v1",
+  "status": "DECLARED_ACCESS_GEOMETRY_PASS_PHY_ASSUMED_UNQUALIFIED",
+  "source_sha256": {
+    "tools/phy_pg/hbm_assumed_pg.py": "53975d62029596307fdd44de6b05767d0533493344fa708ca193da153de225a4",
+    "tools/phy_pg/assumed_access.py": "14234d49502fbcf29aa0c4647f53a4ff4a7110e466d429aec67f3c4a3c3102ab",
+    "tools/phy_pg/test_assumed_access.py": "199673612c3e28e4f7d30c0c1aaa4e5215ab36575acb968ee3550d6735eebcc3",
+    "tools/phy_pg/trace_pdn_selection.py": "19c976ac02f73de05f87b58eed8226c32b0b064cff6118c086d146ad5d5a94f2",
+    "tools/phy_pg/verify_geometry.py": "b3d1637fc44860026387ae2ac87f51a83dfea209ad6450d7f2e4abdcef467fc8",
+    "tools/phy_pg/apply_case.py": "bc2e820f8667db2c1a4082b73d584616f8486230fd363a029a208f20b9c82c16",
+    "tools/phy_pg/hbm_pg_interface.tcl": "5aa961d3d0956ba290633a19e055fcf7ea9a501d4e16de588ba64f55ed85664c",
+    "tools/phy_pg/assumed_access.tcl": "8546d00aa32e93b70d61c22ac971179cf29b519a064b81ac94608d602a1331c1",
+    "tools/phy_pg/fixture/prepare.py": "0b7d2516c7c582c188f245e28fceaac7263c4380d13bf1fec045cc52ffca2971",
+    "tools/phy_pg/fixture/export_geometry.py": "8f501f55bbc5b51695727d895fbe848f77fc4273dfcac5bc9aa92bf41e8303db",
+    "tools/phy_pg/fixture/fixture.tcl": "36d89327a97035a15c71c6d89b6839cb027e720f2b0b09f4120d693ad187afca",
+    "tools/phy_pg/fixture/run.sh": "5e50d992130ef7079d784152b786168a718cc28cd8cf5500e8f85e58336312ba",
+    "tools/phy_pg/hbm_fixture/prepare.py": "8f00876d37e09653b33c6bee35ad2ac084bbb6feddb384d456d49ac3830c456f",
+    "tools/phy_pg/hbm_fixture/fixture.tcl": "5657b7b40c965a218002e9f261d7e5da1fe78653d1c3c1ce96e3c279e7672d2b",
+    "tools/phy_pg/hbm_fixture/run.sh": "e1f2ed85db9598c8257b8453872bab94c888181659fface691e8a0bad7d013da"
+  },
+  "link_fixture": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1107507-1792125741",
+    "memory_request_gb": 4,
+    "threads": 1,
+    "status": "PASS_8_ORIENTATIONS_AND_MUTANTS"
+  },
+  "hbm_fixture": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2970159-1792125873",
+    "memory_request_gb": 8,
+    "threads": 1,
+    "status": "PASS_ALL_4_ACTUAL_HOMES_AND_ORIENTATIONS",
+    "remote": "/srv/opentallas-scratch/codex/phy-pg-hbm-v1-1015"
+  },
+  "hbm_indexed_audit": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2987185-1792126219",
+    "memory_request_gb": 8,
+    "observed_rss_gb_approx": 7.1,
+    "threads": 1,
+    "status": "PASS_INDEPENDENT_SPATIAL_BROAD_PHASE_AND_M8_SPACING"
+  },
+  "hbm_interface_gate": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1179632-1792126513",
+    "memory_request_gb": 2,
+    "status": "PASS_ACTUAL_SUPPLY_PREFLIGHT_AND_HISTORICAL_NO_SUPPLY_MUTANT"
+  },
+  "unit_tests": 16,
+  "unit_command": "PYTHONPATH=tools/qwen_kv_die/chain:tools python3 -m unittest tools/phy_pg/test_assumed_access.py tools/qwen_kv_die/chain/test_pdn_bbox_obs.py",
+  "scope": "ASSUMED PHY external PG contract and declared metal geometry only; no vendor/internal analog, IR/EM or full-die routing/timing qualification.",
+  "area_delta_um2": 0,
+  "latency_delta_cycles": 0,
+  "signal_interface_delta": "none",
+  "unused_keepout_diagnostic": "Not adopted: baseline already passes. Both PG nets and geometry audit pass; diagnostic launcher exit1 comes from an overly specific negative-error grep (actual negative failed at no-grid construction). Final guard runs earlier and its negative test passes."
+}

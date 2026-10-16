@@ -1,0 +1,136 @@
+{
+ "name": "s81hc_ctfxcap_pinpipe_ref",
+ "top": "ot_s81_hc_ctfx_cap_pinpipe",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctfx_cap_pinpipe.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 576.72,
+  "h": 51.84
+ },
+ "why_floorplan": "Existing v26 576.72x51.84 candidate peer geometry preserved. Explicit N capture plus S launch separates measured417um input-to-output-cloned-capture path. Adds1135 flops and1 fixed serial HC edge; no production adoption before whole HC schedule/cost proof.",
+ "macros": [],
+ "pins": {
+  "N": [
+   "fd_in",
+   "fv_in",
+   "rst_in",
+   "clk"
+  ],
+  "S": [
+   "fdx",
+   "fv",
+   "fv_local",
+   "fdx_local"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:S81-HC-takeover",
+  "branch": "codex/s81-hc-takeover-2116",
+  "tag": "ncap-slaunch-caps",
+  "purpose": "Held component structural successor; full HC schedule/adoption open.",
+  "views_to": "physical/ref_tile/s81hc_ctfxcap_pinpipe_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref",
+  "structural_change": "Existing v26 576.72x51.84 candidate peer geometry preserved. Explicit N capture plus S launch separates measured417um input-to-output-cloned-capture path. Adds1135 flops and1 fixed serial HC edge; no production adoption before whole HC schedule/cost proof.",
+  "benches": [
+   {
+    "name": "pinpipe_exact",
+    "cmd": "bash tools/s81_suhc/cap_pinpipe/run.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^CAP_PINPIPE_PASS checked=8187 bits=1128 extra_cycles=1 reset_epochs=17$",
+    "min_count_regex": "checked=([0-9]+)",
+    "min_count": 8187,
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "pinpipe_capture_mutant",
+    "cmd": "bash tools/s81_suhc/cap_pinpipe/run.sh {RUN}/bench/mutant 1",
+    "expect": "fail",
+    "fail_regex": "^CAP_PINPIPE_FAIL checked=8187 errors=[1-9][0-9]* mutant=1$",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "hold_merge": "Actual canonical die capture slot/pin/peer geometry and native TTFFDRC0 qualification pending",
+  "cycles_added": 1
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 3,
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "no fixed output pad, HB1 input pads (native launch/capture; S-ELEM-B shared fix)"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "io_tcl": "physical/s81_die_pins/v26_hc_capture_spread_candidate/ot_s81_hc_ctfx_cap.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v26_hc_capture_spread_candidate/ot_s81_hc_ctfx_cap.tcl",
+  "source": "Existing v26 held request, no die grant claimed"
+ },
+ "slot_change_request": "S-ENGRAM+NORM 1705 v26 CAP spread candidate: same 576.72x51.84 outline; the v21 pins crammed 1,136 inputs into x 225-342 (9.7 b/um) and 2,270 outputs into x 200-350 (~16 b/um over two layers) with clk at the W edge, which drove 13,759 boundary hold buffers into that span (k4 GRT-0116 M3 V 24,647). v26 spreads both faces over the full width in the original bit order (N 0.50 um, S 0.25 um pitch; the ctfn_nt/ctfs_nt chain above is already full-width 5.6 b/um) and puts clk/rst at the N-face centre like ctfn_nt/ctfs_nt. Request posted to S-DIE el1011-s81die.log.",
+ "orfs_vars": {
+  "OT_CKS_K": "4"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL explicitly owns N input capture n_fd/n_fv and S output launch fdx/fv plus fdx_local/fv_local. Reset input is captured by rr. Generic recipe3 wrapper would duplicate these real pin registers and add2 more cycles. Distinct held pinpipe module has exactly1 extra explicit data/valid cycle, verified against old RTL; routed native placement/audit still required."
+ }
+}

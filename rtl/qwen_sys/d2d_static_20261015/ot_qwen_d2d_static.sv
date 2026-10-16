@@ -59,8 +59,19 @@ module ot_qwen_d2d_cal #(parameter integer NE = 32, parameter integer AW = $clog
         if (cfg_addr[AW]) seg1 <= cfg_data[AW-1:0];
         else tbl[cfg_addr[AW-1:0]] <= cfg_data;
     end
+    // Prefetch both first entries while the compiler image is stable. This
+    // removes start -> table-address/mux -> count/field checks from one cycle.
+    // It does not add an execution edge: both words are ready before start.
+    // Configuration must settle for one full edge before a start; a violation
+    // faults rather than delaying or rescheduling the compiled execution.
+    reg [31:0] first0_q, first1_q;
+    reg cfg_recent;
+    always @(posedge ck) begin
+        first0_q <= tbl[0]; first1_q <= tbl[seg1];
+        cfg_recent <= cfg_we;
+    end
     wire [AW-1:0] sb = start_seg ? seg1 : {AW{1'b0}};
-    wire [31:0] first = tbl[sb];
+    wire [31:0] first = start_seg ? first1_q : first0_q;
     wire [31:0] nxt = tbl[ptr[AW-1:0]];
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
@@ -71,7 +82,7 @@ module ot_qwen_d2d_cal #(parameter integer NE = 32, parameter integer AW = $clog
             if (cfg_we && running) fault <= 1'b1;
             if (halt) running <= 1'b0;
             else if (start) begin
-                if (running) fault <= 1'b1;
+                if (running || cfg_we || cfg_recent) fault <= 1'b1;
                 running <= 1'b1;
                 cur <= first; cnt <= first[31:18]; ptr <= {1'b0, sb} + 1'b1; rep <= first[4:0]; bcur <= first[9:5];
                 if (first[31:18] == 14'd0 || {1'b0, first[9:5]} + {1'b0, first[4:0]} > 6'd31) fault <= 1'b1;

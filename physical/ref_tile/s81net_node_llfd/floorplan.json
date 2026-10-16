@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  86.4,
+  43.2,
   77.76
  ],
  "core": [
   2.16,
   2.16,
-  84.24000000000001,
+  41.040000000000006,
   75.60000000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
@@ -74,7 +74,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/snet_gen19b/dsfd_node_LLfd.tcl",
+  "physical/s81_die_pins/snet_node43/dsfd_node_LLfd.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

@@ -1,0 +1,2323 @@
+{
+ "region": "coll_idx_link",
+ "author": "Claude region agent coll_idx_link (H-NETLIST v16)",
+ "basis_commit": "d96381d6e",
+ "instances": [
+  {
+   "name": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_static_host_v4",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
+   "params": {
+    "QID": "2'd0"
+   },
+   "slot": "coll_SW",
+   "owner": "H-COLL+IDX",
+   "note": "v16 master CHANGE (was ot_hfd_coll_q3_static in v15): H-COLL production parent (tb_hgi_coll_sw_slice_parent.sv:3 \"WHOLE production COLL parent\"; slice-parent gate PASS el1014-hbm-p2p-coll.log 13:11) = program_target(52+QID) + ot_hfd_coll_q3_static_v4 (ALL-input-capture TX6/RX2 link endpoints ot_hgi_coll_static_link_capture x3 INSIDE, 612-b pin frame per link) ; QID is a parameter (no qid port)"
+  },
+  {
+   "name": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+   "params": {
+    "QID": "2'd1"
+   },
+   "slot": "coll_SE",
+   "owner": "H-COLL+IDX",
+   "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 1 (q2 $fatal on QID 0), program_target TARGET 53; 2 link endpoints inside (612-b pin frame)"
+  },
+  {
+   "name": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+   "params": {
+    "QID": "2'd2"
+   },
+   "slot": "coll_NW",
+   "owner": "H-COLL+IDX",
+   "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 2 (q2 $fatal on QID 0), program_target TARGET 54; 2 link endpoints inside (612-b pin frame)"
+  },
+  {
+   "name": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+   "params": {
+    "QID": "2'd3"
+   },
+   "slot": "coll_NE",
+   "owner": "H-COLL+IDX",
+   "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 3 (q2 $fatal on QID 0), program_target TARGET 55; 2 link endpoints inside (612-b pin frame)"
+  },
+  {
+   "name": "hb_idx",
+   "master": "ot_hbm_idx_client_static_sw",
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-COLL+IDX",
+   "note": "kept as ONE die instance (v15). Grant slots idx_s0..s3/idx_sel/idx_link/idx_q/idx_op are hierarchical hardened children placed as die plan blocks, not die instances: hb_idx/implementation/index/parent/{gscore[k]/scorer, selector, link, query, operands} (ot_hbm_idx_client_static_sw.sv:30 implementation, ot_hbm_idx_client_static.sv:35 index, ot_hbm_idx_scheduled_static.sv:27 parent, ot_hbm_idx_parent_static.sv:24-50). NOTE grants record idx_s* instance path without the \"implementation/\" level of the _sw wrapper."
+  },
+  {
+   "name": "hb_argmax",
+   "master": "ot_hbm_argmax_static_sw",
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-COLL+IDX",
+   "note": "kept (v15). NO slot in compact660_v5 / grants (H-DIE must give it a plan block or fold it). VM via hb_idx argmax_rq/rr, cq/cr on hb_vms_SW client 0 (v15 edges kept)."
+  },
+  {
+   "name": "lk_S0",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_S0",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_S0 -> coll_SW; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_S1",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_S1",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_S1 -> coll_SW; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_S2",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_S2",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_S2 -> coll_SW; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_S3",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_S3",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_S3 -> coll_SE; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_S4",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_S4",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_S4 -> coll_SE; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_N0",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_N0",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_N0 -> coll_NW; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_N1",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_N1",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_N1 -> coll_NW; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_N2",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_N2",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_N2 -> coll_NE; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "lk_N3",
+   "master": "ot_pdie_serdes",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "lk_N3",
+   "owner": "SerDes owner (hard macro, real digital link layer + behavioural PMA)",
+   "note": "die-to-die SerDes (KP4 FEC); grant peer ep_N3 -> coll_NE; tx/rx 512-b beat in its clk (link) domain; pma_* are die pins"
+  },
+  {
+   "name": "host_N",
+   "master": "ot_pdie_ucie",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "host_N",
+   "owner": "host owner (hard macro)",
+   "note": "host UCIe-A macro. tx/rx/st edges belong to region host_misc (host_cp ingress/loader). Host side must drive tx[511:0] and consume rx[511:0] + st[1:0] (link clk domain); host_cp_ingress (ot_hbm_host_static_ingress) is an AXI-lite 32-b slave, so a 512-b beat <-> AXI-lite host packet bridge is needed between them (host_misc)."
+  }
+ ],
+ "retire_v15": [],
+ "edges": [
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q3_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hfd_coll_q2_static_host_v4.sv:62-71 ot_hgi_coll_static_program_target #(TARGET 52+QID) takes the raw HOST F20 cfg/desc/launch bus = ot_hbm_host_static_ingress.sv:18 outputs (same names/widths); production gate tb_hgi_coll_sw_slice_parent.sv:41-42 drives it with cfg_target 52; grant slot host_cp_ingress (hbm_v15.json)"
+  }
+ ],
+ "drop_v15_edges": [],
+ "clocks": [
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_program",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_control",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_issue",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_qslots",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_ring",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_reduce",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_arg",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_tkm",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_vmwrite",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "clk_link",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_program",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_control",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_issue",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_qslots",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_ring",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_reduce",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_vmwrite",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "clk_link",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_program",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_control",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_issue",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_qslots",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_ring",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_reduce",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_vmwrite",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "clk_link",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_program",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_control",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_issue",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_qslots",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_ring",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_reduce",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_vmwrite",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "clk_link",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_program",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_program_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_operand",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_query",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_quant",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_quant_delay",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_query_bank",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_score",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_engine",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_meta",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_tail",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_chunk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_hslice",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_sel",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_sel_q",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_sel_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_link",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_link_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_pair",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "clk_topk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_idx",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_argmax",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_argmax",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_S0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_S0",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_S1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_S1",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_S2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_S2",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_S3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_S3",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_S4",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_S4",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_N0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_N0",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_N1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_N1",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_N2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_N2",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "lk_N3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "lk_N3",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_N",
+   "port": "clk",
+   "domain": "link",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_N",
+   "port": "rst",
+   "domain": "link",
+   "kind": "reset"
+  }
+ ],
+ "straps": [],
+ "gaps": [
+  {
+   "id": "G-CIL-INJ",
+   "owner": "H-SU (SU quarter inject read) / H-COLL",
+   "missing_rtl": "no static producer of COLL inj_d[1023:0] (2 x 512-b SU-quarter inject words answered INJLAT=12 edges after inj_rd/inj_idx/hgi_inj_addr, ot_hfd_coll_q_static_v4.sv:201-217) exists among the v16 SU/sucore masters known to this region; v15 also unbound (\"actual VM programme SRAM calendar issuer\")",
+   "affects": [
+    [
+     "hb_coll_SW",
+     "inj_d",
+     0,
+     1024
+    ],
+    [
+     "hb_coll_SE",
+     "inj_d",
+     0,
+     1024
+    ],
+    [
+     "hb_coll_NW",
+     "inj_d",
+     0,
+     1024
+    ],
+    [
+     "hb_coll_NE",
+     "inj_d",
+     0,
+     1024
+    ],
+    [
+     "hb_coll_SW",
+     "inj_rd",
+     0,
+     2
+    ],
+    [
+     "hb_coll_SW",
+     "inj_idx",
+     0,
+     32
+    ],
+    [
+     "hb_coll_SW",
+     "hgi_inj_addr",
+     0,
+     160
+    ],
+    [
+     "hb_coll_SE",
+     "inj_rd",
+     0,
+     2
+    ],
+    [
+     "hb_coll_SE",
+     "inj_idx",
+     0,
+     32
+    ],
+    [
+     "hb_coll_SE",
+     "hgi_inj_addr",
+     0,
+     160
+    ],
+    [
+     "hb_coll_NW",
+     "inj_rd",
+     0,
+     2
+    ],
+    [
+     "hb_coll_NW",
+     "inj_idx",
+     0,
+     32
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_inj_addr",
+     0,
+     160
+    ],
+    [
+     "hb_coll_NE",
+     "inj_rd",
+     0,
+     2
+    ],
+    [
+     "hb_coll_NE",
+     "inj_idx",
+     0,
+     32
+    ],
+    [
+     "hb_coll_NE",
+     "hgi_inj_addr",
+     0,
+     160
+    ]
+   ],
+   "note": "coordinator: if region H-SU exposes an inject-answer port of 1024 b keyed by inj_rd/inj_idx/hgi_inj_addr, bind it; outputs listed are unconsumed"
+  },
+  {
+   "id": "G-CIL-RC",
+   "owner": "H-SU / H-COLL",
+   "missing_rtl": "RED_CARRY reduction-carry port pair to the quadrant SU (rc_v/rc_tag[3]/rc_d[256] in, rr_v/rr_tag/rr_d out; ot_hfd_coll_q.sv:17-18, ring lp_data at ot_hfd_coll_q_static_v4.sv:302): no SU-side static RTL port named on main",
+   "affects": [
+    [
+     "hb_coll_SW",
+     "rc_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "rc_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_SW",
+     "rc_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_SW",
+     "rr_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "rr_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_SW",
+     "rr_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_SE",
+     "rc_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "rc_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_SE",
+     "rc_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_SE",
+     "rr_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "rr_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_SE",
+     "rr_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_NW",
+     "rc_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "rc_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_NW",
+     "rc_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_NW",
+     "rr_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "rr_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_NW",
+     "rr_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_NE",
+     "rc_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "rc_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_NE",
+     "rc_d",
+     0,
+     256
+    ],
+    [
+     "hb_coll_NE",
+     "rr_v",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "rr_tag",
+     0,
+     3
+    ],
+    [
+     "hb_coll_NE",
+     "rr_d",
+     0,
+     256
+    ]
+   ],
+   "note": "rr_* outputs unconsumed"
+  },
+  {
+   "id": "G-CIL-DEL",
+   "owner": "H-COLL / H-SU",
+   "missing_rtl": "consumer of COLL delivery lanes del_valid[4]/del_flit[2180]/hgi_del_obase[160] (words delivered to the quadrant slice); v15 retired delivery_<q>; no v16 static consumer port identified",
+   "affects": [
+    [
+     "hb_coll_SW",
+     "del_valid",
+     0,
+     4
+    ],
+    [
+     "hb_coll_SW",
+     "del_flit",
+     0,
+     2180
+    ],
+    [
+     "hb_coll_SW",
+     "hgi_del_obase",
+     0,
+     160
+    ],
+    [
+     "hb_coll_SE",
+     "del_valid",
+     0,
+     4
+    ],
+    [
+     "hb_coll_SE",
+     "del_flit",
+     0,
+     2180
+    ],
+    [
+     "hb_coll_SE",
+     "hgi_del_obase",
+     0,
+     160
+    ],
+    [
+     "hb_coll_NW",
+     "del_valid",
+     0,
+     4
+    ],
+    [
+     "hb_coll_NW",
+     "del_flit",
+     0,
+     2180
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_del_obase",
+     0,
+     160
+    ],
+    [
+     "hb_coll_NE",
+     "del_valid",
+     0,
+     4
+    ],
+    [
+     "hb_coll_NE",
+     "del_flit",
+     0,
+     2180
+    ],
+    [
+     "hb_coll_NE",
+     "hgi_del_obase",
+     0,
+     160
+    ]
+   ],
+   "note": "outputs only (no undriven input)"
+  },
+  {
+   "id": "G-CIL-COLLSTAT",
+   "owner": "host owner (host_misc) / H-DIE",
+   "missing_rtl": "status join: ot_hbm_host_static_ingress has ONE block_ready/program_active/program_fault input; 4 COLL targets (+IDX/ARGMAX) each produce program_configured/program_init_busy/program_fault/hgi_busy/hgi_done/hgi_fault/fault/done/stat_cycles -> needs a real status-aggregation leaf (an OR is glue with no die home)",
+   "affects": [
+    [
+     "hb_coll_SW",
+     "program_configured",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "program_init_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "program_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "hgi_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "hgi_done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "hgi_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SW",
+     "stat_cycles",
+     0,
+     32
+    ],
+    [
+     "hb_coll_SE",
+     "program_configured",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "program_init_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "program_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "hgi_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "hgi_done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "hgi_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_SE",
+     "stat_cycles",
+     0,
+     32
+    ],
+    [
+     "hb_coll_NW",
+     "program_configured",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "program_init_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "program_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NW",
+     "stat_cycles",
+     0,
+     32
+    ],
+    [
+     "hb_coll_NE",
+     "program_configured",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "program_init_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "program_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "hgi_busy",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "hgi_done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "hgi_fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "done",
+     0,
+     1
+    ],
+    [
+     "hb_coll_NE",
+     "stat_cycles",
+     0,
+     32
+    ]
+   ],
+   "note": "outputs only"
+  },
+  {
+   "id": "G-CIL-IDXCP",
+   "owner": "host owner (programme loader) + H-COLL+IDX",
+   "missing_rtl": "IDX programme/record issuer: hb_idx takes a raw programme SRAM write port (program_we/addr[8]/data[256]) + start/length + per-record operands + TOPK descriptor; no IDX host target (cf. ot_hgi_coll_static_program_target for COLL, which decodes the host F20 cfg bus) and no IDX/TOPK record issuer exist on main",
+   "affects": [
+    [
+     "hb_idx",
+     "program_we",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "program_addr",
+     0,
+     8
+    ],
+    [
+     "hb_idx",
+     "program_data",
+     0,
+     256
+    ],
+    [
+     "hb_idx",
+     "start",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "length",
+     0,
+     12
+    ],
+    [
+     "hb_idx",
+     "weight_sector",
+     0,
+     16
+    ],
+    [
+     "hb_idx",
+     "query_sector",
+     0,
+     16
+    ],
+    [
+     "hb_idx",
+     "gbase",
+     0,
+     8
+    ],
+    [
+     "hb_idx",
+     "nkeys",
+     0,
+     14
+    ],
+    [
+     "hb_idx",
+     "keep_en",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "keep_bitmap",
+     0,
+     1368
+    ],
+    [
+     "hb_idx",
+     "topk_go",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_k",
+     0,
+     4
+    ],
+    [
+     "hb_idx",
+     "topk_order",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_n",
+     0,
+     20
+    ],
+    [
+     "hb_idx",
+     "topk_m",
+     0,
+     20
+    ],
+    [
+     "hb_idx",
+     "topk_a_mirror",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_a_base",
+     0,
+     18
+    ],
+    [
+     "hb_idx",
+     "topk_a_str",
+     0,
+     18
+    ],
+    [
+     "hb_idx",
+     "topk_o_mirror",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_o_base",
+     0,
+     18
+    ],
+    [
+     "hb_idx",
+     "topk_o_str",
+     0,
+     18
+    ],
+    [
+     "hb_idx",
+     "topk_has_r",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_r_base",
+     0,
+     18
+    ],
+    [
+     "hb_idx",
+     "topk_r_str",
+     0,
+     18
+    ],
+    [
+     "hb_idx",
+     "done",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_busy",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_done",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "topk_fault",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "share_fault",
+     0,
+     1
+    ],
+    [
+     "hb_idx",
+     "score_observe",
+     0,
+     2440
+    ]
+   ],
+   "note": "v15 unbound_ports \"actual INDEX programme loader / CP\" (same list). rank[6:0] is the die TP rank (same value as argmax die_id[6:0]) -> could become a die top strap pin, see G-CIL-RANK | idxcoll 2026-10-15: hb_idx.rank moved to G-CIL-RANK (die identity strap pin, idxcoll.json)"
+  },
+  {
+   "id": "G-CIL-IDXTX",
+   "owner": "H-COLL+IDX",
+   "missing_rtl": "COLL TopK injection: hb_idx.tx_v[4]/tx[2180] (topk link frames) has no input on any COLL master (q3 host_v4 TKM del_flit is internal: ot_hfd_coll_q_static_v4.sv:291). compact.graph.json link idx_link>coll_SW:IDX_COLL names \"COLL del_flit\", which is an OUTPUT. ot_hgi_coll_idx_tkm_join / ot_hgi_coll_vm_idx_ingress (idx_d input) exist but are only used in benches",
+   "affects": [
+    [
+     "hb_idx",
+     "tx_v",
+     0,
+     4
+    ],
+    [
+     "hb_idx",
+     "tx",
+     0,
+     2180
+    ]
+   ],
+   "note": "outputs only; needs an SW COLL master variant exposing an idx ingress port | idxcoll 2026-10-15: REQUIRED RTL (H-COLL): ot_hfd_coll_q3_static_host_v4 (SW, SOLO; the only IDX) gains inputs idx_v[3:0]/idx_d[2179:0] (pin-registered) and places ot_hgi_coll_vm_idx_ingress (exists, bench PASS: run_vm_idx_ingress_bench.sh) on the four VM-assembled qslots source faces 2+NPT+j (vm face = vm_assembled, idx face = IDX tx), with mode_idx/expected_v[3:0] from a NEW instruction field: the 1536-b q_static_v4 instruction is fully packed (p_ar_low ends at 1535), so the ISA widens or an existing field is re-encoded. Latency per IDX_TKM_NATIVE_JOIN.md: IDX emit E -> ingress E+2/E+3 -> qslots E+4/E+6 -> TKM E+7 (TKM start E-2). Then edges hb_idx.tx_v/tx -> hb_coll_SW.idx_v/idx_d. Alternative without a COLL port: IDX link writes its 64 flits per rank to VM through its record client and COLL reads them as VM-assembled sources (an IDX RTL change instead)."
+  },
+  {
+   "id": "G-CIL-AMCP",
+   "owner": "host owner (programme loader) / MTP owner",
+   "missing_rtl": "ARGMAX.LOCAL record issuer for hb_argmax go/mode/imm_a/a_mirror/a_base/n/o_base/o_is; status join for busy/done/fault/nan_flag",
+   "affects": [
+    [
+     "hb_argmax",
+     "go",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "mode",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "imm_a",
+     0,
+     18
+    ],
+    [
+     "hb_argmax",
+     "a_mirror",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "a_base",
+     0,
+     18
+    ],
+    [
+     "hb_argmax",
+     "n",
+     0,
+     18
+    ],
+    [
+     "hb_argmax",
+     "o_base",
+     0,
+     18
+    ],
+    [
+     "hb_argmax",
+     "o_is",
+     0,
+     16
+    ],
+    [
+     "hb_argmax",
+     "busy",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "done",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "nan_flag",
+     0,
+     1
+    ]
+   ],
+   "note": "v15 unbound"
+  },
+  {
+   "id": "G-CIL-AMSTREAM",
+   "owner": "H-SU / H-ELEM-B (s_mtp)",
+   "missing_rtl": "static SU logit stream am_stream[522:0] {bias_en,bias256,vals256,mask8,last,v}: only the historical ot_hgi_su_unit / ot_hgi_sv_unit (generic/peers) have an am_stream output; no v16 static SU master (su_<q>/sucore_<q>) exports it",
+   "affects": [
+    [
+     "hb_argmax",
+     "am_stream",
+     0,
+     523
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "id": "G-CIL-HOSTN",
+   "owner": "host_misc region (host_cp ingress/loader)",
+   "missing_rtl": "(edge owned by host_misc) host_N.tx[511:0] driver / host_N.rx[511:0]+st[1:0] consumer = host packet bridge between UCIe 512-b beats and ot_hbm_host_static_ingress AXI-lite (s_aw/w/b/ar/r 32-b); hfd_host_native.sv (io_native_20261014, LOCALONLY candidate) is the nearest RTL",
+   "affects": [
+    [
+     "host_N",
+     "tx",
+     0,
+     512
+    ]
+   ],
+   "note": "listed only for accounting; host_misc binds it"
+  }
+ ],
+ "die_pins": [
+  {
+   "inst": "lk_S0",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_S0_pma_tx"
+  },
+  {
+   "inst": "lk_S0",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_S0_pma_tck"
+  },
+  {
+   "inst": "lk_S0",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_S0_pma_rx"
+  },
+  {
+   "inst": "lk_S0",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_S0_pma_rck"
+  },
+  {
+   "inst": "lk_S1",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_S1_pma_tx"
+  },
+  {
+   "inst": "lk_S1",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_S1_pma_tck"
+  },
+  {
+   "inst": "lk_S1",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_S1_pma_rx"
+  },
+  {
+   "inst": "lk_S1",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_S1_pma_rck"
+  },
+  {
+   "inst": "lk_S2",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_S2_pma_tx"
+  },
+  {
+   "inst": "lk_S2",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_S2_pma_tck"
+  },
+  {
+   "inst": "lk_S2",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_S2_pma_rx"
+  },
+  {
+   "inst": "lk_S2",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_S2_pma_rck"
+  },
+  {
+   "inst": "lk_S3",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_S3_pma_tx"
+  },
+  {
+   "inst": "lk_S3",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_S3_pma_tck"
+  },
+  {
+   "inst": "lk_S3",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_S3_pma_rx"
+  },
+  {
+   "inst": "lk_S3",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_S3_pma_rck"
+  },
+  {
+   "inst": "lk_S4",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_S4_pma_tx"
+  },
+  {
+   "inst": "lk_S4",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_S4_pma_tck"
+  },
+  {
+   "inst": "lk_S4",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_S4_pma_rx"
+  },
+  {
+   "inst": "lk_S4",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_S4_pma_rck"
+  },
+  {
+   "inst": "lk_N0",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_N0_pma_tx"
+  },
+  {
+   "inst": "lk_N0",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_N0_pma_tck"
+  },
+  {
+   "inst": "lk_N0",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_N0_pma_rx"
+  },
+  {
+   "inst": "lk_N0",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_N0_pma_rck"
+  },
+  {
+   "inst": "lk_N1",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_N1_pma_tx"
+  },
+  {
+   "inst": "lk_N1",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_N1_pma_tck"
+  },
+  {
+   "inst": "lk_N1",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_N1_pma_rx"
+  },
+  {
+   "inst": "lk_N1",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_N1_pma_rck"
+  },
+  {
+   "inst": "lk_N2",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_N2_pma_tx"
+  },
+  {
+   "inst": "lk_N2",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_N2_pma_tck"
+  },
+  {
+   "inst": "lk_N2",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_N2_pma_rx"
+  },
+  {
+   "inst": "lk_N2",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_N2_pma_rck"
+  },
+  {
+   "inst": "lk_N3",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 544,
+   "top_port": "lk_N3_pma_tx"
+  },
+  {
+   "inst": "lk_N3",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "lk_N3_pma_tck"
+  },
+  {
+   "inst": "lk_N3",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 544,
+   "top_port": "lk_N3_pma_rx"
+  },
+  {
+   "inst": "lk_N3",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "lk_N3_pma_rck"
+  },
+  {
+   "inst": "host_N",
+   "port": "pma_tx",
+   "direction": "output",
+   "bits": 513,
+   "top_port": "host_N_pma_tx"
+  },
+  {
+   "inst": "host_N",
+   "port": "pma_tck",
+   "direction": "output",
+   "bits": 1,
+   "top_port": "host_N_pma_tck"
+  },
+  {
+   "inst": "host_N",
+   "port": "pma_rx",
+   "direction": "input",
+   "bits": 513,
+   "top_port": "host_N_pma_rx"
+  },
+  {
+   "inst": "host_N",
+   "port": "pma_rck",
+   "direction": "input",
+   "bits": 1,
+   "top_port": "host_N_pma_rck"
+  }
+ ],
+ "v15_to_v16_coll_port_map": {
+  "removed": {
+   "qid": "-> parameter QID (SW 0, SE 1, NW 2, NE 3; ring cw SW>SE>NE>NW matches ot_hgi_coll_pring.sv:117 order 0,1,3,2)",
+   "hgi_start": "-> internal (program_target issuer_start from host launch_v)",
+   "hgi_start_pc": "-> internal (issuer_start_pc)",
+   "program_cfg": "-> internal (issuer_cfg[36:0])"
+  },
+  "added": {
+   "clk_program": "stream clock",
+   "clk_reduce": "stream clock [32:0]",
+   "clk_arg": "stream clock, q3 (SW) master only (q2 has no clk_arg / clk_tkm)",
+   "cfg_v": "host_cp_ingress.cfg_v",
+   "cfg_target": "host_cp_ingress.cfg_target",
+   "cfg_addr": "host_cp_ingress.cfg_addr",
+   "cfg_data": "host_cp_ingress.cfg_data",
+   "desc_v": "host_cp_ingress.desc_v",
+   "desc_base": "host_cp_ingress.desc_base",
+   "desc_limit": "host_cp_ingress.desc_limit",
+   "desc_loops": "host_cp_ingress.desc_loops",
+   "launch_v": "host_cp_ingress.launch_v",
+   "program_configured": "status out",
+   "program_init_busy": "status out",
+   "program_fault": "status out"
+  },
+  "changed": {
+   "tx_pin_flit": "NPT*596 -> NPT*612 (V4 capture frame)",
+   "rx_pin_flit": "NPT*596 -> NPT*612"
+  },
+  "unchanged": "rst_n clk_control clk_issue clk_qslots clk_ring clk_vmwrite clk_link clk_tkm(SW) hgi_busy/done/fault inj_* del_* rc_*/rr_* phy_up tx_pin_v rx_pin_v retry_requested pr_cw/ccw_i/o vm_rq vm_rr vm_kq fault done stat_cycles (same widths) -> all v15 edges on hb_coll_<q> (vm rq/rr/kq, ring) stay valid"
+ },
+ "notes": "MASTER CHOICE: hb_coll_<q> rebound from v15 ot_hfd_coll_q{3,2}_static (V1) to ot_hfd_coll_q{3,2}_static_host_v4 #(QID) -- the H-COLL production parent (tb_hgi_coll_sw_slice_parent PASS on main, writer v4 CLOSED inside, state lanes adopted by grants v7). Reasons: (a) its HOST F20 programme target binds the 4 v15 UNBOUND control ports (qid/hgi_start/hgi_start_pc/program_cfg) to real RTL (host_cp_ingress = ot_hbm_host_static_ingress, same port names/widths) and turns qid into a QID parameter; (b) its 612-b pin frame is what the grant COLL_EP windows (1224 b = 2x612) and compact.graph provenance ('tx/rx_pin_flit 1836 = 3 x 612') already assume; (c) all v15 hb_coll edges (vm rq/rr/kq, pr ring) keep their ports and widths. Grants slot cells still say ot_hfd_coll_q{3,2}_static -> H-DIE must re-cell coll_<q> (unclosed cluster, top-down pins) and the writer/state child paths become hb_coll_<q>/u_q/u_q/{u_writer,u_ring...} (host_v4 u_q -> q*_static_v4 u_q -> q_static_v4). Did NOT pick *_elastic_rx(_pingpong): they put the 0az off-die elastic RX inside COLL and add 19-28 rx_* boundary-control inputs with no producer, while the ep plan (el1013-lkep-split.log) puts the elastic pingpong in the ep tile; owner must decide the home (G-CIL-EP). If the coordinator prefers to stay on v15 V1 masters: drop the 36 host_cp_ingress edges, restore qid as a STRAP (SW0 SE1 NW2 NE3) and gap hgi_start/hgi_start_pc/program_cfg, pin flits 596/link. host_cp_ingress TARGET_MASK (default 1<<48) must include targets 52..55 (COLL quadrants) -- host_misc sets that param; launch_v is a broadcast (all 4 quadrants start the same record). EP: no ep_* instance is emitted (no master on main); coll links <-> lk_* stay a gap; nothing aliased. lk_* clk/rst and host_N clk/rst put on the LINK domain (pll_link / por_link, ot_pdie_serdes rst is active-low despite its name, file header line 21); coll clk_link stays STREAM as in v15 (the capture endpoint runs on the native edge) -> the stream<->link crossing must live in the future ep (or pll_link must equal stream; doubt). pma_* ports are die pins (die_pins list; pma_rck/pma_tck are pad clocks of the far die / to the far die). IDX: hb_idx stays one die instance; idx_s0..3/idx_sel/idx_link/idx_q/idx_op are its hardened children placed as plan blocks. hb_argmax kept but has NO compact660_v5 slot. Accounting: every input bit of the 16 instances is an edge dst, a clock/reset, a die pin, a gap, or a kept v15 edge (hb_coll vm_rr/pr_cw_i/pr_ccw_i; hb_idx vm_rr/cr/argmax_rq; hb_argmax vm_rr/cr). | idxcoll 2026-10-15: lk_* clk/rst moved link -> stream (the SerDes ck is the hfd_ep_static clock = COLL clk_link = stream edge); G-CIL-EP closed by idxcoll.json ep_* (hfd_ep_static); G-CIL-IDXKEY closed by idxcoll.json (svg sm_packet -> key_lines); G-CIL-RANK moved to idxcoll.json."
+}

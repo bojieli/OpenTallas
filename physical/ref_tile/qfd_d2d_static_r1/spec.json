@@ -23,11 +23,47 @@
   "w": 475.2,
   "h": 280.8
  },
- "recipe": 2,
+ "recipe": 3,
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "count": 4
+   "count": 1,
+   "at": [
+    45.792,
+    51.84
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[0].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    257.904,
+    51.84
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[1].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    45.792,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[2].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    257.904,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[3].u_store.u_sram"
   }
  ],
  "pins": {
@@ -103,12 +139,15 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware -distance_between_buffers 40 -sink_clustering_levels 2"
+  }
  },
  "job": {
-  "owner": "Claude:q-link",
-  "branch": "claude/qwen-link-1015",
-  "tag": "r1",
+  "owner": "Claude:Q-DVM+LINK",
+  "branch": "claude/qwen-link-2210",
+  "tag": "r4",
   "purpose": "Q-LINK static D2D link end qfd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face S.",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -151,5 +190,10 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r3 cb4ec1b91 GRT-0116 (two zero-capacity M4 gcells beside upper-left SRAM): central macro channel widened 20.088 -> 40.824 um (6b52fd85f; gate trial GRT overflow 0, M3 18.6%). That gate's TT clock spread 123.5 ps (E-face pin flops 538 ps beside the clock entry, SRAM clocks 415) -> two-level sink clustering (trials on the gate placement: flops 466..516, all 77 ps). RTL = main f0bf3575d: calendar-start prefetch removes the measured u_txcal start->table-mux setup cone (-10.5 ps). No clock period, budget or gate relaxed.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
  }
 }

@@ -86,12 +86,13 @@ module tb_hbm_svc_sm_groups_issued;
    end
   end
  end
+ integer image_fd;
  initial begin
   early=$test$plusargs("EARLY");if(!$value$plusargs("IMAGES=%s",images))$fatal(1,"archive images mandatory");
   for(integer s=0;s<8;s=s+1)begin
    packets[s]=0;feeds[s]=0;sectors[s]=0;
-   smname=$sformatf("sm%02d",s+8*STACK);path={images,"/",smname,"/backing.hex"};$readmemh(path,dram.mem);
-   path={images,"/",smname,"/records.hex"};$readmemh(path,load_rows);for(integer r=0;r<ROWS;r=r+1)records[s][r]=load_rows[r];
+   smname=$sformatf("sm%02d",s+8*STACK);path={images,"/",smname,"/backing.hex"};image_fd=$fopen(path,"r");if(image_fd==0)$fatal(1,"required image unavailable: %s",path);$fclose(image_fd);$readmemh(path,dram.mem);
+   path={images,"/",smname,"/records.hex"};image_fd=$fopen(path,"r");if(image_fd==0)$fatal(1,"required image unavailable: %s",path);$fclose(image_fd);$readmemh(path,load_rows);for(integer r=0;r<ROWS;r=r+1)records[s][r]=load_rows[r];
   end
   repeat(4)@(negedge stream);srst=1;repeat(3)@(negedge hbm);hrst=1;repeat(20)@(negedge stream);
   // initialization (host loader): programme words and descriptor table

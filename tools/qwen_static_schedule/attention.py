@@ -21,8 +21,9 @@ _spec.loader.exec_module(AC)
 SERVICE_RTL = ('u_kvd.u_attention', 'ot_qwen_tp8_attention_native_service_w16')
 Q_BEATS = 32
 # KV-die v1.4.3 head stages (el1014-qwen-split-kvsys.log, Q-KVSYS-DIE G3S2): +3 gather in, +2 score back = +5 edges per
-# attention request on top of the measured w16 service (the HXK=5 ECTL binding; the w16 laws were measured at HXK 8 and are
-# re-measured on the v1.4.3 binary when it exists).
+# attention request. ECTL HXK=13 includes the native r4 head's eight edges and these five stages.
+# The full composition at 22ff95ba0 passes 53 contexts only when every dependent age moves +5;
+# increasing the final duration alone emits an early, incorrect internal programme.
 V143_HEAD_EDGES = 5
 RESULT_BEATS = 32
 
@@ -32,11 +33,27 @@ def service(T, pv='w16'):
     if pv != 'w16':
         raise ScheduleError('production attention is the w16 service; w1 is reference only')
     try:
-        c = AC.calendar(T, pv='w16')
+        c = AC.calendar(T, pv='w16', head_g3s2=True)
     except ValueError as error:
         raise ScheduleError(f'attention calendar refused: {error}') from error
-    return dict(T=T, fields=c, calendar_hex=AC.hexcal(c), service_edges=AC.service_cycles(c) + V143_HEAD_EDGES,
-                measured_w16_edges=AC.service_cycles(c), head_stage_edges=V143_HEAD_EDGES)
+    edges = AC.service_cycles(c)
+    return dict(T=T, fields=c, calendar_hex=AC.hexcal(c), service_edges=edges,
+                measured_w16_edges=edges - V143_HEAD_EDGES, head_stage_edges=V143_HEAD_EDGES)
+
+
+# Measured link + KV endpoint ages (core edges), 2026-10-15:
+#  * D2D data port, pin-registered r4 masters qfd/qkd_d2d_static_r1 + PHY 5 trained: send slot S -> KV die-master
+#    OUTPUT pin S+18 (CMD / Q beats), RESULT beat S -> compute die-master output pin S+18 (Q-DVM+LINK 20:18:35,
+#    results/arch/qwen_split_1014/link_static_1015/program_calendar_prod_1015/calendar.json, tools/qwen_split/
+#    d2d_link_calendar.py --pinreg; physical qualification pending, CTS-only fixes expected, 0 cycles).
+#  * KV static endpoint qkd_native_attention_programme (Codex Q-STATIC-ENDPOINT c5e2e9903, branch
+#    codex/qwen-native-static-endpoint-2116, NOT yet on main / root review): record rx 1 edge, start_qk 2 edges after
+#    the CMD record (Q beats stream in behind it), last result beat -> RESULT record tx 1 edge.
+#  request_edges = CMD send slot -> start_qk = 18 + 2 = 20; result_edges = last result beat -> compute pin = 1 + 18 = 19.
+MEASURED_LINK = dict(request_edges=18 + 2, result_edges=1 + 18,
+                     sources=dict(link='results/arch/qwen_split_1014/link_static_1015/program_calendar_prod_1015/calendar.json',
+                                  endpoint='c5e2e9903:results/arch/qwen_native_static_endpoint_1015/programme_8192.json'),
+                     status='link RTL-compiled (physical pending); endpoint component unmerged')
 
 
 def _age(link, name):
@@ -69,7 +86,7 @@ def pc11_implementation(record, T, layer, link, clock='core', period_fs=None):
     return dict(stage=record['stage'], pc=record['pc'], word=record['word'], unit=1, clock=clock,
                 rtl_instance=SERVICE_RTL[0], rtl_module=SERVICE_RTL[1], events=ev,
                 attention=dict(T=T, calendar_hex=s['calendar_hex'], service_edges=n, request_edges=req, result_edges=res,
-                               source='tools/qwen_attention_native/attn_calendar.py pv=w16'))
+                               source='tools/qwen_attention_native/attn_calendar.py pv=w16 head_g3s2=True HXK=13'))
 
 
 def resources(clock='core'):

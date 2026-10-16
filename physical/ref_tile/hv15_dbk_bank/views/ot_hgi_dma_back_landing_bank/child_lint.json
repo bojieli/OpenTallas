@@ -1,16 +1,14 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/hv15_dbk_bank-pf1-4e0d5b48c/record/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hv15_dbk_bank-geo1-bda78a0ad/record/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 596 of 596 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (50.640,86.197), output_en M5 (50.640,86.197), read_addr[0] M5 (50.640,86.197))"
- ],
- "summary": "ot_hgi_dma_back_landing_bank 140.4 x 88.56: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 596 blocked-above 0 blocked-same 0; clock clk insertion 186 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "ot_hgi_dma_back_landing_bank 140.4 x 87.48: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 596 blocked-above 0 blocked-same 0; clock clk insertion 147 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_dma_back_landing_bank",
   "W": 140.4,
-  "H": 88.56,
+  "H": 87.48,
   "pg": {
    "nets": {
     "VDD": {
@@ -40,24 +38,17 @@
   "face": {
    "face_pins": 596,
    "blocked_above": 0,
-   "covered_below": 11,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 596,
-   "band_examples": [
-    "clk M5 (50.640,86.197)",
-    "output_en M5 (50.640,86.197)",
-    "read_addr[0] M5 (50.640,86.197)",
-    "read_addr[10] M5 (50.640,86.197)",
-    "read_addr[11] M5 (50.640,86.197)",
-    "read_addr[12] M5 (50.640,86.197)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 185.96,
-    "min_ps": 113.81
+    "max_ps": 147.03,
+    "min_ps": 111.17
    }
   },
   "pockets": {
@@ -66,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 108
+    "added": 81
    },
    "count": 0,
    "area_um2": 0,

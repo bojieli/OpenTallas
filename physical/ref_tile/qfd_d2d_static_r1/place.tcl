@@ -28,17 +28,17 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(51.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 56.16 51.84 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(247.536 * $dbu)}] [expr {round(51.84 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 247.536 51.84 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(151.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 56.16 151.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(247.536 * $dbu)}] [expr {round(151.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 247.536 151.2 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_core.u_end.u_link.g_bank[0].u_store.u_sram}]
+$i setOrient R0; $i setLocation [expr {round(45.792 * $dbu)}] [expr {round(51.84 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 45.792 51.84 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_core.u_end.u_link.g_bank[1].u_store.u_sram}]
+$i setOrient R0; $i setLocation [expr {round(257.904 * $dbu)}] [expr {round(51.84 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 257.904 51.84 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_core.u_end.u_link.g_bank[2].u_store.u_sram}]
+$i setOrient R0; $i setLocation [expr {round(45.792 * $dbu)}] [expr {round(151.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 45.792 151.2 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_core.u_end.u_link.g_bank[3].u_store.u_sram}]
+$i setOrient R0; $i setLocation [expr {round(257.904 * $dbu)}] [expr {round(151.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 257.904 151.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 4} { error "ref_tile place: expected 4 macros, netlist has $nb" }

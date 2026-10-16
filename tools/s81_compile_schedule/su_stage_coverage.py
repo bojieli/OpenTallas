@@ -12,16 +12,17 @@ REQUIRED=('su_instance','vm_instance','su_source_sha256','vm_source_sha256',
           'core_epoch','duration_edges','boundary_activity','native_kernel_bindings')
 
 def export(stages, fragments, nodes, bindings=()):
-    if len(stages['PHW_required_by_stage']) != 81:
-        raise ValueError('canonical81 stages required')
+    nstages = len(stages['PHW_required_by_stage'])
+    if not nstages or any(type(p) is not int or p <= 0 for p in stages['PHW_required_by_stage']):
+        raise ValueError('allocator phase widths must cover every stage')
     dies={}
     for die in stages['rank_dies']:
         key=(die['stage'],die['rank'])
-        if key in dies or key[0] not in range(81) or key[1] not in range(4):
+        if key in dies or key[0] not in range(nstages) or key[1] not in range(4):
             raise ValueError('canonical stage/rank duplicate or range')
         dies[key]=die['die_id']
-    if len(dies)!=324 or len(set(dies.values()))!=324:
-        raise ValueError('canonical324 physical rank dies required')
+    if len(dies)!=4*nstages or len(set(dies.values()))!=4*nstages:
+        raise ValueError('complete allocator stage/rank physical dies required')
     actual={}
     for b in bindings:
         key=(b['stage'],b['rank'])
@@ -32,10 +33,10 @@ def export(stages, fragments, nodes, bindings=()):
         actual[key]=b
     bystage=collections.defaultdict(list)
     for f in fragments:
-        if f['stage'] not in range(81):raise ValueError('fragment stage')
+        if f['stage'] not in range(nstages):raise ValueError('fragment stage')
         bystage[f['stage']].append(f)
     records=[]
-    for stage in range(81):
+    for stage in range(nstages):
         fs=bystage[stage]
         for rank in range(4):
             b=actual.get((stage,rank),{})
@@ -53,7 +54,7 @@ def export(stages, fragments, nodes, bindings=()):
     # Source operation placement, MTP and all operation coverage need their own
     # literal join; populated-looking stage descriptors cannot bypass it.
     return dict(schema='opentallas.s81.su-stage-coverage.v1',qualified=False,
-        physical_stages=81,physical_rank_dies=324,stage_rank_records=records,
+        physical_stages=nstages,physical_rank_dies=4*nstages,stage_rank_records=records,
         source_SU_node_ids=[n['node'] for n in nodes],
         source_SU_home_assignment_bound=False,MTP_continuation_bound=False,
         he_crom_provider_homes_only=stages['provider_homes'],

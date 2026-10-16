@@ -17,9 +17,6 @@
  },
  "layer_cap": "M5",
  "pins": {
-  "E": [
-   "nf"
-  ],
   "N": [
    "c0",
    "cc",
@@ -36,10 +33,11 @@
   ],
   "W": [
    "ck",
-   "rs"
+   "rs",
+   "nf"
   ]
  },
- "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0sinf.tcl",
+ "io_tcl": "physical/s81_die_pins/snet_sstn_n6/dsfd_sstn_e0c0sinf.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -49,14 +47,18 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "S-NET dsfd_sstn_e0c0sinf (29 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; RTL = the case glue module rendered by the generator (module sha256 4426e75a97ff07a7, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 522 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 172.8 x 30.24 vs generator slot 172.776 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages)",
+ "structural_change": "S-NET dsfd_sstn_e0c0sinf (29 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; RTL = the case glue module rendered by the generator (module sha256 4426e75a97ff07a7, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 522 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 172.8 x 30.24 vs generator slot 172.776 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages) | n6 (S-NET+FILL 2026-10-15): native audit of the CLOSED n5 view fails ONLY nf[0] capture 216.2 ps (> 190): nf sat on the E face 163 um from the status flop (so/si at x ~9) -> nf pin moved to the W face (y 15.108, between ck and rs); no RTL change",
  "reroute_reason": {
-  "kind": "rtl_change"
+  "kind": "pin_register",
+  "source": "results/arch/native_pin_audit_snetfill_1015/s81_net.json",
+  "cell": "dsfd_sstn_e0c0sinf",
+  "capture_ps": 216.2,
+  "fix": "nf[0] pin moved from the E face (x 172.8, 163 um from the status flop) to the W face next to the so/si status flop (io_tcl physical/s81_die_pins/snet_sstn_n6); same RTL, same outline"
  },
  "job": {
-  "owner": "Claude:s81-net",
-  "branch": "claude/el1015-s81-net-static",
-  "tag": "n5",
+  "owner": "Claude:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "n6",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_sstn_e0c0sinf (29 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_sstn_e0c0sinf/views",
   "record_to": "results/rtl/ref_tile/s81net_sstn_e0c0sinf",
@@ -96,5 +98,9 @@
    30.216
   ],
   "pins": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0c0sinf.tcl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): a slot station is one flip-flop per bit between its pins (xai->ra->xa, xbi->rb->xb, cci->rc->cc, status flop rst); a flow pin register would add a second stage per bit the die calendar does not price"
  }
 }

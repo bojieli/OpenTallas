@@ -6,30 +6,34 @@
  "die": [
   0,
   0,
-  356.4,
-  365.04
+  270.0,
+  270.0
  ],
  "core": [
   2.16,
   2.16,
-  354.23999999999995,
-  362.88
+  267.84,
+  267.84
  ],
  "why": "contract vmb_NW_strap_master",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
-  "pg_layer": "M5",
+  "pg_layer": "M6",
   "rlayers": [
    "M2",
-   "M5"
+   "M6"
   ],
-  "strap_layer": "M6",
-  "layer_cap": "M5",
-  "cap_basis": "contract"
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "granted"
  },
  "pins": {
   "N": [
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
    "rslot_v",
    "rslot",
    "wslot_v",
@@ -40,11 +44,7 @@
    "kq_done",
    "status",
    "wq2",
-   "kq",
-   "clk",
-   "rst_n",
-   "bid",
-   "sid"
+   "kq"
   ],
   "S": [
    "rq3",
@@ -84,8 +84,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 90.72,
-   "y": 76.752,
+   "x": 47.52,
+   "y": 29.232,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -97,8 +97,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 90.72,
-   "y": 147.264,
+   "x": 47.52,
+   "y": 99.744,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -110,8 +110,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 90.72,
-   "y": 217.776,
+   "x": 47.52,
+   "y": 170.256,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",

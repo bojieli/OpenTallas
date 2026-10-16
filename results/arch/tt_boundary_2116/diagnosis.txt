@@ -1,0 +1,6 @@
+Source: qfd_tt_scale_leaf-fs4-0d82da4ab, ot-epyc1tb, actual 5_1_grt.odb.
+All695 signal BPin boxes off preferred track by12nm:602 M4 y,93 M5 x.
+Actual OpenDB tracks M4 Y and M5 X start12DBU step48DBU;1000DBU/um.
+Original tag_payload[55] center184.704,0.096um box184.692..184.716,0.054..0.138; nearest M5 track184.716 coincides with rectangle edge so no enclosure. No local obstruction, PG overlap or extreme local cell packing.
+Diagnostic changes ONLY signal BPin boxes by+12DBU on preferred axis in a separate saved ODB; prior route guides/placed cells unchanged; zero architecture latency/area added beyond existing recipe3 (+1 input/+1 output,+2 seam). First detailed-route iteration passes every previously fatal worker; ordinary DRC still requires final route.
+Recovered Claude uncommitted21:09 corrections from qelem-tt-1705 into isolated origin/main WT. Source branch remains unmodified. Root owns shared early gate guard.

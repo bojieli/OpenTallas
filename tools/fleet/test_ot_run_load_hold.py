@@ -80,6 +80,29 @@ class LoadHold(unittest.TestCase):
 
 
 class PickEligibility(unittest.TestCase):
+    def test_status_respects_quarantine_and_explicit_override(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        rows = dict(epyc=row(500, 40, 128), agi=row(100, 0, 64))
+        for override, expected in [(False, 'epyc'), (True, 'agi')]:
+            output = io.StringIO()
+            env = {'OT_RUN_INCLUDE_HELD': '1'} if override else {}
+            with patch.object(module, 'held_hosts', return_value={'agi': 'unstable host'}), \
+                 patch.object(module, 'probe', side_effect=lambda h,d: (h,rows[h])), \
+                 patch.dict(os.environ, env, clear=True), contextlib.redirect_stdout(output):
+                module.status(list(rows))
+            self.assertIn('job -> ' + expected, output.getvalue())
+            self.assertEqual('agi HELD (unstable host)' in output.getvalue(), not override)
+
+    def test_status_with_every_host_quarantined_has_no_next_host(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        output = io.StringIO()
+        with patch.object(module, 'held_hosts', return_value={'agi': 'unstable host'}), \
+             patch.object(module, 'probe', return_value=('agi', row(100, 0, 64))), \
+             patch.dict(os.environ, {}, clear=True), contextlib.redirect_stdout(output):
+            module.status(['agi'])
+        self.assertIn('no eligible host', output.getvalue())
+        self.assertNotIn('job ->', output.getvalue())
+
     def test_status_does_not_advertise_cpu_held_only_memory_fit_host(self):
         module = load(Path(__file__).with_name('ot-run'))
         rows = dict(epyc=row(20, 70, 128), pve=row(104, 43, 28))

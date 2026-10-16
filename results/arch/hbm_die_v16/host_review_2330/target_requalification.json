@@ -1,0 +1,83 @@
+{
+  "scope": "Conservative source-level hierarchy census; conditional branches require actual elaboration check. Staging all RTL alone does not make unrelated tiles consumers.",
+  "module": "ot_static_program_target",
+  "old_sha256": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
+  "new_sha256": "d75564aef1bf616468ee83da7a583e7cc5143754068539c7e7b0f29c95ee44a1",
+  "direct_consumers": [
+    "ot_hbm_attn_host_program_front",
+    "ot_hbm_attn_physical_host_program_front",
+    "ot_hbm_attn_physical_host_program_front_fields",
+    "ot_hbm_attn_physical_host_program_front_h1",
+    "ot_hbm_attn_physical_host_program_front_local",
+    "ot_hgi_qdq_native_program_leaf",
+    "ot_hgi_qdq_sw_program_leaf"
+  ],
+  "all_source_consumers": {
+    "hfd_host_static_native_qdq_program": [
+      "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv"
+    ],
+    "ot_hbm_attn_host_program_front": [
+      "rtl/hdc/v41x/static/ot_hbm_attn_host_program_front.sv"
+    ],
+    "ot_hbm_attn_physical_host_program_front": [
+      "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front.sv"
+    ],
+    "ot_hbm_attn_physical_host_program_front_fields": [
+      "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front_fields.sv"
+    ],
+    "ot_hbm_attn_physical_host_program_front_h1": [
+      "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front_h1.sv"
+    ],
+    "ot_hbm_attn_physical_host_program_front_local": [
+      "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front_local.sv"
+    ],
+    "ot_hbm_host_qdq_installed_target": [
+      "rtl/hbm_accel/host_static_20261015/ot_hbm_host_qdq_installed_target.sv"
+    ],
+    "ot_hgi_qdq_host_static": [
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv"
+    ],
+    "ot_hgi_qdq_native_program_leaf": [
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv"
+    ],
+    "ot_hgi_qdq_sw_host_static": [
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_sw_host_static.sv"
+    ],
+    "ot_hgi_qdq_sw_program_leaf": [
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_sw_host_static.sv"
+    ],
+    "ot_static_program_target": [
+      "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+    ]
+  },
+  "existing_published_records": [
+    {
+      "job": "hgi_qdq_program_sw125_r6-sw125r6-927dd7e7e",
+      "block": "ot_hgi_qdq_sw_program_leaf",
+      "source_commit": "927dd7e7e9b74d739f4ab75e16176a34a971d7bb",
+      "verdict": "CLOSED",
+      "record": "results/closure_loop/hgi_qdq_program_sw125_r6-sw125r6-927dd7e7e/verdict.json",
+      "scope": "Any published view whose actual elaborated hierarchy contains this target must be requalified for changed RTL. Frozen historical jobs/views remain preserved; no alias adoption."
+    }
+  ],
+  "new_v16_direct_instances": [
+    "cp_cal_SW",
+    "cp_cal_SE",
+    "cp_cal_NW",
+    "cp_cal_NE",
+    "cp_fill_SW",
+    "cp_fill_SE",
+    "cp_fill_NW",
+    "cp_fill_NE",
+    "hc_tgt_SW",
+    "hc_tgt_SE",
+    "hc_tgt_NW",
+    "hc_tgt_NE",
+    "cp_ep_SW",
+    "cp_ep_SE",
+    "cp_ep_NW",
+    "cp_ep_NE"
+  ],
+  "requalification": "Changed target source and actual containing QDQ/attention/hostprogramme tiles cannot inherit older views. New v16 direct targets are unqualified already. Normal stage latency remains two transport edges; descriptor rearm required for each launch.",
+  "install_readiness_gap": "Configured proves descriptor bounds/armed state only; loaded row completeness is not proved for these programme-target collars. Missing actualloaded-row status remains native installation safety OPEN; status67target test proves aggregation only."
+}

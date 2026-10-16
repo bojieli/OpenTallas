@@ -35,6 +35,7 @@ from binding_order import sliced_order
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
 # closed leaf views (module -> view dir); every leaf of an expanded frame must have one
+ECTL_H13 = __import__('os').environ.get('OT_KV_ECTL_H13', '0') == '1'
 VIEWS = dict(
     ot_qkh_head_frontq_native=f'{RT}/qkh_r4_frontq_1014/views/ot_qkh_head_frontq_native',
     ot_qkh_head_stin_native=f'{RT}/qkh_r3_stin_1014/views/ot_qkh_head_stin_native',
@@ -44,9 +45,15 @@ VIEWS = dict(
     ot_qkh_ktree=f'{RT}/ot_qkh_ktree_m5/views/ot_qkh_ktree',
     ot_qkh_head_score4_native=f'{RT}/qkh_r4_score4_1014/views/ot_qkh_head_score4_native',
     qkd_ectl_a_tp8_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_direct',
-    qkd_ectl_a_tp8_epoch_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct',
-    qkd_ectl_b_tp8_direct=f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct',
-    qkd_ectl_c_tp8_direct=f'{RT}/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct',
+    # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
+    # a -> the h5 view (synthesis byte-identical to h13, results/arch/qwen_ectl_h13_2115/ab_reuse.json; the a_h13 view is
+    # pending its native capture fix), b -> h5 (identical, native PASS), c -> the CLOSED h13 view (e033dce09). Never c_h5.
+    qkd_ectl_a_tp8_epoch_direct=(f'{RT}/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct' if ECTL_H13 else
+                                 f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct'),
+    qkd_ectl_b_tp8_direct=(f'{RT}/qkd_ectl_b_tp8_direct_h5/views/qkd_ectl_b_tp8_direct' if ECTL_H13 else
+                           f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct'),
+    qkd_ectl_c_tp8_direct=(f'{RT}/qkd_ectl_c_tp8_direct_h13/views/qkd_ectl_c_tp8_direct' if ECTL_H13 else
+                           f'{RT}/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct'),
     qkd_ctrl_pc=f'{RT}/qkd_ctrl_pc/views/qkd_ctrl_pc',
     qkd_ctrl_kc=f'{RT}/qkd_ctrl_kc/views/qkd_ctrl_kc',
     # v1.4.3 near-head feed-through leaves (the far head's T1 / S2)

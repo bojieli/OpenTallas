@@ -532,6 +532,14 @@
      "by": "ot_hgi_dma_back_static_vp4_banks = ot_hgi_dma_back_static_vp4_controller + 8 x ot_hgi_dma_back_landing_bank (hb_dbk_<q> wires-only parent)",
      "reason": "the monolithic DMA STORE back engine (cursor -827 ps, vp -412 ps CTS) is structurally replaced by the DESC_LAT4 controller leaf + eight landing-bank leaves (identical issue/drain/data/fence edges, actual 32VM/128SRAM production proof); H-DIE asked to re-grant hb_dbk_<q> as the wires-only cluster.",
      "evidence": "jobs hv15_dbk_bank-pf1-4e0d5b48c / hv15_dbk_vp4_ctl_stk0-rm1 (claude/hbm-harden-1705), el1011-hbmdie.log H-HARDEN 1705 request (2)"
+    },
+    {
+     "elements": [
+      "hfd_ckgen_rel"
+     ],
+     "by": "hfd_ckgen_rel4 (one leaf, four domain releases, beside the PLL macro)",
+     "reason": "coordinator 10-15 dedupe decision: the 4-copy 2-flop leaf (hbm_ckgen_rel-r2-4c5a2f113 CLOSED, native PASS) folds into one leaf; the die reset tree fans the four releases out.",
+     "evidence": "H-HARDEN el1015-hbm-v15-harden.log; job hbm_ckgen_rel4-one1"
     }
    ],
    "streams": [

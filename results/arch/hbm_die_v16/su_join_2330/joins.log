@@ -1,0 +1,16 @@
+BRIDGE_RELEASE release_ht=E0-6 window=[E0-6,E0-1] cmp_edges=480 errors=0 leaf_fault=1 bridge_fault=1/1
+BRIDGE_RELEASE PASS
+BRIDGE_RELEASE release_ht=E0-12 window=[E0-6,E0-1] cmp_edges=340 errors=176 leaf_fault=1 bridge_fault=1/1
+FATAL: rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_bridge_release.sv:67: BRIDGE_RELEASE FAIL errors=178
+BRIDGE_RELEASE release_ht=E00 window=[E0-6,E0-1] cmp_edges=340 errors=175 leaf_fault=1 bridge_fault=1/1
+FATAL: rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_bridge_release.sv:67: BRIDGE_RELEASE FAIL errors=177
+BRIDGE_RELEASE release_ht=E0-6 window=[E0-6,E0-1] cmp_edges=620 errors=0 leaf_fault=0 bridge_fault=1/1
+BRIDGE_RELEASE PASS
+QCORE_PORTS edges=4065 errors=0 scalars_rf=88 scalars_norf=64 drain_faults=1
+QCORE_PORTS PASS
+QCORE_PORTS edges=4065 errors=3 scalars_rf=88 scalars_norf=64 drain_faults=1
+FATAL: rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_qcore_ports.sv:66: QCORE_PORTS FAIL errors=3
+QCORE_PORTS edges=4065 errors=64 scalars_rf=88 scalars_norf=64 drain_faults=1
+FATAL: rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_qcore_ports.sv:66: QCORE_PORTS FAIL errors=64
+SU_NETLIST_JOINS GATE PASS
+rc=0

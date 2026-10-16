@@ -1,0 +1,5734 @@
+{
+ "region": "sm_vm",
+ "author": "Claude region agent sm_vm (H-NETLIST v16)",
+ "basis_commit": "d96381d6e",
+ "instances": [
+  {
+   "name": "xl_SW_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)"
+  },
+  {
+   "name": "xl_SW_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW x-store BF16 lane quarter 0 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SW_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW x-store BF16 lane quarter 1 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SW_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW x-store BF16 lane quarter 2 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SW_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW x-store BF16 lane quarter 3 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SW_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_SW_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_SW_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SW block-dot lane ring (kit hgi_sm_xl2_bdring 216x216)"
+  },
+  {
+   "name": "xl_SE_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)"
+  },
+  {
+   "name": "xl_SE_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE x-store BF16 lane quarter 0 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SE_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE x-store BF16 lane quarter 1 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SE_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE x-store BF16 lane quarter 2 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SE_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE x-store BF16 lane quarter 3 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_SE_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_SE_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_SE_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant SE block-dot lane ring (kit hgi_sm_xl2_bdring 216x216)"
+  },
+  {
+   "name": "xl_NW_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)"
+  },
+  {
+   "name": "xl_NW_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW x-store BF16 lane quarter 0 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NW_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW x-store BF16 lane quarter 1 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NW_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW x-store BF16 lane quarter 2 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NW_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW x-store BF16 lane quarter 3 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NW_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_NW_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_NW_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NW block-dot lane ring (kit hgi_sm_xl2_bdring 216x216)"
+  },
+  {
+   "name": "xl_NE_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)"
+  },
+  {
+   "name": "xl_NE_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE x-store BF16 lane quarter 0 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NE_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE x-store BF16 lane quarter 1 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NE_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE x-store BF16 lane quarter 2 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NE_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE x-store BF16 lane quarter 3 (8 SRAMs; one master x4; kit hgi_sm_xl2_bfq 345.6x298.1)"
+  },
+  {
+   "name": "xl_NE_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE block-dot quantiser lo half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_NE_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE block-dot quantiser hi half -- ot_hbm_xp_aq_tree13_fmt #(FP4=0): the CLOSED hgi_xp_aq body with the x-load format mode a parameter (FP8 activations for FP8 and FP4 weights; was a parent tie fp4=1'b0); RE-HARDEN the hgi_xp_aq kit under this name (constant-folded fp4)",
+   "rtl_deps": [
+    "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+   ]
+  },
+  {
+   "name": "xl_NE_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   },
+   "slot": null,
+   "owner": "H-SM",
+   "note": "quadrant NE block-dot lane ring (kit hgi_sm_xl2_bdring 216x216)"
+  }
+ ],
+ "retire_v15": [],
+ "edges": [
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wce",
+    0,
+    1
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[0]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SW_bfq0",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_bfq0",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "rwq",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*0 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wce",
+    1,
+    2
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[1]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SW_bfq1",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_bfq1",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "rwq",
+    256,
+    512
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*1 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wce",
+    2,
+    3
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[2]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SW_bfq2",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_bfq2",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "rwq",
+    512,
+    768
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*2 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wce",
+    3,
+    4
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[3]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SW_bfq3",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_bfq3",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "rwq",
+    768,
+    1024
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*3 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SW_aqlo",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "qv_lo"
+   ],
+   "dst": [
+    "xl_SW_aqlo",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "l_d_o",
+    0,
+    1024
+   ],
+   "dst": [
+    "xl_SW_aqlo",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[1023:0]))"
+  },
+  {
+   "src": [
+    "xl_SW_aqlo",
+    "vo"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "qo_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_aqlo",
+    "fault"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "qf_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_aqlo",
+    "q"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "qq_lo"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_aqlo",
+    "e"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "qe_lo"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SW_aqhi",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "qv_hi"
+   ],
+   "dst": [
+    "xl_SW_aqhi",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "l_d_o",
+    1024,
+    2048
+   ],
+   "dst": [
+    "xl_SW_aqhi",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[2047:1024]))"
+  },
+  {
+   "src": [
+    "xl_SW_aqhi",
+    "vo"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "qo_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_aqhi",
+    "fault"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "qf_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_aqhi",
+    "q"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "qq_hi"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_aqhi",
+    "e"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "qe_hi"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "r_wsel"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "r_wsel"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "zlo"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "zlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "zhi"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "zhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "bsel"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "bsel"
+   ],
+   "bits": 26,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv u_ctl.bsel -> u_bd.bsel (7a8256359 one-hot beat select replaces ea/eb2)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "lane_en"
+   ],
+   "dst": [
+    "xl_SW_bd",
+    "lane_en_i"
+   ],
+   "bits": 64,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_bd",
+    "bq_d"
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "bq_d"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "rq"
+   ],
+   "dst": [
+    "hb_vms_SW",
+    "rq",
+    272,
+    408
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind SW read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "hb_vms_SW",
+    "rr",
+    4112,
+    6168
+   ],
+   "dst": [
+    "xl_SW_ctl",
+    "rr"
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind SW read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW0",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW0",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW0",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW0",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW1",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW1",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW1",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW1",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW2",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW2",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW2",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW2",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW3",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW3",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW3",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW3",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW4",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW4",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW4",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW4",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW5",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW5",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW5",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW5",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW6",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW6",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW6",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW6",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SW7",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SW7",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SW7",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SW7",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SW<b>>sm_SW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wce",
+    0,
+    1
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[0]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SE_bfq0",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_bfq0",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "rwq",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*0 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wce",
+    1,
+    2
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[1]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SE_bfq1",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_bfq1",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "rwq",
+    256,
+    512
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*1 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wce",
+    2,
+    3
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[2]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SE_bfq2",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_bfq2",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "rwq",
+    512,
+    768
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*2 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wce",
+    3,
+    4
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[3]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_SE_bfq3",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_bfq3",
+    "rwq"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "rwq",
+    768,
+    1024
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*3 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SE_aqlo",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "qv_lo"
+   ],
+   "dst": [
+    "xl_SE_aqlo",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "l_d_o",
+    0,
+    1024
+   ],
+   "dst": [
+    "xl_SE_aqlo",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[1023:0]))"
+  },
+  {
+   "src": [
+    "xl_SE_aqlo",
+    "vo"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "qo_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_aqlo",
+    "fault"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "qf_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_aqlo",
+    "q"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "qq_lo"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_aqlo",
+    "e"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "qe_lo"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_SE_aqhi",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "qv_hi"
+   ],
+   "dst": [
+    "xl_SE_aqhi",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "l_d_o",
+    1024,
+    2048
+   ],
+   "dst": [
+    "xl_SE_aqhi",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[2047:1024]))"
+  },
+  {
+   "src": [
+    "xl_SE_aqhi",
+    "vo"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "qo_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_aqhi",
+    "fault"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "qf_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_aqhi",
+    "q"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "qq_hi"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_aqhi",
+    "e"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "qe_hi"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "r_wsel"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "r_wsel"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "zlo"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "zlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "zhi"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "zhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "bsel"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "bsel"
+   ],
+   "bits": 26,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv u_ctl.bsel -> u_bd.bsel (7a8256359 one-hot beat select replaces ea/eb2)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "lane_en"
+   ],
+   "dst": [
+    "xl_SE_bd",
+    "lane_en_i"
+   ],
+   "bits": 64,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_bd",
+    "bq_d"
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "bq_d"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "rq"
+   ],
+   "dst": [
+    "hb_vms_SE",
+    "rq",
+    272,
+    408
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind SE read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "hb_vms_SE",
+    "rr",
+    4112,
+    6168
+   ],
+   "dst": [
+    "xl_SE_ctl",
+    "rr"
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind SE read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE0",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE0",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE0",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE0",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE1",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE1",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE1",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE1",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE2",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE2",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE2",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE2",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE3",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE3",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE3",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE3",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE4",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE4",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE4",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE4",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE5",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE5",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE5",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE5",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE6",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE6",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE6",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE6",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_SE7",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_SE7",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_SE7",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_SE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_SE7",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_SE<b>>sm_SE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wce",
+    0,
+    1
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[0]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NW_bfq0",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_bfq0",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "rwq",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*0 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wce",
+    1,
+    2
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[1]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NW_bfq1",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_bfq1",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "rwq",
+    256,
+    512
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*1 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wce",
+    2,
+    3
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[2]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NW_bfq2",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_bfq2",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "rwq",
+    512,
+    768
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*2 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wce",
+    3,
+    4
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[3]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NW_bfq3",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_bfq3",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "rwq",
+    768,
+    1024
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*3 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NW_aqlo",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "qv_lo"
+   ],
+   "dst": [
+    "xl_NW_aqlo",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "l_d_o",
+    0,
+    1024
+   ],
+   "dst": [
+    "xl_NW_aqlo",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[1023:0]))"
+  },
+  {
+   "src": [
+    "xl_NW_aqlo",
+    "vo"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "qo_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_aqlo",
+    "fault"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "qf_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_aqlo",
+    "q"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "qq_lo"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_aqlo",
+    "e"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "qe_lo"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NW_aqhi",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "qv_hi"
+   ],
+   "dst": [
+    "xl_NW_aqhi",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "l_d_o",
+    1024,
+    2048
+   ],
+   "dst": [
+    "xl_NW_aqhi",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[2047:1024]))"
+  },
+  {
+   "src": [
+    "xl_NW_aqhi",
+    "vo"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "qo_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_aqhi",
+    "fault"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "qf_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_aqhi",
+    "q"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "qq_hi"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_aqhi",
+    "e"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "qe_hi"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "r_wsel"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "r_wsel"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "zlo"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "zlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "zhi"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "zhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "bsel"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "bsel"
+   ],
+   "bits": 26,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv u_ctl.bsel -> u_bd.bsel (7a8256359 one-hot beat select replaces ea/eb2)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "lane_en"
+   ],
+   "dst": [
+    "xl_NW_bd",
+    "lane_en_i"
+   ],
+   "bits": 64,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_bd",
+    "bq_d"
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "bq_d"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "rq"
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "rq",
+    272,
+    408
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind NW read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "hb_vms_NW",
+    "rr",
+    4112,
+    6168
+   ],
+   "dst": [
+    "xl_NW_ctl",
+    "rr"
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind NW read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW0",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW0",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW0",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW0",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW1",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW1",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW1",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW1",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW2",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW2",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW2",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW2",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW3",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW3",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW3",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW3",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW4",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW4",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW4",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW4",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW5",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW5",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW5",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW5",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW6",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW6",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW6",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW6",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NW7",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NW7",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NW7",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NW_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NW7",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NW<b>>sm_NW7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wce",
+    0,
+    1
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[0]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NE_bfq0",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_bfq0",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "rwq",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*0 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wce",
+    1,
+    2
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[1]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NE_bfq1",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_bfq1",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "rwq",
+    256,
+    512
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*1 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wce",
+    2,
+    3
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[2]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NE_bfq2",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_bfq2",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "rwq",
+    512,
+    768
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*2 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rst_n(rn), rn = u_ctl.rn_o leaf reset relay)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_d"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "c_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wce",
+    3,
+    4
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "wce"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.wce(c_wce[3]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mhi"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "mhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_mlo"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "mlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "c_wa"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "wa"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_ce"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "r_ce"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_a"
+   ],
+   "dst": [
+    "xl_NE_bfq3",
+    "r_a"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_bfq3",
+    "rwq"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "rwq",
+    768,
+    1024
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.rwq(rwq[256*3 +: 256]))"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NE_aqlo",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "qv_lo"
+   ],
+   "dst": [
+    "xl_NE_aqlo",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "l_d_o",
+    0,
+    1024
+   ],
+   "dst": [
+    "xl_NE_aqlo",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[1023:0]))"
+  },
+  {
+   "src": [
+    "xl_NE_aqlo",
+    "vo"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "qo_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_aqlo",
+    "fault"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "qf_lo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_aqlo",
+    "q"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "qq_lo"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_aqlo",
+    "e"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "qe_lo"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rn_o"
+   ],
+   "dst": [
+    "xl_NE_aqhi",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "qv_hi"
+   ],
+   "dst": [
+    "xl_NE_aqhi",
+    "v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "l_d_o",
+    1024,
+    2048
+   ],
+   "dst": [
+    "xl_NE_aqhi",
+    "x"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die (.x(l_d[2047:1024]))"
+  },
+  {
+   "src": [
+    "xl_NE_aqhi",
+    "vo"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "qo_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_aqhi",
+    "fault"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "qf_hi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_aqhi",
+    "q"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "qq_hi"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_aqhi",
+    "e"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "qe_hi"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "r_wsel"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "r_wsel"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "zlo"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "zlo"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "zhi"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "zhi"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "bsel"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "bsel"
+   ],
+   "bits": 26,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv u_ctl.bsel -> u_bd.bsel (7a8256359 one-hot beat select replaces ea/eb2)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "lane_en"
+   ],
+   "dst": [
+    "xl_NE_bd",
+    "lane_en_i"
+   ],
+   "bits": 64,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_bd",
+    "bq_d"
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "bq_d"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:616-634 ot_hgi_sm_xload_static_cl2 (wires-only parent) lifted to die"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "rq"
+   ],
+   "dst": [
+    "hb_vms_NE",
+    "rq",
+    272,
+    408
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind NE read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "hb_vms_NE",
+    "rr",
+    4112,
+    6168
+   ],
+   "dst": [
+    "xl_NE_ctl",
+    "rr"
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:82-83 (bank b read group g at rq[(g*8+b)*17 +:17] / rr[(g*8+b)*257 +:257]); contract vm_slice_bind NE read_groups[2]=\"SM xload\" UNBOUND in v15; x-load lane l = bank l (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:183, tb_hgi_xload_static_lock fixed-latency 8-bank model); ot_vms_bank_static response at n+6 == RD_LAT 6"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE0",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE0",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE0",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE0",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE0:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE1",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE1",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE1",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE1",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE1:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE2",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE2",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE2",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE2",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE2:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE3",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE3",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE3",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE3",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE3:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE4",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE4",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE4",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE4",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE4:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE5",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE5",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE5",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE5",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE5:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE6",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE6",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE6",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE6",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE6:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_en"
+   ],
+   "dst": [
+    "sm_NE7",
+    "xw_en"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_addr"
+   ],
+   "dst": [
+    "sm_NE7",
+    "xw_addr"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_grp"
+   ],
+   "dst": [
+    "sm_NE7",
+    "xw_grp"
+   ],
+   "bits": 7,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE7:SM_X carry the 8 x 256-b lane slices)"
+  },
+  {
+   "src": [
+    "xl_NE_ctl",
+    "xw_data"
+   ],
+   "dst": [
+    "sm_NE7",
+    "xw_data"
+   ],
+   "bits": 2048,
+   "clock": "stream",
+   "basis": "ot_hbm_accel_smh_static xw_* -> ot_smh_static_front.sv:31-33 (no SM select: xw_grp is the beat index, rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv/ot_hgi_sm_xload_static.sv:462-463) => one quadrant x-load broadcasts the x-store write to all 8 SMs of the quadrant (one VM RG2 per quadrant; grant pin windows vmb_NE<b>>sm_NE7:SM_X carry the 8 x 256-b lane slices)"
+  }
+ ],
+ "drop_v15_edges": [],
+ "clocks": [
+  {
+   "inst": "xl_SW_ctl",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "xl_SW_bfq0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_bfq1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_bfq2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_bfq3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_aqlo",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_aqhi",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_bd",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "xl_SE_bfq0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_bfq1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_bfq2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_bfq3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_aqlo",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_aqhi",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_bd",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_ctl",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_ctl",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "xl_NW_bfq0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_bfq1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_bfq2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_bfq3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_aqlo",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_aqhi",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_bd",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_ctl",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_ctl",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "xl_NE_bfq0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_bfq1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_bfq2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_bfq3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_aqlo",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_aqhi",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_bd",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "port": "clk_eg",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "clk_eg",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NW_ctl",
+   "port": "clk_eg",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "xl_NE_ctl",
+   "port": "clk_eg",
+   "domain": "stream",
+   "kind": "clock"
+  }
+ ],
+ "straps": [],
+ "gaps": [
+  {
+   "id": "G-SMVM-XCMD",
+   "owner": "H-SM (with HBM compiler / CP)",
+   "missing_rtl": "a STATIC x-load command issuer (programme-SRAM sequencer like ot_static_program_target + calendar) that drives x_v/x_base/x_n/x_p/x_stride/x_space/x_fmt/x_xb on fixed cycles and consumes x_done/x_fault. Every producer on main is credited (x_rdy handshake): ot_hgi_sm_record, ot_hgi_smmv, ot_hbm_b2_xload_command (and ot_hgi_cp_die ux_v/ux_rdy). None can bind to the static cl2 ctl (no x_rdy input).",
+   "affects": [
+    [
+     "xl_SW_ctl",
+     "x_v"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_base"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_n"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_p"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_stride"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_space"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_fmt"
+    ],
+    [
+     "xl_SW_ctl",
+     "x_xb"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_v"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_base"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_n"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_p"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_stride"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_space"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_fmt"
+    ],
+    [
+     "xl_SE_ctl",
+     "x_xb"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_v"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_base"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_n"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_p"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_stride"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_space"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_fmt"
+    ],
+    [
+     "xl_NW_ctl",
+     "x_xb"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_v"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_base"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_n"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_p"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_stride"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_space"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_fmt"
+    ],
+    [
+     "xl_NE_ctl",
+     "x_xb"
+    ]
+   ],
+   "note": "outputs x_busy/x_done/x_fault/xw_last of xl_<q>_ctl left unconsumed (xw_last has no SM input; x_done/x_fault belong to the missing issuer)."
+  },
+  {
+   "id": "G-SMVM-SMOUT",
+   "owner": "H-SM (+H-COLL+IDX for the stage, H-ELEM-A for the VM hub)",
+   "missing_rtl": "a STATIC consumer of the SM results rv/rrow[11:0]/rdata[255:0]/fault/schedule_fault (grant link sm_<q>k>vmh_<q>:SM_OUT 270 b). ot_vms_hub_static / hfd_hgi_vms_static have no SM result port; ot_hgi_sm_pub(_hier/_slice) is credited (pub_rdy, sm_cr, cq338 record client) and non-static; ot_hgi_coll_sm_stage_q (8 SMs x rv/rrow/rdata, static, rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv) exists but is instantiated only in its tb, is not in hb_coll_<q> (ot_hfd_coll_q*_static) and needs its own calendar inputs (fill_begin/fill_bank/pub_*/prefetch_*/lp_*). fault/schedule_fault need the status aggregate.",
+   "affects": [],
+   "note": "OUTPUTS left unconsumed on all 32 SMs: rv, rrow, rdata, fault, schedule_fault (no input of any listed instance is affected). Results of attention QK/PV (verdict B) also land here. ARCHITECTURE QUESTION (H-SM + H-COLL + H-ELEM-A, owner): where does an SM result row go? (A) always through the COLL SM stage (ot_hgi_coll_sm_stage_q into hb_coll_<q>: TP partial-sum reduction, then the VM via COLL kq) -- needs the stage instantiated in hb_coll_<q> with its calendar inputs; or (B) non-reduced results written straight into the VM by a static result writer (8 SMs -> 8 banks, sector = base_k + {rrow,k}) -- needs a VM write group: SW/SE have WG=1 (wq0 = LG) and NW/NE WG=3 (wq1 CP / ATT-retired, wq2 QUANT / HC), so (B) is a VM ABI change. vmsm did not build either (no decision)."
+  },
+  {
+   "id": "G-SMVM-KVDESC",
+   "owner": "H-SM / H-ELEM-A",
+   "missing_rtl": "attention SM master ot_hbm_accel_smh_attn (rtl/hbm_accel/sm/attn, on main via eb3e3e94a, ancestor of HEAD) has command[191:0] + kv_desc[63:0] + request (not expected_request); the die binds ot_hbm_accel_smh_static (83-b command from ot_hbm_svc_sm_group.sm_command[82:0], no kv_desc). Missing: (a) a 192-b command source (svc_sm_group emits 83 b), (b) a static kv_desc producer at the VM hub (grant link vmh_<q>>sm_<q>k:KV_DESC 64 b; ot_vms_hub_static has no such port).",
+   "affects": [],
+   "note": "No smh_static input affected; adoption of attention SMs at die level is blocked on (a)+(b). The 192-b command is an svg programme-envelope change (ot_hbm_svc_sm_feed_programmed W135 -> carries the attention command) and the kv_desc producer is a VM-hub port: both need the H-SM attention contract (which SM slots run attention) before RTL."
+  },
+  {
+   "id": "G-SMVM-STRAP",
+   "owner": "H-SM / H-DIE",
+   "missing_rtl": "hfd_vms_bank_strap_q0..3 are the per-quadrant physical masters of the 8 banks INSIDE hb_vms_<q> (they replace ot_vms_bank_static u_bank in ot_vms_slice_static, rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv:89), but ot_vms_slice_static on main still instantiates ot_vms_bank_static (bid=3'(b), sid from hfd_hgi_vms_static_<q> .sid(2'dN)). Not die-level instances while hb_vms_<q> stays one instance; if the coordinator flattens hb_vms into vmh/vmb slots, each vmb_<q><b> = hfd_vms_bank_strap_q<sid> with straps bid=b, sid=q (SW0 SE1 NW2 NE3; results/hbm_sm_attention_1015/vm_strap/strap_table.json; pins results/arch/hbm_die_v15/vm_strap_grants_1015.json).",
+   "affects": [],
+   "note": "no die edge"
+  },
+  {
+   "id": "G-SMVM-CALISS",
+   "owner": "host owner / H-DIE (host_cp)",
+   "missing_rtl": "VM programme SRAM calendar issuer. Candidate RTL exists: ot_vms_calendar_host_static (rtl/hbm_accel/generic/vm/static) outputs cfg_we[3:0]/cfg_addr[39:0]/cfg_data[1023:0]/start_v[3:0]/start_base[39:0]/start_limit[43:0]/start_loops[63:0] = exactly 4 x calendar_<q> inputs (quadrant i at [i*w +: w]) and takes program_active/done/fault[3:0] from calendar_<q> active/done/fault; it sits between the host AXI (s_*) and the CP loader AXI (c_*), instantiated only in tbs. Binding needs the host ingress + CP (ot_hgi_loader_cp) region; not an SM leaf. The RG2 x-load read slots are part of this programme.",
+   "affects": [
+    [
+     "calendar_SW",
+     "cfg_we"
+    ],
+    [
+     "calendar_SW",
+     "cfg_addr"
+    ],
+    [
+     "calendar_SW",
+     "cfg_data"
+    ],
+    [
+     "calendar_SW",
+     "start_v"
+    ],
+    [
+     "calendar_SW",
+     "start_base"
+    ],
+    [
+     "calendar_SW",
+     "start_limit"
+    ],
+    [
+     "calendar_SW",
+     "start_loops"
+    ],
+    [
+     "calendar_SE",
+     "cfg_we"
+    ],
+    [
+     "calendar_SE",
+     "cfg_addr"
+    ],
+    [
+     "calendar_SE",
+     "cfg_data"
+    ],
+    [
+     "calendar_SE",
+     "start_v"
+    ],
+    [
+     "calendar_SE",
+     "start_base"
+    ],
+    [
+     "calendar_SE",
+     "start_limit"
+    ],
+    [
+     "calendar_SE",
+     "start_loops"
+    ],
+    [
+     "calendar_NW",
+     "cfg_we"
+    ],
+    [
+     "calendar_NW",
+     "cfg_addr"
+    ],
+    [
+     "calendar_NW",
+     "cfg_data"
+    ],
+    [
+     "calendar_NW",
+     "start_v"
+    ],
+    [
+     "calendar_NW",
+     "start_base"
+    ],
+    [
+     "calendar_NW",
+     "start_limit"
+    ],
+    [
+     "calendar_NW",
+     "start_loops"
+    ],
+    [
+     "calendar_NE",
+     "cfg_we"
+    ],
+    [
+     "calendar_NE",
+     "cfg_addr"
+    ],
+    [
+     "calendar_NE",
+     "cfg_data"
+    ],
+    [
+     "calendar_NE",
+     "start_v"
+    ],
+    [
+     "calendar_NE",
+     "start_base"
+    ],
+    [
+     "calendar_NE",
+     "start_limit"
+    ],
+    [
+     "calendar_NE",
+     "start_loops"
+    ]
+   ],
+   "note": "H-SM 1705 list also contains the hb_coll_<q>/lg_<q>_2 calendar-issuer inputs (owners H-COLL+IDX / LG) -- not repeated here."
+  },
+  {
+   "id": "G-SMVM-VMCLIENT",
+   "owner": "see note per range (not SM)",
+   "missing_rtl": "static client source migration for VM ports outside RG2: no static producer on main for these client slots",
+   "affects": [
+    [
+     "hb_vms_SW",
+     "cq",
+     338,
+     676
+    ],
+    [
+     "hb_vms_NW",
+     "cq",
+     0,
+     1352
+    ],
+    [
+     "hb_vms_NW",
+     "rq",
+     408,
+     544
+    ],
+    [
+     "hb_vms_NW",
+     "wq",
+     2248,
+     4496
+    ],
+    [
+     "hb_vms_NE",
+     "rq",
+     408,
+     680
+    ],
+    [
+     "hb_vms_NE",
+     "wq",
+     2248,
+     6744
+    ]
+   ],
+   "note": "Listed for accounting (H-SM 1705 list, 8 ports); owners: SW cq client1 = record \"1\" DMA owner (PENDING); NW cq (records cp/fmv/fused/quant) + rq3/wq1 \"CP\" = host/CP owner; NE rq3/wq1 = ATT RETIRE (VM ABI change H-ELEM-A, verdict B); NE rq4/wq2 = HC engine owner. The RG2 range [272,408) of every hb_vms rq IS bound here (x-load). Coordinator: drop duplicates if another region claims them. vmsm 2026-10-15: none of these ranges is an SM/VM-path port: SW cq client1 = DMA owner (G-DMA), NW cq 0..3 + rq3/wq1 = host/CP owner, NE rq4/wq2 = HC engine (G-HC), NE rq3/wq1 = retired ATT slot: H-ELEM-A must either remove it from hfd_hgi_vms_static_NE (VM ABI change) or assign it (candidate: the SM result writer of G-SMVM-SMOUT option B for NE). The HBM->VM path (dq) is closed by vmsm.json and does not use these slots."
+  },
+  {
+   "id": "G-SMVM-KEYSTAGE",
+   "owner": "H-COLL+IDX (with H-SM for attention-on-SM KV)",
+   "missing_rtl": "service key staging producer of hb_idx key_lines[35167:0] (consumes key_slot/key_index): no module on main outputs key_lines (only ot_hbm_idx_* inputs); ot_hbm_svc_sm_group has no key-line output.",
+   "affects": [
+    [
+     "hb_idx",
+     "key_lines"
+    ]
+   ],
+   "note": "H-SM 1705 list item; not an SM port"
+  }
+ ],
+ "notes": "X-LOAD TOPOLOGY: one static x-load cluster per quadrant (4 total), flattened from ot_hgi_sm_xload_static_cl2 (wires-only parent) into its hardened leaves (ctl, bfq x4, aq_tree13 x2, bdring = 8 instances/quadrant, 32 total). Reasons: each quadrant VM has exactly ONE read group 2 (\"SM xload\", 8 banks x 17 b rq / 257 b rr = the cl2 rq/rr widths), and the SM x-store write has no SM-select (xw_grp = beat), so the quadrant x vector is written once and broadcast to its 8 SMs (v14 \"x written once / quadrant x copy\"). RD_LAT=6 = ot_vms_bank_static rq->rr (n+6) with ZERO die-level stages between hb_vms_<q> banks and xl_<q>_ctl: if placement needs relays on rq/rr, RD_LAT must grow (compiler model tools/hbm_sm_xload_static_timing.py) -- DOUBT, no slot granted yet (compact660_v5 has no x-load slot). xw broadcast fan-out: 2063 b x 8 SMs from one ctl per quadrant spans the SM rows (6.6 mm slots) -> die relays/feedthrough on xw will be needed; the static schedule tolerates fixed stages only if every SM sees the same count (SM front deskew) -- DOUBT for H-SM/H-DIE. eb3e3e94a IS an ancestor of HEAD: attention SM (ot_hbm_accel_smh_attn, kv_desc) is on main but not bindable (G-SMVM-KVDESC). Bank strap masters are leaves inside hb_vms (G-SMVM-STRAP), nothing at die level. fp4 of the quantisers: closed by ot_hbm_xp_aq_tree13_fmt #(FP4=0) (mode = leaf parameter, vmsm 2026-10-15). Coordinator-owned SM ports (clk/rst_n/command/packet/expected_request) untouched; every SM input bit of xw_* is driven here."
+}

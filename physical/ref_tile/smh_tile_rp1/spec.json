@@ -1,0 +1,291 @@
+{
+ "name": "smh_tile_rp1",
+ "top": "ot_hbm_accel_smh_tile_eg",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "spine_through_icg": true,
+ "outline": {
+  "w": 397.44,
+  "h": 1192.32
+ },
+ "child_lattice_um": 8.64,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    25.92,
+    734.4
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    25.92,
+    950.4
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    164.16,
+    950.4
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    164.16,
+    1045.44
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    276.48,
+    1045.44
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?0?.u_lh.u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    164.16,
+    25.92
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?1?.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    164.16,
+    120.96
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?1?.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    276.48,
+    120.96
+   ],
+   "orient": "R0",
+   "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    25.92,
+    103.68
+   ],
+   "orient": "MX",
+   "inst": "*g_lf?1?.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    25.92,
+    311.04
+   ],
+   "orient": "MX",
+   "inst": "*g_lf?1?.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "count": 1,
+   "at": [
+    259.2,
+    492.48
+   ],
+   "orient": "R0",
+   "inst": "*u_ptw.u_groups.u_beat_t"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "count": 1,
+   "at": [
+    328.32,
+    492.48
+   ],
+   "orient": "R0",
+   "inst": "*u_pte.u_groups.u_beat"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin",
+   "bin"
+  ],
+  "E": [
+   "rout",
+   "bout"
+  ],
+  "S": [
+   "gout"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "clk",
+   "rst_n",
+   "cgi",
+   "cgo"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tile_rp1_pins.tcl",
+ "orfs_vars": {
+  "OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_IO_REF_CLASS": "1",
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_tile_rp1_strap_regions.tcl"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 met in the RTL, not by a wrapper: every data port already lands in / launches from one register at its pin (OT_SMH_PINREG: 3,705 rin/bin landing flops; rout = row_e last flop, bout = the hard beat_e last stage at the E face; gout = u_gov/u_god; gin = g_gl u_v/u_d; xs_* straps = strap stage s0; rst_n = the RSTPIN flop; cgi/cgo = the cg wake register), anchored by io_flop_at_pins.  A wrapper flop would add +1 cycle per tile hop on the 3,705-bit chain (x8 hops) and ~7.6k sinks (> 15k on one root)."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-SM-REPACK",
+  "branch": "claude/hbm-sm-repack-1015",
+  "tag": "rp1",
+  "structural_change": "H-SM-REPACK (TILE-FILL 354b5bb2e: hfd_sm frames 362 mm2 at 19.5 % fill): the SM tile re-packed into a 388.8-um column.  (1) Leaves re-stacked N-S (xs | bdc+tct | tcl x2; leaf 1 MX about the channel), all 10 closed leaf views unchanged; (2) the cpt clock-rule FAIL (22,862 sinks, spine insertion 1,348 ps) removed structurally: the W transit and E beat stages are the CLOSED ot_smh_tr_group_beat_e master (2 instances, own roots), the tile root keeps ~14.6k sinks; (3) 267.84-um transport channel sized from the crossing bits (3,705 face pins on M4+M6 = 203 um; H cut 0.56); (4) no child gap under 20 um (min 21.6), every port registered at its pin by RTL. Same RTL cycles (GROUP_TRANSPORT / WEST_SPLIT are the exact-bench-proven group bodies).  Outline 388.8 x 1,183.68 = 0.460 mm2 (cpt 0.627, r16 0.790): SM frame 9.03 vs 11.32 mm2.",
+  "purpose": "[H-SM-REPACK rp1] smallest closable SM tile from closed children only (M7 cluster cap, no new master): ot_hbm_accel_smh_tile_eg with 10 closed leaves + 2 closed beat_e transport groups + tile cells; measures whether the re-packed SM frame (3,628.8 x 2,488.32) can be built.  production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
+  "benches": [
+   {
+    "name": "lockstep_enreg_xlk",
+    "expect": "pass",
+    "pass_regex": "SMT_LOCKSTEP_PASS",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMT_LOCKSTEP_PASS"
+   },
+   {
+    "name": "mut_late32",
+    "expect": "fail",
+    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_hold0",
+    "expect": "fail",
+    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_strap_region",
+    "expect": "fail",
+    "fail_regex": "SMT_STRAP_MUTANT_KILLED",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true
+}

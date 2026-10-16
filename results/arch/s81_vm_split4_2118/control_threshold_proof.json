@@ -1,0 +1,73 @@
+{
+ "status": "PASS_REACHABLE_STATE_ALL53_4QUARTERS_ALL_EDGES",
+ "sources": {
+  "tools/s81_vm/area_a2f.sv": "87ac2c197d4bfefa87289de73525565c5aae4b6a20f55f62015354dde00f59b7",
+  "tools/s81_vm/area_a2f_control_resetlocal.sv": "59907c651f325341ec872da56ae3fa965ae01eac3a2fb8d40ade35aa73841d62"
+ },
+ "records": [
+  {
+   "variant": "gold",
+   "seed": 1,
+   "rc": 0,
+   "stdout": "CONTROL_EQUIV PASS seed1 edges1500 bursts206 resetedges19 cleanfaultedges50 faultedges1398\n/tmp/s81-control-resetlocal-qfiuv855/tb.sv:32: $finish called at 15080000 (1ps)\n",
+   "pass_": true
+  },
+  {
+   "variant": "gold",
+   "seed": 2,
+   "rc": 0,
+   "stdout": "CONTROL_EQUIV PASS seed2 edges1500 bursts206 resetedges19 cleanfaultedges50 faultedges1401\n/tmp/s81-control-resetlocal-qfiuv855/tb.sv:32: $finish called at 15080000 (1ps)\n",
+   "pass_": true
+  },
+  {
+   "variant": "gold",
+   "seed": 3,
+   "rc": 0,
+   "stdout": "CONTROL_EQUIV PASS seed3 edges1500 bursts206 resetedges19 cleanfaultedges50 faultedges1398\n/tmp/s81-control-resetlocal-qfiuv855/tb.sv:32: $finish called at 15080000 (1ps)\n",
+   "pass_": true
+  },
+  {
+   "variant": "S81_A2C_MUT_IDBIT",
+   "seed": 1,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-control-resetlocal-qfiuv855/tb.sv:27: CONTROL_MISMATCH edge8 ids1 valid0 slot0 fault0\n       Time: 166000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_A2C_MUT_IDBIT",
+   "seed": 2,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-control-resetlocal-qfiuv855/tb.sv:27: CONTROL_MISMATCH edge8 ids1 valid0 slot0 fault0\n       Time: 166000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_A2C_MUT_IDBIT",
+   "seed": 3,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-control-resetlocal-qfiuv855/tb.sv:27: CONTROL_MISMATCH edge8 ids1 valid0 slot0 fault0\n       Time: 166000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_A2C_MUT_DROP_LANEBAD",
+   "seed": 1,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-control-resetlocal-qfiuv855/tb.sv:27: CONTROL_MISMATCH edge63 ids0 valid0 slot0 fault1\n       Time: 716000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_A2C_MUT_DROP_LANEBAD",
+   "seed": 2,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-control-resetlocal-qfiuv855/tb.sv:27: CONTROL_MISMATCH edge64 ids0 valid0 slot0 fault1\n       Time: 726000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_A2C_MUT_DROP_LANEBAD",
+   "seed": 3,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-control-resetlocal-qfiuv855/tb.sv:27: CONTROL_MISMATCH edge65 ids0 valid0 slot0 fault1\n       Time: 736000  Scope: tb\n",
+   "pass_": false
+  }
+ ],
+ "not_claimed": "No native physical closure or production adoption"
+}

@@ -4,7 +4,7 @@
 #      descriptors: every control output, request and write beat, cycle for cycle);
 #  (2) the unchanged four-quadrant VM/SRAM production bench with vp as the back engine (wrapper keeps the port names).
 #  MUT=1 drain row stride off by one chunk; MUT=2 product operand truncated one bit too far (rows 6 bits);
-#  MUT=3 landing bank leaf write-beat address bit 0 flipped.
+#  MUT=3 landing bank leaf write-beat address bit 0 flipped; MUT=4 stack strap ignored (stk_q stuck 0: stacks 1-3 must fault).
 set -euo pipefail
 out=${1:?output};mut=${2:-0};mkdir -p "$out"
 d=rtl/hbm_accel/generic/peers/static
@@ -13,6 +13,7 @@ cp "$d/ot_hgi_dma_back_static_vp4_banks.sv" "$out/vp.sv"
 cp "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/banks.sv"   # landing bank leaf ot_hgi_dma_back_landing_bank
 case "$mut" in
  1) sed -i "s/drain_row_hbm+37'(hbm_stride)/drain_row_hbm+37'(hbm_stride)+37'd256/g" "$out/vp.sv";;
+ 4) sed -i "s/stk_q<=(MUT==3)?2'd0:stk;/stk_q<=2'd0;/" "$out/vp.sv";;
  3) sed -i "s/wd_payload<={capture_addr,macro_data};/wd_payload<={capture_addr^32'd1,macro_data};/" "$out/banks.sv";;
  2) sed -i "s/wire \[7:0\] a_rows_r={a_mv\[192:186\]==7'd0,a_mv\[192:186\]};/wire [7:0] a_rows_r={a_mv[191:186]==6'd0,1'b0,a_mv[191:186]};/" "$out/vp.sv";;
 esac
@@ -26,7 +27,7 @@ module ot_hgi_dma_back_static #(parameter integer STK=0, parameter integer QID=S
  output wire [8*17-1:0] rq,input wire [8*257-1:0] rr,output wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
  output wire [15:0] wb_reserve_epoch,wb_fill_epoch,output wire [11:0] wb_reserve_sectors,output wire [31:0] wb_reserve_base,
  output wire wb_fill_start,input wire wb_ready,output wire [8*289-1:0] wd,input wire [11:0] wa);
- ot_hgi_dma_back_static_vp4_banks #(.STK(STK),.QID(QID),.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u(.clk(clk),.clk_bank({8{clk}}),.rst_n(rst_n),.cycle(cycle),
+ ot_hgi_dma_back_static_vp4_banks #(.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u(.clk(clk),.clk_bank({8{clk}}),.rst_n(rst_n),.stk(2'(STK)),.cycle(cycle),
   .mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),.mv_wb_bank(mv_wb_bank),.mv_wb_epoch(mv_wb_epoch),
   .mv_src(mv_src),.mv_done(mv_done),.mv_fault(mv_fault),.quiet(quiet),.busy(busy),.rq(rq),.rr(rr),.wb_reserve_v(wb_reserve_v),
   .wb_reserve_bank(wb_reserve_bank),.wb_fill_bank(wb_fill_bank),.wb_reserve_epoch(wb_reserve_epoch),.wb_fill_epoch(wb_fill_epoch),

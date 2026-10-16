@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "s81_a2f_control4_resetlocal",
+ "enable": false,
+ "reason": "Every data input already feeds dedicated unconditional pin registers (raw_src_v/s_bank/header_pin/payload_pin); every ids/dr_v/dr_s/fault output leaves dedicated registers. Preserve those existing stages with keep_pin_regs/pin_reg_split/io_flop_at_pins; adding generic wrapper registers would duplicate them and silently change the static schedule. Native gate must audit actual boundary placement."
+}

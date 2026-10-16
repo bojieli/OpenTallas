@@ -1,0 +1,24 @@
+{
+ "schema": "qwen-vm-residual-census-v1",
+ "date": "2026-10-15",
+ "owner": "Q-VMWB",
+ "design": "qfd_sp_vector_memory_par (PAR_RB=1, NATIVE_BANKS=1, OT_QFD_VM_NOX) with every hardened leaf blackboxed (resid.ys)",
+ "tool": "yosys proc + opt_clean, FF bits = sum of $dff/$adff WIDTH by Q signal (ot_qfd_sp_vector_memory_bv only)",
+ "residual_ff_bits_bv": 87507,
+ "other_residual_ff_bits": {"ot_hdc_delay instances (top level relays)": "~9.2k", "ot_qfd_vm_q_export_fixed": 1046, "qfd_sp_vector_memory": 555},
+ "breakdown": {
+  "bw_data/mask/line/src/we (per-bank write register beside each of 64 banks)": 34880,
+  "g_cp[].pos/win/q/dav/sb_* (3 SU operand copies: coarse/fine rotate + lane select of the answer)": 33864,
+  "ws_data/mask/line/we (SU replica write register, 16 banks)": 8624,
+  "skid queues + write formation (f_*, q_*, kN_*, eN_*)": 9300,
+  "row read / misc control": 839
+ },
+ "partition_plan": [
+  "A: bank write register -> one write leaf per bank (or absorbed as the bank tile's registered input pins, same edge): 64 x ~545 b",
+  "B: SU replica write register -> 16 per-bank write leaves x ~539 b (broadcast to the 3 copies' banks)",
+  "C: SU answer rotate/select -> 3 copies x 32 bit-plane leaves (rotation is whole-element, bits never mix): 96 x ~353 b",
+  "D: skid queues / write formation / hazards / merge -> 1-2 control leaves (~10 k b), recipe 3 pin registers everywhere",
+  "then the VM parent kit = 8 region clusters (VM488 leaves) + A-D leaves; exactness by tb_vmwb 5 PCs + die_static"
+ ],
+ "status": "census only; no RTL partition yet"
+}

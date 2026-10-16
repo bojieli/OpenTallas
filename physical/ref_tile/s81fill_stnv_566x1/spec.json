@@ -18,7 +18,7 @@
  ],
  "outline": {
   "w": 77.76,
-  "h": 36.72,
+  "h": 19.44,
   "exact": true
  },
  "layer_cap": "M5",
@@ -35,6 +35,10 @@
  },
  "io_tcl": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_566x1.tcl",
  "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
  "route": {
   "pd": 0.5,
   "threads": 4,
@@ -45,11 +49,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnv_566x1 (814 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 566 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 69266cae4ca40731, glue 81730f1679e7bc00); pins at the generator centres. Slot 32.376 x 17.256 holds 363 um2 of core vs 482 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 77.76 x 36.72 (data-pin coordinates unchanged). | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face grown to the pin demand at cut <= 0.6 -> 77.76 x 36.72; pins spread evenly per face (spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die adopts this footprint + pin file (slot_change_request) | f8: no recipe-2 output hold pads (the vertical f6/f7 GRT-0116 overflow sat in the output hold-pad band behind the N-face dq pins); hop hold is carried by the receiver's input hold stages",
+ "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnv_566x1 (814 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 566 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 69266cae4ca40731, glue 81730f1679e7bc00); pins at the generator centres. Slot 32.376 x 17.256 holds 363 um2 of core vs 482 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 77.76 x 19.44 (data-pin coordinates unchanged). | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face grown to the pin demand at cut <= 0.6 -> 77.76 x 19.44; pins spread evenly per face (spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die adopts this footprint + pin file (slot_change_request) | f8: no recipe-2 output hold pads (the vertical f6/f7 GRT-0116 overflow sat in the output hold-pad band behind the N-face dq pins); hop hold is carried by the receiver's input hold stages | f9 re-cut (owner rule 20:45 visual inspection): depth 19.44 um, forwarded-clock pins centred",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
-  "tag": "f8",
+  "tag": "f9",
   "purpose": "S81 FILL: GEN18r die station dsfd_stnv_566x1 (814 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81fill_stnv_566x1/views",
   "record_to": "results/rtl/ref_tile/s81fill_stnv_566x1",
@@ -93,7 +97,7 @@
   "reason": "f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, 0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)",
   "outline": [
    77.76,
-   36.72
+   19.44
   ],
   "generator_slot": [
    32.376,
@@ -102,9 +106,11 @@
   "pins": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_566x1.tcl"
  },
  "outhold": false,
- "pin_regs": {
-  "enable": false,
-  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ "reroute_reason": {
+  "kind": "slot_change",
+  "why": "coordinator APPROVED 2026-10-15 ~21:00: CLOSED pilot s81fill_stnv_566x1-f8-0922badf2 layout was ~60 % empty (flops in one band at the capture face) with a NE-corner forwarded-clock entry (35 um root wire); re-cut of the SAME master: depth 36.72 -> 19.44 um (flop content at util 0.45), fi0/fo0/fn0 at the centre of their faces (spread_face_pins base-name clock match); saves ~0.95 mm2 over 814 instances",
+  "successor_of": "s81fill_stnv_566x1-f8-0922badf2",
+  "slot_change_request": "/home/ubuntu/claude-takeover-20261007/el1011-s81die.log line 1639 \"NEW FOOTPRINT dsfd_stnv_566x1 (f9 ...)\": 77.76 x 19.44 um (coordinator APPROVED re-cut, owner rule 20:45 visual inspection)"
  },
  "macros": [],
  "children": [],

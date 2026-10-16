@@ -1,0 +1,77 @@
+{
+  "hbm_pg": [],
+  "hbm_instances": [],
+  "schema": "opentallas.assumed-phy-pg-case.v1",
+  "status": "ASSUMED_UNQUALIFIED",
+  "instances": [
+    "io_ucie",
+    "io_serdes",
+    "io_serdes_1",
+    "io_serdes_2"
+  ],
+  "masters": [
+    {
+      "schema": "opentallas.assumed-phy-pg-access.v1",
+      "status": "ASSUMED_UNQUALIFIED",
+      "source_sha256": "aad26310eb49d15915f01bb62d2c96c156d3eb2f0891e4af732ccdf09d3f93db",
+      "candidate_sha256": "419f3d12546eee672057975a88d0bf2a57a87b9644994adc398fb877eeb3c483",
+      "width_um": "777.600",
+      "height_um": "777.600",
+      "area_delta_um2": 0,
+      "interface_delta": "none; original M4 PG pins preserved",
+      "m5_reserved_columns_um": [
+        [
+          "775.444",
+          "775.844"
+        ],
+        [
+          "776.452",
+          "776.852"
+        ]
+      ],
+      "m5_reserved_area_um2": "621.7600",
+      "strap_width_um": ".12",
+      "strap_spacing_um": ".888",
+      "strap_pitch_um": "2.016",
+      "offset_r0_mx_um": "775.644",
+      "offset_my_r180_um": "0.948",
+      "claim": "Modeled PHY access reservation only; needs actual PDN connectivity, short/obstruction checks and eventual vendor confirmation.",
+      "master": "ot_qfd_ucie_x64_phy",
+      "lef": "elements.lef"
+    },
+    {
+      "schema": "opentallas.assumed-phy-pg-access.v1",
+      "status": "ASSUMED_UNQUALIFIED",
+      "source_sha256": "63b323be6df6bd48efb0bb44ce107af3561b0f030b9d610e663b5bb579f4767d",
+      "candidate_sha256": "a3acb6fd17885b01b553b8ae84fd7d24f377acb82080533099dd9ac6d2604416",
+      "width_um": "2320.056",
+      "height_um": "1563.570",
+      "area_delta_um2": 0,
+      "interface_delta": "none; original M4 PG pins preserved",
+      "m5_reserved_columns_um": [
+        [
+          "2317.876",
+          "2318.276"
+        ],
+        [
+          "2318.884",
+          "2319.284"
+        ]
+      ],
+      "m5_reserved_area_um2": "1250.5360",
+      "strap_width_um": ".12",
+      "strap_spacing_um": ".888",
+      "strap_pitch_um": "2.016",
+      "offset_r0_mx_um": "2318.076",
+      "offset_my_r180_um": "0.972",
+      "claim": "Modeled PHY access reservation only; needs actual PDN connectivity, short/obstruction checks and eventual vendor confirmation.",
+      "master": "ot_qfd_serdes_112g_x12_phy_s597",
+      "lef": "elements.lef"
+    }
+  ],
+  "helper_sha256": "8546d00aa32e93b70d61c22ac971179cf29b519a064b81ac94608d602a1331c1",
+  "bbox_helper_sha256": "ef8d4b0600af5cdc0468dc88bf8916fd33e1e954fe90f81213c7f3d35a509887",
+  "hbm_helper_sha256": null,
+  "area_delta_um2": 0,
+  "qualification": "Fixture proves declared geometry only; full die connectivity/short/routing/IR checks still required; no foundry IP claim."
+}

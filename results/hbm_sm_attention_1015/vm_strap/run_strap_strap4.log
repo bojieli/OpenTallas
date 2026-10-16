@@ -1,0 +1,25 @@
+tb_hbm_vm_strap-0-5-1-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=5 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap-0-5-1-3 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-0-5-1-4 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-0-5-1-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=5 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap_wrappers-0-5-1-3 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-0-5-1-4 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-1-4-1-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=4 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap-1-4-1-3 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-1-4-1-4 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-1-4-1-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=4 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap_wrappers-1-4-1-3 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-1-4-1-4 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-2-6-3-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap-2-6-3-3 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-2-6-3-4 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-2-6-3-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap_wrappers-2-6-3-3 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-2-6-3-4 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-3-6-3-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap-3-6-3-3 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap-3-6-3-4 rc=1 FATAL: tb_hbm_vm_strap.sv:68: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-3-6-3-0 rc=0 VM_ALLGROUPS_STATIC PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_strap_wrappers-3-6-3-3 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+tb_hbm_vm_strap_wrappers-3-6-3-4 rc=1 FATAL: tb_hbm_vm_strap_wrappers.sv:72: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000
+PASS VM_STRAP_IDENTITY core + 4 quadrant masters x 8 strapped instances; strap mutants 3 (bank) 4 (slice) FATAL
