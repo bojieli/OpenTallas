@@ -692,6 +692,25 @@ BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_di
                 qkd_d2ds=_d2ds_binding_dcal())
 BINDINGS.update(qkd_dcal=dcal_binding())
 RTL.update(qkd_dcal=DCAL_FILE)
+
+# Q-KVSYS PVJOIN 2026-10-16 (OT_KV_KVNC=1, needs OT_KV_DCAL=1, default off): the KV-side compiled KVN context
+# qkd_kvn_ctx_cal (rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv, kit physical/ref_tile/qkd_kvn_ctx_cal_r1) produces
+# the static D2D end's kvn_compiled_identity / kvn_compiled_generation (2 of the 17 strict-bind open inputs,
+# bind17_producers.json): identity = {HOST cohort epoch, stage = KV link calendar run index + 1, cohort token / position, 0},
+# generation = HOST cohort_gen.  Inputs: the calendar sequencer's cal_start (tap of n_dcal_cfg bit 40 at its source) and
+# its run index layer (new 6-bit bus), the HOST root's cohort_tag / cohort_gen.  Bench tools/qwen_kv_die/kvn_ctx_bench.sh.
+KVNC = __import__('os').environ.get('OT_KV_KVNC', '0') == '1'
+KVNC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv'
+KVNC_WH = (12.96, 15.12)
+KVNC_CS_BIT = sum(dict(cfg_tx_we=1, cfg_rx_we=1, cfg_addr=6, cfg_data=32)[p_] for p_ in DCAL_CFG[:DCAL_CFG.index('cal_start')])
+assert KVNC_CS_BIT == 40      # LSB-first bit of cal_start in n_dcal_cfg
+BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, parameters=dict(MUT=0),
+                              ports=dict(ck=['ck'], rst_n=['rst_n'], cs=['cal_start'], lay=['layer'], cht=['cohort_tag'],
+                                         chg=['cohort_gen'], kvi=['compiled_identity', 'compiled_generation']),
+                              sliced={}, classed={}))
+BINDINGS['qkd_dcal']['ports']['lay'] = ['layer']
+BINDINGS['qkd_d2ds']['ports']['kvi'] = ['kvn_compiled_identity', 'kvn_compiled_generation']
+RTL.update(qkd_kvnc=KVNC_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
@@ -1772,7 +1791,8 @@ def _host_v14_buses(m):
     add(('rst_hbm', 'reset', 1, [('host', 'hbm_rst_n')] + list(dict.fromkeys(hbm_l)) + [(s, 'hbm_rst_n') for s in slices]))
     link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
     add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l)) +
-         ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else [])))
+         ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else []) +
+         ([('kvnc', 'rst_n')] if KVNC and any(i.name == 'kvnc' for i in m['insts']) else [])))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
     # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
@@ -1879,6 +1899,22 @@ def _d2ds_swap(m):
                 B[i_] = (bid, cl, bits, list(eps) + [('dcal', 'ck')])
         # epoch_go taps the end's fwd_epoch die net at its source (the bump chain keeps its relays and its one driver)
         m.setdefault('extra_conns', {})['dcal'] = ['.ego(n_hfwd_epoch)']
+        if KVNC:
+            # OT_KV_KVNC: the KVN context leaf sits directly below the sequencer (same x, one channel S); cal_start taps the
+            # sequencer's cfg/cal word at its source, layer is a 6-bit abutting bus, the HOST cohort rides kv_oneway relays,
+            # the 61-bit expectation is an abutting-distance bus into the D2D end (it settles >= 645 edges before any KVN word)
+            dc_ = it
+            kw_, kh_ = up(KVNC_WH[0] + SHAVE, GX), up(KVNC_WH[1] + SHAVE, GY)
+            kt = F.Inst('kvnc', 'qkd_kvnc', dc_.x, up(dc_.y - 21.6 - kh_, GY), kw_ - SHAVE, kh_ - SHAVE, 'R0', kind='ctl', region='io')
+            m['insts'].append(kt)
+            add(('kvnc_lay', 'spine_local', 6, [('dcal', 'lay'), ('kvnc', 'lay')]))
+            add(('kvnc_cht', 'kv_oneway', 59, [('host', 'cohort_tag'), ('kvnc', 'cht')]))
+            add(('kvnc_chg', 'kv_oneway', 2, [('host', 'cohort_gen'), ('kvnc', 'chg')]))
+            add(('kvnc_kvi', 'spine_local', 59 + 2, [('kvnc', 'kvi'), ('d2d_kv', 'kvi')]))
+            for i_, (bid, cl, bits, eps) in enumerate(B):
+                if bid == 'clk_core_c':
+                    B[i_] = (bid, cl, bits, list(eps) + [('kvnc', 'ck')])
+            m['extra_conns']['kvnc'] = [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
 
 
 def _centre(it, port=None):
@@ -2690,6 +2726,8 @@ def masters(m, k=1, port_bits=None):
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
     if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
         M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
+    if 'qkd_kvnc' in M and 'cs' not in M['qkd_kvnc'].ports:
+        M['qkd_kvnc'].face('cs', 1, 'N', 'M5', round(M['qkd_kvnc'].w / 2, 3), 1)      # OT_KV_KVNC extra_conns tap (sequencer above)
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
