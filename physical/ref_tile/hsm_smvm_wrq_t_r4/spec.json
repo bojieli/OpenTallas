@@ -99,7 +99,7 @@
  "purpose": "H-SM 2026-10-16: hardened SM result -> VM writer smw_<q>, ONE master for the 4 instances (option A wrapper: folded ot_static_cmd_target MODE 1 command calendar CW 26 + 128x256 table, tgt strap; quad strap replaces parameter QUAD). Pin-bound: W rv/rrow/rdata 2,152, E wq 2,248 at ~6 pins/um -> 388.8 um faces; width 142.56 for the 94.8 um table macro with >= 20 um channels; N F20 bus + straps + status. ~11.3k writer flops + collar. The RTL registers every input at its pin and every output is a flop; pin_reg_split gives each replicated wq data pin its own launch flop: 0 added edges (calendar fire edge unchanged; rv(t) -> wq slot0 at t+3). rst_n lands on one local reset-release flop.",
  "job": {
   "owner": "Codex H-SM physical",
-  "branch": "codex/hsm-physical-0825",
+  "branch": "codex/hbm-element-1246",
   "tag": "faces4",
   "purpose": "Candidate within original142.56x388.8 envelope: two actual local capture roots and two actual launch roots by half-face, core + raw calendar. Zero normal data edges added; fresh typed grant/route/native proof required.",
   "benches": [
@@ -108,6 +108,13 @@
     "cmd": "bash rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t_faces4.sh {RUN}/bench/wrqt",
     "expect": "pass",
     "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "mut_face_clock_drop",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=1 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc1 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc1 > {RUN}/mut/tbc1.log 2>&1 && cat {RUN}/mut/tbc1.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc1.log",
+    "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4
    }

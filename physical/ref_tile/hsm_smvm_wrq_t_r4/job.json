@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/hsm-physical-0825",
+  "branch": "codex/hbm-element-1246",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static",
@@ -33,6 +33,13 @@
     "cmd": "bash rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t_faces4.sh {RUN}/bench/wrqt",
     "expect": "pass",
     "pass_regex": "SM_VM_WR_Q_T BENCH PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "mut_face_clock_drop",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=1 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc1 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc1 > {RUN}/mut/tbc1.log 2>&1 && cat {RUN}/mut/tbc1.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc1.log",
+    "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4
    }
