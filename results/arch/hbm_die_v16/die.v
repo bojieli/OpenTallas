@@ -7155,6 +7155,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar calendar_SW (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_cal_SW__program_cfg_we[0]),
     .cfg_addr(cp_cal_SW__program_cfg_addr[9:0]),
@@ -7241,6 +7243,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar calendar_SE (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_cal_SE__program_cfg_we[0]),
     .cfg_addr(cp_cal_SE__program_cfg_addr[9:0]),
@@ -7327,6 +7331,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar calendar_NW (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_cal_NW__program_cfg_we[0]),
     .cfg_addr(cp_cal_NW__program_cfg_addr[9:0]),
@@ -7413,6 +7419,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar calendar_NE (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_cal_NE__program_cfg_we[0]),
     .cfg_addr(cp_cal_NE__program_cfg_addr[9:0]),
@@ -17552,6 +17560,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar epcal_SW (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_ep_SW__program_cfg_we[0]),
     .cfg_addr(cp_ep_SW__program_cfg_addr[9:0]),
@@ -17608,6 +17618,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar epcal_SE (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_ep_SE__program_cfg_we[0]),
     .cfg_addr(cp_ep_SE__program_cfg_addr[9:0]),
@@ -17664,6 +17676,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar epcal_NW (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_ep_NW__program_cfg_we[0]),
     .cfg_addr(cp_ep_NW__program_cfg_addr[9:0]),
@@ -17720,6 +17734,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   );
   hfd_hgi_vm_calendar epcal_NE (
     .clk(hb_ckgen__pll_stream[0]),
+    .clk_cap(hb_ckgen__pll_stream[0]),
+    .clk_mem(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_we(cp_ep_NE__program_cfg_we[0]),
     .cfg_addr(cp_ep_NE__program_cfg_addr[9:0]),

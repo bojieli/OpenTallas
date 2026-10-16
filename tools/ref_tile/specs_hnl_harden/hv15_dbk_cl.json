@@ -1,0 +1,365 @@
+{
+ "name": "hv15_dbk_cl",
+ "top": "ot_hgi_dma_back_static_vp4_banks",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock": "entries",
+ "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_bank[0]",
+  "clk_bank[1]",
+  "clk_bank[2]",
+  "clk_bank[3]",
+  "clk_bank[4]",
+  "clk_bank[5]",
+  "clk_bank[6]",
+  "clk_bank[7]"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "rq",
+   "rr"
+  ],
+  "N": [
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start",
+   "wb_ready",
+   "wd",
+   "wa"
+  ],
+  "E": [
+   "clk",
+   "clk_bank",
+   "rst_n",
+   "cycle",
+   "mv_v",
+   "mv",
+   "issue_at",
+   "drain_at",
+   "mv_wb_bank",
+   "mv_wb_epoch",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy",
+   "stk"
+  ]
+ },
+ "pin_ranges": {
+  "rq": [
+   75.168,
+   88.224
+  ],
+  "rr": [
+   88.224,
+   285.6
+  ],
+  "wb_reserve_v": [
+   128.64,
+   128.736
+  ],
+  "wb_reserve_bank": [
+   128.736,
+   128.832
+  ],
+  "wb_fill_bank": [
+   128.832,
+   128.928
+  ],
+  "wb_reserve_epoch": [
+   128.928,
+   130.464
+  ],
+  "wb_fill_epoch": [
+   130.464,
+   132.0
+  ],
+  "wb_reserve_sectors": [
+   132.0,
+   133.152
+  ],
+  "wb_reserve_base": [
+   133.152,
+   136.224
+  ],
+  "wb_fill_start": [
+   136.224,
+   136.32
+  ],
+  "wb_ready": [
+   136.32,
+   136.416
+  ],
+  "wd": [
+   136.416,
+   358.368
+  ],
+  "wa": [
+   358.368,
+   359.52
+  ],
+  "clk": [
+   163.296,
+   163.392
+  ],
+  "clk_bank": [
+   163.392,
+   164.16
+  ],
+  "rst_n": [
+   164.16,
+   164.256
+  ],
+  "cycle": [
+   164.256,
+   167.328
+  ],
+  "mv_v": [
+   167.328,
+   167.424
+  ],
+  "mv": [
+   167.424,
+   189.216
+  ],
+  "issue_at": [
+   189.216,
+   192.288
+  ],
+  "drain_at": [
+   192.288,
+   195.36
+  ],
+  "mv_wb_bank": [
+   195.36,
+   195.456
+  ],
+  "mv_wb_epoch": [
+   195.456,
+   196.992
+  ],
+  "mv_src": [
+   196.992,
+   197.088
+  ],
+  "mv_done": [
+   197.088,
+   197.184
+  ],
+  "mv_fault": [
+   197.184,
+   197.28
+  ],
+  "quiet": [
+   197.28,
+   197.376
+  ],
+  "busy": [
+   197.376,
+   197.472
+  ],
+  "stk": [
+   197.664,
+   197.856
+  ]
+ },
+ "outline": {
+  "w": 511.92,
+  "h": 360.72,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[0].u_bank",
+   "at": [
+    23.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[1].u_bank",
+   "at": [
+    185.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[2].u_bank",
+   "at": [
+    347.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[3].u_bank",
+   "at": [
+    23.76,
+    131.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[4].u_bank",
+   "at": [
+    185.76,
+    131.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[5].u_bank",
+   "at": [
+    347.76,
+    131.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[6].u_bank",
+   "at": [
+    23.76,
+    239.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "L[7].u_bank",
+   "at": [
+    185.76,
+    239.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+   "count": 1,
+   "inst": "u_control",
+   "at": [
+    347.76,
+    239.76
+   ],
+   "orient": "R0"
+  }
+ ],
+ "recipe": 3,
+ "hard_define": "OT_DBK_HARD",
+ "defines": [
+  "OT_DBK_HARD"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "hb_dbk_NE"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Parent is wires only; actual hard children own the registered endpoints and nine independently compensated clock entries. Parent wires remain part of the die hop budget."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "params": {},
+ "macros": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hnl-harden-2210",
+  "tag": "real2330",
+  "record_to": "results/rtl/ref_tile/hv15_dbk_cl",
+  "purpose": "hb_dbk wires-only cluster ot_hgi_dma_back_static_vp4_banks, ONE master for the four stacks (stk[1:0] strap pin): 8 closed native-PASS geo1 landing banks + the stk-strap DMA controller at the H-DIE v7 grant homes (511.92 x 360.72), nine clock entries (clk, clk_bank[7:0]), parent = wires only; actual new controller view and all parent PG/hop/native checks required.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+   "results/arch/hier_contract_1015/hbm_v15.json"
+  ],
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS"
+   },
+   {
+    "name": "strap_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_address_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ }
+}

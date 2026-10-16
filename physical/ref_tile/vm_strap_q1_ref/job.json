@@ -1,13 +1,13 @@
 {
- "name": "vm_strap_q1_ref-strap4-COMMIT",
+ "name": "vm_strap_q1_ref-strap4hookfix-COMMIT",
  "block": "hfd_vms_bank_strap_q1",
  "ref_tile": true,
- "owner": "Claude H-SM",
+ "owner": "Codex H-SM 2330",
  "purpose": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/hbm-sm-attention-1015",
+  "branch": "codex/hbm-sm-2330",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static",

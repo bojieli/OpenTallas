@@ -1,0 +1,210 @@
+{
+ "schema": "opentallas.qwen.compute-netlist-0030.v1",
+ "run": "E4 /srv/opentallas-scratch/claude/q-netlist-0030/g2 (OT_RELAY_SKIP=1, r2h2 env: fpq_r2h homes, held45 tile grant, su64 W grant, bw spread, tree hosts dp)",
+ "sys_face_bind": {
+  "master": "qfd_sys_face",
+  "source": "rtl/qwen_split/qfd_sys_face.sv",
+  "source_sha256": "cdb5fd71aea834c44e363645d1c9292afc80e2977771b24d445ec181045062fd",
+  "provider": {
+   "master": "qfd_embedding_word_provider",
+   "source": "rtl/qwen_split/qfd_embedding_word_provider.sv"
+  },
+  "straps": [
+   "bump_pkg_s0",
+   "bump_pkg_s1",
+   "bump_die_ps"
+  ],
+  "added_buses": [
+   "sf_cfg_tx_we",
+   "sf_cfg_rx_we",
+   "sf_cfg_addr",
+   "sf_cfg_data",
+   "sf_cal_start",
+   "sf_cal_seg",
+   "sf_status_epoch16",
+   "sf_vm_drained",
+   "sf_collective_drained",
+   "sf_collective_busy",
+   "sf_crom_fault",
+   "sf_execution_active",
+   "sf_admit_ready",
+   "sf_result_v",
+   "sf_result_done",
+   "sf_result_fault",
+   "sf_result_cause",
+   "sf_result_tag",
+   "sf_result_gen",
+   "sf_result_token",
+   "sf_result_value",
+   "sf_result_cycles",
+   "sf_prog_tx_observed_v",
+   "sf_prog_tx_record",
+   "sf_prog_rx_v",
+   "sf_prog_witness_slot",
+   "sf_prog_auth_slot",
+   "sf_prog_context_slot",
+   "sf_emb_rx_v",
+   "sf_emb_rx_slot",
+   "sf_d2d_fault",
+   "sf_d2d_epoch_abort",
+   "sf_seq_dc",
+   "sf_seq_program_obs",
+   "sf_seq_descriptor_obs",
+   "sf_seq_dh",
+   "sf_tt_program_obs",
+   "sf_tt_control_stores_ready",
+   "sf_tt_pw",
+   "sf_tt_kok",
+   "sf_tt_kwd",
+   "sf_tt_fab",
+   "sf_host_epoch_valid",
+   "sf_host_fused_capability",
+   "sf_host_epoch",
+   "sf_host_tag",
+   "sf_host_generation",
+   "sf_q_slot",
+   "sf_q_slot_beat",
+   "sf_kv_word_slot",
+   "sf_kv_word_index",
+   "sf_visibility_slot",
+   "sf_complete_slot",
+   "sf_native_fault",
+   "sf_emb_word_v",
+   "sf_emb_word_data",
+   "sf_emb_word_token",
+   "sf_emb_word_index",
+   "sf_emb_word_scale",
+   "sf_emb_word_epoch",
+   "sf_emb_expected_slot",
+   "sf_emb_expected_token",
+   "sf_emb_expected_word",
+   "sf_emb_expected_scale",
+   "sf_emb_expected_epoch",
+   "sf_emb_fill_begin",
+   "sf_emb_fill_token",
+   "sf_emb_fill_epoch",
+   "sf_emb_core_epoch",
+   "sf_io_fault",
+   "sf_io_shared_fault",
+   "sf_res_issue_fault",
+   "sf_crom_fc_0",
+   "sf_crom_fc_1",
+   "sf_crom_fc_2",
+   "sf_crom_fc_3",
+   "sf_crom_fc_4",
+   "sf_crom_fc_5",
+   "sf_crom_fc_6",
+   "sf_crom_fc_7",
+   "sf_strap_bump_pkg_s0",
+   "sf_strap_bump_pkg_s1",
+   "sf_strap_bump_die_ps"
+  ],
+  "appended_buses": [
+   "lnk_rx_payload",
+   "ng_io_cmd_free_0",
+   "ng_seq_cfg_image_ready_0",
+   "ng_tt_command_stage_0",
+   "ng_tt_layer_context_v_0",
+   "ng_tt_native_pos_0",
+   "ng_tt_native_tok_0"
+  ],
+  "new_instances": [
+   "sys_face",
+   "bump_pkg_s0",
+   "bump_pkg_s1",
+   "bump_die_ps"
+  ],
+  "frames": {
+   "sys_face": [
+    19541.52,
+    6605.28,
+    302.4,
+    216.0,
+    "R0",
+    "place()"
+   ],
+   "bump_pkg_s0": [
+    15089.76,
+    1602.72,
+    43.176,
+    43.176,
+    "R0",
+    "place()"
+   ],
+   "bump_pkg_s1": [
+    15154.56,
+    1602.72,
+    43.176,
+    43.176,
+    "R0",
+    "place()"
+   ],
+   "bump_die_ps": [
+    15024.96,
+    1602.72,
+    43.176,
+    43.176,
+    "R0",
+    "place()"
+   ]
+  },
+  "qualified": false,
+  "note": "NEW unclosed parent; site from place() unless the homes file names it"
+ },
+ "sys_face_place": {
+  "sys_face": [
+   19541.52,
+   6605.28,
+   302.4,
+   216.0,
+   "R0",
+   "place()"
+  ],
+  "bump_pkg_s0": [
+   15089.76,
+   1602.72,
+   43.176,
+   43.176,
+   "R0",
+   "place()"
+  ],
+  "bump_pkg_s1": [
+   15154.56,
+   1602.72,
+   43.176,
+   43.176,
+   "R0",
+   "place()"
+  ],
+  "bump_die_ps": [
+   15024.96,
+   1602.72,
+   43.176,
+   43.176,
+   "R0",
+   "place()"
+  ]
+ },
+ "gfp_homes": {
+  "path": "results/arch/qwen_split_compute_1014/repack_0030/fpq_r2h-homes.json",
+  "view_shrunk": [
+   "rstseq_rom",
+   "rs_bump"
+  ],
+  "named_new": [],
+  "rebase": {
+   "homes_fingerprint": null,
+   "current_fingerprint": "4d8f42e58a6d432d98e726700f415ec894778acbe51291179dc1a0858e668d1b",
+   "dropped": [
+    "up4_sel_branch0",
+    "up4_sel_branch1"
+   ]
+  }
+ },
+ "instances": 1642,
+ "pin_align": {
+  "OK": 1710,
+  "WARN": 1404,
+  "FAIL": 4
+ }
+}
