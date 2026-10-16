@@ -57,7 +57,7 @@ module qkd_ctrl_pc_host_static_core #(
     output wire completion_v,completion_we,completion_fault,
     // Registered observations only. A parent drain barrier must join BOTH
     // domains plus actual upstream quiet, front idle and return-ring idle.
-    output reg idle_core,idle_hbm,output reg drain_fault_core,drain_fault_hbm,
+    output wire idle_core,output reg idle_hbm,output reg drain_fault_core,drain_fault_hbm,
     // ---- hardened-child seams (wires-parent qkd_ctrl_pc_host_static); every seam output is flop-driven ----
     output wire         p_col_v, p_col_we, p_col_sr,     // dv[LW-2] flops: one edge before the port's pin capture
     output reg          p_w_v,                         // static write data, registered (+1 hclk, hidden by >= 4-edge column)
@@ -373,7 +373,15 @@ module qkd_ctrl_pc_host_static_core #(
     // Register wide reductions independently, and require two quiet edges so
     // a stale zero summary cannot hide an intake captured on the previous edge.
     // Current activity remains an eager veto; only idle assertion may be later.
-    wire core_drain_activity=es[0]||es_v_q||completion_v||e_v||er_v||s_credit||er_cr;
+    wire core_drain_activity_q=es_v_q||completion_v||e_v||er_v||s_credit||er_cr;   // all but the raw es[0] pin
+    wire core_drain_activity=es[0]||core_drain_activity_q;
+    // KVCTRL core_s5 (2026-10-16): idle split, cycle-identical. idle_core_r registers the idle AND WITHOUT the raw es[0]
+    // pin; es0_idle_q is a dedicated es[0] pin flop; idle_core = idle_core_r & !es0_idle_q is exactly the former
+    // registered AND (both flops capture on the same edge). core_s4 gate: es[0] -> idle_core in->reg -34.9 ps.
+    reg idle_core_r;
+    (* keep *) reg es0_idle_q;
+    always @(posedge ck or negedge rs_q) if(!rs_q) es0_idle_q<=1'b0; else es0_idle_q<=es[0];
+    assign idle_core=idle_core_r&&!es0_idle_q;
     reg core_debt_zero_q;reg [1:0] core_quiet_q;
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin core_debt_zero_q<=0;core_quiet_q<=0;end
@@ -384,7 +392,7 @@ module qkd_ctrl_pc_host_static_core #(
     always @(posedge ck or negedge rs_q)
       if(!rs_q)begin
         drain_desc<=0;drain_reads<=0;drain_credits<=0;
-        drain_fault_core<=0;idle_core<=0;
+        drain_fault_core<=0;idle_core_r<=0;
       end else begin
         case({dc_push,dc_pop})
           2'b10:drain_desc<=drain_desc+16'd1;
@@ -407,10 +415,10 @@ module qkd_ctrl_pc_host_static_core #(
            (dc_push&&!dc_pop&&drain_desc==16'hffff)||
            (dr_push&&!dr_pop&&drain_reads==16'hffff)||
            (dq_push&&!dq_pop&&drain_credits==16'hffff))drain_fault_core<=1;
-        if(DRAIN_PIPE!=0)idle_core<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity&&
+        if(DRAIN_PIPE!=0)idle_core_r<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity_q&&
           !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
-        else idle_core<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
-          !es[0]&&!es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
+        else idle_core_r<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
+          !es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
           !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
       end
     // KV corrected returns include tag, PHY raw, pcport and landing ECC
