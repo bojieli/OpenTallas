@@ -28,7 +28,7 @@ Each item has its own helper scope, so the helpers can run in parallel.
 ## H-LKEP (P1 follow-up)
 | # | sev | item | expected gain | dependency | helper scope |
 |---|---|---|---|---|---|
-| 11 | P1 | **T12 hfd_ep_static route 3**: CLOSED TT +128.49 / FF +7.69 (e4e436536); native audit not yet run. Compact variant cmp1 failed GRT-0116 | native PASS = element done. Area: the 434.72 x 315.36 outline vs the 515.2 window already saves 0.087 mm2 per instance | none | Native audit + registry receipt for route 3; drop cmp1 unless a die area need appears |
+| 11 | P1 | **T12 hfd_ep_static**: route 3 CLOSED TT +128.49 / FF +7.69 but native FAIL: launch 223.2 on 3 sd_tx pins (limit 220), capture 212.7 on sd_rx[1] (limit 190) | native PASS = element done (gaps of 3.2 ps launch and 22.7 ps capture) | none | Route 4 (owner, in progress): a single IDLE pin flop, clock moved west on the S face. Helper: native audit of route 4 against the sd_tx/sd_rx pins. Drop cmp1 (GRT-0116) |
 
 ## Not on the list
 Not listed: refuted or no-action findings (D3, T9 reduce, R2-1, T3 q1-q3), withdrawn T7, and the routed-fixed T4 and T9 bank. Masters with no odb are listed in findings.json N1; they need a gate_layout before they can be audited.
