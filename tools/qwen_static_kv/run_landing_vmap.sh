@@ -21,8 +21,9 @@ build 1 0 && run 1 0 0 fail
 # VREQ (Q-VMWB 2026-10-16): V gets on the vport face, K on req (latency 6); collision (faultmode 5) and a VREQ=0 DUT fail
 build 1 1 1 0 && { run 1 1 0 pass 1 0; run 1 1 1 fail 1 0; run 1 1 5 fail 1 0; }
 build 1 1 1 1 && run 1 1 0 fail 1 1
-# K row addressing by stream position (Q-VMWB 10-16): CTX < ~7.7k puts K ordinal 128+i while row i is unread;
-# the old ordinal-row DUT (DUT_MUT 3) must FAIL at CTX 2048, the fixed one PASS at 77 / 2048 / 4097 / 6000
+# K rows in the controller's stream order (t ascending) at several contexts (Q-VMWB 10-16); the old K row ordinal
+# (DUT_MUT 3: sec[7:0], t6 rows 8 stream positions apart share a row) must FAIL
 for c in 77 2048 4097 6000; do build 1 1 1 0 $c 0 && run 1 1 0 pass 1 0 $c 0; done
 build 1 1 1 0 2048 3 && run 1 1 0 fail 1 0 2048 3
+build 1 1 1 0 8192 3 && run 1 1 0 fail 1 0 8192 3
 exit $rc
