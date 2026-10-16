@@ -19,6 +19,7 @@ def main():
     ap.add_argument('--full-graph',action='store_true',help='preserve unrelated die buses and allocator contention; source/physical qualification is separate')
     ap.add_argument('--compact-selector',action='store_true',help='actual four used selector bits; requires source-specific NL2 s4 and fork4')
     ap.add_argument('--production',action='store_true',help='actual banked halftrain/controller/NB6VM interfaces; still unqualified candidate frames')
+    ap.add_argument('--emit-trial',type=Path,help='after allocation write the PHYSICAL-TRIAL die netlist here (b2_graph.physical_trial_netlist; never functional)')
     a=ap.parse_args(); NUP=8 if a.production else 4; QW=64 if a.production else 128; RW=192 if a.production else 384
     a.out.mkdir(parents=True,exist_ok=True)
     import die_top_lint as D
@@ -43,6 +44,10 @@ def main():
     os.environ['OT_RELAY_DUMP']=str(a.out/'allocator_dump.json')
     G._relays(v,m)
     st=m.get('r21_stage_of',{})
+    if a.emit_trial:
+        if not(a.full_graph and a.production and a.mode=='b2'):raise SystemExit('--emit-trial needs --full-graph --production --mode b2')
+        from qwen_split.b2_graph import physical_trial_netlist
+        physical_trial_netlist(m,1,a.emit_trial,'qfd_die',v.write_netlist,prepared,a.source_root)
     if a.full_graph:
         from qwen_split.b2_graph import canonical_graph
         (a.out/'allocator_graph.json').write_text(json.dumps(canonical_graph(m),sort_keys=True,indent=1)+'\n')

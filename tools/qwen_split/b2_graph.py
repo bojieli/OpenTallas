@@ -498,7 +498,10 @@ def apply(v, m, source_root=None):
     writer=v.write_netlist
     def write_netlist(model,k,path,top='qfd_die'):
         if k!=1:raise ValueError('b2 actual source emission requires k=1')
-        if calibration is None:raise ValueError('b2 emission needs actual per-half compiler/relay calibration; LNK is not zero')
+        if calibration is None:
+            if os.environ.get('OT_SPLIT_B2_PHYSICAL_TRIAL')!='1':
+                raise ValueError('b2 emission needs actual per-half compiler/relay calibration; LNK is not zero')
+            return physical_trial_netlist(model,k,path,top,writer,prepared,source_root)
         from qwen_b2_join.phase_protocol import validate_calibration
         # Current graph/age comparison is performed by the shared phase gate;
         # a valid older allocator result never authorizes this emitted die.
@@ -518,6 +521,37 @@ def apply(v, m, source_root=None):
         preservation=m['b2_bus_preservation'],compiler_calibration='required at emission',
         source_receipts=prepared['source_receipts'])
     return m['b2_full_graph']
+
+
+def physical_trial_netlist(model,k,path,top,writer,prepared,source_root):
+    """OT_SPLIT_B2_PHYSICAL_TRIAL=1 (Q-B2 10-16): a die-PHYSICAL trial netlist before the functional phase calibration.
+
+    Connectivity is the full b2 source graph (strict RTL bind below). The six halfband lnk straps are derived from THIS
+    run's own allocator ages (allocator_ledger law, never zero-filled); the controller/issuer remain the generic sources.
+    The sidecar <die.v>.b2_trial.json stamps it PHYSICAL_TRIAL_ONLY_NOT_FUNCTIONAL with every open structural issue.
+    It routes and times the die; it is never a functional or release netlist (the production writer still refuses).
+    """
+    import json
+    from qwen_b2_join.allocator_ledger import ledger,derive
+    graph=canonical_graph(model);stage_of=model.get('r21_stage_of',{})
+    halves,sel,ret,xpf=ledger(graph,stage_of)
+    consts,issues=derive(halves,sel,ret,xpf)
+    hl=consts['halfband_lnk']
+    if not 0<=hl<=54:raise ValueError(f'physical trial: allocator-derived halfband lnk {hl} outside 0..54')
+    if any(i.startswith('sp_halfband_')and p=='lnk'for i,p,n,v in model['ties']):raise ValueError('stale lnk straps present')
+    model['ties'].extend((f'sp_halfband_{h}','lnk',6,hl)for h in range(6))
+    temporary=Path(str(path)+'.b2-unbound')
+    try:
+        writer(model,k,temporary,top)
+        n=bind_changed_sources(temporary,prepared['source_receipts'],source_root)
+        temporary.replace(path)
+        sidecar=Path(str(temporary)+'.params.json')
+        if sidecar.exists():sidecar.replace(str(path)+'.params.json')
+    finally:
+        temporary.unlink(missing_ok=True)
+    Path(str(path)+'.b2_trial.json').write_text(json.dumps(dict(status='PHYSICAL_TRIAL_ONLY_NOT_FUNCTIONAL',
+        constants=consts,structural_issues=issues,changed_instances_bound=n,
+        open='functional phase calibration (calibrated controller/issuer successors + route temporal gate) OPEN'),indent=1)+'\n')
 
 
 def audit_control_preservation(original, final, targets):
