@@ -5,8 +5,9 @@
 #         equivalence vs the monolithic module (every output bit, every cycle, legal + violating traffic);
 #  MUT=1: bank-leaf group select swapped (groups 0/1); MUT=2: bank-leaf SRAM read slot corrupted;
 #  MUT=3 (v4 rst pin flop): lane state released one edge late (two-stage reset release). HBM-V15-HARDEN 10-15
+#  MUT=4 (v5 H-NETLIST/vmdel 10-16): cross-lane status pin flops bypassed (lanes see status 1 edge early vs STATUS_LAT=2).
 set -euo pipefail
-out=${1:?out}; mut=${2:-0}; cyc=${CYCLES:-4000}; LAT=2; mkdir -p "$out"  # v3 lane pin registers: interface latency 2
+out=${1:?out}; mut=${2:-0}; cyc=${CYCLES:-4000}; LAT=2; SLAT=2; mkdir -p "$out"  # v3 lane pin registers: interface latency 2; v5 cross-lane status output+pin flops: status latency 2
 d=rtl/hbm_accel/loader/service_native
 mem=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 sp=$d/split/ot_hbm_svc_static_vm_delivery_split.sv
@@ -14,13 +15,14 @@ cp $sp "$out/split.sv"
 case "$mut" in
  1) sed -i 's/({256{out_group==2.d0}}&macro_data\[0+:256\])/({256{out_group==2\x27d0}}\&macro_data[256+:256])/' "$out/split.sv";;
  2) sed -i 's/\.r_addr_in({rb,rs})/.r_addr_in({rb,rs ^ 6\x27d1})/' "$out/split.sv";;
- 3) sed -i 's/ else rst_r<=6.h3f;/ else rst_r<=rst_r2; reg [5:0] rst_r2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_r2<=0; else rst_r2<=6\x27h3f;/' "$out/split.sv";;  # v4: lane state released one edge late
+ 3) sed -i 's/ else rst_ctl<=1.b1;/ else rst_ctl<=rst_ctl2; reg rst_ctl2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_ctl2<=0; else rst_ctl2<=1;/' "$out/split.sv";;  # v4: lane control state released one edge late
+ 4) sed -i 's/ wire landing_fault=sticky || pcbad_q;/ wire landing_fault=sticky || |pcbad_all;/; s/owned\[1\] \&\& full1_q,owned\[0\] \&\& full0_q/owned[1] \&\& (\&full1_all),owned[0] \&\& (\&full0_all)/' "$out/split.sv";;  # v5: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
 esac
 if [ "$mut" != 0 ]; then cmp -s "$out/split.sv" $sp && { echo 'mutant not applied'; exit 3; }; fi
 sed 's/module ot_hbm_svc_static_vm_delivery_split /module ot_hbm_svc_static_vm_delivery /' "$out/split.sv" > "$out/as_delivery.sv"
-iverilog -g2012 -s tb_hbm_svc_static_vm_delivery -Ptb_hbm_svc_static_vm_delivery.LAT=$LAT -o "$out/vm.vvp" "$mem" "$out/as_delivery.sv" $d/tb_hbm_svc_static_vm_delivery.sv
+iverilog -g2012 -s tb_hbm_svc_static_vm_delivery -Ptb_hbm_svc_static_vm_delivery.LAT=$LAT -Ptb_hbm_svc_static_vm_delivery.SLAT=$SLAT -o "$out/vm.vvp" "$mem" "$out/as_delivery.sv" $d/tb_hbm_svc_static_vm_delivery.sv
 vvp "$out/vm.vvp" > "$out/vm.log" 2>&1 || { cat "$out/vm.log"; exit 1; }
 cat "$out/vm.log"; grep -q 'STATIC_VM_DELIVERY PASS' "$out/vm.log"
-iverilog -g2012 -s tb_hbm_svc_vmdel_split_equiv -Ptb_hbm_svc_vmdel_split_equiv.CYCLES=$cyc -Ptb_hbm_svc_vmdel_split_equiv.LAT=$LAT -o "$out/eq.vvp" "$mem" $d/ot_hbm_svc_static_landing.sv $d/ot_hbm_svc_static_vm_delivery.sv "$out/split.sv" $d/split/tb_hbm_svc_vmdel_split_equiv.sv
+iverilog -g2012 -s tb_hbm_svc_vmdel_split_equiv -Ptb_hbm_svc_vmdel_split_equiv.CYCLES=$cyc -Ptb_hbm_svc_vmdel_split_equiv.LAT=$LAT -Ptb_hbm_svc_vmdel_split_equiv.SLAT=$SLAT -o "$out/eq.vvp" "$mem" $d/ot_hbm_svc_static_landing.sv $d/ot_hbm_svc_static_vm_delivery.sv "$out/split.sv" $d/split/tb_hbm_svc_vmdel_split_equiv.sv
 for s in 11 23; do vvp "$out/eq.vvp" +seed=$s > "$out/eq$s.log" 2>&1 || { tail -3 "$out/eq$s.log"; exit 1; }; cat "$out/eq$s.log"; grep -q 'SPLIT_EQUIV PASS' "$out/eq$s.log"; done
 echo "DELIVERY_SPLIT_BENCH PASS mut=$mut"

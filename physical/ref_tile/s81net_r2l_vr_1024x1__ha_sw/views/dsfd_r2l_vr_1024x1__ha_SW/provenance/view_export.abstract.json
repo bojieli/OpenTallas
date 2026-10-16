@@ -1,0 +1,194 @@
+{
+  "name": "dsfd_r2l_vr_1024x1__ha_SW",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/routes/s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.2061707188593118e-10 min 5.1207010853815405e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/routes/s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/record/views/dsfd_r2l_vr_1024x1__ha_SW:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.0169731723408404e-10 min 1.0540693318183969e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/routes/s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/record/views/dsfd_r2l_vr_1024x1__ha_SW:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 4.5568049333866156e-11 min 2.6752211557123928e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/routes/s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/record/views/dsfd_r2l_vr_1024x1__ha_SW:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc",
+    "sha256": "d4fc2e1fc06dc8dc62831aeb826fb7546b5bb53def21a94b1d4e69e060ce09c7",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/routed_ioref.a1.json",
+    "sha256": "6f220b66833673dcd664712e84d321940b87349832435b6c672b8f229ba83e95",
+    "expect_ps": {
+      "tt": 45.57,
+      "ff": 10.54
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc",
+        "sha256": "d4fc2e1fc06dc8dc62831aeb826fb7546b5bb53def21a94b1d4e69e060ce09c7"
+      },
+      "/work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.odb",
+        "sha256": "b6de6b3f9a69758766639829241ec5e7b9149b8ecaa2564ee9f5f719683f1789"
+      },
+      "/work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.sdc",
+        "sha256": "a46cf77b44e7df5c16cf9be46542a3a78086518292f80a6fffe2d6520e9294bb"
+      },
+      "/work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n7-b51239333/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.spef",
+        "sha256": "6c586f52173768888d2f4ccc116df429980ac88afdb2a262014ffbbe8f399c6f"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 10.540693318183969,
+        "verdict_ps": 10.54,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 45.568049333866156,
+        "verdict_ps": 45.57,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n7_b51239333/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_r2l_vr_1024x1__ha_SW.lef": "4b65e74491d71fb57ee3b48cd21a6e8dfb1b6f5943fe34d46097c9915ae1b560",
+    "dsfd_r2l_vr_1024x1__ha_SW_ff.lib": "7d12125bd9615651ae057cda68b7afbf8ce80e77944f91cf600ca441c776bdf7",
+    "dsfd_r2l_vr_1024x1__ha_SW_ss.lib": "3f9bbf90c2a718855a4dcc4c87fe41a308310e71371bb6049a05159867c37032",
+    "dsfd_r2l_vr_1024x1__ha_SW_tt.lib": "e450e47fd391d48f27de57379777635cbeda9f2aaf022fce647a5633da78e790"
+  },
+  "ok": true,
+  "checked": true
+}

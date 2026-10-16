@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas/claude/closure-loop/qkd_d2d_static_r2sp-r4sp-331b4b5e2/routes/qkd_d2d_static_r2sp_r4sp_331b4b5e2/work/orfs/results/asap7/opentallas_qkd_d2d_static_asap7_ref_qkd_d2d_static_r2sp_r4sp_331b4b5e2/base",
+ "setup_ss": {
+  "paths_seen": 1200,
+  "worst_slack_ps": -399.52,
+  "classes": [
+   {
+    "start_class": "u_core.u_end.u_link.g_bank[*].u_store.rq[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.g_bank[*].u_store.dout[*]$_DFF_P_/D",
+    "worst_slack_ps": -399.52,
+    "paths": 258,
+    "max_levels": 17,
+    "example_start": "u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.g_bank[0].u_store.dout[7]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_rxcal.ptr[*]$_DFFE_PN0P_/QN",
+    "end_class": "u_core.u_end.u_rxcal.cur[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": -383.96,
+    "paths": 6,
+    "max_levels": 13,
+    "example_start": "u_core.u_end.u_rxcal.ptr[1]$_DFFE_PN0P_/QN",
+    "example_end": "u_core.u_end.u_rxcal.cur[15]$_DFFE_PN0P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_rxcal.cnt[*]$_DFFE_PN0P_/QN",
+    "end_class": "u_core.u_end.u_rxcal.ev_beat[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": -268.48,
+    "paths": 3,
+    "max_levels": 9,
+    "example_start": "u_core.u_end.u_rxcal.cnt[8]$_DFFE_PN0P_/QN",
+    "example_end": "u_core.u_end.u_rxcal.ev_beat[0]$_DFFE_PN0P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.u_ctl.rf[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.u_ctl.rx_v$_DFF_PN0_/D",
+    "worst_slack_ps": -267.3,
+    "paths": 1,
+    "max_levels": 14,
+    "example_start": "u_core.u_end.u_link.u_ctl.rf[71]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.u_ctl.rx_v$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+    "end_class": "u_core.u_rec.n[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": -267.05,
+    "paths": 14,
+    "max_levels": 14,
+    "example_start": "u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+    "example_end": "u_core.u_rec.n[14]$_DFFE_PN0P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.u_ctl.rf[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/D",
+    "worst_slack_ps": -266.72,
+    "paths": 1,
+    "max_levels": 14,
+    "example_start": "u_core.u_end.u_link.u_ctl.rf[482]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_rxcal.cnt[*]$_DFFE_PN0P_/QN",
+    "end_class": "u_core.u_end.u_rxcal.ev_kind[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": -261.34,
+    "paths": 1,
+    "max_levels": 9,
+    "example_start": "u_core.u_end.u_rxcal.cnt[8]$_DFFE_PN0P_/QN",
+    "example_end": "u_core.u_end.u_rxcal.ev_kind[0]$_DFFE_PN0P_/D"
+   },
+   {
+    "start_class": "c_cfg_addr[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_txcal.tbl[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": -246.81,
+    "paths": 31,
+    "max_levels": 11,
+    "example_start": "c_cfg_addr[4]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_txcal.tbl[20][16]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.u_ctl.rf[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.u_ctl.fault_cause[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": -245.43,
+    "paths": 1,
+    "max_levels": 14,
+    "example_start": "u_core.u_end.u_link.u_ctl.rf[482]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.u_ctl.fault_cause[0]$_DFFE_PN0P_/D"
+   },
+   {
+    "start_class": "c_cfg_addr[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_rxcal.tbl[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": -242.26,
+    "paths": 25,
+    "max_levels": 10,
+    "example_start": "c_cfg_addr[2]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_rxcal.tbl[15][11]$_DFFE_PP_/D"
+   }
+  ],
+  "errors": []
+ },
+ "hold_ff": {
+  "paths_seen": 800,
+  "worst_slack_ps": -12.45,
+  "classes": [
+   {
+    "start_class": "u_core.u_end.u_rxcal.tbl[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_core.u_end.u_rxcal.first0_q[*]$_DFF_P_/D",
+    "worst_slack_ps": -12.45,
+    "paths": 3,
+    "max_levels": 5,
+    "example_start": "u_core.u_end.u_rxcal.tbl[0][16]$_DFFE_PP_/QN",
+    "example_end": "u_core.u_end.u_rxcal.first0_q[16]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.g_bank[*].u_store.dq[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.g_bank[*].u_store.dout[*]$_DFF_P_/D",
+    "worst_slack_ps": -9.64,
+    "paths": 3,
+    "max_levels": 4,
+    "example_start": "u_core.u_end.u_link.g_bank[0].u_store.dq[5]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.g_bank[0].u_store.dout[5]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_rxcal.ev_port[*]$_DFFE_PN0P_/QN",
+    "end_class": "u_core.u_end.r1p[*]$_DFFE_PN0N_/D",
+    "worst_slack_ps": -9.4,
+    "paths": 2,
+    "max_levels": 4,
+    "example_start": "u_core.u_end.u_rxcal.ev_port[0]$_DFFE_PN0P_/QN",
+    "example_end": "u_core.u_end.r1p[0]$_DFFE_PN0N_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.g_bank[*].u_store.dq[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.g_bank[*].u_store.dqq[*]$_DFF_P_/D",
+    "worst_slack_ps": -7.4,
+    "paths": 4,
+    "max_levels": 4,
+    "example_start": "u_core.u_end.u_link.g_bank[0].u_store.dq[5]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.g_bank[0].u_store.dqq[5]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.g_bank[*].u_store.dqq[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.g_bank[*].u_store.dout[*]$_DFF_P_/D",
+    "worst_slack_ps": -6.68,
+    "paths": 4,
+    "max_levels": 6,
+    "example_start": "u_core.u_end.u_link.g_bank[0].u_store.dqq[116]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.g_bank[0].u_store.dout[116]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.r1p[*]$_DFFE_PN0N_/QN",
+    "end_class": "u_core.u_end.rx_slot[*]$_DFF_PN0_/D",
+    "worst_slack_ps": -5.58,
+    "paths": 2,
+    "max_levels": 2,
+    "example_start": "u_core.u_end.r1p[2]$_DFFE_PN0N_/QN",
+    "example_end": "u_core.u_end.rx_slot[1]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_link.u_ctl.rx_flit[*]$_DFF_P_/QN",
+    "end_class": "record_rx[*]$_DFF_P_/D",
+    "worst_slack_ps": -5.29,
+    "paths": 9,
+    "max_levels": 4,
+    "example_start": "u_core.u_end.u_link.u_ctl.rx_flit[13]$_DFF_P_/QN",
+    "example_end": "record_rx[13]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_core.u_end.u_txcal.tbl[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_core.u_end.u_txcal.first0_q[*]$_DFF_P_/D",
+    "worst_slack_ps": -4.24,
+    "paths": 2,
+    "max_levels": 4,
+    "example_start": "u_core.u_end.u_txcal.tbl[0][29]$_DFFE_PP_/QN",
+    "example_end": "u_core.u_end.u_txcal.first0_q[29]$_DFF_P_/D"
+   },
+   {
+    "start_class": "c_record_tx[*]$_DFF_P_/QN",
+    "end_class": "u_core.u_end.u_link.g_bank[*].u_store.dq[*]$_DFF_P_/D",
+    "worst_slack_ps": 0.1,
+    "paths": 11,
+    "max_levels": 6,
+    "example_start": "c_record_tx[14]$_DFF_P_/QN",
+    "example_end": "u_core.u_end.u_link.g_bank[0].u_store.dq[14]$_DFF_P_/D"
+   },
+   {
+    "start_class": "rx_payload[*]$_DFF_P_/QN",
+    "end_class": "rx_payload[*]",
+    "worst_slack_ps": 0.44,
+    "paths": 210,
+    "max_levels": 8,
+    "example_start": "rx_payload[538]$_DFF_P_/QN",
+    "example_end": "rx_payload[538]"
+   }
+  ],
+  "errors": []
+ }
+}

@@ -1,0 +1,51 @@
+{
+  "scope": "functional source/reset/cycle equivalence only; station reset tree, clocks, placement, route, reach and full scheduled SFU proof remain OPEN",
+  "sources": {
+    "rtl/test/hbm_sfu_relay_0330/tb_sfu_split48.sv": "8fc81ca18fa4d5c6f6672a4e76f89b8c7c2c3af39597c2f5aa4a0a34a22dc8c4",
+    "rtl/test/hbm_sfu_relay_0330/hbfd_rly_624_split48_candidate.sv": "0f941f2259690e13299a3785c49d06c5d069fce9fdc6aefa5e9b96fc6de13127",
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": "5fdbc01ad0bdbfe4e4e6baab63711e42eceba25958eb79eb6a3628f961293439",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv": "f38be06321d90ba5660d783ddba2d5a4f95e4c355b5b87d84b6bc03f63a37053",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "cases": [
+    {
+      "R": 1,
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "R": 11,
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 1,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 2,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 3,
+      "exit": 1,
+      "passed": true
+    }
+  ],
+  "payload_bits_per_station": 624,
+  "literal_48_masters_per_station": 13,
+  "reset_FF_per_station": 15
+}

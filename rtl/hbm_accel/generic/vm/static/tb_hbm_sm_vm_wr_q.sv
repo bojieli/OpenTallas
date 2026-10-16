@@ -17,7 +17,7 @@ module tb_hbm_sm_vm_wr_q;
     always #1 clk = ~clk;
     reg [7:0] rv, smf; reg [95:0] rrow; reg [2047:0] rdata; reg cmd_v; reg [25:0] cmd;
     wire [2247:0] wq_sm; wire busy, wfault;
-    ot_hbm_sm_vm_wr_q #(.QUAD(Q), .DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .rst_n(rst_n), .rv(rv), .rrow(rrow), .rdata(rdata),
+    ot_hbm_sm_vm_wr_q #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .rst_n(rst_n), .quad(2'(Q)), .rv(rv), .rrow(rrow), .rdata(rdata),
         .cmd_v(cmd_v), .cmd(cmd), .sm_fault(smf), .sm_sched_fault(8'd0), .wq(wq_sm), .busy(busy), .fault(wfault));
     // banks
     reg [7:0] wslot_v, rslot_v; reg [2:0] wslot [0:7]; reg [0:0] rslot [0:7];

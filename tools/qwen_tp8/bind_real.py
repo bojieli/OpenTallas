@@ -166,7 +166,12 @@ def main():
     ap.add_argument('--dry', action='store_true', help='report only: the case LEF is not rewritten')
     a = ap.parse_args()
     case, root = Path(a.case), Path(a.repo).resolve()
-    explicit = dict(q.split('=', 1) for q in a.view)
+    explicit = {}
+    sel = os.environ.get('OT_BIND_VIEW_SELECT')
+    if sel:                                  # recorded per-master choice when several closed revisions carry one name
+        sp = Path(sel) if Path(sel).is_absolute() else root / sel
+        explicit.update({k: str(root / v) for k, v in json.loads(sp.read_text()).get('views', {}).items()})
+    explicit.update(dict(q.split('=', 1) for q in a.view))
     src = case / 'elements.lef.gen'          # not *.lef: the case readers glob the LEFs
     if not src.exists():
         shutil.copy(case / 'elements.lef', src)
@@ -190,6 +195,10 @@ def main():
             r['reason'] = 'no view by this name'
             continue
         r['view'] = str(vd.relative_to(root)) if vd.is_absolute() and root in vd.parents else str(vd)
+        alt = [str(c.relative_to(root)) for c in sorted((root / 'physical/ref_tile').glob(f'*/views/{mst}'))
+               if (c / f'{mst}.lef').exists() and c.resolve() != vd.resolve()]
+        if alt:                               # visible, never silent: another closed revision of this name exists
+            r['other_views'] = alt
         vt = (vd / f'{mst}.lef').read_text()
         vm = macros(vt).get(mst)
         if vm is None:

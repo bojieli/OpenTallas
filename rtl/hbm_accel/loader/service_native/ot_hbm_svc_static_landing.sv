@@ -3,7 +3,10 @@
 // may arrive at variable times. After one ready check per block, start reserves
 // exactly 64 consecutive read slots. No per-lane credits or output ready exist.
 // begin/fill are PHY-boundary operations; start is a compiler-scheduled pulse.
-module ot_hbm_svc_static_landing #(parameter integer READ_GROUPS=4) (
+// STATUS_LAT (H-NETLIST/vmdel 10-16): edges between the 32 per-PC full/fault status bits and their use in block_ready,
+// start and the landing fault.  0 = original; 2 = the physical 8-lane split (ot_hbm_svc_vmdel_lane v5: cross-lane
+// status leaves the sending lane from an output flop and is captured in a pin flop at every receiving lane).
+module ot_hbm_svc_static_landing #(parameter integer READ_GROUPS=4, parameter integer STATUS_LAT=0) (
  input wire clk, rst_n,
  input wire begin_v, begin_bank, input wire [15:0] begin_epoch,
  input wire [31:0] fill_v, input wire [31:0] fill_bank,
@@ -17,6 +20,7 @@ module ot_hbm_svc_static_landing #(parameter integer READ_GROUPS=4) (
  output wire busy, output wire fault
 );
  initial if(READ_GROUPS!=1 && READ_GROUPS!=4)$fatal(1,"READ_GROUPS must be 1 or 4");
+ initial if(STATUS_LAT<0 || STATUS_LAT>2)$fatal(1,"STATUS_LAT must be 0, 1 or 2");
  wire [8191:0] macro_data;
  reg [1:0] group_q;
  reg [1:0] owned;
@@ -31,9 +35,13 @@ module ot_hbm_svc_static_landing #(parameter integer READ_GROUPS=4) (
  wire [1:0] rg = running ? group_q : 2'd0;
  wire [5:0] rs = running ? slot_q : 6'd0;
  wire [31:0] pc_fault;
- assign fault = sticky || |pc_fault;
+ reg [95:0] st1,st2;  // STATUS_LAT register stages of {full1,full0,pc_fault}
+ always @(posedge clk or negedge rst_n) if(!rst_n) begin st1<=0;st2<=0; end else begin st1<={full1,full0,pc_fault};st2<=st1; end
+ wire [95:0] st=(STATUS_LAT==0)?{full1,full0,pc_fault}:(STATUS_LAT==1)?st1:st2;
+ wire [31:0] full1_s=st[95:64],full0_s=st[63:32],pc_fault_s=st[31:0];
+ assign fault = sticky || |pc_fault_s;
  assign busy = running;
- assign block_ready = {owned[1] && (&full1),owned[0] && (&full0)};
+ assign block_ready = {owned[1] && (&full1_s),owned[0] && (&full0_s)};
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    owned<=0;epoch[0]<=0;epoch[1]<=0;running<=0;bank_q<=0;slot_q<=0;

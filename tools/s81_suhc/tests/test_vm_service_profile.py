@@ -154,5 +154,67 @@ class SelectedProfileTests(unittest.TestCase):
         self.assertIsNone(r['vm_service_profile'])
 
 
+
+class A2FHop1ProfileTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.name = 's81_vm_a2f_hop1_r4_c2_w1'
+        self.prof = VSP.PROFILES[self.name]
+        measured, artifacts, _ = VSP.measurement_for(self.prof, VSP.ROOT)
+        for path in set(measured) | set(artifacts):
+            target = self.root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(VSP.ROOT / path, target)
+        self.contract = dict(banks=32, bank_mapping='xor_row7_5_shift2', bank_ops_per_cycle=1,
+            vm_service_profile=dict(name=self.name, rtl_tuple=self.prof['rtl_tuple'],
+                                    evidence=VSP.evidence_for(self.name, self.root)))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_source_matched_parent_receipt_admitted(self):
+        prof, bad = VSP.resolve(self.contract, self.root)
+        self.assertEqual(bad, [])
+        self.assertEqual(prof['read_return'], 14)
+
+    def test_every_lane_requires_new_raw_visibility_edge(self):
+        for lane in range(3):
+            write = dict(id='w', kind='write', issue_cycle=10, lane=lane,
+                         raw_cycle=21+lane, commit_cycle=22+lane)
+            read = dict(id='r', kind='read', issue_cycle=16+lane,
+                        raw_cycle=22+lane, response_cycle=30+lane)
+            self.assertEqual(VSP.check_event(self.prof, write), [])
+            self.assertEqual(VSP.check_event(self.prof, read), [])
+            self.assertEqual(VSP.check_dependency(self.prof, write, read), [])
+            # At Q=P+5+lane the SRAM still reads the old value.
+            read.update(issue_cycle=15+lane, raw_cycle=21+lane, response_cycle=29+lane)
+            self.assertEqual(VSP.check_event(self.prof, read), [])
+            self.assertEqual(VSP.check_dependency(self.prof, write, read)[0]['kind'],
+                             'profile_consume_before_raw_write')
+
+    def test_legacy_return_and_write_calendar_rejected(self):
+        read = dict(id='r', kind='read', issue_cycle=0, raw_cycle=7, response_cycle=16)
+        self.assertEqual({v['kind'] for v in VSP.check_event(self.prof, read)},
+                         {'profile_read_raw_edge', 'profile_read_return_edge'})
+        write = dict(id='w', kind='write', issue_cycle=0, lane=0, raw_cycle=10, commit_cycle=12)
+        self.assertEqual(VSP.check_event(self.prof, write)[0]['kind'], 'profile_write_raw_edge')
+
+    def test_rehashing_changed_parent_does_not_create_measurement(self):
+        path = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_mem.sv'
+        with (self.root / path).open('a') as stream:
+            stream.write('\n// unmeasured storage change\n')
+        self.contract['vm_service_profile']['evidence'] = VSP.evidence_for(self.name, self.root)
+        _, bad = VSP.resolve(self.contract, self.root)
+        self.assertIn('vm_service_profile_unmeasured_source:' + path, bad)
+
+    def test_rewritten_embedded_manifest_is_refused(self):
+        path = self.root / VSP.A2F_RECEIPT
+        receipt = json.loads(path.read_text())
+        receipt['source_sha256'] = {}
+        path.write_text(json.dumps(receipt))
+        _, bad = VSP.resolve(self.contract, self.root)
+        self.assertIn('vm_service_profile_invalid_measured_manifest', bad)
+
 if __name__ == '__main__':
     unittest.main()

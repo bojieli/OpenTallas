@@ -19,22 +19,39 @@
  "layer_cap": "M5",
  "pins": {
   "N": [
-   "zh_start",
-   "zh_we",
-   "zh_sid",
-   "zh_iv",
-   "zh_g",
-   "zh_p",
-   "zh_root",
-   "zh_err",
+   "am",
+   "out_valid",
+   "out_g",
+   "out_beat",
+   "out_data",
+   "fault",
+   "ev",
    "clk"
   ],
   "W": [
-   "pl_v",
-   "pl_rz",
-   "pl_y",
-   "pl_pf",
-   "pb_ra"
+   "zw_start",
+   "zw_we",
+   "zw_sid",
+   "zw_iv",
+   "zw_g",
+   "zw_p",
+   "zw_root",
+   "zw_err"
+  ],
+  "E": [
+   "ze_start",
+   "ze_we",
+   "ze_sid",
+   "ze_iv",
+   "ze_g",
+   "ze_p",
+   "ze_root",
+   "ze_err",
+   "rc_v",
+   "rc_x",
+   "rc_y",
+   "rc_vo",
+   "rc_fault"
   ],
   "S": [
    "start",
@@ -47,21 +64,12 @@
    "si_data",
    "pi_valid",
    "pi_g",
+   "pl_v",
+   "pl_rz",
+   "pl_y",
+   "pl_pf",
+   "pb_ra",
    "rst_n"
-  ],
-  "E": [
-   "am",
-   "out_valid",
-   "out_g",
-   "out_beat",
-   "out_data",
-   "fault",
-   "ev",
-   "rc_v",
-   "rc_x",
-   "rc_y",
-   "rc_vo",
-   "rc_fault"
   ]
  },
  "route": {
@@ -80,8 +88,8 @@
  "slot_change_request": "el1014-qwen-kvsys-elements 2026-10-14 (proposal P2 in el1014-qwen-split-kvsys.log): the KV/system die's attention hub qkd_ahub (ot_qwen_nearhbm_attn_hub_t, routed as one 1,171 x 760 cluster: 6 failed routes, last FF -122 ps on 2,253 input endpoints under one 1,864 ps / 266 ps cluster clock) becomes 14 DIE LEAVES: this core (151.2 x 151.2: N face to the 4 zh heads, W face to the pvlg / pbst rows, S face si / pi from the stacks, E face mo / out results + the reciprocal leaf) + the 13 CLOSED tiles 4 x ot_nhb_pbst, 4 x ot_nhb_pvlg, 4 x ot_nhb_zh, ot_qkh_recip_leaf, each with its own die clock entry. Die nets with FIXED relay counts (reference composition ot_qwen_nearhbm_attn_hub_d, rtl/hdc/nearhbm/ot_qkd_ahub_core.sv): ZW_RLY on every core->zh net, ZR_RLY zh->core, RA_RLY core->pbst ra, SR_RLY on every pbst->pvlg sr net (4 x 4 x 128 b crossbar, was hub_t's sr_r), PV_RLY core->pvlg v/rz, Y_RLY pvlg->core; the core's chain lengths are parameters of those counts (defaults 0/0/0/1/0/0). pi_beat / pi_data (2,072 b) go from the stacks straight to the pbst tiles (0..3 stages behind the core's pi_valid / pi_g copy). Recip path latency-free (any relay count).",
  "job": {
   "owner": "Claude:el1014-qwen-kvsys-elements",
-  "branch": "claude/qwen-kvsys-el-1014",
-  "tag": "hd2",
+  "branch": "claude/qkvsys-strip-core",
+  "tag": "hd3",
   "purpose": "Qwen two-die split, KV/system die: the attention hub's control / glue as ONE leaf (decode, lmax, Z control, reciprocal issue, rz, P.V control, tags, output registers) with a register at every pin and its own clock root; replaces the hub_t cluster parent route (its parent clock over 13 hard tiles was the structural fault). Values bit-identical to hub_t; cycle changes measured by the benches.",
   "extra_paths": [
    "rtl/hdc",
@@ -149,7 +157,7 @@
    }
   ]
  },
- "structural_change": "replaces the hub_t cluster route (6 failed, structure repeat: one 1,864 ps / 266 ps cluster clock over 13 hard children + 8.2k parent flops): the parent glue alone as a leaf with its own root (gate hd2: 5,359 sinks, TT insertion 256.4 / spread 23.7 ps, setup +155, hold +26), the 13 closed tiles bound by the die; native pin form (every input a pin flop, every output its own flop, local reset synchroniser)",
+ "structural_change": "hd3 (Q-KVSYS-STRIP, VIS-ROM QKV-07 sev2): hd2 CLOSED but its N face carried the whole Z-head bus (1,345 pins at 8.9/um, half on M3) -> solid red GRT strip along N while the body was 56% empty (fill 0.185). The core now sits in the CENTRE of the hub parent's Z row (ahub parent kit qkd_ahub_die): heads 0/1 leave on the W face (zw_*, 672 pins, 4.4/um M4), heads 2/3 + the reciprocal leaf on the E face (ze_*, rc_*, 738, 4.9/um M4), the hub outputs on N (am/out/ev/fault, 673, 4.5/um), stack inputs + P.V tiles + beat-store address on S (857, 5.7/um M3+M5). Same RTL logic and flops (the Z ports are split by face only: zh_* are now internal registers wired to zw_*/ze_*), outline 151.2 kept (= the pbst/pvlg/zh footprint: one tile size in the hub). Bench qkd_ahub_d eq (3 relay configs x 3 seeds) exact, mutant FAIL.",
  "macros": [],
  "children": [],
  "inter": [],
@@ -163,5 +171,12 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every port at its pin (native pin form since hd2: every input a pin flop, every output its own flop, io_flop_at_pins places them FIRM at the face); OT_PIN_REGS would add a second stage on every port (+2 cycles a hub round trip) for no timing gain"
+ },
+ "fill_reason": {
+  "pin_bound": "pin-bound outline: 3,007 registered pins on 4 faces; at util 0.50 the 72-um side would need ~10 pins/um a face (hd2 failed at 8.9/um), so the outline is set by pin pitch, not cell area (util 11.9%)"
  }
 }

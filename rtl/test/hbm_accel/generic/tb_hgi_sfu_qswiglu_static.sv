@@ -24,7 +24,7 @@ reg [31:0] gates[0:WORDS-1],ups[0:WORDS-1],golds[0:WORDS-1],route[0:0];
  ot_hgi_sfu_programmed_engine dut(.clk(clk),.rst_n(rst_n),.clk_lane({16{clk}}),.clk_map({16{clk}}),
  .rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),.cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start_v(start_v),.start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
- .vi_q(512'd0),.side_y(512'd0),
+ .vi_q(512'd0),
  .scalar_load(scalar_load),.scalar_enable(4'b0010),.scalar_addr({48'd0,24'd12672,24'd0}),.scalar_data({64'd0,route[0]^($test$plusargs("MUT_ROUTE")?32'h00800000:32'd0),32'd0}),.stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));
  initial begin

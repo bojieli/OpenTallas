@@ -38,14 +38,16 @@ module dsfd_vm_a2f_slice128 #(parameter integer HOP1=1, parameter integer SLICE=
  input wire [31:0] w_v,input wire [447:0] w_row,input wire [127:0] w_mask,input wire [4095:0] w_data,input wire [255:0] w_tag,
  output wire [31:0] rs_v,output wire [4095:0] rs_data,output wire [255:0] rs_tag,
  output wire [31:0] commit_v,output wire [287:0] commit_addr,
- output wire [127:0] commit_mask,output wire [255:0] commit_tag,output wire [4:0] fault
+ output wire [127:0] commit_mask,output wire [255:0] commit_tag,output wire [3:0] scatter_fault,output wire [4:0] fault
 );
  wire [31:0] rv,wv,we;wire [287:0] ra,wa;wire [255:0] rt,wt;
  wire [127:0] wm;wire [4095:0] wd;wire [3:0] wfault;
  dsfd_vm_static_suhc_fsr_split u_r(.ck(ck_rscatter),.rst_n(rst_rscatter_n),.i_v(native_rq_v),.i_row(native_rq_row),
   .i_slot(native_rq_slot),.i_group(native_rq_group),.i_aux_v(aux_rq_v),.i_aux_row(aux_rq_row),
   .o_v(rv),.o_addr(ra),.o_tag(rt),.fault(fault[3:0]));
- assign fault[4]=|wfault;
+ // Expose registered per-group faults as wires; capture/reduce in existing native diagnostic leaf.
+ assign scatter_fault=wfault;
+ assign fault[4]=1'b0;
  wire [4095:0] w_data_l;
  genvar l,k;
  generate for(k=0;k<32;k=k+1)begin:lane_map
@@ -113,9 +115,10 @@ endmodule
 
 module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=1)(
  // A2-F write front roots
- input wire ck_wf_header,input wire [3:0] ck_wf_payload,ck_wf_control,ck_wf_fault,
+ input wire [3:0] ck_native_diag,rst_native_diag_n,
+ input wire ck_wf_header,input wire [15:0] ck_wf_payload,input wire [3:0] ck_wf_control,ck_wf_fault,
  input wire [27:0] ck_wf_meta,input wire [127:0] ck_wf_data,
- input wire rst_wf_header_n,input wire [3:0] rst_wf_payload_n,rst_wf_control_n,rst_wf_fault_n,
+ input wire rst_wf_header_n,input wire [15:0] rst_wf_payload_n,input wire [3:0] rst_wf_control_n,rst_wf_fault_n,
  input wire [27:0] rst_wf_meta_n,input wire [127:0] rst_wf_data_n,
  // storage roots
  input wire [15:0] ck_rscatter,input wire [15:0] ck_return,input wire [15:0] ck_wscatter,input wire [127:0] ck_bank,
@@ -140,7 +143,7 @@ module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=
 );
  localparam integer NR = HOP1 ? 4 : 12;   // relay roots per slice
  wire [127:0] fv;wire [1791:0] fr;wire [1023:0] ft;wire [511:0] fm;wire [16383:0] fd;
- s81_a2f_controlled_split4m u_front(
+ s81_a2f_controlled_split4m_payload33 u_front(
   .ck_header(ck_wf_header),.ck_payload(ck_wf_payload),.ck_control(ck_wf_control),.ck_fault(ck_wf_fault),
   .ck_meta(ck_wf_meta),.ck_data(ck_wf_data),
   .rst_header_n(rst_wf_header_n),.rst_payload_n(rst_wf_payload_n),.rst_control_n(rst_wf_control_n),
@@ -155,6 +158,7 @@ module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=
    assign wd[128*q+:128]=fd[512*q+128*s+:128];
   end
   // relay roots: HOP1 -> b8 g of slice s = bit 4s+g; HOP1=0 -> the legacy 12-per-slice slicing
+  wire [3:0] scatter_fault;
   dsfd_vm_a2f_slice128 #(.HOP1(HOP1),.SLICE(s)) u_slice(.ck_rscatter(ck_rscatter[4*s+:4]),.ck_wscatter(ck_wscatter[4*s+:4]),
    .ck_bank(ck_bank[32*s+:32]),.ck_relay_req(ck_relay_req[NR*s+:NR]),.ck_relay_rsp(ck_relay_rsp[NR*s+:NR]),
    .rst_rscatter_n(rst_rscatter_n[4*s+:4]),.rst_wscatter_n(rst_wscatter_n[4*s+:4]),.rst_bank_n(rst_bank_n[32*s+:32]),
@@ -164,7 +168,7 @@ module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=
    .w_v(fv[32*s+:32]),.w_row(fr[448*s+:448]),.w_mask(wm),.w_data(wd),.w_tag(ft[256*s+:256]),
    .rs_v(rv),.rs_data(rd),.rs_tag(rt),.commit_v(commit_v[32*s+:32]),
    .commit_addr(commit_addr[288*s+:288]),.commit_mask(commit_mask[128*s+:128]),
-   .commit_tag(commit_tag[256*s+:256]),.fault(fault[10*s+:5]));
+   .commit_tag(commit_tag[256*s+:256]),.scatter_fault(scatter_fault),.fault(fault[10*s+:5]));
   // unchanged return lanes + native map (dsfd_vm_static512_suhc)
   wire [11:0] lane_group;
   dsfd_vm_static_return32_native_lanes #(.PINREG(RET_PINREG)) u_return(.ck(ck_return[4*s+:4]),.rst_n({4{rst_return_n[s]}}),
@@ -175,7 +179,10 @@ module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=
   assign group_id[3*s+:3]=lane_group[2:0];
   dsfd_vm_static_suhc_return_map u_native(.i_v(group_v[32*s+:32]),.i_data(gd),
    .expected_v(native_expected_v),.release_slot(native_release_slot),
-   .o_v(native_v[18*s+:18]),.o_data(nd),.fault(fault[10*s+9]));
+   .o_v(native_v[18*s+:18]),.o_data(nd),.fault());
+  dsfd_vm_native_valid_diag u_native_diag(.i_fault({12'd0,scatter_fault}),.ck(ck_native_diag[s]),.rst_n(rst_native_diag_n[s]),
+   .i_v(group_v[32*s+:32]),.expected_v(native_expected_v),.release_slot(native_release_slot),
+   .fault(fault[10*s+9]));
   for(q=0;q<18;q=q+1)begin:native_rows
    assign native_data[512*q+128*s+:128]=nd[128*q+:128];
   end
