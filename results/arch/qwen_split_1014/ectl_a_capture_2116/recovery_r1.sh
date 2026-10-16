@@ -5,8 +5,8 @@
 # reroute_reason: {kind: pin_register, source: diagnosis.json, cell: qkd_ectl_a_tp8_epoch_direct, capture_ps: 220.98393,
 #   fix: remove 1826 redundant routed hold-pair cells (913 inputs), keep pin capture regs + ot_inhold/ot_ihdrv pads}
 # Unchanged: sign-off SDC set of the CLOSED ECO (signoff.sdc + io_ref_routed.sdc), HM 18 / SM 40 / FILT 40 / 2 passes,
-# full repair, TT setup / FF hold acceptance 0, DRC 0; fresh GRT only because the plan changes topology; KEEPCLK=1
-# (no clock net is touched). KEEPWIRES / FREEZE are refused by hold_eco.sh/.tcl with the normalization.
+# full repair, TT setup / FF hold acceptance 0, DRC 0; fresh GRT only because the plan changes topology; KEEPCLK=0
+# (attempt 1 with KEEPCLK=1 died DRT-0206 on a kept clock net after hold-repair DPL moved a clock buffer). KEEPWIRES / FREEZE are refused by hold_eco.sh/.tcl with the normalization.
 set -euo pipefail
 M=$1; TAR=$2
 J=/srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48
@@ -28,7 +28,7 @@ RB=$M/routes/$L/work/orfs/results/asap7/$D/base
 echo "{\"closed_job\":\"$J\",\"input_odb_sha256\":\"$ODB_SHA\",\"plan\":\"$PLAN\",\"plan_sha256\":\"$PLAN_SHA\",\"started\":\"$(date -Is)\"}" > $M/record/inputs.json
 cd $M/src
 ECO_SESSION=mm ALLOW_FRESH_GRT=1 NATIVE_FRESH_GRT=1 NATIVE_NORMALIZE_TCL=$M/src/$PLAN NATIVE_NORMALIZE_SHA256=$PLAN_SHA \
-  HM=18 SM=40 FILT=40 PASSES=2 RESAWARE=1 HOLDCELLS=1 ACC_SS=0.0 ACC_FF=0.0 SETUP_LIB=TT KEEPCLK=1 BUF=30 \
+  HM=18 SM=40 FILT=40 PASSES=2 RESAWARE=1 HOLDCELLS=1 ACC_SS=0.0 ACC_FF=0.0 SETUP_LIB=TT KEEPCLK=0 BUF=30 \
   MACROS=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 THREADS=8 SDC_NAME=6_final.sdc ECO_RB_DB=6_final.odb \
   ROUTE_CFG=$M/routes/$L/work/orfs/config.mk \
   bash $M/cl/hold_eco.sh $RB $RB $M/eco qkd_ectl_a_tp8_epoch_direct \
