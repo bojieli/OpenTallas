@@ -8,6 +8,7 @@ module qfd_sp_vector_memory #(
     parameter integer PAR_RB=0, PMUT=0,
     parameter integer USE_NATIVE_CLOCKS=0,
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, RETURN_CLOCKS=0,
+    parameter integer RELAY_TILES=0,   // Q-VMWB 0030: region relays from qvm_data256_native (289 tiles at this shape)
     parameter integer NATIVE_BANKS=0   // 1 = native storage successors (qvm_bank_banked_native / qvm_su_bank_native)
 )(
     input wire ck, rst_n,
@@ -19,6 +20,9 @@ module qfd_sp_vector_memory #(
 `endif
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
     input wire [2:0] read_control_ck,
+`endif
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+    input wire [288:0] relay_ck,
 `endif
     input wire ck_r0_0,
     input wire ck_r0_1,
@@ -528,6 +532,7 @@ module qfd_sp_vector_memory #(
     wire [1007:0] native_ck = {1008{1'b0}};
     wire [95:0] return_ck = 96'b0;
     wire [2:0] read_control_ck = 3'b0;
+    wire [288:0] relay_ck = 289'b0;
     if (USE_NATIVE_CLOCKS != 0 || RETURN_CLOCKS != 0) begin : g_need_partitioned_clocks
         initial $fatal(1, "qfd_sp_vector_memory: USE_NATIVE_CLOCKS / RETURN_CLOCKS need +define+OT_QFD_VM_PARTITIONED_CLOCKS");
     end
@@ -1091,9 +1096,9 @@ module qfd_sp_vector_memory #(
         .read_v(qr_v),.read_row(qr_row),.rsp_v(qr_rsp && q_window),.rsp_data(vmq),
         .q(q),.emitted_done(q_done),.fault(qfault));
     ot_qfd_sp_vector_memory_bv #(.USE_MACRO(USE_MACRO),.USE_LEAF_CLOCKS(USE_LEAF_CLOCKS),
-        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(1),.MUT(MUT),.PAR_RB(PAR_RB),.PMUT(PMUT),.NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS),.RETURN_LEAVES(RETURN_LEAVES),.READ_CONTROL_LEAVES(READ_CONTROL_LEAVES),.RETURN_CLOCKS(RETURN_CLOCKS)) u_vm (
+        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(1),.MUT(MUT),.PAR_RB(PAR_RB),.PMUT(PMUT),.NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS),.RETURN_LEAVES(RETURN_LEAVES),.READ_CONTROL_LEAVES(READ_CONTROL_LEAVES),.RETURN_CLOCKS(RETURN_CLOCKS),.RELAY_TILES(RELAY_TILES),.RELAY_NCK(289)) u_vm (
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
-        .native_ck(native_ck),.return_ck(return_ck),.read_control_ck(read_control_ck),
+        .native_ck(native_ck),.return_ck(return_ck),.read_control_ck(read_control_ck),.relay_ck(relay_ck),
 `endif
         .clk(ck),.leaf_ck(lc),.observer_ck(oc),.rst_n(rst_n),.me_en(mee),.me_en_e(mee),
         .s_re0(sre0),.s_re1(sre1),.s_a0(sa0),.s_a1(sa1),.s_q(sq),
