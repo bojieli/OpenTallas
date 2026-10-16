@@ -1,0 +1,8 @@
+read_verilog -lib -sv -DSYNTHESIS /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+read_verilog -sv -DSYNTHESIS /src/rtl/link/ot_fifo_sram_fwft.sv /src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv
+hierarchy -top ot_s81_hc_ccf_bankpipe
+proc
+opt
+check
+stat -top ot_s81_hc_ccf_bankpipe
+write_json /out/unflattened.json

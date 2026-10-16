@@ -23,29 +23,31 @@
 // pair's own request for this port (req_valid[wp], req_t[14wp +: 14]) enters at pr_*; the port demuxes it by t[0]
 // onto the V get face of landing group {lane, t[0]} (vq0_* / vq1_*, -> qkd_static_kv_landing_physical_grp VREQ=1
 // vreq_*) and derives slot / sel itself from the same request through a fixed delay.  Die timing contract (all 16
-// ports equal, the die balances relays): WP = relay edges pair req pin -> pr pin, RT = edges from the vq output
-// register to the rsp words at this port's in pins (landing VREQ=1 is 8 + request / return relays).  The pair sees
-// its word RL edges after its request (RL 19, ot_qwen_tp8_pv_wide_ctl FIRST_INPUT_AGE = RL + 1): the request waits
-// DQ = RL - 4 - WP - RT edges inside the port (>= 0 is checked at elaboration).
+// ports equal, the die balances relays): RT = edges from the vq output register to the rsp words at this port's in
+// pins (landing VREQ=1 is 8 + request / return relays; the die pads the 15-bit request side so RT is equal), DQ =
+// request wait inside the port.  slot / sel = the request DQ + RT + 1 edges after its pin register.  The pair sees
+// its word RL = 4 + W + DQ + RT edges after its request, W = WP + O (pair -> port request relays + port -> pair
+// word relays, equal for every port: the die pads WP, 15 bits); ot_qwen_tp8_pv_wide_ctl FIRST_INPUT_AGE = RL + 1.
+// r6 (Q-VMWB 10-16): the measured die has W = 59 (landing at the die edge, PV in the centre spine) -> RL 71; the
+// word's epoch travels with it (in{g}_epoch from the landing rsp_epoch -> out_epoch -> the pair's in_epoch check).
 // MUT (bench negative controls): 1 = sel inverted, 2 = quarter 1 and 2 swapped, 3 = K/V flag ignored,
-// 4 = V get sent to the wrong group (t[0] inverted on the issue face).
-module qkd_pv16_vport #(parameter integer MUT = 0, RL = 19, WP = 2, RT = 8) (
+// 4 = V get sent to the wrong group (t[0] inverted on the issue face), 5 = epoch taken from the other side.
+module qkd_pv16_vport #(parameter integer MUT = 0, DQ = 0, RT = 8) (
     input wire ck, rst_n,
     // the pvw pair's request for this port (static: one row t a slot, t[5:4] = lane)
     input wire pr_valid, input wire [13:0] pr_t,
     // V gets to landing group {lane, 0} / {lane, 1} (the landing's vreq face)
     output reg vq0_valid, output reg [13:0] vq0_t, output reg vq1_valid, output reg [13:0] vq1_t,
     // side 0 = landing group {lane, 0} (even q), side 1 = group {lane, 1} (odd q): the group's rsp face
-    input wire in0_valid, input wire in0_vflag, input wire [13:0] in0_t, input wire [1023:0] in0_d,
-    input wire in1_valid, input wire in1_vflag, input wire [13:0] in1_t, input wire [1023:0] in1_d,
-    output reg out_valid, output reg [13:0] out_t,
+    input wire in0_valid, input wire in0_vflag, input wire [13:0] in0_t, input wire [15:0] in0_epoch, input wire [1023:0] in0_d,
+    input wire in1_valid, input wire in1_vflag, input wire [13:0] in1_t, input wire [15:0] in1_epoch, input wire [1023:0] in1_d,
+    output reg out_valid, output reg [13:0] out_t, output reg [15:0] out_epoch,
     output reg [511:0] out_v_lo, output reg [511:0] out_v_hi,     // V row dims 0-63 (quarters 0-1) / 64-127 (2-3)
     output reg fault
 );
-    localparam integer DQ = RL - 4 - WP - RT;                  // request wait inside the port
-    localparam integer SL = RL - 3 - WP;                       // pr register -> slot / sel at the in pins
-    generate if (DQ < 0 || SL < 1) begin : g_bad
-        initial $fatal(1, "qkd_pv16_vport: RL %0d too short for WP %0d + RT %0d", RL, WP, RT);
+    localparam integer SL = DQ + RT + 1;                       // pr register -> slot / sel at the in pins
+    generate if (DQ < 0 || RT < 1) begin : g_bad
+        initial $fatal(1, "qkd_pv16_vport: DQ %0d / RT %0d", DQ, RT);
     end endgenerate
     // reset captured at its pin (r2); internal state uses the local copy (+1 cold-release edge, 0 production cycles)
     (* keep *) reg rst_q;
@@ -79,7 +81,7 @@ module qkd_pv16_vport #(parameter integer MUT = 0, RL = 19, WP = 2, RT = 8) (
     // ---- input pin registers (every port registered) ----
     reg slot_q, sel_q;
     reg [1:0] val_q, vf_q;
-    reg [27:0] t_q;
+    reg [27:0] t_q; reg [31:0] e_q;
     reg [2047:0] d_q;
     always @(posedge ck or negedge rn)
         if (!rn) begin slot_q <= 1'b0; val_q <= 2'b0; end
@@ -87,7 +89,7 @@ module qkd_pv16_vport #(parameter integer MUT = 0, RL = 19, WP = 2, RT = 8) (
     always @(posedge ck) begin
         sel_q <= sel ^ ((MUT == 1) ? 1'b1 : 1'b0);
         vf_q <= (MUT == 3) ? 2'b11 : {in1_vflag, in0_vflag};
-        t_q <= {in1_t, in0_t}; d_q <= {in1_d, in0_d};
+        t_q <= {in1_t, in0_t}; e_q <= {in1_epoch, in0_epoch}; d_q <= {in1_d, in0_d};
     end
 
     // ---- static select of group {lane, sel} ----
@@ -104,5 +106,5 @@ module qkd_pv16_vport #(parameter integer MUT = 0, RL = 19, WP = 2, RT = 8) (
     always @(posedge ck or negedge rn)
         if (!rn) begin out_valid <= 1'b0; fault <= 1'b0; end
         else begin out_valid <= slot_q; if (bad) fault <= 1'b1; end
-    always @(posedge ck) begin out_t <= t0; {out_v_hi, out_v_lo} <= row; end
+    always @(posedge ck) begin out_t <= t0; out_epoch <= (sel_q ^ (MUT == 5)) ? e_q[31:16] : e_q[15:0]; {out_v_hi, out_v_lo} <= row; end
 endmodule
