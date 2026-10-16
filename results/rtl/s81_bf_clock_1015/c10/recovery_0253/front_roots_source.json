@@ -4,6 +4,7 @@
   "boot_reset_release_edges_added": 1,
   "real_reset_relays": 4,
   "north_data_reset": false,
+  "physical_xb_reconstruction": "legacy_xb[1067:0] = {xb_meta[43:0], xb_data[1023:0]}",
   "roots": {
     "ck": "existing core and core-source seam lockup",
     "io_clk": "south primary capture/status/programme, xb metadata/control, and IO-source lockups",
@@ -17,7 +18,7 @@
   },
   "outputs": {
     "rtl/s81/ot_s81_bf_front_roots.sv": "e375fc962f6018ec91652dda49f2019f6c67234bbd808788f8c95e10e1ae6517",
-    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "714e5cd5b14dc95547f36c689ee17b72762ab8ad724d47fb4bb631d7b0ab33d0"
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "b4d7ada194db09feb5b6814bbf8305de6c72f93700cd720a1de1c95ea26a93bb"
   },
   "physical_qualification": false,
   "clock_pins_homes_and_slot_grant": "PENDING",

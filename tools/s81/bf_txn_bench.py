@@ -233,6 +233,8 @@ def main():
         assert count==1,count
         files[fn],count=re.subn(r'\.io_clk\(clk\)', '.io_clk(clk), .io_n(clk), .io_w(clk), .io_e(clk)',files[fn])
         assert count==1,count
+        assert files[fn].count('.xb(xb)')==1
+        files[fn]=files[fn].replace('.xb(xb)', '.xb_data(xb[1023:0]), .xb_meta(xb[1067:1024])')
     if a.mapped_rom_candidate:
         from bf_mapped_rom_images import write_images
         image_dir=a.work.resolve()/'mapped_rom_images'

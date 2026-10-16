@@ -10,7 +10,12 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def main():
     old=ROOT/'physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s/pin_request.json'
-    request=json.loads(old.read_text());pins=request['pins']
+    request=json.loads(old.read_text());pins=request['pins'];mapping={}
+    for i in range(1068):
+        old_name=f'xb[{i}]'
+        name=f'xb_data[{i}]' if i<1024 else f'xb_meta[{i-1024}]'
+        pins[name]=pins.pop(old_name)
+        mapping[old_name]=dict(new_pin=name,geometry=pins[name])
     added={}
     for name,face,layer,target,offset in [('io_n','N','M5',58.38,.012),('io_w','W','M4',99.36,.036),('io_e','E','M4',99.36,.036)]:
         axis='x' if face=='N' else 'y'
@@ -29,10 +34,11 @@ def main():
     assert min(spacing.values())>=.096-1e-6,spacing
     manifest=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/front_roots_source.json'
     source_hash=json.loads(manifest.read_text())['outputs']['rtl/s81/ot_s81_bf_front_roots.sv']
-    request.update(top='dsfd_bf_front_roots',status='PROPOSED_NEW_CLOCK_ABI_NOT_GRANTED',basis=dict(source_manifest=str(manifest.relative_to(ROOT)),source_manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),parent_pin_request_sha256=hashlib.sha256(old.read_bytes()).hexdigest(),all_3269_original_pins_unchanged=True,new_clock_pins=added,min_sameface_samelayer_center_spacing_um=spacing,physical_qualification=False,slot_change_grant='PENDING',native_capture='PENDING'))
+    request.update(top='dsfd_bf_front_roots',status='PROPOSED_NEW_CLOCK_ABI_NOT_GRANTED',basis=dict(source_manifest=str(manifest.relative_to(ROOT)),source_manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),parent_pin_request_sha256=hashlib.sha256(old.read_bytes()).hexdigest(),all_3269_original_pin_shapes_unchanged=True,renamed_xb_pins=1068,old_to_new_mapping='legacy_xb_pin_mapping.json',new_clock_pins=added,min_sameface_samelayer_center_spacing_um=spacing,physical_qualification=False,slot_change_grant='PENDING',native_capture='PENDING'))
     out=ROOT/'physical/ref_tile_specs/s81_bf_native_1015/front_five_roots';out.mkdir(exist_ok=True)
     (out/'pin_request.json').write_text(json.dumps(request,indent=2)+'\n')
-    lines=['# Exact old c10 data geometry plus three literal physical clock pins.']
+    (out/'legacy_xb_pin_mapping.json').write_text(json.dumps(mapping,indent=2)+'\n')
+    lines=['# Exact old c10 data shapes, explicit xb_data/xb_meta ABI and three literal physical clock pins.']
     for name,p in pins.items():
         lines.append(f"place_pin -pin_name {{{name}}} -layer {p['layer']} -location {{{p['x']} {p['y']}}} -pin_size {{{p['w']} {p['h']}}} -force_to_die_boundary")
     (out/'pins.tcl').write_text('\n'.join(lines)+'\n')
@@ -63,11 +69,11 @@ def main():
         shifts={'ck':(-48,-17),'io_clk':(6,-17),'io_n':(0,7),'io_w':(5,3),'io_e':(-29,3)}
         dx,dy=shifts[name];ax.annotate(f"{name}\n({p['x']:.3f},{p['y']:.3f})",(p['x'],p['y']),xytext=(p['x']+dx,p['y']+dy),fontsize=8)
     ax.text(58.32,154,'N: xb[1023:0] data only\nUnreset, as original source',ha='center',fontsize=9)
-    ax.text(58.32,108,'ck: existing core\nand core-source lockups',ha='center',fontsize=9)
+    ax.text(58.32,125,'ck: existing core\nand core-source lockups',ha='center',fontsize=9)
     ax.text(58.32,60,'S: programme/config/xs/status\nxb controls + IO-source-low lockups',ha='center',fontsize=9)
     ax.text(58.32,33,'Four actual local reset relays\nboot release +1 edge; payload +0',ha='center',fontsize=9)
     ax.set(xlim=(-10,126.64),ylim=(-24,218),title='Exact source-to-clock assignment proposal',xlabel='front local x (um)',ylabel='um');ax.set_aspect('equal')
-    fig.suptitle(f'BF five-root front candidate: source body SHA256 {source_hash[:12]}, all3269 original pins preserved +3 clocks\nNative/CTS/capture and clock slot grants PENDING; no physical adoption or inherited abutment proof')
+    fig.suptitle(f'BF five-root front candidate: source body SHA256 {source_hash[:12]}, all3269 pin shapes retained +3 clocks\n1068 xb pins explicitly rebound to xb_data/xb_meta; native/capture and clock slot grants PENDING')
     fig.tight_layout();fig.savefig(out/'connected_pin_plan.png',dpi=150)
     print(json.dumps(dict(new_clock_pins=added,min_spacing_um=min(spacing.values()),pins=len(pins)),indent=2))
 
