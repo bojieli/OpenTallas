@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.slot_request.v1",
+ "from": "Claude H-NETLIST 1315 (H-ELEM decision 14:20: bank cluster)",
+ "to": "H-DIE",
+ "date": "2026-10-16",
+ "kind": "slot_change (area growth) for hc_eng",
+ "contract_instance": "results/arch/hbm_die_v16/contract.json instances/hc_eng (ot_hbm_hc_eng_static, estimate ~9.5 mm2)",
+ "unit": "HC.HC_MIX static engine, QUALIFIED main ccb3c12f4 (P1 968 / 1,160-cycle price; 2,048 FP32 MAC lanes required by the price: halving lanes gives 1,218 > 1,160)",
+ "structure": "8 bank clusters ot_hbm_hc_bank_static (systolic sum chain W->E, 8,192 b between adjacent banks) + core/seq/table + 2 tail units. Bank cluster = 32 CLOSED lane leaves ot_hdc_v41x_hcp_lanes (138.24 x 138.24, hc_lanes_ref-r4; rst_n relayed at the cluster boundary because the view fails native rst_n capture 209.0) + 32 weight macros ot_sram_1r1w_1024x256_m2_r2c2 (174.744 x 70.470) + 16 x macros ot_sram_1r1w_128x256_m1_r2c2 (94.824 x 41.040).",
+ "geometry_estimate": {
+  "bank_column": "leaf pins: s_i W / y E / w_i,x_i S -> one column per bank, per leaf pair [leaf][w macro][x macro][leaf][w macro] with 5.4 um halos: ~485 um per pair x 16 = ~7.76 mm tall, ~0.19 mm wide (weight macro width + halo) = ~1.44 mm2 per bank",
+  "engine": "8 abutted columns ~1.5 x 7.8 mm = ~11.6 mm2 + core/tails/table strip ~0.4-0.5 mm2 = ~12.0 mm2",
+  "coordinator_estimate": "~10.4 mm2 (macro 456k + leaf 611k um2 per bank + channels); the column geometry above is the measured-shape bound",
+  "aspect": "sum chain crosses each bank seam on a 7.8 mm face (8,192 b at ~1.1 pins/um): no inter-bank congestion; weight/x write bus (1,024 b) and descriptor broadcast run N-S inside each column"
+ },
+ "requested_area_mm2": "10.4 minimum, 12.0 for the column layout (preferred: a ~1.6 x 7.9 mm region)",
+ "open_alternative": "macro re-shape (e.g. 2 x 512x256 per weight slot) to bring the column to ~0.14 mm wide -> ~9.5-10 mm2; needs a macro-compiler shape and a bank RTL edit",
+ "status": "BLOCKER for the hc_eng hardening floorplan: needs H-DIE region decision (area + aspect)"
+}
