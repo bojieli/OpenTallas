@@ -47,5 +47,15 @@
     "fail_why": ""
   },
   "scope": "Component physical/native boundary only; no full-layer/full-token qualification.",
-  "layout_review": "Previous gate layout inspected by submitting owner; routed native ETM independently audited here."
+  "layout_review": "Actual image tool inspection: two continuous full-width N/S flop bands, centred S clock, no internal hotspot. Native159.9/132.5ps, spread20.2ps. Pin-face adoption must agree with die grant.",
+  "inspected_images": [
+    {
+      "path": "/home/ubuntu/artifacts/s81-pq-takeover-0253/alignp6-layout/floorplan.png",
+      "sha256": "221bda918af5633e98c02499485d70d7338f03ec31e9c4ce4612e4409ef0f061"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/s81-pq-takeover-0253/alignp6-layout/density.png",
+      "sha256": "c292e6edd7b60478ba26d2f5b12b5e13e89e8df3940923970c1601080bbe3a96"
+    }
+  ]
 }

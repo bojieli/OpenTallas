@@ -47,5 +47,15 @@
     "fail_why": ""
   },
   "scope": "Component physical/native boundary only; no full-layer/full-token qualification.",
-  "layout_review": "Boundary flop bands, sparse pin-bound interior and diagonal raw-bus corner turn; DRC0. Density PNG inspected."
+  "layout_review": "Actual image tool inspection: boundary flop bands, sparse pin-bound interior, diagonal raw S-to-W corner turn remains. b9 co-locates read pins with t_crq at W bottom; native launch improves253.4 to207.0ps. No unconditional shrink/reroute inferred from sparse interior.",
+  "inspected_images": [
+    {
+      "path": "/home/ubuntu/artifacts/s81-pq-takeover-0253/vmb9-layout/floorplan.png",
+      "sha256": "8265b4961eedff2cb4d9c74fc1b370c5ee2e7fb7ff2f5799ae498abf3f049770"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/s81-pq-takeover-0253/vmb9-layout/density.png",
+      "sha256": "598051d97965d96a01159a7064911a2013db06a9a4387f640f5e6d45b9b4297d"
+    }
+  ]
 }

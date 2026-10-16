@@ -46,5 +46,16 @@
     "pass": true,
     "fail_why": ""
   },
-  "scope": "Component physical/native boundary only; no full-layer/full-token qualification."
+  "scope": "Component physical/native boundary only; no full-layer/full-token qualification.",
+  "layout_review": "Actual image tool inspection: centred SRAM, usable ~20um peripheral channels; W and S data flops follow their full faces. Former25um S pin hotspot absent. Native127.9/167.1ps, spread61.5ps.",
+  "inspected_images": [
+    {
+      "path": "/home/ubuntu/artifacts/s81-pq-takeover-0253/ixr5-layout/floorplan.png",
+      "sha256": "72a6bec2d6d1084c2611f794214d7b8426f41307b6b2a5e1c9b60c6ec6bf542e"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/s81-pq-takeover-0253/ixr5-layout/density.png",
+      "sha256": "4ecc071f1ae034fe8e1752375dc6b408295a0e8896340c0548ff342e8e4a264c"
+    }
+  ]
 }
