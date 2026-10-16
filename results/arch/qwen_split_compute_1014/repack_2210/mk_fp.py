@@ -61,7 +61,7 @@ SW = 2 * PT[0] + 522.72      # one s6 band stack width
 cx = XS0 + (WS - cw) / 2.0
 cy = rowy(8) - (vm['y'] + vm['h'] - by0)
 if MODE == 'r2':
-    cx = XS0 + 21.6 + SW + 129.6
+    cx = XS0 + WS - float(__import__('os').environ.get('CLU_E', '21.6')) - cw
 if MODE == 'r3':
     cy = Y0 + 518.4 + 43.2 + PT[1] + 43.2 + 1131.84 + 129.6
 dx, dy = snap(cx - bx0, 8.64), snap(cy - by0, 8.64)
