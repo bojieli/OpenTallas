@@ -42,9 +42,24 @@
       "host": "ot-agidock128",
       "pid": 1481980,
       "remote": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg-20261016-023212",
-      "state": "CTS hold repair in flight"
+      "state": "WARN:0 fail",
+      "tt_setup_ps": -60.9,
+      "ff_hold_ps": 43.56,
+      "sinks": 9354,
+      "insertion_ps": 397.2,
+      "spread_ps": 30.7,
+      "images_inspected": true
     },
     "native_status": "not qualified; no route yet"
   },
-  "next_step": "Finish preserved H5 gate; inspect actual M4 pin/PG/guard overlap before structural successor. Do not launch H5 unchanged merely to retry H4 congestion."
+  "next_step": "H6: keep H4 RTL (H5 TT diagnostic regressed), full M5 reservation plus widened west corridor34.56->56.16um at outline185.76x164.16; new source-bound CTS gate and actual PNG inspection before submit.",
+  "diagnostic_h6": {
+    "source": "exact H4 failed GRT ODB, no fresh synth/placement",
+    "change": "full M5 SRAM blockage instead of 1.2um edge strips",
+    "overflow_before": 33,
+    "overflow_after": 11,
+    "zero_capacity_markers_after": 0,
+    "qualifies_closure": false,
+    "remaining_cause": "positive-capacity west channel overload"
+  }
 }

@@ -1,0 +1,44 @@
+violation type: Horizontal congestion
+	srcs: net:_03179_ net:_03369_ net:_03710_ net:_04474_ net:_04499_ net:_08583_ net:net9729 net:net9694 net:net12922 net:net12212 net:net13318 net:net12224 net:net12208 net:net13171 net:net13146 net:net13118 net:net12231 net:clkbuf_sp_L1133_net
+	comment: capacity:17 usage:18 congestion:1
+	bbox = (34.7700, 89.4900) - (35.3400, 90.0600) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01530_ net:_01606_ net:net11409 net:net11371 net:net11354 net:net11329 net:_22770_ net:_23286_ net:net11485 net:net11363 net:g_kreg.u_skid.out_data\[56\] net:g_kreg.u_skid.out_data\[92\] net:g_krreg.u_skid.in_data\[109\] net:g_krreg.u_skid.in_data\[48\] net:g_krreg.u_skid.in_data\[81\] net:g_krreg.u_skid.in_data\[8\] net:net11369 net:net11807 net:net12560 net:net12559 net:clkbuf_sp_L498_net
+	comment: capacity:20 usage:21 congestion:1
+	bbox = (11.9700, 133.3800) - (12.5400, 133.9500) on Layer -
+violation type: Vertical congestion
+	srcs: net:_22877_ net:_22919_ net:net10088 net:_36818_ net:g_kreg.u_skid.out_data\[104\] net:g_kreg.u_skid.out_data\[10\] net:g_krreg.u_skid.in_data\[106\] net:g_krreg.u_skid.in_data\[161\] net:clkbuf_sp_N381_net net:clkbuf_sp_L457_net net:clkbuf_sp_L459_net net:clkbuf_sp_L458_p1_net net:net14348
+	comment: capacity:12 usage:13 congestion:1
+	bbox = (2.2800, 133.9500) - (2.8500, 134.5200) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01140_ net:_01402_ net:net11354 net:net11335 net:net11346 net:_21961_ net:_22328_ net:net9654 net:net12983 net:_41366_ net:_41767_ net:_41792_ net:g_kreg.u_skid.out_data\[116\] net:g_kreg.u_skid.out_data\[15\] net:g_kreg.u_skid.out_data\[22\] net:g_krreg.u_skid.in_data\[227\] net:g_krreg.u_skid.in_data\[242\] net:g_krreg.u_skid.in_data\[98\] net:net11603 net:net11601 net:net11618
+	comment: capacity:20 usage:21 congestion:1
+	bbox = (12.5400, 133.9500) - (13.1100, 134.5200) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01347_ net:_01349_ net:_02146_ net:_17404_ net:net10299 net:net9583 net:net11048 net:_41300_ net:_41483_ net:_41685_ net:g_kreg.u_skid.out_data\[103\] net:g_kreg.u_skid.out_data\[117\] net:g_kreg.u_skid.out_data\[90\] net:g_krreg.u_skid.in_data\[135\] net:g_krreg.u_skid.in_data\[191\] net:net12554 net:clkbuf_sp_N383_net net:clkbuf_sp_L460_net net:clkbuf_sp_L456_net net:net19426 net:net24913
+	comment: capacity:20 usage:21 congestion:1
+	bbox = (2.8500, 133.9500) - (3.4200, 134.5200) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01359_ net:_02060_ net:_22164_ net:_22608_ net:_22868_ net:g_krreg.u_skid.in_data\[111\] net:g_krreg.u_skid.in_data\[139\] net:g_krreg.u_skid.in_data\[15\] net:g_krreg.u_skid.in_data\[208\] net:g_krreg.u_skid.in_data\[219\] net:g_krreg.u_skid.in_data\[42\] net:g_phy_return.data\[77\] net:net11847 net:clkbuf_sp_L546_net
+	comment: capacity:13 usage:14 congestion:1
+	bbox = (23.9400, 133.3800) - (24.5100, 133.9500) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01167_ net:_02190_ net:_22276_ net:net9611 net:net12458 net:net11800 net:net11045 net:net11038 net:net10577 net:net10390 net:net10247 net:net9623 net:_41444_ net:g_kreg.u_skid.out_data\[112\] net:clkbuf_sp_L468_net net:clkbuf_sp_L477_net
+	comment: capacity:15 usage:16 congestion:1
+	bbox = (7.4100, 133.9500) - (7.9800, 134.5200) on Layer -
+violation type: Vertical congestion
+	srcs: net:_02146_ net:_17404_ net:net10299 net:net9583 net:_41300_ net:_41483_ net:_41685_ net:g_kreg.u_skid.out_data\[103\] net:g_kreg.u_skid.out_data\[104\] net:g_kreg.u_skid.out_data\[117\] net:g_kreg.u_skid.out_data\[90\] net:g_krreg.u_skid.in_data\[135\] net:g_krreg.u_skid.in_data\[191\] net:g_krreg.u_skid.in_data\[218\] net:net12554 net:clkbuf_sp_N383_net net:clkbuf_sp_L460_net net:clkbuf_sp_L476_net net:net14862 net:net19426 net:net24913
+	comment: capacity:20 usage:21 congestion:1
+	bbox = (2.8500, 133.3800) - (3.4200, 133.9500) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01169_ net:net11406 net:net11399 net:net11381 net:net11365 net:_21850_ net:_22302_ net:net11037 net:g_krreg.u_skid.in_data\[143\] net:g_phy_return.data\[3\] net:net11483 net:net11634 net:net11827 net:net12981 net:clkbuf_sp_L514_net net:clkbuf_sp_L513_net
+	comment: capacity:15 usage:16 congestion:1
+	bbox = (18.8100, 133.3800) - (19.3800, 133.9500) on Layer -
+violation type: Vertical congestion
+	srcs: net:_21600_ net:_21960_ net:_22157_ net:_22798_ net:_22917_ net:_23150_ net:net10412 net:net9642 net:net11469 net:_41366_ net:g_kreg.u_skid.out_data\[51\] net:g_krreg.u_skid.in_data\[115\] net:g_krreg.u_skid.in_data\[77\] net:net11587 net:net11589 net:net11627 net:net11761 net:net11821 net:net11825 net:net12563 net:clkbuf_sp_L507_net
+	comment: capacity:20 usage:21 congestion:1
+	bbox = (16.5300, 133.3800) - (17.1000, 133.9500) on Layer -
+violation type: Vertical congestion
+	srcs: net:_01167_ net:_22276_ net:_25293_ net:net9757 net:net9611 net:net12965 net:net12458 net:net10577 net:net10390 net:net10247 net:net9623 net:_42087_ net:g_kreg.u_skid.out_data\[112\] net:net12561 net:clkbuf_sp_L477_net net:net19671
+	comment: capacity:15 usage:16 congestion:1
+	bbox = (7.4100, 133.3800) - (7.9800, 133.9500) on Layer -
