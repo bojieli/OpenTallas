@@ -49,7 +49,7 @@ def main():
              source_contract_sha256=hashlib.sha256(raw).hexdigest(),rows=rows,
              station_leaf_count=736*13,station_reset_ff_added=736*15,
              scope='Hard frames obstruct the selected obstacle-avoiding route plane. No higher-metal feedthrough is qualified.',
-             excluded=['other incident traffic and clocks','programme474 macro candidate homes and local clocks','SKV/collective source homes and roots','actual endpoint views/OBS/PG','reset glue footprint and mapped timing','fixed result transport stages and compiler/cost'])
+             excluded=['other incident traffic and clocks','programme476 macro candidate homes and local clocks','SKV/collective source homes and roots','actual endpoint views/OBS/PG','reset glue footprint and mapped timing','fixed result transport stages and compiler/cost'])
     (ROOT/a.out).write_text(json.dumps(out,indent=1)+'\n')
     for row in rows:print(row['quarter'],row['known_demand_bits'],row['free_channel_um'],row['utilization'],row['passes_060'])
     import matplotlib
@@ -64,6 +64,6 @@ def main():
     row=rows[0];x=row['cut_x_um'];lo,hi=row['sm_bounded_y_um'];yb,yt=row['hard_su_y_um']
     ax.plot([x,x],[lo,hi],color='red',linewidth=2)
     ax.plot([x,x],[lo,yb],color='green',linewidth=6);ax.plot([x,x],[yt,hi],color='green',linewidth=6)
-    ax.set(xlim=(0,14520),ylim=(lo-200,hi+200),aspect='equal',xlabel='um',ylabel='um',title=f"Middle-SFU SW hard-frame cut: known{row['known_demand_bits']} bits /{row['free_channel_um']:g}um channel /14.0625 tracks per um ={row['utilization']:.3f} (limit0.60)\nNecessary cut only; programme474 macros, SKV/collective clocks, other traffic, reset glue not yet included")
+    ax.set(xlim=(0,14520),ylim=(lo-200,hi+200),aspect='equal',xlabel='um',ylabel='um',title=f"Middle-SFU SW hard-frame cut: known{row['known_demand_bits']} bits /{row['free_channel_um']:g}um channel /14.0625 tracks per um ={row['utilization']:.3f} (limit0.60)\nNecessary cut only; programme476 macros, SKV/collective clocks, other traffic, reset glue not yet included")
     fig.tight_layout();fig.savefig((ROOT/a.out).with_suffix('.png'),dpi=160);plt.close(fig)
 if __name__=='__main__':main()

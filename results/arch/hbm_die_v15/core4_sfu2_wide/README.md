@@ -9,7 +9,10 @@ not an adopted die contract or a measured token-cost acceptance.
 The known hard-frame cut through SU group1 improves from 0.731897 to 0.250386:
 2,676 actual source-derived data bits now have 760 µm total channel at the
 established 14.0625 tracks/µm supply. This excludes other traffic, clock roots,
-reset glue, actual programme 474-macro candidate homes, SKV and collective homes.
+reset glue, actual programme 476-macro candidate homes, SKV and collective homes.
+The actual RF36 programme candidate is 302 global macros becoming 476 local
+macros (quarter counts98/141/101/136), +174 SRAMs/+0.67753 mm² macro area. The
+frozen-S 301→474 count is historical and does not size this native alternative.
 Those exclusions remain mandatory blockers to whole-SU capacity qualification.
 The older aggregate graph score (V0.493/H0.566, weighted stages8.871) is historical
 and cannot substitute for a complete source-bound cut.

@@ -95,7 +95,7 @@ through the second SU slice, two broad LG groups plus actual qcore-to-first-
 slice signals require 2,676 bits. Adjacent SM frames leave 260 µm total channel,
 so the established 14.0625 tracks/µm supply gives 0.731897 utilization, above
 0.60. This needs at least 317.155556 µm channel even before clocks, reset glue,
-programme 474-macro candidate storage, SKV/collective traffic or other incident
+programme 476-macro candidate storage, SKV/collective traffic or other incident
 links. It is conditional on hard-frame avoidance; using higher-metal feedthrough
 requires actual leaf OBS/layer/PG evidence. The old aggregate cut does not expose
 this bottleneck. Actual station footprints must follow a structural channel or
