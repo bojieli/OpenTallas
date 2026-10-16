@@ -27,19 +27,32 @@ build() {  # name top files defines...
 DIFF="$COMMON $LEGACY $A2F tb_dsfd_vm_a2f_diff.sv"
 PAR="$COMMON $A2F dsfd_sp_vm_a2f.sv tb_dsfd_sp_vm_a2f.sv"
 PLEG="$COMMON $LEGACY dsfd_sp_vm_static.sv tb_dsfd_sp_vm_static.sv"
-pids=()
-build diff_h1_w1 tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 & pids+=($!)
-build diff_h1_w0 tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=0 & pids+=($!)
-build diff_h0_w1 tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=0 +define+A2F_REF_WSP=1 & pids+=($!)
-build mut_lane   tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 +define+DSFD_VM_A2F_MUT_LANE & pids+=($!)
-build mut_commit tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 +define+DSFD_VM_A2F_MUT_COMMIT & pids+=($!)
-build mut_rel    tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 +define+DSFD_VM_A2F_MUT_HOP1_REL & pids+=($!)
-build par_a2f      tb_dsfd_sp_vm_a2f "$PAR" $NATIVE & pids+=($!)
-build par_capword  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_CAPL_MUT_WORD & pids+=($!)
-build par_wfcpair  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_WFC_MUT_PAIR & pids+=($!)
-build par_x43phase tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_X43_MUT_PHASE & pids+=($!)
-build par_legacy tb_dsfd_sp_vm_static "$PLEG" $NATIVE +define+OT_VM_NATIVE_WSCATTER & pids+=($!)
-bfail=0; for p in "${pids[@]}"; do wait "$p" || bfail=1; done
+# A full differential Verilator frontend measured 3.76 GB. Eleven overlapping frontends/compiler pools
+# exceeded a 32 GB cgroup; bound the build working set without dropping any configuration or mutant.
+MAX_BUILDS=${MAX_BUILDS:-3}
+[[ "$MAX_BUILDS" =~ ^[1-9][0-9]*$ ]] || { echo 'MAX_BUILDS must be positive' >&2; exit 2; }
+pids=(); bfail=0
+flush_builds() {
+  local p
+  for p in "${pids[@]}"; do wait "$p" || bfail=1; done
+  pids=()
+}
+queue_build() {
+  build "$@" & pids+=($!)
+  if [ "${#pids[@]}" -ge "$MAX_BUILDS" ]; then flush_builds; fi
+}
+queue_build diff_h1_w1 tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1
+queue_build diff_h1_w0 tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=0
+queue_build diff_h0_w1 tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=0 +define+A2F_REF_WSP=1
+queue_build mut_lane   tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 +define+DSFD_VM_A2F_MUT_LANE
+queue_build mut_commit tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 +define+DSFD_VM_A2F_MUT_COMMIT
+queue_build mut_rel    tb_dsfd_vm_a2f_diff "$DIFF" +define+A2F_HOP1=1 +define+A2F_REF_WSP=1 +define+DSFD_VM_A2F_MUT_HOP1_REL
+queue_build par_a2f      tb_dsfd_sp_vm_a2f "$PAR" $NATIVE
+queue_build par_capword  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_CAPL_MUT_WORD
+queue_build par_wfcpair  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_WFC_MUT_PAIR
+queue_build par_x43phase tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_X43_MUT_PHASE
+queue_build par_legacy tb_dsfd_sp_vm_static "$PLEG" $NATIVE +define+OT_VM_NATIVE_WSCATTER
+flush_builds
 [ $bfail = 0 ] || { echo 'A2F_GATE FAIL (build)'; exit 2; }
 # ---- runs (all in parallel)
 declare -A RUN
