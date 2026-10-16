@@ -1,5 +1,7 @@
 # S81 network native successors, Codex23:30 takeover
 
+The initial native-only recommendation was held when strict bundle hashes exposed a shared postprocessing provenance defect. `recovered_successors_0010.json` and each view's `provenance/` now record strict raw-final-ODB replay and exact historical helper replay for these15 plus stnv566f9. Raw LEFs match immutable original manifests, processed outputs match published LEFs, original geometry remains, and strict export_fix passes. Root review/publication remains required before adoption; no physical route or timing library changed.
+
 Audit source `ee0e208ef119e6bc7a43cd6e5facda21f2d9631a`. Actual TT exported pins use launch220ps/capture190ps/spread80ps limits. All15 successors below pass with insertion records. Each full route has TT setup/FF hold >=0 and DRC0 in its CLOSED record. Floorplan and density PNGs were read after verdict.
 
 | Master | Launch ps | Capture ps | Spread ps | R ps | View |
