@@ -88,7 +88,7 @@ Total open items: 54. Closure-blocking status is tracked separately in `status.m
 | 2 | S81H-04 | dsfd_sp_collective_static_c | open | area+congestion: vm_boundary 74% empty, SW knot from mismatched W/E bit order; 151 -> ~60 um width | none | helper: align W/E bit order + shrink; gate |
 | 3 | S81H-12 | dsfd_ctrl (leaf dsfd_ctrl_pc) | open | area (low): ctrl_pc fill 0.14 | none | fold into next touch |
 
-## S-VM (6 items; updated S-VM 06:50 10-16)
+## S-VM (6 items; updated S-VM 06:05 10-16)
 
 | sev | id | item | state | expected gain | dependency | suggested helper |
 |---|---|---|---|---|---|---|

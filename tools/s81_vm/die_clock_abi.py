@@ -104,7 +104,7 @@ VIEWS_A2F = {
     'ck_write_data_t': ('s81_a2f_field4 (data: bit 32*slice + 4*field + nibble)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
     'ck_write_meta_t': ('s81_a2f_field4 (metadata: bit 7*slice + nibble; same master as data)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
     'ck_write_control_t': ('s81_a2f_control4_resetlocal (bit = slice)', 'ck_control', 's81_a2f_control4_resetlocal_pilot_2118_r3'),
-    # S-VM 10-16 06:40: routed CLOSED + strict routed native PASS (receipts results/rtl/s81_vm_a2f_leaves_0310,
+    # S-VM 10-16 06:05: routed CLOSED + strict routed native PASS (receipts results/rtl/s81_vm_a2f_leaves_0310,
     # results/physical/s81_vm_native_0300/wfc_routed_native_partial.json, results/physical/s81_xio_native_0253/routed_native.json)
     'ck_rsched_t': ('dsfd_vm_a2f_rsched_p (REL 8, hop-1 release)', 'ck', 'dsfd_vm_a2f_rsched_p_native_0310_r1'),
     'ck_write_header_t': ('s81_a2_w0_header', 'ck', 's81_a2_w0_header_native_0310_r3'),
@@ -137,7 +137,7 @@ for _k in ('ck_rsched_t', 'ck_write_header_t', 'ck_write_payload_t', 'ck_write_f
            'ck_cap_fault_s', 'ck_cap_fault_t', 'ck_wfc_control_t', 'ck_wfc_fault_s', 'ck_wfc_fault_t', 'ck_wfc_fault_x34_s',
            'ck_wfc_fault_x34_t', 'ck_wfc_fault_x43_s', 'ck_wfc_fault_x43_t', 'ck_xio_control_s', 'ck_xio_control_t',
            'ck_xio_fault_s', 'ck_xio_fault_t', 'ck_xio_fault_join_t'):
-    DISPOSITION_A2F[_k] = ('BOUND', 'routed CLOSED, strict routed native PASS (S-VM 10-16 06:40)')
+    DISPOSITION_A2F[_k] = ('BOUND', 'routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)')
 
 
 def insertion_r(kit, pin):
