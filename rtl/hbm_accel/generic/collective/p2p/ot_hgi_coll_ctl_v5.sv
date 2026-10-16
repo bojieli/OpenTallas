@@ -24,28 +24,38 @@ module ot_hgi_coll_iter_mul(
  //   32'(it_l*b + {16'(it_h*b),16'd0}) = 32'(pl0 + {pl1,8'd0} + {ph0,16'd0} + {ph1,24'd0})
  //                         pl0 = it_l*b[7:0] (24b), pl1 = it_l*b[15:8] (24b), ph0 = 16'(it_h*b[7:0]), ph1 = 8'(it_h*b[15:8])
  // The m_* ports keep their names and edges: m_*_l carries the full 32-bit offset, m_*_h is 0 (ctl_v5 adds it, a no-op).
+ // V6c (ctl V6 gate: 16x8 partial stage ~793-817 ps / 22-23 lv, reg->reg -45.6 / -95.7): every product is split into
+ // registered 8x8 byte partials (one 8x8 multiplier per stage-2 flop group), combined in stage 3. Exact V4 truncation:
+ //   off32 = 32'(it_l*b + {16'(it_h*b),16'd0}) = low32(it*b) = 32'(sum_{i<4,j<2,i+j<4} it_i*b_j << 8(i+j))
+ //   16'(it_l*a) = 16'(it_0*a_0 + (it_1*a_0 + it_0*a_1) << 8)
+ //   it_l*k = it_0*k + it_1*k << 8 (24b);   it_h*k = it_2*k + it_3*k << 8 (24b)
  reg [31:0] it;reg [15:0] a,v,b,c,d;reg [7:0] k;
- reg [15:0] pa0,pv0;reg [7:0] pa1,pv1;
- reg [23:0] lk_l,lk_h;
- reg [23:0] pb0,pb1,pc0,pc1,pd0,pd1;reg [15:0] qb0,qc0,qd0;reg [7:0] qb1,qc1,qd1;
+ function automatic [7:0] by(input [31:0] x,input integer i);by=x[i*8+:8];endfunction
+ reg [15:0] pa[0:2],pv[0:2];                 // 00,10,01
+ reg [15:0] pb[0:6],pc[0:6],pd[0:6];         // (i,j): 00,10,20,30,01,11,21
+ reg [15:0] pk[0:3];                         // it_0..3 * k
  always @(posedge clk)begin
   it<=iteration;a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
-  pa0<=16'(it[15:0]*a[7:0]);pa1<=8'(it[15:0]*a[15:8]);
-  pv0<=16'(it[15:0]*v[7:0]);pv1<=8'(it[15:0]*v[15:8]);
-  pb0<=it[15:0]*b[7:0];pb1<=it[15:0]*b[15:8];qb0<=16'(it[31:16]*b[7:0]);qb1<=8'(it[31:16]*b[15:8]);
-  pc0<=it[15:0]*c[7:0];pc1<=it[15:0]*c[15:8];qc0<=16'(it[31:16]*c[7:0]);qc1<=8'(it[31:16]*c[15:8]);
-  pd0<=it[15:0]*d[7:0];pd1<=it[15:0]*d[15:8];qd0<=16'(it[31:16]*d[7:0]);qd1<=8'(it[31:16]*d[15:8]);
-  lk_l<=it[15:0]*k;lk_h<=it[31:16]*k;
+  pa[0]<=by(it,0)*by(a,0);pa[1]<=by(it,1)*by(a,0);pa[2]<=by(it,0)*by(a,1);
+  pv[0]<=by(it,0)*by(v,0);pv[1]<=by(it,1)*by(v,0);pv[2]<=by(it,0)*by(v,1);
+  for(integer i=0;i<4;i=i+1)begin
+   pb[i]<=by(it,i)*by(b,0);pc[i]<=by(it,i)*by(c,0);pd[i]<=by(it,i)*by(d,0);pk[i]<=by(it,i)*k;
+  end
+  for(integer i=0;i<3;i=i+1)begin
+   pb[4+i]<=by(it,i)*by(b,1);pc[4+i]<=by(it,i)*by(c,1);pd[4+i]<=by(it,i)*by(d,1);
+  end
  end
- // V6 (+1 issue edge, H-ELEM 14:20): the combine is its own registered stage (V5b gate: 16x8 stage ~845 ps,
- // combine + field add -322 ps), so products land at E+3 with the pin-captured d2 instruction.
+ function automatic [31:0] off(input [15:0] p0,p1,p2,p3,q0,q1,q2);
+  off=32'({16'd0,p0}+{8'd0,p1,8'd0}+{p2,16'd0}+{p3[7:0],24'd0}+{8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});
+ endfunction
  always @(posedge clk)begin
-  m_idx<=16'(pa0+{pa1,8'd0});m_vm<=16'(pv0+{pv1,8'd0});
-  m_iaddr_l<=32'({8'd0,pb0}+{pb1,8'd0}+{qb0,16'd0}+{qb1,24'd0});
-  m_del_l<=32'({8'd0,pc0}+{pc1,8'd0}+{qc0,16'd0}+{qc1,24'd0});
-  m_rgx_l<=32'({8'd0,pd0}+{pd1,8'd0}+{qd0,16'd0}+{qd1,24'd0});
+  m_idx<=16'(pa[0]+{pa[1][7:0],8'd0}+{pa[2][7:0],8'd0});
+  m_vm<=16'(pv[0]+{pv[1][7:0],8'd0}+{pv[2][7:0],8'd0});
+  m_iaddr_l<=off(pb[0],pb[1],pb[2],pb[3],pb[4],pb[5],pb[6]);
+  m_del_l<=off(pc[0],pc[1],pc[2],pc[3],pc[4],pc[5],pc[6]);
+  m_rgx_l<=off(pd[0],pd[1],pd[2],pd[3],pd[4],pd[5],pd[6]);
   m_iaddr_h<=16'd0;m_del_h<=16'd0;m_rgx_h<=16'd0;
-  m_lk_l<=lk_l;m_lk_h<=lk_h;
+  m_lk_l<=24'({8'd0,pk[0]}+{pk[1],8'd0});m_lk_h<=24'({8'd0,pk[2]}+{pk[3],8'd0});
  end
 endmodule
 
