@@ -19,6 +19,13 @@ class LiteralPinPlan(unittest.TestCase):
         self.assertEqual(6,len(self.valid()))
         p=PortMap({'clk':(1,False),'d':(4,True),'one':(1,True)},{'d':[4,7],'one':[0,0]})
         self.assertEqual(6,len(self.valid(ports=p)))
+    def test_synthesized_symbolic_width_requires_evaluated_bounds(self):
+        p=PortMap({'clk':(1,False),'d':(None,True),'one':(1,True)}, {'d':[4,7],'one':[0,0]})
+        self.assertEqual(6,len(self.valid(ports=p)))
+        for bounds in [{}, {'d':None}, {'d':[7,4]}, {'d':['4',7]}]:
+            with self.subTest(bounds=bounds),self.assertRaises(RT.SpecError):
+                self.valid(ports=PortMap(dict(p),bounds))
+
     def test_scalar_zero_alias_and_range_stay_forbidden(self):
         for n in ['one[0]','d[7:4]','d[3]','d[8]']:
             s=copy.deepcopy(self.s);s['pins']['S'][1]=n
