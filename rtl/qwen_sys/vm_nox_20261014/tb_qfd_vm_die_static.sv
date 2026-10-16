@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_die_static;
-parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0;
+parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,NATIVE_BANKS=0;
 integer COMMIT_MUT=0;
 initial void'($value$plusargs("COMMIT_MUT=%d",COMMIT_MUT));
 integer epoch=0;
@@ -38,7 +38,7 @@ reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,cycles=0,start_cycle=0,requests=0,responses=0,req_start=0;
 
-qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) dut(
+qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS)) dut(
 .ck(clk),.rst_n(rst_n),
 .ck_r0_0(clk),
 .ck_r0_1(clk),
