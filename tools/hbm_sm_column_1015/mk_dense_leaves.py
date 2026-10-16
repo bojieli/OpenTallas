@@ -39,6 +39,9 @@ def main(names):
                                     f"({note}) so the 1036.8-um SM column shrinks; the closed view stays as the fallback")
         s["reroute_reason"] = {"kind": "slot_change", "slot_change_request": s["slot_change_request"]}
         j = s.setdefault("job", {})
+        if not s.get("benches") and not j.get("benches"):
+            j["hold_merge"] = ("density trial for the v8 SM column: same RTL as the closed master (benched in the SM tile "
+                               "lockstep); adopt only after review against the closed view, never auto-merge")
         j.update({"owner": "Claude H-SM", "branch": "claude/hbm-sm-repack-1015", "tag": "d62",
                   "structural_change": (f"[H-SM v8 SM column, OWNER 22:30] density re-harden of {src} "
                                         f"({old['w']} x {old['h']}, synth util {util}) at ~62 % fill: {note}; pd 0.60. "

@@ -302,6 +302,9 @@
     "peak_ram_gb": 72,
     "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
    }
+  ],
+  "extra_paths": [
+   "physical/common_flow/anchor_row_packing.tcl"
   ]
  },
  "macros": [],

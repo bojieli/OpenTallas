@@ -8,7 +8,10 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/hbm-sm-repack-1015",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/common_flow/anchor_row_packing.tcl"
+  ]
  },
  "stages": {
   "bench": [
