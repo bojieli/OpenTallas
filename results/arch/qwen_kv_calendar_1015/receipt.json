@@ -1,5 +1,5 @@
 {
- "schema": "qwen-kv-calendar-36-v1",
+ "schema": "qwen-kv-calendar-36-v2",
  "date": "2026-10-15",
  "owner": "Q-VMWB",
  "tool": "tools/qwen_static_schedule/kv_calendar.py",
@@ -19,9 +19,16 @@
  "assumed": {
   "ring_cdc_core_edges": "3 (2-flop publication sync + capture; to be pinned from qkd_static_kv_return_slots phase)",
   "layer_period_core": "6639 (results/rtl/qwen_layer_tput_1013 production_layer.composed)",
-  "refresh": "0 edges/layer: OPEN input (controller refresh calendar)"
+  "refresh": "as implemented: REFpb every 118 HBM edges per PC, compiled at all 118 layer-start phases; REF_MODE 1 never blocks a column command (ot_hbm_r14_stream_pc_srow rd_block=0; REFpb on the row slot; tRREFD 8 ACT gap vs ACT-ahead one set = 128 sectors) -> RD loss 0. Upper bound (1 + tRREFD = 9 RD edges per REFpb) = sensitivity."
  },
- "cases": {
+ "findings": [
+  "current front (NBLK 4 x BLK 8; block credit covers in-flight) streams K at ~0.45 sector/HBM edge while the static QK pass consumes 1 sector/core edge/PC (1.23x the HBM rate): at T=8192 the return ring would need 160 sectors vs DEPTH 8 -> hold faults; the writer r4 / return r2 holds can NOT be released on the current sizes",
+  "sized boundary (front NBLK 12, return ring DEPTH 64) closes all contexts: ring peak 48 at T=8192 (= 256 x (1 - 833.3/1024) frequency prefill), K fetch 315 core edges, QK starts 111 core edges after the PC prefetch start; the prefetch is issued before the attention request in the static schedule -> 0 added cycles",
+  "the token own K row (t = T-1) is the LAST K read of its PC: its HBM write must commit before that RD (~200 core edges after QK start)",
+  "per-PC HBM busy 514 of 5402 HBM edges per layer at T=8192: bandwidth is not the limit; refresh calendar and V per-PC order are open inputs"
+ ],
+ "revision": "r2 2026-10-15 22:45 PT: controller refresh as implemented (Q-KVSYS-DIE hbm_refresh_calendar.json) + KV-die resized boundary (kv_buffer_resize.json, main e28e2be4d)",
+ "cases_r1_zero_refresh": {
   "current_front4_ring8": {
    "1": {
     "feasible": true,
@@ -183,10 +190,435 @@
    }
   }
  },
- "findings": [
-  "current front (NBLK 4 x BLK 8; block credit covers in-flight) streams K at ~0.45 sector/HBM edge while the static QK pass consumes 1 sector/core edge/PC (1.23x the HBM rate): at T=8192 the return ring would need 160 sectors vs DEPTH 8 -> hold faults; the writer r4 / return r2 holds can NOT be released on the current sizes",
-  "sized boundary (front NBLK 12, return ring DEPTH 64) closes all contexts: ring peak 48 at T=8192 (= 256 x (1 - 833.3/1024) frequency prefill), K fetch 315 core edges, QK starts 111 core edges after the PC prefetch start; the prefetch is issued before the attention request in the static schedule -> 0 added cycles",
-  "the token own K row (t = T-1) is the LAST K read of its PC: its HBM write must commit before that RD (~200 core edges after QK start)",
-  "per-PC HBM busy 514 of 5402 HBM edges per layer at T=8192: bandwidth is not the limit; refresh calendar and V per-PC order are open inputs"
- ]
+ "cases": {
+  "resized_n10_d64_refresh_as_implemented": {
+   "1": {
+    "feasible": true,
+    "qk_start_after_prefetch": 44,
+    "ring_peak": 1,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 2,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 4,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     0
+    ]
+   },
+   "128": {
+    "feasible": true,
+    "qk_start_after_prefetch": 56,
+    "ring_peak": 3,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 20,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 34,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     15
+    ]
+   },
+   "1000": {
+    "feasible": true,
+    "qk_start_after_prefetch": 60,
+    "ring_peak": 7,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 40,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 66,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     28
+    ]
+   },
+   "2048": {
+    "feasible": true,
+    "qk_start_after_prefetch": 67,
+    "ring_peak": 12,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 79,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 130,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     63
+    ]
+   },
+   "4096": {
+    "feasible": true,
+    "qk_start_after_prefetch": 82,
+    "ring_peak": 24,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 158,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 258,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     127
+    ]
+   },
+   "6144": {
+    "feasible": true,
+    "qk_start_after_prefetch": 75,
+    "ring_peak": 27,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 236,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 386,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     191
+    ]
+   },
+   "8192": {
+    "feasible": true,
+    "qk_start_after_prefetch": 111,
+    "ring_peak": 48,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 315,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 514,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     255
+    ]
+   }
+  },
+  "resized_n10_d64_refresh_upper_bound": {
+   "1": {
+    "feasible": true,
+    "qk_start_after_prefetch": 56,
+    "ring_peak": 1,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 13,
+    "credit_rate": 0.1,
+    "pc_busy_hbm": 427,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     0
+    ]
+   },
+   "128": {
+    "feasible": true,
+    "qk_start_after_prefetch": 68,
+    "ring_peak": 8,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 31,
+    "credit_rate": 0.64,
+    "pc_busy_hbm": 457,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     15
+    ]
+   },
+   "1000": {
+    "feasible": true,
+    "qk_start_after_prefetch": 71,
+    "ring_peak": 16,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 51,
+    "credit_rate": 0.7805,
+    "pc_busy_hbm": 489,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     28
+    ]
+   },
+   "2048": {
+    "feasible": true,
+    "qk_start_after_prefetch": 79,
+    "ring_peak": 22,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 90,
+    "credit_rate": 0.8767,
+    "pc_busy_hbm": 553,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     63
+    ]
+   },
+   "4096": {
+    "feasible": true,
+    "qk_start_after_prefetch": 104,
+    "ring_peak": 34,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 180,
+    "credit_rate": 0.8767,
+    "pc_busy_hbm": 690,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     127
+    ]
+   },
+   "6144": {
+    "feasible": true,
+    "qk_start_after_prefetch": 87,
+    "ring_peak": 29,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 259,
+    "credit_rate": 0.9143,
+    "pc_busy_hbm": 818,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     191
+    ]
+   },
+   "8192": {
+    "feasible": false,
+    "qk_start_after_prefetch": 145,
+    "ring_peak": 67,
+    "ring_depth": 64,
+    "front_nblk": 10,
+    "k_rd_core": 348,
+    "credit_rate": 0.9046,
+    "pc_busy_hbm": 955,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     255
+    ]
+   }
+  },
+  "resized_n10_d128_refresh_upper_bound": {
+   "1": {
+    "feasible": true,
+    "qk_start_after_prefetch": 56,
+    "ring_peak": 1,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 13,
+    "credit_rate": 0.1,
+    "pc_busy_hbm": 427,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     0
+    ]
+   },
+   "128": {
+    "feasible": true,
+    "qk_start_after_prefetch": 68,
+    "ring_peak": 8,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 31,
+    "credit_rate": 0.64,
+    "pc_busy_hbm": 457,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     15
+    ]
+   },
+   "1000": {
+    "feasible": true,
+    "qk_start_after_prefetch": 71,
+    "ring_peak": 16,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 51,
+    "credit_rate": 0.7805,
+    "pc_busy_hbm": 489,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     28
+    ]
+   },
+   "2048": {
+    "feasible": true,
+    "qk_start_after_prefetch": 79,
+    "ring_peak": 22,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 90,
+    "credit_rate": 0.8767,
+    "pc_busy_hbm": 553,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     63
+    ]
+   },
+   "4096": {
+    "feasible": true,
+    "qk_start_after_prefetch": 104,
+    "ring_peak": 34,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 180,
+    "credit_rate": 0.8767,
+    "pc_busy_hbm": 690,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     127
+    ]
+   },
+   "6144": {
+    "feasible": true,
+    "qk_start_after_prefetch": 87,
+    "ring_peak": 29,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 259,
+    "credit_rate": 0.9143,
+    "pc_busy_hbm": 818,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     191
+    ]
+   },
+   "8192": {
+    "feasible": true,
+    "qk_start_after_prefetch": 145,
+    "ring_peak": 67,
+    "ring_depth": 128,
+    "front_nblk": 10,
+    "k_rd_core": 348,
+    "credit_rate": 0.9046,
+    "pc_busy_hbm": 955,
+    "refresh_edges": 414,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     255
+    ]
+   }
+  },
+  "old_n4_d8_refresh_as_implemented": {
+   "1": {
+    "feasible": true,
+    "qk_start_after_prefetch": 44,
+    "ring_peak": 1,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 2,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 4,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     0
+    ]
+   },
+   "128": {
+    "feasible": true,
+    "qk_start_after_prefetch": 56,
+    "ring_peak": 3,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 20,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 34,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     15
+    ]
+   },
+   "1000": {
+    "feasible": true,
+    "qk_start_after_prefetch": 60,
+    "ring_peak": 7,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 40,
+    "credit_rate": 1.0,
+    "pc_busy_hbm": 66,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     28
+    ]
+   },
+   "2048": {
+    "feasible": false,
+    "qk_start_after_prefetch": 122,
+    "ring_peak": 32,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 133,
+    "credit_rate": 0.5926,
+    "pc_busy_hbm": 174,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     63
+    ]
+   },
+   "4096": {
+    "feasible": false,
+    "qk_start_after_prefetch": 244,
+    "ring_peak": 68,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 320,
+    "credit_rate": 0.4923,
+    "pc_busy_hbm": 390,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     127
+    ]
+   },
+   "6144": {
+    "feasible": false,
+    "qk_start_after_prefetch": 335,
+    "ring_peak": 98,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 507,
+    "credit_rate": 0.466,
+    "pc_busy_hbm": 606,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     191
+    ]
+   },
+   "8192": {
+    "feasible": false,
+    "qk_start_after_prefetch": 490,
+    "ring_peak": 160,
+    "ring_depth": 8,
+    "front_nblk": 4,
+    "k_rd_core": 694,
+    "credit_rate": 0.4539,
+    "pc_busy_hbm": 822,
+    "refresh_edges": 0,
+    "period_hbm": 5402,
+    "own_row_scan": [
+     255
+    ]
+   }
+  }
+ },
+ "verdict": "KV-die resized boundary (front NBLK 10 x 8, ring DEPTH 64) is FEASIBLE for all 36 layers at T = 1..8192 with the controller refresh as implemented: QK start 111 core edges after the PC prefetch at T=8192 (unchanged), ring peak 48 <= 64. Under the refresh upper bound T=8192 needs ring 67 > 64 (DEPTH 128) and QK start +34 edges -- only if a controller bench shows RD stalls from tRREFD. Old sizes (4 x 8, 8) infeasible from T=2048."
 }
