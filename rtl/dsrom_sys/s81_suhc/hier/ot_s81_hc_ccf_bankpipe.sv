@@ -121,22 +121,37 @@ module ot_s81_hc_ccf_bankpipe_capture #(parameter FVW=7,FSW=1128,YS=2560,DEPTH=3
   end
 endmodule
 
+// HC-COMB-3 2026-10-16: the 512-bit bank is two hardened half leaves (one master x2, x10 per CCF).  The single
+// ot_sram_1r1w_64x512 (171.3 x 77.8 um, every pin on its W/E faces) turned ~1,300 N->S bits through 20-25 um side
+// channels (bank128 GRT overflow 49,847; v1 TT -34.99 on the same detour).  Each half keeps the identical pipeline
+// (pin keep flops, d0/d1, FWFT FIFO, registered head/status) on one ot_sram_1r1w_128x256 (94.8 x 41.1 um): same
+// push/pop, same cycle, bit-exact.  Both halves see the same push/pop, so their status is identical; the bank's
+// hv/ovf come from half 0 (half 1's status outputs are its own registered copies, unused at this wrapper).
 module ot_s81_hc_ccf_bankpipe_bank #(parameter DEPTH=32)(
  input wire clk,srs,pop_i,push_i,input wire[511:0]data_i,
- output reg[511:0]head_o,output reg hv_o,ovf_o);
+ output wire[511:0]head_o,output wire hv_o,ovf_o);
+ wire hv1,ovf1;
+ ot_s81_hc_ccf_bankpipe_bank256 #(.DEPTH(DEPTH)) u_h0(.clk(clk),.srs(srs),.pop_i(pop_i),.push_i(push_i),
+  .data_i(data_i[255:0]),.head_o(head_o[255:0]),.hv_o(hv_o),.ovf_o(ovf_o));
+ ot_s81_hc_ccf_bankpipe_bank256 #(.DEPTH(DEPTH)) u_h1(.clk(clk),.srs(srs),.pop_i(pop_i),.push_i(push_i),
+  .data_i(data_i[511:256]),.head_o(head_o[511:256]),.hv_o(hv1),.ovf_o(ovf1));
+endmodule
+
+module ot_s81_hc_ccf_bankpipe_bank256 #(parameter DEPTH=32)(
+ input wire clk,srs,pop_i,push_i,input wire[255:0]data_i,
+ output reg[255:0]head_o,output reg hv_o,ovf_o);
  reg[1:0]rsr;always @(posedge clk)rsr<={rsr[0],srs};
  wire rs_n=rsr[1];
  wire pop_q,push_q,push_r;
  ot_s81_hc_ccf_bankpipe_keep_ff u_pop(.clk(clk),.rst_n(rs_n),.d(pop_i),.q(pop_q));
  ot_s81_hc_ccf_bankpipe_keep_ff u_push(.clk(clk),.rst_n(rs_n),.d(push_i),.q(push_q));
  ot_s81_hc_ccf_bankpipe_keep_ff u_push_r(.clk(clk),.rst_n(rs_n),.d(push_q),.q(push_r));
- reg[511:0]d0,d1;
+ reg[255:0]d0,d1;
  always @(posedge clk)begin d0<=data_i;d1<=d0;end
- wire[511:0]head;wire hv,ovf;
- ot_fifo_sram_fwft #(.W(512),.DEPTH(DEPTH),.MACRO(0),.ESL(256)) u_fifo(
+ wire[255:0]head;wire hv,ovf;
+ ot_fifo_sram_fwft #(.W(256),.DEPTH(DEPTH),.MACRO(2),.ESL(128)) u_fifo(
   .clk(clk),.rst_n(rs_n),.push(push_r),.wdata(d1),.pop(pop_q),.hv(hv),.head(head),.ovf(ovf));
  // Real bank boundary registers, including status. No raw SRAM/mux ETM substitution.
- // These preserve the old stream one extra edge even across reset transitions.
  always @(posedge clk)begin head_o<=head;hv_o<=hv;ovf_o<=ovf;end
 endmodule
 

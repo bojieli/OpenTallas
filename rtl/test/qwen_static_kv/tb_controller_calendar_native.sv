@@ -59,7 +59,7 @@ module tb_controller_calendar_native;
  if(oe!=epoch_in||{co[11:9],co[7:1]}!=10'(sec)||co[281:26]!==payload(sec,64+integer'(layer)))$fatal(1,"FAIL native calendar actual data index%0d",landed);
  landed++;frame_landed++;
  end
- if(fault||cf||calfault)begin $display("DETAIL schedule%0b cmd%0b early%0b raw%0b legalrd%0b j%0d go%0b open%h done%h",dut.u_ctl.core.on.fault_schedule,dut.f_cmd,dut.f_early,dut.f_raw,dut.u_ctl.core.on.legal_rd,dut.u_ctl.core.on.j,dut.u_ctl.core.go,dut.u_ctl.core.on.open,dut.u_ctl.core.on.done);$fatal(1,"FAIL native calendar fault edge%0d fo%0b cf%0b cal%0b",edge_num,fault,cf,calfault);end
+ if(fault||cf||calfault)begin $display("DETAIL schedule%0b cmd%0b early%0b raw%0b legalrd%0b j%0d go%0b open%h done%h",dut.u_core.u_ctl.core.on.fault_schedule,dut.u_core.f_cmd,dut.u_core.f_early,dut.u_core.f_raw,dut.u_core.u_ctl.core.on.legal_rd,dut.u_core.u_ctl.core.on.j,dut.u_core.u_ctl.core.go,dut.u_core.u_ctl.core.on.open,dut.u_core.u_ctl.core.on.done);$fatal(1,"FAIL native calendar fault edge%0d fo%0b cf%0b cal%0b",edge_num,fault,cf,calfault);end
  end
  end
  always @(negedge ck)pi=due[edge_num+1];

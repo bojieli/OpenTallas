@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_band_upper_b2_l2",
+ "enable": false,
+ "reason": "Source has native input pw/pw_v/lf and selector DLY1 stations, registered tt_ty/use/v/fault outputs and RPIN1 reset entry. Preserve exact composition-proven pipeline, no second generated input/output stages. Actual physical pin station packing is pending this gate."
+}
