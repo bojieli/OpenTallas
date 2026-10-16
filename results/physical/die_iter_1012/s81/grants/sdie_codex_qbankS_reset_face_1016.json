@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "by": "Codex S-DIE under coordinator delegation",
+ "decision": "CONDITIONAL GRANT registered-reset/S-face clock candidate within requested hard-tile outline. Requires actual CTS/physical/native gates and all field-frame incident proofs before integrated adoption.",
+ "master": "dsfd_qbank_S",
+ "source_commit": "f747219c1",
+ "pin_tcl": "physical/s81_die_pins/qbank_s_reset_1016/dsfd_qbank_S.tcl",
+ "pin_tcl_sha256": "4cf715451f2f0b31c8d6fb79991f291fddac8bcd9310f1727081ada1c77dc338",
+ "outline_um": [
+  60.48,
+  25.92
+ ],
+ "actual_ABI": {
+  "i_cfg": 54,
+  "i_go": 1,
+  "i_x0": 283,
+  "i_x1": 266,
+  "o_cfg": 54,
+  "o_go": 1,
+  "o_x0": 283,
+  "o_x1": 266,
+  "each_data_direction_bits": 604
+ },
+ "new_clock_reset": {
+  "ck": {
+   "face": "S",
+   "layer": "M5",
+   "at_um": [
+    30.252,
+    0
+   ]
+  },
+  "rs": {
+   "face": "S",
+   "layer": "M3",
+   "at_um": [
+    30.348,
+    0
+   ]
+  }
+ },
+ "reported_geometry": {
+  "positions_unique": 1210,
+  "minimum_same_layer_spacing_um": 0.096,
+  "cut_N": 0.516,
+  "cut_S": 0.518,
+  "N_output_coordinates_unchanged": true,
+  "S_input_bit_order_unchanged": true
+ },
+ "source_semantics": {
+  "opt_in": "--qbank-s-rstreg",
+  "reset_release_added_edges": 1,
+  "normal_data_pipeline_edges": 1,
+  "default_generator_unchanged": true,
+  "bench": "4000 production-width words PASS; payload/noreset/resetbypass mutants FAIL"
+ },
+ "measured_reason": "Actual old native source reports only reset capture215.3ps failing; launch178.3ps passes. Register reset at face and center clock/root to address local boundary timing. Old historical visual303/222ps values do not justify new claims.",
+ "integration_requirements": [
+  "Current c26b immutable source unchanged and generator BANK_H6.48 currently yields6.456um frame, not25.92um hard height.",
+  "Future hard bank placement must grow DOWN to preserve N-face absolute output/element pin coincidence.",
+  "Source-current final GEN must prove all1898 field frames, cfg7 placement, q-element/qbank mirrored-pair chirality and both input/output incident paths.",
+  "No automatic bit-alignment/parent qualification from component bench or candidate footprint.",
+  "No gate/clock/TT/FF/DRC/price waiver."
+ ]
+}
