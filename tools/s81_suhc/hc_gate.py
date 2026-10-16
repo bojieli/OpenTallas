@@ -436,7 +436,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
 
 
 def cmd_run(a):
-    out = Path(a.out)
+    out = Path(a.out).resolve()
     exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize, a.xmut)
     res = []
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
