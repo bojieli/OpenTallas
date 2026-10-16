@@ -1,0 +1,50 @@
+{
+  "status": "PASS_ISOLATED_A2_CONTROLLER_UNIT_ONLY_NOT_FULL32_OR_PHYSICAL",
+  "source_sha256": {
+    "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+    "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+    "tools/s81_vm/area_a2_controlled_gate.py": "cd0f5ffda86440b99b9d8ef9ae4607f9c47bcb2a51dfa062a089cb3b73397b45"
+  },
+  "bench_sha256": "4933153fce56d5e3ad5661aec7468ad46cb0cad2b1eabec0da9dfaf76d609c61",
+  "scope": "actual controller+one actual native W0header+one actual native W16 stripe; four payload epochs tied to header only in unit bench",
+  "prefix_source": "NP64 sat3 and p_lane block copied from git3f077f3a1 with plain-pin arm qualification added dsfd_vm_static_wcontrol.sv",
+  "records": [
+    {
+      "variant": "gold",
+      "returncode": 0,
+      "stdout": "PASS A2 controller source0/5/52 prefix IDsP2 drainsP4/P5/P6 native_reset phase overflow\n",
+      "exact_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "variant": "wrong_id",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-a60zyu8x/unit.sv:31: UNIT_ID_PREFIX\n       Time: 196000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "variant": "drain_phase",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-a60zyu8x/unit.sv:35: UNIT_UNEXPECTED_FAULT edge4\n       Time: 216000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "variant": "held_reset",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-a60zyu8x/unit.sv:20: UNIT_HELD_RESET\n       Time: 66000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "variant": "epoch",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-a60zyu8x/unit.sv:24: UNIT_EPOCH_PHASE\n       Time: 166000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    }
+  ]
+}
