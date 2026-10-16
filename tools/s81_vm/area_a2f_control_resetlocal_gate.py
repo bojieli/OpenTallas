@@ -8,32 +8,40 @@ BENCH=r'''`timescale 1ns/1ps
 module tb;
 reg ck=0;always #5 ck=~ck;
 reg rn=0;reg [52:0] v=0;reg [423:0] bank=0;reg[2:0] he=0;reg[11:0] pe=0;
+reg ep_rst=0;reg[1:0] ep_rr=0;reg[2:0] epoch=0;
+always @(posedge ck)begin ep_rst<=rn;if(!ep_rst)ep_rr<=0;else ep_rr<={ep_rr[0],1'b1};if(!ep_rr[1])epoch<=0;else epoch<=epoch+3'd1;end
 wire[671:0] ai,bi;wire[31:0] av,bv;wire[63:0] as_,bs;wire[3:0] af,bf;
 s81_a2f_control4 a(ck,rn,v,bank,he,pe,ai,av,as_,af);
 s81_a2f_control4_resetlocal b(ck,rn,v,bank,he,pe,bi,bv,bs,bf);
-integer n,s,seed=1,initseed,edges=0,bursts=0,resetedges=0;
+`ifdef S81_A2C_MUT_DROP_LANEBAD
+initial force b.u_impl.lane_bad=1'b0;
+`endif
+integer n,s,seed=1,initseed,edges=0,bursts=0,resetedges=0,cleanfaultedges=0,faultedges=0;
 initial begin
  if($value$plusargs("seed=%d",seed))begin end initseed=seed;
  repeat(8)@(negedge ck);
  for(n=0;n<1500;n=n+1)begin
   rn=!(n<5 || n==100 || (n>=200&&n<202) || (n>=300&&n<303) || (n>=400&&n<407) || n==800);
   if(!rn)resetedges=resetedges+1;
-  v={$random(seed),$random(seed)};he=$random(seed);pe={$random(seed)};
+  v={$random(seed),$random(seed)};he=epoch;pe={4{epoch}};
+  if(n<60)begin v=0;v[n%53]=rn;end
   for(s=0;s<53;s=s+1)begin
-   if(n%7==0)bank[8*s+:8]=0;else bank[8*s+:8]=$random(seed);
+   if(n<60)bank[8*s+:8]=n%32;else if(n%7==0)bank[8*s+:8]=0;else bank[8*s+:8]=$random(seed);
   end
-  if(n%7==0)bursts=bursts+1;
+  if(n>=60 && n%7==0)bursts=bursts+1;
   @(posedge ck);#1;
   if({ai,av,as_,af}!=={bi,bv,bs,bf})$fatal(1,"CONTROL_MISMATCH edge%0d ids%b valid%b slot%b fault%b",n,ai!==bi,av!==bv,as_!==bs,af!==bf);
+  if(n>=10 && n<60)begin if(af!==0)$fatal(1,"CLEAN_PHASE_FAULT edge%0d %h",n,af);cleanfaultedges=cleanfaultedges+1;end
+  if(af!==0)faultedges=faultedges+1;
   edges=edges+1;@(negedge ck);
  end
- $display("CONTROL_EQUIV PASS seed%0d edges%0d bursts%0d resetedges%0d",initseed,edges,bursts,resetedges);$finish;
+ $display("CONTROL_EQUIV PASS seed%0d edges%0d bursts%0d resetedges%0d cleanfaultedges%0d faultedges%0d",initseed,edges,bursts,resetedges,cleanfaultedges,faultedges);$finish;
 end
 endmodule
 '''
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--bench',default=None);ap.add_argument('--out',default=str(ROOT/'results/arch/s81_vm_split4_2118/control_proof.json'));a=ap.parse_args()
- variants=[a.bench] if a.bench else ['gold','S81_A2C_MUT_IDBIT']
+ variants=[a.bench] if a.bench else ['gold','S81_A2C_MUT_IDBIT','S81_A2C_MUT_DROP_LANEBAD']
  rec=[]
  with tempfile.TemporaryDirectory(prefix='s81-control-resetlocal-') as d:
   p=Path(d);(p/'tb.sv').write_text(BENCH)

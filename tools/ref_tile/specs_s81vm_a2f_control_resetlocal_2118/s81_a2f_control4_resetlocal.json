@@ -69,7 +69,7 @@
  "hold_pad": {
   "cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "s81_a2f_control4_resetlocal: actual control4 TT-109ps rn_pin_d deep prefix path removed by late reset qualification; ID priority mux replaced with reachable-state onehot OR. Full53/4quarters/3slots unchanged; zero added cycles. Native launch/capture budgets tightened, no firm output hold chain.",
+ "structural_change": "s81_a2f_control4_resetlocal: actual control4 TT-109ps reset qualification moved after prefix; binary carry prefix replaced by monotone threshold merge to remove remaining CTS-2.9ps data->overflow path; ID priority mux replaced with onehot OR. Full53/4quarters/3slots unchanged; zero added cycles. Native launch/capture budgets tightened, no firm output hold chain.",
  "slot_change_request": {
   "contract": "S81 VM A2-F front geometry candidate",
   "version": "a2f-1015",

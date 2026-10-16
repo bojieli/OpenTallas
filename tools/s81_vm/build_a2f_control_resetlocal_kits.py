@@ -88,7 +88,7 @@ def build(key):
         pin_regs=dict(enable=False, reason="Every data input already feeds dedicated unconditional pin registers (raw_src_v/s_bank/header_pin/payload_pin); every ids/dr_v/dr_s/fault output leaves dedicated registers. Preserve those existing stages with keep_pin_regs/pin_reg_split/io_flop_at_pins; adding generic wrapper registers would duplicate them and silently change the static schedule. Native gate must audit actual boundary placement."),
         io_flop_at_pins=dict(cols=4, allow_none=True), inhold=True, outhold=False, keep_pin_regs=True, pin_reg_split=True,
         hold_pad=dict(cell='HB1xp67_ASAP7_75t_R'),
-        structural_change=(f'{c["top"]}: actual control4 TT-109ps rn_pin_d deep prefix path removed by late reset qualification; ID priority mux replaced with reachable-state onehot OR. '
+        structural_change=(f'{c["top"]}: actual control4 TT-109ps reset qualification moved after prefix; binary carry prefix replaced by monotone threshold merge to remove remaining CTS-2.9ps data->overflow path; ID priority mux replaced with onehot OR. '
                            'Full53/4quarters/3slots unchanged; zero added cycles. Native launch/capture budgets tightened, no firm output hold chain.'),
         slot_change_request=dict(contract='S81 VM A2-F front geometry candidate', version='a2f-1015',
                                  why='new hardened leaf; VM parent plan a2f_route_plan.py'),

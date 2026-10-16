@@ -27,8 +27,13 @@ module s81_a2f_control_resetlocal #(parameter integer NSRC=53)(
    (payload_pin[2:0]!=own_epoch_q) || (payload_pin[5:3]!=own_epoch_q) ||
    (payload_pin[8:6]!=own_epoch_q) || (payload_pin[11:9]!=own_epoch_q);
  reg [2*NSRC-1:0] lane;reg [NSRC-1:0] lv;
- function automatic [1:0] sat3(input [1:0] a, input [1:0] b);
-  reg [2:0] t; begin t = a + b; sat3 = t[2] ? 2'd3 : t[1:0]; end
+ // Monotone threshold code: bit0=count>=1, bit1=count>=2, bit2=count>=3.
+ // A balanced merge uses Boolean thresholds instead of six levels of binary add/carry/saturation.
+ function automatic [2:0] threshold3(input [2:0] a, input [2:0] b);
+  begin threshold3[0]=a[0]|b[0];
+   threshold3[1]=a[1]|b[1]|(a[0]&b[0]);
+   threshold3[2]=a[2]|b[2]|(a[1]&b[0])|(a[0]&b[1]);
+  end
  endfunction
  localparam integer NP = 64;
  reg rn_pin_d;
@@ -38,20 +43,20 @@ module s81_a2f_control_resetlocal #(parameter integer NSRC=53)(
   raw_src_v <= src_v; rn_pin_d <= rn;
  end
  reg [NSRC-1:0] lane_v_d; reg [2*NSRC-1:0] lane_d; reg lane_bad_d;
- always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [1:0] t [0:NP-1]; reg [1:0] n;
+ always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [2:0] t [0:NP-1]; reg [1:0] n;
   lane_bad_d = 1'b0;
   for (c = 0; c < NSRC; c = c + 1) begin
    bc = s_bank[8*c +: 5] ^ {s_bank[8*c+5 +: 3], 2'b00};
    for (d = 0; d < NP; d = d + 1) begin
-    t[d] = 2'd0;
+    t[d] = 3'd0;
     if (d < c) begin
      bd = s_bank[8*d +: 5] ^ {s_bank[8*d+5 +: 3], 2'b00};
-     t[d] = {1'b0, s_v[d] && bd == bc};
+     t[d] = {2'b00, s_v[d] && bd == bc};
     end
    end
    for (w = NP / 2; w >= 1; w = w / 2)
-    for (k = 0; k < w; k = k + 1) t[k] = sat3(t[2*k], t[2*k+1]);
-   n = t[0];
+    for (k = 0; k < w; k = k + 1) t[k] = threshold3(t[2*k], t[2*k+1]);
+   n = t[0][2] ? 2'd3 : t[0][1] ? 2'd2 : t[0][0] ? 2'd1 : 2'd0;
    lane_d[2*c +: 2] = n;
    lane_v_d[c] = rn_pin_d && s_v[c] && n != 2'd3;
    if (s_v[c] && n == 2'd3) lane_bad_d = 1'b1;
