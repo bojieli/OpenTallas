@@ -202,22 +202,28 @@ def build():
         L.add('clk', 'N', CW / 2)
         L.pack()
         rets.append(L)
-    # slices: E (columns 0/1) and W (2/3); own pins under the ret leaf's own outputs, partner toward the partner
+    # slices: E (columns 0/1) and W (2/3).  10-16 (a2 GRT-0116 on both slices: every bit was packed into ~50 um
+    # windows at the face ends, ~10.5 pins/um, M2 85% / M3 71%): straight-through register columns instead -- bit i's
+    # S input and N output share one x (no bit crosses the 144-um slice horizontally inside the 26-um strip, which
+    # is what saturated M2/M4), each flop sits between its own two pins; the horizontal offset moves to the parent legs.
     slices = {}
     for kind, part_e in (('e', True), ('w', False)):
         S = Leaf(f'ot_s81_hc_ctrn_col_{kind}', CW, SL_H)
-        ref = rets[0 if part_e else 2]
-        for port, src in (('rv_c', 'rvm'), ('hdr_c', 'hdr'), ('a_own', 'a_rdm'), ('b_own', 'b_rdm')):
-            for b in range(len(ref.p[src])):
-                S.add(port, 'S', ref.p[src][b][2])
-        for port in ('a_par', 'b_par'):
-            for b in range(256):
-                S.add(port, 'S', CW - 2.0 if part_e else 2.0)
-        # N: bundle out, aligned to the ret leaf's chain inputs (same x relative to the column)
-        for port, src in (('rv_out', 'rv_in'), ('hdr_out', 'hdr_in'), ('a_own_out', 'ao_in'), ('b_own_out', 'bo_in'),
-                          ('a_par_out', 'ap_in'), ('b_par_out', 'bp_in')):
-            for b in range(len(ref.p[src])):
-                S.add(port, 'N', ref.p[src][b][2])
+        own = [('rv_c', 'rv_out', 8), ('hdr_c', 'hdr_out', 108), ('a_own', 'a_own_out', 256), ('b_own', 'b_own_out', 256)]
+        par = [('a_par', 'a_par_out', 256), ('b_par', 'b_par_out', 256)]
+        def spread(groups, lo, hi):
+            n = sum(g[2] for g in groups); k = 0
+            for pin, pout, w in groups:
+                for b in range(w):
+                    x = lo + (hi - lo) * (k + 0.5) / n; k += 1
+                    S.add(pin, 'S', x); S.add(pout, 'N', x)
+        # windows from the two parent legs (ret row -> slice ~317 um, slice -> next row's ret ~458 um vertical, both
+        # <= 500 um): own bits sit at the end of the next ret's chain inputs, partner bits at the partner end
+        OW, PW = 40.0, 32.0
+        if part_e:
+            spread(own, 1.0, OW); spread(par, CW - PW, CW - 1.0)
+        else:
+            spread(par, 1.0, PW); spread(own, CW - OW, CW - 1.0)
         S.add('clk', 'W', SL_H / 2)
         S.add('rst_in', 'W', SL_H / 2 - 1)
         S.pack()
