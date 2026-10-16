@@ -218,15 +218,18 @@ module tb_hgi_mover_kport;
     // STORE: VM FP32 / U32 words (vmw) -> HBM rows (FP32 / U32), whole sectors; STRIPE4 destination when hb[39:37] = 1
     task automatic store(input [127:0] name, input integer f, input [39:0] vb, input [31:0] vst, input [39:0] hb, input [31:0] hst,
                          input integer m, input integer n, input integer expect_fault);
-        integer t0, t1, o, i, bad; reg [36:0] ra; reg [31:0] want, got; reg strp; real bpc; reg [255:0] sec;
+        integer t0, t1, ts, o, i, bad; reg [36:0] ra; reg [31:0] want, got; reg strp; real bpc; reg [255:0] sec;
         begin
             strp = hb[39:37] == 3'd1;
             hm.delete();
             @(negedge clk);
             mv = {21'(n), 20'(m), 16'd1, hst, hb, 3'(f), 2'd0, 16'd1, vst, vb, (f == 5) ? 3'd5 : 3'd0, 2'd1};
-            mv_v = 1; while (!mv_rdy) @(negedge clk); t0 = cyc; @(negedge clk); mv_v = 0;
-            while (!mv_done && !mv_fault && cyc - t0 < 2000000) @(negedge clk);
+            mv_v = 1; while (!mv_rdy) @(negedge clk); t0 = cyc; ts = -1; @(negedge clk); mv_v = 0;
+            while (!mv_done && !mv_fault && cyc - t0 < 2000000) begin if (mv_src && ts < 0) ts = cyc; @(negedge clk); end
+            if (mv_src && ts < 0) ts = cyc;
             t1 = cyc;
+            // hgi-1010/tput1: the posted retire point (every source sector read and landed) = mv_src
+            $display("SRC %0s source consumed %0d cycles after accept (done %0d)", name, ts - t0, t1 - t0);
             if (expect_fault) begin
                 if (!mv_fault) begin $display("FAIL %0s: expected a fault", name); errs = errs + 1; end
                 else $display("ok %0s: faulted as expected", name);
@@ -264,6 +267,9 @@ module tb_hgi_mover_kport;
         load("stripe_unal",  0, {3'd1, 2'd0, 35'h0700004}, 0,    40'd0,     64,   4, 64,   1);   // must fault
         store("swap_stripe", 0, 40'd1024,  6784, {3'd1, 2'd2, 35'h0800000}, 0,     4, 6784, 0);  // ~106 KB, STRIPE4 destination
         store("swap_linear", 0, 40'd1024,  6784, {3'd0, 2'd1, 35'h0900000}, 27136, 4, 6784, 0);  // the same, one stack
+        // hgi-1010/tput1: DS DMA.KVWB_DS production shape (ds_native window_row_append): one 512-word FP32 VM row ->
+        // its WIN ring slot (2,048 B, one stack), alone on the mover
+        store("kvwb_row",    0, 40'd2048,  512,  {3'd0, 2'd1, 35'h0c00800}, 2048,  1, 512,  0);
         store("u32_rows",    5, 40'd96,    104,  {3'd0, 2'd3, 35'h0a00000}, 4096,  9, 96,   0);
         store("partial_row", 0, 40'd0,     64,   {3'd0, 2'd0, 35'h0b00000}, 256,   2, 60,   1);  // 240 B rows: must fault
         store("unal_base",   0, 40'd0,     64,   {3'd0, 2'd0, 35'h0b00010}, 256,   2, 64,   1);  // must fault
