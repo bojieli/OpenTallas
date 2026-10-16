@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.s81.cfifo_crs.additive-intake.v1",
+  "main_base": "d3d305ce786192bde3d6247b634d6181cc358bbf",
+  "candidate_master": "dsfd_cfifo_crs",
+  "candidate_kit": "physical/ref_tile/s81coll_cfifo_crs",
+  "default_adoption": false,
+  "legacy_files_preserved": [
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv",
+      "sha256": "dedf37e3e971b332dac3f73ed1d650283bfb858c3858c72aade6d7f3a657d4a3",
+      "byte_identical_to_main_base": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/test/tb_dsfd_cfifo_x2pair.sv",
+      "sha256": "9bf2fec124221effed3f76092905447730739531377a008214b4acb9b284efe7",
+      "byte_identical_to_main_base": true
+    },
+    {
+      "path": "tools/s81/cfifo_x2pair_gate.sh",
+      "sha256": "5bf4720581af019ce345e09b20e0e72889e07c52b85dedcba6899602c88738bf",
+      "byte_identical_to_main_base": true
+    }
+  ],
+  "predecessor_source_evidence": {
+    "unadopted_branch": "codex/s81-cfifo-struct-1258",
+    "commit": "fcc4793f2",
+    "original_gate_source": "a1c811a00 exact snapshot",
+    "diagnostic": "Final crs1 CTS TT setup138.796/FF hold19.511ps pass; native rst capture251.88117ps fails; proposed source frontier has not been physically qualified."
+  },
+  "inventory": {
+    "checked_in_rtl_direct_instantiation": "Legacy tb_dsfd_cfifo_x2pair; new isolated tb_dsfd_cfifo_crs instantiates only new master. No production checked-in RTL instantiates candidate.",
+    "generator_module_body": "tools/dsrom_s81_fulldie.py:11312 independently emits old single-root body with ck/co/rf, direct ri, no cr_s.",
+    "generator_clock_buses": [
+      "tools/dsrom_s81_fulldie.py:5291 column bus starts cf.co with optional cf.cr",
+      "tools/dsrom_s81_fulldie.py:5331 same for body frames"
+    ],
+    "timing_clock_ownership": "tools/s81/die_sta.py:51 REL_CLK_COLCK maps rd->cr; candidate requires rd->cr_s and explicit cr_s entry.",
+    "legacy_kits_consuming_shared_old_path": [
+      "s81coll_cfifo_x2",
+      "s81coll_cfifo_x2_w432p144",
+      "s81coll_cfifo_x2_w432p192"
+    ],
+    "physical_parent_binding": "No literal cr_s pin or actual128-instance branch binding exists for candidate on default die; no bindable qualified candidate view exists."
+  },
+  "candidate_cost": {
+    "new_reset_frontier_FF": 0,
+    "ri_pin_FF_vs_legacy": 66,
+    "new_reset_sync_FF_vs_legacy": 2,
+    "status_return_edges_vs_legacy": 1,
+    "initialization_edges_vs_split_r3": 2,
+    "data_stream_edges_added": 0,
+    "whole_die_128_new_ri_and_sync_FF": 8704
+  },
+  "required_opt_in_integration": [
+    "Explicit off-by-default --cfifo-crsplit; never alias new master onto legacy name.",
+    "Bind real dsfd_cfifo_crs views/outline/pins/source and all128 instances.",
+    "Drive cr and cr_s from real same-PLL phase0 column branch network with phi-R delivery; preserve literal xf/xf2; replace old ck/co/rf feedthroughs with actual die clock branches.",
+    "Update rd clock map to cr_s and audit all incident pin/source/phase/reach joins.",
+    "Compiler price ri->rd +1 edge and north-to-south reset release +2 initialization edges; marker after fourth root edge, no wait-based alignment.",
+    "Fresh isolated source-pinned CTS and routed TT/FF/DRC0/native audits/bench mutants, production throughput/price evidence."
+  ],
+  "gate_scope": "Existing live fcc4793f2 run belongs only to unadopted old-name branch and is historical diagnostic; cannot qualify additive renamed master.",
+  "validation": {
+    "actual_isolated_master": "Five cold and five warm phase pairs pass with fixed absolute word calendars, data/status words and north-edge2/south-edge4 reset assertions. Payload, valid, wrong forwarded clock, bypass-ri and stopped actual cr_s mutants all fail as required.",
+    "fleet_bench_receipt": "ot-run RAN on ot-agidock128 unit oth-ubuntu-3502422-1792181349 exit0",
+    "lint": "admitted Verilator lint PASS",
+    "additional_reset_frontier_bypass_mutant": "Actual admitted run FAIL as required: CFIFO_X2 FAIL bad=2 words=390; unit oth-ubuntu-3506678-1792181416 exit1. Bypassing the registered north reset frontier violates the explicit reset-edge assertions."
+  }
+}
