@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfxcap_pinpipe_ref-ck1-COMMIT",
+ "name": "s81hc_ctfxcap_pinpipe_ref-ck1-1552876b8",
  "block": "ot_s81_hc_ctfx_cap_pinpipe",
  "ref_tile": true,
  "owner": "Claude:s81-engnorm-2210",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-2210",
-  "commit": "COMMIT"
+  "commit": "1552876b8"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref/s81hc_ctfxcap_pinpipe_ref-ck1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref/s81hc_ctfxcap_pinpipe_ref-ck1-1552876b8"
   }
  ],
  "cycles_added": 1,
