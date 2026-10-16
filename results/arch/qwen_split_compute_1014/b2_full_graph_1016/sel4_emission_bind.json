@@ -1,0 +1,45 @@
+{
+ "status": "SEL4_SPARSE_OUTPUT_JOIN_DIAGNOSTIC_EMISSION_STRICT_BIND_PASS",
+ "source_commit": "6d93dd457 + straps (this commit)",
+ "e4_dir": "/srv/opentallas-scratch/claude/q-b2-integ-1016",
+ "emission": {
+  "status": "DIAGNOSTIC_EMISSION_ZERO_LNK_NOT_PRODUCTION",
+  "compact_selector": true,
+  "buses": 3778,
+  "data_buses": 3706,
+  "preservation": 3328,
+  "changed_instances_bound": 44,
+  "die_v_sha256": "7308c26c16e6dc7bee7abdbefc57675f34cfa00c3a1e0318f24233fc0fc9a2e0",
+  "open_outputs": {
+   "qfd_tt_ctlm_b2": {
+    "sel": 26
+   }
+  }
+ },
+ "strict_bind": {
+  "tool": "tools/qwen_split/port_bind_compute.sh",
+  "verdict": "PASS",
+  "summary": {
+   "masters": 39,
+   "instances": 1666,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 0,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 0,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 14,
+   "pad_bits": 0
+  }
+ },
+ "sel_join": "tt_ctlm.sel[25:0] = {open[21], sel4[3:2], open[20:10], sel4[1:0], open[9:0]}: bits 10/11/23/24 drive the registered selector4 fork tree; 22 unconsumed OUTPUT bits on one declared open net",
+ "lnk": "DIAGNOSTIC ONLY: six halfband lnk straps 0; production emission refused until phase calibration CLOSED",
+ "selector4_view": "closed view physical/ref_tile/qfd_static_selector_fork4/views/qfd_static_selector_fork4 (12.96x10.8): die frame pin-for-pin identical (14 pins), native PASS"
+}

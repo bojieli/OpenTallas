@@ -1,0 +1,100 @@
+{
+  "qualification": "SOURCE_COUNTS_AND_PROPOSED_RECTANGLES_ONLY",
+  "model_path": "/home/ubuntu/artifacts/qdieplan-0700/geom_dpC.json",
+  "model_sha256": "038f21ef92c741c961a40d7b12e44fcd0081a00f0b3726962fbcbaec3cec3aa2",
+  "sources": {
+    "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv": "01383800e446a14a6e5d376353fb8288732112c70b9453fa5f1e7fec304e7f0e",
+    "rtl/physical/ot_qwen_halfband_lanes_slots.sv": "5701b100fe6707c0a43e50a8929362f54c821d38231c89423d52056d725163ba",
+    "rtl/qwen_split/qfd_band_upper_b2_l2.sv": "6883a2bcb2d636a5bd04cbcf08b3d858ac29c46cecd6e3727e636dec2c350b8a",
+    "rtl/physical/ot_qwen_halfband_lanes_slots_b2_l2.sv": "6acf136681a334ba93c00012ecd1a9616054ac153bc815061e83eb37a802c67f",
+    "rtl/qwen_split/qfd_port_half_b2.sv": "f99637b915adec4ae716c22e3d7b3482b82d6d9162df2acf8e44dc7c806c3e2f",
+    "rtl/qwen_split/qfd_b2_word_status.sv": "74f45cdfca82596ba71727661da508add6eb6f9034e28a710db4f81aaabf91d1",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+  },
+  "shape": {
+    "groups": 3072,
+    "lanes": 16,
+    "bands_old": 3,
+    "halfbands_new": 6,
+    "production_splits": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "empty_split12_rejected_for_b2_output": true
+  },
+  "primary_upper": {
+    "count": 8,
+    "lanes_each": 2,
+    "candidate_outline_um": [
+      86.4,
+      205.2
+    ],
+    "explicit_data_flop_lower_bound_each": 6720,
+    "measured_sink_count": null
+  },
+  "port_parent_register_subset": {
+    "old_per_full_port": 13063,
+    "old_count": 3,
+    "b2_per_half": 6709,
+    "b2_count": 6,
+    "delta": 1065,
+    "b2_source_clock_root_lower_bound": 8913,
+    "scope": "Explicit parent register subset only, not total mapped flip-flops. Includes restored tc/ty/cw/rq stations and dedicated result_status_v FF."
+  },
+  "fp32_tree_adders": {
+    "old_local": 336,
+    "old_upper": 16,
+    "b2_local": 288,
+    "b2_upper": 64,
+    "delta": 0
+  },
+  "mapped_hold_sram_instances": {
+    "configuration": "RDMEM1, LNKS1; fixed 128x256 macro for both GP8 width256 and GP4 width128",
+    "old": 192,
+    "b2": 288,
+    "delta": 96,
+    "macro_size_um": [
+      94.824,
+      41.04
+    ],
+    "delta_macro_footprint_mm2": 0.37359138816,
+    "scope": "Source elaboration formula, synthesis and routed view still required. Upper holds remain flops."
+  },
+  "outline_mm2": {
+    "baseline_actual_model": {
+      "halfband_or_band": 2.9924038655999996,
+      "serializer": 1.209230209728,
+      "upper": 0.05318783999999999,
+      "port": 15.318097919999998
+    },
+    "candidate_die_owner": {
+      "halfband_or_band": 3.4264166400000002,
+      "serializer": 2.41864704,
+      "upper": 0.14183424,
+      "port": 15.318097919999998
+    },
+    "delta": {
+      "halfband_or_band": 0.43401277440000063,
+      "serializer": 1.209416830272,
+      "upper": 0.08864640000000001,
+      "port": 0.0
+    },
+    "delta_total": 1.732076004671999,
+    "excludes": "new status collector, routing channels, actual standard cells/packing/clock distribution",
+    "serializer_caveat": "777.6x518.4 is the NEW conservative production 24-bank halftrain candidate from Q-COMPUTE-DIE and Q-B2-JOIN, superseding diagnostic777.6x324; actual mapped packing/clock qualification pending"
+  },
+  "timing": {
+    "actual_allocator_b2": null,
+    "geometric_64_stages_is_not_a_measurement": true,
+    "native_static_full_token": null,
+    "pending": "Q-COMPUTE-DIE builds actual b2 graph and real allocator; source-native join + measured schedule and physical TT/FF/DRC gates pending"
+  },
+  "historical_area_estimate_mm2": [
+    0.3,
+    0.6
+  ],
+  "historical_estimate_superseded_by_candidate_outline_arithmetic": true
+}
