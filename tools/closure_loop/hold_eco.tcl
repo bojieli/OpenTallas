@@ -364,7 +364,9 @@ set fz [dict create]; foreach nt $frozen { dict set fz [$nt getName] 1 }
 set nstrip 0
 foreach net [$block getNets] {
   if {[$net getSigType] in {POWER GROUND}} continue
-  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK"} continue
+  # KEEPCLK keeps the routed clock tree, except a clock net on a new / moved / resized instance (the repair's DPL can move
+  # a clock buffer: its kept wire no longer reaches the pin -> DRT-0206, ECTL A recovery 2026-10-15); those re-route.
+  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK" && ![dict exists $dirty [$net getName]]} continue
   if {[dict exists $fz [$net getName]]} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nstrip }
 }
