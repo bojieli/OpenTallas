@@ -146,6 +146,47 @@ def main():
                 if omitted:del params['VIAMAP']
                 macro_restorations.append(dict(module=modname,cell=cellname,derived=cell['type'],master=original[0],parameters=params,omitted_empty_viamap=omitted))
                 cell['type']=original[0];cell['parameters'].update(params)
+    # submod exports whole source vectors even if only one bit crosses the
+    # partition. Project precisely the consumed bits into dense leaf ports;
+    # update the parent instance and keep a reversible bit map.
+    port_projection=[]
+    parent=partition['modules']['dsfd_sp_pq_joint_candidate']
+    for logical in groups:
+        child=partition['modules'][logical]
+        instance=next(c for c in parent['cells'].values() if c['type']==logical)
+        outside={b for port in parent['ports'].values() if port['direction']=='output' for b in port['bits'] if isinstance(b,int)}
+        for cell in parent['cells'].values():
+            if cell is instance:continue
+            for pn,bits in cell['connections'].items():
+                if cell['port_directions'][pn]=='input':outside.update(b for b in bits if isinstance(b,int))
+        for pn,port in list(child['ports'].items()):
+            if port['direction']!='output':continue
+            old=list(port['bits']);external=instance['connections'][pn]
+            keep=[i for i,b in enumerate(external) if isinstance(b,int) and b in outside]
+            if len(keep)==len(old):continue
+            port_projection.append(dict(module=logical,port=pn,direction='output',original_width=len(old),kept_original_positions=keep))
+            if keep:
+                port['bits']=[old[i]for i in keep];port.pop('offset',None);port.pop('upto',None)
+                instance['connections'][pn]=[external[i]for i in keep]
+                child['netnames'][pn]['bits']=list(port['bits']);child['netnames'][pn].pop('offset',None);child['netnames'][pn].pop('upto',None)
+            else:
+                del child['ports'][pn];del instance['connections'][pn];del instance['port_directions'][pn]
+        inside={b for port in child['ports'].values() if port['direction']=='output' for b in port['bits'] if isinstance(b,int)}
+        for cell in child['cells'].values():
+            for pn,bits in cell['connections'].items():
+                if cell['port_directions'][pn]=='input':inside.update(b for b in bits if isinstance(b,int))
+        for pn,port in list(child['ports'].items()):
+            if port['direction']!='input':continue
+            old=list(port['bits']);external=instance['connections'][pn]
+            keep=[i for i,b in enumerate(old) if isinstance(b,int) and b in inside]
+            if len(keep)==len(old):continue
+            port_projection.append(dict(module=logical,port=pn,direction='input',original_width=len(old),kept_original_positions=keep))
+            if keep:
+                port['bits']=[old[i]for i in keep];port.pop('offset',None);port.pop('upto',None)
+                instance['connections'][pn]=[external[i]for i in keep]
+                child['netnames'][pn]['bits']=list(port['bits']);child['netnames'][pn].pop('offset',None);child['netnames'][pn].pop('upto',None)
+            else:
+                del child['ports'][pn];del instance['connections'][pn];del instance['port_directions'][pn]
     (a.out/'named_partition.json').write_text(json.dumps(partition))
     selected=['dsfd_sp_pq_joint_candidate',*groups]
     export='read_json '+str((a.out/'named_partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
@@ -154,7 +195,7 @@ def main():
                  extraction_tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                  yosys_version=subprocess.check_output([a.yosys,'-V'],text=True).strip(),
                  hierarchy_sha256=hashlib.sha256(a.hierarchy.read_bytes()).hexdigest(),
-                 physical_macro_restorations=macro_restorations,physical_elaboration_transforms=transforms,source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
+                 leaf_port_projection=port_projection,physical_macro_restorations=macro_restorations,physical_elaboration_transforms=transforms,source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
                  moved_control_cells=len(actual_control),moved_lane_cells=len(actual_lane),retained_hard_leaf_instances=len(retained),
                  unobservable_cleanup=dict(cells=sorted(dead),count=len(dead),types=sorted({cells[n]['type'] for n in dead}),proof='Every removed cell is AND/OR carry logic; its outputs feed only other removed cells and no surviving input or external output. No sequential state or memory removed.'),
                  candidate_sha256=hashlib.sha256((a.out/'candidate.v').read_bytes()).hexdigest(),
