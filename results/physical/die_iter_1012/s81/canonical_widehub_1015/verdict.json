@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.s81.widehub-repack.v1",
+ "date": "2026-10-15",
+ "author": "S-DIE (Claude)",
+ "question": "Adopted wide-hub plan (coordinator 19:45): remove 4 field columns (x-sorted 9,10,11,12), 2,190 pairs / 81 stages (p2190s81), 128 roots re-packed into 18 columns",
+ "tool": "tools/s81/canonical_capacity.py --stage-dir <alloc point> --remove-columns <idx> [--io-to-hub] [--stub-inner]",
+ "physics": "128 uniform roots of 17-18 pairs are 3,000-3,305 um tall; a full-height column (25,960 um, channels 259.2 + 388.8/frame) holds 7, the SW-IO-shortened columns (21,495-22,919 um) hold 6. 128 x 3,290 + 128 x 388.8 = 471 mm of column height > 18 columns x 25.96 mm = 467 mm, so no 18-column die holds 128 roots of 2,190 pairs.",
+ "points": [
+  {
+   "name": "adopted_rm4_p2190",
+   "removed": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "io_to_hub": false,
+   "pairs": 2190,
+   "stages": 81,
+   "result": "INFEASIBLE: 118 of 128 roots place"
+  },
+  {
+   "name": "adopted_rm4io_p2190",
+   "removed": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "io_to_hub": true,
+   "pairs": 2190,
+   "stages": 81,
+   "result": "INFEASIBLE: 126 of 128 roots place"
+  },
+  {
+   "name": "rm3io_stub_p2190",
+   "removed": [
+    9,
+    10,
+    11
+   ],
+   "io_to_hub": true,
+   "pairs": 2190,
+   "stages": 81,
+   "hub_um": "9,708.8 wide below y 7,262; 10,900.2 above (inner E column keeps 2 roots at its foot)",
+   "result": "PASS, file rm3io_stub_p2190.json"
+  },
+  {
+   "name": "rm3io_p2190",
+   "removed": [
+    9,
+    10,
+    11
+   ],
+   "io_to_hub": true,
+   "pairs": 2190,
+   "stages": 81,
+   "hub_um": 9708.8,
+   "result": "PASS, file rm3io_p2190.json"
+  },
+  {
+   "name": "rm3io_p2328",
+   "removed": [
+    9,
+    10,
+    11
+   ],
+   "io_to_hub": true,
+   "pairs": 2328,
+   "stages": 74,
+   "hub_um": 9708.8,
+   "result": "PASS, file rm3io_p2328.json; allocator p2328s74 0 fail (p2328s73 199 fail)"
+  },
+  {
+   "name": "rm4_p1983",
+   "removed": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "io_to_hub": false,
+   "pairs": 1983,
+   "stages": 89,
+   "hub_um": 10900.2,
+   "result": "PASS, file rm4_p1983.json; allocator p1983s89 0 fail (s88 118 fail)"
+  }
+ ],
+ "io_to_hub": "phy_SW/ctrl_SW/svc_SW (8,500 x 3,041 um) centred at the hub foot (x 11,645.9) and the six HCP homes as two rows of three at the hub head E end; every kept column runs full height. Needs a generator option to place the SW stack there (today xs_phy[0] = W-field centre).",
+ "note_rom_trade": "rom_trade.py sized the hub gap by pitch (10,753 um at 4 columns); the actual gap is 10,900.2 (4) / 9,708.8 (3) because column 10 carries the 155.5-um SW service corridor shift. Its 2,176-pair pack used ragged 11-20-pair roots, which the allocator (uniform region bounds) does not model; dsrom_s73_pair1.py now takes --regions-json for that test.",
+ "ragged_allocator_test": "dsrom_s73_pair1.py --regions-json with the DP ragged packs: rom_trade 2,176-pair (11-20-pair roots) at 82/83/84 stages -> 5,105/4,973/4,842 failed groups; 4-col+IO 2,308 ragged at 75/76 -> 4,283/4,127 failed. Ragged roots do not allocate (matrices stripe over all 128 roots, bounded by the smallest); rom_trade's recommended 2,176/82 is not reachable.",
+ "a2f_tier_fit": {
+  "vm_um": [
+   4104,
+   4115
+  ],
+  "tier_width_um": 10645.0,
+  "parts": "S14W 661.6 | HC 1816.6 | capture+collective 1728 | VM A2-F 4104 (+MIX4 N) | SU 1935.4 | S14E >= 399",
+  "rm3io_stub_p2190": "fits above y 7,262 (hub 10,900.2, 255 um spare); below it hub 9,708.8 holds the IO band + roads",
+  "rm3io_p2328": "does not fit (-936 um)",
+  "rm4_p1983": "fits full height, 255 um spare"
+ }
+}
