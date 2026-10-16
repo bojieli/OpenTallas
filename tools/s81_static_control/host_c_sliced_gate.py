@@ -20,15 +20,16 @@ p=argparse.ArgumentParser();p.add_argument('out',type=Path);a=p.parse_args();a.o
 SRC=['rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv','rtl/lib/ot_async_fifo.sv','rtl/lib/ot_reset_sync.sv','rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv','rtl/lib/ot_rst_relay.sv','rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv','rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv','rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv','physical/rom_host_ingest/rtl/dsfd_host.sv','rtl/hdc/ingest/ot_rom_host_ingest.sv','rtl/link/ot_link_afifo.sv','rtl/hdc/ingest/ot_hdc_kv_ingest.sv','rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv','rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv','rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv']
 DEFS=['-DDSFD_HOST_C_STATIC','-DDSFD_HOST_PQ_BOOT','-DOT_S81_HOST_PHASESAFE','-DOT_S81_HOST_BOOT300']
 c=B.C.case_ikey(np.random.default_rng(20261016),1024);c['nb']=B.stream_nb(c['descs']);B.write_case(a.out,c,65536)
-words=[(0,0)];pi=0
+# Mixed intercepted stage/PQ/length CSRs precede real native ingress.
+words=[(0,0x10 | (0x1234567<<32)),(0,0x12 | (1<<96) | (0x2345678<<32)),(0,0x11 | (4<<32)),(0,0)];pi=0
 for desc,nb in zip(c['descs'],c['nb']):
     words.append((1,int(desc)))
     for _ in range(nb):words.append((2,int(c['beats'][pi])));pi+=1
 (a.out/'packets.mem').write_text(''.join(f'{(cls<<513)|(word<<1)|1:0129x}\n' for cls,word in words))
 records=[]
-def build(top,tb,mut,name):
+def build(top,tb,mut,name,replacement=None):
     exe=a.out/(name+'.vvp')
-    cmd=['iverilog','-g2012','-s',top,f'-P{top}.MUT={mut}',*DEFS,'-o',str(exe),str(tb),*[str(ROOT/x) for x in SRC]]
+    cmd=['iverilog','-g2012','-s',top,f'-P{top}.MUT={mut}',*DEFS,'-o',str(exe),str(tb),*[str(replacement) if replacement and x=='rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv' else str(ROOT/x) for x in SRC]]
     cp=subprocess.run(cmd,capture_output=True,text=True)
     (a.out/(name+'.build.log')).write_text(cp.stdout+cp.stderr)
     if cp.returncode:raise SystemExit('HOST_C_SLICED BUILD_FAIL '+name+' '+cp.stderr[-1000:])
@@ -42,6 +43,14 @@ def run(exe,name,args,expect,marker):
 for mut in [0,6]:
     name=f'native_m{mut}';exe=build('tb_host_c_sliced_native',ROOT/'tests/s81/tb_host_c_sliced_native.sv',mut,name)
     run(exe,name,[f'+NP={len(words)}'],mut==0,'HOST_SLICED_NATIVE PASS' if mut==0 else 'HOST_SLICED_NATIVE FAIL exact producer/calendar')
+# Negative control: bypass only the relocated native launch filter. The
+# mixed-CSR bench must catch an intercepted CSR on the actual native port.
+original=(ROOT/'rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv').read_text()
+needle="wire csr=hv&&hcl==0&&(hd[7:0]==8'h10||hd[7:0]==8'h11||hd[7:0]==8'h12);"
+assert original.count(needle)==1
+mutant=a.out/'bypass_intercepts.sv';mutant.write_text(original.replace(needle,"wire csr=1'b0; // mutant: leak intercepted CSRs into native ingest"))
+exe=build('tb_host_c_sliced_native',ROOT/'tests/s81/tb_host_c_sliced_native.sv',0,'native_bypass_intercepts',mutant)
+run(exe,'native_bypass_intercepts',[f'+NP={len(words)}'],False,'HOST_SLICED_NATIVE FAIL interceptedCSR reached native ingest port')
 # Reuse the exact legacy boundary transport vectors, with actual new clock
 # entry pins bound to their ideal source-family phase. This is not timing proof.
 boot=(ROOT/'tests/s81/tb_host_boot300.sv').read_text().replace('module tb_host_boot300;', 'module tb_host_boot300_sliced;').replace('dsfd_host_c #','dsfd_host_c_sliced #').replace('.ck(ck),.ckv(ckv)', '.ck(ck),.ck_data({4{ck}}),.ck_native(ck),.ck_launch(ck),.ck_return(ck),.ckv(ckv)')
@@ -53,4 +62,4 @@ exe=build('tb_host_boot300_sliced',tb,5,'boot_kind_mutant')
 run(exe,'boot_kind_mutant',[],False,'BOOT300 FAIL payload/kind')
 rec=dict(scope=__doc__,generator_source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in ['tools/rtl_rom_host_ingest_bench.py','tools/rtl_hdc_kv_ingest_campaign.py','tools/kv_ingest_ref.py','tools/s81_static_control/host_c_sliced_gate.py']},input_image_sha256={x:hashlib.sha256((a.out/x).read_bytes()).hexdigest() for x in ['packets.mem','init.mem','exp.mem']},source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in SRC+['tests/s81/tb_host_c_sliced_native.sv','tests/s81/tb_host_boot300.sv']},input_slots=dict(first=128,stride=32,packets=len(words),final_verification_edge=60000),normal_token_reservation='OPEN: queue-nonempty service is not a compiled execution calendar',diagnostic_delta=dict(native_fault_host_edges=1,payload_ack_service_edges=0),cases=records)
 (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
-print('HOST_C_SLICED_GATE PASS actual IKEY544sectors/full256 exact59989edges + badpayload mutant + boot8phases/kind/missingclock/capacity')
+print('HOST_C_SLICED_GATE PASS actual IKEY544sectors/full256 exact59989edges + badpayload/interceptbypass mutants + mixedCSR + boot8phases/kind/missingclock/capacity')

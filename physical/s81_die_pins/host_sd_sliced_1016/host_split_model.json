@@ -148,7 +148,9 @@
   "diagnostic_f_st_first_capture": "C0",
   "diagnostic_t_collective_status_visible": "C0+2ck",
   "normal_token_compiler_reservations": "OPEN; nonempty service is not a normalexecutioncalendar",
-  "whole_native_IKEY_component_proof": "fixed60000edge run,1090hostpackets,544sectors,1physicalwritecompletion,59989exactproduceredges; sourcepayloadmutantfails"
+  "whole_native_IKEY_component_proof": "fixed60000edge run,1093hostpackets includingintercepted0x10/0x11/0x12+nativeIKEY,544sectors,1physicalwritecompletion,59989exactproduceredges; payload and CSRfilterbypass mutantsfail",
+  "empty_sector_FIFO_input_sample_to_output_launch_edges": 2,
+  "sector_service_definition": "Input sampleS, fwriteS+1, nonemptyhead launchS+2; no extraedge relativelegacy. Queueing at unpredictableexternalingress remainscomponent scope, notnormalexecutioncalendar."
  },
  "measured_gates": [
   {
@@ -399,5 +401,6 @@
  ],
  "measured_new_sd_projection_std_area_um2": 2653.0,
  "accepted_cost_ledger": "NO new acceptance/reprice; measuredtokenloss and parentactualarea remain OPEN",
- "route_admission": "No full leaf route until unifiedmodel owner incorporates row and actual parent cuts/pin slots accepted; preserve current gates"
+ "route_admission": "No full leaf route until unifiedmodel owner incorporates row and actual parent cuts/pin slots accepted; preserve current gates",
+ "measured_gate_flow_scope": "Measured97069e10d snapshots are historical/source-bound. Current501be7692+7c1815717+07ce6450a helpers integrated and kits regenerated; freshcurrenthelpergates stillpending, no route admission."
 }
