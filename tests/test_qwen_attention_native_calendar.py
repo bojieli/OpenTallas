@@ -34,6 +34,23 @@ def test_r3_8192_capture_slots():
     assert c["R"] == c["P0"] == c["P1"] == cal.R3_8192["R"]
 
 
+def test_minimal_laws_8192():
+    c = cal.calendar(8192)
+    assert (c["LMAX"], c["EXP"], c["Z"], c["PV_START"]) == (406, 421, 911, 627)
+    assert c["PV_START"] + c["R"] < cal.R3_8192["PV_START"] + cal.R3_8192["R"]   # earlier than the generous r3 calendar
+
+
+def test_zwalk_block0():
+    assert cal.zwalk(1) == 0 and cal.zwalk(8192) == 240 and cal.zwalk(3000) == 90
+
+
+def test_pv_binds_reciprocal_for_tiny_context():
+    c = cal.calendar(1)
+    assert c["PV_START"] + c["R"] >= c["HUB_PUB"] + cal.RZ_MARGIN
+    with pytest.raises(ValueError):
+        cal.check(dict(c, PV_START=c["HUB_PUB"] + cal.RZ_MARGIN - c["R"] - 1))
+
+
 @pytest.mark.parametrize("T", [1, 127, 128, 129, 511, 512, 513, 3000, 6145, 8191, 8192])
 def test_every_context_passes_leaf_rules(T):
     c = cal.calendar(T)
