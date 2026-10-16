@@ -148,7 +148,7 @@ endmodule
 // ---------------------------------------------------------------------------
 // PIN-REGISTERED TILE (OWNER RULE 19:50 PT 10-15, H-NETLIST/idxreg 2026-10-16): the die
 // master ot_hbm_idx_selector_static is this shell. Every data input and every output passes ONE kept
-// flop at the pin (clocks and rst_n pass through); the unchanged arithmetic/control is
+// flop at the pin (clocks pass through; rst_n enters a 2-flop release synchroniser); the unchanged arithmetic/control is
 // ot_hbm_idx_selector_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
 // calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
 // Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
@@ -165,6 +165,11 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  output reg [55:0] selected_observe,
  output reg fault
 );
+ // rst_n: async assert, 2-edge release on clk_ctl; the core's resets (async and synchronous uses on every
+ // same-PLL phase-0 root) come from this one kept register, so no input port feeds another root's data pins.
+ (* keep *) reg [1:0] rst_sync;
+ always @(posedge clk_ctl or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
+ wire rst_core_n=rst_sync[1];
  (* keep *) reg [3:0] op_r;(* keep *) reg [1:0] pass_r;(* keep *) reg [7:0] addr_r;(* keep *) reg [9:0] k_r;
  (* keep *) reg [2367:0] in_r;
  wire [3:0] c_out_v,c_sel_v;wire [2367:0] c_out_line,c_sel_line;wire [15:0] c_thr;wire [55:0] c_obs;wire c_fault;
@@ -173,7 +178,7 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
   out_v<=c_out_v;out_line<=c_out_line;threshold_observe<=c_thr;
   selected_v<=c_sel_v;selected_line<=c_sel_line;selected_observe<=c_obs;fault<=c_fault;
  end
- ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q(clk_q),.clk_mem(clk_mem),.rst_n(rst_n),
+ ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q(clk_q),.clk_mem(clk_mem),.rst_n(rst_core_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),.out_v(c_out_v),.out_line(c_out_line),
   .threshold_observe(c_thr),.selected_v(c_sel_v),.selected_line(c_sel_line),.selected_observe(c_obs),.fault(c_fault));
 endmodule
