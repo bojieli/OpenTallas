@@ -165055,6 +165055,170 @@
    "planning_group": "vmh_NE",
    "qualified": false,
    "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+  },
+  {
+   "name": "sfucore_SW",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 763.56,
+    "h": 1936.44
+   },
+   "origin": {
+    "x": 10882.944,
+    "y": 5124.33,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 381.78
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "sfu_core_home_0030",
+   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "faces": {
+    "W": "SU qcore / SFU leaf LG paths (band)",
+    "E": "COLL / DMA-back stack",
+    "N": "clock + reset",
+    "S": "band channel"
+   },
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfucore_SE",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 763.56,
+    "h": 1936.44
+   },
+   "origin": {
+    "x": 19371.96,
+    "y": 5124.33,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 381.78
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "sfu_core_home_0030",
+   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "faces": {
+    "W": "SU qcore / SFU leaf LG paths (band)",
+    "E": "COLL / DMA-back stack",
+    "N": "clock + reset",
+    "S": "band channel"
+   },
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfucore_NW",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 763.56,
+    "h": 1936.44
+   },
+   "origin": {
+    "x": 11029.824,
+    "y": 14216.85,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 381.78
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "sfu_core_home_0030",
+   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "faces": {
+    "W": "SU qcore / SFU leaf LG paths (band)",
+    "E": "COLL / DMA-back stack",
+    "N": "clock + reset",
+    "S": "band channel"
+   },
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfucore_NE",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 763.56,
+    "h": 1936.44
+   },
+   "origin": {
+    "x": 19225.08,
+    "y": 14216.85,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 381.78
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "sfu_core_home_0030",
+   "rtl_owner": "H-SU: ot_hgi_sfu_scheduled_engine",
+   "faces": {
+    "W": "SU qcore / SFU leaf LG paths (band)",
+    "E": "COLL / DMA-back stack",
+    "N": "clock + reset",
+    "S": "band channel"
+   },
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
   }
  ],
  "sub_layouts": {
@@ -171334,5 +171498,10 @@
   "parent_qualified": false,
   "canonical_lineage_publication": "c206b60b0",
   "scope": "Exact descendant binding; emitted parent geometry, PG, relay hops and roots remain OPEN."
+ },
+ "sfu_core_home_0030": {
+  "source": "results/arch/hbm_die_v15/sfu_core_home_0030/homes.json",
+  "status": "GRANTED",
+  "supersedes": "sfu_core_request_v7 (PROPOSED strip, needed SM shrink)"
  }
 }

@@ -10,20 +10,11 @@
  "reset_ports": [
   "rst_n"
  ],
- "outline": {
-  "w": 273.456,
-  "h": 194.4,
-  "exact": true
- },
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "count": 1,
    "inst": "u_residual",
-   "at": [
-    55.296,
-    43.2
-   ],
    "orient": "MY"
   }
  ],
@@ -45,7 +36,6 @@
    "fault"
   ]
  },
- "io_tcl": "physical/hbm_hc/HC_residual_half_exact_source_place.tcl",
  "layer_cap": "M5",
  "recipe": 2,
  "route": {
@@ -56,10 +46,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:/root/h_hc_physical",
-  "branch": "codex/hc-physical-1015",
+  "owner": "Claude:H-NETLIST/kits (for HC owner)",
+  "branch": "claude/hnl-kits-0030",
   "tag": "native1",
-  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim",
+  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim | H-NETLIST/kits 10-16: regenerated + regated on current main (gate 10-15 04:59 predates flow overlays); leaf of the static HC engine (codex/hc-static-engine-1014 ot_hgi_hc_projection_sys1_split_static; v16 gap G-HC-ENG). | Re-kit 10-16 after gate PNG review: the 273.456x194.4 exact engine sub-slot left util 24.6% with the top half empty and gate TT insertion 326 ps; outline 220.32x125.28 (util ~48% of std 279 + macro 12,314 um2; macro + 20-um channels), face pins (W write, E read data, N control), exact-source pin plan dropped (the HC engine sub-slot is not bound in the v16 die; HC owner re-plans the engine from the new abstract).",
   "structural_change": "Replace500um10SRAMsharedclockmonolith withboundedlocalroot; keepactualmemory/phase/TML3; residualwrite+1 priced",
   "extra_paths": [
    "physical/hbm_hc",
@@ -99,9 +89,14 @@
   "views_to": "physical/ref_tile/hbm_hc_residual_half_static/views",
   "record_to": "results/rtl/ref_tile/hbm_hc_residual_half_static"
  },
- "pin_hook_before_flops": [
-  "physical/hbm_hc/HC_residual_half_exact_source_audit.tcl"
- ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every pin: write_v/write_word/write_data captured in first-pin flops (priced +1 write edge), read_v/read_word land on the synchronous SRAM input latch (TML3 read latency priced), residual_data/read_valid/fault leave from flops; synthesis pin registers would add an unpriced stage to the HC engine schedule."
+ },
+ "outline": {
+  "w": 220.32,
+  "h": 125.28
+ },
  "params": {},
  "children": [],
  "inter": [],

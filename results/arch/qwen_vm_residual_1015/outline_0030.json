@@ -1,0 +1,20 @@
+{
+ "owner": "Q-VMWB 0030",
+ "cell": "qfd_sp_vector_memory_par",
+ "outline_um": [
+  4872.0,
+  3239.36
+ ],
+ "adopted_for": "Q-COMPUTE-DIE r2h floorplan (cut 0.592, 0 edges > 0.60; claude/q-compute-die-0030 repack_0030/router)",
+ "basis": "Codex paired-bank source-connected screen 51fc824c0 (physical_inventory/regional_paired.png): 0 overlap, 24,576/24,576 bank-q -> SU1024 legs 87.6-183.5 um (0 > 500 um)",
+ "faces": {
+  "N": "sq -> su64 vq, seq_su (abuts su64 at y=9940)",
+  "S": "native59 (2,023 b)"
+ },
+ "area": {
+  "outline_mm2": 15.78,
+  "hard_leaves_mm2": 10.05,
+  "residual_source_FF_bits": 128043
+ },
+ "status": "build target, NOT qualified: residual FF/relay homes, return-plane pins, clock/PG, parent kit and routed timing open"
+}

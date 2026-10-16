@@ -1,0 +1,25 @@
+{
+ "cell": "ot_hbm_su_static_bank6_clock_physical",
+ "view": "diagnostic_native_views",
+ "lib_cell": "ot_hbm_su_static_bank6_clock_physical",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 164.2,
+ "spread_ps": 24.4,
+ "outputs": 198,
+ "inputs": 103,
+ "launch_ps": 181.5,
+ "launch_pin": "read_data[60]",
+ "capture_ps": 121.4,
+ "capture_pin": "write_data[5]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "qualification_scope": "Failed DRC2 route diagnostic only; no CLOSED view adoption"
+}

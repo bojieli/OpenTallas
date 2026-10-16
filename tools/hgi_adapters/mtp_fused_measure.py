@@ -18,10 +18,24 @@ def sha(path):
 
 def read_run(directory, mutant=False):
     vec = directory / 'vec'
+    sizes = dict((key, int(value)) for key, value in re.findall(
+        r'localparam integer (\w+) = (\d+);', (vec / 'fu_sizes.svh').read_text()))
+    images = {}
+    for name, size, width in (('fu_rec.mem', 'NREC', 304), ('fu_exp.mem', 'NREC', 172),
+                               ('fu_case.mem', 'NCASE', 72), ('fu_vmi.mem', 'NVMI', 16),
+                               ('fu_vme.mem', 'NVME', 16), ('fu_hbm.mem', 'NHBM', 18)):
+        lines = (vec / name).read_text().splitlines()
+        assert size in sizes and len(lines) == sizes[size], f'incomplete {name} image'
+        assert all(re.fullmatch(r'[0-9a-fA-F]{' + str(width) + '}', line) for line in lines), f'invalid {name} image'
+        images[name] = lines
     cases = []
-    for line in (vec / 'fu_case.mem').read_text().splitlines():
+    for line in images['fu_case.mem']:
         assert len(line) == 72, 'incomplete case image'
-        cases.append([int(line[i:i + 8], 16) for i in range(0, 72, 8)])
+        case = [int(line[i:i + 8], 16) for i in range(0, 72, 8)]
+        for offset, count, size in ((case[1], case[2], 'NREC'), (case[3], case[4], 'NVMI'),
+                                    (case[5], case[6], 'NVME'), (case[7], case[8], 'NHBM')):
+            assert offset + count <= sizes[size], 'case image range exceeds declared input'
+        cases.append(case)
     data = {i: c for i, c in enumerate(cases) if c[0] == 0}
     assert data, 'missing data cases'
     text = (directory / 'run.log').read_text()
@@ -46,8 +60,8 @@ def read_run(directory, mutant=False):
         assert len(re.findall(r'^HGI_FUSED_UNIT PASS$', text, re.M)) == 1, 'positive did not pass'
         assert not re.search(r'^ERR |^HGI_FUSED_UNIT FAIL', text, re.M), 'positive contained errors'
     return dict(target_case=target, cases=data, measured=observed,
-                log_sha256=sha(directory / 'run.log'),
-                image_sha256={f: sha(vec / f) for f in ('fu_vmi.mem', 'fu_vme.mem', 'fu_hbm.mem', 'fu_rec.mem', 'fu_case.mem')})
+                log_sha256=sha(directory / 'run.log'), image_counts=sizes,
+                image_sha256={f: sha(vec / f) for f in ('fu_vmi.mem', 'fu_vme.mem', 'fu_hbm.mem', 'fu_rec.mem', 'fu_case.mem', 'fu_exp.mem', 'fu_sizes.svh')})
 
 
 def main():
