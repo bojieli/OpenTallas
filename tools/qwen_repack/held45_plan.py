@@ -126,11 +126,20 @@ def build(nl=False):
         else:                        # tx3..5: LSL gutter 305.1..324.432, fence against own LSL (W side)
             box = [x + 99.792 + 5.4, y0, x + 99.792 + 5.4 + 4.968, y1]
         regions['ck_tx%d' % n] = [[round(v, 3) for v in box]]
+    # Q-TILE45 r5 (gate e9ce9fd28 NK): DPL now converges fully (phase 2 at iteration 0, 2124/2124 recovered), but the
+    # ORFS DPO pass (improve_placement 5 1) then re-breaks the legal placement: DPL-0200 'unexpected displacement',
+    # 295 site / 149 overlap problems, every residual cell beside a 5-11 um TX fence edge (x 90..100, 310..320,
+    # 440).  The same DPO pass broke Codex's zero-illegal 4ecca replay.  Thin vertical fences are the trigger, so the
+    # eight TX roots go unfenced like the bank-pair roots: their sinks are the TX launch/capture registers of ONE LSL,
+    # wired only to that LSL's E-face pins, so connectivity clusters them at that face; the CTS gate measures spread.
+    for n in leaf:
+        regions['ck_tx%d' % n] = []
+        why['ck_tx%d' % n] = 'unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)'
     # residual core root (entry E y400): 40 um wide strip, unfenced 23 um W band and 50 um E-face band
     regions['ck'] = [[365.04, 369.36, 405.0, 505.44]]
     # RQR roots: fence the upper rows only; a contiguous unfenced band remains below each across the full width
     regions['ck_rqr0'] = [[151.848, 524.88, 306.072, 534.6]]
-    regions['ck_rqr1'] = [[164.808, 808.02, 294.408, 816.48]]
+    regions['ck_rqr1'] = [[164.808, 807.84, 294.408, 816.48]]   # row lattice (2.16 + 0.27k)
     pins = []
     moved = {}
     def place(name, face, value, clock=False):
@@ -219,7 +228,7 @@ def build(nl=False):
         assert len(ports) == 41 and len([p for p in pins if p['clock']]) == 41 and len(soft) == 23
         assert len(pins) == 41 + 514 + 508 + 16 + 3
     OUT.mkdir(parents=True, exist_ok=True)
-    grant = dict(schema='qwen.tile.held_machine_grant.v1', state='HELD structural candidate; physical proof required', issuer='Q-TILE45 (Claude) from Codex Qwen dielead draft under root authorization 2026-10-15', home_um=[457.92, 820.8], top=top, normal_edges_added=0, clocks=ports, pins=pins, regions=regions, checks=dict(all_signal_pins_explicit=True, **{'all%d_clock_pins' % len(ports): True}, actual_track_phase_um=.012, track_pitch_um=.048, minimum_same_face_center_spacing_um=.096, fences_exclude_actual_macro_and_child_5p4um_halos=True, disjoint_root_fences=True), pending=['Actual mapped FF/exclusive-comb area and <60% per-region capacity', 'Actual pin PG access, CTS, route, TT>=0 FF>=0 DRC0', 'Native launch<=220 capture<=190 spread<=80 and phi-R per entry', ownership['die_clock_obligation']])
+    grant = dict(schema='qwen.tile.held_machine_grant.v1', state='HELD structural candidate; physical proof required', issuer='Q-TILE45 (Claude) from Codex Qwen dielead draft under root authorization 2026-10-15', home_um=[457.92, 820.8], top=top, normal_edges_added=0, clocks=ports, pins=pins, regions=regions, checks=dict(all_signal_pins_explicit=True, **{'all%d_clock_pins' % len(ports): True}, actual_track_phase_um=.012, track_pitch_um=.048, minimum_same_face_center_spacing_um=.096, fences_exclude_actual_macro_and_child_5p4um_halos=True, disjoint_root_fences=True), pending=['Actual mapped FF/exclusive-comb area and <60% per-region capacity; eight TX roots unfenced so measured locality/spread required', 'Actual pin PG access, CTS, route, TT>=0 FF>=0 DRC0', 'Native launch<=220 capture<=190 spread<=80 and phi-R per entry', ownership['die_clock_obligation']])
     (OUT / 'held_grant.json').write_text(json.dumps(grant, indent=1) + '\n')
     (OUT / 'assigned_pins.tcl').write_text('# HELD machine grant: all data and clock pins on actual routing tracks.\n' + ''.join('place_pin -pin_name {%s} -layer %s -location {%.3f %.3f}\n' % (p['name'], p['layer'], *p['xy_um']) for p in pins))
     grant['unfenced_roots'] = {c: w for c, w in why.items() if c in regions}
@@ -231,7 +240,7 @@ def build(nl=False):
     s['pins'] = {f: sorted(set(p['name'].split('[')[0] for p in pins if p['face'] == f)) for f in 'WENS' if any(p['face'] == f for p in pins)}
     s.pop('pin_ranges', None)
     s['pin_regs'] = dict(enable=False, reason='Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required.')
-    s['structural_change'] = 'HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. r3: output face roots pin-anchored; one-sided <=40um fences leave contiguous unfenced pin-face/channel bands (4ecca DPL-0033 ungrouped glue); footprint/pins/RTL/normaledges unchanged.'
+    s['structural_change'] = 'HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. r5: eight per-LSL TX roots unfenced after r4 legal placement was broken by DPO at narrow fence edges; RQR1 lower bound on real row lattice; residual core/RQR fences and all45 clock entries retained. Measured CTS locality/spread required; footprint/pins/RTL/normaledges unchanged.'
     s['slot_change_request'] = 'HELD candidate machine grant in held_grant.json; existing457.92x820.8a2 home,45 clock entries. Production die contract adoption requires measured local and regional clock proof.'
     s['job'].update(owner='Codex:q_tile45_2330', branch='codex/qtile45-2330', tag='lc45', purpose=s['structural_change'], views_to=f'physical/ref_tile/{NAME}/views', record_to=f'results/rtl/ref_tile/{NAME}', cycles_added=0)
     s['job']['extra_paths'] = ['tools/qwen_repack', 'tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json', 'rtl/physical/qfd_tile_nk_rp1.sv', 'rtl/test/tb_qwen_repack45_native.sv', 'rtl/physical/ot_qwen_tile_lsl_fp1.sv', 'rtl/physical/ot_qwen_tile_node.sv', 'rtl/lib/ot_rst_relay.sv', 'physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v', 'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
@@ -239,7 +248,7 @@ def build(nl=False):
     if nl:
         s['structural_change'] = ('Q-TILE45 node-less twin of qfd_tile_nk_rp2_45_a2 for the 48 qfd_tile_nl slots: NODE 0 (no node leaf, no '
                                   'n_a/n_b/n_y faces), 41 entries = the 45 minus ck_node/ck_fa0/ck_fa1/ck_fa3; same 457.92x820.8 outline, '
-                                  'macro/LSL geometry, shared-logic corridors, fences and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).')
+                                  'macro/LSL geometry, shared-logic corridors, r5 unfenced TX roots and row-aligned RQR1 region, and pin coordinates as the nk kit; t_out TOREG on ck (same edge/value as the nk node feed-through).')
         s['slot_change_request'] = 'qfd_tile_nl slot -> 457.92 x 820.8 (same footprint as qfd_tile_nk_rp2_45_a2); 41 clock entries at the nk coordinates.'
         s['job'].update(tag='lc41', purpose=s['structural_change'])
         s['job']['extra_paths'] = [x.replace('rtl/test/tb_qwen_repack45_native.sv', 'rtl/test/tb_qwen_repack45_nl_native.sv') for x in s['job']['extra_paths']]
