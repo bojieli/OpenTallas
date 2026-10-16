@@ -15,7 +15,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set block [ord::get_db_block]
     set lim [expr {[info exists ::env(OT_ENTRY_WIRE_MAX_UM)] ? $::env(OT_ENTRY_WIRE_MAX_UM) : 60.0}]
     set dbu [expr {double([$block getDbUnitsPerMicron])}]
-    set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}; set entry_nets {}
+    set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}; set entry_nets {}; set ot_ce_soft_macro_sinks 0
     set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
     foreach clk [all_clocks] {
       foreach src [get_property $clk sources] {
@@ -37,6 +37,16 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             # STA renders escaped identifiers differently from OpenDB names.
             # Convert the actual instance object rather than reparsing its name.
             set inst [sta::sta_to_db_inst [lindex $cell 0]]
+            # Opt-in (spec soft_root_macro_masters): a RAW memory macro (Liberty memory, no hard-child view) may be an
+            # ordinary sink of a declared standard-cell root, exactly as in a single-root tile; CTS balances its clock
+            # pin with the root's registers.  Hard children (::ot_ce_counts) never qualify.
+            if {$inst ne "NULL" && [[$inst getMaster] isBlock] && [info exists ::ot_ce_soft_root_macros]
+                && [[$inst getMaster] getName] in $::ot_ce_soft_root_macros
+                && !([info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]])
+                && [get_property [get_lib_pins -of_objects $pin] is_clock]} {
+              incr ot_ce_soft_macro_sinks
+              continue
+            }
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }
@@ -113,7 +123,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
         }
         puts "OT_HYBRID post-CTS scoped net repair on selected roots; [llength $entry_nets] hard entries unchanged"
       }
-      puts "OT_HYBRID CTS roots [join $roots " "]; hard-child entries excluded"
+      puts "OT_HYBRID CTS roots [join $roots " "]; hard-child entries excluded; $ot_ce_soft_macro_sinks raw memory macro clock pins on soft roots"
     }
     if {[llength $cts_nets]} {
       puts "OT_ENTRIES done: $n independent hard entries, [llength $cts_nets] glue CTS roots, $far entry wires over $lim um"

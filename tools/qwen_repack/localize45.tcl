@@ -55,7 +55,8 @@ foreach inst [$q45_block getInsts] {
 # every fenced soft root must own mapped FFs (nk 26 roots, node-less twin 23), and no FF may sit on an unfenced root
 if {[dict size $q45_regs] != [dict size $q45_boxes]} {error "Q45 expected [dict size $q45_boxes] actual soft roots, got [dict size $q45_regs]: [dict keys $q45_regs]"}
 dict for {root registers} $q45_regs {
-  if {[llength $registers] > 5000} {error "Q45 root $root exceeds structural5000sink bound"}
+  set q45_bound [expr {[info exists q45_max_sinks] ? $q45_max_sinks : 5000}]
+  if {[llength $registers] > $q45_bound} {error "Q45 root $root exceeds structural${q45_bound}sink bound"}
   set cone [q45_fanin $registers]; dict set q45_cones $root $cone
   dict for {cell inst} $cone {dict lappend q45_owners $cell $root}
 }

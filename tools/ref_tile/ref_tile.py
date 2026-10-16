@@ -1364,6 +1364,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
+            if s.get("soft_root_macro_masters"):
+                pre_cts.append("set ::ot_ce_soft_root_macros {" + " ".join(s["soft_root_macro_masters"]) + "}")
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
