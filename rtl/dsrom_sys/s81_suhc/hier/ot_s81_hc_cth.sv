@@ -872,7 +872,8 @@ endmodule
 // single strip ctr: pin, origination, merge, RLY - 2 relays, out.
 module ot_s81_hc_ctrs #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0,
-    parameter integer Y_LAG = 0, CS_LAG = 0    // HC-COLUMN 10-16: y beat / cs arrive through a one-cycle relay (capture one cycle later)
+    parameter integer Y_LAG = 0, CS_LAG = 0,   // HC-COLUMN 10-16: y beat / cs arrive through Y_LAG / CS_LAG relay registers (capture that much later)
+    parameter integer HQ_LAG = 0               // 10-16 retcol a4: the banks' hrq arrive through HQ_LAG pin registers; the merge (and the rd relay) wait as long
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -921,13 +922,21 @@ module ot_s81_hc_ctrs #(
     reg [127:0] psb [0:NV-1];
     // CS_LAG / Y_LAG: the capture strobe and index wait one register for the relayed operand (same buffer, same reads)
     wire vs_w, vy_w; wire [7:0] si_w, yi_w;
-    generate if (CS_LAG) begin : g_csl
+    generate if (CS_LAG > 1) begin : g_csl2
+        reg [CS_LAG-1:0] v; reg [8*CS_LAG-1:0] i;
+        always @(posedge clk) begin v <= {v[CS_LAG-2:0], vs[DS]}; i <= {i[8*(CS_LAG-1)-1:0], si}; end
+        assign vs_w = v[CS_LAG-1]; assign si_w = i[8*(CS_LAG-1) +: 8];
+    end else if (CS_LAG) begin : g_csl
         reg v; reg [7:0] i; always @(posedge clk) begin v <= vs[DS]; i <= si; end
         assign vs_w = v; assign si_w = i;
     end else begin : g_csn
         assign vs_w = vs[DS]; assign si_w = si;
     end endgenerate
-    generate if (Y_LAG) begin : g_yl
+    generate if (Y_LAG > 1) begin : g_yl2
+        reg [Y_LAG-1:0] v; reg [8*Y_LAG-1:0] i;
+        always @(posedge clk) begin v <= {v[Y_LAG-2:0], vy[DY]}; i <= {i[8*(Y_LAG-1)-1:0], yi}; end
+        assign vy_w = v[Y_LAG-1]; assign yi_w = i[8*(Y_LAG-1) +: 8];
+    end else if (Y_LAG) begin : g_yl
         reg v; reg [7:0] i; always @(posedge clk) begin v <= vy[DY]; i <= yi; end
         assign vy_w = v; assign yi_w = i;
     end else begin : g_yn
@@ -981,7 +990,18 @@ module ot_s81_hc_ctrs #(
     reg [RDW-1:0]  rdq, rd2;
     wire [S_RT+3:0] rv_merge;
     wire [RDW-1:0] rd_merge;
-    generate if (READ_STAGE) begin : g_read_relay
+    generate if (HQ_LAG > 0) begin : g_read_relay_hq
+        // READ_STAGE + HQ_LAG relay stages: the merge meets hrq that came through HQ_LAG pin registers
+        localparam integer NRS = (READ_STAGE ? 1 : 0) + HQ_LAG;
+        localparam integer VW = S_RT + 4;
+        reg [VW*NRS-1:0] v;                      // packed shift registers (no memory inference)
+        reg [RDW*NRS-1:0] d;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) v <= 0;
+            else v <= {v, rv2};                  // truncating shift: stage 0 = rv2, stage t = stage t-1
+        always @(posedge clk) d <= {d, rd2};
+        assign rv_merge = v[VW*(NRS-1) +: VW]; assign rd_merge = d[RDW*(NRS-1) +: RDW];
+    end else if (READ_STAGE) begin : g_read_relay
         reg [S_RT+3:0] v;
         reg [RDW-1:0] d;
         always @(posedge clk or negedge rst_n) if (!rst_n) v<=0; else v<=rv2;
@@ -1060,7 +1080,8 @@ endmodule
 // Lanes n < 8 (rows above the band) drive the *_n ports on the N face, n >= 8 the *_s ports on the S face.
 module ot_s81_hc_ctra #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0,
-    parameter integer Y_LAG = 0, CS_LAG = 0    // HC-COLUMN 10-16: y beat / cs arrive through a one-cycle relay (capture one cycle later)
+    parameter integer Y_LAG = 0, CS_LAG = 0,   // HC-COLUMN 10-16: y beat / cs arrive through Y_LAG / CS_LAG relay registers (capture that much later)
+    parameter integer HQ_LAG = 0               // 10-16 retcol a4: the banks' hrq arrive through HQ_LAG pin registers; the merge (and the rd relay) wait as long
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -1100,7 +1121,7 @@ module ot_s81_hc_ctra #(
     end endgenerate
     wire [7:0] hnz = {hnz_s[3], hnz_n[3], hnz_s[2], hnz_n[2], hnz_s[1], hnz_n[1], hnz_s[0], hnz_n[0]};
     wire [7:0] pfl = {pflt_s[3], pflt_n[3], pflt_s[2], pflt_n[2], pflt_s[1], pflt_n[1], pflt_s[0], pflt_n[0]};
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE), .Y_LAG(Y_LAG), .CS_LAG(CS_LAG)) u (
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE), .Y_LAG(Y_LAG), .CS_LAG(CS_LAG), .HQ_LAG(HQ_LAG)) u (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
         .rv_in(rv_in), .rd_in({{(RDW - WA){1'b0}}, rd_in}), .rvm(rvm), .rdm(rdm_w), .rq_q(rq_q), .hs_run(hs_run),
         .hs_c(hs_c), .hrq(hrq), .yb({yb_s, yb_n}), .cs(cs), .nflt({nflt_s, nflt_n}), .hov_d(hov_d), .hnz_d(hnz),
@@ -1121,7 +1142,8 @@ endmodule
 
 module ot_s81_hc_ctrb #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0,
-    parameter integer Y_LAG = 0, CS_LAG = 0    // HC-COLUMN 10-16: y beat / cs arrive through a one-cycle relay (capture one cycle later)
+    parameter integer Y_LAG = 0, CS_LAG = 0,   // HC-COLUMN 10-16: y beat / cs arrive through Y_LAG / CS_LAG relay registers (capture that much later)
+    parameter integer HQ_LAG = 0               // 10-16 retcol a4: the banks' hrq arrive through HQ_LAG pin registers; the merge (and the rd relay) wait as long
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -1150,7 +1172,7 @@ module ot_s81_hc_ctrb #(
             assign hrq[64 * S_RT * (n + 8) + 64 * (q + SH) +: 64] = hrq_s[64 * (SH * n + q) +: 64];
         end
     end endgenerate
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE), .Y_LAG(Y_LAG), .CS_LAG(CS_LAG)) u (
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE), .Y_LAG(Y_LAG), .CS_LAG(CS_LAG), .HQ_LAG(HQ_LAG)) u (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
         .rv_in(rv_in), .rd_in({rdd_in, {(512 * SH - 128){1'b0}}, rdh_in}), .rvm(), .rdm(rdm_w), .rq_q(), .hs_run(),
         .hs_c(), .hrq(hrq), .yb({yb_s, yb_n}), .cs(128'd0), .nflt(16'd0), .hov_d(1'b0), .hnz_d(8'd0), .pflt_d(8'd0));

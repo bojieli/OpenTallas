@@ -33,12 +33,13 @@
    "a_rdm",
    "b_rdm",
    "clk",
+   "flag_fault",
+   "flag_hnz",
    "hdr",
    "hnz_n",
    "hs_c",
    "hs_run",
    "pflt_n",
-   "rq_q",
    "rvm"
   ],
   "S": [
@@ -52,26 +53,23 @@
    "hnz_s",
    "last",
    "pflt_s",
+   "rq_q",
    "rst_in",
    "rv_in",
    "tid"
   ],
-  "W": [
-   "cs_fwd",
-   "flag_fault",
-   "flag_hnz",
-   "hov_fwd",
-   "hov_in",
-   "peer_fault",
-   "peer_hnz",
-   "yb_fwd",
-   "yb_peer"
-  ],
   "ANY": [
+   "cs_fwd",
    "cs_in",
    "hrq_col",
    "nflt_col",
+   "yb_fwd",
    "yb_loc"
+  ],
+  "W": [
+   "hov_fwd",
+   "hov_in",
+   "yb_peer"
   ]
  },
  "clock_port": "clk",

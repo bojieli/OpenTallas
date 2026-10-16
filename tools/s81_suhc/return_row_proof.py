@@ -39,7 +39,7 @@ module ref_row(input wire clk, input wire rst_c, input wire [7:0] tid, input wir
   end endgenerate
   wire [15:0] rq_q; wire hs_run; wire [15:0] hs_c; wire [15:0] rq_c1, rq_c2, rq_c3; wire hr1,hr2,hr3; wire [15:0] hc1,hc2,hc3;
   wire [7:0] hov_d = {7'd0, hov0};
-  ot_s81_hc_ctra #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1),.Y_LAG(1),.CS_LAG(1)) u_ra (
+  ot_s81_hc_ctra #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1),.Y_LAG(2),.CS_LAG(2),.HQ_LAG(1)) u_ra (
     .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local), .rv_in(rv_in),
     .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
     .rq_q_c1(rq_c1), .rq_q_c2(rq_c2), .rq_q_c3(rq_c3), .hs_run_c1(hr1), .hs_run_c2(hr2), .hs_run_c3(hr3),
@@ -48,7 +48,7 @@ module ref_row(input wire clk, input wire rst_c, input wire [7:0] tid, input wir
     .nflt_n(nflt[7:0]), .nflt_s(nflt[15:8]), .hov_d(hov_d[0]),
     .hnz_n({hnz_d[6], hnz_d[4], hnz_d[2], hnz_d[0]}), .hnz_s({hnz_d[7], hnz_d[5], hnz_d[3], hnz_d[1]}),
     .pflt_n({pflt_d[6], pflt_d[4], pflt_d[2], pflt_d[0]}), .pflt_s({pflt_d[7], pflt_d[5], pflt_d[3], pflt_d[1]}));
-  ot_s81_hc_ctrb #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1),.Y_LAG(1),.CS_LAG(0)) u_rb (
+  ot_s81_hc_ctrb #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1),.Y_LAG(2),.CS_LAG(0),.HQ_LAG(1)) u_rb (
     .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local), .rv_in(rv_in),
     .rdh_in(rd_in[P_D-1:0]), .rdd_in(rd_in[RDW-1 -: 512 * SH + 128]), .rdm(rdm[RDW-1 -: 512 * SH]),
     .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
@@ -66,13 +66,14 @@ bench='''module check;
   reg clk=0; reg [31:0] rng=32'h2545F491; integer cycle,j,k;
   reg rst; reg [7:0] tid1,tid2; reg last1,last2; reg [6:0] fv1,fv2; reg [103:0] fdx1,fdx2;
   reg [7:0] rv_x; reg [2155:0] rd_x; reg [7:0] rv_xd; reg [2155:0] rd_xd;
-  reg [4095:0] hrq1,hrq2; reg [255:0] yb1,yb2,yb1d,yb2d; reg [127:0] cs1d,cs2d; reg [127:0] cs1,cs2; reg [15:0] nf1,nf2; reg hov1,hov2; reg [7:0] hz1,hz2,pf1,pf2;
+  reg [4095:0] hrq1,hrq2,hrq1d,hrq2d; reg [255:0] yb1,yb2,yb1d,yb2d,yb1e,yb2e; reg [127:0] cs1d,cs2d,cs1e,cs2e; reg [127:0] cs1,cs2;
+  reg rrf; reg [6:0] fv1L,fv2L; /* a4: the reference sees ctfl's fv_local = the early fv registered (reset relay as ctfl) */ reg [15:0] nf1,nf2; reg hov1,hov2; reg [7:0] hz1,hz2,pf1,pf2;
   wire [7:0] r1_rv, r2_rv; wire [2155:0] r1_rd, r2_rd;
   wire [15:0] r1q0,r1q1,r1q2,r1q3,r2q0,r2q1,r2q2,r2q3,r1h0,r1h1,r1h2,r1h3,r2h0,r2h1,r2h2,r2h3; wire [3:0] r1hr,r2hr;
-  ref_row ref1(.clk(clk),.rst_c(rst),.tid(tid1),.last(last1),.fv_local(fv1),.fdx_local(fdx1),.rv_in(rv_x),.rd_in(rd_x),.rv_out(r1_rv),.rd_out(r1_rd),
-    .rq0(r1q0),.rq1(r1q1),.rq2(r1q2),.rq3(r1q3),.hs_run_c(r1hr),.hs0(r1h0),.hs1(r1h1),.hs2(r1h2),.hs3(r1h3),.hrq(hrq1),.yb(yb1d),.cs(cs1d),.nflt(nf1),.hov0(hov1),.hnz_d(hz1),.pflt_d(pf1));
-  ref_row ref2(.clk(clk),.rst_c(rst),.tid(tid2),.last(last2),.fv_local(fv2),.fdx_local(fdx2),.rv_in(r1_rv),.rd_in(r1_rd),.rv_out(r2_rv),.rd_out(r2_rd),
-    .rq0(r2q0),.rq1(r2q1),.rq2(r2q2),.rq3(r2q3),.hs_run_c(r2hr),.hs0(r2h0),.hs1(r2h1),.hs2(r2h2),.hs3(r2h3),.hrq(hrq2),.yb(yb2d),.cs(cs2d),.nflt(nf2),.hov0(hov2),.hnz_d(hz2),.pflt_d(pf2));
+  ref_row ref1(.clk(clk),.rst_c(rst),.tid(tid1),.last(last1),.fv_local(fv1L),.fdx_local(fdx1),.rv_in(rv_x),.rd_in(rd_x),.rv_out(r1_rv),.rd_out(r1_rd),
+    .rq0(r1q0),.rq1(r1q1),.rq2(r1q2),.rq3(r1q3),.hs_run_c(r1hr),.hs0(r1h0),.hs1(r1h1),.hs2(r1h2),.hs3(r1h3),.hrq(hrq1d),.yb(yb1e),.cs(cs1e),.nflt(nf1),.hov0(hov1),.hnz_d(hz1),.pflt_d(pf1));
+  ref_row ref2(.clk(clk),.rst_c(rst),.tid(tid2),.last(last2),.fv_local(fv2L),.fdx_local(fdx2),.rv_in(r1_rv),.rd_in(r1_rd),.rv_out(r2_rv),.rd_out(r2_rd),
+    .rq0(r2q0),.rq1(r2q1),.rq2(r2q2),.rq3(r2q3),.hs_run_c(r2hr),.hs0(r2h0),.hs1(r2h1),.hs2(r2h2),.hs3(r2h3),.hrq(hrq2d),.yb(yb2e),.cs(cs2e),.nflt(nf2),.hov0(hov2),.hnz_d(hz2),.pflt_d(pf2));
   localparam integer RBW=1140;
   wire [4*RBW-1:0] b0, b1, b2; wire [7:0] d_rv; wire [2155:0] d_rd;
   wire [15:0] d1q0,d1q1,d1q2,d1q3,d2q0,d2q1,d2q2,d2q3,d1h0,d1h1,d1h2,d1h3,d2h0,d2h1,d2h2,d2h3; wire [3:0] d1hr,d2hr;
@@ -88,7 +89,7 @@ bench='''module check;
   task automatic rnd(inout reg [31:0] s); begin s=s^(s<<13); s=s^(s>>17); s=s^(s<<5); end endtask
   `define RB(v) for(j=0;j<$bits(v);j=j+1) begin rnd(rng); v[j]=rng[0]; end
   initial begin
-    rst=0; rv_x=0; rd_x=0; yb1d=0; yb2d=0; cs1d=0; cs2d=0;
+    rst=0; rv_x=0; rd_x=0; yb1d=0; yb2d=0; cs1d=0; cs2d=0; yb1e=0; yb2e=0; cs1e=0; cs2e=0; hrq1d=0; hrq2d=0; rrf=0; fv1L=0; fv2L=0;
     for(cycle=0;cycle<3000;cycle=cycle+1) begin
       clk=0; #1;
       rst=(cycle>=6 && !(cycle>=1500 && cycle<1504));
@@ -102,7 +103,8 @@ bench='''module check;
       for(j=0;j<4;j=j+1) begin rd_x[4+8*j +:8]=(cycle+j)%5; rd_x[4+32+16*j +:16]=(cycle+j)%640; end
       rd_x[4+96 +:8]=cycle%5;
       #1; clk=1;
-      yb1d<=yb1; yb2d<=yb2; cs1d<=cs1; cs2d<=cs2;
+      yb1d<=yb1; yb2d<=yb2; cs1d<=cs1; cs2d<=cs2; yb1e<=yb1d; yb2e<=yb2d; cs1e<=cs1d; cs2e<=cs2d; hrq1d<=hrq1; hrq2d<=hrq2;
+      rrf<=rst; fv1L<=rrf ? fv1 : 7'd0; fv2L<=rrf ? fv2 : 7'd0;
       #1;
       p_rv=r2_rv; p_rd=r2_rd;
       p1q0=r1q0;p1q1=r1q1;p1q2=r1q2;p1q3=r1q3;p2q0=r2q0;p2q1=r2q1;p2q2=r2q2;p2q3=r2q3;p1hr=r1hr;p2hr=r2hr;
@@ -125,7 +127,12 @@ MUT={'positive':[],
  'header_from_peer':[('.flg_hnz(flg_hnz), .hdr_c(hdr),','.flg_hnz(flg_hnz), .hdr_c(g_col[(c + 1) % 4].hdr ^ {107\'d0, g_col[(c + 1) % 4].rvm[0]}),')],
  'no_par_ctrb':[(".a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),",".a_par(g_col[PC].a_rdm), .b_par(b_rdm),")],
  'cs_relay_skipped':[('.cs_in(c == 3 ? cs : cs_net), .cs_fwd(csf),','.cs_in(cs), .cs_fwd(csf),')],
- 'unrelayed_own_y':[('assign yb_all[16*n +:16]=yb_r[16*K +:16];','assign yb_all[16*n +:16]=yb_loc[16*K +:16];')],
+ 'unrelayed_own_y':[('yb_o<=yb_r;','yb_o<=yb_loc;')],
+ 'hq_pin_reg_bypassed':[('assign hrq_use = hrq_q;','assign hrq_use = hrq_col;')],
+ 'fv_pin_reg_bypassed':[('assign fv_use = fv_q;','assign fv_use = fv;')],
+ 'yb_peer_reg_bypassed':[('assign yb_own=yb_o; assign yb_pv=yb_pq;','assign yb_own=yb_o; assign yb_pv=yb_peer;')],
+ 'yb_own_reg_bypassed':[('assign yb_own=yb_o; assign yb_pv=yb_pq;','assign yb_own=yb_r; assign yb_pv=yb_pq;')],
+ 'cs_reg_bypassed':[('assign cs_use=cs_o;','assign cs_use=(COLUMN==3) ? cs_q : cs_rel;')],
  'slice_flag_merge_dropped':[('rv_c[S_RT+2] | (|flg_fault)','rv_c[S_RT+2]')]}
 res=[]
 verilator=shutil.which('verilator') or str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
@@ -143,7 +150,7 @@ for v in variants:
     ok=(run.returncode==0)==(v=='positive'); res.append(dict(variant=v,returncode=run.returncode,expected=ok,log=log.name))
     shutil.rmtree(build,ignore_errors=True)
     if not ok: raise SystemExit('UNEXPECTED VERDICT '+str(log))
-rec={'status':'PASS','scope':'two-row return chain (ret_column leaves YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 1; component chain only, the system calendar is checked by the exact HC gate',
-     'cycles':3000,'calendar':'y returns +1 (y beat captured one cycle later, Y_LAG), cs captured +1 (CS_LAG); requests, h returns and the chain unchanged',
+rec={'status':'PASS','scope':'two-row return chain (ret_column leaves a4: YB_STAGE 2, HQ_LAG 1, FV_PIN 1, PAYLOAD_STAGE 0 + ctrn slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 2, HQ_LAG 1 (reference fed y / cs two cycles late, hrq one cycle late, fv_local = registered early fv); component chain only, the system calendar is checked by the exact HC gate',
+     'cycles':3000,'calendar':'a4: y returns +2 vs cth_nt (Y_LAG 2), cs captured +2 (CS_LAG 2), h-return merge +1 per row (HQ_LAG 1: rd relay +1 = chain +1 per row); requests unchanged; fv 0 (early fv + pin register)',
      'sources_sha256':{p:hashlib.sha256((r/p).read_bytes()).hexdigest() for p in ['rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv','rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv','rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv']},'results':res}
 (out/'receipt.json').write_text(json.dumps(rec,indent=1)+'\n'); print(json.dumps(rec))

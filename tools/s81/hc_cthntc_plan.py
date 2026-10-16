@@ -233,11 +233,19 @@ def build():
             face = 'N' if k < 2 else 'S'
             for b in range(16):
                 L.add('yb_loc', face, rel(ctnl_abs(lanes, k, c, 'yb', b)[0]))
+                # a4: yb_fwd launches from the yb_loc capture flop (yb_r): same face, next to its yb_loc bit
+                L.add('yb_fwd', face, rel(ctnl_abs(lanes, k, c, 'yb', b)[0]))
         for j in range(4):
             L.add('nflt_col', 'N' if j < 2 else 'S', rel(ctnl_abs(lanes, j, c, 'flt', 0)[0]))
-        for port, bits in (('rq_q', 16 * 4), ('hs_run', 1), ('hs_c', 16)):
+        for port, bits in (('hs_run', 1), ('hs_c', 16)):
             for b in range(bits):
                 L.add(port, 'N', rel(statistics.mean(ctnl_abs(lanes, j, c, port, b)[0] for j in range(4))))
+        # a4: rq_q = the rdq header pin flop's P_Q field (hdr_in bits 36..99, S face): its launch pin sits on the S face
+        # next to the hdr_in bit it launches from, so one flop serves both pins (a3: rq_q on N, rdq pulled mid-tile,
+        # hdr_in capture 201-209 ps > 190); the parent leg to the lanes above grows by the ret height
+        HX = dict(((port, i), x) for i, (port, x) in enumerate([pp for pp in own_bundle('in', part_e) if pp[0] == 'hdr_in']))
+        for b in range(64):
+            L.add('rq_q', 'S', HX[('hdr_in', 36 + b)])
         # ctpl group c flags; hov (column 0 source)
         for nm, half, face in (('hnz_n', 0, 'N'), ('pflt_n', 0, 'N'), ('hnz_s', 1, 'S'), ('pflt_s', 1, 'S')):
             L.add(nm, face, rel(LW * c + ctpl[nm[:-2] + '_d'][0][2]))
@@ -268,15 +276,13 @@ def build():
             j = b // 32
             if c == 3:
                 L.add('cs_in', 'N' if j < 2 else 'S', CW - 2.0)
-                L.add('cs_fwd', 'W', RET_H / 2)
+                L.add('cs_fwd', 'N' if j < 2 else 'S', CW - 2.0)     # a4: launches from cs_q, next to its cs_in bit
             else:
                 L.add('cs_in', 'E', RET_H / 2)
         if c != 3:
             L.add('cs_fwd', 'E', 1.0)                           # 1-b constant (non-relaying column)
         L.add('hov_fwd', 'E' if c == 0 else 'W', RET_H - 1.0)
         # y beat / flag peer nets on W/E toward the peer
-        for b in range(64):
-            L.add('yb_fwd', 'E' if c < 2 else 'W', RET_H / 2)
         for pi, pc in enumerate([x for x in range(4) if x != c]):
             for b in range(64):
                 L.add('yb_peer', 'W' if pc < c else 'E', RET_H / 2)

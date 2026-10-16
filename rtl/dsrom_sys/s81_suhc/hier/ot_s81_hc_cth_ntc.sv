@@ -436,7 +436,7 @@ module ot_s81_hc_cth_ntc #(
     end endgenerate
     assign cs = {acc[32 * 15 +: 32], acc[32 * 11 +: 32], acc[32 * 7 +: 32], acc[32 * 3 +: 32]};
     ot_s81_hc_retrow #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN)) u_ret (
-        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rb_in(rb_in), .rb_out(rb_out),
+        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv), .fdx(fdx_local[O_D-1:0]), .rb_in(rb_in), .rb_out(rb_out),   // a4: early fv (ctfxs), registered at the ret_column pin
         .rq_q0(rq_col[0]), .rq_q1(rq_col[1]), .rq_q2(rq_col[2]), .rq_q3(rq_col[3]), .hs_run_c(hs_run_col),
         .hs_c0(hs_c_col[0]), .hs_c1(hs_c_col[1]), .hs_c2(hs_c_col[2]), .hs_c3(hs_c_col[3]),
         .hrq(hrq), .yb(yb), .cs(cs), .nflt(nflt), .hov_d(hov_d[0]), .hnz_d(hnz_d), .pflt_d(pflt_d));
@@ -448,7 +448,15 @@ endmodule
 // COLUMN 3 / COLUMN 0 (registered = the relay) and the relayed nets elsewhere (used unregistered).
 module ot_s81_hc_ret_column #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 1,
-    parameter integer COLUMN = 0
+    parameter integer COLUMN = 0,
+    // retcol a4 (10-16, native capture: a3 c2/c3 captured hrq_col / cs / fv / yb pins 215-300 ps > 190 behind the
+    // same-cycle merge, the sequencer and the y/cs buffers): every such input family lands on a pin register.
+    //   HQ_LAG 1 : hrq_col -> hrq_q; the merge (and the rd relay) one cycle later = +1 cycle per return row (h return).
+    //   YB_STAGE 2: own y lanes yb_r -> yb_o, peer lanes yb_peer -> yb_pq, cs (COLUMN 3 cs_q / others cs_in) -> cs_o:
+    //              Y_LAG / CS_LAG 2 = y returns and the cs capture +1 more.
+    //   FV_PIN 1 : fv is the row's EARLY fv (ctfxs fv, one register before ctfl's fv_local) captured at this pin with
+    //              ctfl's reset relay (rst_in -> rr, async clear) = bit-identical to fv_local: 0 cycles.
+    parameter integer HQ_LAG = 1, YB_STAGE = 2, FV_PIN = 1
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -502,16 +510,35 @@ module ot_s81_hc_ret_column #(
             end
         end
     end endgenerate
+    // pin registers (a4): hrq_col (HQ_LAG) and fv (FV_PIN)
+    wire [4*64*S_RT-1:0] hrq_use;
+    wire [S_RD+4:0]      fv_use;
+    generate if (HQ_LAG > 0) begin : g_hq
+        reg [4*64*S_RT-1:0] hrq_q;
+        always @(posedge clk) hrq_q <= hrq_col;
+        assign hrq_use = hrq_q;
+    end else begin : g_hqn
+        assign hrq_use = hrq_col;
+    end endgenerate
+    generate if (FV_PIN) begin : g_fvp
+        reg rrf; reg [S_RD+4:0] fv_q;
+        always @(posedge clk) rrf <= rst_in;
+        always @(posedge clk or negedge rrf) if (!rrf) fv_q <= 0; else fv_q <= fv;
+        assign fv_use = fv_q;
+    end else begin : g_fvn
+        assign fv_use = fv;
+    end endgenerate
     wire [2*64*SH-1:0] hr_n, hr_s, hrb_n, hrb_s;       // [bank][slot]: N = j 0/1, S = j 2/3
     generate for (bank = 0; bank < 2; bank = bank + 1) begin : g_h
         for (q = 0; q < SH; q = q + 1) begin : g_q
-            assign hr_n [64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * bank       + 64 * q +: 64];
-            assign hr_s [64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * (bank + 2) + 64 * q +: 64];
-            assign hrb_n[64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * bank       + 64 * (q + SH) +: 64];
-            assign hrb_s[64 * (SH * bank + q) +: 64] = hrq_col[64 * S_RT * (bank + 2) + 64 * (q + SH) +: 64];
+            assign hr_n [64 * (SH * bank + q) +: 64] = hrq_use[64 * S_RT * bank       + 64 * q +: 64];
+            assign hr_s [64 * (SH * bank + q) +: 64] = hrq_use[64 * S_RT * (bank + 2) + 64 * q +: 64];
+            assign hrb_n[64 * (SH * bank + q) +: 64] = hrq_use[64 * S_RT * bank       + 64 * (q + SH) +: 64];
+            assign hrb_s[64 * (SH * bank + q) +: 64] = hrq_use[64 * S_RT * (bank + 2) + 64 * (q + SH) +: 64];
         end
     end endgenerate
     wire [255:0] yb_rel;                              // the relayed y beat for ctrb: own yb_fwd + the peers'
+    wire [255:0] yb_lag;                              // YB_STAGE 2: ctra's lag-2 view (own yb_o + peer yb_pq), shared
     generate for (q = 0; q < 16; q = q + 1) begin : g_yr
         localparam integer CC = q % 4, K = q / 4, P = (CC < COLUMN) ? CC : CC - 1;
         if (CC == COLUMN) begin : g_own
@@ -520,8 +547,8 @@ module ot_s81_hc_ret_column #(
             assign yb_rel[16 * q +: 16] = yb_peer[64 * P + 16 * K +: 16];
         end
     end endgenerate
-    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(1),.PAYLOAD_STAGE(0),.FLAG_MERGE(0)) u_a (
-        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(a_rdp),
+    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(YB_STAGE),.PAYLOAD_STAGE(0),.FLAG_MERGE(0),.HQ_LAG(HQ_LAG)) u_a (
+        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv_use), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(a_rdp),
         .rvm(rvm), .peer_fault(3'b0), .peer_hnz(3'b0), .yb_loc(yb_loc), .yb_fwd(yb_fwd), .yb_peer(yb_peer),
         .cs_fwd(cs_f), .cs_rel(cs_in), .hov_fwd(hov_fwd), .hov_rel(hov_in),
         .rdm(a_rdm), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
@@ -529,10 +556,11 @@ module ot_s81_hc_ret_column #(
         .hrq_n(hr_n), .hrq_s(hr_s), .yb_n(128'd0), .yb_s(128'd0), .cs(cs_in),
         .nflt_n(nflt_col[1:0]), .nflt_s(nflt_col[3:2]), .hov_d(hov_in),
         .hnz_n(hnz_n), .hnz_s(hnz_s), .pflt_n(pflt_n), .pflt_s(pflt_s),
-        .flag_fault(flag_fault), .flag_hnz(flag_hnz), .header_delay(hdr));
-    ot_s81_hc_ctrb_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(1),.PAYLOAD_STAGE(0)) u_b (
-        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(b_rdp),
-        .rdm(b_rdm), .hrq_n(hrb_n), .hrq_s(hrb_s), .yb_n(yb_rel[127:0]), .yb_s(yb_rel[255:128]));
+        .flag_fault(flag_fault), .flag_hnz(flag_hnz), .header_delay(hdr), .yb_lag(yb_lag));
+    ot_s81_hc_ctrb_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(YB_STAGE),.PAYLOAD_STAGE(0),.HQ_LAG(HQ_LAG)) u_b (
+        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv_use), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(b_rdp),
+        .rdm(b_rdm), .hrq_n(hrb_n), .hrq_s(hrb_s),
+        .yb_n(YB_STAGE > 1 ? yb_lag[127:0] : yb_rel[127:0]), .yb_s(YB_STAGE > 1 ? yb_lag[255:128] : yb_rel[255:128]));
 endmodule
 
 // Hardened masters (one per COLUMN, distinct LEF names): thin wrappers of ot_s81_hc_ret_column / ot_s81_hc_ctrn_col.

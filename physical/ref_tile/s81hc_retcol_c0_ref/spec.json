@@ -57,7 +57,6 @@
    "hs_c",
    "hs_run",
    "pflt_n",
-   "rq_q",
    "rvm"
   ],
   "S": [
@@ -71,6 +70,7 @@
    "hnz_s",
    "last",
    "pflt_s",
+   "rq_q",
    "rst_in",
    "rv_in",
    "tid"
@@ -79,12 +79,12 @@
    "cs_fwd",
    "cs_in",
    "hov_fwd",
-   "yb_fwd",
    "yb_peer"
   ],
   "ANY": [
    "hrq_col",
    "nflt_col",
+   "yb_fwd",
    "yb_loc"
   ]
  },
@@ -99,7 +99,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
   "branch": "claude/s81-hccol-b-1016",
-  "tag": "a3",
+  "tag": "a4",
   "purpose": "New cth_ntc return leaf, COLUMN 0: the four-column return with the y-beat / cs relays (y returns +1, requests and h returns unchanged).",
   "views_to": "physical/ref_tile/s81hc_retcol_c0_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_retcol_c0_ref",
@@ -134,6 +134,6 @@
   "enable": false,
   "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
  },
- "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only.",
+ "structural_change": "Replaces the failed monolithic ctra / ctrb strips (v1 GRT congestion; native capture 674 ps): one engine per column, y beat and cs relayed one cycle, own payload chunks only. | 10-16 a4 (a3 c2/c3 CLOSED but native capture FAIL: hrq_col 277-279, cs_in 273, fv 262-300, yb_loc 247-249, yb_peer 215-238, hdr_in 201-209 ps > 190): every input family on a pin register -- hrq_col -> hrq_q (HQ_LAG 1: merge + rd relay +1 = +1 cycle per return row), yb own/peer and cs one consumer register each (Y_LAG / CS_LAG 2: y returns +1, cs capture +1), fv = the row's early fv (ctfxs) captured at the pin with ctfl's reset relay (0 cycles); pins: rq_q moves to the S face next to its hdr_in P_Q bit (one rdq flop for capture + launch), yb_fwd / cs_fwd (c3) launch on the N/S face next to their capture pins. Same outline.",
  "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16: parent 576.72 x 874.26)."
 }

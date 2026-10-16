@@ -11,7 +11,12 @@
 
 module ot_s81_hc_ctra_column #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1,
-    parameter integer FLAG_MERGE = 1   // 0 (cth_ntc ret_column): the row's four flags are ORed in the ctrn_col slice register
+    parameter integer FLAG_MERGE = 1,  // 0 (cth_ntc ret_column): the row's four flags are ORed in the ctrn_col slice register
+    // retcol a4 (10-16): YB_STAGE 2 = the y beat and cs reach the engine through TWO registers everywhere (the pin
+    // capture / relay + one consumer register: own lanes yb_o <= yb_r, peers yb_pq <= yb_peer at their pin, COLUMN 3
+    // cs_o <= cs_q, others cs_pq <= cs_rel); ctrs Y_LAG / CS_LAG 2.  HQ_LAG: the banks' hrq come through pin registers
+    // (caller), the merge waits HQ_LAG more cycles (ctrs).
+    parameter integer HQ_LAG = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -46,7 +51,8 @@ module ot_s81_hc_ctra_column #(
     input  wire                   hov_d,
     output reg                    flag_fault, flag_hnz,
     output wire [P_D-1:0]          header_delay,
-    input  wire                   hnz_n, hnz_s, pflt_n, pflt_s   // ctpl half 0 (N) / half 1 (S), group g
+    input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,  // ctpl half 0 (N) / half 1 (S), group g
+    output wire [255:0]           yb_lag            // YB_STAGE: the engine's y beat view {yb_s, yb_n} (for the column's ctrb)
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
     localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RDW = P_D + 512 * S_RT, WA = P_D + 512 * SH;
@@ -67,18 +73,27 @@ module ot_s81_hc_ctra_column #(
         reg [63:0] yb_r; reg [4*32-1:0] cs_q; reg hov_q;
         always @(posedge clk) begin yb_r<=yb_loc; cs_q<=cs; hov_q<=hov_d; end
         assign yb_fwd=yb_r;
+        // YB_STAGE 2: one consumer register on every y / cs operand (own and peer alike, so every lane keeps one lag)
+        wire [63:0] yb_own; wire [191:0] yb_pv; wire [4*32-1:0] cs_use;
+        if(YB_STAGE>1) begin : g_lag2
+            reg [63:0] yb_o; reg [191:0] yb_pq; reg [4*32-1:0] cs_o;
+            always @(posedge clk) begin yb_o<=yb_r; yb_pq<=yb_peer; cs_o<=(COLUMN==3) ? cs_q : cs_rel; end
+            assign yb_own=yb_o; assign yb_pv=yb_pq; assign cs_use=cs_o;
+        end else begin : g_lag1
+            assign yb_own=yb_r; assign yb_pv=yb_peer; assign cs_use=(COLUMN==3) ? cs_q : cs_rel;
+        end
         wire [255:0] yb_all;
         for(genvar n=0;n<16;n=n+1) begin : g_yb
             localparam integer CC=n%4, K=n/4, P=(CC<COLUMN)?CC:CC-1;
             if(CC==COLUMN) begin : g_own
-                assign yb_all[16*n +:16]=yb_r[16*K +:16];
+                assign yb_all[16*n +:16]=yb_own[16*K +:16];
             end else begin : g_peer
-                assign yb_all[16*n +:16]=yb_peer[64*P+16*K +:16];
+                assign yb_all[16*n +:16]=yb_pv[64*P+16*K +:16];
             end
         end
         assign {e_yb_s,e_yb_n}=yb_all;
         assign e_rst=rst_in; assign e_tid=tid; assign e_last=last; assign e_fv=fv; assign e_fdx=fdx;
-        assign e_cs=(COLUMN==3) ? cs_q : cs_rel;   assign cs_fwd=(COLUMN==3) ? cs_q : '0;
+        assign e_cs=cs_use;   assign cs_fwd=(COLUMN==3) ? cs_q : '0;
         // hov_d only reaches rvm's overflow flag, which COLUMN 0 owns (its slice carries the row's valid); the
         // relayed copy keeps the other columns' (unused) flag inputs driven without a long join
         assign e_hov=hov_d; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0;
@@ -90,6 +105,7 @@ module ot_s81_hc_ctra_column #(
         assign e_hov=hov_d; assign e_nflt_n=nflt_n; assign e_nflt_s=nflt_s; assign e_hnz_n=hnz_n; assign e_hnz_s=hnz_s;
         assign e_pflt_n=pflt_n; assign e_pflt_s=pflt_s; assign e_yb_n=yb_n; assign e_yb_s=yb_s;
     end endgenerate
+    assign yb_lag = {e_yb_s, e_yb_n};
     wire [S_RT+3:0] rv_base;
     wire [3:0] fault_flags = {peer_fault,flag_fault};
     wire [3:0] hnz_flags = {peer_hnz,flag_hnz};
@@ -148,7 +164,7 @@ module ot_s81_hc_ctra_column #(
     end else begin : g_hdr_direct
         assign header_delay=rd_full[P_D-1:0];
     end endgenerate
-    ot_s81_hc_ctra #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.Y_LAG(YB_STAGE),.CS_LAG(YB_STAGE)) u (
+    ot_s81_hc_ctra #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.Y_LAG(YB_STAGE),.CS_LAG(YB_STAGE),.HQ_LAG(HQ_LAG)) u (
         .clk(clk),
         .rst_in(e_rst),
         .tid(e_tid),
@@ -346,7 +362,8 @@ module ot_s81_hc_ctra_columns #(
 endmodule
 
 module ot_s81_hc_ctrb_column #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1,
+    parameter integer HQ_LAG = 0       // retcol a4: hrq through pin registers (caller); the merge waits as long
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -385,7 +402,7 @@ module ot_s81_hc_ctrb_column #(
         assign hr_n[64*SH*lane +:64*SH] = (lane%4==COLUMN) ? hrq_n[64*SH*(lane/4) +:64*SH] : '0;
         assign hr_s[64*SH*lane +:64*SH] = (lane%4==COLUMN) ? hrq_s[64*SH*(lane/4) +:64*SH] : '0;
     end endgenerate
-    ot_s81_hc_ctrb #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.Y_LAG(YB_STAGE),.CS_LAG(0)) u (
+    ot_s81_hc_ctrb #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.Y_LAG(YB_STAGE),.CS_LAG(0),.HQ_LAG(HQ_LAG)) u (
         .clk(clk),
         .rst_in(e_rst),
         .tid(e_tid),
