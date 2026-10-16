@@ -88,7 +88,7 @@
  "slot_change_request": "el1014-qwen-kvsys-elements 2026-10-14 (proposal P2 in el1014-qwen-split-kvsys.log): the KV/system die's attention hub qkd_ahub (ot_qwen_nearhbm_attn_hub_t, routed as one 1,171 x 760 cluster: 6 failed routes, last FF -122 ps on 2,253 input endpoints under one 1,864 ps / 266 ps cluster clock) becomes 14 DIE LEAVES: this core (151.2 x 151.2: N face to the 4 zh heads, W face to the pvlg / pbst rows, S face si / pi from the stacks, E face mo / out results + the reciprocal leaf) + the 13 CLOSED tiles 4 x ot_nhb_pbst, 4 x ot_nhb_pvlg, 4 x ot_nhb_zh, ot_qkh_recip_leaf, each with its own die clock entry. Die nets with FIXED relay counts (reference composition ot_qwen_nearhbm_attn_hub_d, rtl/hdc/nearhbm/ot_qkd_ahub_core.sv): ZW_RLY on every core->zh net, ZR_RLY zh->core, RA_RLY core->pbst ra, SR_RLY on every pbst->pvlg sr net (4 x 4 x 128 b crossbar, was hub_t's sr_r), PV_RLY core->pvlg v/rz, Y_RLY pvlg->core; the core's chain lengths are parameters of those counts (defaults 0/0/0/1/0/0). pi_beat / pi_data (2,072 b) go from the stacks straight to the pbst tiles (0..3 stages behind the core's pi_valid / pi_g copy). Recip path latency-free (any relay count).",
  "job": {
   "owner": "Claude:el1014-qwen-kvsys-elements",
-  "branch": "claude/qkvsys-strip",
+  "branch": "claude/qkvsys-strip-core",
   "tag": "hd3",
   "purpose": "Qwen two-die split, KV/system die: the attention hub's control / glue as ONE leaf (decode, lmax, Z control, reciprocal issue, rz, P.V control, tags, output registers) with a register at every pin and its own clock root; replaces the hub_t cluster parent route (its parent clock over 13 hard tiles was the structural fault). Values bit-identical to hub_t; cycle changes measured by the benches.",
   "extra_paths": [
