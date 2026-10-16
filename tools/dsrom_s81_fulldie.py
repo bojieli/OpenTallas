@@ -501,6 +501,30 @@ BOUND_TOL = SHAVE + 1e-6
 BOUND_ORIENTS = ('R0', 'MY', 'MX', 'R180')
 
 
+def bound_view_orientation_contract(view):
+    """Declared transforms of this hash-verified LEF, within placer support.
+
+    No SYMMETRY declares R0 only. A placer accepting MY/MX is not evidence that
+    an individual hard macro permits those transforms. This does not add any
+    physical symmetry or qualify mirrored clock/PG/native timing invariants.
+    """
+    match = re.search(r'^\s*SYMMETRY\s+([^;]+);', view['text'], re.M)
+    symmetry = match.group(1).split() if match else []
+    legal = {'R0'}
+    if 'X' in symmetry:
+        legal.add('MX')
+    if 'Y' in symmetry:
+        legal.add('MY')
+    if 'X' in symmetry and 'Y' in symmetry:
+        legal.add('R180')
+    if 'R90' in symmetry:
+        legal.update(('R90', 'R180', 'R270'))
+        if 'X' in symmetry or 'Y' in symmetry:
+            legal.update(('MX', 'MY', 'MXR90', 'MYR90'))
+    return dict(symmetry=symmetry, declared=sorted(legal),
+                supported=[o for o in BOUND_ORIENTS if o in legal])
+
+
 def apply_view_binding(m, pdir):
     """Bind the table's masters present on this die (end of finalize_r8, before any LEF / DEF / netlist is written):
     hard error on a pin-name mismatch with the die netlist, on a non-R0 instance and on a real outline larger than the
@@ -524,19 +548,36 @@ def apply_view_binding(m, pdir):
             why = bound_view_pin_faults(mst, v, pdir.get(mst, {}))[:4]
             if mst in REAL_FILES:
                 why.append('constant-bound hard macro')
-            nr = [i.name for i in its if i.orient not in BOUND_ORIENTS]
+            orientation = bound_view_orientation_contract(v)
+            nr = [dict(instance=i.name, orient=i.orient) for i in its if i.orient not in orientation['supported']]
             if nr:
-                why.append(f'{len(nr)} instance(s) not in {BOUND_ORIENTS}, e.g. {nr[0]}')
+                why.append(f'{len(nr)} instance(s) outside literal LEF orientation contract '
+                           f'{orientation["supported"]}, e.g. {nr[0]}')
             big = [i for i in its if v['w'] > i.w + BOUND_TOL or v['h'] > i.h + BOUND_TOL]
             if big:
                 why.append(f'real {v["w"]} x {v["h"]} > slot {big[0].w:.3f} x {big[0].h:.3f} ({len(big)} inst)')
             if why:
                 mis[mst] = dict(instances=len(its), lef=v['lef'], why=why)
+                if nr:
+                    mis[mst].update(orientation_contract=orientation, unsupported_orientations=nr)
         m['view_binding_misfits'] = mis
         bv = {k: v for k, v in bv.items() if k not in mis}
         print('OT_VIEW_BINDING_MISFITS %d masters not bound' % len(mis), file=sys.stderr)
         for k_, v_ in sorted(mis.items()):
             print('OT_VIEW_MISFIT ' + json.dumps(dict(master=k_, **v_)), file=sys.stderr)
+        unbound = defaultdict(list)
+        for it in m['insts']:
+            if it.master not in bv and it.master not in REAL_FILES:
+                unbound[it.master].append(it.name)
+        m['view_binding_unbound_generated'] = {
+            mst: dict(reason='VIEW_MISFIT' if mst in mis else 'NO_VERIFIED_TABLE_VIEW',
+                      instances=len(names), example_instances=names[:8])
+            for mst, names in sorted(unbound.items())}
+        m['view_binding_qualification'] = dict(
+            complete=not bool(unbound), native_qualification=False,
+            scope='DIAGNOSTIC_BINDING_NOT_NATIVE_PARENT_PROOF',
+            unsupported_orientation_instances=sum(len(v.get('unsupported_orientations', [])) for v in mis.values()),
+            unbound_generated_instances=sum(len(names) for names in unbound.values()))
     for it in m['insts'] if bv else ():
         v = bv.get(it.master)
         if v is None:
@@ -552,8 +593,12 @@ def apply_view_binding(m, pdir):
             r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
                                        generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0,
                                        binding_scope=v.get('binding_scope', 'QUALIFIED'))
-        if it.orient not in BOUND_ORIENTS:
-            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed {BOUND_ORIENTS} only')
+        orientation = bound_view_orientation_contract(v)
+        if it.orient not in orientation['supported']:
+            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: literal LEF '
+                             f'SYMMETRY {orientation["symmetry"]} permits {orientation["supported"]} '
+                             'within placer support; no physical symmetry may be inferred')
+        r_['orientation_contract'] = orientation
         if v['w'] > it.w + BOUND_TOL or v['h'] > it.h + BOUND_TOL:
             raise SystemExit(f'VIEW_BINDING: {it.master} real outline {v["w"]} x {v["h"]} exceeds the generated slot '
                              f'{it.w:.3f} x {it.h:.3f} of {it.name}: the placer sizes slots from the generated outline '
