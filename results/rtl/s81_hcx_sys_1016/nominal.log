@@ -1,0 +1,11 @@
+HCX SYS block0 src0 flatc2c77f32@264 partc2c77f32@318 golden_ok1
+HCX SYS block1 src1 flatc218cb21@264 partc218cb21@318 golden_ok1
+HCX SYS block2 src2 flatc11ca4be@264 partc11ca4be@318 golden_ok4294967295
+HCX SYS block3 src2 flatc0c55bde@264 partc0c55bde@318 golden_ok4294967295
+HCX SYS block4 src2 flatc11ca4be@264 partc11ca4be@318 golden_ok4294967295
+HCX SYS block5 src2 flatc0c55bde@264 partc0c55bde@318 golden_ok4294967295
+HCX_SYS_EQUIV PASS blocks6 flat_cycles264 part_cycles318 delta54
+- rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_sys.sv:69: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 25us; walltime 27.656 s; speed 888.744 ns/s
+- Verilator: cpu 27.651 s on 1 threads; alloced 1085 MB

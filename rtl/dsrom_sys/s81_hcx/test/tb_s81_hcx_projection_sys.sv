@@ -32,7 +32,7 @@ module tb_s81_hcx_projection_sys;
   if(ov_s && ts<0) begin ts=cyc-t0; res_s=od_s; end
  end
  function automatic [15:0] rbf();
-  reg[15:0]v; v[15]=$urandom(seed)&1; v[14:7]=8'(118+($urandom(seed)%20)); v[6:0]=7'($urandom(seed)); return v;
+  reg[15:0]v; v[15]=$urandom()&1; v[14:7]=8'(118+($urandom()%20)); v[6:0]=7'($urandom()); return v;
  endfunction
  task automatic run_block(input integer b,input integer src);
   integer w;
@@ -57,6 +57,8 @@ module tb_s81_hcx_projection_sys;
  initial begin
   if($value$plusargs("LAYER=%d",layer_arg))layer=6'(layer_arg);
   void'($value$plusargs("NRAND=%d",nrand));void'($value$plusargs("SEED=%d",seed));
+  // Seed once: $urandom(seed) on every field would repeat one constant vector in Verilator.
+  void'($urandom(seed));
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR required");
   $readmemh({dir,"/x0.mem"},x0);$readmemh({dir,"/x1.mem"},x1);$readmemh({dir,"/expected.mem"},expectm);$readmemh({dir,"/eps.mem"},eps);
   repeat(3)@(negedge clk);rn=1;
