@@ -62,6 +62,33 @@
     "leaf_links_over_500um": null
    },
    "native_parent": false
+  },
+  "meta4_assigned_capture": {
+   "cut": {
+    "worst_share": 0.607,
+    "edges_over_060": 13
+   },
+   "r900": {
+    "write_edges": 12,
+    "read_edges": 17,
+    "commit_edges": 5,
+    "AR_loss_pct": 5.906
+   },
+   "status": "FAIL_PLANNING_CUT_NOT_MEASURED_THROUGHPUT"
+  },
+  "meta4_p30": {
+   "cut": {
+    "worst_share": 0.604,
+    "edges_over_060": 8
+   },
+   "status": "FAIL_PLANNING_CUT"
+  },
+  "meta4_centerband": {
+   "cut": {
+    "worst_share": 0.618,
+    "edges_over_060": 17
+   },
+   "status": "REJECTED_NO_LOCAL_CUT_IMPROVEMENT"
   }
  },
  "scope": [
@@ -80,5 +107,7 @@
   "tools/s81_vm/area_a2f_split4_equiv_gate.py": "30413080d83d13a8c2f5e398b0965031328494e3c4ec152442f57b8cc8d17f45",
   "tools/s81_vm/area_a2f_split4m_composed.sv": "02f9182a2b5f13f356541023418f615717fba0329799a3c5180d98bd26504f34"
  },
- "source_receipt_warning": "meta4.json price ran with pre-field4 classifier; source_tools/a2f_reach_price hash was captured after its import while that source was refreshed. Its cuts are unaffected (computed by a2_route_plan); use only separate corrected reach receipts for price. Original raw evidence preserved."
+ "source_receipt_warning": "meta4.json price ran with pre-field4 classifier; source_tools/a2f_reach_price hash was captured after its import while that source was refreshed. Its cuts are unaffected (computed by a2_route_plan); use only separate corrected reach receipts for price. Original raw evidence preserved.",
+ "latest_actual_assigned_scope": "meta4_assigned_capture.json binds actual per-bit f_capture from S-DIE vmc2_2330 plus current vmc_2330 peerSHA86ed1f58. All other ports and clocks remain planning.",
+ "next_structural_step": "Classify fixed actual-capture port->cap_ctl control broadcast separately; lane ordering alone barely changes worst2325um. Native parent, relay RTL, per-root clock/reset, PG and actual-fit grid rebinding remain open."
 }
