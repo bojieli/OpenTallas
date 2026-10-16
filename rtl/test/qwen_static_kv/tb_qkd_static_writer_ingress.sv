@@ -26,20 +26,20 @@ module tb_qkd_static_writer_ingress;
  wire[58:0]actual_id=oi^((CASE==2)?(59'd1<<19):59'd0);
  wire[1151:0]ge,oe;wire[317:0]gc;wire[1271:0]oc;
  wire[3:0]gv,ov,pmf;wire[60:0]gi;wire[243:0]odi;wire[28:0]ga;wire[115:0]oda;
- wire[19:0]gp,odp;wire[1:0]gs;wire[7:0]ods;wire gf;
+ wire[19:0]gp,odp;wire[1:0]gs;wire[7:0]ods;wire gf,group_idle;wire[3:0]pc_idle;
  reg[1151:0]host_input=0;reg[1043:0]ctrl_return=0;reg[3:0]c_v=0,c_w=0;
  wire[1043:0]host_return;wire[3:0]host_cv,host_cw;
  qkd_static_writer_group #(.NATIVE_FULL_SECTOR(1),.MUT(IMUT))g(.ck(ck),.rst_n(rst_n),.cfg_stack(2'(cfg_s)),.cfg_group(3'(cfg_g)),
  .writer_es(es),.writer_pc(actual_pc),.writer_stack(stack),.writer_identity(actual_id),.writer_generation(og),
  .programme_valid(pev),.programme_pc(ppc),.programme_stack(pst),.programme_identity(pi),.programme_generation(pg),.programme_address(pa),
- .pc_es(ge),.pc_context(gc),.pc_expected_valid(gv),.pc_expected_identity(gi),.pc_expected_address(ga),.pc_expected_pc(gp),.pc_expected_stack(gs),.fault(gf));
+ .pc_es(ge),.pc_context(gc),.pc_expected_valid(gv),.pc_expected_identity(gi),.pc_expected_address(ga),.pc_expected_pc(gp),.pc_expected_stack(gs),.fault(gf),.idle(group_idle));
  genvar mq;
  generate for(mq=0;mq<4;mq=mq+1)begin:g_mux
  qkd_static_writer_pc_mux m(.ck(ck),.rst_n(rst_n),.native_mode(native_mode),.ownership_valid(ownership_valid),
  .native_es(ge[288*mq+:288]),.native_context(gc),.native_expected_valid(gv[mq]),.native_expected_identity(gi),.native_expected_address(ga),.native_expected_pc(gp[5*mq+:5]),.native_expected_stack(gs),
  .host_es(host_input[288*mq+:288]),.ctrl_er(ctrl_return[261*mq+:261]),.ctrl_completion_v(c_v[mq]),.ctrl_completion_we(c_w[mq]),
  .es(oe[288*mq+:288]),.es_context(oc[318*mq+:318]),.es_expected_valid(ov[mq]),.es_expected_identity(odi[61*mq+:61]),.es_expected_address(oda[29*mq+:29]),.es_expected_pc(odp[5*mq+:5]),.es_expected_stack(ods[2*mq+:2]),
- .host_er(host_return[261*mq+:261]),.host_completion_v(host_cv[mq]),.host_completion_we(host_cw[mq]),.fault(pmf[mq]));
+ .host_er(host_return[261*mq+:261]),.host_completion_v(host_cv[mq]),.host_completion_we(host_cw[mq]),.fault(pmf[mq]),.idle(pc_idle[mq]));
  end endgenerate
  // Independent transport scoreboard: actual input payload/context and independent
  // programme descriptors are sampled separately, then each moves exactly3edges.
@@ -180,13 +180,15 @@ module tb_qkd_static_writer_ingress;
   if(CASE!=0&&!gf)$fatal(1,"bad actual metadata escaped fixed-slot distributor");
   if(sectors!=8*layer_count*135*token_count||slots!=4*layer_count*135*token_count)$fatal(1,"production word counts");
   verify_native=0;ctrl_return=0;c_v=0;c_w=0;repeat(4)step();native_mode=0;repeat(3)step();
+  if(group_idle!==!gf||pc_idle!==4'hf)$fatal(1,"actual ingress did not drain after flush");
   // HOST exceptional traffic has native-context0 and no native expectation.
   host_input[287:0]={287'h12345,1'b1};ctrl_return[260:0]={1'b0,1'b1,258'h321,1'b1};c_v=1;c_w=1;step();
   if(oe[287:0]!==host_input[287:0]||oc[317]||ov!=0||host_return[260:0]!==ctrl_return[260:0]||host_cv!=1||host_cw!=1)$fatal(1,"HOST exception ownership/context/return contract");
   // Invalid handover is exceptional fault-stop, not a wait/ready path.
   ownership_valid=0;step();
   if(oe[0]||host_return!=0||host_cv!=0||ov!=0||!pmf[0])$fatal(1,"invalid ownership did not fault-stop both paths");
-  host_input=0;ctrl_return=0;c_v=0;c_w=0;step();
+  host_input=0;ctrl_return=0;c_v=0;c_w=0;repeat(3)step();
+  if(pc_idle[0])$fatal(1,"faulted mux reported quiet");
   $display("WRITER_INGRESS PASS CASE%0d IMUT%0d layers%0d tokens%0d stack%0d group%0d cases%0d slots%0d sectors%0d transported%0d expected%0d added_edges3 groupfault%0d",CASE,IMUT,layer_count,token_count,cfg_s,cfg_g,cases,slots,sectors,transported,expected_transfers,gf);$finish;
  end
 endmodule

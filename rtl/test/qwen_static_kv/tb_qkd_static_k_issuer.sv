@@ -9,7 +9,7 @@ module tb_qkd_static_k_issuer;
     integer et[0:255],esc[0:255];
     wire [4:0] cfg=5'(engine*4+stack);
     wire [1024:0] rs;
-    wire req_valid,req_v,bridge_fault;
+    wire req_valid,req_v,bridge_fault,idle_issuer;
     wire [13:0] req_t;
     wire [15:0] req_epoch;wire [5:0] req_layer;
     reg [5:0] layer_cur=0;
@@ -19,7 +19,7 @@ module tb_qkd_static_k_issuer;
       .ck(ck),.rst_n(rst_n),.kgo(si[0]),.epoch(16'h1234),.layer(layer_cur),.rq(rq),
       .req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),
-      .rs(rs),.fault(bridge_fault));
+      .rs(rs),.fault(bridge_fault),.idle_issuer(idle_issuer));
     wire [424:0] so;
     wire [16:0] rq;
     wire [1558:0] t0,t1;
@@ -89,7 +89,9 @@ module tb_qkd_static_k_issuer;
                 nconsume=nconsume+1;
             end
             @(negedge ck);
+            if((req_valid||rsp_valid||rs[0])&&idle_issuer)$fatal(1,"issuer quiet with captured traffic");
         end
+        if(idle_issuer !== !bridge_fault)$fatal(1,"issuer idle after real flush/fault");
         if(nreq!=nexpected||nconsume!=nexpected||!so[422])$fatal(1,"shape req%0d consume%0d done%0d",nreq,nconsume,so[422]);
         if((MUT==0||MUT==6) && (so[424]||bridge_fault))$fatal(1,"unexpected normal fault ECTL%0d bridge%0d",so[424],bridge_fault);
         if(((MUT>=1&&MUT<=3)||MUT==7)&&!bridge_fault)$fatal(1,"missing bridge identity/slot fault");

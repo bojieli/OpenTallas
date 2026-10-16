@@ -15,7 +15,7 @@ module qkd_static_writer_group #(
  output wire [1151:0] pc_es,output wire [317:0] pc_context,
  output reg [3:0] pc_expected_valid,output reg [60:0] pc_expected_identity,
  output reg [28:0] pc_expected_address,output reg [19:0] pc_expected_pc,output reg [1:0] pc_expected_stack,
- output reg fault
+ output reg fault,output reg idle
 );
  initial if(NATIVE_FULL_SECTOR!=1)$fatal(1,"requires proved actual native full-sector writer contract");
  (* keep *) reg rn;reg [1:0] stack_q;reg [2:0] group_q;
@@ -68,6 +68,12 @@ module qkd_static_writer_group #(
   always @(posedge ck or negedge rn)if(!rn)valid_q<=0;else valid_q<=selected[q]&&writer_es_p[288*q];
   assign pc_es[288*q+:288]={payload,valid_q};
  end endgenerate
+ // Observation only: raw pins, captured valids, and output valids must empty.
+ always @(posedge ck or negedge rn)
+  if(!rn)idle<=0;
+  else idle<=!fault && !(|programme_valid) && !(|programme_valid_p) && !(|writer_valid_p) &&
+   !(writer_es[0]||writer_es[288]||writer_es[576]||writer_es[864]) &&
+   !(|pc_expected_valid) && !(pc_es[0]||pc_es[288]||pc_es[576]||pc_es[864]);
  integer j;
  always @(posedge ck)begin
   actual_identity<=(MUT==3)?{programme_identity_p,programme_generation_p}:{writer_identity_p,writer_generation_p};
@@ -108,12 +114,19 @@ module qkd_static_writer_pc_mux(
  output reg es_expected_valid,output reg [60:0] es_expected_identity,
  output reg [28:0] es_expected_address,output reg [4:0] es_expected_pc,output reg [1:0] es_expected_stack,
  output reg [260:0] host_er,output reg host_completion_v,host_completion_we,
- output reg fault
+ output reg fault,output reg idle
 );
  (* keep *) reg rn;reg mode_q,native_q;reg [60:0] identity_q;reg [255:0] mask_q;
  reg [286:0] es_data;reg es_valid;assign es={es_data,es_valid};
  always @(posedge ck)rn<=rst_n;
  assign es_context={native_q,identity_q,mask_q};
+ // Includes real return activity; this never gates the fixed forward schedule.
+ always @(posedge ck or negedge rn)
+  if(!rn)idle<=0;
+  else idle<=!fault && ownership_valid && native_mode==mode_q &&
+   !native_es[0] && !native_expected_valid && !host_es[0] && !es_valid && !es_expected_valid &&
+   !ctrl_er[0] && !ctrl_er[259] && !ctrl_er[260] && !ctrl_completion_v &&
+   !host_er[0] && !host_er[259] && !host_er[260] && !host_completion_v;
  always @(posedge ck)begin
   es_data<=native_mode?native_es[287:1]:host_es[287:1];
   identity_q<=native_mode?native_context[316:256]:61'd0;mask_q<=native_mode?native_context[255:0]:256'd0;
@@ -153,7 +166,8 @@ module qkd_static_writer_distribution #(
  output wire [127:0] es_expected_valid,output wire [7807:0] es_expected_identity,
  output wire [3711:0] es_expected_address,output wire [639:0] es_expected_pc,output wire [255:0] es_expected_stack,
  output wire [33407:0] host_er,output wire [127:0] host_completion_v,host_completion_we,
- output wire [31:0] group_fault,output wire [127:0] pc_fault
+ output wire [31:0] group_fault,output wire [127:0] pc_fault,
+ output wire [31:0] idle_group,output wire [127:0] idle_pc
 );
  genvar g,q;
  generate for(g=0;g<32;g=g+1)begin:g_group
@@ -163,7 +177,7 @@ module qkd_static_writer_distribution #(
    .writer_es(writer_es),.writer_pc(writer_pc),.writer_stack(writer_stack),.writer_identity(writer_identity),.writer_generation(writer_generation),
    .programme_valid(programme_valid),.programme_pc(programme_pc),.programme_stack(programme_stack),.programme_identity(programme_identity),
    .programme_generation(programme_generation),.programme_address(programme_address),
-   .pc_es(ge),.pc_context(gc),.pc_expected_valid(gv),.pc_expected_identity(gi),.pc_expected_address(ga),.pc_expected_pc(gp),.pc_expected_stack(gs),.fault(group_fault[g]));
+   .pc_es(ge),.pc_context(gc),.pc_expected_valid(gv),.pc_expected_identity(gi),.pc_expected_address(ga),.pc_expected_pc(gp),.pc_expected_stack(gs),.fault(group_fault[g]),.idle(idle_group[g]));
   for(q=0;q<4;q=q+1)begin:g_pc
    localparam integer PC=4*g+q;
    qkd_static_writer_pc_mux u_mux(.ck(ck_pc[PC]),.rst_n(rst_n),.native_mode(native_mode),.ownership_valid(ownership_valid),
@@ -171,7 +185,7 @@ module qkd_static_writer_distribution #(
     .host_es(host_es[288*PC+:288]),.ctrl_er(ctrl_er[261*PC+:261]),.ctrl_completion_v(ctrl_completion_v[PC]),.ctrl_completion_we(ctrl_completion_we[PC]),
     .es(es[288*PC+:288]),.es_context(es_context[318*PC+:318]),.es_expected_valid(es_expected_valid[PC]),.es_expected_identity(es_expected_identity[61*PC+:61]),
     .es_expected_address(es_expected_address[29*PC+:29]),.es_expected_pc(es_expected_pc[5*PC+:5]),.es_expected_stack(es_expected_stack[2*PC+:2]),
-    .host_er(host_er[261*PC+:261]),.host_completion_v(host_completion_v[PC]),.host_completion_we(host_completion_we[PC]),.fault(pc_fault[PC]));
+    .host_er(host_er[261*PC+:261]),.host_completion_v(host_completion_v[PC]),.host_completion_we(host_completion_we[PC]),.fault(pc_fault[PC]),.idle(idle_pc[PC]));
   end
  end endgenerate
 endmodule
