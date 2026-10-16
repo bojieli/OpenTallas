@@ -92,13 +92,15 @@ def run(root,recipe,out):
             requests[name]=dict(path=[list(p) for p in path],allowed=[list(r) for r in allowed],lanes=list(lanes))
         return original_run(self,name,lanes,path,allowed,start,*a,**kw)
     def hub(*a,**kw):
-        saved=sys.getprofile();record={}
+        saved=sys.getprofile();record=dict(name=f'hb_{a[3]}_{a[6]}_{a[4]}',path=[],bits=a[5],
+            source=a[0]['hub'][a[3]].name,target=a[0]['hub'][a[4]].name,source_key=a[3],target_key=a[4],
+            source_port=a[6],target_port=a[7],route_built=False)
         def profile(frame,event,arg):
             if frame.f_code is original_hub.__code__ and event=='return':
                 loc=frame.f_locals
                 if 'path' in loc:
                     record.update(name=loc.get('name',loc.get('hbn')),path=[list(p) for p in loc['path']],bits=loc.get('bits'),
-                                  source=loc['A'].name,target=loc['Bk'].name,source_key=loc['a_'],target_key=loc['b_'])
+                                  source=loc['A'].name,target=loc['Bk'].name,source_key=loc['a_'],target_key=loc['b_'],route_built=True)
         sys.setprofile(profile)
         try:
             original_hub(*a,**kw)
@@ -106,8 +108,7 @@ def run(root,recipe,out):
             failures.append(dict(source=a[3],target=a[4],port=a[6],error=str(error)))
         finally:
             sys.setprofile(saved)
-            if record:
-                calls.append(record)
+            calls.append(record)
     def stop(m,P):
         raise Collected(m)
     G._hub_bus_chain=hub;G.Chains.run=chain;G._relay_progress_fix=stop
@@ -130,9 +131,10 @@ def run(root,recipe,out):
             req=requests.get(call['name'])
             row=dict(call)
             row.update(audit(call['path'],req['allowed'] if req else None,boxes))
-            row['placement_failed']=any(f['source']==call['source_key'] and f['target']==call['target_key'] for f in failures)
+            row['placement_failed']=any(f['source']==call['source_key'] and f['target']==call['target_key']
+                                        and f['port']==call['source_port'] for f in failures)
             rows.append(row)
-    bad=[r for r in rows if r['macro_crossings'] or r['station_region_gaps'] or r['placement_failed']]
+    bad=[r for r in rows if r['macro_crossings'] or r['station_region_gaps'] or r['placement_failed'] or not r['route_built']]
     result=dict(schema='opentallas.s81.hub-path-preflight.v1',scope='DIAGNOSTIC_FIRST_PASS_ONLY_NO_USABLE_DIE_MODEL',
         source_commit=(root/'SOURCE_SHA').read_text().strip() if (root/'SOURCE_SHA').exists() else None,
         generator_sha256=sha(root/'tools/dsrom_s81_fulldie.py'),driver_sha256=sha(__file__),recipe_sha256=sha(recipe),working_directory=str(Path.cwd()),
