@@ -34,8 +34,10 @@ def depth(config):
                 raise ValueError('M6 pin hook missing/invalid explicit stub depth')
             values.add(float(found[0]))
         for child in re.findall(r'^source\s+([^\s;]+)', source, re.M):
-            if child.endswith('m6_pin_access.tcl'):
-                continue  # policy is in the caller, implementation ships in CL
+            if child.startswith('/src/') and not child.startswith('/src/physical/ref_tile/'):
+                # Generated policy is in the kit hook, not in implementation
+                # helpers (which can source runtime QDM_SDC_DIR expressions).
+                continue
             if '$' in child or '[' in child:
                 raise ValueError(f'cannot resolve dynamic route hook: {child}')
             walk(child)
