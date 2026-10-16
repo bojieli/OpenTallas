@@ -7,27 +7,32 @@
 // context and compiled slots, the embedding provider's row words, the sequencer's dh face and the TT's pw / kok / kwd /
 // fab.  Every one of them is produced here by real hardware from real sources; nothing is tied and no reference data is
 // injected.  Static cycle schedule (owner 10-14 18:59): every production event comes from a compiler image played by a
-// fixed calendar; observations only fault, they never choose or stretch a cycle.  The only elastic edge is the off-die
-// HOST boundary (a token loop is armed by a valid HOST context, owner 10-15 07:28 boundary rule).
+// fixed calendar; observations only fault, they never choose or stretch a cycle.  Run anchor: the forwarded epoch strobe
+// (KV-die bump); the first token starts a compiled number of edges after it, later tokens back-to-back at the compiled
+// token period, so both dies' sequencers stay aligned without any per-token handshake (Q-NETLIST/Q-LINK 10-16).
 //
 // Blocks (all synchronous to ck, one root):
 //   * CONFIG ROM: one ot_rom_4096x72_m8 mask ROM (38.0 x 62.9 um), the compiler image tools/qwen_split/sys_face_image.py:
 //       rows 0..1031       the installed program image, one 64-b word per row: PW0..1023 then DW0..7 ([71:64] = 0)
 //       rows 2048..4095    boot records {target4 [71:68], addr8 [67:60], 28'd0, data32 [31:0]}; target
-//                          1 D2D TX calendar, 2 D2D RX calendar, 3 token calendar T, 4 layer calendar L, 5 embedding
-//                          calendar E, 15 END; addr8 = {seg1-base flag, entry7}.  Any other target or a nonzero reserved
+//                          3 token calendar T, 4 layer calendar L, 5 embedding calendar E, 6 first-token offset (edges
+//                          after the epoch strobe), 15 END; addr8 = {seg1-base flag, entry7}.  The D2D calendars are the
+//                          constants of qfd_d2d_cal_seq (Q-LINK), instantiated here as their only producer.  Any other target or a nonzero reserved
 //                          field faults.
-//   * BOOT (initialisation mode, explicit): after reset the boot records are replayed one per edge into the D2D cfg
-//     port and the three face calendars, until END -> boot_done.  The D2D calendars are written only while stopped.
+//   * BOOT (initialisation mode, explicit): after reset the boot records are replayed one per edge into the three face
+//     calendars and the first-token offset, until END -> boot_done.
 //   * PROGRAM REPLAY (initialisation mode): a HOST kind-13 BEGIN then AUTH accepted by the record port replays rows
 //     0..1031 one per edge: PW i -> TT pw and the sequencer dh pw field (the TT and SU program copies, observed by their
 //     own consumed-write ledgers in the record port), DW j -> dh dw field.  The HOST AUTH digest must match what the two
 //     ledgers actually observed; the kind-14 witness reports it (qfd_program_record_port, existing RTL, unchanged).
 //   * CALENDARS: three ot_qwen_d2d_cal engines (the Q-LINK calendar RTL, unchanged): T (NE 64, per token), L (NE 32,
 //     per decode layer, started by T), E (NE 16, embedding row, started by T).  Event {port3 = class, kind4|beat5 = arg9}:
-//       class 0 STAGE   T only: h_start pulse, stage = arg[5:0]; arg[6] layer start (D2D cal_start seg 0 + L start);
-//                       arg[7] token run (D2D cal_start seg 1 + E start); arg[8] RESULT capture (result_v from the
+//       class 0 STAGE   T only: h_start pulse, stage = arg[5:0]; arg[6] L-calendar start (a decode layer; layers 2..36
+//                       must coincide with qfd_d2d_cal_seq's cal_start seg 0, layer 1 = L0 rides the token run);
+//                       arg[7] token run (E start; must coincide with cal_start seg 1); arg[8] RESULT capture (result_v from the
 //                       sequencer's dc at this edge; s_done must be high)
+//       class 5 MARK    T only: arg[6] / arg[7] as STAGE, without an h_start (e.g. the token-run start: the embedding
+//                       stage's h_start follows once the row has landed)
 //       class 1 LEVEL   kok = arg[0], kwd = arg[1] (compiled KV-ok / KV-write-drained levels), arg[2] token END (T)
 //       class 2 QSLOT   native q_slot, q_slot_beat = arg[4:0] (bursts)
 //       class 3 KVSLOT  native kv_word_slot, kv_word_index = arg[1:0]
@@ -35,8 +40,9 @@
 //       class 6 EMBW    embedding expected word slot, word = arg[5:0]; arg[6] = the scale slot
 //       class 7 FILL    embedding fill_begin
 //     Two calendars driving one class on one edge, a class outside its calendar, or a nonzero unused arg bit fault.
-//   * TOKEN LOOP: T starts on the first edge with boot_done && program_ready && a valid HOST context && no fault, and
-//     again on the edge after its END event (back-to-back compiled token period).  The token register takes the HOST
+//   * TOKEN LOOP: T (and the D2D sequencer, same go) starts first_ofs edges after the epoch strobe, then on its own END
+//     event (back-to-back compiled token period); a go without boot / cal_ready / installed program faults, it never
+//     waits.  The HOST context (kind 12) arrives in every token run before stage 0.  The token register takes the HOST
 //     context's token / position on a context receive and the sequencer's argmax result (dc ntok, pos + 1) at the RESULT
 //     capture; dh tp_token / tp_pos and the embedding fill / expected token come from it.
 //   * EMBEDDING ROW RX (D2D port 2, kinds 6/7 code words, kind 8 row header): record layout (defined here, the KV-die
@@ -54,18 +60,21 @@
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
+    parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
+    parameter [20*36-1:0] START_ADJ = '0,
     parameter ROM_VIAMAP = "",
     parameter ROM_INSTANCE = "sys_face_cfg"
 ) (
     input  wire          ck,
     input  wire          rst_n,
     // ---------------- static D2D end (qfd_d2d_static) ----------------
-    output reg           cfg_tx_we,
-    output reg           cfg_rx_we,
-    output reg  [5:0]    cfg_addr,
-    output reg  [31:0]   cfg_data,
-    output reg           cal_start,
-    output reg           cal_seg,
+    output wire          cfg_tx_we,
+    output wire          cfg_rx_we,
+    output wire [5:0]    cfg_addr,
+    output wire [31:0]   cfg_data,
+    output wire          cal_start,
+    output wire          cal_seg,
+    input  wire          fwd_epoch,            // forwarded epoch strobe (package bump from the KV die): the run anchor
     input  wire [547:0]  rx_payload,
     input  wire          prog_rx_v,
     input  wire          prog_witness_slot,
@@ -171,6 +180,7 @@ module qfd_sys_face #(
     reg         t_we, l_we, e_we;
     reg  [7:0]  c_addr;
     reg  [31:0] c_data;
+    reg  [31:0] first_ofs;                     // compiled edges from the epoch strobe to the first token start
     reg  [142:0] dh_prog;                      // {dw_v, dw_addr3, dw_data64, pw_v, pw_addr10, pw_data64}
     reg  [43:0]  dh_run;                       // {kv_write_drained, h_start, stage6, tp_token18, tp_pos18}
     always @* seq_dh = {dh_prog, dh_run};
@@ -180,13 +190,13 @@ module qfd_sys_face #(
         if (!rst_n) begin
             st <= S_RST; rom_ce <= 1'b0; rom_a <= 12'd0; iss_boot <= 1'b0; iss_prog <= 1'b0; rd_boot <= 1'b0; rd_prog <= 1'b0;
             iss_idx <= 11'd0; rd_idx <= 11'd0; pidx <= 11'd0; boot_done <= 1'b0; boot_fault <= 1'b0; prog_fault <= 1'b0;
-            cfg_tx_we <= 1'b0; cfg_rx_we <= 1'b0; cfg_addr <= 6'd0; cfg_data <= 32'd0;
+            first_ofs <= 32'd0;
             t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0; c_addr <= 8'd0; c_data <= 32'd0;
             tt_pw <= 75'd0; dh_prog <= 143'd0;
         end else begin
             rd_boot <= iss_boot; rd_prog <= iss_prog; rd_idx <= iss_idx;
             iss_boot <= 1'b0; iss_prog <= 1'b0; rom_ce <= 1'b0;
-            cfg_tx_we <= 1'b0; cfg_rx_we <= 1'b0; t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0;
+            t_we <= 1'b0; l_we <= 1'b0; e_we <= 1'b0;
             tt_pw[74] <= 1'b0; dh_prog[142] <= 1'b0; dh_prog[74] <= 1'b0;
             case (st)
                 S_RST:  begin st <= S_BOOT; pidx <= 11'd0; end
@@ -203,10 +213,9 @@ module qfd_sys_face #(
                         end else begin
                             if (b_res) boot_fault <= 1'b1;
                             c_addr <= b_addr; c_data <= rom_q[31:0];
-                            cfg_addr <= {b_addr[7], b_addr[4:0]}; cfg_data <= rom_q[31:0];
                             case (b_tgt)
-                                4'd1: begin cfg_tx_we <= 1'b1; if (b_addr[6:5] != 2'd0) boot_fault <= 1'b1; end
-                                4'd2: begin cfg_rx_we <= 1'b1; if (b_addr[6:5] != 2'd0) boot_fault <= 1'b1; end
+                                // D2D calendars: written by qfd_d2d_cal_seq (single producer), not by this ROM
+                                4'd6: begin first_ofs <= rom_q[31:0]; if (b_addr != 8'd0 || rom_q[31:0] == 32'd0) boot_fault <= 1'b1; end
                                 4'd3: begin t_we <= 1'b1; if (b_addr[6]) boot_fault <= 1'b1; end
                                 4'd4: begin l_we <= 1'b1; if (b_addr[6:5] != 2'd0) boot_fault <= 1'b1; end
                                 4'd5: begin e_we <= 1'b1; if (b_addr[6:4] != 3'd0) boot_fault <= 1'b1; end
@@ -259,7 +268,7 @@ module qfd_sys_face #(
     reg         t_running_q;
     qfd_program_record_port u_record (
         .ck(ck), .rst_n(rst_n), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
-        .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(t_running_q),
+        .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),
         .cfg_image_ready({seq_cfg_image_ready, tt_control_stores_ready}),
         .head_context_v(tt_layer_context_v), .head_stage(tt_command_stage), .head_token(tt_native_tok), .head_position(tt_native_pos),
@@ -273,7 +282,7 @@ module qfd_sys_face #(
 
     // ================================================================ calendars
     wire halt = d2d_epoch_abort;
-    wire        t_go, l_go, e_go;
+    wire        t_go, l_go, ecal_go;
     wire        t_ev, l_ev, e_ev, t_run, l_run, e_run, t_cf, l_cf, e_cf;
     wire [2:0]  t_p, l_p, e_p; wire [3:0] t_k, l_k, e_k; wire [4:0] t_b, l_b, e_b;
     ot_qwen_d2d_cal #(.NE(64)) u_cal_t (.ck(ck), .rst_n(rst_n), .cfg_we(t_we), .cfg_addr({c_addr[7], c_addr[5:0]}), .cfg_data(c_data),
@@ -281,8 +290,16 @@ module qfd_sys_face #(
     ot_qwen_d2d_cal #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_n), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
         .start(l_go), .start_seg(1'b0), .halt(halt), .ev_v(l_ev), .ev_port(l_p), .ev_kind(l_k), .ev_beat(l_b), .running(l_run), .fault(l_cf));
     ot_qwen_d2d_cal #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_n), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
-        .start(e_go), .start_seg(1'b0), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
+        .start(ecal_go), .start_seg(1'b0), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
     assign any_running = t_run | l_run | e_run | t_running_q;
+    // D2D link calendars: the Q-LINK sequencer (compiler images as constants) is the ONLY producer of the link end's
+    // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
+    // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
+    wire cal_ready, cs_running, cs_fault; wire [5:0] cs_layer;
+    qfd_d2d_cal_seq #(.GO_OFS(GO_OFS), .START_ADJ(START_ADJ)) u_cseq (.ck(ck), .rst_n(rst_n),
+        .reload(fwd_epoch && !fe_q && aborted), .tok_go(t_go), .halt(halt),
+        .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .cal_start(cal_start), .cal_seg(cal_seg), .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .fault(cs_fault));
     // bench mutant 1: T events one edge late
     reg t_ev_d; reg [2:0] t_p_d; reg [3:0] t_k_d; reg [4:0] t_b_d;
     always @(posedge ck) begin t_ev_d <= t_ev; t_p_d <= t_p; t_k_d <= t_k; t_b_d <= t_b; end
@@ -292,8 +309,9 @@ module qfd_sys_face #(
     wire [8:0] la = {l_k, l_b}, ea = {e_k, e_b};
     // decoded events (combinational from the calendar registers; registered at the outputs)
     wire ev_stage = te && tp == 3'd0;
-    wire ev_lay   = ev_stage && ta[6];
-    wire ev_tok   = ev_stage && ta[7];
+    wire ev_mark  = te && tp == 3'd5;            // run start without an h_start
+    wire ev_lay   = (ev_stage | ev_mark) && ta[6];  // L calendar start (layer 1 = L0 inside the token run)
+    wire ev_tok   = (ev_stage | ev_mark) && ta[7];
     wire ev_res   = ev_stage && ta[8];
     wire ev_tlev  = te && tp == 3'd1;
     wire ev_llev  = l_ev && l_p == 3'd1;
@@ -304,9 +322,11 @@ module qfd_sys_face #(
     wire ev_embw  = e_ev && e_p == 3'd6;
     wire ev_fill  = e_ev && e_p == 3'd7;
     assign l_go = ev_lay;
-    assign e_go = ev_tok;
+    assign ecal_go = ev_tok;
     // class placement / argument checks
-    wire t_bad = te && (tp >= 3'd2 || (tp == 3'd0 && ta[6] && ta[7]) || (tp == 3'd1 && ta[8:3] != 0));
+    wire t_bad = te && ((tp >= 3'd2 && tp != 3'd5) || ((tp == 3'd0 || tp == 3'd5) && ta[6] && ta[7]) ||
+                        (tp == 3'd1 && ta[8:3] != 0) || (tp == 3'd5 && (ta[8] || ta[5:0] != 0 || !(ta[6] || ta[7]))));
+    reg  cal_exp, seg_exp;
     wire l_bad = l_ev && (l_p == 3'd0 || l_p >= 3'd5 || (l_p == 3'd1 && la[8:2] != 0) || (l_p == 3'd2 && la[8:5] != 0) ||
                           (l_p == 3'd3 && la[8:2] != 0) || (l_p == 3'd4 && la[8:1] != 0));
     wire e_bad = e_ev && (e_p < 3'd6 || (e_p == 3'd6 && ea[8:7] != 0) || (e_p == 3'd6 && ea[6] && ea[5:0] != 0) ||
@@ -318,15 +338,31 @@ module qfd_sys_face #(
     reg  [31:0] tcyc;
     reg         armed_fault;
     wire        face_fault;
-    wire        armed = boot_done && rp_program_ready && host_epoch_valid && !prog_busy && !face_fault;
-    assign t_go = armed && (!t_running_q || ev_end);
+    // Anchor: the first token starts first_ofs edges after the forwarded epoch strobe (both dies count from the same
+    // strobe, so their token starts align without a per-token handshake); every later token starts on the edge of the
+    // token calendar's END (the compiled token period).  A go that finds the program not installed faults (no wait).
+    reg  [31:0] ecnt; reg ewait, fe_q;
+    wire        e_go = ewait && ecnt == 32'd1;
+    wire        loop_go = ev_end && !halt;
+    assign t_go = (e_go || loop_go) && !face_fault;
+    reg         go_fault, aborted;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) aborted <= 1'b0; else if (halt) aborted <= 1'b1; else if (fwd_epoch && !fe_q) aborted <= 1'b0;
     reg ctx_slot_q; reg [1:0] tstart_q;
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
             t_running_q <= 1'b0; tok <= 18'd0; pos <= 18'd0; tcyc <= 32'd0; ctx_slot_q <= 1'b0; armed_fault <= 1'b0; tstart_q <= 2'd0;
+            ecnt <= 32'd0; ewait <= 1'b0; fe_q <= 1'b0; go_fault <= 1'b0;
         end else begin
             ctx_slot_q <= prog_context_slot;
             tstart_q <= {tstart_q[0], t_go};
+            fe_q <= fwd_epoch;
+            if (fwd_epoch && !fe_q) begin                            // epoch strobe: (re)arm the first-token count
+                ewait <= 1'b1; ecnt <= first_ofs;
+                if (!boot_done || first_ofs == 32'd0) go_fault <= 1'b1;
+            end else if (ewait) begin ecnt <= ecnt - 32'd1; if (ecnt == 32'd1) ewait <= 1'b0; end
+            if (t_go && (!boot_done || !cal_ready || !rp_program_ready || prog_busy)) go_fault <= 1'b1;
+            if (e_go && t_running_q) go_fault <= 1'b1;
             if (t_go) begin t_running_q <= 1'b1; tcyc <= 32'd0; end
             else begin
                 if (ev_end || halt) t_running_q <= 1'b0;
@@ -343,14 +379,16 @@ module qfd_sys_face #(
     // ================================================================ event outputs (registered)
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
-            cal_start <= 1'b0; cal_seg <= 1'b0; dh_run <= 44'd0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
+            cal_exp <= 1'b0; seg_exp <= 1'b0; dh_run <= 44'd0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
             q_slot <= 1'b0; q_slot_beat <= 5'd0; kv_word_slot <= 1'b0; kv_word_index <= 2'd0;
             visibility_slot <= 1'b0; complete_slot <= 1'b0;
             emb_expected_slot <= 1'b0; emb_expected_word <= 6'd0; emb_expected_scale <= 1'b0; emb_expected_token <= 18'd0;
             emb_expected_epoch <= 16'd0; emb_fill_begin <= 1'b0; emb_fill_token <= 18'd0; emb_fill_epoch <= 16'd0;
             emb_core_epoch <= 16'd0;
         end else begin
-            cal_start <= ev_lay | ev_tok; cal_seg <= ev_tok;
+            // the D2D sequencer's start must coincide with this calendar's layer / token-run flag (layer 1 = L0 rides the
+            // token run): the two compiler images cannot drift apart unnoticed
+            cal_exp <= ev_tok | (ev_lay && ta[5:0] != 6'd1); seg_exp <= ev_tok;
             dh_run[42] <= ev_stage; dh_run[41:36] <= ev_stage ? ta[5:0] : dh_run[41:36];
             dh_run[35:18] <= tok; dh_run[17:0] <= pos;
             if (ev_tlev) begin tt_kok <= ta[0]; tt_kwd <= ta[1]; end
@@ -423,11 +461,12 @@ module qfd_sys_face #(
                 result_value <= seq_dc[31:0]; result_cycles <= tcyc;
             end
             if (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
-                (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done))
+                (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
+                cal_start !== cal_exp || (cal_start && cal_seg !== seg_exp))
                 cal_fault <= 1'b1;
             tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | res_issue_fault | face_fault;
         end
     end
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | rp_fault | armed_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | rp_fault | armed_fault | go_fault;
     assign fault = face_fault;
 endmodule
