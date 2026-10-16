@@ -131,7 +131,8 @@ def main():
     G6 = json.loads((pd / 'compact.graph.json').read_text())
     NEWCELL = {'sfus_': (None, 'H-SU: store partition of ot_hgi_sfu_scheduled_engine (sfucore_sizing_0600, side-upper bay)'),
                'hc_eng_tgt': ('ot_static_program_target', 'HC owner (H-NETLIST hceng) TARGET 164'),
-               'hc_tbl_tgt': ('ot_static_program_target', 'HC owner (H-NETLIST hceng) TARGET 165')}
+               'hc_tbl_tgt': ('ot_static_program_target', 'HC owner (H-NETLIST hceng) TARGET 165'),
+               'hc_': ('ot_hbm_hc_q_static', 'HC owner (H-NETLIST hc): quadrant HC client at the band inner end')}
     for k, b in P6.items():
         pre = next((x for x in NEWCELL if k.startswith(x)), None)
         if pre and k not in S:

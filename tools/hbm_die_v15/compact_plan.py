@@ -46,7 +46,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1, hc_client_inner=False):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -225,6 +225,12 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
             assert slack >= -1e-6, (q, 'band too long for the v6b core', slack)
             setn(f'vmh_{q}', hub_w, hh, f'VM hub reshaped tall {hub_w:.0f} x {hh:.0f}')
             put(f'vmh_{q}', hx, y_band + GAP, q)
+            if hc_client_inner:
+                # H-DIE-V790 10-16 (H-DIE decision v3): quadrant HC client hc_<q> (ot_hbm_hc_q_static, x_wave source) in the
+                # inner-end pocket: west of the calendar column (220.32 + 2 x 21.6 + 2.16 from the hub), above the
+                # COLL / DMA back / IDX operand stack.  432 x 432 candidate (pin-limited: ~7.6 kb incl. 4-beat x_wave)
+                setn(f'hc_{q}', 432.0, 432.0, 'HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending)')
+                put(f'hc_{q}', hx - 21.6 - 220.32 - 21.6 - 2.16 - 432.0, y_band + GAP + COLL_H + 21.6 + 360.72 + 21.6 + 317.52 + 21.6, q)
             x = hx + hub_w
         elif hub_w:
             # TALL HUB (H-DIE r2 cut fix): hub reshaped to hub_w x (BAND - 2 GAP) at the quadrant's inner edge, so its
@@ -314,6 +320,20 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         for k, t in enumerate(('hc_eng_tgt', 'hc_tbl_tgt')):
             setn(t, 86.4, 64.8, 'PROG:ot_static_program_target collar (H-NETLIST hceng, TARGET 164/165); candidate outline, synth pending')
             P[t] = dict(x=round(c0 + COLUMN_W - 86.4, 3), y=round(yg + k * (64.8 + 21.6), 3), w=86.4, h=64.8, orient='R0')
+    if hc_client_inner:
+        # v16 hc_<q> <-> group leaves hc_<q><k> (k = 0..3): lg_rq 34 + lg_wq 562 = 596 b out, c_rr 514 + c_w_done 2 = 516 b back;
+        # the old estimated HC_CORE links into hc_<q>0 and the HC_ENG source move to the client
+        old = [l for l in G['links'] if l['cls'] == 'HC_CORE']
+        tmpl = old[0] if old else None
+        G['links'] = [l for l in G['links'] if l['cls'] != 'HC_CORE']
+        for q in ('SW', 'SE', 'NW', 'NE'):
+            for k in range(4):
+                for src, dst, b, why in ((f'hc_{q}', f'hc_{q}{k}', 596, 'lg_rq 34 + lg_wq 562'), (f'hc_{q}{k}', f'hc_{q}', 516, 'c_rr 514 + c_w_done 2')):
+                    G['links'].append(dict(tmpl, id=f'{src}>{dst}:HC_CORE', src=src, dst=dst, bits=b, fixed_return=False, rule=None,
+                                           provenance=f'v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: {why} (H-NETLIST 406a2d5f9)'))
+        for l in G['links']:
+            if l['cls'] == 'HC_ENG' and l['src'].startswith('hc_') and l['src'] != 'hc_eng':
+                q = l['src'][3:5]; l.update(src=f'hc_{q}', id=f"hc_{q}>hc_eng:HC_ENG")
     if hc_links_v16:
         # H-NETLIST v16 edges hceng_30..: per quadrant x_wave_v 1 + x_wave_word 10 + x_wave 8192 + gathered_mix (v 1, row 5,
         # pos 3, data 32) = 8,244 b to the engine every 4 edges; result_v 1 + pos 3 + result 768 = 772 b back
@@ -358,6 +378,7 @@ def main():
     ap.add_argument('--hc-eng-mm2', type=float, help='col layout: ot_hbm_hc_eng_static of this area in the centre-column void (+ collars)')
     ap.add_argument('--hc-links-v16', action='store_true', help='HC_ENG links at the v16 widths (8,244 b in, 772 b back per quadrant)')
     ap.add_argument('--hc-x-beats', type=int, default=1, choices=(1, 2, 4), help='what-if: x_wave serialised over N of its 4 edges (RTL change, unadopted)')
+    ap.add_argument('--hc-client-inner', action='store_true', help='col layout: quadrant HC client hc_<q> at the band inner end + v16 group links')
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
@@ -367,7 +388,7 @@ def main():
     if a.column is not None:
         COLUMN_W = a.column
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats)
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area

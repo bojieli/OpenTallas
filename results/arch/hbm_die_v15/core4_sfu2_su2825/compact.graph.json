@@ -2111,6 +2111,15 @@
    "area_src": "measured",
    "provenance": "DMA back (vp4 grant 2330 width when carried)"
   },
+  "hc_SW": {
+   "id": "hc_SW",
+   "kind": "HC_Q",
+   "w": 432.0,
+   "h": 432.0,
+   "area_mm2": 0.186624,
+   "area_src": "measured",
+   "provenance": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending)"
+  },
   "sfucore_SE": {
    "id": "sfucore_SE",
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
@@ -2164,6 +2173,15 @@
    "area_mm2": 0.18465978240000003,
    "area_src": "measured",
    "provenance": "DMA back (vp4 grant 2330 width when carried)"
+  },
+  "hc_SE": {
+   "id": "hc_SE",
+   "kind": "HC_Q",
+   "w": 432.0,
+   "h": 432.0,
+   "area_mm2": 0.186624,
+   "area_src": "measured",
+   "provenance": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending)"
   },
   "sfucore_NW": {
    "id": "sfucore_NW",
@@ -2219,6 +2237,15 @@
    "area_src": "measured",
    "provenance": "DMA back (vp4 grant 2330 width when carried)"
   },
+  "hc_NW": {
+   "id": "hc_NW",
+   "kind": "HC_Q",
+   "w": 432.0,
+   "h": 432.0,
+   "area_mm2": 0.186624,
+   "area_src": "measured",
+   "provenance": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending)"
+  },
   "sfucore_NE": {
    "id": "sfucore_NE",
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
@@ -2272,6 +2299,15 @@
    "area_mm2": 0.18465978240000003,
    "area_src": "measured",
    "provenance": "DMA back (vp4 grant 2330 width when carried)"
+  },
+  "hc_NE": {
+   "id": "hc_NE",
+   "kind": "HC_Q",
+   "w": 432.0,
+   "h": 432.0,
+   "area_mm2": 0.186624,
+   "area_src": "measured",
+   "provenance": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending)"
   },
   "hc_eng_tgt": {
    "id": "hc_eng_tgt",
@@ -4544,62 +4580,17 @@
    "fixed_return": false
   },
   {
-   "id": "hc_SW1>hc_SW0:HC_CORE",
-   "src": "hc_SW1",
-   "dst": "hc_SW0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 82016.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_SW2>hc_SW0:HC_CORE",
-   "src": "hc_SW2",
-   "dst": "hc_SW0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 82016.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_SW3>hc_SW0:HC_CORE",
-   "src": "hc_SW3",
-   "dst": "hc_SW0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 82016.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_SW0>hc_eng:HC_ENG",
-   "src": "hc_SW0",
+   "id": "hc_SW>hc_eng:HC_ENG",
+   "src": "hc_SW",
    "dst": "hc_eng",
    "cls": "HC_ENG",
-   "bits": 8244,
+   "bits": 2100,
    "bytes_per_token": {
     "qwen": 0.0,
     "ds": 1640320.0
    },
    "criticality": 0.1296,
-   "provenance": "v16 hceng_30..: x_wave 8192 + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
+   "provenance": "v16 hceng_30..: x_wave 8192/4 beat(s) + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
    "rule": null,
    "fixed_return": false
   },
@@ -6944,62 +6935,17 @@
    "fixed_return": false
   },
   {
-   "id": "hc_SE1>hc_SE0:HC_CORE",
-   "src": "hc_SE1",
-   "dst": "hc_SE0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 82016.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_SE2>hc_SE0:HC_CORE",
-   "src": "hc_SE2",
-   "dst": "hc_SE0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 82016.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_SE3>hc_SE0:HC_CORE",
-   "src": "hc_SE3",
-   "dst": "hc_SE0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 82016.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_SE0>hc_eng:HC_ENG",
-   "src": "hc_SE0",
+   "id": "hc_SE>hc_eng:HC_ENG",
+   "src": "hc_SE",
    "dst": "hc_eng",
    "cls": "HC_ENG",
-   "bits": 8244,
+   "bits": 2100,
    "bytes_per_token": {
     "qwen": 0.0,
     "ds": 1640320.0
    },
    "criticality": 0.1296,
-   "provenance": "v16 hceng_30..: x_wave 8192 + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
+   "provenance": "v16 hceng_30..: x_wave 8192/4 beat(s) + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
    "rule": null,
    "fixed_return": false
   },
@@ -9314,62 +9260,17 @@
    "fixed_return": false
   },
   {
-   "id": "hc_NW1>hc_NW0:HC_CORE",
-   "src": "hc_NW1",
-   "dst": "hc_NW0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 102520.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_NW2>hc_NW0:HC_CORE",
-   "src": "hc_NW2",
-   "dst": "hc_NW0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 102520.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_NW3>hc_NW0:HC_CORE",
-   "src": "hc_NW3",
-   "dst": "hc_NW0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 102520.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_NW0>hc_eng:HC_ENG",
-   "src": "hc_NW0",
+   "id": "hc_NW>hc_eng:HC_ENG",
+   "src": "hc_NW",
    "dst": "hc_eng",
    "cls": "HC_ENG",
-   "bits": 8244,
+   "bits": 2100,
    "bytes_per_token": {
     "qwen": 0.0,
     "ds": 1640320.0
    },
    "criticality": 0.1296,
-   "provenance": "v16 hceng_30..: x_wave 8192 + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
+   "provenance": "v16 hceng_30..: x_wave 8192/4 beat(s) + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
    "rule": null,
    "fixed_return": false
   },
@@ -11684,62 +11585,17 @@
    "fixed_return": false
   },
   {
-   "id": "hc_NE1>hc_NE0:HC_CORE",
-   "src": "hc_NE1",
-   "dst": "hc_NE0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 102520.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_NE2>hc_NE0:HC_CORE",
-   "src": "hc_NE2",
-   "dst": "hc_NE0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 102520.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_NE3>hc_NE0:HC_CORE",
-   "src": "hc_NE3",
-   "dst": "hc_NE0",
-   "cls": "HC_CORE",
-   "bits": 256,
-   "bytes_per_token": {
-    "qwen": 0.0,
-    "ds": 102520.0
-   },
-   "criticality": 0.1296,
-   "provenance": "engine-internal port-group <-> core (estimate 256 b, 25% of slice traffic)",
-   "rule": null,
-   "fixed_return": false
-  },
-  {
-   "id": "hc_NE0>hc_eng:HC_ENG",
-   "src": "hc_NE0",
+   "id": "hc_NE>hc_eng:HC_ENG",
+   "src": "hc_NE",
    "dst": "hc_eng",
    "cls": "HC_ENG",
-   "bits": 8244,
+   "bits": 2100,
    "bytes_per_token": {
     "qwen": 0.0,
     "ds": 1640320.0
    },
    "criticality": 0.1296,
-   "provenance": "v16 hceng_30..: x_wave 8192 + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
+   "provenance": "v16 hceng_30..: x_wave 8192/4 beat(s) + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)",
    "rule": null,
    "fixed_return": false
   },
@@ -12929,39 +12785,489 @@
    "fixed_return": false
   },
   {
-   "id": "hc_eng>hc_SW0:HC_ENG",
-   "src": "hc_eng",
+   "id": "hc_SW>hc_SW0:HC_CORE",
+   "src": "hc_SW",
    "dst": "hc_SW0",
-   "cls": "HC_ENG",
-   "bits": 772,
+   "cls": "HC_CORE",
+   "bits": 596,
    "bytes_per_token": {
     "qwen": 0.0,
-    "ds": 153605.90004852012
+    "ds": 82016.0
    },
    "criticality": 0.1296,
-   "provenance": "v16: result_v 1 + position 3 + result 768 (bytes scaled from the forward link; estimate)",
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
    "rule": null,
    "fixed_return": false
   },
   {
-   "id": "hc_eng>hc_SE0:HC_ENG",
-   "src": "hc_eng",
+   "id": "hc_SW0>hc_SW:HC_CORE",
+   "src": "hc_SW0",
+   "dst": "hc_SW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SW>hc_SW1:HC_CORE",
+   "src": "hc_SW",
+   "dst": "hc_SW1",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SW1>hc_SW:HC_CORE",
+   "src": "hc_SW1",
+   "dst": "hc_SW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SW>hc_SW2:HC_CORE",
+   "src": "hc_SW",
+   "dst": "hc_SW2",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SW2>hc_SW:HC_CORE",
+   "src": "hc_SW2",
+   "dst": "hc_SW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SW>hc_SW3:HC_CORE",
+   "src": "hc_SW",
+   "dst": "hc_SW3",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SW3>hc_SW:HC_CORE",
+   "src": "hc_SW3",
+   "dst": "hc_SW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE>hc_SE0:HC_CORE",
+   "src": "hc_SE",
    "dst": "hc_SE0",
-   "cls": "HC_ENG",
-   "bits": 772,
+   "cls": "HC_CORE",
+   "bits": 596,
    "bytes_per_token": {
     "qwen": 0.0,
-    "ds": 153605.90004852012
+    "ds": 82016.0
    },
    "criticality": 0.1296,
-   "provenance": "v16: result_v 1 + position 3 + result 768 (bytes scaled from the forward link; estimate)",
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
    "rule": null,
    "fixed_return": false
   },
   {
-   "id": "hc_eng>hc_NW0:HC_ENG",
-   "src": "hc_eng",
+   "id": "hc_SE0>hc_SE:HC_CORE",
+   "src": "hc_SE0",
+   "dst": "hc_SE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE>hc_SE1:HC_CORE",
+   "src": "hc_SE",
+   "dst": "hc_SE1",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE1>hc_SE:HC_CORE",
+   "src": "hc_SE1",
+   "dst": "hc_SE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE>hc_SE2:HC_CORE",
+   "src": "hc_SE",
+   "dst": "hc_SE2",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE2>hc_SE:HC_CORE",
+   "src": "hc_SE2",
+   "dst": "hc_SE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE>hc_SE3:HC_CORE",
+   "src": "hc_SE",
+   "dst": "hc_SE3",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_SE3>hc_SE:HC_CORE",
+   "src": "hc_SE3",
+   "dst": "hc_SE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW>hc_NW0:HC_CORE",
+   "src": "hc_NW",
    "dst": "hc_NW0",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW0>hc_NW:HC_CORE",
+   "src": "hc_NW0",
+   "dst": "hc_NW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW>hc_NW1:HC_CORE",
+   "src": "hc_NW",
+   "dst": "hc_NW1",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW1>hc_NW:HC_CORE",
+   "src": "hc_NW1",
+   "dst": "hc_NW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW>hc_NW2:HC_CORE",
+   "src": "hc_NW",
+   "dst": "hc_NW2",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW2>hc_NW:HC_CORE",
+   "src": "hc_NW2",
+   "dst": "hc_NW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW>hc_NW3:HC_CORE",
+   "src": "hc_NW",
+   "dst": "hc_NW3",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NW3>hc_NW:HC_CORE",
+   "src": "hc_NW3",
+   "dst": "hc_NW",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE>hc_NE0:HC_CORE",
+   "src": "hc_NE",
+   "dst": "hc_NE0",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE0>hc_NE:HC_CORE",
+   "src": "hc_NE0",
+   "dst": "hc_NE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE>hc_NE1:HC_CORE",
+   "src": "hc_NE",
+   "dst": "hc_NE1",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE1>hc_NE:HC_CORE",
+   "src": "hc_NE1",
+   "dst": "hc_NE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE>hc_NE2:HC_CORE",
+   "src": "hc_NE",
+   "dst": "hc_NE2",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE2>hc_NE:HC_CORE",
+   "src": "hc_NE2",
+   "dst": "hc_NE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE>hc_NE3:HC_CORE",
+   "src": "hc_NE",
+   "dst": "hc_NE3",
+   "cls": "HC_CORE",
+   "bits": 596,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_NE3>hc_NE:HC_CORE",
+   "src": "hc_NE3",
+   "dst": "hc_NE",
+   "cls": "HC_CORE",
+   "bits": 516,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 82016.0
+   },
+   "criticality": 0.1296,
+   "provenance": "v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NETLIST 406a2d5f9)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_eng>hc_SW:HC_ENG",
+   "src": "hc_eng",
+   "dst": "hc_SW",
    "cls": "HC_ENG",
    "bits": 772,
    "bytes_per_token": {
@@ -12974,9 +13280,39 @@
    "fixed_return": false
   },
   {
-   "id": "hc_eng>hc_NE0:HC_ENG",
+   "id": "hc_eng>hc_SE:HC_ENG",
    "src": "hc_eng",
-   "dst": "hc_NE0",
+   "dst": "hc_SE",
+   "cls": "HC_ENG",
+   "bits": 772,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 153605.90004852012
+   },
+   "criticality": 0.1296,
+   "provenance": "v16: result_v 1 + position 3 + result 768 (bytes scaled from the forward link; estimate)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_eng>hc_NW:HC_ENG",
+   "src": "hc_eng",
+   "dst": "hc_NW",
+   "cls": "HC_ENG",
+   "bits": 772,
+   "bytes_per_token": {
+    "qwen": 0.0,
+    "ds": 153605.90004852012
+   },
+   "criticality": 0.1296,
+   "provenance": "v16: result_v 1 + position 3 + result 768 (bytes scaled from the forward link; estimate)",
+   "rule": null,
+   "fixed_return": false
+  },
+  {
+   "id": "hc_eng>hc_NE:HC_ENG",
+   "src": "hc_eng",
+   "dst": "hc_NE",
    "cls": "HC_ENG",
    "bits": 772,
    "bytes_per_token": {

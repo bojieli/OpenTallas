@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 7,
  "owner": "H-DIE",
- "updated": "2026-10-16T06:21:16-07:00",
+ "updated": "2026-10-16T06:34:02-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/core4_sfu2_su2825/compact.P.json",
@@ -14,17 +14,17 @@
    23949.682
   ],
   "metrics": {
-   "sum_bits_mm": 1981498.4350980006,
+   "sum_bits_mm": 1502899.44425,
    "traffic_mm_qwen": 10768099890.833672,
-   "traffic_mm_ds": 4011776452.7982254,
-   "relay_flops": 3799588.0,
-   "bits_over_500": 245975.0,
+   "traffic_mm_ds": 3927707982.398576,
+   "relay_flops": 2852548.0,
+   "bits_over_500": 236119.0,
    "fixed_return_violation_bits": 0,
    "fixed_return_violations": 0,
    "overlaps": 0,
    "outside": 0,
-   "J": 7.345805554886372,
-   "n_long_returns": 461
+   "J": 6.669624169892278,
+   "n_long_returns": 481
   },
   "previous": {
    "file": "results/arch/hbm_die_v15/compact660_v5/compact.P.json",
@@ -87485,51 +87485,21 @@
      "face": "W",
      "layer": "M4",
      "offset": 0.0,
-     "span_um": 421.3,
-     "bits": 8244,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_NE0>hc_eng:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 421.3,
-     "span_um": 39.45,
-     "bits": 772,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_NE0:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 460.75,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_NE1",
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NE",
      "cls": "HC_CORE",
-     "link": "hc_NE1>hc_NE0:HC_CORE"
+     "link": "hc_NE>hc_NE0:HC_CORE"
     },
     {
      "face": "W",
      "layer": "M4",
-     "offset": 473.83,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_NE2",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NE",
      "cls": "HC_CORE",
-     "link": "hc_NE2>hc_NE0:HC_CORE"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 486.92,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_NE3",
-     "cls": "HC_CORE",
-     "link": "hc_NE3>hc_NE0:HC_CORE"
+     "link": "hc_NE0>hc_NE:HC_CORE"
     }
    ],
    "plan_block": "hc_NE0"
@@ -87587,14 +87557,24 @@
      "link": "vmb_NE3>hc_NE1:LG_HC"
     },
     {
-     "face": "E",
+     "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_NE0",
+     "offset": 0.0,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NE",
      "cls": "HC_CORE",
-     "link": "hc_NE1>hc_NE0:HC_CORE"
+     "link": "hc_NE>hc_NE1:HC_CORE"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NE",
+     "cls": "HC_CORE",
+     "link": "hc_NE1>hc_NE:HC_CORE"
     }
    ],
    "plan_block": "hc_NE1"
@@ -87652,14 +87632,24 @@
      "link": "vmb_NE5>hc_NE2:LG_HC"
     },
     {
-     "face": "E",
+     "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_NE0",
+     "offset": 0.0,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NE",
      "cls": "HC_CORE",
-     "link": "hc_NE2>hc_NE0:HC_CORE"
+     "link": "hc_NE>hc_NE2:HC_CORE"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NE",
+     "cls": "HC_CORE",
+     "link": "hc_NE2>hc_NE:HC_CORE"
     }
    ],
    "plan_block": "hc_NE2"
@@ -87717,14 +87707,24 @@
      "link": "vmb_NE7>hc_NE3:LG_HC"
     },
     {
-     "face": "E",
+     "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_NE0",
+     "offset": 0.0,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NE",
      "cls": "HC_CORE",
-     "link": "hc_NE3>hc_NE0:HC_CORE"
+     "link": "hc_NE>hc_NE3:HC_CORE"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NE",
+     "cls": "HC_CORE",
+     "link": "hc_NE3>hc_NE:HC_CORE"
     }
    ],
    "plan_block": "hc_NE3"
@@ -87785,51 +87785,21 @@
      "face": "E",
      "layer": "M4",
      "offset": 0.0,
-     "span_um": 421.3,
-     "bits": 8244,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_NW0>hc_eng:HC_ENG"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 421.3,
-     "span_um": 39.45,
-     "bits": 772,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_NW0:HC_ENG"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 460.75,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_NW1",
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NW",
      "cls": "HC_CORE",
-     "link": "hc_NW1>hc_NW0:HC_CORE"
+     "link": "hc_NW>hc_NW0:HC_CORE"
     },
     {
      "face": "E",
      "layer": "M4",
-     "offset": 473.83,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_NW2",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NW",
      "cls": "HC_CORE",
-     "link": "hc_NW2>hc_NW0:HC_CORE"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 486.92,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_NW3",
-     "cls": "HC_CORE",
-     "link": "hc_NW3>hc_NW0:HC_CORE"
+     "link": "hc_NW0>hc_NW:HC_CORE"
     }
    ],
    "plan_block": "hc_NW0"
@@ -87887,14 +87857,24 @@
      "link": "vmb_NW3>hc_NW1:LG_HC"
     },
     {
-     "face": "W",
+     "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_NW0",
+     "offset": 0.0,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NW",
      "cls": "HC_CORE",
-     "link": "hc_NW1>hc_NW0:HC_CORE"
+     "link": "hc_NW>hc_NW1:HC_CORE"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NW",
+     "cls": "HC_CORE",
+     "link": "hc_NW1>hc_NW:HC_CORE"
     }
    ],
    "plan_block": "hc_NW1"
@@ -87952,14 +87932,24 @@
      "link": "vmb_NW5>hc_NW2:LG_HC"
     },
     {
-     "face": "W",
+     "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_NW0",
+     "offset": 0.0,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NW",
      "cls": "HC_CORE",
-     "link": "hc_NW2>hc_NW0:HC_CORE"
+     "link": "hc_NW>hc_NW2:HC_CORE"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NW",
+     "cls": "HC_CORE",
+     "link": "hc_NW2>hc_NW:HC_CORE"
     }
    ],
    "plan_block": "hc_NW2"
@@ -88017,14 +88007,24 @@
      "link": "vmb_NW7>hc_NW3:LG_HC"
     },
     {
-     "face": "W",
+     "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_NW0",
+     "offset": 0.0,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_NW",
      "cls": "HC_CORE",
-     "link": "hc_NW3>hc_NW0:HC_CORE"
+     "link": "hc_NW>hc_NW3:HC_CORE"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 59.6,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_NW",
+     "cls": "HC_CORE",
+     "link": "hc_NW3>hc_NW:HC_CORE"
     }
    ],
    "plan_block": "hc_NW3"
@@ -88084,52 +88084,22 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 0.0,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_SE1",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SE",
      "cls": "HC_CORE",
-     "link": "hc_SE1>hc_SE0:HC_CORE"
+     "link": "hc_SE>hc_SE0:HC_CORE"
     },
     {
      "face": "W",
      "layer": "M4",
-     "offset": 13.08,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_SE2",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SE",
      "cls": "HC_CORE",
-     "link": "hc_SE2>hc_SE0:HC_CORE"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 26.17,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_SE3",
-     "cls": "HC_CORE",
-     "link": "hc_SE3>hc_SE0:HC_CORE"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 39.25,
-     "span_um": 421.3,
-     "bits": 8244,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_SE0>hc_eng:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 460.55,
-     "span_um": 39.45,
-     "bits": 772,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_SE0:HC_ENG"
+     "link": "hc_SE0>hc_SE:HC_CORE"
     }
    ],
    "plan_block": "hc_SE0"
@@ -88187,14 +88157,24 @@
      "link": "vmb_SE3>hc_SE1:LG_HC"
     },
     {
-     "face": "E",
+     "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_SE0",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SE",
      "cls": "HC_CORE",
-     "link": "hc_SE1>hc_SE0:HC_CORE"
+     "link": "hc_SE>hc_SE1:HC_CORE"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SE",
+     "cls": "HC_CORE",
+     "link": "hc_SE1>hc_SE:HC_CORE"
     }
    ],
    "plan_block": "hc_SE1"
@@ -88252,14 +88232,24 @@
      "link": "vmb_SE5>hc_SE2:LG_HC"
     },
     {
-     "face": "E",
+     "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_SE0",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SE",
      "cls": "HC_CORE",
-     "link": "hc_SE2>hc_SE0:HC_CORE"
+     "link": "hc_SE>hc_SE2:HC_CORE"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SE",
+     "cls": "HC_CORE",
+     "link": "hc_SE2>hc_SE:HC_CORE"
     }
    ],
    "plan_block": "hc_SE2"
@@ -88317,14 +88307,24 @@
      "link": "vmb_SE7>hc_SE3:LG_HC"
     },
     {
-     "face": "E",
+     "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_SE0",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SE",
      "cls": "HC_CORE",
-     "link": "hc_SE3>hc_SE0:HC_CORE"
+     "link": "hc_SE>hc_SE3:HC_CORE"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SE",
+     "cls": "HC_CORE",
+     "link": "hc_SE3>hc_SE:HC_CORE"
     }
    ],
    "plan_block": "hc_SE3"
@@ -88384,52 +88384,22 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 0.0,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_SW1",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SW",
      "cls": "HC_CORE",
-     "link": "hc_SW1>hc_SW0:HC_CORE"
+     "link": "hc_SW>hc_SW0:HC_CORE"
     },
     {
      "face": "E",
      "layer": "M4",
-     "offset": 13.08,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_SW2",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SW",
      "cls": "HC_CORE",
-     "link": "hc_SW2>hc_SW0:HC_CORE"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 26.17,
-     "span_um": 13.08,
-     "bits": 256,
-     "peer": "hc_SW3",
-     "cls": "HC_CORE",
-     "link": "hc_SW3>hc_SW0:HC_CORE"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 39.25,
-     "span_um": 421.3,
-     "bits": 8244,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_SW0>hc_eng:HC_ENG"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 460.55,
-     "span_um": 39.45,
-     "bits": 772,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_SW0:HC_ENG"
+     "link": "hc_SW0>hc_SW:HC_CORE"
     }
    ],
    "plan_block": "hc_SW0"
@@ -88487,14 +88457,24 @@
      "link": "vmb_SW3>hc_SW1:LG_HC"
     },
     {
-     "face": "W",
+     "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_SW0",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SW",
      "cls": "HC_CORE",
-     "link": "hc_SW1>hc_SW0:HC_CORE"
+     "link": "hc_SW>hc_SW1:HC_CORE"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SW",
+     "cls": "HC_CORE",
+     "link": "hc_SW1>hc_SW:HC_CORE"
     }
    ],
    "plan_block": "hc_SW1"
@@ -88552,14 +88532,24 @@
      "link": "vmb_SW5>hc_SW2:LG_HC"
     },
     {
-     "face": "W",
+     "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_SW0",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SW",
      "cls": "HC_CORE",
-     "link": "hc_SW2>hc_SW0:HC_CORE"
+     "link": "hc_SW>hc_SW2:HC_CORE"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SW",
+     "cls": "HC_CORE",
+     "link": "hc_SW2>hc_SW:HC_CORE"
     }
    ],
    "plan_block": "hc_SW2"
@@ -88617,14 +88607,24 @@
      "link": "vmb_SW7>hc_SW3:LG_HC"
     },
     {
-     "face": "W",
+     "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
-     "bits": 256,
-     "peer": "hc_SW0",
+     "offset": 388.8,
+     "span_um": 59.6,
+     "bits": 596,
+     "peer": "hc_SW",
      "cls": "HC_CORE",
-     "link": "hc_SW3>hc_SW0:HC_CORE"
+     "link": "hc_SW>hc_SW3:HC_CORE"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 448.4,
+     "span_um": 51.6,
+     "bits": 516,
+     "peer": "hc_SW",
+     "cls": "HC_CORE",
+     "link": "hc_SW3>hc_SW:HC_CORE"
     }
    ],
    "plan_block": "hc_SW3"
@@ -88662,84 +88662,84 @@
    "notes": "HC:ot_hbm_hc_eng_static (H-NETLIST 406a2d5f9, ~9.5 mm2 model hbm_hc_eng_0030) centre-column void; H-DIE-V790 centre-column home, pins from the plan pin windows (v16 widths)",
    "pin_windows": [
     {
-     "face": "W",
-     "layer": "M4",
+     "face": "S",
+     "layer": "M5",
      "offset": 0.0,
-     "span_um": 824.4,
-     "bits": 8244,
-     "peer": "hc_SW0",
+     "span_um": 210.0,
+     "bits": 2100,
+     "peer": "hc_SW",
      "cls": "HC_ENG",
-     "link": "hc_SW0>hc_eng:HC_ENG"
+     "link": "hc_SW>hc_eng:HC_ENG"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 824.4,
+     "face": "S",
+     "layer": "M5",
+     "offset": 210.0,
      "span_um": 77.2,
      "bits": 772,
-     "peer": "hc_SW0",
+     "peer": "hc_SW",
      "cls": "HC_ENG",
-     "link": "hc_eng>hc_SW0:HC_ENG"
+     "link": "hc_eng>hc_SW:HC_ENG"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 2213.15,
-     "span_um": 824.4,
-     "bits": 8244,
-     "peer": "hc_NW0",
+     "face": "S",
+     "layer": "M5",
+     "offset": 2762.8,
+     "span_um": 210.0,
+     "bits": 2100,
+     "peer": "hc_SE",
      "cls": "HC_ENG",
-     "link": "hc_NW0>hc_eng:HC_ENG"
+     "link": "hc_SE>hc_eng:HC_ENG"
     },
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 3037.55,
+     "face": "S",
+     "layer": "M5",
+     "offset": 2972.8,
      "span_um": 77.2,
      "bits": 772,
-     "peer": "hc_NW0",
+     "peer": "hc_SE",
      "cls": "HC_ENG",
-     "link": "hc_eng>hc_NW0:HC_ENG"
+     "link": "hc_eng>hc_SE:HC_ENG"
     },
     {
-     "face": "E",
-     "layer": "M4",
+     "face": "N",
+     "layer": "M5",
      "offset": 0.0,
-     "span_um": 824.4,
-     "bits": 8244,
-     "peer": "hc_SE0",
+     "span_um": 210.0,
+     "bits": 2100,
+     "peer": "hc_NW",
      "cls": "HC_ENG",
-     "link": "hc_SE0>hc_eng:HC_ENG"
+     "link": "hc_NW>hc_eng:HC_ENG"
     },
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 824.4,
+     "face": "N",
+     "layer": "M5",
+     "offset": 210.0,
      "span_um": 77.2,
      "bits": 772,
-     "peer": "hc_SE0",
+     "peer": "hc_NW",
      "cls": "HC_ENG",
-     "link": "hc_eng>hc_SE0:HC_ENG"
+     "link": "hc_eng>hc_NW:HC_ENG"
     },
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 2213.15,
-     "span_um": 824.4,
-     "bits": 8244,
-     "peer": "hc_NE0",
+     "face": "N",
+     "layer": "M5",
+     "offset": 2762.8,
+     "span_um": 210.0,
+     "bits": 2100,
+     "peer": "hc_NE",
      "cls": "HC_ENG",
-     "link": "hc_NE0>hc_eng:HC_ENG"
+     "link": "hc_NE>hc_eng:HC_ENG"
     },
     {
-     "face": "E",
-     "layer": "M4",
-     "offset": 3037.55,
+     "face": "N",
+     "layer": "M5",
+     "offset": 2972.8,
      "span_um": 77.2,
      "bits": 772,
-     "peer": "hc_NE0",
+     "peer": "hc_NE",
      "cls": "HC_ENG",
-     "link": "hc_eng>hc_NE0:HC_ENG"
+     "link": "hc_eng>hc_NE:HC_ENG"
     }
    ],
    "rtl_pending": "HC owner: HC engine",
@@ -128816,7 +128816,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -129217,7 +129217,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -129618,7 +129618,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -130020,7 +130020,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -130422,7 +130422,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -130823,7 +130823,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -131223,7 +131223,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -131623,7 +131623,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -132023,7 +132023,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -132424,7 +132424,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -132825,7 +132825,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -133227,7 +133227,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -133629,7 +133629,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -134030,7 +134030,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -134430,7 +134430,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -134830,7 +134830,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -135230,7 +135230,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -135631,7 +135631,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -136032,7 +136032,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -136434,7 +136434,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -136836,7 +136836,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -137237,7 +137237,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -137637,7 +137637,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -138037,7 +138037,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -138437,7 +138437,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -138838,7 +138838,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -139239,7 +139239,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -139641,7 +139641,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -140043,7 +140043,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -140444,7 +140444,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -140844,7 +140844,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -141244,7 +141244,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -141584,7 +141584,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 3,
     "G": 0,
@@ -142015,7 +142015,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 3,
     "G": 1,
@@ -142446,7 +142446,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 3,
     "G": 2,
@@ -142877,7 +142877,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 3,
     "G": 3,
@@ -143328,7 +143328,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 2,
     "G": 0,
@@ -143759,7 +143759,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 2,
     "G": 1,
@@ -144190,7 +144190,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 2,
     "G": 2,
@@ -144621,7 +144621,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 2,
     "G": 3,
@@ -145072,7 +145072,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 1,
     "G": 0,
@@ -145503,7 +145503,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 1,
     "G": 1,
@@ -145934,7 +145934,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 1,
     "G": 2,
@@ -146365,7 +146365,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 1,
     "G": 3,
@@ -146816,7 +146816,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 0,
     "G": 0,
@@ -147247,7 +147247,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 0,
     "G": 1,
@@ -147678,7 +147678,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 0,
     "G": 2,
@@ -148109,7 +148109,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {
     "QID": 0,
     "G": 3,
@@ -148509,7 +148509,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -148766,7 +148766,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -149023,7 +149023,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -149280,7 +149280,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "ca0a2d04c",
+   "source_prerequisite": "6731a60ce",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -164991,6 +164991,42 @@
    "pin_status": "FACES_ONLY"
   },
   {
+   "name": "hc_SW",
+   "cell": "ot_hbm_hc_q_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 432.0,
+    "h": 432.0
+   },
+   "origin": {
+    "x": 13342.32,
+    "y": 6762.88,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "plan_block": "hc_SW",
+   "qualified": false,
+   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
    "name": "sfus_SE",
    "cell": null,
    "kind": "tile",
@@ -165023,6 +165059,42 @@
    "plan_block": "sfus_SE",
    "qualified": false,
    "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "hc_SE",
+   "cell": "ot_hbm_hc_q_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 432.0,
+    "h": 432.0
+   },
+   "origin": {
+    "x": 19215.68,
+    "y": 6762.88,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "plan_block": "hc_SE",
+   "qualified": false,
+   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
    "pins": [],
    "pin_status": "FACES_ONLY"
   },
@@ -165063,6 +165135,42 @@
    "pin_status": "FACES_ONLY"
   },
   {
+   "name": "hc_NW",
+   "cell": "ot_hbm_hc_q_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 432.0,
+    "h": 432.0
+   },
+   "origin": {
+    "x": 13342.32,
+    "y": 16754.802,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "plan_block": "hc_NW",
+   "qualified": false,
+   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
    "name": "sfus_NE",
    "cell": null,
    "kind": "tile",
@@ -165095,6 +165203,42 @@
    "plan_block": "sfus_NE",
    "qualified": false,
    "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "hc_NE",
+   "cell": "ot_hbm_hc_q_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 432.0,
+    "h": 432.0
+   },
+   "origin": {
+    "x": 19215.68,
+    "y": 16754.802,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "plan_block": "hc_NE",
+   "qualified": false,
+   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
    "pins": [],
    "pin_status": "FACES_ONLY"
   },
@@ -177149,9 +177293,13 @@
    "cij_NW",
    "cij_NE",
    "sfus_SW",
+   "hc_SW",
    "sfus_SE",
+   "hc_SE",
    "sfus_NW",
+   "hc_NW",
    "sfus_NE",
+   "hc_NE",
    "hc_eng_tgt",
    "hc_tbl_tgt"
   ],
@@ -177340,9 +177488,13 @@
     "cij_NW",
     "cij_NE",
     "sfus_SW",
+    "hc_SW",
     "sfus_SE",
+    "hc_SE",
     "sfus_NW",
+    "hc_NW",
     "sfus_NE",
+    "hc_NE",
     "hc_eng_tgt",
     "hc_tbl_tgt"
    ],

@@ -15,6 +15,7 @@ def main():
     ap.add_argument('--borrow-roof',action='store_true',help='conditional lower-SM roof from exact RP4b carve witness; actual OBS/PG still unqualified')
     ap.add_argument('--plan',default='results/arch/hbm_die_v15/core4_sfu2')
     ap.add_argument('--contract',default='/home/ubuntu/wt/hnl-0030/results/arch/hbm_die_v16/source_compact_0253/contract.json')
+    ap.add_argument('--roof-witness',default='results/arch/hbm_die_v15/xc_rp4b_frame_1016/witness.json',help='SM carve witness whose roof is borrowed (rp4c: xc_rp4c_frame_1016)')
     ap.add_argument('--graph-cls',nargs='*',default=[],help="also count the plan graph's links of these classes (e.g. HC_ENG) crossing the cut")
     ap.add_argument('--out',default='results/arch/hbm_die_v15/core4_sfu2/sfu_barrier_cuts.json')
     a=ap.parse_args();p=json.loads((ROOT/a.plan/'compact.P.json').read_text());raw=Path(a.contract).read_bytes();c=json.loads(raw)
@@ -33,7 +34,7 @@ def main():
         for l in g['links']:
             if l['cls'] in a.graph_cls and l['src'] in p and l['dst'] in p:
                 links.append(dict(source=l['src'],sink=l['dst'],bits=l['bits'],kind='plan graph '+l['cls']+': '+l.get('provenance','')[:80]))
-    roof_path=ROOT/'results/arch/hbm_die_v15/xc_rp4b_frame_1016/witness.json'
+    roof_path=ROOT/a.roof_witness
     roof_raw=roof_path.read_bytes() if a.borrow_roof else None
     roof=json.loads(roof_raw)['roof'] if roof_raw else None
     rows=[]
@@ -82,10 +83,10 @@ def main():
     if roof:
         for n,b in p.items():
             if not n.startswith('sm_SW') or abs(b['y']+b['h']-rows[0]['sm_bounded_y_um'][0])>.001:continue
-            base=b['y']+1434.24
-            ax.add_patch(Rectangle((b['x'],base),b['w'],365.76,facecolor='#fff3ce',edgecolor='#aa9944',linewidth=.5))
-            ax.add_patch(Rectangle((b['x']+3421.44,base),345.6,331.2,facecolor='#889988',edgecolor='black',linewidth=.5))
-            ax.add_patch(Rectangle((b['x']+3788.64,b['y']+1455.84),224.64,216,facecolor='#f4a64c',edgecolor='black',linewidth=.5))
+            base=b['y']+roof['roof_base_y_um']
+            ax.add_patch(Rectangle((b['x'],base),b['w'],1800-roof['roof_base_y_um'],facecolor='#fff3ce',edgecolor='#aa9944',linewidth=.5))
+            ax.add_patch(Rectangle((b['x']+3421.44,base),345.6,1765.44-roof['roof_base_y_um'],facecolor='#889988',edgecolor='black',linewidth=.5))
+            ax.add_patch(Rectangle((b['x']+3788.64,b['y']+roof['roof_base_y_um']+21.6),224.64,216,facecolor='#f4a64c',edgecolor='black',linewidth=.5))
     row=rows[0];x=row['cut_x_um'];lo,hi=row['sm_bounded_y_um'];yb,yt=row['hard_su_y_um']
     ax.plot([x,x],[lo-row['conditional_roof_extra_um'],hi],color='red',linewidth=2)
     ax.plot([x,x],[lo-row['conditional_roof_extra_um'],yb],color='green',linewidth=6);ax.plot([x,x],[yt,hi],color='green',linewidth=6)

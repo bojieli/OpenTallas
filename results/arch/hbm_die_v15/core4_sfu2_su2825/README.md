@@ -1,10 +1,99 @@
-# core4_sfu2_su2825 v2: measured SFU core and centre HC engine
+# core4_sfu2_su2825 v3: inner HC client and 4-beat x_wave
 
 Status: **UNADOPTED GEOMETRY PROPOSAL.** The active contract
 `results/arch/hier_contract_1015/hbm_v15.json` is unchanged; the H-DIE lead adopts after review.
 
-**The audit passes, but the die cuts fail.** With the measured v16 HC_ENG link widths, 376 cut lines are over 0.60. The
-HC engine's x_wave transport is not routable as specified; see the HC engine section.
+**Grants audit: PASS** (0 outside / 0 overlaps / 0 points in hard blocks). **Die cut: FAIL by 0.023.** The worst window
+is not HC traffic; see the v3 section.
+
+## v3 (H-DIE decision 10-16): HC client at the band's inner end, x_wave over 4 beats
+
+### What changed
+- **HC client.** `hc_<q>` (ot_hbm_hc_q_static, the x_wave source) is a new plan block with slot.
+  - Candidate outline 432 × 432, pin-limited: about 7.6 kb of pins including the 4-beat x_wave. Synthesis is pending.
+  - Home: the inner-end pocket, SW frame (13342.32, 6762.88), mirrored per quadrant. That is west of the calendar
+    column (2 × 21.6 + 2.16 µm clear of it) and above the COLL / DMA back / IDX operand stack.
+- **Group leaves stay put.** The 16 leaves `hc_<q><k>` (ot_hgi_sfu_lg_pair_leaf) stay at their bank pairs, so LG_HC is
+  still 0-stage.
+- **v16 group links.** Per leaf: 596 b from the client (lg_rq 34 + lg_wq 562) and 516 b back (c_rr 514 + c_w_done 2),
+  class HC_CORE. These replace the 256-b estimates into hc_<q>0.
+- **4-beat x_wave** (`--hc-x-beats 4`): 2,048 + 52 = 2,100 b per quadrant to hc_eng, 772 b back.
+- **Roof at rp4c height.** H-SM rp4c (e15f1ee76, `smh_tile_rp4c/floorplan.json`) makes the SM tile body 1,529.28 µm
+  tall.
+  - The roof strip is now 270.72 µm, not 365.76.
+  - The XC home moves to y 1,550.88; only 33.12 µm remains above it.
+  - Witness: `../xc_rp4c_frame_1016/witness.json`, built with `xc_rp4b_frame_witness_1016.py --tile rp4c --ref
+    e15f1ee76`. The rp4b witness reproduces byte-identically.
+
+### Die cuts (`eval.json`, lane slack 1200)
+
+| Variant | Worst V/H cut | Lines over 0.60 | Weighted stages | HC_ENG stages |
+|---|---|---|---|---|
+| **v3: inner client, 4-beat** | **0.530 / 0.623** | **5** (23 windows) | **9.161** | 10.9 (bit-weighted) |
+| v2: hc_<q>0 client, 1 beat | 0.874 / 0.929 | 376 | 11.337 | 39.0 |
+| v2 client, 4-beat | 0.493 / 0.664 | 4 | 9.502 | 38.5 |
+| baseline, 512-b estimates | 0.493 / 0.574 | 0 | 8.778 | 43.0 |
+
+### HC_ENG round trip (`hc_eng_home.json`, routed, 500 µm per stage)
+
+| Quadrant | In / back stages | Round trip | Plus 4-beat serialisation |
+|---|---|---:|---:|
+| SW | 11 / 13 | 24 | +3 cycles |
+| SE | 8 / 11 | 19 | +3 |
+| NW | 13 / 14 | 27 | +3 |
+| NE | 9 / 11 | 20 | +3 |
+
+v2 was 74–76 per round trip. Engine-face cut: 0.134.
+
+### Worst window (`cut_worst_window.json`, `tools/hbm_die_v15/cut_window_who.py`)
+
+- Horizontal lines y 5,000–5,300, window x 13,100–14,100: 8,764 b, 0.623. The NW mirror at y 18,700 is 0.608.
+- These lines lie in the strip between the SM row and the band, under the SW corner of the hub's W face.
+- What crosses it:
+
+| Class | Bits |
+|---|---:|
+| VM_HUB | 2,690 |
+| HBM_VM + VM_HBM | 4,096 |
+| COLL_RING | 826 |
+| IDX_VM | 548 |
+| SM_OUT | 540 |
+| KV_DESC | 64 |
+
+- **No HC bits cross it.** The same window is 0.567 in the baseline. The HC links move band_lanes' lane choices, which
+  pushes two more vmh→vmb links and the vmb→idx_op links through the window. The excess is 327 b (limit 8,437.5).
+- The y 18,700 window does carry HC_CORE 516 b.
+- This is a lane-assignment / hub-corner problem, not an HC capacity problem. The fix is a hub-face or lane change,
+  not further HC rework.
+
+### Band barrier through su_<q>1 (necessary cut, hard frames; roof at rp4c 270.72 µm)
+
+| Traffic | Hard frames only | With rp4c roof (530.72 µm) |
+|---|---|---|
+| SFU/SU only, 2,676 b | 0.732 | 0.359 |
+| Plus HC: 4,900 b (groups 0/1 ↔ client 2 × 1,112 b) | 1.340 | **0.657, fails** |
+
+- With HC the barrier needs a 580.7 µm channel: 50 µm more than the rp4c roof gives.
+- The client cannot sit anywhere better. West of the cut, groups 2/3 and the x_wave/result (2,872 b) would cross
+  instead. Leaf traffic plus SFU traffic at this cut is the floor.
+- Options:
+  - narrow the HC leaf ↔ client links (e.g. time-multiplex lg_wq);
+  - roof qualification plus 50 µm more of channel;
+  - SFU-side relief.
+
+### Visual check
+
+- `layout_sw_band`, `layout_centre`, `layout` and `sfu_barrier_cuts_roof_hc.png` were personally inspected; no
+  overlaps.
+- **Conflict found in the barrier plot.** sfu_barrier_cut_1016.py models the source-compact SUCX as 720 × 720 at the
+  COLL top + 742. That box overlaps hc_<q> by 54 µm in x.
+- If that SUCX size is adopted, the pocket between SUCX and the calendar column is only 358 µm wide. hc_<q> then needs
+  a 358-wide reshape or a move above the SUCX. Today's plan SUCX is 216 × 194.4, so the audit passes.
+
+## Grant history (v2, kept below)
+
+The numbers below are v2's, with the rp4b roof; the v2 plan files are at commit 6731a60ce. The files in this directory
+now hold v3. The SFU and HC homes, the rules and the audit method are unchanged.
 
 ## What was measured
 
@@ -120,16 +209,18 @@ images also show the open issue: hc_<q>0 sits at the far die edge, so x_wave mus
 
 ```sh
 P=results/arch/hbm_die_v15/core4_sfu2_su2825
-python3 tools/hbm_die_v15/compact_plan.py --layout col --core-at 4 --sfu-at-group 2 --core-w 330.48 --core-h 330.48 --core-column-w 276.48 --band 3045.28 --su-w 1797.12 --su-h 2825.28 --smw 7200 --smh 1800 --edge 100 --column 3050 --channel 450 --hub-w 480 --fit --carry --sfucore-h 3001.91 --sfu-store-side --sfus-wh 1020 1412 --sfus-yoff 1611.68 --hc-eng-mm2 9.5 --hc-links-v16 --out $P
+python3 tools/hbm_die_v15/compact_plan.py --layout col --core-at 4 --sfu-at-group 2 --core-w 330.48 --core-h 330.48 --core-column-w 276.48 --band 3045.28 --su-w 1797.12 --su-h 2825.28 --smw 7200 --smh 1800 --edge 100 --column 3050 --channel 450 --hub-w 480 --fit --carry --sfucore-h 3001.91 --sfu-store-side --sfus-wh 1020 1412 --sfus-yoff 1611.68 --hc-eng-mm2 9.5 --hc-links-v16 --hc-x-beats 4 --hc-client-inner --out $P
+python3 tools/hbm_die_v15/xc_rp4b_frame_witness_1016.py --tile rp4c --ref e15f1ee76 --candidates core4_sfu2_su2825 --out results/arch/hbm_die_v15/xc_rp4c_frame_1016
 python3 tools/hbm_die_v15/v6_eval.py $P --slack 1200
 python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --out $P/sfu_barrier_cuts.json
-python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --borrow-roof --out $P/sfu_barrier_cuts_roof.json
-python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --graph-cls HC_ENG --out $P/sfu_barrier_cuts_hc.json
-python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --borrow-roof --graph-cls HC_ENG --out $P/sfu_barrier_cuts_roof_hc.json
+python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --borrow-roof --roof-witness results/arch/hbm_die_v15/xc_rp4c_frame_1016/witness.json --out $P/sfu_barrier_cuts_roof.json
+python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --graph-cls HC_ENG HC_CORE --out $P/sfu_barrier_cuts_hc.json
+python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan $P --borrow-roof --roof-witness results/arch/hbm_die_v15/xc_rp4c_frame_1016/witness.json --graph-cls HC_ENG HC_CORE --out $P/sfu_barrier_cuts_roof_hc.json
 python3 tools/hbm_die_v15/rf_centre_routes.py $P && python3 tools/hbm_die_v15/rf_centre_allocate.py $P
 python3 tools/hbm_die_v15/rehome_v6.py --plan $P --out $P/grants_proposal.json
-python3 tools/hbm_die_v15/hc_eng_home_1016.py $P --ablation centre_v16=$P nechannel_512b=$P/ablation_hc/nechannel_512b ...
+python3 tools/hbm_die_v15/hc_eng_home_1016.py $P --ablation v3_inner_client_x4=$P centre_v16_x1=$P/ablation_hc/centre_v16_x1 nechannel_512b=$P/ablation_hc/nechannel_512b ...
 python3 tools/die_layout_render.py --hbm $P --grants $P/grants_proposal.json --out $P/layout   # + --window for the zooms
+python3 tools/hbm_die_v15/cut_window_who.py $P h 5300 13100 > $P/cut_worst_window.json
 ```
 
 v5 is unaffected (`rehome_compact.py`). Without the new flags, compact_plan and rf_centre_routes reproduce v1 and

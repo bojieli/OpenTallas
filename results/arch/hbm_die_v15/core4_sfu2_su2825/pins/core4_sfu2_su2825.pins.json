@@ -2226,63 +2226,30 @@
     },
     "E": {
      "face_len_um": 500.0,
-     "bits": 9784,
-     "utilisation": 1.957,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SW1>hc_SW0:HC_CORE",
+       "link": "hc_SW>hc_SW0:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SW1",
+       "peer": "hc_SW",
        "dir": "in",
-       "bits": 256,
-       "offset_um": 0.0,
-       "span_um": 13.08,
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
        "x": 600.0,
-       "y": 6055.0
+       "y": 6467.1
       },
       {
-       "link": "hc_SW2>hc_SW0:HC_CORE",
+       "link": "hc_SW0>hc_SW:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SW2",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 13.08,
-       "span_um": 13.08,
-       "x": 600.0,
-       "y": 6068.1
-      },
-      {
-       "link": "hc_SW3>hc_SW0:HC_CORE",
-       "cls": "HC_CORE",
-       "peer": "hc_SW3",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 26.17,
-       "span_um": 13.08,
-       "x": 600.0,
-       "y": 6081.2
-      },
-      {
-       "link": "hc_SW0>hc_eng:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
+       "peer": "hc_SW",
        "dir": "out",
-       "bits": 8244,
-       "offset_um": 39.25,
-       "span_um": 421.3,
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
        "x": 600.0,
-       "y": 6298.4
-      },
-      {
-       "link": "hc_eng>hc_SW0:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "in",
-       "bits": 772,
-       "offset_um": 460.55,
-       "span_um": 39.45,
-       "x": 600.0,
-       "y": 6528.8
+       "y": 6522.7
       }
      ]
     }
@@ -2853,21 +2820,32 @@
       }
      ]
     },
-    "W": {
+    "E": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SW1>hc_SW0:HC_CORE",
+       "link": "hc_SW>hc_SW1:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SW0",
+       "peer": "hc_SW",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
+       "x": 3457.1,
+       "y": 6467.1
+      },
+      {
+       "link": "hc_SW1>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 2957.1,
-       "y": 6298.5
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
+       "x": 3457.1,
+       "y": 6522.7
       }
      ]
     }
@@ -3405,21 +3383,32 @@
       }
      ]
     },
-    "W": {
+    "E": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SW2>hc_SW0:HC_CORE",
+       "link": "hc_SW>hc_SW2:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SW0",
+       "peer": "hc_SW",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
+       "x": 7099.4,
+       "y": 6467.1
+      },
+      {
+       "link": "hc_SW2>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 6599.4,
-       "y": 6298.5
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
+       "x": 7099.4,
+       "y": 6522.7
       }
      ]
     }
@@ -3953,21 +3942,32 @@
       }
      ]
     },
-    "W": {
+    "E": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SW3>hc_SW0:HC_CORE",
+       "link": "hc_SW>hc_SW3:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SW0",
+       "peer": "hc_SW",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
+       "x": 9956.5,
+       "y": 6467.1
+      },
+      {
+       "link": "hc_SW3>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 9456.5,
-       "y": 6298.5
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
+       "x": 9956.5,
+       "y": 6522.7
       }
      ]
     }
@@ -4970,6 +4970,140 @@
        "span_um": 222.4,
        "x": 14520.0,
        "y": 7023.4
+      }
+     ]
+    }
+   }
+  },
+  "hc_SW": {
+   "x": 13342.3,
+   "y": 6762.9,
+   "w": 432.0,
+   "h": 432.0,
+   "kind": "HC_Q",
+   "orient": "R0",
+   "faces": {
+    "N": {
+     "face_len_um": 432.0,
+     "bits": 2872,
+     "utilisation": 0.665,
+     "pins": [
+      {
+       "link": "hc_SW>hc_eng:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "out",
+       "bits": 2100,
+       "offset_um": 144.8,
+       "span_um": 210.0,
+       "x": 13592.1,
+       "y": 7194.9
+      },
+      {
+       "link": "hc_eng>hc_SW:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 354.8,
+       "span_um": 77.2,
+       "x": 13735.7,
+       "y": 7194.9
+      }
+     ]
+    },
+    "W": {
+     "face_len_um": 432.0,
+     "bits": 4448,
+     "utilisation": 1.03,
+     "pins": [
+      {
+       "link": "hc_SW>hc_SW0:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW0",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 6791.8
+      },
+      {
+       "link": "hc_SW0>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW0",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 57.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 6845.8
+      },
+      {
+       "link": "hc_SW>hc_SW1:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW1",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 108.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 6899.8
+      },
+      {
+       "link": "hc_SW1>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW1",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 165.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 6953.8
+      },
+      {
+       "link": "hc_SW>hc_SW2:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW2",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 216.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 7007.8
+      },
+      {
+       "link": "hc_SW2>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW2",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 273.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 7061.8
+      },
+      {
+       "link": "hc_SW>hc_SW3:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW3",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 324.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 7115.8
+      },
+      {
+       "link": "hc_SW3>hc_SW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SW3",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 381.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 7169.8
       }
      ]
     }
@@ -7171,63 +7305,30 @@
     },
     "W": {
      "face_len_um": 500.0,
-     "bits": 9784,
-     "utilisation": 1.957,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SE1>hc_SE0:HC_CORE",
+       "link": "hc_SE>hc_SE0:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SE1",
+       "peer": "hc_SE",
        "dir": "in",
-       "bits": 256,
-       "offset_um": 0.0,
-       "span_um": 13.08,
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
        "x": 32390.0,
-       "y": 6055.0
+       "y": 6467.1
       },
       {
-       "link": "hc_SE2>hc_SE0:HC_CORE",
+       "link": "hc_SE0>hc_SE:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SE2",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 13.08,
-       "span_um": 13.08,
-       "x": 32390.0,
-       "y": 6068.1
-      },
-      {
-       "link": "hc_SE3>hc_SE0:HC_CORE",
-       "cls": "HC_CORE",
-       "peer": "hc_SE3",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 26.17,
-       "span_um": 13.08,
-       "x": 32390.0,
-       "y": 6081.2
-      },
-      {
-       "link": "hc_SE0>hc_eng:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
+       "peer": "hc_SE",
        "dir": "out",
-       "bits": 8244,
-       "offset_um": 39.25,
-       "span_um": 421.3,
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
        "x": 32390.0,
-       "y": 6298.4
-      },
-      {
-       "link": "hc_eng>hc_SE0:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "in",
-       "bits": 772,
-       "offset_um": 460.55,
-       "span_um": 39.45,
-       "x": 32390.0,
-       "y": 6528.8
+       "y": 6522.7
       }
      ]
     }
@@ -7776,21 +7877,32 @@
       }
      ]
     },
-    "E": {
+    "W": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SE1>hc_SE0:HC_CORE",
+       "link": "hc_SE>hc_SE1:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SE0",
+       "peer": "hc_SE",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
+       "x": 29532.9,
+       "y": 6467.1
+      },
+      {
+       "link": "hc_SE1>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 30032.9,
-       "y": 6298.5
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
+       "x": 29532.9,
+       "y": 6522.7
       }
      ]
     }
@@ -8306,21 +8418,32 @@
       }
      ]
     },
-    "E": {
+    "W": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SE2>hc_SE0:HC_CORE",
+       "link": "hc_SE>hc_SE2:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SE0",
+       "peer": "hc_SE",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
+       "x": 25890.6,
+       "y": 6467.1
+      },
+      {
+       "link": "hc_SE2>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 26390.6,
-       "y": 6298.5
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
+       "x": 25890.6,
+       "y": 6522.7
       }
      ]
     }
@@ -8832,21 +8955,32 @@
       }
      ]
     },
-    "E": {
+    "W": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_SE3>hc_SE0:HC_CORE",
+       "link": "hc_SE>hc_SE3:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_SE0",
+       "peer": "hc_SE",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 388.8,
+       "span_um": 59.6,
+       "x": 23033.5,
+       "y": 6467.1
+      },
+      {
+       "link": "hc_SE3>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 23533.5,
-       "y": 6298.5
+       "bits": 516,
+       "offset_um": 448.4,
+       "span_um": 51.6,
+       "x": 23033.5,
+       "y": 6522.7
       }
      ]
     }
@@ -9704,6 +9838,140 @@
        "span_um": 222.4,
        "x": 18470.0,
        "y": 7023.4
+      }
+     ]
+    }
+   }
+  },
+  "hc_SE": {
+   "x": 19215.7,
+   "y": 6762.9,
+   "w": 432.0,
+   "h": 432.0,
+   "kind": "HC_Q",
+   "orient": "R0",
+   "faces": {
+    "N": {
+     "face_len_um": 432.0,
+     "bits": 2872,
+     "utilisation": 0.665,
+     "pins": [
+      {
+       "link": "hc_SE>hc_eng:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "out",
+       "bits": 2100,
+       "offset_um": 0.0,
+       "span_um": 210.0,
+       "x": 19320.7,
+       "y": 7194.9
+      },
+      {
+       "link": "hc_eng>hc_SE:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 210.0,
+       "span_um": 77.2,
+       "x": 19464.3,
+       "y": 7194.9
+      }
+     ]
+    },
+    "E": {
+     "face_len_um": 432.0,
+     "bits": 4448,
+     "utilisation": 1.03,
+     "pins": [
+      {
+       "link": "hc_SE>hc_SE0:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE0",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 6791.8
+      },
+      {
+       "link": "hc_SE0>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE0",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 57.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 6845.8
+      },
+      {
+       "link": "hc_SE>hc_SE1:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE1",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 108.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 6899.8
+      },
+      {
+       "link": "hc_SE1>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE1",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 165.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 6953.8
+      },
+      {
+       "link": "hc_SE>hc_SE2:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE2",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 216.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 7007.8
+      },
+      {
+       "link": "hc_SE2>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE2",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 273.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 7061.8
+      },
+      {
+       "link": "hc_SE>hc_SE3:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE3",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 324.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 7115.8
+      },
+      {
+       "link": "hc_SE3>hc_SE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_SE3",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 381.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 7169.8
       }
      ]
     }
@@ -11927,63 +12195,30 @@
     },
     "E": {
      "face_len_um": 500.0,
-     "bits": 9784,
-     "utilisation": 1.957,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NW0>hc_eng:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "out",
-       "bits": 8244,
+       "link": "hc_NW>hc_NW0:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW",
+       "dir": "in",
+       "bits": 596,
        "offset_um": 0.0,
-       "span_um": 421.3,
+       "span_um": 59.6,
        "x": 600.0,
-       "y": 17663.7
+       "y": 17482.8
       },
       {
-       "link": "hc_eng>hc_NW0:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "in",
-       "bits": 772,
-       "offset_um": 421.3,
-       "span_um": 39.45,
-       "x": 600.0,
-       "y": 17894.1
-      },
-      {
-       "link": "hc_NW1>hc_NW0:HC_CORE",
+       "link": "hc_NW0>hc_NW:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NW1",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 460.75,
-       "span_um": 13.08,
+       "peer": "hc_NW",
+       "dir": "out",
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
        "x": 600.0,
-       "y": 17920.3
-      },
-      {
-       "link": "hc_NW2>hc_NW0:HC_CORE",
-       "cls": "HC_CORE",
-       "peer": "hc_NW2",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 473.83,
-       "span_um": 13.08,
-       "x": 600.0,
-       "y": 17933.4
-      },
-      {
-       "link": "hc_NW3>hc_NW0:HC_CORE",
-       "cls": "HC_CORE",
-       "peer": "hc_NW3",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 486.92,
-       "span_um": 13.08,
-       "x": 600.0,
-       "y": 17946.5
+       "y": 17538.4
       }
      ]
     }
@@ -12593,21 +12828,32 @@
       }
      ]
     },
-    "W": {
+    "E": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NW1>hc_NW0:HC_CORE",
+       "link": "hc_NW>hc_NW1:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NW0",
+       "peer": "hc_NW",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 59.6,
+       "x": 3551.6,
+       "y": 17482.8
+      },
+      {
+       "link": "hc_NW1>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 3051.6,
-       "y": 17703.0
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
+       "x": 3551.6,
+       "y": 17538.4
       }
      ]
     }
@@ -13184,21 +13430,32 @@
       }
      ]
     },
-    "W": {
+    "E": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NW2>hc_NW0:HC_CORE",
+       "link": "hc_NW>hc_NW2:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NW0",
+       "peer": "hc_NW",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 59.6,
+       "x": 7288.5,
+       "y": 17482.8
+      },
+      {
+       "link": "hc_NW2>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 6788.5,
-       "y": 17703.0
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
+       "x": 7288.5,
+       "y": 17538.4
       }
      ]
     }
@@ -13771,21 +14028,32 @@
       }
      ]
     },
-    "W": {
+    "E": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NW3>hc_NW0:HC_CORE",
+       "link": "hc_NW>hc_NW3:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NW0",
+       "peer": "hc_NW",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 59.6,
+       "x": 10240.1,
+       "y": 17482.8
+      },
+      {
+       "link": "hc_NW3>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 9740.1,
-       "y": 17703.0
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
+       "x": 10240.1,
+       "y": 17538.4
       }
      ]
     }
@@ -14682,6 +14950,140 @@
        "span_um": 222.4,
        "x": 14520.0,
        "y": 17371.0
+      }
+     ]
+    }
+   }
+  },
+  "hc_NW": {
+   "x": 13342.3,
+   "y": 16754.8,
+   "w": 432.0,
+   "h": 432.0,
+   "kind": "HC_Q",
+   "orient": "R0",
+   "faces": {
+    "S": {
+     "face_len_um": 432.0,
+     "bits": 2872,
+     "utilisation": 0.665,
+     "pins": [
+      {
+       "link": "hc_NW>hc_eng:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "out",
+       "bits": 2100,
+       "offset_um": 144.8,
+       "span_um": 210.0,
+       "x": 13592.1,
+       "y": 16754.8
+      },
+      {
+       "link": "hc_eng>hc_NW:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 354.8,
+       "span_um": 77.2,
+       "x": 13735.7,
+       "y": 16754.8
+      }
+     ]
+    },
+    "W": {
+     "face_len_um": 432.0,
+     "bits": 4448,
+     "utilisation": 1.03,
+     "pins": [
+      {
+       "link": "hc_NW>hc_NW0:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW0",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 16783.7
+      },
+      {
+       "link": "hc_NW0>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW0",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 57.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 16837.7
+      },
+      {
+       "link": "hc_NW>hc_NW1:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW1",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 108.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 16891.7
+      },
+      {
+       "link": "hc_NW1>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW1",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 165.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 16945.7
+      },
+      {
+       "link": "hc_NW>hc_NW2:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW2",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 216.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 16999.7
+      },
+      {
+       "link": "hc_NW2>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW2",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 273.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 17053.7
+      },
+      {
+       "link": "hc_NW>hc_NW3:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW3",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 324.0,
+       "span_um": 57.88,
+       "x": 13342.3,
+       "y": 17107.7
+      },
+      {
+       "link": "hc_NW3>hc_NW:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NW3",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 381.88,
+       "span_um": 50.12,
+       "x": 13342.3,
+       "y": 17161.7
       }
      ]
     }
@@ -16883,63 +17285,30 @@
     },
     "W": {
      "face_len_um": 500.0,
-     "bits": 9784,
-     "utilisation": 1.957,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NE0>hc_eng:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "out",
-       "bits": 8244,
+       "link": "hc_NE>hc_NE0:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE",
+       "dir": "in",
+       "bits": 596,
        "offset_um": 0.0,
-       "span_um": 421.3,
+       "span_um": 59.6,
        "x": 32390.0,
-       "y": 17663.7
+       "y": 17482.8
       },
       {
-       "link": "hc_eng>hc_NE0:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "in",
-       "bits": 772,
-       "offset_um": 421.3,
-       "span_um": 39.45,
-       "x": 32390.0,
-       "y": 17894.1
-      },
-      {
-       "link": "hc_NE1>hc_NE0:HC_CORE",
+       "link": "hc_NE0>hc_NE:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NE1",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 460.75,
-       "span_um": 13.08,
+       "peer": "hc_NE",
+       "dir": "out",
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
        "x": 32390.0,
-       "y": 17920.3
-      },
-      {
-       "link": "hc_NE2>hc_NE0:HC_CORE",
-       "cls": "HC_CORE",
-       "peer": "hc_NE2",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 473.83,
-       "span_um": 13.08,
-       "x": 32390.0,
-       "y": 17933.4
-      },
-      {
-       "link": "hc_NE3>hc_NE0:HC_CORE",
-       "cls": "HC_CORE",
-       "peer": "hc_NE3",
-       "dir": "in",
-       "bits": 256,
-       "offset_um": 486.92,
-       "span_um": 13.08,
-       "x": 32390.0,
-       "y": 17946.5
+       "y": 17538.4
       }
      ]
     }
@@ -17488,21 +17857,32 @@
       }
      ]
     },
-    "E": {
+    "W": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NE1>hc_NE0:HC_CORE",
+       "link": "hc_NE>hc_NE1:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NE0",
+       "peer": "hc_NE",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 59.6,
+       "x": 29532.9,
+       "y": 17482.8
+      },
+      {
+       "link": "hc_NE1>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 30032.9,
-       "y": 17703.0
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
+       "x": 29532.9,
+       "y": 17538.4
       }
      ]
     }
@@ -18018,21 +18398,32 @@
       }
      ]
     },
-    "E": {
+    "W": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NE2>hc_NE0:HC_CORE",
+       "link": "hc_NE>hc_NE2:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NE0",
+       "peer": "hc_NE",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 59.6,
+       "x": 25890.6,
+       "y": 17482.8
+      },
+      {
+       "link": "hc_NE2>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 26390.6,
-       "y": 17703.0
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
+       "x": 25890.6,
+       "y": 17538.4
       }
      ]
     }
@@ -18544,21 +18935,32 @@
       }
      ]
     },
-    "E": {
+    "W": {
      "face_len_um": 500.0,
-     "bits": 256,
-     "utilisation": 0.051,
+     "bits": 1112,
+     "utilisation": 0.222,
      "pins": [
       {
-       "link": "hc_NE3>hc_NE0:HC_CORE",
+       "link": "hc_NE>hc_NE3:HC_CORE",
        "cls": "HC_CORE",
-       "peer": "hc_NE0",
+       "peer": "hc_NE",
+       "dir": "in",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 59.6,
+       "x": 23033.5,
+       "y": 17482.8
+      },
+      {
+       "link": "hc_NE3>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE",
        "dir": "out",
-       "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
-       "x": 23533.5,
-       "y": 17703.0
+       "bits": 516,
+       "offset_um": 59.6,
+       "span_um": 51.6,
+       "x": 23033.5,
+       "y": 17538.4
       }
      ]
     }
@@ -19421,6 +19823,140 @@
     }
    }
   },
+  "hc_NE": {
+   "x": 19215.7,
+   "y": 16754.8,
+   "w": 432.0,
+   "h": 432.0,
+   "kind": "HC_Q",
+   "orient": "R0",
+   "faces": {
+    "S": {
+     "face_len_um": 432.0,
+     "bits": 2872,
+     "utilisation": 0.665,
+     "pins": [
+      {
+       "link": "hc_NE>hc_eng:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "out",
+       "bits": 2100,
+       "offset_um": 0.0,
+       "span_um": 210.0,
+       "x": 19320.7,
+       "y": 16754.8
+      },
+      {
+       "link": "hc_eng>hc_NE:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 210.0,
+       "span_um": 77.2,
+       "x": 19464.3,
+       "y": 16754.8
+      }
+     ]
+    },
+    "E": {
+     "face_len_um": 432.0,
+     "bits": 4448,
+     "utilisation": 1.03,
+     "pins": [
+      {
+       "link": "hc_NE>hc_NE0:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE0",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 0.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 16783.7
+      },
+      {
+       "link": "hc_NE0>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE0",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 57.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 16837.7
+      },
+      {
+       "link": "hc_NE>hc_NE1:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE1",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 108.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 16891.7
+      },
+      {
+       "link": "hc_NE1>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE1",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 165.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 16945.7
+      },
+      {
+       "link": "hc_NE>hc_NE2:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE2",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 216.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 16999.7
+      },
+      {
+       "link": "hc_NE2>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE2",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 273.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 17053.7
+      },
+      {
+       "link": "hc_NE>hc_NE3:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE3",
+       "dir": "out",
+       "bits": 596,
+       "offset_um": 324.0,
+       "span_um": 57.88,
+       "x": 19647.7,
+       "y": 17107.7
+      },
+      {
+       "link": "hc_NE3>hc_NE:HC_CORE",
+       "cls": "HC_CORE",
+       "peer": "hc_NE3",
+       "dir": "in",
+       "bits": 516,
+       "offset_um": 381.88,
+       "span_um": 50.12,
+       "x": 19647.7,
+       "y": 17161.7
+      }
+     ]
+    }
+   }
+  },
   "hc_eng": {
    "x": 14970.0,
    "y": 10171.2,
@@ -19429,105 +19965,105 @@
    "kind": "HC_ENGINE",
    "orient": "R0",
    "faces": {
-    "W": {
-     "face_len_um": 3114.8,
-     "bits": 18032,
-     "utilisation": 0.579,
+    "S": {
+     "face_len_um": 3050.0,
+     "bits": 5744,
+     "utilisation": 0.188,
      "pins": [
       {
-       "link": "hc_SW0>hc_eng:HC_ENG",
+       "link": "hc_SW>hc_eng:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_SW0",
+       "peer": "hc_SW",
        "dir": "in",
-       "bits": 8244,
+       "bits": 2100,
        "offset_um": 0.0,
-       "span_um": 824.4,
-       "x": 14970.0,
-       "y": 10583.4
+       "span_um": 210.0,
+       "x": 15075.0,
+       "y": 10171.2
       },
       {
-       "link": "hc_eng>hc_SW0:HC_ENG",
+       "link": "hc_eng>hc_SW:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_SW0",
+       "peer": "hc_SW",
        "dir": "out",
        "bits": 772,
-       "offset_um": 824.4,
+       "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 14970.0,
-       "y": 11034.2
+       "x": 15218.6,
+       "y": 10171.2
       },
       {
-       "link": "hc_NW0>hc_eng:HC_ENG",
+       "link": "hc_SE>hc_eng:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_NW0",
+       "peer": "hc_SE",
        "dir": "in",
-       "bits": 8244,
-       "offset_um": 2213.15,
-       "span_um": 824.4,
-       "x": 14970.0,
-       "y": 12796.5
+       "bits": 2100,
+       "offset_um": 2762.8,
+       "span_um": 210.0,
+       "x": 17837.8,
+       "y": 10171.2
       },
       {
-       "link": "hc_eng>hc_NW0:HC_ENG",
+       "link": "hc_eng>hc_SE:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_NW0",
+       "peer": "hc_SE",
        "dir": "out",
        "bits": 772,
-       "offset_um": 3037.55,
+       "offset_um": 2972.8,
        "span_um": 77.2,
-       "x": 14970.0,
-       "y": 13247.3
+       "x": 17981.4,
+       "y": 10171.2
       }
      ]
     },
-    "E": {
-     "face_len_um": 3114.8,
-     "bits": 18032,
-     "utilisation": 0.579,
+    "N": {
+     "face_len_um": 3050.0,
+     "bits": 5744,
+     "utilisation": 0.188,
      "pins": [
       {
-       "link": "hc_SE0>hc_eng:HC_ENG",
+       "link": "hc_NW>hc_eng:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_SE0",
+       "peer": "hc_NW",
        "dir": "in",
-       "bits": 8244,
+       "bits": 2100,
        "offset_um": 0.0,
-       "span_um": 824.4,
-       "x": 18020.0,
-       "y": 10583.4
+       "span_um": 210.0,
+       "x": 15075.0,
+       "y": 13285.9
       },
       {
-       "link": "hc_eng>hc_SE0:HC_ENG",
+       "link": "hc_eng>hc_NW:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_SE0",
+       "peer": "hc_NW",
        "dir": "out",
        "bits": 772,
-       "offset_um": 824.4,
+       "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 18020.0,
-       "y": 11034.2
+       "x": 15218.6,
+       "y": 13285.9
       },
       {
-       "link": "hc_NE0>hc_eng:HC_ENG",
+       "link": "hc_NE>hc_eng:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_NE0",
+       "peer": "hc_NE",
        "dir": "in",
-       "bits": 8244,
-       "offset_um": 2213.15,
-       "span_um": 824.4,
-       "x": 18020.0,
-       "y": 12796.5
+       "bits": 2100,
+       "offset_um": 2762.8,
+       "span_um": 210.0,
+       "x": 17837.8,
+       "y": 13285.9
       },
       {
-       "link": "hc_eng>hc_NE0:HC_ENG",
+       "link": "hc_eng>hc_NE:HC_ENG",
        "cls": "HC_ENG",
-       "peer": "hc_NE0",
+       "peer": "hc_NE",
        "dir": "out",
        "bits": 772,
-       "offset_um": 3037.55,
+       "offset_um": 2972.8,
        "span_um": 77.2,
-       "x": 18020.0,
-       "y": 13247.3
+       "x": 17981.4,
+       "y": 13285.9
       }
      ]
     }
@@ -20587,30 +21123,6 @@
  },
  "faces_over_1": [
   {
-   "block": "hc_SW0",
-   "face": "E",
-   "utilisation": 1.957,
-   "bits": 9784
-  },
-  {
-   "block": "hc_SE0",
-   "face": "W",
-   "utilisation": 1.957,
-   "bits": 9784
-  },
-  {
-   "block": "hc_NW0",
-   "face": "E",
-   "utilisation": 1.957,
-   "bits": 9784
-  },
-  {
-   "block": "hc_NE0",
-   "face": "W",
-   "utilisation": 1.957,
-   "bits": 9784
-  },
-  {
    "block": "vmh_SW",
    "face": "N",
    "utilisation": 1.066,
@@ -20633,6 +21145,30 @@
    "face": "S",
    "utilisation": 1.066,
    "bits": 5116
+  },
+  {
+   "block": "hc_SW",
+   "face": "W",
+   "utilisation": 1.03,
+   "bits": 4448
+  },
+  {
+   "block": "hc_SE",
+   "face": "E",
+   "utilisation": 1.03,
+   "bits": 4448
+  },
+  {
+   "block": "hc_NW",
+   "face": "W",
+   "utilisation": 1.03,
+   "bits": 4448
+  },
+  {
+   "block": "hc_NE",
+   "face": "E",
+   "utilisation": 1.03,
+   "bits": 4448
   }
  ]
 }
