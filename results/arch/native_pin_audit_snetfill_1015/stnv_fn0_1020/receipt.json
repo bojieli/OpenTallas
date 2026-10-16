@@ -1,0 +1,31 @@
+{
+  "schema": "s81-stnv-forwarded-clock-abi-v1",
+  "master": "dsfd_stnv_566x1",
+  "closed_job": "s81fill_stnv_566x1-f11-15cedae84",
+  "outline_um": [
+    60.48,
+    25.92
+  ],
+  "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_stnv_566x1.sv",
+  "source_sha256": "69266cae4ca40731c40fbaae9437119a04af2e211fa1b66779982661820148d7",
+  "view_path": "physical/ref_tile/s81fill_stnv_566x1/views/dsfd_stnv_566x1",
+  "view_sha256": {
+    "abstract.json": "787b6af5f1c9f932bbb422d319445ccdbcbce80f6f5edeb9cf2b6f39ae0c4a50",
+    "dsfd_stnv_566x1.lef": "ab788b6748d0ca69fcf20ebaee6b7d537d378cf3cf8a0e351a30b99be96771c2",
+    "dsfd_stnv_566x1_ff.lib": "397533d4e513fb45042e9a8bc73b12ab01ebf7b161ccbf666daaa00d3ec38c10",
+    "dsfd_stnv_566x1_ss.lib": "960dbcbd9e186c2bd9093dbd0dccd6ba09ac2294dfad97730a816f742e345692",
+    "dsfd_stnv_566x1_tt.lib": "c7a4edfa6db045a6d26bb5a249215dd1340726bcc87603e2b12c2915a89b44f5",
+    "insertion.json": "9a834cefd127c80e4eefb3f116e80bd9845749edd0caa10c2167752081712f03"
+  },
+  "physical_clock_pins": {
+    "fi0[0]": "  PIN fi0[0]\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT  30.24 0 30.264 0.192 ;\n    END\n  END fi0[0]",
+    "fn0[0]": "  PIN fn0[0]\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT  30.192 25.728 30.216 25.92 ;\n    END\n  END fn0[0]",
+    "fo0[0]": "  PIN fo0[0]\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M3 ;\n        RECT  30.276 25.776 30.294 25.92 ;\n    END\n  END fo0[0]"
+  },
+  "logical_clock_semantics": {
+    "fn0": "fi0 through two distinct kept clock inverter instances; noninverting",
+    "fo0": "fi0 through link-stage forwarding inverter; inverting"
+  },
+  "padding_proof": "b909ef69b actual byte-exact stnv538 and canonical566 source comparison checks every old output including fn0 on both clock edges; ports outside padded data require identical direction/width. This proves logical padding ABI, not physical full-parent placement or clock phase.",
+  "limitation": "Exported clock output Liberty arcs are self-related edge arcs. Existing native output audit and positive TT/FF leaf closure do not prove physical fi0->fn0/fo0 generated-clock propagation. Actual ODB/source-model clock-intent measurement must join next fresh parent. Generated placeholder missing fn0 is not this genuine view and must not alias fo0. CFIFO xf2 remains unclosed; PQ owns structural successor."
+}
