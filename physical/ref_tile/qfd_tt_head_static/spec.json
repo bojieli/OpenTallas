@@ -33,7 +33,6 @@
  "clock_port": "ck_head",
  "clock_ports": [
   "ck_head",
-  "ck_me_sched",
   "ck_pm0",
   "ck_pm1"
  ],
@@ -48,6 +47,7 @@
     "ck_head"
    ],
    "inputs": [
+    "cp_active",
     "native_ret",
     "h_start",
     "token",
@@ -67,6 +67,7 @@
     "rst_n"
    ],
    "outputs": [
+    "me_image_ready",
     "cp",
     "program_obs",
     "layer_context_v",
@@ -94,21 +95,6 @@
     "kvd_nout",
     "kvd_kindk",
     "kvd_pos"
-   ]
-  },
-  "sched": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_me_sched"
-   ],
-   "inputs": [
-    "cp_active"
-   ],
-   "outputs": [
-    "me_image_ready"
    ]
   },
   "pm0": {
@@ -238,7 +224,6 @@
   ],
   "N": [
    "ck_head",
-   "ck_me_sched",
    "rst_n"
   ]
  },
@@ -268,7 +253,7 @@
  "job": {
   "owner": "Claude:Q-ELEM-TTH",
   "branch": "claude/qelem-tth-1016",
-  "tag": "h6",
+  "tag": "h7",
   "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
   "extra_paths": [
    "physical/qwen_tt_static_cluster_1015",
@@ -320,7 +305,7 @@
     "fail_regex": "REGROUP_FAIL"
    }
   ],
-  "structural_change": "h6 (Q-ELEM-TTH 2026-10-16) after h5: (1) h5 retained gate ck.log: ck_head TT boundary 278..410 (mean 308, spread 132), all sinks 270..436 -> native clock FAIL; the obstruction-aware H-tree detours round the two stacked S-face SRAMs (same class as dsfd_gth_re g6 / TT core tc1: -no_obstruction_aware measured spread 52.4->38.6 / 94.6->70.6): route.cts_sink.extra -no_obstruction_aware. (2) RTL: rst_n drove ~481 async-clear flops directly (reset excluded from pin registers; scale-leaf tc1 native rst_n capture 357 ps): rst_n -> one ot_qfd_rst_stn flop at the pin (ot_qfd_tt_ctlm_static_hr RSTN=1); assert asynchronous, release one ck_head edge later; data/command edges unchanged (0 token cycles; ledger 0). Regroup bench reference sees the same release (TB_RSTN=1); TB_RSTN=0 control must FAIL. Outline, macros, pins unchanged.",
+  "structural_change": "h7 (Q-ELEM-TTH 2026-10-16) after h6 gate (c20527ec4 receipt): ck_head boundary spread 73.7 ps OK with -no_obstruction_aware, but placement TT setup sched->core -429 ps / core->sched -301 ps: separate std entries carry the die-skew reserve (setup 150/210, hold 100) on every hop between them (210 because ck_head mean 303 > 300), and the die already feeds ck_me_sched and ck_head from one tap. ck_me_sched entry merged into ck_head (one standard-cell root, 5,402+877 sinks < 15k); hr port ck_me_sched removed (parent port retained until the die netlist drops it, as Q-ELEM-TTP 1c99b5f52). Raw program-SRAM entries ck_pm0/ck_pm1 unchanged (coordinator requirement). Logic, edges, outline, macros unchanged. Keeps h6: reset station (RSTN=1, release +1 edge, 0 token cycles) and -no_obstruction_aware.",
   "cycles_added": 1
  },
  "children": [],
@@ -331,8 +316,7 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "clock_cts_roots": [
-  "ck_head",
-  "ck_me_sched"
+  "ck_head"
  ],
  "pin_ranges": {
   "ck_pm0": [

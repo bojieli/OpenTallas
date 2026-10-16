@@ -3,6 +3,9 @@
 // loaded stage), one hardened leaf with roots ck_head / ck_me_sched. No logic or edge change; the tree
 // return enters as rom_ret_i. Equivalence vs the original parent: physical/qwen_tt_static_cluster_1015.
 // r14 (2026-10-15): the two program SRAMs take explicit raw clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk).
+// h7 (Q-ELEM-TTH 2026-10-16): ONE standard-cell root ck_head (the former ck_me_sched entry is merged into it; the die
+// already delivers both from one tap). Separate entries carry the die-skew reserve (setup 150/210, hold 100) on every
+// sched<->core hop: h6 gate sched->core -429 ps incl. 210 ps reserve. Raw SRAM entries ck_pm0/ck_pm1 stay separate.
 // Static successor parent: actual WSRC classification and real native status.
 // No native command reaches the ROM tree; native completion comes from endpoint.
 // r2 (Q-COMPUTE-ELEM, 2026-10-15, coordinator 12:50 accepted +1 cycle): rom_cmd leaves the head from a register
@@ -13,7 +16,6 @@
 // -> the leaf-internal reset rsl (assert asynchronous, release one ck_head edge later; no data/command edge changes).
 module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1) (
     input wire [94:0] rom_ret_i,
-    input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
     output wire me_image_ready,output wire [75:0] program_obs,
     output wire layer_context_v,output wire [17:0] native_tok,native_pos,
@@ -97,7 +99,7 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
 
         .clk(ck_head),
         .ck_pm({ck_pm1,ck_pm0}),
-        .ck_sched(ck_me_sched),
+        .ck_sched(ck_head),   // h7: the static schedule store shares the ck_head root (die ties them)
         .rst_n(rsl),
         .h_start(h_start),
         .token(token),

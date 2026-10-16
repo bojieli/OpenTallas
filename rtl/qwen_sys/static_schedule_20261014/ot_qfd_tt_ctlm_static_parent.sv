@@ -2,6 +2,8 @@
 // No native command reaches the ROM tree; native completion comes from endpoint.
 // r13 2026-10-15: regrouped into the head-side leaf ot_qfd_tt_ctlm_static_hr + the ROM tree leaf
 // (physical cluster); behaviour identical to the original body (formal equivalence physical/qwen_tt_static_cluster_1015).
+// h7 (Q-ELEM-TTH 2026-10-16): the hr leaf runs its static schedule store on ck_head (same PLL phase, one die tap);
+// ck_me_sched is retained on this parent until the die netlist drops it (Q-COMPUTE-DIE; as Q-ELEM-TTP 1c99b5f52).
 module ot_qfd_tt_ctlm_static_parent (
     input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
@@ -72,7 +74,6 @@ module ot_qfd_tt_ctlm_static_parent (
     wire [94:0] rom_ret;
     ot_qfd_tt_ctlm_static_hr u_hr (
         .rom_ret_i(rom_ret),
-        .ck_me_sched(ck_me_sched),
         .cp_active(cp_active),
         .cp(cp),
         .me_image_ready(me_image_ready),

@@ -82,20 +82,17 @@
   ],
   "N": [
    "ck_head",
-   "ck_me_sched",
    "rst_n"
   ]
  },
  "clock_port": "ck_head",
  "clock_ports": [
   "ck_head",
-  "ck_me_sched",
   "ck_pm0",
   "ck_pm1"
  ],
  "clock_cts_roots": [
-  "ck_head",
-  "ck_me_sched"
+  "ck_head"
  ],
  "blocks": [
   {
