@@ -1,0 +1,22 @@
+{
+ "source_commit": "3de9fd853",
+ "status": "NEEDS_RTL",
+ "TT_ps": 151.26,
+ "FF_ps": 7.16,
+ "DRC": 2,
+ "source_net": "net4115",
+ "endpoint": "u_bank.read_data[189]$_DFF_P_/D",
+ "root_cause": "Single read-data signal uses M5 over east-column SRAM then drops/jogs through M4 macro PG/OBS at x355.381..357.840,y117.936. Earlier clock-net failure class removed. Existing 2.4um M5 edge exclusion begins355.512; failing geometry extends131nm deeper than it.",
+ "native_scope": "Actual final ETM and routed9-clock insertion diagnostic pass L181.5/C121.4/spread24.4; still unqualified DRC2, no inherited CLOSED view.",
+ "looked_images": [
+  "floorplan.png",
+  "density.png"
+ ],
+ "export_hashes": {
+  "ot_hbm_su_static_bank6_clock_physical.lef": "4c7d80cb74abb70fa1db3681ca2d729cc421082cbfb505c46410242109b02600",
+  "ot_hbm_su_static_bank6_clock_physical_ss.lib": "82c78c3739536ead270d3ec08be25da1044062acfc5037df9ff54e07a4ad1789",
+  "ot_hbm_su_static_bank6_clock_physical_ff.lib": "d030010b36120910cba3b3b4285936d13ed497dcb0dd2022560b67098d2b1619",
+  "ot_hbm_su_static_bank6_clock_physical_tt.lib": "5bb662884bd8187e93b40c8aa0887130d984cbca94283a07b3a5a8b89ec438d2"
+ },
+ "remote_source_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_bank6_clock7_1015-r10c-3de9fd853"
+}
