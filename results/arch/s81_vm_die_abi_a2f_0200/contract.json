@@ -410,15 +410,7 @@
    "domain": "serial",
    "master": "ot_s81_vm_x34_s W542 NAT1",
    "child_pin": "s_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_s_w542_1015_r4",
-     "R_tt_ps": 248.1,
-     "min": 233.3,
-     "max": 257.8,
-     "n": 1638
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -429,15 +421,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x34_t W542 NAT1 BAL1; native audited, synchronous pin reset",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_t_w542_1015_r10",
-     "R_tt_ps": 311.5,
-     "min": 273.0,
-     "max": 335.2,
-     "n": 2178
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -489,15 +473,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x34_t W514 (u_xsel, u_xcol, u_xsw.h0, u_xsw.h1)",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_t_w514_1015_f4",
-     "R_tt_ps": 169.7,
-     "min": 163.2,
-     "max": 176.6,
-     "n": 1036
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -728,15 +704,7 @@
    "domain": "serial",
    "master": "ot_s81_vm_x34_s W560 (u_wfc.u_xi)",
    "child_pin": "s_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_s_w560_1015_f4",
-     "R_tt_ps": 183.5,
-     "min": 174.8,
-     "max": 193.4,
-     "n": 3375
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -747,15 +715,7 @@
    "domain": "stream",
    "master": "ot_s81_vm_x34_t W560 (u_wfc.u_xi; n1 native capture fix)",
    "child_pin": "t_ck",
-   "routed_R": [
-    {
-     "kit": "ot_s81_vm_x34_t_w560_1015_n1",
-     "R_tt_ps": 169.5,
-     "min": 160.8,
-     "max": 177.4,
-     "n": 1128
-    }
-   ],
+   "routed_R": null,
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": ""
@@ -865,7 +825,15 @@
    "domain": "serial",
    "master": "dsfd_vm_xio_serial",
    "child_pin": "ck",
-   "routed_R": null,
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_serial_native_1016_r2",
+     "R_tt_ps": 43.9,
+     "min": 43.2,
+     "max": 44.4,
+     "n": 6
+    }
+   ],
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
@@ -876,7 +844,15 @@
    "domain": "stream",
    "master": "dsfd_vm_xio_request",
    "child_pin": "ck",
-   "routed_R": null,
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_request_native_1016_r2",
+     "R_tt_ps": 133.8,
+     "min": 111.2,
+     "max": 139.7,
+     "n": 114
+    }
+   ],
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
@@ -887,7 +863,15 @@
    "domain": "stream",
    "master": "dsfd_vm_xio_fault_join",
    "child_pin": "ck",
-   "routed_R": null,
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_xio_fault_join_native_1016_r2",
+     "R_tt_ps": 43.4,
+     "min": 43.0,
+     "max": 43.8,
+     "n": 8
+    }
+   ],
    "delivery": "phi - wire - R per root (R from the bound routed view)",
    "disposition": "BOUND",
    "disposition_why": "routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)"
