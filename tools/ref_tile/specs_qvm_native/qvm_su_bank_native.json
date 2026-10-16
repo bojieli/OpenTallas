@@ -4,7 +4,7 @@
  },
  "job": {
   "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
-  "branch": "claude/q-vmwb-1705",
+  "branch": "claude/q-vmwb-vm-1705",
   "tag": "su1",
   "purpose": "SU operand-bank native successor cluster (48 x in qfd_sp_vector_memory_par): ctrl + 6 data256 leaves + 2 x 1024x256 macros, 9 clock entries.",
   "views_to": "physical/ref_tile/qvm_su_bank_native/views",
