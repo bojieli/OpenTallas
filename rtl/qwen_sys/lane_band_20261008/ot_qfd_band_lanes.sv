@@ -117,13 +117,19 @@ module ot_qfd_band_lanes #(
     // wait is DU0 + 2 lnk edges with DU0 = NU (TA + 1) + 4, read from the same SRAM ring at a strapped distance, and the
     // lockstep valid is tapped at the same distance.  For lnk = L the block is edge-for-edge the LNK = L block.
     // 0 <= lnk <= (130 - DU0) / 2 (the 128-deep ring; 59 at TP8, 55 at TP4).  Needs RDMEM = 1.
-    parameter integer LNKS = 0
+    parameter integer LNKS = 0,
+    // GP (Q-PORTMAP b2, 2026-10-16): level-7 positions per band block.  8 (default) = the full band, levels
+    // TCUT+1..TCUT+3 here, bit-identical to before.  4 = a HALF band (one side of the die): levels TCUT+1..TCUT+2 here,
+    // the band word is level TCUT+2 position 0, and the upper (ot_qfd_band_upper NB 6, TCUT-1 parameterisation) holds
+    // TCUT+3 (W+E of the band) and the rest; NU = LG - TCUT - 1 - log2(GP).  Result slots: GP words (half-band frame,
+    // tools/qwen_split/b2_frame.py).
+    parameter integer GP = 8
 ) (
     input  wire               clk,
     input  wire               rst_n,
     input  wire [5:0]         lnk,               // LNKS strap (unused, may be left open, when LNKS = 0)
     input  wire               b0,                // strap: 1 on band 0 (takes the tree top's split-11/12 words)
-    input  wire [8*NL*32-1:0] tw,                // the band's level-7 words (from the slab)
+    input  wire [GP*NL*32-1:0] tw,                // the band's level-7 words (from the slab)
     input  wire [LG:0]        sel_e,             // lane-timed per-level select / valid ([$clog2(6144):0])
     input  wire [LG:0]        tv_e,
     input  wire [3*NL*32-1:0] tt_ty,             // tree top: split-11/12 words (positions 0..2), band 0 only
@@ -131,37 +137,39 @@ module ot_qfd_band_lanes #(
     input  wire               tt_v,              // tree top: the op's level-11 valid (lockstep check)
     output wire [NL*32-1:0]   pw,                // band word (level 10 position 0) to the tree top
     output wire               pw_v,              // its valid (the op's level-11 adder valid)
-    output wire [8*NL*32-1:0] ty,                // the band's 8 result-slot words (band-local frame)
+    output wire [GP*NL*32-1:0] ty,                // the band's 8 result-slot words (band-local frame)
     output wire               fault
 );
     localparam integer TA = TREE_LAT;
-    localparam integer NU = (MUT == 4) ? 2 : LG - TCUT - 4;   // the upper's levels TCUT+4 .. LG-1 (2 at TP4, 1 at TP8)
+    localparam integer NLV = $clog2(GP);                     // levels inside the band block: 3 (full band) / 2 (half)
+    localparam integer NU = (MUT == 4) ? 2 : LG - TCUT - 1 - NLV;   // the upper's levels TCUT+NLV+1 .. LG-1 (2 at TP4, 1 at TP8, 2 at b2)
+    initial if (GP != 8 && GP != 4) $error("ot_qfd_band_lanes: GP must be 8 or 4");
     localparam integer DU = NU * (TA + 1) + 4 + 2 * LNK;     // 20 + 2 LNK at TREE_LAT 7, NU 2
     // -- pin flops ------------------------------------------------------------------------------------------------
     // (the per-level selects, b0 and tt_use land in one flop copy per lane: each copy drives one lane's <= 128 mux
     //  bits instead of NL x 128)
-    (* keep *) reg [8*NL*32-1:0] tin_q;
+    (* keep *) reg [GP*NL*32-1:0] tin_q;
     (* keep *) reg [3*NL*32-1:0] tt_q;
     (* keep *) reg [NL-1:0] b0_q, use_q;
     reg tv11_r, tt_v_q;
     always @(posedge clk) begin tin_q <= tw; tt_q <= tt_ty; b0_q <= {NL{b0}}; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin tv11_r <= 1'b0; use_q <= {NL{1'b0}}; tt_v_q <= 1'b0; end
-        else begin tv11_r <= tv_e[TCUT+4]; use_q <= {NL{tt_use}}; tt_v_q <= tt_v; end
+        else begin tv11_r <= tv_e[TCUT+NLV+1]; use_q <= {NL{tt_use}}; tt_v_q <= tt_v; end
     // -- levels 8..10 per lane --------------------------------------------------------------------------------------
-    wire [8*NL*32-1:0] l10;
+    wire [GP*NL*32-1:0] l10;           // the band block's last level (10 at GP 8, 9 at GP 4)
     wire [NL-1:0] lpf;
     genvar l, k;
     generate for (l = 0; l < NL; l = l + 1) begin : g_lane
-        wire [8*32-1:0] li, lo;
-        (* keep *) reg [2:0] sel_r, tv_r;      // levels 10..8, this lane's copy
-        always @(posedge clk) sel_r <= sel_e[TCUT+3:TCUT+1];
-        always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= 3'd0; else tv_r <= tv_e[TCUT+3:TCUT+1];
-        for (k = 0; k < 8; k = k + 1) begin : g_k
+        wire [GP*32-1:0] li, lo;
+        (* keep *) reg [NLV-1:0] sel_r, tv_r;      // levels TCUT+NLV..TCUT+1, this lane's copy
+        always @(posedge clk) sel_r <= sel_e[TCUT+NLV:TCUT+1];
+        always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= {NLV{1'b0}}; else tv_r <= tv_e[TCUT+NLV:TCUT+1];
+        for (k = 0; k < GP; k = k + 1) begin : g_k
             assign li[32*k +: 32] = tin_q[32*(k*NL + l) +: 32];
             assign l10[32*(k*NL + l) +: 32] = lo[32*k +: 32];
         end
-        ot_qfd_bt_levels #(.GI(8), .NLV(3), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 1 ? 2 : 0), .RDMEM(RDMEM), .BANR(BANR)) u_lv (
+        ot_qfd_bt_levels #(.GI(GP), .NLV(NLV), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 1 ? NLV - 1 : 0), .RDMEM(RDMEM), .BANR(BANR)) u_lv (
             .clk(clk), .rst_n(rst_n), .l0(li), .sel_r(sel_r), .tv_r(tv_r), .lo(lo), .pf(lpf[l]));
     end endgenerate
     // -- band word: level 10 position 0 + the op's level-11 valid, through the pin station --------------------------
@@ -171,17 +179,17 @@ module ot_qfd_band_lanes #(
     always @(posedge clk or negedge rst_n) if (!rst_n) pw_vs <= 1'b0; else pw_vs <= tv11_r;
     assign pw = pw_s; assign pw_v = pw_vs;
     // -- the band's own words wait for the round trip (the lane's level-11/12 holds + 4 + 2 LNK) ---------------------
-    wire [8*NL*32-1:0] lw;
+    wire [GP*NL*32-1:0] lw;
     wire vexp;          // the op's level-11 valid, aligned with tt_v_q (lockstep check)
     generate if (LNKS == 0) begin : g_wp
-        ot_qwen_me_rdelay_w12 #(.W(8*NL*32), .D(DU), .MEM(RDMEM)) u_wait (.clk(clk), .rst_n(rst_n), .d(l10), .q(lw));
+        ot_qwen_me_rdelay_w12 #(.W(GP*NL*32), .D(DU), .MEM(RDMEM)) u_wait (.clk(clk), .rst_n(rst_n), .d(l10), .q(lw));
         ot_hdc_delay #(.W(1), .D(DU), .RESET(1)) u_vexp (.clk(clk), .rst_n(rst_n), .d(tv11_r), .q(vexp));
     end else begin : g_ws
         initial if (LNK != 0 || RDMEM != 1) $error("ot_qfd_band_lanes LNKS = 1 needs LNK = 0 and RDMEM = 1");
         // strap copies (static): one per use
         (* keep *) reg [6:0] xd_q, xv_q;
         always @(posedge clk) begin xd_q <= {lnk, 1'b0}; xv_q <= {lnk, 1'b0}; end
-        ot_qfd_bl_xdelay #(.W(8*NL*32), .D(DU)) u_wait (.clk(clk), .rst_n(rst_n), .xd(xd_q), .d(l10), .q(lw));
+        ot_qfd_bl_xdelay #(.W(GP*NL*32), .D(DU)) u_wait (.clk(clk), .rst_n(rst_n), .xd(xd_q), .d(l10), .q(lw));
         // the valid: a DU + 126 deep line, tapped at DU - 1 + 2 lnk (ot_hdc_delay D = DU + 2 lnk)
         localparam integer VD = DU + 126;
         reg [VD-1:0] vsh;
@@ -191,10 +199,10 @@ module ot_qfd_band_lanes #(
         assign vexp = vx_q;
     end endgenerate
     // -- result slots: band 0 slots 0..2 take the tree top's words at split >= 11 ----------------------------------
-    (* keep *) reg [8*NL*32-1:0] ty_s;
+    (* keep *) reg [GP*NL*32-1:0] ty_s;
     integer q, ll;
     always @(posedge clk) begin
-        ty_s[3*NL*32 +: 5*NL*32] <= lw[3*NL*32 +: 5*NL*32];
+        ty_s[3*NL*32 +: (GP-3)*NL*32] <= lw[3*NL*32 +: (GP-3)*NL*32];
         for (q = 0; q < 3; q = q + 1)
             for (ll = 0; ll < NL; ll = ll + 1)
                 ty_s[32*(q*NL + ll) +: 32] <= (b0_q[ll] && use_q[ll]) ? tt_q[32*(q*NL + ll) +: 32] : lw[32*(q*NL + ll) +: 32];
