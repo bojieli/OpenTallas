@@ -175,7 +175,16 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer XMK = 0,
     parameter integer XMF = 16,
     parameter integer XLO = 0,
-    parameter integer XQR = 0
+    parameter integer XQR = 0,
+    // Q-VMWB 2026-10-15 (0 = unchanged): PAR_RB = 1 (requires STATIC_SCHEDULE) lands every ME result lane rb_*[j] on
+    // its own bank in the same edge (up to NB rows an edge) instead of the one-row OR merge.  The compiler calendar
+    // (qfd_res_train_par: bands lag by one burst) puts concurrent lane rows on distinct banks mod NRBS; a same-bank
+    // pair (lane/lane, lane/SU row, lane/skid row) is a sticky static_conflict fault, never arbitrated.  Each bank
+    // write register selects the matching lane by an AND-OR over the lanes (rows distinct mod NRBS); same write
+    // stages as the merge row (rb pins -> bank write register -> macro), 0 added edges.  land_cnt counts the lanes'
+    // `end` beats.  PMUT (bench negative control): 1 = lane 1 takes lane 2's data.
+    parameter integer PAR_RB = 0,
+    parameter integer PMUT = 0
 ) (
     input  wire                    clk,
 `ifdef OT_QFD_VM_NOX
@@ -610,22 +619,41 @@ module ot_qfd_sp_vector_memory_bv #(
                 data=data|rb_data[512*j+:512];nul=nul|rb_nul[j];en=en|rb_end[j];
             end
         end
-        assign m_v=nv;assign m_nowr=nul;assign m_land=en;
+        integer nend;
+        always @* begin nend=0; for(j=0;j<NB;j=j+1) if(rb_v[j] && rb_end[j]) nend=nend+1; end
+        assign m_v=(PAR_RB!=0) ? 1'b0 : nv;assign m_nowr=nul;assign m_land=en;
         assign m_row=row;assign m_mask=mask;assign m_data=data;
         assign m_busy=nv;assign m_fault=bad;assign land_cnt=landed;
         assign rb_cr=0; // Historical parent-only output; absent from the static native die interface.
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin landed<=0;bad<=0;end
             else begin
-                if(n>1 || (nv && !m_take))bad<=1;
-                if(nv && en)landed<=landed+1'b1;
+                if(PAR_RB==0 && (n>1 || (nv && !m_take)))bad<=1;
+                if(PAR_RB!=0) landed<=landed+16'(nend);
+                else if(nv && en)landed<=landed+1'b1;
             end
+        initial if(PAR_RB!=0 && NB>8) $fatal(1,"PAR_RB lanes > 8");
     end else begin : g_legacy_merge
+        initial if(PAR_RB!=0) $fatal(1,"PAR_RB requires STATIC_SCHEDULE");
     ot_qfd_res_merge #(.NB(NB), .W(16), .RW(RW), .CRB(CRB)) u_merge (.clk(clk), .rst_n(rst_n),
         .b_v(rb_v), .b_end(rb_end), .b_nul(rb_nul), .b_row(rb_row), .b_mask(rb_mask), .b_data(rb_data), .b_cr(rb_cr),
         .m_v(m_v), .m_nowr(m_nowr), .m_land(m_land), .m_row(m_row), .m_mask(m_mask), .m_data(m_data),
         .m_take(m_take), .land_cnt(land_cnt), .busy(m_busy), .fault(m_fault));
     end endgenerate
+    // ---- PAR_RB result lanes (each lane is its own bank write source; unused when PAR_RB = 0) ----
+    reg  [NB-1:0]     pl_w;                             // lane j writes a row this edge
+    reg  [NB*RW-1:0]  pl_row;
+    reg  [NB*16-1:0]  pl_mb;
+    reg  [NB*512-1:0] pl_data;
+    always @(*) begin
+        for (i = 0; i < NB; i = i + 1) begin
+            pl_w[i] = (PAR_RB != 0) && rb_v[i] && !rb_nul[i];
+            pl_row[RW*i +: RW] = rb_row[RW*i +: RW];
+            pl_data[512*i +: 512] = (PMUT == 1 && i == 1 && NB > 2) ? rb_data[512*2 +: 512] : rb_data[512*i +: 512];
+            for (k = 0; k < 16; k = k + 1)
+                pl_mb[16*i + k] = rb_mask[16*i + k] && ({rb_row[RW*i +: RW], 4'h0} + k < ELEMS);
+        end
+    end
     // ---- E2 -> E3: per-bank arbitration ----
     reg  [NRB-1:0] su_hit;
     reg  [NRB*3-1:0] su_k;
@@ -695,6 +723,21 @@ module ot_qfd_sp_vector_memory_bv #(
         reg  [RW-1:0] er;
         reg  [15:0]   em;
         reg  [511:0]  ed;
+        // PAR_RB: the lane row of this bank (lanes are distinct mod NRBS, so at most one matches): AND-OR select
+        reg  [NB-1:0] lh;
+        reg  [RW-1:0] lr;
+        reg  [15:0]   lm;
+        reg  [511:0]  ld;
+        integer li;
+        always @(*) begin
+            lh = 0; lr = m_row; lm = m_mb; ld = m_data;
+            if (PAR_RB != 0) begin
+                lr = 0; lm = 0; ld = 0;
+                for (li = 0; li < NB; li = li + 1) if (pl_w[li] && pl_row[RW*li +: LNRB] == g) begin
+                    lh[li] = 1'b1; lr = lr | pl_row[RW*li +: RW]; lm = lm | pl_mb[16*li +: 16]; ld = ld | pl_data[512*li +: 512];
+                end
+            end
+        end
         integer ee;
         always @(*) begin
             es = 3'd0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
@@ -706,6 +749,7 @@ module ot_qfd_sp_vector_memory_bv #(
             if (su_hit[g]) src = 3'd1;
             else if (es != 3'd0) src = es;
             else if (gm && m_row[LNRB-1:0] == g) src = 3'd5;
+            else if (|lh) src = 3'd5;
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) bw_we[g] <= 1'b0; else bw_we[g] <= (src != 0);
         always @(posedge clk) begin
@@ -715,8 +759,8 @@ module ot_qfd_sp_vector_memory_bv #(
                             bw_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
                 3'd2, 3'd3, 3'd4, 3'd6: begin bw_line[g*LAW +: LAW] <= er[LNRB +: LAW]; bw_mask[g*16 +: 16] <= em;
                             bw_data[g*512 +: 512] <= ed; end
-                default: begin bw_line[g*LAW +: LAW] <= m_row[LNRB +: LAW]; bw_mask[g*16 +: 16] <= m_mb;
-                            bw_data[g*512 +: 512] <= m_data; end
+                default: begin bw_line[g*LAW +: LAW] <= lr[LNRB +: LAW]; bw_mask[g*16 +: 16] <= lm;
+                            bw_data[g*512 +: 512] <= ld; end
             endcase
         end
     end endgenerate
@@ -733,6 +777,20 @@ module ot_qfd_sp_vector_memory_bv #(
         reg  [RW-1:0] er;
         reg  [15:0]   em;
         reg  [511:0]  ed;
+        reg  [NB-1:0] lh;
+        reg  [RW-1:0] lr;
+        reg  [15:0]   lm;
+        reg  [511:0]  ld;
+        integer li;
+        always @(*) begin
+            lh = 0; lr = m_row; lm = m_mb; ld = m_data;
+            if (PAR_RB != 0) begin
+                lr = 0; lm = 0; ld = 0;
+                for (li = 0; li < NB; li = li + 1) if (pl_w[li] && pl_row[RW*li +: LNRBS] == g) begin
+                    lh[li] = 1'b1; lr = lr | pl_row[RW*li +: RW]; lm = lm | pl_mb[16*li +: 16]; ld = ld | pl_data[512*li +: 512];
+                end
+            end
+        end
         integer ee;
         always @(*) begin
             es = 1'b0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
@@ -744,6 +802,7 @@ module ot_qfd_sp_vector_memory_bv #(
             if (su_hs[g]) src = 3'd1;
             else if (es) src = 3'd2;
             else if (gm && m_row[LNRBS-1:0] == g) src = 3'd5;
+            else if (|lh) src = 3'd5;
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) ws_we[g] <= 1'b0; else ws_we[g] <= (src != 0);
         always @(posedge clk) begin
@@ -752,8 +811,8 @@ module ot_qfd_sp_vector_memory_bv #(
                             ws_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
                 3'd2: begin ws_line[g*LAWS +: LAWS] <= er[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= em;
                             ws_data[g*512 +: 512] <= ed; end
-                default: begin ws_line[g*LAWS +: LAWS] <= m_row[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= m_mb;
-                            ws_data[g*512 +: 512] <= m_data; end
+                default: begin ws_line[g*LAWS +: LAWS] <= lr[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= lm;
+                            ws_data[g*512 +: 512] <= ld; end
             endcase
         end
     end endgenerate
@@ -1283,6 +1342,11 @@ module ot_qfd_sp_vector_memory_bv #(
                     if(qvf[sf] && q_row[sf][LNRBS-1:0]==q_row[se][LNRBS-1:0])static_conflict=1;
             end
             if(m_v && !m_nowr && su_hs[m_row[LNRBS-1:0]])static_conflict=1;
+            for(se=0;se<NB;se=se+1)if(pl_w[se])begin
+                if(su_hs[pl_row[RW*se +: LNRBS]])static_conflict=1;
+                for(sf=0;sf<NQ;sf=sf+1)if(qvf[sf] && q_row[sf][LNRBS-1:0]==pl_row[RW*se +: LNRBS])static_conflict=1;
+                for(sf=0;sf<se;sf=sf+1)if(pl_w[sf] && pl_row[RW*sf +: LNRBS]==pl_row[RW*se +: LNRBS])static_conflict=1;
+            end
         end
     end
     always @(posedge clk or negedge rst_n) begin

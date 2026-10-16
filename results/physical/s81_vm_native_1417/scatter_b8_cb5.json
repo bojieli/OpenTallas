@@ -1,0 +1,76 @@
+{
+  "verdict": "PASS",
+  "scope": "Source-exact native B8 scatter PIPE1 component; no production pipeline adoption",
+  "route_job": "dsfd_vm_direct_scatter_b8_native_cb5-hb2o5-b1d8e60d3",
+  "route_source": "b1d8e60d3de3a1c42694b9f7bbeeffedc36ef519",
+  "record_commit": "9a138d50d",
+  "signoff": {
+    "TT_setup_ps": 62.05,
+    "FF_hold_ps": 8.22,
+    "DRC": 0
+  },
+  "native_audit": {
+    "cell": "dsfd_vm_static_scatter_b8_out_B8",
+    "view": "physical/ref_tile/dsfd_vm_direct_scatter_b8_native_cb5/views/dsfd_vm_static_scatter_b8_out_B8",
+    "lib_cell": "dsfd_vm_static_scatter_b8_out_B8",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 220.3,
+    "spread_ps": 30.4,
+    "outputs": 1209,
+    "inputs": 1249,
+    "launch_ps": 156.7,
+    "launch_pin": "o_v[4]",
+    "capture_ps": 155.5,
+    "capture_pin": "i_data[126]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "record_commit": "9a138d50d",
+    "view_sha256": {
+      "export_tt.tcl": "7b23527e0ce65f011f51f2e6f0d42281f6876cf7aeac8c386a0ae0fb866d03d9",
+      "dsfd_vm_static_scatter_b8_out_B8_ss.lib": "356d8e63a4ae35e106beb3222b74f0c9384a7dc666198c1695695e737dd155c6",
+      "dsfd_vm_static_scatter_b8_out_B8.lef": "019f533044613395bf958402b8271ec856288031b7ff7086d99685fd82015e7c",
+      "abstract.json": "145265c57df6f632eb24667003a59dfc262b7fd56f6a90d2defbd444121a2043",
+      "dsfd_vm_static_scatter_b8_out_B8_ff.lib": "56fc7470cb3677ae389df7796ca37cb7e16142b3baabab2791c5c45ef64d6489",
+      "export_ff.tcl": "f06f9e4478c5ebc08d8628f2cf21e4d8c0423e047e6e38f2aa33f61a6b9758a3",
+      "insertion.json": "72f1a59e7918edd996ce2370239752e39cdc4128ed30bd4c4a7288ac4fc2cf06",
+      "export_tt.log": "7a15bcf9bcbc9325bd68af18a6c453a78ee4a50caec6445914fc516eb499ed8d",
+      "export_ss.log": "1851d456cfc6588db8c913562baa3045251899b3a4c23413f998b5cd781ff411",
+      "export_ff.log": "ef7c93d8da0edf325d7022f48910f2c3890ebe877d3a969f0680dbcb0da4091c",
+      "dsfd_vm_static_scatter_b8_out_B8_tt.lib": "0a1d746c38ae7ad1129fc9d80fdfd0ce30c68cf5321db2041c668a6aff9bbf05",
+      "export_ss.tcl": "6e773e803971191f2c437a0cb0eafe4215247ee7948f34b6d34bc7cf6227ef3d",
+      "child_lint.json": "9f5c25de9efb96e4d8660da846bf8599c5b818bdb7c59aca5c6f6945a4815b5b"
+    }
+  },
+  "source_join": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+      "sha256": "ef9762480f9df47aa0af2fce692435811086c67bcedd9c2315c10c0379d6dd4c",
+      "bytes_equal_routed_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_direct_write_native_profiles.sv",
+      "sha256": "c05897d559a5efa11a373548ea3e5ee09f40408b11299cc9062a1c4f50c269fe",
+      "bytes_equal_routed_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv",
+      "sha256": "be5afc68ba562ac9f6a00908e5ed1fadd59818d4679e933aab8e37472e8c35f9",
+      "bytes_equal_routed_source": true
+    }
+  ],
+  "parameters": {
+    "PIPE": 1
+  },
+  "limits": [
+    "Production WSCATTER_PIPE default stays0; this view hasPIPE1",
+    "ABI bank-group selection still requires an explicit uniform4-bank profile adoption",
+    "Other B0/B16/B24 native receipts remain independently authoritative"
+  ]
+}

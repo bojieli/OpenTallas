@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.hbm.host-static-ingress-component.v1",
+  "status": "COMPONENT_MECHANISM_PASS_PHYSICAL_OPEN",
+  "sources": {
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv": "e8cb563fb2a76a9f3072132895657679f06f9f77034ed84d1294a28f3fef1329",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready.sv": "251e0911da6d4ccd6f4932100e0e7bd1e630dcd6c65f9a6e66153db67dd0b8a2",
+    "rtl/hbm_accel/host_static_20261015/tb_hbm_host_static_ingress.sv": "9ac4aae119e9b521d654946e3781f1c44ab5a1532d9463374f58f19dcf5cf1a4",
+    "rtl/hbm_accel/host_static_20261015/README.md": "fed66988492dbe21f3c5f08176b18e36f010a47262ead6dcaf4efacf08fb8782",
+    "rtl/hbm_accel/host_static_20261015/run.sh": "b2b54c6bbe8e922eb665f2524a42c5bb08a8be4d1cf2a73cfe1d48570a291583",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197"
+  },
+  "real_macro": {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "capacity_bytes": 32768,
+    "lef_um": [
+      174.744,
+      70.47
+    ]
+  },
+  "positive": {
+    "rows": 1024,
+    "loops": 2,
+    "exact_gapless_calendar_beats": 2048,
+    "axi_aw_w_orderings": 3,
+    "held_response": true,
+    "protocol_negative_cases": 7
+  },
+  "mutants": {
+    "data_bit": "EXPECTED_FAIL_data_ordinal",
+    "premature_launch": "EXPECTED_FAIL_rejected_launch_response",
+    "loaded_row_bypass": "EXPECTED_FAIL_unloaded_range_ready"
+  },
+  "ingress_map": {
+    "source_sha256": "e8cb563fb2a76a9f3072132895657679f06f9f77034ed84d1294a28f3fef1329",
+    "corner": "ASAP7_RVT_SS_nldm",
+    "area_um2": 347.31018,
+    "sequential_area_um2": 226.01916,
+    "ff_count": 659,
+    "cell_count": 2547,
+    "cell_counts": {
+      "A2O1A1Ixp33_ASAP7_75t_R": 16,
+      "A2O1A1O1Ixp25_ASAP7_75t_R": 1,
+      "AND2x2_ASAP7_75t_R": 50,
+      "AND3x1_ASAP7_75t_R": 12,
+      "AND4x1_ASAP7_75t_R": 4,
+      "AND5x1_ASAP7_75t_R": 2,
+      "AO21x1_ASAP7_75t_R": 6,
+      "AO22x1_ASAP7_75t_R": 1,
+      "AOI211xp5_ASAP7_75t_R": 3,
+      "AOI21xp33_ASAP7_75t_R": 414,
+      "AOI22xp33_ASAP7_75t_R": 1,
+      "DFFASRHQNx1_ASAP7_75t_R": 387,
+      "DFFHQNx1_ASAP7_75t_R": 272,
+      "HB1xp67_ASAP7_75t_R": 1,
+      "INVx1_ASAP7_75t_R": 388,
+      "MAJIxp5_ASAP7_75t_R": 4,
+      "NAND2xp33_ASAP7_75t_R": 202,
+      "NAND3xp33_ASAP7_75t_R": 11,
+      "NAND4xp25_ASAP7_75t_R": 9,
+      "NAND5xp2_ASAP7_75t_R": 6,
+      "NOR2xp33_ASAP7_75t_R": 432,
+      "NOR3xp33_ASAP7_75t_R": 14,
+      "NOR4xp25_ASAP7_75t_R": 4,
+      "NOR5xp2_ASAP7_75t_R": 1,
+      "O2A1O1Ixp33_ASAP7_75t_R": 6,
+      "OA21x2_ASAP7_75t_R": 1,
+      "OAI211xp5_ASAP7_75t_R": 4,
+      "OAI21xp33_ASAP7_75t_R": 224,
+      "OAI22xp33_ASAP7_75t_R": 3,
+      "OAI311xp33_ASAP7_75t_R": 1,
+      "OAI31xp33_ASAP7_75t_R": 28,
+      "OR2x2_ASAP7_75t_R": 4,
+      "OR3x1_ASAP7_75t_R": 8,
+      "OR4x1_ASAP7_75t_R": 8,
+      "OR5x1_ASAP7_75t_R": 4,
+      "XNOR2xp5_ASAP7_75t_R": 12,
+      "XOR2xp5_ASAP7_75t_R": 3
+    },
+    "source_sram_macros": 0,
+    "liberty_sha256": "81dd0dac6ed884d2178578808d610ff648811c7e1ab129b6bde0a38cc52c0897",
+    "mapped_json_sha256": "3ec0f6317997ecf6a1cdaa13d18da9ed4cec623d8393a6f191587759c853c40a",
+    "job": "ot-agidock128 oth-ubuntu-1346322-1792095960"
+  },
+  "slot": {
+    "width_um": 432,
+    "height_um": 432,
+    "area_um2": 186624,
+    "area_only_fits": true,
+    "physical_fit": "OPEN assigned pins/CTS/routing"
+  },
+  "local_readiness_map": "PENDING admitted fleet mapping;1024loaded control bits plus state, outside ingress",
+  "open": [
+    "actual host packet/landing/UCIe composition",
+    "heterogeneous target mapping and readiness aggregate",
+    "SU bank16/row7 adapter",
+    "target-specific physical slots and pin assignments",
+    "CTS/native/routed die timing",
+    "production installation frequency and end-to-end price"
+  ]
+}

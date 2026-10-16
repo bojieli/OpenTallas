@@ -4,8 +4,10 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import shutil
 import unittest
 from compile_calendar import compile_program, schedule_jobs, issuer_done_row, ROOT, PIPELINE_ABI
+import vm_service_profile as VSP
 
 
 class CompileTest(unittest.TestCase):
@@ -46,6 +48,54 @@ class CompileTest(unittest.TestCase):
         self.assertEqual([e['row'] for e in r['schedule']['events']],[256,256])
         self.assertEqual(r['schedule']['events'][1]['service_cycle'],15)
         self.assertEqual(len(r['schedule']['dependencies']),1)
+
+    def selected_profile_fixture(self):
+        name = 's81_vm_r4_c2_w1'
+        manifest = json.loads((VSP.ROOT / VSP.MEASURED_MANIFEST).read_text())
+        for path in set(manifest) | set(VSP.PROFILES[name]['receipts']) | {VSP.MEASURED_MANIFEST}:
+            target = self.root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(VSP.ROOT / path, target)
+        self.contract.update(request_min_ps=0, read_min_ps=0, commit_min_ps=0,
+            bank_mapping='xor_row7_5_shift2',
+            vm_service_profile=dict(name=name, rtl_tuple=VSP.PROFILES[name]['rtl_tuple'],
+                                    evidence=VSP.evidence_for(name, self.root)))
+        # Nonzero job origins exercise stream raw-cycle rebasing independently
+        # from ordinal lane=2. This is compiler evidence, not RTL qualification.
+        self.program['ops'][0].update(start=5, end=25)
+        self.program['ops'][1].update(start=26, end=50)
+        self.binding['jobs']['field']['duration_cycles'] = 19
+        self.binding['jobs']['su']['duration_cycles'] = 23
+        self.binding['jobs']['field']['accesses'][0].update(
+            raw_cycle=13, lane=2, service_cycle=13, commit_cycle=15, deadline_cycle=15)
+        self.binding['jobs']['su']['accesses'][0].update(
+            raw_cycle=8, service_cycle=8, response_cycle=17, deadline_cycle=17)
+
+    def test_selected_profile_compiles_raw_and_returned_edges(self):
+        self.selected_profile_fixture()
+        result = self.run_compile()
+        self.assertTrue(result['dispatch_eligible'], result)
+        write, read = result['schedule']['events']
+        self.assertEqual((write['issue_cycle'], write['raw_cycle'], write['commit_cycle'], write['lane']),
+                         (6, 18, 20, 2))
+        self.assertEqual((read['issue_cycle'], read['raw_cycle'], read['response_cycle']), (27, 34, 43))
+        self.assertFalse(result['qualified'])
+
+    def test_selected_profile_missing_raw_edge_blocks_all_dispatch(self):
+        self.selected_profile_fixture()
+        del self.binding['jobs']['field']['accesses'][0]['raw_cycle']
+        result = self.run_compile()
+        self.assertFalse(result['dispatch_eligible'])
+        self.assertIsNone(result['schedule'])
+        self.assertIn('profile_raw_cycle_unbound', [x['kind'] for x in result['reservations']['violations']])
+
+    def test_selected_profile_stale_commit_blocks_all_dispatch(self):
+        self.selected_profile_fixture()
+        self.binding['jobs']['field']['accesses'][0]['commit_cycle'] -= 1
+        result = self.run_compile()
+        self.assertFalse(result['dispatch_eligible'])
+        self.assertIsNone(result['schedule'])
+        self.assertIn('profile_write_returned_commit_edge', [x['kind'] for x in result['reservations']['violations']])
 
     def test_sparse_tensor_counts_actual_rows_not_reserved_holes(self):
         self.binding['tensors']['q'].update(nrows=80,row_stride=4,reserved_span_rows=320)

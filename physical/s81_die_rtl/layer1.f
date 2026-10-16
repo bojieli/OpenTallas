@@ -45,6 +45,9 @@ rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
 # default parameters are the pinned behaviour (el1011-q-sp: L = 3 = the original adders), so they serve both.
 +define+OT_PQ_ROM_PORTS
+# S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): stream ROM = 4 die macros pqrom2a..d (ra2 12 shared, rc2[3:0], rq2[191:0]);
+# select = ot_s81_pq_stream_rom4_sel inside dsfd_sp_pq_n (gates results/rtl/s81_pq_rom4_bind_1015); generator pq_rom4() reads this
++define+DSFD_PQ_ROM4
 rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv

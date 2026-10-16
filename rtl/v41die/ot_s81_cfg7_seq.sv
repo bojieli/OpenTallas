@@ -23,12 +23,21 @@
 // go broadcast, from 0 at reset): a 2-bit count of the broadcast gos this pair has seen (lc[0], before the class gate),
 // so no tag wires leave the hub.  PQ = 0: go_tag = 0, ef ignored, cycle-identical to the pinned loader.
 // Exact gate: rtl/v41die/test/tb_ot_s81_cfg7_seq.sv (cycle lockstep against ot_v41_pair_pq_ld_frontend PHW 10, PQ 0 and 1).
+// LAYOUT = 1 (FILL-S2 2026-10-15, structural timing fix, 0 cycles): the hardened tile at LAYOUT 0 fails TT setup by -179 ps
+// on lc[cfg_go/cfg_ph] -> phase*25 multiply -> 15-b add -> bank decode -> ce/a output pins (a combinational input-to-
+// output path through an adder behind the pins).  LAYOUT 1 places configuration word k of phase p in macro k % 7, row
+// 4p + k / 7 (25 <= 28 = 4 rows x 7 macros; 1,024 phases x 4 rows = 4,096 rows), so the start read is macro 0 at row
+// {phase, 2'b00} (wiring only) and every later read takes macro/row from the registered next-word counters nb / nr:
+// a and ce are one mux / one decode level from flops or from cfg_go.  Same edges, same payload, same c_d timing as
+// LAYOUT 0 (lockstep gate with +define+TB_CFG7_IL7); the cfg ROM image must be emitted in the same layout
+// (tools/s81_static_control/field_cfg7_image.py --layout il7).
 // ---------------------------------------------------------------------------
 module ot_s81_cfg7_seq #(
     parameter integer NSEG = 8,
     parameter integer PHW = 10,
     parameter integer NROM = 7,
     parameter integer PQ = 0,
+    parameter integer LAYOUT = 0,
     parameter integer CW = 3 * NSEG + 1,
     parameter integer AW = $clog2(CW << PHW)
 ) (
@@ -48,6 +57,7 @@ module ot_s81_cfg7_seq #(
         if (NROM != 7) $fatal(1, "ot_s81_cfg7_seq: the port list is written for NROM = 7");
         if ((CW << PHW) > NROM * 4096) $fatal(1, "ot_s81_cfg7_seq: CW x 2^PHW words exceed NROM 4096-row macros");
         if (CW > 32 || AW < 12) $fatal(1, "ot_s81_cfg7_seq: CW <= 32 and AW >= 12 required");
+        if (LAYOUT == 1 && (CW > 4 * NROM || PHW + 2 > 12)) $fatal(1, "ot_s81_cfg7_seq: LAYOUT 1 needs CW <= 28 and PHW <= 10");
     end
     wire           go      = lc[0];
     wire           cfg_go  = lc[1];
@@ -68,11 +78,31 @@ module ot_s81_cfg7_seq #(
     wire        ld_ok = (PQ == 0) || (ef[0] && ef[1]);
     wire        ld_start = (cfg_go && ld_ok) || (PQ != 0 && pend && !cfg_go && ld_ok);
     // same-edge lookahead of the reference's combinational cm_a = ld_a: read ld_a's word one edge early
-    wire [AW-1:0] ra = ld_start ? AW'(cfg_go ? cfg_ph : pend_ph) * AW'(CW) : ld_a + 1'b1;
     wire          rce = rst_n[0] && (ld_start || (ld_run && ld_k < 5'(CW - 1)));
-    wire [AW-13:0] rbank = ra[AW-1:12];
+    wire [AW-13:0] rbank;
     reg  [AW-13:0] bank_q;
-    assign a = ra[11:0];
+    generate if (LAYOUT == 1) begin : g_il7
+        // registered next-word position: nb = macro, nr = row-in-phase of word ld_k + 1; lph = the loading phase
+        reg [2:0] nb;
+        reg [1:0] nr;
+        reg [PHW-1:0] lph;
+        wire [PHW-1:0] sph = cfg_go ? cfg_ph : pend_ph;
+`ifdef OT_S81_CFG7_MUT_STRIDE
+        wire [PHW-1:0] sph_m = {sph[PHW-1:1], 1'b0};     // negative control: wrong phase row base
+`else
+        wire [PHW-1:0] sph_m = sph;
+`endif
+        always @(posedge clk[0]) begin
+            if (ld_start) begin nb <= 3'd1; nr <= 2'd0; lph <= sph_m; end
+            else if (ld_run) begin nb <= (nb == 3'(NROM - 1)) ? 3'd0 : nb + 3'd1; nr <= (nb == 3'(NROM - 1)) ? nr + 2'd1 : nr; end
+        end
+        assign a = ld_start ? {sph_m, 2'b00} : {lph, nr};
+        assign rbank = ld_start ? (AW-12)'(0) : (AW-12)'(nb);
+    end else begin : g_lin
+        wire [AW-1:0] ra = ld_start ? AW'(cfg_go ? cfg_ph : pend_ph) * AW'(CW) : ld_a + 1'b1;
+        assign rbank = ra[AW-1:12];
+        assign a = ra[11:0];
+    end endgenerate
     assign ce0 = rce && rbank == 0;
     assign ce1 = rce && rbank == 1;
     assign ce2 = rce && rbank == 2;
@@ -162,7 +192,8 @@ endmodule
 module ot_s81_cfg7_seq_bf #(
     parameter integer NSEG = 8,
     parameter integer PHW = 10,
-    parameter integer NROM = 7
+    parameter integer NROM = 7,
+    parameter integer LAYOUT = 0
 ) (
     input  wire [0:0]          clk,
     input  wire [0:0]          rst_n,
@@ -175,7 +206,7 @@ module ot_s81_cfg7_seq_bf #(
     output wire [1:0]          st
 );
     wire [1:0] go_tag_0;      // constant 0 at PQ 0
-    ot_s81_cfg7_seq #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
+    ot_s81_cfg7_seq #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0), .LAYOUT(LAYOUT)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
         .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
         .q0(q0), .q1(q1), .q2(q2), .q3(q3), .q4(q4), .q5(q5), .q6(q6),
         .cfg(cfg), .go_e(go_e), .st(st), .ef(2'b00), .go_tag(go_tag_0));

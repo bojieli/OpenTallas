@@ -48,10 +48,20 @@ module dsfd_sp_pq_produced (
     output wire [19:0]   t_vm,
     input  wire [2048:0] f_vm,
     output wire [11:0]   ra0, ra1,
+`ifdef DSFD_PQ_ROM4
+    // S-ELEM-B 10-15 (S-BIND strict port-bind: die ra2 12 vs RTL 14): the 16,384-row stream ROM is FOUR die macros
+    // ot_rom_4096x72_m8 (pqrom2a..d); ra2 = shared 12-bit address, rc2[b] = macro b enable, rq2[48b+:48] = macro b rd_out[47:0]
+    output wire [11:0]   ra2,
+    output wire          rc0, rc1,
+    output wire [3:0]    rc2,
+    input  wire [63:0]   rq0, rq1,
+    input  wire [191:0]  rq2,
+`else
     output wire [13:0]   ra2,
     output wire          rc0, rc1, rc2,
     input  wire [63:0]   rq0, rq1,
     input  wire [47:0]   rq2,
+`endif
     output wire [457:0]  t_cnt,
     input  wire [203:0]  f_cnt,
 `ifdef DSFD_PQ_STATIC_X2

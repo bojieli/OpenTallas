@@ -1,0 +1,40 @@
+{
+  "status": "PASS_SOURCE_INPUT_AND_VERILATOR_HIERARCHY_ONLY",
+  "source_revision": "96967cee695fc14158e28367a0dbae641cd86141",
+  "top": "qkd_host_root_pt",
+  "parameters": {
+    "NL": 2,
+    "ENABLE_NATIVE": 1,
+    "ENABLE_SERVICE": 1,
+    "ENABLE_TOKEN": 1
+  },
+  "original_current_source_count": 63,
+  "rtl_sources": 66,
+  "real_macro_liberties": 4,
+  "module_definitions": 76,
+  "verilator_exit": 0,
+  "warnings": {
+    "%Warning-PINMISSING": 7,
+    "%Warning-WIDTHTRUNC": 100,
+    "%Warning-WIDTHEXPAND": 101,
+    "%Warning-SELRANGE": 1,
+    "%Warning-CASEINCOMPLETE": 6,
+    "%Warning-MULTIDRIVEN": 2
+  },
+  "negative": {
+    "case": "omit actual512x128 physical BB",
+    "exit_code": 1,
+    "expected": "MODMISSING",
+    "log_sha256": "ad07db746ecad88f150810ecdde69b0594eb26f1f32345d2033d3eb434bb0927"
+  },
+  "synthesis_executed": false,
+  "yosys_deferred_frontend_executed": false,
+  "area": null,
+  "frame_fit": null,
+  "reproduce": "python3 -B tools/qwen_kv_die/synth/host_root_plan.py --revision 96967cee695fc14158e28367a0dbae641cd86141 --out /tmp/qkv-host-root-sourceaudit-1103 --coordinator-lock /home/ubuntu/claude-takeover-20261007/COORDINATOR.lock --lint --verilator /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "remaining": [
+    "Run deferred Yosys frontend in coordinated current ORFS environment",
+    "Review retained diagnostics; no clean functional or parent binding claim",
+    "Only after frontend review and memory coordination perform actual source synthesis and area/frame comparison"
+  ]
+}

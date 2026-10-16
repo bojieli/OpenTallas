@@ -1,0 +1,2395 @@
+{
+  "schema": "opentallas.qwen-kv-elastic-boundary.integration.v1",
+  "status": "OPEN_UNADOPTED",
+  "adoption_allowed": false,
+  "holds": "KEPT",
+  "sources": {
+    "controller": {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+      "module": "qkd_ctrl_pc_host_static",
+      "sha256": "e2be6cd367129f6d74375e642364e3623c6764efb35d8e8be9f9efef4d6ab4a2",
+      "ports": [
+        {
+          "name": "pll_hbm",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "hrst",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rsi",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "pc",
+          "direction": "input",
+          "range": "4:0"
+        },
+        {
+          "name": "ci",
+          "direction": "input",
+          "range": "318:0"
+        },
+        {
+          "name": "co",
+          "direction": "output",
+          "range": "293:0"
+        },
+        {
+          "name": "es",
+          "direction": "input",
+          "range": "287:0"
+        },
+        {
+          "name": "er",
+          "direction": "output",
+          "range": "260:0"
+        },
+        {
+          "name": "po",
+          "direction": "output",
+          "range": "327:0"
+        },
+        {
+          "name": "pi",
+          "direction": "input",
+          "range": "288:0"
+        },
+        {
+          "name": "ki",
+          "direction": "input",
+          "range": "32:0"
+        },
+        {
+          "name": "ko",
+          "direction": "output",
+          "range": "32:0"
+        },
+        {
+          "name": "fi",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "fo",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "static_cmd_owner",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "static_cmd",
+          "direction": "input",
+          "range": "42:0"
+        },
+        {
+          "name": "reserved_rd",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "reserved_static_col",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "reserved_write_col",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "static_epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "expected_raw_valid",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cfg_stack",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "es_context",
+          "direction": "input",
+          "range": "317:0"
+        },
+        {
+          "name": "es_expected_valid",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "es_expected_identity",
+          "direction": "input",
+          "range": "60:0"
+        },
+        {
+          "name": "es_expected_address",
+          "direction": "input",
+          "range": "28:0"
+        },
+        {
+          "name": "es_expected_pc",
+          "direction": "input",
+          "range": "4:0"
+        },
+        {
+          "name": "es_expected_stack",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "native_commit_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_commit_identity",
+          "direction": "output",
+          "range": "60:0"
+        },
+        {
+          "name": "native_commit_address",
+          "direction": "output",
+          "range": "28:0"
+        },
+        {
+          "name": "corrected_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "completion_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "completion_we",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "completion_fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "idle_core",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "idle_hbm",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "drain_fault_core",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "drain_fault_hbm",
+          "direction": "output",
+          "range": null
+        }
+      ]
+    },
+    "front": {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv",
+      "module": "qkd_kv_hbm_elastic_front",
+      "sha256": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+      "ports": [
+        {
+          "name": "pll_hbm",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "hrst",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "co_in",
+          "direction": "input",
+          "range": "293:0"
+        },
+        {
+          "name": "epoch_in",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "blk_go",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "co_out",
+          "direction": "output",
+          "range": "293:0"
+        },
+        {
+          "name": "epoch_out",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "compiled_hbm_put",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "blk_freed",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "hold",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "stall_edges",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "occupancy",
+          "direction": "output",
+          "range": "$clog2(NBLK*BLK):0"
+        },
+        {
+          "name": "idle",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault_overflow",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault_go",
+          "direction": "output",
+          "range": null
+        }
+      ]
+    },
+    "return": {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv",
+      "module": "qkd_static_kv_return_slots",
+      "sha256": "58c84c5a4c00eaf641022c3d2417ce9a5a52b17b6f554c2831f2a11b545cc652",
+      "ports": [
+        {
+          "name": "pll_hbm",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "hrst",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rsi",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "controller_co",
+          "direction": "input",
+          "range": "293:0"
+        },
+        {
+          "name": "controller_epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "compiled_hbm_put",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "expected_put",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "expected_sector",
+          "direction": "input",
+          "range": "9:0"
+        },
+        {
+          "name": "expected_epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "expected_layer",
+          "direction": "input",
+          "range": "5:0"
+        },
+        {
+          "name": "actual_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "actual_sector",
+          "direction": "output",
+          "range": "9:0"
+        },
+        {
+          "name": "actual_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "actual_layer",
+          "direction": "output",
+          "range": "5:0"
+        },
+        {
+          "name": "actual_data",
+          "direction": "output",
+          "range": "255:0"
+        },
+        {
+          "name": "fault_hbm",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault_core",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "idle_hbm",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "idle_core",
+          "direction": "output",
+          "range": null
+        }
+      ]
+    },
+    "writer": {
+      "path": "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+      "module": "qkd_kv_static_writer_native",
+      "sha256": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "word_valid",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "word_tag",
+          "direction": "input",
+          "range": "10:0"
+        },
+        {
+          "name": "word_data",
+          "direction": "input",
+          "range": "511:0"
+        },
+        {
+          "name": "word_identity",
+          "direction": "input",
+          "range": "58:0"
+        },
+        {
+          "name": "word_generation",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "compiled_word_slot",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "compiled_word_index",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "compiled_identity",
+          "direction": "input",
+          "range": "58:0"
+        },
+        {
+          "name": "compiled_generation",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "es",
+          "direction": "output",
+          "range": "4*288-1:0"
+        },
+        {
+          "name": "dest_pc",
+          "direction": "output",
+          "range": "4*5-1:0"
+        },
+        {
+          "name": "dest_stack",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "identity",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "generation",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "expected_valid",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "expected_pc",
+          "direction": "output",
+          "range": "4*5-1:0"
+        },
+        {
+          "name": "expected_stack",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "expected_identity",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "expected_generation",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "expected_address",
+          "direction": "output",
+          "range": "28:0"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault_code",
+          "direction": "output",
+          "range": "7:0"
+        }
+      ]
+    },
+    "nominal_calendar": {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv",
+      "module": "qkd_static_kv_return_calendar",
+      "sha256": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+      "ports": [
+        {
+          "name": "pll_hbm",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "hrst",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "reserved_rd",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "reserved_static_read",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "reservation_epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "expected_raw_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "compiled_hbm_put",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "expected_return_epoch",
+          "direction": "output",
+          "range": "15:0"
+        }
+      ]
+    },
+    "sequencer": {
+      "path": "rtl/physical/ot_qwen_kv_centre_slots.sv",
+      "module": "qkd_seq",
+      "sha256": "f17271aef29b8cdb370032f30ed84d5010587032e8a7b43c3a5a5ed3d9dca9ad",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "r_x3_d",
+          "direction": "input",
+          "range": "523:0"
+        },
+        {
+          "name": "r_x3_cr",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "r_sd",
+          "direction": "input",
+          "range": "55:0"
+        },
+        {
+          "name": "r_kvd",
+          "direction": "input",
+          "range": "43:0"
+        },
+        {
+          "name": "t_ar_d",
+          "direction": "output",
+          "range": "519:0"
+        },
+        {
+          "name": "t_ar_cr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "t_ds",
+          "direction": "output",
+          "range": "186:0"
+        },
+        {
+          "name": "t_pw",
+          "direction": "output",
+          "range": "74:0"
+        },
+        {
+          "name": "aq_WS",
+          "direction": "output",
+          "range": "539:0"
+        },
+        {
+          "name": "aq_WN",
+          "direction": "output",
+          "range": "539:0"
+        },
+        {
+          "name": "aq_ES",
+          "direction": "output",
+          "range": "539:0"
+        },
+        {
+          "name": "aq_EN",
+          "direction": "output",
+          "range": "539:0"
+        },
+        {
+          "name": "kvn_WS_d",
+          "direction": "output",
+          "range": "1046:0"
+        },
+        {
+          "name": "kvn_WN_d",
+          "direction": "output",
+          "range": "1046:0"
+        },
+        {
+          "name": "kvn_ES_d",
+          "direction": "output",
+          "range": "1046:0"
+        },
+        {
+          "name": "kvn_EN_d",
+          "direction": "output",
+          "range": "1046:0"
+        },
+        {
+          "name": "kvn_WS_cr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kvn_WN_cr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kvn_ES_cr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kvn_EN_cr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kc_WS",
+          "direction": "output",
+          "range": "32:0"
+        },
+        {
+          "name": "kc_WN",
+          "direction": "output",
+          "range": "32:0"
+        },
+        {
+          "name": "kc_ES",
+          "direction": "output",
+          "range": "32:0"
+        },
+        {
+          "name": "kc_EN",
+          "direction": "output",
+          "range": "32:0"
+        },
+        {
+          "name": "af_WS",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "af_WN",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "af_ES",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "af_EN",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "mf_WS",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "mf_WN",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "mf_ES",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "mf_EN",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ar",
+          "direction": "input",
+          "range": "519:0"
+        },
+        {
+          "name": "hf",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "hs",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "hc",
+          "direction": "input",
+          "range": "181:0"
+        },
+        {
+          "name": "tk",
+          "direction": "output",
+          "range": "92:0"
+        },
+        {
+          "name": "kst",
+          "direction": "output",
+          "range": "9:0"
+        }
+      ]
+    },
+    "program_loader": {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv",
+      "module": "qkd_host_program_loader",
+      "sha256": "3478dec60408e7a4aa3bda1ef2ed4544ff276a357e02cc7d841889b3d087694a",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "begin_image",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "image_epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "pw_count",
+          "direction": "input",
+          "range": "10:0"
+        },
+        {
+          "name": "dw_count",
+          "direction": "input",
+          "range": "3:0"
+        },
+        {
+          "name": "word_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "word_desc",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "word_addr",
+          "direction": "input",
+          "range": "9:0"
+        },
+        {
+          "name": "word_data",
+          "direction": "input",
+          "range": "63:0"
+        },
+        {
+          "name": "seal",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "auth_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "auth_epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "auth_digest",
+          "direction": "input",
+          "range": "63:0"
+        },
+        {
+          "name": "execution_active",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "pr",
+          "direction": "output",
+          "range": "142:0"
+        },
+        {
+          "name": "program_ready",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "digest",
+          "direction": "output",
+          "range": "63:0"
+        },
+        {
+          "name": "program_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "authorized_footer_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "authorized_footer",
+          "direction": "output",
+          "range": "63:0"
+        }
+      ]
+    },
+    "host_root": {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+      "module": "qkd_host_root_pt",
+      "sha256": "bed22a0c8c28d5ac18f5c3785c21c40c1efc8e430165244f18bfb10363f98294",
+      "ports": [
+        {
+          "name": "ck_phy",
+          "direction": "input",
+          "range": "7:0"
+        },
+        {
+          "name": "ck_pad",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_phy_rx_w",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_phy_rx_r",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_phy_tx_w",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_phy_tx_r",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_peer",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_program_rx",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_program_loader",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_host",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_csr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_rst",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_ctl",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_prompt",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_rx",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_tx",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_axi",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_ctrl",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_hc",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_queue",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_ing_w",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_ing_r",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_credit",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_done_w",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_done_r",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_core",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_host",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_ingest",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_qm_bank",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "ck_qm_out",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_map",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_sum",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_order",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_dispatch",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_retire",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_bootbarrier",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_fence_core",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_fence_host",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_guard",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_native",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "package_abort",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "abort_drained",
+          "direction": "input",
+          "range": "3:0"
+        },
+        {
+          "name": "token_epoch_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "token_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "native_pr",
+          "direction": "output",
+          "range": "142:0"
+        },
+        {
+          "name": "native_kv_drained",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_vm_drained",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_collective_drained",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_host_drained",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_collective_busy",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_kv_flush",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "service_ready",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "service_abort",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "ingest_permission",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "local_service_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "service_diag_raw",
+          "direction": "output",
+          "range": "25:0"
+        },
+        {
+          "name": "service_status",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "range": "2:0"
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "pll_locked",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "phy_up",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "phy_rx_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "phy_rx_flit",
+          "direction": "input",
+          "range": "1042:0"
+        },
+        {
+          "name": "phy_tx_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "phy_tx_flit",
+          "direction": "output",
+          "range": "1042:0"
+        },
+        {
+          "name": "link_up",
+          "direction": "input",
+          "range": "NL-1:0"
+        },
+        {
+          "name": "transport_fault",
+          "direction": "input",
+          "range": "7:0"
+        },
+        {
+          "name": "physical_fault",
+          "direction": "input",
+          "range": "7:0"
+        },
+        {
+          "name": "crom_fault",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "local_tk",
+          "direction": "input",
+          "range": "92:0"
+        },
+        {
+          "name": "local_kst",
+          "direction": "input",
+          "range": "9:0"
+        },
+        {
+          "name": "ck_records",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "record_send_kind",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "record_witness_slot",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "record_rx_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "record_rx",
+          "direction": "input",
+          "range": "547:0"
+        },
+        {
+          "name": "record_tx_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "record_tx_observed_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "record_tx",
+          "direction": "output",
+          "range": "547:0"
+        },
+        {
+          "name": "record_fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "execution_active",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "program_ready",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "program_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "program_digest",
+          "direction": "output",
+          "range": "63:0"
+        },
+        {
+          "name": "program_authorized_footer_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "program_authorized_footer64",
+          "direction": "output",
+          "range": "63:0"
+        },
+        {
+          "name": "program_begin_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "program_auth_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "program_expected_pw",
+          "direction": "output",
+          "range": "10:0"
+        },
+        {
+          "name": "program_expected_dw",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "program_auth_epoch",
+          "direction": "output",
+          "range": "15:0"
+        },
+        {
+          "name": "program_auth_digest",
+          "direction": "output",
+          "range": "63:0"
+        },
+        {
+          "name": "hc",
+          "direction": "output",
+          "range": "181:0"
+        },
+        {
+          "name": "seen",
+          "direction": "output",
+          "range": "7:0"
+        },
+        {
+          "name": "irq",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "host_rst_n",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "link_rst_n",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "hbm_rst_n",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "boot_go",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "die_rst_n",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "sys_ready",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault_src",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "source_cr",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "available",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "hb",
+          "direction": "output",
+          "range": "282:0"
+        },
+        {
+          "name": "hb_cr",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "est",
+          "direction": "input",
+          "range": "12:0"
+        },
+        {
+          "name": "chain_f",
+          "direction": "output",
+          "range": "1163:0"
+        },
+        {
+          "name": "chain_c",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "chain_a",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "chain_fault_i",
+          "direction": "input",
+          "range": "3:0"
+        },
+        {
+          "name": "slice_ack",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "slice_boot_done",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "slice_boot_ok",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "slice_boot_fault",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "ctrl_completion_fault",
+          "direction": "input",
+          "range": "127:0"
+        },
+        {
+          "name": "marker_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "marker",
+          "direction": "output",
+          "range": "65:0"
+        },
+        {
+          "name": "issued",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "landed",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "physical_ack_n",
+          "direction": "output",
+          "range": "7:0"
+        },
+        {
+          "name": "service_faults",
+          "direction": "output",
+          "range": "24:0"
+        },
+        {
+          "name": "native_admit_ready",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_links_drained",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_link_reset_seen",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "native_retrained",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "peer_protocol_fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "ck_root_mux",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_coordinator_codec",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_coordinator_lifecycle",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "ck_coordinator_post",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "engine_admit_ready",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "dispatch_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "dispatched",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "cohort_tag",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "cohort_gen",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "accepted_ranks",
+          "direction": "output",
+          "range": "7:0"
+        },
+        {
+          "name": "participant_trace",
+          "direction": "output",
+          "range": "255:0"
+        },
+        {
+          "name": "participant_token",
+          "direction": "output",
+          "range": "143:0"
+        },
+        {
+          "name": "participant_pos",
+          "direction": "output",
+          "range": "143:0"
+        },
+        {
+          "name": "engine_result_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "engine_result_tag",
+          "direction": "input",
+          "range": "58:0"
+        },
+        {
+          "name": "engine_result_gen",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "engine_result_done",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "engine_result_fault",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "engine_result_cause",
+          "direction": "input",
+          "range": "3:0"
+        },
+        {
+          "name": "engine_result_token",
+          "direction": "input",
+          "range": "17:0"
+        },
+        {
+          "name": "engine_result_value",
+          "direction": "input",
+          "range": "31:0"
+        },
+        {
+          "name": "engine_result_cycles",
+          "direction": "input",
+          "range": "31:0"
+        },
+        {
+          "name": "engine_result_cr",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "program_consensus",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "coordinator_fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "recovery_complete",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "host_link_reset_req",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "host_recovery_clear",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "host_drained_local",
+          "direction": "output",
+          "range": null
+        }
+      ]
+    },
+    "link": {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+      "module": "qkd_d2d_static",
+      "sha256": "a6c0e4bef740a390f3953a0c8427c2c472d19265c309f2e6ca61604aa3d2dc67",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cfg_tx_we",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cfg_rx_we",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cfg_addr",
+          "direction": "input",
+          "range": "5:0"
+        },
+        {
+          "name": "cfg_data",
+          "direction": "input",
+          "range": "31:0"
+        },
+        {
+          "name": "cal_start",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cal_seg",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "host_link_reset_req",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "host_recovery_clear",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "host_boot_begin",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "fwd_epoch",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fwd_link_rst_n",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "att_tx_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "att_tx_kind",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "att_tx_beat",
+          "direction": "output",
+          "range": "4:0"
+        },
+        {
+          "name": "att_tx_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "att_tx_payload",
+          "direction": "input",
+          "range": "547:0"
+        },
+        {
+          "name": "att_rx_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "att_rx_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "att_rx_kind",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "att_rx_beat",
+          "direction": "output",
+          "range": "4:0"
+        },
+        {
+          "name": "rx_payload",
+          "direction": "output",
+          "range": "547:0"
+        },
+        {
+          "name": "emb_tx_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "emb_tx_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "emb_tx_payload",
+          "direction": "input",
+          "range": "547:0"
+        },
+        {
+          "name": "record_tx_observed_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "record_tx",
+          "direction": "input",
+          "range": "547:0"
+        },
+        {
+          "name": "record_send_kind",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "record_witness_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "record_rx_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "record_rx",
+          "direction": "output",
+          "range": "547:0"
+        },
+        {
+          "name": "kvn_compiled_identity",
+          "direction": "input",
+          "range": "58:0"
+        },
+        {
+          "name": "kvn_compiled_generation",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "kvn_word_valid",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "kvn_word_tag",
+          "direction": "output",
+          "range": "10:0"
+        },
+        {
+          "name": "kvn_word_data",
+          "direction": "output",
+          "range": "511:0"
+        },
+        {
+          "name": "kvn_word_identity",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "kvn_word_generation",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "kvn_word_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "kvn_word_index",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "status_epoch16",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "serdes_up",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kv_drained_local",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kv_flush_local",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "host_drained_local",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "kv_active_local",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "link_up",
+          "direction": "output",
+          "range": "NL-1:0"
+        },
+        {
+          "name": "transport_fault",
+          "direction": "output",
+          "range": "7:0"
+        },
+        {
+          "name": "native_links_drained",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_link_reset_seen",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_retrained",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "abort_drained",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "native_kv_drained",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_vm_drained",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_collective_drained",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_host_drained",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_collective_busy",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_kv_flush",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "native_admit_ready",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "crom_fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "execution_active",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "engine_result_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "engine_result_done",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "engine_result_fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "engine_result_cause",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "engine_result_tag",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "engine_result_gen",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "engine_result_token",
+          "direction": "output",
+          "range": "17:0"
+        },
+        {
+          "name": "engine_result_value",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "engine_result_cycles",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "fdi_tx_up",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "fdi_tx_v",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fdi_tx_flit",
+          "direction": "output",
+          "range": "582:0"
+        },
+        {
+          "name": "fdi_rx_v",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "fdi_rx_flit",
+          "direction": "input",
+          "range": "582:0"
+        },
+        {
+          "name": "phy_rst_n",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "epoch_abort",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "recovery_cycles",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "range": null
+        }
+      ]
+    },
+    "writer_programme": {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+      "module": "qkd_kv_native_programme",
+      "sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cfg_we",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "cfg_addr",
+          "direction": "input",
+          "range": "7:0"
+        },
+        {
+          "name": "cfg_data",
+          "direction": "input",
+          "range": "63:0"
+        },
+        {
+          "name": "start",
+          "direction": "input",
+          "range": null
+        },
+        {
+          "name": "stage",
+          "direction": "input",
+          "range": "5:0"
+        },
+        {
+          "name": "epoch",
+          "direction": "input",
+          "range": "15:0"
+        },
+        {
+          "name": "token",
+          "direction": "input",
+          "range": "17:0"
+        },
+        {
+          "name": "position",
+          "direction": "input",
+          "range": "12:0"
+        },
+        {
+          "name": "generation",
+          "direction": "input",
+          "range": "1:0"
+        },
+        {
+          "name": "compiled_word_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "compiled_word_index",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "compiled_identity",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "compiled_generation",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "kvn_word_slot",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "configured",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "active",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "done",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "range": null
+        },
+        {
+          "name": "cycle",
+          "direction": "output",
+          "range": "31:0"
+        },
+        {
+          "name": "expected_valid",
+          "direction": "output",
+          "range": "3:0"
+        },
+        {
+          "name": "expected_pc",
+          "direction": "output",
+          "range": "19:0"
+        },
+        {
+          "name": "expected_stack",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "expected_identity",
+          "direction": "output",
+          "range": "58:0"
+        },
+        {
+          "name": "expected_generation",
+          "direction": "output",
+          "range": "1:0"
+        },
+        {
+          "name": "expected_address",
+          "direction": "output",
+          "range": "28:0"
+        }
+      ]
+    }
+  },
+  "writer_programme_scope": {
+    "status": "SOURCE_AVAILABLE_WRITER_ONLY_NOT_FULL_BOUNDARY_PROGRAMME",
+    "produced": [
+      "compiled_word_slot",
+      "compiled_word_index",
+      "compiled_identity",
+      "compiled_generation",
+      "kvn_word_slot",
+      "expected_valid",
+      "expected_pc",
+      "expected_stack",
+      "expected_identity",
+      "expected_generation",
+      "expected_address"
+    ],
+    "not_produced": [
+      "static_cmd_owner",
+      "static_cmd",
+      "reserved_rd",
+      "reserved_static_col",
+      "reserved_write_col",
+      "static_epoch",
+      "expected_raw_valid",
+      "blk_go",
+      "expected_put",
+      "expected_sector",
+      "expected_epoch",
+      "expected_layer",
+      "cfg_tx_we",
+      "cfg_rx_we",
+      "cfg_addr",
+      "cfg_data",
+      "cal_start",
+      "cal_seg"
+    ],
+    "start_origin": "external start/context one edge before actual segment0 accepted core-start; kvn_word_slot is receiver slot, never upstream transport launch",
+    "expected_identity_binding": "controller es_expected_identity = {expected_identity[58:0], expected_generation[1:0]}; compare actual programme's independently compiled descriptor, not writer echo",
+    "physical_status": "Programme source/ABI only; actual placement, pin mapping, boot-image producer, die integration and timing OPEN"
+  },
+  "controller_drain_scope": {
+    "outputs": [
+      "idle_core",
+      "idle_hbm",
+      "drain_fault_core",
+      "drain_fault_hbm"
+    ],
+    "execution_gate": false,
+    "adoption_allowed": false,
+    "parent_requires": "Actual upstream quiet barrier, controller BOTH domain observations, front idle and ring BOTH domain observations, domain-safe synchronizers, typed sticky faults and real producer binding"
+  },
+  "selected_modules": {},
+  "required_module_deficits": {
+    "qkd_ctrl_pc_host_static": {
+      "required": 128,
+      "selected": 0
+    },
+    "qkd_kv_hbm_elastic_front": {
+      "required": 128,
+      "selected": 0
+    },
+    "qkd_static_kv_return_slots": {
+      "required": 128,
+      "selected": 0
+    },
+    "qkd_kv_static_writer_native": {
+      "required": 1,
+      "selected": 0
+    }
+  },
+  "missing_production_producers": {
+    "controller_hbm_calendar": [
+      "static_cmd_owner",
+      "static_cmd",
+      "reserved_rd",
+      "reserved_static_col",
+      "reserved_write_col",
+      "static_epoch",
+      "expected_raw_valid"
+    ],
+    "controller_write_context": [
+      "es_context",
+      "es_expected_valid",
+      "es_expected_identity",
+      "es_expected_address",
+      "es_expected_pc",
+      "es_expected_stack"
+    ],
+    "front_block_calendar": [
+      "blk_go"
+    ],
+    "link_control_image": [
+      "cfg_tx_we",
+      "cfg_rx_we",
+      "cfg_addr",
+      "cfg_data",
+      "cal_start",
+      "cal_seg"
+    ],
+    "return_core_calendar": [
+      "expected_put",
+      "expected_sector",
+      "expected_epoch",
+      "expected_layer"
+    ],
+    "writer_independent_expectation": [
+      "compiled_identity",
+      "compiled_generation"
+    ],
+    "link_independent_expectation": [
+      "kvn_compiled_identity",
+      "kvn_compiled_generation"
+    ]
+  },
+  "available_writer_link_map": {
+    "word_valid": "kvn_word_valid",
+    "word_tag": "kvn_word_tag",
+    "word_data": "kvn_word_data",
+    "word_identity": "kvn_word_identity",
+    "word_generation": "kvn_word_generation",
+    "compiled_word_slot": "kvn_word_slot",
+    "compiled_word_index": "kvn_word_index"
+  },
+  "program_loader_limit": "Existing loader exports pr143, program_ready, fault, digest64, program_epoch16, authorized_footer_valid/footer64; no KV reservation or D2D calendar-image output. Native pr is a distinct program interface.",
+  "nominal_calendar_limit": "Produces raw/nominal corrected slots from reservations; does not issue reservations or the elastic block/core programme.",
+  "required_parameters": {
+    "controller": {
+      "ELASTIC": 1,
+      "RAW_WD": 256,
+      "TQD": 64
+    },
+    "front": {
+      "NBLK": 4,
+      "BLK": 8,
+      "STRIDE": 1
+    },
+    "return_ring": {
+      "DEPTH": 8
+    }
+  },
+  "open_joins": [
+    "Bind cfg_stack to the actual two-bit package stack strap; retain the physical PC strap and logical landing PC mapping.",
+    "Compile actual per-PC RD/WR/refresh reservations and independent identity from the production programme; do not schedule from valid/ready.",
+    "Bind and synchronize actual controller idle_core + idle_hbm and drain_fault_core + drain_fault_hbm. These count descriptor WDONE, actual static read data, credit crossing and KV corrected landing debt; both domains and upstream quiet are required. Front idle alone cannot prove KV drained.",
+    "Synchronize actual registered ring idle_hbm and idle_core together with upstream quiet; local exports alone cannot prove KV drained.",
+    "Join front hold to an actual exceptional sequencer block pause; current qkd_seq has no hold input. Preserve block credit blk_freed at HBM reservation issuer.",
+    "Distribute writer four 288-bit es lanes and identity/context by dest_stack/dest_pc; preserve the actual asynchronous write ingress and expected-address checks.",
+    "Join controller completion_v/we to each HOST slice and typed completion_fault to root; reduce actual front/ring/writer/controller faults with domain-safe registered exports.",
+    "Provide controller ELASTIC=1 RAW_WD=256 TQD=64 physical master/outline/pin grants; inherited qkd_ctrl_pc physical view is a different source/ABI.",
+    "Assign front, held return ring and held writer homes and actual pins; prove every required parent net, reach, native clocks and reset/boot sequence before adoption.",
+    "Price front first-sector +10..26 HBM edges and held writer r4 reset minimum 4 core edges in the actual production image; pin source and calendar hashes."
+  ],
+  "qualification": "Source component proof only; current parent/pin/clock/boot/native audits remain required."
+}

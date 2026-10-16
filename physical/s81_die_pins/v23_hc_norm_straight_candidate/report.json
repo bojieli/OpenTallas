@@ -417,7 +417,7 @@
     "max_lateral_um": 199.584
    }
   },
-  "ctfxs_nt": "unchanged (fd_in / fdx / fv_in granted v22)"
+  "ctfxs_nt": "see rep[\"ctfxs_nt\"] (fd_in / fv_in re-pinned straight)"
  },
  "seams_max_um": {
   "fd_ctfs_to_ctfxs": {
@@ -451,6 +451,20 @@
   "first": "crootr.ch_fd -> first cth ctfn.fd_in + ctfxs_nt.fd_in: ctfxs side unchanged; ctfn.fd_in bits 0..1127 now coincide with ctfxs_nt.fd_in (same x), bits 1128..2919 move east (x 342.64..575.39, was 70.72..496.09): S-DIE to re-measure the crootr legs",
   "last": "last cth fd_out: same consumers as before (chain end), S-DIE to re-measure"
  },
+ "ctfxs_nt": {
+  "rule": "fd_in / fv_in at the fdx / fv x (straight feed-through); fdx, lanes unchanged",
+  "internal_v23": {
+   "max_cut_bits": 0,
+   "lateral_sum_um": 0.0,
+   "max_lateral_um": 0.0
+  },
+  "internal_v22": {
+   "max_cut_bits": 129,
+   "lateral_sum_um": 6873.4,
+   "max_lateral_um": 83.808
+  },
+  "seam_ctfs_to_ctfxs_max_um": 448.848
+ },
  "cost": {
   "cycles": 0,
   "area_um2": 0,
@@ -458,10 +472,8 @@
   "masters_repinned": [
    "ot_s81_hc_ctfn",
    "ot_s81_hc_ctfs_nt",
-   "ot_s81_hc_ctfl_nt"
-  ],
-  "unchanged": [
-   "ot_s81_hc_ctfxs_nt"
+   "ot_s81_hc_ctfl_nt",
+   "ot_s81_hc_ctfxs_nt (fd_in / fv_in only)"
   ]
  }
 }

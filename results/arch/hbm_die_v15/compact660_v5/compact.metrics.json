@@ -1,0 +1,55 @@
+{
+ "die_um": [
+  31018.4,
+  21277.693
+ ],
+ "die_mm2": 660.0,
+ "placed_mm2": 535.17,
+ "density": 0.811,
+ "unplaced": [],
+ "overlaps": [],
+ "n_overlaps": 0,
+ "outside": [],
+ "metrics": {
+  "sum_bits_mm": 1176417.3923499037,
+  "traffic_mm_qwen": 9201110765.902325,
+  "traffic_mm_ds": 3277067954.65512,
+  "relay_flops": 2234230.0,
+  "bits_over_500": 216258.0,
+  "fixed_return_violation_bits": 0,
+  "fixed_return_violations": 0,
+  "overlaps": 0,
+  "outside": 0,
+  "J": 4.820982160147498,
+  "n_long_returns": 435
+ },
+ "cmd": "tools/hbm_die_v15/compact_plan.py --area 660 --fit --band 2000 --channel 600 --hub-w 480 --out DIR; pins tools/hbm_globalfp_pins.py; lanes tools/hbm_die_v15/band_lanes.py PINS P lanes2.json 1200",
+ "pin_cut": {
+  "no_lanes": {
+   "worst": 1.052,
+   "windows_over_060": 1531
+  },
+  "lanes_slack1200": {
+   "worst_v": 0.598,
+   "worst_h": 0.593,
+   "windows_over_060": 0,
+   "lines_over_060": 0
+  },
+  "previous_compact660": {
+   "grid_closest_point": 0.681,
+   "grid_closest_point_offset500": 0.968,
+   "pin_no_lanes": 1.023,
+   "pin_lanes_slack600": 0.679,
+   "pin_lanes_slack1200": 0.729
+  },
+  "model": "tools/hbm_die_v15/pin_cut.py: routes from planned pin segments, half HV/VH (Z through the lane when laned), every 100-um line, sliding 1-mm windows, 14.06 tracks/um, 0 in PHY"
+ },
+ "plan_grt": {
+  "overflow": 0,
+  "usage_pct": 3.72,
+  "M6_pct": 6.41,
+  "M7_pct": 5.24,
+  "bundle_nets": 23179,
+  "k": 16
+ }
+}

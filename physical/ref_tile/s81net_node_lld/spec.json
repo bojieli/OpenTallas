@@ -3,7 +3,6 @@
  "top": "dsfd_node_LLd",
  "kind": "tile",
  "sources": [
-  "rtl/v41rom/ot_v41_ret.sv",
   "rtl/proto/ot_fp32_add_rne_pipe.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
@@ -34,7 +33,7 @@
    "b"
   ]
  },
- "io_tcl": "physical/s81_die_pins/snet_gen18r/dsfd_node_LLd.tcl",
+ "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_LLd.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -46,20 +45,20 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-NET static return node dsfd_node_LLd (128 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 5336ca5fb4ec76b6, glue 49e64b6832936598); pins at the generator centres (gen18r).",
+ "structural_change": "S-NET static return node dsfd_node_LLd (128 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 5336ca5fb4ec76b6, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n1",
+  "tag": "n2",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLd (128 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_node_lld/views",
   "record_to": "results/rtl/ref_tile/s81net_node_lld",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
-   "physical/s81_die_pins/snet_gen18r",
+   "physical/s81_die_pins/snet_gen19b",
    "rtl/v41rom",
    "rtl/proto",
    "rtl/hdc",
@@ -80,7 +79,7 @@
     "name": "node_window_mutant",
     "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mw",
     "expect": "fail",
-    "fail_regex": "NODE_STATIC",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 2,
     "peak_ram_gb": 4
    },
@@ -88,7 +87,7 @@
     "name": "node_fault_chain_mutant",
     "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mf",
     "expect": "fail",
-    "fail_regex": "NODE_STATIC",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 2,
     "peak_ram_gb": 4
    }

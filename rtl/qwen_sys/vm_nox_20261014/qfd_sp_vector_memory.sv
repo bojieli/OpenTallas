@@ -3,7 +3,9 @@
 // SA uses qfd_su_vm_pack. Row/ar/ME bundles are MSB-valid; payload data occupies the low bits.
 // Sequencer addresses are full20-bit ROW addresses (no implicit base).
 module qfd_sp_vector_memory #(
-    parameter integer USE_MACRO=1, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0
+    parameter integer USE_MACRO=1, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0,
+    // Q-VMWB 2026-10-15: PAR_RB=1 lands rb0/rb1/rb2 in the same edge on distinct banks (qfd_res_train_par calendar).
+    parameter integer PAR_RB=0, PMUT=0
 )(
     input wire ck, rst_n,
     input wire ck_r0_0,
@@ -1067,7 +1069,7 @@ module qfd_sp_vector_memory #(
         .read_v(qr_v),.read_row(qr_row),.rsp_v(qr_rsp && q_window),.rsp_data(vmq),
         .q(q),.emitted_done(q_done),.fault(qfault));
     ot_qfd_sp_vector_memory_bv #(.USE_MACRO(USE_MACRO),.USE_LEAF_CLOCKS(USE_LEAF_CLOCKS),
-        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(1),.MUT(MUT)) u_vm (
+        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(1),.MUT(MUT),.PAR_RB(PAR_RB),.PMUT(PMUT)) u_vm (
         .clk(ck),.leaf_ck(lc),.observer_ck(oc),.rst_n(rst_n),.me_en(mee),.me_en_e(mee),
         .s_re0(sre0),.s_re1(sre1),.s_a0(sa0),.s_a1(sa1),.s_q(sq),
         .sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1),.sw_data(swdata),

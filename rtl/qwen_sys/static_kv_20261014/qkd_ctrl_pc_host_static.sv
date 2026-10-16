@@ -51,7 +51,10 @@ module qkd_ctrl_pc_host_static #(
     output wire native_commit_valid,output wire [60:0] native_commit_identity,
     output wire [28:0] native_commit_address,
     output wire [15:0] corrected_epoch,
-    output wire completion_v,completion_we,completion_fault
+    output wire completion_v,completion_we,completion_fault,
+    // Registered observations only. A parent drain barrier must join BOTH
+    // domains plus actual upstream quiet, front idle and return-ring idle.
+    output reg idle_core,idle_hbm,output reg drain_fault_core,drain_fault_hbm
 );
     localparam integer LW  = CVL + 1;              // column delay in front of the pcport
     localparam integer WDS = WDONE - (CVL + 3) + 1;    // write-done stages after the completion pin flop
@@ -322,4 +325,62 @@ module qkd_ctrl_pc_host_static #(
         .hclk(hclk),.hrst_n(h_rn),.ck(ck),.rst_n(rs_q),
         .col_v(po[28]),.col_we(po[29]),.col_sr(physical_col_sr),
         .completion_v(completion_v),.completion_we(completion_we),.fault(completion_fault));
+
+    // ---- actual outstanding work observations (not execution/admission gates) ----
+    // Completion is WDONE, not the early er credit. Reads additionally wait
+    // for the actual returned payload; elastic PHY lateness cannot assert idle.
+    // Credits are counted separately so no hidden credit FIFO entry is ignored.
+    reg [15:0] drain_desc,drain_reads,drain_credits;
+    wire dc_push=es_v_q,dc_pop=completion_v;
+    wire dr_push=es_v_q&&!es_d_q[285],dr_pop=e_v;
+    wire dq_push=es_v_q,dq_pop=s_credit;
+    always @(posedge ck or negedge rs_q)
+      if(!rs_q)begin
+        drain_desc<=0;drain_reads<=0;drain_credits<=0;
+        drain_fault_core<=0;idle_core<=0;
+      end else begin
+        case({dc_push,dc_pop})
+          2'b10:drain_desc<=drain_desc+16'd1;
+          2'b01:drain_desc<=drain_desc-16'd1;
+          default:;
+        endcase
+        case({dr_push,dr_pop})
+          2'b10:drain_reads<=drain_reads+16'd1;
+          2'b01:drain_reads<=drain_reads-16'd1;
+          default:;
+        endcase
+        case({dq_push,dq_pop})
+          2'b10:drain_credits<=drain_credits+16'd1;
+          2'b01:drain_credits<=drain_credits-16'd1;
+          default:;
+        endcase
+        if((dc_pop&&!dc_push&&drain_desc==0)||
+           (dr_pop&&!dr_push&&drain_reads==0)||
+           (dq_pop&&!dq_push&&drain_credits==0)||
+           (dc_push&&!dc_pop&&drain_desc==16'hffff)||
+           (dr_push&&!dr_pop&&drain_reads==16'hffff)||
+           (dq_push&&!dq_pop&&drain_credits==16'hffff))drain_fault_core<=1;
+        idle_core<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
+          !es[0]&&!es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
+          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
+      end
+    // KV corrected returns include tag, PHY raw, pcport and landing ECC
+    // pipelines. Static reads are covered above through their actual e_v.
+    reg [15:0] drain_kv;
+    always @(posedge hclk or negedge h_rn)
+      if(!h_rn)begin drain_kv<=0;drain_fault_hbm<=0;idle_hbm<=0;end
+      else begin
+        case({rd_kv,l_v})
+          2'b10:drain_kv<=drain_kv+16'd1;
+          2'b01:drain_kv<=drain_kv-16'd1;
+          default:;
+        endcase
+        if((l_v&&!rd_kv&&drain_kv==0)||
+           (rd_kv&&!l_v&&drain_kv==16'hffff))drain_fault_hbm<=1;
+        idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
+          !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&!wv_q&&!cv_q&&!hand_q&&
+          hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
+          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!native_commit_valid&&
+          !drain_fault_hbm&&!fo&&!f_ecdc;
+      end
 endmodule

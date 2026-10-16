@@ -1,0 +1,375 @@
+{
+  "scope": "STATIC_V_TRANSPORT_COMPONENT_ONLY",
+  "status": "PASS",
+  "timestamp": "2026-10-14T19:35:22.846960-07:00",
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_vrow_static.sv": "92c91c39ca5ba08353dee88c83663006d1f910a7c3d6fc10585be1fcb509e3b8",
+    "rtl/hdc/nearhbm/ot_qwen_tp8_attention_service.sv": "cda75d7b9c4e05a8531a5a3352cc3a63f17134e697203db75746612d72c7c7b6",
+    "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_pair.sv": "efc153b1fae57acbdb5bb084db0c9c356304b6a0b3680b0ac349925d38c85cbf",
+    "rtl/test/nearhbm/tb_qwen_tp8_vrow_static.cpp": "2abc3a25767395b315f24d29319667629e49218aa072e72192d4e2532af10dfc"
+  },
+  "production_context": 8192,
+  "rows_per_pair": 4096,
+  "init_cycles": 128,
+  "row_ii_cycles": 1,
+  "request_to_captured_return_cycles": 17,
+  "first_request_edge_after_start": 129,
+  "first_row_edge_after_start": 146,
+  "last_row_edge_after_start": 4241,
+  "geometry": "Declared component external return16 plus service row/exp capture1; production route/controller geometry must bind actual latency",
+  "case_results": {
+    "vctx0-1": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 1,
+      "exact": true,
+      "fault": 0,
+      "issued": 1,
+      "returned": 1,
+      "errors": 0
+    },
+    "v1-slot": {
+      "mode": "slot",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx1-1": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 1,
+      "exact": true,
+      "fault": 0,
+      "issued": 0,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx0-8191": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 8191,
+      "exact": true,
+      "fault": 0,
+      "issued": 4096,
+      "returned": 4096,
+      "errors": 0
+    },
+    "v-slot": {
+      "mode": "slot",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx0-256": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 256,
+      "exact": true,
+      "fault": 0,
+      "issued": 128,
+      "returned": 128,
+      "errors": 0
+    },
+    "vctx1-127": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 127,
+      "exact": true,
+      "fault": 0,
+      "issued": 0,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx0-513": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 513,
+      "exact": true,
+      "fault": 0,
+      "issued": 257,
+      "returned": 257,
+      "errors": 0
+    },
+    "vctx1-513": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 513,
+      "exact": true,
+      "fault": 0,
+      "issued": 256,
+      "returned": 256,
+      "errors": 0
+    },
+    "v1-early": {
+      "mode": "early",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 0,
+      "returned": 0,
+      "errors": 0
+    },
+    "v-order": {
+      "mode": "order",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "v-early": {
+      "mode": "early",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 0,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx0-257": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 257,
+      "exact": true,
+      "fault": 0,
+      "issued": 129,
+      "returned": 129,
+      "errors": 0
+    },
+    "v-epoch": {
+      "mode": "epoch",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "v1-missing": {
+      "mode": "missing",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "v1-order": {
+      "mode": "order",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx0-129": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 129,
+      "exact": true,
+      "fault": 0,
+      "issued": 128,
+      "returned": 128,
+      "errors": 0
+    },
+    "vctx1-129": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 129,
+      "exact": true,
+      "fault": 0,
+      "issued": 1,
+      "returned": 1,
+      "errors": 0
+    },
+    "vctx1-8191": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 8191,
+      "exact": true,
+      "fault": 0,
+      "issued": 4095,
+      "returned": 4095,
+      "errors": 0
+    },
+    "v1-epoch": {
+      "mode": "epoch",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "vctx1-257": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 257,
+      "exact": true,
+      "fault": 0,
+      "issued": 128,
+      "returned": 128,
+      "errors": 0
+    },
+    "vctx1-256": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 256,
+      "exact": true,
+      "fault": 0,
+      "issued": 128,
+      "returned": 128,
+      "errors": 0
+    },
+    "vctx0-255": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 255,
+      "exact": true,
+      "fault": 0,
+      "issued": 128,
+      "returned": 128,
+      "errors": 0
+    },
+    "vctx1-128": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 128,
+      "exact": true,
+      "fault": 0,
+      "issued": 0,
+      "returned": 0,
+      "errors": 0
+    },
+    "v-missing": {
+      "mode": "missing",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 0,
+      "errors": 0
+    },
+    "v-exact": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 8192,
+      "exact": true,
+      "fault": 0,
+      "issued": 4096,
+      "returned": 4096,
+      "errors": 0
+    },
+    "vctx1-255": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 255,
+      "exact": true,
+      "fault": 0,
+      "issued": 127,
+      "returned": 127,
+      "errors": 0
+    },
+    "vctx0-127": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 127,
+      "exact": true,
+      "fault": 0,
+      "issued": 127,
+      "returned": 127,
+      "errors": 0
+    },
+    "v1-exact": {
+      "mode": "exact",
+      "pair": 1,
+      "context": 8192,
+      "exact": true,
+      "fault": 0,
+      "issued": 4096,
+      "returned": 4096,
+      "errors": 0
+    },
+    "v-ready": {
+      "mode": "ready",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 1,
+      "returned": 0,
+      "errors": 0
+    },
+    "v1-consumer": {
+      "mode": "consumer",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 1,
+      "errors": 0
+    },
+    "vctx0-128": {
+      "mode": "exact",
+      "pair": 0,
+      "context": 128,
+      "exact": true,
+      "fault": 0,
+      "issued": 128,
+      "returned": 128,
+      "errors": 0
+    },
+    "v-consumer": {
+      "mode": "consumer",
+      "pair": 0,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 18,
+      "returned": 1,
+      "errors": 0
+    },
+    "v1-ready": {
+      "mode": "ready",
+      "pair": 1,
+      "context": 8192,
+      "exact": false,
+      "fault": 1,
+      "issued": 1,
+      "returned": 0,
+      "errors": 0
+    }
+  },
+  "job": {
+    "host": "ot-epyc4",
+    "session": 15398,
+    "exit": 0
+  },
+  "full_native_token_qualified": false,
+  "full_attention_static_schedule_qualified": false,
+  "open": [
+    "source-derived QK/softmax/PV phase calendar",
+    "actual memory/controller/route return geometry",
+    "physical tile mapping",
+    "full attention arithmetic composition with static transport"
+  ]
+}
