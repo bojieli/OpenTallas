@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "hsm_xcal224_r3",
- "top": "ot_hbm_svc_sm_xcal",
+ "name": "hsm_xcal_t224_r1",
+ "top": "ot_hbm_svc_sm_xcal_t",
  "kind": "tile",
  "die": [
   0,
@@ -29,27 +29,29 @@
   "cap_basis": "contract"
  },
  "pins": {
+  "N": [
+   "cfg_data",
+   "cfg_addr",
+   "cfg_target",
+   "cfg_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "desc_v",
+   "launch_v"
+  ],
   "S": [
    "cmd_ext",
    "kv_desc",
-   "active",
    "done",
-   "fault"
-  ],
-  "N": [
-   "cfg_we",
-   "cfg_addr",
-   "cfg_data"
+   "configured",
+   "fault",
+   "active"
   ],
   "W": [
-   "clk",
    "rst_n",
-   "desc_we",
-   "desc_addr",
-   "desc_data",
-   "run_v",
-   "run_base",
-   "run_count"
+   "clk",
+   "tgt"
   ]
  },
  "clock_port": "clk",
@@ -58,7 +60,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_cal.u_program",
+   "inst": "u_xcal.u_cal.u_program",
    "idx": 0,
    "x": 24.192,
    "y": 23.76,
@@ -71,7 +73,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_tab",
+   "inst": "u_xcal.u_tab",
    "idx": 0,
    "x": 60.48,
    "y": 114.48,
@@ -83,22 +85,24 @@
  ],
  "findings": [],
  "referenced": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_t.sv",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
   "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
-  "physical/ref_tile/hsm_xcal224_r3/kit.env",
-  "physical/ref_tile/hsm_xcal224_r3/clock.sdc",
-  "physical/ref_tile/hsm_xcal224_r3/signoff.sdc",
-  "physical/ref_tile/hsm_xcal224_r3/pdn.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/pre_cts.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/post_cts.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/post_grt.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/pre_drt.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/pre_fill.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/post_fill.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/pre_grt.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/post_drt.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/kit.env",
+  "physical/ref_tile/hsm_xcal_t224_r1/clock.sdc",
+  "physical/ref_tile/hsm_xcal_t224_r1/signoff.sdc",
+  "physical/ref_tile/hsm_xcal_t224_r1/pdn.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/pre_cts.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/post_cts.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/post_grt.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/pre_drt.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/pre_fill.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/post_fill.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/pre_grt.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -116,8 +120,8 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/pre_gpl.tcl",
-  "physical/ref_tile/hsm_xcal224_r3/pre_dpl.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/pre_gpl.tcl",
+  "physical/ref_tile/hsm_xcal_t224_r1/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
@@ -127,6 +131,6 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
-  "physical/ref_tile/hsm_xcal224_r3/place.tcl"
+  "physical/ref_tile/hsm_xcal_t224_r1/place.tcl"
  ]
 }
