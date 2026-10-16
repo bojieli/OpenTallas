@@ -18,6 +18,8 @@
 //   seed -> hash : roll_s -> roll_n (ck_seed negedge) -> roll_h (column posedge), inside the hash;
 //   hash -> core : res_n (column negedge) -> res_c (ck posedge) -> the 8:1 strap select -> res[];
 //   seed -> core : removed (hdone = lastl[12]; the hash valid pipe was redundant with it);
+//   rows -> core : (st5) per-bank one-hot atom select registered on the row root's negedge -> OR of six banks into
+//                  e1 on the core posedge (the selects reach the bank on its negedge: core -> rows half cycle);
 //   core -> rows : wen_q/wdata_q -> per-bank wx_en/wx_d (ck negedge) -> leaf we_q/wd_q (row posedge) -> payload,
 //                  +1 write cycle inside the fixed drain (payload visible at age <= RETURN_AGE+2, first read RETURN_AGE+2).
 // Requests, row beats and statuses keep their cycles (0 schedule change).
@@ -350,16 +352,32 @@ module ot_s81_engram_lookup_static #(
                 slo <= nlo; shi <= nhi; sa8 <= na8;
                 q_off <= roff[ej]; q_j <= ej; q_k <= ek[2:0]; q_s <= slot;
             end
+            // rows -> core read hop (STATIC14 st5, st4 EARLY_FAIL_HOLD at CTS on the e1 captures): each row bank selects
+            // its own atoms with the core's one-hot selects (core posedge -> this bank's negedge, half cycle) and registers
+            // the three 256-bit candidates on its OWN root's negative edge; the core ORs the six one-hot bank registers
+            // into e1 on its positive edge (half cycle). Same E0q -> E1 cycle as before, every crossing flop to flop.
+            reg [255:0] blo [0:CPR-1], bhi [0:CPR-1], ba8 [0:CPR-1];
+            genvar gb;
+            for (gb = 0; gb < CPR; gb = gb + 1) begin : g_rdhop
+                reg [255:0] slo_b, shi_b, sa8_b;
+                integer g2, k2;
+                always @(*) begin
+                    slo_b = 256'd0; shi_b = 256'd0; sa8_b = 256'd0;
+                    for (g2 = 0; g2 < 4; g2 = g2 + 1)
+                        for (k2 = 0; k2 < ATOMS; k2 = k2 + 1) begin
+                            slo_b[64*g2 +: 64] = slo_b[64*g2 +: 64] | ({64{slo[NS*g2 + gb*ATOMS + k2]}} & rb[gb][k2][64*g2 +: 64]);
+                            shi_b[64*g2 +: 64] = shi_b[64*g2 +: 64] | ({64{shi[NS*g2 + gb*ATOMS + k2]}} & rb[gb][k2][64*g2 +: 64]);
+                            sa8_b[64*g2 +: 64] = sa8_b[64*g2 +: 64] | ({64{sa8[NS*g2 + gb*ATOMS + k2]}} & rb[gb][k2][64*g2 +: 64]);
+                        end
+                end
+                always @(negedge clk_rows[gb]) begin blo[gb] <= slo_b; bhi[gb] <= shi_b; ba8[gb] <= sa8_b; end
+            end
             reg [255:0] vlo, vhi, va8;
             always @(*) begin
                 vlo = 256'd0; vhi = 256'd0; va8 = 256'd0;
-                for (g = 0; g < 4; g = g + 1)
-                    for (jj = 0; jj < CPR; jj = jj + 1)
-                        for (kk = 0; kk < ATOMS; kk = kk + 1) begin
-                            vlo[64*g +: 64] = vlo[64*g +: 64] | ({64{slo[NS*g + jj*ATOMS + kk]}} & rb[jj][kk][64*g +: 64]);
-                            vhi[64*g +: 64] = vhi[64*g +: 64] | ({64{shi[NS*g + jj*ATOMS + kk]}} & rb[jj][kk][64*g +: 64]);
-                            va8[64*g +: 64] = va8[64*g +: 64] | ({64{sa8[NS*g + jj*ATOMS + kk]}} & rb[jj][kk][64*g +: 64]);
-                        end
+                for (jj = 0; jj < CPR; jj = jj + 1) begin
+                    vlo = vlo | blo[jj]; vhi = vhi | bhi[jj]; va8 = va8 | ba8[jj];
+                end
             end
             always @(posedge clk) if (e0q_v) begin
                 e1_lo <= vlo; e1_hi <= vhi; e1_a8 <= va8;

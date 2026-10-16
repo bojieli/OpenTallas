@@ -291,7 +291,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM",
   "branch": "claude/s81-static14-0600",
-  "tag": "st4-xroot",
+  "tag": "st5-rdhop",
   "purpose": "S81 Engram lookup element, STATIC 14-root form dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
   "structural_change": "Static successor of the credit wrapper dsfd_engram_lkp_14roots: ot_s81_engram_lookup_static (Codex 05:03 draft, preserved 257284f61) behind one input and one output pin register; win_cred/rel/hq_cred/o_cred removed, win_slot/hr_slot added. Element proof: STATIC PASS 16 windows/96 requests/768 beats/96 statuses vs ot_dsrom_engram_lookup reference, 7 mutants rejected.",
   "extra_paths": [
@@ -399,6 +399,7 @@
   "enable": false,
   "reason": "RTL dsfd_engram_lkp_static14 already registers every data input and every output at its pin (one flop each, no logic in front/behind); flow pin registers would add a second stage per port"
  },
+ "structural_change": " | st5 (ENGRAM-3 10-16): st4 EARLY_FAIL_HOLD at CTS stalled only on the rows->core full-cycle row read (e1 captures, min -39..-96 ps): each row bank now selects its atoms with the core one-hot selects and registers lo/hi/a8 on its own root's negedge; the core ORs the six banks into e1 on posedge (0 cycles; element/engine exact PASS, MUT3 FAIL).",
  "children": [],
  "inter": [],
  "hold_pad": {
