@@ -38,7 +38,8 @@ def emit_seg():
          '// qkd_land_seg: one row-engine group of the KV landing strip = 4 x qkd_land_pc (slots q = 0..3, S to N) +',
          '// qkd_land_grp_epoch.  Wires only (every block a CLOSED leaf on its own clock entry).',
          'module qkd_land_seg (', '    input  wire          ck_p0,', '    input  wire          ck_p1,',
-         '    input  wire          ck_p2,', '    input  wire          ck_p3,', '    input  wire          ck_g,', '    input  wire          rst_n,',
+         '    input  wire          ck_p2,', '    input  wire          ck_p3,', '    input  wire          ck_g,',
+         *(f'    input  wire          rst_p{q},' for q in range(4)), '    input  wire          rst_g,',
          '    input  wire [1:0]    st,', '    input  wire [2:0]    g,']
     for q in range(4):
         L += [f'    input  wire [{KS.W_LI - 1}:0]  li{q},', f'    output wire          lp{q},', f'    input  wire          cf{q},',
@@ -57,10 +58,10 @@ def emit_seg():
     a('    assign dn[4] = dn_i; assign dn_o = dn[0]; assign up[0] = up_i; assign up_o = up[4]; assign cr[0] = cr_i;')
     a('    assign cr_o = cr[4]; assign pf[0] = pf_i; assign pf_o = pf[4];')
     for q in range(4):
-        a(f"    qkd_land_pc u_pc{q} (.ck(ck_p{q}), .rst_n(rst_n), .lpc({{2'd{q}, g}}), .li(li{q}), .lp(lp{q}), .cf(cf{q}), "
+        a(f"    qkd_land_pc u_pc{q} (.ck(ck_p{q}), .rst_n(rst_p{q}), .lpc({{2'd{q}, g}}), .li(li{q}), .lp(lp{q}), .cf(cf{q}), "
           f".gw(gw[{q}]), .gc(gc[{q}]), .es(es{q}), .er(er{q}), .dni(dn[{q + 1}]), .dno(dn[{q}]), .upi(up[{q}]), "
           f".upo(up[{q + 1}]), .cri(cr[{q}]), .cro(cr[{q + 1}]), .fi(pf[{q}]), .fo(pf[{q + 1}]));")
-    a('    qkd_land_grp_epoch u_g (.ck(ck_g), .rst_n(rst_n), .g(g), .s(st), '
+    a('    qkd_land_grp_epoch u_g (.ck(ck_g), .rst_n(rst_g), .g(g), .s(st), '
       + ' '.join(f'.gw{q}(gw[{q}]), .gc{q}(gc[{q}]),' for q in range(4))
       + ' .rq(rq), .rs(rs), .lt(lt), .kn(kn), .fi(gf_i), .fo(gf_o));')
     a('endmodule')
@@ -94,7 +95,7 @@ def emit_strip():
     for i in range(NSEG):
         g = KS.LAND_GROUP_ORDER[i]
         b = 4 * i
-        conn = [*(f'.ck_p{q}(ck_p[{b + q}])' for q in range(4)), f'.ck_g(ck_g[{i}])', '.rst_n(rst_n)', '.st(st)', f".g(3'd{g})"]
+        conn = [*(f'.ck_p{q}(ck_p[{b + q}])' for q in range(4)), f'.ck_g(ck_g[{i}])', *(f'.rst_p{q}(rst_n)' for q in range(4)), '.rst_g(rst_n)', '.st(st)', f".g(3'd{g})"]
         for q in range(4):
             conn += [f'.li{q}(li{b + q})', f'.lp{q}(lp{b + q})', f'.cf{q}(cf{b + q})', f'.es{q}(es{b + q})', f'.er{q}(er{b + q})']
         conn += [f'.rq(rq{g})', f'.rs(rs{g})', f'.lt(tap[{i}][{W - 1}:{KS.W_KN}])', f'.kn(tap[{i}][{KS.W_KN - 1}:0])',
