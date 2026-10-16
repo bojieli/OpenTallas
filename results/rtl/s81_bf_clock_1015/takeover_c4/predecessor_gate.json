@@ -1,0 +1,83 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1 port group(s) left to the IO placer (ANY): ['xb']",
+   "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc1tb for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsfd_bf_front_static_ref_20261015-210204.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsfd_bf_front_static_ref_20261015-210204.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/dsfd_bf_front_static_ref-20261015-210204",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 103 s (gate total 355 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1 port group(s) left to the IO placer (ANY): ['xb']",
+   "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 9752 um2 + macros 0 in core 18644: util 52%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS dsfd_bf_front_static cells 70,804 flops 18,123 depth 458.4 ps util 0.5179 reach 45.8 um (1.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.600 vs spec PD 0.60",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)",
+   "fix": "hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json"
+  }
+ ]
+}

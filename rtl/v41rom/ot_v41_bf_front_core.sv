@@ -271,11 +271,11 @@ module ot_v41_bf_front_core #(
     // fclk: free-running core clock below one always-enabled ICG (static programme), same depth as gclk.
     wire fclk;
     if (STATIC_PROGRAM != 0) begin : g_fcg
-        // ENA from a kept always-one register (a constant ENA net has no driver after synthesis and stops
-        // clock propagation through the ICG in STA/CTS: gate 204847 CTS-0179 'No paths found' on every fclk sink).
+        // Reset-dependent ENA remains real logic after synthesis. Clock during reset, then
+        // arm on the first free-clock edge; no production issue occurs during reset release.
         (* keep *) reg fcg_en;
-        always @(posedge clk or negedge rst_n_pin) if (!rst_n_pin) fcg_en <= 1'b1; else fcg_en <= 1'b1;
-        ot_hdc_cg u_fcg (.clk(clk), .en(fcg_en), .gclk(fclk));
+        always @(posedge clk or negedge rst_n_pin) if (!rst_n_pin) fcg_en <= 1'b0; else fcg_en <= 1'b1;
+        ot_hdc_cg u_fcg (.clk(clk), .en(fcg_en | !rst_n_pin), .gclk(fclk));
     end else begin : g_nofcg
         assign fclk = clk;
     end

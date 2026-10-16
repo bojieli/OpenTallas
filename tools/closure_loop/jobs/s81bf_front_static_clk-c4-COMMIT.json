@@ -1,0 +1,156 @@
+{
+  "name": "s81bf_front_static_clk-c4-COMMIT",
+  "block": "dsfd_bf_front_static",
+  "ref_tile": true,
+  "owner": "Claude:S-ELEM-PQ-1825",
+  "purpose": "BF clock-structure pass 2026-10-15 (S-ELEM-PQ, gate ec84ce526 FAILED CTS: hold repair ~119k buffers, util 102.8%; io_clk 202-252 ps vs ck 259-307 ps, boundary->core -158.9 ps because the io_clk programme flop fanned straight into the core issue cone). ck and io_clk stay two related roots of ONE die clock (same_pll_fixed_phase; one root measured 329 ps > 300 at 16,824 sinks, gate 75030). Every io_clk->ck crossing is now register -> lockup latch (io_clk low) -> register with no fan-out: programme pin flop -> latch -> programme_core_q (ck) -> issue (+1 edge, producer DELTA -1, issue edges vs go unchanged); cfg/go/go_bf/xs_v/xb_v through latches like the payload (0 cycles). f_rd replicated 17x (one kept copy per 32-bit read slice, was 4,378 loads); CPIN seam reset relay 1 -> 5 per face (<=160 loads). Outline/pins unchanged; no relaxed timing. | c3 (route c2 EARLY_FAIL_HOLD 26k buffers, measured): (1) kit SDC: the multi-entry die-skew reserve (hold 100/setup 150-210) was applied to EVERY ot_entry pair incl. the 12,276 same-root core paths -> now only between different entries (tools/ref_tile/clock_entry_constraints.py; FF hold violators 27,050 -> 3,401 on the c2 placement); (2) every free-clock core register under one always-enabled ICG u_fcg (same gating depth as the gated core; was 236.8 vs 329.1 ps hi0q_r->b_hi); programme register moved into the core on that clock; (3) core->seam crossing through one shared lockup-latch bank on the core root (ck low).",
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "claude/s81-bf-clk-1825",
+    "commit": "COMMIT",
+    "extra_paths": [
+      "tools/s81",
+      "rtl/s81",
+      "rtl/v41rom",
+      "rtl/common",
+      "rtl/hdc",
+      "rtl/proto",
+      "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+      "rtl/dsrom_sys/s81_die_bind",
+      "physical/ref_tile_specs/s81_bf_native_1015/static_pins",
+      "tests/s81"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_bf_front_static u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/s81/ot_s81_bf_seam.sv rtl/s81/ot_s81_bf_native.sv rtl/common/ot_prefix.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fpu.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/v41rom/ot_v41_bf16_lanes.sv rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain.sv rtl/v41rom/ot_v41_chain2.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv rtl/v41rom/ot_v41_segtree.sv rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bmul2_rne_prepare.sv rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv rtl/v41rom/ot_v41_rom_elem_qx_w10.sv rtl/v41rom/ot_v41_chain2u2.sv rtl/v41rom/ot_v41_kreg.sv rtl/v41rom/ot_v41_chain3.sv rtl/v41rom/ot_v41_chain4.sv rtl/v41rom/ot_v41_fadd2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_bf16_lanes3.sv rtl/v41rom/ot_v41_tile_clk.sv rtl/v41rom/ot_bf_hdly.sv rtl/v41rom/ot_v41_bf_col.sv rtl/v41rom/ot_v41_bf_front_core.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv rtl/v41rom/ot_v41_segtree6.sv physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v rtl/s81/ot_s81_bf_front.sv rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "actual_static_front_boundary",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS actual BF static die front:64 public-pin slots"
+      },
+      {
+        "name": "mutant_programme_register_bypass",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant programme_register_bypass",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT programme_register_bypass FAIL"
+      },
+      {
+        "name": "mutant_read_pointer_copy_stall",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant read_pointer_copy_stall",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT read_pointer_copy_stall FAIL"
+      },
+      {
+        "name": "mutant_control_latch_go_lost",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant control_latch_go_lost",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT control_latch_go_lost FAIL"
+      },
+      {
+        "name": "mutant_seam_lockup_bit_flip",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py --mutant seam_lockup_bit_flip",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MUTANT seam_lockup_bit_flip FAIL"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_bf_front_static_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_bf_front_static_ref/kit.env {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_bf_front_static_ref --out {RUN}/record/views/dsfd_bf_front_static  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/ref_tile/dsfd_bf_front_static_ref/signoff.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/ref_tile/dsfd_bf_front_static_ref/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/physical/s81_bf_native_1015/static_front/dsfd_bf_front_static_ref-ref-COMMIT"
+    }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "BF clock-structure pass 2026-10-15 (S-ELEM-PQ, gate ec84ce526 FAILED CTS: hold repair ~119k buffers, util 102.8%; io_clk 202-252 ps vs ck 259-307 ps, boundary->core -158.9 ps because the io_clk programme flop fanned straight into the core issue cone). ck and io_clk stay two related roots of ONE die clock (same_pll_fixed_phase; one root measured 329 ps > 300 at 16,824 sinks, gate 75030). Every io_clk->ck crossing is now register -> lockup latch (io_clk low) -> register with no fan-out: programme pin flop -> latch -> programme_core_q (ck) -> issue (+1 edge, producer DELTA -1, issue edges vs go unchanged); cfg/go/go_bf/xs_v/xb_v through latches like the payload (0 cycles). f_rd replicated 17x (one kept copy per 32-bit read slice, was 4,378 loads); CPIN seam reset relay 1 -> 5 per face (<=160 loads). Outline/pins unchanged; no relaxed timing. | c3 (route c2 EARLY_FAIL_HOLD 26k buffers, measured): (1) kit SDC: the multi-entry die-skew reserve (hold 100/setup 150-210) was applied to EVERY ot_entry pair incl. the 12,276 same-root core paths -> now only between different entries (tools/ref_tile/clock_entry_constraints.py; FF hold violators 27,050 -> 3,401 on the c2 placement); (2) every free-clock core register under one always-enabled ICG u_fcg (same gating depth as the gated core; was 236.8 vs 329.1 ps hi0q_r->b_hi); programme register moved into the core on that clock; (3) core->seam crossing through one shared lockup-latch bank on the core root (ck low). | c4: reset-dependent free-core ICG enable (reset0 then1, OR !reset) replaces optimized constant enable; makes actual clock arcs observable to CTS without removing clock checks. No production cycle change.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "CTS gate ec84ce526 FAILED: cross-root hold (io_clk programme flop fanning into the ck issue cone, -158.9 ps) -> 119k hold buffers, DPL util 102.8%; f_rd 4,378 loads; seam reset 775 loads",
+    "fix": "Register->lockup latch->register on every io_clk->ck crossing (programme +1 core edge absorbed by producer DELTA -1), 17 kept f_rd copies, 5 seam reset relays/face; two related roots of one die clock kept (single root measured 329 ps > 300)."
+  }
+}
