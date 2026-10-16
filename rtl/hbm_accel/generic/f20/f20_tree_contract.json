@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.hbm_f20_tree.v1",
+ "date": "2026-10-16",
+ "owner": "H-ELEM (element side); geometry H-DIE",
+ "problem": "H-DIE d4a census: flat F20 broadcast (320 nets, fanout 106 sinks / 33,045 sink bits, 55.7 mm) alone ~4.6M repair buffers",
+ "node": {
+  "master": "ot_hgi_f20_relay4",
+  "source": "rtl/hbm_accel/generic/f20/ot_hgi_f20_relay4.sv",
+  "kit": "physical/ref_tile/hf20_relay4",
+  "fanout": 4,
+  "latency_edges": 2,
+  "frame_bits": 320,
+  "frame_layout": "{launch_v[319], desc_loops[318:303], desc_limit[302:290], desc_base[289:278], desc_v[277], cfg_data[276:21], cfg_addr[20:9], cfg_target[8:1], cfg_v[0]}; H-DIE binds the tree root to host_cp_ingress cfg_*/desc_*/launch_v in this order",
+  "outline_um": [
+   86.4,
+   129.6
+  ],
+  "faces": {
+   "W": "fi + clk/rst_n",
+   "N": "o0",
+   "E": "o1,o3",
+   "S": "o2"
+  }
+ },
+ "tree_rule": "every sink at the SAME depth D (H-DIE equalises with pass-through nodes on short branches; unused outputs open), so the compiler charges ONE constant",
+ "compiler_constant": {
+  "f20_tree_edges": "2*D",
+  "applies_to": "host F20 frame -> every programme/table target capture (absolute launch latency); frame-to-frame gaps unchanged (relative to the target's own capture)",
+  "estimate": "106 sinks, 4-ary: D >= 4 by fanout; reach: a node per <= ~3 mm of route at 833 ps (H-DIE to confirm) -> D ~ 6-8 over the 55.7 mm span -> 12-16 edges once per programme launch (not per record)"
+ },
+ "bench": "rtl/hbm_accel/generic/f20/run_f20_relay.sh (3-level 64-leaf tree, every leaf == host frame 6 edges later; data + latency mutants rejected)",
+ "open": "H-DIE: node positions / depth D; frame bit order check vs host_cp_ingress port order; sinks taking 11/279-bit subsets connect the matching slice"
+}

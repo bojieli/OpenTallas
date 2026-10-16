@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_f20_relay4",
+ "enable": false,
+ "reason": "The RTL registers fi at the pin (fq) and every output is its own flop bank (o0..o3, flop Q); the tree contract fixes LAT = 2 edges per node, a synthesis pin stage would add a third."
+}

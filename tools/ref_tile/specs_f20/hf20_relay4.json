@@ -1,0 +1,96 @@
+{
+ "name": "hf20_relay4",
+ "top": "ot_hgi_f20_relay4",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/f20/ot_hgi_f20_relay4.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 129.6
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "fi"
+  ],
+  "N": [
+   "o0"
+  ],
+  "E": [
+   "o1",
+   "o3"
+  ],
+  "S": [
+   "o2"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The RTL registers fi at the pin (fq) and every output is its own flop bank (o0..o3, flop Q); the tree contract fixes LAT = 2 edges per node, a synthesis pin stage would add a third."
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/H-ELEM-1445",
+  "branch": "claude/hnl-f20tree-1445",
+  "tag": "f20t",
+  "purpose": "H-ELEM F20 registered distribution tree node ot_hgi_f20_relay4 (one master, hardened once): 320-b F20 frame in, 4 registered copies out, LAT 2 edges/node; replaces the flat 320-net x 106-sink F20 broadcast (H-DIE d4a: ~4.6M repair buffers). Benched by a 3-level 64-leaf tree bench (every leaf = host frame 6 edges later, every edge) + data / latency mutants.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/f20"
+  ],
+  "benches": [
+   {
+    "name": "f20_tree_pos",
+    "cmd": "bash rtl/hbm_accel/generic/f20/run_f20_relay.sh {RUN}/bench/pos pos 3000",
+    "expect": "pass",
+    "pass_regex": "F20_RELAY_TREE PASS",
+    "min_count_regex": "F20_RELAY_TREE PASS checks(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "f20_tree_mut_data",
+    "cmd": "bash rtl/hbm_accel/generic/f20/run_f20_relay.sh {RUN}/bench/mut1 mut1 1000",
+    "expect": "fail",
+    "fail_regex": "F20_RELAY_TREE FAIL mismatches",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "f20_tree_mut_latency",
+    "cmd": "bash rtl/hbm_accel/generic/f20/run_f20_relay.sh {RUN}/bench/mut2 mut2 1000",
+    "expect": "fail",
+    "fail_regex": "F20_RELAY_TREE FAIL mismatches",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hf20_relay4/views",
+  "record_to": "results/rtl/ref_tile/hf20_relay4"
+ }
+}
