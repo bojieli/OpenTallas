@@ -33,7 +33,7 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  (* keep *)reg [31:0] meta;
  always @(posedge ck)meta<={expected_epoch,expected_layer,expected_sector};
  always @(posedge ck or negedge rs)if(!rs)slot<=0;else slot<=expected_put;
- reg [287:0] data[0:DEPTH-1];
+ wire [287:0] read_data;
  reg [DEPTH-1:0] published,consumed,observed_valid;
  (* async_reg="true" *)reg [DEPTH-1:0] pub_sync1,pub_sync2,done_sync1,done_sync2;
  // Local-domain drain observations, not a ready or scheduling interface.
@@ -69,8 +69,10 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  // frequency/phase as pll_hbm. Every fixed 72-bit slice has <= DEPTH*72 sinks.
  genvar bank;
  generate for(bank=0;bank<4;bank=bank+1)begin:g_storage
+  reg [71:0] bank_data[0:DEPTH-1];
+  assign read_data[bank*72+:72]=bank_read_data;
   always @(posedge pll_hbm_data[bank])
-   if(hr && write_slot)data[wa][bank*72+:72]<=hd[bank*72+:72];
+   if(hr && write_slot)bank_data[wa]<=hd[bank*72+:72];
  end endgenerate
  always @(posedge ck or negedge rs)
   if(!rs)begin rp<=0;consumed<=0;pub_sync1<=0;pub_sync2<=0;actual_valid<=0;fault_core<=0;end
@@ -78,10 +80,10 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
    pub_sync1<=published;pub_sync2<=pub_sync1;
    actual_valid<=slot;
    if(slot)begin
-    actual_data<=data[ra][255:0];actual_sector<=data[ra][265:256];
-    actual_layer<=data[ra][271:266];actual_epoch<=data[ra][287:272];
+    actual_data<=read_data[255:0];actual_sector<=read_data[265:256];
+    actual_layer<=read_data[271:266];actual_epoch<=read_data[287:272];
     consumed[ra]<=~rp[AW];rp<=rp+1'b1;
-    if(pub_sync2[ra] !== ~rp[AW] || observed_valid[ra] !== 1'b1 || data[ra][287:256] !== meta)fault_core<=1;
+    if(pub_sync2[ra] !== ~rp[AW] || observed_valid[ra] !== 1'b1 || read_data[287:256] !== meta)fault_core<=1;
    end
   end
 endmodule

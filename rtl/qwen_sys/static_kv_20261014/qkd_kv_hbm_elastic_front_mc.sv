@@ -75,7 +75,7 @@ module qkd_kv_hbm_elastic_front_mc #(
     always @(posedge pll_hbm or negedge hr)
         if (!hr) land_v <= 1'b0; else land_v <= co_in[0];
     always @(posedge pll_hbm) land_d <= {epoch_in, co_in[281:1]};
-    reg [296:0] mem [0:DEPTH-1];
+    wire [296:0] mem_rd;
     reg [AW:0] wp, rp, bs;          // write, emit read, next block start (entries, wrap bit)
     wire [AW:0] filled = wp - bs;   // landed entries of the next block to release and beyond
     wire ready = (MUT == 3) ? 1'b1 : (MUT == 2) ? (filled >= C_BLK1) : (filled >= C_BLK);
@@ -85,8 +85,10 @@ module qkd_kv_hbm_elastic_front_mc #(
     genvar bank;
     generate for (bank=0; bank<4; bank=bank+1) begin : g_storage
         localparam integer LO=bank*75, WD=(LO+75>297)?297-LO:75;
+        reg [WD-1:0] bank_mem[0:DEPTH-1];
+        assign mem_rd[LO+:WD]=bank_mem[ra_c[AW*(bank*4)+:AW]];
         always @(posedge pll_hbm_data[bank])
-            if (land_v) mem[wp[AW-1:0]][LO+:WD] <= land_d[LO+:WD];
+            if (land_v) bank_mem[wp[AW-1:0]] <= land_d[LO+:WD];
     end endgenerate
 
     // ---- release side: compiled blk_go, one ready check per block --------------------------------------------
@@ -137,12 +139,7 @@ module qkd_kv_hbm_elastic_front_mc #(
             end
             if (start) begin emitting <= 1'b1; cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
         end
-    generate for (gr = 0; gr < NG; gr = gr + 1) begin : g_rd
-        localparam integer LO = gr * SLW, WD = (LO + SLW > 297) ? 297 - LO : SLW;
-        if (WD > 0) begin : g_s
-            always @(posedge pll_hbm) if (take) out_q[LO +: WD] <= mem[ra_c[AW*gr +: AW]][LO +: WD];
-        end
-    end endgenerate
+    always @(posedge pll_hbm) if(take)out_q<=mem_rd;
 
     // ---- controller-format output (drives qkd_static_kv_return_slots) ----------------------------------------
     // Pass-through fields (write completion / hand, not part of the read return) re-timed by two edges.
