@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_engram_capture2_probe",
+ "enable": false,
+ "reason": "Actual source already has one physical data-capture/launch FF edge: d feeds actual captureFF D; q is that FF Q. Generic wrapper adds2compileredges and measures different source. Probe preserves actual1edge and must pass mapped D/Q census and unchanged native gates; clock/reset literal roles are not data. hold_merge probe only, no physical adoption."
+}

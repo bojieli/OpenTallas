@@ -1,0 +1,86 @@
+{
+ "name": "s81engm_capture2_probe_1016",
+ "kind": "tile",
+ "top": "ot_s81_engram_capture2_probe",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_distributed_candidate.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_capture2_probe.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "arst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "N": [
+   "d"
+  ],
+  "S": [
+   "q"
+  ],
+  "W": [
+   "clk",
+   "arst_n"
+  ],
+  "E": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "Finite scoped critical2FF status capture prototype; actual4FF incl2reset; area/pins/clock must be measured. No legacy rly ETM inherited.",
+ "structural_change": "Same-edge distributed FF capture source; actual newleaf capture/launch arcs replace unknown targets before any285 numeric or parent gate.",
+ "job": {
+  "owner": "Codex:norm_mix",
+  "branch": "codex/s81-hc-2330",
+  "tag": "probe1016",
+  "purpose": "MEASURE actual2FF capture TT/FF/area/clock at nativeunchanged limits; tighter160/130 design target unmeasured",
+  "hold_merge": "Physical source probe only; no parent source285/fullnumeric/finitehomes/native adoption",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_engram_mix",
+   "results/arch/s81_mix4_localized_1016/split_relay_source"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual source already has one physical data-capture/launch FF edge: d feeds actual captureFF D; q is that FF Q. Generic wrapper adds2compileredges and measures different source. Probe preserves actual1edge and must pass mapped D/Q census and unchanged native gates; clock/reset literal roles are not data. hold_merge probe only, no physical adoption."
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true
+}

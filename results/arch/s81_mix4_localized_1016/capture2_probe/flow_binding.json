@@ -1,0 +1,49 @@
+{
+ "flow_source": "bf368440c",
+ "clock_edge_fix": "501be7692",
+ "literal_data_stage_audit": "1398a0b60",
+ "files": [
+  {
+   "path": "tools/ref_tile/ref_tile.py",
+   "sha256": "11887f21e96e30c00c0bcf01bf28d9e9cec6a8c72d1b522da7e2084f4cb3ade8",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "tools/ref_tile/pre_route_gate.py",
+   "sha256": "5713a448c2b889704b48cbc74342679c55535edec7e59e5f8fad018bf02f6ce5",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "tools/ref_tile/port_latency.py",
+   "sha256": "1a6ee34d50aa597990927e78cd321c20cf6367351c38f699b4f4cff9775ead73",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "tools/ref_tile/clock_entry_constraints.py",
+   "sha256": "0bb853cebf53772e6bd6bfef9b5e1b6d3be445c84c07e0eee2465858e9e9aa4b",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "tools/run_abi3_physical.py",
+   "sha256": "14f20a2ed72ad7fcec609e0364d8656c9c9d92374a7c2326c36ceb36a1cedcaf",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "physical/common_flow/clock_entries.tcl",
+   "sha256": "e89e8fb54e06104bdc34da6f07fad8d9c806468f3a3ca305501ab45cd6ed8704",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "physical/common_flow/ot_pin_regs.tcl",
+   "sha256": "f41ed3b095774d33021064dc4fa9c61368a3cbb7099517a16a8eafe8a3250b16",
+   "exact_bf368440c": true
+  },
+  {
+   "path": "physical/common_flow/io_flop_at_pins.tcl",
+   "sha256": "cbbcdd2bf0f3ba9e6d450478b56b2b0e80092fd87afc78361d7aea63d7475243",
+   "exact_bf368440c": true
+  }
+ ],
+ "source_optout_reason": "Existing actual one-edge captureFF D/Q source; generic wrapper adds2logicaledges. hold_merge physicalprobe, no adoption. Native actual1edge/fourFF/netlist clock/reset roles must be audited.",
+ "unchanged_native_gates": "TTsetup/FFhold L-H100/spread80/launch220/capture190/DRC0; targets160/130 unmeasured"
+}

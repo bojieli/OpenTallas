@@ -1,0 +1,17 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Actual source already has one physical data-capture/launch FF edge: d feeds actual captureFF D; q is that FF Q. Generic wrapper adds2compileredges and measures different source. Probe preserves actual1edge and must pass mapped D/Q census and unchanged native gates; clock/reset literal roles are not ",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  }
+ ]
+}

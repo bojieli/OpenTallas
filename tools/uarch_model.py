@@ -594,6 +594,30 @@ def dsrom_engram_canonical_model(context=1048576, users=64):
     return record
 
 
+def dsrom_engram_mix4_split_capture_model():
+    """Opt-in same-edge relay source experiment; native physical qualification open."""
+    return dict(schema='opentallas.s81-mix4-split-capture.v1',opt_in_default=False,
+        copies=4,compute_MAC_per_cycle=0,kind='registered transport only',
+        old_capture_payload_bits_per_copy=105,new_capture_payload_bits_per_copy=201,
+        input_capture_bits_per_cycle_per_copy=201,output_bits_per_cycle_per_copy=201,
+        input_bytes_per_cycle_per_copy=201/8,output_bytes_per_cycle_per_copy=201/8,
+        old_roots=217,new_roots=285,added_roots=68,
+        old_reset_ff_per_copy=2,new_reset_ff_per_copy=36,
+        added_payload_ff=384,added_reset_ff=136,total_added_ff=520,
+        captures_per_copy=18,maximum_payload_ff_per_new_root=37,
+        mux_demux='Wire-only split69upFF;32gateFF replicated4ways plus4statusFF; no new cycle',
+        added_fixed_edges=0,new_full_numeric_cycles=None,sealed_ownvalid_cycles=810,
+        prototype_outline_um=[21.6,21.6],outline_is_measured=False,
+        proposed_capture_outline_area_um2=4*18*21.6**2,
+        reserved_area_delta_um2=4*(18*21.6**2-43.2*21.6),
+        native_probe=dict(payload_ff=2,reset_ff=2,clock_roots=1,ports=6,
+            design_target_launch_ps=160,design_target_capture_ps=130,
+            unchanged_native_launch_ceiling_ps=220,unchanged_native_capture_ceiling_ps=190,
+            required_ff_L_minus_H_ps=100,boundary_spread_ps=80),
+        physical_status='Finite homes/currentpacking fail; measure actual critical2FF capture leaf first. No native/PG/clock/pin/cut adoption.',
+        qualification='4096edge mechanism+stoppedroot mutant passed; full285numeric HELD until meaningful physical screen')
+
+
 def dsrom_engram_sink_pincapture_model():
     return dict(schema='opentallas.engram-sink-pincapture-model.v1', opt_in_default=False,
                 replicas=8, sources=4, queue_entries_per_source=4,
