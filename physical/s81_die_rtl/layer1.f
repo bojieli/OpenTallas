@@ -120,6 +120,11 @@ rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv
+# S-DIE-WFC 2026-10-16: u_wfc wrapper (S-VM 6136ed704, wires only); dsfd_sp_vm WFC_RETURN256 1 (--wfc-return256) elaborates
+# the return256 split (two dsfd_vm_wfc_return256 slices + dsfd_vm_native_valid_diag); default 0 = the legacy return leaf
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc_select256.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_wfc_return256.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_native_valid_diag.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv
 
 # S-BIND 2026-10-15: remaining static VM s2 source closure (tools/s81_vm/static_master_gate.sh file list)
