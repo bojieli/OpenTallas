@@ -121,14 +121,76 @@ def shift(iv, k):
     return (iv[0], iv[1] + k, iv[2] + k) if iv[0] == "VM" else iv
 
 
+# ---- multi-position (P-row) records: the H-MTP2 design (2026-10-15) ---------------------------------------------------
+# ISA form (no new opcode): a per-position record carries R = P rows; every descriptor with m = R steps by its stride
+# per row (the per-position copies of a VM region), a descriptor with m = 1 is broadcast to every row (gains, weights,
+# tables); the record retires when the last row's last write is visible.  Cost of a P-row record = c1 + (P - 1) II:
+# c1 = the single-row record (its price / measured cost), II = the per-row initiation interval of the binding resource
+# AFTER the hardware change (the latency, fixed and broadcast parts are paid once).  Two bases: II_price (the price
+# table's own structure), II_meas (the measured RTL structure; None = ratio x II_price).
+FCOLL = 108.6 + 377.6e-9 * CLK + 0.15e-6 * CLK      # perf.coll_cycles fixed part (endpoint + crossing + tail), 741.7
+HBM_RATIO = 136 / 98.96                              # SM line 136 B at 1 line/cycle vs the SM's 98.96 B/cycle HBM share
+SK_PRICE = 0.52778 * 1200                            # Sinkhorn node of the HC_MIX price (ot_hdc_sinkhorn 41 clocks)
+HCP_II = (1578 - 328) / 5                            # HCP RTL spec W256 measured x1 328 / x6 (MTP verify) 1,578 cycles
+ROW_FAMILIES = ("FUSED.PRE", "FUSED.POST", "FUSED.QDQ", "HC", "ATT", "COLL", "IDX.TOPK", "IDX.INDEX", "SU", "DMA",
+                "ARGMAX")
+
+
+def row_family(r):
+    u, op = r.unit, r.op
+    if u == "FUSED":
+        return {"HC_PRE_NORM": "FUSED.PRE", "HC_POST": "FUSED.POST"}.get(op, "FUSED.QDQ")
+    if u == "IDX":
+        return "IDX.TOPK" if op == "TOPK" else "IDX.INDEX"
+    return u
+
+
+def row_ii(r, c1, dyn, L, sk_rep=3):
+    """(II_price, II_meas | None, basis) of a per-position record as a P-row record (see the block comment)."""
+    fam = row_family(r)
+    if fam == "FUSED.PRE":
+        # price: SU chain 20,480 + 5,120 words at M256 (100 beats) | actquant 32 / cycle on 5,120 (160): 160 binds.
+        # LL engine: each of the 32 lanes reads 4 h sectors x 20 (80 VM-bank reads a row; gain kept, writes on W port)
+        return 160.0, 80.0, "price: actquant 5,120 / 32; LL: 80 lane reads a row"
+    if fam == "FUSED.POST":
+        return 100.0, 100.0, "SU chain 25,600 words / 256; LL: 5 reads x 20 sectors a lane"
+    if fam == "FUSED.QDQ":
+        n = r.desc["A"].n
+        return float(math.ceil(n / 32)), float(math.ceil(n / 32)), "quantiser 32 / cycle"
+    if fam == "HC":
+        return max(HCP_II, SK_PRICE / sk_rep), None, f"HCP x6 measured II {HCP_II:.0f}; Sinkhorn {SK_PRICE:.0f} / {sk_rep} units"
+    if fam == "COLL":
+        fixed = FCOLL + (T.first_access() if r.op == "ROW_GATHER" else 0.0)
+        return max(c1 - fixed, 1.0), None, "collective fixed part paid once (one message train of P payloads)"
+    if fam == "IDX.TOPK":
+        return 47.0, 47.0, "router top-6 RTL 47 cycles a row (SU route chain 2 beats)"
+    if fam == "IDX.INDEX":
+        return c1 * 152.0 / 658.9, None, "key stream shared; array ingest 126.7 ns (152 cyc) a query of the 658.9 frame"
+    if fam == "SU":
+        r2 = copy.copy(r)
+        r2.desc = {k: copy.copy(v) for k, v in r.desc.items()}
+        for v in r2.desc.values():
+            v.m = v.m * 2
+        return max(T.su_cost(r2, dyn, L)[0] - T.su_cost(r, dyn, L)[0], 1.0), None, "SU nv x P, depth once"
+    if fam == "DMA":
+        return max(c1 - T.first_access(), 2.0), None, "first access once; row bytes at full bandwidth"
+    if fam == "ARGMAX":
+        return 6.0, None, "1,347-row shard / 256 lanes"
+    return c1, None, "no P-row form"
+
+
 SWAP_IN, SWAP_OUT = 335.9, 241.0   # ds_mtp_kernels column swap launch S2 cycles (STRIPE4 h + PRE, results/rtl/hgi_e2e_mtp_20261010)
 
 
-def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=None, swap=False, pos_scale=None):
+def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=None, swap=False, pos_scale=None,
+                   rows=(), sm_k=None, att_k=None, bcomp=None, sk_rep=3):
     """swap: the P columns' residual h (20,480 words + PRE) do NOT all fit the 2^18-word VM (the AR map ends at
     ~261.7k words): each layer swaps every column in from / out to the HBM column store (ds_mtp_kernels' swap bodies,
     DMA) -- the as-built form; swap=False: VM-resident columns (needs VM growth).  pos_scale: {unit: factor} on the
-    per-position records' cost (binding-unit sensitivity)."""
+    per-position records' cost (binding-unit sensitivity).  rows: the ROW_FAMILIES emitted as ONE P-row record (cost
+    c1 + (P - 1) II, row_ii); sm_mode "slots": the SM carries sm_k MAC slot sets (one HBM read of a weight line serves
+    sm_k positions a pass, ceil(P / sm_k) passes, never faster than the HBM share); att_k: SM attention query slots
+    (option B, "ATT" in rows: fixed spans once, the measured component span bcomp x ceil(P / att_k))."""
     """-> (records, notes): the verify(P) record stream; every record carries .fp (reads, writes intervals) and
     .price(scale) (its cost)."""
     dyn = T.Dyn(DT.POS)
@@ -151,6 +213,7 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
         c.orig_op = f"{r.unit}.{r.op}"
         c.mtp_kind = kind
         c.npos = len(poss)
+        c.ii = None
         if unit:
             c.unit = unit
         out.append(c)
@@ -186,6 +249,13 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
         cls = classify(r)
         if r.unit == "ATT":
             T_ = att_T(r)
+            if "ATT" in rows and P > 1 and att != "A":
+                c_b = bmodel[str(T_)][r.op.lower()]
+                comp = bcomp[str(T_)][r.op.lower()]
+                k_ = att_k or 1
+                emit(r, allp, base, unit="SM", cost=c_b + comp * (math.ceil(P / k_) - 1), kind=f"att_B{T_}_rows")
+                stats["shared"] += 1
+                continue
             if att == "A":
                 for p in allp:
                     emit(r, [p], base, kind="att_A")
@@ -202,6 +272,8 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
                 stats["per_position"] += P
                 continue
             c = base
+            if r.unit == "SM" and sm_mode == "slots" and P > 1:
+                c = base * max(1.0, math.ceil(P / sm_k) / HBM_RATIO)
             if r.unit == "COLL" and P > 1:
                 nb = 4 * r.desc["A"].n
                 c = base * coll_cycles(r.op, P * nb, 96)[0] / coll_cycles(r.op, nb, 96)[0]
@@ -228,10 +300,21 @@ def compile_verify(recs, cf, P, sm_mode="pport", union=UNION, att="A", bmodel=No
                 if what == "egather" and P > 1:
                     nb = 4 * r.desc["A"].n
                     c = base * coll_cycles(r.op, int(round(pe * nb)), 96)[0] / coll_cycles(r.op, nb, 96)[0]
+                if what == "expert" and sm_mode == "slots" and P > 1:
+                    c = base * max(1.0, math.ceil(math.ceil(pe) / sm_k) / HBM_RATIO)
                 emit(r, allp, base, extra_shift=(j // 6) * SLOT_OFF, cost=c, kind=what)
             stats["shared"] += len(range(k, U, 6))
             continue
         # per position
+        if P > 1 and row_family(r) in rows:
+            iip, iim, _ = row_ii(r, base, dyn, L, sk_rep=sk_rep)
+            c = emit(r, allp, base, cost=base + (P - 1) * iip, kind="rows")
+            c.ii, c.ii_meas, c.c1 = iip, iim, base
+            stats["shared"] += 1
+            if r.unit == "IDX" and r.op == "TOPK" and (r.tag or "").startswith("route.top6") and sm_mode != "serial":
+                emit(r, allp, base, kind="expert_union")
+                stats["union_records"] += 1
+            continue
         for p in allp:
             emit(r, [p], base, kind="pos")
         stats["per_position"] += P
@@ -261,7 +344,11 @@ def cost_fn(scale=None):
 
     def cf(r, dyn, L):
         c = r.base_cost
-        if not r.mtp_kind.startswith("att_B"):
+        if getattr(r, "ii", None) is not None and k:
+            q = k.get(r.orig_op, 1.0)
+            iim = r.ii_meas if (r.ii_meas is not None and r.orig_op in k) else q * r.ii
+            c = q * r.c1 + (r.npos - 1) * iim
+        elif not r.mtp_kind.startswith("att_B"):
             c *= k.get(r.orig_op, 1.0)
         return c, "mtp_verify", f"{r.orig_op} {r.mtp_kind} x{r.npos}"
     return cf
