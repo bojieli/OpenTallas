@@ -8,7 +8,7 @@
   "granted_by": "AGREED by Q-COMPUTE-DIE (abc382c495167c39e) 2026-10-16 ~13:45, proposed by Q-XSLEAF (same-area reshape 129.6x69.12; contacts = m6 grant ports/faces/sizes, spans re-centred on the 69.12 um faces). Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6b/m6c params-only changes (READ_PIN_PIPE=1, FILL_PIPE=1 add internal flops; port list, faces, spans and contacts identical); m6f: OT_OUTHOLD_FREE placement only, contacts identical (source a2cc7551f: DVM head opt-in params 6886146c7 only, leaf defaults unchanged); Q-IO-1626 refreshes source-spec digest for unchanged exact contacts and root-approved corrected flow/selected benches only.",
   "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
   "source_commit": "a43e59a977252102bf6fd55b6ed9cd2cda22d923",
-  "source_spec_sha256": "11454f9d6896d3f8ea05470b98d911ad7a37b38c3be8578073b2f596da9e57ae",
+  "source_spec_sha256": "02ecbcb19a81cac41929151b48536174ed23daa583feda2e8edc0daae10adad7",
   "ports": [
    {
     "name": "w_v",
@@ -7957,7 +7957,8 @@
     "needs": [
      "verilator"
     ],
-    "min_count_regex": "^PASS dvm .*\\bops=(\\d+)"
+    "min_count_regex": "^PASS dvm .*\\bops=(\\d+)",
+    "pass_witness": "results/arch/qwen_io_takeover_1016/selected_rpp1_fill1/exact.out"
    },
    {
     "name": "dvm_array_swapped_tile",
@@ -7968,7 +7969,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^FAIL errors=[1-9][0-9]*"
+    "fail_regex": "^FAIL errors=[1-9][0-9]*",
+    "fail_witness": "results/arch/qwen_io_takeover_1016/selected_rpp1_fill1/mutant.out"
    }
   ],
   "calibrate": {
