@@ -1,0 +1,8 @@
+ERROR cycle=1109 exact S source equivalence on normal production edge
+ERROR cycle=1110 exact S source equivalence on normal production edge
+ERROR cycle=1111 exact S source equivalence on normal production edge
+ERROR cycle=1111 non-RF drain skips class5 requirement
+QCORE_S_REFERENCE edges=1108
+QCORE_NATIVE checks=4514 rf_words=1024 scalars=7 guards=5 cycles=1164 errors=4
+FATAL: rtl/test/hbm_qcore_physical_1016/tb_qcore_native.sv:120: QCORE_NATIVE FAIL
+       Time: 11636000  Scope: tb_qcore_native

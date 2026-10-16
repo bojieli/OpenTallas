@@ -1,0 +1,23 @@
+ERROR cycle=500 exact S source equivalence on normal production edge
+ERROR cycle=500 RF addr=0 expected=40000000 got=400001c7
+ERROR cycle=500 RF addr=1 expected=40000041 got=40000186
+ERROR cycle=500 RF addr=2 expected=40000082 got=40000145
+ERROR cycle=500 RF addr=3 expected=400000c3 got=40000104
+ERROR cycle=501 exact S source equivalence on normal production edge
+ERROR cycle=502 exact S source equivalence on normal production edge
+ERROR cycle=503 exact S source equivalence on normal production edge
+ERROR cycle=504 exact S source equivalence on normal production edge
+ERROR cycle=504 RF addr=4 expected=40000104 got=400000c3
+ERROR cycle=504 RF addr=5 expected=40000145 got=40000082
+ERROR cycle=504 RF addr=6 expected=40000186 got=40000041
+ERROR cycle=504 RF addr=7 expected=400001c7 got=40000000
+ERROR cycle=505 exact S source equivalence on normal production edge
+ERROR cycle=506 exact S source equivalence on normal production edge
+ERROR cycle=507 exact S source equivalence on normal production edge
+ERROR cycle=508 exact S source equivalence on normal production edge
+ERROR cycle=508 RF addr=8 expected=40000200 got=400003c7
+ERROR cycle=508 RF addr=9 expected=40000241 got=40000386
+QCORE_S_REFERENCE edges=1108
+QCORE_NATIVE checks=4514 rf_words=1024 scalars=7 guards=5 cycles=1164 errors=1132
+FATAL: rtl/test/hbm_qcore_physical_1016/tb_qcore_native.sv:120: QCORE_NATIVE FAIL
+       Time: 11636000  Scope: tb_qcore_native

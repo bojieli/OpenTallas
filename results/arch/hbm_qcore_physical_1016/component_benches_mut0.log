@@ -1,0 +1,4 @@
+QCORE_S_REFERENCE edges=1108
+QCORE_NATIVE checks=4514 rf_words=1024 scalars=7 guards=5 cycles=1164 errors=0
+QCORE_NATIVE PASS
+rtl/test/hbm_qcore_physical_1016/tb_qcore_native.sv:121: $finish called at 11636000 (1ps)

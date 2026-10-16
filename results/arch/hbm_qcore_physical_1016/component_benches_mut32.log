@@ -1,0 +1,10 @@
+ERROR cycle=952 exact S source equivalence on normal production edge
+ERROR cycle=952 registered native reducer RF head valid/tag[8]
+ERROR cycle=1012 exact S source equivalence on normal production edge
+ERROR cycle=1012 registered native reducer RF head valid/tag[8]
+ERROR cycle=1072 exact S source equivalence on normal production edge
+ERROR cycle=1072 registered native reducer RF head valid/tag[8]
+QCORE_S_REFERENCE edges=1108
+QCORE_NATIVE checks=4514 rf_words=1024 scalars=7 guards=5 cycles=1164 errors=6
+FATAL: rtl/test/hbm_qcore_physical_1016/tb_qcore_native.sv:120: QCORE_NATIVE FAIL
+       Time: 11636000  Scope: tb_qcore_native
