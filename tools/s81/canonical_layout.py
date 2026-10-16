@@ -60,6 +60,13 @@ def corridors(G,m,cor):
  # actual placed PHY/service boxes and supplemental homes as blockers.
  for key in ('s14W','s14E','vch','edgeW','edgeE'):
   xx0,_yy0,xx1,_yy1=cor[key];cor[key]=(xx0,20.432,xx1,G.DIE[1]-20.432)
+ # The die-edge link corridors end at the canonical outermost field columns, not at the generator's symmetric
+ # x_fw (S-DIE-26B 10-16: narrower --node-strip columns move the symmetric x_fw 475 um into column 0, sending
+ # the link chains' edge leg through the frames).  Unchanged when the canonical W column starts at x_fw.
+ g=m['geo'];cs=sorted(d['columns'],key=lambda c:c['x_um']);fw=min(g['x_fw'],cs[0]['x_um'])
+ x0,y0,x1,y1=cor['edgeW'];cor['edgeW']=(x0,y0,min(x1,fw-4.32),y1)
+ x0,y0,x1,y1=cor['edgeE'];cor['edgeE']=(max(x0,g['x_le']-(fw-g['x_lw']-G.LINK_COL)+4.32),y0,x1,y1)
+ assert cor['edgeE'][0]>=cs[-1]['x_um']+G.COL_W8-1e-6 and cor['edgeW'][0]<cor['edgeW'][2] and cor['edgeE'][0]<cor['edgeE'][2],('canonical edge corridors',cor['edgeW'],cor['edgeE'])
  # Never advertise obsolete fullwidth tier streets as free space.
  for k in list(cor):
   if k.startswith('ch') and k[2:].isdigit():del cor[k]
