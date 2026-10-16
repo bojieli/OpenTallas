@@ -28968,9 +28968,9 @@
  "regions": {
   "ck": [
    [
-    331.992,
+    365.04,
     369.36,
-    433.296,
+    405.0,
     505.44
    ]
   ],
@@ -28987,7 +28987,7 @@
   "ck_rqr0": [
    [
     151.848,
-    515.16,
+    524.88,
     306.072,
     534.6
    ]
@@ -28995,93 +28995,79 @@
   "ck_rqr1": [
    [
     164.808,
-    801.414,
+    808.02,
     294.408,
     816.48
    ]
   ],
   "ck_tx0": [
    [
-    77.544,
+    79.704,
     369.36,
-    82.512,
+    84.672,
     505.44
    ]
   ],
   "ck_tx1": [
    [
-    77.544,
+    79.704,
     198.72,
-    82.512,
+    84.672,
     334.8
    ]
   ],
   "ck_tx2": [
    [
-    77.544,
+    79.704,
     28.08,
-    82.512,
+    84.672,
     164.16
    ]
   ],
   "ck_tx3": [
    [
-    317.304,
+    315.144,
     369.36,
-    322.272,
+    320.112,
     505.44
    ]
   ],
   "ck_tx4": [
    [
-    317.304,
+    315.144,
     198.72,
-    322.272,
+    320.112,
     334.8
    ]
   ],
   "ck_tx5": [
    [
-    317.304,
+    315.144,
     28.08,
-    322.272,
+    320.112,
     164.16
    ]
   ],
   "ck_tx6": [
    [
-    437.184,
+    435.024,
     198.72,
-    453.6,
+    446.0,
     334.8
    ]
   ],
   "ck_tx7": [
    [
-    437.184,
+    435.024,
     28.08,
-    453.6,
+    446.0,
     164.16
    ]
   ],
   "ck_fa0": [],
   "ck_fa1": [],
-  "ck_fa2": [
-   [
-    2.16,
-    262.16,
-    17.064,
-    362.66
-   ]
-  ],
-  "ck_fa3": [
-   [
-    2.16,
-    362.66,
-    17.064,
-    463.64
-   ]
-  ],
+  "ck_fa2": [],
+  "ck_fa3": [],
   "ck_fa4": []
  },
  "checks": {
@@ -29103,6 +29089,8 @@
   "ck_fa0": "pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins",
   "ck_fa1": "pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins",
   "ck_fa4": "pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins",
+  "ck_fa2": "pin_anchored: every sink is an output launch flop fixed FIRM at its pin by io_flop_at_pins (OT_OFLOP)",
+  "ck_fa3": "pin_anchored: every sink is an output launch flop fixed FIRM at its pin by io_flop_at_pins (OT_OFLOP)",
   "ck_rp0": "unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers",
   "ck_rp1": "unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers",
   "ck_rp2": "unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers",

@@ -492,12 +492,12 @@
  },
  "refglob": "*",
  "inter": [],
- "structural_change": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. Reserve2.16um shared-logic corridors around core/TX/RQR fences after actual373-cell ungrouped repair/control failure; footprint/pins/RTL/normaledges unchanged.",
+ "structural_change": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. r3: output face roots pin-anchored; one-sided <=40um fences leave contiguous unfenced pin-face/channel bands (4ecca DPL-0033 ungrouped glue); footprint/pins/RTL/normaledges unchanged.",
  "job": {
   "owner": "Codex:q_tile45_2330",
   "branch": "codex/qtile45-2330",
   "tag": "lc45",
-  "purpose": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. Reserve2.16um shared-logic corridors around core/TX/RQR fences after actual373-cell ungrouped repair/control failure; footprint/pins/RTL/normaledges unchanged.",
+  "purpose": "HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. r3: output face roots pin-anchored; one-sided <=40um fences leave contiguous unfenced pin-face/channel bands (4ecca DPL-0033 ungrouped glue); footprint/pins/RTL/normaledges unchanged.",
   "extra_paths": [
    "tools/qwen_repack",
    "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",

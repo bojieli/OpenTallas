@@ -74,6 +74,14 @@ def build(nl=False):
     why = {c: 'pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins' for c in PIN_ANCHORED}
     for c in PIN_ANCHORED:
         regions[c] = []
+    # Q-TILE45 r3 (gates 4ecca5d9c, DPL-0033): the output face roots are pin-anchored too.  Measured group content:
+    # ck_fa2 = 514 t_out launch DFFs (+2 NOR/AND; nl +512 INV), ck_fa3 = 516 n_y/fy launch DFFs (+6 comb) -- every
+    # sink is an output-port flop that io_flop_at_pins (OT_OFLOP) fixes FIRM at its pin.  Their fences covered the
+    # whole 14.9 um W channel (x 2.16..17.064, y 262..463) beside the node block, so the ungrouped hold/driver glue
+    # GPL put there (115+61 NK illegal cells) had no legal site within DPL's 27 um search (node + halos = 53 um).
+    for c in ('ck_fa2', 'ck_fa3'):
+        regions[c] = []
+        why[c] = 'pin_anchored: every sink is an output launch flop fixed FIRM at its pin by io_flop_at_pins (OT_OFLOP)'
     # Bank-pair roots ck_rp0..9 are NOT fenced (gate e6a1b3c6a, DPL: 456 cells left illegal, 792 edge-spacing
     # violations).  Their fences filled the 12.96 um placeable ROM side channels exclusively, but every channel serves
     # the rd_out/addr pins of TWO macros of different roots plus unfenced shared buffers: 400+ unfenced
@@ -85,17 +93,29 @@ def build(nl=False):
     for n in range(10):
         regions['ck_rp%d' % n] = []
         why['ck_rp%d' % n] = 'unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers'
-    # 0e1289147 actual DPL: every reported illegal cell was ungrouped repair/shared logic squeezed
-    # against an EXCLUSIVE root fence. Core-to-RQR and cross-TX controls cannot be assigned to one
-    # data cone. Reserve a 2.16 um shared-logic corridor around core/TX/RQR roots; keep the face
-    # capture/launch strips unchanged. Actual mapped worst inset fill is 39.6 percent (TX0..5).
-    shared_corridor_um = 2.16
-    for root, boxes in regions.items():
-        if root.startswith('ck_fa'):
-            continue
-        regions[root] = [[round(x0 + shared_corridor_um, 3), round(y0 + shared_corridor_um, 3),
-                          round(x1 - shared_corridor_um, 3), round(y1 - shared_corridor_um, 3)]
-                         for x0, y0, x1, y1 in boxes]
+    # Q-TILE45 r3 PIN-FACE / CHANNEL BANDS (die lead directive 10-16 00:45; gates 4ecca5d9c NK 274 / NL 297 illegal,
+    # all ungrouped).  DPL treats every region as EXCLUSIVE and searches only 500 sites (27 um).  The 4ecca fences
+    # each filled a whole narrow channel (W face, N band y799..819, mid band y513..537, the 9.3 um LSL gutters, a
+    # 101x136 um core block), so ungrouped glue that GPL left inside had no reachable legal site.  Measured
+    # std-cell fill of those channels after DPL is only 4-21 % (results/arch/qwen_tile45_2330/r3_band_sizing.json):
+    # capacity is not short, the fence geometry is.  Rule now: every fence is <= ~40 um in its short dimension and
+    # sits on ONE side of its channel, leaving a contiguous unfenced band (>= 4.3 um, 80 sites) on the pin /
+    # consumer side for hold stages, pin drivers and repair buffers; macros, pins, outline and RTL are unchanged.
+    for n, c in leaf.items():
+        x, y = c['at']
+        y0, y1 = y + 2.16, y + 140.4 - 2.16
+        if c['orient'] == 'MY':      # tx0..2: node|LSL gutter 75.384..84.672, fence against own LSL (E side)
+            box = [79.704, y0, 84.672, y1]
+        elif n in (6, 7):            # tx6/7: E channel 435.024..455.76, fence against own LSL, 9.76 um E-face band
+            box = [x + 99.792 + 5.4, y0, 446.0, y1]
+        else:                        # tx3..5: LSL gutter 315.144..324.432, fence against own LSL (W side)
+            box = [x + 99.792 + 5.4, y0, x + 99.792 + 5.4 + 4.968, y1]
+        regions['ck_tx%d' % n] = [[round(v, 3) for v in box]]
+    # residual core root (entry E y400): 40 um wide strip, unfenced 23 um W band and 50 um E-face band
+    regions['ck'] = [[365.04, 369.36, 405.0, 505.44]]
+    # RQR roots: fence the upper rows only; a contiguous unfenced band remains below each across the full width
+    regions['ck_rqr0'] = [[151.848, 524.88, 306.072, 534.6]]
+    regions['ck_rqr1'] = [[164.808, 808.02, 294.408, 816.48]]
     pins = []
     moved = {}
     def place(name, face, value, clock=False):
@@ -196,7 +216,7 @@ def build(nl=False):
     s['pins'] = {f: sorted(set(p['name'].split('[')[0] for p in pins if p['face'] == f)) for f in 'WENS' if any(p['face'] == f for p in pins)}
     s.pop('pin_ranges', None)
     s['pin_regs'] = dict(enable=False, reason='Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required.')
-    s['structural_change'] = 'HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. Reserve2.16um shared-logic corridors around core/TX/RQR fences after actual373-cell ungrouped repair/control failure; footprint/pins/RTL/normaledges unchanged.'
+    s['structural_change'] = 'HELD45-clock structural successor to measured unqualified25-entry spread268ps: eight per-LSL TX roots, five face roots, ten bank-pair roots, two RQR roots, residual core root,19 unchanged hard entries. Actual endpoint/exclusive-comb fences and per-root area checks; all64MAC/10mappedROM/8closedLSL/node retained; normal data calendar unchanged. Same actual a2 outline and hard geometry; all incident pins assigned on .012+.048k tracks. r3: output face roots pin-anchored; one-sided <=40um fences leave contiguous unfenced pin-face/channel bands (4ecca DPL-0033 ungrouped glue); footprint/pins/RTL/normaledges unchanged.'
     s['slot_change_request'] = 'HELD candidate machine grant in held_grant.json; existing457.92x820.8a2 home,45 clock entries. Production die contract adoption requires measured local and regional clock proof.'
     s['job'].update(owner='Codex:q_tile45_2330', branch='codex/qtile45-2330', tag='lc45', purpose=s['structural_change'], views_to=f'physical/ref_tile/{NAME}/views', record_to=f'results/rtl/ref_tile/{NAME}', cycles_added=0)
     s['job']['extra_paths'] = ['tools/qwen_repack', 'tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json', 'rtl/physical/qfd_tile_nk_rp1.sv', 'rtl/test/tb_qwen_repack45_native.sv', 'rtl/physical/ot_qwen_tile_lsl_fp1.sv', 'rtl/physical/ot_qwen_tile_node.sv', 'rtl/lib/ot_rst_relay.sv', 'physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v', 'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']

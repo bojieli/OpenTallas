@@ -1,0 +1,134 @@
+{
+ "schema": "q_tile45.r3_band_sizing.v1",
+ "source_gate": "4ecca5d9c NK/NL terminal DPL-0033 (3_5_place_dp-failed.odb cell dumps)",
+ "method": "std-cell area by band after the failed DPL, excluding taps and hard blocks; band = placeable channel (5.4um macro halos removed)",
+ "nk": {
+  "W_y25_262_na_nb": {
+   "box_um2": 3532,
+   "std_um2": 567,
+   "fill": 0.16
+  },
+  "W_y262_463_tout_ny": {
+   "box_um2": 2996,
+   "std_um2": 302,
+   "fill": 0.1,
+   "fenced_fa2_fa3_cells": 1038
+  },
+  "node_lsl_gutter_x75_85": {
+   "box_um2": 4483,
+   "std_um2": 894,
+   "fill": 0.2
+  },
+  "E_x435_456_y25_507": {
+   "box_um2": 10006,
+   "std_um2": 756,
+   "fill": 0.08
+  },
+  "N_y799_819": {
+   "box_um2": 8909,
+   "std_um2": 1745,
+   "fill": 0.2,
+   "rqr1_um2": 410
+  },
+  "mid_y507_537": {
+   "box_um2": 13227,
+   "std_um2": 2241,
+   "fill": 0.17,
+   "rqr0_um2": 437
+  },
+  "ck_block": {
+   "box_um2": 14830,
+   "std_um2": 2143,
+   "fill": 0.14,
+   "ck_group_um2": 1997
+  },
+  "illegal_cells_hotspots": {
+   "W x0-25 y250-450": 180,
+   "N y800 x275-300": 17,
+   "mid y500 x300-400": 24
+  }
+ },
+ "nl": {
+  "W_y262_463_tout": {
+   "box_um2": 2996,
+   "std_um2": 195,
+   "fill": 0.07
+  },
+  "N_y799_819": {
+   "box_um2": 8909,
+   "std_um2": 1875,
+   "fill": 0.21,
+   "rqr1_um2": 414
+  },
+  "mid_y507_537": {
+   "box_um2": 13227,
+   "std_um2": 2394,
+   "fill": 0.18,
+   "rqr0_um2": 438
+  },
+  "ck_block": {
+   "box_um2": 14830,
+   "std_um2": 2337,
+   "fill": 0.16,
+   "ck_group_um2": 2163
+  },
+  "illegal_cells_hotspots": {
+   "N y800 x150-300": 93,
+   "mid y500 x300-400": 86,
+   "LSL gutter x300-350 y250-450": 66
+  }
+ },
+ "conclusion": "channel capacity is not short (4-21 % fill); every hotspot is an EXCLUSIVE fence that fills a whole narrow channel so ungrouped glue has no legal site within DPL's 500-site (27 um) search. Macro/LSL shift not needed on this evidence; r3 re-shapes fences instead.",
+ "r3_fences": {
+  "ck": [
+   365.04,
+   369.36,
+   405.0,
+   505.44
+  ],
+  "ck_rqr0": [
+   151.848,
+   524.88,
+   306.072,
+   534.6
+  ],
+  "ck_rqr1": [
+   164.808,
+   808.02,
+   294.408,
+   816.48
+  ],
+  "ck_tx0_2_x": [
+   79.704,
+   84.672
+  ],
+  "ck_tx3_5_x": [
+   315.144,
+   320.112
+  ],
+  "ck_tx6_7_x": [
+   435.024,
+   446.0
+  ],
+  "ck_fa2": "pin-anchored (514 output DFFs)",
+  "ck_fa3": "pin-anchored (516 output DFFs)"
+ },
+ "r3_projected_fence_fill": {
+  "ck_nk": 0.37,
+  "ck_nl": 0.4,
+  "rqr0": 0.29,
+  "rqr1": 0.37,
+  "tx0_5": 0.4,
+  "tx6_7": 0.18
+ },
+ "unfenced_bands_um": {
+  "W_face": 14.9,
+  "tx0_2_gutter_W": 4.32,
+  "tx3_5_gutter_E": 4.32,
+  "E_face_tx6_7": 9.76,
+  "ck_W": 22.7,
+  "ck_E_face": 50.8,
+  "mid_below_rqr0": 11.9,
+  "N_below_rqr1": 8.77
+ }
+}
