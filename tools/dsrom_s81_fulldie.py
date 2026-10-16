@@ -7491,10 +7491,18 @@ def _wide_hub_path(m, A, Bk):
             x1_ = min(wb.x + wb.w, (HUB_LAYOUT.get('mix4_slot') or [wb.x + wb.w])[0] - 60.0)   # W of a MIX4 overhang
             sx = wb.x + 40.0 + (x1_ - wb.x - 80.0) * (0.1 + 0.8 * ((lanes.setdefault('su_n', [0])[0] * 0.37) % 1.0))
             lanes['su_n'][0] += 1
-        # enter the slab's W face low (the VM / SU lie below it; the face's middle holds the link / end blocks)
+        # Enter the slab's W face low; its middle holds the link / end blocks.
         kb_ = lanes.setdefault('low', [0]);kb_[0] += 1
         yb = min(ot.y + 40.0 + 90.0 * ((kb_[0] - 1) % 6), ot.y + ot.h - 20.0)
-        p_ = [(sx, wb.y + wb.h), (sx, yb), (ot.x, yb)]
+        if wb.name == 'sp_su_s' and yb < wb.y + wb.h:
+            # The tall SU extends ABOVE this slab. Descending at sx would traverse
+            # the SU itself. Leave its N face, cross the reserved approach above
+            # SU/MIX4 and descend through the clear strip on MIX4's E side.
+            cy = wide_corr_y(m, 'su_capture')
+            vx = wide_strip_x(m, 'su_capture')
+            p_ = [(sx, wb.y + wb.h), (sx, cy), (vx, cy), (vx, yb), (ot.x, yb)]
+        else:
+            p_ = [(sx, wb.y + wb.h), (sx, yb), (ot.x, yb)]
     else:
         return None
     return p_ if wb is A else p_[::-1]
