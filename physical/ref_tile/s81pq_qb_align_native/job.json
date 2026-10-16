@@ -1,5 +1,5 @@
 {
- "name": "s81pq_qb_align_native-p4-sclk-1705-102683345",
+ "name": "s81pq_qb_align_native-p4-sclk-1705-COMMIT",
  "block": "ot_s81_pq_qb_align_native",
  "ref_tile": true,
  "owner": "Claude:S-ELEM-PQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-elempq-align-1705",
-  "commit": "102683345",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/test/dsrom_sys",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_qb_align_native/s81pq_qb_align_native-p4-sclk-1705-102683345"
+   "to": "results/rtl/ref_tile/s81pq_qb_align_native/s81pq_qb_align_native-p4-sclk-1705-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -116,8 +116,10 @@
  "hold_merge": "S-DIE pin-face grant (clk/rst_n W -> S centre) requested 17:3x 10-15; no adoption until granted and native audit PASS",
  "structural_change": "p4 (10-15 S-ELEM-PQ): p3 CLOSED TT +265.34/FF +8.50 but native launch FAIL on one pin (bc_hr_q[295] 223.65 > 220 ps; results/rtl/s81_pq_native_audit_1015/native_collect_1705): clk entered at y=18.4 on the W face of the 172.8-um tile, so the far-E output flops carry the longest insertion. p4 moves clk (centred by spread_face_pins) and rst_n to the S face centre; no RTL, outline or cycle change. Pin-face change requested from S-DIE 17:3x. | p3 NATIVE LAUNCH FIX: p2 CLOSED (TT +234.41/FF +11.48/DRC0) but native audit FAILED 47 bc_hr_q launches max 274.3 ps vs 220: path = 163 ps clock insertion + 115 ps DFFASRHQNx1 clk->QN (149 ps slew, x1 async-reset flop driving the pin wire) + 5 hold pads (FF hold slack +120 ps on bc_hr_q[488]). Structural: the output stage hr1 loses its async reset (hr0 keeps it, so outputs are 0 one edge after reset assertion, before release) -> plain DFF output registers, reset loads 1,220 -> 610; same 2 fixed edges, no compiler change, same outline/faces/pins. | COMMON CAUSE (10-15, bc0 w1 / headp p1 / align p1 all GRT-0116): wide output buses packed into one dense band of a face (auto pin placement clusters a bus where its flops sit: headp hq at the S-east 30 um, 600 GCells) plus two recipe-2 output hold pads per output pin in that band (align: 33k outhold/bt_d_q/bc_hr_q overflow at the N band). Fix in all three kits: explicit even spreading of every face (tools/ref_tile/spread_face_pins.py, legal M3/M5 alternating N/S, M4 W/E) and no output hold pads (q/hq launch from pin flops; the die receivers carry their own input hold stages). | align height 43.2 -> 64.8 for the two 1,634-flop stages. | 10-15 S-ELEM-B: new fixed two-stage alignment leaf (physical_request.json): the unchanged IX data (bt_d 1024) and CTL broadcast (bc_hr 610) are delayed 2 fixed edges to meet the pipelined QB response; core stays wires-only. Own clock entry ck_qb_align (4d2d3b849). Pin-limited (1,634 b per face). | gate p0 (129.6 wide, 12.6 pins/um) GPL-0305 diverged and reset fan-out 1,220 > 256: reset split into 5 relay regions (244 loads each, release unchanged), width 172.8 = the closed BC slice pin density (9.5 pins/um).",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "native audit of CLOSED p2 view FAILS: 47 bc_hr_q output pins launch up to 274.3 ps vs 220 (results/rtl/s81_pq_native_audit_1015/qb_align_p2.json; paths /home/ubuntu/artifacts/s81-pq-native-paths-1015/qb_align_p2_bad_pin_inventory.json): 115 ps DFFASRHQNx1 clk->QN; p3 RTL removes the async reset from output stage hr1",
-  "evidence": "results/rtl/s81_pq_native_audit_1015/qb_align_p2.json"
+  "kind": "native_launch",
+  "source": "results/rtl/s81_pq_native_audit_1015/native_collect_1705/ot_s81_pq_qb_align_native.json",
+  "cell": "ot_s81_pq_qb_align_native",
+  "launch_ps": 223.65,
+  "fix": "clk/rst_n moved from W face (y=18.4) to S-face centre; gate TT insertion 134.5-153.4 ps spread 18.9 (p3 R 162.6 spread 34.4)"
  }
 }

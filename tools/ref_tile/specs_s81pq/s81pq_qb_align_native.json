@@ -115,10 +115,6 @@
    "tools/s81",
    "tools/s81_static_control"
   ],
-  "reroute_reason": {
-   "kind": "pin_register",
-   "why": "p3 native launch FAIL bc_hr_q[295] 223.65 ps > 220: clock pin W face (y=18.4) -> S-face centre; RTL unchanged"
-  },
   "hold_merge": "S-DIE pin-face grant (clk/rst_n W -> S centre) requested 17:3x 10-15; no adoption until granted and native audit PASS"
  },
  "defines": [
@@ -126,8 +122,10 @@
  ],
  "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "native audit of CLOSED p2 view FAILS: 47 bc_hr_q output pins launch up to 274.3 ps vs 220 (results/rtl/s81_pq_native_audit_1015/qb_align_p2.json; paths /home/ubuntu/artifacts/s81-pq-native-paths-1015/qb_align_p2_bad_pin_inventory.json): 115 ps DFFASRHQNx1 clk->QN; p3 RTL removes the async reset from output stage hr1",
-  "evidence": "results/rtl/s81_pq_native_audit_1015/qb_align_p2.json"
+  "kind": "native_launch",
+  "source": "results/rtl/s81_pq_native_audit_1015/native_collect_1705/ot_s81_pq_qb_align_native.json",
+  "cell": "ot_s81_pq_qb_align_native",
+  "launch_ps": 223.65,
+  "fix": "clk/rst_n moved from W face (y=18.4) to S-face centre; gate TT insertion 134.5-153.4 ps spread 18.9 (p3 R 162.6 spread 34.4)"
  }
 }
