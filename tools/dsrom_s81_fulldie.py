@@ -5619,6 +5619,7 @@ SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations /
                                 # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
 NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
 NODE_WIN = 2                    # --node-win: sibling window of the static return node (edges)
+QBANK_S_RSTREG = False          # --qbank-s-rstreg: one reset pin sink; +1 initialization release edge, 0 data edges
 NODE_RSTREG = False             # --node-rstreg (S-NET+FILL 2026-10-15, native audit): the static node's rst_n drives ONE
                                 # reset pin register (async assert, release +1 edge); every node flop resets from it
 HEND_STATIC = False             # --hend-static (S-NET 2026-10-15, owner static rule): hub end/start blocks and xstg cross on
@@ -10639,12 +10640,17 @@ def glue_rtl(m):
                                 f'.rst_n(1\'b1), .i_v(1\'b1), .i_d(di{j}[{hi - 1}:{lo}]), .fclk_o({fo}), .o_v(), '
                                 f'.o_d(do{j}[{hi - 1}:{lo}]));')
         elif mst.startswith('dsfd_qbank'):
+            qrs = 'rs[0]'
+            if mst == 'dsfd_qbank_S' and QBANK_S_RSTREG:
+                body.append("    reg rn; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rn <= 1'b0; else rn <= 1'b1;"
+                            ' // initialization only: async assert, release +1 edge; no normal data edge')
+                qrs = 'rn'
             for p_ in sorted(ports, key=_pnum):
                 if p_[:2] in ('i_', 'e_'):
                     q_ = ('o_' if p_[:2] == 'i_' else 'd_') + p_[2:]
                     w = ports[p_][1]
                     body.append(f'    reg [{w - 1}:0] r_{p_[2:]};')
-                    body.append(f'    always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r_{p_[2:]} <= {w}\'d0; '
+                    body.append(f'    always @(posedge ck[0] or negedge {qrs}) if (!{qrs}) r_{p_[2:]} <= {w}\'d0; '
                                 f'else r_{p_[2:]} <= {p_};')
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
@@ -11112,6 +11118,8 @@ def die_options(ap):
                     'node strip NS_W = width + 8.64, every field column 43.2 um narrower')
     ap.add_argument('--node-rstreg', action='store_true', help='S-NET+FILL (native audit 10-15): with --node-static, rst_n '
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
+    ap.add_argument('--qbank-s-rstreg', action='store_true', help='S-NET+FILL S81F-05: dsfd_qbank_S rs drives one reset '
+                    'pin register (async assert, release +1 initialization edge); normal data remains one edge')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
                     'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
                     'FIFO, credits, ready or trained placement')
@@ -11459,6 +11467,8 @@ def apply_options(a):
     NODE_WIN = int(getattr(a, 'node_win', 2) or 2)
     global NODE_RSTREG
     NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
+    global QBANK_S_RSTREG
+    QBANK_S_RSTREG = bool(getattr(a, 'qbank_s_rstreg', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
