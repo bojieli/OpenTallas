@@ -76,7 +76,9 @@ def move_spec(spec, commit):
 
 def dirty(root, commit, paths):
     """(uncommitted, differs-from-commit) consumed paths"""
-    unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines() if ln.strip()]
+    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit
+    unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines()
+           if ln.strip() and not (ln.startswith("??") and "/gate_layout/" in "/" + ln.split(None, 1)[1])]
     head = git(root, "rev-parse", "HEAD")
     diff = git(root, "diff", "--name-only", commit, head, "--", *paths).splitlines() if not head.startswith(commit) else []
     return unc, [d for d in diff if d]
