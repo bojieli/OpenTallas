@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.hbm-programme-local-proof.v1",
+  "status": "ADDITIVE_UNADOPTED_COMPONENT_AND_MAPPED_PROOF",
+  "source_commit": "a89a10d1fc2200a6f6d556dda2efc905cecbac77",
+  "contract_sha256": "77df74f1df6a2060723cee8bb5764f9dd20db62ba6b30b65ce1363bdb1e9d205",
+  "component": {
+    "unit": "oth-ubuntu-2103883-1792148323",
+    "host": "ot-epyc4",
+    "exit": 0,
+    "rows": 282,
+    "starts": 3,
+    "width": 1032,
+    "baseline_macros": 10,
+    "candidate_macros": 23,
+    "extra_start_edges": 2,
+    "interval": 1,
+    "mutants_rejected": [
+      1,
+      2,
+      4
+    ],
+    "scope": "Independent generated dictionary/index images, not a compiler token proof"
+  },
+  "mapped": {
+    "unit": "oth-ubuntu-2067997-1792148098",
+    "host": "ot-epyc4",
+    "exit": 0,
+    "std_area_um2": 12667.35186,
+    "baseline_std_area_um2": 9394.24392,
+    "check_assert_problems": 0,
+    "mapped_log_sha256": "559636c2b4589701ef3a6dad8abbaa215b8429f940092901340cdbdf7565f02d",
+    "remote": "/srv/opentallas-scratch/codex/hdie-programme-local-0346/synth"
+  },
+  "production_functional": {
+    "unit": "oth-ubuntu-2044133-1792148042",
+    "host": "ot-epyc4",
+    "status": "RUNNING",
+    "shape": "actualS9688bits/7116edges/DB38; independent generated image",
+    "candidate_macros": 474
+  },
+  "failed_attempts": [
+    "2030426: Yosys rejects default-parameter simulation $fatal; guards now simulation-only, actual production capacities independently checked from mapped netlist",
+    "2034190: post-map check lacked libcell definitions; import actual mapped liberty before check; previous output preserved at synth_before_libcheck"
+  ],
+  "physical_qualification": false,
+  "cost_qualification": false,
+  "hashes": {
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_local.sv": "7ff140b4063c86ba48956588f8443435b3f2f36bb7b829b2d7610c8408a8606b",
+    "rtl/test/hbm_programme_local_1016/production.sv": "08b719f046eceda68eb15b1516cb3e560e301c3cf7657520381200ed8edb072e",
+    "rtl/test/hbm_programme_local_1016/production.ys": "9d1a28b78a9f5bbe2bd316597b5cad05a805c5681d4b13ecb53cd367149978bb",
+    "rtl/test/hbm_programme_local_1016/check_mapped.py": "f1185c2a6267899c2ef0a85fdd3cc92baab2e404e5b5b6c1080399bcc14507a6",
+    "rtl/test/hbm_programme_local_1016/synth.sh": "00b5f3ac6bb490f9be09eb9c67d8e80fe1773ce8eac2ce01ebecb2c7b879b569",
+    "rtl/test/hbm_programme_local_1016/tb.sv": "d8ed60e7d0ac032c08f4039feb7dffe33b78a2bc3b5444bbe39261f3eeb9c9b5",
+    "rtl/test/hbm_programme_local_1016/run.sh": "1d95b56d6f762d299201936a35a81d5bd0ea8f3959157df1693a6cceacf351d9",
+    "results/arch/hbm_su_programme_local_1016/component/m2.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/arch/hbm_su_programme_local_1016/component/m4.log": "d9b11b938d1f03dc3d48a868079fca45a311d5945e7981fe88e21f5a18697096",
+    "results/arch/hbm_su_programme_local_1016/component/m0.log": "fa5e0d63ee378980b5221c30e34f59e0a05dd9f4979b75307bf9da8563c21aee",
+    "results/arch/hbm_su_programme_local_1016/component/m1.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/arch/hbm_su_programme_local_1016/component/m4.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/arch/hbm_su_programme_local_1016/component/m0.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/arch/hbm_su_programme_local_1016/component/m1.log": "17270434e5fdfe0ff60c2540ea8ed00dc83ec9bf24928bfeb24061716c9fbfa3",
+    "results/arch/hbm_su_programme_local_1016/component/m2.log": "cb1a8c6c86a7513d278cd225334a4956872b9cd72bbf60c280de66cb7daec926",
+    "results/arch/hbm_su_programme_local_1016/mapped.stat": "c598c183a444dcea02526fdb3f874f7848f910c066a35d03d26e7719269182dc",
+    "results/arch/hbm_su_programme_local_1016/mapped_summary.json": "e9f43dca613a7b2cbd330463835c6ca9b671c4309de03c7b16d03e95d3e3d915",
+    "/tmp/hdie-v16case-0316/src/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "7489a32c3acbe12fca52b1db7a3bceae72ecd2ea1302aa5c1d26407e07ffff05",
+    "/tmp/hdie-v16case-0316/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "/tmp/hdie-v16case-0316/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+  },
+  "tools": {
+    "iverilog": "12.0 stable",
+    "yosys": "0.68+post gitUNKNOWN ORFSasap7lock",
+    "command": "ot-run --mem24 --threads4 --hostsot-epyc4; synth.sh reads actualSRAM _bb.v andactualRVT-TTlibcells; not routed"
+  }
+}

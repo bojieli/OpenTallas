@@ -1,0 +1,14 @@
+read_verilog -lib /source/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS /candidate/ot_hbm_su_programme_local.sv /candidate/production.sv
+hierarchy -check -top hbm_programme_local_production
+tee -o /candidate/synth/hier.stat stat
+synth -top hbm_programme_local_production -flatten
+check -assert
+dfflibmap -liberty /tmp/lib/seq.lib
+abc -liberty /tmp/lib/all.lib
+opt_clean
+read_liberty -lib /tmp/lib/all.lib
+check -assert
+tee -o /candidate/synth/mapped.stat stat -liberty /tmp/lib/all.lib
+write_verilog -noattr /candidate/synth/mapped.v
+write_json /candidate/synth/mapped.json

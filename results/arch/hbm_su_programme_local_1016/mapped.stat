@@ -1,0 +1,65 @@
+
+13. Printing statistics.
+
+=== hbm_programme_local_production ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    75140        - wires
+   320621        - wire bits
+      747        - public wires
+   246228        - public wire bits
+       16        - ports
+    10525        - port bits
+    97497 1.27E+04 cells
+       52        -   $scopeinfo
+       11    0.962   A2O1A1Ixp33_ASAP7_75t_R
+     5366  469.418   AND2x2_ASAP7_75t_R
+      121   10.585   AND3x1_ASAP7_75t_R
+      433   44.192   AND4x1_ASAP7_75t_R
+      205   23.911   AND5x1_ASAP7_75t_R
+       16      1.4   AO21x1_ASAP7_75t_R
+     1105  193.331   AO222x2_ASAP7_75t_R
+      392   51.438   AO22x1_ASAP7_75t_R
+       21    1.837   AOI211xp5_ASAP7_75t_R
+      737   53.727   AOI21xp33_ASAP7_75t_R
+     1817  185.443   AOI221xp5_ASAP7_75t_R
+     5139  749.266   AOI222xp33_ASAP7_75t_R
+    20905 1.83E+03   AOI22xp33_ASAP7_75t_R
+     2042  178.634   AOI31xp33_ASAP7_75t_R
+        1    0.102   AOI32xp33_ASAP7_75t_R
+    23931  6978.28   DFFHQNx1_ASAP7_75t_R
+    22629  989.792   INVx1_ASAP7_75t_R
+     1729  100.835   NAND2xp33_ASAP7_75t_R
+      428   31.201   NAND3xp33_ASAP7_75t_R
+     4193  366.804   NAND4xp25_ASAP7_75t_R
+      184   18.779   NAND5xp2_ASAP7_75t_R
+     3045  177.584   NOR2xp33_ASAP7_75t_R
+      626   45.635   NOR3xp33_ASAP7_75t_R
+      752   65.785   NOR4xp25_ASAP7_75t_R
+       41    4.184   NOR5xp2_ASAP7_75t_R
+      161   14.084   O2A1O1Ixp33_ASAP7_75t_R
+        5    0.583   OA211x2_ASAP7_75t_R
+        2    0.204   OA21x2_ASAP7_75t_R
+        2    0.175   OAI211xp5_ASAP7_75t_R
+      561   40.897   OAI21xp33_ASAP7_75t_R
+        3    0.306   OAI221xp5_ASAP7_75t_R
+       10    0.875   OAI22xp33_ASAP7_75t_R
+        2    0.204   OAI311xp33_ASAP7_75t_R
+        2    0.175   OAI31xp33_ASAP7_75t_R
+        2    0.204   OAI32xp33_ASAP7_75t_R
+      125   10.935   OR2x2_ASAP7_75t_R
+       54    4.724   OR3x1_ASAP7_75t_R
+       17    1.735   OR4x1_ASAP7_75t_R
+        8    0.933   OR5x1_ASAP7_75t_R
+       98    12.86   XNOR2xp5_ASAP7_75t_R
+       50    6.561   XOR2xp5_ASAP7_75t_R
+      474        -   ot_sram_1r1w_128x256_m1_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_128x256_m1_r2c2 is unknown!
+
+   Chip area for module '\hbm_programme_local_production': 12667.351860
+     of which used for sequential elements: 6978.279600 (55.09%)
+
