@@ -67,7 +67,7 @@ module tb_hbm_vm_q2_faces;
                 if(rslot_v[b])begin
                     group_id=int'(rslot[b*RB+:RB]);
                     if(group_id<RG&&rq[(b*RG+group_id)*17+16])begin
-                        row=int'(rq[(b*RG+group_id)*17+3+:10]);
+                        row=int'(rq[(b*RG+group_id)*17+3+:10])+(rq[(b*RG+group_id)*17+15]?1024:0); // mirror half (s[15]) = actual u_c rows 1024..2047
                         exp_rr_v[cycle+6+EXPECT_INPUT_LAT][b*RG+group_id]=1;
                         exp_data[cycle+6+EXPECT_INPUT_LAT][b*256+:256]=payload(b,row);
                     end else if(group_id==RG&&pq[b*285+284])begin
@@ -131,6 +131,28 @@ module tb_hbm_vm_q2_faces;
         clear_inputs();repeat(9)tick();
         if(writes!=1024||reads!=RG*1024)$fatal(1,"missing allgroup inventory");
         for(integer g=0;g<RG;g=g+1)if(group_reads[g]!=1024)$fatal(1,"group throughput mismatch group=%0d count=%0d",g,group_reads[g]);
+        // Mirror half (sector bit15, quadrant field 0): actual u_c SRAM rows 1024..2047 (u_b keeps the check
+        // bits of both halves). Without this phase the u_c macro and its clk_macro2 entry are unobserved.
+        for(row=0;row<128;row=row+1)begin
+            clear_inputs();wslot_v=8'hff;
+            for(integer b=0;b<8;b=b+1)begin
+                wslot[b*WB+:WB]=WB'(row%WG);
+                wq[(b*WG+(row%WG))*281+:281]={1'b1,1'b1,2'd0,10'(row),3'(b),payload(b,row+1024),8'hff};
+            end
+            tick();
+        end
+        clear_inputs();repeat(8)tick();
+        for(integer t=0;t<128;t=t+1)begin
+            clear_inputs();rslot_v=8'hff;
+            for(integer b=0;b<8;b=b+1)begin
+                group_id=(t+b)%RG;row=(t+b*5)%128;
+                rslot[b*RB+:RB]=RB'(group_id);
+                rq[(b*RG+group_id)*17+:17]={1'b1,1'b1,2'd0,10'(row),3'(b)};
+            end
+            tick();
+        end
+        clear_inputs();repeat(9)tick();
+        if(writes!=2048||reads!=RG*1024+1024)$fatal(1,"missing mirror-half (u_c) inventory writes=%0d reads=%0d",writes,reads);
         // Packetport is now ownerRG, seven onlargestshape; it remains distinct
         // from allseven wide outputs and preserves original8bitbank tag.
         rslot_v=8'hff;
@@ -150,7 +172,7 @@ module tb_hbm_vm_q2_faces;
         end
         tick();clear_inputs();repeat(12)tick();
         for(integer b=0;b<8;b=b+1)if(status[b*18+17]!==1)$fatal(1,"unselected secondgroup didnotfault");
-        $display("VM_NATIVE_ABI PASS RG=%0d WG=%0d banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=%0d eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1",RG,WG,RG*1024);
+        $display("VM_NATIVE_ABI PASS RG=%0d WG=%0d banks=8 SRAMs=24 wide_writes=2048 mirror_uc_rows=128x8 exactwide_reads=%0d eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1",RG,WG,RG*1024);
         $finish;
     end
 endmodule
