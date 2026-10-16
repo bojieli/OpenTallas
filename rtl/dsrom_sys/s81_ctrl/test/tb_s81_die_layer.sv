@@ -539,7 +539,10 @@ module tb_s81_die_layer;
         hcx_gc <= {hcx_gc[2:0], hcx_gwv}; hcx_ga[0] <= hcx_gwa; hcx_gdp[0] <= hcx_gwd;
         for (int i = 1; i < 4; i++) begin hcx_ga[i] <= hcx_ga[i-1]; hcx_gdp[i] <= hcx_gdp[i-1]; end
         if (hcx_gc[3]) begin vm[hcx_ga[3]] = hcx_gdp[3]; mark(hcx_ga[3]); end
-        if (hcx_c[84]) begin if (hcx_cmds < 2) hcx_cmd_cyc[hcx_cmds] = cyc; hcx_cmds++; end
+        // Publish the observer count after all posedge monitors have sampled it.
+        // The H-input checker below must see the same pre-command index in every
+        // simulator scheduling order; a blocking increment races that checker.
+        if (hcx_c[84]) begin if (hcx_cmds < 2) hcx_cmd_cyc[hcx_cmds] = cyc; hcx_cmds <= hcx_cmds + 1; end
     end
     wire hcx_srv, hcx_swv; wire [13:0] hcx_sra, hcx_swa; wire [15:0] hcx_swm; wire [511:0] hcx_swd;
     reg [3:0] hcx_sv = 0, hcx_sc = 0; reg [511:0] hcx_sdp [0:3]; reg [13:0] hcx_sap [0:3]; reg [15:0] hcx_smp [0:3]; reg [511:0] hcx_swp [0:3];
