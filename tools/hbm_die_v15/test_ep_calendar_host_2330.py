@@ -11,12 +11,22 @@ for q,es in links.items():
         lo=j*19
         for port,w in fields:
             es_=[e for e in s['edges'] if e['dst'][:2]==['ep_'+ep,port]]
-            assert len(es_)==1 and es_[0]['src']==['epcal_'+q,'calendar',lo,lo+w] and es_[0]['bits']==w
+            universal_fields={f['name']:f for f in json.loads((R/'results/arch/hbm_vm_calendar_1015/universal_layout.json').read_text())['fields']}
+            bit_map={}
+            for e in es_:
+                assert e['src'][0]=='epcal_'+q
+                f=universal_fields[e['src'][1]]
+                for k in range(e['bits']):
+                    di=e['dst'][2]+k
+                    assert di not in bit_map
+                    bit_map[di]=f['lo']+e['src'][2]+k
+            assert bit_map=={k:lo+k for k in range(w)}
             lo+=w
 print('EP_CALENDAR_MAPPING PASS171 bits/9 endpoints')
 sources=['rtl/hbm_accel/host_static_20261015/tb_hbm_ep_calendar_host.sv',
          'rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv',
          'rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv',
+         'rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv',
          'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v']
 with tempfile.TemporaryDirectory(prefix='hbm-epcal-') as td:
     for m in (0,1,2):

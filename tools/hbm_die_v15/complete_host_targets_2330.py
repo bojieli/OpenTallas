@@ -38,9 +38,9 @@ for k,q in enumerate(Q):
     s['instances'] += [dict(name=n,master='ot_static_program_target',
         source='rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv',
         params=dict(TARGET=f"8'd{132+k}",PCW=10),slot=None,owner='H-NETLIST',note='Endpoint RX calendar host collar, existing master'),
-        dict(name=g,master='ot_vms_calendar_static',
-        source='rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv',
-        params=dict(W=187),slot=None,owner='H-NETLIST',note='Standard W187 programme calendar; 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.')]
+        dict(name=g,master='hfd_hgi_vm_calendar',
+        source='rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv',
+        params={},slot=None,owner='H-NETLIST',note='Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.')]
     for i in (n,g): s['clocks'].append(dict(inst=i,port='clk',domain='stream',kind='clock'))
     for p,w in [('cfg_v',1),('cfg_target',8),('cfg_addr',12),('cfg_data',256),('desc_v',1),
                 ('desc_base',12),('desc_limit',13),('desc_loops',16),('launch_v',1)]: e(['host_cp_ingress',p],[n,p],w)
@@ -53,7 +53,13 @@ for k,q in enumerate(Q):
         lo=j*19
         for port,w in [('rx_arm_v',1),('rx_arm_bank',1),('rx_block_words',7),('rx_release_v',1),
                        ('rx_release_bank',1),('rx_slot_v',1),('rx_slot_bank',1),('rx_slot_index',6)]:
-            e([g,'calendar',lo,lo+w],['ep_'+lk,port],w);lo+=w
+            fields=json.loads((ROOT/'results/arch/hbm_vm_calendar_1015/universal_layout.json').read_text())['fields']
+            for f in fields:
+                a,b=max(lo,f['lo']),min(lo+w,f['lo']+f['bits'])
+                if a<b:
+                    e([g,f['name'],a-f['lo'],b-f['lo']],['ep_'+lk,port,a-lo,b-lo],b-a)
+                    s['edges'][-1]['basis']='Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling.'
+            lo+=w
         assert lo==(j+1)*19
 # Universal calendar fields are zero-extended whole packed fields by the compiler.
 # Connect each original quadrant ABI to its low contiguous field bits, preserving its lane packing.

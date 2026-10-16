@@ -63,14 +63,12 @@
   },
   {
    "name": "epcal_SW",
-   "master": "ot_vms_calendar_static",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
-   "params": {
-    "W": 187
-   },
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
    "slot": null,
    "owner": "H-NETLIST",
-   "note": "Standard W187 programme calendar; 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
   },
   {
    "name": "cp_ep_SE",
@@ -86,14 +84,12 @@
   },
   {
    "name": "epcal_SE",
-   "master": "ot_vms_calendar_static",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
-   "params": {
-    "W": 187
-   },
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
    "slot": null,
    "owner": "H-NETLIST",
-   "note": "Standard W187 programme calendar; 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
   },
   {
    "name": "cp_ep_NW",
@@ -109,14 +105,12 @@
   },
   {
    "name": "epcal_NW",
-   "master": "ot_vms_calendar_static",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
-   "params": {
-    "W": 187
-   },
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
    "slot": null,
    "owner": "H-NETLIST",
-   "note": "Standard W187 programme calendar; 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
   },
   {
    "name": "cp_ep_NE",
@@ -132,14 +126,12 @@
   },
   {
    "name": "epcal_NE",
-   "master": "ot_vms_calendar_static",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
-   "params": {
-    "W": 187
-   },
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
    "slot": null,
    "owner": "H-NETLIST",
-   "note": "Standard W187 programme calendar; 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling."
   }
  ],
  "edges": [
@@ -1251,362 +1243,461 @@
   {
    "src": [
     "epcal_SW",
-    "calendar",
+    "client_seq",
     0,
     1
    ],
    "dst": [
     "ep_S0",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
+    "client_seq",
     1,
     2
    ],
    "dst": [
     "ep_S0",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
+    "client_seq",
     2,
     9
    ],
    "dst": [
     "ep_S0",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    7
    ],
    "bits": 7,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
+    "client_seq",
     9,
     10
    ],
    "dst": [
     "ep_S0",
-    "rx_release_v"
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    10,
-    11
+    "response_enable",
+    0,
+    1
    ],
    "dst": [
     "ep_S0",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    11,
-    12
+    "response_enable",
+    1,
+    2
    ],
    "dst": [
     "ep_S0",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    12,
-    13
+    "response_enable",
+    2,
+    3
    ],
    "dst": [
     "ep_S0",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    13,
-    19
+    "response_enable",
+    3,
+    5
    ],
    "dst": [
     "ep_S0",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    2
    ],
-   "bits": 6,
+   "bits": 2,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    19,
-    20
+    "response_seq",
+    0,
+    4
+   ],
+   "dst": [
+    "ep_S0",
+    "rx_slot_index",
+    2,
+    6
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "response_seq",
+    4,
+    5
    ],
    "dst": [
     "ep_S1",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    20,
-    21
+    "response_seq",
+    5,
+    6
    ],
    "dst": [
     "ep_S1",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    21,
-    28
+    "response_seq",
+    6,
+    10
    ],
    "dst": [
     "ep_S1",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    4
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_enable",
+    0,
+    3
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_block_words",
+    4,
+    7
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_enable",
+    3,
+    4
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_release_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_enable",
+    4,
+    5
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_release_bank",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_enable",
+    5,
+    6
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_slot_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_enable",
+    6,
+    7
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_slot_bank",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_enable",
+    7,
+    8
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_slot_index",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_client",
+    0,
+    5
+   ],
+   "dst": [
+    "ep_S1",
+    "rx_slot_index",
+    1,
+    6
+   ],
+   "bits": 5,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_client",
+    5,
+    6
+   ],
+   "dst": [
+    "ep_S2",
+    "rx_arm_v",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_client",
+    6,
+    7
+   ],
+   "dst": [
+    "ep_S2",
+    "rx_arm_bank",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "bank_client",
+    7,
+    14
+   ],
+   "dst": [
+    "ep_S2",
+    "rx_block_words",
+    0,
+    7
    ],
    "bits": 7,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    28,
-    29
+    "bank_client",
+    14,
+    15
    ],
    "dst": [
-    "ep_S1",
-    "rx_release_v"
+    "ep_S2",
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    29,
-    30
+    "bank_client",
+    15,
+    16
    ],
    "dst": [
-    "ep_S1",
-    "rx_release_bank"
+    "ep_S2",
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    30,
-    31
+    "bank_client",
+    16,
+    17
    ],
    "dst": [
-    "ep_S1",
-    "rx_slot_v"
+    "ep_S2",
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    31,
-    32
+    "bank_client",
+    17,
+    18
    ],
    "dst": [
-    "ep_S1",
-    "rx_slot_bank"
+    "ep_S2",
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SW",
-    "calendar",
-    32,
-    38
+    "bank_client",
+    18,
+    24
    ],
    "dst": [
-    "ep_S1",
-    "rx_slot_index"
+    "ep_S2",
+    "rx_slot_index",
+    0,
+    6
    ],
    "bits": 6,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    38,
-    39
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_arm_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    39,
-    40
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_arm_bank"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    40,
-    47
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_block_words"
-   ],
-   "bits": 7,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    47,
-    48
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_release_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    48,
-    49
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_release_bank"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    49,
-    50
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_slot_v"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    50,
-    51
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_slot_bank"
-   ],
-   "bits": 1,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
-  },
-  {
-   "src": [
-    "epcal_SW",
-    "calendar",
-    51,
-    57
-   ],
-   "dst": [
-    "ep_S2",
-    "rx_slot_index"
-   ],
-   "bits": 6,
-   "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
@@ -1832,242 +1923,325 @@
   {
    "src": [
     "epcal_SE",
-    "calendar",
+    "client_seq",
     0,
     1
    ],
    "dst": [
     "ep_S3",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
+    "client_seq",
     1,
     2
    ],
    "dst": [
     "ep_S3",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
+    "client_seq",
     2,
     9
    ],
    "dst": [
     "ep_S3",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    7
    ],
    "bits": 7,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
+    "client_seq",
     9,
     10
    ],
    "dst": [
     "ep_S3",
-    "rx_release_v"
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    10,
-    11
+    "response_enable",
+    0,
+    1
    ],
    "dst": [
     "ep_S3",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    11,
-    12
+    "response_enable",
+    1,
+    2
    ],
    "dst": [
     "ep_S3",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    12,
-    13
+    "response_enable",
+    2,
+    3
    ],
    "dst": [
     "ep_S3",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    13,
-    19
+    "response_enable",
+    3,
+    5
    ],
    "dst": [
     "ep_S3",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    2
    ],
-   "bits": 6,
+   "bits": 2,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    19,
-    20
+    "response_seq",
+    0,
+    4
+   ],
+   "dst": [
+    "ep_S3",
+    "rx_slot_index",
+    2,
+    6
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SE",
+    "response_seq",
+    4,
+    5
    ],
    "dst": [
     "ep_S4",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    20,
-    21
+    "response_seq",
+    5,
+    6
    ],
    "dst": [
     "ep_S4",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    21,
-    28
+    "response_seq",
+    6,
+    10
    ],
    "dst": [
     "ep_S4",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    4
    ],
-   "bits": 7,
+   "bits": 4,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    28,
-    29
+    "bank_enable",
+    0,
+    3
    ],
    "dst": [
     "ep_S4",
-    "rx_release_v"
+    "rx_block_words",
+    4,
+    7
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SE",
+    "bank_enable",
+    3,
+    4
+   ],
+   "dst": [
+    "ep_S4",
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    29,
-    30
+    "bank_enable",
+    4,
+    5
    ],
    "dst": [
     "ep_S4",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    30,
-    31
+    "bank_enable",
+    5,
+    6
    ],
    "dst": [
     "ep_S4",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    31,
-    32
+    "bank_enable",
+    6,
+    7
    ],
    "dst": [
     "ep_S4",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_SE",
-    "calendar",
-    32,
-    38
+    "bank_enable",
+    7,
+    8
    ],
    "dst": [
     "ep_S4",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    1
    ],
-   "bits": 6,
+   "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_SE",
+    "bank_client",
+    0,
+    5
+   ],
+   "dst": [
+    "ep_S4",
+    "rx_slot_index",
+    1,
+    6
+   ],
+   "bits": 5,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
@@ -2293,242 +2467,325 @@
   {
    "src": [
     "epcal_NW",
-    "calendar",
+    "client_seq",
     0,
     1
    ],
    "dst": [
     "ep_N0",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
+    "client_seq",
     1,
     2
    ],
    "dst": [
     "ep_N0",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
+    "client_seq",
     2,
     9
    ],
    "dst": [
     "ep_N0",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    7
    ],
    "bits": 7,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
+    "client_seq",
     9,
     10
    ],
    "dst": [
     "ep_N0",
-    "rx_release_v"
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    10,
-    11
+    "response_enable",
+    0,
+    1
    ],
    "dst": [
     "ep_N0",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    11,
-    12
+    "response_enable",
+    1,
+    2
    ],
    "dst": [
     "ep_N0",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    12,
-    13
+    "response_enable",
+    2,
+    3
    ],
    "dst": [
     "ep_N0",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    13,
-    19
+    "response_enable",
+    3,
+    5
    ],
    "dst": [
     "ep_N0",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    2
    ],
-   "bits": 6,
+   "bits": 2,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    19,
-    20
+    "response_seq",
+    0,
+    4
+   ],
+   "dst": [
+    "ep_N0",
+    "rx_slot_index",
+    2,
+    6
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_NW",
+    "response_seq",
+    4,
+    5
    ],
    "dst": [
     "ep_N1",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    20,
-    21
+    "response_seq",
+    5,
+    6
    ],
    "dst": [
     "ep_N1",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    21,
-    28
+    "response_seq",
+    6,
+    10
    ],
    "dst": [
     "ep_N1",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    4
    ],
-   "bits": 7,
+   "bits": 4,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    28,
-    29
+    "bank_enable",
+    0,
+    3
    ],
    "dst": [
     "ep_N1",
-    "rx_release_v"
+    "rx_block_words",
+    4,
+    7
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_NW",
+    "bank_enable",
+    3,
+    4
+   ],
+   "dst": [
+    "ep_N1",
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    29,
-    30
+    "bank_enable",
+    4,
+    5
    ],
    "dst": [
     "ep_N1",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    30,
-    31
+    "bank_enable",
+    5,
+    6
    ],
    "dst": [
     "ep_N1",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    31,
-    32
+    "bank_enable",
+    6,
+    7
    ],
    "dst": [
     "ep_N1",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NW",
-    "calendar",
-    32,
-    38
+    "bank_enable",
+    7,
+    8
    ],
    "dst": [
     "ep_N1",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    1
    ],
-   "bits": 6,
+   "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_NW",
+    "bank_client",
+    0,
+    5
+   ],
+   "dst": [
+    "ep_N1",
+    "rx_slot_index",
+    1,
+    6
+   ],
+   "bits": 5,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
@@ -2754,242 +3011,325 @@
   {
    "src": [
     "epcal_NE",
-    "calendar",
+    "client_seq",
     0,
     1
    ],
    "dst": [
     "ep_N2",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
+    "client_seq",
     1,
     2
    ],
    "dst": [
     "ep_N2",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
+    "client_seq",
     2,
     9
    ],
    "dst": [
     "ep_N2",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    7
    ],
    "bits": 7,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
+    "client_seq",
     9,
     10
    ],
    "dst": [
     "ep_N2",
-    "rx_release_v"
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    10,
-    11
+    "response_enable",
+    0,
+    1
    ],
    "dst": [
     "ep_N2",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    11,
-    12
+    "response_enable",
+    1,
+    2
    ],
    "dst": [
     "ep_N2",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    12,
-    13
+    "response_enable",
+    2,
+    3
    ],
    "dst": [
     "ep_N2",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    13,
-    19
+    "response_enable",
+    3,
+    5
    ],
    "dst": [
     "ep_N2",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    2
    ],
-   "bits": 6,
+   "bits": 2,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    19,
-    20
+    "response_seq",
+    0,
+    4
+   ],
+   "dst": [
+    "ep_N2",
+    "rx_slot_index",
+    2,
+    6
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_NE",
+    "response_seq",
+    4,
+    5
    ],
    "dst": [
     "ep_N3",
-    "rx_arm_v"
+    "rx_arm_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    20,
-    21
+    "response_seq",
+    5,
+    6
    ],
    "dst": [
     "ep_N3",
-    "rx_arm_bank"
+    "rx_arm_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    21,
-    28
+    "response_seq",
+    6,
+    10
    ],
    "dst": [
     "ep_N3",
-    "rx_block_words"
+    "rx_block_words",
+    0,
+    4
    ],
-   "bits": 7,
+   "bits": 4,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    28,
-    29
+    "bank_enable",
+    0,
+    3
    ],
    "dst": [
     "ep_N3",
-    "rx_release_v"
+    "rx_block_words",
+    4,
+    7
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_NE",
+    "bank_enable",
+    3,
+    4
+   ],
+   "dst": [
+    "ep_N3",
+    "rx_release_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    29,
-    30
+    "bank_enable",
+    4,
+    5
    ],
    "dst": [
     "ep_N3",
-    "rx_release_bank"
+    "rx_release_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    30,
-    31
+    "bank_enable",
+    5,
+    6
    ],
    "dst": [
     "ep_N3",
-    "rx_slot_v"
+    "rx_slot_v",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    31,
-    32
+    "bank_enable",
+    6,
+    7
    ],
    "dst": [
     "ep_N3",
-    "rx_slot_bank"
+    "rx_slot_bank",
+    0,
+    1
    ],
    "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [
     "epcal_NE",
-    "calendar",
-    32,
-    38
+    "bank_enable",
+    7,
+    8
    ],
    "dst": [
     "ep_N3",
-    "rx_slot_index"
+    "rx_slot_index",
+    0,
+    1
    ],
-   "bits": 6,
+   "bits": 1,
    "clock": "stream",
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar"
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
+  },
+  {
+   "src": [
+    "epcal_NE",
+    "bank_client",
+    0,
+    5
+   ],
+   "dst": [
+    "ep_N3",
+    "rx_slot_index",
+    1,
+    6
+   ],
+   "bits": 5,
+   "clock": "stream",
+   "basis": "Exact universal calendar output fields are literal registered programme instruction bits, regrouped into typed endpoint controls; no data-dependent alias or runtime scheduling."
   },
   {
    "src": [

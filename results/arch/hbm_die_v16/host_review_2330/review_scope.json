@@ -34,12 +34,13 @@
       135
     ]
   },
-  "host_component_results": "67 targets readiness/active/completion and100 faults PASS; two status mutants rejected. EP realF20target+mappedSRAM1536 slots,512 wraps and invalidword fault PASS;2 calendar mutants reject.",
+  "host_component_results": "67 targets readiness/active/completion and100 faults PASS; two status mutants rejected. EP realF20target+mappedSRAM1536 slots,512 wraps and invalidword fault PASS;2 calendar mutants reject. Finaluniversalwrapper hostbench1536slots PASS; changedpayload andloopcount mutants reject.",
   "limitations": [
     "SU3:4 multirate predecessor run interrupted exit143; SU_TOP and isolatedjoins PASS only",
     "Keyscorer tags now128*port+beat and all32servicegroups require compiler go_at[142:119], FIXED_GO1",
     "VMkshare quadrant proof uses declared K-port controller models: boundarycomponent proof only, no truefullPHY/controller/die qualification",
     "HCclientbench uses declaredexternal engine-tail inputs/VMboundary; no nativeHCengine qualification",
     "New collars/status leaves and EPcalendar instances have no native physical views/homes yet"
-  ]
+  ],
+  "endpoint_physical_reuse": "Allfour EPcalendars use exact hfd_hgi_vm_calendar source and ports, shared with existing universalVMcalendar. Its output fields are literal programme bits, regrouped acrossfield boundaries into19b typed EPcontrols; no extra bareW187 physicalparameterisation."
 }

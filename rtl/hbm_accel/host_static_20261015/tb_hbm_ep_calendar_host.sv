@@ -26,9 +26,23 @@ module tb_hbm_ep_calendar_host;
         .program_start_v(p_start),.program_start_base(p_base),.program_start_limit(p_limit),
         .program_start_loops(p_loops),.configured(configured),.fault(target_fault));
     wire [31:0] ordinal;
-    ot_vms_calendar_static #(.W(187),.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),.cfg_we(p_we),.cfg_addr(p_addr),.cfg_data(p_data),
+    wire [9:0] client_seq,response_seq;
+    wire [4:0] response_enable;
+    wire [7:0] bank_enable,rslot_v,wslot_v;
+    wire [23:0] bank_client,rslot,wslot,lg_local_read,lg_local_write;
+    wire [1:0] hub_ring_enable,ring_tx_enable;
+    wire [5:0] hub_ring_client,ring_tx_source;
+    wire replay_enable,replay_source;
+    hfd_hgi_vm_calendar dut(.clk(clk),.rst_n(rst_n),.cfg_we(p_we),.cfg_addr(p_addr),.cfg_data(p_data),
         .start_v(p_start),.start_base(p_base),.start_limit(p_limit),.start_loops(p_loops),
-        .calendar(calendar),.calendar_v(calendar_v),.ordinal(ordinal),.active(active),.done(done),.fault(fault));
+        .calendar_v(calendar_v),.ordinal(ordinal),.active(active),.done(done),.fault(fault),
+        .client_seq(client_seq),.response_seq(response_seq),.response_enable(response_enable),
+        .bank_enable(bank_enable),.bank_client(bank_client),.hub_ring_enable(hub_ring_enable),.hub_ring_client(hub_ring_client),
+        .rslot_v(rslot_v),.wslot_v(wslot_v),.rslot(rslot),.wslot(wslot),.ring_tx_enable(ring_tx_enable),
+        .ring_tx_source(ring_tx_source),.replay_enable(replay_enable),.replay_source(replay_source),
+        .lg_local_read(lg_local_read),.lg_local_write(lg_local_write));
+    assign calendar={lg_local_write,lg_local_read,replay_source,replay_enable,ring_tx_source,ring_tx_enable,wslot,rslot,
+                     wslot_v,rslot_v,hub_ring_client,hub_ring_enable,bank_client,bank_enable,response_seq,response_enable,client_seq};
     integer count=0,cycle=0,launch=-1;
     reg watching=0;
     function automatic [186:0] pattern(input integer pc_);
@@ -48,13 +62,13 @@ module tb_hbm_ep_calendar_host;
         end
     endtask
     initial begin
-        step();@(negedge clk);rst_n=1;
+        step();@(negedge clk);rst_n=1;repeat(3)step();
         for(integer p=5;p<8;p++)begin
             @(negedge clk);cfg_we=1;cfg_addr=10'(p);cfg_data=0;
-            cfg_data[255:240]=16'hc7a1;cfg_data[233:224]=10'(p);cfg_data[186:0]=pattern(p);step();
+            cfg_data[255:240]=16'hc7a1;cfg_data[233:224]=10'(p);cfg_data[186:0]=pattern(p);if(MUT==1 && p==6)cfg_data[2]=~cfg_data[2];step();
         end
         @(negedge clk);cfg_we=0;repeat(5)step();
-        desc_v=1;desc_base=5;desc_limit=8;desc_loops=512;step();@(negedge clk);desc_v=0;
+        desc_v=1;desc_base=5;desc_limit=8;desc_loops=(MUT==2)?511:512;step();@(negedge clk);desc_v=0;
         repeat(4)step();if(!configured||target_fault)$fatal(1,"host descriptor install failed");
         launch_v=1;launch=cycle+1;watching=1;step();@(negedge clk);launch_v=0;
         while(count<1536)step();
