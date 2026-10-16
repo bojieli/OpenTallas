@@ -66,6 +66,9 @@ OWNER = [(r'hb_vms_(SW|SE|NW|NE)', lambda m: rf'(vmh|vmb)_{m.group(1)}\d*'),
          (r'hb_(idx|argmax)', lambda m: r'idx_\w+')]
 
 
+PIN_STEP = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
+
+
 def snap(v, g):
     return round(math.ceil(v / g - 1e-9) * g, 3)
 
@@ -196,6 +199,9 @@ def main():
                     help='d4b (H-DIE 10-16): grow every PC band box by this height (um) toward its SM row -- the S boxes '
                          'upward, the N boxes downward -- shifting every plan block, grant slot, h-lane and relay home '
                          'beyond the strip; the die grows by 2x. Room for the per-PC kshare + xcal_t row (d4a overflow).')
+    ap.add_argument('--compact-pins', action='store_true',
+                    help='d4b (H-DIE 10-16): SYNTH abstracts pack each bus at 0.096 um centred toward its peers '
+                         '(direction averaged over all instances of the master) instead of spreading over 90 % of the face')
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
@@ -479,6 +485,15 @@ def main():
                 put(n, r[0], r[1], 'R0', rule, 0.0); occ_res.mark(r[0], r[1], w_, h_); occ_big.mark(r[0], r[1], w_, h_)
                 homes[n] = dict(rule=rule, target=[round(cx, 1), round(cy, 1)], at=list(r))
                 continue
+        if a.d4b_homes and re.fullmatch(r'hb_vms_(SW|SE|NW|NE)', n):
+            # H-DIE 10-16 (coordinator SM_X decision, H-ELEM): the quadrant VM switch serves its own LG banks and the
+            # quadrant xload -> home it in its quadrant band at the nearest free fit to the quadrant SM centroid
+            q_ = n[-2:]; sms = [f'sm_{q_}{i}' for i in range(8) if f'sm_{q_}{i}' in pl]
+            cx = sum(centre(p)[0] for p in sms) / len(sms); cy = sum(centre(p)[1] for p in sms) / len(sms)
+            r = occ.find(cx, cy, w_, h_, HALO); rule = f'd4b: quadrant band, nearest free fit to the {q_} SM centroid'
+            put(n, r[0], r[1], 'R0', rule, HALO); occ_res.mark(r[0], r[1], w_, h_, HALO); occ_big.mark(r[0], r[1], w_, h_, HALO)
+            homes[n] = dict(rule=rule, target=[round(cx, 1), round(cy, 1)], at=list(r))
+            continue
         if a.d4b_homes and I[n]['master'] == 'ot_hgi_sm_xload_cl2_ctlw':
             sms = [p for p in adj[n] if p in pl and I[p]['master'] == 'ot_hbm_accel_smh_attn']
             if sms:
@@ -634,16 +649,26 @@ def main():
         cap = {f: 0.9 * (w if f in 'NS' else h) / 0.048 for f in 'NSEW'}
         want = {}
         clockish = set(p for d_ in clk.values() for p in [re.sub(r'\[\d+\]$', '', x) for x in d_.get(rep, [])])
+        insts_c = [n for n in V[c]['instances'] if n in pl] if a.compact_pins else [rep]
         for p, b in ports[c].items():
             pts = peer_xy.get((rep, p))
             if not pts:
                 want[p] = (['S', 'W', 'N', 'E'] if p in clockish else ['W', 'E', 'N', 'S'], 0.0, b)
                 continue
-            px = sum(x for x, _ in pts) / len(pts) - cx; py = sum(y for _, y in pts) / len(pts) - cy
-            if v['o'] in ('MY', 'R180'):
-                px = -px
-            if v['o'] in ('MX', 'R180'):
-                py = -py
+            # tile-frame direction to the peers, averaged over every instance of the master (one abstract serves all)
+            pxs, pys = [], []
+            for n_ in insts_c:
+                q_ = peer_xy.get((n_, p))
+                if not q_:
+                    continue
+                cx_, cy_ = centre(n_); o_ = pl[n_]['o']
+                px_ = sum(x for x, _ in q_) / len(q_) - cx_; py_ = sum(y for _, y in q_) / len(q_) - cy_
+                if o_ in ('MY', 'R180'):
+                    px_ = -px_
+                if o_ in ('MX', 'R180'):
+                    py_ = -py_
+                pxs.append(px_); pys.append(py_)
+            px = sum(pxs) / len(pxs); py = sum(pys) / len(pys)
             sc = {'E': px / w, 'W': -px / w, 'N': py / h, 'S': -py / h}
             order = sorted(sc, key=lambda f: -sc[f])
             along = (px if order[0] in 'NS' else py)
@@ -669,6 +694,26 @@ def main():
                 continue
             Lf = w if f in 'NS' else h
             tot = sum(k for _, _, _, k in L)
+            if a.compact_pins and tot * PIN_STEP <= 0.9 * Lf:
+                # d4b (H-DIE 10-16): each bus packed at the granted 0.096 um pitch, centred where it faces its peers
+                # (not spread over the whole face: the 5.7 mm SM xw_data spread was this abstract's artifact)
+                lo_, hi_ = 0.05 * Lf, 0.95 * Lf; runs = []
+                for along, p, base, k in sorted(L):
+                    ln_ = k * PIN_STEP; st_ = min(max(Lf / 2 + along - ln_ / 2, lo_), hi_ - ln_)
+                    if runs and st_ < runs[-1][1]:
+                        st_ = runs[-1][1]
+                    runs.append([st_, st_ + ln_, p, base, k])
+                over = runs[-1][1] - hi_ if runs else 0.0
+                if over > 0:                     # pushed past the face end: shift the tail back, keeping order
+                    for r_ in reversed(runs):
+                        r_[0] -= over; r_[1] -= over
+                        prev = runs[runs.index(r_) - 1] if runs.index(r_) else None
+                        if prev is None or prev[1] <= r_[0]:
+                            break
+                        over = prev[1] - r_[0]
+                for st_, en_, p, base, k in runs:
+                    pinlist.append((p, dirs[c][p], f, st_, en_, k, base, ports[c][p] > 1))
+                continue
             step = max(0.048, (0.9 * Lf) / max(tot, 1))
             x = 0.05 * Lf
             for _, p, base, k in sorted(L):
