@@ -2365,15 +2365,15 @@
   },
   {
    "name": "hb_dbk_SW",
-   "cell": "ot_hgi_dma_back_static",
-   "kind": "tile",
+   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 432.0,
+    "w": 488.16,
     "h": 360.72
    },
    "origin": {
-    "x": 11895.84,
+    "x": 11839.68,
     "y": 5864.0,
     "orient": "MY"
    },
@@ -2391,307 +2391,290 @@
    "strap_layer": "M6",
    "signal_max_layer": "M5",
    "layer_cap": "M5",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "rq[135:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 81.672,
      "span_um": [
-      75.144,
-      88.2
+      75.168,
+      88.224
      ],
-     "pins_per_um": 10.417
+     "offset": 81.696
     },
     {
      "name": "rr[2055:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 186.888,
      "span_um": [
-      88.2,
-      285.576
+      88.224,
+      285.6
      ],
-     "pins_per_um": 10.417
+     "offset": 186.912
     },
     {
      "name": "wb_reserve_v",
      "face": "N",
      "layer": "M5",
-     "offset": 100.608,
      "span_um": [
-      100.56,
-      100.656
+      128.64,
+      128.736
      ],
-     "pins_per_um": 10.417
+     "offset": 128.688
     },
     {
      "name": "wb_reserve_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.704,
      "span_um": [
-      100.656,
-      100.752
+      128.736,
+      128.832
      ],
-     "pins_per_um": 10.417
+     "offset": 128.784
     },
     {
      "name": "wb_fill_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.8,
      "span_um": [
-      100.752,
-      100.848
+      128.832,
+      128.928
      ],
-     "pins_per_um": 10.417
+     "offset": 128.88
     },
     {
      "name": "wb_reserve_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 101.616,
      "span_um": [
-      100.848,
-      102.384
+      128.928,
+      130.464
      ],
-     "pins_per_um": 10.417
+     "offset": 129.696
     },
     {
      "name": "wb_fill_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 103.152,
      "span_um": [
-      102.384,
-      103.92
+      130.464,
+      132.0
      ],
-     "pins_per_um": 10.417
+     "offset": 131.232
     },
     {
      "name": "wb_reserve_sectors[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 104.496,
      "span_um": [
-      103.92,
-      105.072
+      132.0,
+      133.152
      ],
-     "pins_per_um": 10.417
+     "offset": 132.576
     },
     {
      "name": "wb_reserve_base[31:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 106.608,
      "span_um": [
-      105.072,
-      108.144
+      133.152,
+      136.224
      ],
-     "pins_per_um": 10.417
+     "offset": 134.688
     },
     {
      "name": "wb_fill_start",
      "face": "N",
      "layer": "M5",
-     "offset": 108.192,
      "span_um": [
-      108.144,
-      108.24
+      136.224,
+      136.32
      ],
-     "pins_per_um": 10.417
+     "offset": 136.272
     },
     {
      "name": "wb_ready",
      "face": "N",
      "layer": "M5",
-     "offset": 108.288,
      "span_um": [
-      108.24,
-      108.336
+      136.32,
+      136.416
      ],
-     "pins_per_um": 10.417
+     "offset": 136.368
     },
     {
      "name": "wd[2311:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 219.312,
      "span_um": [
-      108.336,
-      330.288
+      136.416,
+      358.368
      ],
-     "pins_per_um": 10.417
+     "offset": 247.392
     },
     {
      "name": "wa[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 330.864,
      "span_um": [
-      330.288,
-      331.44
+      358.368,
+      359.52
      ],
-     "pins_per_um": 10.417
+     "offset": 358.944
     },
     {
      "name": "clk",
      "face": "E",
      "layer": "M4",
-     "offset": 163.704,
      "span_um": [
-      163.656,
-      163.752
+      163.296,
+      163.392
      ],
-     "pins_per_um": 10.417
+     "offset": 163.344
+    },
+    {
+     "name": "clk_bank[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      163.392,
+      164.16
+     ],
+     "offset": 163.776
     },
     {
      "name": "rst_n",
      "face": "E",
      "layer": "M4",
-     "offset": 163.8,
      "span_um": [
-      163.752,
-      163.848
+      164.16,
+      164.256
      ],
-     "pins_per_um": 10.417
+     "offset": 164.208
     },
     {
      "name": "cycle[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 165.384,
      "span_um": [
-      163.848,
-      166.92
+      164.256,
+      167.328
      ],
-     "pins_per_um": 10.417
+     "offset": 165.792
     },
     {
      "name": "mv_v",
      "face": "E",
      "layer": "M4",
-     "offset": 166.968,
      "span_um": [
-      166.92,
-      167.016
+      167.328,
+      167.424
      ],
-     "pins_per_um": 10.417
+     "offset": 167.376
     },
     {
      "name": "mv[226:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 177.912,
      "span_um": [
-      167.016,
-      188.808
+      167.424,
+      189.216
      ],
-     "pins_per_um": 10.417
+     "offset": 178.32
     },
     {
      "name": "issue_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 190.344,
      "span_um": [
-      188.808,
-      191.88
+      189.216,
+      192.288
      ],
-     "pins_per_um": 10.417
+     "offset": 190.752
     },
     {
      "name": "drain_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 193.416,
      "span_um": [
-      191.88,
-      194.952
+      192.288,
+      195.36
      ],
-     "pins_per_um": 10.417
+     "offset": 193.824
     },
     {
      "name": "mv_wb_bank",
      "face": "E",
      "layer": "M4",
-     "offset": 195.0,
      "span_um": [
-      194.952,
-      195.048
+      195.36,
+      195.456
      ],
-     "pins_per_um": 10.417
+     "offset": 195.408
     },
     {
      "name": "mv_wb_epoch[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 195.816,
      "span_um": [
-      195.048,
-      196.584
+      195.456,
+      196.992
      ],
-     "pins_per_um": 10.417
+     "offset": 196.224
     },
     {
      "name": "mv_src",
      "face": "E",
      "layer": "M4",
-     "offset": 196.632,
      "span_um": [
-      196.584,
-      196.68
+      196.992,
+      197.088
      ],
-     "pins_per_um": 10.417
+     "offset": 197.04
     },
     {
      "name": "mv_done",
      "face": "E",
      "layer": "M4",
-     "offset": 196.728,
      "span_um": [
-      196.68,
-      196.776
+      197.088,
+      197.184
      ],
-     "pins_per_um": 10.417
+     "offset": 197.136
     },
     {
      "name": "mv_fault",
      "face": "E",
      "layer": "M4",
-     "offset": 196.824,
      "span_um": [
-      196.776,
-      196.872
+      197.184,
+      197.28
      ],
-     "pins_per_um": 10.417
+     "offset": 197.232
     },
     {
      "name": "quiet",
      "face": "E",
      "layer": "M4",
-     "offset": 196.92,
      "span_um": [
-      196.872,
-      196.968
+      197.28,
+      197.376
      ],
-     "pins_per_um": 10.417
+     "offset": 197.328
     },
     {
      "name": "busy",
      "face": "E",
      "layer": "M4",
-     "offset": 197.016,
      "span_um": [
-      196.968,
-      197.064
+      197.376,
+      197.472
      ],
-     "pins_per_um": 10.417
+     "offset": 197.424
     }
    ],
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
    "params": {
     "STK": 0
    },
@@ -2754,15 +2737,91 @@
     "orient": "MY",
     "own_face_match_bits": 0.557
    },
-   "plan_block": "dbk_SW"
+   "plan_block": "dbk_SW",
+   "grant": "wires_only_cluster_v7",
+   "children": [
+    {
+     "inst": "u_bank0",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank1",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank2",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank3",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank4",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank5",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank6",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_bank7",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_control",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "at": [
+      345.6,
+      259.2
+     ],
+     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+    }
+   ]
   },
   {
    "name": "hb_dbk_SE",
-   "cell": "ot_hgi_dma_back_static",
-   "kind": "tile",
+   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 432.0,
+    "w": 488.16,
     "h": 360.72
    },
    "origin": {
@@ -2784,307 +2843,290 @@
    "strap_layer": "M6",
    "signal_max_layer": "M5",
    "layer_cap": "M5",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "rq[135:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 81.672,
      "span_um": [
-      75.144,
-      88.2
+      75.168,
+      88.224
      ],
-     "pins_per_um": 10.417
+     "offset": 81.696
     },
     {
      "name": "rr[2055:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 186.888,
      "span_um": [
-      88.2,
-      285.576
+      88.224,
+      285.6
      ],
-     "pins_per_um": 10.417
+     "offset": 186.912
     },
     {
      "name": "wb_reserve_v",
      "face": "N",
      "layer": "M5",
-     "offset": 100.608,
      "span_um": [
-      100.56,
-      100.656
+      128.64,
+      128.736
      ],
-     "pins_per_um": 10.417
+     "offset": 128.688
     },
     {
      "name": "wb_reserve_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.704,
      "span_um": [
-      100.656,
-      100.752
+      128.736,
+      128.832
      ],
-     "pins_per_um": 10.417
+     "offset": 128.784
     },
     {
      "name": "wb_fill_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.8,
      "span_um": [
-      100.752,
-      100.848
+      128.832,
+      128.928
      ],
-     "pins_per_um": 10.417
+     "offset": 128.88
     },
     {
      "name": "wb_reserve_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 101.616,
      "span_um": [
-      100.848,
-      102.384
+      128.928,
+      130.464
      ],
-     "pins_per_um": 10.417
+     "offset": 129.696
     },
     {
      "name": "wb_fill_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 103.152,
      "span_um": [
-      102.384,
-      103.92
+      130.464,
+      132.0
      ],
-     "pins_per_um": 10.417
+     "offset": 131.232
     },
     {
      "name": "wb_reserve_sectors[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 104.496,
      "span_um": [
-      103.92,
-      105.072
+      132.0,
+      133.152
      ],
-     "pins_per_um": 10.417
+     "offset": 132.576
     },
     {
      "name": "wb_reserve_base[31:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 106.608,
      "span_um": [
-      105.072,
-      108.144
+      133.152,
+      136.224
      ],
-     "pins_per_um": 10.417
+     "offset": 134.688
     },
     {
      "name": "wb_fill_start",
      "face": "N",
      "layer": "M5",
-     "offset": 108.192,
      "span_um": [
-      108.144,
-      108.24
+      136.224,
+      136.32
      ],
-     "pins_per_um": 10.417
+     "offset": 136.272
     },
     {
      "name": "wb_ready",
      "face": "N",
      "layer": "M5",
-     "offset": 108.288,
      "span_um": [
-      108.24,
-      108.336
+      136.32,
+      136.416
      ],
-     "pins_per_um": 10.417
+     "offset": 136.368
     },
     {
      "name": "wd[2311:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 219.312,
      "span_um": [
-      108.336,
-      330.288
+      136.416,
+      358.368
      ],
-     "pins_per_um": 10.417
+     "offset": 247.392
     },
     {
      "name": "wa[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 330.864,
      "span_um": [
-      330.288,
-      331.44
+      358.368,
+      359.52
      ],
-     "pins_per_um": 10.417
+     "offset": 358.944
     },
     {
      "name": "clk",
      "face": "E",
      "layer": "M4",
-     "offset": 163.704,
      "span_um": [
-      163.656,
-      163.752
+      163.296,
+      163.392
      ],
-     "pins_per_um": 10.417
+     "offset": 163.344
+    },
+    {
+     "name": "clk_bank[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      163.392,
+      164.16
+     ],
+     "offset": 163.776
     },
     {
      "name": "rst_n",
      "face": "E",
      "layer": "M4",
-     "offset": 163.8,
      "span_um": [
-      163.752,
-      163.848
+      164.16,
+      164.256
      ],
-     "pins_per_um": 10.417
+     "offset": 164.208
     },
     {
      "name": "cycle[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 165.384,
      "span_um": [
-      163.848,
-      166.92
+      164.256,
+      167.328
      ],
-     "pins_per_um": 10.417
+     "offset": 165.792
     },
     {
      "name": "mv_v",
      "face": "E",
      "layer": "M4",
-     "offset": 166.968,
      "span_um": [
-      166.92,
-      167.016
+      167.328,
+      167.424
      ],
-     "pins_per_um": 10.417
+     "offset": 167.376
     },
     {
      "name": "mv[226:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 177.912,
      "span_um": [
-      167.016,
-      188.808
+      167.424,
+      189.216
      ],
-     "pins_per_um": 10.417
+     "offset": 178.32
     },
     {
      "name": "issue_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 190.344,
      "span_um": [
-      188.808,
-      191.88
+      189.216,
+      192.288
      ],
-     "pins_per_um": 10.417
+     "offset": 190.752
     },
     {
      "name": "drain_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 193.416,
      "span_um": [
-      191.88,
-      194.952
+      192.288,
+      195.36
      ],
-     "pins_per_um": 10.417
+     "offset": 193.824
     },
     {
      "name": "mv_wb_bank",
      "face": "E",
      "layer": "M4",
-     "offset": 195.0,
      "span_um": [
-      194.952,
-      195.048
+      195.36,
+      195.456
      ],
-     "pins_per_um": 10.417
+     "offset": 195.408
     },
     {
      "name": "mv_wb_epoch[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 195.816,
      "span_um": [
-      195.048,
-      196.584
+      195.456,
+      196.992
      ],
-     "pins_per_um": 10.417
+     "offset": 196.224
     },
     {
      "name": "mv_src",
      "face": "E",
      "layer": "M4",
-     "offset": 196.632,
      "span_um": [
-      196.584,
-      196.68
+      196.992,
+      197.088
      ],
-     "pins_per_um": 10.417
+     "offset": 197.04
     },
     {
      "name": "mv_done",
      "face": "E",
      "layer": "M4",
-     "offset": 196.728,
      "span_um": [
-      196.68,
-      196.776
+      197.088,
+      197.184
      ],
-     "pins_per_um": 10.417
+     "offset": 197.136
     },
     {
      "name": "mv_fault",
      "face": "E",
      "layer": "M4",
-     "offset": 196.824,
      "span_um": [
-      196.776,
-      196.872
+      197.184,
+      197.28
      ],
-     "pins_per_um": 10.417
+     "offset": 197.232
     },
     {
      "name": "quiet",
      "face": "E",
      "layer": "M4",
-     "offset": 196.92,
      "span_um": [
-      196.872,
-      196.968
+      197.28,
+      197.376
      ],
-     "pins_per_um": 10.417
+     "offset": 197.328
     },
     {
      "name": "busy",
      "face": "E",
      "layer": "M4",
-     "offset": 197.016,
      "span_um": [
-      196.968,
-      197.064
+      197.376,
+      197.472
      ],
-     "pins_per_um": 10.417
+     "offset": 197.424
     }
    ],
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
    "params": {
     "STK": 1
    },
@@ -3147,19 +3189,95 @@
     "orient": "R180",
     "own_face_match_bits": 0.557
    },
-   "plan_block": "dbk_SE"
+   "plan_block": "dbk_SE",
+   "grant": "wires_only_cluster_v7",
+   "children": [
+    {
+     "inst": "u_bank0",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank1",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank2",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank3",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank4",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank5",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank6",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_bank7",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_control",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "at": [
+      345.6,
+      259.2
+     ],
+     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+    }
+   ]
   },
   {
    "name": "hb_dbk_NW",
-   "cell": "ot_hgi_dma_back_static",
-   "kind": "tile",
+   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 432.0,
+    "w": 488.16,
     "h": 360.72
    },
    "origin": {
-    "x": 11895.84,
+    "x": 11839.68,
     "y": 15052.973,
     "orient": "MY"
    },
@@ -3177,307 +3295,290 @@
    "strap_layer": "M6",
    "signal_max_layer": "M5",
    "layer_cap": "M5",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "rq[135:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 81.672,
      "span_um": [
-      75.144,
-      88.2
+      75.168,
+      88.224
      ],
-     "pins_per_um": 10.417
+     "offset": 81.696
     },
     {
      "name": "rr[2055:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 186.888,
      "span_um": [
-      88.2,
-      285.576
+      88.224,
+      285.6
      ],
-     "pins_per_um": 10.417
+     "offset": 186.912
     },
     {
      "name": "wb_reserve_v",
      "face": "N",
      "layer": "M5",
-     "offset": 100.608,
      "span_um": [
-      100.56,
-      100.656
+      128.64,
+      128.736
      ],
-     "pins_per_um": 10.417
+     "offset": 128.688
     },
     {
      "name": "wb_reserve_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.704,
      "span_um": [
-      100.656,
-      100.752
+      128.736,
+      128.832
      ],
-     "pins_per_um": 10.417
+     "offset": 128.784
     },
     {
      "name": "wb_fill_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.8,
      "span_um": [
-      100.752,
-      100.848
+      128.832,
+      128.928
      ],
-     "pins_per_um": 10.417
+     "offset": 128.88
     },
     {
      "name": "wb_reserve_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 101.616,
      "span_um": [
-      100.848,
-      102.384
+      128.928,
+      130.464
      ],
-     "pins_per_um": 10.417
+     "offset": 129.696
     },
     {
      "name": "wb_fill_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 103.152,
      "span_um": [
-      102.384,
-      103.92
+      130.464,
+      132.0
      ],
-     "pins_per_um": 10.417
+     "offset": 131.232
     },
     {
      "name": "wb_reserve_sectors[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 104.496,
      "span_um": [
-      103.92,
-      105.072
+      132.0,
+      133.152
      ],
-     "pins_per_um": 10.417
+     "offset": 132.576
     },
     {
      "name": "wb_reserve_base[31:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 106.608,
      "span_um": [
-      105.072,
-      108.144
+      133.152,
+      136.224
      ],
-     "pins_per_um": 10.417
+     "offset": 134.688
     },
     {
      "name": "wb_fill_start",
      "face": "N",
      "layer": "M5",
-     "offset": 108.192,
      "span_um": [
-      108.144,
-      108.24
+      136.224,
+      136.32
      ],
-     "pins_per_um": 10.417
+     "offset": 136.272
     },
     {
      "name": "wb_ready",
      "face": "N",
      "layer": "M5",
-     "offset": 108.288,
      "span_um": [
-      108.24,
-      108.336
+      136.32,
+      136.416
      ],
-     "pins_per_um": 10.417
+     "offset": 136.368
     },
     {
      "name": "wd[2311:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 219.312,
      "span_um": [
-      108.336,
-      330.288
+      136.416,
+      358.368
      ],
-     "pins_per_um": 10.417
+     "offset": 247.392
     },
     {
      "name": "wa[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 330.864,
      "span_um": [
-      330.288,
-      331.44
+      358.368,
+      359.52
      ],
-     "pins_per_um": 10.417
+     "offset": 358.944
     },
     {
      "name": "clk",
      "face": "E",
      "layer": "M4",
-     "offset": 163.704,
      "span_um": [
-      163.656,
-      163.752
+      163.296,
+      163.392
      ],
-     "pins_per_um": 10.417
+     "offset": 163.344
+    },
+    {
+     "name": "clk_bank[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      163.392,
+      164.16
+     ],
+     "offset": 163.776
     },
     {
      "name": "rst_n",
      "face": "E",
      "layer": "M4",
-     "offset": 163.8,
      "span_um": [
-      163.752,
-      163.848
+      164.16,
+      164.256
      ],
-     "pins_per_um": 10.417
+     "offset": 164.208
     },
     {
      "name": "cycle[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 165.384,
      "span_um": [
-      163.848,
-      166.92
+      164.256,
+      167.328
      ],
-     "pins_per_um": 10.417
+     "offset": 165.792
     },
     {
      "name": "mv_v",
      "face": "E",
      "layer": "M4",
-     "offset": 166.968,
      "span_um": [
-      166.92,
-      167.016
+      167.328,
+      167.424
      ],
-     "pins_per_um": 10.417
+     "offset": 167.376
     },
     {
      "name": "mv[226:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 177.912,
      "span_um": [
-      167.016,
-      188.808
+      167.424,
+      189.216
      ],
-     "pins_per_um": 10.417
+     "offset": 178.32
     },
     {
      "name": "issue_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 190.344,
      "span_um": [
-      188.808,
-      191.88
+      189.216,
+      192.288
      ],
-     "pins_per_um": 10.417
+     "offset": 190.752
     },
     {
      "name": "drain_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 193.416,
      "span_um": [
-      191.88,
-      194.952
+      192.288,
+      195.36
      ],
-     "pins_per_um": 10.417
+     "offset": 193.824
     },
     {
      "name": "mv_wb_bank",
      "face": "E",
      "layer": "M4",
-     "offset": 195.0,
      "span_um": [
-      194.952,
-      195.048
+      195.36,
+      195.456
      ],
-     "pins_per_um": 10.417
+     "offset": 195.408
     },
     {
      "name": "mv_wb_epoch[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 195.816,
      "span_um": [
-      195.048,
-      196.584
+      195.456,
+      196.992
      ],
-     "pins_per_um": 10.417
+     "offset": 196.224
     },
     {
      "name": "mv_src",
      "face": "E",
      "layer": "M4",
-     "offset": 196.632,
      "span_um": [
-      196.584,
-      196.68
+      196.992,
+      197.088
      ],
-     "pins_per_um": 10.417
+     "offset": 197.04
     },
     {
      "name": "mv_done",
      "face": "E",
      "layer": "M4",
-     "offset": 196.728,
      "span_um": [
-      196.68,
-      196.776
+      197.088,
+      197.184
      ],
-     "pins_per_um": 10.417
+     "offset": 197.136
     },
     {
      "name": "mv_fault",
      "face": "E",
      "layer": "M4",
-     "offset": 196.824,
      "span_um": [
-      196.776,
-      196.872
+      197.184,
+      197.28
      ],
-     "pins_per_um": 10.417
+     "offset": 197.232
     },
     {
      "name": "quiet",
      "face": "E",
      "layer": "M4",
-     "offset": 196.92,
      "span_um": [
-      196.872,
-      196.968
+      197.28,
+      197.376
      ],
-     "pins_per_um": 10.417
+     "offset": 197.328
     },
     {
      "name": "busy",
      "face": "E",
      "layer": "M4",
-     "offset": 197.016,
      "span_um": [
-      196.968,
-      197.064
+      197.376,
+      197.472
      ],
-     "pins_per_um": 10.417
+     "offset": 197.424
     }
    ],
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
    "params": {
     "STK": 2
    },
@@ -3540,15 +3641,91 @@
     "orient": "MY",
     "own_face_match_bits": 0.557
    },
-   "plan_block": "dbk_NW"
+   "plan_block": "dbk_NW",
+   "grant": "wires_only_cluster_v7",
+   "children": [
+    {
+     "inst": "u_bank0",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank1",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank2",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank3",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank4",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank5",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank6",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_bank7",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_control",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "at": [
+      345.6,
+      259.2
+     ],
+     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+    }
+   ]
   },
   {
    "name": "hb_dbk_NE",
-   "cell": "ot_hgi_dma_back_static",
-   "kind": "tile",
+   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 432.0,
+    "w": 488.16,
     "h": 360.72
    },
    "origin": {
@@ -3570,304 +3747,287 @@
    "strap_layer": "M6",
    "signal_max_layer": "M5",
    "layer_cap": "M5",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "rq[135:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 81.672,
      "span_um": [
-      75.144,
-      88.2
+      75.168,
+      88.224
      ],
-     "pins_per_um": 10.417
+     "offset": 81.696
     },
     {
      "name": "rr[2055:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 186.888,
      "span_um": [
-      88.2,
-      285.576
+      88.224,
+      285.6
      ],
-     "pins_per_um": 10.417
+     "offset": 186.912
     },
     {
      "name": "wb_reserve_v",
      "face": "N",
      "layer": "M5",
-     "offset": 100.608,
      "span_um": [
-      100.56,
-      100.656
+      128.64,
+      128.736
      ],
-     "pins_per_um": 10.417
+     "offset": 128.688
     },
     {
      "name": "wb_reserve_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.704,
      "span_um": [
-      100.656,
-      100.752
+      128.736,
+      128.832
      ],
-     "pins_per_um": 10.417
+     "offset": 128.784
     },
     {
      "name": "wb_fill_bank",
      "face": "N",
      "layer": "M5",
-     "offset": 100.8,
      "span_um": [
-      100.752,
-      100.848
+      128.832,
+      128.928
      ],
-     "pins_per_um": 10.417
+     "offset": 128.88
     },
     {
      "name": "wb_reserve_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 101.616,
      "span_um": [
-      100.848,
-      102.384
+      128.928,
+      130.464
      ],
-     "pins_per_um": 10.417
+     "offset": 129.696
     },
     {
      "name": "wb_fill_epoch[15:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 103.152,
      "span_um": [
-      102.384,
-      103.92
+      130.464,
+      132.0
      ],
-     "pins_per_um": 10.417
+     "offset": 131.232
     },
     {
      "name": "wb_reserve_sectors[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 104.496,
      "span_um": [
-      103.92,
-      105.072
+      132.0,
+      133.152
      ],
-     "pins_per_um": 10.417
+     "offset": 132.576
     },
     {
      "name": "wb_reserve_base[31:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 106.608,
      "span_um": [
-      105.072,
-      108.144
+      133.152,
+      136.224
      ],
-     "pins_per_um": 10.417
+     "offset": 134.688
     },
     {
      "name": "wb_fill_start",
      "face": "N",
      "layer": "M5",
-     "offset": 108.192,
      "span_um": [
-      108.144,
-      108.24
+      136.224,
+      136.32
      ],
-     "pins_per_um": 10.417
+     "offset": 136.272
     },
     {
      "name": "wb_ready",
      "face": "N",
      "layer": "M5",
-     "offset": 108.288,
      "span_um": [
-      108.24,
-      108.336
+      136.32,
+      136.416
      ],
-     "pins_per_um": 10.417
+     "offset": 136.368
     },
     {
      "name": "wd[2311:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 219.312,
      "span_um": [
-      108.336,
-      330.288
+      136.416,
+      358.368
      ],
-     "pins_per_um": 10.417
+     "offset": 247.392
     },
     {
      "name": "wa[11:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 330.864,
      "span_um": [
-      330.288,
-      331.44
+      358.368,
+      359.52
      ],
-     "pins_per_um": 10.417
+     "offset": 358.944
     },
     {
      "name": "clk",
      "face": "E",
      "layer": "M4",
-     "offset": 163.704,
      "span_um": [
-      163.656,
-      163.752
+      163.296,
+      163.392
      ],
-     "pins_per_um": 10.417
+     "offset": 163.344
+    },
+    {
+     "name": "clk_bank[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      163.392,
+      164.16
+     ],
+     "offset": 163.776
     },
     {
      "name": "rst_n",
      "face": "E",
      "layer": "M4",
-     "offset": 163.8,
      "span_um": [
-      163.752,
-      163.848
+      164.16,
+      164.256
      ],
-     "pins_per_um": 10.417
+     "offset": 164.208
     },
     {
      "name": "cycle[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 165.384,
      "span_um": [
-      163.848,
-      166.92
+      164.256,
+      167.328
      ],
-     "pins_per_um": 10.417
+     "offset": 165.792
     },
     {
      "name": "mv_v",
      "face": "E",
      "layer": "M4",
-     "offset": 166.968,
      "span_um": [
-      166.92,
-      167.016
+      167.328,
+      167.424
      ],
-     "pins_per_um": 10.417
+     "offset": 167.376
     },
     {
      "name": "mv[226:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 177.912,
      "span_um": [
-      167.016,
-      188.808
+      167.424,
+      189.216
      ],
-     "pins_per_um": 10.417
+     "offset": 178.32
     },
     {
      "name": "issue_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 190.344,
      "span_um": [
-      188.808,
-      191.88
+      189.216,
+      192.288
      ],
-     "pins_per_um": 10.417
+     "offset": 190.752
     },
     {
      "name": "drain_at[31:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 193.416,
      "span_um": [
-      191.88,
-      194.952
+      192.288,
+      195.36
      ],
-     "pins_per_um": 10.417
+     "offset": 193.824
     },
     {
      "name": "mv_wb_bank",
      "face": "E",
      "layer": "M4",
-     "offset": 195.0,
      "span_um": [
-      194.952,
-      195.048
+      195.36,
+      195.456
      ],
-     "pins_per_um": 10.417
+     "offset": 195.408
     },
     {
      "name": "mv_wb_epoch[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 195.816,
      "span_um": [
-      195.048,
-      196.584
+      195.456,
+      196.992
      ],
-     "pins_per_um": 10.417
+     "offset": 196.224
     },
     {
      "name": "mv_src",
      "face": "E",
      "layer": "M4",
-     "offset": 196.632,
      "span_um": [
-      196.584,
-      196.68
+      196.992,
+      197.088
      ],
-     "pins_per_um": 10.417
+     "offset": 197.04
     },
     {
      "name": "mv_done",
      "face": "E",
      "layer": "M4",
-     "offset": 196.728,
      "span_um": [
-      196.68,
-      196.776
+      197.088,
+      197.184
      ],
-     "pins_per_um": 10.417
+     "offset": 197.136
     },
     {
      "name": "mv_fault",
      "face": "E",
      "layer": "M4",
-     "offset": 196.824,
      "span_um": [
-      196.776,
-      196.872
+      197.184,
+      197.28
      ],
-     "pins_per_um": 10.417
+     "offset": 197.232
     },
     {
      "name": "quiet",
      "face": "E",
      "layer": "M4",
-     "offset": 196.92,
      "span_um": [
-      196.872,
-      196.968
+      197.28,
+      197.376
      ],
-     "pins_per_um": 10.417
+     "offset": 197.328
     },
     {
      "name": "busy",
      "face": "E",
      "layer": "M4",
-     "offset": 197.016,
      "span_um": [
-      196.968,
-      197.064
+      197.376,
+      197.472
      ],
-     "pins_per_um": 10.417
+     "offset": 197.424
     }
    ],
    "face_utilisation": {
@@ -3875,7 +4035,7 @@
     "N": 0.534,
     "E": 0.093
    },
-   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
    "params": {
     "STK": 3
    },
@@ -3928,7 +4088,83 @@
     "w": 432.0,
     "h": 360.72
    },
-   "plan_block": "dbk_NE"
+   "plan_block": "dbk_NE",
+   "grant": "wires_only_cluster_v7",
+   "children": [
+    {
+     "inst": "u_bank0",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank1",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank2",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      0
+     ]
+    },
+    {
+     "inst": "u_bank3",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank4",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank5",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      129.6
+     ]
+    },
+    {
+     "inst": "u_bank6",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_bank7",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      259.2
+     ]
+    },
+    {
+     "inst": "u_control",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "at": [
+      345.6,
+      259.2
+     ],
+     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+    }
+   ]
   },
   {
    "name": "svc_SW_s0",
@@ -123065,19 +123301,19 @@
    "instance": "hb_ckgen",
    "source": "rtl/hbm_accel/control/hfd_ckgen.sv",
    "params": {},
-   "kind": "hard_macro_group",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 216.0,
-    "h": 216.0
+    "w": 259.2,
+    "h": 220.32
    },
    "origin": {
     "x": 16416.0,
     "y": 10216.8,
     "orient": "R0"
    },
-   "version": 5,
-   "grant": "slot",
+   "version": 7,
+   "grant": "wires_only_cluster_v7",
    "clock_entry": null,
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -123087,39 +123323,148 @@
     {
      "name": "refclk",
      "face": "N",
-     "layer": "M9",
-     "note": "bump at the ckgen site"
+     "layer": "M5",
+     "span_um": [
+      124.8,
+      129.6
+     ],
+     "offset": 127.2
     },
     {
      "name": "por_n",
      "face": "N",
-     "layer": "M9",
-     "note": "bump at the ckgen site"
+     "layer": "M5",
+     "span_um": [
+      129.6,
+      134.4
+     ],
+     "offset": 132.0
     },
     {
      "name": "pll_hbm",
-     "face": "centre",
-     "layer": "M9",
-     "note": "die clock tree root (die CTS, M8/M9)"
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      110.4,
+      115.2
+     ],
+     "offset": 112.8
     },
     {
      "name": "pll_stream",
-     "face": "centre",
-     "layer": "M9"
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      115.2,
+      120.0
+     ],
+     "offset": 117.6
     },
     {
      "name": "pll_serial",
-     "face": "centre",
-     "layer": "M9"
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      120.0,
+      124.8
+     ],
+     "offset": 122.4
     },
     {
      "name": "pll_link",
-     "face": "centre",
-     "layer": "M9"
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      124.8,
+      129.6
+     ],
+     "offset": 127.2
+    },
+    {
+     "name": "por_hbm",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      129.6,
+      134.4
+     ],
+     "offset": 132.0
+    },
+    {
+     "name": "por_stream",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      134.4,
+      139.2
+     ],
+     "offset": 136.8
+    },
+    {
+     "name": "por_serial",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      139.2,
+      144.0
+     ],
+     "offset": 141.6
+    },
+    {
+     "name": "por_link",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      144.0,
+      148.8
+     ],
+     "offset": 146.4
     }
    ],
    "notes": "die clock root: PLL analog core = allowed modelled hard core (owner rule 10-14 08:05); reset release = real RTL; first tree level = four quadrant roots (die CTS, tools/hbm_die_v15/view_case.py --die-clock)",
-   "granted": "H-DIE 2026-10-15T17:30-07:00"
+   "granted": "H-DIE 2026-10-15T17:30-07:00",
+   "children": [
+    {
+     "inst": "u_pll",
+     "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
+     "at": [
+      22.32,
+      23.76
+     ]
+    },
+    {
+     "inst": "u_rel0",
+     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
+     "at": [
+      215.28,
+      23.76
+     ]
+    },
+    {
+     "inst": "u_rel1",
+     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
+     "at": [
+      215.28,
+      65.36
+     ]
+    },
+    {
+     "inst": "u_rel2",
+     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
+     "at": [
+      215.28,
+      106.96
+     ]
+    },
+    {
+     "inst": "u_rel3",
+     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
+     "at": [
+      215.28,
+      148.56
+     ]
+    }
+   ]
   },
   {
    "name": "quant_NW0_lg",
@@ -127643,7 +127988,8 @@
   "hfd_hgi_am": "v14 single-CP ARGMAX die master (credit dispatch via hfd_cmdproc); superseded by ot_hbm_argmax_static (contract instance hb_argmax, static calendar client)",
   "hfd_cmdproc": "v14 HGI command processor with per-unit dispatch credits and legacy SM launch tree: violates the static on-die schedule (owner 10-14/0az); its host/loader role moves to slot host_cp (static successor)",
   "hfd_serdes_slab": "v14 reservation slab beside the SerDes pin macros; v15 places the real ot_pdie_serdes macros as lk_* blocks (no slab: the macro is the block)",
-  "hfd_host_slab": "v14 host reservation slab; v15 places the real ot_pdie_ucie macro as host_N + host_cp logic"
+  "hfd_host_slab": "v14 host reservation slab; v15 places the real ot_pdie_ucie macro as host_N + host_cp logic",
+  "ot_hbm_svc_static_vm_delivery": "no slot (v7): svc bands retired by the SM-specific engine; VM HBM path = OPEN H-DIE structural item (compiler-windowed K-port share or dedicated PCs); lane split on hold"
  },
  "request_slots_superseded_by_v5": "SU/SFU request boxes are now window slots su_<q><k>, sucore_<q>, sfu_<q><k>",
  "metadata_leaf_refresh_1319": {
@@ -127749,6 +128095,2489 @@
    "writer x4: tkw_d[567:284] -> W M4 [24.576, 51.84]; tkw_d[283:0] S M5 [24.624, 51.888]",
    "state x32: cell ot_hgi_coll_pring_static_state_capture_lane (same ports/outline), cost accepted",
    "idx_s0..s3: 374 control bits local E -> local W [1561.608, 1597.512] next to ql_*/score; clocks stay E"
+  ]
+ },
+ "su_rf_relays_v7": {
+  "RF_RELAY": 36,
+  "clock": "serial 900 MHz",
+  "bits_per_stage": 41,
+  "routes": [
+   {
+    "src": "SW",
+    "dst": "SW",
+    "bits": 41,
+    "length_um": 0.0,
+    "stages": 36,
+    "max_hop_um": 4.8,
+    "homes": [
+     [
+      10866.032,
+      6162.696
+     ],
+     [
+      10870.832,
+      6162.696
+     ],
+     [
+      10875.632,
+      6162.696
+     ],
+     [
+      10880.432,
+      6162.696
+     ],
+     [
+      10885.232,
+      6162.696
+     ],
+     [
+      10890.032,
+      6162.696
+     ],
+     [
+      10894.832,
+      6162.696
+     ],
+     [
+      10899.632,
+      6162.696
+     ],
+     [
+      10904.432,
+      6162.696
+     ],
+     [
+      10909.232,
+      6162.696
+     ],
+     [
+      10914.032,
+      6162.696
+     ],
+     [
+      10918.832,
+      6162.696
+     ],
+     [
+      10923.632,
+      6162.696
+     ],
+     [
+      10928.432,
+      6162.696
+     ],
+     [
+      10933.232,
+      6162.696
+     ],
+     [
+      10938.032,
+      6162.696
+     ],
+     [
+      10942.832,
+      6162.696
+     ],
+     [
+      10947.632,
+      6162.696
+     ],
+     [
+      10952.432,
+      6162.696
+     ],
+     [
+      10957.232,
+      6162.696
+     ],
+     [
+      10962.032,
+      6162.696
+     ],
+     [
+      10966.832,
+      6162.696
+     ],
+     [
+      10971.632,
+      6162.696
+     ],
+     [
+      10976.432,
+      6162.696
+     ],
+     [
+      10981.232,
+      6162.696
+     ],
+     [
+      10986.032,
+      6162.696
+     ],
+     [
+      10990.832,
+      6162.696
+     ],
+     [
+      10995.632,
+      6162.696
+     ],
+     [
+      11000.432,
+      6162.696
+     ],
+     [
+      11005.232,
+      6162.696
+     ],
+     [
+      11010.032,
+      6162.696
+     ],
+     [
+      11014.832,
+      6162.696
+     ],
+     [
+      11019.632,
+      6162.696
+     ],
+     [
+      11024.432,
+      6162.696
+     ],
+     [
+      11029.232,
+      6162.696
+     ],
+     [
+      11034.032,
+      6162.696
+     ]
+    ]
+   },
+   {
+    "src": "SW",
+    "dst": "SE",
+    "bits": 41,
+    "length_um": 9319.9,
+    "stages": 36,
+    "max_hop_um": 251.7,
+    "homes": [
+     [
+      11112.96,
+      6174.696
+     ],
+     [
+      11364.688,
+      6174.696
+     ],
+     [
+      11616.416,
+      6174.696
+     ],
+     [
+      11868.145,
+      6174.696
+     ],
+     [
+      12119.873,
+      6174.696
+     ],
+     [
+      12371.601,
+      6174.696
+     ],
+     [
+      12623.329,
+      6174.696
+     ],
+     [
+      12875.057,
+      6174.696
+     ],
+     [
+      13126.785,
+      6174.696
+     ],
+     [
+      13378.513,
+      6174.696
+     ],
+     [
+      13630.241,
+      6174.696
+     ],
+     [
+      13881.969,
+      6175.024
+     ],
+     [
+      14133.697,
+      6175.438
+     ],
+     [
+      14385.425,
+      6175.851
+     ],
+     [
+      14637.153,
+      6176.264
+     ],
+     [
+      14888.881,
+      6176.678
+     ],
+     [
+      15140.608,
+      6177.091
+     ],
+     [
+      15392.336,
+      6177.504
+     ],
+     [
+      15644.064,
+      6177.917
+     ],
+     [
+      15895.792,
+      6178.331
+     ],
+     [
+      16147.519,
+      6178.744
+     ],
+     [
+      16399.247,
+      6179.157
+     ],
+     [
+      16650.975,
+      6179.571
+     ],
+     [
+      16902.703,
+      6179.984
+     ],
+     [
+      17154.431,
+      6180.397
+     ],
+     [
+      17388.159,
+      6162.696
+     ],
+     [
+      17639.887,
+      6162.696
+     ],
+     [
+      17891.615,
+      6162.696
+     ],
+     [
+      18143.343,
+      6162.696
+     ],
+     [
+      18395.071,
+      6162.696
+     ],
+     [
+      18646.799,
+      6162.696
+     ],
+     [
+      18898.527,
+      6162.696
+     ],
+     [
+      19150.255,
+      6162.696
+     ],
+     [
+      19401.984,
+      6162.696
+     ],
+     [
+      19653.712,
+      6162.696
+     ],
+     [
+      19905.44,
+      6162.696
+     ]
+    ]
+   },
+   {
+    "src": "SW",
+    "dst": "NW",
+    "bits": 41,
+    "length_um": 13776.9,
+    "stages": 36,
+    "max_hop_um": 372.3,
+    "homes": [
+     [
+      11233.579,
+      6186.696
+     ],
+     [
+      11605.927,
+      6186.696
+     ],
+     [
+      11978.274,
+      6186.696
+     ],
+     [
+      12350.622,
+      6186.696
+     ],
+     [
+      12722.969,
+      6186.696
+     ],
+     [
+      13095.317,
+      6186.696
+     ],
+     [
+      13467.664,
+      6186.696
+     ],
+     [
+      13681.98,
+      6344.728
+     ],
+     [
+      13681.98,
+      6717.075
+     ],
+     [
+      13681.98,
+      7089.423
+     ],
+     [
+      13681.98,
+      7461.77
+     ],
+     [
+      13681.98,
+      7834.118
+     ],
+     [
+      13681.98,
+      8206.465
+     ],
+     [
+      13681.98,
+      8578.812
+     ],
+     [
+      13681.98,
+      8951.16
+     ],
+     [
+      13681.98,
+      9323.507
+     ],
+     [
+      13681.98,
+      9695.855
+     ],
+     [
+      13681.98,
+      10068.202
+     ],
+     [
+      13681.98,
+      10440.55
+     ],
+     [
+      13681.98,
+      10812.897
+     ],
+     [
+      13681.98,
+      11185.245
+     ],
+     [
+      13681.98,
+      11557.592
+     ],
+     [
+      13681.98,
+      11929.94
+     ],
+     [
+      13681.98,
+      12302.287
+     ],
+     [
+      13681.98,
+      12674.634
+     ],
+     [
+      13681.98,
+      13046.982
+     ],
+     [
+      13681.98,
+      13419.329
+     ],
+     [
+      13681.98,
+      13791.677
+     ],
+     [
+      13681.98,
+      14164.024
+     ],
+     [
+      13614.544,
+      14432.936
+     ],
+     [
+      13242.197,
+      14432.936
+     ],
+     [
+      12869.849,
+      14432.936
+     ],
+     [
+      12497.502,
+      14432.936
+     ],
+     [
+      12125.154,
+      14432.936
+     ],
+     [
+      11752.807,
+      14432.936
+     ],
+     [
+      11380.459,
+      14432.936
+     ]
+    ]
+   },
+   {
+    "src": "SW",
+    "dst": "NE",
+    "bits": 41,
+    "length_um": 17419.3,
+    "stages": 36,
+    "max_hop_um": 470.8,
+    "homes": [
+     [
+      11332.024,
+      6198.696
+     ],
+     [
+      11802.816,
+      6198.696
+     ],
+     [
+      12273.607,
+      6198.696
+     ],
+     [
+      12744.399,
+      6198.696
+     ],
+     [
+      13215.191,
+      6198.696
+     ],
+     [
+      13681.98,
+      6202.699
+     ],
+     [
+      13681.98,
+      6673.49
+     ],
+     [
+      13681.98,
+      7144.282
+     ],
+     [
+      13681.98,
+      7615.074
+     ],
+     [
+      13681.98,
+      8085.866
+     ],
+     [
+      13681.98,
+      8556.658
+     ],
+     [
+      13681.98,
+      9027.449
+     ],
+     [
+      13681.98,
+      9498.241
+     ],
+     [
+      13681.98,
+      9969.033
+     ],
+     [
+      13681.98,
+      10439.825
+     ],
+     [
+      13681.98,
+      10910.617
+     ],
+     [
+      13681.98,
+      11381.408
+     ],
+     [
+      13681.98,
+      11852.2
+     ],
+     [
+      13681.98,
+      12322.992
+     ],
+     [
+      13681.98,
+      12793.784
+     ],
+     [
+      13681.98,
+      13264.575
+     ],
+     [
+      13681.98,
+      13735.367
+     ],
+     [
+      13681.98,
+      14206.159
+     ],
+     [
+      13907.995,
+      14450.936
+     ],
+     [
+      14378.787,
+      14450.936
+     ],
+     [
+      14849.578,
+      14450.936
+     ],
+     [
+      15320.37,
+      14450.936
+     ],
+     [
+      15791.162,
+      14450.936
+     ],
+     [
+      16261.954,
+      14450.936
+     ],
+     [
+      16732.746,
+      14450.936
+     ],
+     [
+      17203.537,
+      14450.936
+     ],
+     [
+      17656.329,
+      14432.936
+     ],
+     [
+      18127.121,
+      14432.936
+     ],
+     [
+      18597.913,
+      14432.936
+     ],
+     [
+      19068.704,
+      14432.936
+     ],
+     [
+      19539.496,
+      14432.936
+     ]
+    ]
+   },
+   {
+    "src": "SE",
+    "dst": "SW",
+    "bits": 41,
+    "length_um": 9319.9,
+    "stages": 36,
+    "max_hop_um": 251.4,
+    "homes": [
+     [
+      19905.763,
+      6162.696
+     ],
+     [
+      19654.358,
+      6162.696
+     ],
+     [
+      19402.953,
+      6162.696
+     ],
+     [
+      19151.549,
+      6162.696
+     ],
+     [
+      18900.144,
+      6162.696
+     ],
+     [
+      18648.739,
+      6162.696
+     ],
+     [
+      18397.334,
+      6162.696
+     ],
+     [
+      18145.929,
+      6162.696
+     ],
+     [
+      17894.524,
+      6162.696
+     ],
+     [
+      17643.119,
+      6162.696
+     ],
+     [
+      17391.714,
+      6162.696
+     ],
+     [
+      17140.312,
+      6163.662
+     ],
+     [
+      16888.91,
+      6164.9
+     ],
+     [
+      16637.508,
+      6166.139
+     ],
+     [
+      16386.106,
+      6167.377
+     ],
+     [
+      16134.705,
+      6168.615
+     ],
+     [
+      15883.303,
+      6169.853
+     ],
+     [
+      15631.901,
+      6171.092
+     ],
+     [
+      15380.499,
+      6172.33
+     ],
+     [
+      15129.097,
+      6173.568
+     ],
+     [
+      14877.695,
+      6174.806
+     ],
+     [
+      14626.294,
+      6176.045
+     ],
+     [
+      14374.892,
+      6177.283
+     ],
+     [
+      14123.49,
+      6178.521
+     ],
+     [
+      13872.088,
+      6179.76
+     ],
+     [
+      13626.686,
+      6174.696
+     ],
+     [
+      13375.281,
+      6174.696
+     ],
+     [
+      13123.876,
+      6174.696
+     ],
+     [
+      12872.471,
+      6174.696
+     ],
+     [
+      12621.066,
+      6174.696
+     ],
+     [
+      12369.661,
+      6174.696
+     ],
+     [
+      12118.256,
+      6174.696
+     ],
+     [
+      11866.851,
+      6174.696
+     ],
+     [
+      11615.447,
+      6174.696
+     ],
+     [
+      11364.042,
+      6174.696
+     ],
+     [
+      11112.637,
+      6174.696
+     ]
+    ]
+   },
+   {
+    "src": "SE",
+    "dst": "SE",
+    "bits": 41,
+    "length_um": 0.0,
+    "stages": 36,
+    "max_hop_um": 4.8,
+    "homes": [
+     [
+      20152.368,
+      6174.696
+     ],
+     [
+      20147.568,
+      6174.696
+     ],
+     [
+      20142.768,
+      6174.696
+     ],
+     [
+      20137.968,
+      6174.696
+     ],
+     [
+      20133.168,
+      6174.696
+     ],
+     [
+      20128.368,
+      6174.696
+     ],
+     [
+      20123.568,
+      6174.696
+     ],
+     [
+      20118.768,
+      6174.696
+     ],
+     [
+      20113.968,
+      6174.696
+     ],
+     [
+      20109.168,
+      6174.696
+     ],
+     [
+      20104.368,
+      6174.696
+     ],
+     [
+      20099.568,
+      6174.696
+     ],
+     [
+      20094.768,
+      6174.696
+     ],
+     [
+      20089.968,
+      6174.696
+     ],
+     [
+      20085.168,
+      6174.696
+     ],
+     [
+      20080.368,
+      6174.696
+     ],
+     [
+      20075.568,
+      6174.696
+     ],
+     [
+      20070.768,
+      6174.696
+     ],
+     [
+      20065.968,
+      6174.696
+     ],
+     [
+      20061.168,
+      6174.696
+     ],
+     [
+      20056.368,
+      6174.696
+     ],
+     [
+      20051.568,
+      6174.696
+     ],
+     [
+      20046.768,
+      6174.696
+     ],
+     [
+      20041.968,
+      6174.696
+     ],
+     [
+      20037.168,
+      6174.696
+     ],
+     [
+      20032.368,
+      6174.696
+     ],
+     [
+      20027.568,
+      6174.696
+     ],
+     [
+      20022.768,
+      6174.696
+     ],
+     [
+      20017.968,
+      6174.696
+     ],
+     [
+      20013.168,
+      6174.696
+     ],
+     [
+      20008.368,
+      6174.696
+     ],
+     [
+      20003.568,
+      6174.696
+     ],
+     [
+      19998.768,
+      6174.696
+     ],
+     [
+      19993.968,
+      6174.696
+     ],
+     [
+      19989.168,
+      6174.696
+     ],
+     [
+      19984.368,
+      6174.696
+     ]
+    ]
+   },
+   {
+    "src": "SE",
+    "dst": "NW",
+    "bits": 41,
+    "length_um": 17419.3,
+    "stages": 36,
+    "max_hop_um": 470.8,
+    "homes": [
+     [
+      19686.376,
+      6186.696
+     ],
+     [
+      19215.584,
+      6186.696
+     ],
+     [
+      18744.793,
+      6186.696
+     ],
+     [
+      18274.001,
+      6186.696
+     ],
+     [
+      17803.209,
+      6186.696
+     ],
+     [
+      17336.42,
+      6190.699
+     ],
+     [
+      17336.42,
+      6661.49
+     ],
+     [
+      17336.42,
+      7132.282
+     ],
+     [
+      17336.42,
+      7603.074
+     ],
+     [
+      17336.42,
+      8073.866
+     ],
+     [
+      17336.42,
+      8544.658
+     ],
+     [
+      17336.42,
+      9015.449
+     ],
+     [
+      17336.42,
+      9486.241
+     ],
+     [
+      17336.42,
+      9957.033
+     ],
+     [
+      17336.42,
+      10427.825
+     ],
+     [
+      17336.42,
+      10898.617
+     ],
+     [
+      17336.42,
+      11369.408
+     ],
+     [
+      17336.42,
+      11840.2
+     ],
+     [
+      17336.42,
+      12310.992
+     ],
+     [
+      17336.42,
+      12781.784
+     ],
+     [
+      17336.42,
+      13252.575
+     ],
+     [
+      17336.42,
+      13723.367
+     ],
+     [
+      17336.42,
+      14194.159
+     ],
+     [
+      17122.405,
+      14450.936
+     ],
+     [
+      16651.613,
+      14450.936
+     ],
+     [
+      16180.822,
+      14450.936
+     ],
+     [
+      15710.03,
+      14450.936
+     ],
+     [
+      15239.238,
+      14450.936
+     ],
+     [
+      14768.446,
+      14450.936
+     ],
+     [
+      14297.654,
+      14450.936
+     ],
+     [
+      13826.863,
+      14450.936
+     ],
+     [
+      13362.071,
+      14444.936
+     ],
+     [
+      12891.279,
+      14444.936
+     ],
+     [
+      12420.487,
+      14444.936
+     ],
+     [
+      11949.696,
+      14444.936
+     ],
+     [
+      11478.904,
+      14444.936
+     ]
+    ]
+   },
+   {
+    "src": "SE",
+    "dst": "NE",
+    "bits": 41,
+    "length_um": 13752.9,
+    "stages": 36,
+    "max_hop_um": 371.7,
+    "homes": [
+     [
+      19785.469,
+      6198.696
+     ],
+     [
+      19413.77,
+      6198.696
+     ],
+     [
+      19042.072,
+      6198.696
+     ],
+     [
+      18670.373,
+      6198.696
+     ],
+     [
+      18298.674,
+      6198.696
+     ],
+     [
+      17926.975,
+      6198.696
+     ],
+     [
+      17555.276,
+      6198.696
+     ],
+     [
+      17336.42,
+      6351.538
+     ],
+     [
+      17336.42,
+      6723.237
+     ],
+     [
+      17336.42,
+      7094.936
+     ],
+     [
+      17336.42,
+      7466.635
+     ],
+     [
+      17336.42,
+      7838.334
+     ],
+     [
+      17336.42,
+      8210.033
+     ],
+     [
+      17336.42,
+      8581.731
+     ],
+     [
+      17336.42,
+      8953.43
+     ],
+     [
+      17336.42,
+      9325.129
+     ],
+     [
+      17336.42,
+      9696.828
+     ],
+     [
+      17336.42,
+      10068.527
+     ],
+     [
+      17336.42,
+      10440.225
+     ],
+     [
+      17336.42,
+      10811.924
+     ],
+     [
+      17336.42,
+      11183.623
+     ],
+     [
+      17336.42,
+      11555.322
+     ],
+     [
+      17336.42,
+      11927.021
+     ],
+     [
+      17336.42,
+      12298.719
+     ],
+     [
+      17336.42,
+      12670.418
+     ],
+     [
+      17336.42,
+      13042.117
+     ],
+     [
+      17336.42,
+      13413.816
+     ],
+     [
+      17336.42,
+      13785.515
+     ],
+     [
+      17336.42,
+      14157.214
+     ],
+     [
+      17408.396,
+      14444.936
+     ],
+     [
+      17780.095,
+      14444.936
+     ],
+     [
+      18151.794,
+      14444.936
+     ],
+     [
+      18523.493,
+      14444.936
+     ],
+     [
+      18895.192,
+      14444.936
+     ],
+     [
+      19266.89,
+      14444.936
+     ],
+     [
+      19638.589,
+      14444.936
+     ]
+    ]
+   },
+   {
+    "src": "NW",
+    "dst": "SW",
+    "bits": 41,
+    "length_um": 13752.9,
+    "stages": 36,
+    "max_hop_um": 371.7,
+    "homes": [
+     [
+      11379.811,
+      14432.936
+     ],
+     [
+      11751.51,
+      14432.936
+     ],
+     [
+      12123.208,
+      14432.936
+     ],
+     [
+      12494.907,
+      14432.936
+     ],
+     [
+      12866.606,
+      14432.936
+     ],
+     [
+      13238.305,
+      14432.936
+     ],
+     [
+      13610.004,
+      14432.936
+     ],
+     [
+      13681.98,
+      14133.214
+     ],
+     [
+      13681.98,
+      13761.515
+     ],
+     [
+      13681.98,
+      13389.816
+     ],
+     [
+      13681.98,
+      13018.117
+     ],
+     [
+      13681.98,
+      12646.418
+     ],
+     [
+      13681.98,
+      12274.719
+     ],
+     [
+      13681.98,
+      11903.021
+     ],
+     [
+      13681.98,
+      11531.322
+     ],
+     [
+      13681.98,
+      11159.623
+     ],
+     [
+      13681.98,
+      10787.924
+     ],
+     [
+      13681.98,
+      10416.225
+     ],
+     [
+      13681.98,
+      10044.527
+     ],
+     [
+      13681.98,
+      9672.828
+     ],
+     [
+      13681.98,
+      9301.129
+     ],
+     [
+      13681.98,
+      8929.43
+     ],
+     [
+      13681.98,
+      8557.731
+     ],
+     [
+      13681.98,
+      8186.033
+     ],
+     [
+      13681.98,
+      7814.334
+     ],
+     [
+      13681.98,
+      7442.635
+     ],
+     [
+      13681.98,
+      7070.936
+     ],
+     [
+      13681.98,
+      6699.237
+     ],
+     [
+      13681.98,
+      6327.538
+     ],
+     [
+      13463.124,
+      6186.696
+     ],
+     [
+      13091.425,
+      6186.696
+     ],
+     [
+      12719.726,
+      6186.696
+     ],
+     [
+      12348.027,
+      6186.696
+     ],
+     [
+      11976.328,
+      6186.696
+     ],
+     [
+      11604.63,
+      6186.696
+     ],
+     [
+      11232.931,
+      6186.696
+     ]
+    ]
+   },
+   {
+    "src": "NW",
+    "dst": "SE",
+    "bits": 41,
+    "length_um": 17419.3,
+    "stages": 36,
+    "max_hop_um": 470.8,
+    "homes": [
+     [
+      11478.904,
+      14444.936
+     ],
+     [
+      11949.696,
+      14444.936
+     ],
+     [
+      12420.487,
+      14444.936
+     ],
+     [
+      12891.279,
+      14444.936
+     ],
+     [
+      13362.071,
+      14444.936
+     ],
+     [
+      13681.98,
+      14294.053
+     ],
+     [
+      13681.98,
+      13823.262
+     ],
+     [
+      13681.98,
+      13352.47
+     ],
+     [
+      13681.98,
+      12881.678
+     ],
+     [
+      13681.98,
+      12410.886
+     ],
+     [
+      13681.98,
+      11940.094
+     ],
+     [
+      13681.98,
+      11469.303
+     ],
+     [
+      13681.98,
+      10998.511
+     ],
+     [
+      13681.98,
+      10527.719
+     ],
+     [
+      13681.98,
+      10056.927
+     ],
+     [
+      13681.98,
+      9586.135
+     ],
+     [
+      13681.98,
+      9115.344
+     ],
+     [
+      13681.98,
+      8644.552
+     ],
+     [
+      13681.98,
+      8173.76
+     ],
+     [
+      13681.98,
+      7702.968
+     ],
+     [
+      13681.98,
+      7232.177
+     ],
+     [
+      13681.98,
+      6761.385
+     ],
+     [
+      13681.98,
+      6290.593
+     ],
+     [
+      14042.875,
+      6180.696
+     ],
+     [
+      14513.667,
+      6180.696
+     ],
+     [
+      14984.458,
+      6180.696
+     ],
+     [
+      15455.25,
+      6180.696
+     ],
+     [
+      15926.042,
+      6180.696
+     ],
+     [
+      16396.834,
+      6180.696
+     ],
+     [
+      16867.626,
+      6180.696
+     ],
+     [
+      17336.42,
+      6182.693
+     ],
+     [
+      17803.209,
+      6186.696
+     ],
+     [
+      18274.001,
+      6186.696
+     ],
+     [
+      18744.793,
+      6186.696
+     ],
+     [
+      19215.584,
+      6186.696
+     ],
+     [
+      19686.376,
+      6186.696
+     ]
+    ]
+   },
+   {
+    "src": "NW",
+    "dst": "NW",
+    "bits": 41,
+    "length_um": 0.0,
+    "stages": 36,
+    "max_hop_um": 4.8,
+    "homes": [
+     [
+      11012.912,
+      14456.936
+     ],
+     [
+      11017.712,
+      14456.936
+     ],
+     [
+      11022.512,
+      14456.936
+     ],
+     [
+      11027.312,
+      14456.936
+     ],
+     [
+      11032.112,
+      14456.936
+     ],
+     [
+      11036.912,
+      14456.936
+     ],
+     [
+      11041.712,
+      14456.936
+     ],
+     [
+      11046.512,
+      14456.936
+     ],
+     [
+      11051.312,
+      14456.936
+     ],
+     [
+      11056.112,
+      14456.936
+     ],
+     [
+      11060.912,
+      14456.936
+     ],
+     [
+      11065.712,
+      14456.936
+     ],
+     [
+      11070.512,
+      14456.936
+     ],
+     [
+      11075.312,
+      14456.936
+     ],
+     [
+      11080.112,
+      14456.936
+     ],
+     [
+      11084.912,
+      14456.936
+     ],
+     [
+      11089.712,
+      14456.936
+     ],
+     [
+      11094.512,
+      14456.936
+     ],
+     [
+      11099.312,
+      14456.936
+     ],
+     [
+      11104.112,
+      14456.936
+     ],
+     [
+      11108.912,
+      14456.936
+     ],
+     [
+      11113.712,
+      14456.936
+     ],
+     [
+      11118.512,
+      14456.936
+     ],
+     [
+      11123.312,
+      14456.936
+     ],
+     [
+      11128.112,
+      14456.936
+     ],
+     [
+      11132.912,
+      14456.936
+     ],
+     [
+      11137.712,
+      14456.936
+     ],
+     [
+      11142.512,
+      14456.936
+     ],
+     [
+      11147.312,
+      14456.936
+     ],
+     [
+      11152.112,
+      14456.936
+     ],
+     [
+      11156.912,
+      14456.936
+     ],
+     [
+      11161.712,
+      14456.936
+     ],
+     [
+      11166.512,
+      14456.936
+     ],
+     [
+      11171.312,
+      14456.936
+     ],
+     [
+      11176.112,
+      14456.936
+     ],
+     [
+      11180.912,
+      14456.936
+     ]
+    ]
+   },
+   {
+    "src": "NW",
+    "dst": "NE",
+    "bits": 41,
+    "length_um": 9026.2,
+    "stages": 36,
+    "max_hop_um": 243.5,
+    "homes": [
+     [
+      11251.577,
+      14468.936
+     ],
+     [
+      11495.043,
+      14468.936
+     ],
+     [
+      11738.508,
+      14468.936
+     ],
+     [
+      11981.974,
+      14468.936
+     ],
+     [
+      12225.439,
+      14468.936
+     ],
+     [
+      12468.904,
+      14468.936
+     ],
+     [
+      12712.37,
+      14468.936
+     ],
+     [
+      12955.835,
+      14468.936
+     ],
+     [
+      13199.301,
+      14468.936
+     ],
+     [
+      13442.766,
+      14468.936
+     ],
+     [
+      13686.232,
+      14468.915
+     ],
+     [
+      13929.694,
+      14467.716
+     ],
+     [
+      14173.156,
+      14466.517
+     ],
+     [
+      14416.619,
+      14465.318
+     ],
+     [
+      14660.081,
+      14464.118
+     ],
+     [
+      14903.544,
+      14462.919
+     ],
+     [
+      15147.006,
+      14461.72
+     ],
+     [
+      15390.469,
+      14460.521
+     ],
+     [
+      15633.931,
+      14459.322
+     ],
+     [
+      15877.394,
+      14458.122
+     ],
+     [
+      16120.856,
+      14456.923
+     ],
+     [
+      16364.319,
+      14455.724
+     ],
+     [
+      16607.781,
+      14454.525
+     ],
+     [
+      16851.243,
+      14453.326
+     ],
+     [
+      17094.706,
+      14452.127
+     ],
+     [
+      17336.42,
+      14452.684
+     ],
+     [
+      17575.634,
+      14456.936
+     ],
+     [
+      17819.099,
+      14456.936
+     ],
+     [
+      18062.565,
+      14456.936
+     ],
+     [
+      18306.03,
+      14456.936
+     ],
+     [
+      18549.496,
+      14456.936
+     ],
+     [
+      18792.961,
+      14456.936
+     ],
+     [
+      19036.426,
+      14456.936
+     ],
+     [
+      19279.892,
+      14456.936
+     ],
+     [
+      19523.357,
+      14456.936
+     ],
+     [
+      19766.823,
+      14456.936
+     ]
+    ]
+   },
+   {
+    "src": "NE",
+    "dst": "SW",
+    "bits": 41,
+    "length_um": 17419.3,
+    "stages": 36,
+    "max_hop_um": 470.8,
+    "homes": [
+     [
+      19539.496,
+      14432.936
+     ],
+     [
+      19068.704,
+      14432.936
+     ],
+     [
+      18597.913,
+      14432.936
+     ],
+     [
+      18127.121,
+      14432.936
+     ],
+     [
+      17656.329,
+      14432.936
+     ],
+     [
+      17336.42,
+      14282.053
+     ],
+     [
+      17336.42,
+      13811.262
+     ],
+     [
+      17336.42,
+      13340.47
+     ],
+     [
+      17336.42,
+      12869.678
+     ],
+     [
+      17336.42,
+      12398.886
+     ],
+     [
+      17336.42,
+      11928.094
+     ],
+     [
+      17336.42,
+      11457.303
+     ],
+     [
+      17336.42,
+      10986.511
+     ],
+     [
+      17336.42,
+      10515.719
+     ],
+     [
+      17336.42,
+      10044.927
+     ],
+     [
+      17336.42,
+      9574.135
+     ],
+     [
+      17336.42,
+      9103.344
+     ],
+     [
+      17336.42,
+      8632.552
+     ],
+     [
+      17336.42,
+      8161.76
+     ],
+     [
+      17336.42,
+      7690.968
+     ],
+     [
+      17336.42,
+      7220.177
+     ],
+     [
+      17336.42,
+      6749.385
+     ],
+     [
+      17336.42,
+      6278.593
+     ],
+     [
+      16963.525,
+      6180.696
+     ],
+     [
+      16492.733,
+      6180.696
+     ],
+     [
+      16021.942,
+      6180.696
+     ],
+     [
+      15551.15,
+      6180.696
+     ],
+     [
+      15080.358,
+      6180.696
+     ],
+     [
+      14609.566,
+      6180.696
+     ],
+     [
+      14138.774,
+      6180.696
+     ],
+     [
+      13681.98,
+      6194.693
+     ],
+     [
+      13215.191,
+      6198.696
+     ],
+     [
+      12744.399,
+      6198.696
+     ],
+     [
+      12273.607,
+      6198.696
+     ],
+     [
+      11802.816,
+      6198.696
+     ],
+     [
+      11332.024,
+      6198.696
+     ]
+    ]
+   },
+   {
+    "src": "NE",
+    "dst": "SE",
+    "bits": 41,
+    "length_um": 13776.9,
+    "stages": 36,
+    "max_hop_um": 372.3,
+    "homes": [
+     [
+      19637.941,
+      14444.936
+     ],
+     [
+      19265.593,
+      14444.936
+     ],
+     [
+      18893.246,
+      14444.936
+     ],
+     [
+      18520.898,
+      14444.936
+     ],
+     [
+      18148.551,
+      14444.936
+     ],
+     [
+      17776.203,
+      14444.936
+     ],
+     [
+      17403.856,
+      14444.936
+     ],
+     [
+      17336.42,
+      14140.024
+     ],
+     [
+      17336.42,
+      13767.677
+     ],
+     [
+      17336.42,
+      13395.329
+     ],
+     [
+      17336.42,
+      13022.982
+     ],
+     [
+      17336.42,
+      12650.634
+     ],
+     [
+      17336.42,
+      12278.287
+     ],
+     [
+      17336.42,
+      11905.94
+     ],
+     [
+      17336.42,
+      11533.592
+     ],
+     [
+      17336.42,
+      11161.245
+     ],
+     [
+      17336.42,
+      10788.897
+     ],
+     [
+      17336.42,
+      10416.55
+     ],
+     [
+      17336.42,
+      10044.202
+     ],
+     [
+      17336.42,
+      9671.855
+     ],
+     [
+      17336.42,
+      9299.507
+     ],
+     [
+      17336.42,
+      8927.16
+     ],
+     [
+      17336.42,
+      8554.812
+     ],
+     [
+      17336.42,
+      8182.465
+     ],
+     [
+      17336.42,
+      7810.118
+     ],
+     [
+      17336.42,
+      7437.77
+     ],
+     [
+      17336.42,
+      7065.423
+     ],
+     [
+      17336.42,
+      6693.075
+     ],
+     [
+      17336.42,
+      6320.728
+     ],
+     [
+      17550.736,
+      6198.696
+     ],
+     [
+      17923.083,
+      6198.696
+     ],
+     [
+      18295.431,
+      6198.696
+     ],
+     [
+      18667.778,
+      6198.696
+     ],
+     [
+      19040.126,
+      6198.696
+     ],
+     [
+      19412.473,
+      6198.696
+     ],
+     [
+      19784.821,
+      6198.696
+     ]
+    ]
+   },
+   {
+    "src": "NE",
+    "dst": "NW",
+    "bits": 41,
+    "length_um": 9026.2,
+    "stages": 36,
+    "max_hop_um": 243.8,
+    "homes": [
+     [
+      19766.499,
+      14456.936
+     ],
+     [
+      19522.711,
+      14456.936
+     ],
+     [
+      19278.922,
+      14456.936
+     ],
+     [
+      19035.133,
+      14456.936
+     ],
+     [
+      18791.345,
+      14456.936
+     ],
+     [
+      18547.556,
+      14456.936
+     ],
+     [
+      18303.767,
+      14456.936
+     ],
+     [
+      18059.979,
+      14456.936
+     ],
+     [
+      17816.19,
+      14456.936
+     ],
+     [
+      17572.401,
+      14456.936
+     ],
+     [
+      17328.613,
+      14456.923
+     ],
+     [
+      17084.824,
+      14456.523
+     ],
+     [
+      16841.036,
+      14456.123
+     ],
+     [
+      16597.248,
+      14455.722
+     ],
+     [
+      16353.459,
+      14455.322
+     ],
+     [
+      16109.671,
+      14454.922
+     ],
+     [
+      15865.883,
+      14454.522
+     ],
+     [
+      15622.094,
+      14454.121
+     ],
+     [
+      15378.306,
+      14453.721
+     ],
+     [
+      15134.517,
+      14453.321
+     ],
+     [
+      14890.729,
+      14452.921
+     ],
+     [
+      14646.941,
+      14452.52
+     ],
+     [
+      14403.152,
+      14452.12
+     ],
+     [
+      14159.364,
+      14451.72
+     ],
+     [
+      13915.576,
+      14451.32
+     ],
+     [
+      13681.98,
+      14461.129
+     ],
+     [
+      13445.999,
+      14468.936
+     ],
+     [
+      13202.21,
+      14468.936
+     ],
+     [
+      12958.421,
+      14468.936
+     ],
+     [
+      12714.633,
+      14468.936
+     ],
+     [
+      12470.844,
+      14468.936
+     ],
+     [
+      12227.055,
+      14468.936
+     ],
+     [
+      11983.267,
+      14468.936
+     ],
+     [
+      11739.478,
+      14468.936
+     ],
+     [
+      11495.689,
+      14468.936
+     ],
+     [
+      11251.901,
+      14468.936
+     ]
+    ]
+   },
+   {
+    "src": "NE",
+    "dst": "NE",
+    "bits": 41,
+    "length_um": 0.0,
+    "stages": 36,
+    "max_hop_um": 4.8,
+    "homes": [
+     [
+      20005.488,
+      14468.936
+     ],
+     [
+      20000.688,
+      14468.936
+     ],
+     [
+      19995.888,
+      14468.936
+     ],
+     [
+      19991.088,
+      14468.936
+     ],
+     [
+      19986.288,
+      14468.936
+     ],
+     [
+      19981.488,
+      14468.936
+     ],
+     [
+      19976.688,
+      14468.936
+     ],
+     [
+      19971.888,
+      14468.936
+     ],
+     [
+      19967.088,
+      14468.936
+     ],
+     [
+      19962.288,
+      14468.936
+     ],
+     [
+      19957.488,
+      14468.936
+     ],
+     [
+      19952.688,
+      14468.936
+     ],
+     [
+      19947.888,
+      14468.936
+     ],
+     [
+      19943.088,
+      14468.936
+     ],
+     [
+      19938.288,
+      14468.936
+     ],
+     [
+      19933.488,
+      14468.936
+     ],
+     [
+      19928.688,
+      14468.936
+     ],
+     [
+      19923.888,
+      14468.936
+     ],
+     [
+      19919.088,
+      14468.936
+     ],
+     [
+      19914.288,
+      14468.936
+     ],
+     [
+      19909.488,
+      14468.936
+     ],
+     [
+      19904.688,
+      14468.936
+     ],
+     [
+      19899.888,
+      14468.936
+     ],
+     [
+      19895.088,
+      14468.936
+     ],
+     [
+      19890.288,
+      14468.936
+     ],
+     [
+      19885.488,
+      14468.936
+     ],
+     [
+      19880.688,
+      14468.936
+     ],
+     [
+      19875.888,
+      14468.936
+     ],
+     [
+      19871.088,
+      14468.936
+     ],
+     [
+      19866.288,
+      14468.936
+     ],
+     [
+      19861.488,
+      14468.936
+     ],
+     [
+      19856.688,
+      14468.936
+     ],
+     [
+      19851.888,
+      14468.936
+     ],
+     [
+      19847.088,
+      14468.936
+     ],
+     [
+      19842.288,
+      14468.936
+     ],
+     [
+      19837.488,
+      14468.936
+     ]
+    ]
+   }
+  ],
+  "relay_flops": 23616,
+  "rule": "equal arc length along the su_rf_route_pins.json paths (channels / relay rows only)"
+ },
+ "grants_v7_1925": {
+  "date": "2026-10-15",
+  "owner": "H-DIE",
+  "changes": [
+   "hb_dbk x4 -> wires-only vp4 cluster 488.16 x 360.72 (1 controller + 8 banks), one controller master (stk strap)",
+   "hb_ckgen -> 259.2 x 220.32 wires-only cluster (PLL + 4 ckgen_rel), por_* + pll_* S M5, refclk/por_n N",
+   "ot_hbm_svc_static_vm_delivery: no slot; VM HBM path open (H-DIE)",
+   "SU RF: 36 relay homes x 16 routes (max hop 470.8 um)"
   ]
  }
 }
