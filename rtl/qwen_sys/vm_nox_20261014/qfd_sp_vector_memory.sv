@@ -8,6 +8,7 @@ module qfd_sp_vector_memory #(
     parameter integer PAR_RB=0, PMUT=0,
     parameter integer USE_NATIVE_CLOCKS=0,
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, RETURN_CLOCKS=0,
+    parameter integer RETURN_PIN_INPUT=0,
     parameter integer RETURN_RO=1, // opt-in physical return transport depth; compiler must add RETURN_RO-1 edges
     parameter integer RELAY_CLOCKS=8*(22+14*RETURN_RO)+(6*(10+RETURN_RO)+255)/256,
     parameter integer RELAY_TILES=0,   // Q-VMWB 0030: region relays from qvm_data256_native (289 tiles at this shape)
@@ -1098,7 +1099,7 @@ module qfd_sp_vector_memory #(
         .read_v(qr_v),.read_row(qr_row),.rsp_v(qr_rsp && q_window),.rsp_data(vmq),
         .q(q),.emitted_done(q_done),.fault(qfault));
     ot_qfd_sp_vector_memory_bv #(.USE_MACRO(USE_MACRO),.USE_LEAF_CLOCKS(USE_LEAF_CLOCKS),
-        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(RETURN_RO),.MUT(MUT),.PAR_RB(PAR_RB),.PMUT(PMUT),.NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS),.RETURN_LEAVES(RETURN_LEAVES),.READ_CONTROL_LEAVES(READ_CONTROL_LEAVES),.RETURN_CLOCKS(RETURN_CLOCKS),.RELAY_TILES(RELAY_TILES),.RELAY_NCK(RELAY_CLOCKS)) u_vm (
+        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(RETURN_RO),.MUT(MUT),.PAR_RB(PAR_RB),.PMUT(PMUT),.NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS),.RETURN_LEAVES(RETURN_LEAVES),.RETURN_PIN_INPUT(RETURN_PIN_INPUT),.READ_CONTROL_LEAVES(READ_CONTROL_LEAVES),.RETURN_CLOCKS(RETURN_CLOCKS),.RELAY_TILES(RELAY_TILES),.RELAY_NCK(RELAY_CLOCKS)) u_vm (
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
         .native_ck(native_ck),.return_ck(return_ck),.read_control_ck(read_control_ck),.relay_ck(relay_ck),
 `endif

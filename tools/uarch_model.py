@@ -17352,3 +17352,11 @@ QWEN_VM_LOCAL_RETURN_LEAVES_1016 = dict(
     pins="W data / E outputs, S control and centered clock; M4 side faces and PG-excluded M5 S contacts",
     cell_area_status="Unmapped; actual CTS/native220/190/80 and route required",
     global_parent_homes_adopted=False, physical_qualified=False)
+
+# Real input-pin register wrapper for the return leaf, opt-in only. The read
+# control leaf already owns all first/last flops and adds no wrapper stages.
+QWEN_VM_RETURN_PIN_INPUT_1016 = dict(
+    instances=96, original_ff_per_leaf=336, input_pin_ff_per_leaf=332,
+    source_ff_per_leaf=668, additional_SU_edges=1, row_read_edges_added=0,
+    RO6_SU_VL=20, RO6_row_RL=18, source_widths_unchanged=True,
+    outline_um=(64.8,64.8), physical_qualified=False, compiler_adopted=False)

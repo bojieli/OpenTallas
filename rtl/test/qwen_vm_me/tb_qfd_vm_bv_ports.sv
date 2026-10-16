@@ -34,6 +34,7 @@ module tb_qfd_vm_bv_ports;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
     parameter integer USE_NATIVE_CLOCKS=0, RETURN_CLOCKS=0;
+    parameter integer RETURN_PIN_INPUT=0;
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, NATIVE_BANKS=0, USE_MACRO=0;
     parameter integer RELAY_TILES=0, RELAY_NCK=1;
     parameter integer EXPECT_RL=0; // opt-in exact row-response calendar, independent of DUT localparams
@@ -100,7 +101,7 @@ module tb_qfd_vm_bv_ports;
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
-        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES), .RETURN_CLOCKS(RETURN_CLOCKS), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS), .USE_MACRO(USE_MACRO), .RELAY_TILES(RELAY_TILES), .RELAY_NCK(RELAY_NCK)) dut (
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES),.RETURN_PIN_INPUT(RETURN_PIN_INPUT), .RETURN_CLOCKS(RETURN_CLOCKS), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS), .USE_MACRO(USE_MACRO), .RELAY_TILES(RELAY_TILES), .RELAY_NCK(RELAY_NCK)) dut (
         .clk(clk),
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
         .return_ck({96{clk}}), .read_control_ck({3{clk}}), .relay_ck({RELAY_NCK{clk}}),
