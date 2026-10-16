@@ -1,0 +1,116 @@
+{
+ "name": "s81su_sml_tail133_current_ref",
+ "top": "dsfd_su_t_sml",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "util": 0.65,
+ "pins": {
+  "S": [
+   "ck",
+   "rst",
+   "sk_en",
+   "i_cv",
+   "i_nv",
+   "i_scale",
+   "i_sink",
+   "i_sv",
+   "i_s",
+   "i_mv",
+   "i_nmb"
+  ],
+  "N": [
+   "o_mxv",
+   "o_mx",
+   "o_ev",
+   "o_es",
+   "o_el",
+   "o_e"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "job": {
+  "owner": "Codex:s81-su-current",
+  "branch": "codex/s81-suhc-homes-0811",
+  "tag": "native133",
+  "purpose": "Source-current physical SML successor with actual133-position/9beat tail sentinel, exact144 outputwords and disabled-mask mutant. Independent candidate; owner Explorer review before compactSU adoption. No historical source/view alias. Recipe3 adds one edge on registered inputs and one on outputs; exact per-port route table required and static parent/compiler integration remains unqualified until updated.",
+  "hosts": [
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "views_to": "physical/ref_tile/s81su_sml_tail133_current_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_sml_tail133_current_ref",
+  "benches": [
+   {
+    "name": "exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "'mutant': False, 'ok': True",
+    "cmd": "python3 tools/s81_suhc/softmax_tail_gate.py --physical-wrapper --only positive --out {RUN}/bench/tailpositive"
+   },
+   {
+    "name": "mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "'mutant': True, 'ok': False",
+    "cmd": "python3 tools/s81_suhc/softmax_tail_gate.py --physical-wrapper --only mutant --out {RUN}/bench/tailmutant"
+   }
+  ],
+  "cycles_added": 2,
+  "hold_merge": true
+ },
+ "std_area_um2": 10949,
+ "recipe": 3,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Current -Inf inactive sentinel/mask RTL differs from historical closed SML source; exact133 tail uses nine vector beats, not133 beats."
+ },
+ "slot_change_request": "S-DIE grant2026-10-16 candidate-only136.08square, S input/N output faces; no compactSU adoption or current c26d2 mutation.",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "outline": {
+  "w": 136.08,
+  "h": 136.08,
+  "exact": true
+ }
+}
