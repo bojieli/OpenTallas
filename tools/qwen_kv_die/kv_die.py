@@ -1506,7 +1506,8 @@ def _d2ds_swap(m):
         for i_, (bid, cl, bits, eps) in enumerate(B):
             if bid == 'clk_core_c':
                 B[i_] = (bid, cl, bits, list(eps) + [('dcal', 'ck')])
-        add(('dcal_ego', 'spine_local', 1, [('d2d_kv', 'fwd_epoch'), ('dcal', 'ego')]))
+        # epoch_go taps the end's fwd_epoch die net at its source (the bump chain keeps its relays and its one driver)
+        m.setdefault('extra_conns', {})['dcal'] = ['.ego(n_hfwd_epoch)']
 
 
 def _centre(it, port=None):
@@ -2239,6 +2240,8 @@ def masters(m, k=1, port_bits=None):
         _split_pins(M, m)
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
+    if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
+        M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
