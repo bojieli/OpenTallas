@@ -6864,6 +6864,18 @@ def trim_snapshot(tp):
         with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
             f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
     return b
+if mode == "src":
+    # SRC-RELEASE (ROOT 2026-10-15): only the git snapshots (src/, bench_src*/) at the job's own commit, trimmed to the
+    # receipt-named paths; nothing else in the run dir is touched
+    for top in sorted(os.listdir(R)):
+        tp = os.path.join(R, top)
+        if (top == "src" or top.startswith("bench_src")) and os.path.isdir(tp) and not os.path.islink(tp) \
+                and a.get("src_commit") and snap_commit(tp) == a["src_commit"] \
+                and not os.path.exists(os.path.join(tp, ".keep")) \
+                and not os.path.exists(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT")):
+            freed += trim_snapshot(tp)
+    print("DEEP_FREED %d" % (freed // 2 ** 20))
+    sys.exit(0)
 for top in sorted(os.listdir(R)):
     tp = os.path.join(R, top)
     if not os.path.isdir(tp) or os.path.islink(tp):
@@ -7206,6 +7218,82 @@ def release_deep(jobs, now=None):
                     "fail": "6_final.*", "nearmiss": "5_2_route.odb, 6_final.*, objects/, src"}[mode]
             event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
             save_job(j)
+    return n
+
+
+# SRC-RELEASE (ROOT 2026-10-15, coordinator): AGIdock's root went 356 -> 0 GB free in 4.5 h because every loop run dir
+# keeps src/ (6-14 GB) and bench_src_a*/ (13-14 GB) until DEEP release, which waits DEEP_RELEASE_AGE_H and, for a CLOSED
+# job, the closure on main; 61 routes closed on AGIdock in that window.  A route never reads either snapshot after its
+# verdict: the record branch is already pushed, the receipts on main name the few files they cite, and a later human
+# retry / bench re-judgment re-syncs (source_synced=False).  So a terminal job loses both snapshots (trimmed to the
+# receipt-named paths, SOURCE_COMMIT kept) SRC_RELEASE_AGE_H after its last event, on every host.  Kept: near-miss
+# retained jobs (hold-ECO successors), collect-crash retention, BF exemption, helper provenance, source-mismatch
+# retention, .keep, reaper holds, a live process in the run dir, and a run dir shared with a non-terminal job.
+SRC_RELEASE_AGE_H = 0.1
+SRC_RELEASE_PER_TICK = 40
+
+
+def src_release_candidates(jobs, now=None):
+    closed = closed_blocks(jobs)
+    holds = STATE / "reaper_holds"
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    out = []
+    for x in jobs:
+        if x["status"] not in TERMINAL or x.get("src_released") or x.get("snapshot_trimmed") or not x.get("run") \
+                or x.get("host") not in hosts or _terminal_age_h(x, now) < SRC_RELEASE_AGE_H:
+            continue
+        if x["status"] in EARLY_FAIL or x.get("near_miss_retained") or near_miss(x, closed) or bf_exempt(x, now) \
+                or helper_provenance_retained(x) or collect_crash_after_closed_verdict(x) or viz_elem_running(x) \
+                or (holds / x["name"]).exists():
+            continue
+        if any(y["status"] not in TERMINAL for y in shared.get((x["host"], x["run"].rstrip("/")), [])):
+            continue
+        out.append(x)
+    return out
+
+
+def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
+    cand = src_release_candidates(jobs, now)
+    if not cand:
+        return 0
+    ev = _main_evidence()
+    if not ev:
+        return 0
+    sources = release_source_index(jobs)
+    n = freed = 0
+    for x in cand:
+        if n >= limit:
+            break
+        if source_mismatch_retained(x, sources):
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j["status"] not in TERMINAL or j.get("src_released") or j.get("snapshot_trimmed"):
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if not commit or subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                            capture_output=True, timeout=60).returncode != 0:
+                continue
+            full = git("rev-parse", commit + "^{commit}").stdout.strip()
+            run = j["run"].rstrip("/")
+            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode == 3 or r.returncode != 0 or not m:
+                continue
+            j["src_released"] = dict(at=now_iso(), freed_mb=int(m.group(1)))
+            j["source_synced"] = False          # any later resume / human retry re-syncs the snapshot
+            event(j, f"src release ({m.group(1)} MB): src/ + bench_src*/ snapshots cut to receipt-named paths "
+                     f"(git archive {full[:12]} re-creates them)")
+            save_job(j)
+            freed += int(m.group(1))
+    if n:
+        log(f"SRC-RELEASE: {n} run dirs, {freed / 1024:.1f} GB freed")
     return n
 
 
@@ -8042,7 +8130,8 @@ def _slow_phase(name, t0):
 
 def housekeeping():
     """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
-    for name, fn in (("release_bulk", release_bulk), ("release_deep", release_deep), ("stale24 sweep", stale24_sweep)):
+    for name, fn in (("release_src", release_src), ("release_bulk", release_bulk), ("release_deep", release_deep),
+                     ("stale24 sweep", stale24_sweep)):
         try:
             fn(all_jobs())
         except Exception:  # noqa: BLE001
