@@ -55,34 +55,34 @@ puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 329.832 188.352 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh}]
 $i setOrient R0; $i setLocation [expr {round(329.832 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 329.832 25.92 R0"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[0].g_single.g_col[0].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf}]
 $i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(511.488 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 56.16 511.488 R0"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[1].g_single.g_col[0].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf}]
 $i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(641.952 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 56.16 641.952 R0"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[2].g_single.g_col[0].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf}]
 $i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(772.416 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 56.16 772.416 R0"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[3].g_single.g_col[0].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf}]
 $i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(902.88 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 56.16 902.88 R0"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[4].g_single.g_col[0].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf}]
 $i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(1033.344 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 56.16 1033.344 R0"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[0].g_single.g_col[1].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf}]
 $i setOrient MY; $i setLocation [expr {round(228.96 * $dbu)}] [expr {round(511.488 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 228.96 511.488 MY"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[1].g_single.g_col[1].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf}]
 $i setOrient MY; $i setLocation [expr {round(228.96 * $dbu)}] [expr {round(641.952 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 228.96 641.952 MY"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[2].g_single.g_col[1].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf}]
 $i setOrient MY; $i setLocation [expr {round(228.96 * $dbu)}] [expr {round(772.416 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 228.96 772.416 MY"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[3].g_single.g_col[1].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf}]
 $i setOrient MY; $i setLocation [expr {round(228.96 * $dbu)}] [expr {round(902.88 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 228.96 902.88 MY"
-set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rph.g_rb[4].g_single.g_col[1].u_leaf}]
+set i [ot_ref_pick $ot_ref_by ot_qwen_tile_romleaf {u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf}]
 $i setOrient MY; $i setLocation [expr {round(228.96 * $dbu)}] [expr {round(1033.344 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_romleaf at 228.96 1033.344 MY"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }

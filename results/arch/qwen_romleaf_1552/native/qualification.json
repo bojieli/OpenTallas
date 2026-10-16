@@ -155,6 +155,6 @@
   },
   "limits": [
     "Child native proof only. All parent pins/requests/reset stations/physical cuts/clocks require a new actual parent gate.",
-    "TT timing is pathfinding; SS remains sensitivity under active owner policy. No layer throughput adoption claim."
+    "Active owner gate: TT setup >=0, FF hold >=0 and DRC0; SS sensitivity is separately reported and is not the current closure gate."
   ]
 }
