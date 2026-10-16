@@ -105,8 +105,11 @@
  "merge_target": null,
  "structural_change": "Source-exact capture split: only source-proven unused status/padding removed, both actual half faults captured at original g2 hoq edge, all used status/data/control epochs unchanged.",
  "reroute_reason": {
-  "kind": "slot_change",
-  "change": "Die lead granted independent compactctl324x86.4 or CD15.12 native-reset rekit; no old view inheritance. Assigned pin contract required.",
-  "contract": "physical/s81_die_pins/capture_split_1016 (S-DIE assign10 literal capture variants 0364b74eb + 5782 pin requests 1dd814aad, imported 1acf56925/82dbd5b2e)"
+  "kind": "pin_register",
+  "source": "results/arch/s81_hub_parents_1016/native_audit_closed_capture_1016/dsfd_capt_ctl.json",
+  "cell": "dsfd_capt_ctl",
+  "launch_ps": 221.5,
+  "capture_ps": 108.9,
+  "fix": "Closed view fails the native pin audit; new split kit re-kits the leaf at the S-DIE assigned literal pin contract (physical/s81_die_pins/capture_split_1016, 0364b74eb/1dd814aad) with recipe-2 dedicated output flops and native reset capture checks."
  }
 }
