@@ -47,11 +47,6 @@
   "threads": 16,
   "peak_ram_gb": 24,
   "pin_v": "M3 M5",
-  "cts_sink": {
-   "size": 16,
-   "diameter_um": 16,
-   "extra": "-distance_between_buffers 20 -macro_clustering_size 1 -macro_clustering_max_diameter 16"
-  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
@@ -70,14 +65,14 @@
  "defines": [
   "OT_PQ_ROM_PORTS"
  ],
- "structural_change": "b3r (10-16 PQN, takes over from LEGACY): b2 CLOSED on retries (arg1 TT +225.63/FF +4.49, arg2 TT +243.26/FF +19.43) but native FAIL: arg2 capture 242.9 ps on 512 aq_q pins (R 208.6, spread 82.7, launch 219.4 rd[248]); arg1 capture 251.3/545 pins. The route closed against the nominal 0.2 T boundary (~516 ps + L allowed per input), so the 512-bit S capture row was never sized for 190 ps. b3: io_budget in 0.6 / out 0.57 T (route + sign-off enforce native capture/launch), output hold pads kept (b3 trial without them 285867c4f: GPL-0305 divergence at gate), benches on the production --qb-pinread. RTL, outline 142.56 x 86.4, pins unchanged. | NEW master (S-ELEM-PQ/LEGACY 2026-10-16, ROOT GAP 1): ot_s81_pq_qb_bankp_native is the QB SRAM bank of the canonical PQ hierarchy (OT_PQ_QB_PIPE + OT_PQ_QB_PHYS_SPLIT, tools/s81/pq_native_hierarchy.py), x4 in both ot_s81_pq_qb_pipe_native and ot_s81_pq_qb_pinread_native (P10 headpc); it had no kit. Same 142.56x86.4 footprint and S aq_q / N rd / W control faces as the legacy bank0..3 slot (no new footprint); one 128x256 1R1W SRAM; every pin registered in RTL (capture + output register = the canonical +2). | b2: b1 gate (038cb3a78) floorplan showed rd packed into ~15 um at the N-W corner, aq_q in two corner clusters on S and clk near the SW corner -> explicit even per-face spread (spread_face_pins.py; clk at the W-face centre). Util 37% WARN kept on purpose: the outline is set by the 94.8x41.1 SRAM plus the 20 um macro channels to the two wide pin faces (N rd 256, S aq_q 512); it is the existing legacy bank0..3 die slot (drop-in, no new footprint).",
+ "structural_change": "b4 (10-16 PQN): b3rio-ef0c3bd8c TT +14.09 / FF -36.05 ps on the 256 rd output ports (reg->reg +1.24, in->reg +1.37, DRC 0), route hold repair stalled: same cause as ix_rb r4 -- the legacy custom CTS sink clustering (size16/diam16/dbb20, copied from the old bank kit) builds an 85-ps leaf spread, so the N-face rd launch flops clock early against the boundary reference. b4: legacy cts_sink dropped (flow-default clustering; on ix_rb this cut the spread 85 -> 63 ps). | b3r (10-16 PQN, takes over from LEGACY): b2 CLOSED on retries (arg1 TT +225.63/FF +4.49, arg2 TT +243.26/FF +19.43) but native FAIL: arg2 capture 242.9 ps on 512 aq_q pins (R 208.6, spread 82.7, launch 219.4 rd[248]); arg1 capture 251.3/545 pins. The route closed against the nominal 0.2 T boundary (~516 ps + L allowed per input), so the 512-bit S capture row was never sized for 190 ps. b3: io_budget in 0.6 / out 0.57 T (route + sign-off enforce native capture/launch), output hold pads kept (b3 trial without them 285867c4f: GPL-0305 divergence at gate), benches on the production --qb-pinread. RTL, outline 142.56 x 86.4, pins unchanged. | NEW master (S-ELEM-PQ/LEGACY 2026-10-16, ROOT GAP 1): ot_s81_pq_qb_bankp_native is the QB SRAM bank of the canonical PQ hierarchy (OT_PQ_QB_PIPE + OT_PQ_QB_PHYS_SPLIT, tools/s81/pq_native_hierarchy.py), x4 in both ot_s81_pq_qb_pipe_native and ot_s81_pq_qb_pinread_native (P10 headpc); it had no kit. Same 142.56x86.4 footprint and S aq_q / N rd / W control faces as the legacy bank0..3 slot (no new footprint); one 128x256 1R1W SRAM; every pin registered in RTL (capture + output register = the canonical +2). | b2: b1 gate (038cb3a78) floorplan showed rd packed into ~15 um at the N-W corner, aq_q in two corner clusters on S and clk near the SW corner -> explicit even per-face spread (spread_face_pins.py; clk at the W-face centre). Util 37% WARN kept on purpose: the outline is set by the 94.8x41.1 SRAM plus the 20 um macro channels to the two wide pin faces (N rd 256, S aq_q 512); it is the existing legacy bank0..3 die slot (drop-in, no new footprint).",
  "params": {},
  "children": [],
  "inter": [],
  "job": {
   "owner": "Claude:S-ELEM-PQ/PQN",
   "branch": "claude/pqn-0115",
-  "tag": "b3rio",
+  "tag": "b4cts",
   "purpose": "S81 PQ QB pipelined SRAM bank (x4), canonical +2 QB pipeline",
   "benches": [
    {
