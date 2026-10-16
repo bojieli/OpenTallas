@@ -1,9 +1,36 @@
 import unittest
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 
 from case_reach import branches, multicast_relay_ages, typed_clock_pins, xf
 
 
 class BranchReach(unittest.TestCase):
+    def test_d4_schema_far_branch_and_top_reset_are_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); (root / 'views').mkdir()
+            def macro(name, ports):
+                return f'MACRO {name}\n SIZE 10 BY 10 ;\n' + ''.join(
+                    f' PIN {p}\n DIRECTION {d} ;\n USE SIGNAL ;\n PORT\n LAYER M4 ;\n RECT 0 0 0.024 0.024 ;\n END\n END {p}\n'
+                    for p, d in ports) + f'END {name}\n'
+            (root / 'views' / 'test.lef').write_text(macro('Src', [('o', 'OUTPUT')]) + macro('Dst', [('i', 'INPUT'), ('rst_n', 'INPUT')]))
+            (root / 'manifest.json').write_text(json.dumps(dict(placement={
+                'near': dict(m='Dst', o='R0', x=10, y=0), 'far': dict(m='Dst', o='R0', x=12750, y=0),
+                'source': dict(m='Src', o='R0', x=0, y=0)})))
+            (root / 'die.v').write_text('module die(input wire rst_n);\n'
+                '  Dst near (\n .i(data),\n .rst_n(rst_n)\n );\n'
+                '  Dst far (\n .i(data),\n .rst_n(rst_n)\n );\n'
+                '  Src source (\n .o(data)\n );\nendmodule\n')
+            subprocess.run([sys.executable, str(Path(__file__).with_name('case_reach.py')), tmp],
+                           capture_output=True, text=True, check=True)
+            r = json.loads((root / 'reach.json').read_text())
+            self.assertEqual(r['multicast']['data']['longest_um'], 12750)
+            self.assertEqual(len(r['top_driven_nets']['rst_n']['loads']), 2)
+            self.assertEqual(r['top_driven_nets']['rst_n']['reset_forest'], 'UNQUALIFIED')
+
     def test_far_branch_and_driver_last(self):
         ends = [('near', 'i', (10, 0)), ('far', 'i', (12750, 0)), ('source', 'o', (0, 0))]
         directions = {('source', 'o'): 'OUTPUT', ('near', 'i'): 'INPUT', ('far', 'i'): 'INPUT'}
