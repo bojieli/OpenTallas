@@ -120,10 +120,10 @@ def draw(r,out):
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
-    fig,axes=plt.subplots(1,2,figsize=(13,6),gridspec_kw={'width_ratios':[2,1]})
+    fig,axes=plt.subplots(1,3,figsize=(18,6),gridspec_kw={'width_ratios':[2,1,1]})
     lw,lh=r['link_packet']['outline_um'];sx,sy=r['relative_to_link_R0_origin_um'];sw,sh=r['outline_um']
     by={p['name']:p for p in r['pins']}
-    for ax in axes:
+    for ax in axes[:2]:
         ax.add_patch(Rectangle((0,0),lw,lh,facecolor='#b9cfea',edgecolor='black'))
         ax.add_patch(Rectangle((sx,sy),sw,sh,facecolor='#b9dfb4',edgecolor='black'))
         for e in r['edges']:
@@ -138,6 +138,22 @@ def draw(r,out):
     axes[1].set_xlim(lw-5,sx+8);axes[1].set_ylim(147,174)
     axes[1].set_title(f'42 control + 2 epoch/abort requested paths\n{max(e["manhattan_um"] for e in r["edges"]):.3f} um worst requested hop',fontsize=10)
     axes[1].text((lw+sx)/2,148,'21.6 um gap',ha='center',fontsize=8)
+    ax=axes[2]
+    ax.add_patch(Rectangle((0,0),sw,sh,facecolor='#edf5ea',edgecolor='black'))
+    for p in r['pins']:
+        x,y=p['center_um']
+        ax.plot(x,y,'o',ms=2.5,color='red' if p['name']=='ck' else '#265a98')
+        if p['face']=='E':ax.text(x+1,y,p['name'],fontsize=6,va='center')
+    for n,textxy in [('ck',(15,-7)),('rst_n',(31,-10)),('reload',(4,-7))]:
+        p=by[n]
+        ax.annotate(n,xy=p['center_um'],xytext=textxy,fontsize=8,ha='center',arrowprops={'arrowstyle':'->','lw':.7})
+    for n,ty in [('epoch_go',29.5),('halt',25.5)]:
+        ax.annotate(n,xy=by[n]['center_um'],xytext=(-6,ty),fontsize=7,ha='right',arrowprops={'arrowstyle':'->','lw':.6})
+    ax.text(-2,13,'cfg/cal\n3 tracks',fontsize=7,ha='right',va='center')
+    ax.text(-2,32,'cfg\n3 tracks',fontsize=7,ha='right',va='center')
+    ax.set_xlim(-15,sw+22);ax.set_ylim(-12,sh+3);ax.set_aspect('equal');ax.grid(alpha=.15)
+    ax.set_title(f'Sequencer source pin assignment ({len(r["pins"])} bits)\ncentred ck; AUTO tok_go internal0',fontsize=10)
+    ax.set_xlabel('local um');ax.set_ylabel('local um')
     fig.suptitle('Source-exact calendar pin proposal: geometry only; clock/STA/route OPEN',fontsize=12)
     fig.tight_layout();fig.savefig(out/'pin_proposal.png',dpi=160);plt.close(fig)
 
