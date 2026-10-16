@@ -12,7 +12,7 @@ def pins(s):
  return out
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--out',default='results/arch/s81_hc_takeover_1015/nt_parent');a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--fn-banks',action='store_true');ap.add_argument('--swap-fn-fl',action='store_true');ap.add_argument('--out',default='results/arch/s81_hc_takeover_1015/nt_parent');a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
  base='origin/main';path='results/arch/hier_contract_1011/s81_v23_hc_budget.json';raw=show(base,path);old=json.loads(raw)['sub_layouts']['ot_s81_hc_cth'];rows=copy.deepcopy(old['rows']);new=[]
  for r in rows:
   if r['tile']=='ctfx':
@@ -22,7 +22,16 @@ def main():
   else:
    if r['y']>=425.52:r['y']=round(r['y']+38.88,3)
    new.append(r)
- H=835.92;W=576.72;instances=[]
+ if a.swap_fn_fl and not a.fn_banks:ap.error('--swap-fn-fl requires --fn-banks')
+ if a.fn_banks:
+  for row in new:
+   if row['tile']=='ctfn_nt':row.update(cell='ot_s81_hc_ctfn_banks_candidate',h=34.56)
+   elif row['y']>438.48:row['y']=round(row['y']+8.64,3)
+  if a.swap_fn_fl:
+   for row in new:
+    if row['tile']=='ctfn_nt':row['y']=412.56
+    elif row['tile']=='ctfl_nt':row['y']=447.12
+ H=844.56 if a.fn_banks else 835.92;W=576.72;instances=[]
  for r in new:
   for col,x in enumerate(r.get('x_cols',old['x_cols']) if r.get('per_col') else [0.]):
    name=r['tile'].replace('[c]',f'[c={col}]').replace('[l]',f'[l={col}]').replace('[g]',f'[g={col}]')
@@ -30,6 +39,14 @@ def main():
    if r['tile'].startswith('ctnl'):inst['cell']=f'ot_s81_hc_ctnl_l{col}';inst['native_view_binding']='OPEN: actual native successor LEF must be bound, no inherited view'
    if r['cell'].endswith('_column'):inst['params']={'COLUMN':col}
    instances.append(inst)
+ if a.fn_banks:
+  bank_layout=json.loads(show('902e0f18f','physical/s81_die_pins/ctfn_banks_candidate_1015/layout.json'))
+  expanded=[]
+  for inst in instances:
+   if inst['cell']!='ot_s81_hc_ctfn_banks_candidate':expanded.append(inst);continue
+   for g in bank_layout['groups']+[bank_layout['reset_leaf']]:
+    expanded.append(dict(name='ctfn_bank_'+g['cell'],cell=g['cell'],x=g['x'],y_from_N=round(inst['y_from_N']+34.56-g['y']-g['h'],3),w=g['w'],h=g['h'],orient='R0',row_reservation=True,instantiation_status='ACTUAL_BANK_RTL_COMPONENT_PROVEN_PARENT_OPEN'))
+  instances=expanded
  assert len({i['name'] for i in instances})==len(instances)
  overlaps=[]
  for i,x in enumerate(instances):
@@ -42,7 +59,10 @@ def main():
  P={};sha={}
  for k,p in pinpaths.items():
   s=show(commit,p);P[k]=pins(s);sha[k]=dict(path=p,commit=commit,sha256=hashlib.sha256(s.encode()).hexdigest())
- places={'xs':(386.64,25.92),'fl':(412.56,25.92),'fn':(438.48,25.92),'fs':(781.92,51.84)}
+ places={'xs':(386.64,25.92),'fl':(447.12 if a.swap_fn_fl else 412.56,25.92),'fn':(412.56 if a.swap_fn_fl else 438.48,34.56 if a.fn_banks else 25.92),'fs':(790.56 if a.fn_banks else 781.92,51.84)}
+ if a.fn_banks:
+  for n,xy_ in P['fn'].items():
+   if xy_[1]>20:xy_[1]+=8.64
  def xy(k,n,period=0):
   x,y=P[k][n];top,h=places[k];return x,period*H+top+h-y
  joins=[]
@@ -57,12 +77,14 @@ def main():
  join('XS_to_FL_data','xs','fl',[(f'fdx[{i}]',f'fdx[{i}]') for i in range(1128)]+[(f'fv[{i}]',f'fv[{i}]') for i in range(7)])
  join('XS_to_FS_partial','xs','fs',[(f'dl_out[{i}]',f'dl_in[{i}]') for i in range(275)])
  join('FS_to_XS_scale','fs','xs',[(f'ul_out[{i}]',f'ul_in[{i}]') for i in range(33)])
- d=dict(schema='opentallas.s81.nt_parent_candidate.v1',status='HELD_GEOMETRY_ONLY',source_contract=dict(path=path,ref=base,sha256=hashlib.sha256(raw.encode()).hexdigest()),outline_um=[W,H],y_from='N face',orientation='R0 explicitly; no inferred MX',rows=new,instances=instances,overlap_count=0,spare_um=2.16,pin_sources=sha,pin_joins=joins,extra_height_from_current_budget_um=45.36,outer_growth_um={'hc_s_10_rows':453.6,'hc_t_12_rows':544.32},open=['Bind actual full NT RTL hierarchy/source and physical masters (FS_YSHIFT=1,LOCAL_SPLIT=1)','CTNL,CTPL,return-column,collective,reset,tid and every first/last anchor join','Actual per-master routed native views; CTFL and CTFXS still fail old native gates','No source/view inheritance, no static calendar or end-to-end token release claim','Full parent pin registry/clock compensation/cut/route and outer C5 rescreen'])
+ d=dict(schema='opentallas.s81.nt_parent_candidate.v1',status='HELD_GEOMETRY_ONLY',source_contract=dict(path=path,ref=base,sha256=hashlib.sha256(raw.encode()).hexdigest()),outline_um=[W,H],y_from='N face',orientation='R0 explicitly; no inferred MX',rows=new,instances=instances,overlap_count=0,spare_um=2.16,pin_sources=sha,pin_joins=joins,extra_height_from_current_budget_um=round(H-790.56,3),outer_growth_um={'hc_s_10_rows':round((H-790.56)*10,3),'hc_t_12_rows':round((H-790.56)*12,3)},open=['Bind actual full NT RTL hierarchy/source and physical masters (FS_YSHIFT=1,LOCAL_SPLIT=1)','CTNL,CTPL,return-column,collective,reset,tid and every first/last anchor join','Actual per-master routed native views; CTFLs6 native PASS, CTFXSs4 native capture FAIL, bank routes pending','No source/view inheritance, no static calendar or end-to-end token release claim','Full parent pin registry/clock compensation/cut/route and outer C5 rescreen'])
+ if a.fn_banks:
+  d['fn_bank_candidate']={'source':'902e0f18f','clock_entries_per_cth':5,'extra_init_edges':1,'extra_normal_edges':0,'parent_clock_abi_open':True,'swap_fn_fl':a.swap_fn_fl,'pin_transform':'Old FN north pin y+8.64 only, exact bank parent grant from902e0f18f; reset and clock pins must bind actual candidate ABI'}
  (out/'placement.json').write_text(json.dumps(d,indent=2)+'\n')
  import matplotlib;matplotlib.use('Agg');import matplotlib.pyplot as plt
  fig,ax=plt.subplots(figsize=(9,13))
  for i,r in enumerate(instances):
   y=H-r['y_from_N']-r['h'];ax.add_patch(plt.Rectangle((r['x'],y),r['w'],r['h'],fill=True,alpha=.18,edgecolor='black',facecolor=plt.cm.tab20(i%20)));ax.text(r['x']+r['w']/2,y+r['h']/2,r['name'].replace('ctnl','NL').replace('ctpl','PL'),ha='center',va='center',fontsize=7)
- ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_xlabel('um');ax.set_ylabel('um from S');ax.set_title('Literal v25 NT parent candidate 576.72 x 835.92 um\n0 overlaps; partial pin joins only; all native/parent adoption OPEN');fig.savefig(out/'placement.png',dpi=180)
+ ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_xlabel('um');ax.set_ylabel('um from S');ax.set_title('Literal held NT parent candidate (actual outline shown by axes)\n0 overlaps; partial pin joins only; all native/parent adoption OPEN');fig.savefig(out/'placement.png',dpi=180)
  print(json.dumps({'outline':d['outline_um'],'instances':len(instances),'overlaps':0,'pin_joins':[(r['name'],r['bits'],r['over500'],r['max_um']) for r in joins]}))
 if __name__=='__main__':main()
