@@ -317,7 +317,7 @@
    "master": "ot_qwen_tile_lsl_fp1",
    "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
    "idx": 0,
-   "x": 90.072,
+   "x": 100.224,
    "y": 367.296,
    "w": 99.792,
    "h": 140.4,
@@ -330,7 +330,7 @@
    "master": "ot_qwen_tile_lsl_fp1",
    "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
    "idx": 0,
-   "x": 90.072,
+   "x": 100.224,
    "y": 196.608,
    "w": 99.792,
    "h": 140.4,
@@ -343,7 +343,7 @@
    "master": "ot_qwen_tile_lsl_fp1",
    "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
    "idx": 0,
-   "x": 90.072,
+   "x": 100.224,
    "y": 25.92,
    "w": 99.792,
    "h": 140.4,
@@ -356,7 +356,7 @@
    "master": "ot_qwen_tile_lsl_fp1",
    "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
    "idx": 0,
-   "x": 209.952,
+   "x": 200.016,
    "y": 367.296,
    "w": 99.792,
    "h": 140.4,
@@ -369,7 +369,7 @@
    "master": "ot_qwen_tile_lsl_fp1",
    "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
    "idx": 0,
-   "x": 209.952,
+   "x": 200.016,
    "y": 196.608,
    "w": 99.792,
    "h": 140.4,
@@ -382,7 +382,7 @@
    "master": "ot_qwen_tile_lsl_fp1",
    "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
    "idx": 0,
-   "x": 209.952,
+   "x": 200.016,
    "y": 25.92,
    "w": 99.792,
    "h": 140.4,
@@ -426,37 +426,37 @@
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_tile_lsl_fp1#0: origin (90.072, 367.296) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_tile_lsl_fp1#0: origin (100.224, 367.296) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_tile_lsl_fp1#0: origin (90.072, 196.608) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_tile_lsl_fp1#0: origin (100.224, 196.608) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_tile_lsl_fp1#0: origin (90.072, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_tile_lsl_fp1#0: origin (100.224, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_tile_lsl_fp1#0: origin (209.952, 367.296) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_tile_lsl_fp1#0: origin (200.016, 367.296) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_tile_lsl_fp1#0: origin (209.952, 196.608) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_tile_lsl_fp1#0: origin (200.016, 196.608) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "ot_qwen_tile_lsl_fp1#0: origin (209.952, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "ot_qwen_tile_lsl_fp1#0: origin (200.016, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
@@ -470,6 +470,24 @@
    "macro_grid",
    "ot_qwen_tile_lsl_fp1#0: origin (329.832, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "ot_qwen_tile_lsl_fp1#0 / ot_qwen_tile_lsl_fp1#0 channel -0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "ot_qwen_tile_lsl_fp1#0 / ot_qwen_tile_lsl_fp1#0 channel -0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
+  ],
+  [
+   "FAIL",
+   "channel",
+   "ot_qwen_tile_lsl_fp1#0 / ot_qwen_tile_lsl_fp1#0 channel -0.0 um (< 20 um)",
+   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"
   ],
   [
    "WARN",

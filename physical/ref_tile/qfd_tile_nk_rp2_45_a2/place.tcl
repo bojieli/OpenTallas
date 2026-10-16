@@ -62,23 +62,23 @@ set i [ot_ref_pick $ot_ref_by ot_qwen_tile_node {u_tile.u_tile.u_logic.genblk4.g
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(50.784 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_node at 22.464 50.784 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(90.072 * $dbu)}] [expr {round(367.296 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 90.072 367.296 MY"
+$i setOrient MY; $i setLocation [expr {round(100.224 * $dbu)}] [expr {round(367.296 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 100.224 367.296 MY"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(90.072 * $dbu)}] [expr {round(196.608 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 90.072 196.608 MY"
+$i setOrient MY; $i setLocation [expr {round(100.224 * $dbu)}] [expr {round(196.608 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 100.224 196.608 MY"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(90.072 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 90.072 25.92 MY"
+$i setOrient MY; $i setLocation [expr {round(100.224 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 100.224 25.92 MY"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh}]
-$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(367.296 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 367.296 R0"
+$i setOrient R0; $i setLocation [expr {round(200.016 * $dbu)}] [expr {round(367.296 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 200.016 367.296 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh}]
-$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(196.608 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 196.608 R0"
+$i setOrient R0; $i setLocation [expr {round(200.016 * $dbu)}] [expr {round(196.608 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 200.016 196.608 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh}]
-$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 25.92 R0"
+$i setOrient R0; $i setLocation [expr {round(200.016 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 200.016 25.92 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh}]
 $i setOrient R0; $i setLocation [expr {round(329.832 * $dbu)}] [expr {round(196.608 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 329.832 196.608 R0"

@@ -43,6 +43,21 @@ def build(nl=False):
         'ck_rqr0': [[149.688, 513, 308.232, 536.76]],
         'ck_rqr1': [[162.648, 799.254, 296.568, 818.64]],
     }
+    # Q-TILE45 r4 LSL COLUMN REPITCH (gate ff8ffa4d6: after r3 the W face / N band / mid band were clean, the
+    # remaining DPL-0033 cells sat only in the two LSL pin gutters -- node|col1 x75..85 and col2|col3 x300..325,
+    # 9.3 um placeable after 5.4 um halos, holding a TX fence plus every LSL face-pin's glue).  All 465 LSL signal
+    # pins are on the master's E face, so col1 (MY, pins W) and col2 (R0, pins E) meet back to back: abut them
+    # (pin-free 0 um seam, as the abutted ROM stacks) and give the freed 20.088 um to the two pin gutters,
+    # 20.088 -> 30.132 um each (19.3 um placeable).  Node, col3, ROMs, outline, pins and RTL unchanged.
+    LSL_X = {'MY': 100.116, 'R0_mid': 199.908}
+    for c in s['children']:
+        if 'g_sl[' not in c['inst']:
+            continue
+        n = int(c['inst'].split('g_sl[')[1].split(']')[0])
+        if c['orient'] == 'MY':
+            c['at'] = [LSL_X['MY'], c['at'][1]]
+        elif n not in (6, 7):
+            c['at'] = [LSL_X['R0_mid'], c['at'][1]]
     leaf = {}
     for c in s['children']:
         if 'g_sl[' not in c['inst']:
@@ -104,11 +119,11 @@ def build(nl=False):
     for n, c in leaf.items():
         x, y = c['at']
         y0, y1 = y + 2.16, y + 140.4 - 2.16
-        if c['orient'] == 'MY':      # tx0..2: node|LSL gutter 75.384..84.672, fence against own LSL (E side)
-            box = [79.704, y0, 84.672, y1]
+        if c['orient'] == 'MY':      # tx0..2: node|LSL gutter 75.384..94.716, fence against own LSL (E side)
+            box = [x - 5.4 - 4.968, y0, x - 5.4, y1]
         elif n in (6, 7):            # tx6/7: E channel 435.024..455.76, fence against own LSL, 9.76 um E-face band
             box = [x + 99.792 + 5.4, y0, 446.0, y1]
-        else:                        # tx3..5: LSL gutter 315.144..324.432, fence against own LSL (W side)
+        else:                        # tx3..5: LSL gutter 305.1..324.432, fence against own LSL (W side)
             box = [x + 99.792 + 5.4, y0, x + 99.792 + 5.4 + 4.968, y1]
         regions['ck_tx%d' % n] = [[round(v, 3) for v in box]]
     # residual core root (entry E y400): 40 um wide strip, unfenced 23 um W band and 50 um E-face band
