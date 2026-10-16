@@ -16,7 +16,7 @@ module tb_dsfd_cfifo_x2pair;
  reg [1100:0] R=0; reg [65:0] ri=0; reg [1:0] st=0;
  wire [282:0] xa; wire [265:0] xb; wire [14:0] cc; wire [535:0] x2; wire [69:0] rd; wire co, rf, rs;
  reg [565:0] xd = 0; reg [537:0] xd2 = 0; reg go = 0;
- dsfd_cfifo dut(.cc(cc), .ck(cr), .co(co), .cr(cr), .rd(rd), .rf(rf), .ri(ri), .rs(rs), .rst(rst), .st(st),
+ dsfd_cfifo dut(.cc(cc), .cr(cr), .rd(rd), .ri(ri), .rs(rs), .rst(rst), .st(st),
                 .xa(xa), .xb(xb), .xd(xd), .xf(xf), .x2(x2), .xd2(xd2), .xf2(xf2));
  reg [1100:0] gold [0:4095]; integer n=0, n2=0, k; reg [1100:0] w2;
  function automatic [1100:0] word(input integer s);

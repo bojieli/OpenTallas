@@ -16,6 +16,6 @@
   103.68,
   43.176
  ],
- "note": "absolute die x/y of xa/xb/x2-start/xd/rd-start kept; x2 pitch = station x2i pitch (jog 0); cc/st under station cci/so; xd2/xf2 new pins (die bits had none); xf beside xd; rd pitch 0.096",
- "pins": 2350
+ "note": "absolute die x/y of xa/xb/x2-start/xd/rd-start kept; x2 pitch = station x2i pitch (jog 0); cc/st under station cci/so; xd2/xf2 new pins (die bits had none); xf beside xd; rd pitch 0.096; ports ck/co/rf removed (clock feed-throughs: die drives ck_col_<r> and the rd return-lane clock from its column clock root)",
+ "pins": 2347
 }

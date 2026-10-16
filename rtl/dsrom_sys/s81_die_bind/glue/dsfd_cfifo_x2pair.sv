@@ -1,21 +1,21 @@
 // dsfd_cfifo, static x2-pair column entry (S-ELEM-PQ/COLL 2026-10-16, VIS-ROM finding S81F-02).
 // Module text of of the die glue the current die binds: c21h (ot-epyc4 s81-die-iter/c21h/nl/die_glue.sv,
-// sha256 80fe6f54..., module text sha256 e892a5bb...) with ONE edit: the eight 1-bit ports (ck co cr rf rs rst xf xf2)
-// are declared scalar instead of [0:0] (same width/connectivity for the die.v binding; the ref_tile flow names 1-bit
-// pins by base name and OpenSTA keeps [0:0] as cr[0]), emitted by tools/dsrom_s81_fulldie.py with
+// sha256 80fe6f54..., module text sha256 e892a5bb...) with TWO edits: (1) the 1-bit ports (cr rs rst xf xf2) are declared scalar
+// instead of [0:0] (same width; the ref_tile flow names 1-bit pins by base name); (2) the two CLOCK FEED-THROUGHS of
+// the die glue are removed: ck -> co (column clock root) and cr -> rf (return-lane forwarded clock) were wires through
+// the hard tile (no sink inside; a hard view cannot own a clock feed-through as a registered IO domain).  The die drives
+// ck_col_<r> and the rd return-lane clock from its own column clock root instead (S-DIE REBIND REQUEST 2026-10-16).
+// Emitted by tools/dsrom_s81_fulldie.py with
 // --bf-x2-static --bf-x2-pair --cfifo-colck (branch 'mst == dsfd_cfifo and BF_X2_STATIC', BF_X2_PAIR).
 // Ports = die.v binding: xd2[537:0] / xf2 (the x2 extension lane) present; every data input is pin-captured
 // (xd on xf, xd2 on xf2 inside ot_s81_static_column_ingress, ri/st on cr) and every data output is a flop
-// (xa/xb/cc/x2/rd/rs); co = ck and rf = cr are clock wires (column clock root / forwarded return clock).
+// (xa/xb/cc/x2/rd/rs).  Clock roots: cr (core), xf, xf2 (forwarded lane clocks).
 // Static: no occupancy, ready or credit (owner static-cycle rule).
 `timescale 1ns/1ps
 module dsfd_cfifo (
     output wire [14:0] cc,
-    input wire ck,
-    output wire co,
     input wire cr,
     output wire [69:0] rd,
-    output wire rf,
     input wire [65:0] ri,
     output wire rs,
     input wire rst,
@@ -33,7 +33,6 @@ module dsfd_cfifo (
     // --bf-x2-static (S-BIND 2026-10-15, owner static-cycle rule): column entry = ot_s81_static_column_ingress
     // (pin capture of the forwarded record on xf, fixed epoch shift from the forwarded reset marker, no
     // occupancy / ready / credit).  xd = {x2 536 | cc 15 | x1 266 | x0 283 | v | rst_n}: one packed word.
-    assign co = ck;          // column clock-tree root (option C region root)
     assign rs = rsync;
     reg [1:0] sti; always @(posedge cr) sti <= st;
     wire [1100:0] xw_; wire xflt;
@@ -50,6 +49,5 @@ module dsfd_cfifo (
     reg [67:0] rr; reg flt;
     always @(posedge cr or negedge rsync) if (!rsync) begin rr <= 68'd0; flt <= 1'b0; end
         else begin rr <= {sti[1] | flt, sti[0], ri}; flt <= flt | xflt; end
-    assign rf = cr;          // forwarded with rd (the clock that launches it)
     assign rd = {rr, rr[0], rsync};   // {status, root word, valid = root o_v, rst_n}
 endmodule

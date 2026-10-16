@@ -1085,8 +1085,6 @@ place_pin -pin_name {x2[533]} -layer M5 -location {83.916 51.798} -force_to_die_
 place_pin -pin_name {x2[534]} -layer M5 -location {84.012 51.798} -force_to_die_boundary
 place_pin -pin_name {x2[535]} -layer M5 -location {84.108 51.798} -force_to_die_boundary
 place_pin -pin_name {cr} -layer M5 -location {56.796 51.798} -force_to_die_boundary
-place_pin -pin_name {co} -layer M5 -location {56.892 51.798} -force_to_die_boundary
-place_pin -pin_name {ck} -layer M5 -location {56.988 51.798} -force_to_die_boundary
 place_pin -pin_name {cc[0]} -layer M5 -location {85.164 51.798} -force_to_die_boundary
 place_pin -pin_name {cc[1]} -layer M5 -location {85.308 51.798} -force_to_die_boundary
 place_pin -pin_name {cc[2]} -layer M5 -location {85.452 51.798} -force_to_die_boundary
@@ -2347,5 +2345,4 @@ place_pin -pin_name {rd[66]} -layer M5 -location {274.764 0.042} -force_to_die_b
 place_pin -pin_name {rd[67]} -layer M5 -location {274.860 0.042} -force_to_die_boundary
 place_pin -pin_name {rd[68]} -layer M5 -location {274.956 0.042} -force_to_die_boundary
 place_pin -pin_name {rd[69]} -layer M5 -location {275.052 0.042} -force_to_die_boundary
-place_pin -pin_name {rf} -layer M5 -location {271.836 0.042} -force_to_die_boundary
 place_pin -pin_name {rst} -layer M4 -location {0.042 25.932} -force_to_die_boundary
