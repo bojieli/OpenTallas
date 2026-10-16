@@ -15,8 +15,15 @@ SRC=("$W/lib/ot_rst_pipe.sv" "$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
  "$R/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
  "$W/test/qwen_split/tb_qwen_d2d_program.sv")
 sha256sum "${SRC[@]}" "$R/tools/qwen_split/d2d_link_calendar.py" > "$OUT/source.sha256"
+if [ "${BACKEND:-iverilog}" = verilator ]; then
+  verilator --binary --timing -j "${JOBS:-4}" -Wno-fatal -I"$OUT/cal" --top-module tb_qwen_d2d_program \
+    -DOT_MEM_NO_INIT -GMUT="$MUT" -GPR="${PR:-1}" -GTXL="$TXL" -GPHY="$PHY" -GCALDIR=\"$OUT/cal\" \
+    --Mdir "$OUT/obj" "${SRC[@]}" > "$OUT/build.log" 2>&1 || { head -30 "$OUT/build.log"; exit 2; }
+  "$OUT/obj/Vtb_qwen_d2d_program" > "$OUT/run.log" 2>&1 || true
+else
 iverilog -g2012 -I"$OUT/cal" -DOT_MEM_NO_INIT -s tb_qwen_d2d_program -Ptb_qwen_d2d_program.MUT=$MUT -Ptb_qwen_d2d_program.PR=${PR:-1} -Ptb_qwen_d2d_program.TXL=$TXL \
  -Ptb_qwen_d2d_program.PHY=$PHY -Ptb_qwen_d2d_program.CALDIR=\"$OUT/cal\" -o "$OUT/tb.vvp" "${SRC[@]}" > "$OUT/build.log" 2>&1 || { head -30 "$OUT/build.log"; exit 2; }
 vvp -n "$OUT/tb.vvp" > "$OUT/run.log" 2>&1 || true
+fi
 grep -E 'D2D_PROGRAM_|RECOVERY|frames' "$OUT/run.log"
 grep -q '^D2D_PROGRAM_PASS' "$OUT/run.log"
