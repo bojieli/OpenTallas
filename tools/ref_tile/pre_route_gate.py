@@ -211,8 +211,8 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
                   "assign every port to a face")
     one = [p for p, (w, vec) in ports.items() if vec and w == 1]
     if one:
-        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
-              "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
+        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: retain declared indices for literal clock entries; "
+              "check actual mapped pin names for a hand pin list", "use the actual RTL and mapped pin names")
     for clock in RT.clock_ports(spec):
         # Entry-clock specs use literal bits, while the RTL header parser returns
         # vector base names. Keep pin-face plans grouped by base name, but accept
@@ -222,7 +222,7 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
         if bit and bit[1] in ports:
             width, vector = ports[bit[1]]
             bounds = getattr(ports, "ranges", {}).get(bit[1])
-            exists = bool(vector and bounds and bounds[0] != bounds[1] and bounds[0] <= int(bit[2]) <= bounds[1])
+            exists = bool(vector and bounds and bounds[0] <= int(bit[2]) <= bounds[1])
         if not exists:
             g.add("FAIL", "pins", f"clock port {clock} is not a port of {spec['top']}", "fix clock_port")
 
@@ -777,7 +777,14 @@ NB=${{B#$C/}}
 docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base /work/$NB/3_2_place_iop.odb" > $R/iop.log 2>&1; echo "GATE_IOP_RC=$?"
 grep -hE "\[ERROR" $R/iop.log | head -4 | sed 's/^/GATE_FLOWERR /'
 printf 'read_db /work/%s/3_2_place_iop.odb\nsource /src/tools/fp_margin_lint.tcl\not_fp_lint_dump /work/gate_dump.json\nexit\n' $NB > $C/gate_dump.tcl
-docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_dump.tcl > $R/dump.log 2>&1; echo "GATE_DUMP_RC=$?"
+docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_dump.tcl > $R/dump.log 2>&1; DUMPRC=$?; echo "GATE_DUMP_RC=$DUMPRC"
+[ "$DUMPRC" -eq 0 ] || exit 0
+# Validate the actual placed-IO dump before CTS or any PASS evidence is accepted.
+python3 tools/fp_margin_lint.py pins $C/gate_dump.json --out $R/pin_geometry.json > $R/pin_geometry.log 2>&1; PINRC=$?
+sed 's/^/GATE_FP /' $R/pin_geometry.log
+echo "GATE_PIN_GEOMETRY_RC=$PINRC"
+[ -s $R/pin_geometry.json ] && python3 -c 'import json,sys;print("GATE_PIN_GEOMETRY_RESULT "+json.dumps(json.load(open(sys.argv[1])),separators=(",",":")))' $R/pin_geometry.json
+[ "$PINRC" -eq 0 ] || exit 0
 # LAYOUT IMAGES (owner rule 20:45 10-15): the floorplan the route starts from (macros, pins, PG) -> PNG on the gate side
 ot_layout() {{  # ot_layout ODB TAG: tools/ref_tile/layout_dump.tcl on the odb, json back as one zlib+base64 line
   printf 'read_db /work/%s\nsource /src/tools/ref_tile/layout_dump.tcl\nexit\n' "$1" > $C/gate_layout_$2.tcl
@@ -1231,6 +1238,47 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             g.add("INFO", "trial_route", note)
 
 
+def check_actual_pin_geometry(g: Gate, out: str):
+    """A missing, failed or malformed actual-dump proof can never become PASS."""
+    kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
+    records = re.findall(r"^GATE_PIN_GEOMETRY_RESULT (.*)$", out, re.M)
+    try:
+        if kv.get("GATE_DUMP_RC") != "0" or len(records) != 1:
+            raise ValueError("missing successful actual gate_dump / unique pin-geometry report")
+        rep = json.loads(records[0])
+        if not isinstance(rep, dict) or not isinstance(rep.get("metrics"), dict):
+            raise ValueError("malformed actual pin-geometry report")
+        if (not isinstance(rep.get("fails"), list) or
+                any(not isinstance(f, dict) or not isinstance(f.get("check"), str) or
+                    not isinstance(f.get("msg"), str) for f in rep["fails"])):
+            raise ValueError("malformed actual pin-geometry findings")
+        metrics = rep["metrics"]
+        keys = ("signal_clock_pins", "pin_rectangles", "pin_track_checked", "pin_track_inaccessible",
+                "pin_rectangles_outside", "missing_geometry")
+        if any(type(metrics.get(k)) is not int or metrics[k] < 0 for k in keys):
+            raise ValueError("invalid actual pin-geometry counters")
+        if (rep.get("schema") != "opentallas.fp_pin_geometry.v1" or
+                not re.fullmatch(r"[0-9a-f]{64}", rep.get("dump_sha256", "")) or
+                not re.fullmatch(r"[0-9a-f]{64}", rep.get("validator_sha256", "")) or
+                metrics["signal_clock_pins"] <= 0):
+            raise ValueError("invalid actual pin-geometry proof")
+        if rep.get("verdict") == "PASS" and not rep["fails"] and kv.get("GATE_PIN_GEOMETRY_RC") == "0":
+            if metrics["pin_track_checked"] != metrics["signal_clock_pins"]:
+                raise ValueError("PASS lacks actual track coverage for every signal/clock pin")
+            if any(metrics[k] for k in ("pin_track_inaccessible", "pin_rectangles_outside", "missing_geometry")):
+                raise ValueError("PASS contradicts actual pin-geometry metrics")
+            g.add("INFO", "floorplan.pin_geometry", f"actual pin geometry PASS: {metrics}; dump SHA256 {rep['dump_sha256']}")
+            return
+        if rep.get("verdict") != "FAIL" or not rep["fails"] or kv.get("GATE_PIN_GEOMETRY_RC") != "3":
+            raise ValueError("actual pin-geometry checker status/report disagree")
+        for finding in rep["fails"]:
+            g.add("FAIL", "floorplan." + finding["check"], finding["msg"],
+                  "fix actual pin shapes/coordinates against the die and DEF tracks; retain the assigned native pin plan")
+    except (KeyError, TypeError, ValueError) as e:
+        g.add("FAIL", "floorplan.pin_geometry", str(e),
+              "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry")
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
@@ -1274,6 +1322,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     if kv.get("GATE_IOP_RC") not in (None, "0"):
         g.add("FAIL", "io_place", "IO placement failed: " + "; ".join(errs[:3]),
               PF.FIX_TEXT if any("PPL-0093" in e for e in errs) else "fix the pin plan / pin layers")
+    check_actual_pin_geometry(g, out)
     m = re.search(r"^GATE_PORTS (.*)$", out, re.M)
     if m:
         bounds = re.search(r"^GATE_PORT_RANGES (.*)$", out, re.M)
@@ -1624,6 +1673,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
          # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
          + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)]
+         # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
+         # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
+         + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

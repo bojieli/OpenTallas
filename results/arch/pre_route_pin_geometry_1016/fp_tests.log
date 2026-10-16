@@ -1,0 +1,47 @@
+test_bank_distance_and_macro_edge (test_fp_lint.Lint) ... ok
+test_bank_distance_follows_direction (test_fp_lint.Lint)
+safe-hbm Q8/Q9 (hfd_attn_half_lo): a register bank at the N face drives output ports AND, on the same net, ... ok
+test_channel (test_fp_lint.Lint) ... ok
+test_channel_signal_cap_m4_uses_m3 (test_fp_lint.Lint) ... ok
+test_clean_passes (test_fp_lint.Lint) ... ok
+test_cli_exit_codes (test_fp_lint.Lint) ... ok
+test_pin_density (test_fp_lint.Lint) ... ok
+test_pin_pdn_full_column (test_fp_lint.Lint) ... ok
+test_pin_width (test_fp_lint.Lint) ... ok
+test_relay_lint (test_fp_lint.Lint) ... ok
+test_sliver_and_blockage (test_fp_lint.Lint) ... ok
+test_util (test_fp_lint.Lint) ... ok
+test_crash_becomes_floorplan_margin (test_fp_lint.LoopWiring) ... ok
+test_default_on (test_fp_lint.LoopWiring) ... fp_margin_lint: FAIL  util 65.6% (+hold 82.0%), pins 0, max pin density 0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: FAIL util: utilisation 65.6% > 60% (std 26251 + macro 0 um2 in 40000 um2): grow the outline to <= 55-60%
+FLOORPLAN_MARGIN: util: utilisation 65.6% > 60% (std 26251 + macro 0 um2 in 40000 um2): grow the outline to <= 55-60%
+fp_margin_lint: PASS  util 65.6% (+hold 82.0%), pins 0, max pin density 0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: FAIL  util 65.6% (+hold 82.0%), pins 0, max pin density 0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: FAIL util: utilisation 65.6% > 60% (std 26251 + macro 0 um2 in 40000 um2): grow the outline to <= 55-60%
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/cg_pushdown.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/cg_pushdown.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/clk_net_protect.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/clk_net_protect.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_hook.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_hook.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_consistent.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_consistent.sdc'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/nbr_clk_measured_ttb.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/nbr_clk_measured_ttb.sdc'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/cg_pushdown.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/cg_pushdown.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/clk_net_protect.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/clk_net_protect.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_hook.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_hook.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_consistent.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_consistent.sdc'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/nbr_clk_measured_ttb.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/nbr_clk_measured_ttb.sdc'); shipping the daemon's copy
+ok
+test_opt_out_and_overrides (test_fp_lint.LoopWiring) ... 2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/cg_pushdown.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/cg_pushdown.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/clk_net_protect.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/clk_net_protect.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_hook.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_hook.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_consistent.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_consistent.sdc'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/nbr_clk_measured_ttb.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/nbr_clk_measured_ttb.sdc'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/cg_pushdown.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/cg_pushdown.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/clk_net_protect.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/clk_net_protect.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_hook.tcl unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_hook.tcl'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/link_budget_consistent.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/link_budget_consistent.sdc'); shipping the daemon's copy
+2026-10-16T09:00:01-07:00 OVERLAY-TRACKS-MAIN: physical/common_flow/nbr_clk_measured_ttb.sdc unresolved (FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-gate-pin-bounds-0910/physical/common_flow/nbr_clk_measured_ttb.sdc'); shipping the daemon's copy
+ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.074s
+
+OK

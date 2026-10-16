@@ -41,6 +41,8 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
   ident[0]<={req_epoch,req_layer,req_t};
   for(j=1;j<=RESPONSE_LAT;j=j+1)ident[j]<=ident[j-1];
  end
+ // The landing return is shared with the V port. Legal V responses belong
+ // to that consumer; a V response at a reserved K edge still faults missing K.
  // Request qualifiers captured before diagnostics so their logic is local.
  reg bad_rq;
  always @(posedge ck or negedge rn)
@@ -48,7 +50,7 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
   else begin
    ev<=(ev<<1)|req_valid;rv_q<=rsp_valid;vv_q<=rsp_v;
    bad_rq<=rq[0]&&(!active||rq[2:1]!=0||rq[16]!=ly[0]);
-   if(bad_rq || (go_q&&((|ev)||req_valid||rq[0])) || rv_q!=ev[RESPONSE_LAT] ||
-      (rv_q&&(vv_q||returned!=ident[RESPONSE_LAT])))fault<=1;
+   if(bad_rq || (go_q&&((|ev)||req_valid||rq[0])) || (rv_q&&!vv_q)!=ev[RESPONSE_LAT] ||
+      (rv_q&&!vv_q&&returned!=ident[RESPONSE_LAT]))fault<=1;
   end
 endmodule

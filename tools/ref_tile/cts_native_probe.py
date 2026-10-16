@@ -17,7 +17,7 @@ def main():
  prelude=(HERE/'path_classes.tcl').read_text().split('proc kind')[0]
  tcl=prelude+'\nwrite_timing_model -library_name native_cts_probe_tt /work/native_probe_tt.lib\n';(out/'probe.tcl').write_text(tcl)
  script=remote+'/native_probe.tcl';run(['ssh',host,'cat > '+shlex.quote(script)],input=tcl,text=True)
- cmd=['ot-run','--mem',str(a.mem),'--threads','1','--dir',remote,'--','docker','run','--rm','-e','OT_GATE_SIGNOFF_SDC=/src/'+kit+'/signoff.sdc','-v',remote+'/src:/src:ro','-v',remote+'/routes/gate/work/orfs:/work','-v',script+':/probe.tcl:ro','openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/probe.tcl']
+ cmd=['ot-run','--mem',str(a.mem),'--threads','1','--hosts',host,'--dir',remote,'--','docker','run','--rm','-e','OT_GATE_SIGNOFF_SDC=/src/'+kit+'/signoff.sdc','-v',remote+'/src:/src:ro','-v',remote+'/routes/gate/work/orfs:/work','-v',script+':/probe.tcl:ro','openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/probe.tcl']
  p=subprocess.run(cmd,capture_output=True,text=True);(out/'probe.log').write_text(p.stdout+p.stderr)
  if p.returncode or 'ot-run: RAN on ' not in p.stderr:raise RuntimeError('STA did not complete; see probe.log')
  for name,path in [('probe_tt.lib',remote+'/routes/gate/work/orfs/native_probe_tt.lib'),('insertion.json',remote+'/ck.json')]:run(['rsync','-a',host+':'+path,str(out/name)])

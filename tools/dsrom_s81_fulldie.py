@@ -1624,6 +1624,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                         parts.append(f'.{port}({{{nc_}, {net}}})')
                     continue
                 parts.append(f'.{port}({net})')
+        for port, literal in m.get('neutral_role_inputs', {}).get(it.name, {}).items():
+            if any(c[0] == port for c in conns.get(it.name, [])):
+                raise ValueError('neutral-role strap collides with active bus '+it.name+'.'+port)
+            parts.append(f'.{port}({literal})')
+            pads_decl[it.name][port] = 0
         for base, pcs in sliced.items():
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
@@ -1670,7 +1675,8 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
     if k == 1 and pads_decl:
         pad_path.write_text(json.dumps(dict(schema='s81-instance-padding-v1', instances={
             inst: dict(master=by[inst].master,
-                       reason='DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged',
+                       reason=('SSTN role superset: only absent original control ports tied zero' if inst in m.get('neutral_role_inputs', {}) else
+                               'DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged'),
                        ports={p_: dict(logical_width=L) for p_, L in sorted(ps.items())})
             for inst, ps in sorted(pads_decl.items())}), indent=1) + '\n')
     elif pad_path.exists():
@@ -4964,6 +4970,12 @@ def build_r8(variant=None):
         h = up(HUB_MM2[name] * 1e6 / w, GY)
         x = up((gap_x0 + gap_x1) / 2 - w / 2, GX)
         y = band_ys[side] if side == 'S' else band_ys[side] + SVC_D - h
+        bb_ = (HUB_LAYOUT or {}).get('band_blocks', {}).get(f'bk_{name}')
+        if bb_:
+            # --hub-layout vmk (S-DIE-HUB 10-16): the layout moves the band block (selector and collector stacked beside
+            # the SW IO under the SU); the outline stays the generator's own
+            assert abs(bb_[2] - (w - SHAVE)) < 0.5 and abs(bb_[3] - (h - SHAVE)) < 0.5, ('band block outline', name, bb_, w, h)
+            x, y = up(bb_[0], GX), up(bb_[1], GY)
         it = Inst(f'bk_{name}', f'dsfd_bk_{name}', x, y, w - SHAVE, h - SHAVE, kind='band_blk', region='svc')
         insts.append(it)
         hub[name] = it
@@ -5500,7 +5512,10 @@ def buses_r8(m):
     starts = {}
     for side in 'WE':
         nm, w, h = end_spec('l2r', [LSW], 'vr')
-        it = hub_block(f'hx_{side}', nm, 'hend', w, h, x_sp if side == 'W' else x_vch + 0.0, vmc,
+        fx_ = x_sp if side == 'W' else x_vch + 0.0
+        if wide_hub() and wide_hub().get('variant') == 'vmk':
+            fx_ = xsrc.x if side == 'W' else xsrc.x + xsrc.w     # vmk: the broadcast start blocks stand on the PQ faces
+        it = hub_block(f'hx_{side}', nm, 'hend', w, h, fx_, vmc,
                        side, [cor['s14W'] if side == 'W' else cor['vch']])
         starts[side] = it
         bus(f'xr_{side}', 'local', LSW + 1, [(xsrc.name, f'x{side.lower()}'), (it.name, 'i')])
@@ -5871,6 +5886,7 @@ PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column
                                 # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
                                 # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
 HSTN_POSEDGE = False            # --hstn-posedge (FILL-S 2026-10-15): common-clock stations as plain posedge flops on ck
+SSTN_SPLIT_MAP = None           # opt-in actual two-leaf SSTN map; both real child views required
 SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations / return stages register the reset-qualified
                                 # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
 NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
@@ -6458,6 +6474,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+RLY536_RSTREG = False           # --rly536-rstreg: canonical536 relay resetpinregister; +1bootstrapreleaseedge,0productionedges
 HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
 DEDUPE_PAD = None               # --dedupe-pad FILE: DEDUPE pad map (instances of FROM become the standard TO, spare bits padded)
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
@@ -7722,6 +7739,7 @@ def _relay_faces_by_pins(m, passes=3):
 # sees the same number of stages: the whole column leaves reset on one cycle (static schedule: a fixed, known release
 # latency, recorded per column in m['col_reset_tree']).  The stage registers are column-clock sinks (ck_col_<c>).
 COL_RESET_TREE = 0              # built on the final build only (ALIGN_EXT[0]): the hop-plan passes never see its registers
+COL_RESET_STRICT = False         # opt-in: refuse unreachable tree stages and uncovered physical branches
 COL_RESET_SPAN_UM = 0.0           # --col-reset-span UM: also split a leaf group wider than UM (0: count only)
 
 
@@ -7736,14 +7754,18 @@ def _col_reset_tree(m, P):
     G = int(COL_RESET_TREE)
     rec, new = {}, []
     for i, (bid, cls, bits, eps) in enumerate(list(m['buses'])):
-        if cls != 'col_reset' or len(eps) - 1 <= G:
+        if cls != 'col_reset' or len(eps) < 2 or (not COL_RESET_STRICT and len(eps) - 1 <= G):
             continue
         r = bid.rsplit('_', 1)[-1]
         ck = ckb.get(f'ck_col_{r}')
         root = eps[0]
         if ck is None or root[0] not in by:
+            if COL_RESET_STRICT:
+                raise ValueError(f'--col-reset-strict: missing clock or driver for {bid}')
             continue
         sinks = [e for e in eps[1:] if e[0] in by]
+        if COL_RESET_STRICT and len(sinks) != len(eps) - 1:
+            raise ValueError(f'--col-reset-strict: unresolved reset sinks for {bid}')
         pos = {e: cen(by[e[0]]) for e in sinks}
 
         def split(grp):
@@ -7801,6 +7823,8 @@ def _col_reset_tree(m, P):
                 if pl is not None:
                     break
             if pl is None:
+                if COL_RESET_STRICT:
+                    raise ValueError(f'--col-reset-strict: unreachable stage {bid} {tag}; no raw branch emitted')
                 pl = P.near(pt[0], pt[1], w_, h_, allowed, prev=None, span=1600.0, rows=160)
                 fails.append(tag)
             assert pl, ('--col-reset-tree: no site', bid, tag)
@@ -7834,6 +7858,21 @@ def _col_reset_tree(m, P):
             else:
                 new.append((f'{bid}_l{it.name}', 'col_reset', 1, [(it.name, 'o')] + list(t['sinks'])))
         build(tree, root, 0)
+        if COL_RESET_STRICT:
+            # A conservative bound for ANY pin inside either placed macro. This
+            # is only a geometry rejection screen; exact pin/pair-budget and RDC
+            # evidence remains mandatory in tools/s81/reset_forest.py.
+            for nbid, _, _, endpoints in new:
+                if not nbid.startswith(bid + '_'):
+                    continue
+                a = by[endpoints[0][0]]
+                for endpoint in endpoints[1:]:
+                    z = by[endpoint[0]]
+                    far = max(abs(a.x - z.x - z.w), abs(a.x + a.w - z.x)) + \
+                          max(abs(a.y - z.y - z.h), abs(a.y + a.h - z.y))
+                    if far > min(500.0, reach) + 1e-6:
+                        raise ValueError(f'--col-reset-strict: branch {nbid} to {endpoint} '
+                                         f'pin-box upper bound {far:.3f}um exceeds reach')
         m['buses'][i] = (bid, cls, bits, [root])       # emptied: the tree nets carry the column reset
         stages = D + sum(extra.get(lv, 0) for lv in range(D))
         rec[bid] = dict(sinks=len(sinks), registers=nreg[0], depth=stages, max_fanout=max(
@@ -8870,7 +8909,14 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             # The C5 service floor is not the vmc SU|VM channel.  Derive
             # this relocated band-to-VM connection from its actual end faces
             # rather than retaining C5's intermediate point inside the SU.
-            path = _vmc_route(m, (bx, by_), 'N' if name == 'sel' else 'S',
+            fs_ = 'N' if name == 'sel' else 'S'
+            if HUB_LAYOUT.get('band_blocks'):
+                # vmk: a moved band block leaves from its ASSIGNED vd face / pin span (record), not the C5 face
+                from s81 import hub_router as HR_
+                rec_ = _assigned_record(blk.master)
+                if rec_ and HR_.assigned_face(rec_, 'vd'):
+                    fs_, (bx, by_) = HR_.endpoint(blk, 'vd', rec_, he)
+            path = _vmc_route(m, (bx, by_), fs_,
                               endpoint, 'S', skip=(blk.name, he.name))
         else:
             path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
@@ -9448,6 +9494,11 @@ def port_usage(m):
             if old and old[0] != d:
                 raise ValueError(f'{inst}.{port}: direction {old[0]} and {d}')
             use[inst][port] = (d, max(bits if lo is None else hi + 1, old[1] if old else 0))
+    for inst, ports in m.get('neutral_role_inputs', {}).items():
+        for port, literal in ports.items():
+            if port in use[inst]:
+                raise ValueError('neutral-role strap attempts to mask live input '+inst+'.'+port)
+            use[inst][port] = ('input', int(literal.split("'")[0]))
     return use
 
 
@@ -9455,6 +9506,13 @@ def finalize_r8(m):
     """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
     nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
     use = port_usage(m)
+    if SSTN_SPLIT_MAP and not m.get('sstn_split'):
+        if not (SSTN_REG and BF_X2_STATIC):
+            raise ValueError('--sstn-split-map requires --sstn-reg and --bf-x2-static')
+        from s81.sstn_split import expand
+        expand(m, use, SSTN_SPLIT_MAP['map'], bound_views())
+        m['sstn_split']['map'] = {k: SSTN_SPLIT_MAP[k] for k in ('path', 'sha256')}
+        use = port_usage(m)
     for in_, pr_ in (m.get('pad') or {}).items():      # --dedupe-pad: the standard's full port width
         for p_, w_ in pr_['ports'].items():
             d_, b_ = use[in_][p_]
@@ -10207,6 +10265,12 @@ def _assigned_physical_pins(Mx, ports):
             Mx.order.append(port)
 
 
+def _require_physical_source_ports(master, ports):
+    missing = sorted(set(ports) - set(master.ports))
+    if missing:
+        raise ValueError(f'{master.name}: physical master omits live source ports {missing}')
+
+
 def masters_r8(m, k=1):
     pdir = m.get('pdir') or finalize_r8(m)
     if '_by' not in m:
@@ -10246,6 +10310,7 @@ def masters_r8(m, k=1):
         if k == 1:
             _assigned_physical_pins(Mx, ports)
             _resolve_pin_collisions(Mx)
+        _require_physical_source_ports(Mx, ports)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
@@ -10407,6 +10472,10 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
+    if it.kind in ('sstn_split_base', 'sstn_split_payload') and _LAY_K[0] == 1:
+        from s81.sstn_split import populate
+        populate(sys.modules[__name__], Mx, ports)
+        return
     if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
                                                                                          'dsfd_bf_front_static'):
         from s81.bf_direct_pins import populate, groups
@@ -10446,6 +10515,13 @@ def _faces_r8(m, Mx, it, ports):
         else:
             _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
             _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+        # fn is a distinct non-inverted clock path (two actual RTL inverters),
+        # whereas fo is the forwarded stage clock. Never alias or drop fn.
+        # This is diagnostic placeholder geometry; a bound native view replaces
+        # it with its literal physical contacts and insertion measurements.
+        copies = P_([f'fn{j}' for j in range(n)])
+        if copies:
+            _lay(Mx, 'E' if horiz else 'N', copies, 'M4' if horiz else 'M5', start=2.16)
     elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
         for p_, f_, at in (('fi', mst[-2], 2.16), ('fo', mst[-1], 6.48)):
             Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
@@ -10551,7 +10627,7 @@ def _faces_r8(m, Mx, it, ports):
         c1 = COL_W8 - RSC_W / 2 - CF_X
         if CFIFO_V2:              # 432 um outline: the return pins at its E end (the return column lies beyond it)
             c1 = min(c1, Mx.w - 30.0)
-        _lay(Mx, 'S', P_(['xf', 'xd']), 'M5', start=c0 - 15.0)
+        _lay(Mx, 'S', P_(['xf', 'xd', 'xf2', 'xd2']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'x2', 'cc', 'st']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
@@ -11012,6 +11088,18 @@ def _status_lane_glue(kind, fmt, ports):
     return b
 
 
+def rly536_reset_contract(m):
+    """Explicit static bootstrap requirement; physical generation alone does not qualify the compiler."""
+    if not RLY536_RSTREG:
+        return None
+    masters = sorted(k for k in m['pdir'] if re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', k))
+    return dict(schema='s81-rly536-reset-contract-v1', masters=masters,
+                async_assert='immediate', release_edges_before_first_production=1,
+                normal_data_edges=1, added_normal_edges=0,
+                source='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv', params=dict(W=536, RSREG=1),
+                compiler_bootstrap_qualification='OPEN: consumer must reserve and verify release edge before production')
+
+
 def glue_rtl(m):
     """Verilog of every generated glue master (structural over the real primitives ot_fwd_link_stage, ot_meso_fifo,
     ot_ratio_cdc_fifo, ot_v41_retn_w17w10)."""
@@ -11061,8 +11149,14 @@ def glue_rtl(m):
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
             w = ports['i'][1]
-            body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
-            body.append('    assign o = r;')
+            if RLY536_RSTREG and re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', mst):
+                assert w == 536, (mst, w)
+                # Physical canonical536 leaf: one resetpinregister releases before production starts.
+                # Asyncassert still immediate; firstreleaseedge holdsdatazero, subsequentedgescapturei.
+                body.append('    ot_s81_rly #(.W(536), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));')
+            else:
+                body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
+                body.append('    assign o = r;')
         elif mst.startswith('dsfd_xstg') and HEND_STATIC:
             w = ports['i'][1]
             body += ['    // S-NET --hend-static: end block (cw) -> band block (ck), same frequency, on the fixed calendar of',
@@ -11411,6 +11505,7 @@ def plan_record_r8(m):
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
         ctrl_model=m.get('ctrl_model'), ctrl_binding_shell_sha256=m.get('ctrl_binding_shell_sha256'),
+        **(dict(rly536_reset_contract=rly536_reset_contract(m)) if RLY536_RSTREG else {}),
         slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
@@ -11539,6 +11634,8 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--rly536-rstreg', action='store_true', help='canonical536-bit relay resetpinregister (536only): asyncassert unchanged, +1bootstrapreleaseedge, 0productionedges; requires statically scheduled reset release')
+    ap.add_argument('--sstn-split-map', help='Exact source-pinned two-leaf SSTN role map; requires both real bound child views')
     ap.add_argument('--dedupe-pad', help='S-NET+FILL: DEDUPE pad map JSON (results/arch/tile_dedupe_1015/s81_pad_map_1016.json): '
                     'instances of FROM become the closed standard TO; spare inputs tied low (die.v.pads.json), spare outputs open')
     ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
@@ -11728,6 +11825,7 @@ def die_options(ap):
                     'better non-closed variants are recorded as kit requests), not from instance centres')
     ap.add_argument('--col-reset-tree', type=int, default=32, metavar='G', help='DEFAULT 32 since S-DIE 10-16 0600 (0 = one net per column, disabled). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
                     'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
+    ap.add_argument('--col-reset-strict', action='store_true', help='Opt-in placement rejection gate: abort on an unreachable reset stage or any branch whose full pin-box bound exceeds 500um. Does not qualify exact pins, pair timing or reset recovery/removal.')
     ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
     ap.add_argument('--stn-pin-pitch2', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-stn-pin-pitch2 to disable). VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
                     'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
@@ -11882,8 +11980,15 @@ def apply_options(a):
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
     global HEND_BOUND_FOOTPRINT
     HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
+    global RLY536_RSTREG
+    RLY536_RSTREG = bool(getattr(a, 'rly536_rstreg', False))
     global DEDUPE_PAD
     DEDUPE_PAD = None
+    global SSTN_SPLIT_MAP
+    SSTN_SPLIT_MAP = None
+    if getattr(a, 'sstn_split_map', None):
+        sp_ = Path(a.sstn_split_map); sp_ = sp_ if sp_.is_absolute() else ROOT / sp_
+        SSTN_SPLIT_MAP = dict(path=str(a.sstn_split_map), map=json.loads(sp_.read_text()), sha256=hashlib.sha256(sp_.read_bytes()).hexdigest())
     if getattr(a, 'dedupe_pad', None):
         pp_ = Path(a.dedupe_pad); pp_ = pp_ if pp_.is_absolute() else ROOT / pp_
         DEDUPE_PAD = dict(path=str(a.dedupe_pad), map=json.loads(pp_.read_text())['map'])
@@ -12120,11 +12225,14 @@ def apply_options(a):
     global RLY_FACE_REACH, RLY_REAL_DIMS
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
-    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
+    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, COL_RESET_STRICT, LEF_PIN_DIR, STN_PIN_PITCH2
     STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', True))
     RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', True))
     COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 32) or 0)
     COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
+    COL_RESET_STRICT = bool(getattr(a, 'col_reset_strict', False))
+    if COL_RESET_STRICT and (COL_RESET_TREE <= 0 or not COL_RESET_SPAN_UM or COL_RESET_SPAN_UM > 500):
+        raise ValueError('--col-reset-strict requires --col-reset-tree > 0 and 0 < --col-reset-span <= 500')
     LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
@@ -12381,6 +12489,10 @@ def main(argv=None):
         write_netlist(m, 1, work / 'die.v')
         if GEN == 'r8':
             (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
+            if RLY536_RSTREG:
+                (work / 'die_glue.reset_contract.json').write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
+            elif (work / 'die_glue.reset_contract.json').exists():
+                (work / 'die_glue.reset_contract.json').unlink()
         print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
     elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))

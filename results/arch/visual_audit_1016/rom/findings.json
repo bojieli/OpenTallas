@@ -5,12 +5,7 @@
  "order": "owner 2026-10-16 ~01:00 PT: crowding and pin positioning problems must be fixed",
  "scope": "ROM dies (Qwen compute, Qwen KV/system, DeepSeek S81): every master not closed+native PASS in results/arch/die_completeness_1015/completeness.json plus newer successors, and the latest die runs/plans",
  "counts": {
-  "findings": 56,
-  "by_severity": {
-   "1": 12,
-   "2": 31,
-   "3": 13
-  }
+  "total": 67
  },
  "classes": {
   "P1": "pin face away from consumer",
@@ -3268,6 +3263,220 @@
    "images_local": [],
    "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted.",
    "status_1016_0400": "fix-in-gate: r5 dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f submitted. r4 route had failed TT -98.74 / FF -70.09: (a) e_d->s_d -98.7 ps on 548 endpoints (lane-major e_d pins, 4 mux sources up to 225 um apart), (b) xd->w_d -36.5 (w_d flops pinned at E outputs 194 um from W inputs), (c) pre_e->e_q 4:3 core->serial crossing in-leaf. r5: e_d bit-major, pin-flop anchoring inputs only, NO in-leaf crossing (e_q serial-native x43 fault, fault core-native). Equivalence gate PASS vs r9 split ref (FAULT/LANE mutants + unmodified r9 FAIL). CTS gate WARN 0 fail, in->reg +174, reg->reg +259 ps. VIS-ROM LOOKED at gate density: cells at their W/E input faces, centre and top/bottom ~35% very sparse (area, not timing)."
+  },
+  {
+   "id": "S81F-02b",
+   "round": 3,
+   "die": "s81",
+   "master": "dsfd_cfifo (x2-pair, 128 inst)",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "s81coll_cfifo_x2-g69-66cca05ae (EARLY_FAIL_CONGESTION 09:17)",
+   "host_run": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/s81coll_cfifo_x2-g69-66cca05ae",
+   "see": "4_1_cts odb 280.8x69.1 um, fill 0.52, all pins M5 only. S face: xd 566 bits in 27.1 um (x 98.6-125.7) = 20.9 pins/um, every M5 track; xd2 538 in 51.6 um (10.4/um). N face: xa 283 in 13.5 um (21/um), xb 266 in 12.7 um (21/um), x2 536 in 51.4 um; N pins use only 91.5 of 280.8 um (span 0.33). GRT-0116: total congestion 677 (M3 348, M4 131, M5 108, M2 90); every hot gcell sits at y 0-5 um, x 98-127 um = the xd pin wall, nets xd[] + ot_ihdrv/ot_inhold hold buffers. The die slot for dsfd_cfifo in c26b_r is 432.0 x 95.0 um, so the kit uses 65% of the width and 73% of the height it is given.",
+   "numbers": {
+    "outline_um": [
+     280.8,
+     69.1
+    ],
+    "die_slot_um": [
+     432.0,
+     95.0
+    ],
+    "xd_pins_per_um": 20.9,
+    "xa_xb_pins_per_um": 21.0,
+    "n_face_span_frac": 0.33,
+    "grt_total_congestion": 677,
+    "layers": "M5 only"
+   },
+   "classes": [
+    "P2",
+    "P4"
+   ],
+   "severity": 1,
+   "fix": "Use the full die slot (432 x 95 um, +54% face length) and 2-track pin pitch: xd over >=55 um, xa/xb over >=27 um each, N buses spread over the whole 432 um; put alternate bits on M7 if the M5 cap allows a grant, else M5+M3. Keep the xd2 window aligned to the station x2i column (S81F-02). Expected: per-face density 20.9 -> <=8 pins/um, GRT hot band removed.",
+   "images_committed": [
+    "img_r3/S81F-02_cfifo_g69_floorplan.png",
+    "img_r3/S81F-02_cfifo_g69_density.png"
+   ]
+  },
+  {
+   "id": "S81H-15",
+   "round": 3,
+   "die": "s81",
+   "master": "ot_s81_hc_ccf_bankpipe_bank / _bank128",
+   "level": "tile",
+   "owner": "S-ENGRAM+NORM (HC-COMB)",
+   "job": "s81hc_ccfbp_bank128_ref-g128edge24-a4b82332d (EARLY_FAIL_CONGESTION 09:32); s81hc_ccfbp_bank_ref-v1-2b1061e5e (NEEDS_RTL TT -34.99 / DRC 2)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_bank128_ref-g128edge24-a4b82332d",
+   "see": "216.0x125.3 um tile, one OT_SRAM_1R1W_64x512 (171.3x77.8) centred. The SRAM LEF puts every signal pin on its W and E faces (rd_out 512 W, wd_in 266 W + 246 E, w_mask_in 512 E, all M4). The tile buses run N->S (data_i 512 on N, head_o 512 on S, M3+M5, 2.5/um). So ~1,300 bits must turn into a ~20 um W channel and a ~25 um E channel and turn again: density image shows the cells packed in the W channel (>1.0) and GRT total congestion 49,847 (M4 23,235, M3 15,049). v1 failed TT on the detoured macro->east->south path (-34.99 ps) and CTS shorts on macro E M4 (DRC 2).",
+   "numbers": {
+    "outline_um": [
+     216.0,
+     125.28
+    ],
+    "sram_um": [
+     171.288,
+     77.784
+    ],
+    "w_channel_um": 20,
+    "e_channel_um": 25,
+    "grt_total_congestion": 49847,
+    "tt_ps": -34.99,
+    "drc": 2
+   },
+   "classes": [
+    "P1",
+    "P3",
+    "P4"
+   ],
+   "severity": 1,
+   "fix": "Make the flow match the macro: either (a) move data_i/head_o to the W/E faces beside the SRAM pin faces (rd_out W -> head_o W, wd_in/w_mask from E), or (b) rotate the SRAM R90 and re-outline to ~130 wide x ~216 tall so its pin faces look N/S onto data_i/head_o. If the die order must stay N->S, open both side channels to >=60 um (outline ~300 x 125). The g128edge24 fencing does not change the turn count.",
+   "images_committed": [
+    "img_r3/S81H-15_bank128_floorplan.png",
+    "img_r3/S81H-15_bank128_density.png"
+   ]
+  },
+  {
+   "id": "S81F-16",
+   "round": 3,
+   "die": "s81",
+   "master": "dsfd_sstn_*_x2 (e0c0, e0c0si, e0c0sinf, e0e1c0c1si, e0e1c0c1sinf; 579+357+... die instances)",
+   "level": "tile",
+   "owner": "S-NET+FILL",
+   "job": "s81net_sstn_*_x2 x1 and x2nh (10 routes, all EARLY_FAIL_CONGESTION 08:08-08:35; data reaped)",
+   "host_run": "gate images /home/ubuntu/wt/el1015-snetfill/physical/ref_tile/s81net_sstn_e0c0si_x2/gate_layout",
+   "see": "172.8x30.2 um, 2,336 pins, 1,102 flops, util 9.9%. Post-place density: all pin registers sit in a ~6 um band under the N edge (density >1.0) and a 1-row band at S; ~75% of the tile is empty. Every x2 variant failed GRT on both the x1 and x2nh retry. c26b_r still binds these masters (dsfd_sstn_e0e1c0c1si_x2 579 inst, e0c0si_x2 357 inst) with no closed view; the split successors ot_s81_sstn_base566 / payload536 CLOSED 09:05.",
+   "numbers": {
+    "outline_um": [
+     172.8,
+     30.2
+    ],
+    "pins": 2336,
+    "flops": 1102,
+    "util": 0.099,
+    "failed_routes": 10
+   },
+   "classes": [
+    "P2",
+    "P4",
+    "P5"
+   ],
+   "severity": 1,
+   "fix": "Do not re-route the x2 kits again unchanged. Bind the closed split pair (base566 + payload536) in the die and drop the x2 masters; if the x2 must stay, spread the pin registers over 3+ rows of depth (pin-reg fence 6 um -> ~18 um) and halve the width (fill 0.1 is too low).",
+   "images_committed": [
+    "img_r3/S81F-16_sstn_x2_gate_floorplan.png",
+    "img_r3/S81F-16_sstn_x2_gate_density.png"
+   ]
+  },
+  {
+   "id": "D-S81-04",
+   "round": 3,
+   "die": "s81",
+   "master": "DIE c26b_r (placed, GRT extra 5/12) + hub candidate c74342891",
+   "level": "die",
+   "owner": "S-DIE",
+   "job": "/srv/opentallas-scratch/claude/s81-die-iter/c26b_r/a_real/floorplan.odb (84,145 blocks)",
+   "host_run": "ot-epyc4",
+   "see": "c26b_r hub band x 9.9-22.1 mm (317 mm2): block-covered 0.34, 210 mm2 empty (pass 1 c21h/vmc2: 161 of 315). Core 8x21 mm: 104 mm2 empty. bk_collector (y 23.65 mm) and bk_selector (y 1.46 mm) are 22.2 mm apart; SU_S 1.89x10.71 mm and HC_T/HC_S 1.82x19.5 mm towers. The Codex hub candidate (c74342891) fixes adjacency (selector+collector together at y 20.9-22.2, SU south of VM, HC folded 64) but its south hub x 10-22 mm, y 0-8.5 mm is still empty (~100 mm2), only the SW svc/ctrl/PHY block remains there.",
+   "numbers": {
+    "hub_mm2": 317.2,
+    "hub_empty_mm2": 210.1,
+    "core_empty_mm2": 103.7,
+    "collector_selector_mm": 22.2,
+    "candidate_south_white_mm2": 100
+   },
+   "classes": [
+    "P5",
+    "P1"
+   ],
+   "severity": 2,
+   "fix": "Adopt the compaction, then spend the freed south ~100 mm2: either pull the W/E field columns inward (shorter field->hub buses, fewer relay stages) or shrink the die height; publish bit-mm / relay stages / cut for c26b_r vs candidate before the owner review (the candidate has none).",
+   "images_committed": [
+    "img_r3/D_s81_c26b_r_floorplan.png",
+    "img_r3/D_s81_c26b_r_buses.png",
+    "img_r3/D_s81_hub_candidate_c74342891.png"
+   ]
+  },
+  {
+   "id": "D-QC-03",
+   "round": 3,
+   "die": "qwen_compute",
+   "master": "DIE r2h5 (GEN skip geometry geom_r2h5_skip.json, 840.7 mm2)",
+   "level": "die",
+   "owner": "Q-COMPUTE-DIE",
+   "job": "/srv/opentallas-scratch/claude/qwen-split-compute/r2h5 (FULL GEN running)",
+   "host_run": "ot-epyc4",
+   "see": "Centre column x 12.50-20.43 mm (7.93 mm, 125.4 mm2): 69.8 mm2 occupied, 55.6 mm2 empty (44%). A full tile row is vacant across both arrays (y 7.50-8.32 mm, 821 um x 25.1 mm = 20.5 mm2, only xcol slivers cross it). The six port tiles all sit west of SFU/VM (x 12.6 and 14.1 mm), so the whole east NK array (x 20.4-33 mm) reaches them across SFU+VM: the bus picture shows fat red bundles crossing the centre (max modelled 55 stages). This is the r2h4 geometry; the approved b2 port remap (each port tile serves its own side) is in r2h6 staging only.",
+   "numbers": {
+    "centre_mm2": 125.4,
+    "centre_empty_mm2": 55.6,
+    "row_gap_mm2": 20.5,
+    "die_mm2": 840.7,
+    "max_model_stages": 55
+   },
+   "classes": [
+    "P5",
+    "P1"
+   ],
+   "severity": 2,
+   "fix": "Move to r2h6/b2 next (3 port tiles beside each array, 0 cross-centre bits). If the row gap is a reserved channel, document its use; otherwise close it (~20 mm2) or put the band/SFU column there. Trim the centre column to its content (D-QC-01 b).",
+   "images_committed": [
+    "img_r3/D_qc_r2h5_floorplan.png",
+    "img_r3/D_qc_r2h5_buses.png"
+   ]
+  },
+  {
+   "id": "D-QK-03",
+   "round": 3,
+   "die": "qwen_kvsys",
+   "master": "DIE kvs12a-v143c / kvs12b-rly-dcal (case_kv placed, PDN)",
+   "level": "die",
+   "owner": "Q-KVSYS-DIE",
+   "job": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs12{a,b}*/case_kv/floorplan.odb",
+   "host_run": "ot-epyc4",
+   "see": "10.80x24.59 mm (265.5 mm2). Neither die contains a PV block (no pv* master in 20,605 / 21,333 instances): the PV spine of v1.4.4 is not in these trials, and the spine is empty: S spine 13.1-13.6 mm2, N spine 13.0-13.4 mm2, S band 9.4-9.8 mm2, N band 11.5-11.9 mm2 (~47 mm2, 18% of the die; pass 1 kvs11: ~36 mm2). kvs12b replaces the kvs12a relay family (rly_2089 61 x 52.7x105.8 at 20.9 pins/um) with RLY_STD rlys_528/296/36/1 (528 bits on 82.1 um), which is the QKV-04 fix. The astk/land 9.7/12.1 mm strips are still single parents (D-QK-02).",
+   "numbers": {
+    "die_mm2": 265.5,
+    "empty_spine_mm2": 26.5,
+    "empty_total_mm2": 47,
+    "pv_instances": 0
+   },
+   "classes": [
+    "P5"
+   ],
+   "severity": 2,
+   "fix": "kvs12a/b GRT/STA do not measure the PV routing, which is the KV die risk; run the v1.4.4 spine-PV + 16 vport trial next (vports CLOSED r1-r5) and compare congestion in the spine. Retire kvs12a if 12b passes (12b already carries the relay fix).",
+   "images_committed": [
+    "img_r3/D_kv_kvs12a_floorplan.png",
+    "img_r3/D_kv_kvs12b_floorplan.png",
+    "img_r3/D_kv_kvs12b_buses.png"
+   ]
+  },
+  {
+   "id": "S81H-16",
+   "round": 3,
+   "die": "s81",
+   "master": "dsfd_bf_front_static c10 (424 die inst)",
+   "level": "tile",
+   "owner": "S-ELEM-PQ",
+   "job": "s81bf_front_static_clk-c10-5fce4c7b5 (CLOSED 04:49, TT +0.00)",
+   "host_run": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5",
+   "see": "116.6x198.7 um, fill 0.572. xb 1,068 pins on N (9.5/um, M3+M5) with its capture registers in a ~15 um band under N at density >1.0 (and a similar S band); closed with exactly 0.00 ps TT setup. W/E c0/c1 now spread full face (4.0/um), corner clock fixed (S81H-03 confirmed on pins).",
+   "numbers": {
+    "tt_ps": 0.0,
+    "ff_ps": 7.41,
+    "fill": 0.572,
+    "n_face_pins_per_um": 9.5
+   },
+   "classes": [
+    "P2"
+   ],
+   "severity": 2,
+   "fix": "Closed stands; flag for die STA. If die parasitics name it, split xb over N and the free upper W/E faces and lower util to ~0.5.",
+   "images_committed": [
+    "img_r3/T_bf_front_c10_density.png"
+   ]
   }
  ],
  "no_image": [
@@ -3664,5 +3873,41 @@
     "verdict": "No new host_c/cfifo/stage_seq routes. The rly r4 set (23:14-23:31) is the node-strip source, and there is no r5."
    }
   ]
+ },
+ "round3": {
+  "date": "2026-10-16 ~10:00 PT",
+  "dies": [
+   "s81 c26b_r placed",
+   "qwen r2h5 skip geometry",
+   "kv kvs12a/kvs12b placed"
+  ],
+  "tiles_inspected": 18,
+  "new_findings": [
+   "S81F-02b",
+   "S81H-15",
+   "S81F-16",
+   "D-S81-04",
+   "D-QC-03",
+   "D-QK-03",
+   "S81H-16"
+  ],
+  "scores": {
+   "QKV-02": "confirmed: ectl_a pg16s CLOSED TT +155.24/FF +9.50 (06:43); rs 1,025 on M4+M6 8.7/um, t0/t1 over 208 um",
+   "QC-05": "confirmed: xs_tap xt10 CLOSED 05:04 TT +64.59, xt11 CLOSED 08:08 TT +112.06; aw S 3.5 pins/um (was 20.9)",
+   "QKV-13": "confirmed: return_slots_mc mc3b CLOSED 05:04 TT +68.38/FF +25.64; pins <=1.8/um",
+   "QKV-07": "confirmed: ahub_core hd3 CLOSED 06:52 TT +236.64; N out_data 4.5/um M3+M5 (was 8.9 half on M3)",
+   "QC-03": "confirmed: ucie_six_five r16 CLOSED 06:49 TT +13.34; E frame 5.0/um (was wall)",
+   "S81H-14": "confirmed: wfc_return CLOSED 07:58, wfc_return256 CLOSED 09:29 TT +282.37",
+   "S81V-01": "confirmed: xio_return r3 CLOSED 07:01 TT +196.13 (was native capture 220.0)",
+   "S81H-03": "confirmed (pins): bf_front c10 CLOSED TT +0.00; see S81H-16",
+   "QKV-04": "confirmed in kvs12b case (RLY_STD rlys_528 82.1 um face); GRT pending",
+   "S81F-06": "partial: rly_536_SN/SW/WS CLOSED 08:50-08:53; sstn x2 side failed (S81F-16)",
+   "S81F-02": "open, worse evidence: g69 grown kit EARLY_FAIL_CONGESTION (S81F-02b); c26b_r omits 68,864 xd2 + xf2 bits (S-DIE LEF audit)",
+   "S81H-02": "open: stage_seq c9 n5 EARLY_FAIL_CONGESTION 04:27 (EPYC1 run, terminated host)",
+   "QC-04": "open: d2d_static r4/r5 CLOSED (r5 bound in r2h5) but r6 reset-capture successor EARLY_FAIL_HOLD -24.0 ps / 12,272 buffers 07:16",
+   "QKV-01": "superseded by PV16 (owner 10-15) + v1.4.4 spine PV plan; not in any die trial yet (D-QK-03)",
+   "D-QC-01": "partial: r2h5 centre 55.6 mm2 + row gap 20.5 mm2 empty (r2b2 95.7 mm2) (D-QC-03)",
+   "D-S81-01": "open, worse: c26b_r hub 210/317 mm2 empty (D-S81-04)"
+  }
  }
 }

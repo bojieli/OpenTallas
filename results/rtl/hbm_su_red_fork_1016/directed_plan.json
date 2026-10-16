@@ -1,0 +1,73 @@
+{
+  "rf_relay": 36,
+  "exports": [
+    {
+      "quarter": 0,
+      "command_edge": 100,
+      "source_addr": 80,
+      "source_ready_serial": 99,
+      "carry_word": 0
+    },
+    {
+      "quarter": 0,
+      "command_edge": 101,
+      "source_addr": 81,
+      "source_ready_serial": 99,
+      "carry_word": 1
+    },
+    {
+      "quarter": 0,
+      "command_edge": 102,
+      "source_addr": 82,
+      "source_ready_serial": 99,
+      "carry_word": 2
+    },
+    {
+      "quarter": 0,
+      "command_edge": 103,
+      "source_addr": 83,
+      "source_ready_serial": 99,
+      "carry_word": 3
+    },
+    {
+      "quarter": 0,
+      "command_edge": 104,
+      "source_addr": 84,
+      "source_ready_serial": 99,
+      "carry_word": 4
+    },
+    {
+      "quarter": 0,
+      "command_edge": 105,
+      "source_addr": 85,
+      "source_ready_serial": 99,
+      "carry_word": 5
+    },
+    {
+      "quarter": 0,
+      "command_edge": 106,
+      "source_addr": 86,
+      "source_ready_serial": 99,
+      "carry_word": 6
+    },
+    {
+      "quarter": 0,
+      "command_edge": 107,
+      "source_addr": 87,
+      "source_ready_serial": 99,
+      "carry_word": 7,
+      "emit": true,
+      "collective_tag": 3,
+      "return_destination": 0,
+      "lp_sample_stream": 162,
+      "rf_addr": 0
+    }
+  ],
+  "returns": [
+    {
+      "quarter": 0,
+      "tag": 3,
+      "coll_update_stream": 220
+    }
+  ]
+}

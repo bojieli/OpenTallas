@@ -1,0 +1,8 @@
+ot-run: ot-agidock128  admits    56 GB (avail 85, growth 29, headroom 24, waiters 0/0 GB) load 27/64 running 9 disk 324 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1401667-1792149626 after 0 s
+PLACEMENT_DIAGNOSTIC_WS tt max -4.859973534721007e-11 min 4.3854503362084074e-11
+PLACEMENT_DIAGNOSTIC_DONE tt
+PLACEMENT_DIAGNOSTIC_WS ff max 4.8734571933550797e-11 min 1.757119449941058e-11
+PLACEMENT_DIAGNOSTIC_DONE ff
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1401667-1792149626): exit 0

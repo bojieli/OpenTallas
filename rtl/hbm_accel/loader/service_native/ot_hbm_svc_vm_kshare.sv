@@ -217,14 +217,17 @@ module ot_hbm_svc_vm_kshare #(parameter integer MUT=0) (
  end endgenerate
  assign all_norm=&norm_l;
  // ---------------------------------------------------------------- stream side: fills + fault
- reg[1:0]hfs;reg sbad;
+ wire hfault_stream;reg sbad;
+ ot_hbm_svc_fault_cdc u_fault_cdc(.wr_clk(hbm_clk),.wr_rst_n(hrst_q),
+  .rd_clk(stream_clk),.rd_rst_n(srst_q),.src_fault(|hfault_l||cf_un||wf_un),
+  .dst_fault(hfault_stream),.wr_overflow(),.rd_underflow());
  always @(posedge stream_clk or negedge srst_q)begin
-  if(!srst_q)begin fill_v<=0;hfs<=0;sbad<=0;fault<=0;end
+  if(!srst_q)begin fill_v<=0;sbad<=0;fault<=0;end
   else begin
-   fill_v<=rf_valid;hfs<={hfs[0],|hfault_l||cf_un||wf_un};
+   fill_v<=rf_valid;
    if(cv_q&&!cf_wr_ready)sbad<=1;
    if(wv3&&!wf_wr_ready)sbad<=1;
-   fault<=sbad||hfs[1]||cf_ov||wf_ov;
+   fault<=sbad||hfault_stream||cf_ov||wf_ov;
   end
  end
  integer i;
