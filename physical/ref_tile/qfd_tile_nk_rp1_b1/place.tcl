@@ -32,32 +32,32 @@ set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[0].g_bank[
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(665.28 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 22.464 665.28 R0"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[1].g_bank[0].u_rom}]
-$i setOrient R0; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(665.28 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 665.28 R0"
+$i setOrient MY; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(665.28 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 665.28 MY"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[0].g_bank[1].u_rom}]
 $i setOrient MX; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(728.202 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 22.464 728.202 MX"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[1].g_bank[1].u_rom}]
-$i setOrient MX; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(728.202 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 728.202 MX"
+$i setOrient R180; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(728.202 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 728.202 R180"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[0].g_bank[2].u_rom}]
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(791.136 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 22.464 791.136 R0"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[1].g_bank[2].u_rom}]
-$i setOrient R0; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(791.136 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 791.136 R0"
+$i setOrient MY; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(791.136 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 791.136 MY"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[0].g_bank[3].u_rom}]
 $i setOrient MX; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(854.058 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 22.464 854.058 MX"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[1].g_bank[3].u_rom}]
-$i setOrient MX; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(854.058 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 854.058 MX"
+$i setOrient R180; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(854.058 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 854.058 R180"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[0].g_bank[4].u_rom}]
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(916.992 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 22.464 916.992 R0"
 set i [ot_ref_pick $ot_ref_by ot_rom_4096x266_m8 {u_tile.u_tile.g_col[1].g_bank[4].u_rom}]
-$i setOrient R0; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(916.992 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 916.992 R0"
+$i setOrient MY; $i setLocation [expr {round(304.992 * $dbu)}] [expr {round(916.992 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_rom_4096x266_m8 at 304.992 916.992 MY"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_node {u_tile.u_tile.u_logic.genblk4.g_ndh.u_node}]
 $i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(117.504 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_node at 22.464 117.504 R0"
@@ -74,16 +74,16 @@ set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g
 $i setOrient MY; $i setLocation [expr {round(90.072 * $dbu)}] [expr {round(22.464 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 90.072 22.464 MY"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(504.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 504.0 MY"
+$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(504.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 504.0 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(343.488 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 343.488 MY"
+$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(343.488 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 343.488 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(182.976 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 182.976 MY"
+$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(182.976 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 182.976 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tile_lsl_fp1 {u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh}]
-$i setOrient MY; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(22.464 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 22.464 MY"
+$i setOrient R0; $i setLocation [expr {round(209.952 * $dbu)}] [expr {round(22.464 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tile_lsl_fp1 at 209.952 22.464 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 19} { error "ref_tile place: expected 19 macros, netlist has $nb" }

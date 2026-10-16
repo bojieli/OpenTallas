@@ -148,7 +148,7 @@
     209.952,
     503.928
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -158,7 +158,7 @@
     209.952,
     343.44
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -168,7 +168,7 @@
     209.952,
     182.952
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -178,7 +178,7 @@
     209.952,
     22.464
    ],
-   "orient": "MY"
+   "orient": "R0"
   }
  ],
  "macros": [
@@ -207,7 +207,7 @@
     665.28
    ],
    "at_exact": true,
-   "orient": "R0",
+   "orient": "MY",
    "clock_entry": {
     "port": "ck_rom5",
     "pin": "clk",
@@ -239,7 +239,7 @@
     728.202
    ],
    "at_exact": true,
-   "orient": "MX",
+   "orient": "R180",
    "clock_entry": {
     "port": "ck_rom6",
     "pin": "clk",
@@ -271,7 +271,7 @@
     791.136
    ],
    "at_exact": true,
-   "orient": "R0",
+   "orient": "MY",
    "clock_entry": {
     "port": "ck_rom7",
     "pin": "clk",
@@ -303,7 +303,7 @@
     854.058
    ],
    "at_exact": true,
-   "orient": "MX",
+   "orient": "R180",
    "clock_entry": {
     "port": "ck_rom8",
     "pin": "clk",
@@ -335,7 +335,7 @@
     916.992
    ],
    "at_exact": true,
-   "orient": "R0",
+   "orient": "MY",
    "clock_entry": {
     "port": "ck_rom9",
     "pin": "clk",
@@ -353,14 +353,33 @@
    "n_a",
    "n_b",
    "t_out",
-   "n_y"
+   "n_y",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_node",
+   "ck_rom0",
+   "ck_rom1",
+   "ck_rom2",
+   "ck_rom3",
+   "ck_rom4"
   ],
   "E": [
    "tie_lo",
    "tie_hi",
    "tile_id",
    "rst_n",
-   "tap"
+   "tap",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7",
+   "ck_rom5",
+   "ck_rom6",
+   "ck_rom7",
+   "ck_rom8",
+   "ck_rom9"
   ],
   "N": [
    "ck",
@@ -368,29 +387,110 @@
    "ck_rp1",
    "ck_rp2",
    "ck_rp3",
-   "ck_rp4",
-   "ck_rom0",
-   "ck_rom1",
-   "ck_rom2",
-   "ck_rom3",
-   "ck_rom4",
-   "ck_rom5",
-   "ck_rom6",
-   "ck_rom7",
-   "ck_rom8",
-   "ck_rom9",
-   "ck_lsl0",
-   "ck_lsl1",
-   "ck_lsl2",
-   "ck_lsl3",
-   "ck_lsl4",
-   "ck_lsl5",
-   "ck_lsl6",
-   "ck_lsl7",
-   "ck_node"
+   "ck_rp4"
   ]
  },
  "pin_ranges": {
+  "ck_lsl0": [
+   566.428,
+   567.428
+  ],
+  "ck_lsl1": [
+   405.94,
+   406.94
+  ],
+  "ck_lsl2": [
+   245.452,
+   246.452
+  ],
+  "ck_lsl3": [
+   84.964,
+   85.964
+  ],
+  "ck_node": [
+   328.404,
+   329.404
+  ],
+  "ck_rom0": [
+   665.58,
+   666.58
+  ],
+  "ck_rom1": [
+   789.812,
+   790.812
+  ],
+  "ck_rom2": [
+   791.436,
+   792.436
+  ],
+  "ck_rom3": [
+   915.668,
+   916.668
+  ],
+  "ck_rom4": [
+   917.292,
+   918.292
+  ],
+  "ck_lsl4": [
+   566.428,
+   567.428
+  ],
+  "ck_lsl5": [
+   405.94,
+   406.94
+  ],
+  "ck_lsl6": [
+   245.452,
+   246.452
+  ],
+  "ck_lsl7": [
+   84.964,
+   85.964
+  ],
+  "ck_rom5": [
+   665.58,
+   666.58
+  ],
+  "ck_rom6": [
+   789.812,
+   790.812
+  ],
+  "ck_rom7": [
+   791.436,
+   792.436
+  ],
+  "ck_rom8": [
+   915.668,
+   916.668
+  ],
+  "ck_rom9": [
+   917.292,
+   918.292
+  ],
+  "ck": [
+   224.14,
+   225.14
+  ],
+  "ck_rp0": [
+   226.14,
+   227.14
+  ],
+  "ck_rp1": [
+   228.14,
+   229.14
+  ],
+  "ck_rp2": [
+   230.14,
+   231.14
+  ],
+  "ck_rp3": [
+   232.14,
+   233.14
+  ],
+  "ck_rp4": [
+   234.14,
+   235.14
+  ],
   "n_a": [
    128.404,
    227.704
@@ -408,28 +508,24 @@
    529.304
   ],
   "tie_lo": [
-   525.928,
-   526.928
+   565.928,
+   566.928
   ],
   "tie_hi": [
-   527.428,
-   528.428
+   567.428,
+   568.428
   ],
   "tile_id": [
-   528.928,
-   531.928
+   568.928,
+   571.928
   ],
   "rst_n": [
-   532.428,
-   533.428
+   572.428,
+   573.428
   ],
   "tap": [
-   533.928,
-   582.6
-  ],
-  "ck": [
-   224.14,
-   225.14
+   573.928,
+   622.6
   ]
  },
  "reset_ports": [

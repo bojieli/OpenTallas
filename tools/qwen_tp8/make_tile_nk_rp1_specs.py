@@ -64,8 +64,12 @@ def up(v, g):
     return round(math.ceil(round(v / g, 6)) * g, 4)
 
 
-def plan(name, tag, W, ncol, rows, gl, gm, e_bot, e_top, purpose):
-    """rows: bank layout per macro row, bottom (next to the lanes) first: list of (p, b) tuples"""
+def plan(name, tag, W, ncol, rows, gl, gm, e_bot, e_top, purpose, row_or):
+    """rows: bank layout per macro row, bottom (next to the lanes) first: list of (p, b) tuples; row_or: R0 / MX per
+    row.  CLOCK ENTRY REACH (gate 6e8fb6f0d: RSZ-3006 on a 270 um raw entry -- repair_clock_nets will not buffer a
+    do-not-touch entry net beyond its 163 um max wire): every raw macro / hard-child clock pin is kept within reach of
+    a face: left macros W face, right macros MY (pins E) E face, middle macros only in the top two rows facing each
+    other ~86 um below N; lane column 0 MY (clk W), columns 1-2 R0 (clk E); the node clk on W between n_b and t_out."""
     s = copy.deepcopy(json.loads(BASE.read_text()))
     s["name"] = name
     s["top"] = "qfd_tile_nk_rp1"
@@ -85,19 +89,31 @@ def plan(name, tag, W, ncol, rows, gl, gm, e_bot, e_top, purpose):
         slots = {0: (0, 2), 1: (0, 1), 2: (0, 0), 3: (1, 2), 4: (1, 1), 5: (1, 0), 6: (2, 1), 7: (2, 0)}
     else:           # 2 x 4 as qfd_tile_nk_native: column 0 = lsl 0..3, column 1 = 4..7 (top..bottom); E strip = glue
         slots = {k: (k // 4, 3 - k % 4) for k in range(8)}
-    children = [{"view": LSL, "count": 1, "inst": INST_LSL.format(k=k), "at": [xs[c], yr[r]], "orient": "MY"}
+    corient = ["MY"] + ["R0"] * (ncol - 1)
+    children = [{"view": LSL, "count": 1, "inst": INST_LSL.format(k=k), "at": [xs[c], yr[r]], "orient": corient[c]}
                 for k, (c, r) in sorted(slots.items())]
+    LCLK = 63.0                                                  # lsl clk pin y (E face; MY keeps y)
+    ckpin = {"W": {}, "E": {}, "N": {}}
+    for k, (c, r) in slots.items():
+        ckpin["W" if c == 0 else "E"][f"ck_lsl{k}"] = yr[r] + LCLK
+    ckpin["W"]["ck_node"] = ny + 211.4                            # node clk y 204 on its E face; W gap n_b | t_out
     children.insert(0, {"view": NODE, "count": 1, "inst": INST_NODE, "at": [E, ny], "orient": "R0"})
     macros = []
     y = ym
+    mclk = []
     for r, row in enumerate(rows):
         xr = macro_xs(W, len(row))
-        orient = "R0" if r % 2 == 0 else "MX"
+        orient = row_or[r]
         y = row_y(y if r == 0 else y + MH, orient)
-        for (p, b), x in zip(row, xr):
+        for i, ((p, b), x) in enumerate(zip(row, xr)):
             k = p * 5 + b
+            right = i == len(row) - 1
+            o = {"R0": "MY", "MX": "R180"}[orient] if right else orient
+            cy = y + (0.8 if orient == "R0" else MH - 0.8)
+            # clk pin on the macro W edge (E edge when MY); N-face entries offset per row so ranges never overlap
+            mclk.append((f"ck_rom{k}", "E" if right else ("W" if i == 0 else "N"), x - 4.0 + 2.0 * r, cy))
             macros.append({"view": ROM, "count": 1, "inst": INST_ROM.format(p=p, b=b), "at": [x, y], "at_exact": True,
-                           "orient": orient,
+                           "orient": o,
                            "clock_entry": {"port": f"ck_rom{k}", "pin": "clk", "reference": "raw_liberty_clock_pin"}})
     H = up(y + MH + e_top, 2.16)
     assert sorted((m["inst"]) for m in macros) == sorted(INST_ROM.format(p=p, b=b) for p in (0, 1) for b in range(5))
@@ -116,11 +132,17 @@ def plan(name, tag, W, ncol, rows, gl, gm, e_bot, e_top, purpose):
     s["outline"] = {"w": W, "h": H, "exact": True}
     # faces: die tree on W at the node's pin rows; issue tap + strap on E beside the glue slot (top right lane slot);
     # every clock on N (the macro block / soft roots); the die re-derives the column pins from this plan.
-    tap_lo = yr[-1] + 30.0
-    s["pins"] = {"W": ["n_a", "n_b", "t_out", "n_y"],
-                 "E": ["tie_lo", "tie_hi", "tile_id", "rst_n", "tap"],
-                 "N": s["clock_ports"]}
-    s["pin_ranges"] = {
+    tap_lo = yr[-1] + 70.0                                       # above the top-row lane clocks (y + 63)
+    for port, face, cx, cy in mclk:
+        ckpin[face][port] = cx if face == "N" else cy
+    ckpin["N"]["ck"] = W / 2
+    for b in range(5):
+        ckpin["N"][f"ck_rp{b}"] = W / 2 + 2.0 * (b + 1)
+    s["pins"] = {"W": ["n_a", "n_b", "t_out", "n_y"] + sorted(ckpin["W"]),
+                 "E": ["tie_lo", "tie_hi", "tile_id", "rst_n", "tap"] + sorted(ckpin["E"]),
+                 "N": sorted(ckpin["N"])}
+    assert sorted(sum((list(v) for v in ckpin.values()), [])) == sorted(s["clock_ports"])
+    s["pin_ranges"] = {**{p: [round(v - 0.5, 3), round(v + 0.5, 3)] for f in ckpin.values() for p, v in f.items()},
         "n_a": [round(ny + 10.9, 3), round(ny + 110.2, 3)],
         "n_b": [round(ny + 111.5, 3), round(ny + 210.8, 3)],
         "t_out": [round(ny + 212.0, 3), round(ny + 311.3, 3)],
@@ -130,7 +152,6 @@ def plan(name, tag, W, ncol, rows, gl, gm, e_bot, e_top, purpose):
         "tile_id": [round(tap_lo - 5.0, 3), round(tap_lo - 2.0, 3)],
         "rst_n": [round(tap_lo - 1.5, 3), round(tap_lo - 0.5, 3)],
         "tap": [round(tap_lo, 3), round(tap_lo + 48.672, 3)],
-        "ck": [round(W / 2 - 0.5, 3), round(W / 2 + 0.5, 3)],
     }
     s.pop("io_tcl", None)
     s["structural_change"] = (
@@ -167,21 +188,25 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     b = lambda p, *bs: [(p, x) for x in bs]
     # P1 (minimum): rows of 3, 3, 2, 2 macros; each bank's two macros side by side, bank 1 split over rows 0 / 1 (same x)
-    r3322 = [[(0, 0), (1, 0), (0, 1)], [(0, 2), (1, 2), (1, 1)], [(0, 3), (1, 3)], [(0, 4), (1, 4)]]
+    # rows bottom -> top: two rows of 2 (banks 0, 1), then two rows of 3 whose middle macros face each other (clock
+    # entries ~86 um below the N face); bank 3 split over the two top rows in the right column
+    r2233 = [[(0, 0), (1, 0)], [(0, 1), (1, 1)], [(0, 2), (1, 2), (0, 3)], [(0, 4), (1, 4), (1, 3)]]
+    o2233 = ["R0", "MX", "MX", "R0"]
     r22222 = [[(0, k), (1, k)] for k in range(5)]
+    o22222 = ["R0", "MX", "R0", "MX", "R0"]
     plans = [
         # A: 3 lane columns + node need 452.1 um and a row of 3 macros 449.8 um (>= 20 um channels, 22.16 um from the
         # die edge) -> both exceed today's 449.28 column pitch; 457.92 is the next 8.64 um cluster lattice width.
-        ("qfd_tile_nk_rp1_a1", "a1", 457.92, 3, r3322, 20.088, 20.088, E, E,
-         "Re-pack minimum (die column +8.64 um): 3x3 lane grid, every channel at 20 um, 4 abutted macro rows (3,3,2,2)"),
-        ("qfd_tile_nk_rp1_a2", "a2", 457.92, 3, r3322, 30.24, 34.56, 25.92, 25.92,
-         "Re-pack middle (die column +8.64 um): 30-35 um channels for the soft bank rows, 4 abutted macro rows (3,3,2,2)"),
+        ("qfd_tile_nk_rp1_a1", "a1", 457.92, 3, r2233, 20.088, 20.088, E, E,
+         "Re-pack minimum (die column +8.64 um): 3x3 lane grid, every channel at 20 um, 4 abutted macro rows (2,2,3,3)", o2233),
+        ("qfd_tile_nk_rp1_a2", "a2", 457.92, 3, r2233, 30.24, 34.56, 25.92, 25.92,
+         "Re-pack middle (die column +8.64 um): 30-35 um channels for the soft bank rows, 4 abutted macro rows (2,2,3,3)", o2233),
         # B: today's width: 2 lane columns x 4 rows + node, 2 macros per row (5 abutted rows, one bank each)
         ("qfd_tile_nk_rp1_b1", "b1", 449.28, 2, r22222, 20.088, 20.088, E, E,
-         "Re-pack at today's 449.28 column: 2x4 lane grid + E glue strip, 5 abutted macro rows (one bank each)"),
+         "Re-pack at today's 449.28 column: 2x4 lane grid + E glue strip, 5 abutted macro rows (one bank each)", o22222),
     ]
-    for name, tag, W, ncol, rows, gl, gm, eb, et, purpose in plans:
-        s, H = plan(name, tag, W, ncol, rows, gl, gm, eb, et, purpose)
+    for name, tag, W, ncol, rows, gl, gm, eb, et, purpose, ro in plans:
+        s, H = plan(name, tag, W, ncol, rows, gl, gm, eb, et, purpose, ro)
         (OUT / f"{name}.json").write_text(json.dumps(s, indent=1) + "\n")
         print(f"{name}: {W} x {H} um = {W * H / 1e3:.1f}k um2; real-area fill at 173.0k = {173.0e3 / (W * H) * 100:.1f} %")
 

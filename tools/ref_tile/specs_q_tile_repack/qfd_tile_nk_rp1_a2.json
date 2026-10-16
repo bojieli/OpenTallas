@@ -138,7 +138,7 @@
     209.952,
     367.2
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -148,7 +148,7 @@
     209.952,
     196.56
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -158,7 +158,7 @@
     209.952,
     25.92
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -168,7 +168,7 @@
     329.832,
     196.56
    ],
-   "orient": "MY"
+   "orient": "R0"
   },
   {
    "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
@@ -178,7 +178,7 @@
     329.832,
     25.92
    ],
-   "orient": "MY"
+   "orient": "R0"
   }
  ],
  "macros": [
@@ -203,11 +203,11 @@
    "count": 1,
    "inst": "u_tile.u_tile.g_col[1].g_bank[0].u_rom",
    "at": [
-    168.048,
+    313.632,
     542.16
    ],
    "at_exact": true,
-   "orient": "R0",
+   "orient": "MY",
    "clock_entry": {
     "port": "ck_rom5",
     "pin": "clk",
@@ -219,13 +219,29 @@
    "count": 1,
    "inst": "u_tile.u_tile.g_col[0].g_bank[1].u_rom",
    "at": [
-    313.632,
-    542.16
+    22.464,
+    605.082
    ],
    "at_exact": true,
-   "orient": "R0",
+   "orient": "MX",
    "clock_entry": {
     "port": "ck_rom1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "u_tile.u_tile.g_col[1].g_bank[1].u_rom",
+   "at": [
+    313.632,
+    605.082
+   ],
+   "at_exact": true,
+   "orient": "R180",
+   "clock_entry": {
+    "port": "ck_rom6",
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
    }
@@ -236,7 +252,7 @@
    "inst": "u_tile.u_tile.g_col[0].g_bank[2].u_rom",
    "at": [
     22.464,
-    605.082
+    668.01
    ],
    "at_exact": true,
    "orient": "MX",
@@ -252,7 +268,7 @@
    "inst": "u_tile.u_tile.g_col[1].g_bank[2].u_rom",
    "at": [
     168.048,
-    605.082
+    668.01
    ],
    "at_exact": true,
    "orient": "MX",
@@ -265,47 +281,15 @@
   {
    "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
    "count": 1,
-   "inst": "u_tile.u_tile.g_col[1].g_bank[1].u_rom",
-   "at": [
-    313.632,
-    605.082
-   ],
-   "at_exact": true,
-   "orient": "MX",
-   "clock_entry": {
-    "port": "ck_rom6",
-    "pin": "clk",
-    "reference": "raw_liberty_clock_pin"
-   }
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
-   "count": 1,
    "inst": "u_tile.u_tile.g_col[0].g_bank[3].u_rom",
    "at": [
-    22.464,
-    668.016
+    313.632,
+    668.01
    ],
    "at_exact": true,
-   "orient": "R0",
+   "orient": "R180",
    "clock_entry": {
     "port": "ck_rom3",
-    "pin": "clk",
-    "reference": "raw_liberty_clock_pin"
-   }
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
-   "count": 1,
-   "inst": "u_tile.u_tile.g_col[1].g_bank[3].u_rom",
-   "at": [
-    313.632,
-    668.016
-   ],
-   "at_exact": true,
-   "orient": "R0",
-   "clock_entry": {
-    "port": "ck_rom8",
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
    }
@@ -316,10 +300,10 @@
    "inst": "u_tile.u_tile.g_col[0].g_bank[4].u_rom",
    "at": [
     22.464,
-    730.938
+    730.944
    ],
    "at_exact": true,
-   "orient": "MX",
+   "orient": "R0",
    "clock_entry": {
     "port": "ck_rom4",
     "pin": "clk",
@@ -331,13 +315,29 @@
    "count": 1,
    "inst": "u_tile.u_tile.g_col[1].g_bank[4].u_rom",
    "at": [
-    313.632,
-    730.938
+    168.048,
+    730.944
    ],
    "at_exact": true,
-   "orient": "MX",
+   "orient": "R0",
    "clock_entry": {
     "port": "ck_rom9",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "u_tile.u_tile.g_col[1].g_bank[3].u_rom",
+   "at": [
+    313.632,
+    730.944
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_rom8",
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
    }
@@ -353,44 +353,144 @@
    "n_a",
    "n_b",
    "t_out",
-   "n_y"
+   "n_y",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_node",
+   "ck_rom0",
+   "ck_rom1",
+   "ck_rom2",
+   "ck_rom4"
   ],
   "E": [
    "tie_lo",
    "tie_hi",
    "tile_id",
    "rst_n",
-   "tap"
-  ],
-  "N": [
-   "ck",
-   "ck_rp0",
-   "ck_rp1",
-   "ck_rp2",
-   "ck_rp3",
-   "ck_rp4",
-   "ck_rom0",
-   "ck_rom1",
-   "ck_rom2",
-   "ck_rom3",
-   "ck_rom4",
-   "ck_rom5",
-   "ck_rom6",
-   "ck_rom7",
-   "ck_rom8",
-   "ck_rom9",
-   "ck_lsl0",
-   "ck_lsl1",
-   "ck_lsl2",
+   "tap",
    "ck_lsl3",
    "ck_lsl4",
    "ck_lsl5",
    "ck_lsl6",
    "ck_lsl7",
-   "ck_node"
+   "ck_rom3",
+   "ck_rom5",
+   "ck_rom6",
+   "ck_rom8"
+  ],
+  "N": [
+   "ck",
+   "ck_rom7",
+   "ck_rom9",
+   "ck_rp0",
+   "ck_rp1",
+   "ck_rp2",
+   "ck_rp3",
+   "ck_rp4"
   ]
  },
  "pin_ranges": {
+  "ck_lsl0": [
+   429.7,
+   430.7
+  ],
+  "ck_lsl1": [
+   259.06,
+   260.06
+  ],
+  "ck_lsl2": [
+   88.42,
+   89.42
+  ],
+  "ck_node": [
+   261.66,
+   262.66
+  ],
+  "ck_rom0": [
+   542.46,
+   543.46
+  ],
+  "ck_rom1": [
+   666.692,
+   667.692
+  ],
+  "ck_rom2": [
+   729.62,
+   730.62
+  ],
+  "ck_rom4": [
+   731.244,
+   732.244
+  ],
+  "ck_lsl3": [
+   429.7,
+   430.7
+  ],
+  "ck_lsl4": [
+   259.06,
+   260.06
+  ],
+  "ck_lsl5": [
+   88.42,
+   89.42
+  ],
+  "ck_lsl6": [
+   259.06,
+   260.06
+  ],
+  "ck_lsl7": [
+   88.42,
+   89.42
+  ],
+  "ck_rom5": [
+   542.46,
+   543.46
+  ],
+  "ck_rom6": [
+   666.692,
+   667.692
+  ],
+  "ck_rom3": [
+   729.62,
+   730.62
+  ],
+  "ck_rom8": [
+   731.244,
+   732.244
+  ],
+  "ck_rom7": [
+   167.548,
+   168.548
+  ],
+  "ck_rom9": [
+   169.548,
+   170.548
+  ],
+  "ck": [
+   228.46,
+   229.46
+  ],
+  "ck_rp0": [
+   230.46,
+   231.46
+  ],
+  "ck_rp1": [
+   232.46,
+   233.46
+  ],
+  "ck_rp2": [
+   234.46,
+   235.46
+  ],
+  "ck_rp3": [
+   236.46,
+   237.46
+  ],
+  "ck_rp4": [
+   238.46,
+   239.46
+  ],
   "n_a": [
    61.66,
    160.96
@@ -408,28 +508,24 @@
    462.56
   ],
   "tie_lo": [
-   389.2,
-   390.2
+   429.2,
+   430.2
   ],
   "tie_hi": [
-   390.7,
-   391.7
+   430.7,
+   431.7
   ],
   "tile_id": [
-   392.2,
-   395.2
+   432.2,
+   435.2
   ],
   "rst_n": [
-   395.7,
-   396.7
+   435.7,
+   436.7
   ],
   "tap": [
-   397.2,
-   445.872
-  ],
-  "ck": [
-   228.46,
-   229.46
+   437.2,
+   485.872
   ]
  },
  "reset_ports": [
@@ -459,7 +555,7 @@
   "owner": "Claude:q_tile_repack",
   "branch": "claude/qtile-repack-1015",
   "tag": "a2",
-  "purpose": "Re-pack middle (die column +8.64 um): 30-35 um channels for the soft bank rows, 4 abutted macro rows (3,3,2,2)",
+  "purpose": "Re-pack middle (die column +8.64 um): 30-35 um channels for the soft bank rows, 4 abutted macro rows (2,2,3,3)",
   "extra_paths": [
    "rtl/test/tb_qfd_tile_nk_rp1.sv",
    "tools/rtl_qwen_me_partition_gate_w12.py",

@@ -34,14 +34,33 @@
    "n_a",
    "n_b",
    "t_out",
-   "n_y"
+   "n_y",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_node",
+   "ck_rom0",
+   "ck_rom1",
+   "ck_rom2",
+   "ck_rom3",
+   "ck_rom4"
   ],
   "E": [
    "tie_lo",
    "tie_hi",
    "tile_id",
    "rst_n",
-   "tap"
+   "tap",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7",
+   "ck_rom5",
+   "ck_rom6",
+   "ck_rom7",
+   "ck_rom8",
+   "ck_rom9"
   ],
   "N": [
    "ck",
@@ -49,26 +68,7 @@
    "ck_rp1",
    "ck_rp2",
    "ck_rp3",
-   "ck_rp4",
-   "ck_rom0",
-   "ck_rom1",
-   "ck_rom2",
-   "ck_rom3",
-   "ck_rom4",
-   "ck_rom5",
-   "ck_rom6",
-   "ck_rom7",
-   "ck_rom8",
-   "ck_rom9",
-   "ck_lsl0",
-   "ck_lsl1",
-   "ck_lsl2",
-   "ck_lsl3",
-   "ck_lsl4",
-   "ck_lsl5",
-   "ck_lsl6",
-   "ck_lsl7",
-   "ck_node"
+   "ck_rp4"
   ]
  },
  "clock_port": "ck",
@@ -131,7 +131,7 @@
    "y": 665.28,
    "w": 121.824,
    "h": 62.91,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -157,7 +157,7 @@
    "y": 728.202,
    "w": 121.824,
    "h": 62.91,
-   "orient": "MX",
+   "orient": "R180",
    "offtrack": 0
   },
   {
@@ -183,7 +183,7 @@
    "y": 791.136,
    "w": 121.824,
    "h": 62.91,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -209,7 +209,7 @@
    "y": 854.058,
    "w": 121.824,
    "h": 62.91,
-   "orient": "MX",
+   "orient": "R180",
    "offtrack": 0
   },
   {
@@ -235,7 +235,7 @@
    "y": 916.992,
    "w": 121.824,
    "h": 62.91,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -313,7 +313,7 @@
    "y": 504.0,
    "w": 99.792,
    "h": 140.4,
-   "orient": "MY",
+   "orient": "R0",
    "offtrack": 0
   },
   {
@@ -326,7 +326,7 @@
    "y": 343.488,
    "w": 99.792,
    "h": 140.4,
-   "orient": "MY",
+   "orient": "R0",
    "offtrack": 0
   },
   {
@@ -339,7 +339,7 @@
    "y": 182.976,
    "w": 99.792,
    "h": 140.4,
-   "orient": "MY",
+   "orient": "R0",
    "offtrack": 0
   },
   {
@@ -352,7 +352,7 @@
    "y": 22.464,
    "w": 99.792,
    "h": 140.4,
-   "orient": "MY",
+   "orient": "R0",
    "offtrack": 0
   }
  ],
