@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.assumed-phy-pg-proof.v1",
+  "status": "DECLARED_GEOMETRY_PASS_PHY_ASSUMED_UNQUALIFIED",
+  "base_commit": "108aa7446 and upstream origin/main at worktree creation",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2911565-1792125166",
+  "remote": "/srv/opentallas-scratch/codex/phy-pg-v1-bbox-final-1015",
+  "image": "openroad/orfs:asap7lock",
+  "openroad": "26Q3-1510-g6cb3f2b704",
+  "source_sha256": {
+    "tools/phy_pg/assumed_access.py": "3b27e976f56206afad58e9a42992b2e445f2c8e9344125d6473a1994a20dbad9",
+    "tools/phy_pg/test_assumed_access.py": "2ae5bc28e97f081e3db22f85e6605bbc59b40eab8dd6a9ea1410cd40051de103",
+    "tools/phy_pg/verify_geometry.py": "6cfcf2d2e4d4036708481558e32fb26f593ecc0d46c8c4719900aabeb01b6f77",
+    "tools/phy_pg/apply_case.py": "e8d9bb8ef081bf65b749c7ebae098839bc13b7eef9112f354c44f2ae3bcee87e",
+    "tools/phy_pg/assumed_access.tcl": "0a143021c3d3a9c5e250e80553149a2b3341af262c8ebced5e71297826167197",
+    "tools/phy_pg/fixture/prepare.py": "0b7d2516c7c582c188f245e28fceaac7263c4380d13bf1fec045cc52ffca2971",
+    "tools/phy_pg/fixture/export_geometry.py": "8f501f55bbc5b51695727d895fbe848f77fc4273dfcac5bc9aa92bf41e8303db",
+    "tools/phy_pg/fixture/fixture.tcl": "36d89327a97035a15c71c6d89b6839cb027e720f2b0b09f4120d693ad187afca",
+    "tools/phy_pg/fixture/run.sh": "5e50d992130ef7079d784152b786168a718cc28cd8cf5500e8f85e58336312ba",
+    "tools/qwen_kv_die/chain/pdn_bbox_obs.tcl": "ef8d4b0600af5cdc0468dc88bf8916fd33e1e954fe90f81213c7f3d35a509887"
+  },
+  "technology_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+  "verification": {
+    "status": "PASS",
+    "shapes": 86016,
+    "orientations": [
+      "MX",
+      "MY",
+      "R0",
+      "R180",
+      "MX",
+      "MY",
+      "R0",
+      "R180"
+    ],
+    "routing_shapes_inside_macros": 40824,
+    "m5_straps": 16,
+    "opposite_net_comparisons": 1118889,
+    "shorts": 0,
+    "obstruction_violations": 0,
+    "signal_pin_overlaps": 0
+  },
+  "limits": "Declared modeled PHY PG access only; no foundry or full die signoff."
+}
