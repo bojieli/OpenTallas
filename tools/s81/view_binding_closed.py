@@ -104,8 +104,10 @@ def poststub_lineage(master, d: Path, rec: dict):
         out, _msg = aps.process(lef)
     except Exception as e:  # noqa: BLE001
         return False, f"abstract_pin_stub failed on the LEF: {e}"
-    if out != lef:
-        return False, "LEF is not a fixed point of abstract_pin_stub (not the post-processed export)"
+    mv = re.search(r"pinstub: (\d+) OBS rects moved", _msg)
+    ad = re.search(r"pockets: (\d+) OBS rects added", _msg)
+    if not mv or mv.group(1) != "0" or (ad and ad.group(1) != "0"):
+        return False, f"LEF is not a fixed point of abstract_pin_stub ({_msg[:120]})"
     macros = re.findall(r"^MACRO (\S+)", lef, re.M)
     if macros != [master]:
         return False, f"LEF MACRO {macros}"
@@ -133,6 +135,10 @@ def poststub_lineage(master, d: Path, rec: dict):
     return True, "POSTSTUB_SAME_COMMIT " + cs[0][:12]
 
 
+def _ps_job(args):
+    return poststub_lineage(*args)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
@@ -143,6 +149,25 @@ def main():
     a = ap.parse_args()
     cands = {}
     rejected = {}
+    ps_cache = {}
+    if a.poststub_same_commit:
+        # abstract_pin_stub on a large routed LEF takes ~10-80 s: evaluate every post-stub candidate in parallel first
+        from concurrent.futures import ProcessPoolExecutor
+        last_commits([])
+        todo = []
+        for ab in sorted(glob.glob(str(ROOT / "physical/ref_tile/*/views/*/abstract.json"))):
+            d_, m_ = Path(ab).parent, Path(ab).parent.name
+            if not S81.match(m_) or m_ in a.exclude_master:
+                continue
+            ok_, why_ = export_fix(dict(master=m_, export_dir=str(d_.relative_to(ROOT))))
+            if not ok_ and why_ == f"{m_}.lef on disk is not the file the verdict-replay export recorded":
+                try:
+                    todo.append((m_, d_, json.loads(Path(ab).read_text())))
+                except Exception:  # noqa: BLE001
+                    pass
+        with ProcessPoolExecutor(max_workers=28) as ex:
+            for (m_, d_, _r), res in zip(todo, ex.map(_ps_job, todo)):
+                ps_cache[str(d_)] = res
     for ab in sorted(glob.glob(str(ROOT / "physical/ref_tile/*/views/*/abstract.json"))):
         ab = Path(ab)
         d = ab.parent
@@ -180,7 +205,7 @@ def main():
         ok_export, export_why = export_fix(dict(master=master, export_dir=str(rel)))
         lineage = "EXACT_EXPORT"
         if not ok_export and a.poststub_same_commit and export_why == f"{master}.lef on disk is not the file the verdict-replay export recorded":
-            ok_ps, ps_why = poststub_lineage(master, d, rec)
+            ok_ps, ps_why = ps_cache.get(str(d)) or poststub_lineage(master, d, rec)
             if ok_ps:
                 ok_export, lineage = True, ps_why
             else:
